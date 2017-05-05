@@ -23623,7 +23623,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			current_file.put_string (c_eif_false)
+			if multithreaded_mode then
+				current_file.put_string (c_eif_true)
+			else
+				current_file.put_string (c_eif_false)
+			end
 		end
 
 	print_builtin_platform_is_unix_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)

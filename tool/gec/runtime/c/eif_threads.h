@@ -47,8 +47,8 @@ extern "C" {
 
 /* THREAD */
 #define eif_thr_create_with_attr(current_obj, init_func, attr)
-#define eif_thr_wait(term)
-#define eif_thr_wait_with_timeout(term,tms) EIF_FALSE
+#define eif_thr_wait(obj,get_terminated)
+#define eif_thr_wait_with_timeout(obj,get_terminated,tms) EIF_FALSE
 #define eif_thr_last_thread() NULL
 #define eif_thr_exit()
 
@@ -70,10 +70,10 @@ extern "C" {
 #define eif_thr_cond_signal(a_cond_ptr)
 #define eif_thr_cond_wait(a_cond_ptr,a_mutex_ptr)
 #define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
-#define eif_thr_cond_destroy(a_mutex_ptr)
+#define eif_thr_cond_destroy(a_cond_ptr)
 
 /* SEMAPHORE */
-#define eif_thr_sem_create(count) NULL
+#define eif_thr_sem_create(a_count) NULL
 #define eif_thr_sem_wait(a_sem_pointer)
 #define eif_thr_sem_post(a_sem_pointer)
 #define eif_thr_sem_trywait(a_sem_pointer) EIF_FALSE
@@ -81,12 +81,10 @@ extern "C" {
 
 /* READ_WRITE_LOCK */
 #define eif_thr_rwl_create() NULL
-#define eif_thr_rwl_rdlock(an_item)
-#define eif_thr_rwl_unlock(an_item)
-#define eif_thr_rwl_wrlock(an_item)
-#define eif_thr_rwl_destroy(an_item)
-
-#define eif_thr_sleep(nanoseconds)
+#define eif_thr_rwl_rdlock(a_read_write_lock_pointer)
+#define eif_thr_rwl_unlock(a_read_write_lock_pointer)
+#define eif_thr_rwl_wrlock(a_read_write_lock_pointer)
+#define eif_thr_rwl_destroy(a_read_write_lock_pointer)
 
 #else
 
@@ -98,9 +96,9 @@ extern "C" {
 #define eif_thr_join_all() GE_thread_join_all()
 
 /* THREAD */
-#define eif_thr_create_with_attr(current_obj,init_func,attr) GE_thread_create_with_attr((current_obj),(init_func),(EIF_THR_ATTR_TYPE*)(attr))
-#define eif_thr_wait(term) GE_thread_wait(term)
-#define eif_thr_wait_with_timeout(term,tms) GE_thread_wait_with_timeout((term),(tms))
+#define eif_thr_create_with_attr(current_obj,init_func,set_terminated_func,attr) GE_thread_create_with_attr((current_obj),(init_func),(set_terminated_func),(EIF_THR_ATTR_TYPE*)(attr))
+#define eif_thr_wait(obj,get_terminated) GE_thread_wait((obj),(get_terminated))
+#define eif_thr_wait_with_timeout(obj,get_terminated,tms) GE_thread_wait_with_timeout((obj),(get_terminated),(tms))
 #define eif_thr_last_thread() GE_last_thread_created()
 #define eif_thr_exit() GE_thread_exit()
 
@@ -117,28 +115,26 @@ extern "C" {
 #define eif_thr_mutex_destroy(a_mutex_pointer) GE_mutex_destroy(a_mutex_pointer)
 
 /* CONDITION_VARIABLE */
-#define eif_thr_cond_create() NULL
-#define eif_thr_cond_broadcast(a_cond_ptr)
-#define eif_thr_cond_signal(a_cond_ptr)
-#define eif_thr_cond_wait(a_cond_ptr,a_mutex_ptr)
-#define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
-#define eif_thr_cond_destroy(a_mutex_ptr)
+#define eif_thr_cond_create() GE_condition_variable_create()
+#define eif_thr_cond_broadcast(a_cond_ptr) GE_condition_variable_broadcast(a_cond_ptr)
+#define eif_thr_cond_signal(a_cond_ptr) GE_condition_variable_signal(a_cond_ptr)
+#define eif_thr_cond_wait(a_cond_ptr,a_mutex_ptr) GE_condition_variable_wait((a_cond_ptr),(a_mutex_ptr))
+#define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) GE_condition_variable_wait_with_timeout((a_cond_ptr),(a_mutex_ptr),(a_timeout))
+#define eif_thr_cond_destroy(a_cond_ptr) GE_condition_variable_destroy(a_cond_ptr)
 
 /* SEMAPHORE */
-#define eif_thr_sem_create(count) NULL
-#define eif_thr_sem_wait(a_sem_pointer)
-#define eif_thr_sem_post(a_sem_pointer)
-#define eif_thr_sem_trywait(a_sem_pointer) EIF_FALSE
-#define eif_thr_sem_destroy(a_sem_pointer)
+#define eif_thr_sem_create(a_count) GE_semaphore_create(a_count)
+#define eif_thr_sem_wait(a_sem_pointer) GE_semaphore_wait(a_sem_pointer)
+#define eif_thr_sem_post(a_sem_pointer) GE_semaphore_post(a_sem_pointer)
+#define eif_thr_sem_trywait(a_sem_pointer) GE_semaphore_try_wait(a_sem_pointer)
+#define eif_thr_sem_destroy(a_sem_pointer) GE_semaphore_destroy(a_sem_pointer)
 
 /* READ_WRITE_LOCK */
-#define eif_thr_rwl_create() NULL
-#define eif_thr_rwl_rdlock(an_item)
-#define eif_thr_rwl_unlock(an_item)
-#define eif_thr_rwl_wrlock(an_item)
-#define eif_thr_rwl_destroy(an_item)
-
-#define eif_thr_sleep(nanoseconds)
+#define eif_thr_rwl_create() GE_read_write_lock_create()
+#define eif_thr_rwl_rdlock(a_read_write_lock_pointer) GE_read_write_lock_read_lock(a_read_write_lock_pointer)
+#define eif_thr_rwl_unlock(a_read_write_lock_pointer) GE_read_write_lock_unlock(a_read_write_lock_pointer)
+#define eif_thr_rwl_wrlock(a_read_write_lock_pointer) GE_read_write_lock_write_lock(a_read_write_lock_pointer)
+#define eif_thr_rwl_destroy(a_read_write_lock_pointer) GE_read_write_lock_destroy(a_read_write_lock_pointer)
 
 /* WEL */
 #ifdef EIF_WINDOWS

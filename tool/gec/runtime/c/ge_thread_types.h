@@ -86,7 +86,15 @@ struct GE_thread_context_struct {
 	EIF_THR_TYPE thread_id; /* Thread identifier for associated thread. */
 	EIF_REFERENCE current; /* Eiffel root object. */
 	void (*routine)(EIF_REFERENCE); /* Eiffel routine. */
+	void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN); /* Eiffel routine to set {THREAD}.terminated. */
 	unsigned int initial_priority; /* Initial priority. */
+	EIF_THR_TYPE last_thread_id; /* Last thread created from current thread. */
+	volatile int n_children; /* Number of direct thread children. */
+	EIF_MUTEX_TYPE* children_mutex; /* Mutex to wait for thread children. */
+	EIF_COND_TYPE* children_cond; /* Condition variable to wait for thread children. */
+	GE_thread_context* parent_context;	/* Context of parent thread, NULL if main thread. */
+	int thread_exiting; /* Has current thread already called GE_thread_exit? */
+	volatile int is_alive; /* Is Current thread still alive? */
 };
 
 #ifdef __cplusplus

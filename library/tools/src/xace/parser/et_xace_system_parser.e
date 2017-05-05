@@ -5,7 +5,7 @@ note
 		"Xace Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2017, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -140,11 +140,13 @@ feature {NONE} -- Xace AST factory
 				Result.set_exception_trace_mode (l_options.exception_trace)
 				Result.set_trace_mode (l_options.trace)
 				Result.set_use_boehm_gc (STRING_.same_string (l_options.garbage_collector, options.boehm_value))
+				Result.set_multithreaded_mode (l_options.multithreaded)
 			else
 				Result.set_console_application_mode (True)
 				Result.set_exception_trace_mode (False)
 				Result.set_trace_mode (False)
 				Result.set_use_boehm_gc (False)
+				Result.set_multithreaded_mode (False)
 			end
 		end
 

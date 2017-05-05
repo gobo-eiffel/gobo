@@ -869,8 +869,8 @@ ISE Ace:
   true -> multithreaded (yes)
   false -> multithreaded (no)
 ISE ECF:
-  true -> <setting name="multithreaded" value="true"/>
-  false -> <setting name="multithreaded" value="false"/>
+  true -> <setting name="concurrency" value="thread"/>
+  false -> <setting name="concurrency" value="none"/>
 VE:
   true -> multithreading on
   false -> multithreading off

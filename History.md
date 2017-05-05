@@ -10,6 +10,7 @@
 * Made the runtime C files thread-safe.
 * Made once-per-process thread-safe.
 * Added support for once-per-thread.
+* Added support for multi-threading.
 
 ### gedoc
 

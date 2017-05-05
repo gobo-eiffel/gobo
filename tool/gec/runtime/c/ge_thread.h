@@ -149,7 +149,7 @@ extern void GE_init_thread(GE_context* a_context);
  * Create a new thread with attributes `attr' and execute
  * Eiffel routine `routine' on object `current'.
  */
-extern void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE), EIF_THR_ATTR_TYPE* attr);
+extern void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr);
 
 /*
  * Execution context of current thread.
@@ -162,7 +162,7 @@ extern GE_context* GE_thread_current_context(void);
 extern EIF_POINTER GE_thread_id(void);
 
 /*
- * Last thread created.
+ * Thread ID of last thread created from current thread.
  */
 extern EIF_POINTER GE_last_thread_created(void);
 
@@ -180,7 +180,7 @@ extern void* GE_thread_create_wel_per_thread_data(size_t a_size);
  * which means it is terminated. The calling thread must be the
  * direct parent of the thread, or the function might loop indefinitely.
  */
-extern void GE_thread_wait(EIF_REFERENCE obj);
+extern void GE_thread_wait(EIF_REFERENCE obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE));
 
 /*
  * Waits until a child thread sets `terminated' from `obj' to True,
@@ -188,7 +188,7 @@ extern void GE_thread_wait(EIF_REFERENCE obj);
  * The calling thread must be the direct parent of the thread,
  * or the function might loop indefinitely.
  */
-extern EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_REFERENCE obj, EIF_NATURAL_64 a_timeout_ms);
+extern EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_REFERENCE obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE), EIF_NATURAL_64 a_timeout_ms);
 
 /*
  * Yields execution to other threads.
@@ -245,6 +245,90 @@ extern void GE_mutex_unlock(EIF_POINTER a_mutex);
  * Destroy and free all resources used by mutex.
  */
 extern void GE_mutex_destroy(EIF_POINTER a_mutex);
+
+/*
+ * Create a new semaphore allowing `a_count' threads
+ * to go into a critical section.
+ */
+extern EIF_POINTER GE_semaphore_create(EIF_INTEGER a_count);
+
+/*
+ * Decrement semaphore count, waiting if necessary
+ * until that becomes possible.
+ */
+extern void GE_semaphore_wait(EIF_POINTER a_semaphore);
+
+/*
+ * Has client been successful in decrementing semaphore
+ * count without waiting?
+ */
+extern EIF_BOOLEAN GE_semaphore_try_wait(EIF_POINTER a_semaphore);
+
+/*
+ * Increment semaphore count.
+ */
+extern void GE_semaphore_post(EIF_POINTER a_semaphore);
+
+/*
+ * Destroy and free all resources used by semaphore.
+ */
+extern void GE_semaphore_destroy(EIF_POINTER a_semaphore);
+
+/*
+ * Create a new condition variable.
+ */
+extern EIF_POINTER GE_condition_variable_create(void);
+
+/*
+ * Unblock all threads blocked on condition variable.
+ */
+extern void GE_condition_variable_broadcast(EIF_POINTER a_condition_variable);
+
+/*
+ * Unblock one thread blocked on condition variable.
+ */
+extern void GE_condition_variable_signal(EIF_POINTER a_condition_variable);
+
+/*
+ * Block calling thread on condition variable.
+ */
+extern void GE_condition_variable_wait(EIF_POINTER a_condition_variable, EIF_POINTER a_mutex);
+
+/*
+ * Block calling thread on condition variable for at most `a_timeout' milliseconds.
+ * Return 1 is we got the condition variable on time, otherwise return 0.
+ */
+extern EIF_INTEGER GE_condition_variable_wait_with_timeout(EIF_POINTER a_condition_variable, EIF_POINTER a_mutex, EIF_INTEGER a_timeout);
+
+/*
+ * Destroy and free all resources used by condition variable.
+ */
+extern void GE_condition_variable_destroy(EIF_POINTER a_condition_variable);
+
+/*
+ * Create a new read-write lock.
+ */
+extern EIF_POINTER GE_read_write_lock_create(void);
+
+/*
+ * Acquire a read lock. Multiple readers can go if there are no writer.
+ */
+extern void GE_read_write_lock_read_lock(EIF_POINTER a_read_write_lock);
+
+/*
+ * Acquire a write lock. Only a single write can proceed.
+ */
+extern void GE_read_write_lock_write_lock(EIF_POINTER a_read_write_lock);
+
+/*
+ * Unlock a read or write lock.
+ */
+extern void GE_read_write_lock_unlock(EIF_POINTER a_read_write_lock);
+
+/*
+ * Destroy and free all resources used by read-write lock.
+ */
+extern void GE_read_write_lock_destroy(EIF_POINTER a_read_write_lock);
 
 #ifdef __cplusplus
 }

@@ -15,7 +15,7 @@ is hosted at
 while the official site (for stable releases) is located at
 [gobosoft.com](http://www.gobosoft.com).
 
-*Gobo Eiffel* already consists of sixteen Eiffel libraries:
+*Gobo Eiffel* already consists of seventeen Eiffel libraries:
 
 * Gobo Eiffel Argument Library
 * Gobo Eiffel Kernel Library
@@ -27,6 +27,7 @@ while the official site (for stable releases) is located at
 * Gobo Eiffel String Library
 * Gobo Eiffel Structure Library
 * Gobo Eiffel Test Library
+* Gobo Eiffel Thread Library
 * Gobo Eiffel Time Library
 * Gobo Eiffel Tools Library
 * Gobo Eiffel Utility Library

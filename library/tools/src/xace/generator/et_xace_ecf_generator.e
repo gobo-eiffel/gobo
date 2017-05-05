@@ -6,7 +6,7 @@ note
 
 	remark: "Generate ECF version 1.15"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -714,9 +714,9 @@ feature {NONE} -- Output
 			if an_option.is_multithreaded_declared then
 				print_indentation (indent, a_file)
 				if an_option.multithreaded then
-					a_file.put_line ("<setting name=%"multithreaded%" value=%"true%"/>")
+					a_file.put_line ("<setting name=%"concurrency%" value=%"thread%"/>")
 				else
-					a_file.put_line ("<setting name=%"multithreaded%" value=%"false%"/>")
+					a_file.put_line ("<setting name=%"concurrency%" value=%"none%"/>")
 				end
 			end
 				-- old_verbatim_strings

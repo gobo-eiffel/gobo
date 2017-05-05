@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>2 April 2017</date>
+	<date>5 Mai 2017</date>
 </chapterinfo>
 
 <title>Gec Limitations</title>
@@ -65,10 +65,8 @@ The following Eiffel constructs have not been implemented yet:
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>Multithreading</term>
-		<listitem><para>
-			partially implemented
-		</para></listitem>
+		<term>Once-per-object</term>
+		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
 		<term>SCOOP</term>
