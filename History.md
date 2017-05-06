@@ -11,6 +11,14 @@
 * Made once-per-process thread-safe.
 * Added support for once-per-thread.
 * Added support for multi-threading.
+* Fixed misused of `volatile` qualifier in the generated C code
+  when there is a rescue clause. It was declaring a variable 
+  pointing to a `volatile` object instead of a `volatile` variable
+  pointing to an object.
+* Fixed bug when a routine had a local variable which was both
+  written and read in its rescue clause and more than one exception
+  was raised in this routine. In some cases the local variable
+  was not declared as `volatile` in the generated C code.
 
 ### gedoc
 

@@ -6079,7 +6079,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				-- Variable for 'Result' entity.
 			if a_result_type /= Void then
 				print_indentation
-				if has_rescue and then (l_result_read_in_rescue or (has_retry and then l_result_read_in_body)) and then l_result_written_in_body then
+				print_type_declaration (a_result_type, current_file)
+				current_file.put_character (' ')
+				if has_rescue and then (l_result_written_in_body or l_result_written_in_rescue) and then (has_retry or l_result_read_in_rescue) then
 						-- The implementation of the rescue mechanism in C uses 'setjmp'
 						-- and 'longjmp'. The use of these two C functions requires that
 						-- any local variable modified between the call to 'setjmp' and
@@ -6092,8 +6094,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					current_file.put_string (c_volatile)
 					current_file.put_character (' ')
 				end
-				print_type_declaration (a_result_type, current_file)
-				current_file.put_character (' ')
 				print_result_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
@@ -6110,7 +6110,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					l_local_type_set := dynamic_type_set (l_name)
 					l_local_type := l_local_type_set.static_type
 					print_indentation
-					if has_rescue and then (locals_read_in_rescue.has (l_name) or (has_retry and then locals_read_in_body.has (l_name))) and then locals_written_in_body.has (l_name) then
+					print_type_declaration (l_local_type, current_file)
+					current_file.put_character (' ')
+					if has_rescue and then (locals_written_in_body.has (l_name) or locals_written_in_rescue.has (l_name)) and then (has_retry or locals_read_in_rescue.has (l_name)) then
 							-- The implementation of the rescue mechanism in C uses 'setjmp'
 							-- and 'longjmp'. The use of these two C functions requires that
 							-- any local variable modified between the call to 'setjmp' and
@@ -6123,8 +6125,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						current_file.put_string (c_volatile)
 						current_file.put_character (' ')
 					end
-					print_type_declaration (l_local_type, current_file)
-					current_file.put_character (' ')
 					print_local_name (l_name, current_file)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
@@ -10288,6 +10288,10 @@ feature {NONE} -- Expression generation
 							-- Pass the address of the expanded object.
 						current_file.put_character ('(')
 						if has_rescue then
+								-- When there is a rescue clause, the local variable might 
+								-- have been declared with a 'volatile' qualifier. In that 
+								-- case we need a type cast here to avoid C compiler warning
+								-- (at least with MSVC 12).
 							current_file.put_character ('(')
 							print_type_declaration (l_static_type, current_file)
 							current_file.put_character ('*')
@@ -10303,38 +10307,10 @@ feature {NONE} -- Expression generation
 						print_boxed_attribute_item_access (a_name, l_call_target_type, call_target_check_void)
 						current_file.put_character (')')
 					else
-						if has_rescue then
-							current_file.put_character ('(')
-							print_type_declaration (l_static_type, current_file)
-							current_file.put_character (')')
-						end
 						print_local_name (a_name, current_file)
 					end
 				else
-					if has_rescue then
-						l_dynamic_type_set := dynamic_type_set (a_name)
-						l_static_type := l_dynamic_type_set.static_type
-						if l_static_type.is_basic then
-							current_file.put_character ('(')
-							print_type_declaration (l_static_type, current_file)
-							current_file.put_character (')')
-							print_local_name (a_name, current_file)
-						else
-							current_file.put_character ('*')
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_type_declaration (l_static_type, current_file)
-							current_file.put_character ('*')
-							current_file.put_character (')')
-							current_file.put_character ('(')
-							current_file.put_character ('&')
-							print_local_name (a_name, current_file)
-							current_file.put_character (')')
-							current_file.put_character (')')
-						end
-					else
-						print_local_name (a_name, current_file)
-					end
+					print_local_name (a_name, current_file)
 				end
 			end
 		end
@@ -11847,6 +11823,10 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 							-- Pass the address of the expanded object.
 						current_file.put_character ('(')
 						if has_rescue then
+								-- When there is a rescue clause, the result entity might 
+								-- have been declared with a 'volatile' qualifier. In that 
+								-- case we need a type cast here to avoid C compiler warning
+								-- (at least with MSVC 12).
 							current_file.put_character ('(')
 							print_type_declaration (l_static_type, current_file)
 							current_file.put_character ('*')
@@ -11862,38 +11842,10 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						print_boxed_attribute_item_access (an_expression, l_call_target_type, call_target_check_void)
 						current_file.put_character (')')
 					else
-						if has_rescue then
-							current_file.put_character ('(')
-							print_type_declaration (l_static_type, current_file)
-							current_file.put_character (')')
-						end
 						print_result_name (current_file)
 					end
 				else
-					if has_rescue then
-						l_dynamic_type_set := dynamic_type_set (an_expression)
-						l_static_type := l_dynamic_type_set.static_type
-						if l_static_type.is_basic then
-							current_file.put_character ('(')
-							print_type_declaration (l_static_type, current_file)
-							current_file.put_character (')')
-							print_result_name (current_file)
-						else
-							current_file.put_character ('*')
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_type_declaration (l_static_type, current_file)
-							current_file.put_character ('*')
-							current_file.put_character (')')
-							current_file.put_character ('(')
-							current_file.put_character ('&')
-							print_result_name (current_file)
-							current_file.put_character (')')
-							current_file.put_character (')')
-						end
-					else
-						print_result_name (current_file)
-					end
+					print_result_name (current_file)
 				end
 			end
 		end
@@ -15435,11 +15387,6 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 					print_indentation
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
-						-- In case of an inline agent, when there is a rescue clause,
-						-- the result entity might have been declared with a 'volatile'
-						-- qualifier. In that case we need a type cast here to
-						-- avoid C compiler warning (at least with MSVC 12).
-					print_declaration_type_cast (l_result_type, current_file)
 					print_result_name (current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
@@ -32612,12 +32559,6 @@ feature {NONE} -- Misc C code
 			current_file.put_string (c_return)
 			if attached current_feature.result_type_set as l_result_type_set then
 				current_file.put_character (' ')
-				if a_feature.rescue_clause /= Void then
-						-- When there is a rescue clause, the result entity might have been declared
-						-- with a 'volatile' qualifier. In that case we need a type cast here to
-						-- avoid C compiler warning (at least with MSVC 12).
-					print_declaration_type_cast (l_result_type_set.static_type, current_file)
-				end
 				print_result_name (current_file)
 			end
 			current_file.put_character (';')
