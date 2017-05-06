@@ -27,6 +27,13 @@
 #ifndef GE_ONCE_H
 #include "ge_once.h"
 #endif
+#ifndef GE_TIME_H
+#include "ge_time.h"
+#endif
+
+#ifdef GE_USE_POSIX_THREADS
+#include <limits.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -286,9 +293,9 @@ static EIF_POINTER GE_unprotected_mutex_create(uintptr_t a_spin_count)
 		pthread_mutexattr_t l_attr;
 		pthread_mutexattr_init(&l_attr);
 		pthread_mutexattr_settype(&l_attr, PTHREAD_MUTEX_RECURSIVE);
-		if (!pthread_mutex_init(*l_mutex, &l_attr)) {
+		if (pthread_mutex_init(l_mutex, &l_attr)) {
 			GE_free(l_mutex);
-			mutex = NULL;
+			l_mutex = NULL;
 		}
 		pthread_mutexattr_destroy(&l_attr);
 	}
@@ -330,7 +337,7 @@ EIF_POINTER GE_mutex_create(void)
 static int GE_unprotected_mutex_lock(EIF_POINTER a_mutex)
 {
 #ifdef GE_USE_POSIX_THREADS
-	if (!pthread_mutex_lock((EIF_MUTEX_TYPE*)a_mutex)) {
+	if (pthread_mutex_lock((EIF_MUTEX_TYPE*)a_mutex)) {
 		return GE_THREAD_ERROR;
 	}
 	return GE_THREAD_OK;
@@ -402,7 +409,7 @@ EIF_BOOLEAN GE_mutex_try_lock(EIF_POINTER a_mutex)
 static int GE_unprotected_mutex_unlock(EIF_POINTER a_mutex)
 {
 #ifdef GE_USE_POSIX_THREADS
-	if (!pthread_mutex_unlock((EIF_MUTEX_TYPE*)a_mutex)) {
+	if (pthread_mutex_unlock((EIF_MUTEX_TYPE*)a_mutex)) {
 		return GE_THREAD_ERROR;
 	}
 	return GE_THREAD_OK;
@@ -436,6 +443,7 @@ static int GE_unprotected_mutex_destroy(EIF_POINTER a_mutex)
 	if (a_mutex) {
 		if (pthread_mutex_destroy((EIF_MUTEX_TYPE*)a_mutex)) {
 			l_result = GE_THREAD_ERROR;
+		}
 		GE_free(a_mutex);
 	}
 	return l_result;
@@ -848,7 +856,7 @@ static struct timespec GE_timeout_to_timespec(uintptr_t a_timeout)
 	long l_nano_seconds = (a_timeout % 1000) * 1000000;	/* Reminder in nanoseconds */
 	struct timespec tspec;
 	struct timeval now;
-	gettime(&now);
+	GE_ftime(&now);
 	tspec.tv_sec = now.tv_sec + l_seconds;
 	l_nano_seconds += (now.tv_usec * 1000);
 	tspec.tv_nsec = l_nano_seconds;
@@ -1288,9 +1296,7 @@ static void GE_thread_set_priority(EIF_THR_TYPE a_thread_id, unsigned int a_prio
 	struct sched_param l_param;
 	memset(&l_param, 0, sizeof(struct sched_param));
 	l_param.sched_priority = a_priority;
-	if (pthread_setschedparam(a_thread_id, SCHED_OTHER, &l_param) != 0) {
-		GE_raise_with_message(GE_EX_EXT, "Cannot set priority to thread");
-	}
+	pthread_setschedparam(a_thread_id, SCHED_OTHER, &l_param);
 #elif defined(EIF_WINDOWS)
 	int l_win_priority;
 	switch (a_priority) {
@@ -1309,9 +1315,7 @@ static void GE_thread_set_priority(EIF_THR_TYPE a_thread_id, unsigned int a_prio
 				l_win_priority = THREAD_PRIORITY_ABOVE_NORMAL;
 			}
 	}
-	if (!SetThreadPriority(a_thread_id, l_win_priority)) {
-		GE_raise_with_message(GE_EX_EXT, "Cannot set priority to thread");
-	}
+	SetThreadPriority(a_thread_id, l_win_priority);
 #endif
 }
 
@@ -1417,7 +1421,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 
 			if (pthread_attr_init(&l_attr) == 0) {
 					/* Initialize the stack size if more than the minimum. */
-				if (thread_attr->stack_size >= PTHREAD_STACK_MIN) {
+				if (attr->stack_size >= PTHREAD_STACK_MIN) {
 					pthread_attr_setstacksize(&l_attr, attr->stack_size);
 				}
 				if (attr->priority != EIF_DEFAULT_THR_PRIORITY) {

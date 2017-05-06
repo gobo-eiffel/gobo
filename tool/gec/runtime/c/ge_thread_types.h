@@ -29,6 +29,7 @@
 
 #ifdef GE_USE_POSIX_THREADS
 #include <pthread.h>
+#include <semaphore.h>
 #elif defined EIF_WINDOWS
 #include <windows.h>
 #include <process.h>

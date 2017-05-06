@@ -32783,6 +32783,9 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_store.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_threads.h%"") then
 					include_runtime_header_file ("eif_threads.h", False, a_file)
+				elseif a_filename.same_string ("<eif_threads.h>") then
+						-- This notation is used in class THREAD_ENVIRONMENT.
+					include_runtime_header_file ("eif_threads.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_traverse.h%"") then
 					include_runtime_header_file ("eif_traverse.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_types.h%"") then
@@ -33035,6 +33038,7 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_thread.h", False, a_header_file)
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
 					include_runtime_header_file ("ge_once.h", False, a_header_file)
+					include_runtime_header_file ("ge_time.h", False, a_header_file)
 				elseif a_filename.same_string ("ge_types.c") then
 					include_runtime_header_file ("ge_types.h", False, a_header_file)
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
