@@ -19,6 +19,9 @@
   written and read in its rescue clause and more than one exception
   was raised in this routine. In some cases the local variable
   was not declared as `volatile` in the generated C code.
+* Implemented proper support for exceptions in once routines
+  as specified in ECMA-2, section 8.23.22.2, p.124:
+  "Semantics: Once Routine Execution Semantics".
 
 ### gedoc
 

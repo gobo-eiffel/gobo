@@ -454,17 +454,28 @@ void GE_free_exception(GE_context* a_context)
 }
 
 /*
- * Pointer to function to create a new exception manager object.
+ * Pointer to function to create a new exception manager object
+ * (of type ISE_EXCEPTION_MANAGER).
  */
 EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
 
 /*
- * Pointer to Eiffel routine EXCEPTION_MANAGER.init_exception_manager.
+ * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.init_exception_manager.
  */
 void (*GE_init_exception_manager)(GE_context*, EIF_REFERENCE);
 
 /*
- * Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data.
+ * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.last_exception.
+ */
+EIF_REFERENCE (*GE_last_exception)(GE_context*, EIF_REFERENCE);
+
+/*
+ * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.once_raise.
+ */
+void (*GE_once_raise)(GE_context*, EIF_REFERENCE, EIF_REFERENCE);
+
+/*
+ * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.set_exception_data.
  */
 void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
 
@@ -472,7 +483,7 @@ void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BO
  * Jump to execute the rescue of the last routine with a rescue
  * in the call stack.
  */
-static void GE_jump_to_last_rescue(GE_context* a_context)
+void GE_jump_to_last_rescue(GE_context* a_context)
 {
 	char* l_exception_trace;
 
@@ -605,10 +616,10 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 			GE_append_to_exception_trace_buffer(&l_context->last_exception_trace, l_trace);
 		}
 		GE_call_set_exception_data(l_context, code, new_obj, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, l_trace, line_number, is_invariant_entry);
-		GE_jump_to_last_rescue(l_context);
 		l_context->raising_exception = '\0';
 		l_context->exception_code = 0;
 		l_context->exception_tag = (char*)0;
+		GE_jump_to_last_rescue(l_context);
 	}
 }
 
@@ -634,6 +645,34 @@ void GE_raise_with_message(long a_code, const char* msg)
 void GE_developer_raise(long a_code, char* a_meaning, char* a_message)
 {
 	GE_raise_exception(a_code, 0, -1, -1, a_message, NULL, NULL, NULL, NULL, NULL, -1, 0);
+}
+
+/*
+ * Raise exception which was raised the first time a once routine
+ * was executed when executing it again.
+ */
+void GE_raise_once_exception(GE_context* a_context, EIF_REFERENCE a_exception)
+{
+	EIF_REFERENCE l_exception_manager;
+
+	l_exception_manager = a_context->exception_manager;
+	if (l_exception_manager) {
+		GE_once_raise(a_context, l_exception_manager, a_exception);
+	}
+}
+
+/*
+ * Exception, if any, which was last raised in `a_context'.
+ */
+EIF_REFERENCE GE_last_exception_raised(GE_context* a_context)
+{
+	EIF_REFERENCE l_exception_manager;
+
+	l_exception_manager = a_context->exception_manager;
+	if (l_exception_manager) {
+		return GE_last_exception(a_context, l_exception_manager);
+	}
+	return EIF_VOID;
 }
 
 /*

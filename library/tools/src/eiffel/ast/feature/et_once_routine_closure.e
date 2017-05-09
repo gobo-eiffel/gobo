@@ -15,11 +15,20 @@ deferred class ET_ONCE_ROUTINE_CLOSURE
 inherit
 
 	ET_INTERNAL_ROUTINE_CLOSURE
+		redefine
+			is_once,
+			is_once_per_process,
+			is_once_per_thread,
+			is_once_per_object
+		end
 
 	ET_SHARED_STANDARD_ONCE_KEYS
 		export {NONE} all end
 
 feature -- Status report
+
+	is_once: BOOLEAN = True
+			-- Is current routine a once feature?
 
 	is_once_per_process: BOOLEAN
 			-- Is current once routine a once-per-process?

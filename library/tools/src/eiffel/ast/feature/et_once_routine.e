@@ -16,11 +16,10 @@ inherit
 
 	ET_INTERNAL_ROUTINE
 		undefine
+			is_once,
 			is_once_per_process,
 			is_once_per_thread,
 			is_once_per_object
-		redefine
-			is_once
 		end
 
 	ET_ONCE_ROUTINE_CLOSURE
@@ -30,10 +29,5 @@ inherit
 			first_indexing,
 			implementation_feature
 		end
-
-feature -- Status report
-
-	is_once: BOOLEAN = True
-			-- Is current feature a once feature?
 
 end

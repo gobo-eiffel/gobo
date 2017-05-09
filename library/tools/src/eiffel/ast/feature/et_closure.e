@@ -16,6 +16,38 @@ inherit
 
 	ANY
 
+feature -- Status report
+
+	is_once: BOOLEAN
+			-- Is current closure a once feature?
+		do
+			-- Result := False
+		end
+
+	is_once_per_process: BOOLEAN
+			-- Is current closure a once-per-process feature?
+		do
+			-- Result := False
+		ensure
+			is_once: Result implies is_once
+		end
+
+	is_once_per_thread: BOOLEAN
+			-- Is current closure a once-per-thread feature?
+		do
+			-- Result := False
+		ensure
+			is_once: Result implies is_once
+		end
+
+	is_once_per_object: BOOLEAN
+			-- Is current closure a once-per-object feature?
+		do
+			-- Result := False
+		ensure
+			is_once: Result implies is_once
+		end
+
 feature -- Access
 
 	type: detachable ET_TYPE

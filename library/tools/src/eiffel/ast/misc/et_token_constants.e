@@ -2364,6 +2364,14 @@ feature -- Feature names
 			once_objects_feature_name_not_void: Result /= Void
 		end
 
+	once_raise_feature_name: ET_FEATURE_NAME
+			-- 'once_raise' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (once_raise_name)
+		ensure
+			once_raise_feature_name_not_void: Result /= Void
+		end
+
 	opposite_feature_name: ET_FEATURE_NAME
 			-- 'opposite' feature name
 		once
@@ -4950,6 +4958,9 @@ feature -- Keyword and symbol names
 
 	once_objects_name: STRING = "once_objects"
 			-- Name of Eiffel feature 'once_objects'
+
+	once_raise_name: STRING = "once_raise"
+			-- Name of Eiffel feature 'once_raise'
 
 	opposite_name: STRING = "opposite"
 			-- Name of Eiffel feature 'opposite'

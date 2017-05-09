@@ -906,6 +906,14 @@ feature {NONE} -- C code Generation
 						l_ise_exception_manager_init_exception_manager_feature.set_generated (True)
 						called_features.force_last (l_ise_exception_manager_init_exception_manager_feature)
 					end
+					if attached current_dynamic_system.ise_exception_manager_last_exception_feature as l_ise_exception_manager_last_exception_feature then
+						l_ise_exception_manager_last_exception_feature.set_generated (True)
+						called_features.force_last (l_ise_exception_manager_last_exception_feature)
+					end
+					if attached current_dynamic_system.ise_exception_manager_once_raise_feature as l_ise_exception_manager_once_raise_feature then
+						l_ise_exception_manager_once_raise_feature.set_generated (True)
+						called_features.force_last (l_ise_exception_manager_once_raise_feature)
+					end
 					if attached current_dynamic_system.ise_exception_manager_set_exception_data_feature as l_ise_exception_manager_set_exception_data_feature then
 						l_ise_exception_manager_set_exception_data_feature.set_generated (True)
 						called_features.force_last (l_ise_exception_manager_set_exception_data_feature)
@@ -5706,6 +5714,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
+				print_raise_thread_safe_once_exception_if_any (current_feature, l_once_kind, l_once_index)
 				print_indentation
 				current_file.put_string (c_return)
 				if l_result_type_set /= Void then
@@ -5742,7 +5751,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						print_assign_once_value_to_result (current_feature, l_once_kind, l_once_index)
 						print_assign_result_to_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
 					end
+					print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
 					print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
+					print_raise_thread_safe_once_exception_if_any (current_feature, l_once_kind, l_once_index)
 					print_return_result (a_feature)
 					dedent
 					print_indentation
@@ -5763,8 +5774,10 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						print_assign_once_value_to_result (current_feature, l_once_kind, l_once_index)
 						print_assign_result_to_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
 					end
+					print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
 					print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
 					print_once_mutex_unlock (current_feature, l_once_kind, l_once_index)
+					print_raise_thread_safe_once_exception_if_any (current_feature, l_once_kind, l_once_index)
 					print_indentation
 					current_file.put_string (c_return)
 					if l_result_type_set /= Void then
@@ -5922,6 +5935,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_result_read_in_body: BOOLEAN
 			l_result_written_in_rescue: BOOLEAN
 			l_result_read_in_rescue: BOOLEAN
+			l_is_once: BOOLEAN
+			l_once_kind: INTEGER
+			l_once_index: INTEGER
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -5929,8 +5945,14 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				-- Declaration of variables.
 				--
 				-- Variable for rescue chain.
+			once_features.search (current_feature.static_feature.implementation_feature)
+			if once_features.found then
+				l_is_once := True
+				l_once_index := once_features.found_item
+				l_once_kind := once_kind (current_feature)
+			end
 			l_rescue := a_feature.rescue_clause
-			if l_rescue /= Void then
+			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
@@ -5957,8 +5979,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			reset_rescue_data
 			locals_written := locals_written_in_rescue
 			locals_read := locals_read_in_rescue
-			if l_rescue /= Void then
-				has_rescue := True
+			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
@@ -6006,14 +6027,36 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character ('1')
 				current_file.put_character (';')
 				current_file.put_new_line
-				print_compound (l_rescue)
-				print_indentation
-				current_file.put_string (c_ge_raise)
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_ex_fail)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				if l_rescue /= Void then
+					has_rescue := True
+					print_compound (l_rescue)
+				end
+				if l_is_once then
+					print_assign_last_exception_to_once_exception (current_feature, l_once_kind, l_once_index)
+				end
+				if multithreaded_mode and then a_feature.is_once_per_process then
+					print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
+					print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
+					print_assign_completed_to_once_status (current_feature, l_once_kind, l_once_index)
+					print_once_mutex_unlock (current_feature, l_once_kind, l_once_index)
+				end
+				if l_rescue /= Void then
+					print_indentation
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_ex_fail)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+				else
+					print_indentation
+					current_file.put_string (c_ge_jump_to_last_rescue)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
 				dedent
 				print_indentation
 				current_file.put_character ('}')
@@ -6054,7 +6097,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 			l_result_written_in_body := result_written
 			l_result_read_in_body := result_read
-			if l_rescue /= Void then
+			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
@@ -10288,8 +10331,8 @@ feature {NONE} -- Expression generation
 							-- Pass the address of the expanded object.
 						current_file.put_character ('(')
 						if has_rescue then
-								-- When there is a rescue clause, the local variable might 
-								-- have been declared with a 'volatile' qualifier. In that 
+								-- When there is a rescue clause, the local variable might
+								-- have been declared with a 'volatile' qualifier. In that
 								-- case we need a type cast here to avoid C compiler warning
 								-- (at least with MSVC 12).
 							current_file.put_character ('(')
@@ -11823,8 +11866,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 							-- Pass the address of the expanded object.
 						current_file.put_character ('(')
 						if has_rescue then
-								-- When there is a rescue clause, the result entity might 
-								-- have been declared with a 'volatile' qualifier. In that 
+								-- When there is a rescue clause, the result entity might
+								-- have been declared with a 'volatile' qualifier. In that
 								-- case we need a type cast here to avoid C compiler warning
 								-- (at least with MSVC 12).
 							current_file.put_character ('(')
@@ -27381,6 +27424,28 @@ feature {NONE} -- C function generation
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
+				if attached current_dynamic_system.ise_exception_manager_last_exception_feature as l_ise_exception_manager_last_exception_feature then
+					print_indentation
+					current_file.put_string (c_ge_last_exception)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('&')
+					print_routine_name (l_ise_exception_manager_last_exception_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				if attached current_dynamic_system.ise_exception_manager_once_raise_feature as l_ise_exception_manager_once_raise_feature then
+					print_indentation
+					current_file.put_string (c_ge_once_raise)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('&')
+					print_routine_name (l_ise_exception_manager_once_raise_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
 				if attached current_dynamic_system.ise_exception_manager_set_exception_data_feature as l_ise_exception_manager_set_exception_data_feature then
 					print_indentation
 					current_file.put_string (c_ge_set_exception_data)
@@ -29526,6 +29591,68 @@ feature {NONE} -- Once feature generation
 			current_file.put_character (']')
 		end
 
+	print_once_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once exception of `a_feature'.
+			-- `a_feature' is expected to be a once routine of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once: a_feature.is_once
+			a_feature_is_function: a_feature.is_function
+		local
+			l_once_prefix: STRING
+		do
+			l_once_prefix := once_prefixes.item (a_once_kind)
+			if not multithreaded_mode or else a_feature.is_once_per_process then
+				current_file.put_string (c_ge_process_onces)
+			else
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_thread_onces)
+			end
+			current_file.put_string (c_arrow)
+			current_file.put_string (l_once_prefix)
+			current_file.put_string (c_exception_suffix)
+			current_file.put_character ('[')
+			current_file.put_integer (a_once_index)
+			current_file.put_character (']')
+		end
+
+	print_thread_safe_once_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once exception of `a_feature'.
+			-- `a_feature' is expected to be a once routine of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+			-- In case of once-per-process in multithreaded mode,
+			-- use the version cached in the current thread.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once: a_feature.is_once
+			a_feature_is_function: a_feature.is_function
+		local
+			l_once_prefix: STRING
+		do
+			l_once_prefix := once_prefixes.item (a_once_kind)
+			if multithreaded_mode then
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				if a_feature.is_once_per_process then
+					current_file.put_string (c_process_onces)
+				else
+					current_file.put_string (c_thread_onces)
+				end
+			else
+				current_file.put_string (c_ge_process_onces)
+			end
+			current_file.put_string (c_arrow)
+			current_file.put_string (l_once_prefix)
+			current_file.put_string (c_exception_suffix)
+			current_file.put_character ('[')
+			current_file.put_integer (a_once_index)
+			current_file.put_character (']')
+		end
+
 	print_assign_called_to_once_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to set the once status of `a_feature' to "called".
 			-- `a_feature' is expected to be a once routine of kind
@@ -29673,6 +29800,85 @@ feature {NONE} -- Once feature generation
 			current_file.put_character (' ')
 			print_once_value (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_assign_last_exception_to_once_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print code to set the once exception of `a_feature' to the last exception raised.
+			-- `a_feature' is expected to be a once routine of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once: a_feature.is_once
+		do
+			print_indentation
+			print_once_exception (a_feature, a_once_kind, a_once_index)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string (c_ge_last_exception_raised)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_assign_once_exception_to_thread_safe_once_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print code to set the version of once exception cached in
+			-- current thread to the non-cached version of once exception.
+			-- `a_feature' is expected to be a once routine of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once: a_feature.is_once
+		do
+			print_indentation
+			print_thread_safe_once_exception (a_feature, a_once_kind, a_once_index)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			print_once_exception (a_feature, a_once_kind, a_once_index)
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_raise_thread_safe_once_exception_if_any (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print code to raise the once exception if any.
+			-- `a_feature' is expected to be a once routine of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+			-- In case of once-per-process in multithreaded mode,
+			-- use the version cached in the current thread.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once: a_feature.is_once
+		do
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_thread_safe_once_exception (a_feature, a_once_kind, a_once_index)
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_ge_raise_once_exception)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			print_thread_safe_once_exception (a_feature, a_once_kind, a_once_index)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			print_indentation
+			current_file.put_character ('}')
 			current_file.put_new_line
 		end
 
@@ -34922,6 +35128,7 @@ feature {NONE} -- Constants
 	c_equal: STRING = "=="
 	c_exception_code: STRING = "exception_code"
 	c_exception_manager: STRING = "exception_manager"
+	c_exception_suffix: STRING = "_exception"
 	c_exception_tag: STRING = "exception_tag"
 	c_extern: STRING = "extern"
 	c_find_referers: STRING = "find_referers"
@@ -35011,6 +35218,9 @@ feature {NONE} -- Constants
 	c_ge_is_tuple_encoded_type: STRING = "GE_is_tuple_encoded_type"
 	c_ge_is_tuple_object: STRING = "GE_is_tuple_object"
 	c_ge_istr32_from_nstr: STRING = "GE_istr32_from_nstr"
+	c_ge_jump_to_last_rescue: STRING = "GE_jump_to_last_rescue"
+	c_ge_last_exception: STRING = "GE_last_exception"
+	c_ge_last_exception_raised: STRING = "GE_last_exception_raised"
 	c_ge_lock_marking: STRING = "GE_lock_marking"
 	c_ge_ma: STRING = "GE_ma"
 	c_ge_malloc: STRING = "GE_malloc"
@@ -35053,6 +35263,7 @@ feature {NONE} -- Constants
 	c_ge_object_id: STRING = "GE_object_id"
 	c_ge_object_id_free: STRING = "GE_object_id_free"
 	c_ge_object_size: STRING = "GE_object_size"
+	c_ge_once_raise: STRING = "GE_once_raise"
 	c_ge_persistent_field_count_of_encoded_type: STRING = "GE_persistent_field_count_of_encoded_type"
 	c_ge_pointer_field: STRING = "GE_pointer_field"
 	c_ge_pointer_field_at: STRING = "GE_pointer_field_at"
@@ -35060,6 +35271,7 @@ feature {NONE} -- Constants
 	c_ge_process_once_mutexes: STRING = "GE_process_once_mutexes"
 	c_ge_process_onces: STRING = "GE_process_onces"
 	c_ge_raise: STRING = "GE_raise"
+	c_ge_raise_once_exception: STRING = "GE_raise_once_exception"
 	c_ge_raw_object_at_offset: STRING = "GE_raw_object_at_offset"
 	c_ge_raw_reference_field_at: STRING = "GE_raw_reference_field_at"
 	c_ge_register_dispose: STRING = "GE_register_dispose"

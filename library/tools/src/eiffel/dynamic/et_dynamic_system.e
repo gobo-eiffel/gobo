@@ -1782,6 +1782,8 @@ feature {NONE} -- Compilation
 				end
 					-- Type "ISE_EXCEPTION_MANAGER".
 				ise_exception_manager_init_exception_manager_feature := Void
+				ise_exception_manager_last_exception_feature := Void
+				ise_exception_manager_once_raise_feature := Void
 				ise_exception_manager_set_exception_data_feature := Void
 				l_class_type := current_system.ise_exception_manager_type
 				l_class := l_class_type.base_class
@@ -1804,7 +1806,7 @@ feature {NONE} -- Compilation
 								error_handler.report_gvkfe4a_error (l_class, l_query)
 							else
 								set_fatal_error
-								error_handler.report_gvkfe1a_error (l_class, tokens.set_exception_data_feature_name)
+								error_handler.report_gvkfe1a_error (l_class, tokens.init_exception_manager_feature_name)
 							end
 						elseif attached l_procedure.arguments as l_formal_arguments and then l_formal_arguments.count /= 0 then
 							set_fatal_error
@@ -1813,6 +1815,46 @@ feature {NONE} -- Compilation
 							l_dynamic_feature := ise_exception_manager_type.dynamic_procedure (l_procedure, Current)
 							l_dynamic_feature.set_regular (True)
 							ise_exception_manager_init_exception_manager_feature := l_dynamic_feature
+						end
+							-- Check feature 'last_exception' of class "ISE_EXCEPTION_MANAGER".
+						if not attached l_class.named_query (tokens.last_exception_feature_name) as l_query then
+							if attached l_class.named_procedure (tokens.last_exception_feature_name) as l_procedure then
+								set_fatal_error
+								error_handler.report_gvkfe4a_error (l_class, l_procedure)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.last_exception_feature_name)
+							end
+						elseif attached l_query.arguments as l_formal_arguments and then l_formal_arguments.count /= 0 then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_query, Void, current_system.universe.detachable_exception_type)
+						elseif not l_query.type.type.same_named_type (current_system.universe.detachable_exception_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_query, Void, current_system.universe.detachable_exception_type)
+						else
+							l_dynamic_feature := ise_exception_manager_type.dynamic_query (l_query, Current)
+							l_dynamic_feature.set_regular (True)
+							ise_exception_manager_last_exception_feature := l_dynamic_feature
+						end
+							-- Check feature 'once_raise' of class "ISE_EXCEPTION_MANAGER".
+						if not attached l_class.named_procedure (tokens.once_raise_feature_name) as l_procedure then
+							if attached l_class.named_query (tokens.once_raise_feature_name) as l_query then
+								set_fatal_error
+								error_handler.report_gvkfe4a_error (l_class, l_query)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.once_raise_feature_name)
+							end
+						elseif not attached l_procedure.arguments as l_formal_arguments or else l_formal_arguments.count /= 1 then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.exception_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (1).type.same_named_type (current_system.universe.exception_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.exception_type.type>>, Void)
+						else
+							l_dynamic_feature := ise_exception_manager_type.dynamic_procedure (l_procedure, Current)
+							l_dynamic_feature.set_regular (True)
+							ise_exception_manager_once_raise_feature := l_dynamic_feature
 						end
 							-- Check feature 'set_exception_data' of class "ISE_EXCEPTION_MANAGER".
 						if not attached l_class.named_procedure (tokens.set_exception_data_feature_name) as l_procedure then
@@ -1991,6 +2033,12 @@ feature -- Features
 
 	ise_exception_manager_init_exception_manager_feature: detachable ET_DYNAMIC_FEATURE
 			-- Expected procedure 'init_exception_manager' in class "ISE_EXCEPTION_MANAGER"
+
+	ise_exception_manager_last_exception_feature: detachable ET_DYNAMIC_FEATURE
+			-- Expected procedure 'last_exception' in class "ISE_EXCEPTION_MANAGER"
+
+	ise_exception_manager_once_raise_feature: detachable ET_DYNAMIC_FEATURE
+			-- Expected procedure 'once_raise' in class "ISE_EXCEPTION_MANAGER"
 
 	ise_exception_manager_set_exception_data_feature: detachable ET_DYNAMIC_FEATURE
 			-- Expected procedure 'set_exception_data' in class "ISE_EXCEPTION_MANAGER"

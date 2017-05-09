@@ -341,36 +341,6 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_once: BOOLEAN
-			-- Is current feature a once feature?
-		do
-			-- Result := False
-		end
-
-	is_once_per_process: BOOLEAN
-			-- Is current feature a once-per-process feature?
-		do
-			-- Result := False
-		ensure
-			is_once: Result implies is_once
-		end
-
-	is_once_per_thread: BOOLEAN
-			-- Is current feature a once-per-thread feature?
-		do
-			-- Result := False
-		ensure
-			is_once: Result implies is_once
-		end
-
-	is_once_per_object: BOOLEAN
-			-- Is current feature a once-per-object feature?
-		do
-			-- Result := False
-		ensure
-			is_once: Result implies is_once
-		end
-
 	is_infixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'infix ...'?

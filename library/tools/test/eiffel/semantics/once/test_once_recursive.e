@@ -10,7 +10,7 @@ note
 		'Result' as it was when the recursive calls occurred.
 	]"
 
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,16 +33,16 @@ feature -- Test
 			-- says that the recursive calls to once-functions should return the value of
 			-- 'Result' as it was when the recursive calls occurred.
 		do
-			assert_integers_equal ("one", 1, f)
+			assert_integers_equal ("one", 1, f (1))
 		end
 
 feature -- Once function
 
-	f: INTEGER
+	f (i: INTEGER): INTEGER
 			-- Recursive once function
 		once
-			Result := 1
-			Result := f
+			Result := i
+			Result := f (i + 1)
 		end
 
 end

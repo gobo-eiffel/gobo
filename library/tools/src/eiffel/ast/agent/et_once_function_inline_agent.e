@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents with a once-function as associated feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,12 @@ class ET_ONCE_FUNCTION_INLINE_AGENT
 inherit
 
 	ET_INTERNAL_FUNCTION_INLINE_AGENT
+		undefine
+			is_once,
+			is_once_per_process,
+			is_once_per_thread,
+			is_once_per_object
+		end
 
 	ET_ONCE_ROUTINE_INLINE_AGENT
 		rename

@@ -172,17 +172,28 @@ extern void GE_init_exception(GE_context* context);
 extern void GE_free_exception(GE_context* a_context);
 
 /*
- * Pointer to function to create a new exception manager object.
+ * Pointer to function to create a new exception manager object
+ * (of type ISE_EXCEPTION_MANAGER).
  */
 extern EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
 
 /*
- * Pointer to Eiffel routine EXCEPTION_MANAGER.init_exception_manager.
+ * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.init_exception_manager.
  */
 extern void (*GE_init_exception_manager)(GE_context*, EIF_REFERENCE);
 
 /*
- * Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data.
+ * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.last_exception.
+ */
+extern EIF_REFERENCE (*GE_last_exception)(GE_context*, EIF_REFERENCE);
+
+/*
+ * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.once_raise.
+ */
+extern void (*GE_once_raise)(GE_context*, EIF_REFERENCE, EIF_REFERENCE);
+
+/*
+ * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.set_exception_data.
  */
 extern void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
 
@@ -205,6 +216,23 @@ extern void GE_raise_with_message(long a_code, const char* msg);
  * Raise an exception from EXCEPTION_MANAGER.
  */
 extern void GE_developer_raise(long a_code, char* a_meaning, char* a_message);
+
+/*
+ * Raise exception which was raised the first time a once routine
+ * was executed when executing it again.
+ */
+extern void GE_raise_once_exception(GE_context* a_context, EIF_REFERENCE a_exception);
+
+/*
+ * Exception, if any, which was last raised in `a_context'.
+ */
+extern EIF_REFERENCE GE_last_exception_raised(GE_context* a_context);
+
+/*
+ * Jump to execute the rescue of the last routine with a rescue
+ * in the call stack.
+ */
+extern void GE_jump_to_last_rescue(GE_context* a_context);
 
 /*
  * Set `in_assertion' to 'not b'.
