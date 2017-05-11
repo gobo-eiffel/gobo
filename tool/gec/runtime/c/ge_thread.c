@@ -1279,11 +1279,10 @@ static EIF_THR_TYPE GE_current_thread(void)
 }
 
 /*
- * Initialize context of current thread.
+ * Register context of current thread.
  */
-static void GE_init_thread_context(GE_context* a_context, GE_thread_context* a_thread_context)
+static void GE_register_thread_context(GE_context* a_context)
 {
-	a_thread_context->thread_id = GE_current_thread();
 	EIF_TSD_SET(GE_thread_context_key, a_context, "Cannot bind thread context to TSD.");
 }
 
@@ -1334,7 +1333,7 @@ static void* GE_thread_routine(void* arg)
 	l_context.thread = l_thread_context;
 	GE_thread_init_onces(&l_context);
 	GE_init_exception(&l_context);
-	GE_init_thread_context(&l_context, l_thread_context);
+	GE_register_thread_context(&l_context);
 	GE_thread_set_priority(l_thread_context->thread_id, l_thread_context->initial_priority);
 	l_thread_context->routine(l_thread_context->current);
 	GE_thread_exit();
@@ -1358,9 +1357,10 @@ void GE_init_thread(GE_context* a_context)
 	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
 	if (l_thread_context) {
 		a_context->thread = l_thread_context;
+		l_thread_context->thread_id = GE_current_thread();
 		l_thread_context->is_alive = 1;
 		GE_thread_init_onces(a_context);
-		GE_init_thread_context(a_context, l_thread_context);
+		GE_register_thread_context(a_context);
 	} else {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
 	}
@@ -1435,6 +1435,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				pthread_attr_setdetachstate(&l_attr, PTHREAD_CREATE_DETACHED);
 
 				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_thread_context) == 0) {
+					l_thread_context->thread_id = l_thread_id;
 					l_current_thread_context->last_thread_id = l_thread_id;
 					pthread_attr_destroy(&l_attr);
 				} else {
@@ -1460,6 +1461,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 			SIGRESUME;
 			GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 		} else {
+			l_thread_context->thread_id = l_thread_id;
 			l_current_thread_context->last_thread_id = l_thread_id;
 		}
 #else
