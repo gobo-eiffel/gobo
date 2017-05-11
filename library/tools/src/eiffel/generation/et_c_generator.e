@@ -6001,7 +6001,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
-				if exception_trace_mode then
+				if exception_trace_mode and then l_rescue /= Void then
 					print_indentation
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
