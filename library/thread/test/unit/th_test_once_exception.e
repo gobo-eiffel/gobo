@@ -37,6 +37,7 @@ feature -- Test
 			l_first_exception: detachable EXCEPTION
 			l_second_exception: detachable EXCEPTION
 		do
+			assert_true ("is_thread_capable", {PLATFORM}.is_thread_capable)
 			l_first_exception := f1_exception (1)
 			l_second_exception := f1_exception (2)
 			assert_true ("has_exception", l_first_exception /= Void)
@@ -51,6 +52,7 @@ feature -- Test
 			l_first_exception: detachable EXCEPTION
 			l_second_exception: detachable EXCEPTION
 		do
+			assert_true ("is_thread_capable", {PLATFORM}.is_thread_capable)
 			l_pair := run_functions_in_thread (agent f2_exception (1), agent f2_exception (2))
 			l_first_exception := l_pair.first
 			l_second_exception := l_pair.second
@@ -65,6 +67,7 @@ feature -- Test
 			l_first_exception: detachable EXCEPTION
 			l_second_exception: detachable EXCEPTION
 		do
+			assert_true ("is_thread_capable", {PLATFORM}.is_thread_capable)
 			l_first_exception := run_function_in_thread (agent f3_exception (1))
 			l_second_exception := run_function_in_thread (agent f3_exception (2))
 			assert_true ("has_exception", l_first_exception /= Void)
@@ -78,6 +81,7 @@ feature -- Test
 			l_first_exception: detachable EXCEPTION
 			l_second_exception: detachable EXCEPTION
 		do
+			assert_true ("is_thread_capable", {PLATFORM}.is_thread_capable)
 			l_first_exception := g1_exception (1)
 			l_second_exception := g1_exception (2)
 			assert_true ("has_exception", l_first_exception /= Void)
@@ -92,6 +96,7 @@ feature -- Test
 			l_first_exception: detachable EXCEPTION
 			l_second_exception: detachable EXCEPTION
 		do
+			assert_true ("is_thread_capable", {PLATFORM}.is_thread_capable)
 			l_pair := run_functions_in_thread (agent g2_exception (1), agent g2_exception (2))
 			l_first_exception := l_pair.first
 			l_second_exception := l_pair.second
@@ -106,13 +111,14 @@ feature -- Test
 			l_first_exception: detachable EXCEPTION
 			l_second_exception: detachable EXCEPTION
 		do
+			assert_true ("is_thread_capable", {PLATFORM}.is_thread_capable)
 			l_first_exception := run_function_in_thread (agent g3_exception (1))
 			l_second_exception := run_function_in_thread (agent g3_exception (2))
 			assert_true ("first_with_exception", l_first_exception /= Void)
 			assert_true ("second_without_exception", l_second_exception = Void)
 		end
 
-feature -- Once routines
+feature {NONE} -- Once routines
 
 	f1 (i: INTEGER): INTEGER
 			-- Once function raising an exception when `i' is 1
@@ -300,16 +306,18 @@ feature -- Once routines
 			end
 		end
 
+feature {NONE} -- Implementation
+
 	run_function_in_thread (a_agent: FUNCTION [detachable EXCEPTION]): detachable EXCEPTION
 			-- Execute `a_agent' in a thread and return the result
 		require
 			a_agent_not_void: a_agent /= Void
 		local
-			l_thread: MY_THREAD
+			l_thread: WORKER_THREAD
 			l_cell: DS_CELL [detachable EXCEPTION]
 		do
 			create l_cell.make (Void)
-			create l_thread.make_with_agent (agent put_result_in_cell (a_agent, l_cell))
+			create l_thread.make (agent put_result_in_cell (a_agent, l_cell))
 			l_thread.launch
 			l_thread.join
 			Result := l_cell.item
@@ -321,11 +329,11 @@ feature -- Once routines
 			a_agent1_not_void: a_agent1 /= Void
 			a_agent2_not_void: a_agent2 /= Void
 		local
-			l_thread: MY_THREAD
+			l_thread: WORKER_THREAD
 			l_pair: DS_PAIR [detachable EXCEPTION, detachable EXCEPTION]
 		do
 			create l_pair.make (Void, Void)
-			create l_thread.make_with_agent (agent put_results_in_pair (a_agent1, a_agent2, l_pair))
+			create l_thread.make (agent put_results_in_pair (a_agent1, a_agent2, l_pair))
 			l_thread.launch
 			l_thread.join
 			Result := l_pair

@@ -1,8 +1,8 @@
-class MY_THREAD4
+class MY_WORKER_THREAD3
 
 inherit
 
-	THREAD
+	WORKER_THREAD
 		rename
 			terminated as thread_terminated
 		end
@@ -15,12 +15,5 @@ feature -- Access
 
 	terminated: INTEGER
 			-- My attribute
-
-feature -- Basic operations
-
-	execute
-			-- <Precursor>
-		do
-		end
 
 end
