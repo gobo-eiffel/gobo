@@ -46,7 +46,7 @@ extern "C" {
 #define eif_thr_join_all()
 
 /* THREAD */
-#define eif_thr_create_with_attr(current_obj, init_func, attr)
+#define eif_thr_create_with_attr(current_obj, init_func, set_terminated_func, attr)
 #define eif_thr_wait(obj,get_terminated)
 #define eif_thr_wait_with_timeout(obj,get_terminated,tms) EIF_FALSE
 #define eif_thr_last_thread() NULL
