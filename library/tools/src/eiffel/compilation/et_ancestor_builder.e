@@ -5,7 +5,7 @@ note
 		"Eiffel class ancestor builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class
 		end
@@ -32,15 +32,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new ancestor builder for given classes.
 		do
-			precursor {ET_CLASS_PROCESSOR}
+			precursor (a_system_processor)
 			create class_sorter.make_default
 			create ancestors.make_map (10)
 			create conforming_ancestors.make_map (10)
-			create parent_checker.make
-			create formal_parameter_checker.make
+			create parent_checker.make (a_system_processor)
+			create formal_parameter_checker.make (a_system_processor)
 			create parent_context.make_with_capacity (current_class, 1)
 		end
 
@@ -62,7 +62,7 @@ feature -- Processing
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make
+				create a_processor.make (system_processor)
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
@@ -110,7 +110,7 @@ feature {NONE} -- Processing
 			old_class := current_class
 			current_class := a_class
 			if not current_class.ancestors_built then
-				current_class.process (current_system.eiffel_parser)
+				current_class.process (system_processor.eiffel_parser)
 				if not current_class.is_parsed or else current_class.has_syntax_error then
 					set_fatal_error (current_class)
 				else
@@ -124,7 +124,7 @@ feature {NONE} -- Processing
 								set_fatal_error (current_class)
 							else
 								current_class.set_ancestors_built
-								error_handler.report_compilation_status (Current, current_class)
+								error_handler.report_compilation_status (Current, current_class, system_processor)
 								set_ancestors
 								if not current_class.is_dotnet then
 										-- No need to check validity of .NET classes.
@@ -150,7 +150,7 @@ feature {NONE} -- Processing
 							end
 								-- Report the validity error VHPR-1.
 							current_class := a_cycle.first
-							error_handler.report_compilation_status (Current, current_class)
+							error_handler.report_compilation_status (Current, current_class, system_processor)
 							error_handler.report_vhpr1a_error (current_class, a_cycle)
 						else
 							class_sorter.wipe_out
@@ -192,7 +192,7 @@ feature {NONE} -- Topological sort
 				old_class := current_class
 				current_class := a_class
 				if not current_class.ancestors_built then
-					current_class.process (current_system.eiffel_parser)
+					current_class.process (system_processor.eiffel_parser)
 					if not current_class.is_parsed or else current_class.has_syntax_error then
 							-- This error has already been reported
 							-- somewhere else (during the parsing).
@@ -236,7 +236,7 @@ feature {NONE} -- Topological sort
 								end
 							else
 								l_any_class := current_universe.any_type.base_class
-								l_any_class.process (current_system.eiffel_parser)
+								l_any_class.process (system_processor.eiffel_parser)
 								if not l_any_class.is_preparsed then
 										-- Error: class "ANY" not in universe (VHAY, ETL2 p.88).
 										-- The validity error will be reported in `set_ancestors'

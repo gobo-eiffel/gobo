@@ -5,7 +5,7 @@ note
 		"Eiffel feature signature checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type,
@@ -36,10 +36,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new signature checker for features of given classes.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			create parent_context.make_with_capacity (current_class, 1)
 		end
 
@@ -237,7 +237,7 @@ feature {NONE} -- Signature validity
 						check_tuple_actual_parameters_unfolded (a_type, a_flattened_feature.implementation_class)
 						check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
 					end
-					l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class)
+					l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class, system_processor)
 				end
 				if not l_conforms then
 					set_fatal_error
@@ -333,7 +333,7 @@ feature {NONE} -- Signature validity
 							check_tuple_actual_parameters_unfolded (a_type, a_flattened_feature.implementation_class)
 							check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
 						end
-						l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class)
+						l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class, system_processor)
 					end
 					if not l_conforms then
 						set_fatal_error
@@ -422,7 +422,7 @@ feature {NONE} -- Signature validity
 						check_tuple_actual_parameters_unfolded (a_type, a_flattened_feature.implementation_class)
 						check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
 					end
-					l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class)
+					l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class, system_processor)
 				end
 				if not l_conforms then
 					set_fatal_error
@@ -486,7 +486,7 @@ feature {NONE} -- Signature validity
 							check_tuple_actual_parameters_unfolded (a_type, a_flattened_feature.implementation_class)
 							check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
 						end
-						l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class)
+						l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class, system_processor)
 					end
 					if not l_conforms then
 						set_fatal_error

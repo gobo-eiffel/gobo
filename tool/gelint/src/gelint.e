@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,6 +53,7 @@ feature -- Execution
 				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
 			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
+			create system_processor.make_null
 			is_flat_dbc := True
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
@@ -132,9 +133,9 @@ feature -- Execution
 							std.output.put_line ("Press Enter...")
 							io.read_line
 						end
-						if last_system.error_handler.has_eiffel_error then
+						if system_processor.error_handler.has_eiffel_error then
 							Exceptions.die (2)
-						elseif last_system.error_handler.has_internal_error then
+						elseif system_processor.error_handler.has_internal_error then
 							Exceptions.die (5)
 						end
 					else
@@ -168,6 +169,9 @@ feature -- Access
 
 	last_system: ET_SYSTEM
 			-- Last system parsed, if any
+
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 feature {NONE} -- Eiffel config file parsing
 
@@ -283,11 +287,13 @@ feature {NONE} -- Processing
 		local
 			a_dynamic_system: ET_DYNAMIC_SYSTEM
 			a_builder: ET_DYNAMIC_TYPE_SET_BUILDER
+			l_error_handler: ET_ERROR_HANDLER
 		do
---			a_system.error_handler.set_compilers
-			a_system.error_handler.set_ise
-			a_system.error_handler.set_verbose (is_verbose)
-			a_system.error_handler.set_benchmark_shown (not is_silent or is_verbose)
+			create l_error_handler.make_standard
+--			l_error_handler.set_compilers
+			l_error_handler.set_ise
+			l_error_handler.set_verbose (is_verbose)
+			l_error_handler.set_benchmark_shown (not is_silent or is_verbose)
 			if ise_version = Void then
 				ise_version := ise_latest
 			end
@@ -296,17 +302,19 @@ feature {NONE} -- Processing
 			a_system.set_flat_mode (is_flat)
 			a_system.set_flat_dbc_mode (is_flat_dbc)
 			a_system.set_unknown_builtin_reported (False)
+			system_processor.activate (a_system)
+			system_processor.set_error_handler (l_error_handler)
 			if is_catcall then
-				create a_dynamic_system.make (a_system)
+				create a_dynamic_system.make (a_system, system_processor)
 				a_dynamic_system.set_catcall_error_mode (True)
-				create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_dynamic_system)
+				create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_dynamic_system, system_processor)
 				a_dynamic_system.set_dynamic_type_set_builder (a_builder)
-				a_dynamic_system.compile
+				a_dynamic_system.compile (system_processor)
 			else
 				a_system.set_providers_enabled (True)
 				a_system.set_cluster_dependence_enabled (True)
 				a_system.set_use_cluster_dependence_pathnames (True)
-				a_system.compile
+				a_system.compile (system_processor)
 			end
 		end
 
@@ -351,5 +359,6 @@ feature -- Error handling
 invariant
 
 	error_handler_not_void: error_handler /= Void
+	system_processor_not_void: system_processor /= Void
 
 end

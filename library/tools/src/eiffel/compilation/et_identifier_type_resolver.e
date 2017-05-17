@@ -5,7 +5,7 @@ note
 		"Eiffel identifier type resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,8 +17,8 @@ inherit
 	ET_CLASS_SUBPROCESSOR
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type,
@@ -41,7 +41,7 @@ feature -- Access
 feature -- Type resolving
 
 	resolve_type (a_type: ET_TYPE; a_feature: detachable ET_FEATURE; a_class: ET_CLASS)
-			-- Resolve identifiers (such as 'like identifier') in type `a_type' 
+			-- Resolve identifiers (such as 'like identifier') in type `a_type'
 			-- when it appears in `a_feature' in `a_class'. Do not try to resolve
 			-- qualified anchored types. This is done after the
 			-- features of the corresponding classes have been

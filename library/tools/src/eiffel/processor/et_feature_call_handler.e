@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_across_expression,
 			process_across_instruction,
@@ -140,12 +140,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new feature call handler.
 		do
-			create expression_type_finder.make
+			precursor (a_system_processor)
+			create expression_type_finder.make (a_system_processor)
 			expression_type_finder.set_internal_error_enabled (internal_error_enabled)
-			current_class := tokens.unknown_class
 			current_type := current_class
 			current_feature := dummy_feature
 			current_feature_impl := dummy_feature.implementation_feature

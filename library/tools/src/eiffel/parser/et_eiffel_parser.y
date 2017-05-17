@@ -19,7 +19,8 @@ inherit
 		undefine
 			read_token
 		redefine
-			yyparse
+			yyparse,
+			system_processor
 		end
 
 	ET_EIFFEL_SCANNER
@@ -27,6 +28,8 @@ inherit
 			make as make_eiffel_scanner
 		undefine
 			reset, set_syntax_error
+		redefine
+			system_processor
 		end
 
 create
@@ -4257,6 +4260,11 @@ Add_counter: { add_counter }
 	
 --------------------------------------------------------------------------------
 %%
+
+feature -- Access
+
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 feature -- Parsing
 

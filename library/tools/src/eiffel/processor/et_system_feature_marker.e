@@ -142,8 +142,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new system feature marker.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			create used_features.make (500000)
 			create descendant_classes.make
@@ -153,7 +155,9 @@ feature {NONE} -- Initialization
 			create precursor_features.make
 			precursor_features.set_use_implementation_feature (True)
 			create marked_polymorphic_calls.make_map (50000)
-			make_feature_call_handler
+			make_feature_call_handler (a_system_processor)
+		ensure
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Processing

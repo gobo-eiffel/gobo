@@ -148,11 +148,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_dynamic_system)
+	make (a_system: like current_dynamic_system; a_system_processor: like system_processor)
 			-- Create a new C code generator.
+		require
+			a_system_not_void: a_system /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_buffer: STRING
 		do
+			system_processor := a_system_processor
 			current_dynamic_system := a_system
 			dynamic_types := a_system.dynamic_types
 			short_names := True
@@ -225,6 +229,9 @@ feature {NONE} -- Initialization
 			c_filenames.set_key_equality_tester (string_equality_tester)
 			make_rescue_data
 			make_external_regexps
+		ensure
+			current_dynamic_system_set: current_dynamic_system = a_system
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Access
@@ -242,12 +249,15 @@ feature -- Access
 	current_dynamic_system: ET_DYNAMIC_SYSTEM
 			-- Surrounding Eiffel dynamic system
 
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
+
 feature -- Error handling
 
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
-			Result := current_system.error_handler
+			Result := system_processor.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
 		end
@@ -11367,7 +11377,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					l_class_impl := current_feature.static_feature.implementation_class
 					if l_current_class /= l_class_impl then
 							-- Resolve generic parameters in the context of `current_type'.
-						l_current_class.process (current_system.ancestor_builder)
+						l_current_class.process (system_processor.ancestor_builder)
 						if not l_current_class.ancestors_built or else l_current_class.has_ancestors_error then
 								-- 'ancestor_builder' should already have been executed
 								-- on `l_current_class' at this stage, and any error
@@ -35435,6 +35445,7 @@ feature {NONE} -- Constants
 invariant
 
 	current_dynamic_system_not_void: current_dynamic_system /= Void
+	system_processor_not_void: system_processor /= Void
 	dynamic_types_not_void: dynamic_types /= Void
 	no_void_dynamic_type: not dynamic_types.has_void
 	current_file_not_void: current_file /= Void

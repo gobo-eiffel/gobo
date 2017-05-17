@@ -454,14 +454,15 @@ feature -- Measurement
 
 feature -- Export status
 
-	is_exported_to (a_client: ET_CLASS): BOOLEAN
+	is_exported_to (a_client: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is current feature exported to `a_client'?
-			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_client_not_void: a_client /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			Result := clients.has_descendant (a_client)
+			Result := clients.has_descendant (a_client, a_system_processor)
 		end
 
 	is_directly_exported_to (a_client: ET_CLASS): BOOLEAN
@@ -476,23 +477,24 @@ feature -- Export status
 			Result := clients.has_class (a_client)
 		end
 
-	is_creation_exported_to (a_client, a_class: ET_CLASS): BOOLEAN
+	is_creation_exported_to (a_client, a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is current feature listed in the creation clauses of `a_class'
 			-- and exported to `a_client', or is current feature the version of
 			-- 'default_create' in `a_class' with `a_class' being a non-deferred
 			-- class with no creation clauses?
-			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants. Also use
-			-- `current_system.feature_flattener' on `a_class' if needed to determine
+			-- `a_system_processor.feature_flattener' on `a_class' if needed to determine
 			-- whether current feature is the version of 'default_create' in `a_class'.)
 		require
 			a_client_not_void: a_client /= Void
 			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			if a_class.is_creation_exported_to (name, a_client) then
+			if a_class.is_creation_exported_to (name, a_client, a_system_processor) then
 				Result := True
 			elseif a_class.creators = Void and not a_class.is_deferred and a_class.is_preparsed then
-				a_class.process (a_class.current_system.feature_flattener)
+				a_class.process (a_system_processor.feature_flattener)
 				Result := has_seed (a_class.current_system.default_create_seed)
 			end
 		end

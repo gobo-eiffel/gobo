@@ -5,7 +5,7 @@ note
 		".NET assembly consumers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,25 +14,25 @@ deferred class ET_DOTNET_ASSEMBLY_CONSUMER
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_system)
+	make (a_system_processor: like system_processor)
 			-- Create a new assembly consumer.
 		require
-			a_system_not_void: a_system /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			current_system := a_system
+			system_processor := a_system_processor
 		ensure
-			current_system_set: current_system = a_system
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Access
 
-	current_system: ET_SYSTEM
-			-- Surrounding Eiffel system
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
-			Result := current_system.error_handler
+			Result := system_processor.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
 		end
@@ -81,6 +81,6 @@ feature {ET_DOTNET_ASSEMBLY} -- Consuming
 
 invariant
 
-	current_system_not_void: current_system /= Void
+	system_processor_not_void: system_processor /= Void
 
 end

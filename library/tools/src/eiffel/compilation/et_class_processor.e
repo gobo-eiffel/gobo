@@ -15,8 +15,8 @@ deferred class ET_CLASS_PROCESSOR
 inherit
 
 	ET_AST_PROCESSOR
-		redefine
-			make
+		rename
+			make as make_ast_processor
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -24,10 +24,15 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new processor for given classes.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			current_class := tokens.unknown_class
+			system_processor := a_system_processor
+		ensure
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Access
@@ -51,6 +56,9 @@ feature -- Access
 			current_system_not_void: Result /= Void
 		end
 
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
+
 feature -- Setting
 
 	set_current_class (a_class: like current_class)
@@ -68,7 +76,7 @@ feature -- Error handling
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
-			Result := current_system.error_handler
+			Result := system_processor.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
 		end
@@ -76,5 +84,6 @@ feature -- Error handling
 invariant
 
 	current_class_not_void: current_class /= Void
+	system_processor_not_void: system_processor /= Void
 
 end

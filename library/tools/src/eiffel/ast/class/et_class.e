@@ -185,7 +185,7 @@ feature -- Initialization
 			procedures.reset
 			if attached formal_parameters as l_formal_parameters then
 				l_formal_parameters.reset
-				create l_unfolded_tuple_actual_parameters_resolver.make
+				create l_unfolded_tuple_actual_parameters_resolver.make (tokens.null_system_processor)
 				nb := l_formal_parameters.count
 				from i := 1 until i > nb loop
 					if attached l_formal_parameters.formal_parameter (i).constraint as l_constraint then
@@ -197,7 +197,7 @@ feature -- Initialization
 			if attached parent_clauses as l_parent_clauses then
 				l_parent_clauses.reset
 				if l_unfolded_tuple_actual_parameters_resolver = Void then
-					create l_unfolded_tuple_actual_parameters_resolver.make
+					create l_unfolded_tuple_actual_parameters_resolver.make (tokens.null_system_processor)
 				end
 				nb := l_parent_clauses.count
 				from i := 1 until i > nb loop
@@ -1384,7 +1384,7 @@ feature -- Genericity
 			tuple_actual_parameters_unfolded_2 := True
 		end
 
-	resolve_unfolded_tuple_actual_parameters_2 (a_context, a_constraint_context: ET_TYPE_CONTEXT)
+	resolve_unfolded_tuple_actual_parameters_2 (a_context, a_constraint_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Second phase of Tuple-type-unfolding in actual parameters of current class type.
 			-- Perform transformations which require conformance checking:
 			-- * Resolve the case: "FOO [A, B, C]" -> "FOO [A, TUPLE [B], C]".
@@ -1758,17 +1758,18 @@ feature -- Ancestor building status
 
 feature -- Creation
 
-	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN
+	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is feature name listed in current creation clauses
 			-- and is it exported to `a_client'?
-			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_name_not_void: a_name /= Void
 			a_client_not_void: a_client /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if attached creators as l_creators then
-				Result := l_creators.is_exported_to (a_name, a_client)
+				Result := l_creators.is_exported_to (a_name, a_client, a_system_processor)
 			end
 		end
 
@@ -1788,16 +1789,19 @@ feature -- Creation
 			end
 		end
 
-	add_creations_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_FEATURE_NAME])
+	add_creations_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_FEATURE_NAME]; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Add to `a_set' the feature name of creation procedures which are
 			-- exported to `a_client'.
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes
+			-- whose ancestors need to be built in order to check for descendants.)
 		require
 			a_client_not_void: a_client /= Void
 			a_set_not_void: a_set /= Void
 			no_void_names: not a_set.has_void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if attached creators as l_creators then
-				l_creators.add_creations_exported_to (a_client, a_set)
+				l_creators.add_creations_exported_to (a_client, a_set, a_system_processor)
 			end
 		end
 

@@ -107,6 +107,7 @@ feature -- Argument parsing
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST
 			l_format: GEDOC_FORMAT
+			l_system_processor: ET_SYSTEM_PROCESSOR
 		do
 			create l_parser.make
 			l_parser.set_application_description ("Gobo Eiffel Doc, generate Eiffel documentation.")
@@ -173,9 +174,13 @@ feature -- Argument parsing
 				report_usage_message (l_parser)
 				Exceptions.die (1)
 			elseif not format_option.was_found or format_option.parameter ~ "pretty_print" then
-				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, error_handler)
+				create l_system_processor.make
+				l_system_processor.set_error_handler (error_handler)
+				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, l_system_processor)
 			elseif format_option.parameter ~ "html_ise_stylesheet" then
-				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, error_handler)
+				create l_system_processor.make
+				l_system_processor.set_error_handler (error_handler)
+				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, l_system_processor)
 			end
 			if l_format /= Void then
 				set_ise_version (ise_option, l_parser, l_format)
@@ -338,7 +343,7 @@ feature -- Argument parsing
 
 feature -- Error handling
 
-	error_handler: UT_ERROR_HANDLER
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
 	has_error: BOOLEAN

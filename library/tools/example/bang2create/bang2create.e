@@ -4,7 +4,7 @@ note
 
 		"Tool to replace !! creation instructions by create keywords"
 
-	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,6 +28,7 @@ feature -- Execution
 		local
 			a_system: ET_SYSTEM
 			an_ast_factory: ET_DECORATED_AST_FACTORY
+			l_system_processor: ET_SYSTEM_PROCESSOR
 			in_file: KL_TEXT_INPUT_FILE
 			out_file: KL_TEXT_OUTPUT_FILE
 			a_cluster: ET_XACE_CLUSTER
@@ -39,11 +40,13 @@ feature -- Execution
 			create error_handler.make_standard
 			read_arguments
 			create a_system.make ("system_name")
+			create l_system_processor.make_null
+			l_system_processor.activate (a_system)
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
-			a_system.set_ast_factory (an_ast_factory)
+			l_system_processor.set_ast_factory (an_ast_factory)
 			create a_cluster.make ("cluster_name", ".", a_system)
-			create a_parser.make
+			create a_parser.make (l_system_processor)
 			if in_filename.is_equal ("-") or in_filename.is_empty then
 				a_parser.parse_file (std.input, "stdin", a_time_stamp, a_cluster)
 			else

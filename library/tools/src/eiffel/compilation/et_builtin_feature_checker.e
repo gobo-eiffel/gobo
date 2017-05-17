@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_external_function,
 			process_external_procedure
@@ -41,11 +41,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create new built-in feature checker.
 		do
 			create builtin_features.make_map (100)
-			Precursor {ET_CLASS_SUBPROCESSOR}
+			Precursor (a_system_processor)
 		end
 
 feature -- Validity checking

@@ -107,7 +107,7 @@ feature -- Initialization
 			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed_and_errors))
 		end
 
-	reset_classes_incremental_recursive
+	reset_classes_incremental_recursive (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Reset parts of the classes (declared in current universe and recursively in universes
 			-- it depends on) which may not be valid anymore because of changes in other
 			-- classes. Re-processing these classes will not affect the parts which didn't
@@ -122,6 +122,8 @@ feature -- Initialization
 			-- to rebuild the feature table for this class. When the feature
 			-- table of a class has been rebuilt, we need to recheck the validity
 			-- of the feature calls in the clients of this class.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_ancestors_status_checker: ET_ANCESTORS_STATUS_CHECKER
 			l_flattening_status_checker: ET_FLATTENING_STATUS_CHECKER
@@ -178,16 +180,16 @@ feature -- Initialization
 				-- flag will be cleared.
 			classes_do_if_recursive (agent {ET_CLASS}.set_implementation_error, agent {ET_CLASS}.implementation_checked)
 				-- Reset ancestors building.
-			create l_ancestors_status_checker.make
+			create l_ancestors_status_checker.make (a_system_processor)
 			classes_do_if_recursive (agent l_ancestors_status_checker.process_class, agent {ET_CLASS}.ancestors_built)
 				-- Reset feature flattening.
-			create l_flattening_status_checker.make
+			create l_flattening_status_checker.make (a_system_processor)
 			classes_do_if_recursive (agent l_flattening_status_checker.process_class, agent {ET_CLASS}.features_flattened)
 				-- Reset interface checking.
-			create l_interface_status_checker.make
+			create l_interface_status_checker.make (a_system_processor)
 			classes_do_if_recursive (agent l_interface_status_checker.process_class, agent {ET_CLASS}.interface_checked)
 				-- Reset implementation checking.
-			create l_implementation_status_checker.make
+			create l_implementation_status_checker.make (a_system_processor)
 			classes_do_if_recursive (agent l_implementation_status_checker.process_class, agent {ET_CLASS}.implementation_checked)
 				-- Reset the modified status of all classes.
 			master_classes_do_recursive (agent {ET_MASTER_CLASS}.set_modified (False))
@@ -201,10 +203,12 @@ feature -- Initialization
 			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_errors))
 		end
 
-	reset_errors_recursive
+	reset_errors_recursive (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Reset classes (declared in current universe and recursively in universes
 			-- it depends on) as they were before their first error was reported.
 			-- Errors will be reported again if classes are processed again.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_reparse_needed: UT_TRISTATE
 		do
@@ -215,7 +219,7 @@ feature -- Initialization
 					-- Some classes which had a syntax error will be reparsed.
 					-- As a consequence, it is wiser to incrementally reset
 					-- the classes that depend on them.
-				reset_classes_incremental_recursive
+				reset_classes_incremental_recursive (a_system_processor)
 			end
 		end
 
@@ -2545,7 +2549,7 @@ feature -- Parsing
 			-- class names and their filenames, and that `master_classes' has been
 			-- populated, even if the classes have not been parsed yet.
 
-	preparse
+	preparse (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Build a mapping between class names and their filenames and
 			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -2560,13 +2564,15 @@ feature -- Parsing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			is_preparsed := True
 		ensure
 			preparsed: is_preparsed
 		end
 
-	preparse_recursive
+	preparse_recursive (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Build a mapping between class names and their filenames and
 			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -2581,14 +2587,16 @@ feature -- Parsing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			preparse
+			preparse (a_system_processor)
 			import_classes
 		ensure
 			preparsed: is_preparsed
 		end
 
-	parse_all
+	parse_all (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Parse all classes declared locally in the current universe.
 			-- There is no need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
@@ -2606,13 +2614,15 @@ feature -- Parsing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			is_preparsed := True
 		ensure
 			preparsed: is_preparsed
 		end
 
-	parse_all_recursive
+	parse_all_recursive (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
 			-- depends on. There is no need to call one of the preparse
@@ -2629,8 +2639,10 @@ feature -- Parsing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			parse_all
+			parse_all (a_system_processor)
 			import_classes
 		ensure
 			preparsed: is_preparsed

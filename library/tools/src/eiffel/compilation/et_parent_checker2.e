@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type,
@@ -34,10 +34,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new signature checker for features of  given classes.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			create constraint_context.make_with_capacity (current_class, 1)
 		end
 
@@ -144,14 +144,14 @@ feature {NONE} -- Parent validity
 							-- "LIST[ANY]", not just "LIST[G]". So, the constraint
 							-- needs to be handled in the correct type context.
 						constraint_context.set (a_type, current_class)
-						l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_class)
+						l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_class, system_processor)
 						if not l_conforms then
 							if a_class.tuple_constraint_position = i then
-								a_type.resolve_unfolded_tuple_actual_parameters_2 (current_class, constraint_context)
+								a_type.resolve_unfolded_tuple_actual_parameters_2 (current_class, constraint_context, system_processor)
 								if attached a_type.actual_parameters as l_actual_parameters and then l_actual_parameters /= an_actuals then
 									an_actuals := l_actual_parameters
 									an_actual := an_actuals.type (i)
-									l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_class)
+									l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_class, system_processor)
 								end
 							end
 						end

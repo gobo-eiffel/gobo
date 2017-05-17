@@ -5,7 +5,7 @@ note
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -827,10 +827,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
@@ -839,11 +839,12 @@ feature -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			Result := conforms_to_type_with_type_marks (other, Void, other_context, Void, a_context)
+			Result := conforms_to_type_with_type_marks (other, Void, other_context, Void, a_context, a_system_processor)
 		end
 
-	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Same as `conforms_to_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
@@ -853,17 +854,18 @@ feature -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
+			a_system_processor_not_void: a_system_processor /= Void
 		deferred
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
@@ -872,16 +874,17 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			-- Result := False
 		end
 
-	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
@@ -891,16 +894,17 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			-- Result := False
 		end
 
-	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
@@ -909,6 +913,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			-- Result := False
 		end

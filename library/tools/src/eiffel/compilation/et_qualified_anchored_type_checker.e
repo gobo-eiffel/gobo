@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type,
@@ -37,10 +37,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new qualified anchored type checker.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			current_class_impl := current_class
 		end
 
@@ -209,7 +209,7 @@ feature {NONE} -- Type validity
 			l_target_type.process (Current)
 			if not has_fatal_error then
 				l_class := l_target_type.base_class (current_class)
-				l_class.process (current_system.feature_flattener)
+				l_class.process (system_processor.feature_flattener)
 				if not l_class.features_flattened or else l_class.has_flattening_error then
 					set_fatal_error
 				else

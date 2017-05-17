@@ -5,7 +5,7 @@ note
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,9 +21,7 @@ inherit
 
 	ET_AST_NULL_PROCESSOR
 		rename
-			make as make_class_processor
-		undefine
-			make_class_processor
+			make as make_ast_processor
 		redefine
 			process_class
 		end
@@ -34,13 +32,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new implementation checker for given classes.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_feature_checker: ET_FEATURE_CHECKER
 		do
-			create l_feature_checker.make
+			create l_feature_checker.make (a_system_processor)
 			make_with_feature_checker (l_feature_checker)
+		ensure
+			system_processor_set: system_processor = a_system_processor
 		end
 
 	make_with_feature_checker (a_feature_checker: like feature_checker)
@@ -52,7 +54,7 @@ feature {NONE} -- Initialization
 		local
 			l_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
 		do
-			make_class_processor
+			make_class_processor (a_feature_checker.system_processor)
 			feature_checker := a_feature_checker
 			create precursor_procedures.make (10)
 			create precursor_queries.make (10)
@@ -136,7 +138,7 @@ feature -- Processing
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make
+				create a_processor.make (system_processor)
 				a_processor.set_flat_mode (flat_mode)
 				a_processor.set_flat_dbc_mode (flat_dbc_mode)
 				a_processor.set_short_mode (short_mode)
@@ -201,7 +203,7 @@ feature {NONE} -- Processing
 			current_class := a_class
 			if not current_class.implementation_checked then
 					-- Check interface of `current_class' if not already done.
-				current_class.process (current_system.interface_checker)
+				current_class.process (system_processor.interface_checker)
 				if current_class.interface_checked and then not current_class.has_interface_error then
 					current_class.set_implementation_checked
 						-- Process parents first.
@@ -228,7 +230,7 @@ feature {NONE} -- Processing
 						end
 						i1 := i1 + 1
 					end
-					error_handler.report_compilation_status (Current, current_class)
+					error_handler.report_compilation_status (Current, current_class, system_processor)
 					if suppliers_enabled then
 						l_suppliers := supplier_builder.supplier_classes
 						supplier_builder.set (current_class, l_suppliers)

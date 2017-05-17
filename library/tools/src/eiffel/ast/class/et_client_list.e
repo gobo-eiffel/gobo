@@ -5,7 +5,7 @@ note
 		"Eiffel comma-separated lists of clients"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,13 +67,14 @@ feature -- Status report
 			end
 		end
 
-	has_descendant (a_class: ET_CLASS): BOOLEAN
+	has_descendant (a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is `a_class' a descendant of any of classes in list?
 			-- True if `a_class' is "NONE", even if current list is empty.
-			-- (Note: Use `current_system.ancestor_builder' on the classes
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes
 			-- whose ancestors need to be built in order to check for descendants.)
 		require
 			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			i, nb: INTEGER
 		do
@@ -90,7 +91,7 @@ feature -- Status report
 					-- not even its filename.
 					--
 					-- Search ancestors of `a_class' first.
-				a_class.process (a_class.current_system.ancestor_builder)
+				a_class.process (a_system_processor.ancestor_builder)
 				if a_class.ancestors_built and then not a_class.has_ancestors_error then
 					nb := count - 1
 					from i := 0 until i > nb loop

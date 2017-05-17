@@ -133,35 +133,34 @@ feature -- Compilation report
 			end
 		end
 
-	report_compilation_status (a_processor: ET_AST_PROCESSOR; a_class: ET_CLASS)
+	report_compilation_status (a_processor: ET_AST_PROCESSOR; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Report that `a_processor' is currently processing `a_class'.
 		require
 			a_processor_not_void: a_processor /= Void
 			a_class_not_void: a_class /= Void
 			a_class_is_preparsed: a_class.is_preparsed
-		local
-			l_system: ET_SYSTEM
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if is_verbose then
 				if info_file /= Void then
-					l_system := a_class.current_system
-					if a_processor = l_system.eiffel_parser then
+					if a_processor = a_system_processor.eiffel_parser then
 						info_file.put_string ("Degree 5 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.ancestor_builder then
+					elseif a_processor = a_system_processor.ancestor_builder then
 						info_file.put_string ("Degree 4.3 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.feature_flattener then
+					elseif a_processor = a_system_processor.feature_flattener then
 						info_file.put_string ("Degree 4.2 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.interface_checker then
+					elseif a_processor = a_system_processor.interface_checker then
 						info_file.put_string ("Degree 4.1 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.implementation_checker then
-						info_file.put_string ("Degree 3 class ")
-						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.flat_implementation_checker then
-						info_file.put_string ("Degree 3 (flat) class ")
+					elseif a_processor = a_system_processor.implementation_checker then
+						if a_class.current_system.flat_mode then
+							info_file.put_string ("Degree 3 (flat) class ")
+						else
+							info_file.put_string ("Degree 3 class ")
+						end
 						info_file.put_line (a_class.upper_name)
 					end
 				end

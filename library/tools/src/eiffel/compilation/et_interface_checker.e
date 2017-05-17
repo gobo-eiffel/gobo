@@ -5,7 +5,7 @@ note
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class
 		end
@@ -34,20 +34,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new interface checker for given classes.
 		do
-			precursor {ET_CLASS_PROCESSOR}
+			precursor (a_system_processor)
 			create classes_to_be_processed.make (10)
-			create parent_checker3.make
+			create parent_checker3.make (a_system_processor)
 			parent_checker3.set_classes_to_be_processed (classes_to_be_processed)
-			create qualified_anchored_type_checker.make
+			create qualified_anchored_type_checker.make (a_system_processor)
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
-			create feature_adaptation_resolver.make
-			create dotnet_feature_adaptation_resolver.make
-			create signature_checker.make
-			create unfolded_tuple_actual_parameters_resolver.make
+			create feature_adaptation_resolver.make (a_system_processor)
+			create dotnet_feature_adaptation_resolver.make (a_system_processor)
+			create signature_checker.make (a_system_processor)
+			create unfolded_tuple_actual_parameters_resolver.make (a_system_processor)
 		end
 
 feature -- Processing
@@ -70,7 +70,7 @@ feature -- Processing
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make
+				create a_processor.make (system_processor)
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				if not a_class.interface_checked or else not a_class.has_interface_error then
@@ -126,7 +126,7 @@ feature {NONE} -- Processing
 			current_class := a_class
 			if not current_class.interface_checked then
 					-- Flatten features of `current_class' if not already done.
-				current_class.process (current_system.feature_flattener)
+				current_class.process (system_processor.feature_flattener)
 				if current_class.features_flattened and then not current_class.has_flattening_error then
 					current_class.set_interface_checked
 						-- Process parents first.
@@ -153,7 +153,7 @@ feature {NONE} -- Processing
 						i := i + 1
 					end
 					if not current_class.has_interface_error then
-						error_handler.report_compilation_status (Current, current_class)
+						error_handler.report_compilation_status (Current, current_class, system_processor)
 						check_qualified_anchored_signatures_validity
 						resolve_signatures_unfolded_tuple_actual_parameters
 						if not current_class.redeclared_signatures_checked then
@@ -413,7 +413,7 @@ feature {NONE} -- Constraint creation validity
 					a_class := current_universe.detachable_any_type.base_class
 				end
 					-- Build the feature table.
-				a_class.process (current_system.feature_flattener)
+				a_class.process (system_processor.feature_flattener)
 				if not a_class.features_flattened or else a_class.has_flattening_error then
 					set_fatal_error (current_class)
 				else

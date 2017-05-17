@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/06/22 $"
 	revision: "$Revision: #5 $"
@@ -161,13 +161,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new system feature marker.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			create used_features.make (500000)
 			used_features.set_equality_tester (targeted_feature_tester)
 			create descendants_cache.make (50000)
-			make_feature_call_handler
+			make_feature_call_handler (a_system_processor)
+		ensure
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Access

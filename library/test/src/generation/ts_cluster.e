@@ -5,7 +5,7 @@ note
 		"Test config clusters"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -134,15 +134,17 @@ feature -- Processing
 			a_cluster: ET_LACE_CLUSTER
 			a_clusters: ET_LACE_CLUSTERS
 			a_system: ET_LACE_SYSTEM
+			l_system_processor: ET_SYSTEM_PROCESSOR
 		do
 			create a_system.make ("test_generator")
-			a_system.set_error_handler (an_error_handler)
 			create a_cluster.make (name, pathname, a_system)
 			create a_clusters.make (a_cluster)
 			a_system.set_clusters (a_clusters)
 			a_system.set_default_keyword_usage
-			a_system.activate_processors
-			a_system.parse_all_recursive
+			create l_system_processor.make_null
+			l_system_processor.activate (a_system)
+			l_system_processor.set_error_handler (an_error_handler)
+			a_system.parse_all_recursive (l_system_processor)
 			a_system.classes_do_if_recursive (agent process_class (?, testcases), agent is_testcase_class)
 		end
 

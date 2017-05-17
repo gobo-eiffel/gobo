@@ -119,14 +119,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_dynamic_system)
+	make (a_system: like current_dynamic_system; a_system_processor: like system_processor)
 			-- Create a new dynamic type set builder.
 		require
 			a_system_not_void: a_system /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			current_dynamic_system := a_system
-			make_feature_checker
-			create feature_checker.make
+			make_feature_checker (a_system_processor)
+			create feature_checker.make (a_system_processor)
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
@@ -138,6 +139,7 @@ feature {NONE} -- Initialization
 			catcall_error_mode := True
 		ensure
 			current_dynamic_system_set: current_dynamic_system = a_system
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Factory
@@ -1251,7 +1253,7 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					l_source_type := l_source_type_set.static_type
-					if l_source_type.base_type.conforms_to_type (a_target_type, current_type, current_type) then
+					if l_source_type.base_type.conforms_to_type (a_target_type, current_type, current_type, system_processor) then
 -- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
 						set_dynamic_type_set (l_source_type_set, an_expression)
 					else

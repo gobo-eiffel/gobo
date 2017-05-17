@@ -23,6 +23,9 @@ inherit
 			has_type
 		end
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 	HASHABLE
 
 	DEBUG_OUTPUT
@@ -159,15 +162,13 @@ feature -- Conformance
 
 	conforms_to_type (other: ET_DYNAMIC_TYPE): BOOLEAN
 			-- Does current type conform to `other' type?
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
 		local
 			l_other_base_type: ET_BASE_TYPE
 		do
 			l_other_base_type := other.base_type
-			Result := base_type.conforms_to_type (l_other_base_type, l_other_base_type, base_type)
+			Result := base_type.conforms_to_type (l_other_base_type, l_other_base_type, base_type, tokens.null_system_processor)
 		end
 
 feature -- Status setting

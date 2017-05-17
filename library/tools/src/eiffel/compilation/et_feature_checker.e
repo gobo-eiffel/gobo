@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_across_expression,
 			process_across_instruction,
@@ -139,11 +139,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new feature validity checker.
 		do
-			create type_checker.make
-			current_class := tokens.unknown_class
+			precursor (a_system_processor)
+			create type_checker.make (a_system_processor)
 			current_type := current_class
 			current_feature := dummy_feature
 			current_feature_impl := dummy_feature.implementation_feature
@@ -162,7 +162,7 @@ feature {NONE} -- Initialization
 				-- Object-tests.
 			create current_object_test_types.make_map (50)
 			create current_object_test_scope.make
-			create object_test_scope_builder.make
+			create object_test_scope_builder.make (a_system_processor)
 				-- Across components.
 			create current_across_cursor_types.make_map (50)
 			create current_across_cursor_scope.make
@@ -279,7 +279,7 @@ feature -- Validity checking
 				old_class_impl := current_class_impl
 				current_class_impl := l_class_impl
 					-- First, make sure that the interface of `current_type' is valid.
-				current_class.process (current_system.interface_checker)
+				current_class.process (system_processor.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
 						-- The error should have already been reported.
 					set_fatal_error
@@ -406,7 +406,7 @@ feature -- Validity checking
 				old_in_precondition := in_precondition
 				in_precondition := True
 					-- First, make sure that the interface of `current_type' is valid.
-				current_class.process (current_system.interface_checker)
+				current_class.process (system_processor.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
 						-- The error should have already been reported.
 					set_fatal_error
@@ -535,7 +535,7 @@ feature -- Validity checking
 				old_in_postcondition := in_postcondition
 				in_postcondition := True
 					-- First, make sure that the interface of `current_type' is valid.
-				current_class.process (current_system.interface_checker)
+				current_class.process (system_processor.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
 						-- The error should have already been reported.
 					set_fatal_error
@@ -669,7 +669,7 @@ feature -- Validity checking
 				old_in_invariant := in_invariant
 				in_invariant := True
 					-- First, make sure that the interface of `current_type' is valid.
-				current_class.process (current_system.interface_checker)
+				current_class.process (system_processor.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
 						-- The error should have already been reported.
 					set_fatal_error
@@ -2513,7 +2513,7 @@ feature {NONE} -- Instruction validity
 							-- Determine the base class of the target in order to find
 							-- the feature of the call in this class.
 						l_target_base_class := l_target_context.base_class
-						l_target_base_class.process (current_system.interface_checker)
+						l_target_base_class.process (system_processor.interface_checker)
 						if not l_target_base_class.interface_checked or else l_target_base_class.has_interface_error then
 								-- There was an error when processing this class in
 								-- a previous compilation pass. The error was reported
@@ -2614,7 +2614,7 @@ feature {NONE} -- Instruction validity
 							-- Determine the base class of the target.
 							-- It has to be the class 'TUPLE'.
 						l_target_base_class := l_target_context.base_class
-						l_target_base_class.process (current_system.interface_checker)
+						l_target_base_class.process (system_processor.interface_checker)
 						if not l_target_base_class.interface_checked or else l_target_base_class.has_interface_error then
 								-- There was an error when processing this class in
 								-- a previous compilation pass. The error was reported
@@ -2681,7 +2681,7 @@ feature {NONE} -- Instruction validity
 					check_expression_validity (l_target, l_target_context, l_detachable_any_type)
 					if not has_fatal_error then
 						l_target_base_class := l_target_context.base_class
-						l_target_base_class.process (current_system.interface_checker)
+						l_target_base_class.process (system_processor.interface_checker)
 						if not l_target_base_class.interface_checked or else l_target_base_class.has_interface_error then
 							set_fatal_error
 						else
@@ -2712,7 +2712,7 @@ feature {NONE} -- Instruction validity
 								error_handler.report_vuta2a_error (current_class, current_class_impl, l_name, l_query, l_target_context.named_type)
 							end
 						end
-						if not l_query.is_exported_to (current_class) then
+						if not l_query.is_exported_to (current_class, system_processor) then
 								-- Report error: the feature is not exported to `current_class'.
 							set_fatal_error
 							error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, l_query, l_target_base_class)
@@ -2819,7 +2819,7 @@ feature {NONE} -- Instruction validity
 				if not has_fatal_error then
 						-- Both source and call have valid types. Check whether the type
 						-- of the source conforms or converts to the type of the call.
-					if not l_source_context.conforms_to_context (l_expected_type_context) then
+					if not l_source_context.conforms_to_context (l_expected_type_context, system_processor) then
 							-- The source does not conform to the call.
 							-- Try to find out whether it converts to it.
 						l_convert_expression := convert_expression (l_source, l_source_context, l_expected_type_context)
@@ -2920,7 +2920,7 @@ feature {NONE} -- Instruction validity
 						end
 					end
 				end
-				if not l_source_context.conforms_to_context (l_target_context) then
+				if not l_source_context.conforms_to_context (l_target_context, system_processor) then
 						-- The source does not conform to the target.
 						-- Try to find out whether it converts to it.
 -- TODO: do we need to check for the attachment status of the source and the target when using conversion?
@@ -3285,7 +3285,7 @@ feature {NONE} -- Instruction validity
 								end
 								l_class := l_creation_type.base_class (l_creation_context)
 								l_creation_context.force_last (l_creation_type)
-								l_class.process (current_system.interface_checker)
+								l_class.process (system_processor.interface_checker)
 								if not l_class.interface_checked or else l_class.has_interface_error then
 									set_fatal_error
 								else
@@ -3350,7 +3350,7 @@ feature {NONE} -- Instruction validity
 						end
 						l_class := l_creation_type.base_class (l_creation_context)
 						l_creation_context.force_last (l_creation_type)
-						l_class.process (current_system.interface_checker)
+						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						elseif l_seed /= 0 then
@@ -3369,7 +3369,7 @@ feature {NONE} -- Instruction validity
 				if l_explicit_creation_type /= Void then
 					l_explicit_creation_type_context := new_context (current_type)
 					l_explicit_creation_type_context.force_last (l_explicit_creation_type)
-					if not l_explicit_creation_type_context.conforms_to_context (l_target_context) then
+					if not l_explicit_creation_type_context.conforms_to_context (l_target_context, system_processor) then
 						set_fatal_error
 						l_creation_named_type := l_explicit_creation_type.named_type (current_type)
 						l_target_named_type := l_target_type.named_type (current_type)
@@ -3429,7 +3429,7 @@ feature {NONE} -- Instruction validity
 								error_handler.report_vgcc8b_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
 							end
 						end
-					elseif not l_procedure.is_creation_exported_to (current_class, l_class) then
+					elseif not l_procedure.is_creation_exported_to (current_class, l_class, system_processor) then
 							-- The procedure is not a creation procedure exported to `current_class',
 							-- and it is not the implicit creation procedure 'default_create'.
 						if current_class /= current_class_impl and current_class.is_deferred and l_creation_type.is_like_current then
@@ -4386,7 +4386,7 @@ feature {NONE} -- Instruction validity
 					check_expression_validity (l_target, l_context, current_system.detachable_any_type)
 					if not has_fatal_error then
 						l_class := l_context.base_class
-						l_class.process (current_system.interface_checker)
+						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						elseif l_class.is_dotnet then
@@ -4423,7 +4423,7 @@ feature {NONE} -- Instruction validity
 				check_expression_validity (l_target, l_context, current_system.detachable_any_type)
 				if not has_fatal_error then
 					l_class := l_context.base_class
-					l_class.process (current_system.interface_checker)
+					l_class.process (system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					elseif attached l_class.seeded_procedure (l_seed) as l_procedure then
@@ -4602,7 +4602,7 @@ feature {NONE} -- Instruction validity
 					else
 						l_context.force_last (l_type)
 						l_class := l_context.base_class
-						l_class.process (current_system.interface_checker)
+						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						elseif l_class.is_dotnet then
@@ -4637,7 +4637,7 @@ feature {NONE} -- Instruction validity
 						-- this expression was written.
 					l_context.force_last (l_type)
 					l_class := l_context.base_class
-					l_class.process (current_system.interface_checker)
+					l_class.process (system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					elseif attached l_class.seeded_procedure (l_seed) as l_procedure then
@@ -4734,7 +4734,7 @@ feature {NONE} -- Instruction validity
 			l_type := a_call.type
 			report_static_supplier (l_type, current_class, current_feature)
 				-- Check export status.
-			if not a_procedure.is_exported_to (current_class) then
+			if not a_procedure.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
 				error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, a_procedure, a_class)
@@ -5152,7 +5152,7 @@ feature {NONE} -- Expression validity
 			if has_fatal_error then
 				l_had_error := True
 				l_had_iterable_error := True
-			elseif not l_expression_context.conforms_to_type (l_iterable_type, current_class_impl) then
+			elseif not l_expression_context.conforms_to_type (l_iterable_type, current_class_impl, system_processor) then
 				l_had_error := True
 				l_had_iterable_error := True
 				set_fatal_error
@@ -5733,7 +5733,7 @@ feature {NONE} -- Expression validity
 									a_context.force_last (tokens.attached_like_current)
 								end
 							end
-							l_class.process (current_system.interface_checker)
+							l_class.process (system_processor.interface_checker)
 							if not l_class.interface_checked or else l_class.has_interface_error then
 								set_fatal_error
 							else
@@ -5806,7 +5806,7 @@ feature {NONE} -- Expression validity
 							a_context.force_last (tokens.attached_like_current)
 						end
 					end
-					l_class.process (current_system.interface_checker)
+					l_class.process (system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					elseif l_seed /= 0 then
@@ -5869,7 +5869,7 @@ feature {NONE} -- Expression validity
 									error_handler.report_vgcc8a_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
 								end
 							end
-						elseif not l_procedure.is_creation_exported_to (current_class, l_class) then
+						elseif not l_procedure.is_creation_exported_to (current_class, l_class, system_processor) then
 								-- The procedure is not a creation procedure exported to `current_class',
 								-- and it is not the implicit creation procedure 'default_create'.
 							if current_class /= current_class_impl and current_class.is_deferred and l_creation_type.is_like_current then
@@ -5969,9 +5969,9 @@ feature {NONE} -- Expression validity
 				if not has_fatal_error then
 					if current_class /= current_class_impl then
 						-- Possible convertibility should be resolved in the implementation class.
-					elseif l_left_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_right_context, tokens.attached_keyword) then
+					elseif l_left_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_right_context, tokens.attached_keyword, system_processor) then
 						-- OK.
-					elseif l_right_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_left_context, tokens.attached_keyword) then
+					elseif l_right_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_left_context, tokens.attached_keyword, system_processor) then
 						-- OK.
 					elseif l_left_context.same_named_type (current_system.detachable_none_type, current_type) then
 						-- OK: we can compare anything with 'Void'.
@@ -6255,7 +6255,7 @@ feature {NONE} -- Expression validity
 							-- Try to see if it is of the form '$feature_name'.
 -- TODO: I don't think we need to check the interface of `current_class' again.
 -- I guess that's already done in `check_feature_validity'.
-						current_class.process (current_system.interface_checker)
+						current_class.process (system_processor.interface_checker)
 						if not current_class.interface_checked or else current_class.has_interface_error then
 							set_fatal_error
 						else
@@ -6548,7 +6548,7 @@ feature {NONE} -- Expression validity
 						-- This is of the form '$feature_name'.
 -- TODO: I don't think we need to check the interface of `current_class' again.
 -- I guess that's already done in `check_feature_validity'.
-					current_class.process (current_system.interface_checker)
+					current_class.process (system_processor.interface_checker)
 					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
@@ -6767,7 +6767,7 @@ feature {NONE} -- Expression validity
 					check_expression_validity (l_target, a_context, l_detachable_any_type)
 					if not has_fatal_error then
 						l_class := a_context.base_class
-						l_class.process (current_system.interface_checker)
+						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						else
@@ -6809,7 +6809,7 @@ feature {NONE} -- Expression validity
 					check_expression_validity (l_target, a_context, l_detachable_any_type)
 					if not has_fatal_error then
 						l_class := a_context.base_class
-						l_class.process (current_system.interface_checker)
+						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						else
@@ -6833,7 +6833,7 @@ feature {NONE} -- Expression validity
 								error_handler.report_vuta2a_error (current_class, current_class_impl, l_name, l_query, a_context.named_type)
 							end
 						end
-						if not l_query.is_exported_to (current_class) then
+						if not l_query.is_exported_to (current_class, system_processor) then
 								-- The feature is not exported to `current_class'.
 							set_fatal_error
 							error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, l_query, l_class)
@@ -6856,7 +6856,7 @@ feature {NONE} -- Expression validity
 								l_formal := l_formals.formal_argument (1)
 								l_formal_context := a_context
 								l_formal_type := l_formal.type
-								if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context) then
+								if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context, system_processor) then
 										-- The actual argument does not conform to the formal argument.
 										-- Try to see if it converts to it.
 									if has_fatal_error then
@@ -6897,7 +6897,7 @@ feature {NONE} -- Expression validity
 								end
 								l_formal_context.remove_last
 								if not has_fatal_error then
-									if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context) then
+									if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context, system_processor) then
 											-- The actual argument does not conform to the formal argument.
 											-- Try to see if it converts to it.
 										if has_fatal_error then
@@ -7007,7 +7007,7 @@ feature {NONE} -- Expression validity
 							end
 							l_formal_context.remove_last
 							if not has_fatal_error then
-								if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context) then
+								if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context, system_processor) then
 										-- The actual argument does not conform to the formal argument.
 										-- Try to see if it converts to it.
 									l_formal_context.force_last (l_formal_type)
@@ -7038,7 +7038,7 @@ feature {NONE} -- Expression validity
 													-- same types.
 													-- Left-hand side type: `l_formal_context'
 													-- Right-hand side type: `l_actual_context'
-												other_class.process (current_system.interface_checker)
+												other_class.process (system_processor.interface_checker)
 												if other_class.interface_checked and then not other_class.has_interface_error then
 													other_query := other_class.named_query (l_name)
 													if other_query = Void then
@@ -7052,7 +7052,7 @@ feature {NONE} -- Expression validity
 												end
 											end
 											if other_query /= Void then
-												if other_query.is_exported_to (current_class) then
+												if other_query.is_exported_to (current_class, system_processor) then
 														-- There is an exported query with the same name in the
 														-- base class of the right-hand-side of the infix expression.
 														-- Now we need to find out whether it is possible to
@@ -7070,7 +7070,7 @@ feature {NONE} -- Expression validity
 													else
 															-- If the left-hand-side does not convert to the type
 															-- of the right-hand-side, it might conform!
-														if l_formal_context.conforms_to_context (l_actual_context) then
+														if l_formal_context.conforms_to_context (l_actual_context, system_processor) then
 															create l_cast_expression.make (l_target, l_actual_context.named_type)
 															l_cast_expression.set_index (l_target.index)
 														end
@@ -7086,7 +7086,7 @@ feature {NONE} -- Expression validity
 														other_formal := other_formals.formal_argument (1)
 -- TODO: should we check for convertibility if no conformance?
 -- Check what ECMA Eiffel says.
-														if l_actual_context.conforms_to_type (other_formal.type, l_actual_context) then
+														if l_actual_context.conforms_to_type (other_formal.type, l_actual_context, system_processor) then
 																-- The right-hand-side is a valid actual argument for
 																-- the replacement query. Let's do the substitution
 																-- and make as if there was no error in the first place.
@@ -7555,7 +7555,7 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						had_error := True
 					else
-						if l_array_type /= Void and then not l_expression_context.conforms_to_type (l_array_parameter, current_type) then
+						if l_array_type /= Void and then not l_expression_context.conforms_to_type (l_array_parameter, current_type, system_processor) then
 								-- The type of this item does not conform to the type of
 								-- the parameter of the expected array type. Try to see
 								-- if it converts to it.
@@ -7608,10 +7608,10 @@ feature {NONE} -- Expression validity
 								l_item_context := l_expression_context
 								l_expression_context := new_context (current_type)
 							elseif not hybrid_type then
-								if l_expression_context.conforms_to_context (l_item_context) then
+								if l_expression_context.conforms_to_context (l_item_context, system_processor) then
 										-- The type of the current item conforms to the type
 										-- retained so far. Keep the old type.
-								elseif l_item_context.conforms_to_context (l_expression_context) then
+								elseif l_item_context.conforms_to_context (l_expression_context, system_processor) then
 										-- The type retained so far conforms to the type of the
 										-- current item. Retain this new type.
 									l_old_item_context := l_item_context
@@ -7652,10 +7652,10 @@ feature {NONE} -- Expression validity
 							l_item_context := l_expression_context
 							l_expression_context := new_context (current_type)
 						elseif not hybrid_type then
-							if l_expression_context.conforms_to_context (l_item_context) then
+							if l_expression_context.conforms_to_context (l_item_context, system_processor) then
 									-- The type of the current item conforms to the type
 									-- retained so far. Keep the old type.
-							elseif l_item_context.conforms_to_context (l_expression_context) then
+							elseif l_item_context.conforms_to_context (l_expression_context, system_processor) then
 									-- The type retained so far conforms to the type of the
 									-- current item. Retain this new type.
 								l_old_item_context := l_item_context
@@ -8089,9 +8089,9 @@ feature {NONE} -- Expression validity
 				if not has_fatal_error then
 					if current_class /= current_class_impl then
 						-- Possible convertibility should be resolved in the implementation class.
-					elseif l_left_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_right_context, tokens.attached_keyword) then
+					elseif l_left_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_right_context, tokens.attached_keyword, system_processor) then
 						-- OK.
-					elseif l_right_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_left_context, tokens.attached_keyword) then
+					elseif l_right_context.conforms_to_context_with_type_marks (tokens.attached_keyword, l_left_context, tokens.attached_keyword, system_processor) then
 						-- OK.
 					elseif l_left_context.same_named_type (current_system.detachable_none_type, current_type) then
 						-- OK: we can compare anything with 'Void'.
@@ -8525,7 +8525,7 @@ feature {NONE} -- Expression validity
 					check_expression_validity (l_target, a_context, current_system.detachable_any_type)
 					if not has_fatal_error then
 						l_class := a_context.base_class
-						l_class.process (current_system.interface_checker)
+						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						elseif l_class.is_dotnet then
@@ -8587,7 +8587,7 @@ feature {NONE} -- Expression validity
 				check_expression_validity (l_target, a_context, current_system.detachable_any_type)
 				if not has_fatal_error then
 					l_class := a_context.base_class
-					l_class.process (current_system.interface_checker)
+					l_class.process (system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					elseif not l_class.is_tuple_class then
@@ -8607,7 +8607,7 @@ feature {NONE} -- Expression validity
 				check_expression_validity (l_target, a_context, current_system.detachable_any_type)
 				if not has_fatal_error then
 					l_class := a_context.base_class
-					l_class.process (current_system.interface_checker)
+					l_class.process (system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					elseif attached l_class.seeded_query (l_seed) as l_query then
@@ -8711,7 +8711,7 @@ feature {NONE} -- Expression validity
 				end
 			end
 				-- Check export status.
-			if not a_feature.is_exported_to (current_class) then
+			if not a_feature.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
 				error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, a_feature, a_class)
@@ -9262,7 +9262,7 @@ feature {NONE} -- Expression validity
 					else
 						a_context.force_last (l_type)
 						l_class := a_context.base_class
-						l_class.process (current_system.interface_checker)
+						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						elseif l_class.is_dotnet then
@@ -9299,7 +9299,7 @@ feature {NONE} -- Expression validity
 						-- this expression was written.
 					a_context.force_last (l_type)
 					l_class := a_context.base_class
-					l_class.process (current_system.interface_checker)
+					l_class.process (system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					elseif attached l_class.seeded_query (l_seed) as l_query then
@@ -9400,7 +9400,7 @@ feature {NONE} -- Expression validity
 			l_type := a_call.type
 			report_static_supplier (l_type, current_class, current_feature)
 				-- Check export status.
-			if not a_query.is_exported_to (current_class) then
+			if not a_query.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
 				error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, a_query, a_class)
@@ -9521,7 +9521,7 @@ feature {NONE} -- Expression validity
 					else
 -- TODO: I don't think we need to check the interface of `current_class' again.
 -- I guess that's already done in `check_feature_validity'.
-						current_class.process (current_system.interface_checker)
+						current_class.process (system_processor.interface_checker)
 						if not current_class.interface_checked or else current_class.has_interface_error then
 							set_fatal_error
 						elseif attached current_class.named_query (l_name) as l_query then
@@ -9555,7 +9555,7 @@ feature {NONE} -- Expression validity
 				if not had_error and not already_checked then
 -- TODO: I don't think we need to check the interface of `current_class' again.
 -- I guess that's already done in `check_feature_validity'.
-					current_class.process (current_system.interface_checker)
+					current_class.process (system_processor.interface_checker)
 					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
@@ -10028,7 +10028,7 @@ feature {NONE} -- Expression validity
 					else
 -- TODO: I don't think we need to check the interface of `current_class' again.
 -- I guess that's already done in `check_feature_validity'.
-						current_class.process (current_system.interface_checker)
+						current_class.process (system_processor.interface_checker)
 						if not current_class.interface_checked or else current_class.has_interface_error then
 							set_fatal_error
 						else
@@ -10123,7 +10123,7 @@ feature {NONE} -- Expression validity
 					l_client_class := l_client.base_class
 					if l_client_class.is_none then
 						-- "NONE" is a descendant of all classes.
-					elseif a_feature.is_exported_to (l_client_class) then
+					elseif a_feature.is_exported_to (l_client_class, system_processor) then
 						-- The feature is exported to `l_client'.
 					elseif l_feature_clients.has_class (current_universe.any_type.base_class) then
 						-- The feature is not exported to `l_client'.
@@ -10166,7 +10166,7 @@ feature {NONE} -- Expression validity
 					l_client_class := l_client.base_class
 					if l_client_class.is_none then
 						-- "NONE" is a descendant of all classes.
-					elseif a_feature.is_exported_to (l_client_class) then
+					elseif a_feature.is_exported_to (l_client_class, system_processor) then
 						-- The feature is exported to `l_client'.
 					elseif l_feature_clients.has_class (current_universe.any_type.base_class) then
 						-- The feature is not exported to `l_client'.
@@ -10362,7 +10362,7 @@ feature {NONE} -- Expression validity
 								end
 							end
 						end
-						if not l_actual_context.conforms_to_context (l_formal_context) then
+						if not l_actual_context.conforms_to_context (l_formal_context, system_processor) then
 								-- The actual type does not conform to the format type.
 								-- Try to find out whether it converts to it.
 							l_convert_expression := Void
@@ -10545,7 +10545,7 @@ feature {NONE} -- Parenthesis call validity
 		do
 			has_fatal_error := False
 			l_base_class := a_context.base_class
-			l_base_class.process (current_system.interface_checker)
+			l_base_class.process (system_processor.interface_checker)
 			if l_base_class.interface_checked and then not l_base_class.has_interface_error then
 					-- Look for a feature with 'alias "()"' in `l_base_class'.
 				create l_parenthesis.make
@@ -10602,7 +10602,7 @@ feature {NONE} -- Parenthesis call validity
 					a_context.force_last (a_query.type)
 					l_base_class := a_context.base_class
 					a_context.remove_last
-					l_base_class.process (current_system.interface_checker)
+					l_base_class.process (system_processor.interface_checker)
 					if l_base_class.interface_checked and then not l_base_class.has_interface_error then
 							-- Look for a feature with 'alias "()"' in `l_base_class'.
 						create l_parenthesis.make
@@ -10737,7 +10737,7 @@ feature {NONE} -- Parenthesis call validity
 				a_context.force_last (a_parent_query.type)
 				l_base_class := a_context.base_class
 				a_context.remove_last
-				l_base_class.process (current_system.interface_checker)
+				l_base_class.process (system_processor.interface_checker)
 				if l_base_class.interface_checked and then not l_base_class.has_interface_error then
 						-- Look for a feature with 'alias "()"' in `l_base_class'.
 					create l_parenthesis.make
@@ -10799,7 +10799,7 @@ feature {NONE} -- Parenthesis call validity
 				a_context.force_last (a_query.type)
 				l_base_class := a_context.base_class
 				a_context.remove_last
-				l_base_class.process (current_system.interface_checker)
+				l_base_class.process (system_processor.interface_checker)
 				if l_base_class.interface_checked and then not l_base_class.has_interface_error then
 						-- Look for a feature with 'alias "()"' in `l_base_class'.
 					create l_parenthesis.make
@@ -10898,7 +10898,7 @@ feature {NONE} -- Agent validity
 						error_handler.report_giaaa_error
 					end
 				else
-					current_class.process (current_system.interface_checker)
+					current_class.process (system_processor.interface_checker)
 					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
@@ -10937,7 +10937,7 @@ feature {NONE} -- Agent validity
 					end
 				end
 			elseif an_expression.is_procedure then
-				current_class.process (current_system.interface_checker)
+				current_class.process (system_processor.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
 					set_fatal_error
 				elseif not attached current_class.seeded_procedure (a_seed) as l_procedure then
@@ -10949,7 +10949,7 @@ feature {NONE} -- Agent validity
 				end
 			else
 					-- We still need to find `l_query'.
-				current_class.process (current_system.interface_checker)
+				current_class.process (system_processor.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
 					set_fatal_error
 				elseif not attached current_class.seeded_query (a_seed) as l_query then
@@ -11104,7 +11104,7 @@ feature {NONE} -- Agent validity
 							end
 						end
 						a_class := a_context.base_class
-						a_class.process (current_system.interface_checker)
+						a_class.process (system_processor.interface_checker)
 						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
@@ -11196,7 +11196,7 @@ feature {NONE} -- Agent validity
 						end
 					end
 					a_class := a_context.base_class
-					a_class.process (current_system.interface_checker)
+					a_class.process (system_processor.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then
 						set_fatal_error
 					elseif not a_class.is_tuple_class then
@@ -11220,7 +11220,7 @@ feature {NONE} -- Agent validity
 						end
 					end
 					a_class := a_context.base_class
-					a_class.process (current_system.interface_checker)
+					a_class.process (system_processor.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then
 						set_fatal_error
 					else
@@ -11247,7 +11247,7 @@ feature {NONE} -- Agent validity
 						end
 					end
 					a_class := a_context.base_class
-					a_class.process (current_system.interface_checker)
+					a_class.process (system_processor.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then
 						set_fatal_error
 					else
@@ -11302,7 +11302,7 @@ feature {NONE} -- Agent validity
 					error_handler.report_vuta2a_error (current_class, current_class_impl, a_name, a_query, a_context.named_type)
 				end
 			end
-			if not a_query.is_exported_to (current_class) then
+			if not a_query.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
 				error_handler.report_vpca2a_error (current_class, current_class_impl, a_name, a_query, a_context.base_class)
@@ -11375,7 +11375,7 @@ feature {NONE} -- Agent validity
 					error_handler.report_vuta2a_error (current_class, current_class_impl, a_name, a_procedure, a_context.named_type)
 				end
 			end
-			if not a_procedure.is_exported_to (current_class) then
+			if not a_procedure.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
 				error_handler.report_vpca2a_error (current_class, current_class_impl, a_name, a_procedure, a_context.base_class)
@@ -11511,7 +11511,7 @@ feature {NONE} -- Agent validity
 					else
 						a_context.force_last (a_target_type)
 						a_class := a_context.base_class
-						a_class.process (current_system.interface_checker)
+						a_class.process (system_processor.interface_checker)
 						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
@@ -11594,7 +11594,7 @@ feature {NONE} -- Agent validity
 				elseif a_name.is_tuple_label then
 					a_context.force_last (a_target_type)
 					a_class := a_context.base_class
-					a_class.process (current_system.interface_checker)
+					a_class.process (system_processor.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then
 						set_fatal_error
 					elseif not a_class.is_tuple_class then
@@ -11609,7 +11609,7 @@ feature {NONE} -- Agent validity
 				elseif an_expression.is_procedure then
 					a_context.force_last (a_target_type)
 					a_class := a_context.base_class
-					a_class.process (current_system.interface_checker)
+					a_class.process (system_processor.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then
 						set_fatal_error
 					elseif not attached a_class.seeded_procedure (a_seed) as l_procedure then
@@ -11625,7 +11625,7 @@ feature {NONE} -- Agent validity
 				else
 					a_context.force_last (a_target_type)
 					a_class := a_context.base_class
-					a_class.process (current_system.interface_checker)
+					a_class.process (system_processor.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then
 						set_fatal_error
 					elseif not attached a_class.seeded_query (a_seed) as l_query then
@@ -11672,7 +11672,7 @@ feature {NONE} -- Agent validity
 			a_name := an_expression.name
 			a_seed := a_name.seed
 			a_target_type := a_target.type
-			if not a_query.is_exported_to (current_class) then
+			if not a_query.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
 				error_handler.report_vpca2a_error (current_class, current_class_impl, a_name, a_query, a_context.base_class)
@@ -11741,7 +11741,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_seed := a_name.seed
-			if not a_procedure.is_exported_to (current_class) then
+			if not a_procedure.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
 				error_handler.report_vpca2a_error (current_class, current_class_impl, a_name, a_procedure, a_context.base_class)
@@ -12760,7 +12760,7 @@ feature {NONE} -- Agent validity
 										end
 									end
 								end
-								if not l_actual_context.conforms_to_context (l_formal_context) then
+								if not l_actual_context.conforms_to_context (l_formal_context, system_processor) then
 										-- The actual type does not conform to the format type.
 										-- Try to find out whether it converts to it.
 									l_convert_expression := convert_expression (l_actual, l_actual_context, l_formal_context)
@@ -12810,7 +12810,7 @@ feature {NONE} -- Agent validity
 							l_actual_type := l_agent_type.type
 							check_type_validity (l_actual_type)
 							if not has_fatal_error then
-								if not l_actual_type.conforms_to_type (l_formal.type, l_formal_context, current_type) then
+								if not l_actual_type.conforms_to_type (l_formal.type, l_formal_context, current_type, system_processor) then
 -- Note: VPCA-5 says nothing about type convertibility.
 									set_fatal_error
 									l_actual_named_type := l_actual_type.named_type (current_type)
@@ -13796,7 +13796,7 @@ feature {NONE} -- Conversion
 				if l_convert_feature /= Void then
 					if l_convert_feature.is_convert_from then
 						l_convert_class := a_target_type.base_class
-						l_convert_class.process (current_system.feature_flattener)
+						l_convert_class.process (system_processor.feature_flattener)
 						if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
 								-- Error already reported by the feature flattener.
 							set_fatal_error
@@ -13815,7 +13815,7 @@ feature {NONE} -- Conversion
 						end
 					elseif l_convert_feature.is_convert_to then
 						l_convert_class := a_source_type.base_class
-						l_convert_class.process (current_system.feature_flattener)
+						l_convert_class.process (system_processor.feature_flattener)
 						if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
 								-- Error already reported by the feature flattener.
 							set_fatal_error
@@ -14956,7 +14956,7 @@ feature {NONE} -- Overloading (useful in .NET)
 										l_best_overloaded_features.wipe_out
 										l_best_overloaded_features.force_last (l_feature1)
 									end
-								elseif l_actual_context.conforms_to_type (l_type1, a_target_context) then
+								elseif l_actual_context.conforms_to_type (l_type1, a_target_context, system_processor) then
 										-- The type of the actual argument conforms to
 										-- the type of the formal argument of `l_feature1'.
 									if l_same_type_mode then
@@ -14981,11 +14981,11 @@ feature {NONE} -- Overloading (useful in .NET)
 														-- If `l_feature2' is considered as one of the best choices,
 														-- `l_feature1' should be as well.
 													k := 0 -- Jump out of the loop.
-												elseif l_type2.conforms_to_type (l_type1, a_target_context, a_target_context) then
+												elseif l_type2.conforms_to_type (l_type1, a_target_context, a_target_context, system_processor) then
 														-- `l_feature2' is a better choice.
 													l_to_be_added := False
 													k := 0 -- Jump out of the loop.
-												elseif l_type1.conforms_to_type (l_type2, a_target_context, a_target_context) then
+												elseif l_type1.conforms_to_type (l_type2, a_target_context, a_target_context, system_processor) then
 														-- `l_feature1' is a better choice.
 													l_best_overloaded_features.remove (k)
 												end

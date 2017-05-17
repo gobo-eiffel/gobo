@@ -6,7 +6,7 @@ note
 		in clusters, or imported from libraries or .NET assemblies.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008-12-23 16:09:12 +0100 (Tue, 23 Dec 2008) $"
 	revision: "$Revision: 6570 $"
@@ -591,7 +591,7 @@ feature -- Actions
 
 feature -- Parsing
 
-	preparse
+	preparse (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Build a mapping between class names and their filenames and
 			-- populate `classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -609,7 +609,7 @@ feature -- Parsing
 		do
 			if not is_preparsed then
 				is_preparsed := True
-				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_preparser))
+				clusters.do_all (agent {ET_CLUSTER}.process (a_system_processor.eiffel_preparser))
 			elseif not is_read_only then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
@@ -618,11 +618,11 @@ feature -- Parsing
 					-- will give inconsistent results and will need to be rerun again.
 				master_classes_do_all (agent {ET_MASTER_CLASS}.reset_local_modified_classes)
 				master_classes_do_all (agent {ET_MASTER_CLASS}.remove_unknown_local_classes)
-				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_preparser))
+				clusters.do_all (agent {ET_CLUSTER}.process (a_system_processor.eiffel_preparser))
 			end
 		end
 
-	preparse_recursive
+	preparse_recursive (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Build a mapping between class names and their filenames and
 			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -646,10 +646,10 @@ feature -- Parsing
 			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.dotnet_assemblies_do_if (agent l_assembly_set.force_last, agent {ET_DOTNET_ASSEMBLY}.is_consumable))
 			create l_assemblies.make_empty
 			l_assembly_set.do_all (agent l_assemblies.put_last)
-			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse)
-			libraries.do_recursive (agent {ET_LIBRARY}.preparse)
-			preparse
+			a_system_processor.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse (a_system_processor))
+			libraries.do_recursive (agent {ET_LIBRARY}.preparse (a_system_processor))
+			preparse (a_system_processor)
 				-- Then for each universe, import classes from other universes.
 			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
 			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
@@ -657,11 +657,11 @@ feature -- Parsing
 				-- Reset incrementally all classes that may have been
 				-- affected by changes made above.
 			if classes_modified_recursive then
-				reset_classes_incremental_recursive
+				reset_classes_incremental_recursive (a_system_processor)
 			end
 		end
 
-	parse_all
+	parse_all (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Parse all classes declared locally in the current universe.
 			-- There is no need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
@@ -682,7 +682,7 @@ feature -- Parsing
 		do
 			if not is_preparsed then
 				is_preparsed := True
-				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_parser))
+				clusters.do_all (agent {ET_CLUSTER}.process (a_system_processor.eiffel_parser))
 			elseif not is_read_only then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
@@ -691,11 +691,11 @@ feature -- Parsing
 					-- will give inconsistent results and will need to be rerun again.
 				master_classes_do_all (agent {ET_MASTER_CLASS}.reset_local_modified_classes)
 				master_classes_do_all (agent {ET_MASTER_CLASS}.remove_unknown_local_classes)
-				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_parser))
+				clusters.do_all (agent {ET_CLUSTER}.process (a_system_processor.eiffel_parser))
 			end
 		end
 
-	parse_all_recursive
+	parse_all_recursive (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
 			-- depends on. There is no need to call one of the preparse
@@ -721,10 +721,10 @@ feature -- Parsing
 			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.dotnet_assemblies_do_if (agent l_assembly_set.force_last, agent {ET_DOTNET_ASSEMBLY}.is_consumable))
 			create l_assemblies.make_empty
 			l_assembly_set.do_all (agent l_assemblies.put_last)
-			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all)
-			libraries.do_recursive (agent {ET_LIBRARY}.parse_all)
-			parse_all
+			a_system_processor.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all (a_system_processor))
+			libraries.do_recursive (agent {ET_LIBRARY}.parse_all (a_system_processor))
+			parse_all (a_system_processor)
 				-- Then for each universe, import classes from other universes.
 			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
 			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
@@ -732,7 +732,7 @@ feature -- Parsing
 				-- Reset incrementally all classes that may have been
 				-- affected by changes made above.
 			if classes_modified_recursive then
-				reset_classes_incremental_recursive
+				reset_classes_incremental_recursive (a_system_processor)
 			end
 		end
 

@@ -27,10 +27,10 @@ feature {NONE} -- Processing
 			-- Otherwise use all classes in `a_system'.
 		do
 			if attached input_classes as l_input_classes then
-				l_input_classes.do_all (agent {ET_CLASS}.process (a_system.eiffel_parser))
+				l_input_classes.do_all (agent {ET_CLASS}.process (system_processor.eiffel_parser))
 				l_input_classes.do_all (agent pretty_print_class)
 			else
-				a_system.parse_all_recursive
+				a_system.parse_all_recursive (system_processor)
 				a_system.classes_do_unless_recursive (agent pretty_print_class, agent {ET_CLASS}.is_none)
 			end
 		end

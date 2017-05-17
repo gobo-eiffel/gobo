@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class
 		end
@@ -41,10 +41,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new feature flattener for given classes.
 		do
-			precursor {ET_CLASS_PROCESSOR}
+			precursor (a_system_processor)
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
 			create queries.make (400)
@@ -53,16 +53,16 @@ feature {NONE} -- Initialization
 			aliased_features.set_key_equality_tester (alias_name_tester)
 			create clients_list.make (20)
 			create client_classes.make_map (20)
-			create feature_adaptation_resolver.make
-			create dotnet_feature_adaptation_resolver.make
-			create identifier_type_resolver.make
-			create unfolded_tuple_actual_parameters_resolver.make
-			create anchored_type_checker.make
-			create signature_checker.make
-			create parent_checker.make
-			create formal_parameter_checker.make
-			create builtin_feature_checker.make
-			create precursor_checker.make
+			create feature_adaptation_resolver.make (a_system_processor)
+			create dotnet_feature_adaptation_resolver.make (a_system_processor)
+			create identifier_type_resolver.make (a_system_processor)
+			create unfolded_tuple_actual_parameters_resolver.make (a_system_processor)
+			create anchored_type_checker.make (a_system_processor)
+			create signature_checker.make (a_system_processor)
+			create parent_checker.make (a_system_processor)
+			create formal_parameter_checker.make (a_system_processor)
+			create builtin_feature_checker.make (a_system_processor)
+			create precursor_checker.make (a_system_processor)
 			create precursors.make_map (20)
 		end
 
@@ -97,7 +97,7 @@ feature -- Processing
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make
+				create a_processor.make (system_processor)
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
@@ -133,7 +133,7 @@ feature {NONE} -- Processing
 			current_class := a_class
 			if not current_class.features_flattened then
 					-- Build ancestors of `current_class' if not already done.
-				current_class.process (current_system.ancestor_builder)
+				current_class.process (system_processor.ancestor_builder)
 				if current_class.ancestors_built and then not current_class.has_ancestors_error then
 					current_class.set_features_flattened
 						-- Process parents first.
@@ -160,7 +160,7 @@ feature {NONE} -- Processing
 						i1 := i1 + 1
 					end
 					if not current_class.has_flattening_error then
-						error_handler.report_compilation_status (Current, current_class)
+						error_handler.report_compilation_status (Current, current_class, system_processor)
 							-- Check validity rules of the parents and of formal
 							-- generic parameters of `current_class'.
 						if not current_class.is_dotnet then
@@ -1978,7 +1978,7 @@ feature -- Assigner validity
 										-- formal argument of the assigner procedure conforms to the type of the query.
 										-- The conformance in the other direction is checked in the client code,
 										-- which is not what ECMA 367-2 suggests (see rules VFAC-3 and VBAC-1).
-									if not l_other_type.conforms_to_type (l_type, current_class, current_class) then
+									if not l_other_type.conforms_to_type (l_type, current_class, current_class, system_processor) then
 										set_fatal_error (current_class)
 										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 									end
@@ -2069,7 +2069,7 @@ feature -- Assigner validity
 										-- formal argument of the assigner procedure conforms to the type of the query.
 										-- The conformance in the other direction is checked in the client code,
 										-- which is not what ECMA 367-2 suggests (see rules VFAC-3 and VBAC-1).
-									if not l_other_type.conforms_to_type (l_type, current_class, current_class) then
+									if not l_other_type.conforms_to_type (l_type, current_class, current_class, system_processor) then
 										set_fatal_error (current_class)
 										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 									end

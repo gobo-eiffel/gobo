@@ -328,10 +328,10 @@ feature -- Comparison
 
 feature -- Conformance
 
-	conforms_to_types (other: ET_ACTUAL_PARAMETERS; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_to_types (other: ET_ACTUAL_PARAMETERS; other_context, a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does current actual parameters appearing in `a_context' conform
 			-- to `other' actual parameters appearing in `other_context'?
-			-- (Note: 'current_system.ancestor_builder' is used on classes on
+			-- (Note: 'a_system_processor.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		require
@@ -340,6 +340,7 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			i, nb: INTEGER
 		do
@@ -352,7 +353,7 @@ feature -- Conformance
 				Result := True
 				nb := count
 				from i := 1 until i > nb loop
-					if not type (i).conforms_to_type (other.type (i), other_context, a_context) then
+					if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_system_processor) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -362,12 +363,12 @@ feature -- Conformance
 			end
 		end
 
-	agent_conforms_to_types (a_tuple_position: INTEGER; other: ET_ACTUAL_PARAMETERS; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	agent_conforms_to_types (a_tuple_position: INTEGER; other: ET_ACTUAL_PARAMETERS; other_context, a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does current actual parameters (of an Agent type) appearing in `a_context'
 			-- conform to `other' actual parameters appearing in `other_context'?
 			-- Use SmartEiffel agent type conformance semantics, where the conformance
 			-- of the Tuple actual generic parameter is checked in the reverse order.
-			-- (Note: 'current_system.ancestor_builder' is used on classes on
+			-- (Note: 'a_system_processor.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		require
@@ -376,6 +377,7 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			i, nb: INTEGER
 		do
@@ -390,14 +392,14 @@ feature -- Conformance
 				from i := 1 until i > nb loop
 					if i = a_tuple_position then
 							-- Reverse conformance for the argument parameter.
-						if not other.type (i).conforms_to_type (type (i), a_context, other_context) then
+						if not other.type (i).conforms_to_type (type (i), a_context, other_context, a_system_processor) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else
 							i := i + 1
 						end
 					else
-						if not type (i).conforms_to_type (other.type (i), other_context, a_context) then
+						if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_system_processor) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -408,10 +410,10 @@ feature -- Conformance
 			end
 		end
 
-	tuple_conforms_to_types (other: ET_ACTUAL_PARAMETERS; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN
+	tuple_conforms_to_types (other: ET_ACTUAL_PARAMETERS; other_context, a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does current actual parameters (of a Tuple_type) appearing in `a_context'
 			-- conform to `other' actual parameters appearing in `other_context'?
-			-- (Note: 'current_system.ancestor_builder' is used on classes on
+			-- (Note: 'a_system_processor.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		require
@@ -420,6 +422,7 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			i, nb: INTEGER
 		do
@@ -430,7 +433,7 @@ feature -- Conformance
 				if nb <= count then
 					Result := True
 					from i := 1 until i > nb loop
-						if not type (i).conforms_to_type (other.type (i), other_context, a_context) then
+						if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_system_processor) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else

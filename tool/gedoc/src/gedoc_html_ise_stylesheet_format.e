@@ -50,13 +50,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_input_filename: STRING; a_error_handler: like error_handler)
+	make (a_input_filename: STRING; a_system_processor: like system_processor)
 			-- Create a new documentation format with `a_input_filename'.
-			-- Use error handler `a_error_handler'.
 		do
-			precursor (a_input_filename, a_error_handler)
+			precursor (a_input_filename, a_system_processor)
 			output_directory := "."
-			create html_printer.make_null
+			create html_printer.make_null (a_system_processor)
 			create line_splitter.make_with_separators ("%R%N")
 		end
 
@@ -101,23 +100,23 @@ feature {NONE} -- Processing
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			if not a_system.stop_requested and then a_system.error_handler.benchmark_shown then
+			if not system_processor.stop_requested and then system_processor.error_handler.benchmark_shown then
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			a_system.parse_all_recursive
-			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system.print_time (dt1, "Degree 5")
+			a_system.parse_all_recursive (system_processor)
+			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				system_processor.print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			a_system.compile_degree_4
-			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system.print_time (dt1, "Degree 4")
+			a_system.compile_degree_4 (system_processor)
+			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				system_processor.print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			a_system.compile_degree_3
-			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system.print_time (dt1, "Degree 3")
+			a_system.compile_degree_3 (system_processor)
+			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				system_processor.print_time (dt1, "Degree 3")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			l_root_path := ""
@@ -134,8 +133,8 @@ feature {NONE} -- Processing
 				l_root_path := "../"
 			end
 			l_universe_mapping.keys.do_all (agent print_universe_chart (?, l_class_chart_mapping, l_feature_mapping, l_root_path))
-			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system.print_time (dt1, "Group Charts")
+			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				system_processor.print_time (dt1, "Group Charts")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			nb := a_system.class_count_recursive
@@ -145,20 +144,20 @@ feature {NONE} -- Processing
 			create l_suppliers_classes.make_map (nb)
 			a_system.classes_do_recursive (agent build_class_relations (?, l_parent_classes, l_heir_classes, l_client_classes, l_suppliers_classes))
 			l_class_chart_mapping.keys.do_all (agent print_class_chart (?, l_parent_classes, l_universe_mapping, l_class_chart_mapping, l_feature_mapping, l_root_path))
-			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system.print_time (dt1, "Class Charts")
+			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				system_processor.print_time (dt1, "Class Charts")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			l_class_links_mapping := class_mapping ("_links", a_system, input_classes)
 			l_class_links_mapping.keys.do_all (agent print_class_links (?, l_parent_classes, l_heir_classes, l_client_classes, l_suppliers_classes, l_class_links_mapping, l_feature_mapping, l_root_path))
-			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system.print_time (dt1, "Class Relations")
+			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				system_processor.print_time (dt1, "Class Relations")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			l_class_mapping := class_mapping ("", a_system, input_classes)
 			l_class_mapping.keys.do_all (agent print_class_text (?, l_class_mapping, l_feature_mapping, l_root_path))
-			if not a_system.stop_requested and then dt1 /= Void then
-				a_system.print_time (dt1, "Class Texts")
+			if not system_processor.stop_requested and then dt1 /= Void then
+				system_processor.print_time (dt1, "Class Texts")
 			end
 		end
 
@@ -857,7 +856,7 @@ feature {NONE} -- Output
 			end
 			l_feature_name_set := new_feature_name_set (20)
 			l_any := a_class.current_system.any_type.base_class
-			a_class.add_creations_exported_to (l_any, l_feature_name_set)
+			a_class.add_creations_exported_to (l_any, l_feature_name_set, system_processor)
 			nb := l_feature_name_set.count
 			if nb > 0 then
 				a_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eitag)
@@ -933,7 +932,7 @@ feature {NONE} -- Output
 			if nb > 0 then
 				l_any := a_features.first.implementation_class.current_system.any_type.base_class
 				l_feature_list := new_feature_list (nb)
-				a_features.add_user_defined_features_exported_to (l_any, l_feature_list)
+				a_features.add_user_defined_features_exported_to (l_any, l_feature_list, system_processor)
 				nb := l_feature_list.count
 				if nb > 0 then
 					a_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)

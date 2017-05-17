@@ -40,12 +40,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING)
+	make (a_filename: STRING; a_system_processor: like system_processor)
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: not a_filename.is_empty
+			a_system_processor_not_void: a_system_processor /= Void
 		do
+			system_processor := a_system_processor
 			make_with_buffer (Empty_buffer)
 			last_text_count := 1
 			last_literal_start := 1
@@ -56,6 +58,7 @@ feature {NONE} -- Initialization
 			verbatim_close_white_characters := no_verbatim_marker
 		ensure
 			filename_set: filename = a_filename
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Initialization
@@ -107,10 +110,13 @@ feature -- Access
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
 		do
-			Result := current_system.ast_factory
+			Result := system_processor.ast_factory
 		ensure
 			ast_factory_not_void: Result /= Void
 		end
+
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 feature -- Status report
 
@@ -162,7 +168,7 @@ feature -- Error handling
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
-			Result := current_system.error_handler
+			Result := system_processor.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
 		end
@@ -3936,5 +3942,6 @@ invariant
 	last_literal_start_large_enough: last_literal_start >= 1
 	last_literal_start_small_enough: last_literal_start <= last_literal_end + 1
 	last_literal_end_small_enough: last_literal_end <= text_count
+	system_processor_not_void: system_processor /= Void
 
 end

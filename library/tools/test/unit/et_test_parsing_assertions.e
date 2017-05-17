@@ -5,7 +5,7 @@ note
 		"Test the Eiffel parser when parsing assertions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,6 +60,7 @@ feature {NONE} -- Implementation
 		local
 			l_system: ET_SYSTEM
 			l_ast_factory: ET_DECORATED_AST_FACTORY
+			l_system_processor: ET_SYSTEM_PROCESSOR
 			l_group: ET_TEXT_GROUP
 			l_class: ET_CLASS
 			l_identifier: ET_IDENTIFIER
@@ -69,16 +70,17 @@ feature {NONE} -- Implementation
 			create l_system.make ("test_system")
 			create l_ast_factory.make
 			l_ast_factory.set_keep_all_breaks (True)
-			l_system.set_ast_factory (l_ast_factory)
 			l_system.set_default_keyword_usage
-			l_system.activate_processors
+			create l_system_processor.make_null
+			l_system_processor.activate (l_system)
+			l_system_processor.set_ast_factory (l_ast_factory)
 			create l_group.make ("text_group", l_system)
 			create l_identifier.make (a_class_name)
 			create l_class.make (l_identifier)
 			l_class.set_time_stamp (-1)
 			l_class.set_group (l_group)
 			l_group.set_class_text (a_class_text, l_class)
-			l_class.process (l_class.current_system.eiffel_parser)
+			l_class.process (l_system_processor.eiffel_parser)
 			assert (a_class_name + "_parsed", l_class.is_parsed)
 			assert (a_class_name + "_no_syntax_error", not l_class.has_syntax_error)
 			create l_printer.make_null

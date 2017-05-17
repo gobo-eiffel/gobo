@@ -5,7 +5,7 @@ note
 		"Eiffel provider checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2013/09/19 $"
 	revision: "$Revision: #1 $"
@@ -17,8 +17,8 @@ inherit
 	ET_CLASS_PROCESSOR
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class
 		end
@@ -41,7 +41,7 @@ feature -- Processing
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make
+				create a_processor.make (system_processor)
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
@@ -77,9 +77,9 @@ feature {NONE} -- Processing
 			old_class := current_class
 			current_class := a_class
 				-- Parse of `current_class' if not already done.
-			current_class.process (current_system.eiffel_parser)
+			current_class.process (system_processor.eiffel_parser)
 			if current_class.is_parsed and then not current_class.has_syntax_error then
-				error_handler.report_compilation_status (Current, current_class)
+				error_handler.report_compilation_status (Current, current_class, system_processor)
 				check_cluster_dependence_constraints
 			else
 				set_fatal_error (current_class)

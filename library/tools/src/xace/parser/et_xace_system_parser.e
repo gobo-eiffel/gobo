@@ -85,8 +85,6 @@ feature {NONE} -- Xace AST factory
 	new_system (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): ET_XACE_SYSTEM
 			-- New Eiffel system build from `an_element'
 		local
-			l_error_handler: ET_ERROR_HANDLER
-			l_factory: ET_AST_FACTORY
 			l_externals: ET_XACE_EXTERNALS
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
@@ -103,10 +101,6 @@ feature {NONE} -- Xace AST factory
 					-- The Xace file is not valid.
 				create Result.make ("*unknown*")
 			end
-			l_factory := new_eiffel_ast_factory
-			Result.set_ast_factory (l_factory)
-			l_error_handler := new_eiffel_error_handler
-			Result.set_error_handler (l_error_handler)
 			fill_system (Result, an_element, a_position_table, Result)
 			Result.mount_libraries
 			create l_externals.make
@@ -148,60 +142,6 @@ feature {NONE} -- Xace AST factory
 				Result.set_use_boehm_gc (False)
 				Result.set_multithreaded_mode (False)
 			end
-		end
-
-feature {NONE} -- Eiffel AST factory
-
-	new_eiffel_ast_factory: ET_AST_FACTORY
-			-- New Eiffel AST factory
-		do
-			if attached eiffel_ast_factory as l_eiffel_ast_factory then
-				Result := l_eiffel_ast_factory
-			else
-				create Result.make
-			end
-		ensure
-			eiffel_ast_factory_not_void: Result /= Void
-		end
-
-	new_eiffel_error_handler: ET_ERROR_HANDLER
-			-- New Eiffel error handler for Eiffel parser
-		do
-			if attached eiffel_error_handler as l_eiffel_error_handler then
-				Result := l_eiffel_error_handler
-			else
-				create Result.make_standard
-			end
-		ensure
-			eiffel_error_handler_not_void: Result /= Void
-		end
-
-feature -- Configuration
-
-	eiffel_ast_factory: detachable ET_AST_FACTORY
-			-- Return this AST factory in `new_eiffel_ast_factory'
-			-- if not void
-
-	eiffel_error_handler: detachable ET_ERROR_HANDLER
-			-- Return this error handler in `new_eiffel_error handler'
-			-- if not void
-
-feature -- Configuration setting
-
-	set_eiffel_ast_factory (a_factory: like eiffel_ast_factory)
-			-- Set `eiffel_ast_factory' to `a_factory'.
-		do
-			eiffel_ast_factory := a_factory
-		ensure
-			eiffel_ast_factory_set: eiffel_ast_factory = a_factory
-		end
-
-	set_eiffel_error_handler (a_handler: like eiffel_error_handler)
-			-- Set `eiffel_error_handler' to `a_handler'.
-		do
-			eiffel_error_handler := a_handler
-		ensure
-			eiffel_error_handler_set: eiffel_error_handler = a_handler
 		end
 
 end

@@ -5,7 +5,7 @@ note
 		"Lace Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,60 +88,6 @@ feature -- AST factory
 			create Result.make (a_name)
 		ensure
 			system_not_void: Result /= Void
-		end
-
-feature -- Eiffel AST factory
-
-	new_ast_factory: ET_AST_FACTORY
-			-- New Eiffel AST factory
-		do
-			if attached ast_factory as l_ast_factory then
-				Result := l_ast_factory
-			else
-				create Result.make
-			end
-		ensure
-			ast_factory_not_void: Result /= Void
-		end
-
-	new_error_handler: ET_ERROR_HANDLER
-			-- New error handler for Eiffel parser
-		do
-			if attached error_handler as l_error_handler then
-				Result := l_error_handler
-			else
-				create Result.make_standard
-			end
-		ensure
-			error_handler_not_void: Result /= Void
-		end
-
-feature -- Configuration
-
-	ast_factory: detachable ET_AST_FACTORY
-			-- Return this AST factory in `new_ast_factory'
-			-- if not void
-
-	error_handler: detachable ET_ERROR_HANDLER
-			-- Return this error handler in `new_error handler'
-			-- if not void
-
-feature -- Configuration setting
-
-	set_ast_factory (a_factory: like ast_factory)
-			-- Set `ast_factory' to `a_factory'.
-		do
-			ast_factory := a_factory
-		ensure
-			ast_factory_set: ast_factory = a_factory
-		end
-
-	set_error_handler (a_handler: like error_handler)
-			-- Set `error_handler' to `a_handler'.
-		do
-			error_handler := a_handler
-		ensure
-			error_handler_set: error_handler = a_handler
 		end
 
 end

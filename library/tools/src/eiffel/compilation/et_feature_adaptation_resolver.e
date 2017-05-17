@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		end
 
 	ET_SHARED_CALL_NAME_TESTER
@@ -36,10 +36,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new feature adaptation resolver for given classes.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			create rename_table.make_map (10)
 			rename_table.set_key_equality_tester (call_name_tester)
 			create export_table.make (10)

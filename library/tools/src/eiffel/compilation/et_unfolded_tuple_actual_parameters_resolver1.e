@@ -5,7 +5,7 @@ note
 		"Tuple-type-unfolding type resolvers, phase 1 (and phase 2 when no identifier anchored types are involved)."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class_type,
 			process_qualified_like_type,
@@ -35,10 +35,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new Tuple-type-unfolding resolver for types of given classes.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			create constraint_context.make_with_capacity (current_class, 1)
 		end
 
@@ -102,7 +102,7 @@ feature {NONE} -- Tuple-type-unfolding
 				end
 			end
 			l_base_class := a_type.base_class
-			l_base_class.process (current_system.eiffel_parser)
+			l_base_class.process (system_processor.eiffel_parser)
 			a_type.resolve_unfolded_tuple_actual_parameters_1 (current_universe)
 			if not a_type.tuple_actual_parameters_unfolded_2 then
 				l_tuple_constraint_position := l_base_class.tuple_constraint_position
@@ -110,7 +110,7 @@ feature {NONE} -- Tuple-type-unfolding
 					an_actual := an_actuals.type (l_tuple_constraint_position)
 					if not an_actual.has_identifier_anchored_type then
 						constraint_context.set (a_type, current_class)
-						a_type.resolve_unfolded_tuple_actual_parameters_2 (current_class, constraint_context)
+						a_type.resolve_unfolded_tuple_actual_parameters_2 (current_class, constraint_context, system_processor)
 					end
 				end
 			end

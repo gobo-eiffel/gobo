@@ -5,7 +5,7 @@ note
 		"Eiffel parent validity third pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type
@@ -33,10 +33,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new parent third pass checker.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			create classes_to_be_processed.make (0)
 		end
 
@@ -142,7 +142,7 @@ feature {NONE} -- Parent validity
 							if nb2 > 0 then
 									-- Note that we already checked in ET_PARENT_CHECKER1 that
 									-- `an_actual_class' had to be preparsed.
-								an_actual_class.process (current_system.feature_flattener)
+								an_actual_class.process (system_processor.feature_flattener)
 								if not an_actual_class.features_flattened or else an_actual_class.has_flattening_error then
 									set_fatal_error
 								else
@@ -168,7 +168,7 @@ feature {NONE} -- Parent validity
 												a_constraint_class := a_class.universe.detachable_any_type.base_class
 											end
 												-- Build the feature table.
-											a_constraint_class.process (current_system.feature_flattener)
+											a_constraint_class.process (system_processor.feature_flattener)
 											if not a_constraint_class.features_flattened or else a_constraint_class.has_flattening_error then
 												a_constraint_error := True
 											else
@@ -203,7 +203,7 @@ feature {NONE} -- Parent validity
 														error_handler.report_vtcg4b_error (current_class, current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
 													end
 												end
-											elseif not a_creation_procedure.is_creation_exported_to (a_class, an_actual_class) then
+											elseif not a_creation_procedure.is_creation_exported_to (a_class, an_actual_class, system_processor) then
 												set_fatal_error
 												error_handler.report_vtcg4a_error (current_class, current_class, a_type.position, i, a_name, an_actual_class, a_class)
 											end

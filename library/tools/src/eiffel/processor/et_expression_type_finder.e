@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_across_expression,
 			process_binary_integer_constant,
@@ -87,11 +87,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new feature validity checker.
 		do
-			create type_checker.make
-			current_class := tokens.unknown_class
+			precursor (a_system_processor)
+			create type_checker.make (a_system_processor)
 			current_type := current_class
 			current_feature := dummy_feature
 			current_feature_impl := dummy_feature.implementation_feature
@@ -1225,7 +1225,7 @@ feature {NONE} -- Expression processing
 					if has_fatal_error then
 						had_error := True
 					else
-						if l_array_type /= Void and then not l_expression_context.conforms_to_type (l_array_parameter, current_type) then
+						if l_array_type /= Void and then not l_expression_context.conforms_to_type (l_array_parameter, current_type, system_processor) then
 								-- The type of this item does not conform to the type of
 								-- the parameter of the expected array type. Try to see
 								-- if it converts to it.
@@ -1253,10 +1253,10 @@ feature {NONE} -- Expression processing
 								l_item_context := l_expression_context
 								l_expression_context := new_context (current_type)
 							elseif not hybrid_type then
-								if l_expression_context.conforms_to_context (l_item_context) then
+								if l_expression_context.conforms_to_context (l_item_context, system_processor) then
 										-- The type of the current item conforms to the type
 										-- retained so far. Keep the old type.
-								elseif l_item_context.conforms_to_context (l_expression_context) then
+								elseif l_item_context.conforms_to_context (l_expression_context, system_processor) then
 										-- The type retained so far conforms to the type of the
 										-- current item. Retain this new type.
 									l_old_item_context := l_item_context
@@ -1297,10 +1297,10 @@ feature {NONE} -- Expression processing
 							l_item_context := l_expression_context
 							l_expression_context := new_context (current_type)
 						elseif not hybrid_type then
-							if l_expression_context.conforms_to_context (l_item_context) then
+							if l_expression_context.conforms_to_context (l_item_context, system_processor) then
 									-- The type of the current item conforms to the type
 									-- retained so far. Keep the old type.
-							elseif l_item_context.conforms_to_context (l_expression_context) then
+							elseif l_item_context.conforms_to_context (l_expression_context, system_processor) then
 									-- The type retained so far conforms to the type of the
 									-- current item. Retain this new type.
 								l_old_item_context := l_item_context

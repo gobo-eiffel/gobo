@@ -38,22 +38,21 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_input_filename: STRING; a_error_handler: like error_handler)
+	make (a_input_filename: STRING; a_system_processor: like system_processor)
 			-- Create a new documentation format with `a_input_filename'.
-			-- Use error handler `a_error_handler'.
 		require
 			a_input_filename_not_void: a_input_filename /= Void
-			a_error_handler_not_void: a_error_handler /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			input_filename := a_input_filename
-			error_handler := a_error_handler
+			system_processor := a_system_processor
 			ise_version := ise_latest
 			create class_name_buffer.make (80)
 			create filename_buffer.make (200)
 			create concat_buffer.make (100)
 		ensure
 			input_filename_set: input_filename = a_input_filename
-			error_handler_set: error_handler = a_error_handler
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Execution
@@ -70,7 +69,7 @@ feature -- Execution
 				if not has_error then
 					process_system (l_last_system)
 				end
-				if l_last_system.error_handler.has_error then
+				if system_processor.error_handler.has_error then
 					has_error := True
 				end
 			end
@@ -111,6 +110,9 @@ feature -- Access
 
 	silent_flag: BOOLEAN
 			-- Should no informative messages be displayed?
+
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 feature -- Setting
 
@@ -260,7 +262,6 @@ feature {NONE} -- Eiffel config file parsing
 			elseif not attached l_xace_parser.last_system as l_last_system then
 				report_no_system_found_error (a_file.name)
 			else
-				l_last_system.activate_processors
 				last_system := l_last_system
 			end
 		ensure
@@ -295,7 +296,6 @@ feature {NONE} -- Eiffel config file parsing
 			elseif not attached l_ecf_parser.last_system as l_last_system then
 				report_no_system_found_error (a_file.name)
 			else
-				l_last_system.activate_processors
 				last_system := l_last_system
 			end
 		ensure
@@ -319,12 +319,11 @@ feature {NONE} -- Eiffel config file parsing
 			last_system := Void
 			create l_system.make ("gedoc_system")
 			l_system.set_ise_version (ise_version)
-			l_system.activate_processors
 			create l_cluster.make ("gedoc_cluster", ".", l_system)
-			if attached {ET_EIFFEL_PREPARSER} l_system.eiffel_preparser as l_system_eiffel_preparser then
+			if attached {ET_EIFFEL_PREPARSER} system_processor.eiffel_preparser as l_system_eiffel_preparser then
 				l_eiffel_preparser := l_system_eiffel_preparser
 			else
-				create l_eiffel_preparser.make
+				create l_eiffel_preparser.make (system_processor)
 			end
 			l_eiffel_preparser.preparse_file (a_file.name, l_cluster)
 			if l_eiffel_preparser.error_handler.has_error then
@@ -353,9 +352,9 @@ feature {NONE} -- Processing
 		local
 			l_ast_factory: ET_DECORATED_AST_FACTORY
 		do
-			a_system.error_handler.set_ise
-			a_system.error_handler.set_verbose (verbose_flag)
-			a_system.error_handler.set_benchmark_shown (not silent_flag or verbose_flag)
+			system_processor.error_handler.set_ise
+			system_processor.error_handler.set_verbose (verbose_flag)
+			system_processor.error_handler.set_benchmark_shown (not silent_flag or verbose_flag)
 			a_system.set_ise_version (ise_version)
 			a_system.set_unknown_builtin_reported (False)
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_attachment_type_conformance_mode (False))
@@ -363,7 +362,7 @@ feature {NONE} -- Processing
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark))
 			create l_ast_factory.make
 			l_ast_factory.set_keep_all_comments (True)
-			a_system.set_ast_factory (l_ast_factory)
+			system_processor.set_ast_factory (l_ast_factory)
 		end
 
 	build_input_classes (a_system: ET_SYSTEM)
@@ -376,7 +375,7 @@ feature {NONE} -- Processing
 			if input_classes /= Void then
 				-- Nothing to be done.
 			elseif attached class_filters as l_class_filters and then not l_class_filters.is_empty then
-				a_system.preparse_recursive
+				a_system.preparse_recursive (system_processor)
 				create l_input_classes.make (500)
 				input_classes := l_input_classes
 				across l_class_filters as l_class_wildcards loop
@@ -588,6 +587,11 @@ feature -- Error handling
 
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
+		do
+			Result := system_processor.error_handler
+		ensure
+			error_handler_not_void: Result /= Void
+		end
 
 	has_error: BOOLEAN
 			-- Have some errors been reported?
@@ -699,7 +703,7 @@ feature -- Error handling
 
 invariant
 
-	error_handler_not_void: error_handler /= Void
+	system_processor_not_void: system_processor /= Void
 	input_filename_not_void: input_filename /= Void
 	ise_version_not_void: ise_version /= Void
 	class_filters_compiled: attached class_filters as l_class_filters implies l_class_filters.for_all (agent {LX_DFA_WILDCARD}.is_compiled)

@@ -5,7 +5,7 @@ note
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type,
@@ -41,10 +41,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new type checker.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			current_context := tokens.unknown_class
 			current_class_impl := tokens.unknown_class
 			current_feature_impl := dummy_feature
@@ -137,7 +137,7 @@ feature -- Validity checking
 			current_class_impl := a_current_class_impl
 			an_actuals := a_type.actual_parameters
 			a_type_class := a_type.base_class
-			a_type_class.process (current_system.interface_checker)
+			a_type_class.process (system_processor.interface_checker)
 			if not a_type_class.interface_checked or else a_type_class.has_interface_error then
 				set_fatal_error
 			elseif an_actuals /= Void and then not an_actuals.is_empty then
@@ -173,7 +173,7 @@ feature -- Validity checking
 							end
 							nb2 := a_creator.count
 							if nb2 > 0 then
-								a_base_class.process (current_system.interface_checker)
+								a_base_class.process (system_processor.interface_checker)
 								if not a_base_class.interface_checked or else a_base_class.has_interface_error then
 									set_fatal_error
 								else
@@ -194,7 +194,7 @@ feature -- Validity checking
 													end
 												end
 											end
-										elseif not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class) then
+										elseif not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, system_processor) then
 											if current_system.is_ise and then (current_class.is_deferred and an_actual.is_like_current) then
 												-- ISE accepts code of the form:
 												--
@@ -328,7 +328,7 @@ feature -- Type conversion
 				-- Make sure that the class has been parsed before
 				-- asking for its conversion features.
 			if a_source_base_class.is_preparsed then
-				a_source_base_class.process (a_source_base_class.current_system.eiffel_parser)
+				a_source_base_class.process (system_processor.eiffel_parser)
 			end
 			Result := a_source_base_class.convert_to_feature (a_target_type, a_source_type)
 			if Result = Void then
@@ -336,7 +336,7 @@ feature -- Type conversion
 					-- Make sure that the class has been parsed before
 					-- asking for its conversion features.
 				if a_target_base_class.is_preparsed then
-					a_target_base_class.process (a_target_base_class.current_system.eiffel_parser)
+					a_target_base_class.process (system_processor.eiffel_parser)
 				end
 				Result := a_target_base_class.convert_from_feature (a_source_type, a_target_type)
 				if Result = Void then
@@ -392,7 +392,7 @@ feature {NONE} -- Validity checking
 					end
 				end
 			else
-				a_class.process (current_system.interface_checker)
+				a_class.process (system_processor.interface_checker)
 				if not a_class.interface_checked then
 					set_fatal_error
 				elseif a_class.has_interface_error then
@@ -510,14 +510,14 @@ feature {NONE} -- Validity checking
 									-- we need to check that "LIST [FOO]" conforms to
 									-- "LIST [LIST [FOO]]", not just "LIST [G]".
 								constraint_context.set (a_type, current_context.root_context)
-								l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_context)
+								l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_context, system_processor)
 								if not l_conforms then
 									if current_class = current_class_impl and then a_class.tuple_constraint_position = i then
-										a_type.resolve_unfolded_tuple_actual_parameters_2 (current_context, constraint_context)
+										a_type.resolve_unfolded_tuple_actual_parameters_2 (current_context, constraint_context, system_processor)
 										if attached a_type.actual_parameters as l_actual_parameters and then l_actual_parameters /= l_actuals then
 											l_actuals := l_actual_parameters
 											an_actual := l_actuals.type (i)
-											l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_context)
+											l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_context, system_processor)
 										end
 									end
 								end
@@ -596,7 +596,7 @@ feature {NONE} -- Validity checking
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					current_class.process (current_system.interface_checker)
+					current_class.process (system_processor.interface_checker)
 					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
@@ -754,7 +754,7 @@ feature {NONE} -- Validity checking
 						error_handler.report_giaaa_error
 					else
 						l_class := l_target_type.base_class (current_context)
-						l_class.process (current_system.interface_checker)
+						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						else
@@ -783,7 +783,7 @@ feature {NONE} -- Validity checking
 					end
 				else
 					l_class := l_target_type.base_class (current_context)
-					l_class.process (current_system.interface_checker)
+					l_class.process (system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					else

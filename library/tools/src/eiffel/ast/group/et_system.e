@@ -37,14 +37,10 @@ feature {NONE} -- Initialization
 
 	make (a_name: STRING)
 			-- Create a new Eiffel system.
-			-- Error messages will be sent to standard files.
-			-- Use default Eiffel AST factory.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-			error_handler := tokens.standard_error_handler
-			ast_factory := tokens.default_ast_factory
 			initialize
 			set_default_keyword_usage
 			set_preparse_shallow_mode
@@ -55,16 +51,6 @@ feature {NONE} -- Initialization
 			alias_transition_mode := True
 			unknown_builtin_reported := True
 			qualified_anchored_types_cycle_detection_enabled := False
-			create null_processor.make
-			eiffel_preparser := null_processor
-			master_class_checker := null_processor
-			eiffel_parser := null_processor
-			provider_checker := null_processor
-			ancestor_builder := null_processor
-			feature_flattener := null_processor
-			interface_checker := null_processor
-			implementation_checker := null_processor
-			flat_implementation_checker := null_processor
 			set_system_name (a_name)
 				-- First set the kernel types to some dummy types so that the attached attributes
 				-- get properly set before using `Current'. Otherwise the compiler will complain.
@@ -94,12 +80,6 @@ feature -- Access
 	root_creation: detachable ET_FEATURE_NAME
 			-- Root creation procedure
 
-	error_handler: ET_ERROR_HANDLER
-			-- Error handler
-
-	ast_factory: ET_AST_FACTORY
-			-- Abstract Syntax Tree factory
-
 	kind_name: STRING
 			-- Name of the kind of universe (e.g. "library", "assembly", etc.)
 		once
@@ -121,7 +101,7 @@ feature -- Kernel types
 			l_master_class.set_in_system (True)
 			create none_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 			create detachable_none_type.make (tokens.detachable_keyword, l_name, l_master_class)
-			l_class := ast_factory.new_class (l_name)
+			create l_class.make (l_name)
 			register_class (l_class)
 			create l_none_group.make (Current)
 			l_class.set_group (l_none_group)
@@ -337,26 +317,6 @@ feature -- Setting
 			root_creation := a_name
 		ensure
 			root_creation_set: root_creation = a_name
-		end
-
-	set_error_handler (a_handler: like error_handler)
-			-- Set `error_handler' to `a_handler'.
-		require
-			a_handler_not_void: a_handler /= Void
-		do
-			error_handler := a_handler
-		ensure
-			error_handler_set: error_handler = a_handler
-		end
-
-	set_ast_factory (a_factory: like ast_factory)
-			-- Set `ast_factory' to `a_factory'.
-		require
-			a_factory_not_void: a_factory /= Void
-		do
-			ast_factory := a_factory
-		ensure
-			ast_factory_set: ast_factory = a_factory
 		end
 
 feature -- Compilation options
@@ -729,15 +689,6 @@ feature -- Implementation checking status setting
 			-- Set `flat_mode' to `b'.
 		do
 			flat_mode := b
-			if b then
-				if attached {ET_IMPLEMENTATION_CHECKER} flat_implementation_checker as l_checker then
-					l_checker.set_flat_mode (b)
-				end
-			else
-				if attached {ET_IMPLEMENTATION_CHECKER} implementation_checker as l_checker then
-					l_checker.set_flat_mode (b)
-				end
-			end
 		ensure
 			flat_mode_set: flat_mode = b
 		end
@@ -746,12 +697,6 @@ feature -- Implementation checking status setting
 			-- Set `flat_dbc_mode' to `b'.
 		do
 			flat_dbc_mode := b
-			if attached {ET_IMPLEMENTATION_CHECKER} implementation_checker as l_checker then
-				l_checker.set_flat_dbc_mode (b)
-			end
-			if attached {ET_IMPLEMENTATION_CHECKER} flat_implementation_checker as l_checker then
-				l_checker.set_flat_dbc_mode (b)
-			end
 		ensure
 			flat_dbc_mode_set: flat_dbc_mode = b
 		end
@@ -760,12 +705,6 @@ feature -- Implementation checking status setting
 			-- Set `suppliers_enabled' to `b'.
 		do
 			suppliers_enabled := b
-			if attached {ET_IMPLEMENTATION_CHECKER} implementation_checker as l_checker then
-				l_checker.set_suppliers_enabled (b)
-			end
-			if attached {ET_IMPLEMENTATION_CHECKER} flat_implementation_checker as l_checker then
-				l_checker.set_suppliers_enabled (b)
-			end
 		ensure
 			suppliers_enabled_set: suppliers_enabled = b
 		end
@@ -780,7 +719,7 @@ feature -- Implementation checking status setting
 
 feature -- Parsing
 
-	preparse_recursive
+	preparse_recursive (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Build a mapping between class names and their filenames and
 			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
@@ -796,13 +735,13 @@ feature -- Parsing
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
 		do
-			precursor
-			check_master_class_validity
+			precursor (a_system_processor)
+			check_master_class_validity (a_system_processor)
 			build_scm_read_mappings
 			build_scm_write_mappings
 		end
 
-	parse_all_recursive
+	parse_all_recursive (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
 			-- depends on. There is no need to call one of the preparse
@@ -820,19 +759,21 @@ feature -- Parsing
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
 		do
-			precursor
-			check_master_class_validity
+			precursor (a_system_processor)
+			check_master_class_validity (a_system_processor)
 			build_scm_read_mappings
 			build_scm_write_mappings
 		end
 
-	parse_system
+	parse_system (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Parse all classes reachable from the root class.
 			-- The Eiffel system needs to have been preparsed beforehand.
 			--
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_root_class: ET_CLASS
 			l_parsed_class_count: INTEGER
@@ -842,23 +783,23 @@ feature -- Parsing
 			if not attached root_type as l_root_type then
 				-- Do nothing.
 			elseif l_root_type.same_named_type (none_type, tokens.unknown_class, tokens.unknown_class) then
-				parse_all_recursive
+				parse_all_recursive (a_system_processor)
 			elseif l_root_type.same_named_type (any_type, tokens.unknown_class, tokens.unknown_class) then
-				parse_all_recursive
+				parse_all_recursive (a_system_processor)
 			else
 				l_root_class := l_root_type.base_class
-				l_root_class.process (eiffel_parser)
+				l_root_class.process (a_system_processor.eiffel_parser)
 				if not l_root_class.is_preparsed then
 						-- Error: unknown root class.
-					error_handler.report_gvsrc4a_error (l_root_class)
+					a_system_processor.error_handler.report_gvsrc4a_error (l_root_class)
 				else
 					l_done := False
 					l_old_parsed_class_count := parsed_class_count_recursive
 					from until l_done loop
-						if stop_requested then
+						if a_system_processor.stop_requested then
 							l_done := True
 						else
-							classes_do_if_recursive_until (agent {ET_CLASS}.process (eiffel_parser), agent {ET_CLASS}.in_system, stop_request)
+							classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.eiffel_parser), agent {ET_CLASS}.in_system, a_system_processor.stop_request)
 							l_parsed_class_count := parsed_class_count_recursive
 							l_done := (l_parsed_class_count = l_old_parsed_class_count)
 							l_old_parsed_class_count := l_parsed_class_count
@@ -870,7 +811,7 @@ feature -- Parsing
 
 feature -- Ignored classes
 
-	ignore_classes (a_classes: DS_HASH_SET [ET_CLASS])
+	ignore_classes (a_classes: DS_HASH_SET [ET_CLASS]; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Unmark classes which were already marked as ignored
 			-- and mark the classes in `a_classes'. Reset classes
 			-- of current system accordingly to take into account
@@ -878,6 +819,7 @@ feature -- Ignored classes
 		require
 			a_classes_not_void: a_classes /= Void
 			no_void_classes: not a_classes.has_void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 				-- Unmark classes which were already marked as ignored
 				-- and mark the classes in `a_classes'.
@@ -890,9 +832,9 @@ feature -- Ignored classes
 				-- Reset incrementally all classes that may have been
 				-- affected by changes made above.
 			if classes_modified_recursive then
-				reset_classes_incremental_recursive
+				reset_classes_incremental_recursive (a_system_processor)
 			end
-			check_master_class_validity
+			check_master_class_validity (a_system_processor)
 		end
 
 feature -- SCM mappings
@@ -1076,7 +1018,7 @@ feature -- Compilation setting
 
 feature -- Compilation
 
-	compile
+	compile (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Compile current Eiffel system.
 			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
@@ -1086,19 +1028,21 @@ feature -- Compilation
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if root_type = Void then
-				compile_all
+				compile_all (a_system_processor)
 			elseif root_type = none_type then
-				compile_all
+				compile_all (a_system_processor)
 			elseif root_type = any_type then
-				compile_all
+				compile_all (a_system_processor)
 			else
-				compile_system
+				compile_system (a_system_processor)
 			end
 		end
 
-	compile_system
+	compile_system (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Compile all classes reachable from the root class.
 			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
@@ -1108,47 +1052,48 @@ feature -- Compilation
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			activate_processors
-			if error_handler.benchmark_shown then
+			if a_system_processor.error_handler.benchmark_shown then
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			preparse_recursive
-			if not stop_requested and then dt1 /= Void and l_clock /= Void then
-				print_time (dt1, "Degree 6")
+			preparse_recursive (a_system_processor)
+			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system_processor.print_time (dt1, "Degree 6")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			parse_system
-			if not stop_requested and then error_handler.benchmark_shown then
-				error_handler.info_file.put_string ("Preparsed ")
-				error_handler.info_file.put_integer (class_count_recursive)
-				error_handler.info_file.put_line (" classes")
-				error_handler.info_file.put_string ("Parsed ")
-				error_handler.info_file.put_integer (parsed_class_count_recursive)
-				error_handler.info_file.put_line (" classes")
-				error_handler.info_file.put_integer (registered_feature_count)
-				error_handler.info_file.put_line (" features")
+			parse_system (a_system_processor)
+			if not a_system_processor.stop_requested and then a_system_processor.error_handler.benchmark_shown then
+				a_system_processor.error_handler.info_file.put_string ("Preparsed ")
+				a_system_processor.error_handler.info_file.put_integer (class_count_recursive)
+				a_system_processor.error_handler.info_file.put_line (" classes")
+				a_system_processor.error_handler.info_file.put_string ("Parsed ")
+				a_system_processor.error_handler.info_file.put_integer (parsed_class_count_recursive)
+				a_system_processor.error_handler.info_file.put_line (" classes")
+				a_system_processor.error_handler.info_file.put_integer (registered_feature_count)
+				a_system_processor.error_handler.info_file.put_line (" features")
 			end
-			if not stop_requested and then dt1 /= Void and l_clock /= Void then
-				print_time (dt1, "Degree 5")
+			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system_processor.print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			compile_degree_4
-			if not stop_requested and then dt1 /= Void and l_clock /= Void then
-				print_time (dt1, "Degree 4")
+			compile_degree_4 (a_system_processor)
+			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system_processor.print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			compile_degree_3
-			if not stop_requested and then dt1 /= Void then
-				print_time (dt1, "Degree 3")
+			compile_degree_3 (a_system_processor)
+			if not a_system_processor.stop_requested and then dt1 /= Void then
+				a_system_processor.print_time (dt1, "Degree 3")
 			end
 		end
 
-	compile_all
+	compile_all (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Compile all classes in the current Eiffel system.
 			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
@@ -1158,83 +1103,88 @@ feature -- Compilation
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			activate_processors
-			if error_handler.benchmark_shown then
+			if a_system_processor.error_handler.benchmark_shown then
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			if preparse_enabled then
-				preparse_recursive
-				if not stop_requested and then dt1 /= Void and l_clock /= Void then
-					print_time (dt1, "Degree 6")
+				preparse_recursive (a_system_processor)
+				if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+					a_system_processor.print_time (dt1, "Degree 6")
 					dt1 := l_clock.system_clock.date_time_now
 				end
-				compile_degree_5
+				compile_degree_5 (a_system_processor)
 			else
-				parse_all_recursive
-				check_provider_validity
+				parse_all_recursive (a_system_processor)
+				check_provider_validity (a_system_processor)
 			end
-			if not stop_requested and then dt1 /= Void and l_clock /= Void then
-				print_time (dt1, "Degree 5")
+			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system_processor.print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			compile_degree_4
-			if not stop_requested and then dt1 /= Void and l_clock /= Void then
-				print_time (dt1, "Degree 4")
+			compile_degree_4 (a_system_processor)
+			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system_processor.print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			compile_degree_3
-			if not stop_requested and then dt1 /= Void then
-				print_time (dt1, "Degree 3")
+			compile_degree_3 (a_system_processor)
+			if not a_system_processor.stop_requested and then dt1 /= Void then
+				a_system_processor.print_time (dt1, "Degree 3")
 			end
 		end
 
-	compile_degree_5
+	compile_degree_5 (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Equivalent of ISE's Degree 5.
 			--
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 				-- Parse classes.
-			classes_do_recursive_until (agent {ET_CLASS}.process (eiffel_parser), stop_request)
-			check_provider_validity
-			if not stop_requested and then error_handler.benchmark_shown then
-				error_handler.info_file.put_string ("Parsed ")
-				error_handler.info_file.put_integer (parsed_class_count_recursive)
-				error_handler.info_file.put_line (" classes")
-				error_handler.info_file.put_integer (registered_feature_count)
-				error_handler.info_file.put_line (" features")
+			classes_do_recursive_until (agent {ET_CLASS}.process (a_system_processor.eiffel_parser), a_system_processor.stop_request)
+			check_provider_validity (a_system_processor)
+			if not a_system_processor.stop_requested and then a_system_processor.error_handler.benchmark_shown then
+				a_system_processor.error_handler.info_file.put_string ("Parsed ")
+				a_system_processor.error_handler.info_file.put_integer (parsed_class_count_recursive)
+				a_system_processor.error_handler.info_file.put_line (" classes")
+				a_system_processor.error_handler.info_file.put_integer (registered_feature_count)
+				a_system_processor.error_handler.info_file.put_line (" features")
 			end
 		end
 
-	compile_degree_4
+	compile_degree_4 (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Equivalent of ISE Eiffel's Degree 4.
 			--
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 				-- Build ancestors.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (ancestor_builder), agent {ET_CLASS}.is_parsed, stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.ancestor_builder), agent {ET_CLASS}.is_parsed, a_system_processor.stop_request)
 				-- Flatten features.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (feature_flattener), agent {ET_CLASS}.ancestors_built, stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.feature_flattener), agent {ET_CLASS}.ancestors_built, a_system_processor.stop_request)
 				-- Check interface.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (interface_checker), agent {ET_CLASS}.features_flattened, stop_request)
-			if not stop_requested and then error_handler.benchmark_shown then
-				error_handler.info_file.put_string ("Flattened ")
-				error_handler.info_file.put_integer (parsed_class_count_recursive)
-				error_handler.info_file.put_line (" classes")
-				error_handler.info_file.put_integer (registered_feature_count)
-				error_handler.info_file.put_line (" features")
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.interface_checker), agent {ET_CLASS}.features_flattened, a_system_processor.stop_request)
+			if not a_system_processor.stop_requested and then a_system_processor.error_handler.benchmark_shown then
+				a_system_processor.error_handler.info_file.put_string ("Flattened ")
+				a_system_processor.error_handler.info_file.put_integer (parsed_class_count_recursive)
+				a_system_processor.error_handler.info_file.put_line (" classes")
+				a_system_processor.error_handler.info_file.put_integer (registered_feature_count)
+				a_system_processor.error_handler.info_file.put_line (" features")
 			end
 		end
 
-	compile_degree_3
+	compile_degree_3 (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Equivalent of ISE Eiffel's Degree 3.
 			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes.
@@ -1244,287 +1194,46 @@ feature -- Compilation
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_processor: ET_AST_PROCESSOR
 		do
 				-- Check implementation.
-			if flat_mode then
-				l_processor := flat_implementation_checker
-			else
-				l_processor := implementation_checker
-			end
+			l_processor := a_system_processor.implementation_checker
 			if attached {ET_IMPLEMENTATION_CHECKER} l_processor as l_checker then
 				l_checker.set_flat_mode (flat_mode)
 				l_checker.set_flat_dbc_mode (flat_dbc_mode)
 				l_checker.set_suppliers_enabled (suppliers_enabled)
 			end
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (l_processor), agent {ET_CLASS}.interface_checked, stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (l_processor), agent {ET_CLASS}.interface_checked, a_system_processor.stop_request)
 		end
 
-	check_provider_validity
+	check_provider_validity (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Check cluster dependence constraints.
 			--
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if cluster_dependence_enabled then
-				classes_do_if_recursive_until (agent {ET_CLASS}.process (provider_checker), agent {ET_CLASS}.is_parsed, stop_request)
+				classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.provider_checker), agent {ET_CLASS}.is_parsed, a_system_processor.stop_request)
 			end
 		end
 
-	check_master_class_validity
+	check_master_class_validity (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Check for invalid class name clashes and invalid class overriding.
 			--
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
-		do
-			master_classes_do_recursive_until (agent {ET_MASTER_CLASS}.process (master_class_checker), stop_request)
-		end
-
-feature -- Processors
-
-	eiffel_preparser: ET_AST_PROCESSOR
-			-- Eiffel preparser
-
-	eiffel_parser: ET_AST_PROCESSOR
-			-- Eiffel parser
-
-	master_class_checker: ET_AST_PROCESSOR
-			-- Master class checker
-
-	dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER
-			-- .NET assembly consumer
-		do
-			if attached internal_dotnet_assembly_consumer as l_internal_dotnet_assembly_consumer then
-				Result := l_internal_dotnet_assembly_consumer
-			else
-				create {ET_DOTNET_ASSEMBLY_CLASSIC_CONSUMER} Result.make (Current)
-				internal_dotnet_assembly_consumer := Result
-			end
-		ensure
-			dotnet_assembly_consumer_not_void: Result /= Void
-		end
-
-	provider_checker: ET_AST_PROCESSOR
-			-- Provider checker
-
-	ancestor_builder: ET_AST_PROCESSOR
-			-- Ancestor builder
-
-	feature_flattener: ET_AST_PROCESSOR
-			-- Feature flattener
-
-	interface_checker: ET_AST_PROCESSOR
-			-- Interface checker
-
-	implementation_checker: ET_AST_PROCESSOR
-			-- Implementation checker
-
-	flat_implementation_checker: ET_AST_PROCESSOR
-			-- Implementation checker in flat mode
-
-	null_processor: ET_AST_NULL_PROCESSOR
-			-- Null processor
-
-	activate_processors
-			-- Activate processors.
-		local
-			l_implementation_checker: ET_IMPLEMENTATION_CHECKER
-		do
-			if eiffel_preparser = null_processor then
-				create {ET_EIFFEL_PREPARSER} eiffel_preparser.make
-			end
-			if master_class_checker = null_processor then
-				create {ET_MASTER_CLASS_CHECKER} master_class_checker.make
-			end
-			if eiffel_parser = null_processor then
-				create {ET_EIFFEL_PARSER} eiffel_parser.make
-			end
-			if provider_checker = null_processor then
-				create {ET_PROVIDER_CHECKER} provider_checker.make
-			end
-			if ancestor_builder = null_processor then
-				create {ET_ANCESTOR_BUILDER} ancestor_builder.make
-			end
-			if feature_flattener = null_processor then
-				create {ET_FEATURE_FLATTENER} feature_flattener.make
-			end
-			if interface_checker = null_processor then
-				create {ET_INTERFACE_CHECKER} interface_checker.make
-			end
-			if implementation_checker = null_processor then
-				create l_implementation_checker.make
-				l_implementation_checker.set_flat_mode (False)
-				l_implementation_checker.set_flat_dbc_mode (flat_dbc_mode)
-				l_implementation_checker.set_suppliers_enabled (suppliers_enabled)
-				implementation_checker := l_implementation_checker
-			end
-			if flat_implementation_checker = null_processor then
-				create l_implementation_checker.make
-				l_implementation_checker.set_flat_mode (True)
-				l_implementation_checker.set_flat_dbc_mode (flat_dbc_mode)
-				l_implementation_checker.set_suppliers_enabled (suppliers_enabled)
-				flat_implementation_checker := l_implementation_checker
-			end
-		end
-
-	set_eiffel_preparser (a_eiffel_preparser: like eiffel_preparser)
-			-- Set `eiffel_preparser' to `a_eiffel_preparser'.
 		require
-			a_eiffel_preparser_not_void: a_eiffel_preparser /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			eiffel_preparser := a_eiffel_preparser
-		ensure
-			eiffel_preparser_set: eiffel_preparser = a_eiffel_preparser
+			master_classes_do_recursive_until (agent {ET_MASTER_CLASS}.process (a_system_processor.master_class_checker), a_system_processor.stop_request)
 		end
-
-	set_master_class_checker (a_master_class_checker: like master_class_checker)
-			-- Set `master_class_checker' to `a_master_class_checker'.
-		require
-			a_master_class_checker_not_void: a_master_class_checker /= Void
-		do
-			master_class_checker := a_master_class_checker
-		ensure
-			master_class_checker_set: master_class_checker = a_master_class_checker
-		end
-
-	set_eiffel_parser (a_eiffel_parser: like eiffel_parser)
-			-- Set `eiffel_parser' to `a_eiffel_parser'.
-		require
-			a_eiffel_parser_not_void: a_eiffel_parser /= Void
-		do
-			eiffel_parser := a_eiffel_parser
-		ensure
-			eiffel_parser_set: eiffel_parser = a_eiffel_parser
-		end
-
-	set_dotnet_assembly_consumer (a_consumer: like dotnet_assembly_consumer)
-			-- Set `dotnet_assembly_consumer' to `a_consumer'.
-		require
-			a_consumer_not_void: a_consumer /= Void
-		do
-			internal_dotnet_assembly_consumer := a_consumer
-		ensure
-			dotnet_assembly_consumer_set: dotnet_assembly_consumer = a_consumer
-		end
-
-	set_provider_checker (a_provider_checker: like provider_checker)
-			-- Set `provider_checker' to `a_provider_checker'.
-		require
-			a_provider_checker_not_void: a_provider_checker /= Void
-		do
-			provider_checker := a_provider_checker
-		ensure
-			provider_checker_set: provider_checker = a_provider_checker
-		end
-
-	set_ancestor_builder (an_ancestor_builder: like ancestor_builder)
-			-- Set `ancestor_builder' to `an_ancestor_builder'.
-		require
-			an_ancestor_builder_not_void: an_ancestor_builder /= Void
-		do
-			ancestor_builder := an_ancestor_builder
-		ensure
-			ancestor_builder_set: ancestor_builder = an_ancestor_builder
-		end
-
-	set_feature_flattener (a_feature_flattener: like feature_flattener)
-			-- Set `feature_flattener' to `a_feature_flattener'.
-		require
-			a_feature_flattener_not_void: a_feature_flattener /= Void
-		do
-			feature_flattener := a_feature_flattener
-		ensure
-			feature_flattener_set: feature_flattener = a_feature_flattener
-		end
-
-	set_interface_checker (an_interface_checker: like interface_checker)
-			-- Set `interface_checker' to `an_interface_checker'.
-		require
-			an_interface_checker_not_void: an_interface_checker /= Void
-		do
-			interface_checker := an_interface_checker
-		ensure
-			interface_checker_set: interface_checker = an_interface_checker
-		end
-
-	set_implementation_checker (a_checker: like implementation_checker)
-			-- Set `implementation_chcker' to `a_checker'.
-		require
-			a_checker_not_void: a_checker /= Void
-		do
-			implementation_checker := a_checker
-		ensure
-			implementation_checker_set: implementation_checker = a_checker
-		end
-
-	set_flat_implementation_checker (a_checker: like flat_implementation_checker)
-			-- Set `flat_implementation_chcker' to `a_checker'.
-		require
-			a_checker_not_void: a_checker /= Void
-		do
-			flat_implementation_checker := a_checker
-		ensure
-			flat_implementation_checker_set: flat_implementation_checker = a_checker
-		end
-
-feature -- Stop
-
-	stop_requested: BOOLEAN
-			-- Has the interruption of the current operation
-			-- been requested? The operation will therefore be
-			-- interrupted at the earliest possible time.
-		do
-			if attached stop_request as l_stop_request then
-				Result := l_stop_request.item ([])
-			end
-		end
-
-	stop_request: detachable FUNCTION [BOOLEAN]
-			-- Agent used to figure out whether there has been
-			-- a request to interrupt the current operation;
-			-- No interruption if Void
-
-	set_stop_request (a_stop_request: like stop_request)
-			-- Set `stop_request' to `a_stop_request'.
-		do
-			stop_request := a_stop_request
-		ensure
-			stop_request_set: stop_request = a_stop_request
-		end
-
-feature -- Timing
-
-	print_time (a_start: DT_DATE_TIME; a_degree: STRING)
-			-- Print time spent in `a_degree' since `a_start'.
-		require
-			a_start_not_void: a_start /= Void
-			a_degree_not_void: a_degree /= Void
-		local
-			l_clock: DT_SHARED_SYSTEM_CLOCK
-			dt2: DT_DATE_TIME
-			dtd: DT_DATE_TIME_DURATION
-		do
-			if not stop_requested then
-				create l_clock
-				dt2 := l_clock.system_clock.date_time_now
-				dtd := dt2 - a_start
-				dtd.set_canonical (a_start)
-				error_handler.info_file.put_string (a_degree)
-				error_handler.info_file.put_string (": ")
-				error_handler.info_file.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	internal_dotnet_assembly_consumer: detachable ET_DOTNET_ASSEMBLY_CONSUMER
-			-- .NET assembly consumer
 
 feature {NONE} -- Constants
 
@@ -1536,8 +1245,6 @@ feature {NONE} -- Constants
 
 invariant
 
-	error_handler_not_void: error_handler /= Void
-	ast_factory_not_void: ast_factory /= Void
 		-- Feature seeds.
 	default_create_seed_not_negative: default_create_seed >= 0
 	copy_seed_not_negative: copy_seed >= 0
@@ -1545,17 +1252,6 @@ invariant
 	dispose_seed_not_negative: dispose_seed >= 0
 	routine_call_seed_not_negative: routine_call_seed >= 0
 	function_item_seed_not_negative: function_item_seed >= 0
-		-- Processors.
-	eiffel_preparser_not_void: eiffel_preparser /= Void
-	master_class_checker_not_void: master_class_checker /= Void
-	eiffel_parser_not_void: eiffel_parser /= Void
-	provider_checker_not_void: provider_checker /= Void
-	ancestor_builder_not_void: ancestor_builder /= Void
-	feature_flattener_not_void: feature_flattener /= Void
-	interface_checker_not_void: interface_checker /= Void
-	implementation_checker_not_void: implementation_checker /= Void
-	flat_implementation_checker_not_void: flat_implementation_checker /= Void
-	null_processor_not_void: null_processor /= Void
 		-- Compilation options.
 	external_include_pathnames_not_void: external_include_pathnames /= Void
 	no_void_external_include_pathname: not external_include_pathnames.has_void

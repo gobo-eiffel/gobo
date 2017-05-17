@@ -1124,7 +1124,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Same as `conforms_to_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
@@ -1140,7 +1140,7 @@ feature -- Conformance
 				a_class := a_context.base_class
 				l_index := index
 				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					Result := l_args.item (l_index).type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					Result := l_args.item (l_index).type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context, a_system_processor)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1150,7 +1150,7 @@ feature -- Conformance
 			else
 				a_class := a_context.base_class
 				if attached a_class.seeded_query (seed) as l_query then
-					Result := l_query.type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					Result := l_query.type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context, a_system_processor)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1162,12 +1162,12 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_class: ET_CLASS
@@ -1180,7 +1180,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				a_class := a_context.base_class
 				l_index := index
 				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					Result := l_args.item (l_index).type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					Result := l_args.item (l_index).type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context, a_system_processor)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1190,7 +1190,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			else
 				a_class := a_context.base_class
 				if attached a_class.seeded_query (seed) as l_query then
-					Result := l_query.type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context,  overridden_type_mark (a_type_mark), a_context)
+					Result := l_query.type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context,  overridden_type_mark (a_type_mark), a_context, a_system_processor)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1200,12 +1200,12 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_class: ET_CLASS
@@ -1218,7 +1218,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				a_class := a_context.base_class
 				l_index := index
 				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					Result := l_args.item (l_index).type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					Result := l_args.item (l_index).type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context, a_system_processor)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1228,7 +1228,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			else
 				a_class := a_context.base_class
 				if attached a_class.seeded_query (seed) as l_query then
-					Result := l_query.type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					Result := l_query.type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context, a_system_processor)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1238,12 +1238,12 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: attached ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: attached ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: attached ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: attached ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_class: ET_CLASS
@@ -1256,7 +1256,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				a_class := a_context.base_class
 				l_index := index
 				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					Result := l_args.item (l_index).type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					Result := l_args.item (l_index).type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context, a_system_processor)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1266,7 +1266,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			else
 				a_class := a_context.base_class
 				if attached a_class.seeded_query (seed) as l_query then
-					Result := l_query.type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					Result := l_query.type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context, a_system_processor)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved

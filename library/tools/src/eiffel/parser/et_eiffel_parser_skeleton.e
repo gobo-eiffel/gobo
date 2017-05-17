@@ -26,7 +26,8 @@ inherit
 		rename
 			make as make_eiffel_scanner
 		redefine
-			reset, set_syntax_error
+			reset, set_syntax_error,
+			system_processor
 		end
 
 	ET_CLASS_PROCESSOR
@@ -38,17 +39,17 @@ inherit
 		undefine
 			error_handler, current_universe, current_system
 		redefine
-			make
+			make,
+			system_processor
 		end
 
 	ET_AST_NULL_PROCESSOR
 		rename
+			make as make_ast_processor,
 			process_identifier as process_ast_identifier,
 			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
-		undefine
-			make
 		redefine
 			process_class, process_cluster
 		end
@@ -61,10 +62,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new Eiffel parser.
 		do
-			precursor {ET_CLASS_PROCESSOR}
+			precursor (a_system_processor)
 			create eiffel_buffer.make_with_size (std.input, Initial_eiffel_buffer_size)
 			create counters.make (Initial_counters_capacity)
 			create last_formal_arguments_stack.make (Initial_last_formal_arguments_stack_capacity)
@@ -81,7 +82,7 @@ feature {NONE} -- Initialization
 			create procedures.make (Initial_procedures_capacity)
 			create constraints.make (Initial_constraints_capacity)
 			create providers.make (Initial_providers_capacity)
-			make_eiffel_scanner ("unknown file")
+			make_eiffel_scanner ("unknown file", a_system_processor)
 			make_parser_skeleton
 		end
 
@@ -115,6 +116,9 @@ feature -- Access
 
 	time_stamp: INTEGER
 			-- Time stamp of file being parsed
+
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 feature -- Status report
 
@@ -392,7 +396,7 @@ feature -- AST processing
 							error_handler.report_gcaab_error (a_cluster, a_filename)
 						end
 					elseif current_class.is_in_dotnet_assembly then
-						current_system.dotnet_assembly_consumer.consume_class (current_class)
+						system_processor.dotnet_assembly_consumer.consume_class (current_class)
 					elseif attached {ET_TEXT_GROUP} current_class.group as l_text_group then
 						l_class_filename := current_class.filename
 						if l_class_filename /= Void and then not l_class_filename.is_empty then
@@ -2018,7 +2022,7 @@ feature {NONE} -- AST factory
 					Result.set_in_system (True)
 					old_current_class := current_class
 					current_class := Result
-					error_handler.report_compilation_status (Current, current_class)
+					error_handler.report_compilation_status (Current, current_class, system_processor)
 					current_class := old_current_class
 					queries.wipe_out
 					procedures.wipe_out

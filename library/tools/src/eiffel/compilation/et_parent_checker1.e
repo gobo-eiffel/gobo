@@ -5,7 +5,7 @@ note
 		"Eiffel parent validity first pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #11 $"
@@ -17,8 +17,8 @@ inherit
 	ET_CLASS_SUBPROCESSOR
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type,
@@ -92,7 +92,7 @@ feature {NONE} -- Parent validity
 			a_class: ET_CLASS
 		do
 			a_class := a_type.base_class
-			a_class.process (current_system.eiffel_parser)
+			a_class.process (system_processor.eiffel_parser)
 			if not a_class.is_preparsed then
 				set_fatal_error
 				if a_type = a_parent.type then

@@ -4,7 +4,7 @@ note
 
 		"Eiffel pretty-printer"
 
-	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,7 @@ feature {NONE} -- Execution
 		local
 			a_system: ET_SYSTEM
 			an_ast_factory: ET_DECORATED_AST_FACTORY
+			l_system_processor: ET_SYSTEM_PROCESSOR
 			in_file: KL_TEXT_INPUT_FILE
 			out_file: KL_TEXT_OUTPUT_FILE
 			a_cluster: ET_XACE_CLUSTER
@@ -45,17 +46,19 @@ feature {NONE} -- Execution
 			read_arguments
 			create a_system.make ("system_name")
 			a_system.set_ise_version (ise_latest)
+			create l_system_processor.make_null
+			l_system_processor.activate (a_system)
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
-			a_system.set_ast_factory (an_ast_factory)
+			l_system_processor.set_ast_factory (an_ast_factory)
 				-- Make sure that syntax errors are reported to standard error.
 			create a_eiffel_error_handler.make_standard
 			a_eiffel_error_handler.set_info_file (std.error)
-			a_system.set_error_handler (a_eiffel_error_handler)
+			l_system_processor.set_error_handler (a_eiffel_error_handler)
 				-- Make sure that kernel classes are set correctly.
-			a_system.preparse
+			a_system.preparse (l_system_processor)
 			create a_cluster.make ("cluster_name", ".", a_system)
-			create a_parser.make
+			create a_parser.make (l_system_processor)
 			create in_file.make (in_filename)
 			a_time_stamp := in_file.time_stamp
 			in_file.open_read

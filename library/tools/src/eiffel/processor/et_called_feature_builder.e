@@ -6,7 +6,7 @@ note
 		"Builders of lists of features called by a given feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -29,22 +29,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new called features builder.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			create called_features.make
-			make_with_called_features (called_features)
+			make_with_called_features (called_features, a_system_processor)
+		ensure
+			system_processor_set: system_processor = a_system_processor
 		end
 
-	make_with_called_features (a_called_features: like called_features)
+	make_with_called_features (a_called_features: like called_features; a_system_processor: like system_processor)
 			-- Create a new called features builder using `a_called_features'.
 		require
 			a_called_features_not_void: a_called_features /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			called_features := a_called_features
-			make_feature_call_handler
+			make_feature_call_handler (a_system_processor)
 		ensure
 			called_features_set: called_features = a_called_features
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Access

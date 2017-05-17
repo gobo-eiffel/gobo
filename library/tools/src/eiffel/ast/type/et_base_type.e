@@ -5,7 +5,7 @@ note
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -321,12 +321,12 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			an_index: INTEGER
@@ -350,7 +350,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					else
 							-- Keep the attachment mark of `other' (possibly overridden by `other_type_mark').
 						l_detachable_any_type := a_base_class.current_system.detachable_any_type
-						Result := conforms_from_class_type_with_type_marks (l_detachable_any_type, other.overridden_type_mark (other_type_mark), other_context, a_type_mark, a_context)
+						Result := conforms_from_class_type_with_type_marks (l_detachable_any_type, other.overridden_type_mark (other_type_mark), other_context, a_type_mark, a_context, a_system_processor)
 					end
 				else
 					if attached a_formal.constraint_base_type as l_base_type then
@@ -359,7 +359,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 							-- the resolved base type of this constraint has
 							-- been made available in `base_type'.
 							-- Keep the attachment mark of `other' (possibly overridden by `other_type_mark').
-						Result := l_base_type.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context)
+						Result := l_base_type.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context, a_system_processor)
 					else
 							-- There is a cycle of the form "A [G -> H, H -> G]"
 							-- in the constraint of `a_formal'. Therefore `other'
@@ -373,12 +373,12 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_other_base_class: ET_CLASS
@@ -389,7 +389,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					-- If the base class of a Tuple_type conforms to current class type,
 					-- then the Tuple_type itself conforms to it.
 					-- Keep the attachment mark of `other' (possibly overridden by `other_type_mark').
-				Result := conforms_from_class_type_with_type_marks (l_other_base_class, other.overridden_type_mark (other_type_mark), other_context, a_type_mark, a_context)
+				Result := conforms_from_class_type_with_type_marks (l_other_base_class, other.overridden_type_mark (other_type_mark), other_context, a_type_mark, a_context, a_system_processor)
 			end
 			if not Result then
 					-- "TUPLE [...]" conforms to "ANY", so "TUPLE [...]"
@@ -402,7 +402,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				else
 						-- Keep the attachment mark of `other' (possibly overridden by `other_type_mark').
 					l_any_type := base_class.current_system.any_type
-					Result := conforms_from_class_type_with_type_marks (l_any_type, other.overridden_type_mark (other_type_mark), other_context, a_type_mark, a_context)
+					Result := conforms_from_class_type_with_type_marks (l_any_type, other.overridden_type_mark (other_type_mark), other_context, a_type_mark, a_context, a_system_processor)
 				end
 			end
 		end
@@ -571,11 +571,11 @@ feature -- Type context
 			Result := same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 		end
 
-	context_conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+	context_conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Same as `context_conforms_to_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
-			Result := conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			Result := conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 		end
 
 	to_nested_type_context: ET_NESTED_TYPE_CONTEXT
@@ -641,34 +641,34 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 			Result := same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 		end
 
-	context_conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+	context_conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
-			Result := conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			Result := conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 		end
 
-	context_conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+	context_conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
-			Result := conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			Result := conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 		end
 
-	context_conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+	context_conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
-			Result := conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			Result := conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 		end
 
 invariant

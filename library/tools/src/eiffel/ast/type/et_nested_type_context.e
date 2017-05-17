@@ -5,7 +5,7 @@ note
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -957,7 +957,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Same as `conforms_to_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
@@ -966,57 +966,57 @@ feature -- Conformance
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if count = 0 then
-				Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 			elseif attached {ET_LIKE_N} last as l_like_n then
 				l_index := l_like_n.index
 				if l_index = 0 then
-					Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 				elseif l_index >= count then
 					if other_context /= Current then
 						force_last (tokens.like_0)
-						Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 						remove_last
 					else
 						l_context := cloned_type_context
 						l_context.force_last (tokens.like_0)
-						Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+						Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 					end
 				else
 					l_type := item (l_index)
 					if other_context /= Current then
 						put (l_like_n.previous, count)
-						Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
 						l_context.force_last (l_like_n.previous)
-						Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+						Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 					end
 				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 					put_last (l_type)
 				elseif count = 1 then
-					Result := last.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+					Result := last.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context, a_system_processor)
 				else
 					l_type := last
 					l_context := cloned_type_context
 					l_context.remove_last
-					Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 				end
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
@@ -1024,55 +1024,55 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if count = 0 then
-				Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 			elseif attached {ET_LIKE_N} last as l_like_n then
 				l_index := l_like_n.index
 				if l_index = 0 then
-					Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 				elseif l_index >= count then
 					if other_context /= Current then
 						force_last (tokens.like_0)
-						Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 						remove_last
 					else
 						l_context := cloned_type_context
 						l_context.force_last (tokens.like_0)
-						Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+						Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 					end
 				else
 					l_type := item (l_index)
 					if other_context /= Current then
 						put (l_like_n.previous, count)
-						Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
 						l_context.force_last (l_like_n.previous)
-						Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+						Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 					end
 				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 					put_last (l_type)
 				elseif count = 1 then
-					Result := last.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+					Result := last.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context, a_system_processor)
 				else
 					l_type := last
 					l_context := cloned_type_context
 					l_context.remove_last
-					Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 				end
 			end
 		end
 
-	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
@@ -1080,55 +1080,55 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if count = 0 then
-				Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 			elseif attached {ET_LIKE_N} last as l_like_n then
 				l_index := l_like_n.index
 				if l_index = 0 then
-					Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 				elseif l_index >= count then
 					if other_context /= Current then
 						force_last (tokens.like_0)
-						Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 						remove_last
 					else
 						l_context := cloned_type_context
 						l_context.force_last (tokens.like_0)
-						Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+						Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 					end
 				else
 					l_type := item (l_index)
 					if other_context /= Current then
 						put (l_like_n.previous, count)
-						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
 						l_context.force_last (l_like_n.previous)
-						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 					end
 				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 					put_last (l_type)
 				elseif count = 1 then
-					Result := last.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+					Result := last.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context, a_system_processor)
 				else
 					l_type := last
 					l_context := cloned_type_context
 					l_context.remove_last
-					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 				end
 			end
 		end
 
-	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
@@ -1136,46 +1136,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if count = 0 then
-				Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 			elseif attached {ET_LIKE_N} last as l_like_n then
 				l_index := l_like_n.index
 				if l_index = 0 then
-					Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 				elseif l_index >= count then
 					if other_context /= Current then
 						force_last (tokens.like_0)
-						Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 						remove_last
 					else
 						l_context := cloned_type_context
 						l_context.force_last (tokens.like_0)
-						Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+						Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 					end
 				else
 					l_type := item (l_index)
 					if other_context /= Current then
 						put (l_like_n.previous, count)
-						Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
 						l_context.force_last (l_like_n.previous)
-						Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+						Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 					end
 				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 					put_last (l_type)
 				elseif count = 1 then
-					Result := last.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+					Result := last.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context, a_system_processor)
 				else
 					l_type := last
 					l_context := cloned_type_context
 					l_context.remove_last
-					Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
 				end
 			end
 		end

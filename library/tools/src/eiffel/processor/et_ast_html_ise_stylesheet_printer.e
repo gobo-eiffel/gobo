@@ -23,10 +23,12 @@ class ET_AST_HTML_ISE_STYLESHEET_PRINTER
 inherit
 
 	ET_AST_PRETTY_PRINTER
+		rename
+			make as make_pretty_printer,
+			make_null as make_null_pretty_printer
 		export
 			{ANY} print_new_line, print_indentation
 		redefine
-			make,
 			reset,
 			process_attribute,
 			process_break,
@@ -79,13 +81,14 @@ inherit
 			set_target,
 			set_current_target,
 			set_target_type
-		select
-			make_null
 		end
 
 	ET_CLASS_PROCESSOR
 		rename
-			make as make_class_processor
+			make as make_class_processor,
+			make_ast_processor as make_null_pretty_printer
+		undefine
+			make_null_pretty_printer
 		end
 
 create
@@ -94,16 +97,32 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: like file)
-			-- <Precursor>
+	make (a_file: like file; a_system_processor: like system_processor)
+			-- Create a new printer to HTML with ISE stylesheet.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			make_class_processor
+			make_class_processor (a_system_processor)
 			create quoted_feature_name_buffer.make (20)
 			create quoted_class_name_buffer.make (20)
 			create internal_feature_name.make ("dummy")
-			create expression_type_finder.make
-			precursor (a_file)
+			create expression_type_finder.make (a_system_processor)
+			make_pretty_printer (a_file)
+			make_class_processor (a_system_processor)
 			create internal_type_context.make_with_capacity (current_class, 100)
+		ensure
+			file_set: file = a_file
+			system_processor_set: system_processor = a_system_processor
+		end
+
+	make_null (a_system_processor: like system_processor)
+			-- Create a new printer to HTML with ISE stylesheet,
+			-- initialized with a null output stream.
+		do
+			make (null_output_stream, a_system_processor)
+		ensure
+			file_set: file = null_output_stream
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Initialization

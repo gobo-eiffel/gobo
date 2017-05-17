@@ -181,11 +181,11 @@ feature -- Relations
 
 feature -- Parsing
 
-	preparse
+	preparse (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- <Precursor>
 		do
-			current_system.error_handler.report_preparsing_status (Current)
-			Precursor
+			a_system_processor.error_handler.report_preparsing_status (Current)
+			Precursor (a_system_processor)
 		end
 
 invariant

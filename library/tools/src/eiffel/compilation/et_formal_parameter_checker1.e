@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type,
@@ -42,10 +42,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new formal parameter first pass checker.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			create formal_parameter_sorter.make_default
 			create direct_formal_parameter_sorter.make_default
 		end
@@ -143,7 +143,7 @@ feature {NONE} -- Constraint validity
 			l_actual: ET_TYPE
 		do
 			a_class := a_type.base_class
-			a_class.process (current_system.eiffel_parser)
+			a_class.process (system_processor.eiffel_parser)
 			if not a_class.is_preparsed then
 				set_fatal_error
 				error_handler.report_vtct0a_error (current_class, a_type)

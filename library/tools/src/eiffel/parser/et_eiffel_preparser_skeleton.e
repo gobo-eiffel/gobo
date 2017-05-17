@@ -5,7 +5,7 @@ note
 		"Eiffel preparser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,21 +23,26 @@ inherit
 
 	ET_AST_NULL_PROCESSOR
 		rename
+			make as make_ast_processor,
 			process_identifier as process_ast_identifier,
 			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		redefine
-			make, process_cluster
+			process_cluster
 		end
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new Eiffel preparser.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			create eiffel_buffer.make_with_size (std.input, Initial_eiffel_buffer_size)
-			make_eiffel_scanner ("unknown file")
+			make_eiffel_scanner ("unknown file", a_system_processor)
+		ensure
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Initialization

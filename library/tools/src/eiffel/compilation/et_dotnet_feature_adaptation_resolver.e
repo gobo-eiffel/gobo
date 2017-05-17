@@ -5,7 +5,7 @@ note
 		"Feature adaptation resolvers for .NET classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		end
 
 create
@@ -30,12 +30,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new feature adaptation resolver for .NET classes.
 		local
 			l_dotnet_signature_tester: ET_DOTNET_SIGNATURE_TESTER
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			create dotnet_features.make (400)
 			create l_dotnet_signature_tester.make
 			dotnet_features.set_equality_tester (l_dotnet_signature_tester)
@@ -323,7 +323,7 @@ feature {NONE} -- Feature recording
 			elseif a_parent_feature.is_frozen and l_heir_class_impl /= l_parent_class_impl then
 -- TODO: if the feature is frozen in the parent then they should be declared in the same class.
 -- If not then they are two different routines.
-			elseif not l_heir_class_impl.conforms_to_type (l_parent_class_impl, current_class, current_class) then
+			elseif not l_heir_class_impl.conforms_to_type (l_parent_class_impl, current_class, current_class, system_processor) then
 -- TODO: there is no guarantee that these two features are related.
 			else
 				found := True

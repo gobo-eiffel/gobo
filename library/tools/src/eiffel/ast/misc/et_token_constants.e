@@ -5690,6 +5690,15 @@ feature -- System
 			standard_error_handler_not_void: Result /= Void
 		end
 
+	null_error_handler: ET_NULL_ERROR_HANDLER
+			-- Shared error handler where no error message
+			-- will be displayed
+		once
+			create Result.make_null
+		ensure
+			null_error_handler_not_void: Result /= Void
+		end
+
 	default_ast_factory: ET_AST_FACTORY
 			-- Shared default Eiffel AST factory
 		once
@@ -5705,6 +5714,22 @@ feature -- System
 		ensure
 			empty_actual_parameters_not_void: Result /= Void
 			actual_parameters_is_empty: Result.is_empty
+		end
+
+	null_ast_processor: ET_AST_NULL_PROCESSOR
+			-- Null AST processor
+		once ("PROCESS")
+			create Result.make
+		ensure
+			null_ast_processor_not_void: Result /= Void
+		end
+
+	null_system_processor: ET_SYSTEM_PROCESSOR
+			-- Null system processor
+		once ("PROCESS")
+			create Result.make_null
+		ensure
+			null_system_processor_not_void: Result /= Void
 		end
 
 feature -- Empty lists

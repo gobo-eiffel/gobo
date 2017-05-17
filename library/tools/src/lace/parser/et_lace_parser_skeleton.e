@@ -5,7 +5,7 @@ note
 		"Lace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -330,8 +330,6 @@ feature {NONE} -- AST factory
 			a_name_not_empty: not a_name.is_empty
 		do
 			Result := ast_factory.new_system (a_name)
-			Result.set_error_handler (ast_factory.new_error_handler)
-			Result.set_ast_factory (ast_factory.new_ast_factory)
 		ensure
 			system_not_void: Result /= Void
 		end

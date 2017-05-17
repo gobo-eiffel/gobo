@@ -107,17 +107,18 @@ feature -- Access
 
 feature -- Status report
 
-	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN
+	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is feature name listed in current creation clause
 			-- and is it exported to `a_class'?
-			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_name_not_void: a_name /= Void
 			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if not is_empty then
-				if clients.has_descendant (a_class) then
+				if clients.has_descendant (a_class, a_system_processor) then
 					Result := has_feature_name (a_name)
 				end
 			end
@@ -155,18 +156,21 @@ feature -- Setting
 
 feature -- Basic operations
 
-	add_creations_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_FEATURE_NAME])
+	add_creations_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_FEATURE_NAME]; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Add to `a_set' the feature name of creation procedures which are
 			-- exported to `a_client'.
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes
+			-- whose ancestors need to be built in order to check for descendants.)
 		require
 			a_client_not_void: a_client /= Void
 			a_set_not_void: a_set /= Void
 			no_void_names: not a_set.has_void
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			i: INTEGER
 		do
 			if not is_empty then
-				if clients.has_descendant (a_client) then
+				if clients.has_descendant (a_client, a_system_processor) then
 					from
 						i := count - 1
 					until

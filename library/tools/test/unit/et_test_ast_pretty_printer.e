@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,6 +40,7 @@ feature -- Test
 		local
 			a_system: ET_SYSTEM
 			an_ast_factory: ET_DECORATED_AST_FACTORY
+			l_system_processor: ET_SYSTEM_PROCESSOR
 			a_cluster: ET_XACE_CLUSTER
 			a_class: ET_CLASS
 			a_class_name: ET_IDENTIFIER
@@ -47,11 +48,12 @@ feature -- Test
 			a_filename: STRING
 		do
 			create a_system.make ("system_name")
+			a_system.set_ise_version (ise_latest)
+			create l_system_processor.make_null
+			l_system_processor.activate (a_system)
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
-			a_system.set_ast_factory (an_ast_factory)
-			a_system.set_ise_version (ise_latest)
-			a_system.activate_processors
+			l_system_processor.set_ast_factory (an_ast_factory)
 			create a_class_name.make ("PRETTY_PRINTED1")
 			a_class := an_ast_factory.new_class (a_class_name)
 			a_system.register_class (a_class)
@@ -61,16 +63,17 @@ feature -- Test
 			a_class.set_group (a_cluster)
 			a_master_class := a_system.master_class (a_class_name)
 			a_master_class.add_first_local_class (a_class)
-			check_class (a_class)
+			check_class (a_class, l_system_processor)
 		end
 
 feature {NONE} -- Test
 
-	check_class (a_class: ET_CLASS)
+	check_class (a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Check that after parsing `a_class' and printing back its AST,
 			-- we get two files containing the same text.
 		require
 			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_printer: ET_AST_PRETTY_PRINTER
 			l_file: KL_TEXT_OUTPUT_FILE
@@ -81,7 +84,7 @@ feature {NONE} -- Test
 				l_full_test := variables.has ("full_test")
 				l_prefixed_name := a_class.group.prefixed_name
 				if l_full_test or else (l_prefixed_name.count > 2 and then (l_prefixed_name.item (1) = 'd' and l_prefixed_name.item (2) = 't')) then
-					a_class.process (a_class.current_system.eiffel_parser)
+					a_class.process (a_system_processor.eiffel_parser)
 					assert (a_class.lower_name + "_parsed", a_class.is_parsed)
 					assert (a_class.lower_name + "_no_syntax_error", not a_class.has_syntax_error)
 					create l_file.make ("gobo.txt")

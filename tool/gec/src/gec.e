@@ -32,9 +32,6 @@ inherit
 	ET_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
-	ET_SHARED_ERROR_HANDLERS
-		export {NONE} all end
-
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
@@ -56,6 +53,7 @@ feature -- Execution
 				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
 			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
+			create system_processor.make_null
 			parse_arguments
 			a_filename := ace_filename
 			create a_file.make (a_filename)
@@ -77,7 +75,7 @@ feature -- Execution
 						std.output.put_line ("Press Enter...")
 						std.input.read_character
 					end
-					if last_system.error_handler.has_error then
+					if system_processor.error_handler.has_error then
 						Exceptions.die (2)
 					end
 				else
@@ -98,6 +96,9 @@ feature -- Access
 
 	last_system: ET_SYSTEM
 			-- Last Eiffel system parsed, if any
+
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 feature {NONE} -- Eiffel config file parsing
 
@@ -211,6 +212,7 @@ feature {NONE} -- Processing
 			a_system_not_void: a_system /= Void
 		local
 			l_system: ET_DYNAMIC_SYSTEM
+			l_error_handler: ET_ERROR_HANDLER
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_root_type: ET_BASE_TYPE
 			l_generator: ET_C_GENERATOR
@@ -221,18 +223,24 @@ feature {NONE} -- Processing
 			l_type_names: DS_HASH_SET [STRING]
 			s: STRING
 		do
-			if is_silent then
-				a_system.set_error_handler (null_error_handler)
+			if is_gelint then
+				a_system.set_flat_mode (True)
+				a_system.set_flat_dbc_mode (True)
 			end
-			a_system.error_handler.set_ise
+			system_processor.activate (a_system)
+			if is_silent then
+				create l_error_handler.make_null
+			else
+				create l_error_handler.make_standard
+			end
+			l_error_handler.set_ise
+			system_processor.set_error_handler (l_error_handler)
 			a_system.set_ise_version (ise_latest)
 			if is_verbose then
 -- TODO.
 			end
-			create l_system.make (a_system)
+			create l_system.make (a_system, system_processor)
 			if is_gelint then
-				a_system.set_flat_mode (True)
-				a_system.set_flat_dbc_mode (True)
 				l_system.set_full_class_checking (True)
 			end
 			l_system.set_catcall_error_mode (catcall_error_mode)
@@ -263,9 +271,9 @@ feature {NONE} -- Processing
 					Exceptions.die (1)
 				end
 			end
-			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system)
+			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system, system_processor)
 			l_system.set_dynamic_type_set_builder (l_builder)
-			l_system.compile
+			l_system.compile (system_processor)
 			l_root_type := a_system.root_type
 			if l_root_type = Void then
 				-- Do nothing.
@@ -279,7 +287,7 @@ feature {NONE} -- Processing
 				if l_system_name = Void then
 					l_system_name := l_root_type.base_class.lower_name
 				end
-				create l_generator.make (l_system)
+				create l_generator.make (l_system, system_processor)
 				if gc_option.was_found then
 						-- Override any option that might have been specified
 						-- in the Eiffel config file.
@@ -537,6 +545,7 @@ feature -- Argument parsing
 invariant
 
 	error_handler_not_void: error_handler /= Void
+	system_processor_not_void: system_processor /= Void
 	ace_filename_not_void: ace_filename /= Void
 	catcall_option_not_void: catcall_option /= Void
 	gelint_flag_not_void: gelint_flag /= Void

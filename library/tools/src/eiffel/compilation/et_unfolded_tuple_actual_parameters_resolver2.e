@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class_type,
 			process_qualified_like_type,
@@ -35,10 +35,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new Tuple-type-unfolding resolver for types of given classes.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			create constraint_context.make_with_capacity (current_class, 1)
 		end
 
@@ -106,7 +106,7 @@ feature {NONE} -- Tuple-type-unfolding
 				l_base_class := a_type.base_class
 				if l_base_class.tuple_constraint_position /= 0 and then l_base_class.formal_parameter_count = nb then
 					constraint_context.set (a_type, current_class)
-					a_type.resolve_unfolded_tuple_actual_parameters_2 (current_class, constraint_context)
+					a_type.resolve_unfolded_tuple_actual_parameters_2 (current_class, constraint_context, system_processor)
 				end
 			end
 		end
