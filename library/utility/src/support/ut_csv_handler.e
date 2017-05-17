@@ -85,15 +85,15 @@ feature -- Input
 			from i := 1 until i > nb loop
 				c := a_row.item (i)
 				if c = '%"' then
-					if l_cell.is_empty then
-						has_quote := True
-					elseif has_quote then
+					if has_quote then
 						if i < nb and then a_row.item (i + 1) = '%"' then
 							l_cell.append_character ('%"')
 							i := i + 1
 						else
 							has_quote := False
 						end
+					elseif l_cell.is_empty then
+						has_quote := True
 					else
 						l_cell.append_character ('%"')
 					end

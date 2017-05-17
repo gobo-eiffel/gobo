@@ -40,6 +40,11 @@
 
 * Simplified the way built-in features are supported.
 
+### Gobo Eiffel Utility Library
+
+* Fixed bug in `UT_CSV_HANDLER.read_row` when a cell contains
+  an empty string between double-quotes: ""
+
 ## Version 4.1 - 2 April 2017
 
 ### gec
