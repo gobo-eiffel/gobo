@@ -227,6 +227,9 @@
 			<cluster name="kernel">
 				<cluster name="exceptions"/>
 			</cluster>
+			<cluster name="synchronization">
+				<cluster name="classic"/>
+			</cluster>
 		</cluster>
 	</cluster>
 	<cluster name="regexp" location="${GOBO}/library/regexp/src" prefix="rx_">

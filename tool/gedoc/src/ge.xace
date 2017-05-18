@@ -189,6 +189,9 @@
 			<cluster name="kernel">
 				<cluster name="exceptions"/>
 			</cluster>
+			<cluster name="synchronization">
+				<cluster name="classic"/>
+			</cluster>
 		</cluster>
 	</cluster>
 	<cluster name="skeleton" location="${GOBO}/library/lexical/src/skeleton" prefix="lx_"/>

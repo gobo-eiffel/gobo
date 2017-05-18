@@ -62,6 +62,9 @@
 			<cluster name="kernel">
 				<cluster name="exceptions"/>
 			</cluster>
+			<cluster name="synchronization">
+				<cluster name="classic"/>
+			</cluster>
 		</cluster>
 	</cluster>
 </system>

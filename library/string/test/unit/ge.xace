@@ -164,6 +164,9 @@
 			<cluster name="kernel">
 				<cluster name="exceptions"/>
 			</cluster>
+			<cluster name="synchronization">
+				<cluster name="classic"/>
+			</cluster>
 		</cluster>
 	</cluster>
 	<cluster name="xml" location="${GOBO}/library/xml/src" prefix="xm_">

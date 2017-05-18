@@ -155,6 +155,9 @@
 			<cluster name="kernel">
 				<cluster name="exceptions"/>
 			</cluster>
+			<cluster name="synchronization">
+				<cluster name="classic"/>
+			</cluster>
 		</cluster>
 	</cluster>
 	<cluster name="time" location="${GOBO}/library/time/src" prefix="dt_">

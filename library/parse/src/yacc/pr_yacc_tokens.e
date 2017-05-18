@@ -1,7 +1,7 @@
 note
 
 	description: "Parser token codes"
-	generator: "geyacc version 4.0"
+	generator: "geyacc version 4.1"
 
 deferred class PR_YACC_TOKENS
 

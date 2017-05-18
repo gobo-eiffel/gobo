@@ -151,6 +151,9 @@
 			<cluster name="kernel">
 				<cluster name="exceptions"/>
 			</cluster>
+			<cluster name="synchronization">
+				<cluster name="classic"/>
+			</cluster>
 		</cluster>
 	</cluster>
 	<cluster name="string" location="${GOBO}/library/string/src" prefix="st_">
