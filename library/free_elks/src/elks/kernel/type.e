@@ -134,9 +134,6 @@ feature -- Status report
 
 	is_attached: BOOLEAN
 			-- Is current type attached?
-			--
-			-- Note that this routine does not consider expanded types as attached,
-			-- even in void-safe mode!
 		external
 			"built_in"
 		end

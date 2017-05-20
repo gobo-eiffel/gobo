@@ -353,7 +353,7 @@ feature -- Comparison
 		ensure
 			symmetric: Result implies other.is_case_insensitive_equal (Current)
 			consistent: attached {like Current} other as l_other implies (standard_is_equal (l_other) implies Result)
-			valid_result: as_lower ~ other.as_lower implies Result
+			valid_result: as_lower.same_string (other.as_lower) implies Result
 		end
 
  	same_caseless_characters (other: READABLE_STRING_32; start_pos, end_pos, index_pos: INTEGER): BOOLEAN
