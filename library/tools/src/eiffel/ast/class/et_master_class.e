@@ -16,7 +16,7 @@ note
 		the given name when viewed from the surrounding universe using `actual_class'.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #8 $"
@@ -764,6 +764,20 @@ feature -- Implementation checking status
 					Result := l_first_overriding_class.implementation_checked
 				else
 					Result := intrinsic_class.implementation_checked
+				end
+			end
+		end
+
+	implementation_checked_successfully: BOOLEAN
+			-- Has the implementation of current class been successfully checked?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.implementation_checked_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.implementation_checked_successfully
+				else
+					Result := intrinsic_class.implementation_checked_successfully
 				end
 			end
 		end

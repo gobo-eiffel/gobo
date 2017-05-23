@@ -1142,7 +1142,7 @@ feature -- Compilation
 		do
 			has_fatal_error := False
 			activate_dynamic_type_set_builder (a_system_processor)
-			current_system.compile_all (a_system_processor)
+			a_system_processor.compile_all (current_system)
 			if not a_system_processor.stop_requested and then error_handler.benchmark_shown then
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now

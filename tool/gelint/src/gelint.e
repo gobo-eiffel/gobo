@@ -45,6 +45,7 @@ feature -- Execution
 			a_file: KL_TEXT_INPUT_FILE
 			i, nb: INTEGER
 			arg: STRING
+			l_string: STRING
 			a_ise_version: STRING
 			a_ise_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
@@ -53,8 +54,8 @@ feature -- Execution
 				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
 			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
-			create system_processor.make_null
 			is_flat_dbc := True
+			thread_count := 1
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
 				arg := Arguments.argument (i)
@@ -68,6 +69,14 @@ feature -- Execution
 					defined_variables := arg.substring (10, arg.count)
 				elseif arg.is_equal ("--verbose") then
 					is_verbose := True
+				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--thread=") then
+					l_string := arg.substring (10, arg.count)
+					if l_string.is_integer then
+						thread_count := l_string.to_integer
+					else
+						report_usage_message
+						Exceptions.die (1)
+					end
 				elseif arg.is_equal ("--flat") then
 					is_flat := True
 				elseif arg.is_equal ("--noflatdbc") then
@@ -133,9 +142,9 @@ feature -- Execution
 							std.output.put_line ("Press Enter...")
 							io.read_line
 						end
-						if system_processor.error_handler.has_eiffel_error then
+						if error_handler.has_eiffel_error then
 							Exceptions.die (2)
-						elseif system_processor.error_handler.has_internal_error then
+						elseif error_handler.has_internal_error then
 							Exceptions.die (5)
 						end
 					else
@@ -160,18 +169,16 @@ feature -- Status report
 	ecma_version: UT_VERSION
 	ise_version: UT_VERSION
 	is_silent: BOOLEAN
+	thread_count: INTEGER
 			-- Command-line options
 
 feature -- Access
 
-	error_handler: UT_ERROR_HANDLER
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
 	last_system: ET_SYSTEM
 			-- Last system parsed, if any
-
-	system_processor: ET_SYSTEM_PROCESSOR
-			-- System processor currently used
 
 feature {NONE} -- Eiffel config file parsing
 
@@ -287,13 +294,13 @@ feature {NONE} -- Processing
 		local
 			a_dynamic_system: ET_DYNAMIC_SYSTEM
 			a_builder: ET_DYNAMIC_TYPE_SET_BUILDER
-			l_error_handler: ET_ERROR_HANDLER
+			l_system_processor: ET_SYSTEM_PROCESSOR
+			l_system_multiprocessor: ET_SYSTEM_MULTIPROCESSOR
 		do
-			create l_error_handler.make_standard
---			l_error_handler.set_compilers
-			l_error_handler.set_ise
-			l_error_handler.set_verbose (is_verbose)
-			l_error_handler.set_benchmark_shown (not is_silent or is_verbose)
+--			error_handler.set_compilers
+			error_handler.set_ise
+			error_handler.set_verbose (is_verbose)
+			error_handler.set_benchmark_shown (not is_silent or is_verbose)
 			if ise_version = Void then
 				ise_version := ise_latest
 			end
@@ -302,19 +309,25 @@ feature {NONE} -- Processing
 			a_system.set_flat_mode (is_flat)
 			a_system.set_flat_dbc_mode (is_flat_dbc)
 			a_system.set_unknown_builtin_reported (False)
-			system_processor.activate (a_system)
-			system_processor.set_error_handler (l_error_handler)
+			if thread_count > 1 then
+				create l_system_multiprocessor.make (thread_count)
+				l_system_multiprocessor.set_all_error_handler (error_handler)
+				l_system_processor := l_system_multiprocessor
+			else
+				create l_system_processor.make
+				l_system_processor.set_error_handler (error_handler)
+			end
 			if is_catcall then
-				create a_dynamic_system.make (a_system, system_processor)
+				create a_dynamic_system.make (a_system, l_system_processor)
 				a_dynamic_system.set_catcall_error_mode (True)
-				create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_dynamic_system, system_processor)
+				create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_dynamic_system, l_system_processor)
 				a_dynamic_system.set_dynamic_type_set_builder (a_builder)
-				a_dynamic_system.compile (system_processor)
+				a_dynamic_system.compile (l_system_processor)
 			else
 				a_system.set_providers_enabled (True)
 				a_system.set_cluster_dependence_enabled (True)
 				a_system.set_use_cluster_dependence_pathnames (True)
-				a_system.compile (system_processor)
+				l_system_processor.compile (a_system)
 			end
 		end
 
@@ -351,7 +364,7 @@ feature -- Error handling
 			-- Gelint usage message.
 		once
 			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
-				%%T[--flat][--noflatdbc][--catcall][--silent][--verbose] xace_or_ecf_filename")
+				%%T[--thread=N][--flat][--noflatdbc][--catcall][--silent][--verbose] xace_or_ecf_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

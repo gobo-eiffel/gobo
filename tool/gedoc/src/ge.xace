@@ -202,4 +202,7 @@
 		<cluster name="pcre"/>
 		<cluster name="support"/>
 	</cluster>
+	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
+		<cluster name="classic"/>
+	</cluster>
 </system>

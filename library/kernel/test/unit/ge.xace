@@ -170,6 +170,9 @@
 			</cluster>
 		</cluster>
 	</cluster>
+	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
+		<cluster name="classic"/>
+	</cluster>
 	<cluster name="xml" location="${GOBO}/library/xml/src" prefix="xm_">
 		<option name="abstract" value="true"/>
 		<cluster name="position"/>

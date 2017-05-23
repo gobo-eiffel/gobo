@@ -281,6 +281,12 @@
 				</cluster>
 			</cluster>
 		</cluster>
+		<cluster name="th_thread" location="${GOBO}/library/thread/src">
+			<option void_safety="none"/>
+			<cluster name="th_classic" location="$|classic">
+				<option void_safety="none"/>
+			</cluster>
+		</cluster>
 		<cluster name="xm_xml" location="${GOBO}/library/xml/src">
 			<option void_safety="none"/>
 			<cluster name="xm_position" location="$|position">

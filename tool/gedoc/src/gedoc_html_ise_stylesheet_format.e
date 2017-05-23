@@ -109,12 +109,12 @@ feature {NONE} -- Processing
 				system_processor.print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			a_system.compile_degree_4 (system_processor)
+			system_processor.compile_degree_4 (a_system)
 			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
 				system_processor.print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			a_system.compile_degree_3 (system_processor)
+			system_processor.compile_degree_3 (a_system)
 			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
 				system_processor.print_time (dt1, "Degree 3")
 				dt1 := l_clock.system_clock.date_time_now

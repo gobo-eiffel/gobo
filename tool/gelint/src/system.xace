@@ -3,7 +3,7 @@
 <system name="gelint">
 	<description>
 		system: "Gobo Eiffel Lint"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -11,6 +11,7 @@
 
 	<root class="GELINT" creation="execute"/>
 	<option name="console_application" value="true"/>
+	<option name="multithreaded" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
@@ -39,5 +40,6 @@
 	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/math/library.xace"/>
 	<mount location="${GOBO}/library/time/library.xace"/>
+	<mount location="${GOBO}/library/thread/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

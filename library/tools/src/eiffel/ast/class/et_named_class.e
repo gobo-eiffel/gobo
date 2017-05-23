@@ -5,7 +5,7 @@ note
 		"Eiffel classes with a given name."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #3 $"
@@ -241,8 +241,7 @@ feature -- Implementation checking status
 
 	implementation_checked_successfully: BOOLEAN
 			-- Has the implementation of current class been successfully checked?
-		do
-			Result := implementation_checked and then not has_implementation_error
+		deferred
 		ensure
 			definition: Result = (implementation_checked and then not has_implementation_error)
 		end

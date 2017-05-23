@@ -83,6 +83,11 @@ feature -- Status report
 	suppliers_enabled: BOOLEAN
 			-- Should suppliers of `current_class' be computed?
 
+	has_class_not_processed: BOOLEAN
+			-- Is there some classes which could not be processed
+			-- because their parents was still in the middle of being
+			-- processed in another thread by another processor
+
 feature -- Status setting
 
 	set_flat_mode (b: BOOLEAN)
@@ -117,6 +122,14 @@ feature -- Status setting
 			suppliers_enabled_set: suppliers_enabled = b
 		end
 
+	set_has_class_not_processed (b: BOOLEAN)
+			-- Set `has_class_not_processed' to `b'.
+		do
+			has_class_not_processed := b
+		ensure
+			has_class_not_processed_set: has_class_not_processed = b
+		end
+
 feature -- Processing
 
 	process_class (a_class: ET_CLASS)
@@ -129,10 +142,18 @@ feature -- Processing
 			-- the feature `a_class.reset_implementation_checked' needs to be called
 			-- before checking it again in flat mode. No incrementality is provided
 			-- between non-flat and flat modes.
+			--
+			-- Note that in multi-threaded mode, when several system processors
+			-- are processing a Eiffel system together, the implementation of 
+			-- `a_class' may still not be checked at the end of this routine if
+			-- it is currently being processed by another system processor.
 		local
 			a_processor: like Current
 		do
 			if a_class.is_none then
+				if suppliers_enabled and then a_class.suppliers = Void then
+					a_class.set_suppliers (no_suppliers)
+				end
 				a_class.set_implementation_checked
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
@@ -152,12 +173,8 @@ feature -- Processing
 			else
 				internal_process_class (a_class)
 			end
-			if suppliers_enabled and then a_class.suppliers = Void then
-				a_class.set_suppliers (no_suppliers)
-			end
 		ensure then
-			implementation_checked: a_class.implementation_checked
-			suppliers_set: suppliers_enabled implies a_class.suppliers /= Void
+			suppliers_set: a_class.implementation_checked and suppliers_enabled implies a_class.suppliers /= Void
 		end
 
 feature -- Error handling
@@ -167,11 +184,14 @@ feature -- Error handling
 		require
 			a_class_not_void: a_class /= Void
 		do
-			a_class.set_implementation_checked
+			if suppliers_enabled and then a_class.suppliers = Void then
+				a_class.set_suppliers (no_suppliers)
+			end
 			a_class.set_implementation_error
 		ensure
 			implementation_checked: a_class.implementation_checked
 			has_implementation_error: a_class.has_implementation_error
+			suppliers_set: suppliers_enabled implies a_class.suppliers /= Void
 		end
 
 feature {NONE} -- Processing
@@ -186,6 +206,11 @@ feature {NONE} -- Processing
 			-- the feature `a_class.reset_implementation_checked' needs to be called
 			-- before checking it again in flat mode. No incrementality is provided
 			-- between non-flat and flat modes.
+			--
+			-- Note that in multi-threaded mode, when several system processors
+			-- are processing a Eiffel system together, the implementation of 
+			-- `a_class' may still not be checked at the end of this routine if
+			-- it is currently being processed by another system processor.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -198,63 +223,106 @@ feature {NONE} -- Processing
 			i1, nb1: INTEGER
 			i2, nb2: INTEGER
 			l_parent_clause: ET_PARENT_LIST
+			l_parent_not_checked: BOOLEAN
 		do
 			old_class := current_class
 			current_class := a_class
-			if not current_class.implementation_checked then
-					-- Check interface of `current_class' if not already done.
-				current_class.process (system_processor.interface_checker)
-				if current_class.interface_checked and then not current_class.has_interface_error then
-					current_class.set_implementation_checked
-						-- Process parents first.
-					nb1 := current_class.parents_count
-					from i1 := 1 until i1 > nb1 loop
-						l_parent_clause := current_class.parents (i1)
-						nb2 := l_parent_clause.count
-						from i2 := 1 until i2 > nb2 loop
-							a_parent_class := l_parent_clause.parent (i2).type.base_class
-							if not a_parent_class.is_preparsed then
-									-- Internal error: the VTCT error should have already been
-									-- reported in ET_ANCESTOR_BUILDER.
-								a_error_in_parent := True
-								set_fatal_error (current_class)
-							else
-									-- This is a controlled recursive call to `internal_process_class'.
-								internal_process_class (a_parent_class)
-								if a_parent_class.has_implementation_error then
-									a_error_in_parent := True
-									set_fatal_error (current_class)
-								end
-							end
-							i2 := i2 + 1
-						end
-						i1 := i1 + 1
-					end
-					error_handler.report_compilation_status (Current, current_class, system_processor)
-					if suppliers_enabled then
-						l_suppliers := supplier_builder.supplier_classes
-						supplier_builder.set (current_class, l_suppliers)
-					end
-					check_features_validity (a_error_in_parent)
-					check_invariants_validity (a_error_in_parent)
-					if l_suppliers /= Void then
-						if not current_class.has_implementation_error then
-							create l_suppliers2.make (l_suppliers.count)
-							l_suppliers2.extend (l_suppliers)
-							current_class.set_suppliers (l_suppliers2)
-						else
-							current_class.set_suppliers (no_suppliers)
-						end
-						l_suppliers.wipe_out
-					end
-				else
+			if current_class.implementation_checking_mutex.try_lock then
+					-- No other thread is processing `current_class'.
+					-- Got exclusive access for its processing.
+				if current_class.is_checking_implementation then
+						-- Internal error: this is a recursive call because of a cycle
+						-- in the parents. It should have already been reported in
+						-- ET_ANCESTOR_BUILDER.
 					set_fatal_error (current_class)
+					error_handler.report_giaaa_error
+				elseif not current_class.implementation_checked then
+						-- Check interface of `current_class' if not already done.
+					current_class.process (system_processor.interface_checker)
+					if current_class.interface_checked_successfully then
+						current_class.set_checking_implementation (True)
+							-- Process parents first.
+						nb1 := current_class.parents_count
+						from i1 := 1 until i1 > nb1 loop
+							l_parent_clause := current_class.parents (i1)
+							nb2 := l_parent_clause.count
+							from i2 := 1 until i2 > nb2 loop
+								a_parent_class := l_parent_clause.parent (i2).type.base_class
+								process_parent_class (a_parent_class)
+								if a_parent_class.implementation_checked then
+									if a_parent_class.has_implementation_error then
+										a_error_in_parent := True
+									end
+								else
+									l_parent_not_checked := True
+								end
+								i2 := i2 + 1
+							end
+							i1 := i1 + 1
+						end
+						if l_parent_not_checked then
+								-- Some parents have not been fully checked yet.
+								-- Postpone the processing of `current_class'.
+							has_class_not_processed := True
+						else
+							error_handler.report_compilation_status (Current, current_class, system_processor)
+							if a_error_in_parent then
+								set_fatal_error (current_class)
+							end
+							if suppliers_enabled then
+								l_suppliers := supplier_builder.supplier_classes
+								supplier_builder.set (current_class, l_suppliers)
+							end
+							check_features_validity (a_error_in_parent)
+							check_invariants_validity (a_error_in_parent)
+							if l_suppliers /= Void then
+								if not current_class.has_implementation_error then
+									create l_suppliers2.make (l_suppliers.count)
+									l_suppliers2.extend (l_suppliers)
+									current_class.set_suppliers (l_suppliers2)
+								else
+									current_class.set_suppliers (no_suppliers)
+								end
+								l_suppliers.wipe_out
+							end
+							current_class.set_implementation_checked
+						end
+						current_class.set_checking_implementation (False)
+					else
+						set_fatal_error (current_class)
+					end
 				end
+				current_class.implementation_checking_mutex.unlock
 			end
 			current_class := old_class
 		ensure
-			implementation_checked: a_class.implementation_checked
-			suppliers_set: suppliers_enabled implies a_class.suppliers /= Void
+			suppliers_set: a_class.implementation_checked and suppliers_enabled implies a_class.suppliers /= Void
+		end
+
+	process_parent_class (a_class: ET_CLASS)
+			-- Same as `process_class', except that this is a controlled
+			-- recursive call where `a_class' is a parent of `current_class'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if a_class.is_none then
+				if suppliers_enabled and then a_class.suppliers = Void then
+					a_class.set_suppliers (no_suppliers)
+				end
+				a_class.set_implementation_checked
+			elseif a_class.is_unknown then
+				set_fatal_error (a_class)
+				error_handler.report_giaaa_error
+			elseif not a_class.is_preparsed then
+					-- Internal error: the VTCT error should have already been
+					-- reported in ET_ANCESTOR_BUILDER.
+				set_fatal_error (a_class)
+				error_handler.report_giaaa_error
+			else
+				internal_process_class (a_class)
+			end
+		ensure
+			suppliers_set: a_class.implementation_checked and suppliers_enabled implies a_class.suppliers /= Void
 		end
 
 feature {NONE} -- Feature validity

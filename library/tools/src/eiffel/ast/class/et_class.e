@@ -79,6 +79,8 @@ feature {NONE} -- Initialization
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			group := tokens.unknown_group
+			create implementation_status_mutex.make
+			create implementation_checking_mutex.make
 			named_base_class := Current
 			time_stamp := no_time_stamp
 			class_code := class_codes.class_code (a_name)
@@ -2416,32 +2418,56 @@ feature -- Implementation checking status
 			-- Has the implementation of current class been checked?
 			-- Immediate and redefined (and possibly inherited when in flat mode)
 			-- features and invariant have been checked.
+		do
+			implementation_status_mutex.lock
+			Result := unprotected_implementation_checked
+			implementation_status_mutex.unlock
+		end
+
+	implementation_checked_successfully: BOOLEAN
+			-- Has the implementation of current class been successfully checked?
+		do
+			implementation_status_mutex.lock
+			Result := unprotected_implementation_checked and then not unprotected_has_implementation_error
+			implementation_status_mutex.unlock
+		end
 
 	has_implementation_error: BOOLEAN
 			-- Has a fatal error occurred during implementation checking?
+		do
+			implementation_status_mutex.lock
+			Result := unprotected_has_implementation_error
+			implementation_status_mutex.unlock
+		end
 
 	set_implementation_checked
 			-- Set `implementation_checked' to True.
 		do
-			implementation_checked := True
+			implementation_status_mutex.lock
+			unprotected_implementation_checked := True
+			implementation_status_mutex.unlock
 		ensure
 			implementation_checked: implementation_checked
 		end
 
 	set_implementation_error
 			-- Set `has_implementation_error' to True.
-		require
-			implementation_checked: implementation_checked
 		do
-			has_implementation_error := True
+			implementation_status_mutex.lock
+			unprotected_implementation_checked := True
+			unprotected_has_implementation_error := True
+			implementation_status_mutex.unlock
 		ensure
+			implementation_checked: implementation_checked
 			has_implementation_error: has_implementation_error
 		end
 
 	unset_implementation_error
 			-- Set `has_implementation_error' to False.
 		do
-			has_implementation_error := False
+			implementation_status_mutex.lock
+			unprotected_has_implementation_error := False
+			implementation_status_mutex.unlock
 		ensure
 			not_has_implementation_error: not has_implementation_error
 		end
@@ -2449,14 +2475,52 @@ feature -- Implementation checking status
 	reset_implementation_checked
 			-- Set `implementation_checked' to False.
 		do
-			has_implementation_error := False
-			implementation_checked := False
+			implementation_status_mutex.lock
+			unprotected_has_implementation_error := False
+			unprotected_implementation_checked := False
 			suppliers := Void
+			implementation_status_mutex.unlock
 		ensure
 			implementation_not_checked: not implementation_checked
 			no_implementation_error: not has_implementation_error
 			suppliers_reset: suppliers = Void
 		end
+
+feature {ET_IMPLEMENTATION_CHECKER} -- Implementation checking status
+
+	implementation_checking_mutex: MUTEX
+			-- Mutex to get exclusive access to current class
+			-- when checking its implementation
+
+	is_checking_implementation: BOOLEAN
+			-- Is the implementation of current class being checked?
+			-- (This is to avoid infinite loop in ET_IMPLEMENTATION_CHECKER
+			-- in case of a cycle in the parents.)
+
+	set_checking_implementation (b: BOOLEAN)
+			-- Set `is_checking_implementation' to `b'.
+		do
+			is_checking_implementation := b
+		ensure
+			checking_implementation_set: is_checking_implementation = b
+		end
+
+feature {NONE} -- Implementation checking status
+
+	unprotected_implementation_checked: BOOLEAN
+			-- Has the implementation of current class been checked?
+			-- Immediate and redefined (and possibly inherited when in flat mode)
+			-- features and invariant have been checked.
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_implementation_error: BOOLEAN
+			-- Has a fatal error occurred during implementation checking?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	implementation_status_mutex: MUTEX
+			-- Mutex to access implementation status
 
 feature -- Invariant
 
@@ -2630,5 +2694,7 @@ invariant
 	no_void_supplier: attached suppliers as l_suppliers implies not l_suppliers.has_void
 	no_void_provider: attached providers as l_providers implies not l_providers.has_void
 	tuple_constraint_position: tuple_constraint_position /= 0 implies attached formal_parameters as l_formal_parameters and then (tuple_constraint_position >= 1 and tuple_constraint_position <= l_formal_parameters.count)
+	implementation_status_mutex_not_void: implementation_status_mutex /= Void
+	implementation_checking_mutex_not_void: implementation_checking_mutex /= Void
 
 end

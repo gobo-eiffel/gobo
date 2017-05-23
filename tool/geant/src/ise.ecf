@@ -458,6 +458,12 @@
 		<cluster name="ts_harness" location="${GOBO}/library/test/src/harness">
 			<option void_safety="none"/>
 		</cluster>
+		<cluster name="th_thread" location="${GOBO}/library/thread/src">
+			<option void_safety="none"/>
+			<cluster name="th_classic" location="$|classic">
+				<option void_safety="none"/>
+			</cluster>
+		</cluster>
 		<override name="kl_kernel_16_05" location="${GOBO}/library/kernel/src/16.05">
 			<option void_safety="none"/>
 			<file_rule>

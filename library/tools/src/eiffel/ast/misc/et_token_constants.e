@@ -5616,7 +5616,6 @@ feature -- System
 			Result.set_flattening_error
 			Result.set_interface_checked
 			Result.set_interface_error
-			Result.set_implementation_checked
 			Result.set_implementation_error
 		ensure
 			unknown_class_not_void: Result /= Void

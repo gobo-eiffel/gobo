@@ -6,6 +6,7 @@
 	<option name="console_application" value="true"/>
 	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="multithreaded" value="true"/>
 	<cluster name="gelint" location="${GOBO}/tool/gelint/src"/>
 	<cluster name="lexical" location="${GOBO}/library/lexical/src" prefix="lx_">
 		<option name="abstract" value="true"/>
@@ -155,6 +156,9 @@
 		<cluster name="date"/>
 		<cluster name="stopwatch"/>
 		<cluster name="time_zone"/>
+	</cluster>
+	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
+		<cluster name="classic"/>
 	</cluster>
 	<cluster name="ge" location="${GOBO}/library"/>
 	<cluster name="skeleton" location="${GOBO}/library/lexical/src/skeleton" prefix="lx_"/>

@@ -10,7 +10,7 @@
 	<description>
 		description: "ECF file for the Gobo Eiffel Tools Library"
 		library: "Gobo Eiffel Tools Library"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -47,6 +47,8 @@
 		<library name="structure" location="$GOBO/library/structure/library.ecf" readonly="true"/>
 
 		<library name="string" location="$GOBO/library/string/library.ecf" readonly="true"/>
+
+		<library name="thread" location="$GOBO/library/thread/library.ecf" readonly="true"/>
 		
 		<library name="time" location="$GOBO/library/time/library.ecf" readonly="true"/>
 		

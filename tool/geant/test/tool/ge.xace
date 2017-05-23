@@ -245,4 +245,7 @@
 	<cluster name="skeleton" location="${GOBO}/library/lexical/src/skeleton" prefix="lx_"/>
 	<cluster name="skeleton" location="${GOBO}/library/parse/src/skeleton" prefix="pr_"/>
 	<cluster name="harness" location="${GOBO}/library/test/src/harness" prefix="ts_"/>
+	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
+		<cluster name="classic"/>
+	</cluster>
 </system>

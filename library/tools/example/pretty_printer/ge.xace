@@ -165,6 +165,9 @@
 	<cluster name="ge" location="${GOBO}/library"/>
 	<cluster name="skeleton" location="${GOBO}/library/lexical/src/skeleton" prefix="lx_"/>
 	<cluster name="skeleton" location="${GOBO}/library/parse/src/skeleton" prefix="pr_"/>
+	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
+		<cluster name="classic"/>
+	</cluster>
 	<cluster name="free_elks" location="${GOBO}/library/free_elks/src" prefix="fe_">
 		<option name="abstract" value="true"/>
 		<cluster name="fake"/>

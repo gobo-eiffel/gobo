@@ -10,7 +10,7 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="time" location="${GOBO}/library/thread/src">
+	<cluster name="thread" location="${GOBO}/library/thread/src">
 		<cluster name="classic"/>
 	</cluster>
 

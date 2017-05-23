@@ -16,6 +16,8 @@ inherit
 
 	UT_ERROR_HANDLER
 		redefine
+			make_standard,
+			make_null,
 			is_verbose,
 			report_error_message
 		end
@@ -25,6 +27,22 @@ inherit
 create
 
 	make_standard, make_null
+
+feature {NONE} -- Initialization
+
+	make_standard
+			-- <Precursor>
+		do
+			create mutex.make
+			precursor
+		end
+
+	make_null
+			-- <Precursor>
+		do
+			create mutex.make
+			precursor
+		end
 
 feature -- Status report
 
@@ -92,6 +110,8 @@ feature -- Status setting
 			end
 		ensure
 			has_error_set: has_error = b
+			not_has_eiffel_error: not b implies not has_eiffel_error
+			not_has_internal_error: not b implies not has_internal_error
 		end
 
 	set_has_eiffel_error (b: BOOLEAN)
@@ -103,6 +123,7 @@ feature -- Status setting
 			end
 		ensure
 			has_eiffel_error_set: has_eiffel_error = b
+			has_error: b implies has_error
 		end
 
 	set_has_internal_error (b: BOOLEAN)
@@ -114,6 +135,7 @@ feature -- Status setting
 			end
 		ensure
 			has_internal_error_set: has_internal_error = b
+			has_error: b implies has_error
 		end
 
 feature -- Compilation report
@@ -125,10 +147,12 @@ feature -- Compilation report
 		do
 			if is_verbose then
 				if info_file /= Void then
+					mutex.lock
 					info_file.put_string ("Degree 6 ")
 					info_file.put_string (a_group.kind_lower_name)
 					info_file.put_character (' ')
 					info_file.put_line (a_group.full_lower_name ('/'))
+					mutex.unlock
 				end
 			end
 		end
@@ -143,6 +167,7 @@ feature -- Compilation report
 		do
 			if is_verbose then
 				if info_file /= Void then
+					mutex.lock
 					if a_processor = a_system_processor.eiffel_parser then
 						info_file.put_string ("Degree 5 class ")
 						info_file.put_line (a_class.upper_name)
@@ -163,6 +188,7 @@ feature -- Compilation report
 						end
 						info_file.put_line (a_class.upper_name)
 					end
+					mutex.unlock
 				end
 			end
 		end
@@ -174,11 +200,13 @@ feature -- Cluster errors
 		require
 			an_error_not_void: an_error /= Void
 		do
+			mutex.lock
 			set_has_eiffel_error (True)
 			report_info (an_error)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_gcaaa_error (a_cluster: ET_CLUSTER; a_dirname: STRING)
@@ -321,11 +349,13 @@ feature -- Universe errors
 		require
 			an_error_not_void: an_error /= Void
 		do
+			mutex.lock
 			set_has_eiffel_error (True)
 			report_info (an_error)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_vscn0a_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
@@ -422,11 +452,13 @@ feature -- .NET assembly errors
 		require
 			an_error_not_void: an_error /= Void
 		do
+			mutex.lock
 			set_has_eiffel_error (True)
 			report_info (an_error)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_gaaaa_error (an_assembly: ET_DOTNET_ASSEMBLY)
@@ -486,9 +518,11 @@ feature -- Syntax errors
 		local
 			an_error: ET_SYNTAX_ERROR
 		do
+			mutex.lock
 			set_has_eiffel_error (True)
 			create an_error.make (a_filename, p)
 			report_info (an_error)
+			mutex.unlock
 		end
 
 	report_SCAC_error (a_filename: STRING; p: ET_POSITION)
@@ -702,11 +736,13 @@ feature -- System errors
 		require
 			an_error_not_void: an_error /= Void
 		do
+			mutex.lock
 			set_has_eiffel_error (True)
 			report_info (an_error)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_catcall_error (an_error: STRING)
@@ -714,8 +750,10 @@ feature -- System errors
 		require
 			an_error_not_void: an_error /= Void
 		do
+			mutex.lock
 			set_has_eiffel_error (True)
 			report_info_message (an_error)
+			mutex.unlock
 		end
 
 	report_vsrc1a_error (a_class: ET_CLASS)
@@ -865,11 +903,13 @@ feature -- Validity errors
 				(is_ise and an_error.ise_reported) or
 				(is_ge and an_error.ge_reported)
 			then
+				mutex.lock
 				set_has_eiffel_error (True)
 				report_info (an_error)
 				if info_file = std.output then
 					info_file.put_line ("----")
 				end
+				mutex.unlock
 			end
 		end
 
@@ -8592,11 +8632,13 @@ feature -- Internal errors
 		require
 			an_error_not_void: an_error /= Void
 		do
+			mutex.lock
 			set_has_internal_error (True)
 			report_error (an_error)
 			if error_file = std.error then
 				error_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_giaaa_error
@@ -8613,9 +8655,16 @@ feature -- Reporting
 	report_error_message (an_error: STRING)
 			-- Report `an_error'.
 		do
+			mutex.lock
 			precursor (an_error)
 			set_has_error (True)
+			mutex.unlock
 		end
+
+feature {NONE} -- Concurrency
+
+	mutex: MUTEX
+			-- Mutex to report errors in a multi-threaded environment
 
 invariant
 
@@ -8623,5 +8672,6 @@ invariant
 	has_internal_error: has_internal_error implies has_error
 	not_has_eiffel_error: not has_error implies not has_eiffel_error
 	not_has_internal_error: not has_error implies not has_internal_error
+	mutex_not_void: mutex /= Void
 
 end

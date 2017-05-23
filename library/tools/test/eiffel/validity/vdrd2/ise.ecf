@@ -269,6 +269,12 @@
 				</cluster>
 			</cluster>
 		</cluster>
+		<cluster name="th_thread" location="${GOBO}/library/thread/src">
+			<option void_safety="none"/>
+			<cluster name="th_classic" location="$|classic">
+				<option void_safety="none"/>
+			</cluster>
+		</cluster>
 		<cluster name="dt_time" location="${GOBO}/library/time/src">
 			<option void_safety="none"/>
 			<cluster name="dt_clock" location="$|clock">

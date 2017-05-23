@@ -736,7 +736,7 @@ feature -- Parsing
 			-- for more details.
 		do
 			precursor (a_system_processor)
-			check_master_class_validity (a_system_processor)
+			a_system_processor.check_master_class_validity (Current)
 			build_scm_read_mappings
 			build_scm_write_mappings
 		end
@@ -760,7 +760,7 @@ feature -- Parsing
 			-- for more details.
 		do
 			precursor (a_system_processor)
-			check_master_class_validity (a_system_processor)
+			a_system_processor.check_master_class_validity (Current)
 			build_scm_read_mappings
 			build_scm_write_mappings
 		end
@@ -834,7 +834,7 @@ feature -- Ignored classes
 			if classes_modified_recursive then
 				reset_classes_incremental_recursive (a_system_processor)
 			end
-			check_master_class_validity (a_system_processor)
+			a_system_processor.check_master_class_validity (Current)
 		end
 
 feature -- SCM mappings
@@ -1014,225 +1014,6 @@ feature -- Compilation setting
 			end
 		ensure
 			ise_version_set: ise_version = a_version
-		end
-
-feature -- Compilation
-
-	compile (a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Compile current Eiffel system.
-			-- `flat_mode' means that the inherited features are checked
-			-- again in the descendant classes during Degree 3.
-			-- `flat_dbc_mode' means that the inherited pre- and postconditions
-			-- are checked again in the redeclaration of features during Degree 3.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_processor_not_void: a_system_processor /= Void
-		do
-			if root_type = Void then
-				compile_all (a_system_processor)
-			elseif root_type = none_type then
-				compile_all (a_system_processor)
-			elseif root_type = any_type then
-				compile_all (a_system_processor)
-			else
-				compile_system (a_system_processor)
-			end
-		end
-
-	compile_system (a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Compile all classes reachable from the root class.
-			-- `flat_mode' means that the inherited features are checked
-			-- again in the descendant classes during Degree 3.
-			-- `flat_dbc_mode' means that the inherited pre- and postconditions
-			-- are checked again in the redeclaration of features during Degree 3.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_processor_not_void: a_system_processor /= Void
-		local
-			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
-			dt1: detachable DT_DATE_TIME
-		do
-			if a_system_processor.error_handler.benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			preparse_recursive (a_system_processor)
-			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system_processor.print_time (dt1, "Degree 6")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			parse_system (a_system_processor)
-			if not a_system_processor.stop_requested and then a_system_processor.error_handler.benchmark_shown then
-				a_system_processor.error_handler.info_file.put_string ("Preparsed ")
-				a_system_processor.error_handler.info_file.put_integer (class_count_recursive)
-				a_system_processor.error_handler.info_file.put_line (" classes")
-				a_system_processor.error_handler.info_file.put_string ("Parsed ")
-				a_system_processor.error_handler.info_file.put_integer (parsed_class_count_recursive)
-				a_system_processor.error_handler.info_file.put_line (" classes")
-				a_system_processor.error_handler.info_file.put_integer (registered_feature_count)
-				a_system_processor.error_handler.info_file.put_line (" features")
-			end
-			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system_processor.print_time (dt1, "Degree 5")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			compile_degree_4 (a_system_processor)
-			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system_processor.print_time (dt1, "Degree 4")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			compile_degree_3 (a_system_processor)
-			if not a_system_processor.stop_requested and then dt1 /= Void then
-				a_system_processor.print_time (dt1, "Degree 3")
-			end
-		end
-
-	compile_all (a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Compile all classes in the current Eiffel system.
-			-- `flat_mode' means that the inherited features are checked
-			-- again in the descendant classes during Degree 3.
-			-- `flat_dbc_mode' means that the inherited pre- and postconditions
-			-- are checked again in the redeclaration of features during Degree 3.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_processor_not_void: a_system_processor /= Void
-		local
-			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
-			dt1: detachable DT_DATE_TIME
-		do
-			if a_system_processor.error_handler.benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			if preparse_enabled then
-				preparse_recursive (a_system_processor)
-				if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-					a_system_processor.print_time (dt1, "Degree 6")
-					dt1 := l_clock.system_clock.date_time_now
-				end
-				compile_degree_5 (a_system_processor)
-			else
-				parse_all_recursive (a_system_processor)
-				check_provider_validity (a_system_processor)
-			end
-			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system_processor.print_time (dt1, "Degree 5")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			compile_degree_4 (a_system_processor)
-			if not a_system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				a_system_processor.print_time (dt1, "Degree 4")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			compile_degree_3 (a_system_processor)
-			if not a_system_processor.stop_requested and then dt1 /= Void then
-				a_system_processor.print_time (dt1, "Degree 3")
-			end
-		end
-
-	compile_degree_5 (a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Equivalent of ISE's Degree 5.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_processor_not_void: a_system_processor /= Void
-		do
-				-- Parse classes.
-			classes_do_recursive_until (agent {ET_CLASS}.process (a_system_processor.eiffel_parser), a_system_processor.stop_request)
-			check_provider_validity (a_system_processor)
-			if not a_system_processor.stop_requested and then a_system_processor.error_handler.benchmark_shown then
-				a_system_processor.error_handler.info_file.put_string ("Parsed ")
-				a_system_processor.error_handler.info_file.put_integer (parsed_class_count_recursive)
-				a_system_processor.error_handler.info_file.put_line (" classes")
-				a_system_processor.error_handler.info_file.put_integer (registered_feature_count)
-				a_system_processor.error_handler.info_file.put_line (" features")
-			end
-		end
-
-	compile_degree_4 (a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Equivalent of ISE Eiffel's Degree 4.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_processor_not_void: a_system_processor /= Void
-		do
-				-- Build ancestors.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.ancestor_builder), agent {ET_CLASS}.is_parsed, a_system_processor.stop_request)
-				-- Flatten features.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.feature_flattener), agent {ET_CLASS}.ancestors_built, a_system_processor.stop_request)
-				-- Check interface.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.interface_checker), agent {ET_CLASS}.features_flattened, a_system_processor.stop_request)
-			if not a_system_processor.stop_requested and then a_system_processor.error_handler.benchmark_shown then
-				a_system_processor.error_handler.info_file.put_string ("Flattened ")
-				a_system_processor.error_handler.info_file.put_integer (parsed_class_count_recursive)
-				a_system_processor.error_handler.info_file.put_line (" classes")
-				a_system_processor.error_handler.info_file.put_integer (registered_feature_count)
-				a_system_processor.error_handler.info_file.put_line (" features")
-			end
-		end
-
-	compile_degree_3 (a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Equivalent of ISE Eiffel's Degree 3.
-			-- `flat_mode' means that the inherited features are checked
-			-- again in the descendant classes.
-			-- `flat_dbc_mode' means that the inherited pre- and postconditions
-			-- are checked again in the redeclaration of features.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_processor_not_void: a_system_processor /= Void
-		local
-			l_processor: ET_AST_PROCESSOR
-		do
-				-- Check implementation.
-			l_processor := a_system_processor.implementation_checker
-			if attached {ET_IMPLEMENTATION_CHECKER} l_processor as l_checker then
-				l_checker.set_flat_mode (flat_mode)
-				l_checker.set_flat_dbc_mode (flat_dbc_mode)
-				l_checker.set_suppliers_enabled (suppliers_enabled)
-			end
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (l_processor), agent {ET_CLASS}.interface_checked, a_system_processor.stop_request)
-		end
-
-	check_provider_validity (a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Check cluster dependence constraints.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_processor_not_void: a_system_processor /= Void
-		do
-			if cluster_dependence_enabled then
-				classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.provider_checker), agent {ET_CLASS}.is_parsed, a_system_processor.stop_request)
-			end
-		end
-
-	check_master_class_validity (a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Check for invalid class name clashes and invalid class overriding.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_processor_not_void: a_system_processor /= Void
-		do
-			master_classes_do_recursive_until (agent {ET_MASTER_CLASS}.process (a_system_processor.master_class_checker), a_system_processor.stop_request)
 		end
 
 feature {NONE} -- Constants
