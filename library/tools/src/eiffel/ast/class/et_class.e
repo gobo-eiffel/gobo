@@ -79,8 +79,10 @@ feature {NONE} -- Initialization
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			group := tokens.unknown_group
+			create parsing_status_mutex.make
 			create implementation_status_mutex.make
 			create implementation_checking_mutex.make
+			create processing_mutex.make
 			named_base_class := Current
 			time_stamp := no_time_stamp
 			class_code := class_codes.class_code (a_name)
@@ -1042,14 +1044,34 @@ feature -- Parsing status
 			-- Note that when reporting VTCT errors on a class,
 			-- `is_parsed' is set to True even if it was not
 			-- preparsed (and hence not actually parsed).
+		do
+			parsing_status_mutex.lock
+			Result := unprotected_is_parsed
+			parsing_status_mutex.unlock
+		end
+
+	is_parsed_successfully: BOOLEAN
+			-- Has current class been successfully parsed?
+		do
+			parsing_status_mutex.lock
+			Result := unprotected_is_parsed and then not unprotected_has_syntax_error
+			parsing_status_mutex.unlock
+		end
 
 	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
+		do
+			parsing_status_mutex.lock
+			Result := unprotected_has_syntax_error
+			parsing_status_mutex.unlock
+		end
 
 	set_parsed
 			-- Set `is_parsed' to True.
 		do
-			is_parsed := True
+			parsing_status_mutex.lock
+			unprotected_is_parsed := True
+			parsing_status_mutex.unlock
 		ensure
 			is_parsed: is_parsed
 		end
@@ -1057,16 +1079,21 @@ feature -- Parsing status
 	set_syntax_error
 			-- Set `has_syntax_error' to True.
 		do
-			has_syntax_error := True
+			parsing_status_mutex.lock
+			unprotected_is_parsed := True
+			unprotected_has_syntax_error := True
+			parsing_status_mutex.unlock
 		ensure
+			is_parsed: is_parsed
 			syntax_error_set: has_syntax_error
 		end
 
 	reset_parsed
 			-- Set `is_parsed' to False.
 		do
-			has_syntax_error := False
-			is_parsed := False
+			parsing_status_mutex.lock
+			unprotected_has_syntax_error := False
+			unprotected_is_parsed := False
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			external_keyword := Void
@@ -1086,10 +1113,29 @@ feature -- Parsing status
 			procedures := tokens.empty_procedures
 			leading_break := Void
 			providers := Void
+			parsing_status_mutex.unlock
 		ensure
 			not_parsed: not is_parsed
 			no_syntax_error: not has_syntax_error
 		end
+
+feature {NONE} -- Parsing status
+
+	unprotected_is_parsed: BOOLEAN
+			-- Has current class been parsed?
+			-- Note that when reporting VTCT errors on a class,
+			-- `is_parsed' is set to True even if it was not
+			-- preparsed (and hence not actually parsed).
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_syntax_error: BOOLEAN
+			-- Has a fatal syntax error been detected?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	parsing_status_mutex: MUTEX
+			-- Mutex to access parsing status
 
 feature -- Class header
 
@@ -2650,6 +2696,12 @@ feature -- Processing
 			a_processor.process_class (Current)
 		end
 
+feature -- Concurrency
+
+	processing_mutex: MUTEX
+			-- Mutex to get exclusive processing access to current class
+			-- in a multi-threaded environment
+
 feature {NONE} -- Constants
 
 	initial_descendants_capacity: INTEGER
@@ -2694,7 +2746,9 @@ invariant
 	no_void_supplier: attached suppliers as l_suppliers implies not l_suppliers.has_void
 	no_void_provider: attached providers as l_providers implies not l_providers.has_void
 	tuple_constraint_position: tuple_constraint_position /= 0 implies attached formal_parameters as l_formal_parameters and then (tuple_constraint_position >= 1 and tuple_constraint_position <= l_formal_parameters.count)
+	parsing_status_mutex_not_void: parsing_status_mutex /= Void
 	implementation_status_mutex_not_void: implementation_status_mutex /= Void
 	implementation_checking_mutex_not_void: implementation_checking_mutex /= Void
+	processing_mutex_not_void: processing_mutex /= Void
 
 end

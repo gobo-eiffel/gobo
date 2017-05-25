@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 		do
 			create master_classes.make_map (3000)
 			master_classes.set_key_equality_tester (class_name_tester)
+			create master_class_mutex.make
 		end
 
 feature -- Initialization
@@ -322,6 +323,7 @@ feature -- Access
 		require
 			a_name_not_void: a_name /= Void
 		do
+			master_class_mutex.lock
 			master_classes.search (a_name)
 			if master_classes.found then
 				Result := master_classes.found_item
@@ -329,6 +331,7 @@ feature -- Access
 				create Result.make (a_name, Current)
 				master_classes.force_last_new (Result, a_name)
 			end
+			master_class_mutex.unlock
 		ensure
 			master_class_not_void: Result /= Void
 		end
@@ -2708,6 +2711,11 @@ feature {NONE} -- Implementation
 			a_hash_table.force_last (a_value, a_key)
 		end
 
+feature {NONE} -- Concurrency
+
+	master_class_mutex: MUTEX
+			-- Mutex to call `master_class'
+
 invariant
 
 	current_system_not_void: current_system /= Void
@@ -2795,5 +2803,7 @@ invariant
 	real_64_convert_feature_not_void: real_64_convert_feature /= Void
 	string_8_convert_feature_not_void: string_8_convert_feature /= Void
 	string_32_convert_feature_not_void: string_32_convert_feature /= Void
+		-- Concurrency.
+	master_class_mutex_not_void: master_class_mutex /= Void
 
 end

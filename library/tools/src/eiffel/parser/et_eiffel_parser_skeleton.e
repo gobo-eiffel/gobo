@@ -160,6 +160,10 @@ feature -- Parsing
 			eiffel_buffer.set_file (a_file)
 			yy_load_input_buffer
 			yyparse
+			if attached last_class as l_last_class and then l_last_class /= current_class then
+				l_last_class.processing_mutex.unlock
+				last_class := Void
+			end
 			reset
 			group := old_group
 		rescue
@@ -335,15 +339,11 @@ feature -- AST processing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- parsing works. Read the header comments of these features
 			-- for more details.
-		local
-			a_time_stamp: INTEGER
-			a_cluster: ET_CLUSTER
-			a_file: KL_TEXT_INPUT_FILE
-			old_class: ET_CLASS
-			old_group: ET_PRIMARY_GROUP
-			l_class_text: KL_STRING_INPUT_STREAM
-			a_text_filename: STRING
-			l_class_filename: detachable STRING
+			--
+			-- Note that in multi-threaded mode, when several system processors
+			-- are processing a Eiffel system together, the AST of `a_class' may
+			-- still not be parsed at the end of this routine if it is currently
+			-- being processed by another system processor.
 		do
 			if a_class.is_none then
 				a_class.set_parsed
@@ -355,10 +355,57 @@ feature -- AST processing
 			elseif not a_class.is_preparsed then
 				set_fatal_error (a_class)
 			else
-				old_class := current_class
-				current_class := a_class
-				old_group := group
-				group := current_class.group
+				internal_process_class (a_class)
+			end
+		ensure then
+			is_parsed: not {PLATFORM}.is_thread_capable implies a_class.is_parsed
+		end
+
+	process_cluster (a_cluster: ET_CLUSTER)
+			-- Traverse `a_cluster' (recursively) and parse the classes
+			-- it contains. Classes are added to `universe.classes'.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- parsing works. Read the header comments of these features
+			-- for more details.
+		do
+			parse_cluster (a_cluster)
+		end
+
+feature -- AST processing
+
+	internal_process_class (a_class: ET_CLASS)
+			-- Parse `a_class'.
+			-- The class may end up with a syntax error status if its
+			-- `filename' didn't contain this class after all (i.e.
+			-- if the preparsing phase gave errouneous result).
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- parsing works. Read the header comments of these features
+			-- for more details.
+			--
+			-- Note that in multi-threaded mode, when several system processors
+			-- are processing a Eiffel system together, the AST of `a_class' may
+			-- still not be parsed at the end of this routine if it is currently
+			-- being processed by another system processor.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		local
+			a_time_stamp: INTEGER
+			a_cluster: ET_CLUSTER
+			a_file: KL_TEXT_INPUT_FILE
+			old_class: ET_CLASS
+			old_group: ET_PRIMARY_GROUP
+			l_class_text: KL_STRING_INPUT_STREAM
+			a_text_filename: STRING
+			l_class_filename: detachable STRING
+		do
+			old_class := current_class
+			current_class := a_class
+			old_group := group
+			group := current_class.group
+			if current_class.processing_mutex.try_lock then
 				if not current_class.is_parsed then
 					if current_class.is_in_cluster and then attached current_class.filename as a_filename then
 						a_cluster := current_class.group.cluster
@@ -368,22 +415,20 @@ feature -- AST processing
 						a_time_stamp := a_file.time_stamp
 						a_file.open_read
 						if a_file.is_open_read then
-								-- Note that `parse_file' may change the value of `current_class'
-								-- if `a_file' contains a class other than `a_class'.
 							parse_file (a_file, a_filename, a_time_stamp, a_cluster)
 							a_file.close
-							if not a_class.is_preparsed then
+							if not current_class.is_preparsed then
 									-- Make sure that `current_class' is as it was
 									-- after it was last preparsed when the file
 									-- does not contain this class anymore.
-								a_class.set_filename (a_filename)
-								a_class.set_group (a_cluster)
+								current_class.set_filename (a_filename)
+								current_class.set_group (a_cluster)
 							end
-							if not a_class.is_parsed then
+							if not current_class.is_parsed then
 								if not syntax_error and current_system.preparse_multiple_mode then
 										-- The file contains other classes, but not `current_class'.
-									set_fatal_error (a_class)
-									error_handler.report_gvscn1b_error (a_class, a_filename)
+									set_fatal_error (current_class)
+									error_handler.report_gvscn1b_error (current_class, a_filename)
 								end
 							end
 						else
@@ -410,48 +455,36 @@ feature -- AST processing
 						else
 							create l_class_text.make ("")
 						end
-							-- Note that `parse_file' may change the value of `current_class'
-							-- if `l_class_text' contains a class other than `a_class'.
 						parse_file (l_class_text, a_text_filename, -1, l_text_group)
-						if not a_class.is_preparsed then
+						if not current_class.is_preparsed then
 								-- Make sure that `current_class' is as it was
 								-- after it was last preparsed when the file
 								-- does not contain this class anymore.
 							if l_class_filename /= Void and then not l_class_filename.is_empty then
-								a_class.set_filename (l_class_filename)
+								current_class.set_filename (l_class_filename)
 							else
-								a_class.reset_preparsed
+								current_class.reset_preparsed
 							end
-							a_class.set_group (l_text_group)
+							current_class.set_group (l_text_group)
 						end
-						if not a_class.is_parsed then
+						if not current_class.is_parsed then
 							if not syntax_error and current_system.preparse_multiple_mode then
 									-- The class text contains other classes, but not `current_class'.
-								set_fatal_error (a_class)
-								error_handler.report_gvscn1b_error (a_class, a_text_filename)
+								set_fatal_error (current_class)
+								error_handler.report_gvscn1b_error (current_class, a_text_filename)
 							end
 						end
 					end
-					if not a_class.is_parsed then
-						set_fatal_error (a_class)
+					if not current_class.is_parsed then
+						set_fatal_error (current_class)
 					end
 				end
-				current_class := old_class
-				group := old_group
+				current_class.processing_mutex.unlock
 			end
-		ensure then
-			is_parsed: a_class.is_parsed
-		end
-
-	process_cluster (a_cluster: ET_CLUSTER)
-			-- Traverse `a_cluster' (recursively) and parse the classes
-			-- it contains. Classes are added to `universe.classes'.
-			--
-			-- The queries `current_system.preparse_*_mode' govern the way
-			-- parsing works. Read the header comments of these features
-			-- for more details.
-		do
-			parse_cluster (a_cluster)
+			current_class := old_class
+			group := old_group
+		ensure
+			is_parsed: not {PLATFORM}.is_thread_capable implies a_class.is_parsed
 		end
 
 feature {NONE} -- Basic operations
@@ -666,6 +699,7 @@ feature {NONE} -- Basic operations
 				if an_end /= Void then
 					a_class.set_end_keyword (an_end)
 				end
+				a_class.set_parsed
 			end
 		end
 
@@ -1958,14 +1992,19 @@ feature {NONE} -- AST factory
 	new_class (a_name: detachable ET_IDENTIFIER): detachable ET_CLASS
 			-- New Eiffel class
 		local
-			old_current_class: ET_CLASS
 			l_basename: STRING
 			l_class_name: ET_IDENTIFIER
 			l_master_class: ET_MASTER_CLASS
 			l_new_class: ET_CLASS
+			l_reset_needed: BOOLEAN
 		do
+			if attached last_class as l_last_class and then l_last_class /= current_class then
+				l_last_class.processing_mutex.unlock
+				last_class := Void
+			end
 			if a_name /= Void then
 				l_master_class := current_universe.master_class (a_name)
+				l_master_class.mutex.lock
 				if current_class.name.same_class_name (a_name) then
 					Result := current_class
 				elseif l_master_class.has_local_class (current_class) then
@@ -2004,30 +2043,42 @@ feature {NONE} -- AST factory
 							if Result = l_master_class.actual_class then
 								l_master_class.set_modified (True)
 							end
-							Result.reset
+							l_reset_needed := True
 						end
-						Result.set_name (a_name)
-						Result.set_group (group)
+						if Result /= current_class then
+							if not Result.processing_mutex.try_lock then
+									-- 'Result' already processed by another thread.
+									-- Continue the parsing but do not build the AST.
+								Result := Void
+							end
+						end
+						if Result /= Void then
+							if l_reset_needed then
+								Result.reset
+							end
+							Result.set_name (a_name)
+							Result.set_group (group)
+						end
 					else
 						create Result.make (a_name)
+						Result.processing_mutex.lock
 						current_system.register_class (Result)
 						Result.set_group (group)
 						if group.is_cluster then
 							l_master_class.add_last_local_class (Result)
 						end
 					end
-					Result.set_filename (filename)
-					Result.set_parsed
-					Result.set_time_stamp (time_stamp)
-					Result.set_in_system (True)
-					old_current_class := current_class
-					current_class := Result
-					error_handler.report_compilation_status (Current, current_class, system_processor)
-					current_class := old_current_class
-					queries.wipe_out
-					procedures.wipe_out
+					if Result /= Void then
+						Result.set_filename (filename)
+						Result.set_time_stamp (time_stamp)
+						Result.set_in_system (True)
+						error_handler.report_compilation_status (Current, Result, system_processor)
+					end
 				end
+				l_master_class.mutex.unlock
 			end
+			queries.wipe_out
+			procedures.wipe_out
 		end
 
 	new_query_synonym (a_name: detachable ET_EXTENDED_FEATURE_NAME; a_query: detachable ET_QUERY): detachable ET_QUERY
@@ -2067,7 +2118,6 @@ feature -- Error handling
 		require
 			a_class_not_void: a_class /= Void
 		do
-			a_class.set_parsed
 			a_class.set_syntax_error
 		ensure
 			is_parsed: a_class.is_parsed

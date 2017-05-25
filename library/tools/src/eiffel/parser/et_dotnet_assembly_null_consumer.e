@@ -26,7 +26,6 @@ feature -- Consuming
 			-- Consume `a_class'.
 		do
 				-- Enforce postcondition.
-			a_class.set_parsed
 			a_class.set_syntax_error
 		end
 

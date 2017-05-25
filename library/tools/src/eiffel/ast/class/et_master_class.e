@@ -64,6 +64,7 @@ feature {NONE} -- Initialization
 			other_imported_classes := tokens.empty_master_classes
 			other_overriding_classes := tokens.empty_master_classes
 			intrinsic_class := tokens.unknown_class
+			create mutex.make
 		ensure
 			name_set: name = a_name
 			universe_set: universe = a_universe
@@ -642,6 +643,20 @@ feature -- Parsing status
 					Result := l_first_overriding_class.is_parsed
 				else
 					Result := intrinsic_class.is_parsed
+				end
+			end
+		end
+
+	is_parsed_successfully: BOOLEAN
+			-- Has current class been successfully parsed?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.is_parsed_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.is_parsed_successfully
+				else
+					Result := intrinsic_class.is_parsed_successfully
 				end
 			end
 		end
@@ -1984,6 +1999,12 @@ feature -- Processing
 			a_processor.process_master_class (Current)
 		end
 
+feature -- Concurrency
+
+	mutex: MUTEX
+			-- Mutex to get exclusive access to current master class
+			-- in a multi-threaded environment
+
 invariant
 
 	other_local_override_classes_not_void: other_local_override_classes /= Void
@@ -2008,5 +2029,6 @@ invariant
 	no_local_non_override_class_if_unknown: intrinsic_class = tokens.unknown_class implies first_local_non_override_class = Void
 	no_imported_class_if_unknown: intrinsic_class = tokens.unknown_class implies first_imported_class = Void
 	no_overriding_class_if_unknown: intrinsic_class = tokens.unknown_class implies first_overriding_class = Void
+	mutex_not_void: mutex /= Void
 
 end

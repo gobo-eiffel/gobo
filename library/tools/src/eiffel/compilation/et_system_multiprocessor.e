@@ -19,7 +19,9 @@ inherit
 			make as make_single,
 			make_null as make_null_single
 		redefine
-			compile_degree_3
+			compile_degree_5_2,
+			compile_degree_3,
+			is_degree_6_required
 		end
 
 create
@@ -103,6 +105,30 @@ feature -- Setting
 
 feature -- Processing
 
+	compile_degree_5_2 (a_system: ET_SYSTEM)
+			-- Parse classes of `a_system'.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		local
+			i, nb: INTEGER
+			l_thread: WORKER_THREAD
+		do
+			from
+				i := 1
+				nb := other_processors.count
+			until
+				i > nb
+			loop
+				create l_thread.make (agent (other_processors.item (i)).compile_degree_5_2 (a_system))
+				l_thread.launch
+				i := i + 1
+			end
+			precursor (a_system)
+			{THREAD_CONTROL}.join_all
+		end
+
 	compile_degree_3 (a_system: ET_SYSTEM)
 			-- Equivalent of ISE Eiffel's Degree 3 on `a_system'.
 			-- `a_system.flat_mode' means that the inherited features are checked
@@ -131,6 +157,14 @@ feature -- Processing
 			end
 			precursor (a_system)
 			{THREAD_CONTROL}.join_all
+		end
+
+feature {NONE} -- Implementation
+
+	is_degree_6_required (a_system: ET_SYSTEM): BOOLEAN
+			-- Should Degree 6 be done on `a_system' even when parsing all classes?
+		do
+			Result := True
 		end
 
 invariant

@@ -42,6 +42,9 @@ feature {NONE} -- Initialization
 			a_name_not_empty: not a_name.is_empty
 		do
 			initialize
+			create register_class_mutex.make
+			create register_feature_mutex.make
+			create register_inline_constant_mutex.make
 			set_default_keyword_usage
 			set_preparse_shallow_mode
 			create external_include_pathnames.make (20)
@@ -236,12 +239,17 @@ feature -- Class registration
 		require
 			a_class_not_void: a_class /= Void
 		do
+			register_class_mutex.lock
 			registered_class_count := registered_class_count + 1
 			a_class.set_id (registered_class_count)
+			register_class_mutex.unlock
 		end
 
 	registered_class_count: INTEGER
 			-- Number of classes already registered
+
+	register_class_mutex: MUTEX
+			-- Mutex for `register_class'
 
 feature -- Feature registration
 
@@ -250,14 +258,19 @@ feature -- Feature registration
 		require
 			a_feature_not_void: a_feature /= Void
 		do
+			register_feature_mutex.lock
 			registered_feature_count := registered_feature_count + 1
 			a_feature.set_id (registered_feature_count)
+			register_feature_mutex.unlock
 		ensure
 			a_feature_registered: a_feature.is_registered
 		end
 
 	registered_feature_count: INTEGER
 			-- Number of features already registered
+
+	register_feature_mutex: MUTEX
+			-- Mutex for `register_feature'
 
 feature -- Inline constant registration
 
@@ -266,12 +279,17 @@ feature -- Inline constant registration
 		require
 			a_constant_not_void: a_constant /= Void
 		do
+			register_inline_constant_mutex.lock
 			registered_inline_constant_count := registered_inline_constant_count + 1
 			a_constant.set_id (registered_inline_constant_count)
+			register_inline_constant_mutex.unlock
 		end
 
 	registered_inline_constant_count: INTEGER
 			-- Number of inline constants already registered
+
+	register_inline_constant_mutex: MUTEX
+			-- Mutex for `register_inline_constant'
 
 feature -- Setting
 

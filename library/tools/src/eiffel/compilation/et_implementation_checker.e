@@ -144,7 +144,7 @@ feature -- Processing
 			-- between non-flat and flat modes.
 			--
 			-- Note that in multi-threaded mode, when several system processors
-			-- are processing a Eiffel system together, the implementation of 
+			-- are processing a Eiffel system together, the implementation of
 			-- `a_class' may still not be checked at the end of this routine if
 			-- it is currently being processed by another system processor.
 		local
@@ -174,6 +174,7 @@ feature -- Processing
 				internal_process_class (a_class)
 			end
 		ensure then
+			implementation_checked: not {PLATFORM}.is_thread_capable implies a_class.implementation_checked
 			suppliers_set: a_class.implementation_checked and suppliers_enabled implies a_class.suppliers /= Void
 		end
 
@@ -208,7 +209,7 @@ feature {NONE} -- Processing
 			-- between non-flat and flat modes.
 			--
 			-- Note that in multi-threaded mode, when several system processors
-			-- are processing a Eiffel system together, the implementation of 
+			-- are processing a Eiffel system together, the implementation of
 			-- `a_class' may still not be checked at the end of this routine if
 			-- it is currently being processed by another system processor.
 		require
@@ -296,6 +297,7 @@ feature {NONE} -- Processing
 			end
 			current_class := old_class
 		ensure
+			implementation_checked: not {PLATFORM}.is_thread_capable implies a_class.implementation_checked
 			suppliers_set: a_class.implementation_checked and suppliers_enabled implies a_class.suppliers /= Void
 		end
 
@@ -322,6 +324,7 @@ feature {NONE} -- Processing
 				internal_process_class (a_class)
 			end
 		ensure
+			implementation_checked: not {PLATFORM}.is_thread_capable implies a_class.implementation_checked
 			suppliers_set: a_class.implementation_checked and suppliers_enabled implies a_class.suppliers /= Void
 		end
 

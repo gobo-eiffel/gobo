@@ -5,7 +5,7 @@ note
 		"Eiffel classes with a given name."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #3 $"
@@ -149,8 +149,7 @@ feature -- Parsing status
 
 	is_parsed_successfully: BOOLEAN
 			-- Has current class been successfully parsed?
-		do
-			Result := is_parsed and then not has_syntax_error
+		deferred
 		ensure
 			definition: Result = (is_parsed and then not has_syntax_error)
 		end

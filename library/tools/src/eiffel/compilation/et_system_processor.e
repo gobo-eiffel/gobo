@@ -345,7 +345,7 @@ feature -- Processing
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			if a_system.preparse_enabled then
+			if is_degree_6_required (a_system) then
 				a_system.preparse_recursive (Current)
 				if not stop_requested and then dt1 /= Void and l_clock /= Void then
 					print_time (dt1, "Degree 6")
@@ -355,6 +355,13 @@ feature -- Processing
 			else
 				a_system.parse_all_recursive (Current)
 				check_provider_validity (a_system)
+				if not stop_requested and then error_handler.benchmark_shown then
+					error_handler.info_file.put_string ("Parsed ")
+					error_handler.info_file.put_integer (a_system.parsed_class_count_recursive)
+					error_handler.info_file.put_line (" classes")
+					error_handler.info_file.put_integer (a_system.registered_feature_count)
+					error_handler.info_file.put_line (" features")
+				end
 			end
 			if not stop_requested and then dt1 /= Void and l_clock /= Void then
 				print_time (dt1, "Degree 5")
@@ -380,8 +387,7 @@ feature -- Processing
 		require
 			a_system_not_void: a_system /= Void
 		do
-				-- Parse classes.
-			a_system.classes_do_recursive_until (agent {ET_CLASS}.process (eiffel_parser), stop_request)
+			compile_degree_5_2 (a_system)
 			check_provider_validity (a_system)
 			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Parsed ")
@@ -390,6 +396,18 @@ feature -- Processing
 				error_handler.info_file.put_integer (a_system.registered_feature_count)
 				error_handler.info_file.put_line (" features")
 			end
+		end
+
+	compile_degree_5_2 (a_system: ET_SYSTEM)
+			-- Parse classes of `a_system'.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		require
+			a_system_not_void: a_system /= Void
+		do
+			a_system.classes_do_recursive_until (agent {ET_CLASS}.process (eiffel_parser), stop_request)
 		end
 
 	compile_degree_4 (a_system: ET_SYSTEM)
@@ -526,6 +544,16 @@ feature -- Stop
 			stop_request := a_stop_request
 		ensure
 			stop_request_set: stop_request = a_stop_request
+		end
+
+feature {NONE} -- Implementation
+
+	is_degree_6_required (a_system: ET_SYSTEM): BOOLEAN
+			-- Should Degree 6 be done on `a_system' even when parsing all classes?
+		require
+			a_system_not_void: a_system /= Void
+		do
+			Result := a_system.preparse_enabled
 		end
 
 invariant
