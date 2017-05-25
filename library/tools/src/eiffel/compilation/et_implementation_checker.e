@@ -228,7 +228,7 @@ feature {NONE} -- Processing
 		do
 			old_class := current_class
 			current_class := a_class
-			if current_class.implementation_checking_mutex.try_lock then
+			if not {PLATFORM}.is_thread_capable or else current_class.implementation_checking_mutex.try_lock then
 					-- No other thread is processing `current_class'.
 					-- Got exclusive access for its processing.
 				if current_class.is_checking_implementation then

@@ -405,7 +405,7 @@ feature -- AST processing
 			current_class := a_class
 			old_group := group
 			group := current_class.group
-			if current_class.processing_mutex.try_lock then
+			if not {PLATFORM}.is_thread_capable or else current_class.processing_mutex.try_lock then
 				if not current_class.is_parsed then
 					if current_class.is_in_cluster and then attached current_class.filename as a_filename then
 						a_cluster := current_class.group.cluster
@@ -2046,7 +2046,7 @@ feature {NONE} -- AST factory
 							l_reset_needed := True
 						end
 						if Result /= current_class then
-							if not Result.processing_mutex.try_lock then
+							if {PLATFORM}.is_thread_capable and then not Result.processing_mutex.try_lock then
 									-- 'Result' already processed by another thread.
 									-- Continue the parsing but do not build the AST.
 								Result := Void
