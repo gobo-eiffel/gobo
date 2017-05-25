@@ -73,7 +73,7 @@ feature -- Access
 	is_set: BOOLEAN
 			-- Is condition variable initialized?
 		do
-			Result := cond_pointer /= default_pointer
+			Result := cond_pointer /= default_pointer or else not {PLATFORM}.is_thread_capable
 		end
 
 feature -- Status setting

@@ -34,7 +34,7 @@ feature -- Access
 	is_set: BOOLEAN
 			-- Is semaphore initialized?
 		do
-			Result := sem_pointer /= default_pointer
+			Result := sem_pointer /= default_pointer or else not {PLATFORM}.is_thread_capable
 		end
 
 feature -- Status setting

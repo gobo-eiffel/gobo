@@ -30,7 +30,7 @@ feature -- Access
 	is_set: BOOLEAN
 			-- Is read/write lock initialized?
 		do
-			Result := item /= default_pointer
+			Result := item /= default_pointer or else not {PLATFORM}.is_thread_capable
 		end
 
 feature -- Status setting

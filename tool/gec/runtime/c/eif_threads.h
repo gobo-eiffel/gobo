@@ -48,7 +48,7 @@ extern "C" {
 /* THREAD */
 #define eif_thr_create_with_attr(current_obj, init_func, set_terminated_func, attr)
 #define eif_thr_wait(obj,get_terminated)
-#define eif_thr_wait_with_timeout(obj,get_terminated,tms) EIF_FALSE
+#define eif_thr_wait_with_timeout(obj,get_terminated,tms) EIF_TRUE
 #define eif_thr_last_thread() NULL
 #define eif_thr_exit()
 
@@ -60,7 +60,7 @@ extern "C" {
 /* MUTEX */
 #define eif_thr_mutex_create() NULL
 #define eif_thr_mutex_lock(a_mutex_pointer)
-#define eif_thr_mutex_trylock(a_mutex_pointer) EIF_FALSE
+#define eif_thr_mutex_trylock(a_mutex_pointer) EIF_TRUE
 #define eif_thr_mutex_unlock(a_mutex_pointer)
 #define eif_thr_mutex_destroy(a_mutex_pointer)
 
@@ -69,14 +69,14 @@ extern "C" {
 #define eif_thr_cond_broadcast(a_cond_ptr)
 #define eif_thr_cond_signal(a_cond_ptr)
 #define eif_thr_cond_wait(a_cond_ptr,a_mutex_ptr)
-#define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
+#define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 1
 #define eif_thr_cond_destroy(a_cond_ptr)
 
 /* SEMAPHORE */
 #define eif_thr_sem_create(a_count) NULL
 #define eif_thr_sem_wait(a_sem_pointer)
 #define eif_thr_sem_post(a_sem_pointer)
-#define eif_thr_sem_trywait(a_sem_pointer) EIF_FALSE
+#define eif_thr_sem_trywait(a_sem_pointer) EIF_TRUE
 #define eif_thr_sem_destroy(a_sem_pointer)
 
 /* READ_WRITE_LOCK */

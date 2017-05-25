@@ -42,7 +42,7 @@ feature -- Status report
 	is_set: BOOLEAN
 			-- Is mutex initialized?
 		do
-			Result := mutex_pointer /= default_pointer
+			Result := mutex_pointer /= default_pointer or else not {PLATFORM}.is_thread_capable
 		end
 
 feature -- Status setting
