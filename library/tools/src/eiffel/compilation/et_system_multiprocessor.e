@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			-- Create a null system mutliprocessor
 			-- with `a_count' processors.
 		require
+			multithreaded: {PLATFORM}.is_thread_capable
 			a_count_positive: a_count >= 1
 		local
 			i: INTEGER
@@ -57,6 +58,7 @@ feature {NONE} -- Initialization
 			-- Create a null system multiprocessor
 			-- with `a_count' processors.
 		require
+			multithreaded: {PLATFORM}.is_thread_capable
 			a_count_positive: a_count >= 1
 		local
 			i: INTEGER
@@ -169,6 +171,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	multithreaded: {PLATFORM}.is_thread_capable
 	other_processors_not_void: other_processors /= Void
 	no_void_processor: not other_processors.has_void
 

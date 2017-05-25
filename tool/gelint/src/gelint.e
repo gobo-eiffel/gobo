@@ -69,7 +69,7 @@ feature -- Execution
 					defined_variables := arg.substring (10, arg.count)
 				elseif arg.is_equal ("--verbose") then
 					is_verbose := True
-				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--thread=") then
+				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--thread=") and then {PLATFORM}.is_thread_capable then
 					l_string := arg.substring (10, arg.count)
 					if l_string.is_integer then
 						thread_count := l_string.to_integer
@@ -309,7 +309,7 @@ feature {NONE} -- Processing
 			a_system.set_flat_mode (is_flat)
 			a_system.set_flat_dbc_mode (is_flat_dbc)
 			a_system.set_unknown_builtin_reported (False)
-			if thread_count > 1 then
+			if thread_count > 1 and {PLATFORM}.is_thread_capable then
 				create l_system_multiprocessor.make (thread_count)
 				l_system_multiprocessor.set_all_error_handler (error_handler)
 				l_system_processor := l_system_multiprocessor
@@ -362,9 +362,16 @@ feature -- Error handling
 
 	Usage_message: UT_USAGE_MESSAGE
 			-- Gelint usage message.
+		local
+			l_thread_option: STRING
 		once
+			if {PLATFORM}.is_thread_capable then
+				l_thread_option := "[--thread=N]"
+			else
+				l_thread_option := ""
+			end
 			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
-				%%T[--thread=N][--flat][--noflatdbc][--catcall][--silent][--verbose] xace_or_ecf_filename")
+				%%T" + l_thread_option + "[--flat][--noflatdbc][--catcall][--silent][--verbose] xace_or_ecf_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
