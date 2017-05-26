@@ -228,7 +228,7 @@ feature {NONE} -- Processing
 		do
 			old_class := current_class
 			current_class := a_class
-			if not {PLATFORM}.is_thread_capable or else current_class.implementation_checking_mutex.try_lock then
+			if not {PLATFORM}.is_thread_capable or else current_class.processing_mutex.try_lock then
 					-- No other thread is processing `current_class'.
 					-- Got exclusive access for its processing.
 				if current_class.is_checking_implementation then
@@ -293,7 +293,7 @@ feature {NONE} -- Processing
 						set_fatal_error (current_class)
 					end
 				end
-				current_class.implementation_checking_mutex.unlock
+				current_class.processing_mutex.unlock
 			end
 			current_class := old_class
 		ensure

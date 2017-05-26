@@ -299,7 +299,7 @@ feature -- Processing
 				print_time (dt1, "Degree 6")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			a_system.parse_system (Current)
+			parse_system (a_system)
 			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Preparsed ")
 				error_handler.info_file.put_integer (a_system.class_count_recursive)
@@ -386,8 +386,12 @@ feature -- Processing
 			-- interruption if `stop_request' is Void.
 		require
 			a_system_not_void: a_system /= Void
+		local
+			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 		do
-			compile_degree_5_2 (a_system)
+			create l_classes.make (a_system.class_count_recursive)
+			a_system.classes_do_recursive (agent l_classes.force_last)
+			parse_classes (l_classes)
 			check_provider_validity (a_system)
 			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Parsed ")
@@ -396,18 +400,6 @@ feature -- Processing
 				error_handler.info_file.put_integer (a_system.registered_feature_count)
 				error_handler.info_file.put_line (" features")
 			end
-		end
-
-	compile_degree_5_2 (a_system: ET_SYSTEM)
-			-- Parse classes of `a_system'.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_not_void: a_system /= Void
-		do
-			a_system.classes_do_recursive_until (agent {ET_CLASS}.process (eiffel_parser), stop_request)
 		end
 
 	compile_degree_4 (a_system: ET_SYSTEM)
@@ -466,6 +458,140 @@ feature -- Processing
 				end
 			else
 				a_system.classes_do_if_recursive_until (agent {ET_CLASS}.process (l_processor), agent {ET_CLASS}.interface_checked, stop_request)
+			end
+		end
+
+	parse_system (a_system: ET_SYSTEM)
+			-- Parse all classes reachable from the root class of `a_system'
+			-- which have not been parsed yet.
+			-- The Eiffel system needs to have been preparsed beforehand.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		require
+			a_system_not_void: a_system /= Void
+		local
+			l_root_class: ET_CLASS
+			l_classes: DS_ARRAYED_LIST [ET_CLASS]
+		do
+			if not attached a_system.root_type as l_root_type then
+				-- Do nothing.
+			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
+				create l_classes.make (a_system.class_count_recursive)
+				a_system.classes_do_recursive (agent l_classes.force_last)
+				parse_classes (l_classes)
+			elseif l_root_type.same_named_type (a_system.any_type, tokens.unknown_class, tokens.unknown_class) then
+				create l_classes.make (a_system.class_count_recursive)
+				a_system.classes_do_recursive (agent l_classes.force_last)
+				parse_classes (l_classes)
+			else
+				l_root_class := l_root_type.base_class
+				l_root_class.process (eiffel_parser)
+				if not l_root_class.is_preparsed then
+						-- Error: unknown root class.
+					error_handler.report_gvsrc4a_error (l_root_class)
+				else
+					create l_classes.make (a_system.class_count_recursive)
+					a_system.classes_do_recursive (agent l_classes.force_last)
+					parse_marked_classes (l_classes)
+				end
+			end
+		end
+
+	parse_classes (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Parse all classes in `a_classes' which have not been parsed yet.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+		local
+			i, nb: INTEGER
+		do
+			nb := a_classes.count
+			if stop_request /= Void then
+				from
+					i := 1
+				until
+					i > nb or stop_requested
+				loop
+					a_classes.item (i).process (eiffel_parser)
+					i := i + 1
+				end
+			else
+				from i := 1 until i > nb loop
+					a_classes.item (i).process (eiffel_parser)
+					i := i + 1
+				end
+			end
+		end
+
+	parse_marked_classes (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Parse al _marked classes in `a_classes' which have not been parsed yet.
+			-- Note that parsing these classes may mark other classes. Parse these
+			-- other classes as well until no more marked classes are not parsed.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+		local
+			i, nb: INTEGER
+			l_class: ET_CLASS
+			l_done: BOOLEAN
+			l_count, l_old_count: INTEGER
+		do
+			nb := a_classes.count
+			if stop_request /= Void then
+				from
+				until
+					l_done
+				loop
+					l_count := 0
+					from i := 1 until i > nb loop
+						if stop_requested then
+							l_done := True
+								-- Jump out of the loop.
+							i := nb
+						end
+						l_class :=  a_classes.item (i)
+						if l_class.is_marked then
+							l_class.process (eiffel_parser)
+							if l_class.is_parsed then
+								l_count := l_count + 1
+							end
+						end
+						i := i + 1
+					end
+					if not l_done then
+						l_done := (l_count = l_old_count)
+						l_old_count := l_count
+					end
+				end
+			else
+				from
+				until
+					l_done
+				loop
+					l_count := 0
+					from i := 1 until i > nb loop
+						l_class :=  a_classes.item (i)
+						if l_class.is_marked then
+							l_class.process (eiffel_parser)
+							if l_class.is_parsed then
+								l_count := l_count + 1
+							end
+						end
+						i := i + 1
+					end
+					l_done := (l_count = l_old_count)
+					l_old_count := l_count
+				end
 			end
 		end
 

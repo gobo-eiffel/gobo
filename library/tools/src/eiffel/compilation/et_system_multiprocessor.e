@@ -19,7 +19,8 @@ inherit
 			make as make_single,
 			make_null as make_null_single
 		redefine
-			compile_degree_5_2,
+			parse_classes,
+			parse_marked_classes,
 			compile_degree_3,
 			is_degree_6_required
 		end
@@ -107,30 +108,6 @@ feature -- Setting
 
 feature -- Processing
 
-	compile_degree_5_2 (a_system: ET_SYSTEM)
-			-- Parse classes of `a_system'.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		local
-			i, nb: INTEGER
-			l_thread: WORKER_THREAD
-		do
-			from
-				i := 1
-				nb := other_processors.count
-			until
-				i > nb
-			loop
-				create l_thread.make (agent (other_processors.item (i)).compile_degree_5_2 (a_system))
-				l_thread.launch
-				i := i + 1
-			end
-			precursor (a_system)
-			{THREAD_CONTROL}.join_all
-		end
-
 	compile_degree_3 (a_system: ET_SYSTEM)
 			-- Equivalent of ISE Eiffel's Degree 3 on `a_system'.
 			-- `a_system.flat_mode' means that the inherited features are checked
@@ -158,6 +135,56 @@ feature -- Processing
 				i := i + 1
 			end
 			precursor (a_system)
+			{THREAD_CONTROL}.join_all
+		end
+
+	parse_classes (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Parse all classes in `a_classes' which have not been parsed yet.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		local
+			i, nb: INTEGER
+			l_thread: WORKER_THREAD
+		do
+			from
+				i := 1
+				nb := other_processors.count
+			until
+				i > nb
+			loop
+				create l_thread.make (agent (other_processors.item (i)).parse_classes (a_classes))
+				l_thread.launch
+				i := i + 1
+			end
+			precursor (a_classes)
+			{THREAD_CONTROL}.join_all
+		end
+
+	parse_marked_classes (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Parse al _marked classes in `a_classes' which have not been parsed yet.
+			-- Note that parsing these classes may mark other classes. Parse these
+			-- other classes as well until no more marked classes are not parsed.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		local
+			i, nb: INTEGER
+			l_thread: WORKER_THREAD
+		do
+			from
+				i := 1
+				nb := other_processors.count
+			until
+				i > nb
+			loop
+				create l_thread.make (agent (other_processors.item (i)).parse_marked_classes (a_classes))
+				l_thread.launch
+				i := i + 1
+			end
+			precursor (a_classes)
 			{THREAD_CONTROL}.join_all
 		end
 

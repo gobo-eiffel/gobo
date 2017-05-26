@@ -783,50 +783,6 @@ feature -- Parsing
 			build_scm_write_mappings
 		end
 
-	parse_system (a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Parse all classes reachable from the root class.
-			-- The Eiffel system needs to have been preparsed beforehand.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		require
-			a_system_processor_not_void: a_system_processor /= Void
-		local
-			l_root_class: ET_CLASS
-			l_parsed_class_count: INTEGER
-			l_old_parsed_class_count: INTEGER
-			l_done: BOOLEAN
-		do
-			if not attached root_type as l_root_type then
-				-- Do nothing.
-			elseif l_root_type.same_named_type (none_type, tokens.unknown_class, tokens.unknown_class) then
-				parse_all_recursive (a_system_processor)
-			elseif l_root_type.same_named_type (any_type, tokens.unknown_class, tokens.unknown_class) then
-				parse_all_recursive (a_system_processor)
-			else
-				l_root_class := l_root_type.base_class
-				l_root_class.process (a_system_processor.eiffel_parser)
-				if not l_root_class.is_preparsed then
-						-- Error: unknown root class.
-					a_system_processor.error_handler.report_gvsrc4a_error (l_root_class)
-				else
-					l_done := False
-					l_old_parsed_class_count := parsed_class_count_recursive
-					from until l_done loop
-						if a_system_processor.stop_requested then
-							l_done := True
-						else
-							classes_do_if_recursive_until (agent {ET_CLASS}.process (a_system_processor.eiffel_parser), agent {ET_CLASS}.in_system, a_system_processor.stop_request)
-							l_parsed_class_count := parsed_class_count_recursive
-							l_done := (l_parsed_class_count = l_old_parsed_class_count)
-							l_old_parsed_class_count := l_parsed_class_count
-						end
-					end
-				end
-			end
-		end
-
 feature -- Ignored classes
 
 	ignore_classes (a_classes: DS_HASH_SET [ET_CLASS]; a_system_processor: ET_SYSTEM_PROCESSOR)

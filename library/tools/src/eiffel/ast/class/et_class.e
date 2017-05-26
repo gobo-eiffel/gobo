@@ -79,9 +79,7 @@ feature {NONE} -- Initialization
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			group := tokens.unknown_group
-			create parsing_status_mutex.make
-			create implementation_status_mutex.make
-			create implementation_checking_mutex.make
+			create status_mutex.make
 			create processing_mutex.make
 			named_base_class := Current
 			time_stamp := no_time_stamp
@@ -1045,33 +1043,33 @@ feature -- Parsing status
 			-- `is_parsed' is set to True even if it was not
 			-- preparsed (and hence not actually parsed).
 		do
-			parsing_status_mutex.lock
+			status_mutex.lock
 			Result := unprotected_is_parsed
-			parsing_status_mutex.unlock
+			status_mutex.unlock
 		end
 
 	is_parsed_successfully: BOOLEAN
 			-- Has current class been successfully parsed?
 		do
-			parsing_status_mutex.lock
+			status_mutex.lock
 			Result := unprotected_is_parsed and then not unprotected_has_syntax_error
-			parsing_status_mutex.unlock
+			status_mutex.unlock
 		end
 
 	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
 		do
-			parsing_status_mutex.lock
+			status_mutex.lock
 			Result := unprotected_has_syntax_error
-			parsing_status_mutex.unlock
+			status_mutex.unlock
 		end
 
 	set_parsed
 			-- Set `is_parsed' to True.
 		do
-			parsing_status_mutex.lock
+			status_mutex.lock
 			unprotected_is_parsed := True
-			parsing_status_mutex.unlock
+			status_mutex.unlock
 		ensure
 			is_parsed: is_parsed
 		end
@@ -1079,10 +1077,10 @@ feature -- Parsing status
 	set_syntax_error
 			-- Set `has_syntax_error' to True.
 		do
-			parsing_status_mutex.lock
+			status_mutex.lock
 			unprotected_is_parsed := True
 			unprotected_has_syntax_error := True
-			parsing_status_mutex.unlock
+			status_mutex.unlock
 		ensure
 			is_parsed: is_parsed
 			syntax_error_set: has_syntax_error
@@ -1091,7 +1089,7 @@ feature -- Parsing status
 	reset_parsed
 			-- Set `is_parsed' to False.
 		do
-			parsing_status_mutex.lock
+			status_mutex.lock
 			unprotected_has_syntax_error := False
 			unprotected_is_parsed := False
 			class_keyword := tokens.class_keyword
@@ -1113,7 +1111,7 @@ feature -- Parsing status
 			procedures := tokens.empty_procedures
 			leading_break := Void
 			providers := Void
-			parsing_status_mutex.unlock
+			status_mutex.unlock
 		ensure
 			not_parsed: not is_parsed
 			no_syntax_error: not has_syntax_error
@@ -1133,9 +1131,6 @@ feature {NONE} -- Parsing status
 			-- Has a fatal syntax error been detected?
 			--
 			-- This is not protected by a mutex in case of multi-threading.
-
-	parsing_status_mutex: MUTEX
-			-- Mutex to access parsing status
 
 feature -- Class header
 
@@ -2465,33 +2460,33 @@ feature -- Implementation checking status
 			-- Immediate and redefined (and possibly inherited when in flat mode)
 			-- features and invariant have been checked.
 		do
-			implementation_status_mutex.lock
+			status_mutex.lock
 			Result := unprotected_implementation_checked
-			implementation_status_mutex.unlock
+			status_mutex.unlock
 		end
 
 	implementation_checked_successfully: BOOLEAN
 			-- Has the implementation of current class been successfully checked?
 		do
-			implementation_status_mutex.lock
+			status_mutex.lock
 			Result := unprotected_implementation_checked and then not unprotected_has_implementation_error
-			implementation_status_mutex.unlock
+			status_mutex.unlock
 		end
 
 	has_implementation_error: BOOLEAN
 			-- Has a fatal error occurred during implementation checking?
 		do
-			implementation_status_mutex.lock
+			status_mutex.lock
 			Result := unprotected_has_implementation_error
-			implementation_status_mutex.unlock
+			status_mutex.unlock
 		end
 
 	set_implementation_checked
 			-- Set `implementation_checked' to True.
 		do
-			implementation_status_mutex.lock
+			status_mutex.lock
 			unprotected_implementation_checked := True
-			implementation_status_mutex.unlock
+			status_mutex.unlock
 		ensure
 			implementation_checked: implementation_checked
 		end
@@ -2499,10 +2494,10 @@ feature -- Implementation checking status
 	set_implementation_error
 			-- Set `has_implementation_error' to True.
 		do
-			implementation_status_mutex.lock
+			status_mutex.lock
 			unprotected_implementation_checked := True
 			unprotected_has_implementation_error := True
-			implementation_status_mutex.unlock
+			status_mutex.unlock
 		ensure
 			implementation_checked: implementation_checked
 			has_implementation_error: has_implementation_error
@@ -2511,9 +2506,9 @@ feature -- Implementation checking status
 	unset_implementation_error
 			-- Set `has_implementation_error' to False.
 		do
-			implementation_status_mutex.lock
+			status_mutex.lock
 			unprotected_has_implementation_error := False
-			implementation_status_mutex.unlock
+			status_mutex.unlock
 		ensure
 			not_has_implementation_error: not has_implementation_error
 		end
@@ -2521,11 +2516,11 @@ feature -- Implementation checking status
 	reset_implementation_checked
 			-- Set `implementation_checked' to False.
 		do
-			implementation_status_mutex.lock
+			status_mutex.lock
 			unprotected_has_implementation_error := False
 			unprotected_implementation_checked := False
 			suppliers := Void
-			implementation_status_mutex.unlock
+			status_mutex.unlock
 		ensure
 			implementation_not_checked: not implementation_checked
 			no_implementation_error: not has_implementation_error
@@ -2533,10 +2528,6 @@ feature -- Implementation checking status
 		end
 
 feature {ET_IMPLEMENTATION_CHECKER} -- Implementation checking status
-
-	implementation_checking_mutex: MUTEX
-			-- Mutex to get exclusive access to current class
-			-- when checking its implementation
 
 	is_checking_implementation: BOOLEAN
 			-- Is the implementation of current class being checked?
@@ -2564,9 +2555,6 @@ feature {NONE} -- Implementation checking status
 			-- Has a fatal error occurred during implementation checking?
 			--
 			-- This is not protected by a mutex in case of multi-threading.
-
-	implementation_status_mutex: MUTEX
-			-- Mutex to access implementation status
 
 feature -- Invariant
 
@@ -2698,6 +2686,10 @@ feature -- Processing
 
 feature -- Concurrency
 
+	status_mutex: MUTEX
+			-- Mutex to get exclusive status access to current class
+			-- in a multi-threaded environment
+
 	processing_mutex: MUTEX
 			-- Mutex to get exclusive processing access to current class
 			-- in a multi-threaded environment
@@ -2746,9 +2738,7 @@ invariant
 	no_void_supplier: attached suppliers as l_suppliers implies not l_suppliers.has_void
 	no_void_provider: attached providers as l_providers implies not l_providers.has_void
 	tuple_constraint_position: tuple_constraint_position /= 0 implies attached formal_parameters as l_formal_parameters and then (tuple_constraint_position >= 1 and tuple_constraint_position <= l_formal_parameters.count)
-	parsing_status_mutex_not_void: parsing_status_mutex /= Void
-	implementation_status_mutex_not_void: implementation_status_mutex /= Void
-	implementation_checking_mutex_not_void: implementation_checking_mutex /= Void
+	status_mutex_not_void: status_mutex /= Void
 	processing_mutex_not_void: processing_mutex /= Void
 
 end
