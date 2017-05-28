@@ -83,7 +83,6 @@ feature -- Error handling
 		require
 			a_class_not_void: a_class /= Void
 		do
-			a_class.set_ancestors_built
 			a_class.set_ancestors_error
 		ensure
 			ancestors_built: a_class.ancestors_built

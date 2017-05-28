@@ -143,7 +143,7 @@ feature -- Processing
 			a_system.set_default_keyword_usage
 			create l_system_processor.make_null
 			l_system_processor.activate (a_system)
-			l_system_processor.set_error_handler (an_error_handler)
+			l_system_processor.set_error_handler_recursive (an_error_handler)
 			a_system.parse_all_recursive (l_system_processor)
 			a_system.classes_do_if_recursive (agent process_class (?, testcases), agent is_testcase_class)
 		end

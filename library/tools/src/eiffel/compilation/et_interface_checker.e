@@ -93,7 +93,6 @@ feature -- Error handling
 		require
 			a_class_not_void: a_class /= Void
 		do
-			a_class.set_interface_checked
 			a_class.set_interface_error
 		ensure
 			interface_checked: a_class.interface_checked

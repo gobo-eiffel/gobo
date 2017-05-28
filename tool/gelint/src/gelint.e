@@ -295,12 +295,10 @@ feature {NONE} -- Processing
 			a_dynamic_system: ET_DYNAMIC_SYSTEM
 			a_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_system_processor: ET_SYSTEM_PROCESSOR
-			l_system_multiprocessor: ET_SYSTEM_MULTIPROCESSOR
 		do
 --			error_handler.set_compilers
 			error_handler.set_ise
 			error_handler.set_verbose (is_verbose)
-			error_handler.set_benchmark_shown (not is_silent or is_verbose)
 			if ise_version = Void then
 				ise_version := ise_latest
 			end
@@ -310,13 +308,13 @@ feature {NONE} -- Processing
 			a_system.set_flat_dbc_mode (is_flat_dbc)
 			a_system.set_unknown_builtin_reported (False)
 			if thread_count > 1 and {PLATFORM}.is_thread_capable then
-				create l_system_multiprocessor.make (thread_count)
-				l_system_multiprocessor.set_all_error_handler (error_handler)
-				l_system_processor := l_system_multiprocessor
+				create {ET_SYSTEM_MULTIPROCESSOR} l_system_processor.make (thread_count)
 			else
 				create l_system_processor.make
-				l_system_processor.set_error_handler (error_handler)
 			end
+			l_system_processor.set_error_handler_recursive (error_handler)
+			l_system_processor.set_benchmark_shown_recursive (not is_silent or is_verbose)
+			l_system_processor.set_metrics_shown_recursive (not is_silent or is_verbose)
 			if is_catcall then
 				create a_dynamic_system.make (a_system, l_system_processor)
 				a_dynamic_system.set_catcall_error_mode (True)
@@ -325,8 +323,8 @@ feature {NONE} -- Processing
 				a_dynamic_system.compile (l_system_processor)
 			else
 				a_system.set_providers_enabled (True)
-				a_system.set_cluster_dependence_enabled (True)
-				a_system.set_use_cluster_dependence_pathnames (True)
+				l_system_processor.set_cluster_dependence_enabled_recursive (True)
+				l_system_processor.set_use_cluster_dependence_pathnames_recursive (True)
 				l_system_processor.compile (a_system)
 			end
 		end
@@ -379,6 +377,5 @@ feature -- Error handling
 invariant
 
 	error_handler_not_void: error_handler /= Void
-	system_processor_not_void: system_processor /= Void
 
 end

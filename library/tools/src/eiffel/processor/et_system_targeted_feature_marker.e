@@ -362,7 +362,7 @@ feature -- Processing
 			l_system: ET_SYSTEM
 			l_callee_feature_impl: ET_FEATURE
 		do
-			if not a_callee_feature.implementation_class.in_system then
+			if not a_callee_feature.implementation_class.is_marked then
 				Result := False
 			else
 				l_callee_feature_impl := a_callee_feature.implementation_feature
@@ -655,7 +655,7 @@ feature {NONE} -- Descendants cache
 			a_descendants_not_void: a_descendants /= Void
 			no_void_descendants: not a_descendants.has_void
 		do
-			if not a_other_class.in_system then
+			if not a_other_class.is_marked then
 				-- Ignore this class: not in the compiled system.
 			elseif a_other_class.is_none then
 				-- We are not interested in class "NONE".

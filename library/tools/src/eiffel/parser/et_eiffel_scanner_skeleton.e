@@ -213,7 +213,7 @@ feature -- Cluster dependences
 		do
 			old_group := group
 			group := a_cluster
-			if current_system.cluster_dependence_enabled then
+			if system_processor.cluster_dependence_enabled then
 				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "providers.txt"))
 				create l_file.make (l_filename)
 				l_file.open_read
@@ -232,7 +232,7 @@ feature -- Cluster dependences
 					l_splitter.set_separators (" %T%R%N")
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
-					if current_system.use_cluster_dependence_pathnames then
+					if system_processor.use_cluster_dependence_pathnames then
 						if not current_system.is_dotnet then
 								-- Remove assembly dlls from the list.
 							from
@@ -280,7 +280,7 @@ feature -- Cluster dependences
 		do
 			old_group := group
 			group := a_cluster
-			if current_system.cluster_dependence_enabled then
+			if system_processor.cluster_dependence_enabled then
 				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "dependants.txt"))
 				create l_file.make (l_filename)
 				l_file.open_read
@@ -299,7 +299,7 @@ feature -- Cluster dependences
 					l_splitter.set_separators (" %T%R%N")
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
-					if current_system.use_cluster_dependence_pathnames then
+					if system_processor.use_cluster_dependence_pathnames then
 						if not current_system.is_dotnet then
 								-- Remove assembly dlls from the list.
 							from

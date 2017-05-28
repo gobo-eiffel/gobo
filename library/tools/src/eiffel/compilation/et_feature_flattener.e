@@ -73,7 +73,6 @@ feature -- Error handling
 		require
 			a_class_not_void: a_class /= Void
 		do
-			a_class.set_features_flattened
 			a_class.set_flattening_error
 		ensure
 			features_flattened: a_class.features_flattened

@@ -167,7 +167,7 @@ feature -- Initialization
 				-- flag will be cleared.
 			classes_do_if_recursive (agent {ET_CLASS}.set_interface_error, agent {ET_CLASS}.interface_checked)
 				-- It is possible to check the implementation of features
-				-- individiually without setting ET_CLASS.implementation_checked.
+				-- individually without setting {ET_CLASS}.implementation_checked.
 				-- It is safer to force a reset just in case we are in this situation.
 			classes_do_if_recursive (agent {ET_CLASS}.reset_after_interface_checked, agent {ET_CLASS}.not_implementation_checked)
 				-- Classes that had an implementation error need to be reprocessed.
@@ -1050,7 +1050,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.any_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create any_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 			create detachable_any_type.make (tokens.detachable_keyword, l_name, l_master_class)
 			create detachable_separate_any_type.make (tokens.detachable_separate_type_mark, l_name, l_master_class)
@@ -1074,7 +1074,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.array_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 				-- Type "ARRAY [ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
@@ -1097,7 +1097,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.boolean_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create boolean_type.make (Void, l_name, l_master_class)
 		end
 
@@ -1109,7 +1109,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.character_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create character_type.make (Void, l_name, l_master_class)
 		end
 
@@ -1122,7 +1122,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.character_8_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create character_8_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create character_8_convert_feature.make (character_8_type)
@@ -1137,7 +1137,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.character_32_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create character_32_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create character_32_convert_feature.make (character_32_type)
@@ -1151,7 +1151,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.double_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create double_type.make (Void, l_name, l_master_class)
 		end
 
@@ -1163,7 +1163,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.exception_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create exception_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 			create detachable_exception_type.make (tokens.detachable_keyword, l_name, l_master_class)
 		end
@@ -1176,7 +1176,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.exception_manager_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create exception_manager_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 		end
 
@@ -1189,7 +1189,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.function_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (any_type)
 			l_parameters.put_first (tuple_type)
@@ -1204,7 +1204,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.immutable_string_32_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create immutable_string_32_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 		end
 
@@ -1216,7 +1216,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.integer_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create integer_type.make (Void, l_name, l_master_class)
 		end
 
@@ -1229,7 +1229,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.integer_8_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create integer_8_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create integer_8_convert_feature.make (integer_8_type)
@@ -1244,7 +1244,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.integer_16_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create integer_16_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create integer_16_convert_feature.make (integer_16_type)
@@ -1259,7 +1259,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.integer_32_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create integer_32_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create integer_32_convert_feature.make (integer_32_type)
@@ -1274,7 +1274,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.integer_64_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create integer_64_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create integer_64_convert_feature.make (integer_64_type)
@@ -1288,7 +1288,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.ise_exception_manager_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create ise_exception_manager_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 		end
 
@@ -1301,7 +1301,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.iterable_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 				-- Type "ITERABLE [detachable ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
@@ -1316,7 +1316,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.natural_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create natural_type.make (Void, l_name, l_master_class)
 		end
 
@@ -1329,7 +1329,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.natural_8_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create natural_8_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create natural_8_convert_feature.make (natural_8_type)
@@ -1344,7 +1344,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.natural_16_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create natural_16_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create natural_16_convert_feature.make (natural_16_type)
@@ -1359,7 +1359,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.natural_32_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create natural_32_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create natural_32_convert_feature.make (natural_32_type)
@@ -1374,7 +1374,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.natural_64_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create natural_64_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create natural_64_convert_feature.make (natural_64_type)
@@ -1389,7 +1389,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.none_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create none_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 			create detachable_none_type.make (tokens.detachable_keyword, l_name, l_master_class)
 			l_none_class := current_system.master_class (l_name)
@@ -1404,7 +1404,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.pointer_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create pointer_type.make (Void, l_name, l_master_class)
 		end
 
@@ -1417,7 +1417,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.predicate_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 				-- "PREDICATE [like Current]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (tokens.like_current)
@@ -1433,7 +1433,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.procedure_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 				-- "PROCEDURE [like Current]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (tokens.like_current)
@@ -1448,7 +1448,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.real_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create real_type.make (Void, l_name, l_master_class)
 		end
 
@@ -1461,7 +1461,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.real_32_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create real_32_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create real_32_convert_feature.make (real_32_type)
@@ -1476,7 +1476,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.real_64_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create real_64_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create real_64_convert_feature.make (real_64_type)
@@ -1491,7 +1491,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.routine_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (tuple_type)
 			create routine_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
@@ -1506,7 +1506,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.special_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 				-- Type "SPECIAL [ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
@@ -1525,7 +1525,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.string_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create string_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 			create detachable_string_type.make (tokens.detachable_keyword, l_name, l_master_class)
 		end
@@ -1539,7 +1539,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.string_8_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create string_8_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create string_8_convert_feature.make (string_8_type)
@@ -1554,7 +1554,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.string_32_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create string_32_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create string_32_convert_feature.make (string_32_type)
@@ -1569,7 +1569,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.system_object_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create system_object_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 				-- Implicit parent "SYSTEM_OBJECT".
 			create l_parent.make (system_object_type, Void, Void, Void, Void, Void)
@@ -1585,7 +1585,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.system_string_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create system_string_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 		end
 
@@ -1598,7 +1598,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.tuple_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 				-- "TUPLE"
 			create tuple_type.make (tokens.implicit_attached_type_mark, Void, l_master_class)
 				-- "detachable TUPLE"
@@ -1620,7 +1620,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.type_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 				-- "TYPE [ANY]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
@@ -1662,7 +1662,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.typed_pointer_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 				-- "TYPED_POINTER [ANY]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
@@ -1681,7 +1681,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.wide_character_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create wide_character_type.make (Void, l_name, l_master_class)
 		end
 

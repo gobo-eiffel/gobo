@@ -917,7 +917,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				if providers_enabled then
 					providers.force_last (a_base_class)
 				end
-				a_base_class.set_in_system (True)
+				a_base_class.set_marked (True)
 				l_type_mark := a_type_mark
 				if l_type_mark = Void then
 					l_type_mark := current_universe.implicit_attachment_type_mark
@@ -977,7 +977,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					if providers_enabled then
 						providers.force_last (a_base_class)
 					end
-					a_base_class.set_in_system (True)
+					a_base_class.set_marked (True)
 					l_type_mark := a_type_mark
 					if l_type_mark = Void then
 						l_type_mark := current_universe.implicit_attachment_type_mark
@@ -1659,7 +1659,7 @@ feature {NONE} -- AST factory
 					if providers_enabled then
 						providers.force_last (l_class)
 					end
-					l_class.set_in_system (True)
+					l_class.set_marked (True)
 					l_type_mark := a_type_mark
 					if l_type_mark = Void then
 						l_type_mark := current_universe.implicit_attachment_type_mark
@@ -1722,7 +1722,7 @@ feature {NONE} -- AST factory
 				if providers_enabled then
 					providers.force_last (l_class)
 				end
-				l_class.set_in_system (True)
+				l_class.set_marked (True)
 				if a_generic_parameters /= Void then
 					a_type := ast_factory.new_generic_class_type (Void, a_name, a_generic_parameters, l_class)
 				else
@@ -1861,7 +1861,7 @@ feature {NONE} -- AST factory
 		a_generics: detachable ET_ACTUAL_PARAMETER_LIST): detachable ET_TUPLE_TYPE
 			-- New 'TUPLE' type
 		local
-			a_class: ET_NAMED_CLASS
+			a_class: ET_MASTER_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
 		do
 			if a_tuple /= Void then
@@ -1869,7 +1869,7 @@ feature {NONE} -- AST factory
 				if providers_enabled then
 					providers.force_last (a_class)
 				end
-				a_class.set_in_system (True)
+				a_class.set_marked (True)
 				l_type_mark := a_type_mark
 				if l_type_mark = Void then
 					l_type_mark := current_universe.implicit_attachment_type_mark
@@ -2004,7 +2004,7 @@ feature {NONE} -- AST factory
 			end
 			if a_name /= Void then
 				l_master_class := current_universe.master_class (a_name)
-				l_master_class.mutex.lock
+				l_master_class.processing_mutex.lock
 				if current_class.name.same_class_name (a_name) then
 					Result := current_class
 				elseif l_master_class.has_local_class (current_class) then
@@ -2071,11 +2071,11 @@ feature {NONE} -- AST factory
 					if Result /= Void then
 						Result.set_filename (filename)
 						Result.set_time_stamp (time_stamp)
-						Result.set_in_system (True)
+						Result.set_marked (True)
 						error_handler.report_compilation_status (Current, Result, system_processor)
 					end
 				end
-				l_master_class.mutex.unlock
+				l_master_class.processing_mutex.unlock
 			end
 			queries.wipe_out
 			procedures.wipe_out

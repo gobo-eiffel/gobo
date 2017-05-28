@@ -86,6 +86,7 @@ feature {NONE} -- Processing
 			-- Use `input_classes' as input classes if not Void.
 			-- Otherwise use all classes in `a_system'.
 		local
+			l_all_classes: DS_ARRAYED_LIST [ET_CLASS]
 			l_universe_mapping: DS_HASH_TABLE [STRING, ET_UNIVERSE]
 			l_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]
 			l_class_chart_mapping: DS_HASH_TABLE [STRING, ET_CLASS]
@@ -100,23 +101,12 @@ feature {NONE} -- Processing
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			if not system_processor.stop_requested and then system_processor.error_handler.benchmark_shown then
+			system_processor.compile_degree_6 (a_system)
+			create l_all_classes.make (a_system.class_count_recursive)
+			a_system.classes_do_recursive (agent l_all_classes.force_last)
+			system_processor.compile_classes (l_all_classes)
+			if not system_processor.stop_requested and then system_processor.benchmark_shown then
 				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			a_system.parse_all_recursive (system_processor)
-			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				system_processor.print_time (dt1, "Degree 5")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			system_processor.compile_degree_4 (a_system)
-			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				system_processor.print_time (dt1, "Degree 4")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			system_processor.compile_degree_3 (a_system)
-			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				system_processor.print_time (dt1, "Degree 3")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			l_root_path := ""
@@ -137,12 +127,12 @@ feature {NONE} -- Processing
 				system_processor.print_time (dt1, "Group Charts")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			nb := a_system.class_count_recursive
+			nb := l_all_classes.count
 			create l_parent_classes.make_map (nb)
 			create l_heir_classes.make_map (nb)
 			create l_client_classes.make_map (nb)
 			create l_suppliers_classes.make_map (nb)
-			a_system.classes_do_recursive (agent build_class_relations (?, l_parent_classes, l_heir_classes, l_client_classes, l_suppliers_classes))
+			l_all_classes.do_all (agent build_class_relations (?, l_parent_classes, l_heir_classes, l_client_classes, l_suppliers_classes))
 			l_class_chart_mapping.keys.do_all (agent print_class_chart (?, l_parent_classes, l_universe_mapping, l_class_chart_mapping, l_feature_mapping, l_root_path))
 			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
 				system_processor.print_time (dt1, "Class Charts")

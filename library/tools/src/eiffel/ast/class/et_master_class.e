@@ -64,7 +64,8 @@ feature {NONE} -- Initialization
 			other_imported_classes := tokens.empty_master_classes
 			other_overriding_classes := tokens.empty_master_classes
 			intrinsic_class := tokens.unknown_class
-			create mutex.make
+			create status_mutex.make
+			create processing_mutex.make
 		ensure
 			name_set: name = a_name
 			universe_set: universe = a_universe
@@ -691,6 +692,20 @@ feature -- Ancestor building status
 			end
 		end
 
+	ancestors_built_successfully: BOOLEAN
+			-- Have `ancestors' been successfully built?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.ancestors_built_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.ancestors_built_successfully
+				else
+					Result := intrinsic_class.ancestors_built_successfully
+				end
+			end
+		end
+
 	has_ancestors_error: BOOLEAN
 			-- Has a fatal error occurred when building `ancestors'?
 		do
@@ -721,6 +736,20 @@ feature -- Feature flattening status
 			end
 		end
 
+	features_flattened_successfully: BOOLEAN
+			-- Have features been successfully flattened?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.features_flattened_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.features_flattened_successfully
+				else
+					Result := intrinsic_class.features_flattened_successfully
+				end
+			end
+		end
+
 	has_flattening_error: BOOLEAN
 			-- Has a fatal error occurred during feature flattening?
 		do
@@ -747,6 +776,20 @@ feature -- Interface checking status
 					Result := l_first_overriding_class.interface_checked
 				else
 					Result := intrinsic_class.interface_checked
+				end
+			end
+		end
+
+	interface_checked_successfully: BOOLEAN
+			-- Has the interface of current class been successfully checked?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.interface_checked_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.interface_checked_successfully
+				else
+					Result := intrinsic_class.interface_checked_successfully
 				end
 			end
 		end
@@ -1982,7 +2025,9 @@ feature -- System
 		local
 			l_class: ET_CLASS
 		do
-			is_marked := b
+			status_mutex.lock
+			unprotected_is_marked := b
+			status_mutex.unlock
 			if b then
 				l_class := actual_class
 				if not l_class.is_unknown then
@@ -1998,12 +2043,6 @@ feature -- Processing
 		do
 			a_processor.process_master_class (Current)
 		end
-
-feature -- Concurrency
-
-	mutex: MUTEX
-			-- Mutex to get exclusive access to current master class
-			-- in a multi-threaded environment
 
 invariant
 
@@ -2029,6 +2068,5 @@ invariant
 	no_local_non_override_class_if_unknown: intrinsic_class = tokens.unknown_class implies first_local_non_override_class = Void
 	no_imported_class_if_unknown: intrinsic_class = tokens.unknown_class implies first_imported_class = Void
 	no_overriding_class_if_unknown: intrinsic_class = tokens.unknown_class implies first_overriding_class = Void
-	mutex_not_void: mutex /= Void
 
 end

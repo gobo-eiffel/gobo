@@ -354,7 +354,8 @@ feature {NONE} -- Processing
 		do
 			system_processor.error_handler.set_ise
 			system_processor.error_handler.set_verbose (verbose_flag)
-			system_processor.error_handler.set_benchmark_shown (not silent_flag or verbose_flag)
+			system_processor.set_benchmark_shown_recursive (not silent_flag or verbose_flag)
+			system_processor.set_metrics_shown_recursive (not silent_flag or verbose_flag)
 			a_system.set_ise_version (ise_version)
 			a_system.set_unknown_builtin_reported (False)
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_attachment_type_conformance_mode (False))
@@ -362,7 +363,7 @@ feature {NONE} -- Processing
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark))
 			create l_ast_factory.make
 			l_ast_factory.set_keep_all_comments (True)
-			system_processor.set_ast_factory (l_ast_factory)
+			system_processor.set_ast_factory_recursive (l_ast_factory)
 		end
 
 	build_input_classes (a_system: ET_SYSTEM)

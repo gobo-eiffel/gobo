@@ -101,7 +101,7 @@ feature -- Kernel types
 		do
 			l_name := tokens.none_class_name
 			l_master_class := master_class (l_name)
-			l_master_class.set_in_system (True)
+			l_master_class.set_marked (True)
 			create none_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 			create detachable_none_type.make (tokens.detachable_keyword, l_name, l_master_class)
 			create l_class.make (l_name)
@@ -494,15 +494,6 @@ feature -- Parser status report
 	providers_enabled: BOOLEAN
 			-- Should providers be built when parsing a class?
 
-	cluster_dependence_enabled: BOOLEAN
-			-- Should cluster dependence constraints be checked?
-
-	use_cluster_dependence_pathnames: BOOLEAN
-			-- Should cluster dependence constraints specified in 'providers.txt'
-			-- and 'dependants.txt' files be considered as group pathnames
-			-- (possibly with wildcards)? Otherwise they are considered as
-			-- group names.
-
 	qualified_anchored_types_cycle_detection_enabled: BOOLEAN
 			-- Should an error be reported (VTAT-2) when the type of
 			-- the anchor appearing in a qualified anchored type
@@ -599,22 +590,6 @@ feature -- Parser setting
 			providers_enabled := b
 		ensure
 			providers_enabled_set: providers_enabled = b
-		end
-
-	set_cluster_dependence_enabled (b: BOOLEAN)
-			-- Set `cluster_dependence_enabled' to `b'.
-		do
-			cluster_dependence_enabled := b
-		ensure
-			cluster_dependence_enabled_set: cluster_dependence_enabled = b
-		end
-
-	set_use_cluster_dependence_pathnames (b: BOOLEAN)
-			-- Set `use_cluster_dependence_pathnames' to `b'.
-		do
-			use_cluster_dependence_pathnames := b
-		ensure
-			use_cluster_dependence_pathnames_set: use_cluster_dependence_pathnames = b
 		end
 
 	set_qualified_anchored_types_cycle_detection_enabled (b: BOOLEAN)

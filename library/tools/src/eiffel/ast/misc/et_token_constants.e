@@ -5608,11 +5608,8 @@ feature -- System
 			create Result.make_unknown
 			Result.set_group (unknown_group)
 			Result.set_syntax_error
-			Result.set_ancestors_built
 			Result.set_ancestors_error
-			Result.set_features_flattened
 			Result.set_flattening_error
-			Result.set_interface_checked
 			Result.set_interface_error
 			Result.set_implementation_error
 		ensure

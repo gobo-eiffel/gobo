@@ -175,11 +175,11 @@ feature -- Argument parsing
 				Exceptions.die (1)
 			elseif not format_option.was_found or format_option.parameter ~ "pretty_print" then
 				create l_system_processor.make
-				l_system_processor.set_error_handler (error_handler)
+				l_system_processor.set_error_handler_recursive (error_handler)
 				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, l_system_processor)
 			elseif format_option.parameter ~ "html_ise_stylesheet" then
 				create l_system_processor.make
-				l_system_processor.set_error_handler (error_handler)
+				l_system_processor.set_error_handler_recursive (error_handler)
 				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, l_system_processor)
 			end
 			if l_format /= Void then

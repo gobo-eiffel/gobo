@@ -109,7 +109,7 @@ feature -- Initialization
 			reset_parsed
 			reset_preparsed
 			index := 0
-			is_marked := False
+			unprotected_is_marked := False
 		ensure
 			same_name: name = old name
 			same_id: id = old id
@@ -1757,32 +1757,56 @@ feature -- Ancestor building status
 
 	ancestors_built: BOOLEAN
 			-- Have `ancestors' been built?
+		do
+			status_mutex.lock
+			Result := unprotected_ancestors_built
+			status_mutex.unlock
+		end
+
+	ancestors_built_successfully: BOOLEAN
+			-- Have `ancestors' been successfully built?
+		do
+			status_mutex.lock
+			Result := unprotected_ancestors_built and then not unprotected_has_ancestors_error
+			status_mutex.unlock
+		end
 
 	has_ancestors_error: BOOLEAN
 			-- Has a fatal error occurred when building `ancestors'?
+		do
+			status_mutex.lock
+			Result := unprotected_has_ancestors_error
+			status_mutex.unlock
+		end
 
 	set_ancestors_built
 			-- Set `ancestors_built' to True.
 		do
-			ancestors_built := True
+			status_mutex.lock
+			unprotected_ancestors_built := True
+			status_mutex.unlock
 		ensure
 			ancestors_built: ancestors_built
 		end
 
 	set_ancestors_error
 			-- Set `has_ancestors_error' to True.
-		require
-			ancestors_built: ancestors_built
 		do
-			has_ancestors_error := True
+			status_mutex.lock
+			unprotected_ancestors_built := True
+			unprotected_has_ancestors_error := True
+			status_mutex.unlock
 		ensure
+			ancestors_built: ancestors_built
 			has_ancestors_error: has_ancestors_error
 		end
 
 	unset_ancestors_error
 			-- Set `has_ancestors_error' to False.
 		do
-			has_ancestors_error := False
+			status_mutex.lock
+			unprotected_has_ancestors_error := False
+			status_mutex.unlock
 		ensure
 			not_has_ancestors_error: not has_ancestors_error
 		end
@@ -1790,14 +1814,28 @@ feature -- Ancestor building status
 	reset_ancestors_built
 			-- Set `ancestors_built' to False.
 		do
-			has_ancestors_error := False
-			ancestors_built := False
+			status_mutex.lock
+			unprotected_has_ancestors_error := False
+			unprotected_ancestors_built := False
 			ancestors := tokens.empty_ancestors
 			conforming_ancestors := tokens.empty_ancestors
+			status_mutex.unlock
 		ensure
 			ancestors_not_built: not ancestors_built
 			no_ancestors_error: not has_ancestors_error
 		end
+
+feature {NONE} -- Ancestor building status
+
+	unprotected_ancestors_built: BOOLEAN
+			-- Have `ancestors' been built?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_ancestors_error: BOOLEAN
+			-- Has a fatal error occurred when building `ancestors'?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
 
 feature -- Creation
 
@@ -2293,32 +2331,56 @@ feature -- Feature flattening status
 
 	features_flattened: BOOLEAN
 			-- Have features been flattened?
+		do
+			status_mutex.lock
+			Result := unprotected_features_flattened
+			status_mutex.unlock
+		end
+
+	features_flattened_successfully: BOOLEAN
+			-- Have features been successfully flattened?
+		do
+			status_mutex.lock
+			Result := unprotected_features_flattened and then not unprotected_has_flattening_error
+			status_mutex.unlock
+		end
 
 	has_flattening_error: BOOLEAN
 			-- Has a fatal error occurred during feature flattening?
+		do
+			status_mutex.lock
+			Result := unprotected_has_flattening_error
+			status_mutex.unlock
+		end
 
 	set_features_flattened
 			-- Set `features_flattened' to True.
 		do
-			features_flattened := True
+			status_mutex.lock
+			unprotected_features_flattened := True
+			status_mutex.unlock
 		ensure
 			features_flattened: features_flattened
 		end
 
 	set_flattening_error
 			-- Set `has_flattening_error' to True.
-		require
-			features_flattened: features_flattened
 		do
-			has_flattening_error := True
+			status_mutex.lock
+			unprotected_features_flattened := True
+			unprotected_has_flattening_error := True
+			status_mutex.unlock
 		ensure
+			features_flattened: features_flattened
 			has_flattening_error: has_flattening_error
 		end
 
 	unset_flattening_error
 			-- Set `has_flattening_error' to False.
 		do
-			has_flattening_error := False
+			status_mutex.lock
+			unprotected_has_flattening_error := False
+			status_mutex.unlock
 		ensure
 			not_has_flattening_error: not has_flattening_error
 		end
@@ -2326,45 +2388,83 @@ feature -- Feature flattening status
 	reset_features_flattened
 			-- Set `features_flattened' to False.
 		do
-			has_flattening_error := False
-			features_flattened := False
+			status_mutex.lock
+			unprotected_has_flattening_error := False
+			unprotected_features_flattened := False
 			has_deferred_features := False
 			redeclared_signatures_checked := False
+			status_mutex.unlock
 		ensure
 			features_not_flattened: not features_flattened
 			no_flattening_error: not has_flattening_error
 		end
 
+feature {NONE} -- Feature flattening status
+
+	unprotected_features_flattened: BOOLEAN
+			-- Have features been flattened?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_flattening_error: BOOLEAN
+			-- Has a fatal error occurred during feature flattening?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
 feature -- Interface checking status
 
 	interface_checked: BOOLEAN
 			-- Has the interface of current class been checked?
+		do
+			status_mutex.lock
+			Result := unprotected_interface_checked
+			status_mutex.unlock
+		end
+
+	interface_checked_successfully: BOOLEAN
+			-- Has the interface of current class been successfully checked?
+		do
+			status_mutex.lock
+			Result := unprotected_interface_checked and then not unprotected_has_interface_error
+			status_mutex.unlock
+		end
 
 	has_interface_error: BOOLEAN
 			-- Has a fatal error occurred during interface checking?
+		do
+			status_mutex.lock
+			Result := unprotected_has_interface_error
+			status_mutex.unlock
+		end
 
 	set_interface_checked
 			-- Set `interface_checked' to True.
 		do
-			interface_checked := True
+			status_mutex.lock
+			unprotected_interface_checked := True
+			status_mutex.unlock
 		ensure
 			interface_checked: interface_checked
 		end
 
 	set_interface_error
 			-- Set `has_interface_error' to True.
-		require
-			interface_checked: interface_checked
 		do
-			has_interface_error := True
+			status_mutex.lock
+			unprotected_interface_checked := True
+			unprotected_has_interface_error := True
+			status_mutex.unlock
 		ensure
+			interface_checked: interface_checked
 			has_interface_error: has_interface_error
 		end
 
 	unset_interface_error
 			-- Set `has_interface_error' to False.
 		do
-			has_interface_error := False
+			status_mutex.lock
+			unprotected_has_interface_error := False
+			status_mutex.unlock
 		ensure
 			not_has_interface_error: not has_interface_error
 		end
@@ -2372,12 +2472,26 @@ feature -- Interface checking status
 	reset_interface_checked
 			-- Set `interface_checked' to False.
 		do
-			has_interface_error := False
-			interface_checked := False
+			status_mutex.lock
+			unprotected_has_interface_error := False
+			unprotected_interface_checked := False
+			status_mutex.unlock
 		ensure
 			interface_not_checked: not interface_checked
 			no_interface_error: not has_interface_error
 		end
+
+feature {NONE} -- Interface checking status
+
+	unprotected_interface_checked: BOOLEAN
+			-- Has the interface of current class been checked?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_interface_error: BOOLEAN
+			-- Has a fatal error occurred during interface checking?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
 
 feature -- Suppliers/Providers
 
@@ -2684,16 +2798,6 @@ feature -- Processing
 			a_processor.process_class (Current)
 		end
 
-feature -- Concurrency
-
-	status_mutex: MUTEX
-			-- Mutex to get exclusive status access to current class
-			-- in a multi-threaded environment
-
-	processing_mutex: MUTEX
-			-- Mutex to get exclusive processing access to current class
-			-- in a multi-threaded environment
-
 feature {NONE} -- Constants
 
 	initial_descendants_capacity: INTEGER
@@ -2738,7 +2842,5 @@ invariant
 	no_void_supplier: attached suppliers as l_suppliers implies not l_suppliers.has_void
 	no_void_provider: attached providers as l_providers implies not l_providers.has_void
 	tuple_constraint_position: tuple_constraint_position /= 0 implies attached formal_parameters as l_formal_parameters and then (tuple_constraint_position >= 1 and tuple_constraint_position <= l_formal_parameters.count)
-	status_mutex_not_void: status_mutex /= Void
-	processing_mutex_not_void: processing_mutex /= Void
 
 end

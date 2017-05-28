@@ -57,9 +57,6 @@ feature -- Status report
 	is_verbose: BOOLEAN
 			-- Should status be reported for each class processed?
 
-	benchmark_shown: BOOLEAN
-			-- Should benchmark be shown for each Degree?
-
 	has_error: BOOLEAN
 			-- Has an error been reported?
 
@@ -90,14 +87,6 @@ feature -- Status setting
 			is_verbose := b
 		ensure
 			verbose_set: is_verbose = b
-		end
-
-	set_benchmark_shown (b: BOOLEAN)
-			-- Set `benchmark_shown' to `b'.
-		do
-			benchmark_shown := b
-		ensure
-			benchmark_shown_set: benchmark_shown = b
 		end
 
 	set_has_error (b: BOOLEAN)
