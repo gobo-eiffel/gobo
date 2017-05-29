@@ -379,29 +379,25 @@ feature -- Processing
 			l_root_class: ET_CLASS
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 		do
-			if not attached a_system.root_type as l_root_type then
-				-- Do nothing.
+			compile_degree_6 (a_system)
+			if
+				not attached a_system.root_type as l_root_type or else
+				l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) or else
+				l_root_type.same_named_type (a_system.any_type, tokens.unknown_class, tokens.unknown_class)
+			then
+				create l_classes.make (a_system.class_count_recursive)
+				a_system.classes_do_recursive (agent l_classes.force_last)
+				compile_classes (l_classes)
 			else
-				compile_degree_6 (a_system)
-				if l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
-					create l_classes.make (a_system.class_count_recursive)
-					a_system.classes_do_recursive (agent l_classes.force_last)
-					compile_classes (l_classes)
-				elseif l_root_type.same_named_type (a_system.any_type, tokens.unknown_class, tokens.unknown_class) then
-					create l_classes.make (a_system.class_count_recursive)
-					a_system.classes_do_recursive (agent l_classes.force_last)
-					compile_classes (l_classes)
+				l_root_class := l_root_type.base_class
+				l_root_class.process (eiffel_parser)
+				if not l_root_class.is_preparsed then
+						-- Error: unknown root class.
+					error_handler.report_gvsrc4a_error (l_root_class)
 				else
-					l_root_class := l_root_type.base_class
-					l_root_class.process (eiffel_parser)
-					if not l_root_class.is_preparsed then
-							-- Error: unknown root class.
-						error_handler.report_gvsrc4a_error (l_root_class)
-					else
-						create l_classes.make (a_system.class_count_recursive)
-						a_system.classes_do_recursive (agent l_classes.force_last)
-						compile_marked_classes (l_classes)
-					end
+					create l_classes.make (a_system.class_count_recursive)
+					a_system.classes_do_recursive (agent l_classes.force_last)
+					compile_marked_classes (l_classes)
 				end
 			end
 		end
@@ -1003,7 +999,7 @@ feature {NONE} -- Implementation
 				l_class := a_classes.item (i)
 				if l_class.is_marked then
 					j := j + 1
-					a_classes.put (l_class, j)
+					a_classes.replace (l_class, j)
 				end
 				i := i + 1
 			end
