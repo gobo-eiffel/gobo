@@ -1876,7 +1876,7 @@ feature -- Iteration
 
 feature -- Initialization
 
-	reset_local_modified_classes
+	reset_local_modified_classes (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Reset appropriately classes that have been declared in groups of `universe'
 			-- (i.e. classes that can be found in `first_local_override_class', `other_local_override_classes',
 			-- `first_local_non_override_class', `other_local_non_override_classes',
@@ -1895,22 +1895,24 @@ feature -- Initialization
 			-- re(pre)parse will give inconsistent results and will need to be
 			-- rerun again.
 			--
-			-- The queries `current_system.preparse_*_mode' govern the way
+			-- The queries `a_system_processor.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			local_override_classes_do_all (agent reset_local_modified_class)
-			if not current_system.preparse_override_mode then
-				local_non_override_classes_do_all (agent reset_local_modified_class)
-				local_ignored_classes_do_all (agent reset_local_modified_class)
+			local_override_classes_do_all (agent reset_local_modified_class (?, a_system_processor))
+			if not a_system_processor.preparse_override_mode then
+				local_non_override_classes_do_all (agent reset_local_modified_class (?, a_system_processor))
+				local_ignored_classes_do_all (agent reset_local_modified_class (?, a_system_processor))
 			else
-				local_ignored_classes_do_if (agent reset_local_modified_class, agent {ET_CLASS}.is_in_override_group)
+				local_ignored_classes_do_if (agent reset_local_modified_class (?, a_system_processor), agent {ET_CLASS}.is_in_override_group)
 			end
 		end
 
 feature {NONE} -- Initialization
 
-	reset_local_modified_class (a_class: ET_CLASS)
+	reset_local_modified_class (a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Reset `a_class' appropriately if it has been modified and possibly removed (either
 			-- its old file does not exist anymore, or it has been modified and may contain another
 			-- class) so that it will be (pre)parsed again.
@@ -1925,11 +1927,12 @@ feature {NONE} -- Initialization
 			-- re(pre)parse will give inconsistent results and will need to be
 			-- rerun again.
 			--
-			-- The queries `current_system.preparse_*_mode' govern the way
+			-- The queries `a_system_processor.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
 		require
 			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_cluster: ET_CLUSTER
 			l_override_mode: BOOLEAN
@@ -1938,9 +1941,9 @@ feature {NONE} -- Initialization
 			l_time_stamp, l_new_timestamp: INTEGER
 			l_actual_class: ET_CLASS
 		do
-			l_override_mode := current_system.preparse_override_mode
-			l_readonly_mode := current_system.preparse_readonly_mode
-			l_shallow_mode := current_system.preparse_shallow_mode
+			l_override_mode := a_system_processor.preparse_override_mode
+			l_readonly_mode := a_system_processor.preparse_readonly_mode
+			l_shallow_mode := a_system_processor.preparse_shallow_mode
 			l_actual_class := actual_class
 			if a_class /= l_actual_class then
 				a_class.reset_after_parsed_and_errors

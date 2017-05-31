@@ -106,7 +106,7 @@ feature -- Parsing
 		do
 			old_group := group
 			group := a_cluster
-			if current_system.preparse_shallow_mode then
+			if system_processor.preparse_shallow_mode then
 					-- With the "shallow" algorithm the time-stamp is only set when
 					-- parsing the class.
 				l_time_stamp := tokens.unknown_class.time_stamp
@@ -132,7 +132,7 @@ feature -- Parsing
 					if attached last_classname as l_last_classname then
 						l_class := current_universe.master_class (l_last_classname)
 						preparse_class (l_class, a_filename, l_time_stamp)
-						if current_system.preparse_multiple_mode then
+						if system_processor.preparse_multiple_mode then
 							from
 								class_keyword_found := False
 								last_classname := Void
@@ -189,7 +189,7 @@ feature {NONE} -- Parsing
 			group := a_cluster
 			l_already_preparsed := a_cluster.is_preparsed
 			a_cluster.set_preparsed (True)
-			if not a_cluster.is_abstract and then (not l_already_preparsed or else ((current_system.preparse_readonly_mode or else not a_cluster.is_read_only) and then (current_system.preparse_override_mode implies a_cluster.is_override))) then
+			if not a_cluster.is_abstract and then (not l_already_preparsed or else ((system_processor.preparse_readonly_mode or else not a_cluster.is_read_only) and then (system_processor.preparse_override_mode implies a_cluster.is_override))) then
 				error_handler.report_preparsing_status (a_cluster)
 				l_dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
 				l_dir_name := file_system.canonical_pathname (l_dir_name)
@@ -298,8 +298,8 @@ feature {NONE} -- Parsing
 			l_override_mode: BOOLEAN
 			l_dir_name: STRING
 		do
-			l_readonly_mode := current_system.preparse_readonly_mode
-			l_override_mode := current_system.preparse_override_mode
+			l_readonly_mode := system_processor.preparse_readonly_mode
+			l_override_mode := system_processor.preparse_override_mode
 			l_clusters := a_clusters.clusters
 			nb := l_clusters.count
 			from i := 1 until i > nb loop

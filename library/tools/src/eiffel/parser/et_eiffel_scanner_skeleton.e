@@ -124,7 +124,7 @@ feature -- Status report
 			-- Should 'attached' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_attached_keyword
+			Result := system_processor.use_attached_keyword
 		end
 
 	use_attribute_keyword: BOOLEAN
@@ -134,7 +134,7 @@ feature -- Status report
 			if group.use_obsolete_syntax then
 				Result := False
 			else
-				Result := current_system.use_attribute_keyword
+				Result := system_processor.use_attribute_keyword
 			end
 		end
 
@@ -142,7 +142,7 @@ feature -- Status report
 			-- Should 'detachable' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_detachable_keyword
+			Result := system_processor.use_detachable_keyword
 		end
 
 	use_note_keyword: BOOLEAN
@@ -152,7 +152,7 @@ feature -- Status report
 			if group.use_obsolete_syntax then
 				Result := False
 			else
-				Result := current_system.use_note_keyword
+				Result := system_processor.use_note_keyword
 			end
 		end
 
@@ -160,7 +160,7 @@ feature -- Status report
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_reference_keyword
+			Result := system_processor.use_reference_keyword
 		end
 
 feature -- Error handling

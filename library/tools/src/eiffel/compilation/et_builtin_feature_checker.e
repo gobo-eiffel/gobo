@@ -71,7 +71,7 @@ feature -- Status report
 	unknown_builtin_reported: BOOLEAN
 			-- Should unknown built-in features be reported as an error?
 		do
-			Result := current_system.unknown_builtin_reported
+			Result := system_processor.unknown_builtin_reported
 		end
 
 feature {NONE} -- Built-in validity

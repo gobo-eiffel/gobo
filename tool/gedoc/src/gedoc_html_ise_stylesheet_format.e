@@ -78,7 +78,7 @@ feature {NONE} -- Processing
 			-- Prepare `a_system' before being processed.
 		do
 			precursor (a_system)
-			a_system.set_suppliers_enabled (True)
+			system_processor.set_suppliers_enabled_recursive (True)
 		end
 
 	process_system (a_system: ET_SYSTEM)

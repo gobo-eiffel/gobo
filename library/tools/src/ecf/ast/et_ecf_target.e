@@ -5,7 +5,7 @@ note
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -340,11 +340,6 @@ feature -- Basic operations
 			l_value := settings.value (exception_trace_setting_name)
 			if l_value /= Void and then l_value.is_boolean then
 				a_system.set_exception_trace_mode (l_value.to_boolean)
-			end
-				-- Unknown built-in features reported.
-			l_value := variables.value ("unknown_builtin_reported")
-			if l_value /= Void and then l_value.is_boolean then
-				a_system.set_unknown_builtin_reported (l_value.to_boolean)
 			end
 		end
 

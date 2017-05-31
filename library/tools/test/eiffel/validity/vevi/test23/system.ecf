@@ -4,7 +4,6 @@
 		<root class="AA" feature="make"/>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all"/>
 		<setting name="console_application" value="true"/>
-		<variable name="unknown_builtin_reported" value="false"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>

@@ -141,7 +141,7 @@ feature {NONE} -- Type validity
 							args := l_feature.arguments
 							l_index := a_type.index
 							if args /= Void and then l_index <= args.count then
-								if current_system.qualified_anchored_types_cycle_detection_enabled then
+								if system_processor.qualified_anchored_types_cycle_detection_enabled then
 									if args.item (l_index).type.depends_on_qualified_anchored_type (current_class) then
 											-- Error: the type of the anchor appearing in a qualified
 											-- anchored type should not depend on a qualified anchored type.
@@ -165,7 +165,7 @@ feature {NONE} -- Type validity
 						end
 					else
 						if attached current_class.seeded_query (l_seed) as l_query then
-							if current_system.qualified_anchored_types_cycle_detection_enabled then
+							if system_processor.qualified_anchored_types_cycle_detection_enabled then
 								if  l_query.type.depends_on_qualified_anchored_type (current_class) then
 										-- Error: the type of the anchor appearing in a qualified
 										-- anchored type should not depend on a qualified anchored type.
@@ -233,7 +233,7 @@ feature {NONE} -- Type validity
 									-- will check the validity of its signature again.
 								a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
-								if current_system.qualified_anchored_types_cycle_detection_enabled then
+								if system_processor.qualified_anchored_types_cycle_detection_enabled then
 									if  l_query.type.depends_on_qualified_anchored_type (l_class) then
 											-- Error: the type of the anchor appearing in a qualified
 											-- anchored type should not depend on a qualified anchored type.
@@ -258,7 +258,7 @@ feature {NONE} -- Type validity
 								-- of feature whose signature contains `a_type', we
 								-- will check the validity of its signature again.
 -- TODO: check that `l_query' is exported to `current_class'.
-							if current_system.qualified_anchored_types_cycle_detection_enabled then
+							if system_processor.qualified_anchored_types_cycle_detection_enabled then
 								if  l_query.type.depends_on_qualified_anchored_type (l_class) then
 										-- Error: the type of the anchor appearing in a qualified
 										-- anchored type should not depend on a qualified anchored type.

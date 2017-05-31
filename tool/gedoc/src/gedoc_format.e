@@ -318,7 +318,6 @@ feature {NONE} -- Eiffel config file parsing
 		do
 			last_system := Void
 			create l_system.make ("gedoc_system")
-			l_system.set_ise_version (ise_version)
 			create l_cluster.make ("gedoc_cluster", ".", l_system)
 			if attached {ET_EIFFEL_PREPARSER} system_processor.eiffel_preparser as l_system_eiffel_preparser then
 				l_eiffel_preparser := l_system_eiffel_preparser
@@ -356,8 +355,8 @@ feature {NONE} -- Processing
 			system_processor.error_handler.set_verbose (verbose_flag)
 			system_processor.set_benchmark_shown_recursive (not silent_flag or verbose_flag)
 			system_processor.set_metrics_shown_recursive (not silent_flag or verbose_flag)
-			a_system.set_ise_version (ise_version)
-			a_system.set_unknown_builtin_reported (False)
+			system_processor.set_ise_version_recursive (ise_version)
+			system_processor.set_unknown_builtin_reported_recursive (False)
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_attachment_type_conformance_mode (False))
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_target_type_attachment_mode (False))
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark))

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets of agent operands pushing types to supersets (type sets of argument of features 'call' and 'item')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,7 +78,7 @@ feature -- Element change
 						end
 					end
 				end
-			elseif a_system.current_system.is_ise and then not has_type (a_type) then
+			elseif a_system.system_processor.is_ise and then not has_type (a_type) then
 					-- ISE Eiffel does not type-check the tuple operand of Agent calls even at
 					-- execution time. It only checks whether the tuple has enough items and
 					-- these items are of the expected types, regardless of the type of the tuple

@@ -195,7 +195,7 @@ feature -- Validity checking
 												end
 											end
 										elseif not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, system_processor) then
-											if current_system.is_ise and then (current_class.is_deferred and an_actual.is_like_current) then
+											if system_processor.is_ise and then (current_class.is_deferred and an_actual.is_like_current) then
 												-- ISE accepts code of the form:
 												--
 												--   class A [G -> B create default_create end]
@@ -254,7 +254,7 @@ feature -- Validity checking
 												--
 												-- which was nevertheless not more unsafe than the other cases above.
 											elseif
-												(current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_0_6_7358) and then
+												system_processor.older_ise_version (ise_6_0_6_7358) and then
 												(a_base_class.is_deferred and a_creation_procedure.has_seed (current_system.default_create_seed))
 											then
 												-- ISE started to report this VTCG error with version 6.0.6.7358.
@@ -605,7 +605,7 @@ feature {NONE} -- Validity checking
 								-- This is a 'like feature'.
 							a_type.resolve_like_feature (l_query)
 							if in_qualified_anchored_type then
-								if current_system.qualified_anchored_types_cycle_detection_enabled then
+								if system_processor.qualified_anchored_types_cycle_detection_enabled then
 									if  l_query.type.depends_on_qualified_anchored_type (current_class) then
 											-- Error: the type of the anchor appearing in a qualified
 											-- anchored type should not depend on a qualified anchored type.
@@ -632,7 +632,7 @@ feature {NONE} -- Validity checking
 											a_type.resolve_like_argument (l_feature)
 											resolved := True
 											if in_qualified_anchored_type then
-												if current_system.qualified_anchored_types_cycle_detection_enabled then
+												if system_processor.qualified_anchored_types_cycle_detection_enabled then
 													if args.item (l_index).type.depends_on_qualified_anchored_type (current_class) then
 															-- Error: the type of the anchor appearing in a qualified
 															-- anchored type should not depend on a qualified anchored type.
@@ -671,7 +671,7 @@ feature {NONE} -- Validity checking
 							args := l_feature.arguments
 							l_index := a_type.index
 							if args /= Void and then l_index <= args.count then
-								if current_system.qualified_anchored_types_cycle_detection_enabled then
+								if system_processor.qualified_anchored_types_cycle_detection_enabled then
 									if args.item (l_index).type.depends_on_qualified_anchored_type (current_class) then
 											-- Error: the type of the anchor appearing in a qualified
 											-- anchored type should not depend on a qualified anchored type.
@@ -697,7 +697,7 @@ feature {NONE} -- Validity checking
 						end
 					else
 						if attached current_class.seeded_query (l_seed) as l_query then
-							if current_system.qualified_anchored_types_cycle_detection_enabled then
+							if system_processor.qualified_anchored_types_cycle_detection_enabled then
 								if l_query.type.depends_on_qualified_anchored_type (current_class) then
 										-- Error: the type of the anchor appearing in a qualified
 										-- anchored type should not depend on a qualified anchored type.
@@ -761,7 +761,7 @@ feature {NONE} -- Validity checking
 							if attached l_class.named_query (a_type.name) as l_query then
 								a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
-								if current_system.qualified_anchored_types_cycle_detection_enabled then
+								if system_processor.qualified_anchored_types_cycle_detection_enabled then
 									if  l_query.type.depends_on_qualified_anchored_type (l_class) then
 											-- Error: the type of the anchor appearing in a qualified
 											-- anchored type should not depend on a qualified anchored type.
@@ -789,7 +789,7 @@ feature {NONE} -- Validity checking
 					else
 						if attached l_class.seeded_query (l_seed) as l_query then
 -- TODO: check that `l_query' is exported to `current_class'.
-							if current_system.qualified_anchored_types_cycle_detection_enabled then
+							if system_processor.qualified_anchored_types_cycle_detection_enabled then
 								if l_query.type.depends_on_qualified_anchored_type (l_class) then
 										-- Error: the type of the anchor appearing in a qualified
 										-- anchored type should not depend on a qualified anchored type.

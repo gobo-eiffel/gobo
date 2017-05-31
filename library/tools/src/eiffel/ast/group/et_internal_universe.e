@@ -616,7 +616,7 @@ feature -- Parsing
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				master_classes_do_all (agent {ET_MASTER_CLASS}.reset_local_modified_classes)
+				master_classes_do_all (agent {ET_MASTER_CLASS}.reset_local_modified_classes (a_system_processor))
 				master_classes_do_all (agent {ET_MASTER_CLASS}.remove_unknown_local_classes)
 				clusters.do_all (agent {ET_CLUSTER}.process (a_system_processor.eiffel_preparser))
 			end
@@ -689,7 +689,7 @@ feature -- Parsing
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				master_classes_do_all (agent {ET_MASTER_CLASS}.reset_local_modified_classes)
+				master_classes_do_all (agent {ET_MASTER_CLASS}.reset_local_modified_classes (a_system_processor))
 				master_classes_do_all (agent {ET_MASTER_CLASS}.remove_unknown_local_classes)
 				clusters.do_all (agent {ET_CLUSTER}.process (a_system_processor.eiffel_parser))
 			end

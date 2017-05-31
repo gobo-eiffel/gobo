@@ -140,10 +140,9 @@ feature -- Processing
 			create a_cluster.make (name, pathname, a_system)
 			create a_clusters.make (a_cluster)
 			a_system.set_clusters (a_clusters)
-			a_system.set_default_keyword_usage
-			create l_system_processor.make_null
-			l_system_processor.activate (a_system)
+			create l_system_processor.make
 			l_system_processor.set_error_handler_recursive (an_error_handler)
+			l_system_processor.set_default_keyword_usage_recursive
 			a_system.parse_all_recursive (l_system_processor)
 			a_system.classes_do_if_recursive (agent process_class (?, testcases), agent is_testcase_class)
 		end

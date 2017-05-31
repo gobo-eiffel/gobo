@@ -226,13 +226,13 @@ feature {NONE} -- Processing
 -- TODO.
 			end
 			error_handler.set_ise
-			a_system.set_ise_version (ise_latest)
-			if is_gelint then
-				a_system.set_flat_mode (True)
-				a_system.set_flat_dbc_mode (True)
-			end
 			create l_system_processor.make
 			l_system_processor.set_error_handler_recursive (error_handler)
+			l_system_processor.set_ise_version_recursive (ise_latest)
+			if is_gelint then
+				l_system_processor.set_flat_mode_recursive (True)
+				l_system_processor.set_flat_dbc_mode_recursive (True)
+			end
 			create l_system.make (a_system, l_system_processor)
 			if is_gelint then
 				l_system.set_full_class_checking (True)

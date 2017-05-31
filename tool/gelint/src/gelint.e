@@ -302,11 +302,6 @@ feature {NONE} -- Processing
 			if ise_version = Void then
 				ise_version := ise_latest
 			end
-			a_system.set_ise_version (ise_version)
-			a_system.set_ecma_version (ecma_version)
-			a_system.set_flat_mode (is_flat)
-			a_system.set_flat_dbc_mode (is_flat_dbc)
-			a_system.set_unknown_builtin_reported (False)
 			if thread_count > 1 and {PLATFORM}.is_thread_capable then
 				create {ET_SYSTEM_MULTIPROCESSOR} l_system_processor.make (thread_count)
 			else
@@ -315,6 +310,11 @@ feature {NONE} -- Processing
 			l_system_processor.set_error_handler_recursive (error_handler)
 			l_system_processor.set_benchmark_shown_recursive (not is_silent or is_verbose)
 			l_system_processor.set_metrics_shown_recursive (not is_silent or is_verbose)
+			l_system_processor.set_ise_version_recursive (ise_version)
+			l_system_processor.set_ecma_version_recursive (ecma_version)
+			l_system_processor.set_flat_mode_recursive (is_flat)
+			l_system_processor.set_flat_dbc_mode_recursive (is_flat_dbc)
+			l_system_processor.set_unknown_builtin_reported_recursive (False)
 			if is_catcall then
 				create a_dynamic_system.make (a_system, l_system_processor)
 				a_dynamic_system.set_catcall_error_mode (True)
@@ -322,7 +322,7 @@ feature {NONE} -- Processing
 				a_dynamic_system.set_dynamic_type_set_builder (a_builder)
 				a_dynamic_system.compile (l_system_processor)
 			else
-				a_system.set_providers_enabled (True)
+				l_system_processor.set_providers_enabled_recursive (True)
 				l_system_processor.set_cluster_dependence_enabled_recursive (True)
 				l_system_processor.set_use_cluster_dependence_pathnames_recursive (True)
 				l_system_processor.compile (a_system)

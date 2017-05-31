@@ -254,7 +254,7 @@ Class_declaration: Indexing_clause_opt Class_to_end
 Class_declaration_opt: -- Empty
 	|
 		{
-			if not current_system.preparse_multiple_mode then
+			if not system_processor.preparse_multiple_mode then
 					-- Raise syntax error: it is not valid to have more
 					-- than one class text in the same file.
 				raise_error
@@ -1524,7 +1524,7 @@ Creation_procedure_list: Identifier
 	| Creation_procedure_comma
 		-- TODO: syntax error.
 		{
-			if current_system.is_ise then
+			if system_processor.is_ise then
 				raise_error
 			else
 				$$ := ast_factory.new_creator (last_keyword, last_clients, counter_value)
@@ -1832,7 +1832,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt '=' Manifest_constant Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
@@ -1842,7 +1842,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt '=' E_UNIQUE Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
@@ -1854,7 +1854,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
@@ -1868,7 +1868,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
@@ -1880,7 +1880,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $10, ast_factory.new_once_compound ($9, $11), $12, $13, $14, $15, last_clients, last_feature_clause, last_class)
@@ -1894,7 +1894,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $11, ast_factory.new_once_compound ($10, $12), $13, $14, $15, $16, last_clients, last_feature_clause, last_class)
@@ -1904,7 +1904,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class)
@@ -1916,7 +1916,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class)
@@ -1928,7 +1928,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
@@ -1942,7 +1942,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
@@ -1980,7 +1980,7 @@ Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt O
 
 Is_opt: -- Empty
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := Void
@@ -2875,7 +2875,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		{$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))}
 	| '!' E_LIKE '{' Type '}' '.' Identifier
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
@@ -2883,7 +2883,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		}
 	| '!' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
@@ -2891,7 +2891,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		}
 	| '?' E_LIKE '{' Type '}' '.' Identifier
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
@@ -2899,7 +2899,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		}
 	| '?' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
@@ -3042,7 +3042,7 @@ Instruction: Creation_instruction
 		{ $$ := ast_factory.new_loop_instruction_old_syntax ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
 	| From_compound Loop_invariant_clause_opt E_UNTIL Expression Loop_compound E_END
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
+			if system_processor.older_ise_version (ise_6_3_7_4554) then
 				$$ := ast_factory.new_loop_instruction_old_syntax ($1, $2, Void, ast_factory.new_conditional ($3, $4), $5, $6)
 			else
 				$$ := ast_factory.new_loop_instruction ($1, $2, ast_factory.new_conditional ($3, $4), $5, Void, $6)
@@ -3050,7 +3050,7 @@ Instruction: Creation_instruction
 		}
 	| From_compound Loop_invariant_clause_opt E_UNTIL Expression Loop_compound Variant_clause E_END
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
+			if system_processor.older_ise_version (ise_6_3_7_4554) then
 				raise_error
 			else
 				$$ := ast_factory.new_loop_instruction ($1, $2, ast_factory.new_conditional ($3, $4), $5, $6, $7)
@@ -3393,7 +3393,7 @@ Untyped_call_chain: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Untyped_bracket_expression
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := $1
@@ -3407,7 +3407,7 @@ Untyped_call_chain: Identifier Actuals_opt
 
 Typed_call_chain: Typed_bracket_expression
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := $1
@@ -3588,7 +3588,7 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 		{ $$ := ast_factory.new_old_expression ($1, $2) }
 	| '{' Identifier ':' Type '}' Non_binary_expression %prec E_NOT
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := new_old_object_test ($1, $2, $3, $4, $5, $6)

@@ -4148,7 +4148,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 255")
 end
 
-			if not current_system.preparse_multiple_mode then
+			if not system_processor.preparse_multiple_mode then
 					-- Raise syntax error: it is not valid to have more
 					-- than one class text in the same file.
 				raise_error
@@ -10332,7 +10332,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1524")
 end
 
-			if current_system.is_ise then
+			if system_processor.is_ise then
 				raise_error
 			else
 				yyval57 := ast_factory.new_creator (last_keyword, last_clients, counter_value)
@@ -11547,7 +11547,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1833")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := ast_factory.new_constant_attribute (yyvs66.item (yyvsp66), ast_factory.new_colon_type (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs5.item (yyvsp5), yyvs48.item (yyvsp48), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -11614,7 +11614,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1843")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := ast_factory.new_unique_attribute (yyvs66.item (yyvsp66), ast_factory.new_colon_type (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs5.item (yyvsp5), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -11687,7 +11687,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1854")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := ast_factory.new_do_function (yyvs66.item (yyvsp66), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), Void, yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -11767,7 +11767,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1867")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := ast_factory.new_do_function (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), Void, yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -11848,7 +11848,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1880")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := ast_factory.new_once_function (yyvs66.item (yyvsp66), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), Void, yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -11930,7 +11930,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1893")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := ast_factory.new_once_function (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), Void, yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -12009,7 +12009,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1905")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := ast_factory.new_deferred_function (yyvs66.item (yyvsp66), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), Void, yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs2.item (yyvsp2 - 1), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -12085,7 +12085,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1916")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := ast_factory.new_deferred_function (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), Void, yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs2.item (yyvsp2 - 1), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -12163,7 +12163,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1928")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := new_external_function (yyvs66.item (yyvsp66), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), Void, yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -12243,7 +12243,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1941")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval109 := new_external_function (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), Void, yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -12560,7 +12560,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1981")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval2 := Void
@@ -19662,7 +19662,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2876")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
@@ -19696,7 +19696,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2884")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
@@ -19730,7 +19730,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2892")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
@@ -19765,7 +19765,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2900")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
@@ -20699,7 +20699,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3043")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
+			if system_processor.older_ise_version (ise_6_3_7_4554) then
 				yyval87 := ast_factory.new_loop_instruction_old_syntax (yyvs46.item (yyvsp46 - 1), yyvs94.item (yyvsp94), Void, ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2))
 			else
 				yyval87 := ast_factory.new_loop_instruction (yyvs46.item (yyvsp46 - 1), yyvs94.item (yyvsp94), ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs46.item (yyvsp46), Void, yyvs2.item (yyvsp2))
@@ -20733,7 +20733,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3051")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
+			if system_processor.older_ise_version (ise_6_3_7_4554) then
 				raise_error
 			else
 				yyval87 := ast_factory.new_loop_instruction (yyvs46.item (yyvsp46 - 1), yyvs94.item (yyvsp94), ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs46.item (yyvsp46), yyvs117.item (yyvsp117), yyvs2.item (yyvsp2))
@@ -22970,7 +22970,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3394")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval64 := yyvs35.item (yyvsp35)
@@ -23047,7 +23047,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3408")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				yyval64 := yyvs35.item (yyvsp35)
@@ -24359,7 +24359,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3589")
 end
 
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				yyval64 := new_old_object_test (yyvs5.item (yyvsp5 - 2), yyvs12.item (yyvsp12), yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5), yyvs64.item (yyvsp64))

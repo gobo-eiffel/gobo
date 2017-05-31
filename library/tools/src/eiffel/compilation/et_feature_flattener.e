@@ -1111,7 +1111,7 @@ feature {NONE} -- Clients
 			j, nb2: INTEGER
 			l_largest_clients: detachable ET_CLIENT_LIST
 		do
-			l_ise := current_system.is_ise
+			l_ise := system_processor.is_ise
 			from
 				l_parent_feature := a_feature.parent_feature
 			until
@@ -1970,7 +1970,7 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (1).type
 									l_arg_offset := 1
 								end
-								if current_system.is_ise then
+								if system_processor.is_ise then
 										-- ECMA 367-2 says that the type of the query and of the first formal argument
 										-- of the assigner procedure should have the same deanchored form.
 										-- But EiffelStudio 6.8.8.6542 actually only checks that the type of the
@@ -2061,7 +2061,7 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (1).type
 									l_arg_offset := 1
 								end
-								if current_system.is_ise then
+								if system_processor.is_ise then
 										-- ECMA 367-2 says that the type of the query and of the first formal argument
 										-- of the assigner procedure should have the same deanchored form.
 										-- But EiffelStudio 6.8.8.6542 actually only checks that the type of the

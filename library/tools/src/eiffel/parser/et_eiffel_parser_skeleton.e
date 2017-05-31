@@ -125,7 +125,7 @@ feature -- Status report
 	providers_enabled: BOOLEAN
 			-- Should providers be built when parsing a class?
 		do
-			Result := current_system.providers_enabled
+			Result := system_processor.providers_enabled
 		end
 
 feature -- Parsing
@@ -203,7 +203,7 @@ feature -- Parsing
 				std.error.put_string (a_cluster.full_pathname)
 				std.error.put_line ("%'")
 			end
-			if not a_cluster.is_abstract and then (not l_already_preparsed or else ((current_system.preparse_readonly_mode or else not a_cluster.is_read_only) and then (current_system.preparse_override_mode implies a_cluster.is_override))) then
+			if not a_cluster.is_abstract and then (not l_already_preparsed or else ((system_processor.preparse_readonly_mode or else not a_cluster.is_read_only) and then (system_processor.preparse_override_mode implies a_cluster.is_override))) then
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
 				dir_name := file_system.canonical_pathname (dir_name)
 				dir := tmp_directory
@@ -306,8 +306,8 @@ feature -- Parsing
 			l_override_mode: BOOLEAN
 			l_dir_name: STRING
 		do
-			l_readonly_mode := current_system.preparse_readonly_mode
-			l_override_mode := current_system.preparse_override_mode
+			l_readonly_mode := system_processor.preparse_readonly_mode
+			l_override_mode := system_processor.preparse_override_mode
 			l_clusters := a_clusters.clusters
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
@@ -346,7 +346,7 @@ feature -- AST processing
 			-- being processed by another system processor.
 		do
 			if a_class.is_none then
-				a_class.set_parsed
+				process_none_class (a_class)
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is fatal.
@@ -372,7 +372,7 @@ feature -- AST processing
 			parse_cluster (a_cluster)
 		end
 
-feature -- AST processing
+feature {NONE} -- AST processing
 
 	internal_process_class (a_class: ET_CLASS)
 			-- Parse `a_class'.
@@ -425,7 +425,7 @@ feature -- AST processing
 								current_class.set_group (a_cluster)
 							end
 							if not current_class.is_parsed then
-								if not syntax_error and current_system.preparse_multiple_mode then
+								if not syntax_error and system_processor.preparse_multiple_mode then
 										-- The file contains other classes, but not `current_class'.
 									set_fatal_error (current_class)
 									error_handler.report_gvscn1b_error (current_class, a_filename)
@@ -468,7 +468,7 @@ feature -- AST processing
 							current_class.set_group (l_text_group)
 						end
 						if not current_class.is_parsed then
-							if not syntax_error and current_system.preparse_multiple_mode then
+							if not syntax_error and system_processor.preparse_multiple_mode then
 									-- The class text contains other classes, but not `current_class'.
 								set_fatal_error (current_class)
 								error_handler.report_gvscn1b_error (current_class, a_text_filename)
@@ -478,11 +478,29 @@ feature -- AST processing
 					if not current_class.is_parsed then
 						set_fatal_error (current_class)
 					end
+					system_processor.report_class_processed (current_class)
 				end
 				current_class.processing_mutex.unlock
 			end
 			current_class := old_class
 			group := old_group
+		ensure
+			is_parsed: not {PLATFORM}.is_thread_capable implies a_class.is_parsed
+		end
+
+	process_none_class (a_class: ET_CLASS)
+			-- Process class "NONE".
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_none: a_class.is_none
+		do
+			if not {PLATFORM}.is_thread_capable or else a_class.processing_mutex.try_lock then
+				if not a_class.is_parsed then
+					a_class.set_parsed
+					system_processor.report_class_processed (a_class)
+				end
+				a_class.processing_mutex.unlock
+			end
 		ensure
 			is_parsed: not {PLATFORM}.is_thread_capable implies a_class.is_parsed
 		end
@@ -762,7 +780,7 @@ feature {NONE} -- Basic operations
 			l_file_position: ET_FILE_POSITION
 			l_old_count: INTEGER
 		do
-			if current_system.is_ise then
+			if system_processor.is_ise then
 					-- ISE does not accept assertions of the form:
 					--      a_tag: -- a comment assertion
 					-- when followed by another tagged assertion.
@@ -2014,13 +2032,13 @@ feature {NONE} -- AST factory
 				else
 					Result := tokens.unknown_class
 				end
-				if not current_system.preparse_multiple_mode and then not current_class.is_unknown and then Result /= current_class then
+				if not system_processor.preparse_multiple_mode and then not current_class.is_unknown and then Result /= current_class then
 						-- We are parsing another class than the one we want to parse.
 					set_fatal_error (current_class)
 					error_handler.report_gvscn1a_error (current_class, a_name, filename)
 						-- Stop the parsing.
 					accept
-				elseif current_system.preparse_shallow_mode and then current_class.is_unknown and then not file_system.basename (filename).as_lower.same_string (a_name.lower_name + ".e") then
+				elseif system_processor.preparse_shallow_mode and then current_class.is_unknown and then not file_system.basename (filename).as_lower.same_string (a_name.lower_name + ".e") then
 						-- The file does not contain the expected class
 						-- (whose name is supposed to match the filename).
 					l_basename := file_system.basename (filename).as_lower
@@ -2073,6 +2091,9 @@ feature {NONE} -- AST factory
 						Result.set_time_stamp (time_stamp)
 						Result.set_marked (True)
 						error_handler.report_compilation_status (Current, Result, system_processor)
+						if Result /= current_class then
+							system_processor.report_class_processed (Result)
+						end
 					end
 				end
 				l_master_class.processing_mutex.unlock

@@ -71,64 +71,28 @@ feature -- Status report
 	flat_mode: BOOLEAN
 			-- Should the inherited features be processed
 			-- again in `current_class'?
+		do
+			Result := system_processor.flat_mode
+		end
 
 	flat_dbc_mode: BOOLEAN
 			-- Should the inherited pre- and postconditions be
 			-- processed again in the redeclaration of features
 			-- in `current_class'?
-
-	short_mode: BOOLEAN
-			-- Process short form of `current_class'
+		do
+			Result := system_processor.flat_dbc_mode
+		end
 
 	suppliers_enabled: BOOLEAN
 			-- Should suppliers of `current_class' be computed?
+		do
+			Result := system_processor.suppliers_enabled
+		end
 
 	has_class_not_processed: BOOLEAN
 			-- Is there some classes which could not be processed
 			-- because their parents was still in the middle of being
 			-- processed in another thread by another processor
-
-feature -- Status setting
-
-	set_flat_mode (b: BOOLEAN)
-			-- Set `flat_mode' to `b'.
-		do
-			flat_mode := b
-		ensure
-			flat_mode_set: flat_mode = b
-		end
-
-	set_flat_dbc_mode (b: BOOLEAN)
-			-- Set `flat_dbc_mode' to `b'.
-		do
-			flat_dbc_mode := b
-		ensure
-			flat_dbc_mode_set: flat_dbc_mode = b
-		end
-
-	set_short_mode (b: BOOLEAN)
-			-- Set `short_mode' to `b'.
-		do
-			short_mode := b
-		ensure
-			short_mode_set: short_mode = b
-		end
-
-	set_suppliers_enabled (b: BOOLEAN)
-			-- Set `suppliersproviders_enabled' to `b'.
-		do
-			suppliers_enabled := b
-		ensure
-			suppliers_enabled_set: suppliers_enabled = b
-		end
-
-	set_has_class_not_processed (b: BOOLEAN)
-			-- Set `has_class_not_processed' to `b'.
-		do
-			has_class_not_processed := b
-		ensure
-			has_class_not_processed_set: has_class_not_processed = b
-		end
 
 feature -- Processing
 
@@ -151,19 +115,12 @@ feature -- Processing
 			a_processor: like Current
 		do
 			if a_class.is_none then
-				if suppliers_enabled and then a_class.suppliers = Void then
-					a_class.set_suppliers (no_suppliers)
-				end
-				a_class.set_implementation_checked
+				process_none_class (a_class)
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
 				create a_processor.make (system_processor)
-				a_processor.set_flat_mode (flat_mode)
-				a_processor.set_flat_dbc_mode (flat_dbc_mode)
-				a_processor.set_short_mode (short_mode)
-				a_processor.set_suppliers_enabled (suppliers_enabled)
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
@@ -287,6 +244,7 @@ feature {NONE} -- Processing
 								l_suppliers.wipe_out
 							end
 							current_class.set_implementation_checked
+							system_processor.report_class_processed (current_class)
 						end
 						current_class.set_checking_implementation (False)
 					else
@@ -308,10 +266,7 @@ feature {NONE} -- Processing
 			a_class_not_void: a_class /= Void
 		do
 			if a_class.is_none then
-				if suppliers_enabled and then a_class.suppliers = Void then
-					a_class.set_suppliers (no_suppliers)
-				end
-				a_class.set_implementation_checked
+				process_none_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
 				error_handler.report_giaaa_error
@@ -322,6 +277,27 @@ feature {NONE} -- Processing
 				error_handler.report_giaaa_error
 			else
 				internal_process_class (a_class)
+			end
+		ensure
+			implementation_checked: not {PLATFORM}.is_thread_capable implies a_class.implementation_checked
+			suppliers_set: a_class.implementation_checked and suppliers_enabled implies a_class.suppliers /= Void
+		end
+
+	process_none_class (a_class: ET_CLASS)
+			-- Process class "NONE".
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_none: a_class.is_none
+		do
+			if not {PLATFORM}.is_thread_capable or else a_class.processing_mutex.try_lock then
+				if not a_class.implementation_checked then
+					if suppliers_enabled and then a_class.suppliers = Void then
+						a_class.set_suppliers (no_suppliers)
+					end
+					a_class.set_implementation_checked
+					system_processor.report_class_processed (a_class)
+				end
+				a_class.processing_mutex.unlock
 			end
 		ensure
 			implementation_checked: not {PLATFORM}.is_thread_capable implies a_class.implementation_checked

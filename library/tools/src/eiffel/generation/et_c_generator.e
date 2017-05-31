@@ -25188,7 +25188,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				l_tuple := call_operands.item (2)
 				l_tuple_source_type_set := dynamic_type_set (l_tuple)
 				l_tuple_target_type_set := argument_type_set_in_feature (1, a_feature)
-				if current_system.is_ise then
+				if system_processor.is_ise then
 						-- ISE Eiffel does not type-check the tuple operand of Agent calls even at
 						-- execution time. It only checks whether the tuple has enough items and
 						-- these items are of the expected types, regardless of the type of the tuple

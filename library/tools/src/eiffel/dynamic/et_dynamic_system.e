@@ -1678,7 +1678,7 @@ feature {NONE} -- Compilation
 						set_fatal_error
 					else
 							-- Check feature 'to_pointer' of class "TYPED_POINTER".
-						if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_0_6_7057 then
+						if a_system_processor.older_ise_version (ise_6_0_6_7057) then
 							typed_pointer_to_pointer_feature := l_class.named_query (tokens.pointer_item_feature_name)
 						else
 							typed_pointer_to_pointer_feature := l_class.named_query (tokens.to_pointer_feature_name)

@@ -2049,7 +2049,7 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 					l_name := l_object_test.name
 					l_name.set_object_test_local (True)
 					l_name.set_seed (i)
-					if attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_4_7_7252 then
+					if system_processor.older_ise_version (ise_6_4_7_7252) then
 							-- ISE used to have a validity rule VUOT-3 which forbids two
 							-- object-tests in the same feature (or in the same inline
 							-- agent) to have the same local name.
@@ -2094,7 +2094,7 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 					l_name := l_object_test.name
 					l_name.set_object_test_local (True)
 					l_name.set_seed (i)
-					if attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_4_7_7252 then
+					if system_processor.older_ise_version (ise_6_4_7_7252) then
 							-- ISE used to have a validity rule VUOT-3 which forbids two
 							-- object-tests in the same feature (or in the same inline
 							-- agent) to have the same local name.
@@ -2766,7 +2766,7 @@ feature {NONE} -- Instruction validity
 								error_handler.report_giaaa_error
 							end
 						end
-						if current_system.is_ise then
+						if system_processor.is_ise then
 								-- ECMA 367-2 says that the type of the call and of the first formal argument
 								-- of the assigner procedure should have the same deanchored form.
 								-- But EiffelStudio 6.8.8.6542 actually only checks that the type of the
@@ -2933,7 +2933,7 @@ feature {NONE} -- Instruction validity
 						check implementation_class: current_class = current_class_impl end
 						an_instruction.set_source (l_convert_expression)
 					elseif
-						current_system.is_ise and current_class /= current_class_impl and
+						system_processor.is_ise and current_class /= current_class_impl and
 						(current_class.is_basic or current_class.is_typed_pointer_class)
 					then
 						-- Compatibility with ISE 5.6.0610.
@@ -3017,7 +3017,7 @@ feature {NONE} -- Instruction validity
 				had_error := True
 				l_target_context.wipe_out
 				l_target_context.force_last (current_system.detachable_any_type)
-			elseif not (current_system.is_dotnet or (attached current_system.ise_version as l_ise_version and then l_ise_version >= ise_5_7_0)) and not l_target_context.is_type_reference then
+			elseif not (current_system.is_dotnet or system_processor.newer_or_same_ise_version (ise_5_7_0)) and not l_target_context.is_type_reference then
 					-- Assignment attempts with expanded targets are allowed in Eiffel for .NET
 					-- and versions of ISE greater than or equal to 5.7. Otherwise, report a
 					-- VJRV validity error.
@@ -3026,7 +3026,7 @@ feature {NONE} -- Instruction validity
 					set_fatal_error
 					l_target_named_type := l_target_context.named_type
 					error_handler.report_vjrv0a_error (current_class, current_class_impl, l_target, l_target_named_type)
-				elseif not current_class_impl.is_any_class or else not current_system.is_ise then
+				elseif not current_class_impl.is_any_class or else not system_processor.is_ise then
 						-- Note: Do not report this error if the assignment
 						-- attempt appears in class ANY because of a design
 						-- bug in ISE's class ANY.
@@ -8033,7 +8033,7 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 					error_handler.report_vuot1e_error (current_class, an_expression, l_across_component)
 				end
-				if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_5660 then
+				if system_processor.older_ise_version (ise_6_3_7_5660) then
 						-- ISE did not support object-tests in preconditions before 6.3.7.5660.
 					if current_inline_agent = Void and in_precondition then
 -- TODO: check the case where we are in the precondition of an inline agent.
@@ -10381,7 +10381,7 @@ feature {NONE} -- Expression validity
 									l_actual_list.put (l_convert_expression, i)
 								end
 							elseif
-								current_system.is_ise and current_class /= current_class_impl and
+								system_processor.is_ise and current_class /= current_class_impl and
 								(current_class.is_basic or current_class.is_typed_pointer_class)
 							then
 								-- Compatibility with ISE 5.6.0610.
@@ -12180,7 +12180,7 @@ feature {NONE} -- Agent validity
 				-- Check validity of call agent equivalent form.
 			check_query_inline_agent_validity (an_expression, a_context)
 			has_fatal_error := has_fatal_error or had_error
-			if current_system.is_ise then
+			if system_processor.is_ise then
 					-- ISE does not support inline agent of the external form.
 				set_fatal_error
 				error_handler.report_vpir3b_error (current_class, an_expression)
@@ -12257,7 +12257,7 @@ feature {NONE} -- Agent validity
 				-- Check validity of call agent equivalent form.
 			check_procedure_inline_agent_validity (an_expression, a_context)
 			has_fatal_error := has_fatal_error or had_error
-			if current_system.is_ise then
+			if system_processor.is_ise then
 					-- ISE does not support inline agent of the external form.
 				set_fatal_error
 				error_handler.report_vpir3b_error (current_class, an_expression)
@@ -12404,7 +12404,7 @@ feature {NONE} -- Agent validity
 				-- Check validity of call agent equivalent form.
 			check_query_inline_agent_validity (an_expression, a_context)
 			has_fatal_error := has_fatal_error or had_error or had_key_error
-			if current_system.is_ise then
+			if system_processor.is_ise then
 					-- ISE does not support inline agent of the once form.
 				set_fatal_error
 				error_handler.report_vpir3a_error (current_class, an_expression)
@@ -12532,7 +12532,7 @@ feature {NONE} -- Agent validity
 				-- Check validity of call agent equivalent form.
 			check_procedure_inline_agent_validity (an_expression, a_context)
 			has_fatal_error := has_fatal_error or had_error or had_key_error
-			if current_system.is_ise then
+			if system_processor.is_ise then
 					-- ISE does not support inline agent of the once form.
 				set_fatal_error
 				error_handler.report_vpir3a_error (current_class, an_expression)

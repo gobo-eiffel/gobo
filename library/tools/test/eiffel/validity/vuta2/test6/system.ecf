@@ -6,7 +6,6 @@
 			<assertions loop="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<variable name="unknown_builtin_reported" value="false"/>
 		<variable name="gelint" value="true"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
 			<condition>
