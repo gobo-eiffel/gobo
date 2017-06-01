@@ -863,13 +863,13 @@ feature -- Processing
 				compile_classes (l_classes)
 			else
 				l_root_class := l_root_type.base_class
-				l_root_class.process (eiffel_parser)
 				if not l_root_class.is_preparsed then
 						-- Error: unknown root class.
 					error_handler.report_gvsrc4a_error (l_root_class)
 				else
 					create l_classes.make (a_system.class_count_recursive)
 					a_system.classes_do_recursive (agent l_classes.force_last)
+					l_root_class.set_marked (True)
 					compile_marked_classes (l_classes)
 				end
 			end
@@ -1145,25 +1145,23 @@ feature -- Processing
 			l_root_class: ET_CLASS
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 		do
-			if not attached a_system.root_type as l_root_type then
-				-- Do nothing.
-			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
-				create l_classes.make (a_system.class_count_recursive)
-				a_system.classes_do_recursive (agent l_classes.force_last)
-				parse_classes (l_classes)
-			elseif l_root_type.same_named_type (a_system.any_type, tokens.unknown_class, tokens.unknown_class) then
+			if
+				not attached a_system.root_type as l_root_type or else
+				l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) or else
+				l_root_type.same_named_type (a_system.any_type, tokens.unknown_class, tokens.unknown_class)
+			then
 				create l_classes.make (a_system.class_count_recursive)
 				a_system.classes_do_recursive (agent l_classes.force_last)
 				parse_classes (l_classes)
 			else
 				l_root_class := l_root_type.base_class
-				l_root_class.process (eiffel_parser)
 				if not l_root_class.is_preparsed then
 						-- Error: unknown root class.
 					error_handler.report_gvsrc4a_error (l_root_class)
 				else
 					create l_classes.make (a_system.class_count_recursive)
 					a_system.classes_do_recursive (agent l_classes.force_last)
+					l_root_class.set_marked (True)
 					parse_marked_classes (l_classes)
 				end
 			end
@@ -1181,10 +1179,10 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 			l_class: ET_CLASS
-			l_processor: ET_AST_PROCESSOR
+			l_eiffel_parser: like eiffel_parser
 		do
 			reset_total_processed_class_count
-			l_processor := eiffel_parser
+			l_eiffel_parser := eiffel_parser
 			from
 				i := 1
 				nb := a_classes.count
@@ -1193,7 +1191,7 @@ feature -- Processing
 			loop
 				l_class := a_classes.item (i)
 				if not l_class.is_parsed then
-					l_class.process (l_processor)
+					l_class.process (l_eiffel_parser)
 				end
 				i := i + 1
 			end
@@ -1215,10 +1213,10 @@ feature -- Processing
 			i, nb: INTEGER
 			l_class: ET_CLASS
 			l_done: BOOLEAN
-			l_processor: ET_AST_PROCESSOR
+			l_eiffel_parser: like eiffel_parser
 		do
 			reset_total_processed_class_count
-			l_processor := eiffel_parser
+			l_eiffel_parser := eiffel_parser
 			from
 				nb := a_classes.count
 			until
@@ -1232,7 +1230,7 @@ feature -- Processing
 					else
 						l_class :=  a_classes.item (i)
 						if l_class.is_marked and then not l_class.is_parsed then
-							l_class.process (l_processor)
+							l_class.process (l_eiffel_parser)
 						end
 					end
 					i := i + 1
@@ -1257,10 +1255,10 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 			l_class: ET_CLASS
-			l_processor: ET_AST_PROCESSOR
+			l_provider_checker: like provider_checker
 		do
 			if cluster_dependence_enabled then
-				l_processor := provider_checker
+				l_provider_checker := provider_checker
 				from
 					i := 1
 					nb := a_classes.count
@@ -1269,7 +1267,7 @@ feature -- Processing
 				loop
 					l_class := a_classes.item (i)
 					if l_class.is_parsed then
-						l_class.process (l_processor)
+						l_class.process (l_provider_checker)
 					end
 					i := i + 1
 				end
@@ -1288,9 +1286,12 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 			l_class: ET_CLASS
-			l_processor: ET_AST_PROCESSOR
+			l_eiffel_parser: like eiffel_parser
+			l_ancestor_builder: like ancestor_builder
 		do
-			l_processor := ancestor_builder
+			l_eiffel_parser := eiffel_parser
+			eiffel_parser := tokens.null_ast_processor
+			l_ancestor_builder := ancestor_builder
 			from
 				i := 1
 				nb := a_classes.count
@@ -1299,10 +1300,11 @@ feature -- Processing
 			loop
 				l_class := a_classes.item (i)
 				if l_class.is_parsed and then not l_class.ancestors_built then
-					l_class.process (l_processor)
+					l_class.process (l_ancestor_builder)
 				end
 				i := i + 1
 			end
+			eiffel_parser := l_eiffel_parser
 		end
 
 	flatten_features (a_classes: DS_ARRAYED_LIST [ET_CLASS])
@@ -1317,9 +1319,15 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 			l_class: ET_CLASS
-			l_processor: ET_AST_PROCESSOR
+			l_eiffel_parser: like eiffel_parser
+			l_ancestor_builder: like ancestor_builder
+			l_feature_flattener: like feature_flattener
 		do
-			l_processor := feature_flattener
+			l_eiffel_parser := eiffel_parser
+			eiffel_parser := tokens.null_ast_processor
+			l_ancestor_builder := ancestor_builder
+			ancestor_builder := tokens.null_ast_processor
+			l_feature_flattener := feature_flattener
 			from
 				i := 1
 				nb := a_classes.count
@@ -1328,10 +1336,12 @@ feature -- Processing
 			loop
 				l_class := a_classes.item (i)
 				if l_class.ancestors_built and then not l_class.features_flattened then
-					l_class.process (l_processor)
+					l_class.process (l_feature_flattener)
 				end
 				i := i + 1
 			end
+			eiffel_parser := l_eiffel_parser
+			ancestor_builder := l_ancestor_builder
 		end
 
 	check_interface_validity (a_classes: DS_ARRAYED_LIST [ET_CLASS])
@@ -1346,9 +1356,18 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 			l_class: ET_CLASS
-			l_processor: ET_AST_PROCESSOR
+			l_eiffel_parser: like eiffel_parser
+			l_ancestor_builder: like ancestor_builder
+			l_feature_flattener: like feature_flattener
+			l_interface_checker: like interface_checker
 		do
-			l_processor := interface_checker
+			l_eiffel_parser := eiffel_parser
+			eiffel_parser := tokens.null_ast_processor
+			l_ancestor_builder := ancestor_builder
+			ancestor_builder := tokens.null_ast_processor
+			l_feature_flattener := feature_flattener
+			feature_flattener := tokens.null_ast_processor
+			l_interface_checker := interface_checker
 			from
 				i := 1
 				nb := a_classes.count
@@ -1357,10 +1376,13 @@ feature -- Processing
 			loop
 				l_class := a_classes.item (i)
 				if l_class.features_flattened and then not l_class.interface_checked then
-					l_class.process (l_processor)
+					l_class.process (l_interface_checker)
 				end
 				i := i + 1
 			end
+			eiffel_parser := l_eiffel_parser
+			ancestor_builder := l_ancestor_builder
+			feature_flattener := l_feature_flattener
 		end
 
 	check_implementation_validity (a_classes: DS_ARRAYED_LIST [ET_CLASS])
@@ -1379,11 +1401,23 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 			l_class: ET_CLASS
-			l_processor: ET_AST_PROCESSOR
 			l_done: BOOLEAN
+			l_eiffel_parser: like eiffel_parser
+			l_ancestor_builder: like ancestor_builder
+			l_feature_flattener: like feature_flattener
+			l_interface_checker: like interface_checker
+			l_implementation_checker: like implementation_checker
 		do
+			l_eiffel_parser := eiffel_parser
+			eiffel_parser := tokens.null_ast_processor
+			l_ancestor_builder := ancestor_builder
+			ancestor_builder := tokens.null_ast_processor
+			l_feature_flattener := feature_flattener
+			feature_flattener := tokens.null_ast_processor
+			l_interface_checker := interface_checker
+			interface_checker := tokens.null_ast_processor
+			l_implementation_checker := implementation_checker
 			reset_total_processed_class_count
-			l_processor := implementation_checker
 			from
 				nb := a_classes.count
 			until
@@ -1397,7 +1431,7 @@ feature -- Processing
 					else
 						l_class :=  a_classes.item (i)
 						if l_class.interface_checked and then not l_class.implementation_checked then
-							l_class.process (l_processor)
+							l_class.process (l_implementation_checker)
 						end
 					end
 					i := i + 1
@@ -1407,6 +1441,10 @@ feature -- Processing
 				end
 				reset_processed_class_count
 			end
+			eiffel_parser := l_eiffel_parser
+			ancestor_builder := l_ancestor_builder
+			feature_flattener := l_feature_flattener
+			interface_checker := l_interface_checker
 		end
 
 	check_master_class_validity (a_system: ET_SYSTEM)
