@@ -47,12 +47,53 @@ feature {NONE} -- Initialization
 			input_filename := a_input_filename
 			system_processor := a_system_processor
 			ise_version := ise_latest
+			input_classes := tokens.empty_classes
 			create class_name_buffer.make (80)
+			create universe_name_buffer.make (80)
 			create filename_buffer.make (200)
 			create concat_buffer.make (100)
+			create interactive_mutex.make
 		ensure
 			input_filename_set: input_filename = a_input_filename
 			system_processor_set: system_processor = a_system_processor
+		end
+
+	make_from_format (a_format: like Current; a_system_processor: like system_processor)
+			-- Create a new documentation format using the settings of `a_format'.
+		require
+			a_format_not_void: a_format /= Void
+			a_system_processor_not_void: a_system_processor /= Void
+		do
+			make (a_format.input_filename, a_system_processor)
+			set_defined_variables (a_format.defined_variables)
+			set_ise_version (a_format.ise_version)
+			set_class_filters (a_format.class_filters)
+			set_output_directory (a_format.output_directory)
+			set_library_prefix_flag (a_format.library_prefix_flag)
+			set_force_flag (a_format.force_flag)
+			set_interactive_flag (a_format.interactive_flag)
+			set_verbose_flag (a_format.verbose_flag)
+			set_benchmark_flag (a_format.benchmark_flag)
+			set_metrics_flag (a_format.metrics_flag)
+			set_silent_flag (a_format.silent_flag)
+			last_system := a_format.last_system
+			input_classes := a_format.input_classes
+		ensure
+			input_filename_set: input_filename = a_format.input_filename
+			system_processor_set: system_processor = a_system_processor
+			defined_variables_set: defined_variables = a_format.defined_variables
+			ise_version_set: ise_version = a_format.ise_version
+			class_fiters_set: class_filters = a_format.class_filters
+			output_directory_set: output_directory = a_format.output_directory
+			library_prefix_flag_set: library_prefix_flag = a_format.library_prefix_flag
+			force_flag_set: force_flag = a_format.force_flag
+			interactive_flag_set: interactive_flag = a_format.interactive_flag
+			verbose_flag_set: verbose_flag = a_format.verbose_flag
+			benchmark_flag_set: benchmark_flag = a_format.benchmark_flag
+			metrics_flag: metrics_flag =  a_format.metrics_flag
+			silent_flag_set: silent_flag = a_format.silent_flag
+			last_system_set: last_system = a_format.last_system
+			input_classes_set: input_classes = a_format.input_classes
 		end
 
 feature -- Execution
@@ -107,6 +148,12 @@ feature -- Access
 
 	verbose_flag: BOOLEAN
 			-- Should detailed informative messages be displayed?
+
+	benchmark_flag: BOOLEAN
+			-- Should benchmark information be displayed?
+
+	metrics_flag: BOOLEAN
+			-- Should metrics information be displayed?
 
 	silent_flag: BOOLEAN
 			-- Should no informative messages be displayed?
@@ -182,6 +229,22 @@ feature -- Setting
 			verbose_flag := b
 		ensure
 			verbose_flag_set: verbose_flag = b
+		end
+
+	set_benchmark_flag (b: BOOLEAN)
+			-- Set `benchmark_flag' to `b'.
+		do
+			benchmark_flag := b
+		ensure
+			benchmark_flag_set: benchmark_flag = b
+		end
+
+	set_metrics_flag (b: BOOLEAN)
+			-- Set `metrics_flag' to `b'.
+		do
+			metrics_flag := b
+		ensure
+			metrics_flag_set: metrics_flag = b
 		end
 
 	set_silent_flag (b: BOOLEAN)
@@ -335,6 +398,8 @@ feature {NONE} -- Eiffel config file parsing
 				if l_input_classes.is_empty then
 					report_no_class_found_in_file_error (a_file.name)
 					l_system := Void
+				else
+					input_classes := l_input_classes
 				end
 			end
 			last_system := l_system
@@ -353,31 +418,35 @@ feature {NONE} -- Processing
 		do
 			system_processor.error_handler.set_ise
 			system_processor.error_handler.set_verbose (verbose_flag)
-			system_processor.set_benchmark_shown_recursive (not silent_flag or verbose_flag)
-			system_processor.set_metrics_shown_recursive (not silent_flag or verbose_flag)
+			system_processor.set_benchmark_shown_recursive (benchmark_flag)
+			system_processor.set_metrics_shown_recursive (metrics_flag)
 			system_processor.set_ise_version_recursive (ise_version)
 			system_processor.set_unknown_builtin_reported_recursive (False)
+			a_system.set_unique_universe_names
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_attachment_type_conformance_mode (False))
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_target_type_attachment_mode (False))
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark))
 			create l_ast_factory.make
 			l_ast_factory.set_keep_all_comments (True)
 			system_processor.set_ast_factory_recursive (l_ast_factory)
+			if input_classes.is_empty then
+					-- If `input_classes' is not empty, it means that we got them
+					-- from an Eiffel files as input (`parse_eiffel_file'). In that
+					-- case we do not run Degree 6 to get the list of classes.
+				system_processor.compile_degree_6 (a_system)
+			end
 		end
 
 	build_input_classes (a_system: ET_SYSTEM)
 			-- Build `input_classes' using `class_filters' if not done yet.
-			-- Leave `input_classes' Void if all classes in `a_system' shoud be processed.
 		local
 			l_last_wildcard: detachable STRING
-			l_input_classes: like input_classes
+			l_input_classes: DS_HASH_SET [ET_CLASS]
 		do
-			if input_classes /= Void then
+			if not input_classes.is_empty then
 				-- Nothing to be done.
 			elseif attached class_filters as l_class_filters and then not l_class_filters.is_empty then
-				a_system.preparse_recursive (system_processor)
 				create l_input_classes.make (500)
-				input_classes := l_input_classes
 				across l_class_filters as l_class_wildcards loop
 					l_last_wildcard := l_class_wildcards.item.pattern
 					a_system.add_classes_by_wildcarded_name_recursive (l_class_wildcards.item, l_input_classes)
@@ -385,25 +454,29 @@ feature {NONE} -- Processing
 				l_input_classes.remove (a_system.none_type.base_class)
 				if l_input_classes.is_empty and l_last_wildcard /= Void then
 					report_no_class_matching_wildcard_error (l_last_wildcard)
+				else
+					create input_classes.make_from_linear (l_input_classes)
 				end
+			else
+				create input_classes.make (a_system.class_count_recursive)
+				a_system.classes_do_unless_recursive (agent input_classes.force_last, agent {ET_CLASS}.is_none)
 			end
 		end
 
 	process_system (a_system: ET_SYSTEM)
-			-- Process `a_system'.
-			-- Use `input_classes' as input classes if not Void.
-			-- Otherwise use all classes in `a_system'.
+			-- Process `input_classes' from `a_system'.
 		require
 			a_system_not_void: a_system /= Void
 		deferred
 		end
 
+feature {GEDOC_FORMAT} -- Processing
+
 	last_system: detachable ET_SYSTEM
 			-- Last system parsed, if any
 
-	input_classes: detachable DS_HASH_SET [ET_CLASS]
-			-- Classes to be processed.
-			-- Process all classes if Void
+	input_classes: DS_ARRAYED_LIST [ET_CLASS]
+			-- Classes to be processed
 
 feature {NONE} -- Output
 
@@ -418,7 +491,7 @@ feature {NONE} -- Output
 			if attached output_directory as l_output_directory then
 				Result := l_output_directory
 				if library_prefix_flag then
-					Result := file_system.pathname (Result, universe_name (a_class.universe))
+					Result := file_system.pathname (Result, universe_lower_name (a_class.universe))
 				end
 			elseif a_class.is_in_cluster then
 				Result := a_class.group.full_pathname
@@ -434,48 +507,9 @@ feature {NONE} -- Output
 			if attached output_directory as l_output_directory then
 				Result := l_output_directory
 				if library_prefix_flag then
-					Result := file_system.pathname (Result, universe_name (a_universe))
+					Result := file_system.pathname (Result, universe_lower_name (a_universe))
 				end
 			end
-		end
-
-	universe_name (a_universe: ET_UNIVERSE): STRING
-			-- Name of `a_universe'.
-			-- Can be different of `a_universe.name' if two universes have the same name.
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			l_universe_names: like universe_names
-			l_lower_name: STRING
-			i: INTEGER
-			l_names: DS_HASH_SET [STRING]
-		do
-			l_universe_names := universe_names
-			if l_universe_names = Void then
-				create l_universe_names.make_map (50)
-				universe_names := l_universe_names
-			end
-			l_universe_names.search (a_universe)
-			if l_universe_names.found then
-				Result := l_universe_names.found_item
-			else
-				create l_names.make_equal (l_universe_names.count)
-				l_names.extend_last (l_universe_names)
-				l_lower_name := a_universe.lower_name
-				from
-					i := 1
-					Result := l_lower_name
-				until
-					not l_names.has (Result)
-				loop
-					i := i + 1
-					Result := l_lower_name + "_" + i.out
-				end
-				l_universe_names.force_last (Result, a_universe)
-			end
-		ensure
-			universe_name_not_void: Result /= Void
-			universe_name_not_empty: not Result.is_empty
 		end
 
 	is_file_overwritable (a_filename: STRING): BOOLEAN
@@ -488,18 +522,17 @@ feature {NONE} -- Output
 			elseif not file_system.file_exists (a_filename) then
 				Result := True
 			elseif interactive_flag then
+				interactive_mutex.lock
 				std.output.put_string ("File '")
 				std.output.put_string (a_filename)
 				std.output.put_line ("' already exists. Overwrite it (y/n)?")
 				std.input.read_line
 				Result := std.input.last_string.starts_with ("y")
+				interactive_mutex.unlock
 			end
 		end
 
 feature {NONE} -- Implementation
-
-	universe_names: detachable DS_HASH_TABLE [STRING, ET_UNIVERSE]
-			-- Unique name of universes, indexed by universe
 
 	new_output_file (a_filename: STRING): KL_BUFFERED_TEXT_OUTPUT_FILE
 			-- File named `a_filename'
@@ -538,6 +571,23 @@ feature {NONE} -- Implementation
 
 	class_name_buffer: STRING
 			-- Buffer for class names
+
+	universe_lower_name (a_universe: ET_UNIVERSE): STRING
+			-- Name of `a_universe' in lower-case
+			--
+			-- Note that this routine always returns the same object.
+		do
+			Result := universe_name_buffer
+			Result.wipe_out
+			Result.append_string (a_universe.name)
+			Result.to_lower
+		ensure
+			universe_lower_name_not_void: Result /= Void
+			definition: Result ~ a_universe.lower_name
+		end
+
+	universe_name_buffer: STRING
+			-- Buffer for universe names
 
 	filename (a_dirname, a_pathname: STRING): STRING
 			-- Pathname made up of relative pathname
@@ -701,14 +751,23 @@ feature -- Error handling
 			has_error: has_error
 		end
 
+feature {NONE} -- Concurrency
+
+	interactive_mutex: MUTEX
+			-- Mutex to be used in interactive mode in a multi-threaded environment
+
 invariant
 
 	system_processor_not_void: system_processor /= Void
 	input_filename_not_void: input_filename /= Void
 	ise_version_not_void: ise_version /= Void
 	class_filters_compiled: attached class_filters as l_class_filters implies l_class_filters.for_all (agent {LX_DFA_WILDCARD}.is_compiled)
+	input_classes_not_void: input_classes /= Void
+	no_void_imput_class: not input_classes.has_void
 	class_name_buffer_not_void: class_name_buffer /= Void
+	universe_name_buffer_not_void: universe_name_buffer /= Void
 	filename_buffer_not_void: filename_buffer /= Void
 	concat_buffer_not_void: concat_buffer /= Void
+	interactive_mutex_not_void: interactive_mutex /= Void
 
 end

@@ -19,6 +19,7 @@ inherit
 			make as make_single,
 			make_null as make_null_single
 		redefine
+			processor_count,
 			set_benchmark_shown_recursive,
 			set_metrics_shown_recursive,
 			set_use_attached_keyword_recursive,
@@ -47,9 +48,10 @@ inherit
 			parse_classes,
 			parse_marked_classes,
 			check_implementation_validity,
+			process_custom,
 			set_stop_request_recursive,
-			report_degree_5_2_metrics,
-			report_degree_3_metrics
+			do_all,
+			report_degree_metrics
 		end
 
 create
@@ -103,6 +105,17 @@ feature {NONE} -- Initialization
 			make_null_single
 		ensure
 			other_processors_count: other_processors.count = a_count - 1
+		end
+
+feature -- Status report
+
+	processor_count: INTEGER
+			-- Number of processors available to process
+			-- Eiffel system together
+		do
+			Result := other_processors.count + 1
+		ensure then
+			multiprocessor: Result = (other_processors.count + 1)
 		end
 
 feature -- Status setting
@@ -679,6 +692,34 @@ feature -- Processing
 			{THREAD_CONTROL}.join_all
 		end
 
+feature -- Custom processing
+
+	process_custom (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Execute `custom_processor' on all classes in `a_classes' which have not been marked yet.
+			-- Execute in several passes until no more classes have been reported as
+			-- having been processed.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		local
+			i, nb: INTEGER
+			l_thread: WORKER_THREAD
+		do
+			from
+				i := 1
+				nb := other_processors.count
+			until
+				i > nb
+			loop
+				create l_thread.make (agent (other_processors.item (i)).process_custom (a_classes))
+				l_thread.launch
+				i := i + 1
+			end
+			precursor (a_classes)
+			{THREAD_CONTROL}.join_all
+		end
+
 feature -- Stop
 
 	set_stop_request_recursive (a_stop_request: like stop_request)
@@ -700,26 +741,38 @@ feature -- Stop
 			other_stop_request_set: across other_processors as l_other_processors all l_other_processors.item.stop_request = a_stop_request end
 		end
 
-feature {NONE} -- Metrics
+feature -- Iteration
 
-	report_degree_5_2_metrics (a_classes: DS_ARRAYED_LIST [ET_CLASS])
-			-- Report metrics for Degree 5.2.
+	do_all (a_action: PROCEDURE [ET_SYSTEM_PROCESSOR])
+			-- Execute `a_action' on current system processor and on
+			-- all other system processors in case of a multiprocessor.
+		local
+			i: INTEGER
 		do
-			error_handler.info_file.put_string ("Parsed ")
-			error_handler.info_file.put_integer (total_processed_class_count_recursive)
-			error_handler.info_file.put_line (" classes")
-			report_processor_metrics_recursive
-			error_handler.info_file.put_integer (feature_count (a_classes))
-			error_handler.info_file.put_line (" features")
+			a_action.call ([Current])
+			from
+				i := other_processors.count
+			until
+				i <= 0
+			loop
+				a_action.call ([other_processors.item (i)])
+				i := i - 1
+			end
 		end
 
-	report_degree_3_metrics (a_classes: DS_ARRAYED_LIST [ET_CLASS])
-			-- Report metrics for Degree 3.
+feature {NONE} -- Metrics
+
+	report_degree_metrics (a_classes: DS_ARRAYED_LIST [ET_CLASS]; a_degree: STRING)
+			-- Report metrics for `a_degree' if current system processor
+			-- was not stopped and metrics were requested
 		do
-			error_handler.info_file.put_string ("Checked implementation of ")
-			error_handler.info_file.put_integer (total_processed_class_count_recursive)
-			error_handler.info_file.put_line (" classes")
-			report_processor_metrics_recursive
+			if not stop_requested and then metrics_shown then
+				error_handler.info_file.put_string (a_degree)
+				error_handler.info_file.put_character (' ')
+				error_handler.info_file.put_integer (total_processed_class_count_recursive)
+				error_handler.info_file.put_line (" classes")
+				report_processor_metrics_recursive
+			end
 		end
 
 	report_processor_metrics_recursive

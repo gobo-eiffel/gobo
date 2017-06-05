@@ -89,6 +89,12 @@ feature -- Argument parsing
 	verbose_flag: AP_FLAG
 			-- Flag for '--verbose'
 
+	benchmark_flag: AP_FLAG
+			-- Flag for '--benchmark'
+
+	metrics_flag: AP_FLAG
+			-- Flag for '--metrics'
+
 	silent_flag: AP_FLAG
 			-- Flag for '--silent'
 
@@ -97,6 +103,9 @@ feature -- Argument parsing
 
 	define_option: AP_STRING_OPTION
 			-- Option for '--define=FOO=BAR'
+
+	thread_option: AP_INTEGER_OPTION
+			-- Option for '--thread=<thread_count>'
 
 	version_flag: AP_FLAG
 			-- Flag for '--version'
@@ -107,7 +116,6 @@ feature -- Argument parsing
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST
 			l_format: GEDOC_FORMAT
-			l_system_processor: ET_SYSTEM_PROCESSOR
 		do
 			create l_parser.make
 			l_parser.set_application_description ("Gobo Eiffel Doc, generate Eiffel documentation.")
@@ -145,6 +153,14 @@ feature -- Argument parsing
 			create verbose_flag.make_with_long_form ("verbose")
 			verbose_flag.set_description ("Should detailed informative messages be displayed?")
 			l_parser.options.force_last (verbose_flag)
+				-- benchmark.
+			create benchmark_flag.make_with_long_form ("benchmark")
+			benchmark_flag.set_description ("Should benchmark information be displayed?")
+			l_parser.options.force_last (benchmark_flag)
+				-- metrics.
+			create metrics_flag.make_with_long_form ("metrics")
+			metrics_flag.set_description ("Should metrics information be displayed?")
+			l_parser.options.force_last (metrics_flag)
 				-- silent.
 			create silent_flag.make_with_long_form ("silent")
 			silent_flag.set_description ("Should no informative messages be displayed?")
@@ -160,6 +176,13 @@ feature -- Argument parsing
 			define_option.set_description ("Define variables to be used when reading Xace files.")
 			define_option.set_parameter_description ("NAME=VALUE")
 			l_parser.options.force_last (define_option)
+				-- thread.
+			create thread_option.make_with_long_form ("thread")
+			thread_option.set_description ("Number of threads to be used. (default: 1)")
+			thread_option.set_parameter_description ("thread_count")
+			if {PLATFORM}.is_thread_capable then
+				l_parser.options.force_last (thread_option)
+			end
 				-- version.
 			create version_flag.make ('V', "version")
 			version_flag.set_description ("Print the version number of gedoc and exit.")
@@ -174,13 +197,9 @@ feature -- Argument parsing
 				report_usage_message (l_parser)
 				Exceptions.die (1)
 			elseif not format_option.was_found or format_option.parameter ~ "pretty_print" then
-				create l_system_processor.make
-				l_system_processor.set_error_handler_recursive (error_handler)
-				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, l_system_processor)
+				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "html_ise_stylesheet" then
-				create l_system_processor.make
-				l_system_processor.set_error_handler_recursive (error_handler)
-				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, l_system_processor)
+				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			end
 			if l_format /= Void then
 				set_ise_version (ise_option, l_parser, l_format)
@@ -191,6 +210,8 @@ feature -- Argument parsing
 				l_format.set_interactive_flag (interactive_flag.was_found)
 				l_format.set_library_prefix_flag (library_prefix_flag.was_found)
 				l_format.set_verbose_flag (verbose_flag.was_found)
+				l_format.set_benchmark_flag (benchmark_flag.was_found)
+				l_format.set_metrics_flag (metrics_flag.was_found)
 				l_format.set_silent_flag (silent_flag.was_found)
 				format := l_format
 			end
@@ -202,9 +223,12 @@ feature -- Argument parsing
 			force_flag_not_void: force_flag /= Void
 			interactive_flag_not_void: interactive_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
+			benchmark_flag_not_void: benchmark_flag /= Void
+			metrics_flag_not_void: metrics_flag /= Void
 			silent_flag_not_void: silent_flag /= Void
 			ise_option_not_void: ise_option /= Void
 			define_option_not_void: define_option /= Void
+			thread_option_not_void: thread_option /= Void
 			version_flag_not_void: version_flag /= Void
 		end
 
@@ -341,6 +365,22 @@ feature -- Argument parsing
 			end
 		end
 
+	new_system_processor (a_thread_option: AP_INTEGER_OPTION): ET_SYSTEM_PROCESSOR
+			-- New system processor, using the number of threads
+			-- specified in `a_thread_option'
+		require
+			a_thread_option_not_void: a_thread_option /= Void
+		do
+			if thread_option.was_found and then thread_option.parameter > 1 then
+				create {ET_SYSTEM_MULTIPROCESSOR} Result.make (thread_option.parameter)
+			else
+				create Result.make
+			end
+			Result.set_error_handler_recursive (error_handler)
+		ensure
+			new_system_processor_not_void: Result /= Void
+		end
+
 feature -- Error handling
 
 	error_handler: ET_ERROR_HANDLER
@@ -409,9 +449,12 @@ invariant
 	force_flag_not_void: force_flag /= Void
 	interactive_flag_not_void: interactive_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
+	benchmark_flag_not_void: benchmark_flag /= Void
+	metrics_flag_not_void: metrics_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	ise_option_not_void: ise_option /= Void
 	define_option_not_void: define_option /= Void
+	thread_option_not_void: thread_option /= Void
 	version_flag_not_void: version_flag /= Void
 
 end

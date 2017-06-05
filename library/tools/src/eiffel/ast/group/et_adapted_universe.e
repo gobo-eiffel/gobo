@@ -77,6 +77,19 @@ feature -- Access
 	universe: ET_UNIVERSE
 			-- Eiffel class universe being adapted
 
+feature -- Setting
+
+	set_name (a_name: STRING)
+			-- Set `name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
+
 feature -- Status setting
 
 	set_read_only (b: BOOLEAN)

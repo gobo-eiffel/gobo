@@ -48,6 +48,10 @@ create
 
 	make
 
+create {GEDOC_HTML_ISE_STYLESHEET_FORMAT}
+
+	make_from_format
+
 feature {NONE} -- Initialization
 
 	make (a_input_filename: STRING; a_system_processor: like system_processor)
@@ -77,16 +81,15 @@ feature {NONE} -- Processing
 	prepare_system (a_system: ET_SYSTEM)
 			-- Prepare `a_system' before being processed.
 		do
-			precursor (a_system)
 			system_processor.set_suppliers_enabled_recursive (True)
+			precursor (a_system)
 		end
 
 	process_system (a_system: ET_SYSTEM)
-			-- Process `a_system'.
-			-- Use `input_classes' as input classes if not Void.
-			-- Otherwise use all classes in `a_system'.
+			-- Process `input_classes' from `a_system'.
 		local
 			l_all_classes: DS_ARRAYED_LIST [ET_CLASS]
+			l_input_classes: like input_classes
 			l_universe_mapping: DS_HASH_TABLE [STRING, ET_UNIVERSE]
 			l_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]
 			l_class_chart_mapping: DS_HASH_TABLE [STRING, ET_CLASS]
@@ -96,24 +99,22 @@ feature {NONE} -- Processing
 			l_heir_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]
 			l_client_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]
 			l_suppliers_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]
+			l_formats: DS_ARRAYED_LIST [like Current]
 			nb: INTEGER
 			l_root_path: STRING
-			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			system_processor.compile_degree_6 (a_system)
 			create l_all_classes.make (a_system.class_count_recursive)
 			a_system.classes_do_recursive (agent l_all_classes.force_last)
 			system_processor.compile_classes (l_all_classes)
-			if not system_processor.stop_requested and then system_processor.benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			l_input_classes := input_classes
+			l_input_classes.sort (class_sorter_by_name)
+			dt1 := system_processor.start_time
 			l_root_path := ""
 			print_css_file
-			l_class_chart_mapping := class_mapping ("_chart", a_system, input_classes)
+			l_class_chart_mapping := class_mapping ("_chart", l_input_classes)
 			print_goto_file (l_class_chart_mapping)
-			l_feature_mapping := feature_mapping (a_system, input_classes)
+			l_feature_mapping := feature_mapping (l_input_classes)
 			print_class_list_file (a_system, l_class_chart_mapping, l_feature_mapping, l_root_path)
 			l_universe_mapping := universe_mapping (a_system)
 			print_index_file (a_system, l_universe_mapping, l_class_chart_mapping, l_feature_mapping, l_root_path)
@@ -123,32 +124,21 @@ feature {NONE} -- Processing
 				l_root_path := "../"
 			end
 			l_universe_mapping.keys.do_all (agent print_universe_chart (?, l_class_chart_mapping, l_feature_mapping, l_root_path))
-			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				system_processor.print_time (dt1, "Group Charts")
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			system_processor.record_end_time (dt1, "Group Charts")
 			nb := l_all_classes.count
 			create l_parent_classes.make_map (nb)
 			create l_heir_classes.make_map (nb)
 			create l_client_classes.make_map (nb)
 			create l_suppliers_classes.make_map (nb)
 			l_all_classes.do_all (agent build_class_relations (?, l_parent_classes, l_heir_classes, l_client_classes, l_suppliers_classes))
-			l_class_chart_mapping.keys.do_all (agent print_class_chart (?, l_parent_classes, l_universe_mapping, l_class_chart_mapping, l_feature_mapping, l_root_path))
-			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				system_processor.print_time (dt1, "Class Charts")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			l_class_links_mapping := class_mapping ("_links", a_system, input_classes)
-			l_class_links_mapping.keys.do_all (agent print_class_links (?, l_parent_classes, l_heir_classes, l_client_classes, l_suppliers_classes, l_class_links_mapping, l_feature_mapping, l_root_path))
-			if not system_processor.stop_requested and then dt1 /= Void and l_clock /= Void then
-				system_processor.print_time (dt1, "Class Relations")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			l_class_mapping := class_mapping ("", a_system, input_classes)
-			l_class_mapping.keys.do_all (agent print_class_text (?, l_class_mapping, l_feature_mapping, l_root_path))
-			if not system_processor.stop_requested and then dt1 /= Void then
-				system_processor.print_time (dt1, "Class Texts")
-			end
+			create l_formats.make (system_processor.processor_count)
+			system_processor.do_all (agent add_format (?, l_formats))
+			print_classes_chart (l_input_classes, l_formats, l_parent_classes, l_universe_mapping, l_class_chart_mapping, l_feature_mapping, l_root_path)
+			l_class_links_mapping := class_mapping ("_links", l_input_classes)
+			print_classes_links (l_input_classes, l_formats, l_parent_classes, l_heir_classes, l_client_classes, l_suppliers_classes, l_class_links_mapping, l_feature_mapping, l_root_path)
+			l_class_mapping := class_mapping ("", l_input_classes)
+			print_classes_text (l_input_classes, l_formats, l_class_mapping, l_feature_mapping, l_root_path)
+			has_error := l_formats.there_exists (agent {like Current}.has_error)
 		end
 
 feature {NONE} -- Output
@@ -261,7 +251,7 @@ feature {NONE} -- Output
 					l_printer.set_class_mapping (a_class_mapping)
 					l_printer.set_feature_mapping (a_feature_mapping)
 					l_printer.set_root_path (a_root_path)
-					l_title := concat (universe_name (a_system), titla_suffix_documentation)
+					l_title := concat (universe_lower_name (a_system), titla_suffix_documentation)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					print_navigation_bar (Void, True, True, True, False, False, False, a_root_path, l_file)
@@ -302,7 +292,7 @@ feature {NONE} -- Output
 					l_printer.indent
 					across a_universe_mapping as l_mapping loop
 						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
-						l_printer.print_string (universe_name (l_mapping.key))
+						l_printer.print_string (universe_lower_name (l_mapping.key))
 						l_printer.print_end_a
 						l_printer.print_new_line
 					end
@@ -349,7 +339,7 @@ feature {NONE} -- Output
 					l_printer.set_feature_mapping (a_feature_mapping)
 					l_printer.set_root_path (a_root_path)
 					l_line_splitter := line_splitter
-					l_title := concat (universe_name (a_system), title_suffix_class_dictionary)
+					l_title := concat (universe_lower_name (a_system), title_suffix_class_dictionary)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					print_navigation_bar (Void, False, True, True, False, False, False, a_root_path, l_file)
@@ -412,7 +402,7 @@ feature {NONE} -- Output
 					l_printer.reset
 					l_printer.set_file (l_file)
 					l_printer.set_root_path (a_root_path)
-					l_title := concat (universe_name (a_system), title_suffix_alphabetical_group_list)
+					l_title := concat (universe_lower_name (a_system), title_suffix_alphabetical_group_list)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					print_navigation_bar (Void, True, False, True, False, False, False, a_root_path, l_file)
@@ -423,7 +413,7 @@ feature {NONE} -- Output
 					l_printer.indent
 					across a_universe_mapping as l_mapping loop
 						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
-						l_printer.print_string (universe_name (l_mapping.key))
+						l_printer.print_string (universe_lower_name (l_mapping.key))
 						l_printer.print_end_a
 						l_printer.print_new_line
 					end
@@ -464,7 +454,7 @@ feature {NONE} -- Output
 					l_printer.reset
 					l_printer.set_file (l_file)
 					l_printer.set_root_path (a_root_path)
-					l_title := concat (universe_name (a_system), title_suffix_group_hierarchy)
+					l_title := concat (universe_lower_name (a_system), title_suffix_group_hierarchy)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
@@ -475,7 +465,7 @@ feature {NONE} -- Output
 					l_printer.indent
 					across a_universe_mapping as l_mapping loop
 						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
-						l_printer.print_string (universe_name (l_mapping.key))
+						l_printer.print_string (universe_lower_name (l_mapping.key))
 						l_printer.print_end_a
 						l_printer.print_new_line
 						if attached {ET_INTERNAL_UNIVERSE} l_mapping.key as l_internal_universe then
@@ -513,7 +503,7 @@ feature {NONE} -- Output
 			l_base_name: STRING
 			l_class: ET_CLASS
 		do
-			l_universe_name := universe_name (a_universe)
+			l_universe_name := universe_lower_name (a_universe)
 			if library_prefix_flag then
 				l_base_name := filename_index
 				l_filename := file_system.pathname (output_directory, l_universe_name)
@@ -591,65 +581,45 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_class_chart (a_class: ET_CLASS; a_parent_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]; a_universe_mapping: DS_HASH_TABLE [STRING, ET_UNIVERSE]; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [STRING, ET_FEATURE]; a_root_path: STRING)
-			-- Print file "<class_name>_chart.html".
+	print_classes_chart (a_classes: DS_ARRAYED_LIST [ET_CLASS]; a_formats: DS_ARRAYED_LIST [like Current]; a_parent_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]; a_universe_mapping: DS_HASH_TABLE [STRING, ET_UNIVERSE]; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [STRING, ET_FEATURE]; a_root_path: STRING)
+			-- Print files "<class_name>_chart.html" for each class in `a_classes' using `a_formats'.
 		require
-			a_class_not_void: a_class /= Void
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+			a_formats_not_void: a_formats /= Void
+			no_void_format: not a_formats.has_void
 			a_parent_classes_not_void: a_parent_classes /= Void
 			a_universe_mapping_not_void: a_universe_mapping /= Void
 			a_class_mapping_not_void: a_class_mapping /= Void
 			a_feature_mapping_not_void: a_feature_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: like new_output_file
-			l_filename: STRING
-			l_class_name: STRING
-			l_title: STRING
-			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
+			i, nb: INTEGER
+			l_format: like Current
+			dt1: detachable DT_DATE_TIME
 		do
-			l_class_name := class_lower_name (a_class)
-			l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_chart))
-			if not is_file_overwritable (l_filename) then
-				report_file_already_exists_error (l_filename)
-			else
-				l_file := new_output_file (l_filename)
-				l_file.recursive_open_write
-				if l_file.is_open_write then
-					l_printer := html_printer
-					l_printer.reset
-					l_printer.set_file (l_file)
-					l_printer.set_class_mapping (a_class_mapping)
-					l_printer.set_feature_mapping (a_feature_mapping)
-					l_printer.set_root_path (a_root_path)
-					l_printer.set_current_class (a_class)
-						-- Header.
-					l_title := concat (l_class_name, title_suffix_chart)
-					print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
-					l_file.put_string (html_start_pre)
-					print_navigation_bar (l_class_name, True, True, True, False, True, True, a_root_path, l_file)
-						-- Content.
-					print_class_header (a_class, l_printer)
-					print_class_general (a_class, a_universe_mapping, l_printer)
-					print_class_relation (a_class, title_parents, a_parent_classes, l_printer)
-					print_feature_signatures (a_class.queries, title_queries, l_printer)
-					print_feature_signatures (a_class.procedures, title_commands, l_printer)
-						-- Footer.
-					print_navigation_bar (l_class_name, True, True, True, False, True, True, a_root_path, l_file)
-					l_file.put_line (html_end_pre)
-					print_footer (l_file)
-					l_printer.set_null_file
-					l_printer.reset
-					l_file.close
-				else
-					report_cannot_write_error (l_filename)
+			if not system_processor.stop_requested then
+				dt1 := system_processor.start_time
+				nb := a_formats.count
+				from i := 1 until i > nb loop
+					l_format := a_formats.item (i)
+					system_processor.set_custom_processor (agent l_format.print_class_chart (?, a_parent_classes, a_universe_mapping, a_class_mapping, a_feature_mapping, a_root_path))
+					i := i + 1
 				end
+				a_classes.do_all (agent {ET_CLASS}.set_marked (False))
+				system_processor.process_custom (a_classes)
+				system_processor.record_end_time (dt1, "Class Charts")
+				system_processor.report_custom_metrics (a_classes, "Generated chart files for")
 			end
 		end
 
-	print_class_links (a_class: ET_CLASS; a_parent_classes, a_heir_classes, a_client_classes, a_suppliers_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [STRING, ET_FEATURE]; a_root_path: STRING)
-			-- Print file "<class_name>links.html".
+	print_classes_links (a_classes: DS_ARRAYED_LIST [ET_CLASS]; a_formats: DS_ARRAYED_LIST [like Current]; a_parent_classes, a_heir_classes, a_client_classes, a_suppliers_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [STRING, ET_FEATURE]; a_root_path: STRING)
+			-- Print files "<class_name>links.html" for each class in `a_classes' using `a_formats'.
 		require
-			a_class_not_void: a_class /= Void
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+			a_formats_not_void: a_formats /= Void
+			no_void_format: not a_formats.has_void
 			a_parent_classes_not_void: a_parent_classes /= Void
 			a_heir_classes_not_void: a_heir_classes /= Void
 			a_client_classes_not_void: a_client_classes /= Void
@@ -658,94 +628,52 @@ feature {NONE} -- Output
 			a_feature_mapping_not_void: a_feature_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: like new_output_file
-			l_filename: STRING
-			l_class_name: STRING
-			l_title: STRING
-			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
+			i, nb: INTEGER
+			l_format: like Current
+			dt1: detachable DT_DATE_TIME
 		do
-			l_class_name := class_lower_name (a_class)
-			l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_links))
-			if not is_file_overwritable (l_filename) then
-				report_file_already_exists_error (l_filename)
-			else
-				l_file := new_output_file (l_filename)
-				l_file.recursive_open_write
-				if l_file.is_open_write then
-					l_printer := html_printer
-					l_printer.reset
-					l_printer.set_file (l_file)
-					l_printer.set_class_mapping (a_class_mapping)
-					l_printer.set_feature_mapping (a_feature_mapping)
-					l_printer.set_root_path (a_root_path)
-					l_printer.set_current_class (a_class)
-						-- Header.
-					l_title := concat (l_class_name, title_suffix_relations)
-					print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
-					l_file.put_string (html_start_pre)
-					print_navigation_bar (l_class_name, True, True, True, True, False, True, a_root_path, l_file)
-						-- Content.
-					print_class_header (a_class, l_printer)
-					print_class_relation (a_class, title_parents, a_parent_classes, l_printer)
-					print_class_relation (a_class, title_heirs, a_heir_classes, l_printer)
-					print_class_relation (a_class, title_clients, a_client_classes, l_printer)
-					print_class_relation (a_class, title_suppliers, a_suppliers_classes, l_printer)
-						-- Footer.
-					print_navigation_bar (l_class_name, True, True, True, True, False, True, a_root_path, l_file)
-					l_file.put_line (html_end_pre)
-					print_footer (l_file)
-					l_printer.set_null_file
-					l_printer.reset
-					l_file.close
-				else
-					report_cannot_write_error (l_filename)
+			if not system_processor.stop_requested then
+				dt1 := system_processor.start_time
+				nb := a_formats.count
+				from i := 1 until i > nb loop
+					l_format := a_formats.item (i)
+					system_processor.set_custom_processor (agent l_format.print_class_links (?, a_parent_classes, a_heir_classes, a_client_classes, a_suppliers_classes, a_class_mapping, a_feature_mapping, a_root_path))
+					i := i + 1
 				end
+				a_classes.do_all (agent {ET_CLASS}.set_marked (False))
+				system_processor.process_custom (a_classes)
+				system_processor.record_end_time (dt1, "Class Relations")
+				system_processor.report_custom_metrics (a_classes, "Generated relation files for")
 			end
 		end
 
-	print_class_text (a_class: ET_CLASS; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [STRING, ET_FEATURE]; a_root_path: STRING)
-			-- Print file "<class_name>.html".
+	print_classes_text (a_classes: DS_ARRAYED_LIST [ET_CLASS]; a_formats: DS_ARRAYED_LIST [like Current]; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [STRING, ET_FEATURE]; a_root_path: STRING)
+			-- Print files "<class_name>.html" for each class in `a_classes' using `a_formats'.
 		require
-			a_class_not_void: a_class /= Void
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+			a_formats_not_void: a_formats /= Void
+			no_void_format: not a_formats.has_void
 			a_class_mapping_not_void: a_class_mapping /= Void
 			a_feature_mapping_not_void: a_feature_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: KL_TEXT_OUTPUT_FILE
-			l_filename: STRING
-			l_class_name: STRING
-			l_title: STRING
-			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
+			i, nb: INTEGER
+			l_format: like Current
+			dt1: detachable DT_DATE_TIME
 		do
-			l_class_name := class_lower_name (a_class)
-			l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_text))
-			if not is_file_overwritable (l_filename) then
-				report_file_already_exists_error (l_filename)
-			else
-				l_file := new_output_file (l_filename)
-				l_file.recursive_open_write
-				if l_file.is_open_write then
-					l_printer := html_printer
-					l_printer.reset
-					l_printer.set_file (l_file)
-					l_printer.set_class_mapping (a_class_mapping)
-					l_printer.set_feature_mapping (a_feature_mapping)
-					l_printer.set_root_path (a_root_path)
-					l_printer.set_current_class (a_class)
-					l_title := concat (l_class_name, title_suffix_text)
-					print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
-					l_file.put_string (html_start_pre)
-					print_navigation_bar (l_class_name, True, True, True, True, True, False, a_root_path, l_file)
-					a_class.process (l_printer)
-					print_navigation_bar (l_class_name, True, True, True, True, True, False, a_root_path, l_file)
-					l_file.put_line (html_end_pre)
-					print_footer (l_file)
-					l_printer.set_null_file
-					l_printer.reset
-					l_file.close
-				else
-					report_cannot_write_error (l_filename)
+			if not system_processor.stop_requested then
+				dt1 := system_processor.start_time
+				nb := a_formats.count
+				from i := 1 until i > nb loop
+					l_format := a_formats.item (i)
+					system_processor.set_custom_processor (agent l_format.print_class_text (?, a_class_mapping, a_feature_mapping, a_root_path))
+					i := i + 1
 				end
+				a_classes.do_all (agent {ET_CLASS}.set_marked (False))
+				system_processor.process_custom (a_classes)
+				system_processor.record_end_time (dt1, "Class Texts")
+				system_processor.report_custom_metrics (a_classes, "Generated text files for")
 			end
 		end
 
@@ -795,14 +723,13 @@ feature {NONE} -- Output
 			tokens.colon_symbol.process (a_printer)
 			a_printer.print_character (' ')
 			l_universe := a_class.universe
-			a_universe_mapping.search (l_universe)
-			if a_universe_mapping.found then
-				a_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, a_universe_mapping.found_item)
-				a_printer.print_string (universe_name (l_universe))
+			if attached a_universe_mapping.value (l_universe) as l_universe_href then
+				a_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_universe_href)
+				a_printer.print_string (universe_lower_name (l_universe))
 				a_printer.print_end_a
 			else
 				a_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_necluster)
-				a_printer.print_string (universe_name (l_universe))
+				a_printer.print_string (universe_lower_name (l_universe))
 				a_printer.print_end_span
 			end
 			if not ANY_.same_objects (a_class.universe, a_class.group) then
@@ -879,13 +806,10 @@ feature {NONE} -- Output
 			a_relation_not_void: a_relation /= Void
 			a_printer_not_void: a_printer /= Void
 		local
-			l_class_set: DS_HASH_SET [ET_CLASS]
 			l_class_list: DS_ARRAYED_LIST [ET_CLASS]
 			i, nb: INTEGER
 		do
-			a_relation.search (a_class)
-			if a_relation.found then
-				l_class_set := a_relation.found_item
+			if attached a_relation.value (a_class) as l_class_set then
 				nb := l_class_set.count
 				if nb > 0 then
 					a_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
@@ -1046,6 +970,187 @@ feature {NONE} -- Output
 			a_file.put_string (navigation_line_17)
 		end
 
+feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
+
+	print_class_chart (a_class: ET_CLASS; a_parent_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]; a_universe_mapping: DS_HASH_TABLE [STRING, ET_UNIVERSE]; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [STRING, ET_FEATURE]; a_root_path: STRING)
+			-- Print file "<class_name>_chart.html".
+		require
+			a_class_not_void: a_class /= Void
+			a_parent_classes_not_void: a_parent_classes /= Void
+			a_universe_mapping_not_void: a_universe_mapping /= Void
+			a_class_mapping_not_void: a_class_mapping /= Void
+			a_feature_mapping_not_void: a_feature_mapping /= Void
+			a_root_path_not_void: a_root_path /= Void
+		local
+			l_file: like new_output_file
+			l_filename: STRING
+			l_class_name: STRING
+			l_title: STRING
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
+		do
+			if not {PLATFORM}.is_thread_capable or else a_class.processing_mutex.try_lock then
+				if not a_class.is_marked then
+					l_class_name := class_lower_name (a_class)
+					l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_chart))
+					if not is_file_overwritable (l_filename) then
+						report_file_already_exists_error (l_filename)
+					else
+						l_file := new_output_file (l_filename)
+						l_file.recursive_open_write
+						if l_file.is_open_write then
+							l_printer := html_printer
+							l_printer.reset
+							l_printer.set_file (l_file)
+							l_printer.set_class_mapping (a_class_mapping)
+							l_printer.set_feature_mapping (a_feature_mapping)
+							l_printer.set_root_path (a_root_path)
+							l_printer.set_current_class (a_class)
+								-- Header.
+							l_title := concat (l_class_name, title_suffix_chart)
+							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
+							l_file.put_string (html_start_pre)
+							print_navigation_bar (l_class_name, True, True, True, False, True, True, a_root_path, l_file)
+								-- Content.
+							print_class_header (a_class, l_printer)
+							print_class_general (a_class, a_universe_mapping, l_printer)
+							print_class_relation (a_class, title_parents, a_parent_classes, l_printer)
+							print_feature_signatures (a_class.queries, title_queries, l_printer)
+							print_feature_signatures (a_class.procedures, title_commands, l_printer)
+								-- Footer.
+							print_navigation_bar (l_class_name, True, True, True, False, True, True, a_root_path, l_file)
+							l_file.put_line (html_end_pre)
+							print_footer (l_file)
+							l_printer.set_null_file
+							l_printer.reset
+							l_file.close
+						else
+							report_cannot_write_error (l_filename)
+						end
+					end
+					system_processor.report_class_processed (a_class)
+					a_class.set_marked (True)
+				end
+				a_class.processing_mutex.unlock
+			end
+		end
+
+	print_class_links (a_class: ET_CLASS; a_parent_classes, a_heir_classes, a_client_classes, a_suppliers_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [STRING, ET_FEATURE]; a_root_path: STRING)
+			-- Print file "<class_name>links.html".
+		require
+			a_class_not_void: a_class /= Void
+			a_parent_classes_not_void: a_parent_classes /= Void
+			a_heir_classes_not_void: a_heir_classes /= Void
+			a_client_classes_not_void: a_client_classes /= Void
+			a_suppliers_classes_not_void: a_suppliers_classes /= Void
+			a_class_mapping_not_void: a_class_mapping /= Void
+			a_feature_mapping_not_void: a_feature_mapping /= Void
+			a_root_path_not_void: a_root_path /= Void
+		local
+			l_file: like new_output_file
+			l_filename: STRING
+			l_class_name: STRING
+			l_title: STRING
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
+		do
+			if not {PLATFORM}.is_thread_capable or else a_class.processing_mutex.try_lock then
+				if not a_class.is_marked then
+					l_class_name := class_lower_name (a_class)
+					l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_links))
+					if not is_file_overwritable (l_filename) then
+						report_file_already_exists_error (l_filename)
+					else
+						l_file := new_output_file (l_filename)
+						l_file.recursive_open_write
+						if l_file.is_open_write then
+							l_printer := html_printer
+							l_printer.reset
+							l_printer.set_file (l_file)
+							l_printer.set_class_mapping (a_class_mapping)
+							l_printer.set_feature_mapping (a_feature_mapping)
+							l_printer.set_root_path (a_root_path)
+							l_printer.set_current_class (a_class)
+								-- Header.
+							l_title := concat (l_class_name, title_suffix_relations)
+							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
+							l_file.put_string (html_start_pre)
+							print_navigation_bar (l_class_name, True, True, True, True, False, True, a_root_path, l_file)
+								-- Content.
+							print_class_header (a_class, l_printer)
+							print_class_relation (a_class, title_parents, a_parent_classes, l_printer)
+							print_class_relation (a_class, title_heirs, a_heir_classes, l_printer)
+							print_class_relation (a_class, title_clients, a_client_classes, l_printer)
+							print_class_relation (a_class, title_suppliers, a_suppliers_classes, l_printer)
+								-- Footer.
+							print_navigation_bar (l_class_name, True, True, True, True, False, True, a_root_path, l_file)
+							l_file.put_line (html_end_pre)
+							print_footer (l_file)
+							l_printer.set_null_file
+							l_printer.reset
+							l_file.close
+						else
+							report_cannot_write_error (l_filename)
+						end
+					end
+					system_processor.report_class_processed (a_class)
+					a_class.set_marked (True)
+				end
+				a_class.processing_mutex.unlock
+			end
+		end
+
+	print_class_text (a_class: ET_CLASS; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [STRING, ET_FEATURE]; a_root_path: STRING)
+			-- Print file "<class_name>.html".
+		require
+			a_class_not_void: a_class /= Void
+			a_class_mapping_not_void: a_class_mapping /= Void
+			a_feature_mapping_not_void: a_feature_mapping /= Void
+			a_root_path_not_void: a_root_path /= Void
+		local
+			l_file: KL_TEXT_OUTPUT_FILE
+			l_filename: STRING
+			l_class_name: STRING
+			l_title: STRING
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
+		do
+			if not {PLATFORM}.is_thread_capable or else a_class.processing_mutex.try_lock then
+				if not a_class.is_marked then
+					l_class_name := class_lower_name (a_class)
+					l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_text))
+					if not is_file_overwritable (l_filename) then
+						report_file_already_exists_error (l_filename)
+					else
+						l_file := new_output_file (l_filename)
+						l_file.recursive_open_write
+						if l_file.is_open_write then
+							l_printer := html_printer
+							l_printer.reset
+							l_printer.set_file (l_file)
+							l_printer.set_class_mapping (a_class_mapping)
+							l_printer.set_feature_mapping (a_feature_mapping)
+							l_printer.set_root_path (a_root_path)
+							l_printer.set_current_class (a_class)
+							l_title := concat (l_class_name, title_suffix_text)
+							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
+							l_file.put_string (html_start_pre)
+							print_navigation_bar (l_class_name, True, True, True, True, True, False, a_root_path, l_file)
+							a_class.process (l_printer)
+							print_navigation_bar (l_class_name, True, True, True, True, True, False, a_root_path, l_file)
+							l_file.put_line (html_end_pre)
+							print_footer (l_file)
+							l_printer.set_null_file
+							l_printer.reset
+							l_file.close
+						else
+							report_cannot_write_error (l_filename)
+						end
+					end
+					system_processor.report_class_processed (a_class)
+					a_class.set_marked (True)
+				end
+				a_class.processing_mutex.unlock
+			end
+		end
+
 feature {NONE} -- Mapping
 
 	universe_mapping (a_system: ET_SYSTEM): DS_HASH_TABLE [STRING, ET_UNIVERSE]
@@ -1073,7 +1178,7 @@ feature {NONE} -- Mapping
 			create l_names.make (nb)
 			from i := 1 until i > nb loop
 				l_universe := l_list.item (i)
-				l_name := universe_name (l_universe)
+				create l_name.make_from_string (universe_lower_name (l_universe))
 				l_names.put_last (l_name)
 				l_universes_by_name.put_last (l_universe, l_name)
 				i := i + 1
@@ -1096,41 +1201,28 @@ feature {NONE} -- Mapping
 			universe_mapping_not_void: Result /= Void
 		end
 
-	class_mapping (a_suffix: STRING; a_system: ET_SYSTEM; a_input_classes: like input_classes): DS_HASH_TABLE [STRING, ET_CLASS]
-			-- Mapping between classes to be processed and the
-			-- name of file for these classes (relative to
-			-- `output_directory'), ordered by class names.
+	class_mapping (a_suffix: STRING; a_input_classes: like input_classes): DS_HASH_TABLE [STRING, ET_CLASS]
+			-- Mapping between classes in `a_input_classes' and
+			-- the name of file for these classes (relative to
+			-- `output_directory').
 			-- `a_suffix' is a suffix to be added to the filename (e.g. "_chart").
-			-- Use `a_input_classes' as input classes if not Void.
-			-- Otherwise use all classes in `a_system'.
+			-- Keep the same ordering as in `a_input_classes'.
 		require
 			a_suffix_not_void: a_suffix /= Void
-			a_system_not_void: a_system /= Void
+			a_input_classes_not_void: a_input_classes /= Void
+			no_void_input_class: not a_input_classes.has_void
 		local
-			l_input_classes: DS_ARRAYED_LIST [ET_CLASS]
 			i, nb: INTEGER
 			l_class: ET_CLASS
 			l_filename: STRING
 		do
-			if a_input_classes /= Void then
-				nb := a_input_classes.count
-			else
-				nb := a_system.class_count_recursive
-			end
-			l_input_classes := new_class_list (nb)
-			if a_input_classes /= Void then
-				l_input_classes.append_last (a_input_classes)
-			else
-				a_system.classes_do_unless_recursive (agent l_input_classes.force_last, agent {ET_CLASS}.is_none)
-			end
-			l_input_classes.sort (class_sorter_by_name)
-			nb := l_input_classes.count
+			nb := a_input_classes.count
 			create Result.make_map (nb)
 			from i := 1 until i > nb loop
-				l_class := l_input_classes.item (i)
+				l_class := a_input_classes.item (i)
 				create l_filename.make (50)
 				if library_prefix_flag then
-					l_filename.append_string (universe_name (l_class.universe))
+					l_filename.append_string (universe_lower_name (l_class.universe))
 					l_filename.append_character ('/')
 				end
 				l_filename.append_string (l_class.lower_name)
@@ -1143,16 +1235,14 @@ feature {NONE} -- Mapping
 			class_mapping_not_void: Result /= Void
 		end
 
-	feature_mapping (a_system: ET_SYSTEM; a_input_classes: like input_classes): DS_HASH_TABLE [STRING, ET_FEATURE]
-			-- Mapping between features of classes to be processed and
+	feature_mapping (a_input_classes: like input_classes): DS_HASH_TABLE [STRING, ET_FEATURE]
+			-- Mapping between features of classes in `a_input_classes' and
 			-- the name of file and location for these features (relative
 			-- to `output_directory').
-			-- Use `a_input_classes' as input classes if not Void.
-			-- Otherwise use all classes in `a_system'.
 		require
-			a_system_not_void: a_system /= Void
+			a_input_classes_not_void: a_input_classes /= Void
+			no_void_input_class: not a_input_classes.has_void
 		local
-			l_input_classes: DS_ARRAYED_LIST [ET_CLASS]
 			i, nb: INTEGER
 			l_class: ET_CLASS
 			l_filename: STRING
@@ -1160,19 +1250,13 @@ feature {NONE} -- Mapping
 			l_feature: ET_FEATURE
 			j, nb2: INTEGER
 		do
-			if a_input_classes /= Void then
-				create l_input_classes.make_from_linear (a_input_classes)
-			else
-				create l_input_classes.make (a_system.class_count_recursive)
-				a_system.classes_do_unless_recursive (agent l_input_classes.force_last, agent {ET_CLASS}.is_none)
-			end
-			nb := l_input_classes.count
+			nb := a_input_classes.count
 			create Result.make_map (nb * 50)
 			from i := 1 until i > nb loop
-				l_class := l_input_classes.item (i)
+				l_class := a_input_classes.item (i)
 				create l_filename.make (50)
 				if library_prefix_flag then
-					l_filename.append_string (universe_name (l_class.universe))
+					l_filename.append_string (universe_lower_name (l_class.universe))
 					l_filename.append_character ('/')
 				end
 				l_filename.append_string (l_class.lower_name)
@@ -1435,6 +1519,27 @@ feature {NONE} -- Implementation
 
 	line_splitter: ST_SPLITTER
 			-- Line splitter
+
+	add_format (a_system_processor: ET_SYSTEM_PROCESSOR; a_formats: DS_ARRAYED_LIST [like Current])
+			-- Add format associated with `a_system_processor' to `a_formats'.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
+			a_formats_not_void: a_formats /= Void
+			no_void_format: not a_formats.has_void
+		local
+			l_format: like Current
+		do
+			if a_system_processor = system_processor then
+				l_format := Current
+			else
+				create l_format.make_from_format (Current, a_system_processor)
+			end
+			a_formats.force_last (l_format)
+		ensure
+			no_void_format: not a_formats.has_void
+			one_more: a_formats.count = old a_formats.count + 1
+			system_processor_set: a_formats.last.system_processor = a_system_processor
+		end
 
 	new_class_list (nb: INTEGER): DS_ARRAYED_LIST [ET_CLASS]
 			-- Empty list of classes which can contain at least `nb' classes

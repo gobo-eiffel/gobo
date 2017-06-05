@@ -1028,20 +1028,11 @@ feature -- Compilation
 			l_procedure: detachable ET_PROCEDURE
 			l_query: detachable ET_QUERY
 			l_root_creation_procedure: like root_creation_procedure
-			l_clock: DT_SHARED_SYSTEM_CLOCK
-			dt1: detachable DT_DATE_TIME
 			l_class: ET_CLASS
 		do
 			has_fatal_error := False
 			activate_dynamic_type_set_builder (a_system_processor)
-			if a_system_processor.benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			current_system.preparse_recursive (a_system_processor)
-			if dt1 /= Void then
-				a_system_processor.print_time (dt1, "Degree 6")
-			end
+			a_system_processor.compile_degree_6 (current_system)
 			compile_kernel (a_system_processor)
 			if not a_system_processor.stop_requested then
 				l_root_type := current_system.root_type
@@ -1137,22 +1128,16 @@ feature -- Compilation
 		require
 			a_system_processor_not_void: a_system_processor /= Void
 		local
-			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
 			has_fatal_error := False
 			activate_dynamic_type_set_builder (a_system_processor)
 			a_system_processor.compile_all (current_system)
-			if not a_system_processor.stop_requested and then a_system_processor.benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			dt1 := a_system_processor.start_time
 			compile_kernel (a_system_processor)
 			current_system.classes_do_recursive_until (agent compile_all_features, a_system_processor.stop_request)
 			build_dynamic_type_sets
-			if not a_system_processor.stop_requested and then dt1 /= Void then
-				a_system_processor.print_time (dt1, "Degree Dynamic Type Set")
-			end
+			a_system_processor.record_end_time (dt1, "Degree Dynamic Type Set")
 		end
 
 	compile_feature (a_feature_name: ET_FEATURE_NAME; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
@@ -1169,19 +1154,10 @@ feature -- Compilation
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_clock: DT_SHARED_SYSTEM_CLOCK
-			dt1: detachable DT_DATE_TIME
 		do
 			has_fatal_error := False
 			activate_dynamic_type_set_builder (a_system_processor)
-			if a_system_processor.benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			current_system.preparse_recursive (a_system_processor)
-			if dt1 /= Void then
-				a_system_processor.print_time (dt1, "Degree 6")
-			end
+			a_system_processor.compile_degree_6 (current_system)
 			compile_kernel (a_system_processor)
 			if not a_system_processor.stop_requested then
 				if not a_class.is_preparsed then

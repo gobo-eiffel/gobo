@@ -348,10 +348,12 @@ feature -- Access
 			l_class_name: ET_IDENTIFIER
 		do
 			create l_class_name.make (a_name)
+			master_class_mutex.lock
 			master_classes.search (l_class_name)
 			if master_classes.found then
 				Result := master_classes.found_item
 			end
+			master_class_mutex.unlock
 		end
 
 	master_classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_MASTER_CLASS]
@@ -2671,6 +2673,59 @@ feature {NONE} -- Parsing
 			create l_modified.make_false
 			master_classes_do_if_recursive_until (agent any_actions.call ({ET_MASTER_CLASS} ?, agent l_modified.set_true), agent {ET_MASTER_CLASS}.is_modified, agent l_modified.is_true)
 			Result := l_modified.is_true
+		end
+
+feature -- Name clashes
+
+	set_unique_universe_names
+			-- Make sure that current universe and recursively the universes it
+			-- depends on have unique names (case-insensitive).
+			-- Give new names to some universes if needed to resolve name clashes.
+		local
+			l_visited: DS_HASH_SET [ET_UNIVERSE]
+			l_names: DS_HASH_SET [STRING]
+			l_clashes: detachable DS_ARRAYED_LIST [ET_UNIVERSE]
+			l_universe: ET_UNIVERSE
+			l_lower_name: STRING
+			l_new_name: STRING
+			i, nb: INTEGER
+			l_counter: INTEGER
+		do
+			create l_visited.make (initial_universes_capacity)
+			add_universe_recursive (l_visited)
+			create l_names.make_equal (l_visited.count)
+			from l_visited.start until l_visited.after loop
+				l_universe := l_visited.item_for_iteration
+				l_lower_name := l_universe.lower_name
+				if not l_names.has (l_lower_name) then
+					l_names.put_new (l_lower_name)
+				else
+					if l_clashes = Void then
+						create l_clashes.make (l_visited.count - l_names.count)
+					end
+					l_clashes.force_last (l_universe)
+				end
+				l_visited.forth
+			end
+			if l_clashes /= Void then
+				nb := l_clashes.count
+				from i := 1 until i > nb loop
+					l_universe := l_clashes.item (i)
+					l_lower_name := l_universe.lower_name
+					from
+						l_counter := 2
+						l_new_name := l_lower_name + "_" + l_counter.out
+					until
+						not l_names.has (l_new_name)
+					loop
+						l_counter := l_counter + 1
+						l_new_name := l_lower_name + "_" + l_counter.out
+					end
+					l_names.put_new (l_new_name)
+					l_universe.set_name (l_new_name)
+					i := i + 1
+				end
+			end
 		end
 
 feature {NONE} -- Constants

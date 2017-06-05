@@ -69,6 +69,10 @@ feature -- Execution
 					defined_variables := arg.substring (10, arg.count)
 				elseif arg.is_equal ("--verbose") then
 					is_verbose := True
+				elseif arg.is_equal ("--benchmark") then
+					benchmark_flag := True
+				elseif arg.is_equal ("--metrics") then
+					metrics_flag := True
 				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--thread=") and then {PLATFORM}.is_thread_capable then
 					l_string := arg.substring (10, arg.count)
 					if l_string.is_integer then
@@ -163,6 +167,8 @@ feature -- Status report
 
 	defined_variables: STRING
 	is_verbose: BOOLEAN
+	benchmark_flag: BOOLEAN
+	metrics_flag: BOOLEAN
 	is_flat: BOOLEAN
 	is_flat_dbc: BOOLEAN
 	is_catcall: BOOLEAN
@@ -308,8 +314,8 @@ feature {NONE} -- Processing
 				create l_system_processor.make
 			end
 			l_system_processor.set_error_handler_recursive (error_handler)
-			l_system_processor.set_benchmark_shown_recursive (not is_silent or is_verbose)
-			l_system_processor.set_metrics_shown_recursive (not is_silent or is_verbose)
+			l_system_processor.set_benchmark_shown_recursive (benchmark_flag)
+			l_system_processor.set_metrics_shown_recursive (metrics_flag)
 			l_system_processor.set_ise_version_recursive (ise_version)
 			l_system_processor.set_ecma_version_recursive (ecma_version)
 			l_system_processor.set_flat_mode_recursive (is_flat)
@@ -369,7 +375,7 @@ feature -- Error handling
 				l_thread_option := ""
 			end
 			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
-				%%T" + l_thread_option + "[--flat][--noflatdbc][--catcall][--silent][--verbose] xace_or_ecf_filename")
+				%%T" + l_thread_option + "[--flat][--noflatdbc][--catcall][--silent][--verbose][--benchmark][--metrics] xace_or_ecf_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

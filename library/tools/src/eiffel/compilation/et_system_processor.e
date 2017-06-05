@@ -73,6 +73,15 @@ feature -- Status report
 	metrics_shown: BOOLEAN
 			-- Should metrics be shown?
 
+	processor_count: INTEGER
+			-- Number of processors available to process
+			-- Eiffel system together
+		do
+			Result := 1
+		ensure
+			processor_count_positive: Result >= 1
+		end
+
 feature -- Status setting
 
 	set_benchmark_shown (b: BOOLEAN)
@@ -845,13 +854,9 @@ feature -- Processing
 		local
 			l_root_class: ET_CLASS
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
-			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			if benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			dt1 := start_time
 			compile_degree_6 (a_system)
 			if
 				not attached a_system.root_type as l_root_type or else
@@ -873,11 +878,7 @@ feature -- Processing
 					compile_marked_classes (l_classes)
 				end
 			end
-			if not stop_requested then
-				if dt1 /= Void then
-					print_time (dt1, "All Degrees")
-				end
-			end
+			record_end_time (dt1, "All Degrees")
 		end
 
 	compile_all (a_system: ET_SYSTEM)
@@ -894,22 +895,14 @@ feature -- Processing
 			a_system_not_void: a_system /= Void
 		local
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
-			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			if benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			dt1 := start_time
 			compile_degree_6 (a_system)
 			create l_classes.make (a_system.class_count_recursive)
 			a_system.classes_do_recursive (agent l_classes.force_last)
 			compile_classes (l_classes)
-			if not stop_requested then
-				if dt1 /= Void then
-					print_time (dt1, "All Degrees")
-				end
-			end
+			record_end_time (dt1, "All Degrees")
 		end
 
 	compile_classes (a_classes: DS_ARRAYED_LIST [ET_CLASS])
@@ -961,20 +954,12 @@ feature -- Processing
 		require
 			a_system_not_void: a_system /= Void
 		local
-			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			if benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			dt1 := start_time
 			a_system.preparse_recursive (Current)
-			if dt1 /= Void then
-				print_time (dt1, "Degree 6")
-			end
-			if metrics_shown then
-				report_degree_6_metrics (a_system)
-			end
+			record_end_time (dt1, "Degree 6")
+			report_degree_6_metrics (a_system)
 		end
 
 	compile_degree_5 (a_classes: DS_ARRAYED_LIST [ET_CLASS]; a_marked_only: BOOLEAN)
@@ -993,20 +978,12 @@ feature -- Processing
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
 		local
-			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			if benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			dt1 := start_time
 			compile_degree_5_2 (a_classes, a_marked_only)
 			check_provider_validity (a_classes)
-			if not stop_requested then
-				if dt1 /= Void then
-					print_time (dt1, "Degree 5")
-				end
-			end
+			record_end_time (dt1, "Degree 5")
 		ensure
 			marked_only: a_marked_only implies a_classes.count <= old a_classes.count
 			all_marked: a_marked_only implies a_classes.for_all (agent {ET_CLASS}.is_marked)
@@ -1028,30 +1005,18 @@ feature -- Processing
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
 		local
-			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			if benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			dt1 := start_time
 			if a_marked_only then
 				parse_marked_classes (a_classes)
 				remove_unmarked_classes (a_classes)
 			else
 				parse_classes (a_classes)
 			end
-			if not stop_requested then
-				set_syntax_internal_error (a_classes)
-			end
-			if not stop_requested then
-				if dt1 /= Void then
-					print_time (dt1, "Degree 5.2")
-				end
-				if metrics_shown then
-					report_degree_5_2_metrics (a_classes)
-				end
-			end
+			set_syntax_internal_error (a_classes)
+			record_end_time (dt1, "Degree 5.2")
+			report_degree_5_2_metrics (a_classes)
 		ensure
 			marked_only: a_marked_only implies a_classes.count <= old a_classes.count
 			all_marked: a_marked_only implies a_classes.for_all (agent {ET_CLASS}.is_marked)
@@ -1067,33 +1032,17 @@ feature -- Processing
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
 		local
-			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			if benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			dt1 := start_time
 			build_ancestors (a_classes)
-			if not stop_requested then
-				set_ancestors_internal_error (a_classes)
-			end
+			set_ancestors_internal_error (a_classes)
 			flatten_features (a_classes)
-			if not stop_requested then
-				set_flattening_internal_error (a_classes)
-			end
+			set_flattening_internal_error (a_classes)
 			check_interface_validity (a_classes)
-			if not stop_requested then
-				set_interface_internal_error (a_classes)
-			end
-			if not stop_requested then
-				if dt1 /= Void then
-					print_time (dt1, "Degree 4")
-				end
-				if metrics_shown then
-					report_degree_4_metrics (a_classes)
-				end
-			end
+			set_interface_internal_error (a_classes)
+			record_end_time (dt1, "Degree 4")
+			report_degree_4_metrics (a_classes)
 		end
 
 	compile_degree_3 (a_classes: DS_ARRAYED_LIST [ET_CLASS])
@@ -1110,25 +1059,13 @@ feature -- Processing
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
 		local
-			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
-			if benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
+			dt1 := start_time
 			check_implementation_validity (a_classes)
-			if not stop_requested then
-				set_implementation_internal_error (a_classes)
-			end
-			if not stop_requested then
-				if dt1 /= Void then
-					print_time (dt1, "Degree 3")
-				end
-				if metrics_shown then
-					report_degree_3_metrics (a_classes)
-				end
-			end
+			set_implementation_internal_error (a_classes)
+			record_end_time (dt1, "Degree 3")
+			report_degree_3_metrics (a_classes)
 		end
 
 	parse_system (a_system: ET_SYSTEM)
@@ -1459,7 +1396,99 @@ feature -- Processing
 			a_system.master_classes_do_recursive_until (agent {ET_MASTER_CLASS}.process (master_class_checker), stop_request)
 		end
 
+feature -- Custom processing
+
+	process_custom (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Execute `custom_processor' on all classes in `a_classes' which have not been marked yet.
+			-- Execute in several passes until no more classes have been reported as
+			-- having been processed.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+		local
+			i, nb: INTEGER
+			l_class: ET_CLASS
+			l_done: BOOLEAN
+		do
+			reset_total_processed_class_count
+			if attached custom_processor as l_custom_processor then
+				from
+					nb := a_classes.count
+				until
+					l_done
+				loop
+					from i := 1 until i > nb loop
+						if stop_requested then
+								-- Jump out of the loops.
+							l_done := True
+							i := nb
+						else
+							l_class := a_classes.item (i)
+							if not l_class.is_marked then
+								l_custom_processor.call ([l_class])
+							end
+						end
+						i := i + 1
+					end
+					if not l_done then
+						l_done := processed_class_count = 0
+					end
+					reset_processed_class_count
+				end
+			end
+		end
+
+	custom_processor: detachable PROCEDURE [ET_CLASS]
+			-- Processor to be used by `process_custom'
+
+	set_custom_processor (a_processor: like custom_processor)
+			-- Set `custom_processor' to `a_processor'.
+		do
+			custom_processor := a_processor
+		ensure
+			custom_processor_set: custom_processor = a_processor
+		end
+
+	report_custom_metrics (a_classes: DS_ARRAYED_LIST [ET_CLASS]; a_degree: STRING)
+			-- Report metrics for custom processing `a_degree' if current
+			-- system processor was not stopped and metrics were requested.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+			a_degree_not_void: a_degree /= Void
+		do
+			report_degree_metrics (a_classes, a_degree)
+		end
+
 feature -- Timing
+
+	start_time: detachable DT_DATE_TIME
+			-- Current time in case current system processor
+			-- was not stopped and benchmarks have been requested
+		local
+			l_clock: DT_SHARED_SYSTEM_CLOCK
+		do
+			if not stop_requested and then benchmark_shown then
+				create l_clock
+				Result := l_clock.system_clock.date_time_now
+			end
+		end
+
+	record_end_time (a_start: detachable DT_DATE_TIME; a_degree: STRING)
+			-- Print time spent in `a_degree' since `a_start' in case
+			-- current system processor was not stopped and benchmarks
+			-- have been requested.
+		require
+			a_degree_not_void: a_degree /= Void
+		do
+			if not stop_requested and then a_start /= Void then
+				print_time (a_start, a_degree)
+			end
+		end
 
 	print_time (a_start: DT_DATE_TIME; a_degree: STRING)
 			-- Print time spent in `a_degree' since `a_start'.
@@ -1517,6 +1546,17 @@ feature -- Stop
 			set_stop_request (a_stop_request)
 		ensure
 			stop_request_set: stop_request = a_stop_request
+		end
+
+feature -- Iteration
+
+	do_all (a_action: PROCEDURE [ET_SYSTEM_PROCESSOR])
+			-- Execute `a_action' on current system processor and on
+			-- all other system processors in case of a multiprocessor.
+		require
+			a_action_not_void: a_action /= Void
+		do
+			a_action.call ([Current])
 		end
 
 feature -- Metrics
@@ -1600,48 +1640,65 @@ feature {ET_SYSTEM_MULTIPROCESSOR} -- Metrics
 feature {NONE} -- Metrics
 
 	report_degree_6_metrics (a_system: ET_SYSTEM)
-			-- Report metrics for Degree 6.
+			-- Report metrics for Degree 6 if current system processor
+			-- was not stopped and metrics were requested.
 		require
 			a_system_not_void: a_system /= Void
 		do
-			error_handler.info_file.put_string ("Preparsed ")
-			error_handler.info_file.put_integer (a_system.class_count_recursive)
-			error_handler.info_file.put_line (" classes")
+			if not stop_requested and then metrics_shown then
+				error_handler.info_file.put_string ("Preparsed ")
+				error_handler.info_file.put_integer (a_system.class_count_recursive)
+				error_handler.info_file.put_line (" classes")
+			end
 		end
 
 	report_degree_5_2_metrics (a_classes: DS_ARRAYED_LIST [ET_CLASS])
-			-- Report metrics for Degree 5.2.
+			-- Report metrics for Degree 5.2 if current system processor
+			-- was not stopped and metrics were requested.
 		require
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
 		do
-			error_handler.info_file.put_string ("Parsed ")
-			report_processor_metrics (0)
-			error_handler.info_file.put_integer (feature_count (a_classes))
-			error_handler.info_file.put_line (" features")
+			report_degree_metrics (a_classes, "Parsed")
 		end
 
 	report_degree_4_metrics (a_classes: DS_ARRAYED_LIST [ET_CLASS])
-			-- Report metrics for Degree 4.
+			-- Report metrics for Degree 4 if current system processor
+			-- was not stopped and metrics were requested.
 		require
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
 		do
-			error_handler.info_file.put_string ("Flattened ")
-			error_handler.info_file.put_integer (a_classes.count)
-			error_handler.info_file.put_line (" classes")
-			error_handler.info_file.put_integer (feature_count (a_classes))
-			error_handler.info_file.put_line (" features")
+			if not stop_requested and then metrics_shown then
+				error_handler.info_file.put_string ("Flattened ")
+				error_handler.info_file.put_integer (a_classes.count)
+				error_handler.info_file.put_line (" classes")
+			end
 		end
 
 	report_degree_3_metrics (a_classes: DS_ARRAYED_LIST [ET_CLASS])
-			-- Report metrics for Degree 3.
+			-- Report metrics for Degree 3 if current system processor
+			-- was not stopped and metrics were requested.
 		require
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
 		do
-			error_handler.info_file.put_string ("Checked implementation of ")
-			report_processor_metrics (0)
+			report_degree_metrics (a_classes, "Checked implementation of")
+		end
+
+	report_degree_metrics (a_classes: DS_ARRAYED_LIST [ET_CLASS]; a_degree: STRING)
+			-- Report metrics for `a_degree' if current system processor
+			-- was not stopped and metrics were requested.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+			a_degree_not_void: a_degree /= Void
+		do
+			if not stop_requested and then metrics_shown then
+				error_handler.info_file.put_string (a_degree)
+				error_handler.info_file.put_character (' ')
+				report_processor_metrics (0)
+			end
 		end
 
 	report_processed_class_count_stack
@@ -1694,32 +1751,10 @@ feature {NONE} -- Implementation
 			all_marked: a_classes.for_all (agent {ET_CLASS}.is_marked)
 		end
 
-	feature_count (a_classes: DS_ARRAYED_LIST [ET_CLASS]): INTEGER
-			-- Number of features (immediate or inherited) in `a_classes'
-		require
-			a_classes_not_void: a_classes /= Void
-			no_void_class: not a_classes.has_void
-		local
-			i, nb: INTEGER
-			l_class: ET_CLASS
-		do
-			from
-				i := 1
-				nb := a_classes.count
-			until
-				i > nb
-			loop
-				l_class := a_classes.item (i)
-				Result := Result + l_class.queries.count + l_class.procedures.count
-				i := i + 1
-			end
-		ensure
-			feature_count_not_negative: Result >= 0
-		end
-
 	set_syntax_internal_error (a_classes: DS_ARRAYED_LIST [ET_CLASS])
 			-- Set syntax error to all classes of `a_classes' which have not been parsed.
 			-- Report an internal error.
+			-- Do nothing if current system processor was stopped.
 		require
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
@@ -1727,27 +1762,30 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_class: ET_CLASS
 		do
-			from
-				i := 1
-				nb := a_classes.count
-			until
-				i > nb
-			loop
-				l_class := a_classes.item (i)
-				if not l_class.is_parsed then
-					l_class.set_syntax_error
-					error_handler.report_giaaa_error
+			if not stop_requested then
+				from
+					i := 1
+					nb := a_classes.count
+				until
+					i > nb
+				loop
+					l_class := a_classes.item (i)
+					if not l_class.is_parsed then
+						l_class.set_syntax_error
+						error_handler.report_giaaa_error
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		ensure
-			all_classes_parsed: a_classes.for_all (agent {ET_CLASS}.is_parsed)
+			all_classes_parsed: not {PLATFORM}.is_thread_capable and then not stop_requested implies a_classes.for_all (agent {ET_CLASS}.is_parsed)
 		end
 
 	set_ancestors_internal_error (a_classes: DS_ARRAYED_LIST [ET_CLASS])
 			-- Set ancestors error to all classes of `a_classes' for which
 			-- the ancestors have not been built.
 			-- Report an internal error.
+			-- Do nothing if current system processor was stopped.
 		require
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
@@ -1755,27 +1793,30 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_class: ET_CLASS
 		do
-			from
-				i := 1
-				nb := a_classes.count
-			until
-				i > nb
-			loop
-				l_class := a_classes.item (i)
-				if not l_class.ancestors_built then
-					l_class.set_ancestors_error
-					error_handler.report_giaaa_error
+			if not stop_requested then
+				from
+					i := 1
+					nb := a_classes.count
+				until
+					i > nb
+				loop
+					l_class := a_classes.item (i)
+					if not l_class.ancestors_built then
+						l_class.set_ancestors_error
+						error_handler.report_giaaa_error
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		ensure
-			all_ancestors_built: a_classes.for_all (agent {ET_CLASS}.ancestors_built)
+			all_ancestors_built: not {PLATFORM}.is_thread_capable and then not stop_requested implies a_classes.for_all (agent {ET_CLASS}.ancestors_built)
 		end
 
 	set_flattening_internal_error (a_classes: DS_ARRAYED_LIST [ET_CLASS])
 			-- Set flattening error to all classes of `a_classes' for which
 			-- the features have not been flattened.
 			-- Report an internal error.
+			-- Do nothing if current system processor was stopped.
 		require
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
@@ -1783,27 +1824,30 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_class: ET_CLASS
 		do
-			from
-				i := 1
-				nb := a_classes.count
-			until
-				i > nb
-			loop
-				l_class := a_classes.item (i)
-				if not l_class.features_flattened then
-					l_class.set_flattening_error
-					error_handler.report_giaaa_error
+			if not stop_requested then
+				from
+					i := 1
+					nb := a_classes.count
+				until
+					i > nb
+				loop
+					l_class := a_classes.item (i)
+					if not l_class.features_flattened then
+						l_class.set_flattening_error
+						error_handler.report_giaaa_error
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		ensure
-			all_features_flattened: a_classes.for_all (agent {ET_CLASS}.features_flattened)
+			all_features_flattened: not {PLATFORM}.is_thread_capable and then not stop_requested implies a_classes.for_all (agent {ET_CLASS}.features_flattened)
 		end
 
 	set_interface_internal_error (a_classes: DS_ARRAYED_LIST [ET_CLASS])
 			-- Set interface error to all classes of `a_classes' for which
 			-- the interface has not been checked.
 			-- Report an internal error.
+			-- Do nothing if current system processor was stopped.
 		require
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
@@ -1811,27 +1855,30 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_class: ET_CLASS
 		do
-			from
-				i := 1
-				nb := a_classes.count
-			until
-				i > nb
-			loop
-				l_class := a_classes.item (i)
-				if not l_class.interface_checked then
-					l_class.set_interface_error
-					error_handler.report_giaaa_error
+			if not stop_requested then
+				from
+					i := 1
+					nb := a_classes.count
+				until
+					i > nb
+				loop
+					l_class := a_classes.item (i)
+					if not l_class.interface_checked then
+						l_class.set_interface_error
+						error_handler.report_giaaa_error
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		ensure
-			all_interface_checked: a_classes.for_all (agent {ET_CLASS}.interface_checked)
+			all_interface_checked: not {PLATFORM}.is_thread_capable and then not stop_requested implies a_classes.for_all (agent {ET_CLASS}.interface_checked)
 		end
 
 	set_implementation_internal_error (a_classes: DS_ARRAYED_LIST [ET_CLASS])
 			-- Set implementation error to all classes of `a_classes' for which
 			-- the implementation has not been checked.
 			-- Report an internal error.
+			-- Do nothing if current system processor was stopped.
 		require
 			a_classes_not_void: a_classes /= Void
 			no_void_class: not a_classes.has_void
@@ -1839,21 +1886,23 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_class: ET_CLASS
 		do
-			from
-				i := 1
-				nb := a_classes.count
-			until
-				i > nb
-			loop
-				l_class := a_classes.item (i)
-				if not l_class.implementation_checked then
-					l_class.set_implementation_error
-					error_handler.report_giaaa_error
+			if not stop_requested then
+				from
+					i := 1
+					nb := a_classes.count
+				until
+					i > nb
+				loop
+					l_class := a_classes.item (i)
+					if not l_class.implementation_checked then
+						l_class.set_implementation_error
+						error_handler.report_giaaa_error
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		ensure
-			all_implementation_checked: a_classes.for_all (agent {ET_CLASS}.implementation_checked)
+			all_implementation_checked: not {PLATFORM}.is_thread_capable and then not stop_requested implies a_classes.for_all (agent {ET_CLASS}.implementation_checked)
 		end
 
 invariant

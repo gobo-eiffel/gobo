@@ -108,7 +108,6 @@ feature {NONE} -- Initialization
 			create internal_feature_name.make ("dummy")
 			create expression_type_finder.make (a_system_processor)
 			make_pretty_printer (a_file)
-			make_class_processor (a_system_processor)
 			create internal_type_context.make_with_capacity (current_class, 100)
 		ensure
 			file_set: file = a_file
@@ -862,10 +861,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_unescaped_character ('>')
 			print_end_a
 			if attached feature_mapping as l_feature_mapping then
-				l_feature_mapping.search (a_feature.implementation_feature)
-				if l_feature_mapping.found then
-					l_href := l_feature_mapping.found_item
-				end
+				l_href := l_feature_mapping.value (a_feature.implementation_feature)
 			end
 			if l_href /= Void then
 				process_feature_name_with_href (l_feature_name, l_href)
@@ -936,10 +932,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 					if attached l_target_class.seeded_feature (a_feature_name.seed) as l_feature then
 						l_feature_name := l_feature.name
 						if attached feature_mapping as l_feature_mapping then
-							l_feature_mapping.search (l_feature.implementation_feature)
-							if l_feature_mapping.found then
-								l_href := l_feature_mapping.found_item
-							end
+							l_href := l_feature_mapping.value (l_feature.implementation_feature)
 						end
 					end
 				end
@@ -1067,10 +1060,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			if attached {ET_IDENTIFIER} a_class_name as l_identifier then
 				l_class := a_named_class.actual_class
 				if attached class_mapping as l_class_mapping then
-					l_class_mapping.search (l_class)
-					if l_class_mapping.found then
-						l_href := l_class_mapping.found_item
-					end
+					l_href := l_class_mapping.value (l_class)
 				end
 			end
 			if l_href /= Void then
@@ -1094,10 +1084,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			l_feature_name := l_extended_feature_name.feature_name
 			if attached feature_mapping as l_feature_mapping then
 				if attached current_class.seeded_feature (l_feature_name.seed) as l_feature then
-					l_feature_mapping.search (l_feature.implementation_feature)
-					if l_feature_mapping.found then
-						l_href := l_feature_mapping.found_item
-					end
+					l_href := l_feature_mapping.value (l_feature.implementation_feature)
 				end
 			end
 			if l_href /= Void then
@@ -1163,10 +1150,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			if attached feature_mapping as l_feature_mapping then
 				if attached target_class as l_target_class then
 					if attached l_target_class.seeded_feature (a_keyword.seed) as l_feature then
-						l_feature_mapping.search (l_feature.implementation_feature)
-						if l_feature_mapping.found then
-							l_href := l_feature_mapping.found_item
-						end
+						l_href := l_feature_mapping.value (l_feature.implementation_feature)
 					end
 				end
 			end
@@ -1259,10 +1243,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			if attached {ET_IDENTIFIER} a_writable as l_identifier and then l_identifier.is_feature_name then
 				if attached feature_mapping as l_feature_mapping then
 					if attached current_class.seeded_feature (l_identifier.seed) as l_feature then
-						l_feature_mapping.search (l_feature.implementation_feature)
-						if l_feature_mapping.found then
-							l_href := l_feature_mapping.found_item
-						end
+						l_href := l_feature_mapping.value (l_feature.implementation_feature)
 					end
 				end
 				if l_href /= Void then
@@ -1326,10 +1307,7 @@ feature {NONE} -- Comments
 					l_feature_name := internal_feature_name
 					l_feature_name.set_name (a_quoted_name)
 					if attached current_class.named_feature (l_feature_name) as l_named_feature then
-						l_feature_mapping.search (l_named_feature.implementation_feature)
-						if l_feature_mapping.found then
-							l_href := l_feature_mapping.found_item
-						end
+						l_href := l_feature_mapping.value (l_named_feature.implementation_feature)
 					end
 				end
 				if l_href /= Void then
@@ -1368,10 +1346,7 @@ feature {NONE} -- Comments
 				if attached class_mapping as l_class_mapping then
 					if attached current_universe.master_class_by_name (a_quoted_class_name) as l_master_class then
 						l_class := l_master_class.actual_class
-						l_class_mapping.search (l_class)
-						if l_class_mapping.found then
-							l_href := l_class_mapping.found_item
-						end
+						l_href := l_class_mapping.value (l_class)
 					end
 				end
 			end
@@ -1399,10 +1374,7 @@ feature {NONE} -- Comments
 						l_feature_name := internal_feature_name
 						l_feature_name.set_name (a_feature_name)
 						if attached l_class.named_feature (l_feature_name) as l_named_feature then
-							l_feature_mapping.search (l_named_feature.implementation_feature)
-							if l_feature_mapping.found then
-								l_href := l_feature_mapping.found_item
-							end
+							l_href := l_feature_mapping.value (l_named_feature.implementation_feature)
 						end
 					end
 					if l_href /= Void then
