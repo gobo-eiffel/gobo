@@ -6,7 +6,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #16 $"
@@ -638,8 +638,8 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 feature {NONE} -- Implementation
 
 	search_position (k: K)
-			-- Search for position where key is equal to `k'.
-			-- or to possible insertion position otherwise.
+			-- Search for position where key is equal to `k',
+			-- or 'No_position' otherwise.
 			-- (Use `key_equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 		local
@@ -653,14 +653,16 @@ feature {NONE} -- Implementation
 				slots_position := modulus
 				clashes_previous_position := No_position
 			else
+				l_position := position
 				if attached key_equality_tester as l_tester then
-					l_position := position
+						-- Keep track of `slots_position' and `clashes_previous_position' before
+						-- the call to `l_tester.test' in case of a re-entrant call to `search_position'.
 					l_slots_position := slots_position
 					prev := clashes_previous_position
 					if
-						position = No_position or else
-						clashes_item (position) <= Free_watermark or else
-						not l_tester.test (k, key_storage_item (position))
+						l_position = No_position or else
+						clashes_item (l_position) <= Free_watermark or else
+						not l_tester.test (k, key_storage_item (l_position))
 					then
 						from
 							l_slots_position := hash_position (k)
@@ -685,20 +687,20 @@ feature {NONE} -- Implementation
 					clashes_previous_position := prev
 				else
 					if
-						position = No_position or else
-						clashes_item (position) <= Free_watermark or else
-						k /= key_storage_item (position)
+						l_position = No_position or else
+						clashes_item (l_position) <= Free_watermark or else
+						k /= key_storage_item (l_position)
 					then
 						from
-							slots_position := hash_position (k)
-							i := slots_item (slots_position)
-							position := No_position
+							l_slots_position := hash_position (k)
+							i := slots_item (l_slots_position)
+							l_position := No_position
 							prev := No_position
 						until
 							i = No_position
 						loop
 							if k = key_storage_item (i) then
-								position := i
+								l_position := i
 									-- Jump out of the loop.
 								i := No_position
 							else
@@ -706,6 +708,8 @@ feature {NONE} -- Implementation
 								i := clashes_item (i)
 							end
 						end
+						position := l_position
+						slots_position := l_slots_position
 						clashes_previous_position := prev
 					end
 				end
@@ -718,6 +722,60 @@ feature {NONE} -- Implementation
 			clashes_previous_position_not_set: (position /= No_position and
 				clashes_previous_position = No_position) implies
 					(slots_item (slots_position) = position)
+		end
+
+	position_of_key (k: K): INTEGER
+			-- Position where key is equal to `k',
+			-- or 'No_position' otherwise.
+			-- (Use `key_equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			--
+			-- Contrary to `search_position', there is no internal caching
+			-- here, which allows to use this routine in a multi-threaded
+			-- environment when no items are added or removed.
+		local
+			i: INTEGER
+			l_position: INTEGER
+			l_slots_position: INTEGER
+		do
+			if k = Void then
+				Result := slots_item (modulus)
+			else
+				if attached key_equality_tester as l_tester then
+					from
+						l_slots_position := hash_position (k)
+						i := slots_item (l_slots_position)
+						l_position := No_position
+					until
+						i = No_position
+					loop
+						if l_tester.test (k, key_storage_item (i)) then
+							l_position := i
+								-- Jump out of the loop.
+							i := No_position
+						else
+							i := clashes_item (i)
+						end
+					end
+				else
+					from
+						l_slots_position := hash_position (k)
+						i := slots_item (l_slots_position)
+						l_position := No_position
+					until
+						i = No_position
+					loop
+						if k = key_storage_item (i) then
+							l_position := i
+								-- Jump out of the loop.
+							i := No_position
+						else
+							i := clashes_item (i)
+						end
+					end
+				end
+				Result := l_position
+			end
 		end
 
 	key_equality_tester: detachable KL_EQUALITY_TESTER [K]

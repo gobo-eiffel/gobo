@@ -36,6 +36,12 @@
   compilers are Gobo Eiffel and ISE Eiffel, and they both use
   the same kernel library (the FreeELKS library).
 
+### Gobo Eiffel Structure Library
+
+* `DS_HASH_TABLE.value` can now be used in a multi-threaded
+  environment when no items are added or removed. Contrary
+  to `item`, there is no internal caching in `value`.
+
 ### Gobo Eiffel Tools Library
 
 * Simplified the way built-in features are supported.

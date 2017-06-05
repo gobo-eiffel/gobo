@@ -7,7 +7,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,6 +25,8 @@ inherit
 			occurrences,
 			cursor_off,
 			key_for_iteration
+		redefine
+			value
 		end
 
 	DS_SPARSE_CONTAINER [G, K]
@@ -157,6 +159,22 @@ feature -- Access
 				hash_k: position /= No_position
 			end
 			Result := item_storage_item (position)
+		end
+
+	value (k: K): detachable G
+			-- Item associated with `k';
+			-- Return default value if no such item
+			--
+			-- Contrary to `item', there is no internal caching
+			-- here, which allows to use this routine in a multi-threaded
+			-- environment when no items are added or removed.
+		local
+			l_position: INTEGER
+		do
+			l_position := position_of_key (k)
+			if l_position /= No_position then
+				Result := item_storage_item (l_position)
+			end
 		end
 
 	key (k: K): K
