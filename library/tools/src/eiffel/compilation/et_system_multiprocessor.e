@@ -21,6 +21,7 @@ inherit
 		redefine
 			processor_count,
 			set_benchmark_shown_recursive,
+			set_nested_benchmark_shown_recursive,
 			set_metrics_shown_recursive,
 			set_use_attached_keyword_recursive,
 			set_use_attribute_keyword_recursve,
@@ -137,6 +138,25 @@ feature -- Status setting
 			end
 		ensure then
 			other_benchmark_shown_set: across other_processors as l_other_processors all l_other_processors.item.benchmark_shown = b end
+		end
+
+	set_nested_benchmark_shown_recursive (b: BOOLEAN)
+			-- Set `nested_benchmark_shown' to `b' in current system processor
+			-- and all other system processors in case of a multiprocessor.
+		local
+			i: INTEGER
+		do
+			set_nested_benchmark_shown (b)
+			from
+				i := other_processors.count
+			until
+				i <= 0
+			loop
+				other_processors.item (i).set_nested_benchmark_shown (b)
+				i := i - 1
+			end
+		ensure then
+			other_nested_benchmark_shown_set: across other_processors as l_other_processors all l_other_processors.item.nested_benchmark_shown = b end
 		end
 
 	set_metrics_shown_recursive (b: BOOLEAN)

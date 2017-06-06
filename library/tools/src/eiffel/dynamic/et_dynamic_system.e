@@ -1133,7 +1133,7 @@ feature -- Compilation
 			has_fatal_error := False
 			activate_dynamic_type_set_builder (a_system_processor)
 			a_system_processor.compile_all (current_system)
-			dt1 := a_system_processor.start_time
+			dt1 := a_system_processor.benchmark_start_time
 			compile_kernel (a_system_processor)
 			current_system.classes_do_recursive_until (agent compile_all_features, a_system_processor.stop_request)
 			build_dynamic_type_sets

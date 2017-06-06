@@ -109,7 +109,7 @@ feature {NONE} -- Processing
 			system_processor.compile_classes (l_all_classes)
 			l_input_classes := input_classes
 			l_input_classes.sort (class_sorter_by_name)
-			dt1 := system_processor.start_time
+			dt1 := system_processor.benchmark_start_time
 			l_root_path := ""
 			print_css_file
 			l_class_chart_mapping := class_mapping ("_chart", l_input_classes)
@@ -599,11 +599,11 @@ feature {NONE} -- Output
 			dt1: detachable DT_DATE_TIME
 		do
 			if not system_processor.stop_requested then
-				dt1 := system_processor.start_time
+				dt1 := system_processor.benchmark_start_time
 				nb := a_formats.count
 				from i := 1 until i > nb loop
 					l_format := a_formats.item (i)
-					system_processor.set_custom_processor (agent l_format.print_class_chart (?, a_parent_classes, a_universe_mapping, a_class_mapping, a_feature_mapping, a_root_path))
+					l_format.system_processor.set_custom_processor (agent l_format.print_class_chart (?, a_parent_classes, a_universe_mapping, a_class_mapping, a_feature_mapping, a_root_path))
 					i := i + 1
 				end
 				a_classes.do_all (agent {ET_CLASS}.set_marked (False))
@@ -633,11 +633,11 @@ feature {NONE} -- Output
 			dt1: detachable DT_DATE_TIME
 		do
 			if not system_processor.stop_requested then
-				dt1 := system_processor.start_time
+				dt1 := system_processor.benchmark_start_time
 				nb := a_formats.count
 				from i := 1 until i > nb loop
 					l_format := a_formats.item (i)
-					system_processor.set_custom_processor (agent l_format.print_class_links (?, a_parent_classes, a_heir_classes, a_client_classes, a_suppliers_classes, a_class_mapping, a_feature_mapping, a_root_path))
+					l_format.system_processor.set_custom_processor (agent l_format.print_class_links (?, a_parent_classes, a_heir_classes, a_client_classes, a_suppliers_classes, a_class_mapping, a_feature_mapping, a_root_path))
 					i := i + 1
 				end
 				a_classes.do_all (agent {ET_CLASS}.set_marked (False))
@@ -663,11 +663,11 @@ feature {NONE} -- Output
 			dt1: detachable DT_DATE_TIME
 		do
 			if not system_processor.stop_requested then
-				dt1 := system_processor.start_time
+				dt1 := system_processor.benchmark_start_time
 				nb := a_formats.count
 				from i := 1 until i > nb loop
 					l_format := a_formats.item (i)
-					system_processor.set_custom_processor (agent l_format.print_class_text (?, a_class_mapping, a_feature_mapping, a_root_path))
+					l_format.system_processor.set_custom_processor (agent l_format.print_class_text (?, a_class_mapping, a_feature_mapping, a_root_path))
 					i := i + 1
 				end
 				a_classes.do_all (agent {ET_CLASS}.set_marked (False))

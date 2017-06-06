@@ -70,6 +70,9 @@ feature -- Status report
 	benchmark_shown: BOOLEAN
 			-- Should benchmark be shown for each Degree?
 
+	nested_benchmark_shown: BOOLEAN
+			-- Should nested benchmark be shown for each Degree?
+
 	metrics_shown: BOOLEAN
 			-- Should metrics be shown?
 
@@ -99,6 +102,23 @@ feature -- Status setting
 			set_benchmark_shown (b)
 		ensure
 			benchmark_shown_set: benchmark_shown = b
+		end
+
+	set_nested_benchmark_shown (b: BOOLEAN)
+			-- Set `nested_benchmark_shown' to `b'.
+		do
+			nested_benchmark_shown := b
+		ensure
+			nested_benchmark_shown_set: nested_benchmark_shown = b
+		end
+
+	set_nested_benchmark_shown_recursive (b: BOOLEAN)
+			-- Set `nested_benchmark_shown' to `b' in current system processor
+			-- and all other system processors in case of a multiprocessor.
+		do
+			set_nested_benchmark_shown (b)
+		ensure
+			nested_benchmark_shown_set: nested_benchmark_shown = b
 		end
 
 	set_metrics_shown (b: BOOLEAN)
@@ -854,9 +874,7 @@ feature -- Processing
 		local
 			l_root_class: ET_CLASS
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
-			dt1: detachable DT_DATE_TIME
 		do
-			dt1 := start_time
 			compile_degree_6 (a_system)
 			if
 				not attached a_system.root_type as l_root_type or else
@@ -878,7 +896,6 @@ feature -- Processing
 					compile_marked_classes (l_classes)
 				end
 			end
-			record_end_time (dt1, "All Degrees")
 		end
 
 	compile_all (a_system: ET_SYSTEM)
@@ -895,14 +912,11 @@ feature -- Processing
 			a_system_not_void: a_system /= Void
 		local
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
-			dt1: detachable DT_DATE_TIME
 		do
-			dt1 := start_time
 			compile_degree_6 (a_system)
 			create l_classes.make (a_system.class_count_recursive)
 			a_system.classes_do_recursive (agent l_classes.force_last)
 			compile_classes (l_classes)
-			record_end_time (dt1, "All Degrees")
 		end
 
 	compile_classes (a_classes: DS_ARRAYED_LIST [ET_CLASS])
@@ -956,7 +970,7 @@ feature -- Processing
 		local
 			dt1: detachable DT_DATE_TIME
 		do
-			dt1 := start_time
+			dt1 := benchmark_start_time
 			a_system.preparse_recursive (Current)
 			record_end_time (dt1, "Degree 6")
 			report_degree_6_metrics (a_system)
@@ -980,7 +994,7 @@ feature -- Processing
 		local
 			dt1: detachable DT_DATE_TIME
 		do
-			dt1 := start_time
+			dt1 := benchmark_start_time
 			compile_degree_5_2 (a_classes, a_marked_only)
 			check_provider_validity (a_classes)
 			record_end_time (dt1, "Degree 5")
@@ -1007,7 +1021,7 @@ feature -- Processing
 		local
 			dt1: detachable DT_DATE_TIME
 		do
-			dt1 := start_time
+			dt1 := nested_benchmark_start_time
 			if a_marked_only then
 				parse_marked_classes (a_classes)
 				remove_unmarked_classes (a_classes)
@@ -1034,7 +1048,7 @@ feature -- Processing
 		local
 			dt1: detachable DT_DATE_TIME
 		do
-			dt1 := start_time
+			dt1 := benchmark_start_time
 			build_ancestors (a_classes)
 			set_ancestors_internal_error (a_classes)
 			flatten_features (a_classes)
@@ -1061,7 +1075,7 @@ feature -- Processing
 		local
 			dt1: detachable DT_DATE_TIME
 		do
-			dt1 := start_time
+			dt1 := benchmark_start_time
 			check_implementation_validity (a_classes)
 			set_implementation_internal_error (a_classes)
 			record_end_time (dt1, "Degree 3")
@@ -1466,7 +1480,7 @@ feature -- Custom processing
 
 feature -- Timing
 
-	start_time: detachable DT_DATE_TIME
+	benchmark_start_time: detachable DT_DATE_TIME
 			-- Current time in case current system processor
 			-- was not stopped and benchmarks have been requested
 		local
@@ -1478,10 +1492,22 @@ feature -- Timing
 			end
 		end
 
+	nested_benchmark_start_time: detachable DT_DATE_TIME
+			-- Current time in case current system processor
+			-- was not stopped and nested benchmarks have been requested
+		local
+			l_clock: DT_SHARED_SYSTEM_CLOCK
+		do
+			if not stop_requested and then nested_benchmark_shown then
+				create l_clock
+				Result := l_clock.system_clock.date_time_now
+			end
+		end
+
 	record_end_time (a_start: detachable DT_DATE_TIME; a_degree: STRING)
 			-- Print time spent in `a_degree' since `a_start' in case
-			-- current system processor was not stopped and benchmarks
-			-- have been requested.
+			-- current system processor was not stopped and
+			-- `a_start' is not Void.
 		require
 			a_degree_not_void: a_degree /= Void
 		do

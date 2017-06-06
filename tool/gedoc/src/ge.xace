@@ -6,6 +6,7 @@
 	<option name="console_application" value="true"/>
 	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="multithreaded" value="true"/>
 	<cluster name="gedoc" location="${GOBO}/tool/gedoc/src"/>
 	<cluster name="argument" location="${GOBO}/library/argument/src" prefix="ap_"/>
 	<cluster name="lexical" location="${GOBO}/library/lexical/src" prefix="lx_">
@@ -157,6 +158,9 @@
 		<cluster name="stopwatch"/>
 		<cluster name="time_zone"/>
 	</cluster>
+	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
+		<cluster name="classic"/>
+	</cluster>
 	<cluster name="ge" location="${GOBO}/library"/>
 	<cluster name="free_elks" location="${GOBO}/library/free_elks/src" prefix="fe_">
 		<option name="abstract" value="true"/>
@@ -201,8 +205,5 @@
 		<cluster name="interface"/>
 		<cluster name="pcre"/>
 		<cluster name="support"/>
-	</cluster>
-	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
-		<cluster name="classic"/>
 	</cluster>
 </system>

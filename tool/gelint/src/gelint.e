@@ -301,6 +301,7 @@ feature {NONE} -- Processing
 			a_dynamic_system: ET_DYNAMIC_SYSTEM
 			a_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_system_processor: ET_SYSTEM_PROCESSOR
+			dt1: detachable DT_DATE_TIME
 		do
 --			error_handler.set_compilers
 			error_handler.set_ise
@@ -314,13 +315,15 @@ feature {NONE} -- Processing
 				create l_system_processor.make
 			end
 			l_system_processor.set_error_handler_recursive (error_handler)
-			l_system_processor.set_benchmark_shown_recursive (benchmark_flag)
+			l_system_processor.set_benchmark_shown_recursive (benchmark_flag or not is_silent)
+			l_system_processor.set_nested_benchmark_shown_recursive (benchmark_flag)
 			l_system_processor.set_metrics_shown_recursive (metrics_flag)
 			l_system_processor.set_ise_version_recursive (ise_version)
 			l_system_processor.set_ecma_version_recursive (ecma_version)
 			l_system_processor.set_flat_mode_recursive (is_flat)
 			l_system_processor.set_flat_dbc_mode_recursive (is_flat_dbc)
 			l_system_processor.set_unknown_builtin_reported_recursive (False)
+			dt1 := l_system_processor.benchmark_start_time
 			if is_catcall then
 				create a_dynamic_system.make (a_system, l_system_processor)
 				a_dynamic_system.set_catcall_error_mode (True)
@@ -333,6 +336,7 @@ feature {NONE} -- Processing
 				l_system_processor.set_use_cluster_dependence_pathnames_recursive (True)
 				l_system_processor.compile (a_system)
 			end
+			l_system_processor.record_end_time (dt1, "Total Time")
 		end
 
 feature -- Error handling

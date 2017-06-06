@@ -6,6 +6,7 @@
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="thread"/>
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
 		<cluster name="gedoc" location="${GOBO}/tool/gedoc/src">
@@ -341,6 +342,12 @@
 				<option void_safety="none"/>
 			</cluster>
 		</cluster>
+		<cluster name="th_thread" location="${GOBO}/library/thread/src">
+			<option void_safety="none"/>
+			<cluster name="th_classic" location="$|classic">
+				<option void_safety="none"/>
+			</cluster>
+		</cluster>
 		<cluster name="lx_skeleton" location="${GOBO}/library/lexical/src/skeleton">
 			<option void_safety="none"/>
 		</cluster>
@@ -356,12 +363,6 @@
 				<option void_safety="none"/>
 			</cluster>
 			<cluster name="rx_support" location="$|support">
-				<option void_safety="none"/>
-			</cluster>
-		</cluster>
-		<cluster name="th_thread" location="${GOBO}/library/thread/src">
-			<option void_safety="none"/>
-			<cluster name="th_classic" location="$|classic">
 				<option void_safety="none"/>
 			</cluster>
 		</cluster>

@@ -100,7 +100,11 @@ feature -- Execution
 
 	execute
 			-- Execute documentation format.
+		local
+			dt1: detachable DT_DATE_TIME
 		do
+			system_processor.set_benchmark_shown_recursive (benchmark_flag or not silent_flag)
+			dt1 := system_processor.benchmark_start_time
 			parse_input_file (input_filename)
 			if not has_error and attached last_system as l_last_system then
 				prepare_system (l_last_system)
@@ -114,6 +118,7 @@ feature -- Execution
 					has_error := True
 				end
 			end
+			system_processor.record_end_time (dt1, "Total Time")
 		end
 
 feature -- Access
@@ -418,7 +423,8 @@ feature {NONE} -- Processing
 		do
 			system_processor.error_handler.set_ise
 			system_processor.error_handler.set_verbose (verbose_flag)
-			system_processor.set_benchmark_shown_recursive (benchmark_flag)
+			system_processor.set_benchmark_shown_recursive (benchmark_flag or not silent_flag)
+			system_processor.set_nested_benchmark_shown_recursive (benchmark_flag)
 			system_processor.set_metrics_shown_recursive (metrics_flag)
 			system_processor.set_ise_version_recursive (ise_version)
 			system_processor.set_unknown_builtin_reported_recursive (False)
