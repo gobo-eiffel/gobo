@@ -27,6 +27,13 @@
 
 * Fixed bug in the html format when the target of an assignment 
   is a local variable. It was sometimes shown as a feature name.
+* Made `gedoc` multi-threaded. It runs almost 3 times faster on 
+  a 4-CPU machine.
+
+### gelint
+
+* Made `gelint` multi-threaded. It runs almost 3 times faster on 
+  a 4-CPU machine.
 
 ### Gobo Eiffel Kernel Library
 
@@ -45,6 +52,10 @@
 ### Gobo Eiffel Tools Library
 
 * Simplified the way built-in features are supported.
+* Moved some code from `ET_SYSTEM` to `ET_SYSTEM_PROCESSOR`
+  to allow several system processor objects to work together
+  when analyzing the classes of an Eiffel system in a 
+  multi-threaded environment.
 
 ### Gobo Eiffel Utility Library
 

@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>25 March 2017</date>
+	<date>7 June 2017</date>
 </chapterinfo>
 
 <title>Using gedoc</title>
@@ -94,7 +94,6 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 			Directory for generated files. (default: next to each class file)
 		</para></listitem>
 	</varlistentry>
-
 	<varlistentry>
 		<term>
 			<filename>--library-prefix</filename>
@@ -141,7 +140,15 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 			Define variables to be used when reading Xace files. This option can be used several
 			times to define several variables.
 		</para></listitem>
-	</varlistentry>		
+	</varlistentry>	
+	<varlistentry>
+		<term>
+			<filename>--thread=&lt;thread_count&gt;</filename>
+		</term>
+		<listitem><para>
+			Number of threads to be used to run <projectname>gedoc</projectname>. (default: 1)
+		</para></listitem>
+	</varlistentry>
 	<varlistentry>
 		<term>
 			<filename>--silent</filename>
@@ -156,6 +163,22 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 		</term>
 		<listitem><para>
 			Run <projectname>gedoc</projectname> in verbose mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--benchmark</filename>
+		</term>
+		<listitem><para>
+			Should benchmark information be displayed?
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--metrics</filename>
+		</term>
+		<listitem><para>
+			Should metrics information be displayed?
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

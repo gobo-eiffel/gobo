@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>1 April 2017</date>
+	<date>7 June 2017</date>
 </chapterinfo>
 
 <title>Using gelint</title>
@@ -106,7 +106,15 @@ Eiffel library. Here is the list of options that can be used with
 		<listitem><para>
 			Define variables to be used when reading Xace files.
 		</para></listitem>
-	</varlistentry>			
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--thread=&lt;thread_count&gt;</filename>
+		</term>
+		<listitem><para>
+			Number of threads to be used to run <projectname>gelint</projectname>. (default: 1)
+		</para></listitem>
+	</varlistentry>
 	<varlistentry>
 		<term>
 			<filename>--silent</filename>
@@ -121,6 +129,22 @@ Eiffel library. Here is the list of options that can be used with
 		</term>
 		<listitem><para>
 			Run <projectname>gelint</projectname> in verbose mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--benchmark</filename>
+		</term>
+		<listitem><para>
+			Should benchmark information be displayed?
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--metrics</filename>
+		</term>
+		<listitem><para>
+			Should metrics information be displayed?
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

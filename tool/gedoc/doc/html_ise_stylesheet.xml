@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>25 March 2017</date>
+	<date>7 June 2017</date>
 </chapterinfo>
 
 <title>HTML Format with ISE's Stylesheet</title>
@@ -119,7 +119,7 @@ use the same code as <projectname>gelint</projectname> as a front-end of
 were up to our expectations:
 <programlisting>
 	<filename>gedoc.exe --format=html_ise_stylesheet --force --library-prefix --output=some_output_directory integration.ecf</filename>
-		2 minutes 54 seconds
+		2 minutes 48 seconds
 		RAM: 3.0 GB
 		No disk usage
 </programlisting>
@@ -129,7 +129,23 @@ Here is what we get when <projectname>gedoc</projectname> is compiled with
 <projectname>gec</projectname> using the Boehm GC:
 <programlisting>
 	<filename>gedoc.exe --format=html_ise_stylesheet --force --library-prefix --output=some_output_directory integration.ecf</filename>
-		3 minutes 5 seconds
+		2 minutes 56 seconds
+		RAM: 2.7 GB
+		No disk usage
+</programlisting>
+Starting with <projectname>Gobo Eiffel</projectname> 4.2, 
+<projectname>gedoc</projectname> can now take advantage of multi-threading. 
+Following are the results on a 4-CPU machine with no garbage collection:
+<programlisting>
+	<filename>gedoc.exe --format=html_ise_stylesheet --thread=4 --force --library-prefix --output=some_output_directory integration.ecf</filename>
+		1 minute 1 second
+		RAM: 3.0 GB
+		No disk usage
+</programlisting>
+and when using the Boehm GC :
+<programlisting>
+	<filename>gedoc.exe --format=html_ise_stylesheet --thread=4 --force --library-prefix --output=some_output_directory integration.ecf</filename>
+		1 minute 4 seconds
 		RAM: 2.7 GB
 		No disk usage
 </programlisting>

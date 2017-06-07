@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>2 April 2017</date>
+	<date>7 June 2017</date>
 </chapterinfo>
 
 <title>Code Analysis Technology</title>
@@ -98,11 +98,20 @@ work we are using <projectname>gelint</projectname> in
 full-class-checking mode, with the following results:
 <programlisting>
  	<filename>gelint.exe --flat integration.ecf</filename>
-		1 minute 32 seconds
-		RAM: 2.0 GB
+		1 minute 19 seconds
+		RAM: 2.1 GB
 		No disk usage
 </programlisting>
 which is still acceptable in our Continuous Integration cycle.
+Starting with <projectname>Gobo Eiffel</projectname> 4.2, 
+<projectname>gelint</projectname> can now take advantage of multi-threading. 
+Following are the results on a 4-CPU machine in full-class-checking mode:
+<programlisting>
+ 	<filename>gelint.exe --thread=4 --flat integration.ecf</filename>
+		29 seconds
+		RAM: 2.1 GB
+		No disk usage
+</programlisting>
 Note that these benchmarks are when <filename>gelint.exe</filename>
 has been compiled with <projectname>gec</projectname> (the 
 <projectname>Gobo Eiffel Compiler</projectname>) and executed
