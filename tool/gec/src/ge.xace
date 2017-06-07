@@ -149,6 +149,9 @@
 		<option name="abstract" value="true"/>
 		<cluster name="decimal"/>
 	</cluster>
+	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
+		<cluster name="classic"/>
+	</cluster>
 	<cluster name="time" location="${GOBO}/library/time/src" prefix="dt_">
 		<option name="abstract" value="true"/>
 		<cluster name="clock"/>
@@ -200,8 +203,5 @@
 		<cluster name="interface"/>
 		<cluster name="pcre"/>
 		<cluster name="support"/>
-	</cluster>
-	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
-		<cluster name="classic"/>
 	</cluster>
 </system>

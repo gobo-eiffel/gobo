@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Xace file for the Gobo Eiffel Library libraries"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -20,6 +20,7 @@
 	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/structure/library.xace"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
+	<mount location="${GOBO}/library/thread/library.xace"/>
 	<mount location="${GOBO}/library/time/library.xace"/>
 	<mount location="${GOBO}/library/tools/library.xace"/>
 	<mount location="${GOBO}/library/utility/library.xace"/>

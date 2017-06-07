@@ -3,7 +3,7 @@
 <system name="gec">
 	<description>
 		system: "Gobo Eiffel Compiler"
-		copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -45,6 +45,7 @@
 	<mount location="${GOBO}/library/xml/library.xace"/>
 	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/math/library.xace"/>
+	<mount location="${GOBO}/library/thread/library.xace"/>
 	<mount location="${GOBO}/library/time/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

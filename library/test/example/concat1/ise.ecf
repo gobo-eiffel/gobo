@@ -137,6 +137,12 @@
 		<cluster name="ts_harness" location="${GOBO}/library/test/src/harness">
 			<option void_safety="none"/>
 		</cluster>
+		<cluster name="th_thread" location="${GOBO}/library/thread/src">
+			<option void_safety="none"/>
+			<cluster name="th_classic" location="$|classic">
+				<option void_safety="none"/>
+			</cluster>
+		</cluster>
 		<cluster name="et_tools" location="${GOBO}/library/tools/src">
 			<option void_safety="none"/>
 			<cluster name="et_eiffel_eiffel" location="$|eiffel">
@@ -264,12 +270,6 @@
 				<cluster name="st_parameter" location="$|parameter">
 					<option void_safety="none"/>
 				</cluster>
-			</cluster>
-		</cluster>
-		<cluster name="th_thread" location="${GOBO}/library/thread/src">
-			<option void_safety="none"/>
-			<cluster name="th_classic" location="$|classic">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="dt_time" location="${GOBO}/library/time/src">

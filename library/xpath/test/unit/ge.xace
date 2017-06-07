@@ -149,6 +149,9 @@
 	<cluster name="skeleton" location="${GOBO}/library/lexical/src/skeleton" prefix="lx_"/>
 	<cluster name="skeleton" location="${GOBO}/library/parse/src/skeleton" prefix="pr_"/>
 	<cluster name="harness" location="${GOBO}/library/test/src/harness" prefix="ts_"/>
+	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
+		<cluster name="classic"/>
+	</cluster>
 	<cluster name="tools" location="${GOBO}/library/tools/src" prefix="et_">
 		<option name="abstract" value="true"/>
 		<cluster name="eiffel" prefix="et_eiffel_">
@@ -237,8 +240,5 @@
 		<cluster name="interface"/>
 		<cluster name="pcre"/>
 		<cluster name="support"/>
-	</cluster>
-	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
-		<cluster name="classic"/>
 	</cluster>
 </system>

@@ -145,6 +145,9 @@
 			<cluster name="xpointer_event" location="event" relative="true"/>
 		</cluster>
 	</cluster>
+	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
+		<cluster name="classic"/>
+	</cluster>
 	<cluster name="time" location="${GOBO}/library/time/src" prefix="dt_">
 		<option name="abstract" value="true"/>
 		<cluster name="clock"/>
@@ -165,9 +168,6 @@
 	<cluster name="ge" location="${GOBO}/library"/>
 	<cluster name="skeleton" location="${GOBO}/library/lexical/src/skeleton" prefix="lx_"/>
 	<cluster name="skeleton" location="${GOBO}/library/parse/src/skeleton" prefix="pr_"/>
-	<cluster name="thread" location="${GOBO}/library/thread/src" prefix="th_">
-		<cluster name="classic"/>
-	</cluster>
 	<cluster name="free_elks" location="${GOBO}/library/free_elks/src" prefix="fe_">
 		<option name="abstract" value="true"/>
 		<cluster name="fake"/>

@@ -10,7 +10,7 @@
 	<description>
 		description: "ECF file for the Gobo Eiffel Test Library"
 		library: "Gobo Eiffel Test Library"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -46,6 +46,8 @@
 		<library name="structure" location="$GOBO/library/structure/library.ecf" readonly="true"/>
 
 		<library name="test_skl" location="$GOBO/library/test/library_skl.ecf" readonly="true"/>
+
+		<library name="thread" location="$GOBO/library/thread/library.ecf" readonly="true"/>
 
 		<library name="tools" location="$GOBO/library/tools/library.ecf" readonly="true"/>
 		
