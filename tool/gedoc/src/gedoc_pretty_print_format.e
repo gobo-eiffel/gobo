@@ -30,10 +30,18 @@ feature {NONE} -- Processing
 		local
 			l_input_classes: like input_classes
 			l_formats: DS_ARRAYED_LIST [like Current]
+			l_processor_count: INTEGER
 		do
 			l_input_classes := input_classes
 			system_processor.parse_classes (l_input_classes)
-			create l_formats.make (system_processor.processor_count)
+			l_processor_count := system_processor.processor_count
+			if l_processor_count > 1 then
+					-- Make sure that output directories exist
+					-- before having several threads trying to create
+					-- them at the same time.
+				create_class_output_directories (l_input_classes)
+			end
+			create l_formats.make (l_processor_count)
 			system_processor.do_all (agent add_format (?, l_formats))
 			l_input_classes.do_all (agent {ET_CLASS}.set_marked (False))
 			system_processor.process_custom (l_input_classes)

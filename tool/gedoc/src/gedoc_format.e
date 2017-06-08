@@ -538,6 +538,28 @@ feature {NONE} -- Output
 			end
 		end
 
+	create_class_output_directories (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Create output directories for all classes in `a_classes'.
+			-- It's useful to create them beforehand in a multi-threaded
+			-- environment, to avoid having two threads trying to create
+			-- the same directory at the same time.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+		local
+			i, nb: INTEGER
+		do
+			if output_directory /= Void then
+				nb := a_classes.count
+				from i := 1 until i > nb loop
+					if attached class_output_directory (a_classes.item (i)) as l_directory then
+						file_system.recursive_create_directory (l_directory)
+					end
+					i := i + 1
+				end
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	new_output_file (a_filename: STRING): KL_BUFFERED_TEXT_OUTPUT_FILE
