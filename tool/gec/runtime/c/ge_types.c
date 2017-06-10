@@ -106,8 +106,10 @@ EIF_TYPE GE_non_attached_type(EIF_TYPE a_type)
  */
 EIF_TYPE GE_attached_type(EIF_TYPE a_type)
 {
-	a_type.annotations &= ~DETACHABLE_FLAG;
-	a_type.annotations |= ATTACHED_FLAG;
+	if (!GE_is_expanded_type_index(a_type.id)) {
+		a_type.annotations &= ~DETACHABLE_FLAG;
+		a_type.annotations |= ATTACHED_FLAG;
+	}
 	return a_type;
 }
 

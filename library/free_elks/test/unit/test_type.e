@@ -5,7 +5,7 @@ note
 		"Test features of class TYPE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,18 +58,29 @@ feature -- Test
 				assert_false ("none_non_void_safe", ({NONE}).is_attached)
 			end
 			assert_false ("detachable", ({detachable STRING_8}).is_attached)
-				-- Expanded types are not considered attached, even in void-safe mode!
-			assert_false ("basic_expanded", ({INTEGER_32}).is_attached)
-			assert_false ("attached_basic_expanded", ({attached INTEGER_32}).is_attached)
-			assert_false ("detachable_basic_expanded", ({detachable INTEGER_32}).is_attached)
-			assert_false ("non_basic_expanded", ({UTF_CONVERTER}).is_attached)
-			assert_false ("attached_non_basic_expanded", ({attached UTF_CONVERTER}).is_attached)
-			assert_false ("detachable_non_basic_expanded", ({detachable UTF_CONVERTER}).is_attached)
+			if not eiffel_compiler.is_ise then
+					-- Expanded types are considered as attached
+					-- even in non-void-safe mode.
+				assert_true ("basic_expanded", ({INTEGER_32}).is_attached)
+				assert_true ("attached_basic_expanded", ({attached INTEGER_32}).is_attached)
+				assert_true ("detachable_basic_expanded", ({detachable INTEGER_32}).is_attached)
+				assert_true ("non_basic_expanded", ({UTF_CONVERTER}).is_attached)
+				assert_true ("attached_non_basic_expanded", ({attached UTF_CONVERTER}).is_attached)
+				assert_true ("detachable_non_basic_expanded", ({detachable UTF_CONVERTER}).is_attached)
+			else
+					-- With ISE < svn#100435, expanded types are not considered attached, even in void-safe mode!
+				assert_false ("basic_expanded", ({INTEGER_32}).is_attached)
+				assert_false ("attached_basic_expanded", ({attached INTEGER_32}).is_attached)
+				assert_false ("detachable_basic_expanded", ({detachable INTEGER_32}).is_attached)
+				assert_false ("non_basic_expanded", ({UTF_CONVERTER}).is_attached)
+				assert_false ("attached_non_basic_expanded", ({attached UTF_CONVERTER}).is_attached)
+				assert_false ("detachable_non_basic_expanded", ({detachable UTF_CONVERTER}).is_attached)
+			end
 			if not eiffel_compiler.is_ise then
 					-- Crashing with ISE 16.05.9.9057:
-				assert_false ("non_basic_generic_expanded", ({TYPED_POINTER [ANY]}).is_attached)
-				assert_false ("attached_non_basic_generic_expanded", ({attached TYPED_POINTER [ANY]}).is_attached)
-				assert_false ("detachable_non_basic_generic_expanded", ({detachable TYPED_POINTER [ANY]}).is_attached)
+				assert_true ("non_basic_generic_expanded", ({TYPED_POINTER [ANY]}).is_attached)
+				assert_true ("attached_non_basic_generic_expanded", ({attached TYPED_POINTER [ANY]}).is_attached)
+				assert_true ("detachable_non_basic_generic_expanded", ({detachable TYPED_POINTER [ANY]}).is_attached)
 			end
 		end
 

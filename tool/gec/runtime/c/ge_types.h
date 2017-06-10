@@ -201,7 +201,7 @@ extern EIF_TYPE GE_new_type(EIF_TYPE_INDEX a_id, EIF_TYPE_INDEX a_annotations);
 /*
  * Attachment status of `a_type'.
  */
-#define GE_is_attached_type(a_type) EIF_TEST((a_type).annotations & ATTACHED_FLAG)
+#define GE_is_attached_type(a_type) EIF_TEST(((a_type).annotations & ATTACHED_FLAG) || GE_is_expanded_type_index((a_type).id))
 #define GE_is_attached_encoded_type(a_type) GE_is_attached_type(GE_decoded_type(a_type))
 
 /*
