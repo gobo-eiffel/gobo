@@ -6175,6 +6175,28 @@ feature -- Validity errors
 			end
 		end
 
+	report_vwce0a_error (a_class, a_class_impl: ET_CLASS; a_expression: ET_EXPRESSION; a_type, a_other_type: ET_NAMED_TYPE)
+			-- Report VWCE error: the expression `a_expression' appearing
+			-- in a conditional expression in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is
+			-- of type `a_type' which does not conform to the type `a_other_type'
+			-- of some other expression in this conditional expression.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_expression_not_void: a_expression /= Void
+			a_type_not_void: a_type /= Void
+			a_other_type_not_void: a_other_type /= Void
+		local
+			a_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwce_error (a_class) then
+				create a_error.make_vwce0a (a_class, a_class_impl, a_expression, a_type, a_other_type)
+				report_validity_error (a_error)
+			end
+		end
+
 	report_vweq0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE)
 			-- Report VWEQ error: none of the operands of the equality
 			-- expression `an_expression' appearing in `a_class_impl' and viewed
@@ -8326,6 +8348,16 @@ feature -- Validity error status
 
 	reportable_vwbe_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWBE error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vwce_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWCE error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

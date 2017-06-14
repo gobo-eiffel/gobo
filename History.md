@@ -56,6 +56,8 @@
   to allow several system processor objects to work together
   when analyzing the classes of an Eiffel system in a 
   multi-threaded environment.
+* Added support for conditional expressions 
+  (e.g. `if b then exp1 else exp2 end`)
 
 ### Gobo Eiffel Utility Library
 

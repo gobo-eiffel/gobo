@@ -271,6 +271,7 @@ create
 	make_vvok2a,
 	make_vvok2b,
 	make_vwbe0a,
+	make_vwce0a,
 	make_vweq0a,
 	make_vweq0b,
 	make_vwmq0a,
@@ -11698,6 +11699,52 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = base type of expression
 		end
 
+	make_vwce0a (a_class, a_class_impl: ET_CLASS; a_expression: ET_EXPRESSION; a_type, a_other_type: ET_NAMED_TYPE)
+			-- Create a new VWCE error: the expression `a_expression' appearing
+			-- in a conditional expression in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is
+			-- of type `a_type' which does not conform to the type `a_other_type'
+			-- of some other expression in this conditional expression.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_expression_not_void: a_expression /= Void
+			a_type_not_void: a_type /= Void
+			a_other_type_not_void: a_other_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_expression.position
+			code := template_code (vwce0a_template_code)
+			etl_code := vwce_etl_code
+			default_template := default_message_template (vwce0a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_type.to_text, 7)
+			parameters.put (a_other_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = base type of expression
+			-- dollar8: $8 = base type of other expression
+		end
+
 	make_vweq0a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE)
 			-- Create a new VWEQ error: none of the operands of the equality
 			-- expression `an_expression' appearing in `a_class_impl' and viewed
@@ -14119,8 +14166,9 @@ feature {NONE} -- Implementation
 	vvok2a_default_template: STRING = "once key %"$6%" is not supported. The supported once keys are %"THREAD%", %"PROCESS%" and %"OBJECT%"."
 	vvok2b_default_template: STRING = "indexing once status %"$6%" is not supported. Use one of the supported once keys %"THREAD%", %"PROCESS%" or %"OBJECT%"."
 	vwbe0a_default_template: STRING = "boolean expression of non-BOOLEAN type '$7'."
-	vweq0a_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
-	vweq0b_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
+	vwce0a_default_template: STRING = "expressions of types '$8' and '$7' in branches of conditional expression do not conform to each other."
+	vweq0a_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms nor converts to the other."
+	vweq0b_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms nor converts to the other."
 	vwmq0a_default_template: STRING = "type '$7' in the integer constant is not one of the sized variants of INTEGER."
 	vwmq0b_default_template: STRING = "type '$7' in the real constant is not one of the sized variants of REAL."
 	vwmq0c_default_template: STRING = "type '$7' in the character constant is not one of the sized variants of CHARACTER."
@@ -14291,6 +14339,7 @@ feature {NONE} -- Implementation
 	vvok1_etl_code: STRING = "VVOK-1"
 	vvok2_etl_code: STRING = "VVOK-2"
 	vwbe_etl_code: STRING = "VWBE"
+	vwce_etl_code: STRING = "VWCE"
 	vweq_etl_code: STRING = "VWEQ"
 	vwmq_etl_code: STRING = "VWMQ"
 	vwst1_etl_code: STRING = "VWST-1"
@@ -14586,6 +14635,7 @@ feature {NONE} -- Implementation
 	vvok2a_template_code: STRING = "vvok2a"
 	vvok2b_template_code: STRING = "vvok2b"
 	vwbe0a_template_code: STRING = "vwbe0a"
+	vwce0a_template_code: STRING = "vwce0a"
 	vweq0a_template_code: STRING = "vweq0a"
 	vweq0b_template_code: STRING = "vweq0b"
 	vwmq0a_template_code: STRING = "vwmq0a"

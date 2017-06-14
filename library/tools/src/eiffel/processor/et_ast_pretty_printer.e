@@ -71,6 +71,8 @@ inherit
 			process_do_procedure_inline_agent,
 			process_dotnet_function,
 			process_dotnet_procedure,
+			process_elseif_expression,
+			process_elseif_expression_list,
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
@@ -91,6 +93,7 @@ inherit
 			process_formal_parameter_list,
 			process_formal_parameter_type,
 			process_hexadecimal_integer_constant,
+			process_if_expression,
 			process_if_instruction,
 			process_indexing_list,
 			process_indexing_term_list,
@@ -2074,6 +2077,42 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		local
+			l_conditional: ET_CONDITIONAL
+			l_expression: ET_EXPRESSION
+		do
+			tokens.elseif_keyword.process (Current)
+			print_space
+			l_conditional := an_elseif_part.conditional
+			l_expression := l_conditional.expression
+			l_expression.process (Current)
+			comment_finder.add_excluded_node (l_expression)
+			comment_finder.find_comments (l_conditional, comment_list)
+			comment_finder.reset_excluded_nodes
+			print_space
+			an_elseif_part.then_keyword.process (Current)
+			print_space
+			an_elseif_part.then_expression.process (Current)
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					print_space
+				end
+				a_list.item (i).process (Current)
+				process_comments
+				i := i + 1
+			end
+		end
+
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 		local
@@ -3000,6 +3039,39 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			process_integer_constant (a_constant)
+		end
+
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		local
+			l_conditional: ET_CONDITIONAL
+			l_expression: ET_EXPRESSION
+		do
+			tokens.if_keyword.process (Current)
+			print_space
+			l_conditional := a_expression.conditional
+			l_expression := a_expression.conditional_expression
+			l_expression.process (Current)
+			comment_finder.add_excluded_node (l_expression)
+			comment_finder.find_comments (l_conditional, comment_list)
+			comment_finder.reset_excluded_nodes
+			print_space
+			a_expression.then_keyword.process (Current)
+			print_space
+			a_expression.then_expression.process (Current)
+			if attached a_expression.elseif_parts as l_elseif_parts then
+				process_comments
+				print_space
+				l_elseif_parts.process (Current)
+			end
+			process_comments
+			print_space
+			a_expression.else_keyword.process (Current)
+			print_space
+			a_expression.else_expression.process (Current)
+			process_comments
+			print_space
+			a_expression.end_keyword.process (Current)
 		end
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)

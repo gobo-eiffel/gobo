@@ -58,6 +58,7 @@ inherit
 			process_feature_address,
 			process_hexadecimal_integer_constant,
 			process_identifier,
+			process_if_expression,
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
@@ -10153,6 +10154,145 @@ feature {NONE} -- Expression generation
 			a_constant_not_void: a_constant /= Void
 		do
 			print_integer_constant (a_constant)
+		end
+
+	print_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Print `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		local
+			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_expression: ET_EXPRESSION
+			l_elseif: ET_ELSEIF_EXPRESSION
+			i, nb: INTEGER
+		do
+			assignment_target := Void
+				-- Declaration of temporary result.
+			l_dynamic_type_set := dynamic_type_set (a_expression)
+			l_dynamic_type := l_dynamic_type_set.static_type
+			l_temp := new_temp_variable (l_dynamic_type)
+				-- We will set the index of `l_temp' later because
+				-- it could still be used in `call_operands'.
+			l_temp_index := a_expression.index
+			operand_stack.force (l_temp)
+			print_operand (a_expression.conditional_expression)
+			fill_call_operands (1)
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			call_operands.wipe_out
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			assignment_target := l_temp
+			l_expression := a_expression.then_expression
+			print_operand (l_expression)
+			assignment_target := Void
+			fill_call_operands (1)
+			if call_operands.first /= l_temp then
+				print_indentation
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attachment_expression (call_operands.first, dynamic_type_set (l_expression), l_dynamic_type)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			call_operands.wipe_out
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			if attached a_expression.elseif_parts as l_elseif_parts then
+				nb := l_elseif_parts.count
+				from i := 1 until i > nb loop
+					l_elseif := l_elseif_parts.item (i)
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_operand (l_elseif.conditional_expression)
+					fill_call_operands (1)
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_expression (call_operands.first)
+					call_operands.wipe_out
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					assignment_target := l_temp
+					l_expression := l_elseif.then_expression
+					print_operand (l_expression)
+					assignment_target := Void
+					fill_call_operands (1)
+					if call_operands.first /= l_temp then
+						print_indentation
+						print_temp_name (l_temp, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_attachment_expression (call_operands.first, dynamic_type_set (l_expression), l_dynamic_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					call_operands.wipe_out
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					i := i + 1
+				end
+			end
+			current_file.put_character (' ')
+			current_file.put_string (c_else)
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			assignment_target := l_temp
+			l_expression := a_expression.else_expression
+			print_operand (l_expression)
+			assignment_target := Void
+			fill_call_operands (1)
+			if call_operands.first /= l_temp then
+				print_indentation
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attachment_expression (call_operands.first, dynamic_type_set (l_expression), l_dynamic_type)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			call_operands.wipe_out
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			from i := 1 until i > nb loop
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				i := i + 1
+			end
+			current_file.put_new_line
+			if l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				l_temp.set_index (l_temp_index)
+			end
 		end
 
 	print_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
@@ -33675,6 +33815,12 @@ feature {ET_AST_NODE} -- Processing
 			elseif an_identifier.is_agent_closed_operand then
 				print_agent_closed_operand (an_identifier)
 			end
+		end
+
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			print_if_expression (a_expression)
 		end
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)

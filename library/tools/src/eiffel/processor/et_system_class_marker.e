@@ -5,7 +5,7 @@ note
 		"Eiffel system class markers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -64,6 +64,8 @@ inherit
 			process_dotnet_constant_attribute,
 			process_dotnet_function,
 			process_dotnet_procedure,
+			process_elseif_expression,
+			process_elseif_expression_list,
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
@@ -77,6 +79,7 @@ inherit
 			process_formal_argument_list,
 			process_formal_parameter_list,
 			process_hexadecimal_integer_constant,
+			process_if_expression,
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
@@ -703,6 +706,25 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		do
+			process_expression (an_elseif_part.conditional_expression)
+			process_expression (an_elseif_part.then_expression)
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				process_elseif_expression (a_list.item (i))
+				i := i + 1
+			end
+		end
+
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 		do
@@ -920,6 +942,17 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			process_integer_constant (a_constant)
+		end
+
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			process_expression (a_expression.conditional_expression)
+			process_expression (a_expression.then_expression)
+			if attached a_expression.elseif_parts as l_elseif_parts then
+				process_elseif_expression_list (l_elseif_parts)
+			end
+			process_expression (a_expression.else_expression)
 		end
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)

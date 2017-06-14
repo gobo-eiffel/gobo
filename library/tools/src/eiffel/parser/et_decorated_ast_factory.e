@@ -215,6 +215,7 @@ inherit
 			new_do_procedure_inline_agent,
 			new_dot_feature_name,
 			new_else_compound,
+			new_elseif_expression,
 			new_exports,
 			new_expression_address,
 			new_expression_comma,
@@ -234,6 +235,7 @@ inherit
 			new_formal_parameter_comma,
 			new_formal_parameters,
 			new_from_compound,
+			new_if_expression,
 			new_if_instruction,
 			new_indexing_semicolon,
 			new_indexing_term_comma,
@@ -2486,6 +2488,18 @@ feature -- AST nodes
 			end
 		end
 
+	new_elseif_expression (a_conditional: detachable ET_CONDITIONAL;
+		a_then_keyword: detachable ET_KEYWORD; a_then_expression: detachable ET_EXPRESSION): detachable ET_ELSEIF_EXPRESSION
+			-- New 'elseif' part of 'if' expression
+		do
+			if a_conditional /= Void and a_then_expression /= Void then
+				create Result.make (a_conditional, a_then_expression)
+				if a_then_keyword /= Void then
+					Result.set_then_keyword (a_then_keyword)
+				end
+			end
+		end
+
 	new_exports (an_export: detachable ET_KEYWORD; nb: INTEGER): detachable ET_EXPORT_LIST
 			-- New export clause with given capacity
 		do
@@ -2769,10 +2783,30 @@ feature -- AST nodes
 			end
 		end
 
+	new_if_expression (a_conditional: detachable ET_CONDITIONAL; a_then_keyword: detachable ET_KEYWORD; a_then_expression: detachable ET_EXPRESSION;
+		a_elseif_parts: detachable ET_ELSEIF_EXPRESSION_LIST; a_else_keyword: detachable ET_KEYWORD; a_else_expression: detachable ET_EXPRESSION;
+		a_end_keyword: detachable ET_KEYWORD): detachable ET_IF_EXPRESSION
+			-- New 'if' expression
+		do
+			if a_conditional /= Void and a_then_expression /= Void and a_else_expression /= Void then
+				create Result.make (a_conditional, a_then_expression, a_else_expression)
+				Result.set_elseif_parts (a_elseif_parts)
+				if a_then_keyword /= Void then
+					Result.set_then_keyword (a_then_keyword)
+				end
+				if a_else_keyword /= Void then
+					Result.set_else_keyword (a_else_keyword)
+				end
+				if a_end_keyword /= Void then
+					Result.set_end_keyword (a_end_keyword)
+				end
+			end
+		end
+
 	new_if_instruction (a_conditional: detachable ET_CONDITIONAL; a_then_compound: detachable ET_COMPOUND;
 		an_elseif_parts: detachable ET_ELSEIF_PART_LIST; an_else_compound: detachable ET_COMPOUND;
 		an_end: detachable ET_KEYWORD): detachable ET_IF_INSTRUCTION
-			-- New if instruction
+			-- New 'if' instruction
 		do
 			if a_conditional /= Void then
 				create Result.make (a_conditional, a_then_compound)

@@ -2128,6 +2128,25 @@ feature -- AST nodes
 			end
 		end
 
+	new_elseif_expression (a_conditional: detachable ET_CONDITIONAL;
+		a_then_keyword: detachable ET_KEYWORD; a_then_expression: detachable ET_EXPRESSION): detachable ET_ELSEIF_EXPRESSION
+			-- New 'elseif' part of 'if' expression
+		do
+			if a_conditional /= Void and a_then_expression /= Void then
+				create Result.make (a_conditional, a_then_expression)
+			end
+		end
+
+	new_elseif_expression_list (nb: INTEGER): detachable ET_ELSEIF_EXPRESSION_LIST
+			-- New 'elseif' expression list with capacity `nb'
+		require
+			nb_positive: nb >= 0
+		do
+			if nb > 0 then
+				create Result.make_with_capacity (nb)
+			end
+		end
+
 	new_elseif_part (a_conditional: detachable ET_CONDITIONAL;
 		a_then_compound: detachable ET_COMPOUND): detachable ET_ELSEIF_PART
 			-- New elseif part
@@ -2440,10 +2459,21 @@ feature -- AST nodes
 			end
 		end
 
+	new_if_expression (a_conditional: detachable ET_CONDITIONAL; a_then_keyword: detachable ET_KEYWORD; a_then_expression: detachable ET_EXPRESSION;
+		a_elseif_parts: detachable ET_ELSEIF_EXPRESSION_LIST; a_else_keyword: detachable ET_KEYWORD; a_else_expression: detachable ET_EXPRESSION;
+		a_end_keyword: detachable ET_KEYWORD): detachable ET_IF_EXPRESSION
+			-- New 'if' expression
+		do
+			if a_conditional /= Void and a_then_expression /= Void and a_else_expression /= Void then
+				create Result.make (a_conditional, a_then_expression, a_else_expression)
+				Result.set_elseif_parts (a_elseif_parts)
+			end
+		end
+
 	new_if_instruction (a_conditional: detachable ET_CONDITIONAL; a_then_compound: detachable ET_COMPOUND;
 		an_elseif_parts: detachable ET_ELSEIF_PART_LIST; an_else_compound: detachable ET_COMPOUND;
 		an_end: detachable ET_KEYWORD): detachable ET_IF_INSTRUCTION
-			-- New if instruction
+			-- New 'if' instruction
 		do
 			if a_conditional /= Void then
 				create Result.make (a_conditional, a_then_compound)

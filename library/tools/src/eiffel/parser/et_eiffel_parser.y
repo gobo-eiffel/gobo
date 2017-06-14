@@ -150,6 +150,8 @@ create
 %type <detachable ET_CREATOR> Creation_clause Creation_procedure_list
 %type <detachable ET_CREATOR_LIST> Creators_opt Creators_list
 %type <detachable ET_DEBUG_INSTRUCTION> Debug_instruction
+%type <detachable ET_ELSEIF_EXPRESSION> Elseif_expression
+%type <detachable ET_ELSEIF_EXPRESSION_LIST> Elseif_expressions Elseif_expression_list
 %type <detachable ET_ELSEIF_PART> Elseif_part
 %type <detachable ET_ELSEIF_PART_LIST> Elseif_list Elseif_part_list
 %type <detachable ET_EXPORT> New_export_item
@@ -174,7 +176,8 @@ create
 %type <detachable ET_FORMAL_PARAMETER_ITEM> Formal_parameter_comma
 %type <detachable ET_FORMAL_PARAMETER_LIST> Formal_parameters_opt Formal_parameter_list
 %type <detachable ET_IDENTIFIER> Identifier Class_name
-%type <detachable ET_IF_INSTRUCTION> Conditional
+%type <detachable ET_IF_EXPRESSION> Conditional_expression
+%type <detachable ET_IF_INSTRUCTION> Conditional_instruction
 %type <detachable ET_INDEXING_LIST> Indexing_clause Indexing_clause_opt Index_list Note_list
 %type <detachable ET_INDEXING_ITEM> Index_clause Index_clause_semicolon Index_clause_impl Note_item Note_item_semicolon Note_item_impl
 %type <detachable ET_INDEXING_TERM> Index_value
@@ -3034,7 +3037,7 @@ Instruction: Creation_instruction
 		{ $$ := ast_factory.new_assignment ($1, $2, $3) }
 	| Writable E_REVERSE Expression
 		{ $$ := ast_factory.new_assignment_attempt ($1, $2, $3) }
-	| Conditional
+	| Conditional_instruction
 		{ $$ := $1 }
 	| Multi_branch
 		{ $$ := $1 }
@@ -3119,7 +3122,7 @@ Creation_region: -- Empty
 
 ------------------------------------------------------------------------------------
 
-Conditional: E_IF Expression Then_compound E_END
+Conditional_instruction: E_IF Expression Then_compound E_END
 		{ $$ := ast_factory.new_if_instruction (ast_factory.new_conditional ($1, $2), $3, Void, Void, $4) }
 	| E_IF Expression Then_compound Else_compound E_END
 		{ $$ := ast_factory.new_if_instruction (ast_factory.new_conditional ($1, $2), $3, Void, $4, $5) }
@@ -3161,6 +3164,46 @@ Elseif_part: E_ELSEIF Expression Then_compound
 		}
 	;
 
+------------------------------------------------------------------------------------
+
+Conditional_expression: E_IF Expression E_THEN Expression E_ELSE Expression E_END
+		{ $$ := ast_factory.new_if_expression (ast_factory.new_conditional ($1, $2), $3, $4, Void, $5, $6, $7) }
+	| E_IF Expression E_THEN Expression Elseif_expressions E_ELSE Expression E_END
+		{ $$ := ast_factory.new_if_expression (ast_factory.new_conditional ($1, $2), $3, $4, $5, $6, $7, $8) }
+	;
+
+Elseif_expressions: Add_counter Elseif_expression_list
+		{
+			$$ := $2
+			remove_counter
+		}
+	;
+
+Elseif_expression_list: Elseif_expression
+		{
+			$$ := ast_factory.new_elseif_expression_list (counter_value)
+			if $$ /= Void and attached $1 as l_elseif_part then
+				$$.put_first (l_elseif_part)
+			end
+		}
+	| Elseif_expression Elseif_expression_list
+		{
+			$$ := $2
+			if $$ /= Void and attached $1 as l_elseif_part then
+				$$.put_first (l_elseif_part)
+			end
+		}
+	;
+
+Elseif_expression: E_ELSEIF Expression E_THEN Expression
+		{
+			$$ := ast_factory.new_elseif_expression (ast_factory.new_conditional ($1, $2), $3, $4)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+	
 ------------------------------------------------------------------------------------
 
 Multi_branch: E_INSPECT Expression When_list_opt Explicit_else_compound E_END
@@ -3569,6 +3612,8 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 	| Across_some_expression
 		{ $$ := $1 }
 	| Across_all_expression
+		{ $$ := $1 }
+	| Conditional_expression
 		{ $$ := $1 }
 	| Manifest_tuple
 		{ $$ := $1 }

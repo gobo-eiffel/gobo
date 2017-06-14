@@ -67,6 +67,7 @@ inherit
 			process_feature_address,
 			process_hexadecimal_integer_constant,
 			process_identifier,
+			process_if_expression,
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
@@ -6664,7 +6665,7 @@ feature {NONE} -- Expression validity
 					l_type := l_formal.type
 					a_context.force_last (l_type)
 					if current_universe.attachment_type_conformance_mode then
-						if not a_context.is_type_attached and then current_attachment_scope.has_name (a_name) then
+						if not a_context.is_type_attached and then current_attachment_scope.has_formal_argument (a_name) then
 								-- Even though this formal argument has not been declared as attached,
 								-- we can guarantee that at this stage this entity is attached.
 							a_context.force_last (tokens.attached_like_current)
@@ -6685,6 +6686,217 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			check_integer_constant_validity (a_constant, a_context)
+		end
+
+	check_if_expression_validity (a_expression: ET_IF_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check validity of `a_expression'.
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			boolean_type: ET_CLASS_TYPE
+			l_conditional: ET_EXPRESSION
+			l_conditional_context: ET_NESTED_TYPE_CONTEXT
+			l_elseif: ET_ELSEIF_EXPRESSION
+			i, nb: INTEGER
+			had_error: BOOLEAN
+			l_named_type: ET_NAMED_TYPE
+			l_other_named_type: ET_NAMED_TYPE
+			l_old_object_test_scope: INTEGER
+			l_old_elseif_object_test_scope: INTEGER
+			l_old_attachment_scope: like current_attachment_scope
+			l_else_attachment_scope: like current_attachment_scope
+			l_old_initialization_scope: like current_initialization_scope
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_result_context: detachable ET_NESTED_TYPE_CONTEXT
+		do
+			has_fatal_error := False
+			boolean_type := current_universe_impl.boolean_type
+			l_conditional := a_expression.conditional.expression
+			l_conditional_context := new_context (current_type)
+			check_expression_validity (l_conditional, l_conditional_context, boolean_type)
+			if has_fatal_error then
+				had_error := True
+			elseif not l_conditional_context.same_named_type (boolean_type, current_class_impl) then
+				had_error := True
+				set_fatal_error
+				l_named_type := l_conditional_context.named_type
+				error_handler.report_vwbe0a_error (current_class, current_class_impl, l_conditional, l_named_type)
+			end
+			free_context (l_conditional_context)
+			l_old_object_test_scope := current_object_test_scope.count
+			object_test_scope_builder.build_scope (l_conditional, current_object_test_scope, current_class_impl)
+			had_error := had_error or object_test_scope_builder.has_fatal_error
+			l_old_initialization_scope := current_initialization_scope
+			l_old_attachment_scope := current_attachment_scope
+			l_else_attachment_scope := current_attachment_scope
+			if current_universe.attachment_type_conformance_mode then
+				current_initialization_scope := new_attachment_scope
+				current_initialization_scope.copy_scope (l_old_initialization_scope)
+				current_attachment_scope := new_attachment_scope
+				current_attachment_scope.copy_scope (l_old_attachment_scope)
+				l_else_attachment_scope := new_attachment_scope
+				l_else_attachment_scope.copy_scope (l_old_attachment_scope)
+				attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
+				attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
+			end
+			l_expression_context := new_context (current_type)
+			check_expression_validity (a_expression.then_expression, l_expression_context, current_target_type)
+			if has_fatal_error then
+				had_error := True
+				free_context (l_expression_context)
+			else
+				l_result_context := l_expression_context
+			end
+			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
+			object_test_scope_builder.build_negated_scope (l_conditional, current_object_test_scope, current_class_impl)
+			had_error := had_error or object_test_scope_builder.has_fatal_error
+			if attached a_expression.elseif_parts as l_elseif_parts then
+				nb := l_elseif_parts.count
+				from i := 1 until i > nb loop
+					l_elseif := l_elseif_parts.item (i)
+					if current_universe.attachment_type_conformance_mode then
+						current_attachment_scope.copy_scope (l_else_attachment_scope)
+					end
+					l_conditional := l_elseif.conditional.expression
+					l_conditional_context := new_context (current_type)
+					check_expression_validity (l_conditional, l_conditional_context, boolean_type)
+					if has_fatal_error then
+						had_error := True
+					elseif not l_conditional_context.same_named_type (boolean_type, current_class_impl) then
+						had_error := True
+						set_fatal_error
+						l_named_type := l_conditional_context.named_type
+						error_handler.report_vwbe0a_error (current_class, current_class_impl, l_conditional, l_named_type)
+					end
+					free_context (l_conditional_context)
+					l_old_elseif_object_test_scope := current_object_test_scope.count
+					object_test_scope_builder.build_scope (l_conditional, current_object_test_scope, current_class_impl)
+					had_error := had_error or object_test_scope_builder.has_fatal_error
+					if current_universe.attachment_type_conformance_mode then
+						attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
+						attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
+					end
+					l_expression_context := new_context (current_type)
+					check_expression_validity (l_elseif.then_expression, l_expression_context, current_target_type)
+					if has_fatal_error then
+						had_error := True
+						free_context (l_expression_context)
+					elseif l_result_context = Void then
+						l_result_context := l_expression_context
+					elseif l_expression_context.conforms_to_context (l_result_context, system_processor) then
+							-- The type of the current expression conforms to the type
+							-- retained so far. Keep the old type.
+						free_context (l_expression_context)
+					elseif l_result_context.conforms_to_context (l_expression_context, system_processor) then
+							-- The type retained so far conforms to the type of the
+							-- current expression. Retain this new type.
+						free_context (l_result_context)
+						l_result_context := l_expression_context
+					else
+							-- Try with different attachment marks.
+-- TODO: do the same thing with separateness marks.
+						l_result_context.force_last (tokens.detachable_like_current)
+						if l_expression_context.conforms_to_context (l_result_context, system_processor) then
+								-- The type of the current expression conforms to the detachable
+								-- version of then type retained so far. Keep the old detachable type.
+							free_context (l_expression_context)
+						else
+							l_result_context.remove_last
+							l_expression_context.force_last (tokens.detachable_like_current)
+							if l_result_context.conforms_to_context (l_expression_context, system_processor) then
+									-- The type retained so far conforms to the detachable version
+									-- of then type of the current expression. Retain this new detachable type.
+								free_context (l_result_context)
+								l_result_context := l_expression_context
+							else
+								had_error := True
+								set_fatal_error
+								l_expression_context.remove_last
+								l_named_type := l_expression_context.named_type
+								free_context (l_expression_context)
+								l_other_named_type := l_result_context.named_type
+								error_handler.report_vwce0a_error (current_class, current_class_impl, l_elseif.then_expression, l_named_type, l_other_named_type)
+							end
+						end
+					end
+					current_object_test_scope.keep_object_tests (l_old_elseif_object_test_scope)
+					object_test_scope_builder.build_negated_scope (l_conditional, current_object_test_scope, current_class_impl)
+					had_error := had_error or object_test_scope_builder.has_fatal_error
+					i := i + 1
+				end
+			end
+			if current_universe.attachment_type_conformance_mode then
+				current_attachment_scope.copy_scope (l_else_attachment_scope)
+			end
+			l_expression_context := new_context (current_type)
+			check_expression_validity (a_expression.else_expression, l_expression_context, current_target_type)
+			if has_fatal_error then
+				had_error := True
+				free_context (l_expression_context)
+			elseif l_result_context = Void then
+				l_result_context := l_expression_context
+			elseif l_expression_context.conforms_to_context (l_result_context, system_processor) then
+					-- The type of the current expression conforms to the type
+					-- retained so far. Keep the old type.
+				free_context (l_expression_context)
+			elseif l_result_context.conforms_to_context (l_expression_context, system_processor) then
+					-- The type retained so far conforms to the type of the
+					-- current expression. Retain this new type.
+				free_context (l_result_context)
+				l_result_context := l_expression_context
+			else
+					-- Try with different attachment marks.
+-- TODO: do the same thing with separateness marks.
+				l_result_context.force_last (tokens.detachable_like_current)
+				if l_expression_context.conforms_to_context (l_result_context, system_processor) then
+						-- The type of the current expression conforms to the detachable
+						-- version of then type retained so far. Keep the old detachable type.
+					free_context (l_expression_context)
+				else
+					l_result_context.remove_last
+					l_expression_context.force_last (tokens.detachable_like_current)
+					if l_result_context.conforms_to_context (l_expression_context, system_processor) then
+							-- The type retained so far conforms to the detachable version
+							-- of then type of the current expression. Retain this new detachable type.
+						free_context (l_result_context)
+						l_result_context := l_expression_context
+					else
+						had_error := True
+						set_fatal_error
+						l_expression_context.remove_last
+						l_named_type := l_expression_context.named_type
+						free_context (l_expression_context)
+						l_other_named_type := l_result_context.named_type
+						error_handler.report_vwce0a_error (current_class, current_class_impl, a_expression.else_expression, l_named_type, l_other_named_type)
+					end
+				end
+			end
+			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
+			if current_universe.attachment_type_conformance_mode then
+				free_attachment_scope (current_attachment_scope)
+				free_attachment_scope (l_else_attachment_scope)
+				free_attachment_scope (current_initialization_scope)
+				current_attachment_scope := l_old_attachment_scope
+				current_initialization_scope := l_old_initialization_scope
+			end
+			if had_error then
+				set_fatal_error
+			elseif l_result_context = Void then
+					-- Internal error: `had_error' should be True in that case.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+					-- The type of all expressions conforms to one of them.
+				a_context.copy_type_context (l_result_context)
+				report_if_expression (a_expression, tokens.like_current, a_context)
+			end
+			if l_result_context /= Void then
+				free_context (l_result_context)
+			end
 		end
 
 	check_infix_cast_expression_validity (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -7479,13 +7691,13 @@ feature {NONE} -- Expression validity
 					a_context.force_last (l_type)
 					if current_universe.attachment_type_conformance_mode then
 						if not a_context.is_type_attached then
-							if current_attachment_scope.has_name (a_name) then
+							if current_attachment_scope.has_local_variable (a_name) then
 									-- Even though this local variable has not been declared as attached,
 									-- we can guarantee that at this stage this entity is attached.
 								a_context.force_last (tokens.attached_like_current)
 							end
 						elseif not a_context.is_type_detachable and not a_context.is_type_expanded then
-							if not current_initialization_scope.has_name (a_name) then
+							if not current_initialization_scope.has_local_variable (a_name) then
 									-- Error: local variable declared as attached and
 									-- used before being initialized.
 								set_fatal_error
@@ -13036,6 +13248,18 @@ feature {NONE} -- Event handling
 		do
 		end
 
+	report_if_expression (a_expression: ET_IF_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
+			-- Report that a 'if' epxression of type `a_type' in context
+			-- of `a_context' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_expression_not_void: a_expression /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		do
+		end
+
 	report_inline_agent_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT)
 			-- Report that the declaration of the formal argument `a_formal'
 			-- of an inline agent has been processed.
@@ -14154,6 +14378,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			check_if_expression_validity (a_expression, current_context)
+		end
+
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -14593,12 +14823,12 @@ feature {NONE} -- Attachments
 				Result := current_attachment_scope.has_result
 			elseif attached {ET_IDENTIFIER} l_unparenthesized_expression as l_identifier then
 				if l_identifier.is_local then
-					Result := current_attachment_scope.has_name (l_identifier)
+					Result := current_attachment_scope.has_local_variable (l_identifier)
 				elseif l_identifier.is_argument then
-					Result := current_attachment_scope.has_name (l_identifier)
+					Result := current_attachment_scope.has_formal_argument (l_identifier)
 				elseif attached current_class.seeded_query (l_identifier.seed) as l_query and then l_query.is_attribute then
 -- TODO: see whether the attribute is declared as stable.
-					Result := current_attachment_scope.has_name (l_identifier)
+					Result := current_attachment_scope.has_attribute (l_identifier)
 				end
 			end
 		end

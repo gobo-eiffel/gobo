@@ -45,12 +45,15 @@ inherit
 			process_do_function_inline_agent,
 			process_do_procedure,
 			process_do_procedure_inline_agent,
+			process_elseif_expression,
+			process_elseif_expression_list,
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
 			process_expression_address,
 			process_external_function_inline_agent,
 			process_external_procedure_inline_agent,
+			process_if_expression,
 			process_if_instruction,
 			process_infix_expression,
 			process_inspect_instruction,
@@ -557,6 +560,25 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		do
+			an_elseif_part.conditional_expression.process (Current)
+			an_elseif_part.then_expression.process (Current)
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 		do
@@ -605,6 +627,17 @@ feature {ET_AST_NODE} -- Processing
 			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as an_arguments then
 				process_agent_argument_operand_list (an_arguments)
 			end
+		end
+
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.conditional_expression.process (Current)
+			a_expression.then_expression.process (Current)
+			if attached a_expression.elseif_parts as an_elseif_parts then
+				process_elseif_expression_list (an_elseif_parts)
+			end
+			a_expression.else_expression.process (Current)
 		end
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)

@@ -330,7 +330,7 @@ feature -- Element change
 		end
 
 	merge_scope (other: ET_ATTACHMENT_SCOPE)
-			-- Keep in `Current' only the entities which are not in `other'.
+			-- Keep in `Current' only the entities which are also in `other'.
 		require
 			other_not_void: other /= Void
 		local

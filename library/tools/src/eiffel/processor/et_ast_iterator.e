@@ -1060,6 +1060,26 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		do
+			an_elseif_part.conditional.process (Current)
+			an_elseif_part.then_keyword.process (Current)
+			an_elseif_part.then_expression.process (Current)
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 		do
@@ -1564,6 +1584,20 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_identifier.identifier.process (Current)
 			an_identifier.comma.process (Current)
+		end
+
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.conditional.process (Current)
+			a_expression.then_keyword.process (Current)
+			a_expression.then_expression.process (Current)
+			if attached a_expression.elseif_parts as l_elseif_parts then
+				l_elseif_parts.process (Current)
+			end
+			a_expression.else_keyword.process (Current)
+			a_expression.else_expression.process (Current)
+			a_expression.end_keyword.process (Current)
 		end
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)

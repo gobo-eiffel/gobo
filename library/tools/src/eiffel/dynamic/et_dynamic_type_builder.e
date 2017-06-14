@@ -54,6 +54,7 @@ inherit
 			report_formal_argument,
 			report_formal_argument_declaration,
 			report_function_address,
+			report_if_expression,
 			report_inline_agent_formal_argument_declaration,
 			report_inline_agent_local_variable_declaration,
 			report_inline_agent_result_declaration,
@@ -1416,6 +1417,18 @@ feature {NONE} -- Event handling
 				l_dynamic_query.set_address (True)
 -- TODO: the dynamic type set of the formal arguments of `l_dynamic_query'
 -- may be altered when its address is passed to an external routine.
+			end
+		end
+
+	report_if_expression (a_expression: ET_IF_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
+			-- Report that a 'if' epxression of type `a_type' in context
+			-- of `a_context' has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
+				set_dynamic_type_set (l_type, a_expression)
 			end
 		end
 

@@ -46,6 +46,7 @@ inherit
 			process_feature_address,
 			process_hexadecimal_integer_constant,
 			process_identifier,
+			process_if_expression,
 			process_infix_cast_expression,
 			process_infix_expression,
 			process_manifest_array,
@@ -101,6 +102,10 @@ feature {NONE} -- Initialization
 			current_context := new_context (current_type)
 			current_target_type := tokens.unknown_class
 			free_context (current_context)
+				-- Attachments.
+			create current_attachment_scope.make
+			create attachment_scope_builder.make
+			create unused_attachment_scopes.make (40)
 		end
 
 feature -- Basic operations
@@ -1016,6 +1021,13 @@ feature {NONE} -- Expression processing
 				l_formal := l_arguments.formal_argument (l_seed)
 				l_type := l_formal.type
 				a_context.force_last (l_type)
+				if current_universe.attachment_type_conformance_mode then
+					if not a_context.is_type_attached and then current_attachment_scope.has_formal_argument (a_name) then
+							-- Even though this formal argument has not been declared as attached,
+							-- we can guarantee that at this stage this entity is attached.
+						a_context.force_last (tokens.attached_like_current)
+					end
+				end
 			end
 		end
 
@@ -1028,6 +1040,175 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		do
 			find_integer_constant_type (a_constant, a_context)
+		end
+
+	find_if_expression_type (a_expression: ET_IF_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_conditional: ET_EXPRESSION
+			l_elseif: ET_ELSEIF_EXPRESSION
+			i, nb: INTEGER
+			had_error: BOOLEAN
+			l_old_attachment_scope: like current_attachment_scope
+			l_else_attachment_scope: like current_attachment_scope
+			l_detachable_any_type: ET_CLASS_TYPE
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_result_context: detachable ET_NESTED_TYPE_CONTEXT
+		do
+			reset_fatal_error (False)
+			l_conditional := a_expression.conditional.expression
+			l_old_attachment_scope := current_attachment_scope
+			l_else_attachment_scope := current_attachment_scope
+			if current_universe.attachment_type_conformance_mode then
+				current_attachment_scope := new_attachment_scope
+				current_attachment_scope.copy_scope (l_old_attachment_scope)
+				l_else_attachment_scope := new_attachment_scope
+				l_else_attachment_scope.copy_scope (l_old_attachment_scope)
+				attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
+				attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
+			end
+			l_detachable_any_type := current_system.detachable_any_type
+			l_expression_context := new_context (current_type)
+			find_expression_type (a_expression.then_expression, l_expression_context, l_detachable_any_type)
+			if has_fatal_error then
+				had_error := True
+				free_context (l_expression_context)
+			else
+				l_result_context := l_expression_context
+			end
+			if attached a_expression.elseif_parts as l_elseif_parts then
+				nb := l_elseif_parts.count
+				from i := 1 until i > nb loop
+					l_elseif := l_elseif_parts.item (i)
+					if current_universe.attachment_type_conformance_mode then
+						current_attachment_scope.copy_scope (l_else_attachment_scope)
+					end
+					l_conditional := l_elseif.conditional.expression
+					if current_universe.attachment_type_conformance_mode then
+						attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
+						attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
+					end
+					l_expression_context := new_context (current_type)
+					find_expression_type (l_elseif.then_expression, l_expression_context, l_detachable_any_type)
+					if has_fatal_error then
+						had_error := True
+						free_context (l_expression_context)
+					elseif l_result_context = Void then
+						l_result_context := l_expression_context
+					elseif l_expression_context.conforms_to_context (l_result_context, system_processor) then
+							-- The type of the current expression conforms to the type
+							-- retained so far. Keep the old type.
+						free_context (l_expression_context)
+					elseif l_result_context.conforms_to_context (l_expression_context, system_processor) then
+							-- The type retained so far conforms to the type of the
+							-- current expression. Retain this new type.
+						free_context (l_result_context)
+						l_result_context := l_expression_context
+					else
+							-- Try with different attachment marks.
+-- TODO: do the same thing with separateness marks.
+						l_result_context.force_last (tokens.detachable_like_current)
+						if l_expression_context.conforms_to_context (l_result_context, system_processor) then
+								-- The type of the current expression conforms to the detachable
+								-- version of then type retained so far. Keep the old detachable type.
+							free_context (l_expression_context)
+						else
+							l_result_context.remove_last
+							l_expression_context.force_last (tokens.detachable_like_current)
+							if l_result_context.conforms_to_context (l_expression_context, system_processor) then
+									-- The type retained so far conforms to the detachable version
+									-- of then type of the current expression. Retain this new detachable type.
+								free_context (l_result_context)
+								l_result_context := l_expression_context
+							else
+								free_context (l_expression_context)
+									-- Internal error.
+									-- This error should have already been reported when checking
+									-- `current_feature' (using ET_FEATURE_CHECKER for example).
+								had_error := True
+								set_fatal_error
+								if internal_error_enabled or not current_class.has_implementation_error then
+									error_handler.report_giaaa_error
+								end
+							end
+						end
+					end
+					i := i + 1
+				end
+			end
+			if current_universe.attachment_type_conformance_mode then
+				current_attachment_scope.copy_scope (l_else_attachment_scope)
+			end
+			l_expression_context := new_context (current_type)
+			find_expression_type (a_expression.else_expression, l_expression_context, l_detachable_any_type)
+			if has_fatal_error then
+				had_error := True
+				free_context (l_expression_context)
+			elseif l_result_context = Void then
+				l_result_context := l_expression_context
+			elseif l_expression_context.conforms_to_context (l_result_context, system_processor) then
+					-- The type of the current expression conforms to the type
+					-- retained so far. Keep the old type.
+				free_context (l_expression_context)
+			elseif l_result_context.conforms_to_context (l_expression_context, system_processor) then
+					-- The type retained so far conforms to the type of the
+					-- current expression. Retain this new type.
+				free_context (l_result_context)
+				l_result_context := l_expression_context
+			else
+					-- Try with different attachment marks.
+-- TODO: do the same thing with separateness marks.
+				l_result_context.force_last (tokens.detachable_like_current)
+				if l_expression_context.conforms_to_context (l_result_context, system_processor) then
+						-- The type of the current expression conforms to the detachable
+						-- version of then type retained so far. Keep the old detachable type.
+					free_context (l_expression_context)
+				else
+					l_result_context.remove_last
+					l_expression_context.force_last (tokens.detachable_like_current)
+					if l_result_context.conforms_to_context (l_expression_context, system_processor) then
+							-- The type retained so far conforms to the detachable version
+							-- of then type of the current expression. Retain this new detachable type.
+						free_context (l_result_context)
+						l_result_context := l_expression_context
+					else
+						free_context (l_expression_context)
+							-- Internal error.
+							-- This error should have already been reported when checking
+							-- `current_feature' (using ET_FEATURE_CHECKER for example).
+						had_error := True
+						set_fatal_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
+					end
+				end
+			end
+			if current_universe.attachment_type_conformance_mode then
+				free_attachment_scope (current_attachment_scope)
+				free_attachment_scope (l_else_attachment_scope)
+				current_attachment_scope := l_old_attachment_scope
+			end
+			if had_error then
+				set_fatal_error
+			elseif l_result_context = Void then
+					-- Internal error: `had_error' should be True in that case.
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			else
+					-- The type of all expressions conforms to one of them.
+				a_context.copy_type_context (l_result_context)
+			end
+			if l_result_context /= Void then
+				free_context (l_result_context)
+			end
 		end
 
 	find_infix_cast_expression_type (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -1174,6 +1355,15 @@ feature {NONE} -- Expression processing
 				l_local := l_locals.local_variable (l_seed)
 				l_type := l_local.type
 				a_context.force_last (l_type)
+				if current_universe.attachment_type_conformance_mode then
+					if not a_context.is_type_attached then
+						if current_attachment_scope.has_local_variable (a_name) then
+								-- Even though this local variable has not been declared as attached,
+								-- we can guarantee that at this stage this entity is attached.
+							a_context.force_last (tokens.attached_like_current)
+						end
+					end
+				end
 			end
 		end
 
@@ -1565,6 +1755,7 @@ feature {NONE} -- Expression processing
 				else
 					find_expression_type (l_object_test.expression, a_context, current_system.detachable_any_type)
 				end
+				a_context.force_last (tokens.attached_like_current)
 			end
 		end
 
@@ -1874,6 +2065,15 @@ feature {NONE} -- Expression processing
 				end
 			else
 				a_context.force_last (l_type)
+				if current_universe.attachment_type_conformance_mode then
+					if not a_context.is_type_attached then
+						if current_attachment_scope.has_result then
+								-- Even though this 'Result' entity has not been declared as attached,
+								-- we can guarantee that at this stage it is attached.
+							a_context.force_last (tokens.attached_like_current)
+						end
+					end
+				end
 			end
 		end
 
@@ -3145,6 +3345,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			find_if_expression_type (a_expression, current_context)
+		end
+
 	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -3448,6 +3654,40 @@ feature {NONE} -- Access
 	current_target_type: ET_TYPE_CONTEXT
 			-- Type of the target of expression being processed
 
+feature {NONE} -- Attachments
+
+	current_attachment_scope: ET_ATTACHMENT_SCOPE
+			-- Attachment scopes, to determine whether a given entity
+			-- (local variable, Result, formal argument, stable attribute)
+			-- can be considered as attached (when declared as detachable)
+
+	attachment_scope_builder: ET_ATTACHMENT_SCOPE_BUILDER
+			-- Attachment scope builder
+
+	new_attachment_scope: ET_ATTACHMENT_SCOPE
+			-- New attachment scope
+		do
+			if unused_attachment_scopes.is_empty then
+				create Result.make
+			else
+				Result := unused_attachment_scopes.last
+				unused_attachment_scopes.remove_last
+			end
+		ensure
+			new_attachment_scope_not_void: Result /= Void
+		end
+
+	free_attachment_scope (a_attachment_scope: ET_ATTACHMENT_SCOPE)
+			-- Free `a_attachment_scope' so that it can be reused.
+		require
+			a_attachment_scope_not_void: a_attachment_scope /= Void
+		do
+			unused_attachment_scopes.force_last (a_attachment_scope)
+		end
+
+	unused_attachment_scopes: DS_ARRAYED_LIST [ET_ATTACHMENT_SCOPE]
+			-- Attachment scopes that are not currently used
+
 feature {NONE} -- Status report
 
 	in_assertion: BOOLEAN
@@ -3529,5 +3769,10 @@ invariant
 	unused_contexts_not_void: unused_contexts /= Void
 	no_void_unused_context: not unused_contexts.has_void
 	current_target_type_not_void: current_target_type /= Void
+		-- Attachments.
+	current_attachment_scope_not_void: current_attachment_scope /= Void
+	attachment_scope_builder_not_void: attachment_scope_builder /= Void
+	unused_attachment_scopes_not_void: unused_attachment_scopes /= Void
+	no_void_unused_attachment_scope: not unused_attachment_scopes.has_void
 
 end

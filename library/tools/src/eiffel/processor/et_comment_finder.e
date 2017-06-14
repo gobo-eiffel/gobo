@@ -87,6 +87,8 @@ inherit
 			process_dot_feature_name,
 			process_dotnet_function,
 			process_dotnet_procedure,
+			process_elseif_expression,
+			process_elseif_expression_list,
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
@@ -116,6 +118,7 @@ inherit
 			process_hexadecimal_integer_constant,
 			process_identifier_colon,
 			process_identifier_comma,
+			process_if_expression,
 			process_if_instruction,
 			process_indexing,
 			process_indexing_semicolon,
@@ -849,6 +852,22 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		do
+			if not excluded_nodes.has (an_elseif_part) then
+				precursor (an_elseif_part)
+			end
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
+			end
+		end
+
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 		do
@@ -1081,6 +1100,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_identifier) then
 				precursor (an_identifier)
+			end
+		end
+
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			if not excluded_nodes.has (a_expression) then
+				precursor (a_expression)
 			end
 		end
 

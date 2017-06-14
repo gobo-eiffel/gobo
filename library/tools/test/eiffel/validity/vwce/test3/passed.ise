@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VWCE
+
+Error: types of expressions in two or more Then_part(s) or Else_part are different.
+What to do: use expressions of the same type.
+
+Class: AA
+Feature: make
+Type in Then_part: attached STRING_8
+Type in Else(if)_part: attached TUPLE [INTEGER_32]
+Line: 13
+      do
+->      a := if True then "gobo" else [1] end
+      end
+
+-------------------------------------------------------------------------------
