@@ -1362,6 +1362,14 @@ feature {NONE} -- Expression processing
 								-- we can guarantee that at this stage this entity is attached.
 							a_context.force_last (tokens.attached_like_current)
 						end
+					elseif not a_context.is_type_detachable and not a_context.is_type_expanded then
+						if system_processor.is_ise then
+								-- In ISE Eiffel, local variables (including 'Result') are considered
+								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+							if not current_attachment_scope.has_result then
+								a_context.force_last (tokens.detachable_like_current)
+							end
+						end
 					end
 				end
 			end
@@ -2071,6 +2079,14 @@ feature {NONE} -- Expression processing
 								-- Even though this 'Result' entity has not been declared as attached,
 								-- we can guarantee that at this stage it is attached.
 							a_context.force_last (tokens.attached_like_current)
+						end
+					elseif not (current_inline_agent = Void and in_postcondition) and then (not a_context.is_type_detachable and not a_context.is_type_expanded) then
+						if system_processor.is_ise then
+								-- In ISE Eiffel, local variables (including 'Result') are considered
+								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+							if not current_attachment_scope.has_result then
+								a_context.force_last (tokens.detachable_like_current)
+							end
 						end
 					end
 				end

@@ -1039,16 +1039,19 @@ feature {NONE} -- Feature validity
 				end
 				if current_universe.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
-						if not current_initialization_scope.has_result then
-								-- Error: 'Result' entity declared as attached is not initialized
+						if system_processor.is_ise and then current_attachment_scope.has_result then
+								-- In ISE Eiffel, local variables (including 'Result') are considered
+								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+								-- Here we know that 'Result' is attached anyway.
+						elseif current_initialization_scope.has_result then
+								-- 'Result' entity declared as attached is correctly initialized
 								-- at the end of the body the function.
-							if not current_initialization_scope.is_code_unreachable then
-									-- Starting with ISE 7.0.8.7345, void-safety errors in
-									-- unreachable code are not reported.
-								had_error := True
-								set_fatal_error
-								error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
-							end
+						elseif not current_initialization_scope.is_code_unreachable then
+								-- Starting with ISE 7.0.8.7345, void-safety errors in
+								-- unreachable code are not reported.
+							had_error := True
+							set_fatal_error
+							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
 						end
 					end
 				end
@@ -1298,7 +1301,11 @@ feature {NONE} -- Feature validity
 							-- When the body is empty, we consider that it is not an
 							-- initialization declaration.
 						if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
-							if not current_initialization_scope.has_result then
+							if system_processor.is_ise and then current_attachment_scope.has_result then
+									-- In ISE Eiffel, local variables (including 'Result') are considered
+									-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+									-- Here we know that 'Result' is attached anyway.
+							elseif not current_initialization_scope.has_result then
 									-- Error: 'Result' entity declared as attached is not initialized
 									-- at the end of the body of the attribute.
 								had_error := True
@@ -1462,16 +1469,19 @@ feature {NONE} -- Feature validity
 				end
 				if current_universe.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
-						if not current_initialization_scope.has_result then
-								-- Error: 'Result' entity declared as attached is not initialized
-								-- at the end of the body of the function.
-							if not current_initialization_scope.is_code_unreachable then
-									-- Starting with ISE 7.0.8.7345, void-safety errors in
-									-- unreachable code are not reported.
-								had_error := True
-								set_fatal_error
-								error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
-							end
+						if system_processor.is_ise and then current_attachment_scope.has_result then
+								-- In ISE Eiffel, local variables (including 'Result') are considered
+								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+								-- Here we know that 'Result' is attached anyway.
+						elseif current_initialization_scope.has_result then
+								-- 'Result' entity declared as attached is correctly initialized
+								-- at the end of the body the function.
+						elseif not current_initialization_scope.is_code_unreachable then
+								-- Starting with ISE 7.0.8.7345, void-safety errors in
+								-- unreachable code are not reported.
+							had_error := True
+							set_fatal_error
+							error_handler.report_vevi0c_error (current_class, current_class_impl, a_feature)
 						end
 					end
 				end
@@ -3278,7 +3288,7 @@ feature {NONE} -- Instruction validity
 						else
 							check_writable_validity (l_target, l_target_context)
 							if not has_fatal_error then
-								l_target_type := l_target_context.last
+								l_target_type := l_target_context.first
 								if l_explicit_creation_type /= Void then
 									l_creation_type := l_explicit_creation_type
 								else
@@ -3343,7 +3353,7 @@ feature {NONE} -- Instruction validity
 				if l_procedure = Void then
 					check_writable_validity (l_target, l_target_context)
 					if not has_fatal_error then
-						l_target_type := l_target_context.last
+						l_target_type := l_target_context.first
 						if l_explicit_creation_type /= Void then
 							l_creation_type := l_explicit_creation_type
 						else
@@ -7697,7 +7707,13 @@ feature {NONE} -- Expression validity
 								a_context.force_last (tokens.attached_like_current)
 							end
 						elseif not a_context.is_type_detachable and not a_context.is_type_expanded then
-							if not current_initialization_scope.has_local_variable (a_name) then
+							if system_processor.is_ise then
+									-- In ISE Eiffel, local variables (including 'Result') are considered
+									-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+								if not current_attachment_scope.has_result then
+									a_context.force_last (tokens.detachable_like_current)
+								end
+							elseif not current_initialization_scope.has_local_variable (a_name) then
 									-- Error: local variable declared as attached and
 									-- used before being initialized.
 								set_fatal_error
@@ -9293,7 +9309,13 @@ feature {NONE} -- Expression validity
 								a_context.force_last (tokens.attached_like_current)
 							end
 						elseif not (current_inline_agent = Void and in_postcondition) and then (not a_context.is_type_detachable and not a_context.is_type_expanded) then
-							if not current_initialization_scope.has_result then
+							if system_processor.is_ise then
+									-- In ISE Eiffel, local variables (including 'Result') are considered
+									-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+								if not current_attachment_scope.has_result then
+									a_context.force_last (tokens.detachable_like_current)
+								end
+							elseif not current_initialization_scope.has_result then
 									-- Error: 'Result' entity declared as attached and
 									-- used before being initialized.
 								set_fatal_error
@@ -10150,7 +10172,8 @@ feature {NONE} -- Expression validity
 	check_writable_validity (a_writable: ET_WRITABLE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_writable' in `current_feature' of `current_class'.
 			-- Set `has_fatal_error' is a fatal error occurred. Otherwise
-			-- the type of `a_writable' is appended to `a_context'.
+			-- the type of `a_writable' is appended to `a_context', possibly followed
+			-- by an attachment mark indicator.
 		require
 			a_writable_not_void: a_writable /= Void
 			a_context_not_void: a_context /= Void
@@ -10185,6 +10208,15 @@ feature {NONE} -- Expression validity
 					end
 				else
 					a_context.force_last (l_type)
+					if current_universe.attachment_type_conformance_mode then
+						if not a_context.is_type_detachable and not a_context.is_type_expanded then
+							if system_processor.is_ise then
+									-- In ISE Eiffel, local variables (including 'Result') are considered
+									-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+								a_context.force_last (tokens.detachable_like_current)
+							end
+						end
+					end
 					report_result_assignment_target (l_result)
 				end
 			elseif attached {ET_IDENTIFIER} a_writable as l_identifier then
@@ -10202,6 +10234,15 @@ feature {NONE} -- Expression validity
 						l_local := l_locals.local_variable (l_seed)
 						l_type := l_local.type
 						a_context.force_last (l_type)
+						if current_universe.attachment_type_conformance_mode then
+							if not a_context.is_type_detachable and not a_context.is_type_expanded then
+								if system_processor.is_ise then
+										-- In ISE Eiffel, local variables (including 'Result') are considered
+										-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+									a_context.force_last (tokens.detachable_like_current)
+								end
+							end
+						end
 						report_local_assignment_target (l_identifier, l_local)
 					end
 				elseif l_seed /= 0 then
@@ -12139,10 +12180,17 @@ feature {NONE} -- Agent validity
 					had_error := had_error or has_fatal_error
 				end
 				if current_universe.attachment_type_conformance_mode then
-					if not l_type.is_type_detachable (a_context) and not l_type.is_type_expanded (a_context) then
-						if not current_initialization_scope.has_result then
-								-- Error: 'Result' entity declared as attached is not initialized
-								-- at the end of the body of the inline agent.
+					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
+						if system_processor.is_ise and then current_attachment_scope.has_result then
+								-- In ISE Eiffel, local variables (including 'Result') are considered
+								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+								-- Here we know that 'Result' is attached anyway.
+						elseif current_initialization_scope.has_result then
+								-- 'Result' entity declared as attached is correctly initialized
+								-- at the end of the body the function.
+						elseif not current_initialization_scope.is_code_unreachable then
+								-- Starting with ISE 7.0.8.7345, void-safety errors in
+								-- unreachable code are not reported.
 							had_error := True
 							set_fatal_error
 							error_handler.report_vevi0d_error (current_class, current_class_impl, an_expression)
@@ -12563,10 +12611,17 @@ feature {NONE} -- Agent validity
 					had_error := had_error or has_fatal_error
 				end
 				if current_universe.attachment_type_conformance_mode then
-					if not l_type.is_type_detachable (a_context) and not l_type.is_type_expanded (a_context) then
-						if not current_initialization_scope.has_result then
-								-- Error: 'Result' entity declared as attached is not initialized
-								-- at the end of the body of the inline agent.
+					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
+						if system_processor.is_ise and then current_attachment_scope.has_result then
+								-- In ISE Eiffel, local variables (including 'Result') are considered
+								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
+								-- Here we know that 'Result' is attached anyway.
+						elseif current_initialization_scope.has_result then
+								-- 'Result' entity declared as attached is correctly initialized
+								-- at the end of the body the function.
+						elseif not current_initialization_scope.is_code_unreachable then
+								-- Starting with ISE 7.0.8.7345, void-safety errors in
+								-- unreachable code are not reported.
 							had_error := True
 							set_fatal_error
 							error_handler.report_vevi0d_error (current_class, current_class_impl, an_expression)

@@ -58,6 +58,9 @@
   multi-threaded environment.
 * Added support for conditional expressions 
   (e.g. `if b then exp1 else exp2 end`)
+* Interoperability with ISE Eiffel: local variables (including
+  'Result') are considered as 'detachable' (even when the 
+  'attached' keyword is explicitly specified).
 
 ### Gobo Eiffel Utility Library
 
