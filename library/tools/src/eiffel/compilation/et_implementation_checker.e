@@ -89,11 +89,6 @@ feature -- Status report
 			Result := system_processor.suppliers_enabled
 		end
 
-	has_class_not_processed: BOOLEAN
-			-- Is there some classes which could not be processed
-			-- because their parents was still in the middle of being
-			-- processed in another thread by another processor
-
 feature -- Processing
 
 	process_class (a_class: ET_CLASS)
@@ -218,11 +213,9 @@ feature {NONE} -- Processing
 							end
 							i1 := i1 + 1
 						end
-						if l_parent_not_checked then
-								-- Some parents have not been fully checked yet.
-								-- Postpone the processing of `current_class'.
-							has_class_not_processed := True
-						else
+						if not l_parent_not_checked then
+								-- When some parents have not been fully checked yet,
+								-- then we postpone the processing of `current_class'.
 							error_handler.report_compilation_status (Current, current_class, system_processor)
 							if a_error_in_parent then
 								set_fatal_error (current_class)
