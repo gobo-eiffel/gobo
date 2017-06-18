@@ -43,17 +43,20 @@ feature -- Access
 	Command_line: IMMUTABLE_STRING_32
 			-- Full command line: `command_name' followed by arguments.
 		local
-			i: INTEGER
+			i, n: INTEGER
 			l_result: STRING_32
 		once
+			n := argument_count
 				-- Approximation of size, 10 characters per argument.
-			create l_result.make (command_name.count + argument_count * 10)
+			create l_result.make (command_name.count + n * 10)
 			from
 				i := 0
 			until
-				i > argument_count
+				i > n
 			loop
-				l_result.append_character (' ')
+				if i > 0 then
+					l_result.append_character (' ')
+				end
 				l_result.append (argument (i))
 				i := i + 1
 			end
