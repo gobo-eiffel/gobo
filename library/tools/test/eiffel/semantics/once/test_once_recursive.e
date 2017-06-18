@@ -33,16 +33,31 @@ feature -- Test
 			-- says that the recursive calls to once-functions should return the value of
 			-- 'Result' as it was when the recursive calls occurred.
 		do
-			assert_integers_equal ("one", 1, f (1))
+			assert_integers_equal ("one", 1, f1 (1))
 		end
 
-feature -- Once function
+	test_once_non_basic_expanded
+			-- Test recursive once functions with non-basic expanded types.
+		do
+			assert_integers_equal ("one", 1, f2 (1).attr)
+		end
+			
+feature -- Once functions
 
-	f (i: INTEGER): INTEGER
+	f1 (i: INTEGER): INTEGER
 			-- Recursive once function
 		once
+			Result := 2
+			assert_integers_equal ("two", 2, f1 (0))
 			Result := i
-			Result := f (i + 1)
 		end
 
+	f2 (i: INTEGER): AA_EXPANDED
+			-- Recursive once function with non-basic expanded type
+		once
+			Result.set_attr (2)
+			assert_integers_equal ("two", 2, f2 (0).attr)
+			Result.set_attr (i)
+		end
+		
 end
