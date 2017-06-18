@@ -1366,7 +1366,7 @@ feature {NONE} -- Expression processing
 						if system_processor.is_ise then
 								-- In ISE Eiffel, local variables (including 'Result') are considered
 								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
-							if not current_attachment_scope.has_result then
+							if not current_attachment_scope.has_local_variable (a_name) then
 								a_context.force_last (tokens.detachable_like_current)
 							end
 						end

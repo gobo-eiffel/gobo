@@ -2964,6 +2964,20 @@ feature {NONE} -- Instruction validity
 						if attached {ET_RESULT} l_target then
 							if not l_target_type_detachable then
 								current_initialization_scope.add_result
+							elseif attached current_closure_impl.type as l_result_type and then not l_result_type.is_type_detachable (current_type) then
+								if l_result_type.is_type_attached (current_type) then
+									if l_source_type_attached or l_source_entity_attached then
+										current_initialization_scope.add_result
+									else
+										current_initialization_scope.remove_result
+									end
+								else
+									if not l_source_context.is_type_detachable then
+										current_initialization_scope.add_result
+									else
+										current_initialization_scope.remove_result
+									end
+								end
 							end
 							if not l_target_type_attached then
 								if l_source_type_attached or l_source_entity_attached then
@@ -3461,6 +3475,8 @@ feature {NONE} -- Instruction validity
 						if current_universe.attachment_type_conformance_mode then
 							if attached {ET_RESULT} l_target then
 								if not l_target_context.is_type_detachable then
+									current_initialization_scope.add_result
+								elseif attached current_closure_impl.type as l_result_type and then not l_result_type.is_type_detachable (current_type) then
 									current_initialization_scope.add_result
 								end
 								if not l_target_context.is_type_attached then
@@ -7710,7 +7726,7 @@ feature {NONE} -- Expression validity
 							if system_processor.is_ise then
 									-- In ISE Eiffel, local variables (including 'Result') are considered
 									-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
-								if not current_attachment_scope.has_result then
+								if not current_attachment_scope.has_local_variable (a_name) then
 									a_context.force_last (tokens.detachable_like_current)
 								end
 							elseif not current_initialization_scope.has_local_variable (a_name) then

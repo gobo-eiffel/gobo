@@ -1,19 +1,17 @@
 -------------------------------------------------------------------------------
 
-Error code: VJAR
+Error code: VEVI
 
-Type error: source of assignment is not compatible with target. 
-What to do: make sure that type of source (right-hand side)
-  is compatible with type of target. 
+Error: variable is not properly set.
+What to do: ensure the variable is properly set by the corresponding
+  setter instruction.
 
 Class: BB [reference G]
 Feature: f
-Target name: Result
-Target type: Generic #1
-Source type: [detachable] NONE
-Line: 8
-        Result := a
-->      Result := Void
-      end
+Variable: Result
+Line: 9
+        Result := Void
+->    end
+      
 
 -------------------------------------------------------------------------------
