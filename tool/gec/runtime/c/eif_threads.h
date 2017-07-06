@@ -96,9 +96,9 @@ extern "C" {
 #define eif_thr_join_all() GE_thread_join_all()
 
 /* THREAD */
-#define eif_thr_create_with_attr(current_obj,init_func,set_terminated_func,attr) GE_thread_create_with_attr((current_obj),(init_func),(set_terminated_func),(EIF_THR_ATTR_TYPE*)(attr))
-#define eif_thr_wait(obj,get_terminated) GE_thread_wait((obj),(get_terminated))
-#define eif_thr_wait_with_timeout(obj,get_terminated,tms) GE_thread_wait_with_timeout((obj),(get_terminated),(tms))
+#define eif_thr_create_with_attr(current_obj,init_func,set_terminated_func,attr) GE_thread_create_with_attr((current_obj),(void (*)(EIF_REFERENCE))(init_func),(void (*)(EIF_REFERENCE,EIF_BOOLEAN))(set_terminated_func),(EIF_THR_ATTR_TYPE*)(attr))
+#define eif_thr_wait(obj,get_terminated) GE_thread_wait((obj),(EIF_BOOLEAN (*)(EIF_REFERENCE))(get_terminated))
+#define eif_thr_wait_with_timeout(obj,get_terminated,tms) GE_thread_wait_with_timeout((obj),(EIF_BOOLEAN (*)(EIF_REFERENCE))(get_terminated),(tms))
 #define eif_thr_last_thread() GE_last_thread_created()
 #define eif_thr_exit() GE_thread_exit()
 

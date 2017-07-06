@@ -1330,11 +1330,15 @@ static void* GE_thread_routine(void* arg)
 	GE_thread_context* l_thread_context = (GE_thread_context*)arg;
 	GE_context l_context = GE_default_context;
 
+	SIGBLOCK;
+	GE_unprotected_mutex_lock((EIF_POINTER)l_thread_context->parent_context->children_mutex);
 	l_context.thread = l_thread_context;
 	GE_thread_init_onces(&l_context);
 	GE_init_exception(&l_context);
 	GE_register_thread_context(&l_context);
 	GE_thread_set_priority(l_thread_context->thread_id, l_thread_context->initial_priority);
+	GE_unprotected_mutex_unlock((EIF_POINTER)l_thread_context->parent_context->children_mutex);
+	SIGRESUME;
 	l_thread_context->routine(l_thread_context->current);
 	GE_thread_exit();
 #ifdef EIF_WINDOWS
@@ -1377,10 +1381,11 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 	GE_thread_context* l_current_thread_context;
 	EIF_MUTEX_TYPE* l_mutex;
 	EIF_COND_TYPE* l_condition_variable;
+	int l_raise_error = 0;
 
 	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
 	if (!l_thread_context) {
-		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
+		l_raise_error = 1;
 	} else {
 		l_thread_context->current = current;
 		l_thread_context->routine = routine;
@@ -1434,6 +1439,8 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 					/* We always create threads detached. */
 				pthread_attr_setdetachstate(&l_attr, PTHREAD_CREATE_DETACHED);
 
+				SIGBLOCK;
+				GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_thread_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
 					l_current_thread_context->last_thread_id = l_thread_id;
@@ -1441,29 +1448,27 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				} else {
 					pthread_attr_destroy(&l_attr);
 					GE_free(l_thread_context);
-					SIGBLOCK;
-					GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 					l_current_thread_context->n_children--;
-					GE_unprotected_mutex_unlock((EIF_POINTER)l_current_thread_context->children_mutex);
-					SIGRESUME;
-					GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
+					l_raise_error = 1;
 				}
+				GE_unprotected_mutex_unlock((EIF_POINTER)l_current_thread_context->children_mutex);
+				SIGRESUME;
 			}
 		}
 #elif defined EIF_WINDOWS
+		SIGBLOCK;
+		GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)attr->stack_size, GE_thread_routine, l_thread_context, 0, NULL);
 		if (l_thread_id == 0) {
 			GE_free(l_thread_context);
-			SIGBLOCK;
-			GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 			l_current_thread_context->n_children--;
-			GE_unprotected_mutex_unlock((EIF_POINTER)l_current_thread_context->children_mutex);
-			SIGRESUME;
-			GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
+			l_raise_error = 1;
 		} else {
 			l_thread_context->thread_id = l_thread_id;
 			l_current_thread_context->last_thread_id = l_thread_id;
 		}
+		GE_unprotected_mutex_unlock((EIF_POINTER)l_current_thread_context->children_mutex);
+		SIGRESUME;
 #else
 		GE_free(l_thread_context);
 		SIGBLOCK;
@@ -1471,8 +1476,11 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 		l_current_thread_context->n_children--;
 		GE_unprotected_mutex_unlock((EIF_POINTER)l_current_thread_context->children_mutex);
 		SIGRESUME;
-		GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
+		l_raise_error = 1;
 #endif
+	}
+	if (l_raise_error) {
+		GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 	}
 }
 
@@ -1683,8 +1691,7 @@ void GE_thread_exit(void)
 			}
 			GE_free(l_thread_context);
 		}
-#ifdef GE_USE_POSIX_THREADS
-#elif defined EIF_WINDOWS
+#ifdef EIF_WINDOWS
 		if (!CloseHandle(l_thread_id)) {
 			GE_raise_with_message(GE_EX_EXT, "Cannot close thread");
 		}
