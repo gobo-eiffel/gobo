@@ -85,13 +85,13 @@ feature -- Test
 				ise_version := ise_latest
 			end
 			create l_system_processor.make
-			l_system_processor.set_ise_version_recursive (ise_version)
-			l_system_processor.set_ecma_version_recursive (ecma_version)
+			l_system_processor.set_ise_version (ise_version)
+			l_system_processor.set_ecma_version (ecma_version)
 				-- We restrict this test to files that contain only one class.
-			l_system_processor.set_preparse_single_mode_recursive
+			l_system_processor.set_preparse_single_mode
 			create an_eiffel_ast_factory.make
 			an_eiffel_ast_factory.set_keep_all_breaks (True)
-			l_system_processor.set_ast_factory_recursive (an_eiffel_ast_factory)
+			l_system_processor.set_ast_factory (an_eiffel_ast_factory)
 			a_system.preparse_recursive (l_system_processor)
 			a_system.classes_do_recursive (agent check_class (?, l_system_processor))
 		end

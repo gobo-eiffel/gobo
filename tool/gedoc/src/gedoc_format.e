@@ -103,7 +103,7 @@ feature -- Execution
 		local
 			dt1: detachable DT_DATE_TIME
 		do
-			system_processor.set_benchmark_shown_recursive (benchmark_flag or not silent_flag)
+			system_processor.set_benchmark_shown (benchmark_flag or not silent_flag)
 			dt1 := system_processor.benchmark_start_time
 			parse_input_file (input_filename)
 			if not has_error and attached last_system as l_last_system then
@@ -423,18 +423,18 @@ feature {NONE} -- Processing
 		do
 			system_processor.error_handler.set_ise
 			system_processor.error_handler.set_verbose (verbose_flag)
-			system_processor.set_benchmark_shown_recursive (benchmark_flag or not silent_flag)
-			system_processor.set_nested_benchmark_shown_recursive (benchmark_flag)
-			system_processor.set_metrics_shown_recursive (metrics_flag)
-			system_processor.set_ise_version_recursive (ise_version)
-			system_processor.set_unknown_builtin_reported_recursive (False)
+			system_processor.set_benchmark_shown (benchmark_flag or not silent_flag)
+			system_processor.set_nested_benchmark_shown (benchmark_flag)
+			system_processor.set_metrics_shown (metrics_flag)
+			system_processor.set_ise_version (ise_version)
+			system_processor.set_unknown_builtin_reported (False)
 			a_system.set_unique_universe_names
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_attachment_type_conformance_mode (False))
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_target_type_attachment_mode (False))
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark))
 			create l_ast_factory.make
 			l_ast_factory.set_keep_all_comments (True)
-			system_processor.set_ast_factory_recursive (l_ast_factory)
+			system_processor.set_ast_factory (l_ast_factory)
 			if input_classes.is_empty then
 					-- If `input_classes' is not empty, it means that we got them
 					-- from an Eiffel files as input (`parse_eiffel_file'). In that

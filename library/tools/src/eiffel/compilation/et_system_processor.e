@@ -59,10 +59,10 @@ feature {NONE} -- Initialization
 			implementation_checker := l_null_processor
 			error_handler := tokens.null_error_handler
 			create {ET_DOTNET_ASSEMBLY_CLASSIC_CONSUMER} dotnet_assembly_consumer.make (Current)
-			set_default_keyword_usage
-			set_preparse_shallow_mode
-			set_unknown_builtin_reported (True)
-			set_qualified_anchored_types_cycle_detection_enabled (False)
+			set_default_keyword_usage_only
+			set_preparse_shallow_mode_only
+			set_unknown_builtin_reported_only (True)
+			set_qualified_anchored_types_cycle_detection_enabled_only (False)
 		end
 
 feature -- Status report
@@ -87,53 +87,59 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_benchmark_shown (b: BOOLEAN)
+	set_benchmark_shown_only (b: BOOLEAN)
 			-- Set `benchmark_shown' to `b'.
+			-- Contrary to `set_benchmark_shown', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			benchmark_shown := b
 		ensure
 			benchmark_shown_set: benchmark_shown = b
 		end
 
-	set_benchmark_shown_recursive (b: BOOLEAN)
+	set_benchmark_shown (b: BOOLEAN)
 			-- Set `benchmark_shown' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_benchmark_shown (b)
+			set_benchmark_shown_only (b)
 		ensure
 			benchmark_shown_set: benchmark_shown = b
 		end
 
-	set_nested_benchmark_shown (b: BOOLEAN)
+	set_nested_benchmark_shown_only (b: BOOLEAN)
 			-- Set `nested_benchmark_shown' to `b'.
+			-- Contrary to `set_nested_benchmark_shown', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			nested_benchmark_shown := b
 		ensure
 			nested_benchmark_shown_set: nested_benchmark_shown = b
 		end
 
-	set_nested_benchmark_shown_recursive (b: BOOLEAN)
+	set_nested_benchmark_shown (b: BOOLEAN)
 			-- Set `nested_benchmark_shown' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_nested_benchmark_shown (b)
+			set_nested_benchmark_shown_only (b)
 		ensure
 			nested_benchmark_shown_set: nested_benchmark_shown = b
 		end
 
-	set_metrics_shown (b: BOOLEAN)
+	set_metrics_shown_only (b: BOOLEAN)
 			-- Set `metrics_shown' to `b'.
+			-- Contrary to `set_metrics_shown', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			metrics_shown := b
 		ensure
 			metrics_shown_set: metrics_shown = b
 		end
 
-	set_metrics_shown_recursive (b: BOOLEAN)
+	set_metrics_shown (b: BOOLEAN)
 			-- Set `metrics_shown' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_metrics_shown (b)
+			set_metrics_shown_only (b)
 		ensure
 			metrics_shown_set: metrics_shown = b
 		end
@@ -199,178 +205,200 @@ feature -- Parser status report
 
 feature -- Parser status setting
 
-	set_use_attached_keyword (b: BOOLEAN)
+	set_use_attached_keyword_only (b: BOOLEAN)
 			-- Set `use_attached_keyword' to `b'.
+			-- Contrary to `set_use_attached_keyword', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			use_attached_keyword := b
 		ensure
 			use_attached_keyword_set: use_attached_keyword = b
 		end
 
-	set_use_attached_keyword_recursive (b: BOOLEAN)
+	set_use_attached_keyword (b: BOOLEAN)
 			-- Set `use_attached_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_use_attached_keyword (b)
+			set_use_attached_keyword_only (b)
 		ensure
 			use_attached_keyword_set: use_attached_keyword = b
 		end
 
-	set_use_attribute_keyword (b: BOOLEAN)
+	set_use_attribute_keyword_only (b: BOOLEAN)
 			-- Set `use_attribute_keyword' to `b'.
+			-- Contrary to `set_use_attribute_keyword', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			use_attribute_keyword := b
 		ensure
 			use_attribute_keyword_set: use_attribute_keyword = b
 		end
 
-	set_use_attribute_keyword_recursve (b: BOOLEAN)
+	set_use_attribute_keyword (b: BOOLEAN)
 			-- Set `use_attribute_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_use_attribute_keyword (b)
+			set_use_attribute_keyword_only (b)
 		ensure
 			use_attribute_keyword_set: use_attribute_keyword = b
 		end
 
-	set_use_detachable_keyword (b: BOOLEAN)
+	set_use_detachable_keyword_only (b: BOOLEAN)
 			-- Set `use_detachable_keyword' to `b'.
+			-- Contrary to `set_use_detachable_keyword', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			use_detachable_keyword := b
 		ensure
 			use_detachable_keyword_set: use_detachable_keyword = b
 		end
 
-	set_use_detachable_keyword_recusive (b: BOOLEAN)
+	set_use_detachable_keyword (b: BOOLEAN)
 			-- Set `use_detachable_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_use_detachable_keyword (b)
+			set_use_detachable_keyword_only (b)
 		ensure
 			use_detachable_keyword_set: use_detachable_keyword = b
 		end
 
-	set_use_note_keyword (b: BOOLEAN)
+	set_use_note_keyword_only (b: BOOLEAN)
 			-- Set `use_note_keyword' to `b'.
+			-- Contrary to `set_use_note_keyword', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			use_note_keyword := b
 		ensure
 			use_note_keyword_set: use_note_keyword = b
 		end
 
-	set_use_note_keyword_recursive (b: BOOLEAN)
+	set_use_note_keyword (b: BOOLEAN)
 			-- Set `use_note_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_use_note_keyword (b)
+			set_use_note_keyword_only (b)
 		ensure
 			use_note_keyword_set: use_note_keyword = b
 		end
 
-	set_use_reference_keyword (b: BOOLEAN)
+	set_use_reference_keyword_only (b: BOOLEAN)
 			-- Set `use_reference_keyword' to `b'.
+			-- Contrary to `set_use_reference_keyword', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			use_reference_keyword := b
 		ensure
 			use_reference_keyword_set: use_reference_keyword = b
 		end
 
-	set_use_reference_keyword_recursive (b: BOOLEAN)
+	set_use_reference_keyword (b: BOOLEAN)
 			-- Set `use_reference_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_use_reference_keyword (b)
+			set_use_reference_keyword_only (b)
 		ensure
 			use_reference_keyword_set: use_reference_keyword = b
 		end
 
-	set_default_keyword_usage
+	set_default_keyword_usage_only
 			-- Set default keyword usage.
+			-- Contrary to `set_default_keyword_usage', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
-			set_use_attribute_keyword (True)
-			set_use_note_keyword (True)
-			set_use_reference_keyword (True)
-			set_use_attached_keyword (True)
-			set_use_detachable_keyword (True)
+			set_use_attribute_keyword_only (True)
+			set_use_note_keyword_only (True)
+			set_use_reference_keyword_only (True)
+			set_use_attached_keyword_only (True)
+			set_use_detachable_keyword_only (True)
 		end
 
-	set_default_keyword_usage_recursive
+	set_default_keyword_usage
 			-- Set default keyword usage in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_default_keyword_usage
+			set_default_keyword_usage_only
 		end
 
-	set_providers_enabled (b: BOOLEAN)
+	set_providers_enabled_only (b: BOOLEAN)
 			-- Set `providers_enabled' to `b'.
+			-- Contrary to `set_providers_enabled', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			providers_enabled := b
 		ensure
 			providers_enabled_set: providers_enabled = b
 		end
 
-	set_providers_enabled_recursive (b: BOOLEAN)
+	set_providers_enabled (b: BOOLEAN)
 			-- Set `providers_enabled' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_providers_enabled (b)
+			set_providers_enabled_only (b)
 		ensure
 			providers_enabled_set: providers_enabled = b
 		end
 
-	set_cluster_dependence_enabled (b: BOOLEAN)
+	set_cluster_dependence_enabled_only (b: BOOLEAN)
 			-- Set `cluster_dependence_enabled' to `b'.
+			-- Contrary to `set_cluster_dependence_enabled', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			cluster_dependence_enabled := b
 		ensure
 			cluster_dependence_enabled_set: cluster_dependence_enabled = b
 		end
 
-	set_cluster_dependence_enabled_recursive (b: BOOLEAN)
+	set_cluster_dependence_enabled (b: BOOLEAN)
 			-- Set `cluster_dependence_enabled' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_cluster_dependence_enabled (b)
+			set_cluster_dependence_enabled_only (b)
 		ensure
 			cluster_dependence_enabled_set: cluster_dependence_enabled = b
 		end
 
-	set_use_cluster_dependence_pathnames (b: BOOLEAN)
+	set_use_cluster_dependence_pathnames_only (b: BOOLEAN)
 			-- Set `use_cluster_dependence_pathnames' to `b'.
+			-- Contrary to `set_use_cluster_dependence_pathnames', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			use_cluster_dependence_pathnames := b
 		ensure
 			use_cluster_dependence_pathnames_set: use_cluster_dependence_pathnames = b
 		end
 
-	set_use_cluster_dependence_pathnames_recursive (b: BOOLEAN)
+	set_use_cluster_dependence_pathnames (b: BOOLEAN)
 			-- Set `use_cluster_dependence_pathnames' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_use_cluster_dependence_pathnames (b)
+			set_use_cluster_dependence_pathnames_only (b)
 		ensure
 			use_cluster_dependence_pathnames_set: use_cluster_dependence_pathnames = b
 		end
 
-	set_qualified_anchored_types_cycle_detection_enabled (b: BOOLEAN)
+	set_qualified_anchored_types_cycle_detection_enabled_only (b: BOOLEAN)
 			-- Set `qualified_anchored_types_cycle_detection_enabled' to `b'.
+			-- Contrary to `set_qualified_anchored_types_cycle_detection_enabled', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			qualified_anchored_types_cycle_detection_enabled := b
 		ensure
 			qualified_anchored_types_cycle_detection_enabled_set: qualified_anchored_types_cycle_detection_enabled = b
 		end
 
-	set_qualified_anchored_types_cycle_detection_enabled_recursive (b: BOOLEAN)
+	set_qualified_anchored_types_cycle_detection_enabled (b: BOOLEAN)
 			-- Set `qualified_anchored_types_cycle_detection_enabled' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_qualified_anchored_types_cycle_detection_enabled (b)
+			set_qualified_anchored_types_cycle_detection_enabled_only (b)
 		ensure
 			qualified_anchored_types_cycle_detection_enabled_set: qualified_anchored_types_cycle_detection_enabled = b
 		end
 
-	set_preparse_shallow_mode
+	set_preparse_shallow_mode_only
 			-- Set `preparse_shallow_mode' to True.
+			-- Contrary to `set_preparse_shallow_mode', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			preparse_shallow_mode := True
 			preparse_single_mode := False
@@ -381,19 +409,21 @@ feature -- Parser status setting
 			preparse_multiple_mode_unset: not preparse_multiple_mode
 		end
 
-	set_preparse_shallow_mode_recursive
+	set_preparse_shallow_mode
 			-- Set `preparse_shallow_mode' to True in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_preparse_shallow_mode
+			set_preparse_shallow_mode_only
 		ensure
 			preparse_shallow_mode_set: preparse_shallow_mode
 			preparse_single_mode_unset: not preparse_single_mode
 			preparse_multiple_mode_unset: not preparse_multiple_mode
 		end
 
-	set_preparse_single_mode
+	set_preparse_single_mode_only
 			-- Set `preparse_single_mode' to True.
+			-- Contrary to `set_preparse_single_mode', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			preparse_single_mode := True
 			preparse_shallow_mode := False
@@ -404,19 +434,21 @@ feature -- Parser status setting
 			preparse_multiple_mode_unset: not preparse_multiple_mode
 		end
 
-	set_preparse_single_mode_recursive
+	set_preparse_single_mode
 			-- Set `preparse_single_mode' to True in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_preparse_single_mode
+			set_preparse_single_mode_only
 		ensure
 			preparse_single_mode_set: preparse_single_mode
 			preparse_shallow_mode_unset: not preparse_shallow_mode
 			preparse_multiple_mode_unset: not preparse_multiple_mode
 		end
 
-	set_preparse_multiple_mode
+	set_preparse_multiple_mode_only
 			-- Set `preparse_multiple_mode' to True.
+			-- Contrary to `set_preparse_multiple_mode', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			preparse_multiple_mode := True
 			preparse_shallow_mode := False
@@ -427,47 +459,51 @@ feature -- Parser status setting
 			preparse_single_mode_unset: not preparse_single_mode
 		end
 
-	set_preparse_multiple_mode_recursive
+	set_preparse_multiple_mode
 			-- Set `preparse_multiple_mode' to True in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_preparse_multiple_mode
+			set_preparse_multiple_mode_only
 		ensure
 			preparse_multiple_mode_set: preparse_multiple_mode
 			preparse_shallow_mode_unset: not preparse_shallow_mode
 			preparse_single_mode_unset: not preparse_single_mode
 		end
 
-	set_preparse_readonly_mode (b: BOOLEAN)
+	set_preparse_readonly_mode_only (b: BOOLEAN)
 			-- Set `preparse_readonly_mode' to `b'.
+			-- Contrary to `set_preparse_readonly_mode', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			preparse_readonly_mode := b
 		ensure
 			preparse_readonly_mode_set: preparse_readonly_mode = b
 		end
 
-	set_preparse_readonly_mode_recursive (b: BOOLEAN)
+	set_preparse_readonly_mode (b: BOOLEAN)
 			-- Set `preparse_readonly_mode' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_preparse_readonly_mode (b)
+			set_preparse_readonly_mode_only (b)
 		ensure
 			preparse_readonly_mode_set: preparse_readonly_mode = b
 		end
 
-	set_preparse_override_mode (b: BOOLEAN)
+	set_preparse_override_mode_only (b: BOOLEAN)
 			-- Set `preparse_override_mode' to `b'.
+			-- Contrary to `set_preparse_override_mode', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			preparse_override_mode := b
 		ensure
 			preparse_override_mode_set: preparse_override_mode = b
 		end
 
-	set_preparse_override_mode_recursive (b: BOOLEAN)
+	set_preparse_override_mode (b: BOOLEAN)
 			-- Set `preparse_override_mode' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_preparse_override_mode (b)
+			set_preparse_override_mode_only (b)
 		ensure
 			preparse_override_mode_set: preparse_override_mode = b
 		end
@@ -490,70 +526,78 @@ feature -- Implementation checking status report
 
 feature -- Implementation checking status setting
 
-	set_flat_mode (b: BOOLEAN)
+	set_flat_mode_only (b: BOOLEAN)
 			-- Set `flat_mode' to `b'.
+			-- Contrary to `set_flat_mode', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			flat_mode := b
 		ensure
 			flat_mode_set: flat_mode = b
 		end
 
-	set_flat_mode_recursive (b: BOOLEAN)
+	set_flat_mode (b: BOOLEAN)
 			-- Set `flat_mode' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_flat_mode (b)
+			set_flat_mode_only (b)
 		ensure
 			flat_mode_set: flat_mode = b
 		end
 
-	set_flat_dbc_mode (b: BOOLEAN)
+	set_flat_dbc_mode_only (b: BOOLEAN)
 			-- Set `flat_dbc_mode' to `b'.
+			-- Contrary to `set_flat_dbc_mode', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			flat_dbc_mode := b
 		ensure
 			flat_dbc_mode_set: flat_dbc_mode = b
 		end
 
-	set_flat_dbc_mode_recursive (b: BOOLEAN)
+	set_flat_dbc_mode (b: BOOLEAN)
 			-- Set `flat_dbc_mode' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_flat_dbc_mode (b)
+			set_flat_dbc_mode_only (b)
 		ensure
 			flat_dbc_mode_set: flat_dbc_mode = b
 		end
 
-	set_suppliers_enabled (b: BOOLEAN)
+	set_suppliers_enabled_only (b: BOOLEAN)
 			-- Set `suppliers_enabled' to `b'.
+			-- Contrary to `set_suppliers_enabled', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			suppliers_enabled := b
 		ensure
 			suppliers_enabled_set: suppliers_enabled = b
 		end
 
-	set_suppliers_enabled_recursive (b: BOOLEAN)
+	set_suppliers_enabled (b: BOOLEAN)
 			-- Set `suppliers_enabled' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_suppliers_enabled (b)
+			set_suppliers_enabled_only (b)
 		ensure
 			suppliers_enabled_set: suppliers_enabled = b
 		end
 
-	set_unknown_builtin_reported (b: BOOLEAN)
+	set_unknown_builtin_reported_only (b: BOOLEAN)
 			-- Set `unknown_builtin_reported' to `b'.
+			-- Contrary to `set_unknown_builtin_reported', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			unknown_builtin_reported := b
 		ensure
 			unknown_builtin_reported_set: unknown_builtin_reported = b
 		end
 
-	set_unknown_builtin_reported_recursive (b: BOOLEAN)
+	set_unknown_builtin_reported (b: BOOLEAN)
 			-- Set `unknown_builtin_reported' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_unknown_builtin_reported (b)
+			set_unknown_builtin_reported_only (b)
 		ensure
 			unknown_builtin_reported_set: unknown_builtin_reported = b
 		end
@@ -632,58 +676,62 @@ feature -- Eiffel version
 
 feature -- Eiffel version setting
 
-	set_ecma_version (a_version: like ecma_version)
+	set_ecma_version_only (a_version: like ecma_version)
 			-- Set `ecma_version' to `a_version'.
+			-- Contrary to `set_ecma_version', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			ecma_version := a_version
 			if ecma_version /= Void then
-				set_use_attribute_keyword (True)
-				set_use_note_keyword (True)
-				set_use_reference_keyword (False)
-				set_use_attached_keyword (True)
-				set_use_detachable_keyword (True)
+				set_use_attribute_keyword_only (True)
+				set_use_note_keyword_only (True)
+				set_use_reference_keyword_only (False)
+				set_use_attached_keyword_only (True)
+				set_use_detachable_keyword_only (True)
 			elseif ise_version /= Void then
-				set_ise_version (ise_version)
+				set_ise_version_only (ise_version)
 			else
-				set_default_keyword_usage
+				set_default_keyword_usage_only
 			end
 		ensure
 			ecma_version_set: ecma_version = a_version
 		end
 
-	set_ecma_version_recursive (a_version: like ecma_version)
+	set_ecma_version (a_version: like ecma_version)
 			-- Set `ecma_version' to `a_version' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_ecma_version (a_version)
+			set_ecma_version_only (a_version)
 		ensure
 			ecma_version_set: ecma_version = a_version
 		end
 
-	set_ise_version (a_version: like ise_version)
+	set_ise_version_only (a_version: like ise_version)
 			-- Set `ise_version' to `a_version'.
+			-- Contrary to `set_ise_version', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			ise_version := a_version
 			if ise_version /= Void then
-				set_use_attribute_keyword (True)
-				set_use_note_keyword (True)
-				set_use_reference_keyword (True)
-				set_use_attached_keyword (True)
-				set_use_detachable_keyword (True)
+				set_use_attribute_keyword_only (True)
+				set_use_note_keyword_only (True)
+				set_use_reference_keyword_only (True)
+				set_use_attached_keyword_only (True)
+				set_use_detachable_keyword_only (True)
 			elseif ecma_version /= Void then
-				set_ecma_version (ecma_version)
+				set_ecma_version_only (ecma_version)
 			else
-				set_default_keyword_usage
+				set_default_keyword_usage_only
 			end
 		ensure
 			ise_version_set: ise_version = a_version
 		end
 
-	set_ise_version_recursive (a_version: like ise_version)
+	set_ise_version (a_version: like ise_version)
 			-- Set `ise_version' to `a_version' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_ise_version (a_version)
+			set_ise_version_only (a_version)
 		ensure
 			ise_version_set: ise_version = a_version
 		end
@@ -725,8 +773,10 @@ feature -- Access
 
 feature -- Setting
 
-	set_ast_factory (a_factory: like ast_factory)
+	set_ast_factory_only (a_factory: like ast_factory)
 			-- Set `ast_factory' to `a_factory'.
+			-- Contrary to `set_ast_factory', do not set it
+			-- in other system processors in case of a multiprocessor.
 		require
 			a_factory_not_void: a_factory /= Void
 		do
@@ -735,13 +785,13 @@ feature -- Setting
 			ast_factory_set: ast_factory = a_factory
 		end
 
-	set_ast_factory_recursive (a_factory: like ast_factory)
+	set_ast_factory (a_factory: like ast_factory)
 			-- Set `ast_factory' to `a_factory' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		require
 			a_factory_not_void: a_factory /= Void
 		do
-			set_ast_factory (a_factory)
+			set_ast_factory_only (a_factory)
 		ensure
 			ast_factory_set: ast_factory = a_factory
 		end
@@ -836,8 +886,10 @@ feature -- Setting
 			implementation_checker_set: implementation_checker = a_checker
 		end
 
-	set_error_handler (a_handler: like error_handler)
+	set_error_handler_only (a_handler: like error_handler)
 			-- Set `error_handler' to `a_handler'.
+			-- Contrary to `set_error_handler', do not set it
+			-- in other system processors in case of a multiprocessor.
 		require
 			a_handler_not_void: a_handler /= Void
 		do
@@ -846,13 +898,13 @@ feature -- Setting
 			error_handler_set: error_handler = a_handler
 		end
 
-	set_error_handler_recursive (a_handler: like error_handler)
+	set_error_handler (a_handler: like error_handler)
 			-- Set `error_handler' to `a_handler' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		require
 			a_handler_not_void: a_handler /= Void
 		do
-			set_error_handler (a_handler)
+			set_error_handler_only (a_handler)
 		ensure
 			error_handler_set: error_handler = a_handler
 		end
@@ -1557,19 +1609,21 @@ feature -- Stop
 			-- a request to interrupt the current operation;
 			-- No interruption if Void
 
-	set_stop_request (a_stop_request: like stop_request)
+	set_stop_request_only (a_stop_request: like stop_request)
 			-- Set `stop_request' to `a_stop_request'.
+			-- Contrary to `set_stop_request', do not set it
+			-- in other system processors in case of a multiprocessor.
 		do
 			stop_request := a_stop_request
 		ensure
 			stop_request_set: stop_request = a_stop_request
 		end
 
-	set_stop_request_recursive (a_stop_request: like stop_request)
+	set_stop_request (a_stop_request: like stop_request)
 			-- Set `stop_request' to `a_stop_request' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		do
-			set_stop_request (a_stop_request)
+			set_stop_request_only (a_stop_request)
 		ensure
 			stop_request_set: stop_request = a_stop_request
 		end

@@ -376,7 +376,7 @@ feature -- Argument parsing
 			else
 				create Result.make
 			end
-			Result.set_error_handler_recursive (error_handler)
+			Result.set_error_handler (error_handler)
 		ensure
 			new_system_processor_not_void: Result /= Void
 		end

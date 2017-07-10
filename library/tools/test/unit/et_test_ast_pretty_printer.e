@@ -49,10 +49,10 @@ feature -- Test
 		do
 			create a_system.make ("system_name")
 			create l_system_processor.make
-			l_system_processor.set_ise_version_recursive (ise_latest)
+			l_system_processor.set_ise_version (ise_latest)
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
-			l_system_processor.set_ast_factory_recursive (an_ast_factory)
+			l_system_processor.set_ast_factory (an_ast_factory)
 			create a_class_name.make ("PRETTY_PRINTED1")
 			a_class := an_ast_factory.new_class (a_class_name)
 			a_system.register_class (a_class)

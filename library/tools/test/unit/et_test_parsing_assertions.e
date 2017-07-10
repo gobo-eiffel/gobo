@@ -71,8 +71,8 @@ feature {NONE} -- Implementation
 			create l_system_processor.make
 			create l_ast_factory.make
 			l_ast_factory.set_keep_all_breaks (True)
-			l_system_processor.set_ast_factory_recursive (l_ast_factory)
-			l_system_processor.set_default_keyword_usage_recursive
+			l_system_processor.set_ast_factory (l_ast_factory)
+			l_system_processor.set_default_keyword_usage
 			create l_group.make ("text_group", l_system)
 			create l_identifier.make (a_class_name)
 			create l_class.make (l_identifier)

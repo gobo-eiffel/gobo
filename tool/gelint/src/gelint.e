@@ -314,15 +314,15 @@ feature {NONE} -- Processing
 			else
 				create l_system_processor.make
 			end
-			l_system_processor.set_error_handler_recursive (error_handler)
-			l_system_processor.set_benchmark_shown_recursive (benchmark_flag or not is_silent)
-			l_system_processor.set_nested_benchmark_shown_recursive (benchmark_flag)
-			l_system_processor.set_metrics_shown_recursive (metrics_flag)
-			l_system_processor.set_ise_version_recursive (ise_version)
-			l_system_processor.set_ecma_version_recursive (ecma_version)
-			l_system_processor.set_flat_mode_recursive (is_flat)
-			l_system_processor.set_flat_dbc_mode_recursive (is_flat_dbc)
-			l_system_processor.set_unknown_builtin_reported_recursive (False)
+			l_system_processor.set_error_handler (error_handler)
+			l_system_processor.set_benchmark_shown (benchmark_flag or not is_silent)
+			l_system_processor.set_nested_benchmark_shown (benchmark_flag)
+			l_system_processor.set_metrics_shown (metrics_flag)
+			l_system_processor.set_ise_version (ise_version)
+			l_system_processor.set_ecma_version (ecma_version)
+			l_system_processor.set_flat_mode (is_flat)
+			l_system_processor.set_flat_dbc_mode (is_flat_dbc)
+			l_system_processor.set_unknown_builtin_reported (False)
 			dt1 := l_system_processor.benchmark_start_time
 			if is_catcall then
 				create a_dynamic_system.make (a_system, l_system_processor)
@@ -331,9 +331,9 @@ feature {NONE} -- Processing
 				a_dynamic_system.set_dynamic_type_set_builder (a_builder)
 				a_dynamic_system.compile (l_system_processor)
 			else
-				l_system_processor.set_providers_enabled_recursive (True)
-				l_system_processor.set_cluster_dependence_enabled_recursive (True)
-				l_system_processor.set_use_cluster_dependence_pathnames_recursive (True)
+				l_system_processor.set_providers_enabled (True)
+				l_system_processor.set_cluster_dependence_enabled (True)
+				l_system_processor.set_use_cluster_dependence_pathnames (True)
 				l_system_processor.compile (a_system)
 			end
 			l_system_processor.record_end_time (dt1, "Total Time")

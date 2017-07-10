@@ -20,37 +20,37 @@ inherit
 			make_null as make_null_single
 		redefine
 			processor_count,
-			set_benchmark_shown_recursive,
-			set_nested_benchmark_shown_recursive,
-			set_metrics_shown_recursive,
-			set_use_attached_keyword_recursive,
-			set_use_attribute_keyword_recursve,
-			set_use_detachable_keyword_recusive,
-			set_use_note_keyword_recursive,
-			set_use_reference_keyword_recursive,
-			set_default_keyword_usage_recursive,
-			set_providers_enabled_recursive,
-			set_cluster_dependence_enabled_recursive,
-			set_use_cluster_dependence_pathnames_recursive,
-			set_qualified_anchored_types_cycle_detection_enabled_recursive,
-			set_preparse_shallow_mode_recursive,
-			set_preparse_single_mode_recursive,
-			set_preparse_multiple_mode_recursive,
-			set_preparse_readonly_mode_recursive,
-			set_preparse_override_mode_recursive,
-			set_flat_mode_recursive,
-			set_flat_dbc_mode_recursive,
-			set_suppliers_enabled_recursive,
-			set_unknown_builtin_reported_recursive,
-			set_ecma_version_recursive,
-			set_ise_version_recursive,
-			set_ast_factory_recursive,
-			set_error_handler_recursive,
+			set_benchmark_shown,
+			set_nested_benchmark_shown,
+			set_metrics_shown,
+			set_use_attached_keyword,
+			set_use_attribute_keyword,
+			set_use_detachable_keyword,
+			set_use_note_keyword,
+			set_use_reference_keyword,
+			set_default_keyword_usage,
+			set_providers_enabled,
+			set_cluster_dependence_enabled,
+			set_use_cluster_dependence_pathnames,
+			set_qualified_anchored_types_cycle_detection_enabled,
+			set_preparse_shallow_mode,
+			set_preparse_single_mode,
+			set_preparse_multiple_mode,
+			set_preparse_readonly_mode,
+			set_preparse_override_mode,
+			set_flat_mode,
+			set_flat_dbc_mode,
+			set_suppliers_enabled,
+			set_unknown_builtin_reported,
+			set_ecma_version,
+			set_ise_version,
+			set_ast_factory,
+			set_error_handler,
 			parse_classes,
 			parse_marked_classes,
 			check_implementation_validity,
 			process_custom,
-			set_stop_request_recursive,
+			set_stop_request,
 			do_all,
 			report_degree_metrics
 		end
@@ -121,57 +121,57 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_benchmark_shown_recursive (b: BOOLEAN)
+	set_benchmark_shown (b: BOOLEAN)
 			-- Set `benchmark_shown' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_benchmark_shown (b)
+			set_benchmark_shown_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_benchmark_shown (b)
+				other_processors.item (i).set_benchmark_shown_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_benchmark_shown_set: across other_processors as l_other_processors all l_other_processors.item.benchmark_shown = b end
 		end
 
-	set_nested_benchmark_shown_recursive (b: BOOLEAN)
+	set_nested_benchmark_shown (b: BOOLEAN)
 			-- Set `nested_benchmark_shown' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_nested_benchmark_shown (b)
+			set_nested_benchmark_shown_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_nested_benchmark_shown (b)
+				other_processors.item (i).set_nested_benchmark_shown_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_nested_benchmark_shown_set: across other_processors as l_other_processors all l_other_processors.item.nested_benchmark_shown = b end
 		end
 
-	set_metrics_shown_recursive (b: BOOLEAN)
+	set_metrics_shown (b: BOOLEAN)
 			-- Set `metrics_shown' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_metrics_shown (b)
+			set_metrics_shown_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_metrics_shown (b)
+				other_processors.item (i).set_metrics_shown_only (b)
 				i := i - 1
 			end
 		ensure then
@@ -180,207 +180,207 @@ feature -- Status setting
 
 feature -- Parser status setting
 
-	set_use_attached_keyword_recursive (b: BOOLEAN)
+	set_use_attached_keyword (b: BOOLEAN)
 			-- Set `use_attached_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_use_attached_keyword (b)
+			set_use_attached_keyword_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_use_attached_keyword (b)
+				other_processors.item (i).set_use_attached_keyword_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_use_attached_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_attached_keyword = b end
 		end
 
-	set_use_attribute_keyword_recursve (b: BOOLEAN)
+	set_use_attribute_keyword (b: BOOLEAN)
 			-- Set `use_attribute_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_use_attribute_keyword (b)
+			set_use_attribute_keyword_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_use_attribute_keyword (b)
+				other_processors.item (i).set_use_attribute_keyword_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_use_attribute_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_attribute_keyword = b end
 		end
 
-	set_use_detachable_keyword_recusive (b: BOOLEAN)
+	set_use_detachable_keyword (b: BOOLEAN)
 			-- Set `use_detachable_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_use_detachable_keyword (b)
+			set_use_detachable_keyword_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_use_detachable_keyword (b)
+				other_processors.item (i).set_use_detachable_keyword_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_use_detachable_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_detachable_keyword = b end
 		end
 
-	set_use_note_keyword_recursive (b: BOOLEAN)
+	set_use_note_keyword (b: BOOLEAN)
 			-- Set `use_note_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_use_note_keyword (b)
+			set_use_note_keyword_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_use_note_keyword (b)
+				other_processors.item (i).set_use_note_keyword_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_use_note_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_note_keyword = b end
 		end
 
-	set_use_reference_keyword_recursive (b: BOOLEAN)
+	set_use_reference_keyword (b: BOOLEAN)
 			-- Set `use_reference_keyword' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_use_reference_keyword (b)
+			set_use_reference_keyword_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_use_reference_keyword (b)
+				other_processors.item (i).set_use_reference_keyword_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_use_reference_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_reference_keyword = b end
 		end
 
-	set_default_keyword_usage_recursive
+	set_default_keyword_usage
 			-- Set default keyword usage in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_default_keyword_usage
+			set_default_keyword_usage_only
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_default_keyword_usage
+				other_processors.item (i).set_default_keyword_usage_only
 				i := i - 1
 			end
 		end
 
-	set_providers_enabled_recursive (b: BOOLEAN)
+	set_providers_enabled (b: BOOLEAN)
 			-- Set `providers_enabled' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_providers_enabled (b)
+			set_providers_enabled_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_providers_enabled (b)
+				other_processors.item (i).set_providers_enabled_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_providers_enabled_set: across other_processors as l_other_processors all l_other_processors.item.providers_enabled = b end
 		end
 
-	set_cluster_dependence_enabled_recursive (b: BOOLEAN)
+	set_cluster_dependence_enabled (b: BOOLEAN)
 			-- Set `cluster_dependence_enabled' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_cluster_dependence_enabled (b)
+			set_cluster_dependence_enabled_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_cluster_dependence_enabled (b)
+				other_processors.item (i).set_cluster_dependence_enabled_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_cluster_dependence_enabled_set: across other_processors as l_other_processors all l_other_processors.item.cluster_dependence_enabled = b end
 		end
 
-	set_use_cluster_dependence_pathnames_recursive (b: BOOLEAN)
+	set_use_cluster_dependence_pathnames (b: BOOLEAN)
 			-- Set `use_cluster_dependence_pathnames' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_use_cluster_dependence_pathnames (b)
+			set_use_cluster_dependence_pathnames_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_use_cluster_dependence_pathnames (b)
+				other_processors.item (i).set_use_cluster_dependence_pathnames_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_use_cluster_dependence_pathnames_set: across other_processors as l_other_processors all l_other_processors.item.use_cluster_dependence_pathnames = b end
 		end
 
-	set_qualified_anchored_types_cycle_detection_enabled_recursive (b: BOOLEAN)
+	set_qualified_anchored_types_cycle_detection_enabled (b: BOOLEAN)
 			-- Set `qualified_anchored_types_cycle_detection_enabled' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_qualified_anchored_types_cycle_detection_enabled (b)
+			set_qualified_anchored_types_cycle_detection_enabled_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_qualified_anchored_types_cycle_detection_enabled (b)
+				other_processors.item (i).set_qualified_anchored_types_cycle_detection_enabled_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_qualified_anchored_types_cycle_detection_enabled_set: across other_processors as l_other_processors all l_other_processors.item.qualified_anchored_types_cycle_detection_enabled = b end
 		end
 
-	set_preparse_shallow_mode_recursive
+	set_preparse_shallow_mode
 			-- Set `preparse_shallow_mode' to True in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_preparse_shallow_mode
+			set_preparse_shallow_mode_only
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_preparse_shallow_mode
+				other_processors.item (i).set_preparse_shallow_mode_only
 				i := i - 1
 			end
 		ensure then
@@ -389,19 +389,19 @@ feature -- Parser status setting
 			other_preparse_multiple_mode_unset: across other_processors as l_other_processors all not l_other_processors.item.preparse_multiple_mode end
 		end
 
-	set_preparse_single_mode_recursive
+	set_preparse_single_mode
 			-- Set `preparse_single_mode' to True in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_preparse_single_mode
+			set_preparse_single_mode_only
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_preparse_single_mode
+				other_processors.item (i).set_preparse_single_mode_only
 				i := i - 1
 			end
 		ensure then
@@ -410,19 +410,19 @@ feature -- Parser status setting
 			other_preparse_multiple_mode_unset: across other_processors as l_other_processors all not l_other_processors.item.preparse_multiple_mode end
 		end
 
-	set_preparse_multiple_mode_recursive
+	set_preparse_multiple_mode
 			-- Set `preparse_multiple_mode' to True in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_preparse_multiple_mode
+			set_preparse_multiple_mode_only
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_preparse_multiple_mode
+				other_processors.item (i).set_preparse_multiple_mode_only
 				i := i - 1
 			end
 		ensure then
@@ -431,38 +431,38 @@ feature -- Parser status setting
 			other_preparse_single_mode_unset: across other_processors as l_other_processors all not l_other_processors.item.preparse_single_mode end
 		end
 
-	set_preparse_readonly_mode_recursive (b: BOOLEAN)
+	set_preparse_readonly_mode (b: BOOLEAN)
 			-- Set `preparse_readonly_mode' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_preparse_readonly_mode (b)
+			set_preparse_readonly_mode_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_preparse_readonly_mode (b)
+				other_processors.item (i).set_preparse_readonly_mode_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_preparse_readonly_mode_set: across other_processors as l_other_processors all l_other_processors.item.preparse_readonly_mode = b end
 		end
 
-	set_preparse_override_mode_recursive (b: BOOLEAN)
+	set_preparse_override_mode (b: BOOLEAN)
 			-- Set `preparse_override_mode' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_preparse_override_mode (b)
+			set_preparse_override_mode_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_preparse_override_mode (b)
+				other_processors.item (i).set_preparse_override_mode_only (b)
 				i := i - 1
 			end
 		ensure then
@@ -471,76 +471,76 @@ feature -- Parser status setting
 
 feature -- Implementation checking status setting
 
-	set_flat_mode_recursive (b: BOOLEAN)
+	set_flat_mode (b: BOOLEAN)
 			-- Set `flat_mode' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_flat_mode (b)
+			set_flat_mode_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_flat_mode (b)
+				other_processors.item (i).set_flat_mode_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_flat_mode_set: across other_processors as l_other_processors all l_other_processors.item.flat_mode = b end
 		end
 
-	set_flat_dbc_mode_recursive (b: BOOLEAN)
+	set_flat_dbc_mode (b: BOOLEAN)
 			-- Set `flat_dbc_mode' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_flat_dbc_mode (b)
+			set_flat_dbc_mode_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_flat_dbc_mode (b)
+				other_processors.item (i).set_flat_dbc_mode_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_flat_dbc_mode_set: across other_processors as l_other_processors all l_other_processors.item.flat_dbc_mode = b end
 		end
 
-	set_suppliers_enabled_recursive (b: BOOLEAN)
+	set_suppliers_enabled (b: BOOLEAN)
 			-- Set `suppliers_enabled' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_suppliers_enabled (b)
+			set_suppliers_enabled_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_suppliers_enabled (b)
+				other_processors.item (i).set_suppliers_enabled_only (b)
 				i := i - 1
 			end
 		ensure then
 			other_suppliers_enabled_set: across other_processors as l_other_processors all l_other_processors.item.suppliers_enabled = b end
 		end
 
-	set_unknown_builtin_reported_recursive (b: BOOLEAN)
+	set_unknown_builtin_reported (b: BOOLEAN)
 			-- Set `unknown_builtin_reported' to `b' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_unknown_builtin_reported (b)
+			set_unknown_builtin_reported_only (b)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_unknown_builtin_reported (b)
+				other_processors.item (i).set_unknown_builtin_reported_only (b)
 				i := i - 1
 			end
 		ensure then
@@ -549,38 +549,38 @@ feature -- Implementation checking status setting
 
 feature -- Eiffel version setting
 
-	set_ecma_version_recursive (a_version: like ecma_version)
+	set_ecma_version (a_version: like ecma_version)
 			-- Set `ecma_version' to `a_version' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_ecma_version (a_version)
+			set_ecma_version_only (a_version)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_ecma_version (a_version)
+				other_processors.item (i).set_ecma_version_only (a_version)
 				i := i - 1
 			end
 		ensure then
 			other_ecma_version_set: across other_processors as l_other_processors all l_other_processors.item.ecma_version = a_version end
 		end
 
-	set_ise_version_recursive (a_version: like ise_version)
+	set_ise_version (a_version: like ise_version)
 			-- Set `ise_version' to `a_version' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_ise_version (a_version)
+			set_ise_version_only (a_version)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_ise_version (a_version)
+				other_processors.item (i).set_ise_version_only (a_version)
 				i := i - 1
 			end
 		ensure then
@@ -594,38 +594,38 @@ feature -- Access
 
 feature -- Setting
 
-	set_ast_factory_recursive (a_factory: like ast_factory)
+	set_ast_factory (a_factory: like ast_factory)
 			-- Set `ast_factory' to `a_factory' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_ast_factory (a_factory)
+			set_ast_factory_only (a_factory)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_ast_factory (a_factory)
+				other_processors.item (i).set_ast_factory_only (a_factory)
 				i := i - 1
 			end
 		ensure then
 			other_ast_factory_set: across other_processors as l_other_processors all l_other_processors.item.ast_factory = a_factory end
 		end
 
-	set_error_handler_recursive (a_handler: like error_handler)
+	set_error_handler (a_handler: like error_handler)
 			-- Set `error_handler' to `a_handler' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_error_handler (a_handler)
+			set_error_handler_only (a_handler)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_error_handler (a_handler)
+				other_processors.item (i).set_error_handler_only (a_handler)
 				i := i - 1
 			end
 		ensure then
@@ -742,19 +742,19 @@ feature -- Custom processing
 
 feature -- Stop
 
-	set_stop_request_recursive (a_stop_request: like stop_request)
+	set_stop_request (a_stop_request: like stop_request)
 			-- Set `stop_request' to `a_stop_request' in current system processor
 			-- and all other system processors in case of a multiprocessor.
 		local
 			i: INTEGER
 		do
-			set_stop_request (a_stop_request)
+			set_stop_request_only (a_stop_request)
 			from
 				i := other_processors.count
 			until
 				i <= 0
 			loop
-				other_processors.item (i).set_stop_request (a_stop_request)
+				other_processors.item (i).set_stop_request_only (a_stop_request)
 				i := i - 1
 			end
 		ensure then

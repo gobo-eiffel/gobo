@@ -46,14 +46,14 @@ feature {NONE} -- Execution
 			read_arguments
 			create a_system.make ("system_name")
 			create l_system_processor.make
-			l_system_processor.set_ise_version_recursive (ise_latest)
+			l_system_processor.set_ise_version (ise_latest)
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
-			l_system_processor.set_ast_factory_recursive (an_ast_factory)
+			l_system_processor.set_ast_factory (an_ast_factory)
 				-- Make sure that syntax errors are reported to standard error.
 			create a_eiffel_error_handler.make_standard
 			a_eiffel_error_handler.set_info_file (std.error)
-			l_system_processor.set_error_handler_recursive (a_eiffel_error_handler)
+			l_system_processor.set_error_handler (a_eiffel_error_handler)
 				-- Make sure that kernel classes are set correctly.
 			a_system.preparse (l_system_processor)
 			create a_cluster.make ("cluster_name", ".", a_system)

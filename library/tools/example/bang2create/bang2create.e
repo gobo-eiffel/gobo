@@ -43,7 +43,7 @@ feature -- Execution
 			create l_system_processor.make
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
-			l_system_processor.set_ast_factory_recursive (an_ast_factory)
+			l_system_processor.set_ast_factory (an_ast_factory)
 			create a_cluster.make ("cluster_name", ".", a_system)
 			create a_parser.make (l_system_processor)
 			if in_filename.is_equal ("-") or in_filename.is_empty then
