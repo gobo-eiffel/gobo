@@ -1,7 +1,7 @@
 note
 
 	description: "Parser token codes"
-	generator: "geyacc version 4.1"
+	generator: "geyacc version 4.2"
 
 deferred class ET_EIFFEL_TOKENS
 

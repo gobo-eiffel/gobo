@@ -1,21 +1,22 @@
-# Release notes - Gobo Eiffel 4.1
+# Release notes - Gobo Eiffel 4.2
 
-The focus of this release has been put on Continuous Integration
-and Continuous Delivery. Indeed the technology behind the tools
-of the Gobo package makes them very suitable for this kind of
-tasks, complementary to your favorite Eiffel development tools
-such as ISE EiffelStudio. Therefore:
+The focus of this release was to support multi-threading. 
+In particular:
 
-* The documentation of `gelint`, a useful tool to check the validity
-  rules in your Eiffel system, has been added.
-* A new tool, `gedoc`, for pretty-printing and generation of
-  HTML documentation out of Eiffel classes, has been implemented.
+* `gec`, the Gobo Eiffel Compiler, can now compile Eiffel applications
+  in multi-threaded mode, using the same EiffelThread library as ISE Eiffel.
+* Made `gelint` multi-threaded. It now runs almost 3 times faster on
+  a 4-CPU machine.
+* Made `gedoc` multi-threaded. It now runs almost 3 times faster on 
+  a 4-CPU machine.
+
+Note that this release does not support SCOOP yet.
 
 For more details, see [History.md](History.md).
 
 ## Compiler specific notes
 
-### ISE 16.05.9.8969 and 17.01.9.9700 (ISE Eiffel)
+### ISE 17.05.10.0416 (ISE Eiffel)
 
 * The ECF files for ISE Eiffel provided in this package are for
   Eiffel classic. In order to get ECF files configured for Eiffel
