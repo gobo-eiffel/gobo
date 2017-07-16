@@ -36,6 +36,7 @@ inherit
 			propagate_builtin_result_dynamic_types,
 			propagate_call_agent_result_dynamic_types,
 			propagate_creation_dynamic_type,
+			propagate_if_expression_dynamic_types,
 			propagate_inline_agent_result_dynamic_types,
 			propagate_like_argument_dynamic_types,
 			propagate_manifest_string_area_dynamic_type,
@@ -1198,6 +1199,18 @@ feature {NONE} -- Implementation
 				create l_attachment.make (a_creation_type, a_creation, current_dynamic_feature, current_dynamic_type)
 				l_target_type_set.put_source (l_attachment, current_dynamic_system)
 			end
+		end
+
+	propagate_if_expression_dynamic_types (a_if_expression: ET_IF_EXPRESSION; a_sub_expression: ET_EXPRESSION; a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_source_type_set' (which is the dynamic
+			-- type set of the sub-expressions `a_sub_expression' within `a_if_expression')
+			-- to the dynamic type set `a_target_type_set' (which is the dynamic
+			-- type set of `a_if_expression').
+		local
+			l_attachment: ET_DYNAMIC_IF_EXPRESSION_ATTACHMENT
+		do
+			create l_attachment.make (a_source_type_set, a_if_expression, a_sub_expression, current_dynamic_feature, current_dynamic_type)
+			a_target_type_set.put_source (l_attachment, current_dynamic_system)
 		end
 
 	propagate_inline_agent_result_dynamic_types (an_agent: ET_INLINE_AGENT; a_result_type_set: ET_DYNAMIC_TYPE_SET)

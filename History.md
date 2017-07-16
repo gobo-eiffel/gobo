@@ -1,5 +1,14 @@
 # Release History
 
+## Version 4.3 - ??
+
+### Gobo Eiffel Tools Library
+
+* Changed the way the type of conditional expressions is computed
+  to match ISE Eiffel 17.11.
+* Fixed bug in the computation of the dynamic type set of conditional
+  expressions.
+
 ## Version 4.2 - 14 July 2017
 
 ### gec

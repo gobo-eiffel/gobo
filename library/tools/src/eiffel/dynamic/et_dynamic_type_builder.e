@@ -1424,11 +1424,48 @@ feature {NONE} -- Event handling
 			-- Report that a 'if' epxression of type `a_type' in context
 			-- of `a_context' has been processed.
 		local
-			l_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_sub_expression: ET_EXPRESSION
+			i, nb: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				set_dynamic_type_set (l_type, a_expression)
+				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, a_context)
+				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+				set_dynamic_type_set (l_dynamic_type_set, a_expression)
+				l_sub_expression := a_expression.then_expression
+				if attached dynamic_type_set (l_sub_expression) as l_then_dynamic_type_set then
+					propagate_if_expression_dynamic_types (a_expression, l_sub_expression, l_then_dynamic_type_set, l_dynamic_type_set)
+				else
+						-- Internal error: the dynamic type set of the sub-expressions
+						-- of `a_expression' should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+				if attached a_expression.elseif_parts as l_elseif_parts then
+					nb := l_elseif_parts.count
+					from i := 1 until i > nb loop
+						l_sub_expression := l_elseif_parts.item (i).then_expression
+						if attached dynamic_type_set (l_sub_expression) as l_then_dynamic_type_set then
+							propagate_if_expression_dynamic_types (a_expression, l_sub_expression, l_then_dynamic_type_set, l_dynamic_type_set)
+						else
+								-- Internal error: the dynamic type set of the sub-expressions
+								-- of `a_expression' should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+						i := i + 1
+					end
+				end
+				l_sub_expression := a_expression.else_expression
+				if attached dynamic_type_set (l_sub_expression) as l_else_dynamic_type_set then
+					propagate_if_expression_dynamic_types (a_expression, l_sub_expression, l_else_dynamic_type_set, l_dynamic_type_set)
+				else
+						-- Internal error: the dynamic type set of the sub-expressions
+						-- of `a_expression' should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
 			end
 		end
 
@@ -3575,6 +3612,20 @@ feature {NONE} -- Implementation
 		require
 			a_creation_type_not_void: a_creation_type /= Void
 			a_creation_not_void: a_creation /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_if_expression_dynamic_types (a_if_expression: ET_IF_EXPRESSION; a_sub_expression: ET_EXPRESSION; a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_source_type_set' (which is the dynamic
+			-- type set of the sub-expressions `a_sub_expression' within `a_if_expression')
+			-- to the dynamic type set `a_target_type_set' (which is the dynamic
+			-- type set of `a_if_expression').
+		require
+			a_if_expression_not_void: a_if_expression /= Void
+			a_sub_expression_not_void: a_sub_expression /= Void
+			a_source_type_set_not_void: a_source_type_set /= Void
+			a_target_type_set_not_void: a_target_type_set /= Void
 		do
 			-- Do nothing.
 		end

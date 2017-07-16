@@ -1,2 +1,0 @@
-[VWCE] class AA (21,48): expressions of types '[attached] STRING_8' and '[attached] TUPLE [INTEGER_32]' in branches of conditional expression do not conform to each other.
-----

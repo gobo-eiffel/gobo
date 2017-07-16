@@ -106,6 +106,8 @@ feature {NONE} -- Initialization
 			create current_attachment_scope.make
 			create attachment_scope_builder.make
 			create unused_attachment_scopes.make (40)
+				-- Common Ancestor Types.
+			create common_ancestor_type_list.make (500)
 		end
 
 feature -- Basic operations
@@ -1058,7 +1060,8 @@ feature {NONE} -- Expression processing
 			l_else_attachment_scope: like current_attachment_scope
 			l_detachable_any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
-			l_result_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
+			l_old_result_context_list_count: INTEGER
 		do
 			reset_fatal_error (False)
 			l_conditional := a_expression.conditional.expression
@@ -1073,13 +1076,15 @@ feature {NONE} -- Expression processing
 				attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
 			end
 			l_detachable_any_type := current_system.detachable_any_type
+			l_result_context_list := common_ancestor_type_list
+			l_old_result_context_list_count := l_result_context_list.count
 			l_expression_context := new_context (current_type)
 			find_expression_type (a_expression.then_expression, l_expression_context, l_detachable_any_type)
 			if has_fatal_error then
 				had_error := True
 				free_context (l_expression_context)
 			else
-				l_result_context := l_expression_context
+				update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 			end
 			if attached a_expression.elseif_parts as l_elseif_parts then
 				nb := l_elseif_parts.count
@@ -1098,45 +1103,8 @@ feature {NONE} -- Expression processing
 					if has_fatal_error then
 						had_error := True
 						free_context (l_expression_context)
-					elseif l_result_context = Void then
-						l_result_context := l_expression_context
-					elseif l_expression_context.conforms_to_context (l_result_context, system_processor) then
-							-- The type of the current expression conforms to the type
-							-- retained so far. Keep the old type.
-						free_context (l_expression_context)
-					elseif l_result_context.conforms_to_context (l_expression_context, system_processor) then
-							-- The type retained so far conforms to the type of the
-							-- current expression. Retain this new type.
-						free_context (l_result_context)
-						l_result_context := l_expression_context
 					else
-							-- Try with different attachment marks.
--- TODO: do the same thing with separateness marks.
-						l_result_context.force_last (tokens.detachable_like_current)
-						if l_expression_context.conforms_to_context (l_result_context, system_processor) then
-								-- The type of the current expression conforms to the detachable
-								-- version of then type retained so far. Keep the old detachable type.
-							free_context (l_expression_context)
-						else
-							l_result_context.remove_last
-							l_expression_context.force_last (tokens.detachable_like_current)
-							if l_result_context.conforms_to_context (l_expression_context, system_processor) then
-									-- The type retained so far conforms to the detachable version
-									-- of then type of the current expression. Retain this new detachable type.
-								free_context (l_result_context)
-								l_result_context := l_expression_context
-							else
-								free_context (l_expression_context)
-									-- Internal error.
-									-- This error should have already been reported when checking
-									-- `current_feature' (using ET_FEATURE_CHECKER for example).
-								had_error := True
-								set_fatal_error
-								if internal_error_enabled or not current_class.has_implementation_error then
-									error_handler.report_giaaa_error
-								end
-							end
-						end
+						update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 					end
 					i := i + 1
 				end
@@ -1149,45 +1117,8 @@ feature {NONE} -- Expression processing
 			if has_fatal_error then
 				had_error := True
 				free_context (l_expression_context)
-			elseif l_result_context = Void then
-				l_result_context := l_expression_context
-			elseif l_expression_context.conforms_to_context (l_result_context, system_processor) then
-					-- The type of the current expression conforms to the type
-					-- retained so far. Keep the old type.
-				free_context (l_expression_context)
-			elseif l_result_context.conforms_to_context (l_expression_context, system_processor) then
-					-- The type retained so far conforms to the type of the
-					-- current expression. Retain this new type.
-				free_context (l_result_context)
-				l_result_context := l_expression_context
 			else
-					-- Try with different attachment marks.
--- TODO: do the same thing with separateness marks.
-				l_result_context.force_last (tokens.detachable_like_current)
-				if l_expression_context.conforms_to_context (l_result_context, system_processor) then
-						-- The type of the current expression conforms to the detachable
-						-- version of then type retained so far. Keep the old detachable type.
-					free_context (l_expression_context)
-				else
-					l_result_context.remove_last
-					l_expression_context.force_last (tokens.detachable_like_current)
-					if l_result_context.conforms_to_context (l_expression_context, system_processor) then
-							-- The type retained so far conforms to the detachable version
-							-- of then type of the current expression. Retain this new detachable type.
-						free_context (l_result_context)
-						l_result_context := l_expression_context
-					else
-						free_context (l_expression_context)
-							-- Internal error.
-							-- This error should have already been reported when checking
-							-- `current_feature' (using ET_FEATURE_CHECKER for example).
-						had_error := True
-						set_fatal_error
-						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
-						end
-					end
-				end
+				update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 			end
 			if current_universe.attachment_type_conformance_mode then
 				free_attachment_scope (current_attachment_scope)
@@ -1196,19 +1127,17 @@ feature {NONE} -- Expression processing
 			end
 			if had_error then
 				set_fatal_error
-			elseif l_result_context = Void then
-					-- Internal error: `had_error' should be True in that case.
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
-				end
 			else
-					-- The type of all expressions conforms to one of them.
-				a_context.copy_type_context (l_result_context)
+				if l_result_context_list.count /= 1 then
+						-- There is no expression such as the types of all other
+						-- expressions conform to its type.
+					l_expression_context := new_context (current_type)
+					l_expression_context.force_last (current_system.any_type)
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				end
+				a_context.copy_type_context (l_result_context_list.last)
 			end
-			if l_result_context /= Void then
-				free_context (l_result_context)
-			end
+			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
 		end
 
 	find_infix_cast_expression_type (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -3756,6 +3685,112 @@ feature {NONE} -- Type contexts
 	unused_contexts: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			-- Contexts that are not currently used
 
+feature {NONE} -- Common ancestor type
+
+	update_common_ancestor_type_list (a_type: ET_NESTED_TYPE_CONTEXT; a_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]; a_ignored: INTEGER)
+			-- Add `a_type' to the end of `a_list' if it does not conform
+			-- to any of the types already in the list.
+			-- Remove from the list other types which conform to `a_type'.
+			-- 'detachable' and/or 'separate' type marks can be added to any of the
+			-- types involved if it makes conformance possible beween these types.
+			-- The first `a_ignored' types in `a_list' are not taken into account
+			-- (it's as if the list started at index 'a_ignored + 1').
+			-- Free type contexts which have been removed from `a_list', and
+			-- `a_type' if it has not beed added to the list.
+			--
+			-- Note: For more details about Common Ancestor Type, see:
+			-- https://www.eiffel.org/doc/version/trunk/eiffel/Types#Common_ancestor_types
+		require
+			a_type_not_void: a_type /= Void
+			a_list_not_void: a_list /= Void
+			no_void_type: not a_list.has_void
+			a_ignored_large_enough: a_ignored >= 0
+			a_ignored_small_enough: a_ignored <= a_list.count
+		local
+			i, nb: INTEGER
+			l_add_type: BOOLEAN
+			l_other_type: ET_NESTED_TYPE_CONTEXT
+		do
+			l_add_type := True
+			from
+				i := a_ignored + 1
+				nb := a_list.count
+			until
+				i > nb
+			loop
+				l_other_type := a_list.item (i)
+				if a_type.conforms_to_context (l_other_type, system_processor) then
+					l_add_type := False
+						-- Jump out of the loop.
+					i := nb + 1
+				elseif l_other_type.conforms_to_context (a_type, system_processor) then
+					free_context (l_other_type)
+					a_list.remove (i)
+					nb := nb - 1
+				else
+						-- Try with different attachment marks.
+-- TODO: do the same thing with separateness marks.
+					l_other_type.force_last (tokens.detachable_like_current)
+					if a_type.conforms_to_context (l_other_type, system_processor) then
+						l_add_type := False
+							-- Jump out of the loop.
+						i := nb + 1
+					else
+						l_other_type.remove_last
+						a_type.force_last (tokens.detachable_like_current)
+						if l_other_type.conforms_to_context (a_type, system_processor) then
+							free_context (l_other_type)
+							a_list.remove (i)
+							nb := nb - 1
+						else
+							a_type.remove_last
+							i := i + 1
+						end
+					end
+				end
+			end
+			if l_add_type then
+				a_list.force_last (a_type)
+			else
+				free_context (a_type)
+			end
+		ensure
+			not_empty: a_list.count > a_ignored
+			no_void_type: not a_list.has_void
+		end
+
+	free_common_ancestor_types (a_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]; a_ignored: INTEGER)
+			-- Keep only the first `a_ignored' type contexts in `a_list'.
+			-- Free all other type contexts.
+		require
+			a_list_not_void: a_list /= Void
+			no_void_type: not a_list.has_void
+			a_ignored_large_enough: a_ignored >= 0
+			a_ignored_small_enough: a_ignored <= a_list.count
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := a_ignored + 1
+				nb := a_list.count
+			until
+				i > nb
+			loop
+				free_context (a_list.item (i))
+				i := i + 1
+			end
+			a_list.keep_first (a_ignored)
+		ensure
+			new_count: a_list.count = a_ignored
+			no_void_type: not a_list.has_void
+		end
+
+	common_ancestor_type_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
+			-- List used when computing Common Ancestor Types
+			--
+			-- Note: For more details about Common Ancestor Type, see:
+			-- https://www.eiffel.org/doc/version/trunk/eiffel/Types#Common_ancestor_types
+
 feature {NONE} -- Constants
 
 	dummy_feature: ET_FEATURE
@@ -3790,5 +3825,8 @@ invariant
 	attachment_scope_builder_not_void: attachment_scope_builder /= Void
 	unused_attachment_scopes_not_void: unused_attachment_scopes /= Void
 	no_void_unused_attachment_scope: not unused_attachment_scopes.has_void
+		-- Common Ancestor Types.
+	common_ancestor_type_list_not_void: common_ancestor_type_list /= Void
+	no_void_common_ancestor_type: not common_ancestor_type_list.has_void
 
 end
