@@ -190,8 +190,8 @@ feature -- Cluster errors
 			an_error_not_void: an_error /= Void
 		do
 			mutex.lock
-			set_has_eiffel_error (True)
 			report_info (an_error)
+			set_has_eiffel_error (True)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
@@ -339,8 +339,8 @@ feature -- Universe errors
 			an_error_not_void: an_error /= Void
 		do
 			mutex.lock
-			set_has_eiffel_error (True)
 			report_info (an_error)
+			set_has_eiffel_error (True)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
@@ -442,8 +442,8 @@ feature -- .NET assembly errors
 			an_error_not_void: an_error /= Void
 		do
 			mutex.lock
-			set_has_eiffel_error (True)
 			report_info (an_error)
+			set_has_eiffel_error (True)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
@@ -508,9 +508,9 @@ feature -- Syntax errors
 			an_error: ET_SYNTAX_ERROR
 		do
 			mutex.lock
-			set_has_eiffel_error (True)
 			create an_error.make (a_filename, p)
 			report_info (an_error)
+			set_has_eiffel_error (True)
 			mutex.unlock
 		end
 
@@ -726,8 +726,8 @@ feature -- System errors
 			an_error_not_void: an_error /= Void
 		do
 			mutex.lock
-			set_has_eiffel_error (True)
 			report_info (an_error)
+			set_has_eiffel_error (True)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
@@ -893,8 +893,8 @@ feature -- Validity errors
 				(is_ge and an_error.ge_reported)
 			then
 				mutex.lock
-				set_has_eiffel_error (True)
 				report_info (an_error)
+				set_has_eiffel_error (True)
 				if info_file = std.output then
 					info_file.put_line ("----")
 				end
@@ -8654,8 +8654,8 @@ feature -- Internal errors
 			an_error_not_void: an_error /= Void
 		do
 			mutex.lock
-			set_has_internal_error (True)
 			report_error (an_error)
+			set_has_internal_error (True)
 			if error_file = std.error then
 				error_file.put_line ("----")
 			end
