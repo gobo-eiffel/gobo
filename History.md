@@ -2,6 +2,10 @@
 
 ## Version 4.3 - ??
 
+### Gobo Eiffel Kernel Library
+
+* Removed support for ISE Eiffel 16.05.
+
 ### Gobo Eiffel Tools Library
 
 * Changed the way the type of conditional expressions is computed

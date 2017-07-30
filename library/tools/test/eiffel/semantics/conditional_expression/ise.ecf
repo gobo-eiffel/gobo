@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="xvtat2">
-	<target name="xvtat2">
-		<root class="XVTAT2" feature="make"/>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="xconditional_expression">
+	<target name="xconditional_expression">
+		<root class="XCONDITIONAL_EXPRESSION" feature="make"/>
 		<option trace="false" profile="false" debug="false" warning="true" void_safety="none">
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
-		<cluster name="vtat2_tester" location="${GOBO}/library/tools/test/eiffel/validity/vtat2">
+		<cluster name="conditional_expression_tester" location="${GOBO}/library/tools/test/eiffel/semantics/conditional_expression">
 			<option void_safety="none"/>
 		</cluster>
-		<cluster name="vtat2_testgen" location="TESTGEN">
-			<option void_safety="none"/>
-		</cluster>
-		<cluster name="test_common" location="${GOBO}/library/tools/test/eiffel/common">
+		<cluster name="conditional_expression_testgen" location="TESTGEN">
 			<option void_safety="none"/>
 		</cluster>
 		<cluster name="ts_test" location="${GOBO}/library/test/src">
@@ -92,6 +89,21 @@
 				<option void_safety="none"/>
 			</cluster>
 			<cluster name="dp_command" location="$|command">
+				<option void_safety="none"/>
+			</cluster>
+		</cluster>
+		<cluster name="dt_time" location="${GOBO}/library/time/src">
+			<option void_safety="none"/>
+			<cluster name="dt_clock" location="$|clock">
+				<option void_safety="none"/>
+			</cluster>
+			<cluster name="dt_date" location="$|date">
+				<option void_safety="none"/>
+			</cluster>
+			<cluster name="dt_stopwatch" location="$|stopwatch">
+				<option void_safety="none"/>
+			</cluster>
+			<cluster name="dt_time_zone" location="$|time_zone">
 				<option void_safety="none"/>
 			</cluster>
 		</cluster>
@@ -273,21 +285,6 @@
 				<cluster name="st_parameter" location="$|parameter">
 					<option void_safety="none"/>
 				</cluster>
-			</cluster>
-		</cluster>
-		<cluster name="dt_time" location="${GOBO}/library/time/src">
-			<option void_safety="none"/>
-			<cluster name="dt_clock" location="$|clock">
-				<option void_safety="none"/>
-			</cluster>
-			<cluster name="dt_date" location="$|date">
-				<option void_safety="none"/>
-			</cluster>
-			<cluster name="dt_stopwatch" location="$|stopwatch">
-				<option void_safety="none"/>
-			</cluster>
-			<cluster name="dt_time_zone" location="$|time_zone">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="xm_xml" location="${GOBO}/library/xml/src">

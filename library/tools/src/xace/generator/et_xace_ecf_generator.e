@@ -1047,13 +1047,11 @@ feature {NONE} -- Output
 			an_option: detachable ET_XACE_OPTIONS
 			subclusters: detachable ET_XACE_CLUSTERS
 			a_class_options: detachable DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
-			l_condition_16_05: BOOLEAN
 		do
 			if (not is_shallow or else not a_cluster.is_mounted) and then not a_cluster.is_fully_abstract then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<override name=%"")
 				print_quote_escaped_string (a_cluster.prefixed_name, a_file)
-				l_condition_16_05 := a_cluster.name.has_substring ("16_05")
 				a_file.put_string ("%" location=%"")
 				a_parent := a_cluster.parent
 				if a_parent /= Void then
@@ -1083,7 +1081,7 @@ feature {NONE} -- Output
 				end
 				a_class_options := a_cluster.class_options
 				subclusters := a_cluster.subclusters
-				if an_option = Void and a_class_options = Void and subclusters = Void and not l_condition_16_05 then
+				if an_option = Void and a_class_options = Void and subclusters = Void then
 					a_file.put_line ("/>")
 				else
 					if an_option /= Void and then an_option.is_prefix_option_declared and then attached an_option.declared_prefix_option as l_declared_prefix_option then
@@ -1095,20 +1093,6 @@ feature {NONE} -- Output
 					if an_option /= Void then
 						print_file_rules (an_option, indent + 1, a_file)
 						print_options (an_option, indent + 1, a_file)
-					end
-					if l_condition_16_05 then
-						print_indentation (indent + 1, a_file)
-						a_file.put_line ("<file_rule>")
-						print_indentation (indent + 2, a_file)
-						a_file.put_line ("<exclude>/.*\.e$</exclude>")
-						print_indentation (indent + 2, a_file)
-						a_file.put_line ("<condition>")
-						print_indentation (indent + 3, a_file)
-						a_file.put_line ("<version type=%"compiler%" min=%"16.05.9.9053%"/>")
-						print_indentation (indent + 2, a_file)
-						a_file.put_line ("</condition>")
-						print_indentation (indent + 1, a_file)
-						a_file.put_line ("</file_rule>")
 					end
 					if a_class_options /= Void then
 						a_class_options.do_all (agent print_class_options (?, indent + 1, a_file))

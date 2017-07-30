@@ -9,8 +9,6 @@
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
-
-	<option name="override_cluster" value="kernel_16_05" unless="${GOBO_EIFFEL}=ge"/>
 	
 	<cluster name="kernel" location="${GOBO}/library/kernel/src">
 		<option name="abstract" value="true"/>
@@ -20,7 +18,6 @@
 		<cluster name="unicode"/>
 		<cluster name="support"/>
 	</cluster>
-	<cluster name="kernel_16_05" location="${GOBO}/library/kernel/src/16.05" unless="${GOBO_EIFFEL}=ge"/>
 
 	<mount location="${GOBO}/library/kernel.xace"/>
 </library>
