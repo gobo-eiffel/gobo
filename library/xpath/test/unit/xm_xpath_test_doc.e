@@ -5,7 +5,7 @@ note
 		"Test XPath collection(), doc() and doc-available functions."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2001-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2001-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,7 +80,9 @@ feature -- Test
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("collection ()")
 			assert ("No error", not an_evaluator.is_error)
-			assert ("At least 2 documents", an_evaluator.evaluated_items.count >= 2)
+			if attached (create {KL_DIRECTORY}.make (file_system.current_working_directory)).filenames as l_current_directory_filenames then
+				assert ("At least as many documents as files in current working directory", an_evaluator.evaluated_items.count >= l_current_directory_filenames.count)
+			end
 		end
 
 	test_doc_available_function
