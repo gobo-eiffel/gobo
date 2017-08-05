@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -335,7 +335,7 @@ feature -- Test
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
 			a_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_name))
-			a_filename := file_system.pathname (a_name, new_filename ("gobo", ".tmp"))
+			a_filename := file_system.pathname (a_name, "gobo1.tmp")
 			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
@@ -365,7 +365,7 @@ feature -- Test
 			a_name, a_parent: STRING
 		do
 			a_parent := new_dirname ("gobo")
-			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
+			a_name := file_system.pathname (a_parent, "gobo1")
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
 			create a_directory.make (a_name)
@@ -394,7 +394,7 @@ feature -- Test
 			a_name, a_parent: STRING
 		do
 			a_parent := new_dirname ("gobo")
-			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
+			a_name := file_system.pathname (a_parent, "gobo1")
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
 			create a_directory.make (a_name)
@@ -450,7 +450,7 @@ feature -- Test
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
 			a_directory.create_directory
 			assert ("readable1", file_system.is_directory_readable (a_name))
-			a_filename := file_system.pathname (a_name, new_filename ("gobo", ".tmp"))
+			a_filename := file_system.pathname (a_name, "gobo1.tmp")
 			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
@@ -478,7 +478,7 @@ feature -- Test
 			a_name, a_parent: STRING
 		do
 			a_parent := new_dirname ("gobo")
-			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
+			a_name := file_system.pathname (a_parent, "gobo1")
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
 			create a_parent_directory.make (a_parent)
@@ -505,7 +505,7 @@ feature -- Test
 			a_filename: STRING
 		do
 			a_parent := new_dirname ("gobo")
-			a_name := file_system.pathname (a_parent, new_dirname ("gobo"))
+			a_name := file_system.pathname (a_parent, "gobo1")
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
 			create a_parent_directory.make (a_parent)
@@ -516,7 +516,7 @@ feature -- Test
 			a_directory.create_directory
 			assert ("readable2", file_system.is_directory_readable (a_parent))
 			assert ("readable3", file_system.is_directory_readable (a_name))
-			a_filename := file_system.pathname (a_name, new_filename ("gobo",".tmp"))
+			a_filename := file_system.pathname (a_name, "gobo2.tmp")
 			file_system.copy_file (Execution_environment.interpreted_string (hello_filename), a_filename)
 			assert ("readable4", file_system.is_file_readable (a_filename))
 			assert_files_equal ("diff", hello_filename, a_filename)
@@ -576,7 +576,7 @@ feature -- Test
 			i, nb: INTEGER
 		do
 			a_parent := new_dirname ("gobo")
-			a_child := new_dirname ("gobo")
+			a_child := "gobo1"
 			a_name := file_system.pathname (a_parent, a_child)
 			assert ("not_readable1", not file_system.is_directory_readable (a_parent))
 			assert ("not_readable2", not file_system.is_directory_readable (a_name))
@@ -588,7 +588,7 @@ feature -- Test
 			a_directory.create_directory
 			assert ("readable2", file_system.is_directory_readable (a_parent))
 			assert ("readable3", file_system.is_directory_readable (a_name))
-			a_filename := file_system.pathname (a_parent, new_filename ("gobo", ".tmp"))
+			a_filename := file_system.pathname (a_parent, "gobo2.tmp")
 			file_system.copy_file (Execution_environment.interpreted_string (hello_filename), a_filename)
 			assert ("readable4", file_system.is_file_readable (a_filename))
 			assert_files_equal ("diff", hello_filename, a_filename)
