@@ -9,6 +9,7 @@
 
 # usage: install.sh [-v] <c_compiler>
 
+echo "Executing install.sh..."
 
 gobo_usage() {
 	echo "usage: install.sh [-v] <c_compiler>"
