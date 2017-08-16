@@ -64,26 +64,36 @@ BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
 PATH=$BIN_DIR:$PATH
 export PATH
 cd $BIN_DIR
+echo "Bootstraping gec..."
 $BOOTSTRAP_DIR/bootstrap.sh $VERBOSE $CC
 
 if [ "$EIF" = "ge" ]; then
 	cd $BIN_DIR
+	echo "Compiling geant..."
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/geant/src/ge.xace
 	$STRIP geant${EXE}
+	echo "Compiling gexace..."
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gexace/src/ge.xace
 	$STRIP gexace${EXE}
+	echo "Compiling gelex..."
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelex/src/ge.xace
 	$STRIP gelex${EXE}
+	echo "Compiling geyacc..."
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/geyacc/src/ge.xace
 	$STRIP geyacc${EXE}
+	echo "Compiling gepp..."
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gepp/src/ge.xace
 	$STRIP gepp${EXE}
+	echo "Compiling getest..."
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/getest/src/ge.xace
 	$STRIP getest${EXE}
+	echo "Compiling gelint..."
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelint/src/ge.xace
 	$STRIP gelint${EXE}
+	echo "Compiling gedoc..."
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gedoc/src/ge.xace
 	$STRIP gedoc${EXE}
+	echo "Compiling gexlt..."
 	$BIN_DIR/geant$EXE --buildfilename=$GOBO/tool/gexslt/src/build.eant compile_ge
 	$STRIP gexslt${EXE}
 else
