@@ -5,7 +5,7 @@ note
 		"Eiffel manifest arrays"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,9 @@ inherit
 		redefine
 			make,
 			make_with_capacity,
-			reset
+			reset,
+			position,
+			first_leaf
 		end
 
 create
@@ -59,6 +61,9 @@ feature -- Initialization
 			l_expression: ET_EXPRESSION
 			i, nb: INTEGER
 		do
+			if attached cast_type as l_cast_type then
+				l_cast_type.type.reset
+			end
 			nb := count - 1
 			from i := 0 until i > nb loop
 				l_item := storage.item (i)
@@ -80,6 +85,42 @@ feature -- Status report
 
 	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
+
+feature -- Access
+
+	cast_type: detachable ET_TARGET_TYPE
+			-- Cast type
+
+	position: ET_POSITION
+			-- Position of first character of
+			-- current node in source code
+		do
+			if attached cast_type as l_cast_type then
+				Result := l_cast_type.position
+			else
+				Result := precursor
+			end
+		end
+
+	first_leaf: ET_AST_LEAF
+			-- First leaf node in current node
+		do
+			if attached cast_type as l_cast_type then
+				Result := l_cast_type.first_leaf
+			else
+				Result := precursor
+			end
+		end
+
+feature -- Setting
+
+	set_cast_type (a_type: like cast_type)
+			-- Set `cast_type' to `a_type'.
+		do
+			cast_type := a_type
+		ensure
+			cast_type_set: cast_type = a_type
+		end
 
 feature -- Processing
 

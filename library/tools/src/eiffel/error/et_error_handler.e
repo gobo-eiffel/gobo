@@ -6243,6 +6243,54 @@ feature -- Validity errors
 			end
 		end
 
+	report_vwma1a_error (a_class, a_class_impl: ET_CLASS; a_manifest_array: ET_MANIFEST_ARRAY)
+			-- Report VWMA-1 error: the cast type of `a_manifest_array' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not an "ARRAY" type.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_manifest_array_not_void: a_manifest_array /= Void
+			a_cast_type_not_void: a_manifest_array.cast_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwma1_error (a_class) then
+				create an_error.make_vwma1a (a_class, a_class_impl, a_manifest_array)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vwma2a_error (a_class, a_class_impl: ET_CLASS; a_manifest_array_item: ET_EXPRESSION; i: INTEGER; a_item_type, a_array_parameter_type: ET_NAMED_TYPE)
+			-- Report VWMA-2 error: the type `a_item_type' of the `i'-th item
+			-- `a_manifest_array_item' in manifest array appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself),
+			-- does not conform nor convert to the generic parameter
+			-- `a_array_parameter_type' of the array type specified
+			-- for the manifest array.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_manifest_array_item_not_void: a_manifest_array_item /= Void
+			a_item_type_type_not_void: a_item_type /= Void
+			a_item_type_type_is_named_type: a_item_type.is_named_type
+			a_array_parameter_type_not_void: a_array_parameter_type /= Void
+			a_array_parameter_type_is_named_type: a_array_parameter_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwma2_error (a_class) then
+				create an_error.make_vwma2a (a_class, a_class_impl, a_manifest_array_item, i, a_item_type, a_array_parameter_type)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vwmq0a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT)
 			-- Report VWMQ error: the cast type of `a_constant' appearing in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
@@ -8368,6 +8416,26 @@ feature -- Validity error status
 
 	reportable_vweq_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWEQ error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vwma1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWMA-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vwma2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWMA-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

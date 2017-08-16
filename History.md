@@ -12,6 +12,10 @@
   to match ISE Eiffel 17.11.
 * Fixed bug in the computation of the dynamic type set of conditional
   expressions.
+* Added support for typed manifest arrays as described
+  [here](https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array).
+* Implemented new semantics for untyped manifest arrays as described
+  [here](https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array).
 
 ## Version 4.2 - 14 July 2017
 

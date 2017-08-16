@@ -819,6 +819,9 @@ feature -- Kernel types
 	array_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "ARRAY [detachable ANY]", with implicit 'attached' type mark
 
+	array_none_type: ET_CLASS_TYPE
+			-- Class type "ARRAY [NONE]", with implicit 'attached' type mark
+
 	array_like_current_type: ET_CLASS_TYPE
 			-- Class type "ARRAY [like Current]", with implicit 'attached' type mark
 
@@ -994,12 +997,16 @@ feature -- Kernel types
 				-- Note: make sure to call `set_any_type' before calling `set_array_type',
 				-- `set_function_type', `set_predicate_type', `set_procedure_type',
 				-- `set_routine_type', `set_special_type', `set_type_type' and
-				-- `set_typed_pointer_type', otherwise `any_type' is still Void when
+				-- `set_typed_pointer_type', otherwise `any_type' is not set when
 				-- `set_kernel_types' is called from the creation procedure.
 			set_any_type
+				-- Note: make sure to call `set_none_type' before calling `set_array_type',
+				-- otherwise `none_type' is not set when `set_kernel_types' is called from
+				-- the creation procedure.
+			set_none_type
 				-- Note: make sure to call `set_tuple_type' before calling `set_function_type',
 				-- `set_predicate_type', `set_procedure_type' and `set_routine_type', otherwise
-				-- `tuple_type' is still Void when `set_kernel_types' is called from the
+				-- `tuple_type' is not set when `set_kernel_types' is called from the
 				-- creation procedure.
 			set_tuple_type
 			set_array_type
@@ -1024,7 +1031,6 @@ feature -- Kernel types
 			set_natural_16_type
 			set_natural_32_type
 			set_natural_64_type
-			set_none_type
 			set_pointer_type
 			set_predicate_type
 			set_procedure_type
@@ -1089,6 +1095,10 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (tokens.like_current)
 			create array_like_current_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+				-- Type "ARRAY [NONE]".
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (none_type)
+			create array_none_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_boolean_type
@@ -1708,6 +1718,7 @@ feature -- Kernel types
 			unfolded_empty_tuple_actual_parameters := tokens.empty_actual_parameters
 			array_any_type := tokens.unknown_generic_class_type
 			array_detachable_any_type := tokens.unknown_generic_class_type
+			array_none_type := tokens.unknown_generic_class_type
 			array_like_current_type := tokens.unknown_generic_class_type
 			boolean_type := tokens.unknown_class_type
 			character_type := tokens.unknown_class_type
@@ -2786,6 +2797,7 @@ invariant
 	any_clients_not_void: any_clients /= Void
 	array_any_type_not_void: array_any_type /= Void
 	array_detachable_any_type_not_void: array_detachable_any_type /= Void
+	array_none_type_not_void: array_none_type /= Void
 	array_like_current_type_not_void: array_like_current_type /= Void
 	character_8_type_not_void: character_8_type /= Void
 	character_32_type_not_void: character_32_type /= Void

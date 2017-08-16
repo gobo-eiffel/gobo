@@ -1105,6 +1105,9 @@ feature {ET_AST_NODE} -- Processing
 	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Process `an_expression'.
 		do
+			if attached an_expression.cast_type as l_type then
+				process_type (l_type.type)
+			end
 			process_expression_list (an_expression)
 		end
 

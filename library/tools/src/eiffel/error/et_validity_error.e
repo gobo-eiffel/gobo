@@ -274,6 +274,8 @@ create
 	make_vwce0a,
 	make_vweq0a,
 	make_vweq0b,
+	make_vwma1a,
+	make_vwma2a,
 	make_vwmq0a,
 	make_vwmq0b,
 	make_vwmq0c,
@@ -11843,6 +11845,101 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = base type of right operand
 		end
 
+	make_vwma1a (a_class, a_class_impl: ET_CLASS; a_manifest_array: ET_MANIFEST_ARRAY)
+			-- Create a new VWMA-1 error: the cast type of `a_manifest_array' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not an "ARRAY" type.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_manifest_array_not_void: a_manifest_array /= Void
+			a_cast_type_not_void: a_manifest_array.cast_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := ast_position (a_manifest_array.cast_type)
+			code := template_code (vwma1a_template_code)
+			etl_code := vwma1_etl_code
+			default_template := default_message_template (vwma1a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (type_name (a_manifest_array.cast_type), 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = cast type
+		end
+
+	make_vwma2a (a_class, a_class_impl: ET_CLASS; a_manifest_array_item: ET_EXPRESSION; i: INTEGER; a_item_type, a_array_parameter_type: ET_NAMED_TYPE)
+			-- Create a new VWMA-2 error: the type `a_item_type' of the `i'-th item
+			-- `a_manifest_array_item' in manifest array appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself),
+			-- does not conform nor convert to the generic parameter
+			-- `a_array_parameter_type' of the array type specified
+			-- for the manifest array.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_manifest_array_item_not_void: a_manifest_array_item /= Void
+			a_item_type_type_not_void: a_item_type /= Void
+			a_item_type_type_is_named_type: a_item_type.is_named_type
+			a_array_parameter_type_not_void: a_array_parameter_type /= Void
+			a_array_parameter_type_is_named_type: a_array_parameter_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_manifest_array_item.position
+			code := template_code (vwma2a_template_code)
+			etl_code := vwma2_etl_code
+			default_template := default_message_template (vwma2a_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (i.out, 7)
+			parameters.put (a_item_type.to_text, 8)
+			parameters.put (a_array_parameter_type.to_text, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = type of manifest array item
+			-- dollar8: $8 = type of generic parameter of array type
+		end
+
 	make_vwmq0a (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT)
 			-- Create a new VWMQ error: the cast type of `a_constant' appearing in
 			-- `a_class_impl' and viewed from one of its descendants `a_class'
@@ -14169,6 +14266,8 @@ feature {NONE} -- Implementation
 	vwce0a_default_template: STRING = "expressions of types '$8' and '$7' in branches of conditional expression do not conform to each other."
 	vweq0a_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms nor converts to the other."
 	vweq0b_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms nor converts to the other."
+	vwma1a_default_template: STRING = "type '$7' in the manifest array is not an ARRAY type."
+	vwma2a_default_template: STRING = "the $7-th item (of type '$8') in manifest array does not conform nor convert to the array's generic parameter (of type '$9')."
 	vwmq0a_default_template: STRING = "type '$7' in the integer constant is not one of the sized variants of INTEGER."
 	vwmq0b_default_template: STRING = "type '$7' in the real constant is not one of the sized variants of REAL."
 	vwmq0c_default_template: STRING = "type '$7' in the character constant is not one of the sized variants of CHARACTER."
@@ -14341,6 +14440,8 @@ feature {NONE} -- Implementation
 	vwbe_etl_code: STRING = "VWBE"
 	vwce_etl_code: STRING = "VWCE"
 	vweq_etl_code: STRING = "VWEQ"
+	vwma1_etl_code: STRING = "VWMA-1"
+	vwma2_etl_code: STRING = "VWMA-2"
 	vwmq_etl_code: STRING = "VWMQ"
 	vwst1_etl_code: STRING = "VWST-1"
 	vwst2_etl_code: STRING = "VWST-2"
@@ -14638,6 +14739,8 @@ feature {NONE} -- Implementation
 	vwce0a_template_code: STRING = "vwce0a"
 	vweq0a_template_code: STRING = "vweq0a"
 	vweq0b_template_code: STRING = "vweq0b"
+	vwma1a_template_code: STRING = "vwma1a"
+	vwma2a_template_code: STRING = "vwma2a"
 	vwmq0a_template_code: STRING = "vwmq0a"
 	vwmq0b_template_code: STRING = "vwmq0b"
 	vwmq0c_template_code: STRING = "vwmq0c"

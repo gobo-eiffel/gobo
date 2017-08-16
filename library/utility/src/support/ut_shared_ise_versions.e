@@ -284,6 +284,14 @@ feature -- Access
 			ise_6_6_latest_not_void: Result /= Void
 		end
 
+	ise_17_11_0: UT_VERSION
+			-- ISE 17.11.0
+		once
+			create Result.make (17, 11, 0, 0)
+		ensure
+			ise_17_11_0_not_void: Result /= Void
+		end
+			
 	ise_latest: UT_VERSION
 			-- After the latest release of ISE
 		once

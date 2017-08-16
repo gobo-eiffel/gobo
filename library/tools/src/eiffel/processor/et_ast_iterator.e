@@ -1895,6 +1895,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
+			if attached an_expression.cast_type as l_type then
+				l_type.process (Current)
+			end
 			an_expression.left_symbol.process (Current)
 			nb := an_expression.count
 			from i := 1 until i > nb loop

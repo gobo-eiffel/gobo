@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+
+Error code: VWMA
+
+Type error: non-conforming manifest array. 
+What to do: make sure that every element type conforms to desired type.  
+
+Class: AA
+Feature: make
+Manifest array element at index 1 has type STRING_8 incompatible with declared element type INTEGER_32.
+Line: 13
+      do
+->      a := {ARRAY [INTEGER]} <<"gobo">>
+      end
+
+-------------------------------------------------------------------------------

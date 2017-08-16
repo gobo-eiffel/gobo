@@ -68,12 +68,14 @@ feature {NONE} -- Implementation
 		local
 			a_parser: XM_EIFFEL_PARSER
 			a_sink: XM_STOP_ON_ERROR_FILTER
+			a_sink_2: XM_CALLBACKS_FILTER
 		do
 			a_sink := new_stop_on_error
+			a_sink_2 := a_sink
 
 			create a_parser.make
 			a_parser.set_string_mode_mixed
-			a_parser.set_callbacks (standard_callbacks_pipe (<<new_unicode_validation, a_sink>>))
+			a_parser.set_callbacks (standard_callbacks_pipe (<<new_unicode_validation, a_sink_2>>))
 			a_parser.parse_from_stream (literal_stream (a_in))
 			assert ("parse_fails", a_sink.has_error)
 		end

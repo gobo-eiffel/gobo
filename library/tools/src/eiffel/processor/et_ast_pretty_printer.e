@@ -3653,6 +3653,10 @@ feature {ET_AST_NODE} -- Processing
 			l_item: ET_EXPRESSION_ITEM
 			l_expression: ET_EXPRESSION
 		do
+			if attached an_expression.cast_type as l_cast_type then
+				process_cast_type (l_cast_type)
+				print_space
+			end
 			an_expression.left_symbol.process (Current)
 			nb := an_expression.count
 			from i := 1 until i > nb loop

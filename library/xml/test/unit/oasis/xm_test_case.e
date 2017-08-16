@@ -168,11 +168,13 @@ feature {NONE} -- Parser
 			-- Reset parser.
 		local
 			an_attribute: XM_ATTRIBUTE_DEFAULT_FILTER
+			a_error: XM_CALLBACKS_FILTER
 		do
 			parser := new_parser
 			parser.set_string_mode_mixed
 
 			error := new_stop_on_error
+			a_error := error
 			printer := new_canonical_pretty_print
 			printer.set_output_to_string
 			create an_attribute.make_null
@@ -180,7 +182,7 @@ feature {NONE} -- Parser
 			parser.set_callbacks (callbacks_pipe (<<
 				new_unicode_validation,
 				an_attribute,
-				error,
+				a_error,
 				printer >>))
 		ensure
 			parser_not_void: parser /= Void

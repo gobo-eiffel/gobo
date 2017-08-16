@@ -1304,181 +1304,193 @@ feature {NONE} -- Expression processing
 			end
 		end
 
-	find_manifest_array_type (an_expression: ET_MANIFEST_ARRAY; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- `a_context' represents the type in which `an_expression' appears.
-			-- It will be altered on exit to represent the type of `an_expression'.
+	find_manifest_array_type (a_expression: ET_MANIFEST_ARRAY; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
-			an_expression_not_void: an_expression /= Void
+			a_expression_not_void: a_expression /= Void
+			a_context_not_void: a_context /= Void
+		do
+			if attached a_expression.cast_type as l_cast_type then
+				find_typed_manifest_array_type (a_expression, l_cast_type, a_context)
+			else
+				find_untyped_manifest_array_type (a_expression, a_context)
+			end
+		end
+
+	find_typed_manifest_array_type (a_expression: ET_MANIFEST_ARRAY; a_cast_type: ET_TARGET_TYPE; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- A typed manifest array is of the form:
+			--    {T} << item_1, ..., item_n>>
+			-- The type of the manifest array is the attached version of 'T'.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+			-- for more details.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_cast_type_not_void: a_cast_type /= Void
+			typed: a_expression.cast_type = a_cast_type
+			a_context_not_void: a_context /= Void
+		do
+			reset_fatal_error (False)
+			a_context.force_last (a_cast_type.type)
+			a_context.force_last (tokens.attached_like_current)
+		end
+
+	find_untyped_manifest_array_type (a_expression: ET_MANIFEST_ARRAY; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- A untyped manifest array is of the form:
+			--    << item_1, ..., item_n>>
+			-- We have to check that:
+			--  * there exists an item of type 'T' such as the types of all other
+			--    items conform to 'T' or its detachable version.
+			--  * otherwise, 'T' is "ANY".
+			-- The type of the manifest array is "ARRAY [T]", or "ARRAY [detachable T]"
+			-- if the type of one of the items is not attached.
+			-- An empty manifest array "<< >>" is of type "ARRAY [NONE]".
+			--
+			-- There is a backward compatibility mode when the manifest array is
+			-- the source of an attachment and the array type built above does not
+			-- conform nor convert to the type of the target of this attachment.
+			-- In that case, the type of the manifest array will be the type of
+			-- the target of this attachment when this type is an array type and
+			-- the types of all items conform or convert to its generic parameter.
+			-- Also, for empty manifest arrays, the type will be "ARRAY [ANY]" when
+			-- the type of target of the assignment is not an array type and
+			-- "ARRAY [NONE]" does not conform nor convert to it but "ARRAY [ANY]" does.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+			-- for more details.
+		require
+			a_expression_not_void: a_expression /= Void
+			untyped: a_expression.cast_type = Void
 			a_context_not_void: a_context /= Void
 		local
 			i, nb: INTEGER
-			had_error: BOOLEAN
-			hybrid_type: BOOLEAN
-			l_is_item_type_attached: BOOLEAN
-			array_class: ET_NAMED_CLASS
-			l_array_type: detachable ET_CLASS_TYPE
-			l_array_parameters: detachable ET_ACTUAL_PARAMETERS
-			l_array_parameter: detachable ET_TYPE
-			l_detachable_any_type: ET_CLASS_TYPE
-			l_expression_context: ET_NESTED_TYPE_CONTEXT
-			l_parameter_context: ET_NESTED_TYPE_CONTEXT
-			l_item_context: detachable ET_NESTED_TYPE_CONTEXT
-			l_old_item_context: ET_NESTED_TYPE_CONTEXT
+			l_item_context: ET_NESTED_TYPE_CONTEXT
+			l_item: ET_EXPRESSION_ITEM
+			l_item_expression: ET_EXPRESSION
+			l_had_error: BOOLEAN
+			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
+			l_old_result_context_list_count: INTEGER
+			l_array_type: ET_CLASS_TYPE
+			l_item_target_context: ET_TYPE_CONTEXT
+			l_parameter_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_use_target_type: BOOLEAN
+			l_has_converted_item: BOOLEAN
+			l_item_conversion_aborted: BOOLEAN
 		do
 			reset_fatal_error (False)
-			array_class := current_universe_impl.array_any_type.named_base_class
-				-- Try to find out whether the expected type (i.e. `current_target_type')
-				-- for the manifest array is 'ARRAY [...]'. If this is the case then the
-				-- manifest array will be created of that type.
-			if attached {ET_CLASS_TYPE} current_target_type.named_type as l_class_type then
-				l_array_type := l_class_type
-			end
-			if l_array_type /= Void and then l_array_type.base_class.is_array_class then
-				l_array_parameters := l_array_type.actual_parameters
-				if l_array_parameters /= Void and then l_array_parameters.count = 1 then
-					l_array_parameter := l_array_parameters.type (1)
+			l_use_target_type := True
+			l_item_target_context := current_system.detachable_any_type
+				-- Try to find out whether the manifest array is the source of
+				-- an attachment whose target is of type "ARRAY [T]". If this is
+				-- the case then the expected type for the items of the manifest
+				-- array will be the generic parameter "T" of this array type.
+			if attached {ET_CLASS_TYPE} current_target_type.named_type as l_expected_array_type and then l_expected_array_type.base_class.is_array_class then
+				if attached l_expected_array_type.actual_parameters as l_array_parameters and then l_array_parameters.count = 1 then
+					l_parameter_context := new_context (current_type)
+					l_parameter_context.force_last (l_array_parameters.type (1))
+					l_item_target_context := l_parameter_context
 				end
 			end
-			nb := an_expression.count
-			if l_array_parameter /= Void then
-					-- The expected type for the manifest array is 'ARRAY [...]'.
-					-- So the manifest array will be created of that type.
-				l_parameter_context := new_context (current_type)
-				l_parameter_context.force_last (l_array_parameter)
-				l_expression_context := new_context (current_type)
-				from i := 1 until i > nb loop
-					find_expression_type (an_expression.expression (i), l_expression_context, l_parameter_context)
-					if has_fatal_error then
-						had_error := True
-					else
-						if l_array_type /= Void and then not l_expression_context.conforms_to_type (l_array_parameter, current_type, system_processor) then
-								-- The type of this item does not conform to the type of
-								-- the parameter of the expected array type. Try to see
-								-- if it converts to it.
-							if type_checker.convert_feature (l_expression_context, l_parameter_context) = Void then
-									-- It does not conform nor convert. We are out of luck
-									-- and revise our position: We will have to find another
-									-- way to determine the type of the array, and a validity
-									-- error will be reported when we try to pass this array as
-									-- argument or in an assignment with a type that does
-									-- not conform nor convert to the expected type.
-									-- To determine the type of the array, we will now
-									-- try to see if all items have the same type. If so then the
-									-- type of the manifest array will be an array of that type.
-									-- Otherwise we are out of luck and will consider that it is
-									-- an 'ARRAY [ANY]' or an 'ARRAY [detachable ANY]' if not all
-									-- items are attached.
--- TODO: remove convert features from AST.
-								l_array_type := Void
-							else
--- TODO: insert convert feature in AST.
-							end
-						end
-						if not had_error then
-							if l_item_context = Void then
-								l_item_context := l_expression_context
-								l_expression_context := new_context (current_type)
-							elseif not hybrid_type then
-								if l_expression_context.conforms_to_context (l_item_context, system_processor) then
-										-- The type of the current item conforms to the type
-										-- retained so far. Keep the old type.
-								elseif l_item_context.conforms_to_context (l_expression_context, system_processor) then
-										-- The type retained so far conforms to the type of the
-										-- current item. Retain this new type.
-									l_old_item_context := l_item_context
-									l_item_context := l_expression_context
-									l_expression_context := l_old_item_context
-								else
-									hybrid_type := True
-									l_is_item_type_attached := l_item_context.is_type_attached
-									if l_is_item_type_attached then
-										l_is_item_type_attached := l_expression_context.is_type_attached
-									end
-								end
-							elseif l_is_item_type_attached then
-								l_is_item_type_attached := l_expression_context.is_type_attached
-							end
-						end
-					end
-					l_expression_context.wipe_out
-					i := i + 1
-				end
-				free_context (l_expression_context)
-				free_context (l_parameter_context)
-			else
-					-- Try to see if the types of all items conform to one of them.
-					-- If so then the type of the manifest array will be an array of
-					-- that type. Otherwise we are out of luck and will consider that
-					-- it is an 'ARRAY [ANY]' or an 'ARRAY [detachable ANY]' if not
-					-- all items are attached.
-				l_array_type := Void
-				l_detachable_any_type := current_system.detachable_any_type
-				l_expression_context := new_context (current_type)
-				from i := 1 until i > nb loop
-					find_expression_type (an_expression.expression (i), l_expression_context, l_detachable_any_type)
-					if has_fatal_error then
-						had_error := True
-					elseif not had_error then
-						if l_item_context = Void then
-							l_item_context := l_expression_context
-							l_expression_context := new_context (current_type)
-						elseif not hybrid_type then
-							if l_expression_context.conforms_to_context (l_item_context, system_processor) then
-									-- The type of the current item conforms to the type
-									-- retained so far. Keep the old type.
-							elseif l_item_context.conforms_to_context (l_expression_context, system_processor) then
-									-- The type retained so far conforms to the type of the
-									-- current item. Retain this new type.
-								l_old_item_context := l_item_context
-								l_item_context := l_expression_context
-								l_expression_context := l_old_item_context
-							else
-								hybrid_type := True
-								l_is_item_type_attached := l_item_context.is_type_attached
-								if l_is_item_type_attached then
-									l_is_item_type_attached := l_expression_context.is_type_attached
-								end
-							end
-						elseif l_is_item_type_attached then
-							l_is_item_type_attached := l_expression_context.is_type_attached
-						end
-					end
-					l_expression_context.wipe_out
-					i := i + 1
-				end
-				free_context (l_expression_context)
-			end
-			if had_error then
-				set_fatal_error
-			elseif l_array_type /= Void then
-				a_context.force_last (l_array_type)
-			elseif l_item_context = Void then
-					-- This is an empty manifest array: '<< >>'. We have no way to
-					-- find out the type of the parameter, so we use 'ARRAY [ANY]'.
-				l_array_type := current_system.array_any_type
-				a_context.force_last (l_array_type)
-			elseif hybrid_type then
-					-- There are at least two items which don't conform to each other either way.
-					-- Use 'ARRAY [ANY]' in that case, or 'ARRAY [detachable ANY]' if at least
-					-- one of the items is not attached.
--- TODO: we could do better than 'ARRAY [ANY]', for example choosing one of the
--- common ancestors of these two types. But which one to choose? ETL2 does not say.
-				if l_is_item_type_attached then
-					l_array_type := current_system.array_any_type
+			nb := a_expression.count
+			if nb = 0 then
+					-- This is an empty manifest array: '<< >>'.
+				if l_use_target_type and then l_parameter_context /= Void and then not current_system.none_type.conforms_to_context (l_parameter_context, system_processor) then
+						-- Its type is the attachment target array type.
+-- TODO: Emit "manifest_array_type" warning as specified in ECF 1.17.0.
+					a_context.copy_type_context (l_parameter_context)
+				elseif
+					l_use_target_type and then l_parameter_context = Void and then
+					not (current_system.array_none_type.conforms_to_context (current_target_type, system_processor) or else
+					(current_class = current_class_impl and then type_checker.convert_feature (current_system.array_none_type, current_target_type) /= Void)) and then
+					(current_system.array_any_type.conforms_to_context (current_target_type, system_processor) or else
+					(current_class = current_class_impl and then type_checker.convert_feature (current_system.array_any_type, current_target_type) /= Void))
+				then
+							-- Its type is 'ARRAY [ANY]'.
+-- TODO: Emit "manifest_array_type" warning as specified in ECF 1.17.0.
+						a_context.force_last (current_system.any_type)
 				else
-					l_array_type := current_system.array_detachable_any_type
+						-- Its type is 'ARRAY [NONE]'.
+					a_context.force_last (current_system.none_type)
 				end
-				a_context.force_last (l_array_type)
-			else
-					-- The type of all items conforms to one of them.
-					-- So the manifest array will be an array of that type.
-				a_context.copy_type_context (l_item_context)
 				l_array_type := current_system.array_like_current_type
 				a_context.force_last (l_array_type)
+			else
+				l_result_context_list := common_ancestor_type_list
+				l_old_result_context_list_count := l_result_context_list.count
+				from i := 1 until i > nb loop
+					l_item := a_expression.item (i)
+					l_item_expression := l_item.expression
+					l_item_context := new_context (current_type)
+					find_expression_type (l_item_expression, l_item_context, l_item_target_context)
+					if has_fatal_error then
+						l_had_error := True
+						l_item_conversion_aborted := True
+						free_context (l_item_context)
+					else
+						if l_use_target_type and then l_parameter_context /= Void and then not l_item_conversion_aborted then
+							if not l_item_context.conforms_to_context (l_parameter_context, system_processor) then
+									-- The type of this item does not conform to the type of
+									-- the parameter of the attachment target array type.
+									-- Try to see if it converts to it.
+									-- Convertibility should be resolved in the implementation class.
+								if current_class /= current_class_impl or else type_checker.convert_feature (l_item_context, l_parameter_context) = Void then
+									l_item_conversion_aborted := True
+								end
+							end
+						end
+						update_common_ancestor_type_list (l_item_context, l_result_context_list, l_old_result_context_list_count)
+					end
+					i := i + 1
+				end
+				if l_had_error then
+					set_fatal_error
+				else
+					if l_use_target_type and then l_parameter_context /= Void and then not l_item_conversion_aborted then
+						if l_result_context_list.count = l_old_result_context_list_count + 1 and then l_result_context_list.last.conforms_to_context (l_parameter_context, system_processor) then
+								-- There is an item such as the types of all other
+								-- items conform to its type, and this type conforms
+								-- to the attachment target array type generic parameter.
+								-- This means that the types of all items conform to
+								-- the attachment target array type generic parameter.
+								-- So no conversion was necessary.
+							check no_conversion: not l_has_converted_item end
+							a_context.copy_type_context (l_result_context_list.last)
+						else
+-- TODO: Emit "manifest_array_type" warning as specified in ECF 1.17.0.
+							a_context.copy_type_context (l_parameter_context)
+						end
+					elseif l_result_context_list.count = l_old_result_context_list_count + 1 then
+							-- There is an item such as the types of all other
+							-- items conform to its type.
+						a_context.copy_type_context (l_result_context_list.last)
+					else
+							-- There is no item such as the types of all other
+							-- items conform to its type.
+							-- In that case the type of the manifest array will be
+							-- "ARRAY [ANY]", or "ARRAY [detachable ANY]" if the type
+							-- of one of the items not attached.
+						l_item_context := new_context (current_type)
+						l_item_context.force_last (current_system.any_type)
+						update_common_ancestor_type_list (l_item_context, l_result_context_list, l_old_result_context_list_count)
+						a_context.copy_type_context (l_result_context_list.last)
+					end
+					l_array_type := current_system.array_like_current_type
+					a_context.force_last (l_array_type)
+				end
+				free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
 			end
-			if l_item_context /= Void then
-				free_context (l_item_context)
+			if l_parameter_context /= Void then
+				free_context (l_parameter_context)
 			end
 		end
 

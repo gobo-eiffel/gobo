@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+
+Error code: VWMA
+
+Type error: non-conforming manifest array. 
+What to do: make sure that every element type conforms to desired type.  
+
+Class: AA
+Feature: make
+Manifest array type COMPARABLE is not an array type.
+Line: 13
+      do
+->      a := {COMPARABLE} <<"gobo">>
+      end
+
+-------------------------------------------------------------------------------

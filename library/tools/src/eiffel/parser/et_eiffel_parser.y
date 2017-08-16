@@ -196,10 +196,10 @@ create
 %type <detachable ET_LOCAL_VARIABLE_ITEM> Local_variable Local_variable_semicolon
 %type <detachable ET_LOCAL_VARIABLE_LIST> Local_declarations_opt Local_variable_list
 %type <detachable ET_LOOP_INVARIANTS> Loop_invariant_clause Loop_invariant_clause_opt
-%type <detachable ET_MANIFEST_ARRAY> Manifest_array Manifest_array_expression_list
+%type <detachable ET_MANIFEST_ARRAY> Typed_manifest_array Untyped_manifest_array Manifest_array_expression_list
 %type <detachable ET_MANIFEST_STRING> Manifest_string Typed_manifest_string Untyped_manifest_string
-%type <detachable ET_MANIFEST_STRING_ITEM> Manifest_string_comma
-%type <detachable ET_MANIFEST_STRING_LIST> Manifest_string_list Parenthesized_manifest_string_list_opt
+%type <detachable ET_MANIFEST_STRING_ITEM> Untyped_manifest_string_comma
+%type <detachable ET_MANIFEST_STRING_LIST> Untyped_manifest_string_list Parenthesized_untyped_manifest_string_list_opt
 %type <detachable ET_MANIFEST_TUPLE> Manifest_tuple Manifest_tuple_expression_list
 %type <detachable ET_OBSOLETE> Obsolete_opt
 %type <detachable ET_PARENTHESIZED_EXPRESSION> Parenthesized_expression
@@ -227,7 +227,7 @@ create
 %type <detachable ET_WHEN_PART_LIST> When_list When_list_opt
 %type <detachable ET_WRITABLE> Writable
 
-%expect 81
+%expect 82
 %start Class_declarations
 
 %%
@@ -924,7 +924,7 @@ Constraint_tuple_labeled_actual_parameter_semicolon: Identifier ':' Constraint_t
 
 Obsolete_opt: -- Empty
 		-- { $$ := Void }
-	| E_OBSOLETE Manifest_string
+	| E_OBSOLETE Untyped_manifest_string
 		{ $$ := ast_factory.new_obsolete_message ($1, $2) }
 	;
 
@@ -1878,10 +1878,10 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 			end
 		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $11, ast_factory.new_once_compound ($10, $12), $13, $14, $15, $16, last_clients, last_feature_clause, last_class) }	
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
@@ -1891,11 +1891,11 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		}
 	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12, ast_factory.new_once_compound ($11, $13), $14, $15, $16, $17, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
@@ -1961,11 +1961,11 @@ Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt O
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $9, ast_factory.new_once_compound ($8, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, last_clients, last_feature_clause, last_class) }
@@ -3328,11 +3328,11 @@ Until_expression_opt: -- Empty
 	
 ------------------------------------------------------------------------------------
 
-Debug_instruction: E_DEBUG Parenthesized_manifest_string_list_opt Compound_opt E_END
+Debug_instruction: E_DEBUG Parenthesized_untyped_manifest_string_list_opt Compound_opt E_END
 		{ $$ := ast_factory.new_debug_instruction ($2, ast_factory.new_debug_compound ($1, $3), $4) }
 	;
 
-Parenthesized_manifest_string_list_opt: -- Empty
+Parenthesized_untyped_manifest_string_list_opt: -- Empty
 		-- { $$ := Void }
 	| '(' ')'
 		{ $$ := ast_factory.new_manifest_string_list ($1, $2, 0) }
@@ -3341,7 +3341,7 @@ Parenthesized_manifest_string_list_opt: -- Empty
 			add_symbol ($1)
 			add_counter
 		}
-	  Manifest_string_list
+	  Untyped_manifest_string_list
 		{
 			$$ := $3
 			remove_symbol
@@ -3349,7 +3349,7 @@ Parenthesized_manifest_string_list_opt: -- Empty
 		}
 	;
 
-Manifest_string_list: Untyped_manifest_string ')'
+Untyped_manifest_string_list: Untyped_manifest_string ')'
 		{
 			if attached $1 as l_manifest_string then
 				$$ := ast_factory.new_manifest_string_list (last_symbol, $2, counter_value + 1)
@@ -3360,7 +3360,7 @@ Manifest_string_list: Untyped_manifest_string ')'
 				$$ := ast_factory.new_manifest_string_list (last_symbol, $2, counter_value)
 			end
 		}
-	| Manifest_string_comma Manifest_string_list
+	| Untyped_manifest_string_comma Untyped_manifest_string_list
 		{
 			$$ := $2
 			if $$ /= Void and attached $1 as l_manifest_string then
@@ -3369,7 +3369,7 @@ Manifest_string_list: Untyped_manifest_string ')'
 		}
 	;
 
-Manifest_string_comma: Untyped_manifest_string ','
+Untyped_manifest_string_comma: Untyped_manifest_string ','
 		{
 			$$ := ast_factory.new_manifest_string_comma ($1, $2)
 			if $$ /= Void then
@@ -3706,7 +3706,7 @@ Untyped_bracket_target: Untyped_call_expression
 --      end
 --
 		{ $$ := new_once_manifest_string ($1, $2) }
-	| Manifest_array
+	| Untyped_manifest_array
 		{ $$ := $1 }
 	| Strip_expression
 		{ $$ := $1 }
@@ -3718,6 +3718,14 @@ Typed_bracket_target: Typed_call_expression
 		{ $$ := $1 }
 	| Typed_manifest_string
 		{ $$ := $1 }
+	| Typed_manifest_array
+		{
+			if system_processor.older_ise_version (ise_17_11_0) then
+				raise_error
+			else
+				$$ := $1
+			end
+		}
 	| Typed_character_constant
 		{ $$ := $1 }
 	;
@@ -3790,7 +3798,7 @@ Parenthesized_expression: Left_parenthesis Expression ')'
 		 }
 	;
 
-Manifest_array: E_LARRAY E_RARRAY
+Untyped_manifest_array: E_LARRAY E_RARRAY
 		{ $$ := ast_factory.new_manifest_array ($1, $2, 0) }
 	| E_LARRAY
 		{
@@ -3805,6 +3813,15 @@ Manifest_array: E_LARRAY E_RARRAY
 		}
 	;
 
+Typed_manifest_array: '{' Type '}' Untyped_manifest_array
+		{
+			$$ := $4
+			if $$ /= Void then
+				$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			end
+		}
+	;
+	
 Manifest_array_expression_list: Expression E_RARRAY
 		{
 			if attached $1 as l_expression then
@@ -3977,13 +3994,13 @@ Inline_agent_no_actual_arguments:
 			register_inline_agent ($$)
 		}
 	| E_AGENT No_inline_agent_formal_arguments ':' Type
-	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 		{
 			$$ := ast_factory.new_once_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, Void)
 			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments ':' Type
-	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 		{
 			$$ := ast_factory.new_once_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, Void)
 			register_inline_agent ($$)
@@ -4013,13 +4030,13 @@ Inline_agent_no_actual_arguments:
 			register_inline_agent ($$)
 		}
 	| E_AGENT No_inline_agent_formal_arguments
-	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 		{
 			$$ := ast_factory.new_once_procedure_inline_agent ($1, Void, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, Void)
 			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments
-	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 		{
 			$$ := ast_factory.new_once_procedure_inline_agent ($1, $2, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, Void)
 		}
@@ -4123,7 +4140,7 @@ Agent_actual: Expression
 	;
 
 ------------------------------------------------------------------------------------
-
+	
 Manifest_string: Untyped_manifest_string
 		{ $$ := $1 }
 	| Typed_manifest_string

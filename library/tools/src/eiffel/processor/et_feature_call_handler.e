@@ -1923,8 +1923,18 @@ feature {ET_AST_NODE} -- Processing
 	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			had_error: BOOLEAN
 		do
+			reset_fatal_error (False)
+			if anchored_types_enabled then
+				if attached an_expression.cast_type as l_type then
+					process_type (l_type.type)
+					had_error := has_fatal_error
+				end
+			end
 			process_expression_list (an_expression)
+			reset_fatal_error (had_error or has_fatal_error)
 		end
 
 	process_manifest_string (a_string: ET_MANIFEST_STRING)
