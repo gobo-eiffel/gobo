@@ -9,6 +9,7 @@
 
 # usage: bootstrap.sh [-v] <c_compiler>
 
+echo "Executing bootstrap.sh..."
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v] <c_compiler>"
@@ -41,6 +42,7 @@ BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
 cd $BIN_DIR
 
 c_compilation() {
+	echo "Compiling C code..."
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec8.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec7.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec6.c
@@ -167,8 +169,10 @@ if [ "$EIF" = "ge" ]; then
 	cd $BIN_DIR
 	# Compile gec twice to get a bootstrap effect.
 	$MV gec$EXE gec1$EXE
+	echo "Compiling gec (bootstrap 1)..."
 	$BIN_DIR/gec1$EXE --finalize $GOBO/tool/gec/src/ge.xace
 	$MV gec$EXE gec1$EXE
+	echo "Compiling gec (bootstrap 2)..."
 	$BIN_DIR/gec1$EXE --finalize $GOBO/tool/gec/src/ge.xace
 	$STRIP gec$EXE
 	$RM gec1$EXE

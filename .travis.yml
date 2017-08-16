@@ -3,7 +3,6 @@ language: eiffel
 before_script:
   # Install Gobo Eiffel
   - export GOBO=$PWD
-  - ls -al bin
   - bin/install.sh gcc
   - export PATH=$PATH:$GOBO/bin
 
