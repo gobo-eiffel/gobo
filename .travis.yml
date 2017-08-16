@@ -1,11 +1,11 @@
 language: eiffel
 
 before_script:
-	# Install Gobo Eiffel
-	- export GOBO=$PWD
-	- bin/install.sh gcc
-	- export PATH=$PATH:$GOBO/bin
+  # Install Gobo Eiffel
+  - export GOBO=$PWD
+  - bin/install.sh gcc
+  - export PATH=$PATH:$GOBO/bin
 
 script: 
-	# Testing
-	- geant test_debug_ge
+  # Testing
+  - geant test_debug_ge
