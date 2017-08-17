@@ -65,37 +65,57 @@ BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
 PATH=$BIN_DIR:$PATH
 export PATH
 cd $BIN_DIR
-echo "Bootstraping gec..."
+if [ "$VERBOSE" = "-v" ]; then
+	echo "Bootstraping gec..."
+fi
 $BOOTSTRAP_DIR/bootstrap.sh $VERBOSE $CC
 
 if [ "$EIF" = "ge" ]; then
 	cd $BIN_DIR
-	echo "Compiling geant..."
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling geant..."
+	fi
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/geant/src/ge.xace
 	$STRIP geant${EXE}
-	echo "Compiling gexace..."
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gexace..."
+	fi
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gexace/src/ge.xace
 	$STRIP gexace${EXE}
-	echo "Compiling gelex..."
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gelex..."
+	fi
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelex/src/ge.xace
 	$STRIP gelex${EXE}
-	echo "Compiling geyacc..."
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling geyacc..."
+	fi
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/geyacc/src/ge.xace
 	$STRIP geyacc${EXE}
-	echo "Compiling gepp..."
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gepp..."
+	fi
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gepp/src/ge.xace
 	$STRIP gepp${EXE}
-	echo "Compiling getest..."
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling getest..."
+	fi
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/getest/src/ge.xace
 	$STRIP getest${EXE}
-	echo "Compiling gelint..."
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gelint..."
+	fi
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelint/src/ge.xace
 	$STRIP gelint${EXE}
-	echo "Compiling gedoc..."
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gedoc..."
+	fi
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gedoc/src/ge.xace
 	$STRIP gedoc${EXE}
-	echo "Compiling gexlt..."
-	$BIN_DIR/geant$EXE --buildfilename=$GOBO/tool/gexslt/src/build.eant compile_ge
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gexlt..."
+	fi
+	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gexslt/src/ge.xace
 	$STRIP gexslt${EXE}
 else
 	echo "Unknown Eiffel compiler: $EIF"
