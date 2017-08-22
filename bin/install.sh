@@ -101,6 +101,11 @@ if [ "$EIF" = "ge" ]; then
 	fi
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/getest/src/ge.xace
 	$STRIP getest${EXE}
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gelint..."
+	fi
+	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelint/src/ge.xace
+	$STRIP gelint${EXE}
 	if [ "$TEST_ONLY" = "" ]; then
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gelex..."
@@ -117,11 +122,6 @@ if [ "$EIF" = "ge" ]; then
 		fi
 		$BIN_DIR/gec$EXE --finalize $GOBO/tool/gepp/src/ge.xace
 		$STRIP gepp${EXE}
-		if [ "$VERBOSE" = "-v" ]; then
-			echo "Compiling gelint..."
-		fi
-		$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelint/src/ge.xace
-		$STRIP gelint${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gedoc..."
 		fi
@@ -143,11 +143,11 @@ geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gec/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geant/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gexace/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/getest/src/build.eant clean
+geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelint/src/build.eant clean
 if [ "$TEST_ONLY" = "" ]; then
 	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelex/src/build.eant clean
 	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geyacc/src/build.eant clean
 	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gepp/src/build.eant clean
-	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelint/src/build.eant clean
 	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gedoc/src/build.eant clean
 	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gexslt/src/build.eant clean
 fi

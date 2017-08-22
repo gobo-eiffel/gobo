@@ -48,21 +48,21 @@ script:
   - geant test_debug_ge
   - cd $GOBO/tool/geant
   - geant test_debug_ge
-  - cd $GOBO/tool/gec
-  - geant test_debug_ge
+  #- cd $GOBO/tool/gec
+  #- geant test_debug_ge
   - cd $GOBO/tool/gedoc
   - geant test_debug_ge
   - cd $GOBO/tool/gelex
   - geant test_debug_ge
-  - cd $GOBO/tool/gelint
-  - geant test_debug_ge
+  #- cd $GOBO/tool/gelint
+  #- geant test_debug_ge
   - cd $GOBO/tool/gepp
   - geant test_debug_ge
-  - cd $GOBO/tool/getest
-  - geant test_debug_ge
+  #- cd $GOBO/tool/getest
+  #- geant test_debug_ge
   - cd $GOBO/tool/gexace
   - geant test_debug_ge
-  - cd $GOBO/tool/gexslt
-  - geant test_debug_ge
+  #- cd $GOBO/tool/gexslt
+  #- geant test_debug_ge
   - cd $GOBO/tool/geyacc
   - geant test_debug_ge
