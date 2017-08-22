@@ -3,7 +3,7 @@ language: eiffel
 before_script:
   # Install Gobo Eiffel
   - export GOBO=$PWD
-  - travis_wait 60 bin/install.sh -v gcc
+  - travis_wait 60 bin/install.sh -v -t gcc
   - export PATH=$PATH:$GOBO/bin
 
 script: 
