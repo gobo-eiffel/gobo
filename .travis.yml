@@ -45,7 +45,7 @@ script:
   - cd $GOBO/library/xpath
   - geant test_debug_ge
   - cd $GOBO/library/xslt
-  - geant test_debug_ge
+  - travis_wait 60 geant test_debug_ge
   - cd $GOBO/tool/geant
   - geant test_debug_ge
   #- cd $GOBO/tool/gec
