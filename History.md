@@ -16,6 +16,9 @@
   [here](https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array).
 * Implemented new semantics for untyped manifest arrays as described
   [here](https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array).
+* Fixed bug where a VFFD-5 error was wrongly reported when the 
+  result type of a once-per-object function contains an anchored type 
+  or a formal generic parameter.
 
 ## Version 4.2 - 14 July 2017
 

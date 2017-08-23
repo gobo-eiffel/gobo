@@ -384,7 +384,7 @@ feature {NONE} -- Feature flattening
 							end
 						end
 					end
-					if l_query.is_once then
+					if l_query.is_once and then not l_query.is_once_per_object then
 						a_type := l_query.type
 							-- The type of a once function should not contain
 							-- a formal generic parameter or an anchored type.
