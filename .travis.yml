@@ -1,5 +1,11 @@
 language: eiffel
 
+branches:
+  # Build all branches:
+  only:
+  - gh-pages
+  - /.*/
+
 before_script:
   # Install Gobo Eiffel
   - export GOBO=$PWD
