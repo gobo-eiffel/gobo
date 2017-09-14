@@ -275,7 +275,6 @@ feature -- Basic operations
 			if not rescued then
 				old_close
 				old_end_of_input := True
-				last_entry_pointer := default_pointer
 				entry_buffer := Void
 				last_entry := Dummy_entry
 			end
