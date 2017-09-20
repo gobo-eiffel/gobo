@@ -1,5 +1,8 @@
 language: eiffel
 
+dist: trusty
+sudo: required
+
 branches:
   # Build all branches:
   only:
