@@ -1,5 +1,6 @@
 language: eiffel
 
+# Use full virtual machine.
 dist: trusty
 sudo: required
 
@@ -15,63 +16,39 @@ before_script:
   - travis_wait 60 bin/install.sh -v -t gcc
   - export PATH=$PATH:$GOBO/bin
 
+env:
+  matrix:
+    - GOBO_TEST_DIR=$GOBO/library/argument
+    - GOBO_TEST_DIR=$GOBO/library/common
+    - GOBO_TEST_DIR=$GOBO/library/free_elks
+    - GOBO_TEST_DIR=$GOBO/library/kernel
+    - GOBO_TEST_DIR=$GOBO/library/lexical
+    - GOBO_TEST_DIR=$GOBO/library/math
+    - GOBO_TEST_DIR=$GOBO/library/parse
+    - GOBO_TEST_DIR=$GOBO/library/pattern
+    - GOBO_TEST_DIR=$GOBO/library/regexp
+    - GOBO_TEST_DIR=$GOBO/library/string
+    - GOBO_TEST_DIR=$GOBO/library/structure
+    - GOBO_TEST_DIR=$GOBO/library/test
+    - GOBO_TEST_DIR=$GOBO/library/thread
+    - GOBO_TEST_DIR=$GOBO/library/time
+    - GOBO_TEST_DIR=$GOBO/library/tools
+    - GOBO_TEST_DIR=$GOBO/library/utility
+    - GOBO_TEST_DIR=$GOBO/library/xml
+    - GOBO_TEST_DIR=$GOBO/library/xpath
+    - GOBO_TEST_DIR=$GOBO/library/xslt
+    - GOBO_TEST_DIR=$GOBO/tool/geant
+    #- GOBO_TEST_DIR=$GOBO/tool/gec
+    - GOBO_TEST_DIR=$GOBO/tool/gedoc
+    - GOBO_TEST_DIR=$GOBO/tool/gelex
+    #- GOBO_TEST_DIR=$GOBO/tool/gelint
+    - GOBO_TEST_DIR=$GOBO/tool/gepp
+    #- GOBO_TEST_DIR=$GOBO/tool/getest
+    - GOBO_TEST_DIR=$GOBO/tool/gexace
+    #- GOBO_TEST_DIR=$GOBO/tool/gexslt
+    - GOBO_TEST_DIR=$GOBO/tool/geyacc
+
 script: 
   # Testing
-  - cd $GOBO/library/argument
-  - geant test_debug_ge
-  - cd $GOBO/library/common
-  - geant test_debug_ge
-  - cd $GOBO/library/free_elks
-  - geant test_debug_ge
-  - cd $GOBO/library/kernel
-  - geant test_debug_ge
-  - cd $GOBO/library/lexical
-  - geant test_debug_ge
-  - cd $GOBO/library/math
-  - geant test_debug_ge
-  - cd $GOBO/library/parse
-  - geant test_debug_ge
-  - cd $GOBO/library/pattern
-  - geant test_debug_ge
-  - cd $GOBO/library/regexp
-  - geant test_debug_ge
-  - cd $GOBO/library/string
-  - geant test_debug_ge
-  - cd $GOBO/library/structure
-  - geant test_debug_ge
-  - cd $GOBO/library/test
-  - geant test_debug_ge
-  - cd $GOBO/library/thread
-  - geant test_debug_ge
-  - cd $GOBO/library/time
-  - geant test_debug_ge
-  - cd $GOBO/library/tools
-  - geant test_debug_ge
-  - cd $GOBO/library/utility
-  - geant test_debug_ge
-  - cd $GOBO/library/xml
-  - geant test_debug_ge
-  - cd $GOBO/library/xpath
-  - geant test_debug_ge
-  - cd $GOBO/library/xslt
-  - travis_wait 60 geant test_debug_ge
-  - cd $GOBO/tool/geant
-  - geant test_debug_ge
-  #- cd $GOBO/tool/gec
-  #- geant test_debug_ge
-  - cd $GOBO/tool/gedoc
-  - geant test_debug_ge
-  - cd $GOBO/tool/gelex
-  - geant test_debug_ge
-  #- cd $GOBO/tool/gelint
-  #- geant test_debug_ge
-  - cd $GOBO/tool/gepp
-  - geant test_debug_ge
-  #- cd $GOBO/tool/getest
-  #- geant test_debug_ge
-  - cd $GOBO/tool/gexace
-  - geant test_debug_ge
-  #- cd $GOBO/tool/gexslt
-  #- geant test_debug_ge
-  - cd $GOBO/tool/geyacc
+  - cd $GOBO_TEST_DIR
   - geant test_debug_ge
