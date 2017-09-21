@@ -10,45 +10,47 @@ branches:
   - gh-pages
   - /.*/
 
-before_script:
-  # Install Gobo Eiffel
-  - export GOBO=$PWD
-  - travis_wait 60 bin/install.sh -v -t gcc
-  - export PATH=$PATH:$GOBO/bin
-
-env:
-  matrix:
-    - GOBO_TEST_DIR=$GOBO/library/argument
-    - GOBO_TEST_DIR=$GOBO/library/common
-    - GOBO_TEST_DIR=$GOBO/library/free_elks
-    - GOBO_TEST_DIR=$GOBO/library/kernel
-    - GOBO_TEST_DIR=$GOBO/library/lexical
-    - GOBO_TEST_DIR=$GOBO/library/math
-    - GOBO_TEST_DIR=$GOBO/library/parse
-    - GOBO_TEST_DIR=$GOBO/library/pattern
-    - GOBO_TEST_DIR=$GOBO/library/regexp
-    - GOBO_TEST_DIR=$GOBO/library/string
-    - GOBO_TEST_DIR=$GOBO/library/structure
-    - GOBO_TEST_DIR=$GOBO/library/test
-    - GOBO_TEST_DIR=$GOBO/library/thread
-    - GOBO_TEST_DIR=$GOBO/library/time
-    - GOBO_TEST_DIR=$GOBO/library/tools
-    - GOBO_TEST_DIR=$GOBO/library/utility
-    - GOBO_TEST_DIR=$GOBO/library/xml
-    - GOBO_TEST_DIR=$GOBO/library/xpath
-    - GOBO_TEST_DIR=$GOBO/library/xslt
-    - GOBO_TEST_DIR=$GOBO/tool/geant
-    #- GOBO_TEST_DIR=$GOBO/tool/gec
-    - GOBO_TEST_DIR=$GOBO/tool/gedoc
-    - GOBO_TEST_DIR=$GOBO/tool/gelex
-    #- GOBO_TEST_DIR=$GOBO/tool/gelint
-    - GOBO_TEST_DIR=$GOBO/tool/gepp
-    #- GOBO_TEST_DIR=$GOBO/tool/getest
-    - GOBO_TEST_DIR=$GOBO/tool/gexace
-    #- GOBO_TEST_DIR=$GOBO/tool/gexslt
-    - GOBO_TEST_DIR=$GOBO/tool/geyacc
-
-script: 
-  # Testing
-  - cd $GOBO_TEST_DIR
-  - geant test_debug_ge
+jobs:
+  include:
+    - stage: bootstrap
+      script:
+        # Install Gobo Eiffel
+        - export GOBO=$PWD
+        - travis_wait 60 bin/install.sh -v -t gcc
+        - export PATH=$PATH:$GOBO/bin
+    - stage: test
+      env:
+        matrix:
+          - GOBO_TEST_DIR=$GOBO/library/argument
+          - GOBO_TEST_DIR=$GOBO/library/common
+          - GOBO_TEST_DIR=$GOBO/library/free_elks
+          - GOBO_TEST_DIR=$GOBO/library/kernel
+          - GOBO_TEST_DIR=$GOBO/library/lexical
+          - GOBO_TEST_DIR=$GOBO/library/math
+          - GOBO_TEST_DIR=$GOBO/library/parse
+          - GOBO_TEST_DIR=$GOBO/library/pattern
+          - GOBO_TEST_DIR=$GOBO/library/regexp
+          - GOBO_TEST_DIR=$GOBO/library/string
+          - GOBO_TEST_DIR=$GOBO/library/structure
+          - GOBO_TEST_DIR=$GOBO/library/test
+          - GOBO_TEST_DIR=$GOBO/library/thread
+          - GOBO_TEST_DIR=$GOBO/library/time
+          - GOBO_TEST_DIR=$GOBO/library/tools
+          - GOBO_TEST_DIR=$GOBO/library/utility
+          - GOBO_TEST_DIR=$GOBO/library/xml
+          - GOBO_TEST_DIR=$GOBO/library/xpath
+          - GOBO_TEST_DIR=$GOBO/library/xslt
+          - GOBO_TEST_DIR=$GOBO/tool/geant
+          #- GOBO_TEST_DIR=$GOBO/tool/gec
+          - GOBO_TEST_DIR=$GOBO/tool/gedoc
+          - GOBO_TEST_DIR=$GOBO/tool/gelex
+          #- GOBO_TEST_DIR=$GOBO/tool/gelint
+          - GOBO_TEST_DIR=$GOBO/tool/gepp
+          #- GOBO_TEST_DIR=$GOBO/tool/getest
+          - GOBO_TEST_DIR=$GOBO/tool/gexace
+          #- GOBO_TEST_DIR=$GOBO/tool/gexslt
+          - GOBO_TEST_DIR=$GOBO/tool/geyacc
+      script: 
+        # Testing
+        - cd $GOBO_TEST_DIR
+        - geant test_debug_ge
