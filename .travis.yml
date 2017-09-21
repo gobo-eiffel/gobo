@@ -10,6 +10,8 @@ branches:
   - gh-pages
   - /.*/
 
+os: osx
+
 before_script:
   # Install Gobo Eiffel
   - export GOBO=$PWD
