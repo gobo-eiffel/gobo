@@ -1,4 +1,4 @@
-language: eiffel
+language: c
 
 # Use full virtual machine.
 dist: trusty
