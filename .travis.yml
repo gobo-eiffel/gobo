@@ -10,7 +10,9 @@ branches:
   - gh-pages
   - /.*/
 
-os: osx
+os:
+  - linux
+  - osx
 
 before_script:
   # Install Gobo Eiffel
