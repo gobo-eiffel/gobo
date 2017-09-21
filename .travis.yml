@@ -32,11 +32,10 @@ before_script:
 
 env:
   matrix:
-    - TRAVIS_GOBO_TEST_DIR=library
-    - TRAVIS_GOBO_TEST_DIR=tool
-    - TRAVIS_GOBO_EIFFEL=ge
-    - TRAVIS_GOBO_EIFFEL=ise
-    - TRAVIS_ISE_VERSION=beta/nightly/Eiffel_17.11_gpl_100740
+    - TRAVIS_GOBO_TEST_DIR=library TRAVIS_GOBO_EIFFEL=ge TRAVIS_ISE_VERSION=beta/nightly/Eiffel_17.11_gpl_100740
+    - TRAVIS_GOBO_TEST_DIR=tool TRAVIS_GOBO_EIFFEL=ge TRAVIS_ISE_VERSION=beta/nightly/Eiffel_17.11_gpl_100740
+    - TRAVIS_GOBO_TEST_DIR=library TRAVIS_GOBO_EIFFEL=ise TRAVIS_ISE_VERSION=beta/nightly/Eiffel_17.11_gpl_100740
+    - TRAVIS_GOBO_TEST_DIR=tool TRAVIS_GOBO_EIFFEL=ise TRAVIS_ISE_VERSION=beta/nightly/Eiffel_17.11_gpl_100740
 
 script: 
   # Test
