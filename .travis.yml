@@ -19,13 +19,26 @@ before_script:
   - export GOBO=$PWD
   - travis_wait 60 bin/install.sh -v -t gcc
   - export PATH=$PATH:$GOBO/bin
+  - echo `gec --version`
+  # Install ISE Eiffel
+  - cd $GOBO/..
+  - export ISE_EIFFEL=$PWD/Eiffel_17.11;
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export ISE_PLATFORM=linux-x86-64; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export ISE_PLATFORM=macosx-x86-64; fi
+  - curl -sSL https://ftp.eiffel.com/pub/$TRAVIS_ISE_VERSION-$ISE_PLATFORM.tar.bz2 | tar -x --bzip2
+  - export PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$PATH:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin
+  - echo `ec -version`
+  - cd $GOBO
 
 env:
   matrix:
-    - GOBO_TEST_DIR=library
-    - GOBO_TEST_DIR=tool
+    - TRAVIS_GOBO_TEST_DIR=library
+    - TRAVIS_GOBO_TEST_DIR=tool
+    - TRAVIS_GOBO_EIFFEL=ge
+    - TRAVIS_GOBO_EIFFEL=ise
+    - TRAVIS_ISE_VERSION=beta/nightly/Eiffel_17.11_gpl_100740
 
 script: 
   # Test
-  - cd $GOBO/$GOBO_TEST_DIR
-  - geant test_debug_ge
+  - cd $GOBO/$TRAVIS_GOBO_TEST_DIR
+  - geant test_debug_$TRAVIS_GOBO_EIFFEL
