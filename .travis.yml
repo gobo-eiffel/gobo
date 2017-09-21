@@ -10,19 +10,18 @@ branches:
   - gh-pages
   - /.*/
 
+before_script:
+  # Install Gobo Eiffel
+  - export GOBO=$PWD
+  - travis_wait 60 bin/install.sh -v -t gcc
+  - export PATH=$PATH:$GOBO/bin
+
 env:
   matrix:
     - GOBO_TEST_DIR=library
     - GOBO_TEST_DIR=tool
 
-jobs:
-  include:
-    - stage: Gobo Eiffel
-      script:
-        - export GOBO=$PWD
-        # Install Gobo Eiffel
-        - travis_wait 60 bin/install.sh -v -t gcc
-        - export PATH=$PATH:$GOBO/bin
-        # Test
-        - cd $GOBO/$GOBO_TEST_DIR
-        - geant test_debug_ge
+script: 
+  # Test
+  - cd $GOBO/$GOBO_TEST_DIR
+  - geant test_debug_ge
