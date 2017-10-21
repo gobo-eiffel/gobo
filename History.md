@@ -19,6 +19,8 @@
 * Fixed bug where a VFFD-5 error was wrongly reported when the 
   result type of a once-per-object function contains an anchored type 
   or a formal generic parameter.
+* Avoid reporting that an object-test local is used outside of its scope 
+  when there is an error in the expression of the corresponding object-test.
 
 ## Version 4.2 - 14 July 2017
 

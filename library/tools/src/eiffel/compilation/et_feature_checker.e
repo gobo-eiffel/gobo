@@ -6937,8 +6937,15 @@ feature {NONE} -- Expression validity
 					end
 				else
 					check_expression_validity (l_target, a_context, l_detachable_any_type)
+						-- It is useful to know which binary expressions are
+						-- boolean operators between two boolean expressions
+						-- when trying to determine the scope of object-test locals,
+						-- even when a fatal error occurred in `l_target'.
+					l_class := a_context.base_class
+					if l_class.is_boolean_class then
+						an_expression.set_boolean_operator (True)
+					end
 					if not has_fatal_error then
-						l_class := a_context.base_class
 						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
@@ -6958,14 +6965,6 @@ feature {NONE} -- Expression validity
 										-- ISE Eiffel 5.4 reports this error as a VEEN,
 										-- but it is in fact a VUEX-2 (ETL2 p.368).
 									error_handler.report_vuex2a_error (current_class, l_name, l_class)
-								end
-							end
-							if not has_fatal_error then
-								if l_class.is_boolean_class then
-										-- This is useful to know which binary expressions are
-										-- boolean operators between two boolean expressions
-										-- when trying to determine the scope of object-test locals.
-									an_expression.set_boolean_operator (True)
 								end
 							end
 						end
@@ -7272,7 +7271,7 @@ feature {NONE} -- Expression validity
 															an_expression.set_left (l_cast_expression)
 															l_target := l_cast_expression
 															if l_class.is_boolean_class then
-																	-- This is useful to know which binary expressions are
+																	-- It is useful to know which binary expressions are
 																	-- boolean operators between two boolean expressions
 																	-- when trying to determine the scope of object-test locals.
 																an_expression.set_boolean_operator (True)
@@ -8311,8 +8310,12 @@ feature {NONE} -- Expression validity
 					end
 				end
 			end
+				-- Set the type of the object-test to be BOOLEAN even in case
+				-- of fatal error so that the scope of the object-test local
+				-- can be computed even if the object-test appears as an operand
+				-- of an infix or prefix boolean operator.
+			a_context.force_last (current_universe_impl.boolean_type)
 			if not has_fatal_error then
-				a_context.force_last (current_universe_impl.boolean_type)
 				report_named_object_test (an_expression, l_expression_context)
 			end
 			if not l_type_kept then
@@ -8787,8 +8790,19 @@ feature {NONE} -- Expression validity
 					end
 				else
 					check_expression_validity (l_target, a_context, current_system.detachable_any_type)
+						-- It is useful to know which binary expressions are
+						-- boolean operators between two boolean expressions
+						-- when trying to determine the scope of object-test locals,
+						-- even when a fatal error occurred in `l_target'.
+					l_class := a_context.base_class
+					if l_class.is_boolean_class then
+						if attached {ET_PREFIX_EXPRESSION} a_call as l_prefix_expression then
+							l_prefix_expression.set_boolean_operator (True)
+						elseif attached {ET_INFIX_EXPRESSION} a_call as l_infix_expression then
+							l_infix_expression.set_boolean_operator (True)
+						end
+					end
 					if not has_fatal_error then
-						l_class := a_context.base_class
 						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
@@ -8807,16 +8821,6 @@ feature {NONE} -- Expression validity
 							elseif attached a_call.parenthesis_call as l_parenthesis_call then
 								a_call.set_index (l_parenthesis_call.index)
 							else
-								if l_class.is_boolean_class then
-										-- This is useful to know which unary and binary expressions
-										-- are boolean operators between boolean expressions
-										-- when trying to determine the scope of object-test locals.
-									if attached {ET_PREFIX_EXPRESSION} a_call as l_prefix_expression then
-										l_prefix_expression.set_boolean_operator (True)
-									elseif attached {ET_INFIX_EXPRESSION} a_call as l_infix_expression then
-										l_infix_expression.set_boolean_operator (True)
-									end
-								end
 								check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context)
 							end
 						elseif attached l_class.named_procedure (l_name) as l_procedure then
