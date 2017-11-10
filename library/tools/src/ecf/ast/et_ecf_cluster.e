@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			pathname := a_pathname
-			is_relative := (a_pathname = Void)
+			is_relative := (a_pathname = Void or else (a_pathname.count > 2 and then a_pathname.item (1) = '$' and then (once "|/\").has (a_pathname.item (2))))
 			universe := a_universe
 			set_scm_mapping_constraint_enabled (True)
 			if attached universe.ecf_version as l_ecf_version and then l_ecf_version <= ecf_1_4_0 then
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			pathname_set: pathname = a_pathname
 			universe_set: universe = a_universe
 			prefixed_name_set: prefixed_name = a_name
-			is_relative: is_relative = (a_pathname = Void)
+			is_relative: is_relative = (a_pathname = Void or else (a_pathname.count > 2 and then a_pathname.item (1) = '$' and then (once "|/\").has (a_pathname.item (2))))
 			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
 		end
 
@@ -72,7 +72,6 @@ feature -- Access
 			a_pathname: detachable STRING
 			parent_pathname: STRING
 			a_basename: STRING
-			l_relative: BOOLEAN
 			l_ecf_filename: STRING
 			i, nb: INTEGER
 		do
@@ -96,7 +95,6 @@ feature -- Access
 					inspect a_pathname.item (2)
 					when '/', '\' then
 						a_pathname := a_pathname.substring (3, a_pathname.count)
-						l_relative := True
 					else
 						-- Not relative.
 					end
@@ -109,7 +107,7 @@ feature -- Access
 					-- and '/' as directory separator.
 				a_pathname := file_system.pathname_from_file_system (a_pathname, windows_file_system)
 			end
-			if (is_relative or l_relative) and attached parent as l_parent then
+			if is_relative and attached parent as l_parent then
 				parent_pathname := l_parent.full_pathname
 				if a_pathname /= Void and then a_pathname.count > 0 then
 					a_basename := a_pathname
