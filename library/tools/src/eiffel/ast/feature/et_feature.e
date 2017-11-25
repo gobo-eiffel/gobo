@@ -341,6 +341,21 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_static: BOOLEAN
+			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
+		do
+			Result := has_static_mark or is_statically_called
+		end
+
+	has_static_mark: BOOLEAN
+			-- Has feature been explicitly marked as static?
+		do
+			Result := attached first_indexing as l_indexing and then l_indexing.has_tagged_indexing_term_value (tokens.option_indexing_tag, tokens.instance_free_indexing_value)
+		end
+
+	is_statically_called: BOOLEAN
+			-- Is feature statically called (i.e. in a call of the form {A}.f)?
+
 	is_infixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
@@ -375,6 +390,70 @@ feature -- Status report
 			Result := attached arguments as l_arguments and then l_arguments.count > 0
 		ensure
 			definition: Result = (attached arguments as l_arguments and then l_arguments.count > 0)
+		end
+
+	are_preconditions_all_true_recursive: BOOLEAN
+			-- Are all precondition expressions, if any, the 'True' entity (possibly parenthesized)?
+			-- Take into account inherited preconditions recursively.
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			Result := True
+			if attached preconditions as l_preconditions and then not l_preconditions.are_all_true then
+				Result := False
+			elseif attached first_precursor as l_first_precursor then
+				if not l_first_precursor.are_preconditions_all_true_recursive then
+					Result := False
+				elseif attached other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						if not l_other_precursor.are_preconditions_all_true_recursive then
+							Result := False
+								 -- Jump out of the loop
+							i := nb
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	are_postconditions_all_true_recursive: BOOLEAN
+			-- Are all postcondition expressions, if any, the 'True' entity (possibly parenthesized)?
+			-- Take into account inherited postconditions recursively.
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			Result := True
+			if attached postconditions as l_postconditions and then not l_postconditions.are_all_true then
+				Result := False
+			elseif attached first_precursor as l_first_precursor then
+				if not l_first_precursor.are_postconditions_all_true_recursive then
+					Result := False
+				elseif attached other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						if not l_other_precursor.are_postconditions_all_true_recursive then
+							Result := False
+								 -- Jump out of the loop
+							i := nb
+						end
+						i := i + 1
+					end
+				end
+			end
 		end
 
 	is_flattened_immediate: BOOLEAN = True

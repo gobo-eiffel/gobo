@@ -5,7 +5,7 @@ note
 		"Procedures implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,7 @@ inherit
 	ET_PROCEDURE
 		undefine
 			is_frozen, is_dotnet,
+			is_static,
 			is_deferred,
 			overloaded_extended_name
 		redefine

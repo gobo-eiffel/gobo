@@ -74,6 +74,7 @@ inherit
 			reportable_vffd5_error,
 			reportable_vffd6_error,
 			reportable_vffd7_error,
+			reportable_vffd9_error,
 			reportable_vgcc1_error,
 			reportable_vgcc3_error,
 			reportable_vgcc5_error,
@@ -129,6 +130,7 @@ inherit
 			reportable_vrlv2_error,
 			reportable_vscn_error,
 			reportable_vsrc1_error,
+			reportable_vstb_error,
 			reportable_vtat1_error,
 			reportable_vtat2_error,
 			reportable_vtcg3_error,
@@ -611,6 +613,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vffd9_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFFD-9 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vgcc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-1 error be reported when it
 			-- appears in `a_class'?
@@ -977,6 +986,13 @@ feature -- Validity error status
 
 	reportable_vrlv2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRLV-2 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vstb_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VSTB error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

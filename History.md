@@ -21,6 +21,8 @@
   or a formal generic parameter.
 * Avoid reporting that an object-test local is used outside of its scope 
   when there is an error in the expression of the corresponding object-test.
+* Added support for instance-free features (which can be used in
+  Non-object-calls of the form `{T}.f`).
 
 ## Version 4.2 - 14 July 2017
 

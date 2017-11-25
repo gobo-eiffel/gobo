@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VSTB
+
+Error: The instance-free feature f calls the non-instance free feature g.
+What to do:
+	- remove the call to the non-instance-free feature g from the code or
+	- remove the instance-free mark from the feature declaration of f or
+	- mark the feature g as instance-free.
+Class: BB
+Feature: f
+Line: 11
+      do
+->      a := g.out
+      end
+
+-------------------------------------------------------------------------------

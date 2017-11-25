@@ -219,7 +219,6 @@ feature -- Access
 			if not attached first_precursor as l_first_precursor then
 				create Result.make (a_feature, a_parent_type, Current, a_system)
 				Result.set_regular (is_regular or is_creation)
-				Result.set_static (is_static)
 				first_precursor := Result
 			elseif l_first_precursor.parent_type = a_parent_type and l_first_precursor.static_feature = a_feature then
 				Result := l_first_precursor
@@ -228,7 +227,6 @@ feature -- Access
 				if l_other_precursors = Void then
 					create Result.make (a_feature, a_parent_type, Current, a_system)
 					Result.set_regular (is_regular or is_creation)
-					Result.set_static (is_static)
 					create l_other_precursors.make_with_capacity (1)
 					l_other_precursors.put_last (Result)
 					other_precursors := l_other_precursors
@@ -248,7 +246,6 @@ feature -- Access
 					else
 						create Result.make (a_feature, a_parent_type, Current, a_system)
 						Result.set_regular (is_regular or is_creation)
-						Result.set_static (is_static)
 						l_other_precursors.force_last (Result)
 					end
 				end
@@ -299,14 +296,14 @@ feature -- Status report
 	is_generated: BOOLEAN
 			-- Has code for current feature been generated?
 
+	is_static_generated: BOOLEAN
+			-- Has code for the statically called version of current feature been generated?
+
 	is_creation: BOOLEAN
 			-- Is current feature used as a creation procedure?
 
 	is_regular: BOOLEAN
 			-- Is current feature used as a regular feature?
-
-	is_static: BOOLEAN
-			-- Is current feature used as a static feature?
 
 	is_address: BOOLEAN
 			-- Is address of current feature used?
@@ -719,6 +716,14 @@ feature -- Status setting
 			generated_set: is_generated = b
 		end
 
+	set_static_generated (b: BOOLEAN)
+			-- Set `is_static_generated' to `b'.
+		do
+			is_static_generated := b
+		ensure
+			static_generated_set: is_static_generated = b
+		end
+
 	set_creation (b: BOOLEAN)
 			-- Set `is_creation' to `b'.
 		local
@@ -761,26 +766,6 @@ feature -- Status setting
 			end
 		ensure
 			regular_set: is_regular = b
-		end
-
-	set_static (b: BOOLEAN)
-			-- Set `is_static' to `b'.
-		local
-			i, nb: INTEGER
-		do
-			is_static := b
-			if attached first_precursor as l_first_precursor then
-				l_first_precursor.set_static (b)
-				if attached other_precursors as l_other_precursors then
-					nb := l_other_precursors.count
-					from i := 1 until i > nb loop
-						l_other_precursors.item (i).set_static (b)
-						i := i + 1
-					end
-				end
-			end
-		ensure
-			static_set: is_static = b
 		end
 
 	set_address (b: BOOLEAN)

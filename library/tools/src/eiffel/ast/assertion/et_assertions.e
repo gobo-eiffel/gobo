@@ -35,7 +35,7 @@ feature -- Initialization
 feature -- Status report
 
 	are_all_true: BOOLEAN
-			-- Are all assertion expressions the 'True' entity (possibly parenthesized)?
+			-- Are all assertion expressions, if any, the 'True' entity (possibly parenthesized)?
 		local
 			i, nb: INTEGER
 		do

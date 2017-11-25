@@ -25,6 +25,9 @@ inherit
 	ET_SHARED_STANDARD_ONCE_KEYS
 		export {NONE} all end
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 feature -- Status report
 
 	is_once: BOOLEAN = True
@@ -36,7 +39,7 @@ feature -- Status report
 			if attached keys as l_keys then
 				Result := standard_once_keys.has_process_key (l_keys)
 			elseif attached first_indexing as l_indexing then
-				Result := l_indexing.has_tagged_indexing_term_value (standard_once_keys.once_indexing_tag, standard_once_keys.global_once_indexing_value)
+				Result := l_indexing.has_tagged_indexing_term_value (tokens.once_indexing_tag, tokens.global_once_indexing_value)
 			end
 		end
 
@@ -46,9 +49,9 @@ feature -- Status report
 			if attached keys as l_keys then
 				Result := standard_once_keys.has_thread_key (l_keys)
 			elseif attached first_indexing as l_indexing then
-				if l_indexing.has_tagged_indexing_term_value (standard_once_keys.once_indexing_tag, standard_once_keys.thread_once_indexing_value) then
+				if l_indexing.has_tagged_indexing_term_value (tokens.once_indexing_tag, tokens.thread_once_indexing_value) then
 					Result := True
-				elseif not l_indexing.has_indexing_term_with_tag (standard_once_keys.once_indexing_tag) then
+				elseif not l_indexing.has_indexing_term_with_tag (tokens.once_indexing_tag) then
 						-- Once-per-thread by default.
 					Result := True
 				end

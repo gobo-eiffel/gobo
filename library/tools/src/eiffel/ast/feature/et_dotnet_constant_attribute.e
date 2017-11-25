@@ -5,7 +5,7 @@ note
 		"Constant attributes implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,7 @@ inherit
 	ET_CONSTANT_ATTRIBUTE
 		undefine
 			is_frozen, is_dotnet,
+			has_static_mark,
 			overloaded_extended_name
 		redefine
 			process, make,
@@ -26,6 +27,7 @@ inherit
 	ET_DOTNET_QUERY
 		undefine
 			is_constant_attribute,
+			is_static,
 			is_prefixable
 		end
 

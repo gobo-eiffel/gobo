@@ -129,6 +129,9 @@ create
 	make_vffd6a,
 	make_vffd7a,
 	make_vffd7b,
+	make_vffd9a,
+	make_vffd9b,
+	make_vffd9c,
 	make_vgcc1a,
 	make_vgcc1b,
 	make_vgcc3a,
@@ -229,6 +232,14 @@ create
 	make_vrlv1b,
 	make_vrlv2a,
 	make_vrlv2b,
+	make_vstb0a,
+	make_vstb0b,
+	make_vstb0c,
+	make_vstb0d,
+	make_vstb0e,
+	make_vstb0f,
+	make_vstb0g,
+	make_vstb0h,
 	make_vtat1a,
 	make_vtat1b,
 	make_vtat1c,
@@ -5164,6 +5175,129 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
+	make_vffd9a (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VFFD-9 error: attributes cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_attribute: a_feature.is_attribute
+			a_feature_static: a_feature.is_static
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			code := template_code (vffd9a_template_code)
+			etl_code := vffd9_etl_code
+			default_template := default_message_template (vffd9a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vffd9b (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VFFD-9 error: deferred features cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_deferred: a_feature.is_deferred
+			a_feature_static: a_feature.is_static
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			code := template_code (vffd9b_template_code)
+			etl_code := vffd9_etl_code
+			default_template := default_message_template (vffd9b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vffd9c (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VFFD-9 error: once-per-object features cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_once_per_object: a_feature.is_once_per_object
+			a_feature_static: a_feature.is_static
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			code := template_code (vffd9c_template_code)
+			etl_code := vffd9_etl_code
+			default_template := default_message_template (vffd9c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+		end
+
 	make_vgcc1a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS)
 			-- Create a new VGCC-1 error: the creation expression `a_creation',
 			-- appearing in `a_class_impl' and viewed from one
@@ -9755,6 +9889,341 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local name
 		end
 
+	make_vstb0a (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_attribute: ET_FEATURE)
+			-- Create a new VSTB error: `a_name', appearing as target of an assignment or a creation instruction
+			-- in a feature written in `a_class_impl' and viewed from `a_class' where this feature is marked
+			-- as static, is the name of an attribute `a_attribute'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_attribute_not_void: a_attribute /= Void
+			a_attribute_is_attribute: a_attribute.is_attribute
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vstb0a_template_code)
+			etl_code := vstb_etl_code
+			default_template := default_message_template (vstb0a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = attribute name
+		end
+
+	make_vstb0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
+			-- Create a new VSTB error: the unqualified call `a_name' written in `a_class_impl'
+			-- is a call to the non-static feature `a_feature' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_static: not a_feature.is_static
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vstb0b_template_code)
+			etl_code := vstb_etl_code
+			default_template := default_message_template (vstb0b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vstb0c (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_attribute: ET_FEATURE)
+			-- Create a new VSTB error: the access to the address of `a_name' written in `a_class_impl'
+			-- if the access to the address of attribute `a_attribute' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_a_attribute_not_void: a_attribute /= Void
+			a_attribute_is_attribute: a_attribute.is_attribute
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vstb0c_template_code)
+			etl_code := vstb_etl_code
+			default_template := default_message_template (vstb0c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = attribute name
+		end
+
+	make_vstb0d (a_class, a_class_impl: ET_CLASS; a_current: ET_CURRENT)
+			-- Create a new VSTB error: `a_current' written in `a_class_impl' is
+			-- used in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_not_void: a_current /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_current.position
+			code := template_code (vstb0d_template_code)
+			etl_code := vstb_etl_code
+			default_template := default_message_template (vstb0d_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vstb0e (a_class, a_class_impl: ET_CLASS; a_current_address: ET_CURRENT_ADDRESS)
+			-- Create a new VSTB error: `a_current' written in `a_class_impl' is
+			-- used in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_address_not_void: a_current_address /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_current_address.position
+			code := template_code (vstb0e_template_code)
+			etl_code := vstb_etl_code
+			default_template := default_message_template (vstb0e_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vstb0f (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE)
+			-- Create a new VSTB error: the call to `a_precursor' written in `a_class_impl'
+			-- is a call to the non-static feature `a_feature' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_static: not a_feature.is_static
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_precursor.position
+			code := template_code (vstb0f_template_code)
+			etl_code := vstb_etl_code
+			default_template := default_message_template (vstb0f_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_precursor.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = precursor keyword
+		end
+
+	make_vstb0g (a_class, a_class_impl: ET_CLASS; a_agent: ET_INLINE_AGENT)
+			-- Create a new VSTB error: the inline agent `a_agent' written in `a_class_impl'
+			-- appears in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_agent.position
+			code := template_code (vstb0g_template_code)
+			etl_code := vstb_etl_code
+			default_template := default_message_template (vstb0g_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vstb0h (a_class, a_class_impl: ET_CLASS; a_agent: ET_CALL_AGENT)
+			-- Create a new VSTB error: the unqualified call agent `a_agent' written in `a_class_impl'
+			-- appears in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+			a_unqualified_call_agent: not a_agent.is_qualified_call
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_agent.position
+			code := template_code (vstb0h_template_code)
+			etl_code := vstb_etl_code
+			default_template := default_message_template (vstb0h_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_agent.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = agent feature name
+		end
+
 	make_vtat1a (a_class: ET_CLASS; a_type: ET_LIKE_FEATURE)
 			-- Create a new VTAT-1 error: the anchor in the Anchored_type
 			-- must be the final name of a query in `a_class'.
@@ -14121,6 +14590,9 @@ feature {NONE} -- Implementation
 	vffd6a_default_template: STRING = "feature `$7' has an Infix name but is not a function with exactly one argument."
 	vffd7a_default_template: STRING = "feature `$7' is a once funtion but its type contains an anchored type."
 	vffd7b_default_template: STRING = "feature `$7' is a once funtion but its type contains a formal generic parameter."
+	vffd9a_default_template: STRING = "feature `$7' is an attribute, so it cannot be used in static calls."
+	vffd9b_default_template: STRING = "feature `$7' is a deferred feature, so it cannot be used in static calls."
+	vffd9c_default_template: STRING = "feature `$7' is a once-per-object feature, so it cannot be used in static calls."
 	vgcc1a_default_template: STRING = "creation expression with no Creation_call part, but $7 is deferred."
 	vgcc1b_default_template: STRING = "creation instruction with no Creation_call part, but $7 is deferred."
 	vgcc3a_default_template: STRING = "explicit creation type '$7' does not conform to target entity type '$8'."
@@ -14221,6 +14693,14 @@ feature {NONE} -- Implementation
 	vrlv1b_default_template: STRING = "local variable name '$7' in inline agent is also the final name of a feature."
 	vrlv2a_default_template: STRING = "local variable name '$7' in feature `$8' is also the name of a formal argument of this feature."
 	vrlv2b_default_template: STRING = "local variable name '$7' in inline agent is also the name of a formal argument of this agent."
+	vstb0a_default_template: STRING = "attribute '$7' cannot be used as target of an assignment or creation instruction in a static feature."
+	vstb0b_default_template: STRING = "static feature contains an unqualified call to non-static feature '$7'."
+	vstb0c_default_template: STRING = "the address of attribute '$7' cannot be accessed from a static feature."
+	vstb0d_default_template: STRING = "'Current' cannot be used in a static feature."
+	vstb0e_default_template: STRING = "'$Current' cannot be used in a static feature."
+	vstb0f_default_template: STRING = "static feature contains a call to non-static '$7'."
+	vstb0g_default_template: STRING = "static feature contains an inline agent."
+	vstb0h_default_template: STRING = "static feature contains an agent with an unqualified call to '$7'."
 	vtat1a_default_template: STRING = "invalid type '$7': the anchor `$8' must be the final name of a query."
 	vtat1b_default_template: STRING = "invalid type '$7': the anchor `$8' must be the final name of a query, or an argument of routine `$9'."
 	vtat1c_default_template: STRING = "invalid type '$7': the anchor `$8' must be the final name of a query in class $9."
@@ -14363,6 +14843,7 @@ feature {NONE} -- Implementation
 	vffd5_etl_code: STRING = "VFFD-5"
 	vffd6_etl_code: STRING = "VFFD-6"
 	vffd7_etl_code: STRING = "VFFD-7"
+	vffd9_etl_code: STRING = "VFFD-9"
 	vhpr1_etl_code: STRING = "VHPR-1"
 	vgcc1_etl_code: STRING = "VGCC-1"
 	vgcc3_etl_code: STRING = "VGCC-3"
@@ -14417,6 +14898,7 @@ feature {NONE} -- Implementation
 	vrle2_etl_code: STRING = "VRLE-2"
 	vrlv1_etl_code: STRING = "VRLV-1"
 	vrlv2_etl_code: STRING = "VRLV-2"
+	vstb_etl_code: STRING = "VSTB"
 	vtat1_etl_code: STRING = "VTAT-1"
 	vtat2_etl_code: STRING = "VTAT-2"
 	vtcg3_etl_code: STRING = "VTCG-3"
@@ -14594,6 +15076,9 @@ feature {NONE} -- Implementation
 	vffd6a_template_code: STRING = "vffd6a"
 	vffd7a_template_code: STRING = "vffd7a"
 	vffd7b_template_code: STRING = "vffd7b"
+	vffd9a_template_code: STRING = "vffd9a"
+	vffd9b_template_code: STRING = "vffd9b"
+	vffd9c_template_code: STRING = "vffd9c"
 	vgcc1a_template_code: STRING = "vgcc1a"
 	vgcc1b_template_code: STRING = "vgcc1b"
 	vgcc3a_template_code: STRING = "vgcc3a"
@@ -14694,6 +15179,14 @@ feature {NONE} -- Implementation
 	vrlv1b_template_code: STRING = "vrlv1b"
 	vrlv2a_template_code: STRING = "vrlv2a"
 	vrlv2b_template_code: STRING = "vrlv2b"
+	vstb0a_template_code: STRING = "vstb0a"
+	vstb0b_template_code: STRING = "vstb0b"
+	vstb0c_template_code: STRING = "vstb0c"
+	vstb0d_template_code: STRING = "vstb0d"
+	vstb0e_template_code: STRING = "vstb0e"
+	vstb0f_template_code: STRING = "vstb0f"
+	vstb0g_template_code: STRING = "vstb0g"
+	vstb0h_template_code: STRING = "vstb0h"
 	vtat1a_template_code: STRING = "vtat1a"
 	vtat1b_template_code: STRING = "vtat1b"
 	vtat1c_template_code: STRING = "vtat1c"

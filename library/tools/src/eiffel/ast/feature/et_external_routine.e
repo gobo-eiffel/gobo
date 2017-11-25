@@ -16,7 +16,7 @@ inherit
 
 	ET_ROUTINE
 		redefine
-			is_external
+			is_external, is_static
 		end
 
 	ET_EXTERNAL_ROUTINE_CLOSURE
@@ -27,10 +27,36 @@ inherit
 			implementation_feature
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 feature -- Status report
 
 	is_external: BOOLEAN = True
 			-- Is feature external?
+
+	is_static: BOOLEAN
+			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
+			--
+			-- True even if not explicitly declared as static provided that the external routine
+			-- has no assertions and is not a built-in non-static routine.
+			-- Note ECMA-367 2nd Edition says that it's possible to have assertions provided
+			-- that they do not involve "Current" or unqualified calls (see ECMA VUNO-3).
+			-- But ISE is more strict and does not accept any assertions apart from empty ones
+			-- or those containing only the expression "True".
+		do
+			if Precursor then
+				Result := True
+			elseif is_builtin and then not is_builtin_static then
+				Result := False
+			elseif not are_preconditions_all_true_recursive then
+				Result := False
+			elseif not are_postconditions_all_true_recursive then
+				Result := False
+			else
+				Result := True
+			end
+		end
 
 feature -- Built-in
 
@@ -38,6 +64,15 @@ feature -- Built-in
 			-- Is current feature built-in?
 		do
 			Result := (builtin_class_code /= tokens.builtin_not_builtin)
+		end
+
+	is_builtin_static: BOOLEAN
+			-- Is current feature a built-in feature declared as static?
+		local
+			l_external_language: STRING
+		do
+			l_external_language := language.manifest_string.value
+			Result := STRING_.same_case_insensitive (l_external_language, tokens.builtin_static_marker) or STRING_.same_case_insensitive (l_external_language, tokens.static_builtin_marker)
 		end
 
 	is_builtin_unknown: BOOLEAN

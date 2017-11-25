@@ -2258,7 +2258,6 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				l_dynamic_query := l_dynamic_type.dynamic_query (a_query, current_dynamic_system)
-				l_dynamic_query.set_static (True)
 				l_dynamic_type.set_static (True)
 				if attached an_expression.arguments as l_actuals then
 					nb := l_actuals.count
@@ -2290,7 +2289,6 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				l_dynamic_procedure := l_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
-				l_dynamic_procedure.set_static (True)
 				l_dynamic_type.set_static (True)
 				if attached an_instruction.arguments as l_actuals then
 					nb := l_actuals.count

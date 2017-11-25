@@ -18,7 +18,8 @@ inherit
 		rename
 			make as make_function
 		undefine
-			is_external
+			is_external,
+			is_static
 		end
 
 	ET_EXTERNAL_ROUTINE

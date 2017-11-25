@@ -18,7 +18,8 @@ inherit
 		rename
 			make as make_procedure
 		undefine
-			is_external
+			is_external,
+			is_static
 		end
 
 	ET_EXTERNAL_ROUTINE

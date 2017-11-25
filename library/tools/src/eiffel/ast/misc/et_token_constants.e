@@ -5527,6 +5527,29 @@ feature -- Built-in
 			unknown_convert_feature_not_void: Result /= Void
 		end
 
+feature -- Indexing clauses
+
+	once_indexing_tag: STRING = "once_status"
+			-- Tag in indexing clauses for once status
+
+	option_indexing_tag: STRING = "option"
+			-- Tag in indexing clauses for feature options
+
+	global_once_indexing_value: STRING = "global"
+			-- "global" indexing value for once status
+
+	thread_once_indexing_value: STRING = "thread"
+			-- "thread" indexing value for once status
+
+	instance_free_indexing_value: STRING = "instance_free"
+			-- "instance_free" indexing value for static features
+
+	stable_indexing_value: STRING = "stable"
+			-- "stable" indexing value for stable attributes
+
+	transient_indexing_value: STRING = "transient"
+			-- "transient" indexing value for transient attributes
+
 feature -- Position
 
 	null_position: ET_POSITION

@@ -247,6 +247,7 @@ feature -- Validity checking
 			l_class_impl: ET_CLASS
 			l_class: ET_CLASS
 			l_old_has_error: BOOLEAN
+			old_in_static_feature: BOOLEAN
 		do
 			has_fatal_error := False
 			l_feature_impl := a_feature.implementation_feature
@@ -299,7 +300,10 @@ feature -- Validity checking
 						end
 						build_preconditions_attachment_scope (a_feature)
 					end
+					old_in_static_feature := in_static_feature
+					in_static_feature := a_feature.is_static
 					a_feature.process (Current)
+					in_static_feature := old_in_static_feature
 					if current_type = current_class_impl then
 						a_feature.set_validity_checked
 						if has_fatal_error then
@@ -365,6 +369,7 @@ feature -- Validity checking
 			old_class_impl: ET_CLASS
 			old_type: ET_BASE_TYPE
 			old_in_precondition: BOOLEAN
+			old_in_static_feature: BOOLEAN
 			l_assertion_context: ET_NESTED_TYPE_CONTEXT
 			i, nb: INTEGER
 			boolean_type: ET_CLASS_TYPE
@@ -406,6 +411,8 @@ feature -- Validity checking
 				current_class := l_current_class
 				old_class_impl := current_class_impl
 				current_class_impl := l_class_impl
+				old_in_static_feature := in_static_feature
+				in_static_feature := not (a_current_feature.is_constant_attribute or a_current_feature.is_unique_attribute) and then a_current_feature.is_static
 				old_in_precondition := in_precondition
 				in_precondition := True
 					-- First, make sure that the interface of `current_type' is valid.
@@ -452,6 +459,7 @@ feature -- Validity checking
 					end
 				end
 				in_precondition := old_in_precondition
+				in_static_feature := old_in_static_feature
 				from current_object_test_types.start until current_object_test_types.after loop
 					free_context (current_object_test_types.item_for_iteration)
 					current_object_test_types.forth
@@ -493,6 +501,7 @@ feature -- Validity checking
 			old_class_impl: ET_CLASS
 			old_type: ET_BASE_TYPE
 			old_in_postcondition: BOOLEAN
+			old_in_static_feature: BOOLEAN
 			l_assertion_context: ET_NESTED_TYPE_CONTEXT
 			i, nb: INTEGER
 			boolean_type: ET_CLASS_TYPE
@@ -535,6 +544,8 @@ feature -- Validity checking
 				current_class := l_current_class
 				old_class_impl := current_class_impl
 				current_class_impl := l_class_impl
+				old_in_static_feature := in_static_feature
+				in_static_feature := not (a_current_feature.is_constant_attribute or a_current_feature.is_unique_attribute) and then a_current_feature.is_static
 				old_in_postcondition := in_postcondition
 				in_postcondition := True
 					-- First, make sure that the interface of `current_type' is valid.
@@ -593,6 +604,7 @@ feature -- Validity checking
 					end
 				end
 				in_postcondition := old_in_postcondition
+				in_static_feature := old_in_static_feature
 				from current_object_test_types.start until current_object_test_types.after loop
 					free_context (current_object_test_types.item_for_iteration)
 					current_object_test_types.forth
@@ -770,6 +782,12 @@ feature {NONE} -- Feature validity
 			if attached a_feature.across_components as l_across_components then
 				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
+			end
+			if a_feature.is_static then
+					-- Error: attributes cannot be used in static calls.
+				set_fatal_error
+				error_handler.report_vffd9a_error (current_class, a_feature)
+				had_error := True
 			end
 			has_fatal_error := had_error
 		end
@@ -949,6 +967,12 @@ feature {NONE} -- Feature validity
 				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
+			if a_feature.is_static then
+					-- Error: deferred features cannot be used in static calls.
+				set_fatal_error
+				error_handler.report_vffd9b_error (current_class, a_feature)
+				had_error := True
+			end
 			has_fatal_error := had_error
 		end
 
@@ -973,6 +997,12 @@ feature {NONE} -- Feature validity
 			if attached a_feature.across_components as l_across_components then
 				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
+			end
+			if a_feature.is_static then
+					-- Error: deferred features cannot be used in static calls.
+				set_fatal_error
+				error_handler.report_vffd9b_error (current_class, a_feature)
+				had_error := True
 			end
 			has_fatal_error := had_error
 		end
@@ -1338,6 +1368,12 @@ feature {NONE} -- Feature validity
 					end
 				end
 			end
+			if a_feature.is_static then
+					-- Error: attributes cannot be used in static calls.
+				set_fatal_error
+				error_handler.report_vffd9a_error (current_class, a_feature)
+				had_error := True
+			end
 			has_fatal_error := had_error
 		end
 
@@ -1508,6 +1544,12 @@ feature {NONE} -- Feature validity
 					end
 				end
 			end
+			if a_feature.is_static and a_feature.is_once_per_object then
+					-- Error: once-per-object features cannot be used in static calls.
+				set_fatal_error
+				error_handler.report_vffd9c_error (current_class, a_feature)
+				had_error := True
+			end
 			has_fatal_error := had_error or had_key_error
 		end
 
@@ -1583,6 +1625,12 @@ feature {NONE} -- Feature validity
 						end
 					end
 				end
+			end
+			if a_feature.is_static and a_feature.is_once_per_object then
+					-- Error: once-per-object features cannot be used in static calls.
+				set_fatal_error
+				error_handler.report_vffd9c_error (current_class, a_feature)
+				had_error := True
 			end
 			has_fatal_error := had_error or had_key_error
 		end
@@ -2327,18 +2375,18 @@ feature {NONE} -- Once key validity
 			has_fatal_error := False
 			if a_indexing_list /= Void then
 				l_indexing_term_list := indexing_term_list
-				a_indexing_list.append_tagged_indexing_terms_to_list (standard_once_keys.once_indexing_tag, l_indexing_term_list)
+				a_indexing_list.append_tagged_indexing_terms_to_list (tokens.once_indexing_tag, l_indexing_term_list)
 				nb := l_indexing_term_list.count
 				from i := 1 until i > nb loop
 					l_indexing_term := l_indexing_term_list.item (i)
-					if l_indexing_term.has_indexing_term_value (standard_once_keys.global_once_indexing_value) then
+					if l_indexing_term.has_indexing_term_value (tokens.global_once_indexing_value) then
 						l_process_indexing := l_indexing_term
 						if l_thread_indexing /= Void then
 								-- Error: once keys "THREAD" and "PROCESS" cannot be combined.
 							set_fatal_error
 							error_handler.report_vvok1c_error (current_class, l_thread_indexing, l_indexing_term)
 						end
-					elseif l_indexing_term.has_indexing_term_value (standard_once_keys.thread_once_indexing_value) then
+					elseif l_indexing_term.has_indexing_term_value (tokens.thread_once_indexing_value) then
 						l_thread_indexing := l_indexing_term
 						if l_process_indexing /= Void then
 								-- Error: once keys "PROCESS" and "THREAD" cannot be combined.
@@ -4366,11 +4414,19 @@ feature {NONE} -- Instruction validity
 			a_parent_type_not_void: a_parent_type /= Void
 		local
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
+			l_had_error: BOOLEAN
 		do
+			if in_static_feature and then not a_parent_procedure.is_static then
+					-- Error: we cannot call a non-static precursor from a static feature.
+				set_fatal_error
+				error_handler.report_vstb0f_error (current_class, current_class_impl, an_instruction.precursor_keyword, a_parent_procedure)
+				l_had_error := True
+			end
 			l_actual_context := new_context (current_type)
 			l_actual_context.force_last (a_parent_type)
 			check_actual_arguments_validity (an_instruction, l_actual_context, a_parent_procedure, a_parent_class)
 			free_context (l_actual_context)
+			reset_fatal_error (l_had_error or has_fatal_error)
 			if not has_fatal_error then
 				report_precursor_instruction (an_instruction, a_parent_type, a_parent_procedure)
 				if attached precursor_procedures as l_precursor_procedures then
@@ -5103,10 +5159,17 @@ feature {NONE} -- Instruction validity
 		do
 			has_fatal_error := False
 			l_name := a_call.name
+			if in_static_feature and then not a_procedure.is_static then
+					-- Error: we cannot have an unqualified call to
+					-- non-static feature in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0b_error (current_class, current_class_impl, l_name, a_procedure)
+				l_had_error := True
+			end
 				-- Check that all features which are called in a precondition of `a_procedure'
 				-- are exported to every class to which `a_procedure' is exported.
 			check_unqualified_vape_validity (l_name, a_procedure)
-			l_had_error := has_fatal_error
+			l_had_error := l_had_error or has_fatal_error
 				-- Check the validity of the arguments of the call.
 			l_context := new_context (current_type)
 			check_actual_arguments_validity (a_call, l_context, a_procedure, Void)
@@ -5933,8 +5996,14 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_last (tokens.attached_like_current)
-			report_current (an_expression)
+			if in_static_feature then
+					-- Error: 'Current' cannot be used in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0d_error (current_class, current_class_impl, an_expression)
+			else
+				a_context.force_last (tokens.attached_like_current)
+				report_current (an_expression)
+			end
 		end
 
 	check_current_address_validity (an_expression: ET_CURRENT_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -5951,20 +6020,26 @@ feature {NONE} -- Expression validity
 			l_pointer_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
-			l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
-			l_typed_pointer_class := l_typed_pointer_type.named_base_class
-			if l_typed_pointer_class.actual_class.is_preparsed then
-					-- Class TYPED_POINTER has been found in the universe.
-					-- Use ISE's implementation: the type of '$Current' is 'TYPED_POINTER [like Current]'.
-				report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-				a_context.force_last (l_typed_pointer_type)
-					-- Need current type to create an object of type 'TYPED_POINTER [<current_type>]'.
-				report_current_type_needed
+			if in_static_feature then
+					-- Error: '$Current' cannot be used in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0e_error (current_class, current_class_impl, an_expression)
 			else
-					-- Use the ETL2 implementation: the type of '$Current' is POINTER.
-				l_pointer_type := current_universe_impl.pointer_type
-				a_context.force_last (l_pointer_type)
-				report_pointer_expression (an_expression, l_pointer_type)
+				l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+				l_typed_pointer_class := l_typed_pointer_type.named_base_class
+				if l_typed_pointer_class.actual_class.is_preparsed then
+						-- Class TYPED_POINTER has been found in the universe.
+						-- Use ISE's implementation: the type of '$Current' is 'TYPED_POINTER [like Current]'.
+					report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+					a_context.force_last (l_typed_pointer_type)
+						-- Need current type to create an object of type 'TYPED_POINTER [<current_type>]'.
+					report_current_type_needed
+				else
+						-- Use the ETL2 implementation: the type of '$Current' is POINTER.
+					l_pointer_type := current_universe_impl.pointer_type
+					a_context.force_last (l_pointer_type)
+					report_pointer_expression (an_expression, l_pointer_type)
+				end
 			end
 		end
 
@@ -6306,29 +6381,36 @@ feature {NONE} -- Expression validity
 									l_seed := l_query.first_seed
 									l_name.set_seed (l_seed)
 									if l_query.is_attribute then
-										report_attribute_address (an_expression, l_query)
-										l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
-										l_typed_pointer_class := l_typed_pointer_type.named_base_class
-										if l_typed_pointer_class.actual_class.is_preparsed then
-												-- Class TYPED_POINTER has been found in the universe.
-												-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
-											l_type := l_query.type
-											if l_type.is_base_type or current_class = current_type then
-												a_context.force_last (l_type)
-												report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-												a_context.force_last (l_typed_pointer_type)
-													-- The type of the attribute may vary in various descendant classes/types.
-												report_current_type_needed
+										if in_static_feature then
+												-- Error: we cannot access the address of an attribute
+												-- from a static feature.
+											set_fatal_error
+											error_handler.report_vstb0c_error (current_class, current_class_impl, l_name, l_query)
+										else
+											report_attribute_address (an_expression, l_query)
+											l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+											l_typed_pointer_class := l_typed_pointer_type.named_base_class
+											if l_typed_pointer_class.actual_class.is_preparsed then
+													-- Class TYPED_POINTER has been found in the universe.
+													-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
+												l_type := l_query.type
+												if l_type.is_base_type or current_class = current_type then
+													a_context.force_last (l_type)
+													report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+													a_context.force_last (l_typed_pointer_type)
+														-- The type of the attribute may vary in various descendant classes/types.
+													report_current_type_needed
+														-- No need to check validity in the context of `current_type' again.
+													already_checked := True
+												end
+											else
+													-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
+												l_pointer_type := current_universe_impl.pointer_type
+												a_context.force_last (l_pointer_type)
+												report_pointer_expression (an_expression, l_pointer_type)
 													-- No need to check validity in the context of `current_type' again.
 												already_checked := True
 											end
-										else
-												-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
-											l_pointer_type := current_universe_impl.pointer_type
-											a_context.force_last (l_pointer_type)
-											report_pointer_expression (an_expression, l_pointer_type)
-												-- No need to check validity in the context of `current_type' again.
-											already_checked := True
 										end
 									else
 										report_function_address (an_expression, l_query)
@@ -6593,23 +6675,30 @@ feature {NONE} -- Expression validity
 							l_query := current_class.seeded_query (l_seed)
 							if l_query /= Void then
 								if l_query.is_attribute then
-									report_attribute_address (an_expression, l_query)
-									l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
-									l_typed_pointer_class := l_typed_pointer_type.named_base_class
-									if l_typed_pointer_class.actual_class.is_preparsed then
-											-- Class TYPED_POINTER has been found in the universe.
-											-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
-										l_type := l_query.type
-										a_context.force_last (l_type)
-										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-										a_context.force_last (l_typed_pointer_type)
-											-- The type of the attribute may vary in various descendant classes/types.
-										report_current_type_needed
+									if in_static_feature then
+											-- Error: we cannot access the address of an attribute
+											-- from a static feature.
+										set_fatal_error
+										error_handler.report_vstb0c_error (current_class, current_class_impl, l_name, l_query)
 									else
-											-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
-										l_pointer_type := current_universe_impl.pointer_type
-										a_context.force_last (l_pointer_type)
-										report_pointer_expression (an_expression, l_pointer_type)
+										report_attribute_address (an_expression, l_query)
+										l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+										l_typed_pointer_class := l_typed_pointer_type.named_base_class
+										if l_typed_pointer_class.actual_class.is_preparsed then
+												-- Class TYPED_POINTER has been found in the universe.
+												-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
+											l_type := l_query.type
+											a_context.force_last (l_type)
+											report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+											a_context.force_last (l_typed_pointer_type)
+												-- The type of the attribute may vary in various descendant classes/types.
+											report_current_type_needed
+										else
+												-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
+											l_pointer_type := current_universe_impl.pointer_type
+											a_context.force_last (l_pointer_type)
+											report_pointer_expression (an_expression, l_pointer_type)
+										end
 									end
 								else
 									report_function_address (an_expression, l_query)
@@ -8725,11 +8814,19 @@ feature {NONE} -- Expression validity
 		local
 			l_type: ET_TYPE
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
+			l_had_error: BOOLEAN
 		do
+			if in_static_feature and then not a_parent_query.is_static then
+					-- Error: we cannot call a non-static precursor from a static feature.
+				set_fatal_error
+				error_handler.report_vstb0f_error (current_class, current_class_impl, an_expression.precursor_keyword, a_parent_query)
+				l_had_error := True
+			end
 			l_actual_context := new_context (current_type)
 			l_actual_context.force_last (a_parent_type)
 			check_actual_arguments_validity (an_expression, l_actual_context, a_parent_query, a_parent_class)
 			free_context (l_actual_context)
+			reset_fatal_error (l_had_error or has_fatal_error)
 			if not has_fatal_error then
 -- TODO: like argument.
 				l_type := a_parent_query.type
@@ -9702,8 +9799,9 @@ feature {NONE} -- Expression validity
 			-- Check validity of `a_feature' as the feature of static call `a_call'.
 			-- `a_class' is the base class of the static type part of the call.
 			--
-			-- To be valid, the feature needs to be a constant attribute, a unique attribute,
-			-- an external routine with no assertions other than a built-in non-static routine,
+			-- To be valid, the feature needs to be explicitly declared as static,
+			-- a constant attribute, a unique attribute, an external routine with
+			-- no assertions other than a built-in non-static routine,
 			-- or a static .NET feature.
 			-- For the assertions in external routines, ECMA says that it's possible to have
 			-- assertions provided that they do not involve "Current" or unqualified calls
@@ -9715,45 +9813,9 @@ feature {NONE} -- Expression validity
 			a_call_not_void: a_call /= Void
 			a_feature_not_void: a_feature /= Void
 			a_class_not_void: a_class /= Void
-		local
-			l_external_language: STRING
-			l_assertions: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE]
-			l_is_valid_feature: BOOLEAN
 		do
 			has_fatal_error := False
-			if attached {ET_CONSTANT_ATTRIBUTE} a_feature then
-				l_is_valid_feature := True
-			elseif attached {ET_UNIQUE_ATTRIBUTE} a_feature then
-				l_is_valid_feature := True
-			elseif attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_feature then
-				l_is_valid_feature := True
-				if l_external_feature.is_builtin then
-					l_external_language := l_external_feature.language.manifest_string.value
-					l_is_valid_feature := STRING_.same_case_insensitive (l_external_language, tokens.builtin_static_marker) or STRING_.same_case_insensitive (l_external_language, tokens.static_builtin_marker)
-				end
-				if l_is_valid_feature then
-					if attached l_external_feature.preconditions as l_preconditions and then not l_preconditions.are_all_true then
-						l_is_valid_feature := False
-					elseif attached l_external_feature.postconditions as l_postconditions and then not l_postconditions.are_all_true then
-						l_is_valid_feature := False
-					else
-						create l_assertions.make_map (30)
-						add_precursors_with_preconditions_recursive (a_feature, l_assertions)
-						if not l_assertions.for_all (agent {ET_ASSERTIONS}.are_all_true) then
-							l_is_valid_feature := False
-						else
-							l_assertions.wipe_out
-							add_precursors_with_postconditions_recursive (a_feature, l_assertions)
-							if not l_assertions.for_all (agent {ET_ASSERTIONS}.are_all_true) then
-								l_is_valid_feature := False
-							end
-						end
-					end
-				end
-			elseif attached {ET_DOTNET_FEATURE} a_feature as l_dotnet_feature and then l_dotnet_feature.is_static then
-				l_is_valid_feature := True
-			end
-			if not l_is_valid_feature then
+			if not a_feature.is_static then
 				set_fatal_error
 				error_handler.report_vuno3a_error (current_class, current_class_impl, a_call.name, a_feature, a_class)
 			end
@@ -10167,10 +10229,17 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			l_name := a_call.name
+			if in_static_feature and then not a_query.is_static then
+					-- Error: we cannot have an unqualified call to
+					-- non-static feature in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0b_error (current_class, current_class_impl, l_name, a_query)
+				l_had_error := True
+			end
 				-- Check that all features which are called in a precondition of `a_query'
 				-- are exported to every class to which `a_query' is exported.
 			check_unqualified_vape_validity (l_name, a_query)
-			l_had_error := has_fatal_error
+			l_had_error := l_had_error or has_fatal_error
 				-- Check the validity of the arguments of the call.
 			check_actual_arguments_validity (a_call, a_context, a_query, Void)
 			reset_fatal_error (l_had_error or has_fatal_error)
@@ -10305,8 +10374,14 @@ feature {NONE} -- Expression validity
 					else
 						l_type := l_attribute.type
 						a_context.force_last (l_type)
-						report_current_type_needed
-						report_attribute_assignment_target (a_writable, l_attribute)
+						if in_static_feature then
+								-- Error: attributes cannot be used in static features.
+							set_fatal_error
+							error_handler.report_vstb0a_error (current_class, current_class_impl, l_identifier, l_attribute)
+						else
+							report_current_type_needed
+							report_attribute_assignment_target (a_writable, l_attribute)
+						end
 					end
 				else
 						-- We need to resolve `l_identifier' in the implementation
@@ -10331,8 +10406,14 @@ feature {NONE} -- Expression validity
 									l_identifier.set_seed (l_seed)
 									l_type := l_attribute.type
 									a_context.force_last (l_type)
-									report_current_type_needed
-									report_attribute_assignment_target (a_writable, l_attribute)
+									if in_static_feature then
+											-- Error: attributes cannot be used in static features.
+										set_fatal_error
+										error_handler.report_vstb0a_error (current_class, current_class_impl, l_identifier, l_attribute)
+									else
+										report_current_type_needed
+										report_attribute_assignment_target (a_writable, l_attribute)
+									end
 								else
 										-- There is a feature with that name, but it
 										-- it is not an attribute.
@@ -11174,10 +11255,17 @@ feature {NONE} -- Agent validity
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
 			l_expected_class: ET_CLASS
+			l_had_error: BOOLEAN
 		do
 			has_fatal_error := False
 -- TODO: do we need to call `report_current_type_needed'.
 			report_current_type_needed
+			if in_static_feature then
+					-- Error: we cannot use an unqualified call agent in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0h_error (current_class, current_class_impl, an_expression)
+				l_had_error := True
+			end
 			a_name := an_expression.name
 			a_seed := a_name.seed
 			if a_seed = 0 then
@@ -11201,10 +11289,12 @@ feature {NONE} -- Agent validity
 								a_name.set_seed (l_procedure.first_seed)
 								an_expression.set_procedure (True)
 								check_unqualified_procedure_call_agent_validity (an_expression, l_procedure, a_context)
+								reset_fatal_error (l_had_error or has_fatal_error)
 							elseif attached current_class.named_query (a_name) as l_query then
 								a_name.set_seed (l_query.first_seed)
 								an_expression.set_procedure (False)
 								check_unqualified_query_call_agent_validity (an_expression, l_query, a_context)
+								reset_fatal_error (l_had_error or has_fatal_error)
 							else
 								set_fatal_error
 									-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -11216,10 +11306,12 @@ feature {NONE} -- Agent validity
 								a_name.set_seed (l_query.first_seed)
 								an_expression.set_procedure (False)
 								check_unqualified_query_call_agent_validity (an_expression, l_query, a_context)
+								reset_fatal_error (l_had_error or has_fatal_error)
 							elseif attached current_class.named_procedure (a_name) as l_procedure then
 								a_name.set_seed (l_procedure.first_seed)
 								an_expression.set_procedure (True)
 								check_unqualified_procedure_call_agent_validity (an_expression, l_procedure, a_context)
+								reset_fatal_error (l_had_error or has_fatal_error)
 							else
 								set_fatal_error
 									-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -11239,6 +11331,7 @@ feature {NONE} -- Agent validity
 					error_handler.report_giaaa_error
 				else
 					check_unqualified_procedure_call_agent_validity (an_expression, l_procedure, a_context)
+					reset_fatal_error (l_had_error or has_fatal_error)
 				end
 			else
 					-- We still need to find `l_query'.
@@ -11251,6 +11344,7 @@ feature {NONE} -- Agent validity
 					error_handler.report_giaaa_error
 				else
 					check_unqualified_query_call_agent_validity (an_expression, l_query, a_context)
+					reset_fatal_error (l_had_error or has_fatal_error)
 				end
 			end
 		end
@@ -12178,10 +12272,16 @@ feature {NONE} -- Agent validity
 				current_attachment_scope := new_attachment_scope
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
+			if in_static_feature then
+					-- Error: we cannot use an inline agent in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				had_error := True
+			end
 				-- Check the associated feature's declaration.
 			if attached an_expression.formal_arguments as l_formal_arguments then
 				check_inline_agent_formal_arguments_validity (l_formal_arguments, an_expression)
-				had_error := has_fatal_error
+				had_error := had_error or has_fatal_error
 			end
 			l_type := an_expression.type
 			check_signature_type_validity (l_type)
@@ -12323,10 +12423,16 @@ feature {NONE} -- Agent validity
 				current_attachment_scope := new_attachment_scope
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
+			if in_static_feature then
+					-- Error: we cannot use an inline agent in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				had_error := True
+			end
 				-- Check the associated feature's declaration.
 			if attached an_expression.formal_arguments as l_formal_arguments then
 				check_inline_agent_formal_arguments_validity (l_formal_arguments, an_expression)
-				had_error := has_fatal_error
+				had_error := had_error or has_fatal_error
 			end
 			if attached an_expression.object_tests as l_object_tests then
 				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
@@ -12438,10 +12544,16 @@ feature {NONE} -- Agent validity
 				current_attachment_scope := new_attachment_scope
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
+			if in_static_feature then
+					-- Error: we cannot use an inline agent in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				had_error := True
+			end
 				-- Check the associated feature's declaration.
 			if attached an_expression.formal_arguments as l_arguments then
 				check_inline_agent_formal_arguments_validity (l_arguments, an_expression)
-				had_error := has_fatal_error
+				had_error := had_error or has_fatal_error
 			end
 			l_type := an_expression.type
 			check_signature_type_validity (l_type)
@@ -12522,10 +12634,16 @@ feature {NONE} -- Agent validity
 				current_attachment_scope := new_attachment_scope
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
+			if in_static_feature then
+					-- Error: we cannot use an inline agent in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				had_error := True
+			end
 				-- Check the associated feature's declaration.
 			if attached an_expression.formal_arguments as l_arguments then
 				check_inline_agent_formal_arguments_validity (l_arguments, an_expression)
-				had_error := has_fatal_error
+				had_error := had_error or has_fatal_error
 			end
 			if attached an_expression.object_tests as l_object_tests then
 				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
@@ -12607,10 +12725,16 @@ feature {NONE} -- Agent validity
 				current_attachment_scope := new_attachment_scope
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
+			if in_static_feature then
+					-- Error: we cannot use an inline agent in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				had_error := True
+			end
 				-- Check the associated feature's declaration.
 			if attached an_expression.formal_arguments as l_formal_arguments then
 				check_inline_agent_formal_arguments_validity (l_formal_arguments, an_expression)
-				had_error := has_fatal_error
+				had_error := had_error or has_fatal_error
 			end
 			l_type := an_expression.type
 			check_signature_type_validity (l_type)
@@ -12760,10 +12884,16 @@ feature {NONE} -- Agent validity
 				current_attachment_scope := new_attachment_scope
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
+			if in_static_feature then
+					-- Error: we cannot use an inline agent in a static feature.
+				set_fatal_error
+				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				had_error := True
+			end
 				-- Check the associated feature's declaration.
 			if attached an_expression.formal_arguments as l_formal_arguments then
 				check_inline_agent_formal_arguments_validity (l_formal_arguments, an_expression)
-				had_error := has_fatal_error
+				had_error := had_error or has_fatal_error
 			end
 			if attached an_expression.object_tests as l_object_tests then
 				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
@@ -15122,6 +15252,10 @@ feature {NONE} -- Status report
 
 	in_precursor: BOOLEAN
 			-- Are we processing a precursor feature?
+
+	in_static_feature: BOOLEAN
+			-- Are we processing a feature which can be used in static calls
+			-- (i.e. of the form {A}.f)?
 
 feature -- Precursors
 

@@ -3153,7 +3153,7 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vffd6_error (a_class) then
+			if reportable_vffd7_error (a_class) then
 				create an_error.make_vffd7a (a_class, a_feature)
 				report_validity_error (an_error)
 			end
@@ -3161,7 +3161,7 @@ feature -- Validity errors
 
 	report_vffd7b_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFFD-7 error: the type of the once function `a_feature'
-			-- contains an formal generic parameter.
+			-- contains a formal generic parameter.
 			--
 			-- ETL2: p.69
 		require
@@ -3173,9 +3173,66 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vffd6_error (a_class) then
+			if reportable_vffd7_error (a_class) then
 				create an_error.make_vffd7b (a_class, a_feature)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_vffd9a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VFFD-9 error: attributes cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_attribute: a_feature.is_attribute
+			a_feature_static: a_feature.is_static
+		local
+			a_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vffd9_error (a_class) then
+				create a_error.make_vffd9a (a_class, a_feature)
+				report_validity_error (a_error)
+			end
+		end
+
+	report_vffd9b_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VFFD-9 error: deferred features cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_deferred: a_feature.is_deferred
+			a_feature_static: a_feature.is_static
+		local
+			a_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vffd9_error (a_class) then
+				create a_error.make_vffd9b (a_class, a_feature)
+				report_validity_error (a_error)
+			end
+		end
+
+	report_vffd9c_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VFFD-9 error: once-per-object features cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_deferred: a_feature.is_deferred
+			a_feature_static: a_feature.is_static
+		local
+			a_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vffd9_error (a_class) then
+				create a_error.make_vffd9c (a_class, a_feature)
+				report_validity_error (a_error)
 			end
 		end
 
@@ -5302,6 +5359,171 @@ feature -- Validity errors
 		do
 			if reportable_vrlv2_error (a_class) then
 				create an_error.make_vrlv2b (a_class, a_local, an_agent, f, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vstb0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_attribute: ET_FEATURE)
+			-- Report VSTB error: `a_name', appearing as target of an assignment or a creation instruction
+			-- in a feature written in `a_class_impl' and viewed from `a_class' where this feature is marked
+			-- as static, is the name of an attribute `a_attribute'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_attribute_not_void: a_attribute /= Void
+			a_attribute_is_attribute: a_attribute.is_attribute
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vstb_error (a_class) then
+				create an_error.make_vstb0a (a_class, a_class_impl, a_name, a_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vstb0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
+			-- Report VSTB error: the unqualified call `a_name' written in `a_class_impl'
+			-- is a call to the non-static feature `a_feature' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_static: not a_feature.is_static
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vstb_error (a_class) then
+				create an_error.make_vstb0b (a_class, a_class_impl, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vstb0c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_attribute: ET_FEATURE)
+			-- Report VSTB error: the access to the address of `a_name' written in `a_class_impl'
+			-- if the access to the address of attribute `a_attribute' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_a_attribute_not_void: a_attribute /= Void
+			a_attribute_is_attribute: a_attribute.is_attribute
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vstb_error (a_class) then
+				create an_error.make_vstb0c (a_class, a_class_impl, a_name, a_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vstb0d_error (a_class, a_class_impl: ET_CLASS; a_current: ET_CURRENT)
+			-- Report VSTB error: `a_current' written in `a_class_impl' is
+			-- used in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_not_void: a_current /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vstb_error (a_class) then
+				create an_error.make_vstb0d (a_class, a_class_impl, a_current)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vstb0e_error (a_class, a_class_impl: ET_CLASS; a_current_address: ET_CURRENT_ADDRESS)
+			-- Report VSTB error: `a_current_address' written in `a_class_impl'
+			-- is used in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_address_not_void: a_current_address /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vstb_error (a_class) then
+				create an_error.make_vstb0e (a_class, a_class_impl, a_current_address)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vstb0f_error (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE)
+			-- Report VSTB error: the call to `a_precursor' written in `a_class_impl'
+			-- is a call to the non-static feature `a_feature' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_static: not a_feature.is_static
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vstb_error (a_class) then
+				create an_error.make_vstb0f (a_class, a_class_impl, a_precursor, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vstb0g_error (a_class, a_class_impl: ET_CLASS; a_agent: ET_INLINE_AGENT)
+			-- Report VSTB error: the inline agent `a_agent' written in `a_class_impl'
+			-- appears in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vstb_error (a_class) then
+				create an_error.make_vstb0g (a_class, a_class_impl, a_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vstb0h_error (a_class, a_class_impl: ET_CLASS; a_agent: ET_CALL_AGENT)
+			-- Report VSTB error: the unqualified call agent `a_agent' written in `a_class_impl'
+			-- appears in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+			a_unqualified_call_agent: not a_agent.is_qualified_call
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vstb_error (a_class) then
+				create an_error.make_vstb0h (a_class, a_class_impl, a_agent)
 				report_validity_error (an_error)
 			end
 		end
@@ -7664,6 +7886,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vffd9_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFFD-9 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vgcc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-1 error be reported when it
 			-- appears in `a_class'?
@@ -8186,6 +8418,16 @@ feature -- Validity error status
 
 	reportable_vrlv2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VRLV-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vstb_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VSTB error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

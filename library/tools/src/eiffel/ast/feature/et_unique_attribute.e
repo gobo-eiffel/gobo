@@ -5,7 +5,7 @@ note
 		"Eiffel unique attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,7 @@ inherit
 	ET_QUERY
 		redefine
 			is_unique_attribute,
+			is_static,
 			is_prefixable
 		end
 
@@ -52,6 +53,9 @@ feature -- Status report
 
 	is_unique_attribute: BOOLEAN = True
 			-- Is feature a unique attribute?
+
+	is_static: BOOLEAN = True
+			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
 
 	is_prefixable: BOOLEAN = True
 			-- Can current feature have a name of

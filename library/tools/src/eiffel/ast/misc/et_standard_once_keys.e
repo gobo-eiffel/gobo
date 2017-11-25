@@ -108,13 +108,4 @@ feature -- Standard once keys
 	object_once_key: STRING = "OBJECT"
 			-- "OBJECT" once key
 
-	once_indexing_tag: STRING = "once_status"
-			-- Tag in indexing clauses for once status
-
-	global_once_indexing_value: STRING = "global"
-			-- "global" indexing value for once status
-
-	thread_once_indexing_value: STRING = "thread"
-			-- "thread" indexing value for once status
-
 end

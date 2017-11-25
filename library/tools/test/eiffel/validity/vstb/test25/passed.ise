@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+
+Error code: VSTB
+
+Error: The instance-free feature f uses Current.
+What to do: Remove Current from the code or the instance-free mark from the feature declaration.
+Class: BB
+Feature: f
+Line: 11
+      do
+->      a := agent Current.out
+      end
+
+-------------------------------------------------------------------------------

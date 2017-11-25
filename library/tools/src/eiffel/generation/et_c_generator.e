@@ -220,6 +220,7 @@ feature {NONE} -- Initialization
 			create dynamic_type_id_set_names.make_map (10000)
 			dynamic_type_id_set_names.set_key_equality_tester (string_equality_tester)
 			create called_features.make (1000)
+			create called_static_features.make (1000)
 			create included_header_filenames.make (100)
 			included_header_filenames.set_equality_tester (string_equality_tester)
 			create included_runtime_header_files.make (100)
@@ -803,6 +804,7 @@ feature {NONE} -- C code Generation
 			l_header_filename: STRING
 			l_header_file: KL_TEXT_OUTPUT_FILE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			old_in_static_feature: BOOLEAN
 		do
 			old_system_name := system_name
 			system_name := a_system_name
@@ -931,10 +933,23 @@ feature {NONE} -- C code Generation
 					end
 					l_root_procedure.set_generated (True)
 					called_features.force_last (l_root_procedure)
-					from until called_features.is_empty loop
-						l_dynamic_feature := called_features.last
-						called_features.remove_last
-						print_feature (l_dynamic_feature)
+					from until
+						called_features.is_empty and
+						called_static_features.is_empty
+					loop
+						from until called_features.is_empty loop
+							l_dynamic_feature := called_features.last
+							called_features.remove_last
+							print_feature (l_dynamic_feature)
+						end
+						from until called_static_features.is_empty loop
+							l_dynamic_feature := called_static_features.last
+							called_static_features.remove_last
+							old_in_static_feature := in_static_feature
+							in_static_feature := True
+							print_feature (l_dynamic_feature)
+							in_static_feature := old_in_static_feature
+						end
 					end
 				end
 					-- Print polymorphic calls to Tuple label functions.
@@ -1482,12 +1497,11 @@ feature {NONE} -- Feature generation
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif in_static_feature then
+				print_external_routine (a_feature, False, False)
 			else
 				if current_feature.is_regular then
-					print_external_routine (a_feature, False, False, False)
-				end
-				if current_feature.is_static then
-					print_external_routine (a_feature, True, False, False)
+					print_external_routine (a_feature, False, False)
 				end
 				if current_feature.is_address then
 					print_address_routine (a_feature)
@@ -1504,15 +1518,14 @@ feature {NONE} -- Feature generation
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif in_static_feature then
+				print_external_routine (a_feature, False, False)
 			else
 				if current_feature.is_regular then
-					print_external_routine (a_feature, False, False, False)
+					print_external_routine (a_feature, False, False)
 				end
 				if current_feature.is_creation then
-					print_external_routine (a_feature, False, True, False)
-				end
-				if current_feature.is_static then
-					print_external_routine (a_feature, True, False, False)
+					print_external_routine (a_feature, True, False)
 				end
 				if current_feature.is_address then
 					print_address_routine (a_feature)
@@ -1520,16 +1533,15 @@ feature {NONE} -- Feature generation
 			end
 		end
 
-	print_external_routine (a_feature: ET_EXTERNAL_ROUTINE; a_static: BOOLEAN; a_creation: BOOLEAN; a_inline: BOOLEAN)
+	print_external_routine (a_feature: ET_EXTERNAL_ROUTINE; a_creation: BOOLEAN; a_inline: BOOLEAN)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 			-- `a_inline' means that `a_feature' is a C inline or C++ inline feature and
 			-- we want to generate its code in a separate function.
 		require
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
-			is_static: a_static implies current_feature.is_static
 			is_creation: a_creation implies current_feature.is_creation
-			one_kind: (not a_static and not a_creation and not a_inline) or (a_static xor a_creation xor a_inline)
+			one_kind: (not in_static_feature and not a_creation and not a_inline) or (in_static_feature xor a_creation xor a_inline)
 		local
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type: detachable ET_DYNAMIC_TYPE
@@ -1592,7 +1604,7 @@ feature {NONE} -- Feature generation
 				current_file.put_character ('*')
 				current_file.put_character (' ')
 				current_file.put_string (c_ac)
-			elseif a_static then
+			elseif in_static_feature then
 				print_static_routine_name (current_feature, current_type, header_file)
 				print_static_routine_name (current_feature, current_type, current_file)
 				header_file.put_character ('(')
@@ -1703,7 +1715,7 @@ feature {NONE} -- Feature generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				if current_in_exception_trace then
-					if a_static or a_creation then
+					if in_static_feature or a_creation then
 						current_file.put_character ('0')
 					else
 						print_current_name (current_file)
@@ -2048,7 +2060,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				flush_to_c_file
 			end
 			if (exception_trace_mode or trace_mode) and l_is_inline and not a_inline then
-				print_external_routine (a_feature, False, False, True)
+				print_external_routine (a_feature, False, True)
 			end
 		end
 
@@ -5490,12 +5502,11 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif in_static_feature then
+				print_internal_routine (a_feature, False)
 			else
 				if current_feature.is_regular then
-					print_internal_routine (a_feature, False, False)
-				end
-				if current_feature.is_static then
-					print_internal_routine (a_feature, True, False)
+					print_internal_routine (a_feature, False)
 				end
 				if current_feature.is_address then
 					print_address_routine (a_feature)
@@ -5512,15 +5523,14 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif in_static_feature then
+				print_internal_routine (a_feature, False)
 			else
 				if current_feature.is_regular then
-					print_internal_routine (a_feature, False, False)
+					print_internal_routine (a_feature, False)
 				end
 				if current_feature.is_creation then
-					print_internal_routine (a_feature, False, True)
-				end
-				if current_feature.is_static then
-					print_internal_routine (a_feature, True, False)
+					print_internal_routine (a_feature, True)
 				end
 				if current_feature.is_address then
 					print_address_routine (a_feature)
@@ -5528,14 +5538,13 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_internal_routine (a_feature: ET_INTERNAL_ROUTINE; a_static: BOOLEAN; a_creation: BOOLEAN)
+	print_internal_routine (a_feature: ET_INTERNAL_ROUTINE; a_creation: BOOLEAN)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
-			is_static: a_static implies current_feature.is_static
 			is_creation: a_creation implies current_feature.is_creation
-			one_kind: (not a_static and not a_creation) or (a_static xor a_creation)
+			one_kind: (not in_static_feature and not a_creation) or (in_static_feature xor a_creation)
 		local
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type: detachable ET_DYNAMIC_TYPE
@@ -5578,7 +5587,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			if a_static then
+			if in_static_feature then
 				print_static_routine_name (current_feature, current_type, header_file)
 				print_static_routine_name (current_feature, current_type, current_file)
 				header_file.put_character ('(')
@@ -5675,7 +5684,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					current_file.put_character (' ')
 					current_file.put_character ('{')
 					if current_in_exception_trace then
-						if a_static or a_creation then
+						if in_static_feature or a_creation then
 							current_file.put_character ('0')
 						else
 							print_current_name (current_file)
@@ -6223,7 +6232,7 @@ print ("ET_C_GENERATOR.print_once_procedure: once key %"OBJECT%" not supported.%
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				print_attribute_wrapper (a_feature, False)
+				print_attribute_wrapper (a_feature)
 			end
 		end
 
@@ -6253,12 +6262,11 @@ print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported ye
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif in_static_feature then
+				print_attribute_wrapper (a_feature)
 			else
 				if current_feature.is_regular then
-					print_attribute_wrapper (a_feature, False)
-				end
-				if current_feature.is_static then
-					print_attribute_wrapper (a_feature, True)
+					print_attribute_wrapper (a_feature)
 				end
 			end
 		end
@@ -6273,24 +6281,22 @@ print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported ye
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif in_static_feature then
+				print_attribute_wrapper (a_feature)
 			else
 				if current_feature.is_regular then
-					print_attribute_wrapper (a_feature, False)
-				end
-				if current_feature.is_static then
-					print_attribute_wrapper (a_feature, True)
+					print_attribute_wrapper (a_feature)
 				end
 			end
 		end
 
-	print_attribute_wrapper (a_feature: ET_QUERY; a_static: BOOLEAN)
+	print_attribute_wrapper (a_feature: ET_QUERY)
 			-- Print function wrapper for `a_feature' to `current_file'
 			-- and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
 			no_arguments: a_feature.arguments = Void
 			valid_feature: current_feature.static_feature = a_feature
-			is_static: a_static implies current_feature.is_static
 		local
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
@@ -6318,7 +6324,7 @@ print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported ye
 				print_type_declaration (l_result_type, current_file)
 				header_file.put_character (' ')
 				current_file.put_character (' ')
-				if a_static then
+				if in_static_feature then
 					print_static_routine_name (current_feature, current_type, header_file)
 					print_static_routine_name (current_feature, current_type, current_file)
 					header_file.put_character ('(')
@@ -7540,16 +7546,20 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 					else
 						l_parent_dynamic_type := current_dynamic_system.dynamic_type (l_parent_type, current_type.base_type)
 						l_dynamic_precursor := current_feature.dynamic_precursor (l_procedure, l_parent_dynamic_type, current_dynamic_system)
-						if not l_dynamic_precursor.is_generated then
-							l_dynamic_precursor.set_generated (True)
-							called_features.force_last (l_dynamic_precursor)
-						end
 						print_indentation
-						if l_dynamic_precursor.is_static then
+						if in_static_feature then
+							if not l_dynamic_precursor.is_static_generated then
+								l_dynamic_precursor.set_static_generated (True)
+								called_static_features.force_last (l_dynamic_precursor)
+							end
 							print_static_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
 							current_file.put_string (c_ac)
 						else
+							if not l_dynamic_precursor.is_generated then
+								l_dynamic_precursor.set_generated (True)
+								called_features.force_last (l_dynamic_precursor)
+							end
 							print_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
 							current_file.put_string (c_ac)
@@ -7853,31 +7863,41 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			has_retry := True
 		end
 
-	print_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION)
-			-- Print `an_instruction'.
+	print_static_call_instruction (a_instruction: ET_STATIC_CALL_INSTRUCTION)
+			-- Print `a_instruction'.
 		require
-			an_instruction_not_void: an_instruction /= Void
+			a_instruction_not_void: a_instruction /= Void
 		local
-			l_type: ET_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
+		do
+			l_target_type := current_dynamic_system.dynamic_type (a_instruction.type, current_type.base_type)
+			print_instruction_static_call (l_target_type, a_instruction.name, a_instruction.arguments)
+		end
+
+	print_instruction_static_call (a_target_type: ET_DYNAMIC_TYPE; a_name: ET_CALL_NAME; a_arguments: detachable ET_ACTUAL_ARGUMENTS)
+			-- Print instruction which is expected to be a static call to
+			-- feature with the same seed as `a_name' in type `a_target_type'
+			-- and with `a_arguments'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+			a_name_not_void: a_name /= Void
+		local
 			l_dynamic_procedure: detachable ET_DYNAMIC_FEATURE
 			l_seed: INTEGER
 			i, nb: INTEGER
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 		do
-			l_type := an_instruction.type
-			if attached an_instruction.arguments as l_actuals then
-				nb := l_actuals.count
+			if a_arguments /= Void then
+				nb := a_arguments.count
 				from i := 1 until i > nb loop
-					print_operand (l_actuals.actual_argument (i))
+					print_operand (a_arguments.actual_argument (i))
 					i := i + 1
 				end
 			end
 			fill_call_operands (nb)
-			l_target_type := current_dynamic_system.dynamic_type (l_type, current_type.base_type)
-			l_seed := an_instruction.name.seed
-			l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
+			l_seed := a_name.seed
+			l_dynamic_procedure := a_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
 			if l_dynamic_procedure = Void then
 					-- Internal error: there should be a procedure with `l_seed'.
 					-- It has been computed in ET_FEATURE_CHECKER or else an
@@ -7885,12 +7905,12 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				if not l_dynamic_procedure.is_generated then
-					l_dynamic_procedure.set_generated (True)
-					called_features.force_last (l_dynamic_procedure)
+				if not l_dynamic_procedure.is_static_generated then
+					l_dynamic_procedure.set_static_generated (True)
+					called_static_features.force_last (l_dynamic_procedure)
 				end
 				print_indentation
-				print_static_routine_name (l_dynamic_procedure, l_target_type, current_file)
+				print_static_routine_name (l_dynamic_procedure, a_target_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				from i := 1 until i > nb loop
@@ -7919,55 +7939,59 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_seed: INTEGER
 			i, nb: INTEGER
 		do
-			l_actuals := a_call.arguments
-			l_seed := a_call.name.seed
-				-- Check whether this a call to ROUTINE.call with a manifest
-				-- tuple as argument. We have a special treatment in that case
-				-- to avoid having to create the manifest tuple when possible.
-			if l_seed = current_system.routine_call_seed and then not a_call.is_call_agent then
-				if l_actuals /= Void and then l_actuals.count = 1 then
-					if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
-						operand_stack.force (tokens.current_keyword)
-						nb := l_manifest_tuple.count
+			if in_static_feature then
+				print_instruction_static_call (current_type, a_call.name, a_call.arguments)
+			else
+				l_actuals := a_call.arguments
+				l_seed := a_call.name.seed
+					-- Check whether this a call to ROUTINE.call with a manifest
+					-- tuple as argument. We have a special treatment in that case
+					-- to avoid having to create the manifest tuple when possible.
+				if l_seed = current_system.routine_call_seed and then not a_call.is_call_agent then
+					if l_actuals /= Void and then l_actuals.count = 1 then
+						if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
+							operand_stack.force (tokens.current_keyword)
+							nb := l_manifest_tuple.count
+							from i := 1 until i > nb loop
+								print_operand (l_manifest_tuple.expression (i))
+								i := i + 1
+							end
+							nb := nb + 1
+							fill_call_operands (nb)
+							l_manifest_tuple_operand := agent_manifest_tuple
+							l_manifest_tuple_operand.resize (nb - 1)
+							from i := nb until i < 2 loop
+								l_manifest_tuple_operand.put_first (call_operands.item (i))
+								i := i - 1
+							end
+							l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
+							mark_expressions_frozen (l_manifest_tuple_operand)
+							l_target_operand := call_operands.first
+							call_operands.wipe_out
+							call_operands.put_last (l_target_operand)
+							call_operands.put_last (l_manifest_tuple_operand)
+							nb := 2
+						end
+					end
+				end
+				if l_manifest_tuple_operand = Void then
+					operand_stack.force (tokens.current_keyword)
+					if l_actuals /= Void then
+						nb := l_actuals.count
 						from i := 1 until i > nb loop
-							print_operand (l_manifest_tuple.expression (i))
+							print_operand (l_actuals.actual_argument (i))
 							i := i + 1
 						end
-						nb := nb + 1
-						fill_call_operands (nb)
-						l_manifest_tuple_operand := agent_manifest_tuple
-						l_manifest_tuple_operand.resize (nb - 1)
-						from i := nb until i < 2 loop
-							l_manifest_tuple_operand.put_first (call_operands.item (i))
-							i := i - 1
-						end
-						l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
-						mark_expressions_frozen (l_manifest_tuple_operand)
-						l_target_operand := call_operands.first
-						call_operands.wipe_out
-						call_operands.put_last (l_target_operand)
-						call_operands.put_last (l_manifest_tuple_operand)
-						nb := 2
 					end
+					nb := nb + 1
+					fill_call_operands (nb)
 				end
-			end
-			if l_manifest_tuple_operand = Void then
-				operand_stack.force (tokens.current_keyword)
-				if l_actuals /= Void then
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						print_operand (l_actuals.actual_argument (i))
-						i := i + 1
-					end
+				print_named_procedure_call (a_call.name, current_type, False)
+				call_operands.wipe_out
+				if l_manifest_tuple_operand /= Void then
+					mark_expressions_unfrozen (l_manifest_tuple_operand)
+					l_manifest_tuple_operand.wipe_out
 				end
-				nb := nb + 1
-				fill_call_operands (nb)
-			end
-			print_named_procedure_call (a_call.name, current_type, False)
-			call_operands.wipe_out
-			if l_manifest_tuple_operand /= Void then
-				mark_expressions_unfrozen (l_manifest_tuple_operand)
-				l_manifest_tuple_operand.wipe_out
 			end
 		end
 
@@ -11582,15 +11606,19 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						end
 						l_parent_dynamic_type := current_dynamic_system.dynamic_type (l_parent_type, current_type.base_type)
 						l_dynamic_precursor := current_feature.dynamic_precursor (l_query, l_parent_dynamic_type, current_dynamic_system)
-						if not l_dynamic_precursor.is_generated then
-							l_dynamic_precursor.set_generated (True)
-							called_features.force_last (l_dynamic_precursor)
-						end
-						if l_dynamic_precursor.is_static then
+						if in_static_feature then
+							if not l_dynamic_precursor.is_static_generated then
+								l_dynamic_precursor.set_static_generated (True)
+								called_static_features.force_last (l_dynamic_precursor)
+							end
 							print_static_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
 							current_file.put_string (c_ac)
 						else
+							if not l_dynamic_precursor.is_generated then
+								l_dynamic_precursor.set_generated (True)
+								called_features.force_last (l_dynamic_precursor)
+							end
 							print_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
 							current_file.put_string (c_ac)
@@ -12230,13 +12258,26 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			print_manifest_string (a_string)
 		end
 
-	print_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
-			-- Print `an_expression'.
+	print_static_call_expression (a_expression: ET_STATIC_CALL_EXPRESSION)
+			-- Print `a_expression'.
 		require
-			an_expression_not_void: an_expression /= Void
+			a_expression_not_void: a_expression /= Void
 		local
-			l_type: ET_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
+		do
+			l_target_type := current_dynamic_system.dynamic_type (a_expression.type, current_type.base_type)
+			print_expression_static_call (a_expression, l_target_type, a_expression.name, a_expression.arguments)
+		end
+
+	print_expression_static_call (a_expression: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_name: ET_CALL_NAME; a_arguments: detachable ET_ACTUAL_ARGUMENTS)
+			-- Print `a_expression', which is expected to be a static call to
+			-- feature with the same seed as `a_name' in type `a_target_type'
+			-- and with `a_arguments'.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_name_not_void: a_name /= Void
+		local
 			l_query: detachable ET_QUERY
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_seed: INTEGER
@@ -12254,11 +12295,10 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
-			l_type := an_expression.type
-			if attached an_expression.arguments as l_actuals then
-				nb := l_actuals.count
+			if a_arguments /= Void then
+				nb := a_arguments.count
 				from i := 1 until i > nb loop
-					print_operand (l_actuals.actual_argument (i))
+					print_operand (a_arguments.actual_argument (i))
 					i := i + 1
 				end
 			end
@@ -12269,12 +12309,12 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					print_indentation
 					print_writable (l_assignment_target)
 				else
-					l_dynamic_type_set := dynamic_type_set (an_expression)
+					l_dynamic_type_set := dynamic_type_set (a_expression)
 					l_dynamic_type := l_dynamic_type_set.static_type
 					l_temp := new_temp_variable (l_dynamic_type)
 						-- We will set the index of `l_temp' later because
 						-- it could still be used in `call_operands'.
-					l_temp_index := an_expression.index
+					l_temp_index := a_expression.index
 					operand_stack.force (l_temp)
 					print_indentation
 					print_temp_name (l_temp, current_file)
@@ -12284,9 +12324,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				current_file.put_character (' ')
 				current_file.put_character ('(')
 			end
-			l_target_type := current_dynamic_system.dynamic_type (l_type, current_type.base_type)
-			l_seed := an_expression.name.seed
-			l_query := l_target_type.base_class.seeded_query (l_seed)
+			l_seed := a_name.seed
+			l_query := a_target_type.base_class.seeded_query (l_seed)
 			if l_query = Void then
 					-- Internal error: there should be a query with `l_seed'.
 					-- It has been computed in ET_FEATURE_CHECKER or else an
@@ -12309,12 +12348,12 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				else
 					l_constant := l_constant_attribute.constant
 					old_index := l_constant.index
-					l_constant.set_index (an_expression.index)
+					l_constant.set_index (a_expression.index)
 					print_expression (l_constant)
 					l_constant.set_index (old_index)
 				end
 			elseif l_query.is_unique_attribute then
-				l_dynamic_type_set := dynamic_type_set (an_expression)
+				l_dynamic_type_set := dynamic_type_set (a_expression)
 				l_dynamic_type := l_dynamic_type_set.static_type
 				print_type_cast (l_dynamic_type, current_file)
 				current_file.put_character ('(')
@@ -12326,12 +12365,12 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				current_file.put_integer (current_system.registered_feature_count - l_query.implementation_feature.id + 1)
 				current_file.put_character (')')
 			else
-				l_dynamic_feature := l_target_type.dynamic_query (l_query, current_dynamic_system)
-				if not l_dynamic_feature.is_generated then
-					l_dynamic_feature.set_generated (True)
-					called_features.force_last (l_dynamic_feature)
+				l_dynamic_feature := a_target_type.dynamic_query (l_query, current_dynamic_system)
+				if not l_dynamic_feature.is_static_generated then
+					l_dynamic_feature.set_static_generated (True)
+					called_static_features.force_last (l_dynamic_feature)
 				end
-				print_static_routine_name (l_dynamic_feature, l_target_type, current_file)
+				print_static_routine_name (l_dynamic_feature, a_target_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				from i := 1 until i > nb loop
@@ -12605,198 +12644,202 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			old_index: INTEGER
 			l_constant: ET_CONSTANT
 		do
-			l_assignment_target := assignment_target
-			assignment_target := Void
-			l_call_type_set := dynamic_type_set (a_call)
-			l_dynamic_feature := current_type.seeded_dynamic_query (a_call.name.seed, current_dynamic_system)
-			if l_dynamic_feature = Void then
-					-- Internal error: there should be a query for that seed.
-				set_fatal_error
-				error_handler.report_giaaa_error
+			if in_static_feature then
+				print_expression_static_call (a_call, current_type, a_call.name, a_call.arguments)
 			else
-				l_call_type := l_call_type_set.static_type
-				if l_dynamic_feature.is_attribute then
-					if in_operand then
-						operand_stack.force (a_call)
-					elseif l_dynamic_feature.is_builtin then
-							-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
-							-- The call might be the operand (target or argument) of another call.
-							-- Therefore we need to take some care when dealing with `call_operands'.
-							-- We need to keek track of the operands of this possible other call
-							-- while processing the current call to the built-in attribute, for
-							-- which only the target ('Current') needs to be on `call_operands'.
-						if call_operands.is_empty then
-							call_operands.force_last (tokens.current_keyword)
-						else
-							l_old_call_target := call_operands.first
-							call_operands.replace (tokens.current_keyword, 1)
-						end
-						if in_target and l_call_type.is_expanded then
-								-- Pass the address of the built-in attribute expanded object.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-								-- No need to call `print_adapted_query_call' here because an
-								-- unqualified call is not polymorphic, and therefore the type
-								-- of the query is exactly the type expected by the caller.
-							print_query_call (l_dynamic_feature, current_type, False)
-							current_file.put_character (')')
-						else
-								-- No need to call `print_adapted_query_call' here because an
-								-- unqualified call is not polymorphic, and therefore the type
-								-- of the query is exactly the type expected by the caller.
-							print_query_call (l_dynamic_feature, current_type, False)
-						end
-						if l_old_call_target /= Void then
-							call_operands.replace (l_old_call_target, 1)
-							l_old_call_target := Void
-						else
-							call_operands.wipe_out
-						end
-					elseif attached call_target_type as l_call_target_type then
-						check in_target: in_target end
-						if l_call_type.is_expanded then
-								-- Pass the address of the expanded object.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-							current_file.put_character (')')
-						elseif l_call_target_type.is_expanded then
-								-- We need to unbox the object and then pass its address.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_boxed_attribute_item_access (a_call, l_call_target_type, call_target_check_void)
-							current_file.put_character (')')
-						else
-							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-						end
-					else
-						print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-					end
-				elseif l_dynamic_feature.is_constant_attribute then
-					if in_operand then
-						if in_target then
+				l_assignment_target := assignment_target
+				assignment_target := Void
+				l_call_type_set := dynamic_type_set (a_call)
+				l_dynamic_feature := current_type.seeded_dynamic_query (a_call.name.seed, current_dynamic_system)
+				if l_dynamic_feature = Void then
+						-- Internal error: there should be a query for that seed.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_call_type := l_call_type_set.static_type
+					if l_dynamic_feature.is_attribute then
+						if in_operand then
+							operand_stack.force (a_call)
+						elseif l_dynamic_feature.is_builtin then
+								-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
+								-- The call might be the operand (target or argument) of another call.
+								-- Therefore we need to take some care when dealing with `call_operands'.
+								-- We need to keek track of the operands of this possible other call
+								-- while processing the current call to the built-in attribute, for
+								-- which only the target ('Current') needs to be on `call_operands'.
+							if call_operands.is_empty then
+								call_operands.force_last (tokens.current_keyword)
+							else
+								l_old_call_target := call_operands.first
+								call_operands.replace (tokens.current_keyword, 1)
+							end
+							if in_target and l_call_type.is_expanded then
+									-- Pass the address of the built-in attribute expanded object.
+								current_file.put_character ('&')
+								current_file.put_character ('(')
+									-- No need to call `print_adapted_query_call' here because an
+									-- unqualified call is not polymorphic, and therefore the type
+									-- of the query is exactly the type expected by the caller.
+								print_query_call (l_dynamic_feature, current_type, False)
+								current_file.put_character (')')
+							else
+									-- No need to call `print_adapted_query_call' here because an
+									-- unqualified call is not polymorphic, and therefore the type
+									-- of the query is exactly the type expected by the caller.
+								print_query_call (l_dynamic_feature, current_type, False)
+							end
+							if l_old_call_target /= Void then
+								call_operands.replace (l_old_call_target, 1)
+								l_old_call_target := Void
+							else
+								call_operands.wipe_out
+							end
+						elseif attached call_target_type as l_call_target_type then
+							check in_target: in_target end
 							if l_call_type.is_expanded then
-								in_operand := False
-								l_temp := new_temp_variable (l_call_type)
-								print_indentation
-								print_temp_name (l_temp, current_file)
-								current_file.put_character (' ')
-								current_file.put_character ('=')
-								current_file.put_character (' ')
-								print_unqualified_call_expression (a_call)
-								current_file.put_character (';')
-								current_file.put_new_line
-								l_temp.set_index (a_call.index)
-								operand_stack.force (l_temp)
-								in_operand := True
+									-- Pass the address of the expanded object.
+								current_file.put_character ('&')
+								current_file.put_character ('(')
+								print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
+								current_file.put_character (')')
+							elseif l_call_target_type.is_expanded then
+									-- We need to unbox the object and then pass its address.
+								current_file.put_character ('&')
+								current_file.put_character ('(')
+								print_boxed_attribute_item_access (a_call, l_call_target_type, call_target_check_void)
+								current_file.put_character (')')
+							else
+								print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
+							end
+						else
+							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
+						end
+					elseif l_dynamic_feature.is_constant_attribute then
+						if in_operand then
+							if in_target then
+								if l_call_type.is_expanded then
+									in_operand := False
+									l_temp := new_temp_variable (l_call_type)
+									print_indentation
+									print_temp_name (l_temp, current_file)
+									current_file.put_character (' ')
+									current_file.put_character ('=')
+									current_file.put_character (' ')
+									print_unqualified_call_expression (a_call)
+									current_file.put_character (';')
+									current_file.put_new_line
+									l_temp.set_index (a_call.index)
+									operand_stack.force (l_temp)
+									in_operand := True
+								else
+									operand_stack.force (a_call)
+								end
 							else
 								operand_stack.force (a_call)
 							end
-						else
-							operand_stack.force (a_call)
+						elseif attached {ET_CONSTANT_ATTRIBUTE} l_dynamic_feature.static_feature as l_constant_attribute then
+							if attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
+								l_once_feature := l_constant_attribute.implementation_feature
+								constant_features.force_last (l_string_constant, l_once_feature)
+								print_once_value_name (l_once_feature, current_file)
+							else
+								l_constant := l_constant_attribute.constant
+								old_index := l_constant.index
+								l_constant.set_index (a_call.index)
+								print_expression (l_constant)
+								l_constant.set_index (old_index)
+							end
 						end
-					elseif attached {ET_CONSTANT_ATTRIBUTE} l_dynamic_feature.static_feature as l_constant_attribute then
-						if attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
-							l_once_feature := l_constant_attribute.implementation_feature
-							constant_features.force_last (l_string_constant, l_once_feature)
-							print_once_value_name (l_once_feature, current_file)
-						else
-							l_constant := l_constant_attribute.constant
-							old_index := l_constant.index
-							l_constant.set_index (a_call.index)
-							print_expression (l_constant)
-							l_constant.set_index (old_index)
+					else
+						l_actuals := a_call.arguments
+						l_seed := a_call.name.seed
+							-- Check whether this a call to FUNCTION.item with a manifest
+							-- tuple as argument. We have a special treatment in that case
+							-- to avoid having to create the manifest tuple when possible.
+						if l_seed = current_system.function_item_seed and then not a_call.is_call_agent then
+							if l_actuals /= Void and then l_actuals.count = 1 then
+								if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
+									operand_stack.force (tokens.current_keyword)
+									nb := l_manifest_tuple.count
+									from i := 1 until i > nb loop
+										print_operand (l_manifest_tuple.expression (i))
+										i := i + 1
+									end
+									nb := nb + 1
+									fill_call_operands (nb)
+									l_manifest_tuple_operand := agent_manifest_tuple
+									l_manifest_tuple_operand.resize (nb - 1)
+									from i := nb until i < 2 loop
+										l_manifest_tuple_operand.put_first (call_operands.item (i))
+										i := i - 1
+									end
+									l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
+									mark_expressions_frozen (l_manifest_tuple_operand)
+									l_target_operand := call_operands.first
+									call_operands.wipe_out
+									call_operands.put_last (l_target_operand)
+									call_operands.put_last (l_manifest_tuple_operand)
+									nb := 2
+								end
+							end
 						end
-					end
-				else
-					l_actuals := a_call.arguments
-					l_seed := a_call.name.seed
-						-- Check whether this a call to FUNCTION.item with a manifest
-						-- tuple as argument. We have a special treatment in that case
-						-- to avoid having to create the manifest tuple when possible.
-					if l_seed = current_system.function_item_seed and then not a_call.is_call_agent then
-						if l_actuals /= Void and then l_actuals.count = 1 then
-							if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
-								operand_stack.force (tokens.current_keyword)
-								nb := l_manifest_tuple.count
+						if l_manifest_tuple_operand = Void then
+							operand_stack.force (tokens.current_keyword)
+							if l_actuals /= Void then
+								nb := l_actuals.count
 								from i := 1 until i > nb loop
-									print_operand (l_manifest_tuple.expression (i))
+									print_operand (l_actuals.actual_argument (i))
 									i := i + 1
 								end
-								nb := nb + 1
-								fill_call_operands (nb)
-								l_manifest_tuple_operand := agent_manifest_tuple
-								l_manifest_tuple_operand.resize (nb - 1)
-								from i := nb until i < 2 loop
-									l_manifest_tuple_operand.put_first (call_operands.item (i))
-									i := i - 1
-								end
-								l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
-								mark_expressions_frozen (l_manifest_tuple_operand)
-								l_target_operand := call_operands.first
-								call_operands.wipe_out
-								call_operands.put_last (l_target_operand)
-								call_operands.put_last (l_manifest_tuple_operand)
-								nb := 2
 							end
+							nb := nb + 1
+							fill_call_operands (nb)
 						end
-					end
-					if l_manifest_tuple_operand = Void then
-						operand_stack.force (tokens.current_keyword)
-						if l_actuals /= Void then
-							nb := l_actuals.count
-							from i := 1 until i > nb loop
-								print_operand (l_actuals.actual_argument (i))
-								i := i + 1
+						if in_operand then
+							if l_assignment_target /= Void then
+								operand_stack.force (l_assignment_target)
+								print_indentation
+								print_writable (l_assignment_target)
+							else
+								l_temp := new_temp_variable (l_call_type)
+									-- We will set the index of `l_temp' later because
+									-- it could still be used in `call_operands'.
+								l_temp_index := a_call.index
+								operand_stack.force (l_temp)
+								print_indentation
+								print_temp_name (l_temp, current_file)
 							end
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							current_file.put_character ('(')
 						end
-						nb := nb + 1
-						fill_call_operands (nb)
-					end
-					if in_operand then
-						if l_assignment_target /= Void then
-							operand_stack.force (l_assignment_target)
-							print_indentation
-							print_writable (l_assignment_target)
-						else
-							l_temp := new_temp_variable (l_call_type)
-								-- We will set the index of `l_temp' later because
-								-- it could still be used in `call_operands'.
-							l_temp_index := a_call.index
-							operand_stack.force (l_temp)
-							print_indentation
-							print_temp_name (l_temp, current_file)
+							-- When there is no result type of the form 'like argument',
+							-- then there is no need to call `print_adapted_query_call'
+							-- because an unqualified call is not polymorphic, and therefore
+							-- the type of the query is exactly the type expected by
+							-- the caller. This is another story with 'like argument'.
+							-- For example 'clone (1)' is expected to be of type INTEGER
+							-- and 'clone ("gobo")' is expected to be of type STRING.
+							-- But the corresponding generated function for 'clone' will
+							-- be declared to return an ANY. Hence the need for a call
+							-- to `print_adapted_query_call' in this case.
+						print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
+						if in_operand then
+							current_file.put_character (')')
+							current_file.put_character (';')
+							current_file.put_new_line
 						end
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-					end
-						-- When there is no result type of the form 'like argument',
-						-- then there is no need to call `print_adapted_query_call'
-						-- because an unqualified call is not polymorphic, and therefore
-						-- the type of the query is exactly the type expected by
-						-- the caller. This is another story with 'like argument'.
-						-- For example 'clone (1)' is expected to be of type INTEGER
-						-- and 'clone ("gobo")' is expected to be of type STRING.
-						-- But the corresponding generated function for 'clone' will
-						-- be declared to return an ANY. Hence the need for a call
-						-- to `print_adapted_query_call' in this case.
-					print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
-					if in_operand then
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
-					call_operands.wipe_out
-					if l_manifest_tuple_operand /= Void then
-						mark_expressions_unfrozen (l_manifest_tuple_operand)
-						l_manifest_tuple_operand.wipe_out
-					end
-					if l_temp /= Void and then l_temp_index /= 0 then
-							-- We had to wait until this stage to set the index of `l_temp'
-							-- because it could have still been used in `call_operands'.
-						l_temp.set_index (l_temp_index)
+						call_operands.wipe_out
+						if l_manifest_tuple_operand /= Void then
+							mark_expressions_unfrozen (l_manifest_tuple_operand)
+							l_manifest_tuple_operand.wipe_out
+						end
+						if l_temp /= Void and then l_temp_index /= 0 then
+								-- We had to wait until this stage to set the index of `l_temp'
+								-- because it could have still been used in `call_operands'.
+							l_temp.set_index (l_temp_index)
+						end
 					end
 				end
 			end
@@ -32328,7 +32371,6 @@ feature {NONE} -- Feature name generation
 			-- Print name of static feature `a_feature' to `a_file'.
 		require
 			a_routine_not_void: a_routine /= Void
-			a_routine_static: a_routine.is_static
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -32394,7 +32436,6 @@ feature {NONE} -- Feature name generation
 			-- Print name of C inline feature `a_feature' to `a_file'.
 		require
 			a_routine_not_void: a_routine /= Void
-			a_routine_static: a_routine.is_static
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -32735,7 +32776,11 @@ feature {NONE} -- Feature name generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			print_routine_name (a_routine, a_type, a_file)
+			if in_static_feature then
+				print_static_routine_name (a_routine, a_type, a_file)
+			else
+				print_routine_name (a_routine, a_type, a_file)
+			end
 			a_file.put_character ('o')
 			a_file.put_character ('t')
 			a_file.put_integer (i)
@@ -32751,7 +32796,11 @@ feature {NONE} -- Feature name generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			print_routine_name (a_routine, a_type, a_file)
+			if in_static_feature then
+				print_static_routine_name (a_routine, a_type, a_file)
+			else
+				print_routine_name (a_routine, a_type, a_file)
+			end
 			a_file.put_character ('e')
 			a_file.put_integer (i)
 		end
@@ -32764,7 +32813,11 @@ feature {NONE} -- Feature name generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			print_routine_name (a_routine, a_type, a_file)
+			if in_static_feature then
+				print_static_routine_name (a_routine, a_type, a_file)
+			else
+				print_routine_name (a_routine, a_type, a_file)
+			end
 			a_file.put_character ('o')
 			a_file.put_character ('e')
 			a_file.put_integer (i)
@@ -32863,7 +32916,11 @@ feature {NONE} -- Feature name generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			print_routine_name (a_routine, a_type, a_file)
+			if in_static_feature then
+				print_static_routine_name (a_routine, a_type, a_file)
+			else
+				print_routine_name (a_routine, a_type, a_file)
+			end
 			a_file.put_character ('a')
 			a_file.put_character ('c')
 			a_file.put_integer (i)
@@ -32877,7 +32934,11 @@ feature {NONE} -- Feature name generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			print_routine_name (a_routine, a_type, a_file)
+			if in_static_feature then
+				print_static_routine_name (a_routine, a_type, a_file)
+			else
+				print_routine_name (a_routine, a_type, a_file)
+			end
 			a_file.put_character ('a')
 			a_file.put_character ('f')
 			a_file.put_integer (i)
@@ -34420,6 +34481,9 @@ feature {NONE} -- Access
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
 
+	called_static_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
+			-- Features being called statically (i.e. calls of the form {A}.f).
+
 	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			-- Dynamic types in the system
 
@@ -35213,6 +35277,9 @@ feature {NONE} -- Rescue clauses
 
 feature {NONE} -- Implementation
 
+	in_static_feature: BOOLEAN
+			-- Is a feature to be used in a static call being printed?
+
 	in_operand: BOOLEAN
 			-- Is an operand being processed?
 
@@ -35848,6 +35915,8 @@ invariant
 	no_void_current_equality: not current_equalities.has_void
 	called_features_not_void: called_features /= Void
 	no_void_called_feature: not called_features.has_void
+	called_static_features_not_void: called_static_features /= Void
+	no_void_called_static_feature: not called_static_features.has_void
 	once_features_not_void: once_features /= Void
 	no_void_once_feature: not once_features.has_void
 	once_feature_constraint: across once_features as l_features all l_features.key = l_features.key.implementation_feature end

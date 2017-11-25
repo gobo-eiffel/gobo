@@ -5,7 +5,7 @@ note
 		"Features implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,7 @@ inherit
 	ET_FEATURE
 		redefine
 			is_frozen, is_dotnet,
+			is_static,
 			overloaded_extended_name
 		end
 
@@ -32,6 +33,12 @@ feature -- Status report
 			-- Has feature been declared as virtual?
 
 	is_static: BOOLEAN
+			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
+		do
+			Result := has_dotnet_static_mark
+		end
+
+	has_dotnet_static_mark: BOOLEAN
 			-- Has feature been declared as static?
 
 	is_dotnet: BOOLEAN = True
@@ -57,11 +64,11 @@ feature -- Status setting
 		end
 
 	set_static (b: BOOLEAN)
-			-- Set `is_static' to `b'.
+			-- Set `has_static_mark' to `b'.
 		do
-			is_static := b
+			has_dotnet_static_mark := b
 		ensure
-			static_set: is_static = b
+			static_set: has_dotnet_static_mark = b
 		end
 
 feature -- Setting

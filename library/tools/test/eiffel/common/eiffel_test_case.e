@@ -87,7 +87,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			end
 			a_geant_filename := geant_filename (a_test_name)
 				-- Compile program.
-			execute_shell ("geant -b " + a_geant_filename + " compile_" + a_debug + "ge" + output1_log)
+			execute_shell ("geant -b " + a_geant_filename + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
 			concat_output1 (agent filter_output_gec)
 				-- Execute program.
 			if file_system.file_exists (program_exe) then
@@ -805,13 +805,21 @@ feature {NONE} -- Output logs
 								l_file1.close
 								l_file2.close
 								done := True
-							elseif not Execution_environment.interpreted_string (l_file1.last_string).same_string (l_file2.last_string) then
-								if not l_regexp2.matches (l_file2.last_string) or else not Execution_environment.interpreted_string (l_file1.last_string).as_lower.same_string (l_file2.last_string.as_lower) then
-									Result := False
-									l_file1.close
-									l_file2.close
-									done := True
-								end
+							elseif l_file1.last_string.same_string (l_file2.last_string) then
+								-- OK
+							elseif Execution_environment.interpreted_string (l_file1.last_string).same_string (l_file2.last_string) then
+								-- OK
+							elseif
+								l_regexp2.matches (l_file2.last_string) and then
+								(l_file1.last_string.as_lower.same_string (l_file2.last_string.as_lower) or
+								Execution_environment.interpreted_string (l_file1.last_string).as_lower.same_string (l_file2.last_string.as_lower))	
+							then
+								-- OK
+							else
+								Result := False
+								l_file1.close
+								l_file2.close
+								done := True
 							end
 						end
 					else
