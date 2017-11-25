@@ -130,6 +130,9 @@ feature {NONE} -- Output
 				if not l_option.is_debug_option_declared then
 					l_option.set_debug_option (False)
 				end
+				if not l_option.is_void_safety_declared then
+					l_option.set_void_safety (options.none_value)
+				end
 				print_options (l_option, 2, a_file)
 				print_settings (l_option, 2, a_file)
 			end
@@ -212,6 +215,9 @@ feature {NONE} -- Output
 				-- Options and settings.
 			l_option := a_library.options
 			if l_option /= Void then
+				if not l_option.is_void_safety_declared then
+					l_option.set_void_safety (options.none_value)
+				end
 				print_options (l_option, 2, a_file)
 				print_settings (l_option, 2, a_file)
 			end
@@ -367,20 +373,22 @@ feature {NONE} -- Output
 				a_file.put_character ('%"')
 			end
 				-- void_safety
-			if not l_option_attribute_printed then
-				print_indentation (indent, a_file)
-				a_file.put_string ("<option")
-				l_option_attribute_printed := True
+			if an_option.is_void_safety_declared then
+				if not l_option_attribute_printed then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<option")
+					l_option_attribute_printed := True
+				end
+				a_file.put_string (" void_safety=%"")
+				if an_option.void_safety.same_string (options.none_value) then
+					a_file.put_string ("none")
+				elseif an_option.void_safety.same_string (options.on_demand_value) then
+					a_file.put_string ("initialization")
+				else
+					a_file.put_string ("all")
+				end
+				a_file.put_character ('%"')
 			end
-			a_file.put_string (" void_safety=%"")
-			if an_option.void_safety.same_string (options.none_value) then
-				a_file.put_string ("none")
-			elseif an_option.void_safety.same_string (options.on_demand_value) then
-				a_file.put_string ("initialization")
-			else
-				a_file.put_string ("all")
-			end
-			a_file.put_character ('%"')
 				-- debug
 			if an_option.is_debug_tag_declared then
 				l_cursor := an_option.debug_tag.new_cursor
