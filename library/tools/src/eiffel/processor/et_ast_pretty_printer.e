@@ -47,6 +47,7 @@ inherit
 			process_choice_list,
 			process_choice_range,
 			process_class,
+			process_class_assertion,
 			process_class_type,
 			process_clients,
 			process_colon_type,
@@ -61,6 +62,7 @@ inherit
 			process_create_instruction,
 			process_creator,
 			process_creator_list,
+			process_current,
 			process_custom_attribute,
 			process_debug_instruction,
 			process_deferred_function,
@@ -82,6 +84,7 @@ inherit
 			process_external_function_inline_agent,
 			process_external_procedure,
 			process_external_procedure_inline_agent,
+			process_false_constant,
 			process_feature_clause,
 			process_feature_clause_list,
 			process_feature_export,
@@ -1051,6 +1054,13 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 		end
 
+	process_class_assertion (a_assertion: ET_CLASS_ASSERTION)
+			-- Process `a_assertion'.
+		do
+			process_keyword (tokens.class_keyword)
+			comment_finder.find_comments (a_assertion, comment_list)
+		end
+
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
@@ -1413,6 +1423,13 @@ feature {ET_AST_NODE} -- Processing
 				end
 				i := i + 1
 			end
+		end
+
+	process_current (a_current: ET_CURRENT)
+			-- Process `a_current'.
+		do
+			process_keyword (tokens.current_keyword)
+			comment_finder.find_comments (a_current, comment_list)
 		end
 
 	process_custom_attribute (an_attribute: ET_CUSTOM_ATTRIBUTE)
@@ -2731,6 +2748,13 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 			end
 			an_expression.end_keyword.process (Current)
+		end
+
+	process_false_constant (a_constant: ET_FALSE_CONSTANT)
+			-- Process `a_constant'.
+		do
+			process_keyword (tokens.false_keyword)
+			comment_finder.find_comments (a_constant, comment_list)
 		end
 
 	process_feature_clause (a_feature_clause: ET_FEATURE_CLAUSE)
@@ -4889,9 +4913,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_assertion'.
 		do
 			process_tag (an_assertion.tag)
-			if attached an_assertion.expression as l_expression then
+			if attached an_assertion.untagged_assertion as l_untagged_assertion then
 				print_space
-				l_expression.process (Current)
+				l_untagged_assertion.process (Current)
 			end
 		end
 

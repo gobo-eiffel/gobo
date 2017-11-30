@@ -11,7 +11,7 @@ feature
 
 	g: INTEGER
 		note
-			option: "instance_free"
+			option: instance_free
 		do
 			Result := 6
 		end

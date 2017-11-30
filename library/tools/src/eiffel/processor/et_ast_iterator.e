@@ -472,6 +472,12 @@ feature {ET_AST_NODE} -- Processing
 			a_class.end_keyword.process (Current)
 		end
 
+	process_class_assertion (a_assertion: ET_CLASS_ASSERTION)
+			-- Process `a_assertion'.
+		do
+			process_keyword (a_assertion.class_keyword)
+		end
+
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
@@ -2613,8 +2619,8 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_assertion'.
 		do
 			an_assertion.tag.process (Current)
-			if attached an_assertion.expression as l_expression then
-				l_expression.process (Current)
+			if attached an_assertion.untagged_assertion as l_untagged_assertion then
+				l_untagged_assertion.process (Current)
 			end
 		end
 

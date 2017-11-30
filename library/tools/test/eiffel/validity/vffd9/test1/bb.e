@@ -4,7 +4,7 @@ feature
 
 	f: INTEGER
 		note
-			option: "instance_free"
+			option: instance_free
 		attribute
 		end
 

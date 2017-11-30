@@ -23,6 +23,9 @@
   when there is an error in the expression of the corresponding object-test.
 * Added support for instance-free features (which can be used in
   Non-object-calls of the form `{T}.f`).
+* Added support for class routines, similar to instance-free features
+  above, except that they are declared with `class` in the postcondition
+  instead of `option: instance_free` in the `note` clause.
 
 ## Version 4.2 - 14 July 2017
 

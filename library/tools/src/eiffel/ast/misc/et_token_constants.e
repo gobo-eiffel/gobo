@@ -4000,6 +4000,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	false_keyword: ET_FALSE_CONSTANT
+			-- 'False' keyword
+		once ("PROCESS")
+			create Result.make
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	feature_keyword: ET_KEYWORD
 			-- 'feature' keyword
 		once ("PROCESS")

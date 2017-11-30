@@ -55,6 +55,7 @@ inherit
 			process_choice_list,
 			process_choice_range,
 			process_class,
+			process_class_assertion,
 			process_class_type,
 			process_client,
 			process_client_comma,
@@ -593,6 +594,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_class) then
 				precursor (a_class)
+			end
+		end
+
+	process_class_assertion (a_assertion: ET_CLASS_ASSERTION)
+			-- Process `a_assertion'.
+		do
+			if not excluded_nodes.has (a_assertion) then
+				precursor (a_assertion)
 			end
 		end
 

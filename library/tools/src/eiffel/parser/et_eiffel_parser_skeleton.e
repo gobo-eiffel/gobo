@@ -78,6 +78,8 @@ feature {NONE} -- Initialization
 			create last_across_components_pool.make (Initial_last_across_components_capacity)
 			create assertions.make (Initial_assertions_capacity)
 			create assertion_counters.make (Initial_assertion_counters_capacity)
+			create assertion_kinds.make (Initial_assertion_counters_capacity)
+			assertion_kind := assertion_kind_none
 			create queries.make (Initial_queries_capacity)
 			create procedures.make (Initial_procedures_capacity)
 			create constraints.make (Initial_constraints_capacity)
@@ -103,6 +105,8 @@ feature -- Initialization
 			providers.wipe_out
 			assertions.wipe_out
 			assertion_counters.wipe_out
+			assertion_kinds.wipe_out
+			assertion_kind := assertion_kind_none
 			queries.wipe_out
 			procedures.wipe_out
 			constraints.wipe_out
@@ -732,6 +736,20 @@ feature {NONE} -- Basic operations
 	add_expression_assertion (an_expression: detachable ET_EXPRESSION; a_semicolon: detachable ET_SYMBOL)
 			-- Add `an_expression' assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
+		do
+			add_untagged_assertion (an_expression, a_semicolon)
+		end
+
+	add_class_assertion (a_class_assertion: detachable ET_CLASS_ASSERTION; a_semicolon: detachable ET_SYMBOL)
+			-- Add `a_class_assertion' assertion, optionally followed
+			-- by `a_semicolon', to `assertions'.
+		do
+			add_untagged_assertion (a_class_assertion, a_semicolon)
+		end
+
+	add_untagged_assertion (a_untagged_assertion: detachable ET_UNTAGGED_ASSERTION; a_semicolon: detachable ET_SYMBOL)
+			-- Add `a_untagged_assertion' assertion, optionally followed
+			-- by `a_semicolon', to `assertions'.
 		local
 			l_old_count: INTEGER
 			an_assertion: detachable ET_ASSERTION_ITEM
@@ -742,8 +760,8 @@ feature {NONE} -- Basic operations
 			end
 			if assertions.count > l_old_count then
 				if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.expression = Void then
-					if an_expression /= Void then
-						l_tagged.set_expression (an_expression)
+					if a_untagged_assertion /= Void then
+						l_tagged.set_untagged_assertion (a_untagged_assertion)
 						if a_semicolon /= Void then
 							an_assertion := ast_factory.new_assertion_semicolon (l_tagged, a_semicolon)
 							if an_assertion /= Void then
@@ -760,9 +778,9 @@ feature {NONE} -- Basic operations
 			end
 			if not done then
 				if a_semicolon /= Void then
-					an_assertion := ast_factory.new_assertion_semicolon (an_expression, a_semicolon)
+					an_assertion := ast_factory.new_assertion_semicolon (a_untagged_assertion, a_semicolon)
 				else
-					an_assertion := an_expression
+					an_assertion := a_untagged_assertion
 				end
 				if an_assertion /= Void then
 					assertions.force_last (an_assertion)
@@ -891,10 +909,54 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	start_assertions
-			-- Indicate that we start parsing a list of assertions.
+	start_precondition
+			-- Indicate that we start parsing a precondition.
+		do
+			start_assertions (assertion_kind_precondition)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_precondition
+		end
+
+	start_postcondition
+			-- Indicate that we start parsing a postcondition.
+		do
+			start_assertions (assertion_kind_postcondition)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_postcondition
+		end
+
+	start_invariant
+			-- Indicate that we start parsing an invariant.
+		do
+			start_assertions (assertion_kind_invariant)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_invariant
+		end
+
+	start_loop_invariant
+			-- Indicate that we start parsing a loop invariant.
+		do
+			start_assertions (assertion_kind_loop_invariant)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_loop_invariant
+		end
+
+	start_check_instruction
+			-- Indicate that we start parsing a check instruction.
+		do
+			start_assertions (assertion_kind_check_instruction)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_check_instruction
+		end
+
+	start_assertions (a_assertion_kind: INTEGER)
+			-- Indicate that we start parsing a list of assertions of `a_assertion_kind'.
 		do
 			assertion_counters.force_last (assertions.count)
+			assertion_kinds.force_last (assertion_kind)
+			assertion_kind := a_assertion_kind
+		ensure
+			assertion_kind_set: assertion_kind = a_assertion_kind
 		end
 
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
@@ -1326,6 +1388,12 @@ feature {NONE} -- AST factory
 					end
 				end
 			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
+			end
 		end
 
 	new_choice_attribute_constant (a_name: detachable ET_IDENTIFIER): detachable ET_CHOICE_CONSTANT
@@ -1561,6 +1629,12 @@ feature {NONE} -- AST factory
 					end
 				end
 			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
+			end
 			if Result /= Void then
 				if attached last_object_tests as l_last_object_tests then
 					Result.set_object_tests (l_last_object_tests.cloned_object_test_list)
@@ -1627,6 +1701,12 @@ feature {NONE} -- AST factory
 						i := i - 1
 					end
 				end
+			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
 			end
 		end
 
@@ -1783,6 +1863,12 @@ feature {NONE} -- AST factory
 					end
 				end
 			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
+			end
 		end
 
 	new_preconditions (a_require: detachable ET_KEYWORD; an_else: detachable ET_KEYWORD): detachable ET_PRECONDITIONS
@@ -1816,6 +1902,12 @@ feature {NONE} -- AST factory
 						i := i - 1
 					end
 				end
+			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
 			end
 		end
 
@@ -2165,6 +2257,12 @@ feature {NONE} -- Access
 	assertion_counters: DS_ARRAYED_LIST [INTEGER]
 			-- List of counters when we start parsing assertions
 
+	assertion_kinds: DS_ARRAYED_LIST [INTEGER]
+			-- List of kinds of assertions when we start parsing assertions
+
+	assertion_kind: INTEGER
+			-- Kind of assertions currently parsed
+
 	queries: DS_ARRAYED_LIST [ET_QUERY]
 			-- List of queries currently being parsed
 
@@ -2481,7 +2579,7 @@ feature {NONE} -- Constants
 			-- Initial capacity for `assertions'
 
 	Initial_assertion_counters_capacity: INTEGER = 10
-			-- Initial capacity for `assertion_counters'
+			-- Initial capacity for `assertion_counters' and `assertion_kinds'
 
 	Initial_queries_capacity: INTEGER = 100
 			-- Initial capacity for `queries'
@@ -2494,6 +2592,24 @@ feature {NONE} -- Constants
 
 	Initial_providers_capacity: INTEGER = 100
 			-- Initial capacity for `providers'
+
+	assertion_kind_none: INTEGER = 0
+			-- No assertion being parsed
+
+	assertion_kind_precondition: INTEGER = 1
+			-- Precondition being parsed
+
+	assertion_kind_postcondition: INTEGER = 2
+			-- Postcondition being parsed
+
+	assertion_kind_invariant: INTEGER = 3
+			-- Invariant being parsed
+
+	assertion_kind_check_instruction: INTEGER = 4
+			-- Check instruction being parsed
+
+	assertion_kind_loop_invariant: INTEGER = 5
+			-- Loop invariant being parsed
 
 	dummy_type: ET_TYPE
 			-- Dummy type
@@ -2535,6 +2651,7 @@ invariant
 	assertions_not_void: assertions /= Void
 	no_void_assertion: not assertions.has_void
 	assertion_counters_not_void: assertion_counters /= Void
+	assertion_kinds_not_void: assertion_kinds /= Void
 	queries_not_void: queries /= Void
 	no_void_query: not queries.has_void
 	-- queries_registered: forall f in queries, f.is_registered

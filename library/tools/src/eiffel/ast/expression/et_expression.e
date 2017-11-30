@@ -24,7 +24,7 @@ inherit
 			expression as expression_item
 		end
 
-	ET_ASSERTION
+	ET_UNTAGGED_ASSERTION
 		rename
 			expression as expression_item
 		undefine

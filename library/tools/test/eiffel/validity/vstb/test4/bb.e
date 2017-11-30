@@ -4,7 +4,7 @@ feature
 
 	f: INTEGER
 		note
-			option: "instance_free"
+			option: instance_free
 		do
 				-- It's OK to call an instance-free feature
 				-- from another instance-free feature.
@@ -13,7 +13,7 @@ feature
 		
 	g: INTEGER
 		note
-			option: "instance_free"
+			option: instance_free
 		do
 			Result := 8
 		end

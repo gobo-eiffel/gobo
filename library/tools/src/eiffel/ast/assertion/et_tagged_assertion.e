@@ -16,7 +16,8 @@ inherit
 
 	ET_ASSERTION
 		redefine
-			reset
+			reset,
+			is_class_assertion
 		end
 
 create
@@ -40,8 +41,20 @@ feature -- Initialization
 	reset
 			-- Reset assertion as it was when it was last parsed.
 		do
-			if attached expression as l_expression then
-				l_expression.reset
+			if attached untagged_assertion as l_untagged_assertion then
+				l_untagged_assertion.reset
+			end
+		end
+
+feature -- Status report
+
+	is_class_assertion: BOOLEAN
+			-- Does current assertion indicate that the associated feature is a class routine?
+			-- A class routine is an instance-free feature which can be used in Non-object-calls
+			-- of the form '{A}.f'.
+		do
+			if attached untagged_assertion as l_untagged_assertion then
+				Result := l_untagged_assertion.is_class_assertion
 			end
 		end
 
@@ -50,8 +63,16 @@ feature -- Access
 	tag: ET_TAG
 			-- Tag
 
+	untagged_assertion: detachable ET_UNTAGGED_ASSERTION
+			-- Assertion with no tag
+
 	expression: detachable ET_EXPRESSION
 			-- Expression
+		do
+			if attached {ET_EXPRESSION} untagged_assertion as l_expression then
+				Result := l_expression
+			end
+		end
 
 	position: ET_POSITION
 			-- Position of first character of
@@ -69,8 +90,8 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if attached expression as l_expression then
-				Result := l_expression.last_leaf
+			if attached untagged_assertion as l_untagged_assertion then
+				Result := l_untagged_assertion.last_leaf
 			else
 				Result := tag.last_leaf
 			end
@@ -78,12 +99,12 @@ feature -- Access
 
 feature -- Setting
 
-	set_expression (an_expression: like expression)
-			-- Set `expression' to `an_expression'.
+	set_untagged_assertion (a_untagged_assertion: like untagged_assertion)
+			-- Set `untagged_assertion' to `a_untagged_assertion'.
 		do
-			expression := an_expression
+			untagged_assertion := a_untagged_assertion
 		ensure
-			expression_set: expression = an_expression
+			untagged_assertion_set: untagged_assertion = a_untagged_assertion
 		end
 
 feature -- Processing

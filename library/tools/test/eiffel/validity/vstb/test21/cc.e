@@ -11,7 +11,7 @@ feature
 
 	f: DD
 		note
-			option: "instance_free"
+			option: instance_free
 		do
 			Precursor (5)
 			create Result

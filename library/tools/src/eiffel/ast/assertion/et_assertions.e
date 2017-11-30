@@ -53,6 +53,22 @@ feature -- Status report
 			end
 		end
 
+	has_class_assertion: BOOLEAN
+			-- Is one of the assertions a class assertion?
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if assertion (i).is_class_assertion then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	assertion (i: INTEGER): ET_ASSERTION

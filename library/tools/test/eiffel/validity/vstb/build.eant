@@ -51,6 +51,35 @@
 		<geant file="build.eant" target="install" dir="test24"/>
 		<geant file="build.eant" target="install" dir="test25"/>
 		<geant file="build.eant" target="install" dir="test26"/>
+		<geant file="build.eant" target="install" dir="test27"/>
+		<geant file="build.eant" target="install" dir="test28"/>
+		<geant file="build.eant" target="install" dir="test29"/>
+		<geant file="build.eant" target="install" dir="test30"/>
+		<geant file="build.eant" target="install" dir="test31"/>
+		<geant file="build.eant" target="install" dir="test32"/>
+		<geant file="build.eant" target="install" dir="test33"/>
+		<geant file="build.eant" target="install" dir="test34"/>
+		<geant file="build.eant" target="install" dir="test35"/>
+		<geant file="build.eant" target="install" dir="test36"/>
+		<geant file="build.eant" target="install" dir="test37"/>
+		<geant file="build.eant" target="install" dir="test38"/>
+		<geant file="build.eant" target="install" dir="test39"/>
+		<geant file="build.eant" target="install" dir="test40"/>
+		<geant file="build.eant" target="install" dir="test41"/>
+		<geant file="build.eant" target="install" dir="test42"/>
+		<geant file="build.eant" target="install" dir="test43"/>
+		<geant file="build.eant" target="install" dir="test44"/>
+		<geant file="build.eant" target="install" dir="test45"/>
+		<geant file="build.eant" target="install" dir="test46"/>
+		<geant file="build.eant" target="install" dir="test47"/>
+		<geant file="build.eant" target="install" dir="test48"/>
+		<geant file="build.eant" target="install" dir="test49"/>
+		<geant file="build.eant" target="install" dir="test50"/>
+		<geant file="build.eant" target="install" dir="test51"/>
+		<geant file="build.eant" target="install" dir="test52"/>
+		<geant file="build.eant" target="install" dir="test53"/>
+		<geant file="build.eant" target="install" dir="test54"/>
+		<geant file="build.eant" target="install" dir="test55"/>
 	</target>
 
 	<target name="other_clean" depend="init" export="NONE">
@@ -83,6 +112,35 @@
 		<geant file="build.eant" target="clean" dir="test24"/>
 		<geant file="build.eant" target="clean" dir="test25"/>
 		<geant file="build.eant" target="clean" dir="test26"/>
+		<geant file="build.eant" target="clean" dir="test27"/>
+		<geant file="build.eant" target="clean" dir="test28"/>
+		<geant file="build.eant" target="clean" dir="test29"/>
+		<geant file="build.eant" target="clean" dir="test30"/>
+		<geant file="build.eant" target="clean" dir="test31"/>
+		<geant file="build.eant" target="clean" dir="test32"/>
+		<geant file="build.eant" target="clean" dir="test33"/>
+		<geant file="build.eant" target="clean" dir="test34"/>
+		<geant file="build.eant" target="clean" dir="test35"/>
+		<geant file="build.eant" target="clean" dir="test36"/>
+		<geant file="build.eant" target="clean" dir="test37"/>
+		<geant file="build.eant" target="clean" dir="test38"/>
+		<geant file="build.eant" target="clean" dir="test39"/>
+		<geant file="build.eant" target="clean" dir="test40"/>
+		<geant file="build.eant" target="clean" dir="test41"/>
+		<geant file="build.eant" target="clean" dir="test42"/>
+		<geant file="build.eant" target="clean" dir="test43"/>
+		<geant file="build.eant" target="clean" dir="test44"/>
+		<geant file="build.eant" target="clean" dir="test45"/>
+		<geant file="build.eant" target="clean" dir="test46"/>
+		<geant file="build.eant" target="clean" dir="test47"/>
+		<geant file="build.eant" target="clean" dir="test48"/>
+		<geant file="build.eant" target="clean" dir="test49"/>
+		<geant file="build.eant" target="clean" dir="test50"/>
+		<geant file="build.eant" target="clean" dir="test51"/>
+		<geant file="build.eant" target="clean" dir="test52"/>
+		<geant file="build.eant" target="clean" dir="test53"/>
+		<geant file="build.eant" target="clean" dir="test54"/>
+		<geant file="build.eant" target="clean" dir="test55"/>
 		<delete directory="Ttest1"/>
 		<delete directory="Ttest2"/>
 		<delete directory="Ttest3"/>
@@ -109,6 +167,35 @@
 		<delete directory="Ttest24"/>
 		<delete directory="Ttest25"/>
 		<delete directory="Ttest26"/>
+		<delete directory="Ttest27"/>
+		<delete directory="Ttest28"/>
+		<delete directory="Ttest29"/>
+		<delete directory="Ttest30"/>
+		<delete directory="Ttest31"/>
+		<delete directory="Ttest32"/>
+		<delete directory="Ttest33"/>
+		<delete directory="Ttest34"/>
+		<delete directory="Ttest35"/>
+		<delete directory="Ttest36"/>
+		<delete directory="Ttest37"/>
+		<delete directory="Ttest38"/>
+		<delete directory="Ttest39"/>
+		<delete directory="Ttest40"/>
+		<delete directory="Ttest41"/>
+		<delete directory="Ttest42"/>
+		<delete directory="Ttest43"/>
+		<delete directory="Ttest44"/>
+		<delete directory="Ttest45"/>
+		<delete directory="Ttest46"/>
+		<delete directory="Ttest47"/>
+		<delete directory="Ttest48"/>
+		<delete directory="Ttest49"/>
+		<delete directory="Ttest50"/>
+		<delete directory="Ttest51"/>
+		<delete directory="Ttest52"/>
+		<delete directory="Ttest53"/>
+		<delete directory="Ttest54"/>
+		<delete directory="Ttest55"/>
 	</target>
 
 	<target name="other_clobber" depend="init" export="NONE">
@@ -141,6 +228,35 @@
 		<geant file="build.eant" target="clobber" dir="test24"/>
 		<geant file="build.eant" target="clobber" dir="test25"/>
 		<geant file="build.eant" target="clobber" dir="test26"/>
+		<geant file="build.eant" target="clobber" dir="test27"/>
+		<geant file="build.eant" target="clobber" dir="test28"/>
+		<geant file="build.eant" target="clobber" dir="test29"/>
+		<geant file="build.eant" target="clobber" dir="test30"/>
+		<geant file="build.eant" target="clobber" dir="test31"/>
+		<geant file="build.eant" target="clobber" dir="test32"/>
+		<geant file="build.eant" target="clobber" dir="test33"/>
+		<geant file="build.eant" target="clobber" dir="test34"/>
+		<geant file="build.eant" target="clobber" dir="test35"/>
+		<geant file="build.eant" target="clobber" dir="test36"/>
+		<geant file="build.eant" target="clobber" dir="test37"/>
+		<geant file="build.eant" target="clobber" dir="test38"/>
+		<geant file="build.eant" target="clobber" dir="test39"/>
+		<geant file="build.eant" target="clobber" dir="test40"/>
+		<geant file="build.eant" target="clobber" dir="test41"/>
+		<geant file="build.eant" target="clobber" dir="test42"/>
+		<geant file="build.eant" target="clobber" dir="test43"/>
+		<geant file="build.eant" target="clobber" dir="test44"/>
+		<geant file="build.eant" target="clobber" dir="test45"/>
+		<geant file="build.eant" target="clobber" dir="test46"/>
+		<geant file="build.eant" target="clobber" dir="test47"/>
+		<geant file="build.eant" target="clobber" dir="test48"/>
+		<geant file="build.eant" target="clobber" dir="test49"/>
+		<geant file="build.eant" target="clobber" dir="test50"/>
+		<geant file="build.eant" target="clobber" dir="test51"/>
+		<geant file="build.eant" target="clobber" dir="test52"/>
+		<geant file="build.eant" target="clobber" dir="test53"/>
+		<geant file="build.eant" target="clobber" dir="test54"/>
+		<geant file="build.eant" target="clobber" dir="test55"/>
 	</target>
 
 	<target name="init_system" export="NONE">

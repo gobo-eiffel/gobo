@@ -1,0 +1,2 @@
+[VSTB] class BB (7,11): attribute 'attr' cannot be used as target of an assignment or creation instruction in a static feature.
+----

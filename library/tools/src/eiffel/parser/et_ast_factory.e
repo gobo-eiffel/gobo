@@ -130,7 +130,8 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			Result := tokens.class_keyword
+			create Result.make_class
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_convert_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
@@ -1671,6 +1672,15 @@ feature -- AST nodes
 		do
 			if a_lower /= Void and an_upper /= Void then
 				create Result.make (a_lower, an_upper)
+			end
+		end
+
+	new_class_assertion (a_class_keyword: detachable ET_KEYWORD): detachable ET_CLASS_ASSERTION
+			-- New class assertion
+		do
+			create Result.make
+			if a_class_keyword /= Void then
+				Result.set_class_keyword (a_class_keyword)
 			end
 		end
 

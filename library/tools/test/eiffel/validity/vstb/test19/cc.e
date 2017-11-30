@@ -11,7 +11,7 @@ feature
 
 	f: BOOLEAN
 		note
-			option: "instance_free"
+			option: instance_free
 		do
 			Result := Precursor
 		end

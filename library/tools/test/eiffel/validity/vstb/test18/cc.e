@@ -11,7 +11,7 @@ feature
 
 	f
 		note
-			option: "instance_free"
+			option: instance_free
 		do
 			Precursor
 		end

@@ -4,7 +4,7 @@ feature
 
 	f: STRING
 		note
-			option: "instance_free"
+			option: instance_free
 		local
 			i: INTEGER
 		do

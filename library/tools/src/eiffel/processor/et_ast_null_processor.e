@@ -232,6 +232,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_class_assertion (a_assertion: ET_CLASS_ASSERTION)
+			-- Process `a_assertion'.
+		do
+		end
+
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do

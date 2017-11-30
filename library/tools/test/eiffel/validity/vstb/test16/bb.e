@@ -4,7 +4,7 @@ feature
 
 	f: like Current
 		note
-			option: "instance_free"
+			option: instance_free
 		do
 				-- It's OK to use 'like Current' in instance-free features.
 			create Result

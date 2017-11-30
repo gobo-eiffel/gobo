@@ -4,7 +4,7 @@ feature
 
 	f
 		note
-			option: "instance_free"
+			option: instance_free
 		local
 			b: BB
 		do

@@ -350,7 +350,7 @@ feature -- Status report
 	has_static_mark: BOOLEAN
 			-- Has feature been explicitly marked as static?
 		do
-			Result := attached first_indexing as l_indexing and then l_indexing.has_tagged_indexing_term_value (tokens.option_indexing_tag, tokens.instance_free_indexing_value)
+			Result := has_class_postcondition_recursive or (attached first_indexing as l_indexing and then l_indexing.has_tagged_indexing_term_value (tokens.option_indexing_tag, tokens.instance_free_indexing_value))
 		end
 
 	is_statically_called: BOOLEAN
@@ -447,6 +447,37 @@ feature -- Status report
 						l_other_precursor := l_other_precursors.item (i)
 						if not l_other_precursor.are_postconditions_all_true_recursive then
 							Result := False
+								 -- Jump out of the loop
+							i := nb
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	has_class_postcondition_recursive: BOOLEAN
+			-- Is one of the postconditions a class assertion?
+			-- Take into account inherited postconditions recursively.
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			if attached postconditions as l_postconditions and then l_postconditions.has_class_assertion then
+				Result := True
+			elseif attached first_precursor as l_first_precursor then
+				if l_first_precursor.has_class_postcondition_recursive then
+					Result := True
+				elseif attached other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						if l_other_precursor.has_class_postcondition_recursive then
+							Result := True
 								 -- Jump out of the loop
 							i := nb
 						end
