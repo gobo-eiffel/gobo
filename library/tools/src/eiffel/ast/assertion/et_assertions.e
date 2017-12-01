@@ -54,7 +54,7 @@ feature -- Status report
 		end
 
 	has_class_assertion: BOOLEAN
-			-- Is one of the assertions a class assertion?
+			-- Is one of the assertions a 'class' assertion?
 		local
 			i, nb: INTEGER
 		do

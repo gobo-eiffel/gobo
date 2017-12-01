@@ -2400,7 +2400,7 @@ Assertions: Expression
 	| E_CLASS
 		{
 			if assertion_kind = assertion_kind_postcondition then
-					-- Class assertions only allowed in postconditions.
+					-- 'class' assertions only allowed in postconditions.
 				add_class_assertion (ast_factory.new_class_assertion ($1), Void)
 			else
 				raise_error
@@ -2409,7 +2409,7 @@ Assertions: Expression
 	| E_CLASS ';'
 		{
 			if assertion_kind = assertion_kind_postcondition then
-					-- Class assertions only allowed in postconditions.
+					-- 'class' assertions only allowed in postconditions.
 				add_class_assertion (ast_factory.new_class_assertion ($1), $2)
 			else
 				raise_error
@@ -2426,7 +2426,7 @@ Assertions: Expression
 	| Assertions E_CLASS
 		{
 			if assertion_kind = assertion_kind_postcondition then
-					-- Class assertions only allowed in postconditions.
+					-- 'class' assertions only allowed in postconditions.
 				add_class_assertion (ast_factory.new_class_assertion ($2), Void)
 			else
 				raise_error
@@ -2435,7 +2435,7 @@ Assertions: Expression
 	| Assertions E_CLASS ';'
 		{
 			if assertion_kind = assertion_kind_postcondition then
-					-- Class assertions only allowed in postconditions.
+					-- 'class' assertions only allowed in postconditions.
 				add_class_assertion (ast_factory.new_class_assertion ($2), $3)
 			else
 				raise_error

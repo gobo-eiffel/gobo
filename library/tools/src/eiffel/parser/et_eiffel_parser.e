@@ -15477,7 +15477,7 @@ debug ("GEYACC")
 end
 
 			if assertion_kind = assertion_kind_postcondition then
-					-- Class assertions only allowed in postconditions.
+					-- 'class' assertions only allowed in postconditions.
 				add_class_assertion (ast_factory.new_class_assertion (yyvs2.item (yyvsp2)), Void)
 			else
 				raise_error
@@ -15509,7 +15509,7 @@ debug ("GEYACC")
 end
 
 			if assertion_kind = assertion_kind_postcondition then
-					-- Class assertions only allowed in postconditions.
+					-- 'class' assertions only allowed in postconditions.
 				add_class_assertion (ast_factory.new_class_assertion (yyvs2.item (yyvsp2)), yyvs21.item (yyvsp21))
 			else
 				raise_error
@@ -15618,7 +15618,7 @@ debug ("GEYACC")
 end
 
 			if assertion_kind = assertion_kind_postcondition then
-					-- Class assertions only allowed in postconditions.
+					-- 'class' assertions only allowed in postconditions.
 				add_class_assertion (ast_factory.new_class_assertion (yyvs2.item (yyvsp2)), Void)
 			else
 				raise_error
@@ -15642,7 +15642,7 @@ debug ("GEYACC")
 end
 
 			if assertion_kind = assertion_kind_postcondition then
-					-- Class assertions only allowed in postconditions.
+					-- 'class' assertions only allowed in postconditions.
 				add_class_assertion (ast_factory.new_class_assertion (yyvs2.item (yyvsp2)), yyvs21.item (yyvsp21))
 			else
 				raise_error

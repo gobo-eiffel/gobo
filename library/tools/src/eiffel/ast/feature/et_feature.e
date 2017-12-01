@@ -457,7 +457,7 @@ feature -- Status report
 		end
 
 	has_class_postcondition_recursive: BOOLEAN
-			-- Is one of the postconditions a class assertion?
+			-- Is one of the postconditions a 'class' assertion?
 			-- Take into account inherited postconditions recursively.
 		local
 			i, nb: INTEGER

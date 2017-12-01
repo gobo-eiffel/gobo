@@ -30,7 +30,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Create a new class assertion.
+			-- Create a new 'class' assertion.
 		do
 			class_keyword := tokens.class_keyword
 		end
@@ -87,7 +87,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
---			a_processor.process_class_assertion (Current)
+			a_processor.process_class_assertion (Current)
 		end
 
 invariant

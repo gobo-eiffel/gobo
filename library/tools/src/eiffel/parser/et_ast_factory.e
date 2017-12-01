@@ -1676,7 +1676,7 @@ feature -- AST nodes
 		end
 
 	new_class_assertion (a_class_keyword: detachable ET_KEYWORD): detachable ET_CLASS_ASSERTION
-			-- New class assertion
+			-- New 'class' assertion
 		do
 			create Result.make
 			if a_class_keyword /= Void then
