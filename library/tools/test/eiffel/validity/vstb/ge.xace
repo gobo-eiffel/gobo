@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <system name="xvstb">
-	<root class="XVUNO3" creation="make"/>
+	<root class="XVSTB" creation="make"/>
 	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
 	<option name="finalize" value="true"/>

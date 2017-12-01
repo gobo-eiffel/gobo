@@ -9,348 +9,233 @@
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
 		<cluster name="vuot1_tester" location="${GOBO}/library/tools/test/eiffel/validity/vuot1">
-			<option void_safety="none"/>
 		</cluster>
 		<cluster name="vuot1_testgen" location="TESTGEN">
-			<option void_safety="none"/>
 		</cluster>
 		<cluster name="test_common" location="${GOBO}/library/tools/test/eiffel/common">
-			<option void_safety="none"/>
 		</cluster>
 		<cluster name="ts_test" location="${GOBO}/library/test/src">
-			<option void_safety="none"/>
 			<cluster name="ts_generation" location="$|generation">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="kl_kernel" location="${GOBO}/library/kernel/src">
-			<option void_safety="none"/>
 			<cluster name="kl_basic" location="$|basic">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="kl_io" location="$|io">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="kl_misc" location="$|misc">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="kl_unicode" location="$|unicode">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="kl_support" location="$|support">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="ds_structure" location="${GOBO}/library/structure/src">
-			<option void_safety="none"/>
 			<cluster name="ds_container" location="$|container">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ds_dispenser" location="$|dispenser">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ds_list" location="$|list">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ds_set" location="$|set">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ds_sort" location="$|sort">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ds_support" location="$|support">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ds_table" location="$|table">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="ut_utility" location="${GOBO}/library/utility/src">
-			<option void_safety="none"/>
 			<cluster name="ut_error" location="$|error">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ut_formatter" location="$|formatter">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ut_config" location="$|config">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ut_support" location="$|support">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ut_transcoder" location="$|transcoder">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="ut_uri" location="$|uri">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="dp_pattern" location="${GOBO}/library/pattern/src">
-			<option void_safety="none"/>
 			<cluster name="dp_bridge" location="$|bridge">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="dp_command" location="$|command">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="rx_regexp" location="${GOBO}/library/regexp/src">
-			<option void_safety="none"/>
 			<cluster name="rx_interface" location="$|interface">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="rx_pcre" location="$|pcre">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="rx_support" location="$|support">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="lx_lexical" location="${GOBO}/library/lexical/src">
-			<option void_safety="none"/>
 			<cluster name="lx_automaton" location="$|automaton">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="lx_error" location="$|error">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="lx_generation" location="$|generation">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="lx_lex" location="$|lex">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="lx_regexp" location="$|regexp">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="lx_scanner" location="$|scanner">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="lx_support" location="$|support">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="lx_skeleton" location="${GOBO}/library/lexical/src/skeleton">
-			<option void_safety="none"/>
 		</cluster>
 		<cluster name="pr_skeleton" location="${GOBO}/library/parse/src/skeleton">
-			<option void_safety="none"/>
 		</cluster>
 		<cluster name="ts_harness" location="${GOBO}/library/test/src/harness">
-			<option void_safety="none"/>
 		</cluster>
 		<cluster name="th_thread" location="${GOBO}/library/thread/src">
-			<option void_safety="none"/>
 			<cluster name="th_classic" location="$|classic">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="et_tools" location="${GOBO}/library/tools/src">
-			<option void_safety="none"/>
 			<cluster name="et_eiffel_eiffel" location="$|eiffel">
-				<option void_safety="none"/>
 				<cluster name="et_eiffel_ast" location="$|ast">
-					<option void_safety="none"/>
 					<cluster name="et_eiffel_agent" location="$|agent">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_assertion" location="$|assertion">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_class" location="$|class">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_constant" location="$|constant">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_expression" location="$|expression">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_feature" location="$|feature">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_group" location="$|group">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_instruction" location="$|instruction">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_misc" location="$|misc">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_name" location="$|name">
-						<option void_safety="none"/>
 					</cluster>
 					<cluster name="et_eiffel_type" location="$|type">
-						<option void_safety="none"/>
 					</cluster>
 				</cluster>
 				<cluster name="et_eiffel_compilation" location="$|compilation">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_eiffel_dynamic" location="$|dynamic">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_eiffel_error" location="$|error">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_eiffel_generation" location="$|generation">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_eiffel_parser" location="$|parser">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_eiffel_processor" location="$|processor">
-					<option void_safety="none"/>
 				</cluster>
 			</cluster>
 			<cluster name="et_lace_lace" location="$|lace">
-				<option void_safety="none"/>
 				<cluster name="et_lace_ast" location="$|ast">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_lace_error" location="$|error">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_lace_parser" location="$|parser">
-					<option void_safety="none"/>
 				</cluster>
 			</cluster>
 			<cluster name="et_ecf_ecf" location="$|ecf">
-				<option void_safety="none"/>
 				<cluster name="et_ecf_ast" location="$|ast">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_ecf_error" location="$|error">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_ecf_parser" location="$|parser">
-					<option void_safety="none"/>
 				</cluster>
 			</cluster>
 			<cluster name="et_xace_xace" location="$|xace">
-				<option void_safety="none"/>
 				<cluster name="et_xace_ast" location="$|ast">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_xace_error" location="$|error">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_xace_generator" location="$|generator">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_xace_parser" location="$|parser">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="et_xace_support" location="$|support">
-					<option void_safety="none"/>
 				</cluster>
 			</cluster>
 			<cluster name="et_support" location="$|support">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="st_string" location="${GOBO}/library/string/src">
-			<option void_safety="none"/>
 			<cluster name="st_collation" location="$|collation">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="st_unicode" location="$|unicode">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="st_support" location="$|support">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="st_date" location="$|date">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="st_formatter" location="$|formatter">
-				<option void_safety="none"/>
 				<cluster name="st_general" location="$|general">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="st_parameter" location="$|parameter">
-					<option void_safety="none"/>
 				</cluster>
 			</cluster>
 		</cluster>
 		<cluster name="dt_time" location="${GOBO}/library/time/src">
-			<option void_safety="none"/>
 			<cluster name="dt_clock" location="$|clock">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="dt_date" location="$|date">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="dt_stopwatch" location="$|stopwatch">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="dt_time_zone" location="$|time_zone">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 		<cluster name="xm_xml" location="${GOBO}/library/xml/src">
-			<option void_safety="none"/>
 			<cluster name="xm_position" location="$|position">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="xm_source" location="$|source">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="xm_general" location="$|general">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="xm_event" location="$|event">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="xm_tree" location="$|tree">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="xm_formatter" location="$|formatter">
-				<option void_safety="none"/>
 			</cluster>
 			<cluster name="xm_resolver" location="$|resolver">
-				<option void_safety="none"/>
 				<cluster name="xm_resolver_interface" location="$|interface">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="xm_catalog" location="$|catalog">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="xm_simple" location="$|simple">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="xm_uri" location="$|uri">
-					<option void_safety="none"/>
 				</cluster>
 			</cluster>
 			<cluster name="xm_parser" location="$|parser">
-				<option void_safety="none"/>
 				<cluster name="xm_interface" location="$|interface">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="xm_eiffel" location="$|eiffel">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="xm_no_expat" location="$|no_expat">
-					<option void_safety="none"/>
 				</cluster>
 			</cluster>
 			<cluster name="xm_xml_xpointer" location="${GOBO}/library/xml/src/xpointer">
-				<option void_safety="none"/>
 				<cluster name="xm_xpointer_common" location="$|common">
-					<option void_safety="none"/>
 				</cluster>
 				<cluster name="xm_xpointer_event" location="$|event">
-					<option void_safety="none"/>
 				</cluster>
 			</cluster>
 		</cluster>
 		<cluster name="ma_math" location="${GOBO}/library/math/src">
-			<option void_safety="none"/>
 			<cluster name="ma_decimal" location="$|decimal">
-				<option void_safety="none"/>
 			</cluster>
 		</cluster>
 	</target>

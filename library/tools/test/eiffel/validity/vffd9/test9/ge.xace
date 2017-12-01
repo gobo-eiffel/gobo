@@ -6,7 +6,7 @@
 	<option name="console_application" value="true"/>
 	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
-	<cluster name="vffd9_test4" location="${GOBO}/library/tools/test/eiffel/validity/vffd9/test4"/>
+	<cluster name="vffd9_test9" location="${GOBO}/library/tools/test/eiffel/validity/vffd9/test9"/>
 	<cluster name="ge" location="${GOBO}/library"/>
 	<cluster name="free_elks" location="${GOBO}/library/free_elks/src" prefix="fe_">
 		<option name="abstract" value="true"/>

@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
-		<cluster name="vffd9_test5" location="${GOBO}/library/tools/test/eiffel/validity/vffd9/test5">
+		<cluster name="vffd9_test10" location="${GOBO}/library/tools/test/eiffel/validity/vffd9/test10">
 		</cluster>
 	</target>
 </system>

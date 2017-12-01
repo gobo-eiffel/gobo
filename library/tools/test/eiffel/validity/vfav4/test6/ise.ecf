@@ -9,7 +9,6 @@
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
 		<cluster name="vfav4_test6" location="${GOBO}/library/tools/test/eiffel/validity/vfav4/test6">
-			<option void_safety="none"/>
 		</cluster>
 	</target>
 </system>

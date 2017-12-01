@@ -9,7 +9,6 @@
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
 		<cluster name="vuot1_test6" location="${GOBO}/library/tools/test/eiffel/validity/vuot1/test6">
-			<option void_safety="none"/>
 		</cluster>
 	</target>
 </system>
