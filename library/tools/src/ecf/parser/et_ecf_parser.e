@@ -5,7 +5,7 @@ note
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,6 +32,8 @@ feature {NONE} -- Initialization
 			parsed_libraries.set_key_equality_tester (case_insensitive_string_equality_tester)
 			create parsed_dotnet_assemblies.make_map (10)
 			parsed_dotnet_assemblies.set_key_equality_tester (string_equality_tester)
+			create redirected_locations.make (10)
+			redirected_locations.set_equality_tester (string_equality_tester)
 			create {XM_EIFFEL_PARSER} xml_parser.make
 			xml_parser.set_string_mode_mixed
 				-- The parser will build a tree.
@@ -84,6 +86,8 @@ feature -- Parsing
 			l_position: ET_COMPRESSED_POSITION
 			l_xm_position: XM_POSITION
 			l_message: STRING
+			l_file: KL_TEXT_INPUT_FILE
+			l_filename: STRING
 		do
 				-- Make sure that the filename of the ECF system is a canonical absolute pathname.
 			l_full_filename := a_file.name
@@ -103,6 +107,52 @@ feature -- Parsing
 					l_position_table := tree_pipe.tree.last_position_table
 					if STRING_.same_case_insensitive (l_root_name, xml_system) then
 						build_system_config (l_root_element, l_position_table, l_full_filename)
+					elseif STRING_.same_case_insensitive (l_root_name, xml_redirection) then
+						if not attached l_root_element.attribute_by_name (xml_location) as l_location_attribute then
+							l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
+							error_handler.report_eadg_error (element_name (l_root_element, l_position_table), l_unknown_universe)
+						elseif l_location_attribute.value.is_empty then
+							l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
+							error_handler.report_eadh_error (attribute_name (l_location_attribute, l_position_table), l_unknown_universe)
+						else
+							l_filename := l_location_attribute.value
+								-- Make sure that the filename of the redirected ECF is a canonical absolute pathname.
+							l_filename := Execution_environment.interpreted_string (l_filename)
+								-- Make sure that the directory separator symbol is the
+								-- one of the current file system. We take advantage of
+								-- the fact that `windows_file_system' accepts both '\'
+								-- and '/' as directory separator.
+							l_filename := file_system.pathname_from_file_system (l_filename, windows_file_system)
+							if file_system.is_relative_pathname (l_filename) then
+								l_filename := file_system.pathname (file_system.dirname (l_full_filename), l_filename)
+							end
+							l_filename := file_system.canonical_pathname (l_filename)
+							if redirected_locations.has (l_filename) then
+									-- Cycle in redirected ECF files.
+									-- First, remove filenames which are not part of the cycle.
+								from
+									redirected_locations.start
+								until
+									string_equality_tester.test (redirected_locations.item_for_iteration, l_filename)
+								loop
+									redirected_locations.remove (redirected_locations.item_for_iteration)
+								end
+								l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
+								error_handler.report_eadi_error (attribute_name (l_location_attribute, l_position_table), redirected_locations, l_unknown_universe)
+							else
+								redirected_locations.force_last (l_filename)
+								create l_file.make (l_filename)
+								l_file.open_read
+								if l_file.is_open_read then
+									parse_file (l_file)
+									l_file.close
+								else
+									l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
+									error_handler.report_eadf_error (attribute_name (l_location_attribute, l_position_table), l_filename, l_unknown_universe)
+								end
+							end
+						end
+						redirected_locations.wipe_out
 					else
 						l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
 						error_handler.report_eabx_error (element_name (l_root_element, l_position_table), l_unknown_universe)
@@ -168,10 +218,16 @@ feature {NONE} -- Implementation
 	tree_pipe: XM_TREE_CALLBACKS_PIPE
 			-- Tree generating callbacks
 
+	redirected_locations: DS_HASH_SET [STRING]
+			-- Locations of redirected ECF files,
+			-- used to detect cycles
+
 invariant
 
 	xml_parser_not_void: xml_parser /= Void
 	tree_pipe_not_void: tree_pipe /= Void
 	position_table_enabled: tree_pipe.tree.is_position_table_enabled
+	redirected_locations_not_void: redirected_locations /= Void
+	no_void_redirected_location: not redirected_locations.has_void
 
 end

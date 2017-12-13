@@ -1,0 +1,1 @@
+[EADP] ECF ${GOBO}\library\tools\test\eiffel\ecf\eadp\test3\system.ecf (14,43): value 'all' for capability 'catcall_detection' not supported by library 'lib1'.

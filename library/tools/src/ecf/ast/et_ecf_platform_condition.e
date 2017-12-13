@@ -5,7 +5,7 @@ note
 		"ECF platform conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,9 +69,9 @@ feature -- Status report
 			l_splitter: ST_SPLITTER
 		do
 			if operating_system.is_windows then
-				l_expected_value := "windows"
+				l_expected_value := {ET_ECF_SETTING_NAMES}.windows_setting_value
 			else
-				l_expected_value := "unix"
+				l_expected_value := {ET_ECF_SETTING_NAMES}.unix_setting_value
 			end
 			if value.has (' ') then
 				create l_splitter.make_with_separators (" ")

@@ -5,7 +5,7 @@ note
 		"ECF Eiffel internal universes (i.e. either systems or libraries)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,13 +16,25 @@ inherit
 
 	ET_INTERNAL_UNIVERSE
 		redefine
-			name
+			name,
+			is_read_only
 		end
 
 	ET_ECF_SYSTEM_CONFIG
+		undefine
+			set_read_only
 		redefine
-			name
+			name,
+			is_read_only
 		end
+
+feature -- Status report
+
+	is_read_only: BOOLEAN
+			-- Is current universe a read-only universe?
+			-- In other words, are changes in this universe and in its classes
+			-- not taken into account when repreparsing or reparsing
+			-- universes depending on it?
 
 feature -- Access
 

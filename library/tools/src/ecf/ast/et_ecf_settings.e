@@ -5,7 +5,7 @@ note
 		"ECF settings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,10 @@ inherit
 
 create
 
-	make
+	make,
+	make_default_1_16_0,
+	make_default_1_15_0,
+	make_default_1_14_0
 
 feature {NONE} -- Initialization
 
@@ -34,6 +37,24 @@ feature {NONE} -- Initialization
 			primary_settings.set_key_equality_tester (case_insensitive_string_equality_tester)
 			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
 			primary_settings.set_hash_function (l_hash_function)
+		end
+
+	make_default_1_16_0
+			-- Create a new ECF settings already filled in with the default values of ECF 1.16.0.
+		do
+			make
+		end
+
+	make_default_1_15_0
+			-- Create a new ECF settings already filled in with the default values of ECF 1.15.0.
+		do
+			make_default_1_16_0
+		end
+
+	make_default_1_14_0
+			-- Create a new ECF settings already filled in with the default values of ECF 1.14.0.
+		do
+			make_default_1_15_0
 		end
 
 feature -- Access
@@ -85,7 +106,6 @@ feature -- Setting
 	set_secondary_settings (a_settings: like secondary_settings)
 			-- Set `secondary_settings' to `a_settings'.
 		require
-			a_settings_not_void: a_settings /= Void
 --			no_cycle: `a_settings', or recursively its secondary settings, does not already have `Current' as secondary settings
 		do
 			secondary_settings := a_settings

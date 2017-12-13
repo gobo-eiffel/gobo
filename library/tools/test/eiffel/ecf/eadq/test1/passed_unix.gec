@@ -1,0 +1,1 @@
+[EADQ] ECF ${GOBO}/library/tools/test/eiffel/ecf/eadq/test1/system.ecf (12,41): value 'all' for capability 'void_safety' not supported by current target.

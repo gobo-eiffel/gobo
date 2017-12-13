@@ -5,7 +5,7 @@ note
 		"ECF systems or libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,14 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			filename_set: filename = a_filename
 		end
+
+feature -- Status report
+
+	is_read_only: BOOLEAN
+			-- Is current system a read-only system?
+			-- In other words, are changes in this system and in its classes
+			-- not taken into account when repreparsing or reparsing
+			-- universes depending on it?
 
 feature -- Access
 
@@ -60,6 +68,19 @@ feature -- Access
 
 	library_target: detachable ET_ECF_TARGET
 			-- Library target, if any
+
+	description: detachable STRING
+			-- Description
+
+feature -- Status setting
+
+	set_read_only (b: BOOLEAN)
+			-- Set `is_read_only' to `b'.
+		do
+			is_read_only := b
+		ensure
+			read_only_set: is_read_only = b
+		end
 
 feature -- Setting
 
@@ -101,6 +122,14 @@ feature -- Setting
 			ecf_version := a_version
 		ensure
 			ecf_version_set: ecf_version = a_version
+		end
+
+	set_description (a_description: like description)
+			-- Set `description' to `a_description'.
+		do
+			description := a_description
+		ensure
+			description_set: description = a_description
 		end
 
 invariant

@@ -6,7 +6,7 @@ note
 
 	remark: "See http://en.wikipedia.org/wiki/Software_versioning"
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,12 +27,16 @@ inherit
 
 create
 
-	make, make_major, make_major_minor, make_latest
+	make,
+	make_major,
+	make_major_minor,
+	make_major_minor_revision,
+	make_latest
 
 feature {NONE} -- Initialization
 
 	make (a_major: like major; a_minor: like minor; a_revision: like revision; a_build: like build)
-			-- Make new version of the form "major.minor.revision,build".
+			-- Make new version of the form "major.minor.revision.build".
 		require
 			a_major_not_negative: a_major >= 0
 			a_minor_not_negative: a_minor >= 0
@@ -93,6 +97,29 @@ feature {NONE} -- Initialization
 			has_minor: has_minor
 			minor_set: minor = a_minor
 			no_revision: not has_revision
+			no_build: not has_build
+		end
+
+	make_major_minor_revision (a_major: like major; a_minor: like minor; a_revision: like revision)
+			-- Make new version of the form "major.minor.revision".
+			-- Note that this version is greater than any other
+			-- version of the form "major.minor.revision.xxx".
+		require
+			a_major_not_negative: a_major >= 0
+			a_minor_not_negative: a_minor >= 0
+			a_revision_not_negative: a_revision >= 0
+		do
+			internal_major := a_major
+			internal_minor := a_minor
+			internal_revision := a_revision
+			internal_build := -1
+		ensure
+			has_major: has_major
+			major_set: major = a_major
+			has_minor: has_minor
+			minor_set: minor = a_minor
+			has_revision: has_revision
+			revision_set: revision = a_revision
 			no_build: not has_build
 		end
 

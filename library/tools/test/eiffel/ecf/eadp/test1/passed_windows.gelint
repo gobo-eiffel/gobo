@@ -1,0 +1,1 @@
+[EADP] ECF ${GOBO}\library\tools\test\eiffel\ecf\eadp\test1\system.ecf (14,43): value 'none' for capability 'concurrency' not supported by library 'lib1'.

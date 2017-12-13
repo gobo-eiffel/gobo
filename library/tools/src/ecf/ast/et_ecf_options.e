@@ -5,7 +5,7 @@ note
 		"ECF options"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,10 @@ inherit
 
 create
 
-	make
+	make,
+	make_default_1_16_0,
+	make_default_1_15_0,
+	make_default_1_14_0
 
 feature {NONE} -- Initialization
 
@@ -34,6 +37,35 @@ feature {NONE} -- Initialization
 			primary_options.set_key_equality_tester (case_insensitive_string_equality_tester)
 			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
 			primary_options.set_hash_function (l_hash_function)
+		end
+
+	make_default_1_16_0
+			-- Create a new ECF options already filled in with the default values of ECF 1.16.0.
+		do
+			make
+			set_primary_value ({ET_ECF_OPTION_NAMES}.debug_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+			set_primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+			set_primary_value ({ET_ECF_OPTION_NAMES}.is_attached_by_default_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+			set_primary_value ({ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+			set_primary_value ({ET_ECF_OPTION_NAMES}.msil_application_optimize_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+			set_primary_value ({ET_ECF_OPTION_NAMES}.optimize_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+			set_primary_value ({ET_ECF_OPTION_NAMES}.profile_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+			set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
+			set_primary_value ({ET_ECF_OPTION_NAMES}.trace_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+			set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+		end
+
+	make_default_1_15_0
+			-- Create a new ECF options already filled in with the default values of ECF 1.15.0.
+		do
+			make_default_1_16_0
+		end
+
+	make_default_1_14_0
+			-- Create a new ECF options already filled in with the default values of ECF 1.14.0.
+		do
+			make_default_1_15_0
+			set_primary_value ({ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 		end
 
 feature -- Access
@@ -63,11 +95,14 @@ feature -- Access
 		end
 
 	primary_options: DS_HASH_TABLE [STRING, STRING]
-			-- Options explicitly defined in the target
+			-- Options explicitly defined in the target or group
 
 	secondary_options: detachable KL_STRING_VALUES
 			-- Options to be taken into account when not
 			-- explicitly defined in `primary_options'
+
+	description: detachable STRING
+			-- Description
 
 feature -- Setting
 
@@ -85,12 +120,19 @@ feature -- Setting
 	set_secondary_options (a_options: like secondary_options)
 			-- Set `secondary_options' to `a_options'.
 		require
-			a_options_not_void: a_options /= Void
 --			no_cycle: `a_options', or recursively its secondary options, does not already have `Current' as secondary options
 		do
 			secondary_options := a_options
 		ensure
 			secondary_options_set: secondary_options = a_options
+		end
+
+	set_description (a_description: like description)
+			-- Set `description' to `a_description'.
+		do
+			description := a_description
+		ensure
+			description_set: description = a_description
 		end
 
 invariant

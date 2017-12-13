@@ -1,0 +1,36 @@
+
+-------------------------------------------------------------------------------
+
+Error code: VD01
+
+Error: A library used by the current project or a parent target used by the current target cannot be used under the selected settings.
+What to do: Lower your requirements or update the library or the parent target to match them.
+
+Capability "Concurrency" of supplier target has value "Thread" insuffient for client value "None".
+Client/child target
+	Name: aa
+	System: aa
+	File: ${GOBO}/library/tools/test/eiffel/ecf/eadp/test1/system.ecf
+Supplier/parent target					
+	Name: lib1
+	System: lib1
+	File: ${GOBO}/library/tools/test/eiffel/ecf/eadp/test1/lib1.ecf
+
+-------------------------------------------------------------------------------
+
+Error code: VD01
+
+Error: A library used by the current project or a parent target used by the current target cannot be used under the selected settings.
+What to do: Lower your requirements or update the library or the parent target to match them.
+
+Capability "Concurrency" of dependent target has value "Thread" insufficient for current target setting "None".
+Current target
+	Name: aa
+	System: aa
+	File: ${GOBO}/library/tools/test/eiffel/ecf/eadp/test1/system.ecf
+Dependent target
+	Name: lib1
+	System: lib1
+	File: ${GOBO}/library/tools/test/eiffel/ecf/eadp/test1/lib1.ecf
+
+-------------------------------------------------------------------------------

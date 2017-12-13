@@ -5,7 +5,7 @@ note
 		"ECF error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,54 +53,6 @@ feature -- Syntax error
 
 feature -- Reporting errors
 
-	report_eaaa_error (a_library_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAA error: the name of the library is missing.
-		require
-			a_library_element_name_not_void: a_library_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaaa (a_library_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaab_error (a_library_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAB error: the location of the library is missing.
-		require
-			a_library_element_name_not_void: a_library_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaab (a_library_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaac_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAC error: the name of the library is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaac (a_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaad_error (a_location_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAD error: the filename of the library is empty.
-		require
-			a_location_attribute_name_not_void: a_location_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaad (a_location_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
 	report_eaae_error (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Report EAAE error: cannot have both value and excluded_value in build condition.
 		require
@@ -147,67 +99,6 @@ feature -- Reporting errors
 			l_error: ET_ECF_ERROR
 		do
 			create l_error.make_eaah (a_build_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaai_error (a_cluster_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAI error: the name of the cluster is missing.
-		require
-			a_cluster_element_name_not_void: a_cluster_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaai (a_cluster_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaaj_error (a_cluster_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAJ error: the location of the cluster is missing.
-		require
-			a_cluster_element_name_not_void: a_cluster_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaaj (a_cluster_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaak_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAK error: the name of the cluster is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaak (a_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaal_error (a_location_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAL error: the filename of the cluster is empty.
-		require
-			a_location_attribute_name_not_void: a_location_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaal (a_location_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaam_error (a_recursive_attribute_name: ET_IDENTIFIER; a_recursive_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAM error: the recursive attribute of the cluster should be a boolean.
-		require
-			a_recursive_attribute_name_not_void: a_recursive_attribute_name /= Void
-			a_recursive_value_not_void: a_recursive_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaam (a_recursive_attribute_name, a_recursive_value, a_universe)
 			report_error (l_error)
 		end
 
@@ -408,30 +299,6 @@ feature -- Reporting errors
 			report_error (l_error)
 		end
 
-	report_eabd_error (a_target_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABD error: the name of the target is missing.
-		require
-			a_target_element_name_not_void: a_target_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabd (a_target_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabe_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EABE error: the name of the target is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabe (a_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
 	report_eabf_error (a_min_attribute_name: ET_IDENTIFIER; a_min_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Report EABF error: wrong format for min attribute in version condition.
 			-- It should be of the form "N.N.N.N".
@@ -500,139 +367,6 @@ feature -- Reporting errors
 			report_error (l_error)
 		end
 
-	report_eabk_error (a_system_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABK error: the name of the system is missing.
-		require
-			a_system_element_name_not_void: a_system_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabk (a_system_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabl_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABL error: the name of the system is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabl (a_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabm_error (a_system_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABM error: the name of the system describing a library is missing.
-		require
-			a_system_element_name_not_void: a_system_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabm (a_system_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabn_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABN error: the name of the system describing a library is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabn (a_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabo_error (a_system_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABO error: the uuid of the system describing a library is missing.
-		require
-			a_system_element_name_not_void: a_system_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabo (a_system_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabp_error (a_library_target_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABP error: the name of library target is empty.
-		require
-			a_library_target_attribute_name_not_void: a_library_target_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabp (a_library_target_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabq_error (a_library_target_attribute_name: ET_IDENTIFIER; a_library_target_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABQ error: the name of library target is not the name of an existing target.
-		require
-			a_library_target_attribute_name_not_void: a_library_target_attribute_name /= Void
-			a_library_target_value_not_void: a_library_target_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabq (a_library_target_attribute_name, a_library_target_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabr_error (a_variable_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABR error: the name of the variable missing.
-		require
-			a_variable_element_name_not_void: a_variable_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabr (a_variable_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabs_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABS error: the name of the variable is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabs (a_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabt_error (a_variable_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABT error: the value of the variable missing.
-		require
-			a_variable_element_name_not_void: a_variable_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabt (a_variable_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabu_error (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABU error: the value of the variable is empty.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabu (a_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
 	report_eabv_error (a_location_value: ET_IDENTIFIER; a_filename: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Report EABV error: cannot open library ECF file `a_filename'.
 		require
@@ -680,349 +414,6 @@ feature -- Reporting errors
 			l_error: ET_ECF_ERROR
 		do
 			create l_error.make_eaby (a_system_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabz_error (a_all_classes_attribute_name: ET_IDENTIFIER; a_all_classes_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABZ error: the all_classes attribute of the root element should be a boolean.
-		require
-			a_all_classes_attribute_name_not_void: a_all_classes_attribute_name /= Void
-			a_all_classes_value_not_void: a_all_classes_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabz (a_all_classes_attribute_name, a_all_classes_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaca_error (a_root_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACA error: the class attribute of the root element is missing.
-		require
-			a_root_element_name_not_void: a_root_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaca (a_root_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacb_error (a_class_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACB error: the class attribute of the root element is empty.
-		require
-			a_class_attribute_name_not_void: a_class_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacb (a_class_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacc_error (a_feature_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACC error: the feature attribute of the root element is empty.
-		require
-			a_feature_attribute_name_not_void: a_feature_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacc (a_feature_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacd_error (a_override_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACD error: the name of the override is missing.
-		require
-			a_override_element_name_not_void: a_override_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacd (a_override_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eace_error (a_override_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACE error: the location of the override is missing.
-		require
-			a_override_element_name_not_void: a_override_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eace (a_override_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacf_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACF error: the name of the override is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacf (a_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacg_error (a_location_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACG error: the location of the override is empty.
-		require
-			a_location_attribute_name_not_void: a_location_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacg (a_location_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_each_error (a_recursive_attribute_name: ET_IDENTIFIER; a_recursive_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACH error: the recursive attribute of the override should be a boolean.
-		require
-			a_recursive_attribute_name_not_void: a_recursive_attribute_name /= Void
-			a_recursive_value_not_void: a_recursive_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_each (a_recursive_attribute_name, a_recursive_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaci_error (a_external_include_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACI error: the location of the external include element is missing.
-		require
-			a_external_include_element_name_not_void: a_external_include_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaci (a_external_include_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacj_error (a_location_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACJ error: the filename of the external include element is empty.
-		require
-			a_location_attribute_name_not_void: a_location_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacj (a_location_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eack_error (a_external_library_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACK error: the location of the external library element is missing.
-		require
-			a_external_library_element_name_not_void: a_external_library_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eack (a_external_library_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacl_error (a_location_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACL error: the filename of the external library element is empty.
-		require
-			a_location_attribute_name_not_void: a_location_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacl (a_location_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacm_error (a_external_object_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACM error: the location of the external object element is missing.
-		require
-			a_external_object_element_name_not_void: a_external_object_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacm (a_external_object_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacn_error (a_location_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACN error: the filename of the external object element is empty.
-		require
-			a_location_attribute_name_not_void: a_location_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacn (a_location_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaco_error (a_renaming_clause: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACO error: the old name of the renaming clause is missing.
-		require
-			a_renaming_clause_not_void: a_renaming_clause /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaco (a_renaming_clause, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacp_error (a_old_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACP error: the old name of the renaming clause is empty.
-		require
-			a_old_name_attribute_name_not_void: a_old_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacp (a_old_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacq_error (a_renaming_clause: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACQ error: the new name of the renaming clause is missing.
-		require
-			a_renaming_clause_not_void: a_renaming_clause /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacq (a_renaming_clause, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacr_error (a_new_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACR error: the new name of the renaming clause is empty.
-		require
-			a_new_name_attribute_name_not_void: a_new_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacr (a_new_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacs_error (a_old_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACS error: the old name of the renaming clause already
-			-- appears in another renaming clause.
-		require
-			a_old_name_attribute_name_not_void: a_old_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacs (a_old_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eact_error (a_readonly_attribute_name: ET_IDENTIFIER; a_readonly_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACT error: the readonly attribute of the cluster should be a boolean.
-		require
-			a_readonly_attribute_name_not_void: a_readonly_attribute_name /= Void
-			a_readonly_value_not_void: a_readonly_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eact (a_readonly_attribute_name, a_readonly_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacu_error (a_readonly_attribute_name: ET_IDENTIFIER; a_readonly_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACU error: the readonly attribute of the override should be a boolean.
-		require
-			a_readonly_attribute_name_not_void: a_readonly_attribute_name /= Void
-			a_readonly_value_not_void: a_readonly_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacu (a_readonly_attribute_name, a_readonly_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacv_error (a_readonly_attribute_name: ET_IDENTIFIER; a_readonly_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACV error: the readonly attribute of the library should be a boolean.
-		require
-			a_readonly_attribute_name_not_void: a_readonly_attribute_name /= Void
-			a_readonly_value_not_void: a_readonly_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacv (a_readonly_attribute_name, a_readonly_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacw_error (a_readonly_attribute_name: ET_IDENTIFIER; a_readonly_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACW error: the readonly attribute of the .NET assembly should be a boolean.
-		require
-			a_readonly_attribute_name_not_void: a_readonly_attribute_name /= Void
-			a_readonly_value_not_void: a_readonly_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacw (a_readonly_attribute_name, a_readonly_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacx_error (a_assembly_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACX error: the name of the assembly is missing.
-		require
-			a_assembly_element_name_not_void: a_assembly_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacx (a_assembly_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacy_error (a_assembly_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACY error: the location of the assembly is missing.
-		require
-			a_assembly_element_name_not_void: a_assembly_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacy (a_assembly_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eacz_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EACZ error: the name of the assembly is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eacz (a_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eada_error (a_location_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EADA error: the filename of the assembly is empty.
-		require
-			a_location_attribute_name_not_void: a_location_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eada (a_location_attribute_name, a_universe)
 			report_error (l_error)
 		end
 
@@ -1075,59 +466,226 @@ feature -- Reporting errors
 			report_error (l_error)
 		end
 
-	report_esnm_error (a_setting_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report ESNM error: the name of the setting missing.
-			--
-			-- ESNM: Ecf Setting Name Missing
+	report_eadf_error (a_location_value: ET_IDENTIFIER; a_filename: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADF error: cannot open redirected ECF file `a_filename'.
 		require
-			a_setting_element_name_not_void: a_setting_element_name /= Void
+			a_location_value_not_void: a_location_value /= Void
+			a_filename_not_void: a_filename /= Void
 			a_universe_not_void: a_universe /= Void
 		local
 			l_error: ET_ECF_ERROR
 		do
-			create l_error.make_esnm (a_setting_element_name, a_universe)
+			create l_error.make_eadf (a_location_value, a_filename, a_universe)
 			report_error (l_error)
 		end
 
-	report_esne_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report ESNE error: the name of the setting is empty.
-			--
-			-- ESNE: Ecf Setting Name Empty
+	report_eadg_error (a_redirection_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADG error: the location of the redirected ECF is missing.
 		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
+			a_redirection_element_name_not_void: a_redirection_element_name /= Void
 			a_universe_not_void: a_universe /= Void
 		local
 			l_error: ET_ECF_ERROR
 		do
-			create l_error.make_esne (a_name_attribute_name, a_universe)
+			create l_error.make_eadg (a_redirection_element_name, a_universe)
 			report_error (l_error)
 		end
 
-	report_esvm_error (a_setting_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report ESVM error: the value of the setting missing.
-			--
-			-- ESVM: Ecf Setting Value Missing
+	report_eadh_error (a_location_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADH error: the filename of the redirected ECF is empty.
 		require
-			a_setting_element_name_not_void: a_setting_element_name /= Void
+			a_location_attribute_name_not_void: a_location_attribute_name /= Void
 			a_universe_not_void: a_universe /= Void
 		local
 			l_error: ET_ECF_ERROR
 		do
-			create l_error.make_esvm (a_setting_element_name, a_universe)
+			create l_error.make_eadh (a_location_attribute_name, a_universe)
 			report_error (l_error)
 		end
 
-	report_esve_error (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report ESVE error: the value of the setting is empty.
-			--
-			-- ESVE: Ecf Setting Value Empty
+	report_eadi_error (a_location_attribute_name: ET_IDENTIFIER; a_cycle: DS_HASH_SET [STRING]; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADI error: cycle in ECF file redirections.
 		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
+			a_location_attribute_name_not_void: a_location_attribute_name /= Void
+			a_cycle_not_void: a_cycle /= Void
+			a_cycle_not_void: not a_cycle.is_empty
+			no_void_filename: not a_cycle.has_void
 			a_universe_not_void: a_universe /= Void
 		local
 			l_error: ET_ECF_ERROR
 		do
-			create l_error.make_esve (a_value_attribute_name, a_universe)
+			create l_error.make_eadi (a_location_attribute_name, a_cycle, a_universe)
+			report_error (l_error)
+		end
+
+	report_eadp_error (a_capability_name: STRING; a_capability_value: STRING; a_library_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADP error: value `a_capability_value' for capability `a_capability_name'
+			-- (supported by `a_universe') is not supported by library `a_library_name'.
+		require
+			a_capability_name_not_void: a_capability_name /= Void
+			a_capability_value_not_void: a_capability_value /= Void
+			a_library_name_not_void: a_library_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eadp (a_capability_name, a_capability_value, a_library_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eadq_error (a_capability_name: STRING; a_capability_value: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADQ error: value `a_capability_value' for capability `a_capability_name'
+			-- is not supported by current target in `a_universe'.
+		require
+			a_capability_name_not_void: a_capability_name /= Void
+			a_capability_value_not_void: a_capability_value /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eadq (a_capability_name, a_capability_value, a_universe)
+			report_error (l_error)
+		end
+
+	report_eadr_error (a_extends_value: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADR error: parent target `a_extends_value' is
+			-- not known in `a_universe'.
+		require
+			a_extends_value_not_void: a_extends_value /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eadr (a_extends_value, a_universe)
+			report_error (l_error)
+		end
+
+	report_eads_error (a_capability_name: STRING; a_capability_value: STRING; a_parent_target_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EADS error: value `a_capability_value' for capability `a_capability_name'
+			-- (supported by current target) is not supported by parent target `a_parent_target_name'.
+		require
+			a_capability_name_not_void: a_capability_name /= Void
+			a_capability_value_not_void: a_capability_value /= Void
+			a_parent_target_name_not_void: a_parent_target_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eads (a_capability_name, a_capability_value, a_parent_target_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eatb_error (a_attribute_name, a_attribute_value, a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EATB error: attribute `a_attribute_name' with value
+			-- `a_attribute_value' in element `a_element_name' should be a boolean.
+			--
+			-- EATB: Ecf ATtribute Boolean
+		require
+			a_attribute_name_not_void: a_attribute_name /= Void
+			a_attribute_value_not_void: a_attribute_value /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eatb (a_attribute_name, a_attribute_value, a_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eatd_error (a_attribute_name, a_attribute_value, a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EATD error: attribute `a_attribute_name' with value
+			-- `a_attribute_value' already appears in another element `a_element_name'.
+			--
+			-- EATD: Ecf ATtribute Duplicated
+		require
+			a_attribute_name_not_void: a_attribute_name /= Void
+			a_attribute_value_not_void: a_attribute_value /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eatd (a_attribute_name, a_attribute_value, a_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eate_error (a_attribute_name, a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EATE error: attribute `a_attribute_name' is empty in element `a_element_name'.
+			--
+			-- EATE: Ecf ATtribute Empty
+		require
+			a_attribute_name_not_void: a_attribute_name /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eate (a_attribute_name, a_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eati_error (a_attribute_name, a_attribute_value, a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EATI error: attribute `a_attribute_name' with value
+			-- `a_attribute_value' in element `a_element_name' should be
+			-- an unsigned integer.
+			--
+			-- EATI: Ecf ATtribute unsigned Integer
+		require
+			a_attribute_name_not_void: a_attribute_name /= Void
+			a_attribute_value_not_void: a_attribute_value /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eati (a_attribute_name, a_attribute_value, a_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eatm_error (a_attribute_name: STRING; a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EATM error: attribute `a_attribute_name' is missing in element `a_element_name'.
+			--
+			-- EATM: Ecf ATtribute Missing
+		require
+			a_attribute_name_not_void: a_attribute_name /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eatm (a_attribute_name, a_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eats_error (a_attribute_name: STRING; a_other_attribute_name, a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EATS error: attribute `a_attribute_name' is missing
+			-- in element `a_element_name' when `a_other_attribute_name' is specified.
+			--
+			-- EATS: Ecf ATtribute miSsing
+		require
+			a_attribute_name_not_void: a_attribute_name /= Void
+			a_other_attribute_name_not_void: a_other_attribute_name /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eats (a_attribute_name, a_other_attribute_name, a_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eltm_error (a_library_target_attribute_name, a_library_target_attribute_value: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report ELTM error: the name of library target is not the name of an existing target.
+			--
+			-- ELTM: Ecf Library Target Missing
+		require
+			a_library_target_attribute_name_not_void: a_library_target_attribute_name /= Void
+			aa_library_target_attribute_value_not_void: a_library_target_attribute_value /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eltm (a_library_target_attribute_name, a_library_target_attribute_value, a_universe)
 			report_error (l_error)
 		end
 

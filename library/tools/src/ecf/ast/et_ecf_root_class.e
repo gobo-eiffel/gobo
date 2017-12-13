@@ -5,7 +5,7 @@ note
 		"ECF root classes and creation procedures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,14 +40,25 @@ feature -- Access
 	creation_procedure_name: detachable ET_IDENTIFIER
 			-- Root creation procedure name
 
+	cluster_name: detachable ET_IDENTIFIER
+			-- Name of cluster where to find the root class
+
 feature -- Setting
 
-	set_creation_procedure_name (a_name: ET_IDENTIFIER)
+	set_creation_procedure_name (a_name: like creation_procedure_name)
 			-- Set `creation_procedure_name' to `a_name'.
 		do
 			creation_procedure_name := a_name
 		ensure
 			creation_procedure_name_set: creation_procedure_name = a_name
+		end
+
+	set_cluster_name (a_name: like cluster_name)
+			-- Set `cluster_name' to `a_name'.
+		do
+			cluster_name := a_name
+		ensure
+			cluster_name_set: cluster_name = a_name
 		end
 
 feature -- Element change

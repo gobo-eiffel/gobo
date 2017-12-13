@@ -5,7 +5,7 @@ note
 		"ECF file rules"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,6 +63,19 @@ feature -- Access
 
 	include: detachable DS_HASH_SET [STRING]
 			-- Include patterns
+
+	description: detachable STRING
+			-- Description
+
+feature -- Setting
+
+	set_description (a_description: like description)
+			-- Set `description' to `a_description'.
+		do
+			description := a_description
+		ensure
+			description_set: description = a_description
+		end
 
 feature {NONE} -- Implementation
 

@@ -1,0 +1,2 @@
+[EADI] ECF ${GOBO}\library\tools\test\eiffel\ecf\eadi\test2\lib1.ecf (6,21): cycle in ECF file redirections:
+	${GOBO}\library\tools\test\eiffel\ecf\eadi\test2\lib1.ecf

@@ -1,0 +1,12 @@
+
+-------------------------------------------------------------------------------
+
+Error code: VD00
+
+General configuration parsing error.
+What to do: fix the configuration file.
+
+Cycle in configuration file redirection:
+	${GOBO}/library/tools/test/eiffel/ecf/eadi/test2/lib1.ecf
+
+-------------------------------------------------------------------------------

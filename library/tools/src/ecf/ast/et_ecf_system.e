@@ -18,7 +18,8 @@ inherit
 		rename
 			make as make_system
 		redefine
-			name
+			name,
+			is_read_only
 		end
 
 	ET_ECF_INTERNAL_UNIVERSE
@@ -31,7 +32,9 @@ inherit
 			default_read_only_value,
 			kind_name
 		redefine
-			make, name
+			make,
+			name,
+			is_read_only
 		end
 
 create
@@ -46,6 +49,14 @@ feature {NONE} -- Initialization
 			precursor (a_name, a_filename)
 			make_system (a_name)
 		end
+
+feature -- Status report
+
+	is_read_only: BOOLEAN
+			-- Is current system a read-only system?
+			-- In other words, are changes in this system and in its classes
+			-- not taken into account when repreparsing or reparsing
+			-- universes depending on it?
 
 feature -- Access
 

@@ -5,7 +5,7 @@ note
 		"ECF Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,9 @@ inherit
 		undefine
 			filename
 		redefine
-			name, library
+			name,
+			library,
+			is_read_only
 		end
 
 	ET_ECF_INTERNAL_UNIVERSE
@@ -33,7 +35,9 @@ inherit
 			kind_name,
 			preparse
 		redefine
-			name, library
+			name,
+			library,
+			is_read_only
 		end
 
 create
@@ -57,6 +61,14 @@ feature {NONE} -- Initialization
 			filename_set: filename = a_filename
 			current_system_set: current_system = a_system
 		end
+
+feature -- Status report
+
+	is_read_only: BOOLEAN
+			-- Is current library a read-only library?
+			-- In other words, are changes in this library and in its classes
+			-- not taken into account when repreparsing or reparsing
+			-- universes depending on it?
 
 feature -- Access
 

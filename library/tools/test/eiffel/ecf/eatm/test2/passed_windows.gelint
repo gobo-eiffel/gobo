@@ -1,0 +1,2 @@
+[EATM] ECF ${GOBO}\library\tools\test\eiffel\ecf\eatm\test2\lib1\lib1.ecf (7,23): attribute 'uuid' is missing in element 'system'.
+	Used in ECF ${GOBO}\library\tools\test\eiffel\ecf\eatm\test2\system.ecf (12,48)

@@ -1,0 +1,1 @@
+[EADP] ECF ${GOBO}/library/tools/test/eiffel/ecf/eadp/test2/system.ecf (11,43): value 'all' for capability 'void_safety' not supported by library 'lib1'.

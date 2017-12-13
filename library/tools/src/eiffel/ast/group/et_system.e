@@ -48,6 +48,10 @@ feature {NONE} -- Initialization
 			create external_include_pathnames.make (20)
 			create external_object_pathnames.make (20)
 			create external_library_pathnames.make (20)
+			create external_make_pathnames.make (20)
+			create external_resource_pathnames.make (20)
+			create external_cflags.make (20)
+			create external_linker_flags.make (20)
 			console_application_mode := True
 			alias_transition_mode := True
 			set_system_name (a_name)
@@ -374,6 +378,18 @@ feature -- Compilation options
 	external_library_pathnames: DS_ARRAYED_LIST [STRING]
 			-- External library pathnames
 
+	external_make_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External make pathnames
+
+	external_resource_pathnames: DS_ARRAYED_LIST [STRING]
+			-- External resource pathnames
+
+	external_cflags: DS_ARRAYED_LIST [STRING]
+			-- External C flags
+
+	external_linker_flags: DS_ARRAYED_LIST [STRING]
+			-- External linker flags
+
 feature -- Compilation options setting
 
 	set_console_application_mode (b: BOOLEAN)
@@ -463,6 +479,50 @@ feature -- Compilation options setting
 			external_library_pathnames := a_pathnames
 		ensure
 			external_library_pathnames_set: external_library_pathnames = a_pathnames
+		end
+
+	set_external_make_pathnames (a_pathnames: like external_make_pathnames)
+			-- Set `external_make_pathnames' to `a_pathnames'.
+		require
+			a_pathnames_not_void: a_pathnames /= Void
+			no_void_pathname: not a_pathnames.has_void
+		do
+			external_make_pathnames := a_pathnames
+		ensure
+			external_make_pathnames_set: external_make_pathnames = a_pathnames
+		end
+
+	set_external_resource_pathnames (a_pathnames: like external_resource_pathnames)
+			-- Set `external_resource_pathnames' to `a_pathnames'.
+		require
+			a_pathnames_not_void: a_pathnames /= Void
+			no_void_pathname: not a_pathnames.has_void
+		do
+			external_resource_pathnames := a_pathnames
+		ensure
+			external_resource_pathnames_set: external_resource_pathnames = a_pathnames
+		end
+
+	set_external_cflags (a_flags: like external_cflags)
+			-- Set `external_cflags' to `a_flags'.
+		require
+			a_flags_not_void: a_flags /= Void
+			no_void_flag: not a_flags.has_void
+		do
+			external_cflags := a_flags
+		ensure
+			external_cflags_set: external_cflags = a_flags
+		end
+
+	set_external_linker_flags (a_flags: like external_linker_flags)
+			-- Set `external_linker_flags' to `a_flags'.
+		require
+			a_flags_not_void: a_flags /= Void
+			no_void_flag: not a_flags.has_void
+		do
+			external_linker_flags := a_flags
+		ensure
+			external_linker_flags_set: external_linker_flags = a_flags
 		end
 
 feature -- Parsing
@@ -632,5 +692,13 @@ invariant
 	no_void_external_object_pathname: not external_object_pathnames.has_void
 	external_library_pathnames_not_void: external_library_pathnames /= Void
 	no_void_external_library_pathname: not external_library_pathnames.has_void
+	external_resource_pathnames_not_void: external_resource_pathnames /= Void
+	no_void_external_resource_pathname: not external_resource_pathnames.has_void
+	external_make_pathnames_not_void: external_make_pathnames /= Void
+	no_void_external_make_pathname: not external_make_pathnames.has_void
+	external_cflags_not_void: external_cflags /= Void
+	no_void_external_cflag: not external_cflags.has_void
+	external_linker_flags_not_void: external_linker_flags /= Void
+	no_void_external_linker_flag: not external_linker_flags.has_void
 
 end

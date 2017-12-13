@@ -1,0 +1,2 @@
+[EATM] ECF ${GOBO}/library/tools/test/eiffel/ecf/eatm/test1/lib1/lib1.ecf (11,74): attribute 'name' is missing in element 'library'.
+	Used in ECF ${GOBO}/library/tools/test/eiffel/ecf/eatm/test1/system.ecf (12,48)

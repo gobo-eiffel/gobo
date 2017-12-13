@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd"
+	name="lib1"
+	uuid="966D1318-A1E8-4203-AFC6-709B947477F1"
+	library_target="lib1">
+
+	<target name="lib1">
+		<capability>
+			<concurrency support="thread"/>
+		</capability>
+	</target>
+</system>

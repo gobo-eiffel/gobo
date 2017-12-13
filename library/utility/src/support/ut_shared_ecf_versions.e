@@ -5,7 +5,7 @@ note
 		"Shared ECF version numbers"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2009-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,13 +61,22 @@ feature -- Access
 
 	ecf_1_15_0: UT_VERSION
 			-- ECF 1.15.0
-			-- Corresponding to ISE 15.12
+			-- Introduced in ISE 15.12.
 		once
 			create Result.make (1, 15, 0, 0)
 		ensure
 			ecf_1_15_0_not_void: Result /= Void
 		end
-		
+
+	ecf_1_16_0: UT_VERSION
+			-- ECF 1.16.0
+			-- Introduced in ISE 17.01.
+		once
+			create Result.make (1, 16, 0, 0)
+		ensure
+			ecf_1_16_0_not_void: Result /= Void
+		end
+
 	ecf_latest: UT_VERSION
 			-- After the last ECF version
 		once

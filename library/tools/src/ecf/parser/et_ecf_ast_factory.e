@@ -5,12 +5,19 @@ note
 		"ECF Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_ECF_AST_FACTORY
+
+inherit
+
+	ANY
+
+	KL_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 create
 
@@ -24,6 +31,24 @@ feature {NONE} -- Initialization
 		end
 
 feature -- AST factory
+
+	new_action (a_command_name: STRING): ET_ECF_ACTION
+			-- New action
+		require
+			a_command_name_not_void: a_command_name /= Void
+		do
+			create Result.make (a_command_name)
+		ensure
+			action_not_void: Result /= Void
+		end
+
+	new_actions: DS_ARRAYED_LIST [ET_ECF_ACTION]
+			-- New actions
+		do
+			create Result.make (10)
+		ensure
+			actions_not_void: Result /= Void
+		end
 
 	new_adapted_dotnet_assembly (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_DOTNET_ASSEMBLY
 			-- New adpated .NET assembly
@@ -69,6 +94,18 @@ feature -- AST factory
 			adapted_libraries_not_void: Result /= Void
 		end
 
+	new_adapted_precompiled_library (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_PRECOMPILED_LIBRARY
+			-- New adapted precompiled library
+		require
+			a_name_not_void: a_name /= Void
+			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			create Result.make (a_name, a_filename, a_universe)
+		ensure
+			adapted_library_not_void: Result /= Void
+		end
+
 	new_build_condition (a_value: STRING; a_excluded: BOOLEAN): ET_ECF_BUILD_CONDITION
 			-- New build condition
 		do
@@ -81,11 +118,39 @@ feature -- AST factory
 			condition_not_void: Result /= Void
 		end
 
+	new_class_mappings: DS_HASH_TABLE [STRING, STRING]
+			-- New class mappings
+		do
+			create Result.make_map (10)
+			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
+		ensure
+			class_mappings_not_void: Result /= Void
+		end
+
+	new_class_options: DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
+			-- New class options
+		do
+			create Result.make_map (10)
+			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
+		ensure
+			class_options_not_void: Result /= Void
+		end
+
+	new_class_renamings: DS_HASH_TABLE [STRING, STRING]
+			-- New class renamings
+		do
+			create Result.make_map (10)
+			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
+		ensure
+			class_renamings_not_void: Result /= Void
+		end
+
 	new_cluster (a_name, a_pathname: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CLUSTER
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
+			a_pathname_not_void: a_pathname /= Void
 			a_universe_not_void: a_universe /= Void
 		do
 			create Result.make (a_name, a_pathname, a_universe)
@@ -176,6 +241,26 @@ feature -- AST factory
 			condition_not_void: Result /= Void
 		end
 
+	new_external_cflag (a_flag: STRING): ET_ECF_EXTERNAL_CFLAG
+			-- New external C flag
+		require
+			a_flag_not_void: a_flag /= Void
+		do
+			create Result.make (a_flag)
+		ensure
+			external_cflag_not_void: Result /= Void
+		end
+
+	new_external_cflags (a_external_cflag: ET_ECF_EXTERNAL_CFLAG): ET_ECF_EXTERNAL_CFLAGS
+			-- New external C flag list
+		require
+			a_external_cflag_not_void: a_external_cflag /= Void
+		do
+			create Result.make (a_external_cflag)
+		ensure
+			external_cflags_not_void: Result /= Void
+		end
+
 	new_external_include (a_pathname: STRING): ET_ECF_EXTERNAL_INCLUDE
 			-- New external include
 		require
@@ -216,6 +301,46 @@ feature -- AST factory
 			external_libraries_not_void: Result /= Void
 		end
 
+	new_external_linker_flag (a_flag: STRING): ET_ECF_EXTERNAL_LINKER_FLAG
+			-- New external linker flag
+		require
+			a_flag_not_void: a_flag /= Void
+		do
+			create Result.make (a_flag)
+		ensure
+			external_linker_flag_not_void: Result /= Void
+		end
+
+	new_external_linker_flags (a_external_linker_flag: ET_ECF_EXTERNAL_LINKER_FLAG): ET_ECF_EXTERNAL_LINKER_FLAGS
+			-- New external C flag list
+		require
+			a_external_linker_flag_not_void: a_external_linker_flag /= Void
+		do
+			create Result.make (a_external_linker_flag)
+		ensure
+			external_linker_flags_not_void: Result /= Void
+		end
+
+	new_external_make (a_pathname: STRING): ET_ECF_EXTERNAL_MAKE
+			-- New external make
+		require
+			a_pathname_not_void: a_pathname /= Void
+		do
+			create Result.make (a_pathname)
+		ensure
+			external_make_not_void: Result /= Void
+		end
+
+	new_external_makes (a_external_make: ET_ECF_EXTERNAL_MAKE): ET_ECF_EXTERNAL_MAKES
+			-- New external make list
+		require
+			a_external_make_not_void: a_external_make /= Void
+		do
+			create Result.make (a_external_make)
+		ensure
+			external_makes_not_void: Result /= Void
+		end
+
 	new_external_object (a_pathname: STRING): ET_ECF_EXTERNAL_OBJECT
 			-- New external object
 		require
@@ -234,6 +359,26 @@ feature -- AST factory
 			create Result.make (a_external_object)
 		ensure
 			external_objects_not_void: Result /= Void
+		end
+
+	new_external_resource (a_pathname: STRING): ET_ECF_EXTERNAL_RESOURCE
+			-- New external resource
+		require
+			a_pathname_not_void: a_pathname /= Void
+		do
+			create Result.make (a_pathname)
+		ensure
+			external_resource_not_void: Result /= Void
+		end
+
+	new_external_resources (a_external_resource: ET_ECF_EXTERNAL_RESOURCE): ET_ECF_EXTERNAL_RESOURCES
+			-- New external resource list
+		require
+			a_external_resource_not_void: a_external_resource /= Void
+		do
+			create Result.make (a_external_resource)
+		ensure
+			external_resources_not_void: Result /= Void
 		end
 
 	new_file_rule (a_exclude, a_include: detachable DS_HASH_SET [STRING]): ET_ECF_FILE_RULE
@@ -278,6 +423,14 @@ feature -- AST factory
 			condition_not_void: Result /= Void
 		end
 
+	new_options: ET_ECF_OPTIONS
+			-- New options
+		do
+			create Result.make
+		ensure
+			options_not_void: Result /= Void
+		end
+
 	new_platform_condition (a_value: STRING; a_excluded: BOOLEAN): ET_ECF_PLATFORM_CONDITION
 			-- New platform condition
 		do
@@ -288,6 +441,14 @@ feature -- AST factory
 			end
 		ensure
 			condition_not_void: Result /= Void
+		end
+
+	new_provider_groups: DS_ARRAYED_LIST [STRING]
+			-- New provider groups
+		do
+			create Result.make (10)
+		ensure
+			provider_groups_not_void: Result /= Void
 		end
 
 	new_root_all_classes: ET_ECF_ROOT_ALL_CLASSES
@@ -338,6 +499,24 @@ feature -- AST factory
 			create Result.make (a_target)
 		ensure
 			targets_not_void: Result /= Void
+		end
+
+	new_visible_class (a_class_name: STRING): ET_ECF_VISIBLE_CLASS
+			-- New visible class
+		require
+			a_class_name_not_void: a_class_name /= Void
+		do
+			create Result.make (a_class_name)
+		ensure
+			visible_class_not_void: Result /= Void
+		end
+
+	new_visible_classes: DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
+			-- New visible classes
+		do
+			create Result.make (10)
+		ensure
+			visible_classes_not_void: Result /= Void
 		end
 
 end

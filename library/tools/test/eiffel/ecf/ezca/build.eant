@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<project name="ezca" default="help">
+
+	<description>
+		system: "Test EZCA ECF errors"
+		copyright: "Copyright (c) 2017, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/test.eant">
+			<redefine target="other_install"/>
+			<redefine target="other_clean"/>
+			<redefine target="other_clobber"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="other_install" depend="init" export="NONE">
+		<description>
+			Install other items in ${system} directory.
+		</description>
+		<geant file="build.eant" target="install" dir="test1"/>
+		<geant file="build.eant" target="install" dir="test2"/>
+		<geant file="build.eant" target="install" dir="test3"/>
+		<geant file="build.eant" target="install" dir="test4"/>
+	</target>
+
+	<target name="other_clean" depend="init" export="NONE">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+		<geant file="build.eant" target="clean" dir="test1"/>
+		<geant file="build.eant" target="clean" dir="test2"/>
+		<geant file="build.eant" target="clean" dir="test3"/>
+		<geant file="build.eant" target="clean" dir="test4"/>
+		<delete directory="Ttest1"/>
+		<delete directory="Ttest2"/>
+		<delete directory="Ttest3"/>
+		<delete directory="Ttest4"/>
+	</target>
+
+	<target name="other_clobber" depend="init" export="NONE">
+		<description>
+			Remove other generated files.
+		</description>
+		<geant file="build.eant" target="clobber" dir="test1"/>
+		<geant file="build.eant" target="clobber" dir="test2"/>
+		<geant file="build.eant" target="clobber" dir="test3"/>
+		<geant file="build.eant" target="clobber" dir="test4"/>
+	</target>
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="xezca"/>
+		<set name="rule" value="ezca"/>
+		<set name="system_dir" value="${GOBO}/library/tools/test/eiffel/ecf/${rule}"/>
+	</target>
+
+</project>

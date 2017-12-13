@@ -411,14 +411,23 @@ feature {NONE} -- Compilation script generation
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_object_pathnames: DS_ARRAYED_LIST [STRING]
+			l_external_resource_pathnames: DS_ARRAYED_LIST [STRING]
+			l_external_make_pathnames: DS_ARRAYED_LIST [STRING]
+			l_external_cflags: DS_ARRAYED_LIST [STRING]
+			l_external_linker_flags: DS_ARRAYED_LIST [STRING]
 			l_includes: STRING
 			l_libs: STRING
+			l_cflags: STRING
+			l_lflags: STRING
+			l_cflag: STRING
+			l_lflag: STRING
 			l_pathname: STRING
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 			l_external_c_filenames: DS_HASH_TABLE [STRING, STRING]
 			l_rc_template: STRING
 			l_rc_filename: STRING
 			l_res_filename: STRING
+			l_make_template: STRING
 		do
 			l_base_name := a_system_name
 			l_c_config := c_config
@@ -434,6 +443,7 @@ feature {NONE} -- Compilation script generation
 			create l_com_runtime_regexp.make
 			l_com_runtime_regexp.set_case_insensitive (True)
 			l_com_runtime_regexp.compile ("(.*[\\/]library[\\/]com[\\/]).*[\\/](mt)?com_runtime\.(lib|a)")
+				-- Include files.
 			create l_includes.make (256)
 			l_external_include_pathnames := current_system.external_include_pathnames
 			nb := l_external_include_pathnames.count
@@ -451,6 +461,49 @@ feature {NONE} -- Compilation script generation
 				i := i + 1
 			end
 			l_variables.force (l_includes, "includes")
+				-- C flags.
+			create l_cflags.make (256)
+			l_c_config.search ("cflags")
+			if l_c_config.found then
+				l_cflags.append_string (l_c_config.found_item)
+			end
+			l_external_cflags := current_system.external_cflags
+			nb := l_external_cflags.count
+			from i := 1 until i > nb loop
+				l_cflag := l_external_cflags.item (i)
+				l_env_regexp.match (l_cflag)
+				l_replacement := STRING_.new_empty_string (l_cflag, 6)
+				l_replacement.append_string ("${\1\}")
+				l_cflag := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				if not l_cflags.is_empty then
+					l_cflags.append_character (' ')
+				end
+				l_cflags.append_string (l_cflag)
+				i := i + 1
+			end
+			l_variables.force (l_cflags, "cflags")
+				-- Linker flags.
+			create l_lflags.make (256)
+			l_c_config.search ("lflags")
+			if l_c_config.found then
+				l_lflags.append_string (l_c_config.found_item)
+			end
+			l_external_linker_flags := current_system.external_linker_flags
+			nb := l_external_linker_flags.count
+			from i := 1 until i > nb loop
+				l_lflag := l_external_linker_flags.item (i)
+				l_env_regexp.match (l_lflag)
+				l_replacement := STRING_.new_empty_string (l_lflag, 6)
+				l_replacement.append_string ("${\1\}")
+				l_lflag := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				if not l_lflags.is_empty then
+					l_lflags.append_character (' ')
+				end
+				l_lflags.append_string (l_lflag)
+				i := i + 1
+			end
+			l_variables.force (l_lflags, "lflags")
+				-- C libraries.
 			create l_external_c_filenames.make_map (10)
 			l_external_c_filenames.set_key_equality_tester (string_equality_tester)
 			create l_libs.make (256)
@@ -477,7 +530,9 @@ feature {NONE} -- Compilation script generation
 				i := i + 1
 			end
 			l_variables.force (l_libs, "libs")
+				-- Executable name.
 			l_variables.force (l_base_name + l_c_config.item ("exe"), "exe")
+				-- Object files.
 			create l_obj_filenames.make (100)
 			l_obj := l_c_config.item ("obj")
 			l_cursor := c_filenames.new_cursor
@@ -519,6 +574,7 @@ feature {NONE} -- Compilation script generation
 				l_cursor.forth
 			end
 			l_variables.force (l_obj_filenames, "objs")
+				-- Script.
 			if operating_system.is_windows then
 				l_script_filename := l_base_name + bat_file_extension
 			else
@@ -531,6 +587,24 @@ feature {NONE} -- Compilation script generation
 					l_file.put_line ("@echo off")
 				else
 					l_file.put_line ("#!/bin/sh")
+				end
+					-- Make files.
+				l_c_config.search ("make")
+				if l_c_config.found then
+					l_make_template := l_c_config.found_item
+					l_external_make_pathnames := current_system.external_make_pathnames
+					nb := l_external_make_pathnames.count
+					from i := 1 until i > nb loop
+						l_pathname := l_external_make_pathnames.item (i)
+						l_env_regexp.match (l_pathname)
+						l_replacement := STRING_.new_empty_string (l_pathname, 6)
+						l_replacement.append_string ("${\1\}")
+						l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+						l_variables.force (l_pathname, "makefile")
+						l_command_name := template_expander.expand_from_values (l_make_template, l_variables)
+						l_file.put_line (l_command_name)
+						i := i + 1
+					end
 				end
 					-- Compile files in reverse order so that it looks like
 					-- a countdown since the filenames are numbered.
@@ -551,10 +625,39 @@ feature {NONE} -- Compilation script generation
 					l_file.put_line (l_command_name)
 					l_cursor.forth
 				end
-					-- Resource file.
+					-- Resource files.
 				l_c_config.search ("rc")
 				if l_c_config.found then
 					l_rc_template := l_c_config.found_item
+					l_external_resource_pathnames := current_system.external_resource_pathnames
+					nb := l_external_resource_pathnames.count
+					from i := 1 until i > nb loop
+						l_pathname := l_external_resource_pathnames.item (i)
+						l_env_regexp.match (l_pathname)
+						l_replacement := STRING_.new_empty_string (l_pathname, 6)
+						l_replacement.append_string ("${\1\}")
+						l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+						if file_system.has_extension (l_pathname, res_file_extension) then
+							l_res_filename := l_pathname
+						else
+							l_rc_filename := l_pathname
+							if file_system.has_extension (l_pathname, rc_file_extension) then
+								l_res_filename := l_pathname.twin
+								l_res_filename.remove_tail (rc_file_extension.count)
+								l_res_filename.append_string (res_file_extension)
+							else
+								l_res_filename := l_pathname.twin
+								l_res_filename.append_string (res_file_extension)
+							end
+							l_variables.force (l_rc_filename, "rc_file")
+							l_variables.force (l_res_filename, "res_file")
+							l_command_name := template_expander.expand_from_values (l_rc_template, l_variables)
+							l_file.put_line (l_command_name)
+						end
+						l_obj_filenames.append_character (' ')
+						l_obj_filenames.append_string (l_res_filename)
+						i := i + 1
+					end
 					l_rc_filename :=  l_base_name + rc_file_extension
 					if file_system.file_exists (l_rc_filename) then
 						l_res_filename := l_base_name + res_file_extension

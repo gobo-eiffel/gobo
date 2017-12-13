@@ -5,7 +5,7 @@ note
 		"ECF Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class ET_ECF_CLUSTER
 inherit
 
 	ET_CLUSTER
+		undefine
+			lower_name
 		redefine
 			parent, subclusters,
 			full_pathname, full_unix_pathname,
@@ -23,7 +25,7 @@ inherit
 			universe
 		end
 
-	ET_ECF_CONDITIONED
+	ET_ECF_GROUP
 
 	UT_SHARED_ECF_VERSIONS
 		export {NONE} all end
@@ -39,6 +41,7 @@ feature {NONE} -- Initialization
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
+			a_pathname_not_void: a_pathname /= Void
 			a_universe_not_void: a_universe /= Void
 		do
 			name := a_name
@@ -63,60 +66,58 @@ feature -- Access
 	name: STRING
 			-- Name
 
-	pathname: detachable STRING
-			-- Directory pathname (may be Void)
+	pathname: STRING
+			-- Directory pathname
 
 	full_pathname: STRING
 			-- Full directory pathname
 		local
-			a_pathname: detachable STRING
+			a_pathname: STRING
 			parent_pathname: STRING
 			a_basename: STRING
 			l_ecf_filename: STRING
 			i, nb: INTEGER
 		do
 			a_pathname := pathname
-			if a_pathname /= Void then
-					-- Get rid of '|' as directory separator.
-				if a_pathname.has ('|') then
-					a_pathname := a_pathname.twin
-					nb := a_pathname.count
-					from i := 1 until i > nb loop
-						if a_pathname.item (i) = '|' then
-							a_pathname.put ('/', i)
-						end
-						i := i + 1
+				-- Get rid of '|' as directory separator.
+			if a_pathname.has ('|') then
+				a_pathname := a_pathname.twin
+				nb := a_pathname.count
+				from i := 1 until i > nb loop
+					if a_pathname.item (i) = '|' then
+						a_pathname.put ('/', i)
 					end
+					i := i + 1
 				end
-					-- Process special case where the pathname starts with "$/..."
-					-- or "$\...". The '$' sign will be replaced by the full pathname
-					-- of the parent cluster if any.
-				if a_pathname.count > 2 and then a_pathname.item (1) = '$' then
-					inspect a_pathname.item (2)
-					when '/', '\' then
-						a_pathname := a_pathname.substring (3, a_pathname.count)
-					else
-						-- Not relative.
-					end
-				end
-					-- Expanded variables of the form $NAME or ${NAME}.
-				a_pathname := Execution_environment.interpreted_string (a_pathname)
-					-- Make sure that the directory separator symbol is the
-					-- one of the current file system. We take advantage of
-					-- the fact that `windows_file_system' accepts both '\'
-					-- and '/' as directory separator.
-				a_pathname := file_system.pathname_from_file_system (a_pathname, windows_file_system)
 			end
+				-- Process special case where the pathname starts with "$/..."
+				-- or "$\...". The '$' sign will be replaced by the full pathname
+				-- of the parent cluster if any.
+			if a_pathname.count > 2 and then a_pathname.item (1) = '$' then
+				inspect a_pathname.item (2)
+				when '/', '\' then
+					a_pathname := a_pathname.substring (3, a_pathname.count)
+				else
+					-- Not relative.
+				end
+			end
+				-- Expanded variables of the form $NAME or ${NAME}.
+			a_pathname := Execution_environment.interpreted_string (a_pathname)
+				-- Make sure that the directory separator symbol is the
+				-- one of the current file system. We take advantage of
+				-- the fact that `windows_file_system' accepts both '\'
+				-- and '/' as directory separator.
+			a_pathname := file_system.pathname_from_file_system (a_pathname, windows_file_system)
 			if is_relative and attached parent as l_parent then
 				parent_pathname := l_parent.full_pathname
-				if a_pathname /= Void and then a_pathname.count > 0 then
+				if a_pathname.count > 0 then
 					a_basename := a_pathname
 				else
 					a_basename := name
 				end
 				Result := file_system.pathname (parent_pathname, a_basename)
 			else
-				if a_pathname /= Void and then a_pathname.count > 0 then
+				if a_pathname.count > 0 then
 					Result := a_pathname
 				else
 					Result := name
@@ -139,17 +140,44 @@ feature -- Access
 	file_rules: detachable ET_ECF_FILE_RULES
 			-- File rules
 
-	ecf_file_rules: detachable ET_ECF_FILE_RULES
+	conditioned_file_rules: detachable ET_ECF_FILE_RULES
 			-- File rules as they appear in the ECF file;
 			-- Some of them might not be included in `file_rules'
 			-- depending on their associated condition, whereas
 			-- some others from parent clusters or targets may be
 			-- included in `file_rules'.
 
+	classname_prefix: detachable STRING
+			-- Prefix for class names when using classes of current group
+			-- (may be Void)
+
+	class_renamings: detachable DS_HASH_TABLE [STRING, STRING]
+			-- Class renaming, indexed by old class names in upper-case,
+			-- when using classes of current group
+			-- (may be Void)
+
+	class_mappings: detachable DS_HASH_TABLE [STRING, STRING]
+			-- Class mapping, indexed by new class names in upper-case
+			-- (may be Void)
+
+	visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
+			-- Classes and features accessible from other languages
+
+	overridden_group: detachable STRING
+			-- Name of the group current cluster overrides, if specified.
+			-- Meaningful only when `is_override' is True
+
+	provider_groups: detachable DS_ARRAYED_LIST [STRING]
+			-- Names of the groups that current cluster depends on, if specified
+
 	universe: ET_ECF_INTERNAL_UNIVERSE
 			-- Surrounding universe
 
 feature -- Status report
+
+	is_hidden: BOOLEAN
+			-- Should the classes of current cluster not be exported when used as library?
+			-- See ET_ADAPTED_UNIVERSE.export_classes.
 
 	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel filename which has
@@ -199,7 +227,7 @@ feature -- Nested
 	subclusters: detachable ET_ECF_CLUSTERS
 			-- Subclusters
 
-	ecf_subclusters: detachable ET_ECF_CLUSTERS
+	conditioned_subclusters: detachable ET_ECF_CLUSTERS
 			-- Subclusters as they appear in the ECF file;
 			-- Some of them might not be included in `subclusters'
 			-- depending on their associated condition.
@@ -214,32 +242,100 @@ feature -- Setting
 			file_rules_set: file_rules = a_file_rules
 		end
 
-	set_ecf_file_rules (a_file_rules: like ecf_file_rules)
-			-- Set `ecf_file_rules' to `a_file_rules'.
+	set_conditioned_file_rules (a_file_rules: like conditioned_file_rules)
+			-- Set `conditioned_file_rules' to `a_file_rules'.
 		do
-			ecf_file_rules := a_file_rules
+			conditioned_file_rules := a_file_rules
 		ensure
-			ecf_file_rules_set: ecf_file_rules = a_file_rules
+			conditioned_file_rules_set: conditioned_file_rules = a_file_rules
 		end
 
-	set_ecf_subclusters (a_subclusters: like ecf_subclusters)
-			-- Set `ecf_subclusters' to `a_subclusters'.
+	set_conditioned_subclusters (a_subclusters: like conditioned_subclusters)
+			-- Set `conditioned_subclusters' to `a_subclusters'.
 		do
-			if attached ecf_subclusters as l_ecf_subclusters then
-				l_ecf_subclusters.set_parent (Void)
+			if attached conditioned_subclusters as l_conditioned_subclusters then
+				l_conditioned_subclusters.set_parent (Void)
 			end
-			ecf_subclusters := a_subclusters
+			conditioned_subclusters := a_subclusters
 			if a_subclusters /= Void then
 				a_subclusters.set_parent (Current)
 			end
 		ensure
-			ecf_subclusters_set: ecf_subclusters = a_subclusters
+			conditioned_subclusters_set: conditioned_subclusters = a_subclusters
+		end
+
+	set_classname_prefix (a_prefix: like classname_prefix)
+			-- Set `classname_prefix' to `a_prefix'.
+		do
+			classname_prefix := a_prefix
+		ensure
+			classname_prefix_set: classname_prefix = a_prefix
+		end
+
+	set_class_renamings (a_renamings: like class_renamings)
+			-- Set `class_renamings' to `a_renamings'.
+		require
+			no_void_new_class_renaming: a_renamings /= Void implies not a_renamings.has_void
+			no_void_old_class_renaming: a_renamings /= Void implies not a_renamings.has_void_item
+		do
+			class_renamings := a_renamings
+		ensure
+			class_renamings_set: class_renamings = a_renamings
+		end
+
+	set_class_mappings (a_mappings: like class_mappings)
+			-- Set `class_mappings' to `a_mappings'.
+		require
+			no_void_old_class_mapping: a_mappings /= Void implies not a_mappings.has_void
+			no_void_new_class_mapping: a_mappings /= Void implies not a_mappings.has_void_item
+		do
+			class_mappings := a_mappings
+		ensure
+			class_mappings_set: class_mappings = a_mappings
+		end
+
+	set_visible_classes (a_visible_classes: like visible_classes)
+			-- Set `visible_classes' to `a_visible_classes'.
+		require
+			no_void_visible_class: a_visible_classes /= Void implies not a_visible_classes.has_void
+		do
+			visible_classes := a_visible_classes
+		ensure
+			visible_classes_set: visible_classes = a_visible_classes
+		end
+
+feature -- Status setting
+
+	set_hidden (b: BOOLEAN)
+			-- Set `is_hidden' to `b'.
+		do
+			is_hidden := b
+		ensure
+			hidden_set: is_hidden = b
+		end
+
+	set_overridden_group (a_overridden_group: like overridden_group)
+			-- Set `overridden_group' to `a_overridden_group'.
+		do
+			overridden_group := a_overridden_group
+		ensure
+			overridden_group_set: overridden_group = a_overridden_group
+		end
+
+	set_provider_groups (a_provider_groups: like provider_groups)
+			-- Set `provider_groups' to `a_provider_groups'.
+		require
+			no_void_group: a_provider_groups /= Void implies not a_provider_groups.has_void
+		do
+			provider_groups := a_provider_groups
+		ensure
+			provider_groups_set: provider_groups = a_provider_groups
 		end
 
 feature -- Element change
 
 	fill_subclusters (a_state: ET_ECF_STATE)
-			-- Make sure that clusters in `ecf_subclusters' whose conditions
+			-- Make sure that clusters in `conditioned_subclusters' whose conditions
 			-- satisfy `a_state' are included in `subclusters'.
 			-- Process recursively the clusters in `subclusters'.
 		require
@@ -248,10 +344,10 @@ feature -- Element change
 			i, nb: INTEGER
 			l_cluster: ET_ECF_CLUSTER
 		do
-			if attached ecf_subclusters as l_ecf_subclusters then
-				nb := l_ecf_subclusters.count
+			if attached conditioned_subclusters as l_conditioned_subclusters then
+				nb := l_conditioned_subclusters.count
 				from i := 1 until i > nb loop
-					l_cluster := l_ecf_subclusters.cluster (i)
+					l_cluster := l_conditioned_subclusters.cluster (i)
 					if l_cluster.is_enabled (a_state) then
 						add_subcluster (l_cluster)
 						l_cluster.fill_subclusters (a_state)
@@ -263,7 +359,7 @@ feature -- Element change
 
 	fill_file_rules (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE)
 			-- Make sure that file rules in `a_target', in `parent' if any,
-			-- and in `ecf_file_rules' whose conditions satisfy `a_state'
+			-- and in `conditioned_file_rules' whose conditions satisfy `a_state'
 			-- are included in `file_rules'.
 			-- Process recursively the clusters in `subclusters'.
 		require
@@ -283,8 +379,8 @@ feature -- Element change
 					l_parent_file_rules.fill_file_rules (l_file_rules, a_state)
 				end
 			end
-			if attached ecf_file_rules as l_ecf_file_rules then
-				l_ecf_file_rules.fill_file_rules (l_file_rules, a_state)
+			if attached conditioned_file_rules as l_conditioned_file_rules then
+				l_conditioned_file_rules.fill_file_rules (l_file_rules, a_state)
 			end
 			if attached subclusters as l_subclusters then
 				l_subclusters.do_all (agent {ET_ECF_CLUSTER}.fill_file_rules (a_target, a_state))
@@ -296,14 +392,32 @@ feature {NONE} -- Implementation
 	new_recursive_cluster (a_name: STRING): like Current
 			-- New recursive cluster
 		do
-			create Result.make (a_name, Void, universe)
+			create Result.make (a_name, a_name, universe)
 			Result.set_parent (Current)
 			Result.set_file_rules (file_rules)
 			Result.set_recursive (True)
 			Result.set_implicit (True)
 			Result.set_override (is_override)
 			Result.set_read_only (is_read_only)
+			Result.set_hidden (is_hidden)
 			Result.set_use_obsolete_syntax (use_obsolete_syntax)
+			Result.set_classname_prefix (classname_prefix)
+			Result.set_class_renamings (class_renamings)
+			Result.set_class_mappings (class_mappings)
+			Result.set_options (options)
+			Result.set_class_options (class_options)
+			Result.set_visible_classes (visible_classes)
+			Result.set_provider_groups (provider_groups)
+			Result.set_overridden_group (overridden_group)
 		end
+
+invariant
+
+	no_void_old_class_renaming: attached class_renamings as l_class_renamings implies not l_class_renamings.has_void
+	no_void_new_class_renaming: attached class_renamings as l_class_renamings implies not l_class_renamings.has_void_item
+	no_void_new_class_mapping: attached class_mappings as l_class_mappings implies not l_class_mappings.has_void
+	no_void_old_class_mapping: attached class_mappings as l_class_mappings implies not l_class_mappings.has_void_item
+	no_void_visible_class: attached visible_classes as l_visible_classes implies not l_visible_classes.has_void
+	no_void_provider_group: attached provider_groups as l_provider_groups implies not l_provider_groups.has_void
 
 end
