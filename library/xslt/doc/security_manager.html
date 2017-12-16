@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>The Security Manager</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>The Security Manager</strong></font></td>
+    <td align="right"><a href="output_resolver.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="transformer.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   This interface enables the programmer to configure
+   security needs for the application. Your application needs
+   to consider how a user of the library is authenticated, and how it is going to
+   map user identifiers to authorization domains. Implementing this interface is your
+   way to inform the XSLT library of these decisions.
+   
+  </p>
+  <div>
+   
+   <h2>Features</h2>
+   
+   <dl>
+    
+    <dt><font color="#008080"><i><tt>is_uri_permitted</tt></i></font></dt>
+    <dd>
+     	    This routine (inherited from <font color="#008080"><i><tt>XM_XPATH_SECURITY_MANAGER</tt></i></font>) is called
+     	    by the <font color="#008080">fn:doc(), fn:doc-available() and fn:document()</font> functions to check that it is permissible
+     	    to read from the URI given as an argument to the function, so as to protect sensitive data
+     	    from being seen by unauthorized personnel.
+     	  
+    </dd>
+    
+    <dt><font color="#008080"><i><tt>is_output_uri_permitted</tt></i></font></dt>
+    <dd>
+     	    This routine is supposed to be called by the <font color="#008080"><i><tt>XM_XSLT_OUTPUT_URI_RESOLVER</tt></i></font> to decide
+     	    if an <font color="#008080">xsl:result-document</font> has permission to write to the URI specified as the value of
+     	    it's <font color="#008080">href</font> attribute. If your implementation withholds permission, then the transformation will be terminated
+     	    with the non recoverable error: <font color="#008080">http://www.gobosoft.com/eiffel/gobo/gexslt/extension#OUTPUT_RESOLVER_ERROR</font>.
+     	  
+    </dd>
+    
+    <dt><font color="#008080"><i><tt>is_highly_secure / set_high_security</tt></i></font></dt>
+    <dd>
+     	    This pair of features enables your security manager to act in a bi-modal fashion. The interpretation
+     	    of what high security means is entirely up to you.
+     	  
+    </dd>
+    
+   </dl>
+   
+  </div>
+  <div><a name="xslt_default_security_manager"></a>
+   
+   <h2>The default security manager: <i><tt>XM_XSLT_DEFAULT_SECURITY_MANAGER</tt></i></h2>
+   
+   <p>
+    This is the only concrete security manager provided by the library. If it is not suitable for your needs,
+    then you must write your own, and supply it to the creation routine of your 
+    <font color="#008080"><i><tt>XM_XSLT_OUTPUT_URI_RESOLVER</tt></i></font>.
+    
+   </p>
+   
+   <p>
+    This implementation unconditionally allows all requests to read from a resource. For requests to write to
+    a resource, it examines the state of the <font color="#008080"><i><tt>is_highly_secure</tt></i></font> attribute. If this
+    is <font color="#008080"><i><tt>True</tt></i></font>, then it only allows writing to URIs of the <font color="#008080">stdout</font> and <font color="#008080">string</font> schemes.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Tuesday, October 11th, 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="output_resolver.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="transformer.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,148 @@
+<?xml version="1.0" ?>
+
+<project name="geant_example" default="all">
+
+	<target name="all">
+		<description>execute all examples</description>
+		<mkdir directory="${GOBO}/tool/geant/example/tmp"/>
+		<geant target="hello"/>
+		<geant target="variables"/>
+		<geant target="filesystem"/>
+		<geant target="exec"/>
+		<geant target="exec"/>
+		<geant target="depend"/>
+		<geant target="conditional"/>
+		<geant target="geant"/>
+		<geant target="gexace"/>
+		<geant target="inherit"/>
+		<geant target="misc"/>
+		<delete directory="${GOBO}/tool/geant/example/tmp"/>
+	</target>
+	
+	<target name="hello" dir="hello">
+		<description>execute hello example</description>
+		<geant file="build.eant" target="hi"/>
+	</target>
+
+	<target name="variables" dir="variables">
+		<description>execute variables examples</description>
+		<geant file="variables1.eant" target="var"/>
+		
+		<geant file="variables2.eant" target="var"/>
+		<geant file="variables3.eant" target="var"/>
+		<geant file="variables4.eant" target="var"/>
+		
+		<set name="who" value="Bart"/>
+		<geant file="variables5.eant" reuse_variables="true" target="var"/>
+		<unset name="who"/>
+		<geant file="variables5.eant" reuse_variables="true" target="var"/>
+
+		<geant file="variables5.eant" target="setenv"/>
+		<geant file="variables5.eant" target="cwd"/>
+	
+	</target>
+
+	<target name="filesystem" dir="filesystem">
+		<description>execute filesystem examples</description>
+		<geant file="build.eant" target="copy_file1"/>
+		<geant file="build.eant" target="copy_file2"/>
+		<geant file="build.eant" target="copy_file3"/>
+		<geant file="build.eant" target="copy_fs1a"/>
+		<geant file="build.eant" target="copy_fs1b"/>
+		<geant file="build.eant" target="copy_fs2a"/>
+		<geant file="build.eant" target="copy_fs2b"/>
+		<geant file="build.eant" target="copy_fs3a"/>
+		<geant file="build.eant" target="move_file1"/>
+		<geant file="build.eant" target="move_file2"/>
+		<geant file="build.eant" target="delete_file1"/>
+	</target>
+
+	<target name="exec" dir="exec">
+		<description>execute exec example</description>
+		
+		<!-- problem: -->
+		<!-- <geant file="exec1.eant"/> -->
+		
+	</target>
+
+	<target name="depend" dir="depends">
+		<description>execute depend examples</description>
+		
+		<geant file="depends1.eant" target="A"/>
+		<geant file="depends1.eant" target="C"/>
+		<geant file="depends2.eant" target="D"/>
+		<geant file="depends3.eant" target="A"/>
+		<geant file="depends3.eant" target="D"/>
+		
+	</target>
+
+	<target name="conditional" dir="conditional">
+		<description>execute conditional examples</description>
+		
+		<geant file="if1.eant" target="C"/>
+
+		<set name="runa" value="dummy"/>
+		<geant file="if1.eant" target="C" reuse_variables="true"/>
+
+		<set name="runb" value="dummy"/>
+		<geant file="if1.eant" target="C" reuse_variables="true"/>
+
+		<unset name="runb"/>
+		<geant file="if1.eant" target="C" reuse_variables="true"/>
+
+		<geant file="if2.eant" target="list"/>
+		<geant file="if3.eant" target="list"/>
+		<geant file="if4.eant" target="info"/>
+		
+		<geant file="if5.eant" reuse_variables="true" target="A"/>
+		
+		<set name="taska" value="dummy"/>
+		<geant file="if5.eant" reuse_variables="true" target="A"/>
+	
+		<geant file="if5.eant" target="testbreak"/>
+
+		<!-- <set name="DEBUG" value="dummy"/>  -->
+		<!-- <geant file="if5.eant" target="gexace" reuse_variables="true"/> -->
+		<echo message="**2**"/>
+
+		<geant file="if5.eant" target="gepp"/>
+		<echo message="**3**"/>
+	</target>
+
+	<target name="geant" dir="geant">
+		<description>execute geant examples</description>
+		<geant file="geant1.eant" target="one"/>
+		<geant file="geant2.eant" target="one"/>
+	</target>
+
+	<target name="gexace" dir="gexace">
+		<description>execute gexace examples</description>
+		<geant file="build.eant" dir="hello" target="compile"/>
+		<geant file="build.eant" target="run" dir="hello"/>
+		<geant file="build.eant" target="clean" dir="hello"/>
+	</target>
+
+	<target name="inherit" dir="inherit">
+		<description>execute inherit examples</description>
+		<geant file="b.eant" target="f1"/>
+		<geant file="b.eant" target="f2"/>
+	</target>
+
+	<target name="misc" dir="misc">
+		<description>execute misc examples</description>
+		<geant file="outofdate.eant" target="ood1"/>
+	</target>
+
+	<target name="install">
+		<!-- do nothing -->
+	</target>
+
+	<target name="clean">
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber">
+		<!-- do nothing -->
+	</target>
+
+</project>

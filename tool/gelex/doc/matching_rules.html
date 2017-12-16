@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gelex: Matching Rules</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Matching Rules</strong></font></td>
+        <td align="right"><a href="patterns.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a
+        href="start_conditions.html"><img src="image/next.gif"
+        alt="Next" border="0" width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>When the generated scanner is run, it analyzes its input
+looking for strings which match any of its patterns. If it finds
+more than one match, it takes the one matching the most text (for
+trailing context rules, this includes the length of the trailing
+part, even though it will then be returned to the input). If it
+finds two or more matches of the same length, the rule listed
+first in the <em>gelex</em> description file is chosen.</p>
+
+<p>Once the match is determined, the text corresponding to the
+match (called the <em><strong>token</strong></em>) is made
+available through function <a href="actions.html#text"><font
+color="#008080"><em><tt>text</tt></em></font></a>, and its length
+through function <a href="actions.html#text_count"><font
+color="#008080"><em><tt>text_count</tt></em></font></a> from
+class <a href="skeleton.html"><font color="#008080"><em><tt>YY_SCANNER</tt></em></font></a>.
+The action corresponding to the matched pattern is then executed
+(a more detailed description of <a href="actions.html">actions</a>
+follows), and then the remaining input is scanned for another
+match.</p>
+
+<h2><a name="default_rule">Default Rule</a></h2>
+
+<p>If no match is found, then the <em><strong>default rule</strong></em>
+is executed: the next character in the input is considered
+matched and copied to the standard output. Thus, the simplest
+legal <em>gelex</em> input has an empty <a
+href="description.html#rules">rules section</a>:</p>
+
+<blockquote>
+    <pre><font color="#0000FF"><tt>%{
+</tt></font><font color="#008080"><em><strong><tt>class</tt></strong></em><tt> ...</tt></font><font
+color="#0000FF"><tt>
+%}
+%%
+%%</tt></font><tt>
+    </tt><font color="#008080"><tt>...</tt></font></pre>
+</blockquote>
+
+<p>which generates a scanner that simply copies its input (one
+character at a time) to its output. The semantic action of the
+default rule can be overriden just by redefining the feature <a
+href="skeleton.html#default_action"><font color="#008080"><em><tt>default_action</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>which is inherited from
+class <a href="skeleton.html"><font color="#008080"><em><tt>YY_SCANNER</tt></em></font></a>.</p>
+
+<p>Note that if the <font color="#0000FF"><tt>%option</tt></font>
+<a href="options.html#nodefault"><font color="#800000"><tt>nodefault</tt></font></a>
+or the command-line option <font color="#800000"><tt>-s</tt></font>
+is specified, then the default rule is disabled. If the scanner
+encounters input that does not match any of its rules, it aborts
+with an error. This option is useful for finding holes in a
+scanner's rule set. The default rule can then be simulated by
+adding the following rule at the end of the rules section:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">.|\n</font>    <font
+color="#008080"><em>default_action</em></font></pre>
+</blockquote>
+
+<h2><a name="eof_rules">End-of-file Rules</a></h2>
+
+<p>When the scanner receives an end-of-file indication from its
+input buffer, it then checks the <a href="skeleton.html#wrap"><font
+color="#008080"><em><tt>wrap</tt></em></font></a> function. If
+<font color="#008080"><em><tt>wrap</tt></em></font> returns false,
+then it is assumed that the function has gone ahead and set up the
+scanner to point to another input buffer using <a
+href="actions.html#set_input_buffer"><font
+color="#008080"><em><tt>set_input_buffer</tt></em></font></a>,
+and scanning continues. If it returns true, then there is no further
+files to process. By default, <font color="#008080"><em><tt>wrap</tt></em></font>
+returns true, but this routine can be redefined as in the following
+example:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%{</font>
+<font color="#008080"><em><strong>class</strong></em><em> MY_SCANNER
+
+</em><em><strong>inherit</strong></em><em>
+
+    YY_COMPRESSED_SCANNER_SKELETON
+        </em><em><strong>rename</strong></em><em>
+            ...
+        </em><em><strong>redefine</strong></em><em>
+            wrap, ...
+        </em><em><strong>end</strong></em><em>
+
+</em><em><strong>create</strong></em><em>
+
+    make</em></font>
+<font color="#0000FF">%}</font>
+...
+<font color="#0000FF">%%</font>
+...
+<font color="#0000FF">%%</font>
+
+    <font color="#008080"><em>wrap</em>:<em> BOOLEAN </em><em><strong>is</strong></em><em>
+            </em>-- Should current scanner terminate when end of file is reached?<em>
+        </em><em><strong>do</strong></em><em>
+            </em><em><strong>if </strong></em><em>other_file_available </em><em><strong>then</strong></em><em>
+                set_input_buffer </em>(<em>new_file_buffer </em>(<em>other_file</em>))<em>
+            </em><em><strong>else</strong></em><em>
+                Result </em>:=<em> True
+            </em><em><strong>end</strong></em><em>
+        </em><em><strong>end</strong></em><em>
+
+    ...
+
+</em><em><strong>end</strong></em><em> </em></font></pre>
+</blockquote>
+
+<p>Note that in either case, the <a href="start_conditions.html">start condition</a>
+remains unchanged; it does not revert to <font color="#800000"><tt>INITIAL</tt></font>.</p>
+
+<p>The special rule <font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font>
+indicates actions which are to be taken when an end-of-file is encountered and
+<font color="#008080"><em><tt>wrap</tt></em></font> returns true. The action
+must finish by doing one of three things:</p>
+
+<ul>
+    <li>setting <a
+        href="actions.html#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a>
+        to a non-negative value</font></li>
+    <li>calling the special action <a
+        href="actions.html#terminate"><font color="#008080"><em><tt>terminate</tt></em></font></a></li>
+    <li>switching to a new buffer using <font color="#008080"><em><tt>set_input_buffer</tt></em></font>.</li>
+</ul>
+
+<p><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font> rules may
+not be used with other patterns; they may only be qualified with a list
+of start conditions. If an unqualified <font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font>
+rule is given, it applies to all start conditions which do not already have
+<font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font> actions.
+If a start condition has no <font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font>
+action associated with it, it will by default execute the <font
+color="#008080"><em><tt>terminate</tt></em></font> action. To specify an
+<font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font> rule for only
+the initial start condition, use:</p>
+
+<blockquote>
+    <pre><font color="#800000">&lt;INITIAL&gt;</font><font
+color="#FF0000">&lt;&lt;EOF&gt;&gt;</font></pre>
+</blockquote>
+
+<p>These rules are useful for catching things like
+unclosed comments. An example:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%x</font> <font
+color="#800000">quote</font><font face="Times New Roman">
+</font><font color="#0000FF">%%</font><font face="Times New Roman">
+</font>...other rules for dealing with quotes...
+<font color="#800000">&lt;quote&gt;</font><font
+color="#FF0000">&lt;&lt;EOF&gt;&gt;</font> <font
+color="#0000FF">{</font><font face="Times New Roman">
+                   </font><font color="#008080"><em>io.error.put_string</em> (<em>&quot;unterminated quote%N&quot;</em>)<em>
+       terminate</em></font><font face="Times New Roman">
+            </font><font color="#0000FF">}</font><font face="Times New Roman">
+</font><font color="#FF0000">&lt;&lt;EOF&gt;&gt;</font> <font
+color="#0000FF">{</font>
+       <font color="#008080"><em><strong>if</strong></em><em> </em><em><strong>not</strong></em><em> file_list.after </em><em><strong>then</strong></em><em>
+           set_input_buffer </em>(<em>new_file_buffer </em>(<em>file_list.item</em>))<em>
+           file_list.forth
+       </em><em><strong>else</strong></em><em>
+           terminate
+       </em><em><strong>end</strong></em></font>
+     <font color="#0000FF">}</font>
+<font color="#0000FF">%%</font></pre>
+</blockquote>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 16 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="patterns.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a
+        href="start_conditions.html"><img src="image/next.gif"
+        alt="Next" border="0" width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

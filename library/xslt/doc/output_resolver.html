@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>The Output URI Resolver</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>The Output URI Resolver</strong></font></td>
+    <td align="right"><a href="configuration.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="security_manager.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   This interface is used to resolve the destination URI specified by the 
+   <font color="#008080"><i><tt>href</tt></i></font> attribute of <font color="#008080"><i><tt>xsl:result-document</tt></i></font>. 
+   It is <i>not</i> used to resolve the principal output destination, as that is under the direct control of
+   the user of the XSLT library, not the stylesheet author.
+   
+  </p>
+  <div>
+   
+   <h2>Features</h2>
+   
+   <dl>
+    
+    <dt><font color="#008080"><i><tt>security_manager</tt></i></font></dt>
+    <dd>
+     	    The <a href="security_manager.html"><font color="#008080"><i><tt>XM_XSLT_SECURITY_MANAGER</tt></i></font></a> is an interface
+     	    which allows pluggable security policies. When the output resolver's <font color="#008080"><i><tt>resolve</tt></i></font> routine 
+     	    is called, it in turn is supposed to call <font color="#008080"><i><tt>is_output_uri_permitted</tt></i></font>
+     	    on the security manager, to check that it is permitted to write to the URI in question.
+     	  
+    </dd>
+    
+    <dt><font color="#008080"><i><tt>output_destinations</tt></i></font></dt>
+    <dd>
+     	    This is a map of output URIs to the <a href="transformation_result.html"><font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font></a>s
+     	    allocated to them. This is particularly useful when the principal output destination is to
+     	    a <font color="#008080"><i><tt>STRING</tt></i></font> (selected by a <font color="#008080">string:</font> URI), and the <font color="#008080">href</font>
+     	    attribute of <font color="#008080">xsl:result-document</font> supplies a relative URL. In this case, the output resolver
+     	    will allocate a <a href="transformation_result.html"><font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font></a> that wraps a 
+     	    <font color="#008080"><i><tt>STRING</tt></i></font>. The Eiffel programmer can then retrieve this as it is indexed by the absolute URI.
+     	    For example, if the principal output destination (as supplied by the Eiffel programmer) is <font color="#008080">string:</font>,
+     	    and the stylesheet specifies <font color="#008080">href="one"</font>, then the absolute URI is <font color="#008080">string:/one</font>,
+     	    and this can be used to retrieve the <a href="transformation_result.html"><font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font></a>, and
+     	    hence the <font color="#008080"><i><tt>STRING</tt></i></font>.
+     	  
+     <p>
+      	    This map is also used to ensure that no attempt is made to write two different result trees to the same destination URI.
+      
+      	  
+     </p>
+    </dd>
+    
+    <dt><font color="#008080"><i><tt>resolve</tt></i></font></dt>
+    <dd>
+     	    This routine is called to create an <a href="transformation_result.html"><font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font></a>
+     	    for the output destination.
+     	    But first, it must check with the security manager for permission to write to the URI.
+     	  
+     <p>
+      	    If resolution is successful, <font color="#008080"><i><tt>last_result</tt></i></font> must be set to the created <font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font>, 
+      	    which must also stored in <font color="#008080"><i><tt>output_destinations</tt></i></font>. If resolution is <i>not</i> successful, then
+      	    <font color="#008080"><i><tt>error_message</tt></i></font> must be set to an explanatory message.
+      	  
+     </p>
+    </dd>
+    
+    <dt><font color="#008080"><i><tt>close</tt></i></font></dt>
+    <dd>
+     	   This routine is called when the result tree has been completely written to the output destination.
+     	   It can perform actions such as closing the output stream where appropriate, and might also be used for 
+     	   firing off other actions, such as letting a job scheduler know that an output file is available.
+     	  
+     <p>
+      	   An <font color="#008080"><i><tt>XM_XSLT_OUTPUT_PROPERTIES</tt></i></font> object is passed to the routine so
+      	   that MIME information is available for URI schemes that need it.
+      	  
+     </p>
+    </dd>
+    
+   </dl>
+   
+  </div>
+  <div><a name="xslt_default_output_resolver"></a>
+   
+   <h2>The default output resolver: <i><tt>XM_XSLT_DEFAULT_OUTPUT_URI_RESOLVER</tt></i></h2>
+   
+   <p>
+    This is the only concrete output resolver provided by the library. If it is not suitable for your needs,
+    then you must write your own, and supply it as the third argument to 
+    <a href="configuration.html"><font color="#008080"><i><tt>XM_XSLT_CONFIGURATION</tt></i></font>'s</a> creation procedure, <font color="#008080"><i><tt>make</tt></i></font>.
+    
+   </p>
+   
+   <p>
+    This output resolver handles <font color="#008080"><i><tt>resolve</tt></i></font> requests by passing them to an instance of
+    <font color="#008080"><i><tt>XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER</tt></i></font>, according to the scheme of the URI concerned.
+    
+   </p>
+   
+   <p>
+    The resolver comes pre-configured with handlers for the <font color="#008080">file</font>, <font color="#008080">stdout</font>,
+    and <font color="#008080">string</font> protocols. The latter two are Gobo-specific protocols, for writing to the standard output stream
+    and a <font color="#008080"><i><tt>STRING</tt></i></font>, repectively.
+    
+   </p>
+   
+   <p>
+    Support for additional schemes may be added by calling <font color="#008080"><i><tt>register_scheme</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004-2016, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 December 2016</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="configuration.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="security_manager.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

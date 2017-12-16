@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Unicode character classes</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Unicode character classes</strong></font></td>
+    <td align="right"><a href="index.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="case.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   
+   <h2>About character classes</h2>
+   
+   
+   <p>
+    	The <i>Unicode Character Database</i> (UCD) defines 
+    	a character class for every code-point in Unicode.
+    
+   </p>
+   
+   
+   <p>
+    	Within the UCD, these character classes are written as a single upper-case latin letter, to
+    	denote the major category, followed by a single lower-case latin letter, to denote the minor category.
+    	For example, if a code-point is classified as an upper case letter, then it is given the character class
+    	of Lu. The 'L' denotes "letter" as the major category, and the 'u' denotes "upper-case" as the minor category.
+    
+   </p>
+   
+   
+   <p>
+    	These character classes are translated into Eiffel code as <font color="#008080"><i><tt>INTEGER</tt></i></font> constants in
+    	<font color="#008080"><i><tt>UC_UNICODE_CONSTANTS</tt></i></font>. The names are structured such that they start with the minor category, 
+    	are followed by the major category, and end with the word category. So we have <font color="#008080"><i><tt>Uppercase_letter_category</tt></i></font>,
+    	for instance.
+    
+   </p>
+   
+   
+   <p>
+    	The character class for a given code-point can be retrieved by means of <font color="#008080"><i><tt>character_class</tt></i></font>
+    	from <font color="#008080"><i><tt>ST_UNICODE_CHARACTER_CLASS_INTERFACE</tt></i></font>. This can be useful for defining your own 
+    	classification routines. For instance, an <font color="#008080"><i><tt>is_alphanumeric</tt></i></font> routine might be 
+    	defined in this way (the library doesn't provide one, as more than one plausible definition is possible).
+    
+   </p>
+   
+   
+   <p>
+    	However, some code-points can usefully be considered to be in more than one category. The UCD deals
+    	with this situation by defining the principle category, and also defining various character properties.
+    	For example, the code-points in the range 24B6..24CF (CIRCLED LATIN SMALL LETTER A..CIRCLED LATIN SMALL LETTER Z)
+    	are classified as So (<font color="#008080"><i><tt>Other_symbol_category</tt></i></font>). But they also have the Other_Uppercase property.
+    	The library handles that by providing the routine <font color="#008080"><i><tt>is_upper_case</tt></i></font>, which includes all
+    	code-points in <font color="#008080"><i><tt>Uppercase_letter_category</tt></i></font> and all code-points with the  Other_Uppercase property.
+    
+   </p>
+   
+   
+  </div>
+  <div>
+   
+   <h2>How to access the character class routines provided by the library</h2>
+   
+   
+   <p>
+    	The character class routines provided by the library are defined in the deferred class 
+    	<font color="#008080"><i><tt>ST_UNICODE_CHARACTER_CLASS_INTERFACE</tt></i></font>. In order to gain access to these routines
+    	you can either inherit from <font color="#008080"><i><tt>ST_UNICODE_CHARACTER_CLASS_ROUTINES</tt></i></font>, which
+    	provides information from the latest available version of unicode. Or you can inherit from a class
+    	for a particular version of Unicode (e.g. <font color="#008080"><i><tt>ST_UNICODE_V410_CHARACTER_CLASS_ROUTINES</tt></i></font> for Unicode version 4.1.0).
+    
+   </p>
+   
+   
+   <p>
+    	Alternatively, you can access these classes as clients, by inheriting from <font color="#008080"><i><tt>ST_IMPORTED_UNICODE_CHARACTER_CLASS_ROUTINES</tt></i></font> 
+    	or <font color="#008080"><i><tt>ST_IMPORTED_UNICODE_V410_CHARACTER_CLASS_ROUTINES</tt></i></font>, which provide the routines
+    	<font color="#008080"><i><tt>unicode_character_class</tt></i></font> and <font color="#008080"><i><tt>unicode_v410_character_class</tt></i></font> respectively.
+    
+   </p>
+   
+   
+   <p>
+    	The latter method is necessary if you want to be able to use routines from two different versions of Unicode within
+    	the same class.
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005, Colin Adams</b><br /><b>mailto:</b><a href="mailto:colin-adams@users.sourceforge.net">colin-adams@users.sourceforge.net</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>4 November 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="case.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

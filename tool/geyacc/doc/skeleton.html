@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc: Parser Skeleton</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Parser Skeleton</strong></font></td>
+        <td align="right"><a href="error.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="limitations.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><em><strong>note</strong></em>
+
+    <em>description</em>: <em>&quot;General parsers&quot;</em>
+    <em>library</em>: <em>&quot;Gobo Eiffel Parse Library&quot;</em>
+    <em>copyright</em>:<em> &quot;Copyright (c) 1999-2005, Eric Bezault and others&quot;
+    license</em>:<em> &quot;MIT License&quot;</em>
+
+<em><strong>deferred class</strong></em> <em>YY_PARSER</em> [<em>G</em>]
+
+<em><strong>create</strong></em>
+
+    <a href="parser.html#make" name="make"><em>make</em></a>
+            -- Create a new parser.
+
+<em><strong>feature</strong></em> -- Parsing
+
+    <a href="parser.html#parse" name="parse"><em>parse</em></a>
+            -- Parse input stream.
+            -- Set <em>syntax_error</em> to True if
+            -- parsing has not been successful.
+
+<em><strong>feature</strong></em> -- Status report
+
+    <a href="parser.html#syntax_error" name="syntax_error"><em>syntax_error</em></a>: <em>BOOLEAN</em>
+            -- Has last parsing been unsuccesful?
+
+    <a href="actions.html#is_suspended" name="is_suspended"><em>is_suspended</em></a>: <em>BOOLEAN</em>
+            -- Has parsing been suspended?
+            -- The next call to <em>parse</em> will resume parsing in the state
+            -- where the parser was when it was suspended. Note that a call
+            -- to <em>abort</em> or <em>accept</em> will force <em>parse</em> to parse from scratch.
+
+<em><strong>feature</strong></em> -- Access
+
+    <a href="actions.html#error_count" name="error_count"><em>error_count</em></a>: <em>INTEGER</em>
+            -- Number of errors detected during last parsing
+            -- (<em>error_count</em> can be non-zero even though
+            -- <em>syntax_error</em> is false. This can happen when
+            -- error recovery occurred.)
+        <em><strong>ensure</strong></em>
+            <em>error_count_non_negative</em>: <em>Result</em> &gt;= <em>0</em>
+
+<em><strong>feature</strong></em> -- Basic operations
+
+    <a href="actions.html#accept" name="accept"><em>accept</em></a>
+            -- Stop parsing successfully.
+        <em><strong>ensure</strong></em>
+            <em>accepted</em>: <em><strong>not</strong></em> <em>syntax_error</em>
+
+    <a href="actions.html#abort" name="abort"><em>abort</em></a>
+            -- Abort parsing.
+            -- Do not print error message.
+        <em><strong>ensure</strong></em>
+            <em>aborted</em>: <em>syntax_error</em>
+
+    <a href="actions.html#clear_all" name="clear_all"><em>clear_all</em></a>
+            -- Clear temporary objects so that they can be collected
+            -- by the garbage collector. (This routine is called by
+            -- <em>parse</em> before exiting. It can be redefined in descendants.)
+
+<em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Basic operations
+
+    <a href="actions.html#suspend" name="suspend"><em>suspend</em></a>
+            -- Suspend parsing.
+            -- The next call to <em>parse</em> will resume parsing in the state
+            -- where the parser was when it was suspended. Note that a call
+            -- to <em>abort</em> or <em>accept</em> will force <em>parse</em> to parse from scratch.
+        <em><strong>ensure</strong></em>
+            suspended: is_suspended
+
+    <a href="actions.html#raise_error" name="raise_error"><em>raise_error</em></a>
+            -- Raise a syntax error.
+            -- Report error using the error action %error associated
+            -- with current parsing state or <em>report_error</em> by default,
+            -- and perform normal error recovery if possible.
+
+    <a href="actions.html#recover" name="recover"><em>recover</em></a>
+            -- Recover immediately after a parse error.
+
+    <a href="actions.html#report_error" name="report_error"><em>report_error</em></a> (<em>a_message</em>: <em>STRING</em>)
+            -- Print error message.
+            -- (This routine is called by default by <em>parse</em> when it
+            -- detects a syntax error and there is no error action
+            -- %error available. It can be redefined in descendants.)
+        <em><strong>require</strong></em>
+            <em>a_message_not_void</em>: <em>a_message</em> /= <em>Void</em>
+
+    <a href="actions.html#clear_token" name="clear_token"><em>clear_token</em></a>
+            -- Clear the previous lookahead token.
+            -- Used in error-recovery rule actions.
+<em><strong>
+feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Status report
+
+    <a href="actions.html#is_recovering" name="is_recovering"><em>is_recovering</em></a>: <em>BOOLEAN</em>
+            -- Is current parser recovering from a syntax error?
+
+<em><strong>feature</strong></em> {<em>YY_PARSER_ACTION</em>} -- Scanning
+
+    <a href="actions.html#read_token" name="read_token"><em>read_token</em></a>
+            -- Read a token from input stream.
+            -- Make result available in <em>last_token</em>.
+            -- (This routine is called by <em>parse</em> when it needs a
+            -- new token from the input stream.)
+
+    <a href="actions.html#last_token" name="last_token"><em>last_token</em></a>: <em>INTEGER</em>
+            -- Last token read
+
+    <a href="actions.html#last_value" name="last_value"><em>last_value</em></a>: <em>G</em>
+            -- Semantic value of last token read
+
+<em><strong>end</strong></em></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1999-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault and others</strong><br>
+            <strong>mailto:</strong></font><a
+            href="mailto://www.gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 29 October 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="error.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="limitations.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

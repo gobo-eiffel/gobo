@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>delete</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>delete</strong></font></td>
+    <td align="right"><a href="copy_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="echo_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="delete_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Delete either a single file, all files in a specified directory and its sub-directories, or
+    			a set of files specified by one or more nested <a href="fileset_element.html">fileset</a>
+    			elements.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="delete_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>file</dt>
+    <dd><i>Description: </i>File to be deleted
+     <p><i>Domain: </i>Valid filename
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>directory</dt>
+    <dd><i>Description: </i>Directory to be deleted
+     <p><i>Domain: </i>Valid directoryname
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="delete_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="delete"&gt;
+    &lt;element name="delete"&gt;
+      &lt;ref name="dir_if_unless"/&gt;
+      &lt;choice&gt;
+        &lt;attribute name="file"/&gt;
+        &lt;attribute name="directory"/&gt;
+        &lt;ref name="fileset"/&gt;
+      &lt;/choice&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+
+		</pre>
+   	</div>
+  <div><a name="copy_examples"></a>
+   		
+   <h2>Examples</h2>
+   
+   		<pre>
+  &lt;delete file="readme.txt"/&gt;
+
+  &lt;delete directory="tmp"/&gt;
+
+  &lt;delete&gt;
+    &lt;fileset dir="tmp" include="@(**/*.ge)"/&gt;
+  &lt;/delete&gt;
+
+		</pre>
+   
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="copy_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="echo_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

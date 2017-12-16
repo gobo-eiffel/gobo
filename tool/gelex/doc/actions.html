@@ -1,0 +1,556 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gelex: Actions</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Actions</strong></font></td>
+        <td align="right"><a href="start_conditions.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="skeleton.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>Each pattern in a rule has a corresponding action, which can
+be any arbitrary Eiffel instructions. The pattern ends at the
+first non-escaped whitespace character; the remainder of the line
+is its action. If the action is empty, then when the pattern is
+matched the input token is simply discarded. For example, here is
+an excerpt from the specification of a program which deletes all
+occurrences of &quot;<tt>zap me</tt>&quot; from its input:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%%</font>
+<font color="#FF0000">&quot;zap me&quot;</font></pre>
+</blockquote>
+
+<p>It will copy all other characters in the input to the output
+since they will be matched by the <a
+href="matching_rules.html#default_rule">default rule</a>. Here is
+a program which compresses multiple blanks and tabs down to a
+single blank, and throws away whitespace found at the end of a
+line:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%%</font>
+<font color="#FF0000">[ \t]+ </font>    <font color="#008080"><em>io.put_character </em>(<em>' '</em>)</font>
+<font color="#FF0000">[ \t]+$</font>    <font color="#008080">-- Ignore this token.</font></pre>
+</blockquote>
+
+<p>If the action begins with a <font color="#0000FF"><tt>{</tt></font>,
+then the action spans till the balancing <font color="#0000FF"><tt>}</tt></font>
+is found, and the action may cross multiple lines. <em>Gelex</em>
+knows about Eiffel strings, characters and comments and therefore
+won't be fooled by braces found within them.</p>
+
+<p>An action consisting solely of a vertical bar <font
+color="#0000FF"><tt>|</tt></font> means &quot;same as the action
+for the next rule&quot;. See below for an illustration.</p>
+
+<p>Actions can include arbitrary Eiffel code. There are a number
+of special features, inherited from class <a href="skeleton.html"><font
+color="#008080"><em><tt>YY_SCANNER</tt></em></font></a>, which
+can be used in actions:</p>
+
+<dl>
+    <dt><a href="skeleton.html#append_text_to_string"
+        name="append_text_to_string"><font color="#008080"><em><tt>append_text_to_string</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
+        STRING</tt></em><tt>)</tt></font></dt>
+    <dd>Append <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        at end of <font color="#008080"><em><tt>a_string</tt></em></font>.
+        For efficiency reason, this feature can bypass the call
+        to <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        and directly copy the characters from the input buffer.</dd>
+    <dt><a href="skeleton.html#append_text_substring_to_string"
+        name="append_text_substring_to_string"><font
+        color="#008080"><em><tt>append_text_substring_to_string</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
+        e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>;</tt><em><tt>
+        a_string</tt></em><tt>:</tt><em><tt> STRING</tt></em><tt>)</tt></font></dt>
+    <dd>Append <a href="#text_substring"><font color="#008080"><em><tt>text_substring </tt></em></font></a>at
+        end of <font color="#008080"><em><tt>a_string</tt></em></font>.
+        For efficiency reason, this feature can bypass the call
+        to <a href="#text_substring"><font color="#008080"><em><tt>text_substring</tt></em></font></a>
+        and directly copy the characters from the input buffer.</dd>
+    <dt><a href="skeleton.html#column" name="column"><font
+        color="#008080"><em><tt>column</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
+    <dd>Column number of last token read. If it is used in any of
+        the scanner's actions the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#line"><font color="#800000"><tt>line</tt></font></a><font
+        color="#800000"><tt> </tt></font>will have to be set.</dd>
+    <dt><a href="skeleton.html#echo" name="echo"><font
+        color="#008080"><em><tt>echo</tt></em></font></a></dt>
+    <dd>Copy <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        to the scanner's output file using <a href="#output"><font
+        color="#008080"><em><tt>output</tt></em></font></a>.</dd>
+    <dt><a href="skeleton.html#Empty_buffer" name="Empty_buffer"><font
+        color="#008080"><em><tt>Empty_buffer</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> YY_BUFFER</tt></em></font></dt>
+    <dd>Empty input buffer (once function). When input sources
+        are not known yet at the creation time of a scanner, this
+        input buffer can be used by default with the creation
+        routine <a href="skeleton.html#make_with_buffer"><font
+        color="#008080"><em><tt>make_with_buffer</tt></em></font></a>.</dd>
+    <dt><a href="skeleton.html#flush_input_buffer"
+        name="flush_input_buffer"><font color="#008080"><em><tt>flush_input_buffer</tt></em></font></a></dt>
+    <dd>Flush the scanner's internal buffer so that the next time
+        the scanner attempts to match a token it will first
+        refill the buffer, unless end of file has been found.</dd>
+    <dt><a href="skeleton.html#input_buffer" name="input_buffer"><font
+        color="#008080"><em><tt>input_buffer</tt></em></font></a><font
+        color="#008080"><tt>: </tt><em><tt>YY_BUFFER</tt></em></font></dt>
+    <dd>Input buffer of the scanner. By default the input buffer
+        is filled from the standard input. To avoid unexpected
+        behaviors, the routine <a href="#set_input_buffer"><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>
+        should be used to switch to other input buffers.</dd>
+    <dt><a href="skeleton.html#last_character"
+        name="last_character"><font color="#008080"><em><tt>last_character</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> CHARACTER</tt></em></font></dt>
+    <dd>Last character read by <a href="#read_character"><font
+        color="#008080"><em><tt>read_character</tt></em></font></a>.</dd>
+    <dt><a href="skeleton.html#last_token" name="last_token"><font
+        color="#008080"><em><tt>last_token</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
+    <dd>Code of the last token read. When this attribute is given
+        a non-negative value the procedure <a href="skeleton.html#read_token"><font
+        color="#008080"><em><tt>read_token</tt></em></font></a>
+        stops, giving the opportunity to its caller (e.g. a
+        parser routine) to inspect this code. Each time <a href="skeleton.html#read_token"><font
+        color="#008080"><em><tt>read_token</tt></em></font></a> is
+        called again it continues processing tokens from where it
+        last left off until either <font
+        color="#008080"><em><tt>last_token</tt></em></font>
+        is given a non-negative value again or the end of the
+        file is reached (yielding a null value). Non-positive
+        values are reserved by <a href="skeleton.html#read_token"><font
+        color="#008080"><em><tt>read_token</tt></em></font></a> to indicate internal errors which can
+        occur when too many <a href="#reject"><font
+        color="#008080"><em><tt>reject</tt></em></font></a> are
+        called (and hence nothing can be matched anymore) or when
+        the option <a href="options.html#nodefault"><font
+        color="#800000"><tt>nodefault</tt></font></a> (or option <font
+        color="#800000"><tt>-s</tt></font>) has been specified
+        but the <a href="matching_rules.html#default_rule">default
+        rule</a> is matched nevertheless.</dd>
+    <dt><a href="skeleton.html#less" name="less"><font
+        color="#008080"><em><tt>less</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>n</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>)</tt></font></dt>
+    <dd>Return all but the first <font color="#008080" size="2"
+        face="Courier New"><em>n</em></font> characters of the
+        current token back to the input stream, where they will
+        be rescanned when the scanner looks for the next match. <a href="#text"><font
+        color="#008080"><em><tt>text</tt></em></font></a> and <a href="#text_count"><font
+        color="#008080"><em><tt>text_count</tt></em></font></a> are
+        adjusted appropriately (e.g., <a href="#text_count"><font
+        color="#008080"><em><tt>text_count</tt></em></font></a>
+        will now be equal to <font color="#008080"><em><tt>n</tt></em></font>).
+        For example, on the input &quot;<tt>foobar</tt>&quot; the
+        following will write out &quot;<tt>foobarbar</tt>&quot;:<br>
+        <dl>
+            <dd><pre><font color="#0000FF">%%</font>
+<font color="#FF0000">foobar</font>    <font color="#008080"><em>echo</em>;<em> less </em>(<em>3</em>)</font>
+<font color="#FF0000">[a-z]+ </font>   <font color="#008080"><em>echo</em></font> </pre>
+            </dd>
+        </dl>
+    </dd>
+    <dd>An argument of <em><tt>0</tt></em> to <font
+        color="#008080"><em><tt>less</tt></em></font> will cause
+        the entire current input string to be scanned again.
+        Unless the way the scanner subsequently process its input
+        has been changed (using <a href="#set_start_condition"><font
+        color="#008080"><em><tt>set_start_condition</tt></em></font></a>,
+        for example), this will result in an endless loop.</dd>
+    <dt><a href="skeleton.html#line" name="line"><font
+        color="#008080"><em><tt>line</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
+    <dd>Line number of last token read. If it is used in any of
+        the scanner's actions the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#line"><font color="#800000"><tt>line</tt></font></a><font
+        color="#800000"><tt> </tt></font>will have to be set.</dd>
+    <dt><a href="skeleton.html#more" name="more"><font
+        color="#008080"><em><tt>more</tt></em></font></a></dt>
+    <dd>Tell the scanner that the next time it matches a rule,
+        the corresponding token should be appended onto the
+        current value of<em> </em><a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        rather than replacing it. For example, given the input
+        &quot;<tt>mega-kludge</tt>&quot; the following will write
+        &quot;<tt>mega-mega-kludge</tt>&quot; to the output:<br>
+        <dl>
+            <dd><pre><font color="#0000FF">%%</font>
+<font color="#FF0000">mega-</font>      <font color="#008080"><em>echo</em>;<em> more</em></font>
+<font color="#FF0000">kludge</font>     <font color="#008080"><em>echo</em></font> </pre>
+            </dd>
+        </dl>
+    </dd>
+    <dd>First &quot;<tt>mega-</tt>&quot; is matched and echoed to
+        the output. Then &quot;<tt>kludge</tt>&quot; is matched,
+        but the previous &quot;<tt>mega-</tt>&quot; is still
+        hanging around at the beginning of <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        so the <a href="#echo"><font color="#008080"><em><tt>echo</tt></em></font></a>
+        for the &quot;<tt>kludge</tt>&quot; rule will actually
+        write &quot;<tt>mega-kludge</tt>&quot;.</dd>
+    <dt><a href="skeleton.html#new_file_buffer"
+        name="new_file_buffer"><font color="#008080"><em><tt>new_file_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_file</tt></em><tt>:</tt><em><tt>
+        FILE</tt></em><tt>):</tt><em><tt> YY_FILE_BUFFER</tt></em></font></dt>
+    <dd>Create an input buffer for <font color="#008080"><em><tt>a_file</tt></em></font>.
+        This routine is convenient when used with <a href="#set_input_buffer"><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.</dd>
+    <dt><a href="skeleton.html#new_string_buffer"
+        name="new_string_buffer"><font color="#008080"><em><tt>new_string_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
+        STRING</tt></em><tt>):</tt><em><tt> YY_BUFFER</tt></em></font></dt>
+    <dd>Create an input buffer for <font color="#008080"><em><tt>a_string</tt></em></font>.
+        This routine is convenient when used with <a href="#set_input_buffer"><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.</dd>
+    <dt><a href="skeleton.html#output" name="output"><font
+        color="#008080"><em><tt>output</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_text</tt></em><tt>:</tt><em><tt>
+        </tt></em><em><strong><tt>like </tt></strong></em><em><a href="#text"><font
+        color="#008080"><tt>text</tt></a></font></em><tt>)</tt></font></dt>
+    <dd>Write <font color="#008080"><em><tt>a_text </tt></em></font>to
+        the standard output by default. This behavior can easily
+        be modified through redefinition.</dd>
+    <dt><a href="skeleton.html#position" name="position"><font
+        color="#008080"><em><tt>position</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
+    <dd>Position of last token read (i.e. number of characters
+        from the start of the input source). If it is used in any
+        of the scanner's actions the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#position"><font
+        color="#800000"><tt>position</tt></font></a><font
+        color="#800000"><tt> </tt></font>will have to be set.</dd>
+    <dt><a href="skeleton.html#print_last_token"
+        name="print_last_token"><font color="#008080"><em><tt>print_last_token</tt></em></font></a></dt>
+    <dd>Routine called at the end of <a href="skeleton.html#read_token"><font color="#008080"><em><tt>read_token</tt></em></font></a>
+        when <a href="stages.html#debug">debugging instructions</a>
+        are enabled. Print to standard error debug information
+        about the last token read. This routine can be redefined
+        in descendant classes to print more information. In
+        particular, the routine <font color="#008080"><em><tt>token_name</tt></em></font>
+        generated by <em>geyacc</em> can be used to make the
+        debugging output more human-readable.</dd>
+    <dt><a href="skeleton.html#read_character"
+        name="read_character"><font color="#008080"><em><tt>read_character</tt></em></font></a></dt>
+    <dd>Read the next character from the input stream. Make the
+        result available in <a href="#last_character"><font color="#008080"><em><tt>last_character</tt></em></font></a>.
+        For example, the following is one way to eat up C
+        comments:<dl>
+            <dd><pre>
+<font color="#0000FF">%%</font>
+<font color="#FF0000">&quot;/*&quot;</font>  <font
+color="#0000FF">{</font>
+    <font color="#008080"><em><strong>from</strong></em><em> </em><em><strong>until</strong></em><em> stop </em><em><strong>loop</strong></em><em>
+</em><em><strong>        from</strong></em><em>
+            read_character
+         </em><em><strong>until</strong></em><em>
+            last_character </em>=<em> '*' </em><em><strong>or</strong></em><em>
+            last_character </em>=<em> '%/255/'
+        </em><em><strong>loop</strong></em><em>
+            read_character
+        </em><em><strong>end</strong></em><em>
+        </em><em><strong>if</strong></em><em> last_character </em>=<em> '*' </em><em><strong>then</strong></em><em>
+            </em><em><strong>from</strong></em><em>
+                read_character
+            </em><em><strong>until</strong></em><em>
+                last_character </em>/=<em> '*'
+            </em><em><strong>loop</strong></em><em>
+                read_character
+            </em><em><strong>end</strong></em><em>
+            </em><em><strong>if</strong></em><em> last_character </em>=<em> '/' </em><em><strong>then</strong></em><em>
+                stop </em>:=<em> True
+            </em><em><strong>end</strong></em><em>
+        </em><em><strong>end</strong></em><em>
+        </em><em><strong>if</strong></em><em> last_character </em>=<em> '%/255/' </em><em><strong>then</strong></em><em>
+            io.error.put_string </em>(<em>&quot;EOF in comment%N&quot;</em>)<em>
+            stop </em>:=<em> True
+        </em><em><strong>end</strong></em><em>
+    </em><em><strong>end</strong></em></font>
+<font color="#0000FF">}</font></pre>
+            </dd>
+        </dl>
+    </dd>
+    <dd>This feature should be used with care since it bypasses
+        the pattern-matching <font size="2">DFA</font> engine.</dd>
+    <dt><a name="reject"><font color="#008080"><em><tt>reject</tt></em></font></a></dt>
+    <dd>Direct the scanner to proceed on to the &quot;second
+        best&quot; rule which matched the input (or a prefix of
+        the input). The rule is chosen as described in <a
+        href="matching_rules.html">Matching Rules</a>, and <a href="#text"><font
+        color="#008080"><em><tt>text</tt></em></font></a> and <a href="#text_count"><font
+        color="#008080"><em><tt>text_count</tt></em></font></a>
+        return the appropriate values. It may either be one which
+        matched as much text as the originally chosen rule but
+        came later in the <em>gelex</em> input file, or one which
+        matched less text. For example, the following will both
+        count the words in the input and call the routine <font
+        color="#008080"><em><tt>special</tt></em></font> whenever
+        &quot;<tt>frob</tt>&quot; is seen:<br>
+        <dl>
+            <dd><pre><font color="#0000FF">%%</font>
+<font color="#FF0000">frob</font>         <font color="#008080"><em>special</em>;<em> reject</em></font>
+<font color="#FF0000">[^ \t\n]+</font>    <font color="#008080"><em>word_count </em>:=<em> word_count </em>+<em> 1</em></font>
+<font color="#0000FF">%%</font>
+    <font color="#008080"><em>word_count</em>:<em> INTEGER
+    special </em><em><strong>is do</strong></em><em> ... </em><em><strong>end</strong></em></font></pre>
+            </dd>
+        </dl>
+        <p>Without the <font color="#008080"><em><tt>reject</tt></em></font>,
+        any &quot;<tt>frob</tt>&quot;'s in the input would not be
+        counted as words, since the scanner normally executes
+        only one action per token. Multiple <font color="#008080"><em><tt>reject</tt></em></font>'s
+        are allowed, each one finding the next best choice to the
+        currently active rule. For example, when the following
+        scanner scans the token &quot;<tt>abcd</tt>&quot;, it
+        will write &quot;<tt>abcdabcaba</tt>&quot; to the output:</p>
+        <dl>
+            <dd><pre><font color="#0000FF">%%</font>
+<font color="#FF0000">a </font>       <font color="#0000FF">|</font>
+<font color="#FF0000">ab</font>       <font color="#0000FF">|</font>
+<font color="#FF0000">abc</font>      <font color="#0000FF">|</font>
+<font color="#FF0000">abcd</font>     <font color="#008080"><em>echo</em>;<em> reject</em></font>
+<font color="#FF0000">.|\n</font>     <font color="#008080">-- Eat up any unmatched character.</font> </pre>
+            </dd>
+        </dl>
+    </dd>
+    <dd>(The first three rules share the fourth's action since
+        they use the special '<font color="#0000FF"><tt>|</tt></font>'
+        action.) <font color="#008080"><em><tt>reject</tt></em></font>
+        is a particularly expensive feature in terms of scanner
+        performance. If it is used in any of the scanner's
+        actions the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#reject"><font color="#800000"><tt>reject</tt></font></a>
+        will have to be set and it will slow down all of the
+        scanner's matching. Furthermore, <font color="#008080"><em><tt>reject</tt></em></font>
+        cannot be used with the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#full"><font color="#800000"><tt>full</tt></font></a>
+        and this feature is only available to descendants of
+        class <font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font>.</dd>
+    <dt><a href="skeleton.html#set_input_buffer"
+        name="set_input_buffer"><font color="#008080"><em><tt>set_input_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_buffer</tt></em><tt>:</tt><em><tt>
+        </tt></em><em><strong><tt>like </tt></strong></em><em><a
+        href="#input_buffer"><font color="#008080"><tt>input_buffer</tt></font></a></em><tt>)</tt></font></dt>
+    <dd>Switch the scanner's input buffer so that subsequent
+        tokens will come from <font color="#008080"><em><tt>a_buffer</tt></em></font>.
+        This routine can be used to continue scanning another
+        file when the end-of-file has been read, or to deal with
+        preprocessor instructions such as <tt>#include</tt>. It
+        can eventually be given as argument the result of one of
+        the functions <a href="skeleton.html#new_file_buffer"><font
+        color="#008080"><em><tt>new_file_buffer</tt></em></font></a>
+        or <a href="skeleton.html#new_string_buffer"><font
+        color="#008080"><em><tt>new_string_buffer</tt></em></font></a>.
+        Note that switching input buffers does not change the
+        start condition of the scanner.</dd>
+    <dt><a href="skeleton.html#set_last_token"
+        name="set_last_token"><font color="#008080"><em><tt>set_last_token</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_token</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>)</tt></font></dt>
+    <dd>Set <a href="#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a>
+        to <font color="#008080"><em><tt>a_token</tt></em></font>.</dd>
+    <dt><a href="skeleton.html#set_start_condition"
+        name="set_start_condition"><font color="#008080"><em><tt>set_start_condition</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_start_condition</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>)</tt></font></dt>
+    <dd>Put the scanner in the corresponding start condition. See
+        discussion on <a href="start_conditions.html">start
+        conditions</a> for further details.</dd>
+    <dt><a href="skeleton.html#start_condition"
+        name="start_condition"><font color="#008080"><em><tt>start_condition</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
+    <dd>Current start condition. This value can subsequently be
+        used with <a href="#set_start_condition"><font color="#008080"><em><tt>set_start_condition</tt></em></font></a>
+        to return to that start condition. See discussion on <a
+        href="start_conditions.html">start conditions</a> for
+        further details.</dd>
+    <dt><a href="skeleton.html#terminate" name="terminate"><font
+        color="#008080"><em><tt>terminate</tt></em></font></a></dt>
+    <dd>Terminate the scanner and set <a href="#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a>
+        to <em><tt>0</tt></em>, indicating &quot;all done&quot;.
+        By default, <font color="#008080"><em><tt>terminate</tt></em></font>
+        is also called when an end-of-file is encountered.</dd>
+    <dt><a href="skeleton.html#text" name="text"><font
+        color="#008080"><em><tt>text</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> STRING</tt></em></font></dt>
+    <dd>Text of the last token read. This feature is a function
+        which creates a new string each time it is called.
+        Actions are hence free to alter the result of <font
+        color="#008080"><em><tt>text</tt></em></font> without
+        damaging the input buffer.</dd>
+    <dt><a href="skeleton.html#text_count" name="text_count"><font
+        color="#008080"><em><tt>text_count</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
+    <dd>Length of the last token read. This feature is a function
+        which computes the number of characters matched by the
+        corresponding pattern. If efficiency is a concern and
+        this function is called several times in the same action,
+        its result can be stored in a temporary variable.</dd>
+    <dt><a href="skeleton.html#text_item" name="text_item"><font
+        color="#008080"><em><tt>text_item</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>i</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>):</tt><em><tt> CHARACTER</tt></em></font></dt>
+    <dd>Character at a given index in <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>.
+        For efficiency reason, this function bypasses the call to
+        <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a> and
+        reads the character directly from the input buffer.</dd>
+    <dt><a href="skeleton.html#text_substring"
+        name="text_substring"><font color="#008080"><em><tt>text_substring</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
+        e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>):</tt><em><tt>
+        STRING</tt></em></font></dt>
+    <dd>Substring of <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>.
+        This function creates a new string each time it is
+        called. For efficiency reason, this function bypasses the
+        call to <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        and creates the substring directly from the input buffer.</dd>
+    <dt><a href="skeleton.html#unread_character"
+        name="unread_character"><font color="#008080"><em><tt>unread_character</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>c</tt></em><tt>:</tt><em><tt>
+        CHARACTER</tt></em><tt>)</tt></font></dt>
+    <dd>Put the character <font color="#008080" size="2"
+        face="Courier New"><em>c</em></font> back onto the input
+        stream. It will be the next character scanned. The
+        following action will take the current token and cause it
+        to be rescanned enclosed in parentheses.<br>
+        <dl>
+            <dd><pre><font color="#0000FF">{</font>
+    <font color="#008080"><em>a_text </em>:=<em> text
+    unread_character </em>(<em>')'</em>)<em>
+</em><em><strong>    from</strong></em><em> i </em>:=<em> text_count </em><em><strong>until</strong></em><em> i </em>&lt;<em> 1 </em><em><strong>loop</strong></em><em>
+        unread_character </em>(<em>a_text.item </em>(<em>i</em>))<em>
+        i </em>:=<em> i </em>-<em> 1
+</em><em><strong>    end</strong></em><em>
+    unread_character </em>(<em>'('</em>)</font>
+<font color="#0000FF">}</font> </pre>
+            </dd>
+        </dl>
+    </dd>
+    <dd>Note that since each <font color="#008080"><em><tt>unread_character</tt></em></font>
+        puts the given character back at the beginning of the
+        input stream, pushing back strings must be done
+        back-to-front. An important potential problem when using <font
+        color="#008080"><em><tt>unread_character</tt></em></font>
+        is that it alters the input stream. If you need the value
+        of <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        after a call to <font color="#008080"><em><tt>unread_character</tt></em></font>
+        (as in the above example), you must first save it
+        elsewhere. Finally, note that you cannot put back <tt>EOF</tt>
+        (i.e. '<tt>%/255/</tt>') to attempt to mark the input
+        stream with an end-of-file.</dd>
+</dl>
+
+<p>In addition to the above routines which can be called in
+semantic actions, the following routines can be called after the
+routine <a href="skeleton.html#read_token"><font color="#008080"><em><tt>read_token</tt></em></font></a> has
+returned:</p>
+
+<dl>
+    <dt><a href="skeleton.html#end_of_file" name="end_of_file"><font
+        color="#008080"><em><tt>end_of_file</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> BOOLEAN</tt></em></font></dt>
+    <dd>Has the end of input buffer been reached? This is the
+        case when <a href="#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a> has
+        been set to 0.</dd>
+    <dt><a href="skeleton.html#scanning_error"
+        name="scanning_error"><font color="#008080"><em><tt>scanning_error</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> BOOLEAN</tt></em></font></dt>
+    <dd>Has an error occurred during scanning? This is the case
+        when <a href="#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a> has
+        been given a non-positive value. It can occur when too
+        many <font color="#008080"><em><tt>reject </tt></em></font>are
+        called (and hence nothing can be matched anymore) or when
+        the option <a href="options.html#nodefault"><font
+        color="#800000"><tt>nodefault</tt></font></a> (or option <font
+        color="#800000"><tt>-s</tt></font>) has been specified
+        but the <a href="matching_rules.html#default_rule">default
+        rule</a> is matched nevertheless.</dd>
+</dl>
+
+<p>Furthermore, the following routines can be called before or
+after any semantic actions if the corresponding <font
+color="#0000FF"><tt>%option </tt></font>have been specified.
+These routines do nothing by default but can be redefined in the
+generated scanner class.</p>
+
+<dl>
+    <dt><a href="skeleton.html#pre_action" name="pre_action"><font
+        color="#008080"><em><tt>pre_action</tt></em></font></a></dt>
+    <dd>Action executed before every semantic action when <font
+        color="#0000FF"><tt>%option</tt></font><tt> </tt><a
+        href="options.html#pre-action"><font color="#800000"><tt>pre-action</tt></font></a><font
+        color="#800000"><tt> </tt></font>has been specified.</dd>
+    <dt><a href="skeleton.html#post_action" name="post_action"><font
+        color="#008080"><em><tt>post_action</tt></em></font></a></dt>
+    <dd>Action executed after every semantic action when <font
+        color="#0000FF"><tt>%option</tt></font><tt> </tt><a
+        href="options.html#post-action"><font color="#800000"><tt>post-action</tt></font></a><font
+        color="#800000"><tt> </tt></font>has been specified.</dd>
+    <dt><a href="skeleton.html#pre_eof_action"
+        name="pre_eof_action"><font color="#008080"><em><tt>pre_eof_action</tt></em></font></a></dt>
+    <dd>Action executed before every end-of-file semantic action
+        (i.e. <tt>&lt;&lt;EOF&gt;&gt;</tt>) when <font
+        color="#0000FF"><tt>%option</tt></font><tt> </tt><a
+        href="options.html#pre-eof-action"><font color="#800000"><tt>pre-eof-action</tt></font></a><font
+        color="#800000"><tt> </tt></font>has been specified.</dd>
+    <dt><a href="skeleton.html#post_eof_action"
+        name="post_eof_action"><font color="#008080"><em><tt>post_eof_action</tt></em></font></a></dt>
+    <dd>Action executed after every end-of-file semantic action
+        (i.e. <tt>&lt;&lt;EOF&gt;&gt;</tt>) when <font
+        color="#0000FF"><tt>%option</tt></font><tt> </tt><a
+        href="options.html#post-eof-action"><font color="#800000"><tt>post-eof-action</tt></font></a><font
+        color="#800000"><tt> </tt></font>has been specified.</dd>
+</dl>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="start_conditions.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="skeleton.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

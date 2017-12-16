@@ -1,0 +1,94 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Gobo Eiffel Lint"
+
+	tool: "Gobo Eiffel Lint"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/index">
+<chapterinfo>
+	<copyright>
+		<year>2006-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>28 December 2016</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Lint</title>
+
+<para>
+<projectname>Gobo Eiffel Lint</projectname>, or <projectname>gelint</projectname>
+for short, is a companion tool of <link linkend="${tool/gec}/index">
+<projectname>gec</projectname></link>. It's a <ulink
+url="http://en.wikipedia.org/wiki/Lint_programming_tool">lint-like</ulink> tool
+for Eiffel. In addition to reporting errors found by compilers, it also goes
+further and tries to report suspicious language usage such as code that may lead
+to CAT-calls at run-time by performing system-level static analysis of the code.
+Contrary to some Eiffel compilers, <projectname>gelint</projectname> will report
+as many errors as possible in one go, both in live and dead Eiffel code.
+</para>
+
+<para>
+This documentation of <projectname>gelint</projectname> is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="usage">Using <projectname>gelint</projectname></link>
+		</term>
+		<listitem><para>
+			Command-line options, Ace files.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="technology">Code Analysis Technology</link>
+		</term>
+		<listitem><para>
+			Code analysis techniques used in <projectname>gelint</projectname>.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="limitations">Limitations</link>
+		</term>
+		<listitem><para>
+			Limitations, bugs and other deficiencies.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="see_also">See Also</link>
+		</term>
+		<listitem><para>
+			Bibliographical references, related resources and
+			acknowledgments.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

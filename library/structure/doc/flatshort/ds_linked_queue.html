@@ -1,0 +1,464 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Class DS_LINKED_QUEUE</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Class DS_LINKED_QUEUE</strong></font></td>
+        <td align="right"><a href="ds_linked_list_cursor.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_linked_stack.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><font color="#000080"><em><strong>note</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>description</em>:
+
+<font color="#800000"><em>    &quot;Queues (First-In, First-Out) implemented with linked cells&quot;
+
+</em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
+</em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
+href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
+color="#800000"><em>&gt;&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999-2001, Eric Bezault and others&quot;
+</em></font><em>license:   </em><font color="#800000"><em> &quot;MIT License&quot;</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>class interface</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>DS_LINKED_QUEUE </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
+
+<blockquote>
+    <pre><a href="ds_queue.html"><em>DS_QUEUE</em></a><em> </em>[<em>G</em>]
+    <a href="ds_dispenser.html"><em>DS_DISPENSER</em></a><em> </em>[<em>G</em>]
+        <a href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]<em>
+            </em><a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>create</strong></em></font></pre>
+
+<blockquote>
+    <pre><a name="make"><em>make</em></a><em>
+        </em><font color="#008000">-- Create an empty queue.
+        -- Use `=' as comparison criterion.</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a></pre>
+    <pre><a name="make_equal"><em>make_equal</em></a><em>
+        </em><font color="#008000">-- Create an empty queue.</font><em>
+</em><font color="#008000">        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion.</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a></pre>
+    <pre><a name="make_default"><em>make_default</em></a><em>
+</em><font color="#008000">        -- Create an empty queue.</font><em>
+</em><font color="#008000">        -- Use `=' as comparison criterion.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_container.html#make_default"><font color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Access</font></pre>
+
+<blockquote>
+    <pre><a name="item"><em>item</em></a>:<em> G
+        </em><font color="#008000">-- Item at front of queue</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_dispenser.html#item"><font color="#008000"><em>DS_DISPENSER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a></pre>
+    <pre><a name="equality_tester"><em>equality_tester</em></a>:<em> </em><a
+href="ds_equality_tester.html"><em>DS_EQUALITY_TESTER</em></a><em> </em>[<em>G</em>]<em>
+        </em><font color="#008000">-- Equality tester;
+        -- A void equality tester means that `='
+        -- will be used as comparison criterion.
+        -- (From </font><a
+href="ds_searchable.html#equality_tester"><font color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Measurement</font></pre>
+
+<blockquote>
+    <pre><a name="count"><em>count</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><font
+color="#000080"><em><strong>
+        </strong></em></font><font color="#008000">-- Number of items in queue
+        -- (From </font><a href="ds_container.html#count"><font
+color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="occurrences"><em>occurrences</em></a><em> </em>(<em>v</em>:<em> G</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+        </em><font color="#008000">-- Number of times </font><em>v</em><font
+color="#008000"> appears in queue
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_searchable.html#occurrences"><font color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        positive</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+        has</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>v</em>)<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#008080"><em>Result</em></font><em> </em>&gt;=<em> </em><font
+color="#808000"><em>1</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Status report</font></pre>
+
+<blockquote>
+    <pre><a name="has"><em>has</em></a><em> </em>(<em>v</em>:<em> G</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Does queue include </font><em>v</em><font
+color="#008000">?
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_searchable.html#has"><font color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a></pre>
+    <pre><a name="is_empty"><em>is_empty</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><font
+color="#000080"><em><strong>
+       </strong></em></font><font color="#008000"> -- Is queue empty?
+        -- (From </font><a href="ds_container.html#is_empty"><font
+color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="extendible"><em>extendible</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- May queue be extended with </font><em>n</em><font
+color="#008000"> items?</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure
+        </strong></em></font><em>definition</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>=<em> </em><font
+color="#808000"><em>True</em></font></pre>
+    <pre><a name="same_items"><em>same_items</em></a><em> </em>(<em>v</em>,<em> u</em>:<em> G</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Are </font><em>v</em><font
+color="#008000"> and </font><em>u</em><font color="#008000"> considered equal?
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#same_items"><font color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="same_equality_tester"><em>same_equality_tester</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Does container use the same comparison
+        -- criterion as </font><em>other</em><font
+color="#008000">?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#same_equality_tester"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="equality_tester_settable"><em>equality_tester_settable</em></a><em> </em>(<em>a_tester</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#equality_tester"><em>equality_tester</em></a>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+</em><font color="#008000">        -- Can </font><a
+href="#set_equality_tester"><em>set_equality_tester</em></a><font
+color="#008000"> be called with </font><em>a_tester</em><font
+color="#008000">
+        -- as argument in current state of container?
+        -- (Default answer: True.)
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#equality_tester_settable"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Comparison</font></pre>
+
+<blockquote>
+    <pre><a name="is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font><em>)</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is current queue equal to </font><em>other</em><font
+color="#008000">?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#is_equal"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        consistent</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#standard_is_equal"><em>standard_is_equal</em></a><em> </em>(<em>other</em>)<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#008080"><em>Result</em></font><em>
+        same_type</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<em>
+        symmetric</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> other</em>.<a
+href="#is_equal"><em>is_equal</em></a><em> </em>(<font
+color="#008080"><em>Current</em></font>)<em>
+        same_count</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> count </em>=<em> other</em>.<a
+href="#count"><em>count</em></a></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font> <font
+color="#008000">-- Duplication</font></pre>
+
+<blockquote>
+    <pre><a name="copy"><em>copy</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>)<em>
+        </em><font color="#008000">-- Copy </font><em>other</em><font
+color="#008000"> to current queue.
+        -- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#copy"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        type_identity</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        is_equal</em>:<em> </em><a href="#is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>)</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Setting</font></pre>
+
+<blockquote>
+    <pre><a name="set_equality_tester"><em>set_equality_tester</em></a><em> </em>(<em>a_tester</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#equality_tester"><em>equality_tester</em></a>)<em>
+        </em><font color="#008000">-- Set </font><a
+href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000"> to </font><em>a_tester</em><font color="#008000">.
+        -- A void equality tester means that `='
+        -- will be used as comparison criterion.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_searchable.html#set_equality_tester"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><em>
+</em><font color="#000080"><em><strong>    require</strong></em></font><em>
+        equality_tester_settable</em>:<em> </em><a
+href="#equality_tester_settable"><em>equality_tester_settable</em></a><em> </em>(<em>a_tester</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        equality_tester_set</em>:<em> </em><a
+href="#equality_tester"><em>equality_tester</em></a><em> </em>= <em>a_tester</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Element change</font></pre>
+
+<blockquote>
+    <pre><a name="put"><em>put</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Add </font><em>v</em><font
+color="#008000"> to back of queue.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_dispenser.html#put"><font color="#008000"><em>DS_DISPENSER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        extendible</em>:<em> </em><a href="#extendible"><em>extendible</em></a><em> </em>(<font
+color="#808000"><em>1</em></font>)<font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        one_more</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="force"><em>force</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Add </font><em>v</em><font
+color="#008000"> to back of queue.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_dispenser.html#force"><font color="#008000"><em>DS_DISPENSER</em></font></a><font
+color="#008000">.)</font><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        one_more</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="extend"><em>extend</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_linear.html"><em>DS_LINEAR</em></a><em> </em>[<em>G</em>])<em>
+        </em><font color="#008000">-- Add items of </font><em>other</em><font
+color="#008000"> to back of queue.
+        -- Add </font><em>other</em><font color="#008000">.</font><a
+href="ds_linear.html#first"><em>first</em></a><font
+color="#008000"> first, etc.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_dispenser.html#extend"><font color="#008000"><em>DS_DISPENSER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        extendible</em>:<em> </em><a href="#extendible"><em>extendible</em></a><em> </em>(<em>other</em>.<a
+href="ds_linear.html#count"><em>count</em></a>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        new_count</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> other</em>.<a
+href="ds_linear.html#count"><em>count</em></a></pre>
+    <pre><a name="append"><em>append</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_linear.html"><em>DS_LINEAR</em></a><em> </em>[<em>G</em>])<em>
+        </em><font color="#008000">-- Add items of </font><em>other</em><font
+color="#008000"> to back of queue.
+        -- Add </font><em>other</em><font color="#008000">.</font><a
+href="ds_linear.html#first"><em>first</em></a><font
+color="#008000"> first, etc.
+        -- (From </font><a href="ds_dispenser.html#append"><font
+color="#008000"><em>DS_DISPENSER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        new_count</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> other</em>.<a
+href="ds_linear.html#count"><em>count</em></a></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Removal</font></pre>
+
+<blockquote>
+    <pre><a name="remove"><em>remove</em></a><em>
+        </em><font color="#008000">-- Remove front item from queue.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_dispenser.html#remove"><font color="#008000"><em>DS_DISPENSER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        one_less</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>-<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="prune"><em>prune</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+        </em><font color="#008000">-- Remove </font><em>n</em><font
+color="#008000"> items from queue.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_dispenser.html#prune"><font color="#008000"><em>DS_DISPENSER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_n</em>:<em> </em><font color="#808000"><em>0</em></font><em> </em>&lt;=<em> n </em><font
+color="#000080"><em><strong>and</strong></em></font><em> n </em>&lt;=<em> </em><a
+href="#count"><em>count</em></a><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        new_count</em>: <a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>-<em> n</em></pre>
+    <pre><a name="keep"><em>keep</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+        </em><font color="#008000">-- Keep </font><em>n</em><font
+color="#008000"> items in queue.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_dispenser.html#keep"><font color="#008000"><em>DS_DISPENSER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_n</em>:<em> </em><font color="#808000"><em>0</em></font><em> </em>&lt;=<em> n </em><font
+color="#000080"><em><strong>and</strong></em></font><em> n </em>&lt;=<em> </em><a
+href="#count"><em>count</em></a><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        new_count</em>: <a href="#count"><em>count</em></a><em> </em>=<em> n</em></pre>
+    <pre><a name="wipe_out"><em>wipe_out</em></a><em>
+        </em><font color="#008000">-- Remove all items from queue.
+        -- (From </font><a href="ds_container.html#wipe_out"><font
+color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        wiped_out</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a></pre>
+</blockquote>
+
+<pre><a name="invariant"><font color="#000080"><em><strong>invariant</strong></em></font></a></pre>
+
+<blockquote>
+    <pre><em>positive_count</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+empty_definition</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em> </em>= (<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#808000"><em>0</em></font>)
+    <font color="#008000">-- (From </font><a
+href="ds_container.html#invariant"><font color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>end</strong></em></font><font
+color="#008000"> -- class DS_LINKED_QUEUE</font></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1999-2001</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 31 March 2001</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="ds_linked_list_cursor.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_linked_stack.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

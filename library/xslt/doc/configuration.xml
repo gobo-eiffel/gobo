@@ -1,0 +1,216 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"configuration of the XSLT processor"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_configuration">
+  <chapterinfo>
+    <copyright>
+      <year>2004-2016</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>27 December 2016</date>
+  </chapterinfo>
+  <title>Configuring the XSLT processor</title>
+  <para>
+    The configuration of the processor is controlled by <classname>XM_XSLT_CONFIGURATION</classname>.
+    This has two creation procedures, <featurename>make</featurename> and <featurename>make_with_defaults</featurename>.
+    The latter creation procedure takes no arguments, and sets up convenient defaults (as used by the command-line processor gexslt).
+    We will look in detail at the arguments to <featurename>make</featurename>.
+  </para>
+  <section>
+    <title>The Entity Resolver</title>
+    <para>
+      The first argument is an <classname>XM_URI_EXTERNAL_RESOLVER</classname>, for use by 
+      the XML parser to resolve
+      <exmlsyntax>PUBLIC</exmlsyntax> and <exmlsyntax>SYSTEM</exmlsyntax> external identifiers.
+      The creation procedure <featurename>make_with_defaults</featurename> uses a <link linkend="${library/xml}/catalogs">catalog resolver</link>, <classname>XM_CATALOG_RESOLVER</classname>,
+      to look up the external identifiers in an OASIS ETRC XML catalog.
+    </para>
+    <para>
+      You can disable the actual catalog lookup by inheriting from  <classname>XM_SHARED_CATALOG_MANAGER</classname>
+      and calling <featurecall><featurename>shared_catalog_manager.suppress_catalogs</featurename></featurecall>. In which case
+      you will get resolution of the <exmlsyntax>SYSTEM</exmlsyntax> identifier, providing it's URI scheme is one of the registered
+      schemes. By default, only <uri>file</uri> and <uri>data</uri> are registered. You can register handlers for additional
+      URI schemes by creating a descendant of <classname>XM_URI_RESOLVER</classname> and passing it as the sole argument to
+      <featurecall><featurename>shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme</featurename></featurecall>.
+      You can do this even if you don't disable the catalog lookup.
+    </para>
+    <para>
+      Despite the flexibility of the catalog resolver, you may still want to provide your own resolver (if you
+      want to resolve external entities from a relational database manager, for instance). Just create your own, and
+      pass it as the first argument to <featurename>make</featurename>.
+    </para>
+  </section>
+  <section>
+    <title>The URI Resolver</title>
+    <para>
+      The second argument is an <classname>XM_URI_REFERENCE_RESOLVER</classname>. This is used
+      to resolve URIs given by the <xslt>xsl:include</xslt> and <xslt>xsl:import</xslt>
+      instructions, and the <xpath>document()</xpath> function. <featurename>make_with_defaults</featurename>
+      passes the same catalog resolver as it does for the first argument, but there is no obligation that the
+      two arguments must receive the same object.
+    </para>
+  </section>
+  <section>
+    <title>The Output Resolver</title>
+    <para>
+      The third argument is an <link linkend="output_resolver"><classname>XM_XSLT_OUTPUT_URI_RESOLVER</classname></link>. This is used to resolve
+      the destination URI specified by the <featurename>href</featurename> attribute of <featurename>xsl:result-document</featurename>. 
+      It is <emphasis>not</emphasis> used to resolve the principal output destination, as that is under the direct control of
+      the user of the XSLT library, not the stylesheet author.
+    </para>
+    <para>
+      <featurename>make_with_defaults</featurename> passes an <classname>XM_XSLT_DEFAULT_OUTPUT_URI_RESOLVER</classname>.
+    </para>
+  </section>
+  <section>
+    <title>The Error Listener</title>
+    <para>
+      The fourth argument is an <link linkend="error_listener"><classname>XM_XSLT_ERROR_LISTENER</classname></link>. This receives
+      notifications of warnings, recoverable errors and fatal errors.
+    </para>
+   <para>
+      <featurename>make_with_defaults</featurename> passes an <classname>XM_XSLT_DEFAULT_ERROR_LISTENER</classname>.
+    </para>
+  </section>
+  <section>
+    <title>The Encoder Factory</title>
+    <para>
+      The fifth argument is an <classname>XM_XSLT_ENCODER_FACTORY</classname>. This creates
+      output encoders for the various character encodings supported by the library.
+    </para>
+    <para>
+      If you need to create output files in an encoding which is <emphasis>not</emphasis> supported
+      by the library, then you will need to create a descendant of <classname>XM_XSLT_OUTPUT_ENCODER</classname>,
+      and a descendant of <classname>XM_XSLT_ENCODER_FACTORY</classname> to create your encoder (but better would be to
+      offer your encoder to Gobo, for inclusion in the library, if that is possible for you).
+    </para>
+  </section>
+  <section>
+    <title>The Message Emitter Factory</title>
+    <para>
+     To control the destination of output fron <xslt>xsl:message</xslt> instructions, the configuration
+     supports a feature <featurename>set_message_emitter_factory</featurename>. This takes as a single argument
+     an object of type <classname>XM_XSLT_MESSAGE_EMITTER_FACTORY</classname>. The default factory creates
+     an object of type <classname>XM_XSLT_MESSAGE_EMITTER</classname>, but if you look at the source code, then 
+     you will see that the interface fror the created objects is only an <classname>XM_XPATH_RECEIVER</classname>.
+    </para>
+    <para>
+     The sole feature of the factory is <featurename>new_message_emitter</featurename>. As arguments, this receives a
+     reference to the transformer, an <classname>XM_OUTPUT</classname> for performing output (configured to write to standard error
+     by default, but you can freely change this within <featurename>new_message_emitter</featurename>), and an <classname>XM_XSLT_OUTPUT_PROPERTIES</classname>.
+     This last object is initialized to the defaults for the <xslt>xml output method</xslt>. it is present for use by an <classname>XM_XSLT_XML_EMITTER</classname>, but
+     there is currently no way that the XSLT programmer can set it's contents. If programmers see a need, then we could add a User-defined Data Element which would enable
+     stylesheet authors to code the same parameters as you can currently code on <xslt>xsl:output</xslt> or <xslt>xsl:result-document</xslt>, to affect the way in which
+     <xslt>xsl:message</xslt> output is serialized.
+    </para>
+  </section>
+  <section>
+    <title>Other features of the configuration</title>
+    <para>
+      The following other features are of interest to the Eiffel programmer:
+      <variablelist>
+      	<varlistentry>
+	  <term><featurename>set_trace_listener (a_trace_listener: XM_XSLT_TRACE_LISTENER)</featurename></term>
+	  <listitem>
+	    <para>
+	      This sets the <featurename>trace_listener</featurename>. Setting it to a non-<featurename>Void</featurename>
+	      value turns on stylesheet execution tracing. See <link linkend="tracing">XM_XSLT_TRACE_LISTENER</link>
+	      for more details.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      	<varlistentry>
+	  <term><featurename>set_line_numbering (on_or_off: BOOLEAN)</featurename></term>
+	  <listitem>
+	    <para>
+	      Turns line numbering on and off in diagnostic messages (providing the error listener makes use of the information).
+	    </para>
+	  </listitem>
+	</varlistentry>
+      	<varlistentry>
+	  <term><featurename>set_timing (on_or_off: BOOLEAN)</featurename></term>
+	  <listitem>
+	    <para>
+	      Turns the timing facility on or off.
+	    </para>
+	    <para>
+	      If the timing facility is on, then each execution phase
+	      and build of a document tree prints timing information
+	      on the standard error stream.
+	    </para>
+	  </listitem>
+	</varlistentry>
+     	<varlistentry>
+	  <term><featurename>use_tiny_tree_model (true_or_false: BOOLEAN)</featurename></term>
+	  <listitem>
+	    <para>
+	      Selects use of the tiny tree model for building in-memory representations of XML source documents (not used for the stylesheet).
+	      This is supposed to save memory, at the possible expense of execution time. 
+	    </para>
+	  </listitem>
+	</varlistentry>
+     	<varlistentry>
+	  <term><featurename>set_digits (digits: INTEGER)</featurename></term>
+	  <listitem>
+	    <para>
+	      Sets the number of digits to be used when performing decimal arithmetic with
+	      XPath expressions. The default is 18 digits, and it may not be set lower than this.
+	    </para>
+	  </listitem>
+	</varlistentry>
+    	<varlistentry>
+	  <term><featurename>set_entity_resolver</featurename></term>
+	  <listitem>
+	    <para>
+	      Sets the entity resolver for XML parsing.
+	    </para>
+	  </listitem>
+	</varlistentry>
+    	<varlistentry>
+	  <term><featurename>set_uri_resolver</featurename></term>
+	  <listitem>
+	    <para>
+	      Set the URI reference resolver for <xslt>xsl:import/include</xslt>
+	      processing, and for the <xpath>document()</xpath> function.
+	    </para>
+	  </listitem>
+	</varlistentry>
+    	<varlistentry>
+	  <term><featurename>suppress_dtd</featurename></term>
+	  <listitem>
+	    <para>
+	      Prevents the XML parser from reading external DTDs.
+	      This applies to all uses of the fn:doc(), fn:document() and fn:collection() functions,
+	      as well as the principal source document and all tranformation modules.
+	    </para>
+	  </listitem>
+	</varlistentry>
+    	<varlistentry>
+	  <term><featurename>set_recovery_policy (a_recovery_policy: INTEGER)</featurename></term>
+	  <listitem>
+	    <para>
+	      Sets the recovery policy for error listeners.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+    </para>
+  </section>
+</chapter>
+

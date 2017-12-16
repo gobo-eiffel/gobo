@@ -1,0 +1,27 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 9 in class BB
+Assignment attempt symbol "?=" is not part of ECMA/ISO Eiffel and will not be supported in the future. Use object test instead.
+
+        do
+            attr ?= "gobo"
+-----------------^
+        end
+
+-------------------------------------------------------------------------------
+
+Error code: VSTB
+
+Error: The instance-free feature f calls the non-instance free feature attr.
+What to do:
+	- remove the call to the non-instance-free feature attr from the code or
+	- remove the instance-free mark from the feature declaration of f or
+	- mark the feature attr as instance-free.
+Class: BB
+Feature: f
+Line: 9
+      do
+->      attr ?= "gobo"
+      end
+
+-------------------------------------------------------------------------------

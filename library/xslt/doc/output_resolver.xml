@@ -1,0 +1,120 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Output URI Resolver"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_output_resolver">
+  <chapterinfo>
+    <copyright>
+      <year>2004-2016</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>27 December 2016</date>
+  </chapterinfo>
+  <title>The Output URI Resolver</title>    
+  <para>
+    This interface is used to resolve the destination URI specified by the 
+    <featurename>href</featurename> attribute of <featurename>xsl:result-document</featurename>. 
+    It is <emphasis>not</emphasis> used to resolve the principal output destination, as that is under the direct control of
+    the user of the XSLT library, not the stylesheet author.
+  </para>
+  <section>
+    <title>Features</title>
+    <variablelist>
+      <varlistentry>
+	<term><featurename>security_manager</featurename></term>
+	<listitem>
+	  <para>
+	    The <link linkend="security_manager"><classname>XM_XSLT_SECURITY_MANAGER</classname></link> is an interface
+	    which allows pluggable security policies. When the output resolver's <featurename>resolve</featurename> routine 
+	    is called, it in turn is supposed to call <featurecall><featurename>is_output_uri_permitted</featurename></featurecall>
+	    on the security manager, to check that it is permitted to write to the URI in question.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><featurename>output_destinations</featurename></term>
+	<listitem>
+	  <para>
+	    This is a map of output URIs to the <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>s
+	    allocated to them. This is particularly useful when the principal output destination is to
+	    a <classname>STRING</classname> (selected by a <uri>string:</uri> URI), and the <xslt>href</xslt>
+	    attribute of <xslt>xsl:result-document</xslt> supplies a relative URL. In this case, the output resolver
+	    will allocate a <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link> that wraps a 
+	    <classname>STRING</classname>. The Eiffel programmer can then retrieve this as it is indexed by the absolute URI.
+	    For example, if the principal output destination (as supplied by the Eiffel programmer) is <uri>string:</uri>,
+	    and the stylesheet specifies <uri>href="one"</uri>, then the absolute URI is <uri>string:/one</uri>,
+	    and this can be used to retrieve the <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>, and
+	    hence the <classname>STRING</classname>.
+	  </para>
+	  <para>
+	    This map is also used to ensure that no attempt is made to write two different result trees to the same destination URI. 
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><featurename>resolve</featurename></term>
+	<listitem>
+	  <para>
+	    This routine is called to create an <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>
+	    for the output destination.
+	    But first, it must check with the security manager for permission to write to the URI.
+	  </para>
+	  <para>
+	    If resolution is successful, <featurename>last_result</featurename> must be set to the created <classname>XM_XSLT_TRANSFORMATION_RESULT</classname>, 
+	    which must also stored in <featurename>output_destinations</featurename>. If resolution is <emphasis>not</emphasis> successful, then
+	    <featurename>error_message</featurename> must be set to an explanatory message.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><featurename>close</featurename></term>
+	<listitem>
+	  <para>
+	   This routine is called when the result tree has been completely written to the output destination.
+	   It can perform actions such as closing the output stream where appropriate, and might also be used for 
+	   firing off other actions, such as letting a job scheduler know that an output file is available.
+	  </para>
+	  <para>
+	   An <classname>XM_XSLT_OUTPUT_PROPERTIES</classname> object is passed to the routine so
+	   that MIME information is available for URI schemes that need it.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  <section id="xslt_default_output_resolver">
+    <title>The default output resolver: <classname>XM_XSLT_DEFAULT_OUTPUT_URI_RESOLVER</classname></title>
+    <para>
+      This is the only concrete output resolver provided by the library. If it is not suitable for your needs,
+      then you must write your own, and supply it as the third argument to 
+      <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname>'s</link> creation procedure, <featurename>make</featurename>.
+    </para>
+    <para>
+      This output resolver handles <featurename>resolve</featurename> requests by passing them to an instance of
+      <classname>XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER</classname>, according to the scheme of the URI concerned.
+    </para>
+    <para>
+      The resolver comes pre-configured with handlers for the <uri>file</uri>, <uri>stdout</uri>,
+      and <uri>string</uri> protocols. The latter two are Gobo-specific protocols, for writing to the standard output stream
+      and a <classname>STRING</classname>, repectively.
+    </para>
+    <para>
+      Support for additional schemes may be added by calling <featurecall><featurename>register_scheme</featurename></featurecall>.
+    </para>
+  </section>
+</chapter>

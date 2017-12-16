@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>xslt</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>xslt</strong></font></td>
+    <td align="right"><a href="unset_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="overview.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="xslt_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Invoke XSLT Processor.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="xslt_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>processor</dt>
+    <dd><i>Description: </i>Name of XSLT processor
+     <p><i>Domain: </i>xalan_cpp|xalan_java|xsltproc|gexslt
+     </p>
+     <p><i>Default: </i>xalan_cpp
+     </p>
+     <p>
+      						<i>JDK 1.4 notes: </i>Since with JDK 1.4 Xalan is included
+      						you do not have to make any additional configuration like putting Xalan, Xerces
+      						into the classpath. On how to use newer versions of Xalan than the one coming
+      						with the JDK 1.4 refer to the Xalan homepage on http://xml.apache.org/xalan-j.
+      						In JDK 1.5 it changed again and by default there is no possibility anymore to invoke
+      						xalan from the commandline (see http://www.biglist.com/lists/xsl-list/archives/200503/msg01112.html
+      						for more information) and in addition the packagenames in the JDK changed (from org.apache.xalan.xslt.Process
+      						to com.sun.org.apache.xalan.internal.xslt.Process). Probably the easies way with JDK 1.5 is to put Xalan again
+      						in the classpath as it was done with JDK1.3 but I did not spend very much time yet to investigate further.
+      					
+     </p>
+     <p>
+      						<i>Java 5 notes: </i>In Java 5 it changed again and by default there is
+      						no possibility anymore to invoke
+      						xalan from the commandline (see http://www.biglist.com/lists/xsl-list/archives/200503/msg01112.html
+      						for more information) and in addition the packagenames in the JDK changed (from org.apache.xalan.xslt.Process
+      						to com.sun.org.apache.xalan.internal.xslt.Process). Probably the easies way with Java 5 is to put Xalan again
+      						in the classpath as it was done with JDK 1.3 but I did not spend a lot of time to investigate further.
+      					
+     </p>
+    </dd>
+    
+    			
+    <dt>input</dt>
+    <dd><i>Description: </i>Name of XML input file
+     <p><i>Domain: </i>Valid filename pointing to existing file
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>xsl</dt>
+    <dd><i>Description: </i>Name of stylesheet (XSL) file
+     <p><i>Domain: </i>Valid filename pointing to existing file
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>output</dt>
+    <dd><i>Description: </i>Name of output file
+     <p><i>Domain: </i>Valid filename
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>force</dt>
+    <dd>
+     						<i>Description: </i>Execute even if it would not be
+     						necessary since the outputfile is newer than both the input and the xsl file
+     					
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    			
+    			
+    <dt>indent</dt>
+    <dd><i>Description: </i>Number of spaces for indentation of child elements
+     <p><i>Domain: </i>Integer
+     </p>
+     <p><i>Default: </i>4
+     </p>
+    </dd>
+    
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="xslt_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="xslt"&gt;
+    &lt;element name="xslt"&gt;
+      &lt;ref name="dir_if_unless"/&gt;
+      &lt;attribute name="input"/&gt;
+      &lt;attribute name="output"/&gt;
+      &lt;attribute name="stylesheet"/&gt;
+      &lt;optional&gt;
+        &lt;attribute name="processor"&gt;
+          &lt;!-- runtime evaluation
+          &lt;choice&gt;
+            &lt;value&gt;xalan_cpp&lt;/value&gt;
+            &lt;value&gt;xalan_java&lt;/value&gt;
+            &lt;value&gt;xsltproc&lt;/value&gt;
+          &lt;/choice&gt;
+          --&gt;
+        &lt;/attribute&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="force"&gt;
+          &lt;!-- runtime evaluation
+          &lt;choice&gt;
+            &lt;value&gt;true&lt;/value&gt;
+            &lt;value&gt;false&lt;/value&gt;
+          &lt;/choice&gt;
+          --&gt;
+        &lt;/attribute&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="indent"/&gt; &lt;!-- if attribute 'processor' equals 'xalan_java' or 'xalan_cpp'--&gt;&lt;-- TODO - implement for gexslt --&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="format"/&gt; &lt;!-- if attribute 'processor' equals 'xalan_java' --&gt;
+      &lt;/optional&gt;
+      &lt;zeroOrMore&gt;
+        &lt;element name="parameter"&gt;
+          &lt;attribute name="name"/&gt;
+          &lt;attribute name="value"/&gt;
+        &lt;/element&gt;
+      &lt;/zeroOrMore&gt;
+      &lt;optional&gt;
+        &lt;attribute name="extdirs"/&gt; &lt;!-- if attribute 'processor' equals 'xalan_java' --&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="classpath"/&gt; &lt;!-- if attribute 'processor' equals 'xalan_java' --&gt;
+      &lt;/optional&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+
+  </pre>
+   
+   </div>
+  <div><a name="xslt_examples"></a>
+   
+   <h2>Examples</h2>
+   
+   
+   <p>
+    Note that string parameters must be surrounded by a single quote
+    ('), else they will be interpreted as a number.
+    
+   </p>
+   
+   <p>
+    For gexslt, all parameters are string values, so the single quotes are
+    not needed, unless they contain embedded blanks, which might confuse the shell.
+    
+   </p>
+   
+   <p>
+    Gexslt can also take any XPath expression as a parameter value, but this
+    is not possible via geant.
+    
+   </p>
+   
+   <pre>
+  &lt;xslt
+    input="${GOBO}/doc/structure/index.xml"
+    stylesheet="${GOBO}/doc/misc/gobo2db.xsl"
+    output="${GOBO}/doc/structure/index2.xml"
+  &gt;
+
+  &lt;xslt
+    input="${GOBO}/doc/structure/index.xml"
+    stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+    output="${GOBO}/doc/structure/index2.html"
+  &gt;
+    &lt;parameter name="previous" value="&amp;quot;'../license.html'&amp;quot;"/&gt;
+    &lt;parameter name="next" value="&amp;quot;'../time/index.html'&amp;quot;"/&gt;
+    &lt;parameter name="toc" value="&amp;quot;'../index.html'&amp;quot;"/&gt;
+  &lt;/xslt&gt;
+
+  </pre>
+   </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="unset_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="overview.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Getest: Some Simple Examples</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Some Simple Examples</strong></font></td>
+        <td align="right"><a href="stages.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="assertions.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>First some simple examples to get the flavor of how one uses <em>getest</em>:
+let's consider a class with a function that concatenates two
+strings and returns the result. This example is simple, but <em>getest
+</em>works the same way for testing more realistic classes. </p>
+
+<blockquote>
+    <pre><font color="#000080"><em><strong>class</strong></em></font><em> CONCAT1
+
+</em><font color="#000080"><em><strong>create</strong></em></font><em>
+
+    make
+
+</em><font color="#000080"><em><strong>feature</strong></em></font><em> </em>{<em>NONE</em>}<em> </em><font
+color="#008000">-- Initialization</font><em>
+
+    make
+            </em><font color="#008000">-- Create a new string concatenator.</font><em>
+        </em><font color="#000080"><em><strong>do
+        end</strong></em></font><em>
+
+</em><font color="#000080"><em><strong>feature</strong></em></font><em> </em><font
+color="#008000">-- Basic operations</font><em>
+
+    concat </em>(<em>s1</em>,<em> s2</em>:<em> STRING</em>):<em> STRING
+            </em><font color="#008000">-- Concatenate </font><em>s1</em><font
+color="#008000"> and </font><em>s2</em><font color="#008000">.</font><em>
+   </em><font color="#000080"><em><strong>     require</strong></em></font><em>
+            s1_not_void</em>:<em> s1 </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+            s2_not_void</em>:<em> s2 </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        </em><font color="#000080"><em><strong>do</strong></em></font><em>
+            </em><font color="#000080"><em><strong>create</strong></em></font><em> </em><font
+color="#008080"><em>Result</em></font>.<em>make </em>(<em>s1</em>.<em>count </em>+<em> s2</em>.<em>count</em>)<em>
+            </em><font color="#008080"><em>Result</em></font>.<em>append_string </em>(<em>s1</em>)<em>
+            </em><font color="#008080"><em>Result</em></font>.<em>append_string </em>(<em>s1</em>)<em>
+        </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+            concat_string_not_void: </em><font color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+</em><font color="#000080"><em><strong>        end</strong></em></font><em>
+
+</em><font color="#000080"><em><strong>end</strong></em></font><em> </em></pre>
+</blockquote>
+
+<p>In order to test this class, one just has to write a simple
+test case. The test case class will inherit from class <font
+color="#008080"><em><tt>TS_TEST_CASE</tt></em></font> (from the
+test harness cluster of the <em>Gobo Eiffel Test Library</em>)
+which will provide testing facilities to exercise Eiffel code,
+such as routines <font color="#008080"><em><tt>assert</tt></em></font>
+and <font color="#008080"><em><tt>assert_equal</tt></em></font>.
+The test class will be equipped with a test routine <font
+color="#008080"><em><tt>test_concat</tt></em></font> which makes
+several assertions about the expected results of the feature <font
+color="#008080"><em><tt>concat</tt></em></font> from the tested
+class. </p>
+
+<blockquote>
+    <pre><font color="#000080"><em><strong>class</strong></em></font><em> TEST_CONCAT1
+
+</em><font color="#000080"><em><strong>inherit</strong></em></font><em>
+
+    TS_TEST_CASE
+
+</em><font color="#000080"><em><strong>create</strong></em></font><em>
+
+    make_default
+
+</em><font color="#000080"><em><strong>feature</strong></em></font><em> </em><font
+color="#008000">-- Test</font><em>
+
+    test_concat
+            </em><font color="#008000">-- Test feature </font><em>concat</em><font
+color="#008000">.</font><em>
+        </em><font color="#000080"><em><strong>local</strong></em></font><em>
+            c</em>:<em> CONCAT1
+        </em><font color="#000080"><em><strong>do</strong></em></font><em>
+            </em><font color="#000080"><em><strong>create</strong></em></font><em> c</em>.<em>make
+            assert_equal </em>(<font color="#800000"><em>&quot;toto&quot;</em></font>,<em> </em><font
+color="#800000"><em>&quot;toto&quot;</em></font>,<em> c</em>.<em>concat </em>(<font
+color="#800000"><em>&quot;to&quot;</em></font>,<em> </em><font
+color="#800000"><em>&quot;to&quot;</em></font>))<em>
+            assert_equal </em>(<font color="#800000"><em>&quot;foobar&quot;</em></font>,<em> </em><font
+color="#800000"><em>&quot;foobar&quot;</em></font>,<em> c</em>.<em>concat </em>(<font
+color="#800000"><em>&quot;foo&quot;</em></font>,<em> </em><font
+color="#800000"><em>&quot;bar&quot;</em></font>))<em>
+        </em><font color="#000080"><em><strong>end</strong></em></font><em>
+
+</em><font color="#000080"><em><strong>end</strong></em></font><em> </em></pre>
+</blockquote>
+
+<p>The source code for this example can be found in <font
+color="#800000"><tt>$GOBO/library/test/example/concat1</tt></font>.</p>
+
+<p>Once this test case class has been written, one can run the
+test suite as follows:</p>
+
+<blockquote>
+    <pre><font color="#800000">getest getest.&lt;<em>compiler</em>&gt;</font></pre>
+</blockquote>
+
+<p>where <font color="#800000"><tt>&lt;</tt><em><tt>compiler</tt></em><tt>&gt;</tt></font>
+is either <font color="#800000"><tt>ge</tt></font>, <font
+color="#800000"><tt>ise</tt></font> or <font color="#800000"><tt>se</tt></font>
+depending on the Eiffel compiler used to compile the test suite.
+Alternatively one can use the following shorthand:</p>
+
+<blockquote>
+    <pre><font color="#800000">getest --&lt;<em>compiler</em>&gt;</font></pre>
+</blockquote>
+
+<p>which is equivalent to the command-line above. Here is the
+output I got when running <em>getest</em> with the ISE Eiffel
+compiler:</p>
+
+<blockquote>
+    <pre><font color="#800000">$ cd $GOBO/library/test/example/concat1
+$ getest --ise
+Preparing Test Cases
+Compiling Test Cases
+Running Test Cases
+
+Test Summary for xconcat1
+
+# Passed:     0 test
+# FAILED:     1 test
+# Aborted:    0 test
+# Total:      1 test (2 assertions)
+
+Test Results:
+FAIL:  [TEST_CONCAT1.test_concat] foobar
+   expected: foobar
+   but  got: foofoo</font></pre>
+</blockquote>
+
+<p>Oh well, it looks like we have just found a bug! We can easily
+see that the third line in the routine <font color="#008080"><em><tt>concat</tt></em></font>
+from class <font color="#008080"><em><tt>CONCAT1</tt></em></font>
+should have been:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>Result</em></font>.<em>append_string </em>(<em>s2</em>)</pre>
+</blockquote>
+
+<p>The source code for this example with the bug fixed can be
+found in <font color="#800000"><tt>$GOBO/library/test/example/concat2</tt></font>.
+Here is what we get when we run <em>getest</em> again:</p>
+
+<blockquote>
+    <pre><font color="#800000">$ cd $GOBO/library/test/example/concat2
+$ getest --ise
+Preparing Test Cases
+Compiling Test Cases
+Running Test Cases
+
+Test Summary for xconcat2
+
+# PASSED:     1 test
+# Failed:     0 test
+# Aborted:    0 test
+# Total:      1 test (2 assertions)</font></pre>
+</blockquote>
+
+<p>That's better!</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2001-2016</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"> <br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 28 December 2016</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="stages.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="assertions.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

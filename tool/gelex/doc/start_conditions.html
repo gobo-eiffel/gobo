@@ -1,0 +1,428 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gelex: Start Conditions</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Start Conditions</strong></font></td>
+        <td align="right"><a href="matching_rules.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="actions.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p><em>Gelex</em> provides a mechanism for conditionally
+activating rules. Any rule whose pattern is prefixed with <font
+color="#800000"><tt>&lt;sc&gt;</tt></font> will only be active
+when the scanner is in the <em>start condition</em> named <font
+color="#800000"><tt>sc</tt></font>. For example,</p>
+
+<blockquote>
+    <pre><font color="#800000">&lt;STRING&gt;</font><font
+color="#FF0000">[^&quot;]*</font>    <font color="#0000FF">{</font>  <font
+color="#008080">-- Eat up the string body ...
+                    ...</font>
+                 <font color="#0000FF">}</font></pre>
+</blockquote>
+
+<p>will be active only when the scanner is in the <font
+color="#800000"><tt>STRING</tt></font> start condition, and:</p>
+
+<blockquote>
+    <pre><font color="#800000">&lt;INITIAL,STRING,QUOTE&gt;</font><font
+color="#FF0000">\.</font>   <font color="#0000FF">{</font> <font
+color="#008080">-- handle an escape ...
+                             ...</font>
+                           <font color="#0000FF">}</font></pre>
+</blockquote>
+
+<p>will be active only when the current start condition is either
+<font color="#800000"><tt>INITIAL</tt></font>, <font
+color="#800000"><tt>STRING</tt></font>, or <font color="#800000"><tt>QUOTE</tt></font>.</p>
+
+<p>Start conditions are declared in the <a
+href="description.html#declarations">declarations section</a> of
+the input using unindented lines beginning with either <font
+color="#0000FF"><tt>%s</tt></font> or <font color="#0000FF"><tt>%x</tt></font>
+followed by a whitespace-separated list of names. The former
+declares <em><strong>inclusive</strong></em> start conditions,
+the latter <em><strong>exclusive</strong></em><em> </em>start
+conditions. The name of the start conditions are case-insensitive
+and are made up of a letter followed by zero or more letters,
+digits, or underscores. For each start condition <em>gelex</em>
+generates an Eiffel integer constant attribute which can be used
+to refer to it. The name of the start conditions must therefore
+be different from other feature names in the generated class.</p>
+
+<p>A start condition is activated using feature <font
+color="#008080"><em><tt>set_start_condition</tt></em></font>.
+Until the next <font color="#008080"><em><tt>set_start_condition</tt></em></font>
+is called, rules with the given start condition will be active
+and rules with other start conditions will be inactive. If the
+start condition is inclusive, then rules with no start conditions
+at all will also be active. If it is exclusive, then only rules
+qualified with the start condition will be active. The original
+state where only the rules with no start conditions are active is
+referred to as the start condition <font color="#800000"><tt>INITIAL</tt></font>.</p>
+
+<p>A set of rules contingent on the same exclusive start
+condition describe a scanner which is independent of any of the
+other rules in the <em>gelex</em> input. Because of this,
+exclusive start conditions make it easy to specify
+&quot;mini-scanners&quot; which scan portions of the input that
+are syntactically different from the rest (e.g. strings).</p>
+
+<p>If the distinction between inclusive and exclusive start
+conditions is still a little vague, here's a simple example
+illustrating the connection between the two. The set of rules:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%s</font> <font color="#800000">example</font>
+<font color="#0000FF">%%</font>
+<font color="#800000">&lt;example&gt;</font><font color="#FF0000">foo</font>    <font
+color="#008080"><em>do_something</em></font>
+<font color="#FF0000">bar</font>             <font
+color="#008080"><em>something_else</em></font></pre>
+</blockquote>
+
+<p>is equivalent to:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%x</font> <font color="#800000">example</font>
+<font color="#0000FF">%%</font>
+<font color="#800000">&lt;example&gt;</font><font color="#FF0000">foo</font>           <font
+color="#008080"><em>do_something</em></font>
+<font color="#800000">&lt;INITIAL,example&gt;</font><font
+color="#FF0000">bar</font>   <font color="#008080"><em>something_else</em></font></pre>
+</blockquote>
+
+<p>Without the <font color="#800000"><tt>&lt;INITIAL,example&gt;</tt></font>
+qualifier, the <font color="#FF0000"><tt>bar</tt></font> pattern
+in the second example wouldn't be active (i.e. couldn't match)
+when in start condition <font color="#800000" size="2"
+face="Courier New">example</font>. If we just used <font
+color="#800000"><tt>&lt;example&gt;</tt></font> to qualify <font
+color="#FF0000"><tt>bar</tt></font>, though, then it would only
+be active in <font color="#800000"><tt>example</tt></font> and
+not in <font color="#800000"><tt>INITIAL</tt></font>, while in
+the first example it's active in both, because in the first
+example the <font color="#800000"><tt>example</tt></font> start
+condition is an inclusive (<font color="#0000FF"><tt>%s</tt></font>)
+start condition.</p>
+
+<p>Also note that the special start condition specifier <font
+color="#800000" size="2" face="Courier New">&lt;*&gt;</font>
+matches every start condition. Thus, the above example could also
+have been written:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%x</font> <font color="#800000">example</font>
+<font color="#0000FF">%%</font>
+<font color="#800000">&lt;example&gt;</font><font color="#FF0000">foo</font>    <font
+color="#008080"><em>do_something</em></font>
+<font color="#800000">&lt;*&gt;</font><font color="#FF0000">bar</font>          <font
+color="#008080"><em>something_else</em></font></pre>
+</blockquote>
+
+<p>The <a href="matching_rules.html#default_rule">default rule</a>
+(to echo any unmatched character) remains active in start
+conditions. It is equivalent to:</p>
+
+<blockquote>
+    <pre><font color="#800000">&lt;*&gt;</font><font
+color="#FF0000">.|\n</font>         <font color="#008080"><em>default_action</em></font></pre>
+</blockquote>
+
+<p>To illustrate the uses of start conditions, here is a scanner
+which provides two different interpretations of a string like <font
+color="#808000"><tt>123.456</tt></font>. By default it will treat
+it as three tokens, the integer <font color="#808000"><tt>123</tt></font>,
+a dot, and the integer <font color="#808000"><tt>456</tt></font>.
+But if the string is preceded earlier in the line by the string <font
+color="#808000"><tt>expect-reals</tt></font> it will treat it as
+a single token, the real number <font color="#808000"><tt>123.456</tt></font>:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%s</font> <font color="#800000">expect</font>
+<font color="#0000FF">%%</font>
+<font color="#FF0000">expect-reals</font>              <font
+color="#008080"><em>set_start_condition</em> (<em>expect</em>)</font>
+<font color="#800000">&lt;expect&gt;</font><font color="#FF0000">[0-9]+&quot;.&quot;[0-9]+</font>  <font
+color="#0000FF">{</font>
+                          <font color="#008080"><em>io</em>.<em>put_string</em> (&quot;<em>Found a real: </em>&quot;)
+                          <em>io</em>.<em>put_real</em> (<em>text</em>.<em>to_real</em>)
+                          <em>io</em>.<em>put_new_line</em></font>
+                     <font color="#0000FF">}</font>
+<font color="#800000">&lt;expect&gt;</font><font color="#FF0000">\n</font>           <font
+color="#0000FF">{</font>
+                          <font color="#008080">-- That's the end of the line, so
+                          -- we need another &quot;expect-reals&quot;
+                          -- before we'll recognize any more
+                          -- reals.
+                          <em>set_start_condition</em> (<em>INITIAL</em>)</font>
+                     <font color="#0000FF">}</font>
+<font color="#FF0000">[0-9]+</font>               <font
+color="#0000FF">{</font>
+                          <font color="#008080"><em>io</em>.<em>put_string</em> (&quot;<em>Found an integer: </em>&quot;)
+                          <em>io</em>.<em>put_integer</em> (<em>text</em>.<em>to_integer</em>)
+                          <em>io</em>.<em>put_new_line</em></font>
+                     <font color="#0000FF">}</font>
+<font color="#FF0000">&quot;.&quot;</font>             <font
+color="#008080"><em>io</em>.<em>put_string</em> (&quot;<em>Found a dot</em>&quot;); <em>io</em>.<em>put_new_line</em></font></pre>
+</blockquote>
+
+<p>Here is a scanner which recognizes (and discards) C comments
+while maintaining a count of the current input line.</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%x</font> <font color="#800000">comment</font>
+<font color="#0000FF">%%</font>
+<font color="#FF0000">&quot;/*&quot;</font>                    <font
+color="#008080"><em>set_start_condition</em> (<em>comment</em>)</font>
+<font color="#800000">&lt;comment&gt;</font><font color="#FF0000">[^*\n]*</font>        <font
+color="#008080">-- Eat anything that's not a '*'</font>
+<font color="#800000">&lt;comment&gt;</font><font color="#FF0000">&quot;*&quot;+[^*/\n]*</font>   <font
+color="#008080">-- Eat up '*'s not followed by '/'s</font>
+<font color="#800000">&lt;comment&gt;</font><font color="#FF0000">\n</font>             <font
+color="#008080"><em>line_nb</em> := <em>line_nb</em> + <em>1</em></font>
+<font color="#800000">&lt;comment&gt;</font><font color="#FF0000">&quot;*&quot;+&quot;/&quot; </font>       <font
+color="#008080"><em>set_start_condition</em> (<em>INITIAL</em>)</font>
+<font color="#0000FF">%%</font>
+    <font color="#008080"><em>line_nb</em>: <em>INTEGER</em>
+            -- Current line number
+    ...</font></pre>
+</blockquote>
+
+<p>This scanner goes to a bit of trouble to match as much text as
+possible with each rule. In general, when attempting to write a
+high-speed scanner try to match as much possible in each rule, as
+it's a big win.</p>
+
+<p>Note that start condition entities in the Eiffel code are
+integer values and can be stored as such. Thus, the above could
+be extended in the following fashion:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%x</font> <font color="#800000">comment foo</font>
+<font color="#0000FF">%%</font>
+<font color="#FF0000">&quot;/*&quot;</font>      <font
+color="#0000FF">{</font>
+               <font color="#008080"><em>comment_caller</em> := <em>INITIAL</em>
+               <em>set_start_condition</em> (<em>comment</em>)</font>
+          <font color="#0000FF">}</font>
+<font color="#800000">&lt;foo&gt;</font><font color="#FF0000">&quot;/*&quot;</font> <font
+color="#0000FF">{</font>
+               <font color="#008080"><em>comment_caller</em> := <em>foo</em>
+               <em>set_start_condition</em> (<em>comment</em>)</font>
+          <font color="#0000FF">}</font>
+<font color="#800000">&lt;comment&gt;</font><font color="#FF0000">[^*\n]*</font>         <font
+color="#008080">-- Eat anything that's not a '*'</font>
+<font color="#800000">&lt;comment&gt;</font><font color="#FF0000">&quot;*&quot;+[^*/\n]*</font>    <font
+color="#008080">-- Eat up '*'s not followed by '/'s</font>
+<font color="#800000">&lt;comment&gt;</font><font color="#FF0000">\n</font>              <font
+color="#008080"><em>line_nb</em> := <em>line_nb</em> + <em>1</em></font>
+<font color="#800000">&lt;comment&gt;</font><font color="#FF0000">&quot;*&quot;+&quot;/&quot;</font>         <font
+color="#008080"><em>set_start_condition</em> (<em>comment_caller</em>)</font>
+<font color="#0000FF">%%</font>
+    <font color="#008080"><em>line_nb</em>: <em>INTEGER</em>
+            -- Current line number
+
+    <em>comment_caller</em>: <em>INTEGER
+            </em>-- Last start condition<em>
+    ...</em></font></pre>
+</blockquote>
+
+<p>Furthermore, you can access the current start condition using
+the integer function <font color="#008080"><em><tt>start_condition</tt></em></font>.
+For example, the above assignments to <font color="#008080"><em><tt>comment_caller</tt></em></font>
+could instead have been written:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>comment_caller</em> := <em>start_condition</em></font></pre>
+</blockquote>
+
+<p>In case of nested start conditions, you could also keep track
+of previous start conditions by pushing them on an integer stack
+and then popping them from the stack as you leave the current
+start condition.</p>
+
+<p>Finally, here's an example of how to match Eiffel-style quoted
+strings using exclusive start conditions, including expanded
+escape sequences:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%x</font> <font color="#800000">str</font>
+<font color="#0000FF">%%</font>
+<font color="#FF0000">\&quot;</font>            <font
+color="#008080"><em>buffer</em>.<em>wipe_out</em>; <em>set_start_condition</em> (<em>str</em>)</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">[^%\n&quot;]+</font> <font
+color="#008080"><em>buffer</em>.<em>append_string</em> (<em>text</em>)</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%A </font>      <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%A</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%B</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%B</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%C</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%C</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%D</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%D</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%F</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%F</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%H</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%H</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%L</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%L</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%N</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%N</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%Q</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%Q</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%R</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%R</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%S</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%S</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%T</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%T</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%U</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%U</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%V</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%V</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%%</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%%</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\'</font>      <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%'</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\&quot;</font>      <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%&quot;</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\(</font>      <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%(</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\)</font>      <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%)</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%&lt;</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%&lt;</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%&gt;</font>       <font
+color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%&gt;</em>')</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\/[0-9]+\/</font>   <font
+color="#0000FF">{</font>
+        <font color="#008080"><em>code</em> := <em>text</em>_<em>substring</em> (<em>3</em>, <em>text_count</em> - <em>1</em>).<em>to_integer</em>
+        <em><strong>if</strong></em> <em>code</em> &gt; <em>Maximum_character_code</em> <em><strong>then</strong></em>
+            <em>set_start_condition</em> (<em>INITIAL</em>)
+            <em>last_token</em> := <em>E_STRERR</em>
+        <em><strong>else</strong></em>
+            <em>buffer</em>.<em>append_character</em> (<em>code</em>.<em>to_character</em>)
+        <em><strong>end</strong></em></font>
+     <font color="#0000FF">}</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\r?\n[ \t\r]*%</font>    <font
+color="#008080"><em>line_nb</em> := <em>line_nb</em> + <em>1</em></font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">\&quot;</font>     <font
+color="#0000FF">{</font>
+                 <font color="#008080"><em>set_start_condition</em> (<em>INITIAL</em>)
+                 -- Pass string value to parser.
+                 <em>last_value</em> := <em>cloned_string</em> (<em>buffer</em>)
+                 <em>last_token</em> := <em>E_STRING</em></font>
+            <font color="#0000FF">}</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">.|\n </font>               <font
+color="#0000FF">|</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\r?\n[ \t\r]*</font>      <font
+color="#0000FF">|</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">%\/([0-9]+(\/)?)?</font>   <font
+color="#0000FF">|</font>
+<font color="#800000">&lt;str&gt;</font><font color="#FF0000">&lt;&lt;EOF&gt;&gt;</font>             <font
+color="#0000FF">{</font>   <font color="#008080">-- Catch-all rules (no backing up)
+                              <em>set_start_condition</em> (<em>INITIAL</em>)
+                              <em>last_token</em> := <em>E_STRERR</em></font>
+                          <font color="#0000FF">}</font></pre>
+</blockquote>
+
+<p>A complete version of this example can be found in <font
+color="#800000"><tt>$GOBO/library/lexical/example/eiffel_scanner</tt></font>.</p>
+
+<p>Often, such as in some of the examples above, you wind up
+writing a whole bunch of rules all preceded by the same start
+condition(s). <em>Gelex</em> makes this a little easier and
+cleaner by introducing a notion of <em><strong>start condition
+scope</strong></em>. A start condition scope begins with:</p>
+
+<blockquote>
+    <pre><font color="#800000">&lt;SCs&gt;</font><font
+color="#0000FF">{</font></pre>
+</blockquote>
+
+<p>where <font color="#800000"><tt>SCs</tt></font> is a
+comma-separated list of one or more start conditions. Inside the
+start condition scope, every rule automatically has the prefix <font
+color="#800000"><tt>&lt;SCs&gt;</tt></font> applied to it, until
+a <font color="#0000FF"><tt>}</tt></font> which matches the
+initial <font color="#0000FF"><tt>{</tt></font>. So, for example,</p>
+
+<blockquote>
+    <pre><font color="#800000">&lt;ESC&gt;</font><font
+color="#0000FF">{</font>
+   <font color="#FF0000">%N</font>    <font color="#008080"><em>last_token</em> := '<em>%N</em>'</font>
+   <font color="#FF0000">%T</font>    <font color="#008080"><em>last_token</em> := '<em>%T</em>'</font>
+   <font color="#FF0000">%B</font>    <font color="#008080"><em>last_token</em> := '<em>%B</em>'</font>
+   <font color="#FF0000">%U </font>   <font color="#008080"><em>last_token</em> := '<em>%U</em>'</font>
+<font color="#0000FF">}</font></pre>
+</blockquote>
+
+<p>is equivalent to:</p>
+
+<blockquote>
+    <pre><font color="#800000">&lt;ESC&gt;</font><font
+color="#FF0000">%N</font>    <font color="#008080"><em>last_token</em> := '<em>%N</em>'</font>
+<font color="#800000">&lt;ESC&gt;</font><font color="#FF0000">%T</font>    <font
+color="#008080"><em>last_token</em> := '<em>%T</em>'</font>
+<font color="#800000">&lt;ESC&gt;</font><font color="#FF0000">%B</font>    <font
+color="#008080"><em>last_token</em> := '<em>%B</em>'</font>
+<font color="#800000">&lt;ESC&gt;</font><font color="#FF0000">%U</font>    <font
+color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
+</blockquote>
+
+<p>Start condition scopes may be nested.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 29 May 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="matching_rules.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="actions.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

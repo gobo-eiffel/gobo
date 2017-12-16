@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<project name="concat1" default="help">
+
+	<description>
+		system: "concat1 getest example"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/test.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="xconcat1"/>
+		<set name="library" value="test"/>
+		<set name="example" value="concat1"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/example/${example}"/>
+	</target>
+
+</project>

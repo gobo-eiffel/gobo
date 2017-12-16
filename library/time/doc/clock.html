@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Clocks</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Clocks</strong></font></td>
+        <td align="right"><a href="duration.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="stopwatch.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p align="center"><!--webbot bot="ImageMap" startspan
+rectangle=" (218,90) (375, 124)  flatshort/dt_shared_system_clock.html"
+rectangle=" (22,92) (143, 124)  flatshort/dt_system_clock.html"
+rectangle=" (26,17) (137, 48)  flatshort/dt_clock.html"
+src="image/clock.gif" border="0" width="393" height="159" --><MAP NAME="FrontPageMap0"><AREA SHAPE="RECT" COORDS="218, 90, 375, 124" HREF="flatshort/dt_shared_system_clock.html"><AREA SHAPE="RECT" COORDS="22, 92, 143, 124" HREF="flatshort/dt_system_clock.html"><AREA SHAPE="RECT" COORDS="26, 17, 137, 48" HREF="flatshort/dt_clock.html"></MAP><img src="image/clock.gif" border="0" width="393" height="159" usemap="#FrontPageMap0"><!--webbot
+bot="ImageMap" i-checksum="30851" endspan --></p>
+
+<p>A clock is an object which knows about a particular point on
+the time axis known as <em>now</em>. All times before that point
+are considered in the past and times beyond it are in the future.</p>
+
+<h2>Abstract Clocks</h2>
+
+<p><a href="flatshort/dt_clock.html"><font color="#008080"><em><tt>DT_CLOCK</tt></em></font></a>
+is a deferred class offering features such as <a
+href="flatshort/dt_clock.html#time_now"><font color="#008080"><em><tt>time_now</tt></em></font></a>,
+<a href="flatshort/dt_clock.html#date_now"><font color="#008080"><em><tt>date_now</tt></em></font></a>
+and <a href="flatshort/dt_clock.html#date_time_now"><font
+color="#008080"><em><tt>date_time_now</tt></em></font></a> which
+can provide today's date and the current time according to the
+clock's criterion. Three other features, <a
+href="flatshort/dt_clock.html#set_time_to_now"><font
+color="#008080"><em><tt>set_time_to_now</tt></em></font></a>, <a
+href="flatshort/dt_clock.html#set_date_to_now"><font
+color="#008080"><em><tt>set_date_to_now</tt></em></font></a> and <a
+href="flatshort/dt_clock.html#set_date_time_to_now"><font
+color="#008080"><em><tt>set_date_time_to_now</tt></em></font></a>,
+allow times, dates and date/times to be reset to the clock's
+current time.</p>
+
+<h2><a name="system">System Clocks</a></h2>
+
+<p>Typically programs need to access the current time of the
+computer they are running on. That's what class <a
+href="flatshort/dt_system_clock.html"><font color="#008080"><em><tt>DT_SYSTEM_CLOCK</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>is for. This class is
+an heir of class <font color="#008080"><em><tt>DT_CLOCK </tt></em></font>and
+implements its deferred features so that the current local time
+of the system is returned. The typical way to invoke the system
+clock is to inherit from <a
+href="flatshort/dt_shared_system_clock.html"><font
+color="#008080"><em><tt>DT_SHARED_SYSTEM_CLOCK</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>and call the once
+function <a
+href="flatshort/dt_shared_system_clock.html#system_clock"><font
+color="#008080"><em><tt>system_clock</tt></em></font></a>.
+Alternatively, class <a href="flatshort/dt_utc_system_clock.html"><font
+color="#008080"><em><tt>DT_UTC_SYSTEM_CLOCK</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>provides the current
+UTC (Coordinated Universal Time) time of the system. It is
+available through the once function <a
+href="flatshort/dt_shared_system_clock.html#utc_system_clock"><font
+color="#008080"><em><tt>utc_system_clock</tt></em></font></a> in
+class <font color="#008080"><em><tt>DT_SHARED_SYSTEM_CLOCK</tt></em></font>.</p>
+
+<p><font color="#008080"><em><tt>DT_SYSTEM_CLOCK </tt></em></font>and
+<font color="#008080"><em><tt>DT_UTC_SYSTEM_CLOCK </tt></em></font>are
+implemented using the time facilities provided by each supported
+Eiffel compiler. The corresponding clusters have been added to <font
+color="#800000"><em><tt>$</tt></em><tt>GOBO/library/kernel.xace</tt></font>.
+There is therefore no other addition needed to the Xace files.</p>
+
+<p>There is an example using system clock in <font
+color="#800000"><tt>$GOBO/library/time/example/clock</tt></font>.</p>
+
+<h2><a name="customizable">Customizable Clocks</a></h2>
+
+<p>With the design of the clock classes, it is quite easy to
+write user-customized clocks by inheriting from <font
+color="#008080"><em><tt>DT_CLOCK </tt></em></font>and giving an
+implementation to the deferred features <font color="#008080"><em><tt>set_time_to_now</tt></em></font>,
+<font color="#008080"><em><tt>set_date_to_now </tt></em></font>and
+<font color="#008080"><em><tt>set_date_time_to_now</tt></em></font>.
+An example of a possible customizable clock is a clock which
+could run twice faster than the regular system clock for
+instance. This kind of clock can be useful in order to run
+simulation tests driven by time events. If the clock runs much
+faster than the system clock then tests which may normally last
+several hours or days will finish in a reasonable amount of time.
+Another application of customizable clocks is a clock which runs
+at the same speed as the system clock, but returns dates and
+times in the past or in the future. This could have been used for
+example to check that a program was Y2K compliant just by
+readjusting the clock to just before midnight on 31 December
+1999. There are certainly many other examples where customizable
+clocks can be useful.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2001-2016</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 27 December 2016</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="duration.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="stopwatch.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

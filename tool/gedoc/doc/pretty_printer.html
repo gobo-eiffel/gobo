@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Eiffel Pretty-Printer</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Eiffel Pretty-Printer</strong></font></td>
+    <td align="right"><a href="usage.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="html_ise_stylesheet.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   <i>gedoc</i> can be used as an Eiffel pretty-printer. The resulting class
+   texts will be formatted using the same Eiffel guidelines as used throughout the Eiffel code
+   of the <i>Gobo Eiffel Project</i>. The Eiffel pretty-printer will generate 
+   valid Eiffel code. It will keep all Eiffel comments, possibly in different locations in the
+   class text to follow the Gobo Eiffel guidelines.
+   
+  </p>
+  <p>
+   You will notice in the examples below that the command-line option 
+   <font color="#800000"><i><tt>--format</tt></i></font> is not specified. This is because 
+   <font color="#800000"><i><tt>--format=pretty_print</tt></i></font> is the default format for
+   <i>gedoc</i>.
+   
+  </p>
+  <div>
+   <h2>Pretty-printing a single class</h2>
+   
+   <p>
+    There are two ways to pretty-print a single class <font color="#008080"><i><tt>FOO</tt></i></font>:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --force foo.e</tt></i></font>
+	<font color="#800000"><i><tt>gedoc --force --class=FOO project.ecf</tt></i></font>
+</pre>
+    where <font color="#800000"><i><tt>foo.e</tt></i></font> is the file containing class <font color="#008080"><i><tt>FOO</tt></i></font>,
+    and <font color="#800000"><i><tt>project.ecf</tt></i></font> is an ECF file describing an Eiffel project containing
+    class <font color="#008080"><i><tt>FOO</tt></i></font>. Note that an Xace file can also be used in place of the
+    ECF file.
+    
+   </p>
+   
+   <p>
+    The command-line option <font color="#800000"><i><tt>--force</tt></i></font> tells <i>gedoc</i>
+    to overwrite the file containing the class being pretty-printed. Without this option,
+    files will not be overwritten and <i>gedoc</i> will emit an error
+    message. Alternatively, the command-line option <font color="#800000"><i><tt>--interactive</tt></i></font> can
+    be used. It will ask confirmation to the user before overwriting files. If you want to
+    generate the pretty-printed file in a directory different from the one containing the
+    original class text file, you should use the command-line option <font color="#800000"><i><tt>--output</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Pretty-printing an Eiffel project</h2>
+   
+   <p>
+    Here is how to pretty-print all Eiffel classes in an Eiffel project:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gedoc --force project.ecf</tt></i></font>
+     
+    </blockquote>
+    where <font color="#800000"><i><tt>project.ecf</tt></i></font> is an ECF file describing the Eiffel project.
+    Note that an Xace file can also be used in place of the ECF file. You can also pretty-print
+    a subset of classes in this Eiffel project, using the command-line option
+    <font color="#800000"><i><tt>--class</tt></i></font> with wildcards. For example, to pretty-print only
+    the classes of a given Eiffel library whose names start with <font color="#008080"><i><tt>DS_</tt></i></font>,
+    just type:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gedoc --force --class=DS_* project.ecf</tt></i></font>
+     
+    </blockquote>
+    
+   </p>
+   
+   <p>
+    As seen in the previous section, the command-line option <font color="#800000"><i><tt>--output</tt></i></font>
+    can be used to generate the pretty-printed files in a directory different from the
+    ones contaning the original class text files. The command-line option 
+    <font color="#800000"><i><tt>--library-prefix</tt></i></font> can also be used to generate the pretty-printed
+    files in a subfolder of this output directory whose name is the name of the Eiffel
+    library containing these Eiffel classes (one subfolder per library).
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2017, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>25 March 2017</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="usage.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="html_ise_stylesheet.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,196 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Output extensions and additional serialization parameters"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_output_extensions">
+  <chapterinfo>
+    <copyright>
+      <year>2004-2016</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>27 December 2016</date>
+  </chapterinfo>
+  <title>Output extensions and additional serialization parameters</title>    
+  <para>
+    This chapter relates to the <xslt>xsl:output</xslt> and <xslt>xsl:result-document</xslt> elements.
+  </para>
+  <section>
+    <title>Output extensions</title>
+    <para>
+      The syntax of the <xslt>xsl:output</xslt> and <xslt>xsl:result-document</xslt> elements allows
+      the "method" parameter to take a <exmlsyntax>QName-but-not-NCName</exmlsyntax> value. This allows
+      an implementation to provide additional output methods other than the four standard ones of "xml", 
+      "html", "xhtml" and "text".
+    </para>
+    <para>
+      The library provides an example of how to write your own output methods. This example only implements one method,
+      which is the same as the standard "xml" method, except that it allows the XSLT programmer to supply an internal subset
+      for the DTD, via an additional serialization parameter. If the serialization parameter is not supplied, then
+      no internal subset is written.
+    </para>
+    <para>
+      In this section I will talk you through the steps you need to take to implement your own methods, with reference to the example.
+    </para>
+    <orderedlist>
+      <listitem>
+	<para>
+	  Create a descendant of <classname> XM_XSLT_EXTENSION_EMITTER_FACTORY</classname>. The example is
+	  <classname>XM_XSLT_GEXSLT_EXAMPLES_EMITTER_FACTORY</classname>. The example only implements one method, 
+	  but you can implement as many methods as you like in your class, provided they will all
+	  share the same namespace.
+	</para>
+	<para>
+	  There are four features which you must implement:
+	</para>
+	<variablelist>
+	  <varlistentry>
+	    <term><featurename>namespace_uri: STRING</featurename></term>
+	    <listitem>
+	      <para>
+		This is the namespace-uri which the XSLT programmer will use to call your
+		output methods. Note that it must be a non-null namespace and cannot be the XSLT namespace 
+		nor the XSLT library's extension namespace.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><featurename>is_valid_output_method (a_method_local_name: STRING)</featurename></term>
+	    <listitem>
+	      <para>
+		This is called (indirectly) from <featurename>gather_output_properties</featurename> in <classname>XM_XSLT_OUTPUT</classname>,
+		to determine if the <exmlsyntax>QName</exmlsyntax> supplied as an argument to <xslt>xsl:output</xslt>'s <xslt>method</xslt>
+		attribute is supported by the implementation.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><featurename>set_defaults (a_method_local_name: STRING; some_properties: XM_XSLT_OUTPUT_PROPERTIES; an_import_precedence: INTEGER)</featurename></term>
+	    <listitem>
+	      <para>
+		This is called (indirectly) from <featurename>gather_output_properties</featurename> in <classname>XM_XSLT_OUTPUT</classname>,
+		to set the default serialization parameters for your method. The example does not check the local name, as it only supports
+		one method, and <featurename>is_valid_output_method</featurename> has already returned <featurename>True</featurename>
+		when this routine is called. But if you want to have different defaults for your different routines, then you can test the 
+		value of <argument>a_method_local_name</argument>.
+	      </para>
+	      <para>
+		You do not need to set most of the defaults, as they will be set when <argument>some_properties</argument> is created (using
+		feature <featurename>set_xml_defaults</featurename> from <classname>XM_XSLT_OUTPUT_PROPERTIES</classname>, but the example
+		sets them all, purely for illustration. Note that you <emphasis>must</emphasis> set the method in exactly the same
+		way that the example does.
+	      </para>
+	      <para>
+		You can also set defaults for any additional serialization parameters that your method(s) require(s). The example
+		shows how to do this, but only as a comment, since the serialization parameter is not required in this case.
+		<warning>It is not possible to require the presence of an additional serialization parameter, so if 
+		your method requires a value, you should set a default.</warning>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><featurename>new_receiver</featurename></term>
+	    <listitem>
+	      <para>
+		This routine provides the serializer for the transformer. You have to return a chain of <classname>XM_XPATH_RECEIVER</classname>s,
+		of which the last (and possibly only) one must be a descendant of <classname>XM_XSLT_EMITTER</classname>. You will write this 
+		descendant in the next step.
+	      </para>
+	      <para>
+		The example first checks the method's local name, and ignores it if it doesn't match. In the latter case, this will result in returning 
+		<featurename>Void</featurename>, which violates the post-condition, but for this to happen the pre-condition would have been violated, so this is OK.
+	      </para>
+	      <para>
+		Next, the example creates the emitter (you will write your emitter in the next step). Typically, it passes through the values for the transformer, the result stream, and
+		the output properties. You will almost certainly need to do the same. It also passes an <classname>XM_XSLT_CHARACTER_MAP_EXPANDER</classname>,
+		which it gets from the helper routine <featurename>character_map_expander</featurename> in
+		<classname>XM_XSLT_EMITTER_FACTORY_ROUTINES</classname>. If you wish to support <xslt>xsl:output</xslt>'s <xslt>use-character-maps</xslt>
+		parameter, then you should do the same. Note that the third parameter to that routine says whether or not the <classname>XM_XSLT_CHARACTER_MAP_EXPANDER</classname>
+		should surround any mapped characters with ASCII NULs. This is used by the standard methods (other than the "text" method) to avoid further escaping
+		of mapped characters (and also Unicode normalization, but this isn't implemented yet), as required by the standard. 
+		It is entirely up to you whether you implement escaping of characters in your emitter, and if so, 
+		whether you want mapped characters to avoid further escaping and normalization, but if you do, then you should specify <featurename>True</featurename>
+		here, and implement the appropriate routines in your emitter accordingly. Otherwise you should specify <featurename>False</featurename>.
+	      </para>
+	      <para>
+		Next the example checks the value of the <xslt>indent</xslt> serialization parameter, and adds an indenter to the front of the chain. If you choose to
+		support indenting for your method(s), then you should do the same. You can either use one of the existing indenters (<classname>XM_XSLT_XML_INDENTER</classname>,
+		<classname>XM_XSLT_HTML_INDENTER</classname> or <classname>XM_XSLT_XHTML_INDENTER</classname>), or write your own 
+		(which must be a descendant of <classname>XM_XPATH_PROXY_RECEIVER</classname>).
+	      </para>
+	      <para>
+		Next the example checks whether any <xslt>cdata-section-elements</xslt> have been requested, and if so, adds a <classname>XM_XSLT_CDATA_FILTER</classname>.
+		Again, it is up to you whether or not you want to implement this parameter in your method(s). If you chose to do so, then I suggest using the
+		standard filter.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+      </listitem>
+      <listitem>
+	<para>
+	  Next, you must create your emitter. This must be a descendant of <classname>XM_XSLT_EMITTER</classname>.
+	</para>
+	<para>
+	  The example (<classname>XM_XSLT_GEXSLT_EXAMPLES_XML_EMITTER</classname>) simply inherits from <classname>XM_XSLT_XML_EMITTER</classname>,
+	  and redefines <featurename>write_doctype</featurename>. If your method is a variation on one of the standard methods, then this might be appropriate
+	  for you too. Note that the other standard methods are all implemented as descendants of  <classname>XM_XSLT_XML_EMITTER</classname>, even
+	  <classname>XM_XSLT_TEXT_EMITTER</classname>, so certainly consider this approach.
+	</para>
+	<para>
+	  On the other hand, if your emitter is doing something highly specialized, such as writing to a relational database, then you
+	  probably have to write your own emitter from scratch. So we will take a brief look at <classname>XM_XSLT_EMITTER</classname>.
+	</para>
+	<para>
+	  There is actually very little in here. The <featurename>outputter: XM_XSLT_OUTPUT_ENCODER</featurename> is necessary
+	  for implementing the <xslt>encoding</xslt> parameter, although even this isn't absolutely required (it is possible that it is meaningless for your
+	  method). The <featurename>output_properties: XM_XSLT_OUTPUT_PROPERTIES</featurename> is surely necessary (unless your method is completely parameterless),
+	  so it is required to be non-void. This is where you can find the values of the serialization parameters.
+	</para>
+	<para>
+	  The <featurename>character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER</featurename> is optionally available for implementing <xslt>use-character-maps</xslt>,
+	  if your method supports that. When Unicode normalization is implemented, it will be in <featurename>normalized_string </featurename>.
+	  The <featurename>transformer</featurename> must also be non-Void, as it is needed for error reporting. 
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  Finally, you need to register your <classname> XM_XSLT_EXTENSION_EMITTER_FACTORY</classname> with the library.
+	  You do this by inheriting from <classname>XM_XSLT_SHARED_EMITTER_FACTORY</classname>, and calling
+	  <featurecall><featurename>emitter_factory.register_extension_emitter_factory</featurename></featurecall>
+	  paasing an instance of your extension emitter factory as the sole argument. This uses the 
+	  <featurename>namespace_uri</featurename> feature of the factory to direct requests for that namespace URI
+	  to your factory.
+	</para>
+      </listitem>
+    </orderedlist>
+  </section>
+  <section>
+    <title>Additional serialization parameters</title>
+    <para>
+      See <link linkend="${tool/gexslt}/extension/index">Extensions</link>
+    </para>
+    <para>
+      You can also add your own serialization parameters in a namespace, for use
+      with a <exmlsyntax>QName-but-not-NCName</exmlsyntax> output method that you have written. This must be a non-null namespace,
+      and it must <emphasis>not</emphasis> be the XSLT namespace, nor can it be
+      <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>. Apart from that, you may use any namespace you wish, 
+      but it is strongly recommanded that this be a URI which you control, so as to prevent clashes with other possible
+      extensions. I would suggest using the same namespace as you do for your <exmlsyntax>QName</exmlsyntax> output method.
+    </para>
+  </section>
+</chapter>

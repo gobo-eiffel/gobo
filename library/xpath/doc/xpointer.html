@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Gobo Eiffel XPointer library (XPath implementation)</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Gobo Eiffel XPointer library (XPath implementation)</strong></font></td>
+    <td align="right"><a href="implemented_functions.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="invoking.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   The XPath library includes an implementation of the XPointer Framework and implementations for the W3C XPointer schemes
+   <font color="#008080">element</font>, <font color="#008080">xmlns</font> and <font color="#008080">xpath2</font>. In addition, There is a Gexslt-specific scheme: <font color="#008080">gexslt:xpath</font>, but this is deprecated..
+   
+  </p>
+  <div><a name="xpointer_framework"></a>
+   
+   <h2>Invoking the XPointer Framework</h2>
+   
+   <p>
+    To invoke the XPointer Framework, you must first create an instance of <font color="#008080"><i><tt>XM_XPOINTER_XPATH</tt></i></font>. This creates the XPointer Framework, but
+    no schemes are available - only <font color="#008080">shorthand</font> pointers.
+    
+   </p>
+   
+   <p>
+    The next step is to call <font color="#008080"><i><tt>evaluate</tt></i></font>. This takes two arguments. The second argument is the XML resource (well-formed document or external parsed entity, 
+    represented as an <font color="#008080"><i><tt>XM_XPATH_DOCUMENT)</tt></i></font>. The first argument is the pointer represented as a <font color="#008080"><i><tt>STRING</tt></i></font>.
+    
+   </p>
+   
+   <p>
+    The pointer should have no escaping, other than XPointer carat escaping, within it. So if you are starting with an <font color="#008080"><i><tt>UT_URI</tt></i></font>, simply calling 
+    it's <font color="#008080"><i><tt>fragment</tt></i></font> routine is not sufficent. Instead, you should call the <font color="#008080"><i><tt>fragment_item</tt></i></font> routine, to
+    get an <font color="#008080"><i><tt>UT_URI_STRING</tt></i></font>, and call that object's <font color="#008080"><i><tt>decoded_utf8</tt></i></font> (??? Is this right, Franck?).
+    
+   </p>
+   
+   <p>
+    Calling <font color="#008080"><i><tt>evaluate</tt></i></font> will set <font color="#008080"><i><tt>value</tt></i></font> to a non-Void <font color="#008080"><i><tt>XM_XPATH_VALUE</tt></i></font>. If an XPointer error
+    occurred, then this object will have <font color="#008080"><i><tt>value</tt></i></font> set to an
+    <font color="#008080"><i><tt>XM_XPATH_INVALID_VALUE</tt></i></font> in the case of an XPointer Framework syntax error, or an <font color="#008080"><i><tt>XM_XPATH_EMPTY_SEQUENCE</tt></i></font> (marked in error) if 
+    a <font color="#008080">shorthand</font> pointer failed to locate any resources.
+    
+   </p>
+   
+   <p>
+    XPointer schemes don't signal  XPointer errors - instead <font color="#008080"><i><tt>value</tt></i></font> will be set to an
+    <font color="#008080"><i><tt>XM_XPATH_EMPTY_SEQUENCE</tt></i></font>.
+    
+   </p>
+   
+   <p>
+    If a <font color="#008080">shorthand</font> pointer, or an <font color="#008080">element</font> scheme find a resource, then they set <font color="#008080"><i><tt>value</tt></i></font> to an
+    <font color="#008080"><i><tt>XM_XPATH_SINGLETON_NODE</tt></i></font>. The <font color="#008080">gexslt:xpath</font> scheme sets <font color="#008080"><i><tt>value</tt></i></font> to an
+    <font color="#008080"><i><tt>XM_XPATH_SEQUENCE_EXTENT</tt></i></font>, as it is possible for it to return any XPath sequence. 
+    
+   </p>
+   
+  </div>
+  <div><a name="xpointer_schemes"></a>
+   
+   <h2>XPointer schemes</h2>
+   
+   <p>
+    If your pointer may contain anything other than a <font color="#008080">shorthand</font> pointer, then you must configure the <font color="#008080"><i><tt>XM_XPOINTER_XPATH</tt></i></font>
+    object with any schemes that you may wish to use. This is done by creating instances of descendants of <font color="#008080"><i><tt>XM_XPOINTER_XPATH_SCHEME</tt></i></font>,
+    and passing them as the argument of <font color="#008080"><i><tt>XM_XPOINTER_XPATH</tt></i></font>'s <font color="#008080"><i><tt>register_scheme</tt></i></font> routine.
+    
+   </p>
+   
+   <p>
+    Schemes provided in the library:
+    
+    <dl>
+     
+     <dt><font color="#008080"><i><tt>XM_XPOINTER_XPATH_XMLNS_SCHEME</tt></i></font></dt>
+     <dd>
+      	    The W3C <font color="#008080">xmlns</font> scheme for defining namespace bindings.
+      	  
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>XM_XPOINTER_XPATH_ELEMENT_SCHEME</tt></i></font></dt>
+     <dd>
+      	    The W3C <font color="#008080">element</font> scheme for finding a single element via a <font color="#008080">shorthand</font> pointer and/or by stepwise navigation.
+      	  
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>XM_XPOINTER_XPATH_XPATH_SCHEME</tt></i></font></dt>
+     <dd>
+      	  The  W3C <font color="#008080">xpath2</font> scheme or the (deprecated) <font color="#008080">gexslt:xpath</font> schemes.
+      	
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <div><a name="xpointer_xpath_scheme"></a>
+   
+   <h2>The <font color="#008080">gexslt:xpath</font> scheme
+   </h2>
+   
+   <p>
+    The XPointer scheme, which is an unapproved W3C working draft, is not implemented by this library.
+    This is because:
+    
+    <ol>
+     <li>
+      	  It uses XPath 1.0, whereas this library uses XPath 2.0. This means we could not make a compliant
+      	  implementation.
+      	
+     </li>
+     <li>
+      	  A lot of work is needed to extend XPath for this scheme.
+      	
+     </li>
+     <li>
+      	  The benefits compared with an XPath 2.0 scheme seem slim (only text-editing
+      	  applications are likely to see a clear benefit, and the implementations of the
+      	  XPath data model in this library are read-only).
+      	
+     </li>
+     <li>
+      	  It doesn't look likely that it will ever be approved.
+      	
+     </li>
+    </ol>
+    
+   </p>
+   
+   <p>
+    Instead, I have implemented a scheme which takes an XPath 2.0 expression as it's pointer. This has a local name of "xpath",
+    and a namespace URI 
+    of "http://www.gobosoft.com/eiffel/gobo/gexslt/extension". Therefore, you have to declare a prefix, using the <font color="#008080">xmlns</font> scheme, before
+    you can use this scheme.
+    
+   </p>
+   
+   <p>
+    So, in order to find the third child of the document element, conditional upon it having an attribute named "test", then you
+    will want a pointer that 
+    looks something like: "xmlns(gexslt = http://www.gobosoft.com/eiffel/gobo/gexslt/extension)gexslt:xpath(/*[1]/*[3][@test]".
+    
+    <p><font color="#FF0000">
+      Within a URI, the square brackets and spaces will need percent-encoding, so this example should actually read:
+      "xmlns(gexslt%20=%20http://www.gobosoft.com/eiffel/gobo/gexslt/extension)gexslt:xpath(/*%5B1%5D/*%5B3%5D%5B@test%5D".
+      although the spaces can always be omitted.
+      </font></p>
+    
+   </p>
+   
+   <p>
+    Of course, if you want to use any namespace prefixes (other than "xml", which is always declared) within your XPath expression,
+    then you will
+    need to declare them also using further <font color="#008080">xmlns</font> statements.
+    
+   </p>
+   
+   <p>
+    Since writing the above documentation, the W3C have approved an identical scheme (I'm a trend-setter! :-), except (of course),
+    it is in no namespace.
+    It is also named xpath2 rather than xpath.
+    Just call <font color="#008080"><i><tt>make_w3c</tt></i></font> instead of <font color="#008080"><i><tt>make</tt></i></font>. This is the recommended alternative, as it is much more
+    portable, and it requires less typing in your URIs.
+    
+   </p>
+   
+  </div>
+  <div><a name="xpointer_error_api"></a>
+   
+   <h2>The extended error API</h2>
+   
+   <p>
+    When you create the <font color="#008080"><i><tt>XM_XPOINTER_XPATH</tt></i></font>, the <font color="#008080"><i><tt>make</tt></i></font> procedure takes a single <font color="#008080"><i><tt>BOOLEAN</tt></i></font>
+    argument. If you pass this as False, then you get the standard XPointer Framework error reporting, as described above. If
+    you instead set it to True, and if no
+    resources were found, then <font color="#008080"><i><tt>value</tt></i></font> will be set to a value in error, as reported by the <i>last</i> scheme processor
+    which detected a syntax or semantic error in it's scheme data.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Friday, February 25th, 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="invoking.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="implemented_functions.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="invoking.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

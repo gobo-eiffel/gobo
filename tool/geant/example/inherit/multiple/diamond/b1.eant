@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<project name="B" default="f">
+	<inherit>
+		<parent location="${GOBO}/tool/geant/example/inherit/multiple/diamond/a1.eant">
+			<redefine target="f"/>
+		</parent>
+	</inherit>
+
+	<target name="f">
+		<echo message="this is B.f"/>
+		<precursor/>
+	</target>
+</project>

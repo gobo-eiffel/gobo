@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<!--
+	description:
+	
+		"Introduction to Gobo Eiffel XSLT"
+
+	library: "Gobo Eiffel XSLT"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+  <chapterinfo>
+    <copyright>
+      <year>2004-2016</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>28 December 2016</date>
+  </chapterinfo>
+  <title>Introduction to &title;</title>
+  <para>&title; is a command-line processor for the XSLT 2.0 language. 
+  It is very much still under development at the moment, but it is now close to the XSLT 2.0 Recomendation. It is used to produce the XHTML pages
+  for all of the Gobo documentation that is written in accordance with <filename class="schema">$GOBO/library/common/doc/config/gobo.rng</filename>.
+  </para> 
+  <section>
+    <title>Using &program_name;</title>
+    <para>
+      <link linkend="options">Command line options</link>
+    </para>
+    <para>
+      <link linkend="extension/index">Extensions</link>
+    </para>
+    <para>
+      <link linkend="${library/xslt}/overview">The Eiffel programmers guide to the Gobo XSLT library</link>
+    </para>
+  </section>
+  <section>
+    <title>Exit codes</title>
+    <para>
+     The following are the meanings of the various exit codes from the processor:
+    <variablelist>
+	<varlistentry>
+	  <term>0</term>
+	  <listitem>
+	    <para>
+	     Successful execution.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>1</term>
+	  <listitem>
+	    <para>
+	     Syntax error in the command line.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>2</term>
+	  <listitem>
+	    <para>
+	     Syntax error in the stylesheet.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>3</term>
+	  <listitem>
+	    <para>
+	     Runtime error in the transformation. This includes termination via <xslt>xsl:message terminate='yes'</xslt>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+    </variablelist>
+    </para>
+  </section>
+  <section>
+    <title>Status and conformance</title>
+    <para>
+      &program_name_cased; is intended to conform to a Basic-level XSLT 2.0 Processor. However, no formal
+      conformance statement is provided yet.
+    </para>
+    <para>
+      The implementation status of the core XPath functions can be found at
+      <link linkend="${library/xpath}/implemented_functions">Implemented XPath functions</link>
+      In summary, all are implemented.
+    </para>
+    <para>
+      In general, if a message beginning with TODO appears on the standard error stream, then you should
+      not expect your stylesheet to execute correctly. If however, no errors or TODO messages are reported, then output
+      should be correct.
+    </para>
+  </section>
+
+  <section>
+    <title>Credits</title>
+    <para>The architecture and algorithms of the Gobo Eiffel XSLT library, upon which &title; is built,
+    are largely derived from <ulink url="http://www.saxonica.com/index.html">Saxon</ulink>, an open source XSLT Processor written in Java, by Michael Kay. 
+    I am very grateful to Michael for making the source code available for study, and for answering all my questions.
+    </para>
+  </section>
+

@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Available Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="available_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>available</title>
+
+	<section id="available_description">
+		<title>Description</title>
+		<para>
+			Checks if specified resource is available and sets the value of a variable depending on the result.
+		</para>
+	</section>
+
+	<section id="available_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>resource</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of a resource. Currently files and directories are supported</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename/directoryname</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>variable which reflects the result</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid variable name</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>true_value</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>result value of positive comparison</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>true</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>false_value</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>result value of negative comparison</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</section>
+
+	<section id="available_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="available">
+    <element name="available">
+      <ref name="dir_if_unless"/>
+      <attribute name="resource"/>
+      <attribute name="variable"/>
+      <optional>
+        <attribute name="true_value"/>
+      </optional>
+      <optional>
+        <attribute name="false_value"/>
+      </optional>
+    </element>
+  </define>
+]]>
+	</programlisting>
+	</section>
+
+	<section id="available_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <available resource="${GOBO}/Readme.md" variable="available"/>
+]]>
+	</programlisting>
+	</section>
+
+</chapter>

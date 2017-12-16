@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>External entity and URI reference resolvers</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>External entity and URI reference resolvers</strong></font></td>
+    <td align="right"><a href="serializers.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="catalogs.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="external_resolvers"></a>
+   
+   <h2>Resolution of external entities</h2>
+   
+   
+   <p>
+    By default, the parsers do not resolve external entities and produce an error if an external entity or an external DTD is
+    used. 
+    These external references are loosely defined as a URI reference (although no fragment identifier is allowed) in the XML specification,
+    
+    and thus can be virtually anything, so a customisable resolving facility is provided.
+    
+   </p>
+   
+   
+   <p>
+    To use entities, an external resolver must be set, using the parser's <font color="#008080"><i><tt>set_resolver</tt></i></font> routine. 
+    It sets a single resolver for use both for external DTDs and entities, there are routines to set each of these separately,
+    
+    <font color="#008080"><i><tt>set_entity_resolver</tt></i></font> and  <font color="#008080"><i><tt>set_dtd_resolver</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    An external resolver is a class that opens a <font color="#008080"><i><tt>KI_CHARACTER_INPUT_STREAM</tt></i></font> given a <font color="#008080">SYSTEM</font> identifier (a string) or 
+    a <font color="#008080">PUBLIC</font> identifier (another string - but not a URI). 
+    An error is produced if no corresponding stream can be found. It is the responsibility of the client to close the stream.
+    
+   </p>
+   
+   
+   <p>
+    All external entity resolvers are descendants of <font color="#008080"><i><tt>XM_EXTERNAL_RESOLVER</tt></i></font>.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="uri_reference_resolvers"></a>
+   
+   <h2>Resolution of URI references</h2>    
+   
+   
+   <p>
+    As well as external entities, xml applications (but <i>not</i> the parser), may
+    encounter other URI references that they need to process. A typical example is the <font color="#008080">document()</font>
+    function in XPath/XSLT. The contents of this is a URI reference. This too, will need to be opened for processing.
+    
+   </p>
+   
+   
+   <p>
+    All URI reference resolvers are descendants of <font color="#008080"><i><tt>XM_URI_REFERENCE_RESOLVER</tt></i></font>. To resolve a URI
+    reference, create such a resolver then call it's <font color="#008080"><i><tt>resolve_uri</tt></i></font> routine, passing
+    it the name of the URI reference to open. You will get back a <font color="#008080"><i><tt>KI_CHARACTER_INPUT_STREAM</tt></i></font>.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="concrete_resolvers"></a>
+   
+   <h2>Concrete resolvers</h2>
+   
+   
+   <p>
+    Here is a list of some available external entity resolvers supplied with the library, in order
+    of increasing power. If none of these meets your needs, then you may write your own.
+    
+    
+    <dl>
+     	
+     <dt><font color="#008080"><i><tt>XM_NULL_EXTERNAL_RESOLVER</tt></i></font></dt>
+     <dd>
+      			This resolver does nothing. It is the default used by the xml parser if you do not call 
+      			<font color="#008080"><i><tt>set_resolver</tt></i></font>. Sutiable for stand-alone documents only.
+      		
+     </dd>
+     
+     	
+     <dt><font color="#008080"><i><tt>XM_FILE_EXTERNAL_RESOLVER</tt></i></font></dt>
+     <dd>
+      			This resolver takes the supplied <font color="#008080">SYSTEM</font> id, and treats it as a file in the
+      			current working directory. It is therefore of only extremely limited use, and
+      			should be considered obsolete. Use <font color="#008080"><i><tt>XM_URI_EXTERNAL_RESOLVER</tt></i></font> instead.
+      		
+     </dd>
+     
+     	
+     <dt><font color="#008080"><i><tt>XM_STRING_EXTERNAL_RESOLVER</tt></i></font></dt>
+     <dd>
+      			This resolver resolves by mapping <font color="#008080">SYSTEM</font> ids to in-memory strings. It must
+      			be configured by the programmer for every single <font color="#008080">SYSTEM</font> id that will be
+      			encountered.
+      		
+     </dd>
+     
+     	
+     <dt><font color="#008080"><i><tt>XM_URI_EXTERNAL_RESOLVER</tt></i></font></dt>
+     <dd>
+      			This resolver handles any <font color="#008080">SYSTEM</font> id by examining it's URI scheme, and
+      			delegating it to a descendant of <font color="#008080"><i><tt>XM_URI_RESOLVER</tt></i></font>,
+      			whose purpose is to open URIs for that particular scheme.
+      		
+      <p>
+       			The library provides <font color="#008080"><i><tt>XM_FILE_URI_RESOLVER</tt></i></font>, <font color="#008080"><i><tt>XM_DATA_URI_RESOLVER</tt></i></font>
+       			to handle the file and data protocols, and <font color="#008080"><i><tt>XM_STDIN_URI_RESOLVER</tt></i></font> to resolve <font color="#008080">stdin:</font> to the standard input stream.
+       			If you need to handle other protocols, such as http or ftp,
+       			then you may be able to find them in other libraries (such as ePOSIX for http, https and ftp), or
+       			you can write one yourself. After creating such a resolver, you need to register it
+       			by calling <font color="#008080"><i><tt>register_scheme</tt></i></font> on the <font color="#008080"><i><tt>XM_URI_EXTERNAL_RESOLVER</tt></i></font>. 
+       			You can inherit from <font color="#008080"><i><tt>XM_RESOLVER_FACTORY</tt></i></font>, and use the <font color="#008080"><i><tt>new_resolver*</tt></i></font>
+       			routines to create these resolvers.
+       		
+      </p>
+      <p>
+       			There is also <font color="#008080"><i><tt>XM_STRING_URI_RESOLVER</tt></i></font>, which resolves URIs in the <font color="#008080">string</font> scheme
+       			for naming <font color="#008080"><i><tt>STRING</tt></i></font>s. This is designed to work with the <font color="#008080"><i><tt>XM_CATALOG_BOOTSTRAP_RESOLVER</tt></i></font>
+       			(see below).
+       		
+      </p>
+     </dd>
+     
+     	
+     <dt><font color="#008080"><i><tt>XM_CATALOG_BOOTSTRAP_RESOLVER</tt></i></font></dt>
+     <dd>
+      			This resolver combines the features of <font color="#008080"><i><tt>XM_STRING_EXTERNAL_RESOLVER</tt></i></font>
+      			and <font color="#008080"><i><tt>XM_URI_EXTERNAL_RESOLVER</tt></i></font>, and extends them further, in as much
+      			as it deals with resolution of <font color="#008080">PUBLIC</font> ids and URI references also.
+      		
+      <p>
+       			The resolver comes pre-configured with strings for resolving DTDs and schemas associated with
+       			OASIS ETRC XML Catalog files. Hence it's name - it is designed for use by 
+       			<font color="#008080"><i><tt>XM_CATALOG__RESOLVER</tt></i></font> so that it has a way of resolving references within 
+       			the catalog files that it uses to carry out the resolution process. But you can configure it to
+       			handle additional <font color="#008080">SYSTEM</font> and <font color="#008080">PUBLIC</font> ids,
+       			and URI references (there are separate lists for each type).
+       		
+      </p>
+      <p>
+       			There is also an <font color="#008080"><i><tt>XM_STRING_URI_RESOLVER</tt></i></font>, which maps URIs in a string scheme
+       			to Eiffel <font color="#008080"><i><tt>STRING</tt></i></font>s. To use this, you must add additional <font color="#008080">SYSTEM</font>
+       			ids to the bootstrap resolver's list of well-known <font color="#008080">SYSTEM</font> ids, along with the
+       			contents of an Eiffel <font color="#008080"><i><tt>STRING</tt></i></font>. Then you must register the resolver with the bootstrap
+       			resolver's <font color="#008080"><i><tt>uri_scheme_resolver</tt></i></font>. Once this has been done, the catalog resolver will be 
+       			able to resolve your string URIs.
+       		
+      </p>
+     </dd>
+     
+    </dl>
+    
+    
+   </p>
+   
+   
+   <p>
+    Briefly mentioned in passing was <a href="catalogs.html"><font color="#008080"><i><tt>XM_CATALOG_RESOLVER</tt></i></font></a>. This is such a powerful
+    and complex resolver, that it gets a chapter all of it's own.
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="serializers.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="catalogs.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

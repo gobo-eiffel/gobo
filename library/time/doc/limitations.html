@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gobo Eiffel Time Library: Limitations</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Limitations</strong></font></td>
+        <td align="right"><a href="flatshort/index.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="see_also.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<h2>Gregorian Calendar</h2>
+
+<p>The Gregorian calendar has been adopted in most western
+countries since the 16<sup>th</sup> century (e.g. since 20
+December 1582 in France) with possible disruptions (e.g. French
+Revolutionary calendar used from 24 November 1793 to 31 December
+1805). The <em>Gobo Eiffel Time Library</em> does not take this
+into account and considers that the Gregorian calendar was always
+in use (even at the time of dinosaurs) and will always be in the
+future.</p>
+
+<h2>Leap Seconds</h2>
+
+<p>The International Earth Rotation Service periodically uses
+leap seconds to keep UTC to within 0.9 second of UT1 (which
+measures the true angular orientation of the earth in space).
+There were no leap seconds before 1972 because the official
+mechanism accounting for the discrepancy between atomic time and
+the earth's rotation did not exist until the early 1970s. The <em>Gobo
+Eiffel Time Library</em> does not support leap seconds.</p>
+
+<h2>Time Limits</h2>
+
+<p>The maximum precision of the current implementation of <font
+color="#008080"><em><tt>DT_TIME</tt></em></font> is the
+millisecond. Although the public interface of <font
+color="#008080"><em><tt>DT_TIME </tt></em></font>has four fields
+(<font color="#008080"><em><tt>hour</tt></em></font>, <font
+color="#008080"><em><tt>minute</tt></em></font>, <font
+color="#008080"><em><tt>second</tt></em></font> and <font
+color="#008080"><em><tt>millisecond</tt></em></font>), its
+internal state is compacted into a single integer. Therefore in
+order for <font color="#008080"><em><tt>DT_TIME </tt></em></font>to
+work, your Eiffel compiler should implement <font color="#008080"><em><tt>INTEGER</tt></em></font>
+with at least 32 bits so that it can hold the number of
+milliseconds in one day (i.e. 86,400,000).</p>
+
+<p>Some clients, such as classes which need to store and retrieve
+time objects efficiently, may want to have access to the
+compaction integer called <font color="#008080"><em><tt>storage</tt></em></font>.
+They can do so by simply inheriting from <font color="#008080"><em><tt>DT_TIME_HANDLER</tt></em></font>.
+The creation procedure <font color="#008080"><em><tt>make_from_storage</tt></em></font>
+is also available to descendants of <font color="#008080"><em><tt>DT_TIME_HANDLER</tt></em></font>.</p>
+
+<h2>Date Limits</h2>
+
+<p>Although the public interface of <font color="#008080"><em><tt>DT_DATE
+</tt></em></font>has three fields (<font color="#008080"><em><tt>year</tt></em></font>,
+<font color="#008080"><em><tt>month</tt></em></font> and <font
+color="#008080"><em><tt>day</tt></em></font>), its internal state
+is compacted into a single integer. Therefore in order for <font
+color="#008080"><em><tt>DT_DATE </tt></em></font>to work, your
+Eiffel compiler should implement <font color="#008080"><em><tt>INTEGER</tt></em></font>
+with at least 32 bits so that it can hold nowadays dates. The
+first five right-most bits are used to store the day, the next
+four bits to store the month. Considering that your Eiffel
+compiler implements <font color="#008080"><em><tt>INTEGER </tt></em></font>with
+32 bits, this means that there are 23 bits left for the year. In
+such case the minimum date supported would be <em>1 January
+-4,194,305</em>, and the maximum date would be <em>31 December
+4,194,304</em>.</p>
+
+<p>Some clients, such as classes which need to store and retrieve
+date objects efficiently, may want to have access to the
+compaction integer called <font color="#008080"><em><tt>storage</tt></em></font>.
+They can do so by simply inheriting from <font color="#008080"><em><tt>DT_DATE_HANDLER</tt></em></font>.
+The creation procedure <font color="#008080"><em><tt>make_from_storage</tt></em></font>
+is also available to descendants of <font color="#008080"><em><tt>DT_DATE_HANDLER</tt></em></font>.</p>
+
+<h2>Date Time Limits</h2>
+
+<p><font color="#008080"><em><tt>DT_DATE_TIME </tt></em></font>has
+of course the same implementation constraints as <font
+color="#008080"><em><tt>DT_DATE</tt></em></font> and <font
+color="#008080"><em><tt>DT_TIME</tt></em></font>. A date/time
+object has in fact two compaction integers, <font color="#008080"><em><tt>date_storage</tt></em></font>
+and <font color="#008080"><em><tt>time_storage</tt></em></font>,
+and clients should inherit from <font color="#008080"><em><tt>DT_DATE_TIME_HANDLER</tt></em></font>
+in order to have access to them.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000-2016</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 27 December 2016</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="flatshort/index.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="see_also.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

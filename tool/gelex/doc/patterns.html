@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gelex: Patterns</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Patterns</strong></font></td>
+        <td align="right"><a href="options.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="matching_rules.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>The patterns in the input are written using an extended set of
+regular expressions. These are:</p>
+
+<dl>
+    <dt><font color="#FF0000"><tt>x</tt></font></dt>
+    <dd>match the character <font color="#808000"><tt>x</tt></font>.</dd>
+    <dt><font color="#FF0000"><tt>.</tt></font></dt>
+    <dd>any character except newline.</dd>
+    <dt><font color="#FF0000"><tt>[xyz]</tt></font></dt>
+    <dd>a <em><strong>character class</strong></em>; in this
+        case, the pattern matches either an <font color="#808000"><tt>x</tt></font>,
+        a <font color="#808000"><tt>y</tt></font> or a <font
+        color="#808000"><tt>z</tt></font>.</dd>
+    <dt><font color="#FF0000"><tt>[abj-oZ]</tt></font></dt>
+    <dd>a <em>character class</em> with a range in it; matches an
+        <font color="#808000"><tt>a</tt></font>, a <font
+        color="#808000"><tt>b</tt></font>, any letter from <font
+        color="#808000"><tt>j</tt></font> through <font
+        color="#808000"><tt>o</tt></font>, or a <font
+        color="#808000"><tt>Z</tt></font>.</dd>
+    <dt><font color="#FF0000"><tt>[^A-Z]</tt></font></dt>
+    <dd>a <em><strong>negated character class</strong></em>,
+        i.e., any character but those in the class. In this case,
+        any character except an uppercase letter.</dd>
+    <dt><font color="#FF0000"><tt>[^A-Z\n]</tt></font></dt>
+    <dd>any character except an uppercase letter or a newline.</dd>
+    <dt><font color="#FF0000"><tt>r*</tt></font></dt>
+    <dd>zero or more <font color="#FF0000"><tt>r</tt></font>'s,
+        where <font color="#FF0000"><tt>r</tt></font> is any
+        regular expression.</dd>
+    <dt><font color="#FF0000"><tt>r+</tt></font></dt>
+    <dd>one or more <font color="#FF0000"><tt>r</tt></font>'s.</dd>
+    <dt><font color="#FF0000"><tt>r?</tt></font></dt>
+    <dd>zero or one <font color="#FF0000"><tt>r</tt></font>'s
+        (that is, &quot;an optional <font color="#FF0000"><tt>r</tt></font>&quot;).</dd>
+    <dt><font color="#FF0000"><tt>r{2,5}</tt></font></dt>
+    <dd>anywhere from two to five <font color="#FF0000"><tt>r</tt></font>'s.</dd>
+    <dt><font color="#FF0000"><tt>r{2,}</tt></font></dt>
+    <dd>two or more <font color="#FF0000"><tt>r</tt></font>'s.</dd>
+    <dt><font color="#FF0000"><tt>r{4}</tt></font></dt>
+    <dd>exactly four <font color="#FF0000"><tt>r</tt></font>'s.</dd>
+    <dt><font color="#FF0000"><tt>{name}</tt></font></dt>
+    <dd>the expansion of the &quot;<font color="#800080"><tt>name</tt></font>&quot;
+        <a href="description.html#definitions">definition</a>.</dd>
+    <dt><font color="#FF0000"><tt>&quot;[xyz]\&quot;foo&quot;</tt></font></dt>
+    <dd>the literal string: <font color="#808000"><tt>[xyz]&quot;foo</tt></font>.</dd>
+    <dt><font color="#FF0000"><tt>\X</tt></font></dt>
+    <dd>if <font color="#FF0000"><tt>X</tt></font> is an <font
+        color="#808000"><tt>a</tt></font>, <font color="#808000"><tt>b</tt></font>,
+        <font color="#808000"><tt>f</tt></font>, <font
+        color="#808000"><tt>n</tt></font>, <font color="#808000"><tt>r</tt></font>,
+        <font color="#808000"><tt>t</tt></font>, or <font
+        color="#808000"><tt>v</tt></font>, then the <font
+        size="2">ANSI-C</font> interpretation of <font
+        color="#808000"><tt>\X</tt></font>. Otherwise, a literal <font
+        color="#808000"><tt>X</tt></font> (used to escape
+        operators such as <font color="#FF0000"><tt>*</tt></font>).</dd>
+    <dt><font color="#FF0000"><tt>\0</tt></font></dt>
+    <dd>a null character (<font size="2">ASCII</font> code <font
+        color="#808000"><tt>0</tt></font>).</dd>
+    <dt><font color="#FF0000"><tt>\123</tt></font></dt>
+    <dd>the character with octal value <font color="#808000"><tt>123</tt></font>.</dd>
+    <dt><font color="#FF0000"><tt>\x2a</tt></font></dt>
+    <dd>the character with hexadecimal value <font
+        color="#808000"><tt>2a</tt></font>.</dd>
+    <dt><font color="#FF0000"><tt>(r)</tt></font></dt>
+    <dd>match an <font color="#FF0000"><tt>r</tt></font>;
+        parentheses are used to override <a href="#precedence">precedence</a>.</dd>
+    <dt><font color="#FF0000"><tt>rs</tt></font></dt>
+    <dd>the regular expression <font color="#FF0000"><tt>r</tt></font>
+        followed by the regular expression <font color="#FF0000"><tt>s</tt></font>;
+        called <em><strong>concatenation</strong></em>.</dd>
+</dl>
+
+<hr size="1" width="75%">
+
+<dl>
+    <dt><font color="#FF0000"><tt>r|s</tt></font></dt>
+    <dd>either an <font color="#FF0000"><tt>r</tt></font> or an <font
+        color="#FF0000"><tt>s</tt></font>.</dd>
+</dl>
+
+<hr size="1" width="75%">
+
+<dl>
+    <dt><font color="#FF0000"><tt>r/s</tt></font></dt>
+    <dd>an <font color="#FF0000"><tt>r</tt></font> but only if it
+        is followed by an <font color="#FF0000"><tt>s</tt></font>.
+        The text matched by <font color="#FF0000"><tt>s</tt></font>
+        is included when determining whether this rule is the
+        &quot;longest match&quot;, but is then returned to the
+        input before the action is executed. So the action only
+        sees the text matched by <font color="#FF0000"><tt>r</tt></font>.
+        This type of pattern is called <em><strong>trailing
+        context</strong></em>. (There are some combinations of <font
+        color="#FF0000"><tt>r/s</tt></font> that <em>gelex</em>
+        cannot match correctly, such as in <font color="#FF0000"><tt>zx*/xy</tt></font>.
+        See <em>gelex</em>'s <a href="limitations.html">limitations</a>
+        for details.).</dd>
+    <dt><font color="#FF0000"><tt>^r</tt></font></dt>
+    <dd>an <font color="#FF0000"><tt>r</tt></font>, but only at
+        the beginning of a line (i.e., when just starting to
+        scan, or right after a newline has been scanned).</dd>
+    <dt><font color="#FF0000"><tt>r$</tt></font></dt>
+    <dd>an <font color="#FF0000"><tt>r</tt></font>, but only at
+        the end of a line (i.e., just before a newline).
+        Equivalent to <font color="#FF0000"><tt>r/\n</tt></font>.</dd>
+    <dd>Note that <em>gelex</em>'s notion of &quot;newline&quot;
+        is exactly what is interpreted as <font color="#808000"><tt>%N</tt></font>
+        by the Eiffel compiler that was used to compiler <em>gelex</em>;
+        in particular, on some <font size="2">DOS</font> systems
+        you must either filter out <font color="#FF0000"><tt>\r</tt></font>'s
+        in the input yourself, or explicitly use <font
+        color="#FF0000"><tt>r/\r\n</tt></font> for <font
+        color="#FF0000"><tt>r$</tt></font>.</dd>
+</dl>
+
+<hr size="1" width="75%">
+
+<dl>
+    <dt><font color="#800000"><tt>&lt;s&gt;</tt></font><font
+        color="#FF0000"><tt>r</tt></font></dt>
+    <dd>an <font color="#FF0000"><tt>r</tt></font>, but only in
+        start condition <font color="#800000"><tt>s</tt></font>
+        (see discussion about <a href="start_conditions.html">start
+        conditions</a> for details).</dd>
+    <dt><font color="#800000"><tt>&lt;s1,s2,s3&gt;</tt></font><font
+        color="#FF0000"><tt>r</tt></font></dt>
+    <dd>same, but in any of start conditions <font
+        color="#800000"><tt>s1</tt></font>, <font color="#800000"><tt>s2</tt></font>,
+        or <font color="#800000"><tt>s3</tt></font>.</dd>
+    <dt><font color="#800000"><tt>&lt;*&gt;</tt></font><font
+        color="#FF0000"><tt>r</tt></font></dt>
+    <dd>an <font color="#FF0000"><tt>r</tt></font> in any start
+        condition, even an exclusive one.</dd>
+</dl>
+
+<hr size="1" width="75%">
+
+<dl>
+    <dt><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font></dt>
+    <dd>an end-of-file.</dd>
+    <dt><font color="#800000"><tt>&lt;s1,s2&gt;</tt></font><font
+        color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font></dt>
+    <dd>an end-of-file when in start condition <font
+        color="#800000"><tt>s1</tt></font> or <font
+        color="#800000"><tt>s2</tt></font>.</dd>
+</dl>
+
+<h2>Some notes on patterns</h2>
+
+<p>Note that inside of a character class, all regular expression
+operators lose their special meaning except escape (<font
+color="#FF0000"><tt>\</tt></font>) and the character class
+operators, <font color="#FF0000"><tt>-</tt></font>, <font
+color="#FF0000"><tt>]</tt></font>, and, at the beginning of the
+class, <font color="#FF0000"><tt>^</tt></font>.</p>
+
+<p>The regular expressions listed above are grouped according to <a
+name="precedence"><em><strong>precedence</strong></em></a>, from
+highest precedence at the top to lowest at the bottom. Those
+grouped together have equal precedence. For example,</p>
+
+<blockquote>
+    <pre><font color="#FF0000">foo|bar*</font></pre>
+</blockquote>
+
+<p>is the same as:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">(foo)|(ba(r*))</font></pre>
+</blockquote>
+
+<p>since the <font color="#FF0000"><tt>*</tt></font> operator has
+higher precedence than concatenation, and concatenation higher
+than alternation (<font color="#FF0000"><tt>|</tt></font>). This
+pattern therefore matches either the string <font color="#808000"><tt>foo</tt></font>
+or the string <font color="#808000"><tt>ba</tt></font> followed
+by zero-or-more <font color="#808000"><tt>r</tt></font>'s. To
+match <font color="#808000"><tt>foo</tt></font> or zero-or-more <font
+color="#808000"><tt>bar</tt></font>'s, use:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">foo|(bar)*</font></pre>
+</blockquote>
+
+<p>and to match zero-or-more <font color="#808000"><tt>foo</tt></font>'s-or-<font
+color="#808000"><tt>bar</tt></font>'s:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">(foo|bar)*</font></pre>
+</blockquote>
+
+<p>A negated character class such as the example <font
+color="#FF0000"><tt>[^A-Z]</tt></font> above will match a newline
+unless <font color="#FF0000"><tt>\n</tt></font> (or an equivalent
+escape sequence) is one of the characters explicitly present in
+the negated character class (e.g., <font color="#FF0000"><tt>[^A-Z\n]</tt></font>).
+This is unlike how many other regular expression tools treat
+negated character classes, but unfortunately the inconsistency is
+historically entrenched. Matching newlines means that a pattern
+like <font color="#FF0000"><tt>[^&quot;]*</tt></font> can match
+the entire input unless there's another quote in the input.</p>
+
+<p>A rule can have at most one instance of trailing context (the <font
+color="#FF0000"><tt>/</tt></font> operator or the <font
+color="#FF0000"><tt>$</tt></font> operator). The start
+conditions, <font color="#FF0000"><tt>^</tt></font>, and <font
+color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font> patterns can
+only occur at the beginning of a pattern, and, as well as with <font
+color="#FF0000"><tt>/</tt></font> and <font color="#FF0000"><tt>$</tt></font>,
+cannot be grouped inside parentheses. A <font color="#FF0000"><tt>^</tt></font>
+which does not occur at the beginning of a rule or a <font
+color="#FF0000"><tt>$</tt></font> which does not occur at the end
+of a rule loses its special properties and is treated as a normal
+character.</p>
+
+<p>The following are illegal:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">foo/bar$</font>
+<font color="#800000">&lt;sc1&gt;</font><font color="#FF0000">foo</font><font
+color="#800000">&lt;sc2&gt;</font><font color="#FF0000">bar</font></pre>
+</blockquote>
+
+<p>Note that the first of these, can be written <font
+color="#FF0000"><tt>foo/bar\n</tt></font>. The following will
+result in <font color="#808000"><tt>$</tt></font> or <font
+color="#808000"><tt>^</tt></font> being treated as a normal
+character:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">foo|(bar$)
+foo|^bar</font></pre>
+</blockquote>
+
+<p>If what's wanted is a <font color="#808000"><tt>foo</tt></font>
+or a <font color="#808000"><tt>bar</tt></font>-followed-by-a-newline,
+the following could be used (the special <font color="#0000FF"><tt>|</tt></font>
+action is explained in the <a href="actions.html">Actions</a>
+section):</p>
+
+<blockquote>
+    <pre><font color="#FF0000">foo</font>	<font color="#0000FF">|</font>
+<font color="#FF0000">bar$</font>	<font color="#008080">-- action goes here</font></pre>
+</blockquote>
+
+<p>A similar trick will work for matching a <font color="#808000"><tt>foo</tt></font>
+or a <font color="#808000"><tt>bar</tt></font>-at-the-beginning-of-a-line.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 21 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="options.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="matching_rules.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Invoking the stand-alone evaluator"
+
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xpath_stand_alone_invoke">
+  <chapterinfo>
+    <copyright>
+      <year>2004-2016</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>27 December 2016</date>
+  </chapterinfo>
+  <title>Invoking the stand-alone XPath evaluator</title>
+  <para>
+   <warning>
+    All the following is out-of-date, almost certainly wrong, and not supported.
+   </warning>
+   To evaluate an XPath expression in a stand-alone environment 
+   (or equivalently, from a host language of your own devising), follow the following steps:
+   <itemizedlist>
+     <listitem>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_create_evaluator">Create an instance of <classname>XM_XPATH_EVALUATOR</classname></link></para>
+     </listitem>
+     <listitem>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_static_context">Build a static context.</link></para>
+     </listitem>
+     <listitem>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_evaluate">Call <featurename>evaluate</featurename> on the evaluator.</link></para>
+     </listitem>
+     <listitem>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_check_errors">Check for evaluation errors.</link></para>
+     </listitem>
+     <listitem>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_results">Retrieving the results.</link></para>
+     </listitem>
+   </itemizedlist>
+  </para> 
+  <section id="xpath_stand_alone_invoke_create_evaluator">
+    <title>Creating an evaluator</title>
+    <para>Call creation procedure <featurecall><featurename>make (digits, on_or_off)</featurename></featurecall> from class <classname>XM_XPATH_EVALUATOR</classname>.
+    <featurename>Digits</featurename> is the precision for decimal arithmetic. It should be at least 18 (or 0, for infinite precision).
+    <featurename>On_or_off</featurename> indicates wheter or not line numbering should be turned on for error messages.
+    </para>
+    <para><classname>XM_XPATH_EVALUATOR</classname> inherits from <classname>XM_STRING_MODE</classname>, so you should then
+    call one of the string-mode setting procedures from that class on the evaluator. It will in turn
+    call the same procedure on the Eiffel XML parser.</para>
+  </section>
+  <section id="xpath_stand_alone_invoke_static_context">
+    <title>Building a static context</title>
+    <para>Before calling <featurename>evaluate</featurename>, it is first necessary to create a static context. 
+      Two features are provided to do this:
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <featurecall>
+	      <featurename>build_static_context</featurename>
+	      <arguments>
+		<argument>a_source_uri: STRING</argument>
+		<argument>xpath_one_compatibility: BOOLEAN</argument>
+		<argument>warnings: BOOLEAN</argument>
+		<argument>use_tiny_tree_model: BOOLEAN</argument>
+		<argument>compact_tree: BOOLEAN</argument>
+	      </arguments>
+	    </featurecall>
+	  </para>
+	  <para>The first argument is the URI of an XML source, against which the XPath expression will be evaluated.</para>
+	  <para>The second argument specifies if we should run in XPath 1.0 compatibility mode.</para>
+	  <para>The third argument requests warnings of differences between XPath 1.0 and  XPath 1.0 compatibility mode. 
+	   It is only meaningful if the second argument is True.
+	  </para>
+	  <para>The fourth argument specifies the tree model to use. If performace and/or memory usage
+	  are important to your application, then you should make measurements to see
+	  which tree model suits you best.</para>
+	  <para>The fifth argument specifies whether or not to compact the tree after parsing. it is not
+	  implemented at the time of writing.</para>
+	  <para>
+	    This feature parses <argument>a_source_uri</argument> as XML, and builds an instance of <classname flatshort="">XM_XPATH_DOCUMENT</classname>.
+	    It sets <featurename>was_build_error</featurename> to true if any error was found, in which case <featurename>error_message</featurename>
+	    will contain the text of the parse error.
+	  </para>
+	  <para>If no error was detected, it then creates a static context, using the document node as the context item.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <featurecall>
+	      <featurename>set_static_context</featurename>
+	      <arguments>
+		<argument>a_static_context: XM_XPATH_STAND_ALONE_CONTEXT</argument>
+	      </arguments>
+	    </featurecall>
+	  </para>
+	  <para>This feature enables you to supply a tailored static context. 
+	  You can also use it if you wish to perform an XPath evaluation without 
+	  referencing an XML document (this is of rather limited usefulness, but 
+	  you might want to use it for evaluating environment variables as
+	  booleans, for instance).
+	  </para>
+	  <para>Having built your static context, you may then declare variables, if you wish.</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </section>
+  <section id="xpath_stand_alone_invoke_evaluate">
+    <title>Performing the evaluation</title>
+    <para>The sole argument to
+      <featurecall>
+	<featurename>evaluate</featurename>
+	<arguments>
+	  <argument>an_expression_text: STRING</argument>
+	</arguments>
+      </featurecall>
+      is the text of the XPath expression which you wish to evaluate.
+    </para>
+  </section>
+  <section id="xpath_stand_alone_invoke_check_errors">
+    <title>Checking for evaluation errors</title>
+    <para>After calling <featurename>evaluate</featurename>, check 
+     <featurename>is_error</featurename>
+     to see if an error occurred. if it did, then feature
+     <featurename>error_value</featurename>
+     contains the details of the error. See <classname flatshort="xm_xpath_error_value">XM_XPATH_ERROR_VALUE</classname>.
+    </para>
+  </section>
+  <section id="xpath_stand_alone_invoke_results">
+    <title>Retrieving the results of an evaluation</title>
+    <para>If the evaluation was successful, <featurename>evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]</featurename>
+     contains a list of results. These are all of type <classname flatshort="">XM_XPATH_ITEM</classname>, representing
+     an XPath item. An item may either be a node (<classname flatshort="">XM_XPATH_NODE</classname>), or an atomic value
+     (<classname flatshort="">XM_XPATH_ATOMIC_VALUE</classname>).
+    </para>
+  </section>
+</chapter>

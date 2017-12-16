@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"See Also"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2004, Berend de Boer and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/formatter/see_also">
+
+<chapterinfo>
+	<copyright>
+		<year>2004-2005</year>
+		<holder>Berend de Boer</holder>
+	</copyright>
+	<author>
+		<firstname>Berend</firstname><surname>de Boer</surname>
+	</author>
+	<email>berend@pobox.com</email>
+	<date>7 March 2005</date>
+</chapterinfo>
+
+<title>See Also</title>
+
+<section id="related_resources"><title>Related Resources</title>
+
+<para>
+The <libraryname>Gobo Eiffel String Formatter Library</libraryname> is based on the
+<ulink url="http://efsa.sourceforge.net/archive/objtools/formatti.htm"><libraryname>SiG 
+Formatting Cluster</libraryname></ulink> of Eiffel/S. SiG put the 
+<libraryname>Formatting Cluster</libraryname> in the public domain by licensing it 
+under the <ulink url="http://opensource.org/licenses/mit-license.html">MIT License</ulink>.
+It was ported by Friedrich Dominicus to other Eiffel 
+compilers. The <libraryname>Gobo Eiffel String Formatter Library</libraryname> is based 
+on Friedrich Dominicus's work, which can be downloaded 
+<ulink url="http://efsa.sourceforge.net/archive/dominicu/format.htm">here</ulink>.
+</para>
+
+</section>
+
+</chapter>

@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Getest: Assertions</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Assertions</strong></font></td>
+        <td align="right"><a href="examples.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="configuration.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>The test routines in the test case classes can use assertion
+features defined in class <font color="#008080"><em><tt>TS_ASSERTION_ROUTINES</tt></em></font>.
+Assertions routines have the prefix <font color="#008080"><em><tt>assert</tt></em></font>
+and when they are not true an error is reported to the test suite
+with the name of the test (i.e. feature name of the test routine)
+and the assertion tag. Assertion routines are inherited from
+class <font color="#008080"><em><tt>TS_TEST_CASE</tt></em></font>
+from the test harness cluster of the <em>Gobo Eiffel Test Library</em>.
+Following are the predefined assertion routines available so far:</p>
+
+<blockquote>
+    <pre><em>assert </em>(<em>a_tag</em>:<em> STRING</em>;<em> a_condition</em>:<em> BOOLEAN</em>)<em>
+</em><font color="#008000">        -- Assert </font><em>a_condition</em><font
+color="#008000">.</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_tag_not_void</em>:<em> a_tag </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><em>assert_equal </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ANY</em>)<em>
+</em><font color="#008000">        -- Assert that </font><em>equal</em><font
+color="#008000"> (</font><em>expected</em><font color="#008000">, </font><em>actual</em><font
+color="#008000">).</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_tag_not_void</em>:<em> a_tag </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><em>assert_not_equal </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ANY</em>)<em>
+</em><font color="#008000">        -- Assert that </font><font
+color="#000080"><em><strong>not</strong></em></font><em> equal</em><font
+color="#008000"> (</font><em>expected</em><font color="#008000">, </font><em>actual</em><font
+color="#008000">).</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_tag_not_void</em>:<em> a_tag </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><em>assert_same </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ANY</em>)<em>
+</em><font color="#008000">        -- Assert that </font><em>expected</em><font
+color="#008000"> = </font><em>actual</em><font color="#008000">.</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_tag_not_void</em>:<em> a_tag </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><em>assert_arrays_same </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ARRAY </em>[<em>ANY</em>])<em>
+</em><font color="#008000">        -- Assert that </font><em>expected</em><font
+color="#008000"> and </font><em>actual</em><font color="#008000"> have the same items
+        -- in the same order (use '=' for item comparison).</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_tag_not_void</em>:<em> a_tag </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        expected_not_void</em>:<em> expected </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        actual_not_void</em>:<em> actual </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><em>assert_arrays_equal </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ARRAY </em>[<em>ANY</em>])<em>
+</em><font color="#008000">        -- Assert that </font><em>expected</em><font
+color="#008000"> and </font><em>actual</em><font color="#008000"> have the same items
+        -- in the same order (use </font><em>equal</em><font
+color="#008000"> for item comparison).</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_tag_not_void</em>:<em> a_tag </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        expected_not_void</em>:<em> expected </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        actual_not_void</em>:<em> actual </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><em>assert_iarrays_same </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ARRAY </em>[<em>INTEGER</em>])<em>
+</em><font color="#008000">        -- Assert that </font><em>expected</em><font
+color="#008000"> and </font><em>actual</em><font color="#008000"> have the same items
+        -- in the same order (use '=' for item comparison).</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_tag_not_void</em>:<em> a_tag </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        expected_not_void</em>:<em> expected </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        actual_not_void</em>:<em> actual </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+</blockquote>
+
+<p>Test cases that require a common setup or tear down can
+redefine the features <font color="#008080"><em><tt>set_up</tt></em></font>
+and <font color="#008080"><em><tt>tear_down</tt></em></font> from
+<font color="#008080"><em><tt>TS_TEST_CASE </tt></em></font>to
+achieve that effect.</p>
+
+<blockquote>
+    <pre><em>set_up
+</em><font color="#008000">        -- Setup for a test.
+        -- (Can be redefined in descendant classes.)</font></pre>
+    <pre><em>tear_down
+</em><font color="#008000">        -- Tear down after a test.
+        -- (Can be redefined in descendant classes.)</font></pre>
+</blockquote>
+
+<p>Here is a simple example which tests a database class:</p>
+
+<blockquote>
+    <pre><font color="#000080"><em><strong>class</strong></em></font><em> TEST_DATABASE
+
+</em><font color="#000080"><em><strong>inherit</strong></em></font><em>
+
+    TS_TEST_CASE
+        </em><font color="#000080"><em><strong>redefine</strong></em></font><em>
+            set_up</em>,<em> tear_down
+</em><font color="#000080"><em><strong>        end
+
+create</strong></em></font><em>
+
+    make_default
+</em><font color="#000080"><em><strong>
+feature</strong></em></font><em> </em><font color="#008000">-- Access
+</font><em>
+    db: DATABASE
+</em><font color="#008000">            -- Database to be tested</font><em>
+
+</em><font color="#000080"><em><strong>feature</strong></em></font><em> </em><font
+color="#008000">-- Setting</font><em>
+
+    set_up
+</em><font color="#008000">            -- Connect to the database.</font><em>
+        </em><font color="#000080"><em><strong>do</strong></em></font><em>
+            </em><font color="#000080"><em><strong>create</strong></em></font><em> db</em>.<em>make
+            db</em>.<em>connect
+        </em><font color="#000080"><em><strong>end</strong></em></font><em>
+
+    tear_down
+</em><font color="#008000">            -- Disconnect from the database.</font><em>
+        </em><font color="#000080"><em><strong>do</strong></em></font><em>
+            db</em>.<em>disconnect
+            db </em>:=<em> </em><font color="#008080"><em>Void</em></font><em>
+        </em><font color="#000080"><em><strong>end</strong></em></font><em>
+
+</em><font color="#000080"><em><strong>feature</strong></em></font><em> </em><font
+color="#008000">-- Test</font><em>
+
+    test_connection
+</em><font color="#008000">            -- Test database connection.</font><em>
+        </em><font color="#000080"><em><strong>do</strong></em></font><em>
+            assert </em>(<font color="#800000"><em>&quot;db_not_void&quot;</em></font>,<em> db </em>/=<em> </em><font
+color="#008080"><em>Void</em></font>)<em>
+            assert </em>(<font color="#800000"><em>&quot;db_connected&quot;</em></font>,<em> db</em>.<em>is_connected</em>)<em>
+        </em><font color="#000080"><em><strong>end</strong></em></font><em>
+
+    test_insertion
+</em><font color="#008000">            -- Test insertion in database.</font><em>
+        </em><font color="#000080"><em><strong>do</strong></em></font><em>
+            db.put </em>(<font color="#800000"><em>&quot;gobo&quot;</em></font>,<em> </em><font
+color="#800000"><em>&quot;name&quot;</em></font>)<em>
+            assert </em>(<font color="#800000"><em>&quot;db_has_name&quot;</em></font>,<em> db.has </em>(<font
+color="#800000"><em>&quot;name&quot;</em></font>))<em>
+            assert_equal (</em><font color="#800000"><em>&quot;inserted&quot;</em></font><em>, </em><font
+color="#800000"><em>&quot;gobo&quot;</em></font><em>, db</em>.<em>item </em>(<font
+color="#800000"><em>&quot;name&quot;</em></font>))<em>
+        </em><font color="#000080"><em><strong>end</strong></em></font><em>
+
+</em><font color="#000080"><em><strong>end</strong></em></font><em> </em></pre>
+</blockquote>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2001-2008</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 13 February 2008</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="examples.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="configuration.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

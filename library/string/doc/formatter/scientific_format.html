@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Scientific Format</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Scientific Format</strong></font></td>
+    <td align="right"><a href="correctness.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   The formatting specifications, which consist of optional and required fields, have 
+   the following form:
+   
+  </p>
+  <p>
+   
+   <blockquote>
+    <pre>
+$[flags][minimum width][.precision]typechar
+</pre>
+    </blockquote>
+   
+  </p>
+  <p>
+   Each field of the formatting specification is a single character or a number 
+   indicating a particular format option. The simplest formatting specification contains 
+   only the escape character and a typechar (for example, 
+   &#147;$s&#148;). To print an escape character, write it twice (e.g. 
+   &#147;$$&#148;).
+   
+  </p>
+  <p>
+   The optional fields, which appear before the type character, control other 
+   aspects of the formatting:
+   
+  </p>
+  <div><a name="type_character"></a><h2>Type character</h2>
+   
+   
+   <p>
+    The type character is required. It determines whether the associated parameter is 
+    interpreted as a character, as a string, or as a number.
+    
+   </p>
+   
+   
+   <p>
+    The following typechars are available in class <font color="#008080"><i><tt>ST_SCIENTIFIC_FORMATTER</tt></i></font>:
+    
+   </p>
+   
+   
+   <table border="2" alt="Recognized type characters">
+    <caption>Recognized type characters</caption>
+    <col span="3" />
+    <thead>
+     <tr>
+      <td><b>Typechar</b></td>
+      <td><b>Class</b></td>
+      <td><b>Description</b></td>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td>c</td>
+      <td><font color="#008080"><i><tt>CHARACTER</tt></i></font></td>
+      <td>Single character.</td>
+     </tr>
+     <tr>
+      <td>b</td>
+      <td><font color="#008080"><i><tt>BOOLEAN</tt></i></font></td>
+      <td>&#147;true&#148; or &#147;false&#148; strings.</td>
+     </tr>
+     <tr>
+      <td>B</td>
+      <td><font color="#008080"><i><tt>BOOLEAN</tt></i></font></td>
+      <td>&#147;True&#148; or &#147;False&#148; strings.</td>
+     </tr>
+     <tr>
+      <td>d</td>
+      <td><font color="#008080"><i><tt>INTEGER</tt></i></font></td>
+      <td>Signed decimal integer.</td>
+     </tr>
+     <tr>
+      <td>e</td>
+      <td><font color="#008080"><i><tt>DOUBLE</tt></i></font></td>
+      <td>Signed value having the form &#147;[-]d.dddde[sign]ddd&#148; 
+       				where d is a single decimal digit, dddd is one or more decimal 
+       				digits, ddd is exactly three decimal digits, and sign is 
+       				'+' or '-'.
+      </td>
+     </tr>
+     <tr>
+      <td>E</td>
+      <td><font color="#008080"><i><tt>DOUBLE</tt></i></font></td>
+      <td>As 'e', but using the uppercase character 'E'.</td>
+     </tr>
+     <tr>
+      <td>f</td>
+      <td><font color="#008080"><i><tt>DOUBLE</tt></i></font></td>
+      <td>Signed value having the form &#147;[-]dddd.dddd&#148;, where
+       				&#147;dddd&#148; is one or more decimal digits. The number of 
+       				digits before the decimal point depends on the magnitude of the
+       				number, and the number of digits after the decimal point
+       				depends on the requested precision.
+      </td>
+     </tr>
+     <tr>
+      <td>g</td>
+      <td><font color="#008080"><i><tt>DOUBLE</tt></i></font></td>
+      <td>Signed value printed in 'f' or 'e' format, whichever
+       				is more compact for the given value and precision. The e
+       				format is used only when the exponent of the value is
+       				less than -4 or greater than or equal to the precision
+       				option. Trailing zeros are truncated, and the decimal
+       				point appears only if one or more digits follow it.
+      </td>
+     </tr>
+     <tr>
+      <td>G</td>
+      <td><font color="#008080"><i><tt>DOUBLE</tt></i></font></td>
+      <td>As 'g', but using the 'E' instead of 'e'.</td>
+     </tr>
+     <tr>
+      <td>i</td>
+      <td><font color="#008080"><i><tt>INTEGER</tt></i></font></td>
+      <td>Signed decimal integer.</td>
+     </tr>
+     <tr>
+      <td>o</td>
+      <td><font color="#008080"><i><tt>INTEGER</tt></i></font></td>
+      <td>Unsigned octal integer.</td>
+     </tr>
+     <tr>
+      <td>p</td>
+      <td><font color="#008080"><i><tt>POINTER</tt></i></font></td>
+      <td>Hexadecimal pointer output.</td>
+     </tr>
+     <tr>
+      <td>s</td>
+      <td><font color="#008080"><i><tt>STRING</tt></i></font></td>
+      <td>Character string; Characters are printed up to the end of string 
+       				or until the precision value is reached.
+      </td>
+     </tr>
+     <tr>
+      <td>u</td>
+      <td><font color="#008080"><i><tt>INTEGER</tt></i></font></td>
+      <td>Unsigned decimal integer.</td>
+     </tr>
+     <tr>
+      <td>x</td>
+      <td><font color="#008080"><i><tt>INTEGER</tt></i></font></td>
+      <td>Unsigned hexadecimal integer, using &#147;abcdef&#148;.</td>
+     </tr>
+     <tr>
+      <td>X</td>
+      <td><font color="#008080"><i><tt>INTEGER</tt></i></font></td>
+      <td>Unsigned hexadecimal integer, using &#147;ABCDEF&#148;.</td>
+     </tr>
+    </tbody>
+   </table>
+   
+   
+   <p>
+    Note that this list can be extended. Also note that only letters between a..z and 
+    A..Z are legal.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="flags"></a><h2>Flags</h2>
+   
+   
+   <p>
+    Flags are optional character or characters that control justification of output 
+    and printing of signs, blanks. More than one flag can appear in a formatting
+    specification, but they must be compatible with each other.
+    
+   </p>
+   
+   
+   <table border="2" alt="Flags overview">
+    <caption>Flags overview</caption>
+    <col span="3" />
+    <thead>
+     <tr>
+      <td><b>Flag</b></td>
+      <td><b>Meaning</b></td>
+      <td><b>Default</b></td>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td>^&#8195;&#8195;</td>
+      <td>Center the formatted parameter within the given field width</td>
+      <td>Right align</td>
+     </tr>
+     <tr>
+      <td>-</td>
+      <td>Left align the formatted parameter within the given field width.</td>
+      <td>Right align</td>
+     </tr>
+     <tr>
+      <td>+</td>
+      <td>Prefix the formatted parameter with a sign (+ or -) if it has 
+       				a signed type.
+      </td>
+      <td>Sign appears only for negative values (-).</td>
+     </tr>
+     <tr>
+      <td>0</td>
+      <td>Zeros are added until the minimum width is reached.</td>
+      <td>No padding.</td>
+     </tr>
+     <tr>
+      <td>_&#8195;</td>
+      <td>Prefix the formatted parameter with a blank (shown with an underscore here) if 
+       				it is signed and positive.
+      </td>
+      <td>No blank appears.</td>
+     </tr>
+    </tbody>
+   </table>
+   
+   
+   <p>
+    The following flag combinations: 
+    
+    <ul>
+     <li>
+      		'&#8195;' after '+'
+      	
+     </li>
+     <li>
+      		'0' with '-'
+      	
+     </li>
+     <li>
+      		'0' with '^'
+      	
+     </li>
+     <li>
+      		'-' with '^'
+      	
+     </li>
+    </ul>
+    are not allowed.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="precision"></a><h2>Minimum width</h2>
+   
+   
+   <p>
+    The width is an optional number that specifies the minimum number of 
+    characters in the formatted parameter.
+    
+   </p>
+   
+   
+   <p>
+    The width argument is a non-negative decimal integer controlling the minimum 
+    number of characters printed. If the number of characters in the formatted parameter is 
+    less than the specified width, blanks are added to the left or to the right
+    - depending on whether the '-' flag (for left alignment) is specified - 
+    until the minimum width is reached. If width is prefixed with 0, zeros are added 
+    until the minimum width is reached (not useful for left-aligned numbers).
+    
+   </p>
+   
+   
+   <p>
+    The width specification never causes a value to be truncated. If the number of 
+    characters in the formatted parameter is greater than the specified width, or if width 
+    is not given, all characters of the value are printed (subject to the precision 
+    specification).
+    
+   </p>
+   
+   
+   <p>
+    If the width specification is an asterisk (*), an integer from the parameter 
+    list provides the value. The width option must precede the parameter being 
+    formatted in the parameter list. A non-existent or small field width does not cause 
+    the truncation of a field; if the formatted parameter is wider than the field 
+    width, the field expands to contain all characters.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="precision"></a><h2>Precision</h2>
+   
+   
+   <p>
+    The third optional field of the format specification is the precision 
+    specification. It is made up of a non-negative decimal integer, preceded by a period 
+    '.', which specifies the number of characters to be printed, the number of 
+    decimal places, or the number of significant digits (see table below). Unlike the 
+    width specification, the precision specification can cause either truncation of 
+    the formatted parameter or rounding of a floating-point parameter. If precision is specified 
+    as <font color="#008080"><i><tt>0</tt></i></font> and the parameter to be formatted is <font color="#008080"><i><tt>0</tt></i></font>, 
+    the result is no characters output:
+    
+   </p>
+   
+   
+   <p>
+    
+    <blockquote>
+     <pre>
+<i><tt>print</tt></i><tt> (</tt><i><tt><i><tt>format</tt></i><tt> (</tt><i><tt>"$.0d"</tt></i><tt>, </tt><i><tt>&lt;&lt;<i><tt>integer_cell</tt></i><tt> (</tt><i><tt><i><tt><font color="#808000">0</font></tt></i></tt></i><tt>)</tt>&gt;&gt;</tt></i><tt>)</tt></tt></i><tt>)</tt> -- No characters output
+</pre>
+     </blockquote>
+    
+   </p>
+   
+   
+   <p>
+    If the precision specification is an asterisk (*), an integer from the 
+    parameter list provides the value. The precision option must precede the 
+    parameter being formatted in the parameter list.
+    
+   </p>
+   
+   
+   <p>
+    The table below details how precision affects type:
+    
+   </p>
+   
+   
+   <table border="2" alt="How precision affects type">
+    <caption>How precision affects type</caption>
+    <col span="3" />
+    <thead>
+     <tr>
+      <td><b>Type</b></td>
+      <td><b>Meaning</b></td>
+      <td><b>Default</b></td>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td>c</td>
+      <td>The precision has no effect.</td>
+      <td>Character is printed.</td>
+     </tr>
+     <tr>
+      <td>b, B</td>
+      <td>The precision has no effect.</td>
+      <td>"[tT]rue"/"[fF]alse" is printed.</td>
+     </tr>
+     <tr>
+      <td>d, i, u, o, x</td>
+      <td>The precision specifies the minimum number of digits to be 
+       				printed. If the number of digits in the parameter is less than 
+       				precision, the output value is padded on the left with zeros.
+      </td>
+      <td>The value is not truncated when the number of digits exceeds 
+       				precision. Default precision is <font color="#008080"><i><tt>1</tt></i></font>.
+      </td>
+     </tr>
+     <tr>
+      <td>e</td>
+      <td>The precision specifies the number of digits to
+       				be printed after the decimal point. The last printed
+       				digit is rounded.
+      </td>
+      <td>Default precision is <font color="#008080"><i><tt>6</tt></i></font>; if precision is 
+       				<font color="#008080"><i><tt>0</tt></i></font>, no decimal point is printed.
+      </td>
+     </tr>
+     <tr>
+      <td>f</td>
+      <td>The precision value specifies the number of digits after the 
+       				decimal point. If a decimal point appears, at least one digit 
+       				appears before it. The value is rounded to the appropriate 
+       				number of digits.
+      </td>
+      <td>Default precision is <font color="#008080"><i><tt>6</tt></i></font>; if precision is 
+       				<font color="#008080"><i><tt>0</tt></i></font>, no decimal point is printed.
+      </td>
+     </tr>
+     <tr>
+      <td>g</td>
+      <td>The precision specifies the maximum number of significant 
+       				digits printed.
+      </td>
+      <td>Six significant digits are printed, with any trailing zeros 
+       				truncated.
+      </td>
+     </tr>
+     <tr>
+      <td>s</td>
+      <td>The precision specifies the maximum number of characters to be 
+       				printed. Characters in excess of precision are not printed.
+      </td>
+      <td>Characters are printed until end of string.</td>
+     </tr>
+    </tbody>
+   </table>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004-2005, Berend de Boer</b><br /><b>mailto:</b><a href="mailto:berend@pobox.com">berend@pobox.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 March 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../image/toc.gif" alt="Toc" border="0" /></a><a href="correctness.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

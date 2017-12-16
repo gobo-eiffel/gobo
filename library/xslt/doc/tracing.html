@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Tracing stylesheet execution</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Tracing stylesheet execution</strong></font></td>
+    <td align="right"><a href="error_listener.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="transformation_result.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   As an aid to stylesheet design and performance analysis, the library includes an execution trace facility.
+   To enable tracing, call <font color="#008080"><i><tt>set_trace_listener (a_trace_listener: XM_XSLT_TRACE_LISTENER)</tt></i></font>
+   on your <font color="#008080"><i><tt>XM_XSLT_CONFIGURATION</tt></i></font>.
+   
+  </p>
+  <div>
+   
+   <h2>The default trace listener</h2>
+   
+   <p>
+    The library provides one descendant of <font color="#008080"><i><tt>XM_XSLT_TRACE_LISTENER</tt></i></font>, namely 
+    <font color="#008080"><i><tt>XM_XSLT_DEFAULT_TRACE_LISTENER</tt></i></font>. This class writes trace records as
+    XML text, optionally with timing information added, to the <font color="#008080"><i><tt>info_file: KI_TEXT_OUTPUT_STREAM</tt></i></font> of an <font color="#008080"><i><tt>UT_ERROR_HANDLER</tt></i></font>.
+    A suitable <font color="#008080"><i><tt>UT_ERROR_HANDLER</tt></i></font> is available in <font color="#008080"><i><tt>XM_XSLT_CONFIGURATION</tt></i></font> as
+    <font color="#008080"><i><tt>error_reporter</tt></i></font>.
+    
+   </p>
+   
+   <p>
+    
+    <p><font color="#FF0000">This trace listener generates a large quantity of data for long-running transforms.</font></p>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Writing your own trace listener</h2>
+   
+   <p>
+    If you wish to write your own trace listener, then you need to look at <font color="#008080"><i><tt>XM_XSLT_TRACE_DETAILS</tt></i></font>.
+    In particular the feature <font color="#008080"><i><tt>properties</tt></i></font>. To find out what properties can be present in the 
+    trace details, you can search the library source code, and inspect <font color="#008080"><i><tt>XM_XSLT_DEFAULT_TRACE_LISTENER</tt></i></font>.
+    
+    <p><font color="#FF0000">TODO: document these properties.</font></p>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Suspending tracing</h2>
+   
+   <p>
+    It may be desirable to trace only parts of the execution path. In which case a mechanism is needed to
+    turn tracing on and off. No such mechanism is available right now. One possibility is to use XPath
+    extension functions to pause and resume tracing (this is what Saxon does). Another possibility would be to 
+    use extension attributes, or extension instructions.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Monday, November 1st, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="error_listener.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="transformation_result.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

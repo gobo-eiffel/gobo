@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Documentation</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Documentation</strong></font></td>
+    <td align="right"><a href="programming_style.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="examples.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   Each Eiffel library or tool should come with some documentation to be placed in 
+   <font color="#800000"><i><tt>$GOBO/library/&lt;library-name&gt;/doc</tt></i></font> or
+   <font color="#800000"><i><tt>$GOBO/tool/&lt;tool-name&gt;/doc</tt></i></font>. Documentation should 
+   be written in American English. It is possible to provide the documentation in 
+   other languages (French, Spanish, Dutch, German, ...), but it should at least be 
+   available in American English.
+   
+  </p>
+  <p>
+   Documentation format: 
+   <a href="http://www.oreilly.com/catalog/docbook/chapter/book/docbook.html">DocBook</a> 
+   XML DTD?
+   ...
+   
+  </p>
+  <p>
+   Graphviz could probably be used to generate class inheritance graphs. Graphiz is 
+   an open source graph drawing software. Have a look at:
+   
+   <blockquote>
+    <a href="http://www.graphviz.org">http://www.graphviz.org</a>
+    
+   </blockquote>
+   
+  </p>
+  <p>
+   For example, with the following <font color="#800000"><i><tt>list.dot</tt></i></font> file:
+   
+  </p>
+  <p>
+   
+   <blockquote>
+    <pre>
+digraph G {
+	edge [dir=back, color=maroon];
+	node [height=0.35, fontsize=8, style=filled, color=paleturquoise3];
+
+	ds_list [label="DS_LIST*"];
+	ds_linked_list [label="DS_LINKED_LIST"];
+	ds_bilinked_list [label="DS_BILINKED_LIST"];
+	ds_arrayed_list [label="DS_ARRAYED_LIST"];
+
+	ds_list -&gt; ds_linked_list -&gt; ds_bilinked_list;
+	ds_list -&gt; ds_arrayed_list;
+}
+</pre>
+    </blockquote>
+   
+  </p>
+  <p>
+   I managed to generate a <font color="#800000"><i><tt>list.gif</tt></i></font> file similar to those used 
+   in the existing <i>Gobo Eiffel</i> documentation with the 
+   command-line:
+   
+  </p>
+  <p>
+   
+   <blockquote>
+    <pre>
+  dot -Tgif -o <font color="#800000"><i><tt>list.gif</tt></i></font> <font color="#800000"><i><tt>list.dot</tt></i></font>
+</pre>
+    </blockquote>
+   
+  </p>
+  <p>
+   I don't know yet how to simulate the client relationship double-arrow with 
+   graphviz though.
+   
+  </p>
+  <p>
+   (Thank you to Franck Arnaud for letting me know about this graphviz tool.)
+   
+  </p>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2001-2016, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>22 December 2016</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../image/toc.gif" alt="Toc" border="0" /></a><a href="programming_style.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="examples.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

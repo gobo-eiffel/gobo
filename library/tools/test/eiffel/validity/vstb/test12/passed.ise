@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+
+Error code: VSTB
+
+Error: The instance-free feature f uses the attribute attr.
+What to do: Remove the attribute attr from the code or the instance-free mark from the feature declaration.
+Class: BB
+Feature: f
+Line: 11
+      do
+->      p := $attr
+      end
+
+-------------------------------------------------------------------------------

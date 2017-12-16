@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<project name="tools_doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel Tools Library documentation"
+		library: "Gobo Eiffel Tools Library"
+		copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/doc.eant">
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+	
+<!-- Implementation -->
+
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+
+		<geant target="${target}" arguments="index"/>
+		<geant target="${target}" arguments="ace"/>
+		<geant target="${target}" arguments="ecf"/>
+		<geant target="${target}" arguments="xace"/>
+		<geant target="${target}" arguments="new_xace_option"/>
+		<geant target="${target}" arguments="builtin_routines"/>
+		<geant target="${target}" arguments="new_builtin_routine"/>
+		<geant target="${target}" arguments="applications"/>
+		<geant target="${target}" arguments="limitations"/>
+		<geant target="${target}" arguments="see_also"/>
+	</target>
+
+</project>

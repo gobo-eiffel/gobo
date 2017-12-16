@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>exec</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>exec</strong></font></td>
+    <td align="right"><a href="echo_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="exit_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="exec_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Execute system command.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="exec_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>executable</dt>
+    <dd><i>Description: </i>Commandline to be executed
+     <p><i>Domain: </i>Valid commandline
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>exit_code_variable</dt>
+    <dd><i>Description: </i>Name of variable holding the process's return code after it's run
+     						Note: This attribute can only be used when no fileset is used as nested argument
+     					
+     <p><i>Domain: </i>Integer (usually 0 for OK, and any other number for not OK)
+     </p>
+     <p><i>Default: </i>`Void' (no variable is set if attribute is not specified)
+     </p>
+    </dd>
+    			
+    <dt>accept_errors</dt>
+    <dd><i>Description: </i>Should executable return codes different from zero be accepted?
+     						Note: Use this attribute only if a nested fileset is specified. Usage without one is still supported
+     						but obsolete. Use attribute 'exit_code_variable' instead and set it to a dummy value if you are not
+     						interested in the return code.
+     					
+     <p><i>Domain: </i>true|false
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="exec_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="exec"&gt;
+    &lt;element name="exec"&gt;
+      &lt;ref name="dir_if_unless"/&gt;
+      &lt;attribute name="executable"/&gt;
+      &lt;optional&gt;
+        &lt;attribute name="accept_errors"&gt;
+          &lt;!-- runtime evaluation
+          &lt;choice&gt;
+            &lt;value&gt;true&lt;/value&gt;
+            &lt;value&gt;false&lt;/value&gt;
+          &lt;/choice&gt;
+          --&gt;
+        &lt;/attribute&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;ref name="fileset"/&gt;
+      &lt;/optional&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+
+		</pre>
+   	</div>
+  <div><a name="exec_examples"></a>
+   		
+   <h2>Examples</h2>
+   
+   		<pre>
+  &lt;exec executable="compile system.ace"/&gt;
+
+  &lt;exec executable="ls -l"/&gt;
+
+  &lt;exec executable="dir"/&gt;
+
+  &lt;exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel"&gt;
+    &lt;fileset dir="." include="@(*.ge)"&gt;
+      &lt;map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/&gt;
+    &lt;/fileset&gt;
+  &lt;/exec&gt;
+
+		</pre>
+   	</div>
+  <div><a name="exec_with_fileset"></a>
+   		
+   <h2>Using exec with a fileset</h2>
+   		
+   <p>
+    			It is possible to provide a nested <a href="fileset_element.html">fileset</a>
+    			element. For each element the fileset contains the  commandline specified in
+    			attribute <i>commandline</i> is executed and thus works like an iteration of loop
+    			in a programming language. To use the current item of the iteration the this task provides the
+    			built-in variables <i>${fs.filename}</i> and
+    			<i>${fs.mapped_filename}</i>.
+    		
+   </p>
+   		<pre>
+  &lt;exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel"&gt;
+    &lt;fileset dir="." include="@(*.ge)"&gt;
+      &lt;map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/&gt;
+    &lt;/fileset&gt;
+  &lt;/exec&gt;
+
+		</pre>
+   
+   	<p>
+    	Due to its general purpose 'exec', unlike  <a href="copy_task.html">copy</a>
+    	cannot determine whether the sourcefile is newer than the target file.
+    	If we want to behave 'exec' a bit more intelligent we have to prepare the input in advance.
+    	The element  <a href="fileset_element.html">fileset</a> has an attribute <i>force</i>.
+    	By default it is set to 'true' so that all selected files are included. The reason for this default value
+    	that tasks like <a href="copy_task.html">copy</a> using a
+    	<a href="fileset_element.html">fileset</a> usually provide their own <i>force</i>
+    	attribute. (Note that it is necessary for some tasks, like <a href="copy_task.html">copy</a>
+    	for example, to define their own <i>force</i> attribute since they usually append paths
+    	to the filenames delivered by filesets. <a href="copy_task.html">copy</a> for example is doing this
+    	with the attribute <i>to_directory</i>).
+    	
+   </p>
+   
+   	
+   <p>
+    		By setting <i>force</i> to <i>false</i> the fileset itself determines
+    		whether files are 'out of date' or not. This means of course that the fileset must have the complete
+    		paths to the files and not only parts of them. In the following example we use the path
+    		<i>${GOBO}/example/geant/tmp</i> in the attribute <i>to</i>
+    		of the <a href="fileset_element.html">fileset</a>'s <a href="fileset_element.html">map</a>
+    		element so that the fileset itself can determine which files to include and which not.
+    	
+   </p>
+   
+   	<pre>
+  &lt;exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel"&gt;
+	&lt;fileset dir="." include="@(*.ge)" force="false"&gt;
+	  &lt;map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/&gt;
+	&lt;/fileset&gt;
+  &lt;/exec&gt;
+
+	</pre>
+   
+   	<p>
+    		Here is another example which uses SmartEiffel's 'short' command on a fileset.
+    		The 'exec' command is executed for each entry in the fileset. By default only files which
+    		are newer than their corresponding target files are included in the list.
+    	
+   </p>
+   
+   	<pre>
+  &lt;exec executable="short -html2 se.ace ${fs.filename} &amp;gt; ${fs.mapped_filename}"&gt;
+	&lt;fileset
+	  dir="$GOBO/library/structure/set"
+	  include="@(**/*.e)"
+	  force="false"
+	&gt;
+	  &lt;map type="glob" from="*.e" to="${short_dir}/*.html"&gt;
+		&lt;map type="flat"/&gt;
+	  &lt;/map&gt;
+	&lt;/fileset&gt;
+  &lt;/exec&gt;
+
+	</pre>
+   
+   	</div>
+  <div><a name="exec_with_fileset"></a>
+   		
+   <h2>Using exec with return codes</h2>
+   		
+   <p>
+    			It is possible to catch the return code of a called process and continue
+    			the build process. This way it is possible to check the value of the return code
+    			and decide for each specific situation if the build process should be terminated or
+    			not:
+    		
+   </p>
+   		<pre>
+  &lt;exec executable="..." exit_code_variable="return_code"/&gt;
+  &lt;echo message="return_code: ${return_code}"/&gt;
+  &lt;echo message="run OK" if="${return_code}=0"/&gt;
+  &lt;echo message="run not OK" unless="${return_code}=0"/&gt;
+  &lt;exit code="1" unless="${return_code}=0"/&gt;
+
+
+		</pre>
+   
+   	<p>
+    	
+   </p>
+   
+   	
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="echo_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="exit_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

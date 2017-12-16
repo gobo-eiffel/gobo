@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<project name="print" default="help" >
+
+	<description>
+		system: "'print' xml-printer"
+		copyright: "Copyright (c) 2001-2016, Andreas Leitner and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="print"/>
+		<set name="library" value="xml"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/example/event/${system}"/>
+	</target>
+
+</project>

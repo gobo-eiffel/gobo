@@ -4,13 +4,13 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel String Library"
 		library: "Gobo Eiffel String Library"
-		copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
+		copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="string" location="${GOBO}/library/string">
+	<cluster name="string" location="${GOBO}/library/string/src">
 		<option name="abstract" value="true"/>
 		<cluster name="collation"/>
 		<cluster name="unicode"/>

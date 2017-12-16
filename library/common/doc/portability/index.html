@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Portability Issues</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Portability Issues</strong></font></td>
+        <td align="right"><a href="../index.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="inheritance.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>One of the main concerns that has driven the design and
+implementation of the Eiffel library classes contained in <em>Gobo
+Eiffel</em> package was to make the code compilable by as many
+Eiffel compilers available on the market as possible. This
+implies that the users of this package shouldn't have to modify
+any of the Eiffel classes in order to compile them with their
+favorite compiler. In particular, no modification should be
+necessary in the library classes provided with the compilers,
+such as the kernel library classes. This latter requirement is
+quite important since a simple modification in a kernel class
+such as <font color="#008080"><em><tt>ANY</tt></em></font> or <font
+color="#008080"><em><tt>ARRAY</tt></em></font> by just adding or
+renaming a feature may invalidate a lot of already existing code
+based on these classes.</p>
+
+<p>Fortunately, thanks to the kernel library standard
+<a href="http://www.gobosoft.com/eiffel/nice/elks95/index.html">
+<font
+size="2">ELKS '95</font></a><font size="3"> and
+<a href="http://www.gobosoft.com/eiffel/nice/elks01/index.html">
+<font
+size="2">ELKS 2001</font></a>
+<font size="3"> adopted by </font><font
+size="2">NICE</font><font size="3"> (Nonprofit International
+Consortium for Eiffel), one can now rely on a set of standard
+classes and features to achieve interoperability between Eiffel
+compilers. At least, this is the theory. In practice, despite
+the availability of
+<a href="https://github.com/EiffelSoftware/FreeELKS">FreeELKS</a>,
+a free implementation of the ELKS standard,
+none of the
+Eiffel compilers available on the market are 100% compliant to </font><font
+size="2">ELKS</font><font size="3">, or 100% compliant to the
+<a href="http://www.ecma-international.org/publications/standards/Ecma-367.htm">
+ECMA Eiffel standard</a>.
+As a consequence, kernel classes provided
+with the different compilers have to be adapted to get a minimum
+of compatibility between classes from different vendors. Since
+these classes cannot be directly modified (see requirement
+above), the necessary adaptation is achieved with a combination
+of the three following techniques:</font></p>
+
+<blockquote>
+    <ul>
+        <li><a href="inheritance.html">Adaptation by Inheritance
+            Technique</a></li>
+        <li><a href="client.html">Client/Supplier Adaptation
+            Technique</a></li>
+        <li><a href="gepp.html"><em>Gepp</em>: Gobo Eiffel
+            Preprocessor</a></li>
+    </ul>
+</blockquote>
+
+<p>A non-exhaustive list of <a href="portability.html">portability
+issues</a> encountered during the development of this package,
+along with the corresponding solutions which have been adopted,
+will help to understand some of the design and implementation
+decisions which have been made. Hopefully this list will also be
+useful to those of you who want to develop portable Eiffel class
+libraries. Feel free to contact <a
+href="mailto:ericb@gobosoft.com">me</a> if you want to discuss
+some of the items from this list or if you experienced other
+interoperability problems.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1997-2016</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 23 December 2016</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="../index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="../index.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="inheritance.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gelex Limitations</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Gelex Limitations</strong></font></td>
+        <td align="right"><a href="skeleton.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="see_also.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<h2>Variable-length trailing contexts</h2>
+
+<p>Some trailing context patterns cannot be properly matched and
+generate warning messages (&quot;dangerous trailing
+context&quot;). These are patterns where the ending of the first
+part of the rule matches the beginning of the second part, such
+as <font color="#FF0000"><tt>zx*/xy*</tt></font>, where the <font
+color="#FF0000"><tt>x*</tt></font> matches the <font
+color="#FF0000"><tt>x</tt></font> at the beginning of the
+trailing context. (Note that the POSIX draft for <em>lex</em>
+states that the text matched by such patterns is undefined.)</p>
+
+<h2>Matching Null characters</h2>
+
+<p>Pattern-matching of Null characters is substantially slower
+than matching other characters.</p>
+
+<h2>Resizing input buffer</h2>
+
+<p>The input buffer may be automatically resized when a token is
+so big that it can hardly fit in the buffer's allocated space.
+This dynamic resizing of the input buffer might be a bit slow,
+but all the text matched so far by the current (generally huge)
+token won't have to be scanned again though.</p>
+
+<h2>Reject and full tables</h2>
+
+<p><a href="actions.html#reject"><font color="#008080"><em><tt>reject</tt></em></font></a>
+cannot be used with the <font color="#800000"><tt>-f</tt></font>
+(<a href="options.html#full">full table</a>) option.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 20 February 2000</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="skeleton.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="see_also.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

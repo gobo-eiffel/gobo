@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Getest: Command-line Options</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Command-line Options</strong></font></td>
+        <td align="right"><a href="configuration.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="output.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>The usual way to invoke <em>getest</em> is as follows:</p>
+
+<blockquote>
+    <pre><font color="#800000">getest filename</font></pre>
+</blockquote>
+
+<p>where <font color="#800000"><tt>filename</tt></font> is the <a
+href="configuration.html">configuration file</a> used to run the
+test. If <em>getest</em> is invoked with no filename but the file
+<font color="#800000"><tt>getest.cfg</tt></font> exists, then:</p>
+
+<blockquote>
+    <pre><font color="#800000">getest</font></pre>
+</blockquote>
+
+<p>is equivalent to:</p>
+
+<blockquote>
+    <pre><font color="#800000">getest getest.cfg</font></pre>
+</blockquote>
+
+<p>Alternatively the configuration filename can be specified by
+the environment variable <font color="#800000"><tt>$GETEST_CONFIG</tt></font>:</p>
+
+<blockquote>
+    <pre><font color="#800000">setenv GETEST_CONFIG filename
+getest</font></pre>
+</blockquote>
+
+<p>(<font color="#800000"><tt>setenv</tt></font> is the way to
+set environment variables with C-shell, please use the command
+provided by your favorite shell or operating system.) There are
+also some shorthands such as:</p>
+
+<blockquote>
+    <pre><font color="#800000">getest --ge
+getest --ise</font></pre>
+</blockquote>
+
+<p>which are equivalent to:</p>
+
+<blockquote>
+    <pre><font color="#800000">getest getest.ge
+getest getest.ise</font></pre>
+</blockquote>
+
+<p>provided that the corresponding files exist.</p>
+
+<p>Following is the order used by <em>getest</em> to determine
+which configuration file to use:</p>
+
+<ol>
+    <li>If a filename has been specified on the command-line,
+        then use it.</li>
+    <li>If either <font color="#800000"><tt>--</tt></font><a
+        href="#ge"><font color="#800000"><tt>ge</tt></font></a>
+        or <font color="#800000"><tt>--</tt></font><a href="#ise"><font
+        color="#800000"><tt>ise</tt></font></a> has been
+        specified on the command-line and the corresponding file <font
+        color="#800000"><tt>getest.ge</tt></font> or <font
+        color="#800000"><tt>getest.ise</tt></font> exists, then
+        use this file.</li>
+    <li>If the file <font color="#800000"><tt>getest.cfg</tt></font>
+        exists, then use it.</li>
+    <li>If the environment variable <font color="#800000"><tt>$GETEST_CONFIG</tt></font>
+        has been defined, then use its value as configuration
+        filename.</li>
+</ol>
+
+<p>Here is the list of options that can be used with <em>getest</em>:</p>
+
+<dl>
+    <dt><font color="#800000"><tt>-h<br>
+        -?<br>
+        --help</tt></font></dt>
+    <dd>Print a summary of the command-line options of <em>getest</em>
+        and exit.</dd>
+    <dt><font color="#800000"><tt>-V<br>
+        --version</tt></font></dt>
+    <dd>Print the version number of <em>getest</em> and exit.</dd>
+    <dt><font color="#800000"><tt>-v<br>
+        --verbose</tt></font></dt>
+    <dd>Run <em>getest</em> in verbose mode. In verbose mode, <em>getest</em>
+        prints the number of test cases that have been generated.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="ge"><font
+        color="#800000"><tt>ge</tt></font></a></dt>
+    <dd>Run <em>getest</em> with the configuration file <font
+        color="#800000"><tt>getest.ge</tt></font> if it exists.
+        This configuration file is supposed to contain
+        instructions to run the test with the Gobo Eiffel
+        compiler. Also the default value for the <a
+        href="configuration.html#compile"><font color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file is set to <font color="#800000"><tt>&quot;geant
+        compile_ge&quot;</tt></font>.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="ise"><font
+        color="#800000"><tt>ise</tt></font></a></dt>
+    <dd>Run <em>getest</em> with the configuration file <font
+        color="#800000"><tt>getest.ise</tt></font> if it exists.
+        This configuration file is supposed to contain
+        instructions to run the test with the ISE Eiffel
+        compiler. Also the default value for the <a
+        href="configuration.html#compile"><font color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file is set to <font color="#800000"><tt>&quot;geant
+        compile_ise&quot;</tt></font>.</dd>
+    <dt><font color="#800000"><tt>-a</tt></font></dt>
+    <dd>Do not catch exceptions, but let Eiffel run-time generate
+        a stack dump.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="compile"><font
+        color="#800000"><tt>compile</tt></font></a><font
+        color="#800000"><tt>=&lt;command&gt;</tt></font></dt>
+    <dd>Override the <a href="configuration.html#compile"><font
+        color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="class"><font
+        color="#800000"><tt>class</tt></font></a><font
+        color="#800000"><tt>=&lt;regexp&gt;</tt></font></dt>
+    <dd>Override the <a href="configuration.html#class"><font
+        color="#000080"><em><strong><tt>class</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="feature"><font
+        color="#800000"><tt>feature</tt></font></a><font
+        color="#800000"><tt>=&lt;regexp&gt;</tt></font></dt>
+    <dd>Override the <a href="configuration.html#feature"><font
+        color="#000080"><em><strong><tt>feature</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a
+        name="default_test"><font color="#800000"><tt>default_test</tt></font></a></dt>
+    <dd>Specify whether the feature <font color="#008080"
+        size="2" face="Courier New"><em>default_test</em></font>
+        should be included in the generated test cases.</dd>
+    <dt><font color="#800000"><tt>-D &lt;name&gt;[=&lt;value&gt;]</tt></font></dt>
+    <dt><font color="#800000"><tt>--</tt></font><a name="define"><font
+        color="#800000"><tt>define</tt></font></a><font
+        color="#800000"><tt>=&lt;name&gt;[=&lt;value&gt;]</tt></font></dt>
+    <dd>Define variable <font color="#800000"><tt>name</tt></font>
+        and set it to <font color="#800000"><tt>value</tt></font>
+        if specified. This option may appear several times on the
+        command-line to define different variables. By default
+        these variables are passed to the command <a
+        href="configuration.html#execute">running the test cases</a>.</dd>
+    <dt><font color="#800000"><tt>-g</tt></font></dt>
+    <dd>Testcase generation only. Do not compile nor run the
+        generated test.</dd>
+    <dt><font color="#800000"><tt>-c</tt></font></dt>
+    <dd>Testcase compilation only. Do not generate nor run the
+        test.</dd>
+    <dt><font color="#800000"><tt>-e</tt></font></dt>
+    <dd>Testcase execution only. Do not generate nor compile the
+        test.</dd>
+</dl>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2001-2008</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 4 August 2008</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="configuration.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="output.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Class Layout"
+
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/class_layout">
+<chapterinfo>
+	<copyright>
+		<year>2001-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>22 December 2016</date>
+</chapterinfo>
+
+<title>Class Layout</title>
+
+<section id="indentations"><title>Indentations</title>
+
+<para>
+Indentations from the left margin should be made up of tabs. Please to not use 
+space characters as mixing spaces and tabs gives ugly results when people use 
+different sizes for tabs. Throughout this documentation tabs will be represented 
+by an underscore followed by three spaces in order to make them clearly visible 
+on the page. Here is a example:
+</para>
+
+<para>
+<programlisting>
+<text>_   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>)
+<text>_   _   _   </text><comment>Set `<featurename>foo</featurename>' to `<argument>a_foo</argument>'.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text><assign><target><featurename>foo</featurename></target>
+			<expression><argument>a_foo</argument></expression></assign>
+<text>_   _   </text>ensure
+<text>_   _   _   </text>foo_set: <equal><expression><featurename>foo</featurename></expression>
+					<expression><argument>a_foo</argument></expression></equal>
+<text>_   _   </text>end
+</programlisting>
+</para>
+
+<para>
+Some text editors provide a means similar to the one described above in order to 
+make tabs visible. It is recommended that you enable such facility if you use one 
+of those editors.
+</para>
+
+</section>
+
+<section id="general_layout"><title>General Layout</title>
+
+<para>
+Here is how a class text should look like:
+</para>
+
+<para>
+
+<programlisting>
+note
+<text>
+_   </text>description:
+<text>
+_   _   </text>"Short description of the class"
+<text>
+_   </text>library:    "Gobo Eiffel Lexical Library"
+<text>_   </text>copyright:  "Copyright (c) 2000-2016, Eric Bezault and others"
+<text>_   </text>license:    "MIT License"
+<text>_   </text>date:       "$Date$"
+<text>_   </text>revision:   "$Revision$"
+<text>
+</text>class <classname>BAR</classname> [G -> <classname>TOTO</classname>]
+<text>
+</text>inherit
+<text>
+_   </text><classname>BAZ</classname>
+<text>_   _   </text>rename
+<text>_   _   _   </text><featurename>oof</featurename> as <featurename>foo</featurename>,
+<text>_   _   _   </text><featurename>f</featurename> as <featurename>g</featurename>
+<text>_   _   </text>redefine
+<text>_   _   _   </text>foo, bar
+<text>_   _   </text>end
+<text>
+</text>create
+<text>
+_   </text><featurename>make</featurename>, <featurename>make_from_string</featurename>
+<text>
+</text>feature {<classname>NONE</classname>} <comment>Initialization</comment>
+<text>
+_   </text><featurename>make</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>)
+<text>_   _   _   </text><comment>Create a new bar.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text><featurecall>
+				<featurename>set_foo</featurename>
+				<arguments><argument>a_foo</argument></arguments>
+			</featurecall>
+<text>_   _   </text>ensure
+<text>_   _   _   </text>foo_set: <equal><expression><featurename>foo</featurename></expression>
+					<expression><argument>a_foo</argument></expression></equal>
+<text>_   _   </text>end
+<text>
+_   </text><featurename>make_from_string</featurename> (<argument>a_string</argument>: <classname>STRING</classname>)
+<text>_   _   _   </text><comment>Create a new bar from `<argument>a_string</argument>'.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_string_not_void: <argument>a_string</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text>create <featurecall>
+					<target><featurename>foo</featurename></target>
+					<featurename>make_from_string</featurename> 
+					<arguments><argument>a_string</argument></arguments>
+				</featurecall>
+<text>_   _   </text>end
+<text>
+</text>feature <comment>Access</comment>
+<text>
+_   </text><featurename>foo</featurename>: <classname>FOO</classname>
+<text>_   _   _   </text><comment>Foo</comment>
+<text>
+</text>feature <comment>Setting</comment>
+<text>
+_   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>)
+<text>_   _   _   </text><comment>Set `<featurename>foo</featurename>' to `<argument>a_foo</argument>'.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text><assign><target><featurename>foo</featurename></target>
+				<expression><argument>a_foo</argument></expression></assign>		
+<text>_   _   </text>ensure
+<text>_   _   _   </text>foo_set: <equal><expression><featurename>foo</featurename></expression>
+					<expression><argument>a_foo</argument></expression></equal>
+<text>_   _   </text>end
+<text>
+</text>invariant
+<text>
+_   </text>foo_not_void: <featurename>foo</featurename> /= Void
+<text>
+</text>end
+</programlisting>
+
+</para>
+
+<para>
+Apart from the indentation, please notice that there is one and only one empty 
+line between each top-level construct of the class, and also between features in
+feature clauses.
+</para>
+
+<para>
+(Borrow the guidelines from OOSC2 section 26.5 page 891. Note that contrary to 
+the guidelines in OOSC2, the recommended layout for 
+<projectname>Gobo Eiffel</projectname> classes in to put the class name on the 
+same line as the <constructname>class</constructname> keyword 
+&#x2014; see class <classname>BAR</classname> above.)
+</para>
+
+</section>
+
+</chapter>

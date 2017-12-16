@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Getest: Output</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Output</strong></font></td>
+        <td align="right"><a href="options.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="see_also.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>The output of <em>getest</em> consists of a report of the
+number of tests which have passed (tests with no assertion
+failure), failed (tests which have at least one assertion
+failure) and aborted (tests which had an Eiffel exception). The
+output of a normal execution of <em>getest</em> will look
+something like that:</p>
+
+<blockquote>
+    <pre><font color="#800000">Preparing Test Cases
+Compiling Test Cases
+Running Test Cases
+
+Test Summary for test1
+
+# PASSED:     5 tests
+# Failed:     0 test
+# Aborted:    0 test
+# Total:      5 tests (14 assertions)</font></pre>
+</blockquote>
+
+<p>When there are no failed or aborted tests in the report, the <font
+color="#800000"><tt>PASSED</tt></font> label is in upper-case
+letters. However when a failed or aborted test occurred, then <font
+color="#800000"><tt>FAILED</tt></font> or <font color="#800000"><tt>ABORTED</tt></font>
+are in upper-case letters in order to raise the attention of the
+reader. Furthermore a short explanation of the errors is
+displayed at the end of the report. Here is an example of the output
+of <em>getest</em> when a test failed:</p>
+
+<blockquote>
+    <pre><font color="#800000">Preparing Test Cases
+Compiling Test Cases
+Running Test Cases
+
+Test Summary for test2
+
+# Passed:     3 tests
+# FAILED:     1 test
+# Aborted:    0 test
+# Total:      4 tests (8 assertions)
+
+Test Results:
+FAIL:  [TEST_FOO.test_bar] foo+bar
+   expected: foobar
+   but  got: foofoo</font></pre>
+</blockquote>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2001-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 16 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="options.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="see_also.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

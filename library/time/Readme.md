@@ -1,0 +1,31 @@
+# Gobo Eiffel Time Library
+
+This library is a portable Eiffel class library
+covering date and time handling. When this library has been
+developed, there was no date and time library standard, and
+no portable library supporting the main Eiffel compilers
+was publicly available. Each Eiffel compiler provides its own
+date and time library, but none of them is fully portable.
+Furthermore the existing date and time libraries only covered
+the absolute time and duration notions, leaving untackled areas
+such as time zones, stopwatches, clocks or timers. The *Gobo Eiffel
+Time Library* tries to address these issues with the same care
+that characterizes the other high-quality libraries that make
+up the *Gobo Eiffel Project*.
+
+**Included in this library:**
+
+* `doc`: this folder contains the documentation for this library,
+  in HTML format. Start with `index.html`.
+* `example`: this folder contains examples for this library.
+* `src`: this folder contains the clusters and classes making up this library.
+  * `clock`: Clocks, system clock, customizable clocks.
+  * `date`: Date, time and duration classes.
+  * `stopwatch`: Stopwatches.
+  * `time_zone`: Time zones, date/time conversions. (STILL UNDER DEVELOPMENT)
+* `test`: this folder contains the unit tests for this library as well as
+  tests to exercise the examples.
+
+## Authors
+
+Copyright (c) 2000-2017, Eric Bezault and others

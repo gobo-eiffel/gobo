@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Adding a new Eiffel built-in routine</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Adding a new Eiffel built-in routine</strong></font></td>
+    <td align="right"><a href="builtin_routines.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="applications.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   The following sections will describe step by step what needs to be done
+   in order to add support for new built-in routines in the Eiffel compiler.
+   
+  </p>
+  <div>
+   <h2>Class and Feature names</h2>
+   
+   <p>
+    The first thing to do is to declare the name of the built-in feature and
+    the name of its class. Let's assume that the built-in function <font color="#008080"><i><tt>foo</tt></i></font>
+    and built-in procedure <font color="#008080"><i><tt>poo</tt></i></font>
+    have been declared in class <font color="#008080"><i><tt>BAR</tt></i></font>. These feature and
+    class names will have to be declared as follows in class <font color="#008080"><i><tt>ET_TOKEN_CONSTANTS</tt></i></font>
+    if not already done:
+    
+    <blockquote><pre>
+feature -- Class names
+
+	bar_class_name: ET_CLASS_NAME
+			-- "BAR" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_bar_name)
+		ensure
+			bar_class_name_not_void: Result /= Void
+		end
+
+feature -- Feature names
+
+	foo_feature_name: ET_FEATURE_NAME
+			-- 'foo' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (foo_name)
+		ensure
+			foo_feature_name_not_void: Result /= Void
+		end
+
+	poo_feature_name: ET_FEATURE_NAME
+			-- 'poo' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (poo_name)
+		ensure
+			poo_feature_name_not_void: Result /= Void
+		end
+		
+feature -- Keyword and symbol names
+
+	capitalized_bar_name: STRING = "BAR"
+			-- Name of Eiffel class "BAR"
+
+	foo_name: STRING = "foo"
+			-- Name of Eiffel feature 'foo'
+
+	poo_name: STRING = "poo"
+			-- Name of Eiffel feature 'poo'
+</pre></blockquote>
+    It is a good practice to keep these features in alphabetic order in their
+    respective feature clauses. Note that <font color="#008080"><i><tt>capitalized_bar_name</tt></i></font>,
+    <font color="#008080"><i><tt>foo_name</tt></i></font> and <font color="#008080"><i><tt>poo_name</tt></i></font> also 
+    need to be listed in feature <font color="#008080"><i><tt>strings</tt></i></font>
+    from class <font color="#008080"><i><tt>ET_EIFFEL_SCANNER_SKELETON</tt></i></font>:
+    
+    <blockquote><pre>
+	strings: DS_HASH_TABLE [INTEGER, STRING]
+			-- Strings known by the current scanner, and the associated
+			-- hash codes when they are used as identifier
+		once
+			...
+				-- Class names.
+			Result.force_new (-1, tokens.capitalized_bar_name)
+			...
+				-- Feature names.
+			Result.force_new (-1, tokens.foo_name)
+			...
+			Result.force_new (-1, tokens.poo_name)
+			...
+		end
+</pre></blockquote>
+    Again, try to keep them in alphabetic order in their respective sections.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Built-in feature codes</h2>
+   
+   <p>
+    Each built-in feature is associated with a code which is made up of a
+    class identifier and a feature identifier within this class. Still assuming that
+    the built-in function <font color="#008080"><i><tt>foo</tt></i></font> and the built-in
+    procedure <font color="#008080"><i><tt>poo</tt></i></font>
+    have been declared in class <font color="#008080"><i><tt>BAR</tt></i></font>, the following
+    features need to be declared in class <font color="#008080"><i><tt>ET_TOKEN_CODES</tt></i></font>
+    if not already done:
+    
+    <blockquote><pre>
+feature -- Built-in codes
+
+	...
+	builtin_bar_class: NATURAL_8 = XX
+	...
+			-- Code for classes of built-in features
+	
+	builtin_bar_foo: NATURAL_8 = YY
+			-- Codes for built-in functions from class "BAR"
+
+	builtin_bar_poo: NATURAL_8 = ZZ
+			-- Codes for built-in procedures from class "BAR"
+</pre></blockquote>
+    where XX is the class identifier whose value should be different from all other
+    <font color="#008080"><i><tt>builtin_*_class</tt></i></font> declared in this feature clause, 
+    and YY and ZZ are unique identifiers within the built-in features of this 
+    class. Note that the identifiers for the built-in functions should be listed
+    first, followed by the identifiers for the built-in procedures.
+    
+   </p>
+   
+   <p>
+    This convenience routine should also be added in class <font color="#008080"><i><tt>ET_DYNAMIC_FEATURE</tt></i></font>:
+    
+    <blockquote><pre>
+	is_builtin_bar_class: BOOLEAN
+			-- Is current feature the built-in feature of class "BAR"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_bar_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_bar_class)
+		end
+</pre></blockquote>
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Validity checker</h2>
+   
+   <p>
+    When features are flattened, the Eiffel compiler checks whether features declared
+    as built-in are known and if they have the expected signature. This is done in class
+    <font color="#008080"><i><tt>ET_BUILTIN_FEATURE_CHECKER</tt></i></font>. Let's assume that the feature
+    <font color="#008080"><i><tt>foo</tt></i></font> is a built-in function with no argument and a result
+    of type 'like Current', and the feature <font color="#008080"><i><tt>poo</tt></i></font> is a built-in procedure
+    with one argument of type INTEGER. The following features need to be modified 
+    or added in class <font color="#008080"><i><tt>ET_BUILTIN_FEATURE_CHECKER</tt></i></font>:
+    
+    <blockquote><pre>
+	check_builtin_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Check validity of built-in `a_feature', written in `current_class'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_name: ET_CLASS_NAME
+		do
+			l_name := current_class.name
+			if ... then
+			...
+			elseif l_name.same_class_name (tokens.bar_class_name) then
+				check_builtin_bar_feature_validity (a_feature)
+			...
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_builtin_bar_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Check validity of built-in `a_feature' from class "BAR".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; builtin_feature_code: NATURAL_8], ET_FEATURE_NAME]
+			l_builtin_class_code: NATURAL_8
+		do
+			l_builtin_class_code := tokens.builtin_bar_class
+			builtin_features.search (l_builtin_class_code)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
+			else
+				create l_builtin_features.make_map (...)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, l_builtin_class_code)
+					-- Functions.
+				...
+				register_builtin_feature (tokens.foo_feature_name, Void, tokens.like_current, tokens.builtin_bar_foo, l_builtin_features)
+				...
+					-- Procedures.
+				...
+				register_builtin_feature (tokens.poo_feature_name, &lt;&lt;current_universe.integer_type.type&gt;&gt;, Void, tokens.builtin_bar_poo, l_builtin_features)
+				...
+			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_class_code, l_builtin_features)
+		end
+</pre></blockquote>
+    
+   </p>
+   
+   <p>
+    Various examples with different combinations of argument and result types can be
+    found in class <font color="#008080"><i><tt>ET_BUILTIN_FEATURE_CHECKER</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Dynamic type sets</h2>
+   
+   <p>
+    The Gobo Eiffel compiler uses the dynamic type sets of the target of the
+    feature calls to implement dynamic binding and CAT-call checking. Each
+    expression is associated with a dynamic type set which is then propagated
+    when there is an assignment or argument passing. The dynamic type set of
+    the 'Result' entity of built-in functions needs to be built. If it is only
+    made up of exactly one type which is the declared type of the 'Result'
+    entity of the built-in function, then nothing special needs to be done.
+    The default implementation will take care of this case. On the other
+    hand, if the dynamic type set is more complicated or if the built-in
+    feature calls internally another feature whose dynamic type sets need to
+    be updated as well (for example feature <font color="#008080"><i><tt>twin</tt></i></font>
+    calls feature <font color="#008080"><i><tt>copy</tt></i></font>), then the following code
+    needs to appear in class <font color="#008080"><i><tt>ET_DYNAMIC_TYPE_BUILDER</tt></i></font>:
+    
+    <blockquote><pre>
+feature {NONE} -- Feature validity
+
+	check_external_builtin_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Check validity of `a_feature'.
+			-- `a_feature' is a built-in function.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			builtin_feature_known: not a_feature.is_builtin_unknown
+		do
+			inspect a_feature.builtin_class_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_bar_foo then
+					report_builtin_bar_foo (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
+			...
+			else
+				report_builtin_function (a_feature)
+			end
+		end
+
+feature {NONE} -- Built-in features
+
+	report_builtin_bar_foo (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'BAR.foo' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				...
+				l_result_type := result_type_set.static_type
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+				...
+			end
+		end
+</pre></blockquote>
+    By default, nothing needs to be done for built-in procedures. But there are some
+    special cases when the built-in procedure will call internally another feature or
+    will have an effect on the dynamic type set of some entities (for example in class
+    <font color="#008080"><i><tt>SPECIAL</tt></i></font>, the procedure <font color="#008080"><i><tt>put</tt></i></font> will
+    have an effect on the dynamic type set of <font color="#008080"><i><tt>item</tt></i></font>).
+    In this case, code similar to the one above will be needed for these built-in
+    procedures. Examples can be found in class <font color="#008080"><i><tt>ET_DYNAMIC_TYPE_BUILDER</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Generation of C code</h2>
+   
+   <p>
+    The last thing to do is to make sure that the C code of the built-in feature is
+    properly generated. Still assuming that <font color="#008080"><i><tt>foo</tt></i></font> is
+    a built-in function and <font color="#008080"><i><tt>poo</tt></i></font> is a built-in procedure 
+    declared in class <font color="#008080"><i><tt>BAR</tt></i></font>. Then the following code needs to
+    appear in class <font color="#008080"><i><tt>ET_C_GENERATOR</tt></i></font>:
+    
+    <blockquote><pre>
+feature {NONE} -- Feature generation
+
+	print_external_builtin_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_class_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_class then
+				print_external_builtin_bar_function_body (a_feature)
+			...
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_bar_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "BAR".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_bar: current_feature.is_builtin_bar_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_feature_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_foo then
+				print_builtin_bar_foo_body (a_feature)
+			...
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_class_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_class then
+				print_external_builtin_bar_procedure_body (a_feature)
+			...
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_bar_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "BAR".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_bar: current_feature.is_builtin_bar_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_feature_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_poo then
+				print_builtin_bar_poo_body (a_feature)
+			...
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+feature {NONE} -- Built-in feature generation
+
+	print_builtin_bar_foo_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'BAR.foo'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			...
+		end
+
+	print_builtin_bar_poo_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'BAR.poo'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			...
+		end
+</pre></blockquote>
+    In some cases, the C code can be inlined. This is when the call to the C function
+    can be avoided by calling the C code directly. In that case the code above in class
+    <font color="#008080"><i><tt>ET_C_GENERATOR</tt></i></font> can be changed by replacing
+    <font color="#008080"><i><tt>print_builtin_bar_foo_body</tt></i></font> by <font color="#008080"><i><tt>print_builtin_bar_foo_call</tt></i></font>
+    and <font color="#008080"><i><tt>print_builtin_bar_poo_body</tt></i></font> by <font color="#008080"><i><tt>print_builtin_bar_poo_call</tt></i></font>,
+    and by modifying features <font color="#008080"><i><tt>print_external_builtin_bar_function_body</tt></i></font>
+    and <font color="#008080"><i><tt>print_external_builtin_bar_procedure_body</tt></i></font>
+    as follows:
+    
+    <blockquote><pre>
+feature {NONE} -- Feature generation
+
+	print_external_builtin_bar_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "BAR".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_bar: current_feature.is_builtin_bar_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_feature_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_foo then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_bar_foo_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			...
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_bar_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "BAR".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_bar: current_feature.is_builtin_bar_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_feature_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_poo then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_bar_poo_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			...
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+feature {NONE} -- Query call generation
+
+	print_builtin_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to query `a_feature' (static binding).
+			-- `a_feature' is a built-in feature.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+			-- Note that the result of the query is not adapted to match the kind
+			-- of result type expected by the caller. It is recommended to use
+			-- `print_adapted_query_call' whenever possible.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.result_type_set /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_class_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_class then
+				print_builtin_bar_query_call (a_feature, a_target_type, a_check_void_target)
+			...
+			else
+				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_bar_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to query `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "BAR".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+			-- Note that the result of the query is not adapted to match the kind
+			-- of result type expected by the caller. It is recommended to use
+			-- `print_adapted_query_call' whenever possible.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.result_type_set /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_bar: a_feature.is_builtin_bar_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_feature_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_foo then
+				print_builtin_bar_foo_call (a_feature, a_target_type, a_check_void_target)
+			...
+			else
+				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+feature {NONE} -- Procedure call generation
+
+	print_builtin_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to procedure `a_feature' (static binding).
+			-- `a_feature' is a built-in feature.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_class_code
+			...
+			when {ET_TOKEN_CODES}.builtin_bar_class then
+				print_builtin_bar_procedure_call (a_feature, a_target_type, a_check_void_target)
+			...
+			else
+				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_bar_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to procedure `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "BAR".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_bar: a_feature.is_builtin_bar_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_feature_code
+			when builtin_bar_poo then
+				print_builtin_bar_poo_call (a_feature, a_target_type, a_check_void_target)
+			...
+			else
+				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+feature {NONE} -- Built-in feature generation
+
+	print_builtin_bar_foo_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'BAR.foo'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			...
+		end
+
+	print_builtin_bar_poo_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'BAR.poo'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			...
+		end
+</pre></blockquote>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2010-2017, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>15 April 2017</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="builtin_routines.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="applications.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

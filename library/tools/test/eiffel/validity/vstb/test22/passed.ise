@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+
+Error code: VSTB
+
+Implementation contraint: The instance-free feature f uses an inline agent.
+What to do: Remove the inline agent from the code or the instance-free mark from the feature declaration.
+Class: BB
+Feature: f
+Line: 11
+      do
+->      a := agent do end
+      end
+
+-------------------------------------------------------------------------------

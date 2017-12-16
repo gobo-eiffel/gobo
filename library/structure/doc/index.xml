@@ -1,0 +1,159 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Gobo Eiffel Structure Library"
+
+	library: "Gobo Eiffel Structure Library"
+	copyright: "Copyright (c) 1997-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="structure/index">
+<chapterinfo>
+	<copyright>
+		<year>1999-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>26 December 2016</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Structure Library</title>
+
+<para>
+The <libraryname>Gobo Eiffel Structure Library</libraryname> is
+a portable Eiffel class library covering <emphasis role="strong">data structures
+and algorithms</emphasis>. When this library has been developed,
+there was no data structure library standard, and no portable
+library was publicly available. Each Eiffel compiler provides its
+own data structure library, but none of them is portable (see
+<link linkend="${library/common}/portability/index">portability issues</link>). This
+library has hence been developed as a foundation for other
+portable libraries provided in the <link linkend="${library/common}/index">
+<projectname>Gobo Eiffel Project</projectname></link>.
+The <libraryname>Gobo Eiffel Structure Library</libraryname>
+contains the classic containers needed in everyday
+programming, such as lists, stacks or tables, and provides
+different implementations such as linked, bilinked, arrayed,
+multiarrayed or hashed. More data structures may be added in the
+future if there is a need for them. There is nothing really new
+in this library. Most of the ideas come from other existing data
+structure libraries.
+</para>
+
+<para>
+This documentation is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="terminology">Terminology</link>
+		</term>
+		<listitem><para>
+			Naming conventions followed throughout this library.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="container">General Abstractions</link>
+		</term>
+		<listitem><para>
+			Abstract properties of data structures [cluster 
+			<filename class="directory">container</filename>].
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="traversal">Traversable Containers</link>
+		</term>
+		<listitem><para>
+			Data structure traversal mechanism [cluster
+			<filename class="directory">container</filename>].
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="sort">Sortable Containers</link>
+		</term>
+		<listitem><para>
+			Algorithms for sorting items in containers [cluster
+			<filename class="directory">sort</filename>].
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="list">Lists</link>
+		</term>
+		<listitem><para>
+			Various implementations of lists [cluster
+			<filename class="directory">list</filename>].
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="table">Tables</link>
+		</term>
+		<listitem><para>
+			Containers whose items are accessed by keys [cluster
+			<filename class="directory">table</filename>].
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="set">Sets</link>
+		</term>
+		<listitem><para>
+			Containers containing at most one occurrence of each
+			item [cluster <filename class="directory">set</filename>].
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="dispenser">Dispensers</link>
+		</term>
+		<listitem><para>
+			Stacks (LIFO) and queues (FIFO) [cluster
+			<filename class="directory">dispenser</filename>].
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="flatshort/index">Flat-short Forms</link>
+		</term>
+		<listitem><para>
+			Flat-short forms of the <libraryname>Gobo Eiffel Structure
+			Library</libraryname> classes.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="see_also">See Also</link>
+		</term>
+		<listitem><para>
+			Bibliographical references, related resources and
+			acknowledgments.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

@@ -4,7 +4,7 @@
 		"C functions used to implement class UNIX_SIGNALS"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,84 +12,85 @@
 
 #ifndef EIF_SIG_C
 #define EIF_SIG_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef EIF_SIG_H
+#include "eif_sig.h"
+#endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-char esigdefined(long int sig) {
+char esigdefined(long int sig)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'esigdefined' in 'eif_sig.h' not implemented\n");
 	return (char)'\0';
 }
 
-long esignum(void) {
+long esignum(void)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'esignum' in 'eif_sig.h' not implemented\n");
 	return (long)0;
 }
 
-void esigcatch(long int sig) {
+void esigcatch(long int sig)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'esigcatch' in 'eif_sig.h' not implemented\n");
 }
 
-void esigignore(long int sig) {
+void esigignore(long int sig)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'esigignore' in 'eif_sig.h' not implemented\n");
 }
 
-void esigresall(void) {
+void esigresall(void)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'esigresall' in 'eif_sig.h' not implemented\n");
 }
 
-void esigresdef(long int sig) {
+void esigresdef(long int sig)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'esigresdef' in 'eif_sig.h' not implemented\n");
 }
 
-char esigiscaught(long int sig) {
+char esigiscaught(long int sig)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'esigiscaught' in 'eif_sig.h' not implemented\n");
 	return (char)'\0';
 }
 
-long esigmap(long int idx) {
+long esigmap(long int idx)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'esigmap' in 'eif_sig.h' not implemented\n");
 	return (long)0;
 }
 
-char* esigname(long int sig) {
+char* esigname(long int sig)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'esigname' in 'eif_sig.h' not implemented\n");
 	return (char*)0;
 }

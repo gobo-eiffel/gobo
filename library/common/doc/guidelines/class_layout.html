@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Class Layout</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Class Layout</strong></font></td>
+    <td align="right"><a href="naming_conventions.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="programming_style.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="indentations"></a><h2>Indentations</h2>
+   
+   
+   <p>
+    Indentations from the left margin should be made up of tabs. Please to not use 
+    space characters as mixing spaces and tabs gives ugly results when people use 
+    different sizes for tabs. Throughout this documentation tabs will be represented 
+    by an underscore followed by three spaces in order to make them clearly visible 
+    on the page. Here is a example:
+    
+   </p>
+   
+   
+   <p>
+    <pre>
+_   <i><tt>set_foo</tt></i> (<i><tt>a_foo</tt></i>: like <i><tt>foo</tt></i>)
+_   _   _   <font color="#008000"><tt>-- Set `<i><tt>foo</tt></i>' to `<i><tt>a_foo</tt></i>'.</tt></font>
+_   _   require
+_   _   _   a_foo_not_void: <i><tt>a_foo</tt></i> /= Void
+_   _   do
+_   _   _   <i><tt>foo</tt></i><tt> := </tt><i><tt>a_foo</tt></i>
+_   _   ensure
+_   _   _   foo_set: <i><tt>foo</tt></i><tt> = </tt><i><tt>a_foo</tt></i>
+_   _   end
+</pre>
+    </p>
+   
+   
+   <p>
+    Some text editors provide a means similar to the one described above in order to 
+    make tabs visible. It is recommended that you enable such facility if you use one 
+    of those editors.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="general_layout"></a><h2>General Layout</h2>
+   
+   
+   <p>
+    Here is how a class text should look like:
+    
+   </p>
+   
+   
+   <p>
+    
+    <pre>
+note
+
+_   description:
+
+_   _   "Short description of the class"
+
+_   library:    "Gobo Eiffel Lexical Library"
+_   copyright:  "Copyright (c) 2000-2016, Eric Bezault and others"
+_   license:    "MIT License"
+_   date:       "$Date$"
+_   revision:   "$Revision$"
+
+class <i><tt>BAR</tt></i> [G -&gt; <i><tt>TOTO</tt></i>]
+
+inherit
+
+_   <i><tt>BAZ</tt></i>
+_   _   rename
+_   _   _   <i><tt>oof</tt></i> as <i><tt>foo</tt></i>,
+_   _   _   <i><tt>f</tt></i> as <i><tt>g</tt></i>
+_   _   redefine
+_   _   _   foo, bar
+_   _   end
+
+create
+
+_   <i><tt>make</tt></i>, <i><tt>make_from_string</tt></i>
+
+feature {<i><tt>NONE</tt></i>} <font color="#008000"><tt>-- Initialization</tt></font>
+
+_   <i><tt>make</tt></i> (<i><tt>a_foo</tt></i>: <i><tt>FOO</tt></i>)
+_   _   _   <font color="#008000"><tt>-- Create a new bar.</tt></font>
+_   _   require
+_   _   _   a_foo_not_void: <i><tt>a_foo</tt></i> /= Void
+_   _   do
+_   _   _   <i><tt>set_foo</tt></i><tt> (</tt><i><tt>a_foo</tt></i><tt>)</tt>
+_   _   ensure
+_   _   _   foo_set: <i><tt>foo</tt></i><tt> = </tt><i><tt>a_foo</tt></i>
+_   _   end
+
+_   <i><tt>make_from_string</tt></i> (<i><tt>a_string</tt></i>: <i><tt>STRING</tt></i>)
+_   _   _   <font color="#008000"><tt>-- Create a new bar from `<i><tt>a_string</tt></i>'.</tt></font>
+_   _   require
+_   _   _   a_string_not_void: <i><tt>a_string</tt></i> /= Void
+_   _   do
+_   _   _   create <i><tt>foo</tt></i><tt>.</tt><i><tt>make_from_string</tt></i><tt> (</tt><i><tt>a_string</tt></i><tt>)</tt>
+_   _   end
+
+feature <font color="#008000"><tt>-- Access</tt></font>
+
+_   <i><tt>foo</tt></i>: <i><tt>FOO</tt></i>
+_   _   _   <font color="#008000"><tt>-- Foo</tt></font>
+
+feature <font color="#008000"><tt>-- Setting</tt></font>
+
+_   <i><tt>set_foo</tt></i> (<i><tt>a_foo</tt></i>: like <i><tt>foo</tt></i>)
+_   _   _   <font color="#008000"><tt>-- Set `<i><tt>foo</tt></i>' to `<i><tt>a_foo</tt></i>'.</tt></font>
+_   _   require
+_   _   _   a_foo_not_void: <i><tt>a_foo</tt></i> /= Void
+_   _   do
+_   _   _   <i><tt>foo</tt></i><tt> := </tt><i><tt>a_foo</tt></i>		
+_   _   ensure
+_   _   _   foo_set: <i><tt>foo</tt></i><tt> = </tt><i><tt>a_foo</tt></i>
+_   _   end
+
+invariant
+
+_   foo_not_void: <i><tt>foo</tt></i> /= Void
+
+end
+</pre>
+    
+    </p>
+   
+   
+   <p>
+    Apart from the indentation, please notice that there is one and only one empty 
+    line between each top-level construct of the class, and also between features in
+    feature clauses.
+    
+   </p>
+   
+   
+   <p>
+    (Borrow the guidelines from OOSC2 section 26.5 page 891. Note that contrary to 
+    the guidelines in OOSC2, the recommended layout for 
+    <i>Gobo Eiffel</i> classes in to put the class name on the 
+    same line as the <tt>class</tt> keyword 
+    &#8212; see class <font color="#008080"><i><tt>BAR</tt></i></font> above.)
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2001-2016, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>22 December 2016</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../image/toc.gif" alt="Toc" border="0" /></a><a href="naming_conventions.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="programming_style.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

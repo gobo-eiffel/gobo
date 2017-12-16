@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc: Grammar Rules</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Grammar Rules</strong></font></td>
+        <td align="right"><a href="symbols.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="actions.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>The grammar rules determine the syntax of a language. A rule
+has the following general form:</p>
+
+<blockquote>
+    <pre><font color="#800080">RESULT</font><font color="#0000FF">:</font> <font
+color="#800080">COMPONENTS</font>...
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>where <font color="#800080"><tt>RESULT</tt></font> is the
+nonterminal symbol that this rule describes and <font
+color="#800080"><tt>COMPONENTS</tt></font> are various terminal
+and nonterminal <a href="symbols.html">symbols</a> that are put
+together by this rule. For example,</p>
+
+<blockquote>
+    <pre><font color="#800080">exp</font><font color="#0000FF">:</font> <font
+color="#800080">exp</font> <font color="#FF0000">'+'</font> <font
+color="#800080">exp</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>says that two groupings of type <font color="#800080"><tt>exp</tt></font>,
+with a <font color="#FF0000"><tt>+</tt></font> token in between,
+can be combined into a larger grouping of type <font
+color="#800080"><tt>exp</tt></font>. Whitespace in rules is
+significant only to separate symbols. You can add extra
+whitespace as you wish.</p>
+
+<h2>Actions</h2>
+
+<p>Scattered among the components can be <a href="actions.html">actions</a>
+that determine the semantics of the rule. An action looks like
+this:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">{</font><font color="#008080"><em> Eiffel Instructions </em></font><font
+color="#0000FF">}</font></pre>
+</blockquote>
+
+<p>Usually there is only one action and it follows the
+components. </p>
+
+<h2>Multiple Rules</h2>
+
+<p>Multiple rules for the same <font color="#800080"><tt>RESULT</tt></font>
+can be written separately or can be joined with the vertical-bar
+character <font color="#0000FF"><tt>|</tt></font> as follows:</p>
+
+<blockquote>
+    <pre><font color="#800080">RESULT</font><font color="#0000FF">:</font> <font
+color="#800080">RULE1-COMPONENTS</font>...
+    <font color="#0000FF">|</font> <font color="#800080">RULE2-COMPONENTS</font>...
+    ...
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>They are still considered distinct rules even when joined in
+this way.</p>
+
+<p>In order to avoid mistakes such as giving the same <font
+color="#800080"><tt>RESULT</tt></font> name to two unrelated
+rules in the grammar, <em>geyacc</em> generates a warning
+whenever rules for the same <font color="#800080"><tt>RESULT</tt></font>
+have not been joined.</p>
+
+<h2>Empty Rules</h2>
+
+<p>If <font color="#800080"><tt>COMPONENTS</tt></font> in a rule
+is empty, it means that <font color="#800080"><tt>RESULT</tt></font>
+can match the empty string. For example, here is how to define a
+comma-separated sequence of zero or more <font color="#800080"><tt>exp</tt></font>
+groupings:</p>
+
+<blockquote>
+    <pre><font color="#800080">expseq</font><font color="#0000FF">:</font> <font
+color="#008080">-- Empty</font>
+    <font color="#0000FF">|</font> <font color="#800080">expseq1</font>
+    <font color="#0000FF">;</font>
+
+<font color="#800080">expseq1</font><font color="#0000FF">:</font> <font
+color="#800080">exp</font>
+    <font color="#0000FF">|</font> <font color="#800080">expseq1</font> <font
+color="#FF0000">','</font> <font color="#800080">exp</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>It is customary to write a comment<font color="#008080"><tt>
+-- Empty </tt></font>in each rule with no components.</p>
+
+<h2><a name="recursive">Recursive Rules</a></h2>
+
+<p>A rule is called &quot;recursive&quot; when its <font
+color="#800080" size="2" face="Courier New">RESULT</font>
+nonterminal appears also on its right hand side. Nearly all <em>geyacc</em>
+grammars need to use recursion, because that is the only way to
+define a sequence of any number of something. Consider this
+recursive definition of a comma-separated sequence of one or more
+expressions:</p>
+
+<blockquote>
+    <pre><font color="#800080">expseq1</font><font
+color="#0000FF">:</font> <font color="#800080">exp</font>
+    <font color="#0000FF">|</font> <font color="#800080">expseq1</font> <font
+color="#FF0000">','</font> <font color="#800080">exp</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>Since the recursive use of <font color="#800080"><tt>expseq1</tt></font>
+is the leftmost symbol in the right hand side, we call this <em><strong>left
+recursion</strong></em>. By contrast, here the same construct is
+defined using <em><strong>right recursion</strong></em>:</p>
+
+<blockquote>
+    <pre><font color="#800080">expseq1</font><font
+color="#0000FF">:</font> <font color="#800080">exp</font>
+    <font color="#0000FF">|</font> <font color="#800080">exp</font> <font
+color="#FF0000">','</font> <font color="#800080">expseq1</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>Any kind of sequence can be defined using either left
+recursion or right recursion, but <strong>you should always use
+left recursion</strong>, because it can parse a sequence of any
+number of elements with bounded stack space. Right recursion uses
+up space on the <em>geyacc</em> stack in proportion to the number
+of elements in the sequence, because all the elements must be
+shifted onto the stack before the rule can be applied even once.
+See the <a href="algorithm.html">parser algorithm</a> for further
+explanation of this.</p>
+
+<p><em><strong>Indirect</strong></em> or <em><strong>mutual</strong></em>
+recursion occurs when the result of the rule does not appear
+directly on its right hand side, but does appear in rules for
+other nonterminals which do appear on its right hand side. For
+example:</p>
+
+<blockquote>
+    <pre><font color="#800080">expr</font><font color="#0000FF">:</font> <font
+color="#800080">primary</font>
+    <font color="#0000FF">|</font> <font color="#800080">primary</font> <font
+color="#FF0000">'+'</font> <font color="#800080">primary</font>
+    <font color="#0000FF">;</font>
+
+<font color="#800080">primary</font><font color="#0000FF">:</font> <font
+color="#800080">constant</font>
+    <font color="#0000FF">|</font> <font color="#FF0000">'('</font> <font
+color="#800080">expr</font> <font color="#FF0000">')'</font>
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>defines two mutually-recursive nonterminals, since each refers
+to the other.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="symbols.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="actions.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

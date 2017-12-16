@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Introduction to Gelex</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Introduction to Gelex</strong></font></td>
+        <td align="right"><a href="index.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="stages.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>In most operating systems, files are generally dealt with as a
+stream of individual characters. This abstraction is very
+powerful since any file can be represented by it. However there
+is a disadvantage in that a programmer almost always has to
+impose a structure upon the raw file, or in other words, break
+the file into more meaningful components. For example one part of
+a compiler takes a stream of characters from a file and groups
+them into units that the syntax checker understands, like
+numbers, keywords and strings. This is because the language
+parser of the compiler does not work with a stream of characters
+but with a stream of symbols from the language.</p>
+
+<p>Database applications and applications dealing with binary
+files often have a fixed format for their data and this format is
+used for extracting meaning from the input. The opposite is
+usually true for programs that read in text. These programs must
+often break the input into words or symbols, and there is usually
+no set structure to the way these words or symbols are laid out.
+So, in order to break the input into meaningful symbols, programs
+that deal with text often include a stage called the <em>lexical
+analysis</em> stage or <em>lexical scanning</em> stage which
+takes care of breaking up the input. The functions for doing this
+are referred to as lexical analyzers or lexical scanners, or <em>scanners</em>
+for short. A scanner is like a factory that takes in raw
+materials (i.e. characters) and produces the finished product
+(tokens), ready for the consumers (e.g. parsers).</p>
+
+<p>Generally, writing scanners is neither difficult nor
+interesting for a programmer, but it can be time consuming.
+Fortunately <em>Gobo Eiffel Lex </em>provides programmers with a
+method for cleanly describing the lexical analysis stage and
+generating efficient lexical scanners from the description. The
+programmer supplies <em>gelex </em>with a description of the
+scanner needed and <em>gelex</em> uses this description to
+produce a scanner in Eiffel. The description language is a
+high-level language and is much more suitable for describing
+scanner than Eiffel. It allows the programmer to specify how to
+group characters and also what actions to take after a grouping
+is completed.</p>
+
+<p><em>Gelex</em> is not limited to use only in compilers. Think
+of all the programs on your computer that need to read files and
+deal with groups of characters in some way, and in particular
+transformation filters and language tools. Almost all of these
+programs can be written using <em>gelex</em>, or <em>gelex</em>
+combined with other tools.</p>
+
+<p><em>Gelex</em> can save programmers significant amounts of
+time in developing scanners and processing the characters that
+make up a file. In most cases the <em>gelex</em> input will be
+easier to understand, and at least as portable, and easier to
+maintain than code directly written in C and/or Eiffel. No more
+Eiffel<em> external</em> features calling scanners generated in C
+(using <em>lex</em> or <em>flex</em> for example), and no need
+for <em>Cecil</em> in the semantic actions to call Eiffel
+routines from C. With <em>gelex</em> programmers can directly
+write semantic actions in Eiffel. Not only that, but because
+scanners in <em>gelex</em> can usually be developed in a much
+shorter time than traditional methods, it is ideal for
+prototyping (taking advantage of incremental compilation provided
+by most Eiffel compilers) and for one-shot programs or filters.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1997-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 21 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="stages.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

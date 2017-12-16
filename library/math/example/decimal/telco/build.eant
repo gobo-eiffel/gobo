@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<project name="telco" default="help">
+
+	<description>
+		system: "Telco benchmark"
+		specification: "http://www2.hursley.ibm.com/decimal/telco.html"
+		copyright: "Copyright (c) 2005-2016, Paul G. Crismer and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init" export="NONE">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete file="telco.outc"/>
+	</target>
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="telco"/>
+		<set name="library" value="math"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/example/decimal/${system}"/>
+	</target>
+
+</project>

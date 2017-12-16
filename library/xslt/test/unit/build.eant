@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<project name="xslt_unit_test" default="help">
+
+	<description>
+		system: "Gobo Eiffel XSLT Library Unit Tester"
+		copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/test.eant">
+			<redefine target="init_system"/>
+			<redefine target="other_clobber"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="xslt"/>
+		<set name="library" value="xslt"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/test/unit"/>
+	</target>
+
+	<target name="other_clobber" depend="init" export="NONE">
+		<description>
+			Remove other generated files.
+		</description>
+
+		<delete file="${system_dir}/listing"/>
+	</target>
+
+</project>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Transformation Source</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Transformation Source</strong></font></td>
+    <td align="right"><a href="transformation_result.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="output_extensions.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   <font color="#008080"><i><tt>XM_XSLT_SOURCE</tt></i></font> is an interface for the various sources of
+   data, both for source documents and stylesheets, along with routines to build a tree representation of the data.
+   
+  </p>
+  <div>
+   
+   <h2>The interface</h2>
+   
+   <p>
+    The interface has deferred features <font color="#008080"><i><tt>set_system_id (a_system_id: STRING)</tt></i></font> and <font color="#008080"><i><tt>system_id: STRING</tt></i></font>
+    for naming the source. But the principal deferred feature is <font color="#008080"><i><tt>send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN)</tt></i></font>.
+    
+   </p>
+   
+   <p>
+    <font color="#008080"><i><tt>Send</tt></i></font> is called by the system to build a representation of the data which can be used by the stylesheet compiler
+    and/or the transformer. The meaning of the arguments is as follows:
+    
+    <dl>
+     	
+     <dt><font color="#008080"><i><tt>a_parser: XM_PARSER</tt></i></font></dt>
+     <dd>
+      	      This is an XML parser configured with a suitable entity resolver and string mode. Your implementation
+      	      can use this to start the conversion of XML text data into events for the receiver. If your data source is not of a
+      nature
+      	      that requires parsing by an XML parser, then you still may want to make use of the entity resolver (though this seems
+      unlikely).
+      	      You certainly <i>must</i> honor the string mode setting when creating events to send to the receiver.
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>a_receiver: XM_XPATH_RECEIVER</tt></i></font></dt>
+     <dd>
+      	      This is the receiver that will ultimately build the instance of the XPath data model. it will normally be a chain of
+      receivers,
+      	      so as to implement the correct stripping rules. But as far as the implementer is concerned, all you have to do is to
+      call
+      	      the events on the receiver in the correct order. This will be documented (in the future) as part of the XPath library
+      documentation.
+      	      In the meantime, look at <font color="#008080"><i><tt>XM_XPATH_CONTENT_EMITTER</tt></i></font> for details of how to do this (sorry).
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>a_uri: UT_URI</tt></i></font></dt>
+     <dd>
+      	     An absolute URI for resolving relative URIs. 
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>is_stylesheet: BOOLEAN</tt></i></font></dt>
+     <dd>
+      	      This argument is present so that your implementation may choose to behave differently when building a stylesheet module,
+      	      from when building a source document.
+      	    
+     </dd>
+     
+    </dl>      
+    
+   </p>
+   
+   <p>
+    In summary, when <font color="#008080"><i><tt>send</tt></i></font> is called, an implementation must check the string mode on the supplied parser, and then generate
+    an event stream to the receiver.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Implementations provided by the XSLT library</h2>
+   
+   <p>
+    The system provides the following implementation:
+    
+    <dl>
+     	
+     <dt><font color="#008080"><i><tt>XM_XSLT_URI_SOURCE</tt></i></font></dt>
+     <dd>
+      	      This implementation treats the <font color="#008080"><i><tt>system_id</tt></i></font> as a URI identifying
+      	      a source of XML text data, and uses the supplied XML parser to supply (via it's configured entity resolver) 
+      	      a stream of events (see <font color="#008080"><i><tt>XM_CALLBACKS</tt></i></font> and <font color="#008080"><i><tt>XM_DTD_CALLBACKS</tt></i></font>), and converts
+      	      them, by a series of filters, into a stream of <font color="#008080"><i><tt>XM_XPATH_RECEIVER</tt></i></font> events.
+      	    
+      <p>
+       	      This class provides an additional feature, <font color="#008080"><i><tt>send_from_stream</tt></i></font>, which is used by the library
+       	      for <font color="#008080">xsl:import</font>, <font color="#008080">xsl:include</font> and <font color="#008080">document()</font> processing. Your own implementations
+       	      should not implement this routine, as it will not be called by the library.
+       	    
+      </p>
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+   <p>
+    Possible future library-supplied implementations include <font color="#008080"><i><tt>XM_XSLT_RECEIVER_SOURCE</tt></i></font> and <font color="#008080"><i><tt>XM_XSLT_XM_CALLBACKS_SOURCE</tt></i></font>,
+    to direct existing event streams to the receiver. The former may be need for simple pipeling of multiple transformations.
+    The latter could be useful for
+    bridging between application which are already programmed to use the <font color="#008080"><i><tt>XM_CALLBACKS</tt></i></font> interface, and the XSLT library.
+    I can also envisage a variation on the latter, <font color="#008080"><i><tt>XM_DOCUMENT_SOURCE</tt></i></font>, where an <font color="#008080"><i><tt>XM_DOCUMENT</tt></i></font> is turned
+    into an XPath data model. This will be expensive on memory (two representations of the same tree in memory). An alternative
+    approach
+    is to virtualize an XPath data model over an <font color="#008080"><i><tt>XM_DOCUMENT</tt></i></font>. This would be more expensive on CPU cycles.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>When to write your own implementation</h2>
+   
+   <p>
+    Normally, you will not need to write an implementation of <font color="#008080"><i><tt>XM_XSLT_SOURCE</tt></i></font>. If you have a mechanism for supplying
+    XML data in a textual form, and a suitable URI scheme to associate with it, then you should only have to implement
+    <font color="#008080"><i><tt>XM_URI_RESOLVER</tt></i></font>. In this case, <font color="#008080"><i><tt>XM_XSLT_URI_SOURCE</tt></i></font> will handle your
+    data source transparently. Only when your data source cannot be supplied as a <font color="#008080"><i><tt>KI_CHARACTER_INPUT_STREAM</tt></i></font> supplying XML
+    text, will you need to write an <font color="#008080"><i><tt>XM_XSLT_SOURCE</tt></i></font>.
+    
+    <p><font color="#FF0000">
+      	If you cannot write an (or use an existing) implementation of <font color="#008080"><i><tt>XM_URI_RESOLVER</tt></i></font> for your data source,
+      	then you cannot use that data source as an <font color="#008080">xsl:import</font>, <font color="#008080">xsl:include</font> or <font color="#008080">document()</font> or
+      	<font color="#008080">doc()</font> source.
+      </font></p>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Friday, October 29th, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="transformation_result.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="output_extensions.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<project name="eiffel_parser" default="help">
+
+	<description>
+		system: "Eiffel parser"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
+			<redefine target="help"/>
+			<redefine target="other_install"/>
+			<redefine target="other_clobber"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant parser"/>
+		<echo message="   geant scanner"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ge"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ge"/>
+		<echo message="   geant compile_debug_ise"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="parser" depend="init">
+		<description>
+			Generate parser classes.
+		</description>
+
+		<geant target="eiffel_parser"/>
+	</target>
+
+	<target name="scanner" depend="init">
+		<description>
+			Generate scanner classes.
+		</description>
+
+		<geant target="eiffel_scanner"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="other_install" depend="init" export="NONE">
+		<description>
+			Install other items in ${system} directory.
+		</description>
+
+		<geant target="parser"/>
+		<geant target="scanner"/>
+	</target>
+
+	<target name="other_clobber" depend="init" export="NONE">
+		<description>
+			Remove other generated files.
+		</description>
+
+		<delete file="eiffel_parser.e"/>
+		<delete file="eiffel_scanner.e"/>
+		<delete file="eiffel_tokens.e"/>
+	</target>
+
+	<target name="eiffel_scanner" export="NONE">
+		<gelex input="eiffel_scanner.l"/>
+	</target>
+
+	<target name="eiffel_parser" export="NONE">
+		<geyacc input="eiffel_parser.y" tokens="EIFFEL_TOKENS" output="eiffel_parser.e"/>
+	</target>
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="eiffel_parser"/>
+		<set name="library" value="parse"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/example/${system}"/>
+	</target>
+
+</project>

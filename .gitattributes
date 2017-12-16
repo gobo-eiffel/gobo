@@ -1,2 +1,2 @@
-work/bootstrap/* linguist-vendored
+tool/gec/bootstrap/* linguist-vendored
 *.E linguist-language=Eiffel

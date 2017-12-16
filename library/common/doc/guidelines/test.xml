@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Test Suite"
+
+	library: "Gobo Eiffel Developer Guidelines"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/test">
+<chapterinfo>
+	<copyright>
+		<year>2001-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>22 December 2016</date>
+</chapterinfo>
+
+<title>Test Suite</title>
+
+<para>
+Each Eiffel library should come with a unit test suite runnable with 
+<emphasis>getest</emphasis>. The test case classes should be placed in
+<filename>$GOBO/library/&lt;library-name&gt;/test/unit</filename> along with the Xace files, 
+ECF files and the <emphasis>getest</emphasis> configuration 
+files to run the tests.
+</para>
+
+<para>
+The purpose of these tests is to make sure that the library classes work as 
+expected (i.e. as specified by the assertions) and also to make sure that they 
+compile correctly with the <link linkend="compilers">compilers</link> 
+which compile only alive code. Note that this was the case with the
+previously supported compiler <ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink>.
+</para>
+
+<para>
+These tests are also useful for library maintainers who have not access to all 
+<link linkend="compilers">supported Eiffel compilers</link> or to some operating 
+systems. That way the maintainers can ask others from the 
+<projectname>Gobo</projectname> development team to run the tests on other
+platforms or with other compilers for them.
+</para>
+
+<para>
+Finally the <filename>$GOBO/library/&lt;library-name&gt;/test</filename> directory is 
+used as regression test to make sure that no new bugs have been introduced 
+between two releases.
+</para>
+
+<para>
+Note: <emphasis>getest</emphasis> is based on Jim Weirich's 
+<link linkend="${tool/getest}/see_also#eiffelunit"><projectname>EiffelUnit</projectname></link> 
+tool but has the advantage to work with all 
+<link linkend="compilers">Eiffel compilers</link> supported by the 
+<projectname>Gobo Eiffel Project</projectname>.
+</para>
+
+</chapter>

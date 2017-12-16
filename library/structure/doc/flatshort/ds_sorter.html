@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Class DS_SORTER</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Class DS_SORTER</strong></font></td>
+        <td align="right"><a href="ds_sortable.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_sparse_set.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><font color="#000080"><em><strong>note</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>description</em>:
+
+<font color="#800000"><em>    &quot;Data structure sorters&quot;
+
+</em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
+</em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
+href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
+color="#800000"><em>&gt;&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 2000-2001, Eric Bezault and others&quot;
+</em></font><em>license:   </em><font color="#800000"><em> &quot;MIT License&quot;</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>deferred class interface</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>DS_SORTER </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Status report</font></pre>
+
+<blockquote>
+    <pre><a name="sorted"><em>sorted</em></a><em> </em>(<em>a_container</em>:<em> </em><a
+href="ds_sortable.html"><em>DS_SORTABLE</em></a><em> </em>[<em>G</em>]):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is </font><em>a_container</em><font
+color="#008000"> sorted in increasing order?</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_container_not_void</em>:<em> a_container </em>/= <font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>deferred</strong></em></font></pre>
+    <pre><a name="reverse_sorted"><em>reverse_sorted</em></a><em> </em>(<em>a_container</em>:<em> </em><a
+href="ds_sortable.html"><em>DS_SORTABLE</em></a><em> </em>[<em>G</em>]):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is </font><em>a_container</em><font
+color="#008000"> sorted in decreasing order?</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_container_not_void</em>:<em> a_container </em>/= <font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>deferred</strong></em></font></pre>
+    <pre><a name="sorted_with_comparator"><em>sorted_with_comparator</em></a><em> </em>(<em>a_container</em>:<em> </em><a
+href="ds_sortable.html"><em>DS_SORTABLE</em></a><em> </em>[<em>G</em>];<em> a_comparator</em>:<em> </em><a
+href="ds_comparator.html"><em>DS_COMPARATOR</em></a><em> </em>[<em>G</em>]):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+</em><font color="#008000">        -- Is </font><em>a_container</em><font
+color="#008000"> sorted according to
+        -- </font><em>a_comparator</em><font color="#008000">'s comparison criterion?</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_container_not_void</em>:<em> a_container </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        a_comparator_not_void</em>:<em> a_comparator </em>/= <font
+color="#008080"><em>Void
+</em></font><em>    </em><font color="#000080"><em><strong>deferred</strong></em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Sort</font></pre>
+
+<blockquote>
+    <pre><a name="sort"><em>sort</em></a><em> </em>(<em>a_container</em>:<em> </em><a
+href="ds_sortable.html"><em>DS_SORTABLE</em></a><em> </em>[<em>G</em>])<em>
+        </em><font color="#008000">-- Sort </font><em>a_container</em><font
+color="#008000"> in increasing order.</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_container_not_void</em>:<em> a_container </em>/= <font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>deferred</strong></em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        sorted</em>:<em> </em><a href="#sorted"><em>sorted</em></a><em> </em>(<em>a_container</em>)</pre>
+    <pre><a name="reverse_sort"><em>reverse_sort</em></a><em> </em>(<em>a_container</em>:<em> </em><a
+href="ds_sortable.html"><em>DS_SORTABLE</em></a><em> </em>[<em>G</em>])<em>
+        </em><font color="#008000">-- Sort </font><em>a_container</em><font
+color="#008000"> in decreasing order.</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_container_not_void</em>:<em> a_container </em>/= <font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>deferred</strong></em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        sorted</em>:<em> </em><a href="#reverse_sorted"><em>reverse_sorted</em></a><em> </em>(<em>a_container</em>)</pre>
+    <pre><a name="sort_with_comparator"><em>sort_with_comparator</em></a><em> </em>(<em>a_container</em>:<em> </em><a
+href="ds_sortable.html"><em>DS_SORTABLE</em></a><em> </em>[<em>G</em>];<em> a_comparator</em>:<em> </em><a
+href="ds_comparator.html"><em>DS_COMPARATOR</em></a><em> </em>[<em>G</em>])<em>
+</em><font color="#008000">        -- Sort </font><em>a_container</em><font
+color="#008000"> according to
+        -- </font><em>a_comparator</em><font color="#008000">'s comparison criterion?</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_container_not_void</em>:<em> a_container </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        a_comparator_not_void</em>:<em> a_comparator </em>/= <font
+color="#008080"><em>Void
+</em></font><em>    </em><font color="#000080"><em><strong>deferred</strong></em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        sorted</em>:<em> </em><a href="#sorted_with_comparator"><em>sorted_with_comparator</em></a><em> </em>(<em>a_container</em>,<em> a_comparator</em>)</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>end</strong></em></font><font
+color="#008000"> -- class DS_SORTER</font></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000-2001</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 31 March 2001</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="ds_sortable.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_sparse_set.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+
+<project name="exec" default="fs_variables">
+
+	<target name="init">
+		<set name="gedoc_dir" value="doc_dir"/>
+	</target>
+	
+	<target name="prepare" depend="init">
+		<mkdir directory="${gedoc_dir}"/>
+			<!-- Generate a 'ge.xace' for 'gedoc': -->
+		<gexace system="ge" output="ge.xace" xace="${GOBO}/tool/geant/src/system.xace">
+			<define name="GOBO_OS" value="${GOBO_OS}"/>
+		</gexace>
+	</target>
+	
+	<target name="fs_variables" depend="init">
+		<exec executable="dir ${GOBO}\${fs.filename}" if="${GOBO_OS}=windows">
+			<fileset include="@(**/*.ge)" dir="$GOBO"/>
+		</exec>
+
+		<exec executable="ls -l ${GOBO}/${fs.filename}" unless="${GOBO_OS}=windows">
+			<fileset include="@(**/*.ge)" dir="$GOBO"/>
+		</exec>
+	</target>
+
+	<target name="gedoc" depend="prepare">
+		<description>
+			Call Gobo's 'gedoc' command on a fileset. The 'exec' command is
+			executed for each entry in the fileset. By default only files which
+			are newer than their corresponding target files are included in the list.
+			We also call those files to be 'out of date'.
+			You can override this behaviour with the attribute 'force' (see target 'gedoc_force').
+		</description>
+	
+	
+		<exec executable="gedoc ge.xace ${fs.filename} &gt; ${fs.mapped_filename}">
+			<fileset
+				include="@(**/*.e)"
+				exclude="@(**/spec/ise/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
+				force="false"
+				dir="$GOBO/library/structure/set"
+			>
+				<map type="glob" from="*.e" to="${gedoc_dir}/*.html">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</exec>
+	</target>
+
+	<target name="gedoc_force" depend="prepare">
+		<description>
+			Same as target 'gedoc' but by setting attribute 'force' to 'true' (which is the default anyway)
+			All selected files (not only those out of date) are included in the fileset.
+		</description>
+	
+	
+		<exec executable="gedoc ge.xace ${fs.filename} &gt; ${fs.mapped_filename}">
+			<fileset
+				include="@(**/*.e)"
+				exclude="@(**/spec/ise/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
+				force="true"
+				dir="$GOBO/library/structure/src/set"
+			>
+				<map type="glob" from="*.e" to="${gedoc_dir}\*.html">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</exec>
+	</target>
+
+	<target name="clean" depend="init">
+		<delete directory="${gedoc_dir}"/>
+	</target>
+
+</project>
+

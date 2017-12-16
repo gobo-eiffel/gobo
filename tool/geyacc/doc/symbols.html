@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc: Symbols, Terminal and Nonterminal</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Symbols, Terminal and
+        Nonterminal</strong></font></td>
+        <td align="right"><a href="declarations.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="rules.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p><em>Symbols</em> in <em>geyacc</em> grammars represent the
+grammatical classifications of the language.</p>
+
+<p>A <em><strong>terminal symbol</strong></em> (also known as a <em><strong>token</strong></em><em>
+type</em>) represents a class of syntactically equivalent tokens.
+You use the symbol in grammar rules to mean that a token in that
+class is allowed. The symbol is represented in the <em>geyacc</em>
+parser by a numeric code, and the <font color="#008080"><em><tt>read_token</tt></em></font>
+routine returns a token type code <font color="#008080"><em><tt>last_token</tt></em></font>
+to indicate what kind of token has been read. You don't need to
+know what the code value is; you can use the symbol to stand for
+it.</p>
+
+<p>A <em><strong>nonterminal symbol</strong></em> stands for a
+class of syntactically equivalent groupings. The symbol name is
+used in writing grammar rules. By convention, it should be in
+lower case.</p>
+
+<p>Symbol names are case-insensitive words beginning with a
+letter and followed by zero or more letters, digits, or
+underscores.</p>
+
+<p>There are three ways of writing terminal symbols in the
+grammar:</p>
+
+<ul>
+    <li>A <em>named token type</em> is written with an
+        identifier, like an identifier in Eiffel. By convention,
+        it should be all upper case. Each such name must be
+        defined with a <em>geyacc</em> declaration such as <a
+        href="declarations.html#token"><font color="#0000FF"><tt>%token</tt></font></a>.</li>
+</ul>
+
+<ul>
+    <li>A <a name="character_token"><em>character token type</em></a>
+        (or <em>literal character token</em>) is written in the
+        grammar using the same syntax used in C for character
+        constants; for example, <font color="#FF0000"><tt>'+'</tt></font>
+        is a character token type. A character token type doesn't
+        need to be declared unless you need to specify its
+        associativity, or <a href="declarations.html#precedence">precedence</a>.<br>
+        <br>
+        By convention, a character token type is used only to
+        represent a token that consists of that particular
+        character. Thus, the token type <font color="#FF0000"><tt>'+'</tt></font>
+        is used to represent the character<font
+        face="Courier New"> </font><font color="#808000"><tt>+</tt></font><font
+        face="Courier New"> </font>as a token. Nothing enforces
+        this convention, but if you depart from it, your program
+        will confuse other readers.<br>
+        <br>
+        All the usual escape sequences used in character literals
+        in C can be used in <em>geyacc</em> as well, but you must
+        not use the null character as a character literal because
+        its <font size="2">ASCII</font> code, zero, is the code <font
+        color="#008080"><em><tt>read_token</tt></em></font>
+        returns for end-of-input.</li>
+</ul>
+
+<ul>
+    <li>A <a name="string _token"><em>literal string token</em></a>
+        is written like a C or Eiffel string constant; for
+        example <font color="#FF0000"><tt>&quot;&lt;=&quot;</tt></font>
+        is a literal string token. A literal string token needs
+        to be associated with a symbolic name as an alias, using
+        the <a href="declarations.html#token"><font
+        color="#0000FF"><tt>%token</tt></font></a><font
+        color="#0000FF"><tt> </tt></font>declaration. That way
+        you can also eventually specify its semantic value type
+        and its associativity or <a
+        href="declarations.html#precedence">precedence</a>.<br>
+        <br>
+        By convention, a literal string token is used only to
+        represent a token that consists of that particular
+        string. Thus, you should use the token type <font
+        color="#FF0000"><tt>&quot;&lt;=&quot; </tt></font>to
+        represent the string <font color="#808000"><tt>&lt;=</tt></font>
+        as a token. <em>Geyacc</em> does not enforce this
+        convention, but if you depart from it, people who read
+        your program will be confused.<br>
+        <br>
+        Because literal string tokens have been introduced to
+        make the grammar description more readable, no escape
+        sequences are allowed. Furthermore, a literal string
+        token must contain at least two characters; for a token
+        containing just one character, use a <a
+        href="#character_token">character token</a>.</li>
+</ul>
+
+<p>How you choose to write a terminal symbol has no effect on its
+grammatical meaning. That depends only on where it appears in
+rules.</p>
+
+<p>The value returned by <font color="#008080"><em><tt>read_token</tt></em></font>
+is always one of the terminal symbols (or 0 for end-of-input).
+Whichever way you write the token type in the grammar rules, you
+write it the same way in the definition of <font color="#008080"><em><tt>read_token</tt></em></font>.
+The numeric code for a character token type is simply the <font
+size="2">ASCII</font> code for the character, so <font
+color="#008080"><em><tt>read_token</tt></em></font> can use the
+identical character constant to generate the requisite code. Each
+named token type becomes an integer constant feature in the
+parser class, so <font color="#008080"><em><tt>read_token</tt></em></font>
+can use the name to stand for the code. For a literal string
+token, <font color="#008080"><em><tt>read_token</tt></em></font>
+has to use the named token type associated with it.</p>
+
+<p>If <font color="#008080"><em><tt>read_token</tt></em></font>
+is defined in a separate class, you need to arrange for the
+token-type integer constants definitions to be available there.
+Use the <a href="options.html#-t"><font color="#800000"><tt>-t</tt></font></a><font
+color="#800000" size="2" face="Courier New"> </font>option when
+running <em>geyacc</em>, so that it will write these constants
+definitions into a separate class from which you can inherit in
+the classes that need it.</p>
+
+<p>The symbol <font color="#0000FF"><tt>error</tt></font> is a
+terminal symbol reserved for <a href="error.html">error recovery</a>;
+it shouldn't be used for any other purpose. In particular, <font
+color="#008080"><em><tt>read_token</tt></em></font> should never
+return this value.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1999</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 10 October 1999</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="declarations.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="rules.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Terminology</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Terminology</strong></font></td>
+    <td align="right"><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="container.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   <h2>Class names</h2>
+   
+   
+   <p>
+    In order to avoid classname clashes between different
+    libraries, some Eiffel compilers support class renaming in the
+    Ace file or equivalent. But some don't. Since it is a priority
+    for the library to be portable across all Eiffel compilers
+    available on the market today, the name of the classes of the
+    <i>Gobo Eiffel Structure Library</i> have
+    been systematically prefixed with the two-letter library-code
+    <font color="#008080"><i><tt>DS</tt></i></font>, which stands for <font color="#008080"><i><tt>D</tt></i></font>ata
+    <font color="#008080"><i><tt>S</tt></i></font>tructures. For example the class name
+    for lists implemented with linkable cells will be
+    <font color="#008080"><i><tt>DS_LINKED_LIST</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    Apart from this library-code prefix, class names generally
+    follow the same convention as those adopted in
+    <a href="see_also.html#eiffelbase"><i>EiffelBase</i></a>,
+    with some exceptions mainly for consistency reasons. Names of classes
+    which describe an abstract property are typically adjectives,
+    such as <font color="#008080"><i><tt>DS_TRAVERSABLE</tt></i></font> or
+    <font color="#008080"><i><tt>DS_RESIZABLE</tt></i></font>. More concrete, but still
+    deferred, classes are <font color="#008080"><i><tt>DS_LIST</tt></i></font>,
+    <font color="#008080"><i><tt>DS_STACK</tt></i></font> or <font color="#008080"><i><tt>DS_TABLE</tt></i></font>
+    for instance. And finally these data structures are given various
+    implementations in descendant classes. There are five main kinds
+    of implementations. Data structures implemented with singly
+    linkable cells have their names prefixed by <font color="#008080"><i><tt>LINKED</tt></i></font>
+    such as <font color="#008080"><i><tt>DS_LINKED_LIST</tt></i></font>
+    or <font color="#008080"><i><tt>DS_LINKED_STACK</tt></i></font>.
+    Other containers like <font color="#008080"><i><tt>DS_BILINKED_LIST</tt></i></font>
+    are made up of doubly linkable cells. A third alternative is to
+    use an array internally, as in <font color="#008080"><i><tt>DS_ARRAYED_LIST</tt></i></font>
+    or <font color="#008080"><i><tt>DS_ARRAYED_STACK</tt></i></font>.
+    To avoid too many resizing of these internal arrays, some
+    containers are implemented with a list of array chunks, such as
+    <font color="#008080"><i><tt>DS_MULTIARRAYED_STACK</tt></i></font>.
+    And finally data structures using a hashing mechanism will have
+    their class names prefixed by <font color="#008080"><i><tt>HASH</tt></i></font>,
+    <font color="#008080"><i><tt>DS_HASH_TABLE</tt></i></font>
+    being an example of such class naming.
+    
+   </p>
+   
+  </div>
+  <div><a name="feature_names"></a><h2>Feature names</h2>
+   
+   
+   <p>
+    The <i>Gobo Eiffel Structure Library</i> follows the
+    conventions specified in Dr Meyer's book:
+    <i><a href="see_also.html#reusable_software">Reusable
+      Software</a>, the base object-oriented component libraries</i>.
+    Apart from the Eiffel
+    <a href="see_also.html#style_guidelines">style guidelines</a>,
+    which are enforced in all <i>Gobo Eiffel</i> libraries, this
+    book also describes the <i><b>principle of naming
+      consistency</b></i> and explains why it is so important
+    when writing resuable libraries. Since I won't be able to explain
+    it better than Bertrand Meyer, I'll let you read section 3.8 of
+    his book, <i>Naming Issues</i>,
+    for a detailed description. If unfortunately you don't own a copy
+    of this book, you can still read the article
+    <a href="http://www.drdobbs.com/rules-for-component-builders/184415684"><i>Rules
+      of Component Builders</i></a> published in <i>Software
+     Development</i> online magazine and from which the following
+    paragraphs are extracted:
+    
+    
+    <blockquote>
+     
+     <p>
+      One lesson my colleagues and I learned early in the
+      development of Eiffel libraries is that some issues viewed as
+      cosmetic in non-component application development take on a
+      critical role in component development. Naming is one of
+      them. [...] The consistency principles imply that the names
+      must not only be clear but also uniform.
+      
+     </p>
+     
+     <p>
+      In the first iteration of <i>EiffelBase</i>,
+      class <font color="#008080"><i><tt>STACK</tt></i></font> had operations
+      <font color="#008080"><i><tt>push</tt></i><tt> (</tt><i><tt>x</tt></i><tt>)</tt></font>,
+      <font color="#008080"><i><tt>pop</tt></i></font>, <font color="#008080"><i><tt>top</tt></i></font> for an element
+      <font color="#008080"><i><tt>x</tt></i></font>; class <font color="#008080"><i><tt>ARRAY</tt></i></font> had
+      <font color="#008080"><i><tt>enter</tt></i><tt> (</tt><i><tt>x</tt></i><tt>, </tt><i><tt>i</tt></i><tt>)</tt></font>, and
+      <font color="#008080"><i><tt>entry</tt></i><tt> (</tt><i><tt>i</tt></i><tt>)</tt></font>
+      for an integer <font color="#008080"><i><tt>i</tt></i></font>; class <font color="#008080"><i><tt>HASH_TABLE</tt></i></font> had
+      <font color="#008080"><i><tt>add</tt></i><tt> (</tt><i><tt>x</tt></i><tt>, </tt><i><tt>k</tt></i><tt>)</tt></font>, and
+      <font color="#008080"><i><tt>value</tt></i><tt> (</tt><i><tt>k</tt></i><tt>)</tt></font>
+      for a key <font color="#008080"><i><tt>k</tt></i></font>. Using
+      such well-accepted names, each well-adapted to each kind of
+      structure, emphasized specificity rather than generality.
+      This practice is not a problem with a few library classes,
+      but with hundreds of components it doesn't work with the
+      &#147;<i><b>ease of learning</b></i>&#148;
+      requirement: it amounts to requiring the library user to
+      learn a specific programming language for every new kind of
+      structure. In each case the effort isn't much, but
+      compounded over the practice of large-scale component reuse
+      it can defeat the best intentions. As a result of these
+      observations, we went to a set of completely systematic
+      naming conventions, which I detailed in
+      <a href="see_also.html#reusable_software"><i>Reusable Software</i></a>:
+      
+      <ul>
+       <li>
+        		The basic replacement or addition operation is always
+        		called <font color="#008080"><i><tt>put</tt></i></font> (replacing
+        		<font color="#008080"><i><tt>push</tt></i></font>, <font color="#008080"><i><tt>enter</tt></i></font>,
+        		<font color="#008080"><i><tt>add</tt></i></font>, and so on).
+        	
+       </li>
+       <li>
+        		The basic access operation is always called
+        		<font color="#008080"><i><tt>item</tt></i></font>.
+        	
+       </li>
+       <li>
+        		The basic removal operation is always called
+        		<font color="#008080"><i><tt>remove</tt></i></font> or <font color="#008080"><i><tt>prune</tt></i></font>.
+        	
+       </li>
+      </ul>
+      
+     </p>
+     
+    </blockquote>
+    
+   </p>
+   
+   
+   <p>
+    Of course this may look unusual for programmers used to
+    <font color="#008080"><i><tt>push</tt></i></font>, <font color="#008080"><i><tt>pop</tt></i></font> and the like, but
+    this principle has been well accepted by the Eiffel community.
+    This is mainly because it is much more important when considering
+    a class library as a whole to emphasize the commonalities rather
+    than the differences. The <i>Gobo Eiffel Structure Library</i>
+    follows the principle of naming consistency and the standardized
+    feature names used throughout the library classes are described
+    in the table below:
+    
+    <blockquote>
+     
+     <dl>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>after</tt></i></font>, <font color="#008080"><i><tt>*_after</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Indicate that all items have been visited when
+       			traversing a container forward.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>append</tt></i></font>, <font color="#008080"><i><tt>append_*</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Add several items to the container. This is the same
+       			as <font color="#008080"><i><tt>extend</tt></i></font> except that the container
+       			is automatically resized when there is not enough room left.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>back</tt></i></font>, <font color="#008080"><i><tt>*_back</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Move the cursor backward.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>before</tt></i></font>, <font color="#008080"><i><tt>*_before</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Indicate that all items have been visited when
+       			traversing a container backward.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>capacity</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Maximum number of items that the container can hold.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>count</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Number of items in the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>delete</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Remove all occurrences of an item from the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>extend</tt></i></font>, <font color="#008080"><i><tt>extend_*</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Add several items to the container. Contrary to
+       			<font color="#008080"><i><tt>append</tt></i></font>, <font color="#008080"><i><tt>extend</tt></i></font> has a
+       			precondition (<font color="#008080"><i><tt>extendible</tt></i></font>)
+       			which checks whether there is enough room left in the
+       			container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>extendible</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Indicate whether there is enough room left in the
+       			container to add a given number of items.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>finish</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Move the cursor to the last item in the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>first</tt></i></font>, <font color="#008080"><i><tt>*_first</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			First item in the container, or operations which will
+       			change this first item.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>force</tt></i></font>, <font color="#008080"><i><tt>force_*</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Add an item to the container. This is the same as
+       			<font color="#008080"><i><tt>put</tt></i></font> except
+       			that the container is automatically resized when
+       			there is not enough room left.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>forth</tt></i></font>, <font color="#008080"><i><tt>*_forth</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Move the cursor forward.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>has</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Indicate whether an item is included in the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>is_empty</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Indicate whether the data structure contains at least
+       			one item.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>is_full</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Indicate whether the maximum number of items limit
+       			(<font color="#008080"><i><tt>capacity</tt></i></font>) has been reached.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>item</tt></i></font>, <font color="#008080"><i><tt>item_for_iteration</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Access an item in the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>keep</tt></i></font>, <font color="#008080"><i><tt>keep_*</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Keep several successive items in the container, and
+       			remove all the others.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>key</tt></i></font>, <font color="#008080"><i><tt>key_for_iteration</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Access a key in the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>last</tt></i></font>, <font color="#008080"><i><tt>*_last</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Last item in the container, or operations which will
+       			change this last item.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>*_left</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Operation to be performed to the left of cursor position.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>occurrences</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Number of times an item appears in the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>prune</tt></i></font>, <font color="#008080"><i><tt>prune_*</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Remove several successive items from the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>put</tt></i></font>, <font color="#008080"><i><tt>put_*</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Add an item to the container, provided that it is not
+       			full (see <font color="#008080"><i><tt>is_full</tt></i></font>).
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>remove</tt></i></font>, <font color="#008080"><i><tt>remove_*</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Remove an item from the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>replace</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Replace an item by another one in the container. The
+       			number of items in the container (<font color="#008080"><i><tt>count</tt></i></font>)
+       			is not affected by this operation.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>resize</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Resize the container so that it will have a new
+       			<font color="#008080"><i><tt>capacity</tt></i></font>. <font color="#008080"><i><tt>count</tt></i></font>
+       			is not affected by this operation.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>*_right</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Operation to be performed to the right of cursor position.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>start</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Move the cursor to the first item in the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008080"><i><tt>wipe_out</tt></i></font>
+       		
+      </dt>
+      <dd>
+       			Remove all items from the container.
+       		
+      </dd>
+      
+     </dl>
+     
+    </blockquote>
+    
+   </p>
+   
+   
+   <p>
+    Some feature names will be a combination of two of these
+    standardized names containing an asterisk, such as
+    <font color="#008080"><i><tt>put_right</tt></i></font> or <font color="#008080"><i><tt>remove_first</tt></i></font>.
+    Their meaning should be straightforward: the first routine will add an
+    item to the right of the cursor position, and the second will
+    remove the first item of the container.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Feature categories</h2>
+   
+   
+   <p>
+    To facilitate class learning, the numerous features of the
+    <i>Gobo Eiffel Structure Library</i>
+    have been organized into categories. The Eiffel language
+    is very helpful here with its <tt>Feature_clause</tt>
+    construct. Once again consistency is very important. The
+    standardized feature categories used throughout the library
+    classes are described in the table below:
+    
+    
+    <blockquote>
+     
+     <dl>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Initialization</tt></font>
+       		
+      </dt>
+      <dd>
+       			Creation procedures.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Access</tt></font>
+       		
+      </dt>
+      <dd>
+       			Queries used to get elements or properties about the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Measurement</tt></font>
+       		
+      </dt>
+      <dd>
+       			Queries concerning the number of elements and size of
+       			the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Status report</tt></font>
+       		
+      </dt>
+      <dd>
+       			Queries used to determine general boolean properties
+       			of the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Comparison</tt></font>
+       		
+      </dt>
+      <dd>
+       			Equality tests between containers.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Duplication</tt></font>
+       		
+      </dt>
+      <dd>
+       			Features which produce copies of the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Setting</tt></font>
+       		
+      </dt>
+      <dd>
+       			Procedures which change the general properties of the
+       			container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Cursor movement</tt></font>
+       		
+      </dt>
+      <dd>
+       			Procedures that change the cursor position.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Element change</tt></font>
+       		
+      </dt>
+      <dd>
+       			Commands which add or change items in the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Removal</tt></font>
+       		
+      </dt>
+      <dd>
+       			Commands which remove items from the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Resizing</tt></font>
+       		
+      </dt>
+      <dd>
+       			Commands which change the size of the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Implementation</tt></font>
+       		
+      </dt>
+      <dd>
+       			Secret features used for implementation purposes.
+       		
+      </dd>
+      
+     </dl>
+     
+    </blockquote>
+    
+   </p>
+   
+   
+   <p>
+    In order to make the search of features easier throughout the
+    class text and flat-short forms, the feature categories generally
+    appear in the same predictable order in the classes.
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 1999-2016, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>26 December 2016</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="container.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

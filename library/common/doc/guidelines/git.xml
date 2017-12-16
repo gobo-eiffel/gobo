@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Git Repository"
+
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/git">
+<chapterinfo>
+	<copyright>
+		<year>2001-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>22 December 2016</date>
+</chapterinfo>
+
+<title>Git Repository</title>
+
+<para>
+The Git repository should not include generated files unless they are needed to
+use the library out of the box (such as parser Eiffel classes generated from .y files).
+However, when such generated files are committed in the repository, 
+you should pay attention to the fact that the generated files and the files
+from which they are generated should be kept in sync. In particular,
+don't modify a generated parser Eiffel class directly. First modify the
+associated .y file, then regenerate the Eiffel class, and eventually
+commit both files to the repository.
+</para>
+
+</chapter>

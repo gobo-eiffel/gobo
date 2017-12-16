@@ -4,14 +4,13 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Argument Library"
 		library: "Gobo Eiffel Argument Library"
-		copyright: "Copyright (c) 2006-2013, Bernd Schoeller and others"
+		copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="argument" location="${GOBO}/library/argument"/>
-
+	<cluster name="argument" location="${GOBO}/library/argument/src"/>
 
 	<mount location="${GOBO}/library/kernel.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>

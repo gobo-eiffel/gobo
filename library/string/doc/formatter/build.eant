@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<project name="formatter_doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel String Formatter Library documentation"
+		copyright: "Copyright (c) 2004-2016, Berend de Boer and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/doc.eant">
+			<redefine target="init"/>
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="init" export="NONE">
+		<precursor/>
+		<set name="path_to_doc" value="../"/>
+	</target>
+
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+
+		<geant target="${target}" arguments="index"/>
+		<geant target="${target}" arguments="quick_start"/>
+		<geant target="${target}" arguments="examples"/>
+		<geant target="${target}" arguments="correctness"/>
+		<geant target="${target}" arguments="scientific_format"/>
+		<geant target="${target}" arguments="see_also"/>
+	</target>
+
+</project>

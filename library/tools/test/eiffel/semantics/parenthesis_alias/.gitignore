@@ -1,0 +1,16 @@
+xparenthesis_alias
+compile_*.*
+*.exe
+*.dll
+*.bat
+*.sh
+*.h
+*.c
+*.o
+*.obj
+*.pdb
+*.ilk
+*.wb
+*.log
+EIFGEN*
+TESTGEN

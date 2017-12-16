@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Overview of Geant</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Overview of Geant</strong></font></td>
+    <td align="right"><a href="overview.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="introduction.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   		Geant is a build tool specifically tailored for the Eiffel programming language.
+   	
+  </p>
+  <div><a name="introduction"></a>
+   		
+   <h2>Why Geant?</h2>
+   
+   		
+   <p>
+    			Like the build tool 'make', well known to C and C++ developers 'geant'
+    			is a build tool for Eiffel developers. It is based on the ideas of Jakarta Ant,
+    			a build tool for the Java programming language.
+    		
+   </p>
+   
+   		
+   <p>
+    			There are several reasons why this build tool has been created. The first one
+    			is that I found it annoying to download interesting Eiffel libraries and
+    			having difficulties compiling and using them. Very often I gave up although
+    			I did spend quite some time trying to get it running. The frustrating thing in this
+    			situation is that you do not really know whether you just did anything wrong or if
+    			you simply had no chance to compile or use it since the software is not in
+    			a stable state. What I wanted to have is a build procedure and a readme file
+    			telling me how to invoke the build procedure so that I could use the software.
+    			If the build procedure failed I would know that it wasn't my fault and could send
+    			a bug report to the author.
+    		
+   </p>
+   
+   		
+   <p>
+    			In the Java world there has been exactly the same problem. With the widespread use
+    			of Jakarta Ant the situation improved a lot. Having used Jakarta Ant for Java I thought
+    			it would be a good idea to have something similar for Eiffel and that's how Geant was born.
+    		
+   </p>
+   
+   		
+   <p>
+    			Another advantage is that Geant is OS portable (tested on Windows, Linux, Solaris)
+    			and that it includes commands (so called tasks) which are tailored specifically for
+    			the usage with Eiffel. All available Eiffel compilers are supported.
+    		
+   </p>
+   
+   		
+   <p>
+    			Reusability in build systems has always been an issue which wasn't addressed properly.
+    			Therefore Geant's build scripts can be used as classes: build scripts can inherit
+    			from other build scripts.
+    		
+   </p>
+   
+   	
+  </div>
+  <div>
+   		
+   <h2>How to invoke Geant</h2>
+   		
+   <p>
+    			Like other build tools geant is invoked on the commandline
+    			optionally followed by a so called targetname. Here are some examples (the $ sign
+    			represents the shell prompt):
+    		
+   </p>
+   
+   		<pre>
+		  $ geant
+		  $ geant help
+		  $ geant compile
+		</pre>
+   
+   		<p>
+    			Geant then is looking for a file named 'build.eant' which contains the build instructions.
+    			So far all this sounds familiar to anyone who has used <i>make</i>.
+    			The first difference we encounter is that the format of 'build.eant' or generally
+    			eant files is XML. If you know Jakarta's Java build tool Ant you will see that the
+    			syntax is very similar.
+    		
+   </p>
+   
+   	
+  </div>
+  <div>
+   		
+   <h2>Diving into geant</h2>
+   		
+   <p>
+    			<a href="introduction.html">Introduction to geant</a>
+    		
+   </p>
+   		
+   <p>
+    			<a href="examples.html">geant examples</a>
+    		
+   </p>
+   		
+   <p>
+    			<a href="tasks.html">geant's tasks</a>
+    		
+   </p>
+   		
+   <p>
+    			<a href="builtin_variables.html">Built-in variables</a>
+    		
+   </p>
+   	
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="overview.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="introduction.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

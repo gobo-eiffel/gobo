@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Class DT_DATE_VALUE</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Class DT_DATE_VALUE</strong></font></td>
+        <td align="right"><a href="dt_date_time_value.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="dt_duration.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><font color="#000080"><em><strong>note</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>description</em>:
+
+<font color="#800000"><em>    &quot;Values dealing with year, month and day&quot;
+
+</em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Time Library&quot;
+</em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
+href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
+color="#800000"><em>&gt;&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 2000-2001, Eric Bezault and others&quot;
+</em></font><em>license:   </em><font color="#800000"><em> &quot;MIT License&quot;</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>deferred class interface</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>DT_DATE_VALUE</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Access</font></pre>
+
+<blockquote>
+    <pre><a name="year"><em>year</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+</em><font color="#008000">        -- Year</font><em>
+</em><font color="#000080"><em><strong>    deferred</strong></em></font></pre>
+    <pre><a name="month"><em>month</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+</em><font color="#008000">        -- Month</font><em>
+</em><font color="#000080"><em><strong>    deferred</strong></em></font></pre>
+    <pre><a name="day"><em>day</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+</em><font color="#008000">        -- Day</font><em>
+</em><font color="#000080"><em><strong>    deferred</strong></em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font> <font
+color="#008000">-- Output</font></pre>
+
+<blockquote>
+    <pre><a name="out"><em>out</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/string.html"><em>STRING</em></a><em>
+</em><font color="#008000">        -- Printable representation (year/month/day)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#out"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+</em><em><strong>    </strong></em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        out_not_void</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>/= <font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="date_out"><em>date_out</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/string.html"><em>STRING</em></a><em>
+</em><font color="#008000">        -- Printable representation (year/month/day)</font><em>
+</em><em><strong>    </strong></em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        date_out_not_void</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>/= <font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="append_to_string"><em>append_to_string</em></a><em> </em>(<em>a_string</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/string.html"><em>STRING</em></a>)<em>
+</em><font color="#008000">        -- Append printable representation
+        -- (year/month/day) to </font><em>a_string</em><font
+color="#008000">.</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_string_not_void</em>:<em> a_string </em>/= <font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="append_date_to_string"><em>append_date_to_string</em></a><em> </em>(<em>a_string</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/string.html"><em>STRING</em></a>)<em>
+</em><font color="#008000">        -- Append printable representation
+        -- (year/month/day) to </font><em>a_string</em><font
+color="#008000">.</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_string_not_void</em>:<em> a_string </em>/= <font
+color="#008080"><em>Void</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>end</strong></em></font><font
+color="#008000"> -- class DT_DATE_VALUE</font></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000-2001</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 7 April 2001</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$" -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="dt_date_time_value.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="dt_duration.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -4,7 +4,7 @@
 		"C functions used to implement class IDENTIFIED"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,14 +12,24 @@
 
 #ifndef GE_IDENTIFIED_C
 #define GE_IDENTIFIED_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_IDENTIFIED_H
+#include "ge_identified.h"
+#endif
+#ifndef GE_GC_H
+#include "ge_gc.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /*
-	Weak pointers.
-*/
+ * Weak pointers.
+ */
 
 /*
  * Weak pointer structure.
@@ -35,11 +45,11 @@ GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object) {
 	GE_weak_pointer* wp;
 
 	if (object == 0) {
-		return (GE_weak_pointer*) 0;
+		return (GE_weak_pointer*)0;
 	} else {
-		wp = (GE_weak_pointer*) GE_malloc_atomic(sizeof(GE_weak_pointer));
+		wp = (GE_weak_pointer*)GE_malloc_atomic(sizeof(GE_weak_pointer));
 		wp->object = object;
-#ifdef EIF_BOEHM_GC
+#ifdef GE_USE_BOEHM_GC
 		GC_GENERAL_REGISTER_DISAPPEARING_LINK((void**)(&wp->object), GC_base(object));
 #endif
 		return wp;
@@ -51,7 +61,7 @@ GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object) {
  */
 EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp) {
 	if (wp == 0) {
-		return (EIF_REFERENCE) 0;
+		return (EIF_REFERENCE)0;
 	} else {
 		return (wp->object);
 	}
@@ -60,9 +70,9 @@ EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp) {
 /*
  * Access to the object held in the weak pointer.
  */
-#ifdef EIF_BOEHM_GC
+#ifdef GE_USE_BOEHM_GC
 EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp) {
-	return (EIF_REFERENCE) GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, wp);
+	return (EIF_REFERENCE)GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, wp);
 }
 #else /* No GC */
 #define GE_weak_pointer_object(wp) GE_weak_pointer_object_without_lock(wp)
@@ -70,8 +80,8 @@ EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp) {
 
 
 /*
-	Identified data structures and functions.
-*/
+ * Identified data structures and functions.
+ */
 
 /*
  * Size of inner arrays in `GE_id_objects'.
@@ -107,7 +117,7 @@ EIF_INTEGER_32 GE_last_object_id;
  * Initialize data to keep track of object ids.
  */
 void GE_init_identified(void) {
-	GE_id_objects = (GE_weak_pointer***) 0;
+	GE_id_objects = (GE_weak_pointer***)0;
 	GE_id_objects_capacity = 0;
 	GE_last_object_id = 0;
 }
@@ -156,21 +166,21 @@ EIF_REFERENCE GE_id_object(EIF_INTEGER_32 id) {
 	} else {
 		id_object_chunk = GE_id_objects[i];
 		if (id_object_chunk == 0) {
-			return (EIF_REFERENCE) 0;
+			return (EIF_REFERENCE)0;
 		} else {
 			i = id % GE_ID_OBJECT_CHUNK_SIZE;
 			wp = id_object_chunk[i];
 			if (wp == 0) {
-				return (EIF_REFERENCE) 0;
+				return (EIF_REFERENCE)0;
 			} else {
 				object = GE_weak_pointer_object(wp);
 				if (object == 0) {
-					id_object_chunk[i] = (GE_weak_pointer*) 0;
-#ifdef EIF_BOEHM_GC
+					id_object_chunk[i] = (GE_weak_pointer*)0;
+#ifdef GE_USE_BOEHM_GC
 					GC_unregister_disappearing_link((void**)(&wp->object));
 #endif
 					GE_free(wp);
-					return (EIF_REFERENCE) 0;
+					return (EIF_REFERENCE)0;
 				} else {
 					return object;
 				}
@@ -197,11 +207,11 @@ void GE_object_id_free(EIF_INTEGER_32 id) {
 			if (wp != 0) {
 				object = GE_weak_pointer_object(wp);
 				if (object != 0) {
-#ifdef EIF_BOEHM_GC
+#ifdef GE_USE_BOEHM_GC
 					GC_unregister_disappearing_link((void**)(&wp->object));
 #endif
 				}
-				id_object_chunk[i] = (GE_weak_pointer*) 0;
+				id_object_chunk[i] = (GE_weak_pointer*)0;
 				GE_free(wp);
 			}
 		}

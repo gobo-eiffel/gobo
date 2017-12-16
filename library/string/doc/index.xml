@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gobo Eiffel String Library documentation"
+
+	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/index">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 November 2005</date>
+</chapterinfo>
+
+<title>Gobo Eiffel String Library</title>
+
+<para>
+The <libraryname>Gobo Eiffel String Library</libraryname> gives Eiffel 
+programmers access to string functionalities.
+</para>
+
+<para>
+This document is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="formatter/index">String Formatter</link>
+		</term>
+		<listitem><para>
+			Formatting functionalities of the Standard C library 
+			<libraryname>sprintf</libraryname>.
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<link linkend="unicode/index">Unicode</link>
+		</term>
+		<listitem><para>
+			Unicode String Library
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			Date and time formatting
+		</term>
+		<listitem><para>
+			For date and time formatting see class <classname>ST_DATE_TIME_ROUTINES</classname>.
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

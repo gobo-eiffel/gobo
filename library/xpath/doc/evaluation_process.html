@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>A description of the evaluation process</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>A description of the evaluation process</strong></font></td>
+    <td align="right"><a href="collection.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="implemented_functions.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>This chapter describes the process by which the evaluator turns a
+   text string representing an XPath expression, into a sequence of items. This description should act
+   as a guide for anyone interested in examining the code, and that includes the author (I'm writing it right now
+   to help me check I am being consistent throughout).
+   
+  </p>
+  <p>Conceptually, the process proceeds in a series of phases. In practice, there 
+   is some limited overlapping of these phases. To get a good picture of how an
+   XPath evaluation is supposed to work, see <a href="http://www.w3.org/TR/xpath20/#id-processing-model">XML Path Language (XPath) 2.0</a>.
+   
+  </p>
+  <p>The steps taken by the Gobo XPath evaluation engine are as follows:
+   
+   <ul>
+    <li><a href="evaluation_process.html#xpath_stand_alone_evaluation_process_parsing">Parsing the expression text.</a></li>
+    <li><a href="evaluation_process.html#xpath_stand_alone_evaluation_process_simplifying">Simplifying the parsed expression.</a></li>
+    <li><a href="evaluation_process.html#xpath_stand_alone_evaluation_process_analysis">Performing static type checking and optimization.</a></li>
+    <li><a href="evaluation_process.html#xpath_stand_alone_evaluation_process_evaluation">Evaluating the expression.</a></li>
+   </ul>
+   
+  </p>
+  <div>
+   
+   <h2>Items, Nodes, Values, Sequences, Iterators and Expressions</h2>
+   
+   <p>The input to the evaluation process is a text string, representing an XPath Expression, and a Context Item.
+    First then, some definitions:
+    
+    <dl>
+     
+     <dt>Sequence</dt>
+     <dd>The result of evaluation is a sequence of zero or more <i>Item</i>s. A sequence is a <i>Value</i>, 
+      	  but in the data model, it can also be represented as an <i>Iterator</i>.
+      	  
+      <p>A sequence of one item is completely interchangeable with the item itself.</p>
+      <p>The class for a sequence is <font color="#008080"><i><tt>XM_XPATH_SEQUENCE_VALUE</tt></i></font>.
+      </p>
+     </dd>
+     
+     <dt>Item</dt>
+     <dd>The basic unit of information coming out of the evaluation process. An item is either an <i>Atomic Value</i>
+      	  or else it is a <i>Node</i>.
+      	  
+      <p>The class for an item is <font color="#008080"><i><tt>XM_XPATH_ITEM</tt></i></font>.
+      </p>
+     </dd>
+     
+     <dt>Node</dt>
+     <dd>A node is a constituent of the XML input tree. It is one of:
+      	  
+      <ul>
+       <li>Document</li>
+       <li>Element</li>
+       <li>Attribute</li>
+       <li>Namespace</li>
+       <li>Text</li>
+       <li>Comment</li>
+       <li>Processing instruction</li>
+      </ul>
+      	  
+      <p>The class for a node is <font color="#008080"><i><tt>XM_XPATH_NODE</tt></i></font>.
+      </p>
+      <p>The architecture supports multiple implementations of the data model's tree structure. The only 
+       	  implementations at present are the standard tree implementation and the tiny tree implementation. In these implementation,
+       the 
+       	  class for a node is <font color="#008080"><i><tt>XM_XPATH_TREE_NODE</tt></i></font> and <font color="#008080"><i><tt>XM_XPATH_TINY_NODE</tt></i></font> respectively.
+       	  
+      </p>
+     </dd>
+     
+     <dt>Value</dt>
+     <dd>A value is the result of evaluating an <i>Expression</i>, but
+      	  it is also an expression in it's own right. However, it never has sub-expressions.
+      	  
+      <p>A value can be regarded as a <i>Sequence</i>, although sometimes
+       	  it is a sequence of length one, or even zero.
+       	  
+      </p>
+      <p>The class for a value is <font color="#008080"><i><tt>XM_XPATH_VALUE</tt></i></font>.
+      </p>
+     </dd>
+     
+     <dt>Atomic Value</dt>
+     <dd>An atomic value is a value consisting of a single <i>Item</i>.
+      <p>The class for an atomic value is <font color="#008080"><i><tt>XM_XPATH_ATOMIC_VALUE</tt></i></font>.
+      </p>
+     </dd>
+     
+     <dt>Expression</dt>
+     <dd>An expression is the basic building block of Xpath. 
+      	  Expressions can be nested with full generality (<font color="#008080"><i><tt>sub_expressions</tt></i></font> lists the sub-expressions). Expressions evaluate
+      	  to a <i>Sequence</i> of <i>Item</i>s.
+      	  
+      <p>The class for an expression is <font color="#008080"><i><tt>XM_XPATH_EXPRESSION</tt></i></font>.
+      </p>
+      <p>An expression is either a <i>Value</i> or an instance of
+       	  <font color="#008080"><i><tt>XM_XPATH_COMPUTED_EXPRESSION</tt></i></font>.
+       	  
+      </p>
+     </dd>
+     
+     <dt>Iterator</dt>
+     <dd>An iterator is a construct within the programming model for traversing a <i>Sequence</i>
+      	  of <i>Item</i>s.
+      	  
+      <p>The class for an iterator is <font color="#008080"><i><tt>XM_XPATH_SEQUENCE_ITERATOR</tt></i></font>.
+      </p>
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <div><a name="xpath_stand_alone_evaluation_process_parsing"></a>
+   
+   <h2>Parsing the expression text</h2>
+   
+   <p><font color="#008080"><i><tt>XM_XPATH_EXPRESSION_FACTORY</tt></i></font> has a routine <font color="#008080"><i><tt>make_expression</tt></i></font>
+    which takes a <font color="#008080"><i><tt>STRING</tt></i></font> (holding the text of the expression to be parsed) and an <font color="#008080"><i><tt>XM_XPATH_STATIC_CONTEXT</tt></i></font>.
+    The result of calling <font color="#008080"><i><tt>make_expression</tt></i></font> is an optimized <font color="#008080"><i><tt>XM_XPATH_EXPRESSION</tt></i></font> in <font color="#008080"><i><tt>parsed_expression</tt></i></font>. If a parse error
+    has occurred though, this will be Void. In this case <font color="#008080"><i><tt>is_parse_error</tt></i></font> will be set to True, 
+    and <font color="#008080"><i><tt>parsed_error_value</tt></i></font> will be set to an instance of <font color="#008080"><i><tt>XM_XPATH_ERROR_VALUE</tt></i></font>.
+    
+    <p><font color="#FF0000">A side-effect is that functions and variables may well be bound in the static context.</font></p>
+    
+   </p>
+   
+   <p>Setting the debug-key "XPath expression factory" will cause <font color="#008080"><i><tt>make_expression</tt></i></font> to print
+    a textual representation of the expression tree to the standard error stream, immediately after parsing is sucessfull.
+    
+   </p>
+   
+  </div>
+  <div><a name="xpath_stand_alone_evaluation_process_simplifying"></a>
+   
+   <h2>Simplifying the parsed expression</h2>
+   
+   <p>If parsing is sucessful <font color="#008080"><i><tt>XM_XPATH_EXPRESSION_FACTORY</tt></i></font>'s <font color="#008080"><i><tt>make_expression</tt></i></font> routine goes on to
+    call <font color="#008080"><i><tt>simplify</tt></i></font> on the expression. This performs context-independent optimizations on the expression
+    and (recusively) it's sub-expressions. Current may be marked
+    in error (So the caller of <font color="#008080"><i><tt>simplify</tt></i></font> <i>must</i> test <font color="#008080"><i><tt>is_error</tt></i></font>. 
+    If it is True, you can access <font color="#008080"><i><tt>error_value</tt></i></font>).
+    
+   </p>
+   
+   <p>Note that if a simplification error occurs, <font color="#008080"><i><tt>make_expression</tt></i></font> treats it the same way as a parse error.
+   </p>
+   
+   <p>Setting the debug-key "XPath expression factory" will cause <font color="#008080"><i><tt>make_expression</tt></i></font> to print
+    a textual representation of the simplified expression tree to the standard error stream, immediately after simplification.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="xpath_stand_alone_evaluation_process_analysis"></a>
+   
+   <h2>Performing static type checking and context-dependent optimizations</h2>
+   
+   <p>After the simplication process is complete (the picture here is itself simplified, as <font color="#008080"><i><tt>simplify</tt></i></font>
+    may itself be called by later phases, especially if static analysis is unable to completely determine the type of an
+    operand), the next phase is static analysis of the expression, to determine the types of all expressions. This is accomplished
+    by
+    calling <font color="#008080"><i><tt>analyze</tt></i></font> on the expression.
+    
+   </p>
+   
+   <p><font color="#008080"><i><tt>Analyze</tt></i></font> takes an <font color="#008080"><i><tt>XM_XPATH_STATIC_CONTEXT</tt></i></font> as it's sole parameter. 
+    <p><font color="#FF0000">It may change the static context (?? check this some time).</font></p>
+    As a command, is quite likely change the expression in one of several ways: 
+    
+    <ul>
+     <li>It may mark Current as being in error (this is the chief purpose of static analysis). This is achieved by calling either <font color="#008080"><i><tt>set_last_error</tt></i></font> or 
+      	<font color="#008080"><i><tt>set_last_error_from_string</tt></i></font>. Callers of <font color="#008080"><i><tt>analyze</tt></i></font> <i>must</i>
+      	check <font color="#008080"><i><tt>is_error</tt></i></font> afterwards.
+      	
+     </li>
+     <li>It may promote sub-expressions, via <font color="#008080"><i><tt>promoted_expression</tt></i></font>, or alter or replace them in some other way.
+     </li>
+     <li>It may replace Current with an alternative expression. In this case <font color="#008080"><i><tt>was_expression_replaced</tt></i></font>
+      	is set to True, and <font color="#008080"><i><tt>replacement_expression</tt></i></font> is set. Callers of <font color="#008080"><i><tt>analyze</tt></i></font> <i>must</i>
+      	check for this.
+      	
+      <p>Replacement may be done, for instance, because static analysis can show that the expression is in fact a constant value. In
+       that case
+       	the expression can be pre-evaluated.
+      </p>
+      <p>Another reason for replacement is exactly the opposite: static analysis is unable to determine if the type or cardinality
+       of the
+       	expression is correct or incorrect. In this case, the expression is wrapped in an <font color="#008080"><i><tt>XM_XPATH_ITEM_CHECKER</tt></i></font> or
+       	an <font color="#008080"><i><tt>XM_XPATH_CARDINALITY_CHECKER</tt></i></font> respectively. These classes postpone the checks until evaluation time.
+       	
+      </p>
+     </li>
+    </ul>
+    
+   </p>
+   
+   <p>Setting the debug-key "XPath evaluator" will cause <font color="#008080"><i><tt>evaluate</tt></i></font> to print
+    a textual representation of the expression tree to the standard error stream, immediately after static analysis is sucessfull.
+    
+   </p>
+   
+  </div>
+  <div><a name="xpath_stand_alone_evaluation_process_evaluation"></a>
+   
+   <h2>Evaluating the expression</h2>
+   
+   <p>If static analysis is sucessfull, <font color="#008080"><i><tt>evaluate</tt></i></font> proceeds to the evaluation stage. <font color="#008080"><i><tt>XM_XPATH_EXPRESSION</tt></i></font>
+    has no fewer than six routines for performing evaluation. All of them take an <font color="#008080"><i><tt>XM_XPATH_CONTEXT</tt></i></font> as sole parameter, though this
+    may be Void on occaisions. If it is not Void, then it is liable to be altered by any of these routines (as the <font color="#008080"><i><tt>context_item</tt></i></font>
+    is liable to change), so none of them are pure functions.
+    
+    <ul>
+     <li><font color="#008080"><i><tt>Effective_boolean_value</tt></i></font> is called whenever an
+      	xs:boolean is expected. It always returns an <font color="#008080"><i><tt>XM_XPATH_BOOLEAN_VALUE</tt></i></font>, but the caller
+      	<i>must</i> check <font color="#008080"><i><tt>is_error</tt></i></font> upon return.
+      	
+      <p><font color="#FF0000">TODO: pre-condition of analyzed - check if this is always checked for, as other
+        	evaluation routines cannot have it (because of cardinality-checker/item-checker)</font></p>
+      	
+      <p>This is a function, so it does not change Current (but may change the evaluation context).</p>
+     </li>
+     <li><font color="#008080"><i><tt>Evaluate_item</tt></i></font> is called when a single <font color="#008080"><i><tt>XM_XPATH_ITEM</tt></i></font> is expected,
+      	although there exists the possibility of an empty sequence - denoted by Void.
+      	
+      <p>The result of evaluation is set in <font color="#008080"><i><tt>last_evaluated_item</tt></i></font>. This is Void if Current evaluates without
+       	error to an empty sequence.
+       	
+      </p>
+      <p>If an error is detected, then <font color="#008080"><i><tt>last_evaluated_item</tt></i></font>'s <font color="#008080"><i><tt>is_error</tt></i></font> will
+       	be set to True. Callers of <font color="#008080"><i><tt>evaluate_item</tt></i></font> <i>must</i> check for this possibility (after first checking for Void).
+       	The error value can be accessed via <font color="#008080"><i><tt>error_value</tt></i></font>. A class <font color="#008080"><i><tt>XM_XPATH_INVALID_ITEM</tt></i></font>
+       	is available for returning an error.
+       	
+      </p>
+     </li>
+     <li><font color="#008080"><i><tt>Evaluate_as_string</tt></i></font> is used when it is known that Current can be evaluated
+      	to a single string (or an empty sequence, which can be represented by a zero-length string).
+      	
+     </li>
+     <li><font color="#008080"><i><tt>Iterator</tt></i></font> is the usual routine called for evaluating a sequence. It always
+      	returns a result of type <font color="#008080"><i><tt>XM_XPATH_SEQUENCE_ITERATOR[XM_XPATH_ITEM]</tt></i></font>, althouh it may be
+      	marked as in error (callers <i>must</i> check <font color="#008080"><i><tt>is_error</tt></i></font> - if True, the error value
+      	is available in <font color="#008080"><i><tt>error_value</tt></i></font>).
+      	
+      <p><font color="#008080"><i><tt>XM_XPATH_SEQUENCE_ITERATOR[G -&gt; XM_XPATH_ITEM]</tt></i></font> is modelled on  <font color="#008080"><i><tt>DS_LIST_CURSOR</tt></i></font>,
+       	although it only has a subset of the features (<font color="#008080"><i><tt>before</tt></i></font>, <font color="#008080"><i><tt>after</tt></i></font>,
+       	<font color="#008080"><i><tt>off</tt></i></font>, <font color="#008080"><i><tt>item</tt></i></font>, <font color="#008080"><i><tt>start</tt></i></font> and <font color="#008080"><i><tt>forth</tt></i></font>. It also has
+       	routine <font color="#008080"><i><tt>another</tt></i></font>, which produces another iterator which will iterate over the same items as
+       	the original would have initially done).
+       	
+      </p>
+      <p>Another difference is that <font color="#008080"><i><tt>XM_XPATH_SEQUENCE_ITERATOR[G -&gt; XM_XPATH_ITEM]</tt></i></font> does not iterate
+       	over a physical list object - the sequences are only conceptual. Ususally the next <font color="#008080"><i><tt>XM_XPATH_ITEM</tt></i></font> will
+       	be evaluated (possibly changing the evaluation context as a side effect) when <font color="#008080"><i><tt>start/forth</tt></i></font> is called.
+       	
+      </p>
+      <p><font color="#008080"><i><tt>XM_XPATH_SEQUENCE_ITERATOR[G -&gt; XM_XPATH_ITEM]</tt></i></font> is a deferred class. A number of descendants
+       	are available for actual use:
+       	
+       <ul>
+        <li><font color="#008080"><i><tt>XM_XPATH_LAST_POSITION_FINDER [G-&gt; XM_XPATH_ITEM]</tt></i></font> is a deferred class that adds
+         	    the routine <font color="#008080"><i><tt>last_position</tt></i></font> to it's descndants.
+         	    
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_REVERSIBLE_ITERATOR [G-&gt; XM_XPATH_ITEM]</tt></i></font> is a deferred class that adds
+         	    the routine <font color="#008080"><i><tt>reverse_iterator</tt></i></font> to it's descndants.
+         	    
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_AXIS_ITERATOR [G -&gt; XM_XPATH_NODE]</tt></i></font> is also deferred. An instance is
+         	    used for traversing an XPath Axis. Implementations for the tiny-tree implementation of the data model are:
+         	    
+         <ul>
+          <li><font color="#008080"><i><tt>XM_XPATH_ANCESTOR_ENUMERATION</tt></i></font></li>
+          <li><font color="#008080"><i><tt>XM_XPATH_ATTRIBUTE_ENUMERATION</tt></i></font></li>
+          <li><font color="#008080"><i><tt>XM_XPATH_DESCENDANT_ENUMERATION</tt></i></font></li>
+          <li><font color="#008080"><i><tt>XM_XPATH_FOLLOWING_ENUMERATION</tt></i></font></li>
+          <li><font color="#008080"><i><tt>XM_XPATH_PRECEDING_ENUMERATION</tt></i></font></li>
+          <li><font color="#008080"><i><tt>XM_XPATH_PRECEDING_SIBLING_ENUMERATION</tt></i></font></li>
+          <li><font color="#008080"><i><tt>XM_XPATH_SIBLING_ENUMERATION</tt></i></font></li>
+         </ul>
+         	    
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_ARRAY_ITERATOR [G -&gt; XM_XPATH_ITEM]</tt></i></font> iterates across an <font color="#008080"><i><tt>ARRAY [XM_XPATH_ITEM]</tt></i></font>.
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_ARRAY_LIST_ITERATOR [G -&gt; XM_XPATH_ITEM]</tt></i></font> iterates across a <font color="#008080"><i><tt>DS_ARRAYED_LIST [XM_XPATH_ITEM]</tt></i></font>.
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_EMPTY_ITERATOR [G -&gt; XM_XPATH_ITEM]</tt></i></font> iterates across an  empty sequence.
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_INVALID_ITERATOR</tt></i></font> is useful as a Result when an error is detected.
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_SINGLETON_ITERATOR [G -&gt; XM_XPATH_ITEM]</tt></i></font> is used when only zero or one <font color="#008080"><i><tt>XM_XPATH_ITEM</tt></i></font>s are allowed.
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_ARRAY_ITERATOR [G -&gt; XM_XPATH_ITEM]</tt></i></font> iterates across an <font color="#008080"><i><tt>ARRAY [XM_XPATH_ITEM]</tt></i></font>.
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_FILTER_ITERATOR</tt></i></font> provides filtered iteration across a sequence of <font color="#008080"><i><tt>XM_XPATH_ITEM</tt></i></font>s.
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_MAPPING_ITERATOR</tt></i></font> is used to flatten sequences of sequences of <font color="#008080"><i><tt>XM_XPATH_ITEM</tt></i></font>s, as
+         	    XPath does not permit nested sequences.
+         	    
+         <p>Classes that return an<font color="#008080"><i><tt>XM_XPATH_MAPPING_ITERATOR</tt></i></font> from their <font color="#008080"><i><tt>iterator</tt></i></font> routine
+          	    need to implement <font color="#008080"><i><tt>XM_XPATH_MAPPING_FUNCTION</tt></i></font>. This has a single feature <font color="#008080"><i><tt>map</tt></i></font>, which returns
+          	    an<font color="#008080"><i><tt>XM_XPATH_MAPPED_ITEM</tt></i></font>. This is either Void, or an <font color="#008080"><i><tt>XM_XPATH_ITEM</tt></i></font>, 
+          	    or an<font color="#008080"><i><tt>XM_XPATH_SEQUENCE_ITERATOR[G -&gt; XM_XPATH_ITEM]</tt></i></font>. If <font color="#008080"><i><tt>map</tt></i></font> detects an error, then it's
+          	    return value <i>must</i> encapsulate an <font color="#008080"><i><tt>XM_XPATH_ITEM</tt></i></font> in error.
+          	    
+         </p>
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_POSITION_ITERATOR</tt></i></font> iterates across a sub-sequence.
+        </li>
+        <li><font color="#008080"><i><tt>XM_XPATH_RANGE_ITERATOR</tt></i></font> iterates across a monotonically increasing sequence of integers.
+        </li>
+       </ul>
+       	
+      </p>
+     </li>
+     <li><font color="#008080"><i><tt>Eagerly_evaluate</tt></i></font> is called to perform pre-evaluation, when static analysis
+      	of an <font color="#008080"><i><tt>XM_XPATH_BINARY_EXPRESSION</tt></i></font> has determined that both operands are constants.<font color="#008080"><i><tt>XM_XPATH_FUNCTION_CALL</tt></i></font>
+      	may also call this, to pre-evaluate arguments to a function call.
+      	
+     </li>
+     <li><font color="#008080"><i><tt>Lazily_evaluate</tt></i></font> is called to create an <font color="#008080"><i><tt>XM_XPATH_CLOSURE</tt></i></font>.
+     </li>
+    </ul>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Thursday, April 15th, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="invoking.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="collection.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="implemented_functions.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

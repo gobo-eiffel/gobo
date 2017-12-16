@@ -1,0 +1,2 @@
+[VWMA-2] class AA (13,29): the 1-th item (of type '[attached] STRING_8') in manifest array does not conform nor convert to the array's generic parameter (of type 'INTEGER').
+----

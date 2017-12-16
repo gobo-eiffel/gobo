@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Extensions</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Extensions</strong></font></td>
+    <td align="right"><a href="index.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   All extensions are in the namespace <font color="#008080">http://www.gobosoft.com/eiffel/gobo/gexslt/extension</font>.
+   
+  </p>
+  <div>
+   
+   <h2>Extension attributes</h2>
+   
+   <p>
+    The following extension attributes are available:
+    
+    <dl>
+     	
+     <dt><font color="#008080">explain</font></dt>
+     <dd>
+      	      This attribute may be set on any instruction in the stylesheet, or on a literal result element. The permitted values
+      are "yes", "no" and "all". 
+      	      If the value is "yes", then at compile time an analysis of all XPath expressions appearing as attributes of that element
+      is written to the standard
+      	      error stream. The analysis includes the static type of the expression, and a representation of the expression tree
+      that results from parsing and optimization.
+      	      The tree structure is represented by indentation.
+      	    
+      <p>
+       	      The value of "all" only takes effect on xsl:stylesheet and xsl:transform elements. It is treated as if "yes" was coded.
+       	      Additionally, if this is the prinicpal stylesheet, then the instructions themselves, when compiled to an expression,
+       	      have their compiled form displayed. (Only xsl:templates, top-level xsl:variables and xsl:params, and xsl:function definitions
+       	      are displayed.)
+       	      
+       <p><font color="#FF0000">This can produce a lot of output.</font></p>
+       	    
+      </p>
+     </dd>
+     	
+     <dt><font color="#008080">memo-function</font></dt>
+     <dd>
+      	      
+      <p><font color="#FF0000">
+        	       This attribute used to make gexslt non-compliant. It is now ignored. Use the gexslt:function extension instruction
+        instead.
+        	      </font></p>
+      	    
+     </dd>
+     
+    </dl>
+    
+    <div>
+     
+     <h3>Extension attributes for xsl:output</h3>
+     
+     <dl>
+      	
+      <dt><font color="#008080">character-representation</font></dt>
+      <dd>
+       	      This tells the serializer how to serialize non-ASCII characters, and characters that are not representable
+       	      in the selected encoding.
+       	      
+       <p><font color="#FF0000">
+         		This may need to be dropped - I have to check the serialization specs, but I think they have been tightened to disallow
+         		some of this.
+         	      </font></p>
+       	    
+       <p>
+        	      When the output method is "xml" or "xhtml" 
+        <p><font color="#FF0000">(Hm.maybe xhtml should follow the html behaviour)</font></p>,
+        	      this parameter only effects characters that are not representable
+        	      in the selected encoding. It can take on the value "hex" or "decimal", and it determines whether 
+        	      the character is written out with a decimal character reference, or a hexadecimal 
+        	      character reference (the default).
+        	    
+       </p>
+       <p>
+        	      When the output method is "html", then the value may hold two strings, separated by a semicolon.
+        	      The first string defines how non-ASCII characters within the character encoding will be represented, 
+        	      the values being "native", "entity", "decimal", or "hex". 
+        	      The second string defines how characters outside the encoding will be represented, the values being 
+        	      "entity", "decimal", or "hex". Here "native" means output the character as itself; "entity" means 
+        	      use a defined entity reference (such as "&amp;eacute;") if known; "decimal" and "hex" refer to numeric 
+        	      character references. For example "entity;decimal" (the default) means that with encoding="iso-8859-1", 
+        	      characters in the range 160-255 will be represented using standard HTML entity references, while 
+        	      Unicode characters above 255 will be represented as decimal character references.
+        	    
+       </p>
+       <p>
+        	      This parameter has no meaning when the output method is "text". For <font color="#008080">QName</font> output methods,
+        	      it's interpretation is up to the programmer of the method, but the possible values are those for the 
+        	      "html" method.
+        	    
+       </p>
+      </dd>
+      	
+      <dt><font color="#008080">indent-spaces</font></dt>
+      <dd>
+       	      This tells the serializer how many spaces to add for indentation when <font color="#008080">indent="yes"</font> is specified.
+       	      It is ignored when <font color="#008080">indent="no"</font> is specified, or is omitted and the default
+       	      for the serialization method is "no". If you omit this parameter, then three spaces are used 
+       	      (but check the creation procedure for <font color="#008080"><i><tt>XM_XSLT_OUTPUT_PROPERTIES</tt></i></font> to confirm
+       	      this, in case it gets changed and I forget to update the documentation).
+       	      
+       <p><font color="#FF0000">
+         	       TODO: Change the default to indent with a single tab.
+         	      </font></p>
+       	    
+      </dd>
+      	
+      <dt><font color="#008080">next-in-chain</font></dt>
+      <dd>
+       	      This is only allowed in conjunction with the <font color="#008080">gexslt:chain</font> output method.
+       	      It's value is the URI of the next transformation to be run over the output.
+       	    
+      </dd>
+      	
+      <dt><font color="#008080">method</font></dt>
+      <dd>
+       	    This is only allowed on <font color="#008080">xsl:result-document</font>, and it specifies the method used
+       	    to store the resource. For HTTP, only PUT and POST are permitted. PUT is the default. Other schemes
+       	    allow any value and ignore it.
+       	   
+      </dd>
+      
+     </dl>
+     
+    </div>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>User-defined data elements</h2>
+   
+   <p>
+    The <font color="#008080">fn:doc(), fn:collection() and fn:document()</font> functions are defined to be stable by default.
+    That is, repeated use of one of these functions on the same URI will result in the identical document node (or 
+    collection of document nodes in the case of <font color="#008080">fn:collection()</font>). But to implement this the library
+    is forced to lock the documents in memory for the duration of the transformation. 
+    This can cause severe performance problems, especially with large
+    collections. For that reason, an implementation is allowed to provide options that allow other isolation levels
+    (in the SQL sense - the default behaviour corresponds to SERIALIZABLE).
+    
+   </p>
+   
+   <p>
+    This option is provided through an experimental user-defined data element <font color="#008080">isolation-level</font>, which is ignored
+    unless it is a top-level element in the principal stylesheet module.
+    This has a compulsory attribute (in the per-element partition, not in the gexslt namespace)
+    <font color="#008080">isolation-level</font>. This takes one of the four values:
+    
+    <ul>
+     <li>read-uncommitted</li>
+     <li>read-committed</li>
+     <li>repeatable-read</li>
+     <li>serializable</li>
+    </ul>
+    
+   </p>
+   
+   <p>
+    The effect of this implementation, is that documents or collections specified as read-committed (or read-uncommitted) will
+    not be locked in memory. If the same URI is passed to one of these functions a second time, then the document(s) will be read
+    and parsed by the XML parser a second time. This will break the usual guarantee of node identity.
+    
+    <p><font color="#FF0000">
+      This user-defined data element is experimental. I intend to eventually move towards a more transaction-oriented solution.
+      Support for this user-defined data element may then be dropped (note that this will not cause errors in stylesheets that
+      use it - it will then have no effect (other than to issue a warning)).
+      </font></p>
+    
+   </p>
+   
+   <p>
+    There is also <font color="#008080">collation</font>.
+    This is intended for declaring collation-URI names, but as the only collation supported is
+    the default one at the moment, it is not much use (I use it for binding additional URIs to the default collation,
+    to test the collation-naming mechanism). When a tailorable collation based on the Unicode Collation Algorithm is
+    available, then this will be used to bind URI names to tailored collations.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Extension instructions</h2>
+   
+   <div>
+    
+    <h3>Gexslt:function</h3>
+    
+    <p>
+     <font color="#008080">gexslt:function</font> is identical in syntax to xsl:function. However it is implemented as a memo-function
+     for performance.
+     
+    </p>
+    
+    <p>
+     If the function has any side effects (which can only occur if it uses
+     user-written extension functions with side-effects), or if it access context information, such as position(),
+     last() or the context item, then you may not get what you expect.
+     
+    </p>
+    
+    <p>
+     If the function constructs and returns a temporary tree, the same tree will be returned each time. The only consequence
+     of this is if you compare node identities on that tree. 
+     
+    </p>
+    
+   </div>
+   
+   <p>
+    <font color="#008080">gexslt:serialize</font> may be defined in the future. Or maybe not.
+    Users can always use <a href="http://xmlportfolio.com/xml-to-string/">Evan Lenz's serializer written in XSLT 1.0</a>.
+    (I think an XSLT 2.0 html serializer has also been written).
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Additional output methods</h2>
+   
+   <p>
+    The only supplied method is <font color="#008080">gexslt:chain</font>, which delegates serialization to a further
+    transformation, sepecified by the <font color="#008080">gexslt:next-in-chain</font> attribute. Consquently all other
+    attributes on the <font color="#008080">xslt:output</font> element are ignored.
+    
+   </p>
+   
+   <p>
+    There is also an example provided to show Eiffel programmers
+    how to write their own output methods. This is in the namespace 
+    <font color="#008080">http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example</font>, and has
+    a local name of <font color="#008080">xml</font>. It functions identically to the standard
+    <font color="#008080">xml</font> method, unless the extension attribute <font color="#008080">internal-subset</font> (in the same
+    namespace) is supplied. In which case, it's value is used as the text for a DTD internal subset. You
+    must also supply <font color="#008080">doctype-system</font> for this to work.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Extension functions</h2>
+   
+   <div>
+    
+    <h3>gexslt:transformation</h3>
+    
+    <p>
+     This function allows you to run an XSLT transformation from within your current XSLT transformation. Syntax
+     is <font color="#008080">gexslt:transformation ($trans-uri as xs:string, 
+      $initial-context as node()?, 
+      $initial-template as xs:QName?, 
+      $initial-mode as xs:QName?,
+      $parameter-names as xs:QName*,
+      $parameter-values as item()*,
+      $features as xs:string?) as item()+</font></p>
+    
+    <p>or
+     <font color="#008080"> gexslt:transformation ($trans-uri as xs:string, $initial-context as node()) as item()+</font>
+     
+    </p>
+    
+    <p>
+     The two-argument form is equivalent to passing () for all remaining arguments.
+     
+    </p>
+    
+    <p>
+     The meaning of the arguments is as follows:
+     
+    </p>
+    
+    <ol>
+     <li>The URI of the transformation to be run</li>
+     <li>An optional initial context node</li>
+     <li>An optional initial template</li>
+     <li>An optional initial mode</li>
+     <li>
+      	The $parameter-names are names of global stylesheet parameters.
+      
+     </li>
+     <li>
+      	The $parameter-values lists must be of the same length as the $parameter-names list.
+      	It contains values of the stylesheet parameter named in the corresponding position in the $parameter-names list.
+      
+     </li>
+     <li>
+      	The $features string consists of a white-space separated list of <font color="#008080">xs:QName</font>-valued features.
+      	No features are defined at this stage. I have various stylesheet-caching control features in mind, and general
+      	options such as which tree-model to use.
+      
+     </li>
+    </ol>
+    
+    <p>
+     If the stylesheet fails to compile, then the error return value will be COMPILE_FAILED in the gexslt namespace.
+     If there is no initial template, and no initial context node, then the error return value will be NO_INITIAL_TEMPLATE in the
+     gexslt namespace.
+     If the number of parameter names and values are unequal, then the error return value will be PARAMETER_MISMATCH in the gexslt
+     namespace.
+     If an unrecognized feature name is supplied, then the error return value will be UNRECOGNIZED_FEATURE in the gexslt namespace.
+     Otherwise, the error return value will be a standard XPath or XSLT error code, or a normal gexslt error code,
+     
+    </p>
+    
+    <p>
+     The result sequence has one of two forms:
+     
+     <ol>
+      <li>
+       	 An <font color="#008080">xs:QName</font>,  followed by an <font color="#008080">xs:string</font> forllowed by <font color="#008080">item()*</font>
+       representing the components of the error from the transformation (see <font color="#008080">fn:error()</font>).
+       
+      </li>
+      <li>Zero or one<font color="#008080">document-node()</font>s. The document will be the implicit result document if one exists.
+      </li>
+     </ol>
+     
+    </p>
+    
+    <p>
+     Result documents can be serialized using the <font color="#008080">gexslt:serialize</font> extension instruction (if I ever write it).
+     
+    </p>
+    
+   </div>
+   
+   <div>
+    
+    <h3>gexslt:response-body</h3>
+    
+    <p>
+     This function returns any available response data, as a single string, as a result
+     of storing an <font color="#008080">xsl:result-document</font>. It takes a single string argument (required), whose
+     value must be the same as the (resolved) value of the <font color="#008080">href</font> attribute on the <font color="#008080">xsl:result-document</font>.
+     If no such response data is available then the error return value will be NO_RESPONSE in the gexslt namespace.
+     
+    </p>
+    
+    <p>
+     This is principally intended for use with <font color="#008080">http</font> URIs, but any scheme that supports responses to store requests
+     can use it. Database requests spring to mind.
+     
+    </p>
+    
+   </div>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Wednesday, November 24th, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

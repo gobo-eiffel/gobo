@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Eiffel Language"
+
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/language">
+<chapterinfo>
+	<copyright>
+		<year>2001-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>22 December 2016</date>
+</chapterinfo>
+
+<title>Eiffel Language</title>
+
+<para>
+In order to achieve Eiffel compiler interoperability, it is not necessarily 
+required to strictly follow the 
+<ulink url="http://www.ecma-international.org/publications/standards/Ecma-367.htm">ECMA Eiffel standard</ulink>.
+Some compilers indeed have bugs, do not interpret the standard in the same way as others (be it because of 
+ambiguities in the standard itself or not), or have implementation limitations.
+Therefore the Eiffel dialect used in <projectname>Gobo Eiffel</projectname> is 
+likely to be a subset of the official Eiffel standard.
+</para>
+
+<para>
+On the contrary, constructs which have not been officially adopted by 
+<ulink url="http://www.ecma-international.org/publications/standards/Ecma-367.htm">ECMA</ulink>
+yet but which are already supported by all Eiffel compilers can be used in 
+<projectname>Gobo Eiffel</projectname>. However it is clear that an 
+Eiffel extension can be used in <projectname>Gobo Eiffel</projectname> only if it 
+is supported by all <link linkend="compilers">Eiffel compilers</link>.
+</para>
+
+<para>
+Differences between the <link linkend="compilers">supported Eiffel compilers</link> 
+which have been already noticed, along with workarounds when available, will be 
+listed on-line in order to help others to avoid making the same mistakes by using 
+these non-portable Eiffel constructs.
+</para>
+
+</chapter>

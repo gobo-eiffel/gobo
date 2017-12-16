@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<project name="bang2create" default="help">
+
+	<description>
+		system: "Tool to replace !! creation instructions by 'create' keywords"
+		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant convert"/>
+		<echo message="   geant recursive"/>
+	</target>
+
+	<target name="convert" depend="init">
+		<description>
+			Convert all Eiffel files *.e in directory ${directory}.
+		</description>
+
+		<exec executable="bang2create ${fs.filename} ${fs.filename}" dir="${directory}">
+			<fileset include="@(*.e)"/>
+		</exec>
+	</target>
+
+	<target name="recursive" depend="init">
+		<description>
+			Convert all Eiffel files *.e in directory ${directory}
+			and recursively in its subdirectories.
+		</description>
+
+		<exec executable="bang2create ${fs.filename} ${fs.filename}" dir="${directory}">
+			<fileset include="@(**/*.e)"/>
+		</exec>
+	</target>
+
+	<target name="init">
+		<set name="directory" value="${GOBO}/library/tools/example/bang2create"/>
+	</target>
+
+</project>

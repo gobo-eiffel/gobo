@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc Declarations</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Geyacc Declarations</strong></font></td>
+        <td align="right"><a href="description.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="symbols.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>The<em> geyacc declarations</em> subsection of a <em>geyacc</em>
+grammar defines the <a href="symbols.html">symbols</a> used in
+formulating the grammar.</p>
+
+<p>All token type names (but not single-character literal tokens
+such as<font color="#FF0000" size="2" face="Courier New"> </font><font
+color="#FF0000"><tt>'+'</tt></font> and <font color="#FF0000"><tt>'*'</tt></font>)
+must be declared. Nonterminal symbols must be declared if the
+Eiffel <a href="actions.html#value_types">type</a> used for the
+semantic value needs to be specified. The first rule in the file
+also specifies the <a href="introduction.html#start_symbol"><em>start
+symbol</em></a>, by default. If you want some other symbol to be
+the start symbol, you must declare it explicitly.</p>
+
+<h2><a name="token">Tokens</a></h2>
+
+<p>The basic way to declare a token type name (terminal symbol)
+is as follows:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%token</font> <font
+color="#FF0000">NAME</font></pre>
+</blockquote>
+
+<p><em>Geyacc</em> will convert this into an integer constant
+feature in the parser, so that the routine <font color="#008080"><em><tt>read_token</tt></em></font>
+(if it is define in this class) can use the name <font
+color="#FF0000"><tt>NAME</tt></font> to stand for this token
+type's code. Any number of terminal symbols can be specified in
+the same <font color="#0000FF"><tt>%token</tt></font>
+declaration. Use spaces to separate the symbol names.</p>
+
+<p>Alternatively, you can use <font color="#0000FF"><tt>%left</tt></font>,
+<font color="#0000FF"><tt>%right</tt></font>, or <font
+color="#0000FF"><tt>%nonassoc</tt></font> instead of <font
+color="#0000FF"><tt>%token</tt></font>, if you wish to specify <a
+href="precedence.html">precedence</a>.</p>
+
+<p>You can explicitly specify the numeric code for a token type
+by appending an integer value in the field immediately following
+the token name:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%token</font> <font
+color="#FF0000">NUM</font> <font color="#008080">300</font></pre>
+</blockquote>
+
+<p>It is generally best, however, to let <em>geyacc</em> choose
+the numeric codes for all token types. <em>Geyacc</em> will
+automatically select codes that don't conflict with each other or
+with <font size="2">ASCII</font> characters.</p>
+
+<p>In the event of <a href="actions.html#value_types">multiple
+types</a> for semantic values, the syntax of <font
+color="#0000FF"><tt>%token </tt></font>may be extended to include
+the Eiffel type alternative (possibly an anchored type) delimited
+by angle-brackets:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%token</font> <font
+color="#0000FF">&lt;</font><font color="#008080"><em>INTEGER</em></font><font
+color="#0000FF">&gt;</font><font color="#FF0000"> NUM       </font><font
+color="#008080">-- Define token </font><font color="#FF0000">NUM</font><font
+color="#008080"> of type <em>INTEGER</em></font><font
+color="#FF0000">
+</font><font color="#0000FF">%token</font> <font color="#0000FF">&lt;</font><font
+color="#008080"><em>STRING</em></font><font color="#0000FF">&gt;</font><font
+color="#FF0000"> NAME       </font><font color="#008080">-- Define token </font><font
+color="#FF0000">NAME</font><font color="#008080"> of type <em>STRING
+</em></font><font color="#0000FF">%token</font> <font
+color="#0000FF">&lt;</font><font color="#008080"><em><strong>like</strong></em><em> token</em></font><font
+color="#0000FF">&gt;</font><font color="#FF0000"> DIGIT  </font><font
+color="#008080">-- Define token </font><font color="#FF0000">DIGIT</font><font
+color="#008080"> of type <em><strong>like</strong></em><em> token</em></font></pre>
+</blockquote>
+
+<p>All tokens specified in the same <font color="#0000FF"><tt>%token
+</tt></font>declaration will have the same value type.</p>
+
+<p>A <a href="symbols.html#string_token">literal string token</a>
+can be associated with a token type name by writing the literal
+string at the end of a <font color="#0000FF"><tt>%token </tt></font>declaration
+which declares the name. For example:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%token</font> <font
+color="#FF0000">LE  &quot;&lt;=&quot;
+</font><font color="#0000FF">%token</font> <font color="#0000FF">&lt;</font><font
+color="#008080"><em>OPERATOR</em></font><font color="#0000FF">&gt;</font><font
+color="#FF0000"> ASSIGN </font><font color="#008080">310 </font><font
+color="#FF0000">&quot;:=&quot;</font></pre>
+</blockquote>
+
+<p>Once the literal string has been associated with the token
+name, you can use them interchangeably in the grammar rules.</p>
+
+<h2><a name="precedence">Operator Precedence</a></h2>
+
+<p>Use the <font color="#0000FF"><tt>%left</tt></font>, <font
+color="#0000FF"><tt>%right</tt></font> or <font color="#0000FF"><tt>%nonassoc</tt></font>
+declaration to declare a token and specify its <a
+href="precedence.html">precedence</a> and associativity, all at
+once. These are called <em><strong>precedence declarations</strong></em>.</p>
+
+<p>The syntax of a precedence declaration is the same as that of <font
+color="#0000FF"><tt>%token</tt></font>:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%left</font> SYMBOLS ...</pre>
+</blockquote>
+
+<p>And indeed any of these declarations serves the purposes of <font
+color="#0000FF"><tt>%token</tt></font>. But in addition, they
+specify the associativity and relative precedence for all the <tt>SYMBOLS</tt>:</p>
+
+<ul>
+    <li>The associativity of an operator <font color="#808000"><tt>OP</tt></font>
+        determines how repeated uses of the operator nest:
+        whether <font color="#808000"><tt>X OP Y OP Z</tt></font>
+        is parsed by grouping <font color="#808000"><tt>X</tt></font>
+        with <font color="#808000"><tt>Y</tt></font> first or by
+        grouping <font color="#808000"><tt>Y</tt></font> with <font
+        color="#808000"><tt>Z</tt></font> first. <font
+        color="#0000FF"><tt>%left</tt></font> specifies
+        left-associativity (grouping <font color="#808000"><tt>X</tt></font>
+        with <font color="#808000"><tt>Y</tt></font> first) and <font
+        color="#0000FF"><tt>%right</tt></font> specifies
+        right-associativity (grouping <font color="#808000"><tt>Y</tt></font>
+        with <font color="#808000"><tt>Z</tt></font> first). <font
+        color="#0000FF"><tt>%nonassoc</tt></font> specifies no
+        associativity, which means that <font color="#808000"><tt>X
+        OP Y OP Z</tt></font> is considered a syntax error.</li>
+    <li>The precedence of an operator determines how it nests
+        with other operators. All the tokens declared in a single
+        precedence declaration have equal precedence and nest
+        together according to their associativity. When two
+        tokens declared in different precedence declarations
+        associate, the one declared later has the higher
+        precedence and is grouped first.</li>
+</ul>
+
+<h2><a name="type">Nonterminal Symbols</a></h2>
+
+<p>When you want to specify <a href="actions.html#value_types">multiple
+value types</a>, you can declare the value type of each
+nonterminal symbol for which values are used. This is done with a
+<font color="#0000FF"><tt>%type</tt></font> declaration, like
+this:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%type &lt;</font><font
+color="#008080"><em>TYPE</em></font><font color="#0000FF">&gt;</font> NONTERMINAL ...</pre>
+</blockquote>
+
+<p>Here <tt>NONTERMINAL</tt> is the name of a nonterminal symbol,
+and <font color="#008080"><em><tt>TYPE</tt></em></font> is the
+name of the Eiffel type associated with this symbol. Anchored
+types such as:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%type &lt;</font><font
+color="#008080"><em><strong>like</strong></em><em> foo</em></font><font
+color="#0000FF">&gt;</font> NONTERMINAL ...</pre>
+</blockquote>
+
+<p>where <font color="#008080"><em><tt>foo </tt></em></font>is a
+feature name, are also accepted. Any number of nonterminal
+symbols can be specified in the same <font color="#0000FF"><tt>%type</tt></font>
+declaration, if they have the same value type. Use spaces to
+separate the symbol names.</p>
+
+<h2><a name="expect">Suppressing Conflict Warnings</a></h2>
+
+<p><em>Geyacc</em> normally warns if there are any conflicts in
+the grammar, but most real grammars have harmless <a
+href="algorithm.html#shift_reduce">shift/reduce</a> conflicts
+which are resolved in a predictable way and would be difficult to
+eliminate. It is desirable to suppress the warning about these
+conflicts unless the number of conflicts changes. You can do this
+with the <font color="#0000FF"><tt>%expect</tt></font>
+declaration. The declaration looks like this:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%expect</font> N</pre>
+</blockquote>
+
+<p>Here <tt>N</tt> is a decimal integer. The declaration says
+there should be no warning if there are <tt>N</tt> shift/reduce
+conflicts and no reduce/reduce conflicts. The usual warning is
+given if there are either more or fewer conflicts, or if there
+are any reduce/reduce conflicts. In general, using <font
+color="#0000FF"><tt>%expect</tt></font> involves these steps:</p>
+
+<ul>
+    <li>Compile your grammar without <font color="#0000FF"><tt>%expect</tt></font>.
+        Use the <font color="#800000"><tt>-v</tt> </font>option
+        to get a verbose list of where the conflicts occur. <em>Geyacc</em>
+        will also print the number of conflicts.</li>
+    <li>Check each of the conflicts to make sure that <em>geyacc</em>'s
+        default resolution is what you really want. If not,
+        rewrite the grammar and go back to the beginning.</li>
+    <li>Add an <font color="#0000FF"><tt>%expect</tt></font>
+        declaration, copying the number <tt>N</tt> from the
+        number which <em>geyacc</em> printed.</li>
+</ul>
+
+<p>Now <em>geyacc</em> will stop annoying you about the conflicts
+you have checked, but it will warn you again if changes in the
+grammar result in additional conflicts.</p>
+
+<h2><a name="start">The Start-Symbol</a></h2>
+
+<p><em>Geyacc</em> assumes by default that the start symbol for
+the grammar is the first nonterminal specified in the grammar
+specification section. The programmer may override this
+restriction with the <font color="#0000FF"><tt>%start</tt></font>
+declaration as follows:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%start</font> SYMBOL</pre>
+</blockquote>
+
+<h2>Geyacc Declaration Summary</h2>
+
+<p>Here is a summary of all <em>geyacc</em> declarations:</p>
+
+<dl>
+    <dt><a href="#token"><font color="#0000FF"><tt>%token</tt></font></a></dt>
+    <dd>Declare a terminal symbol (token type name) with no
+        precedence or associativity specified.</dd>
+    <dt><a href="#precedence"><font color="#0000FF"><tt>%right</tt></font></a></dt>
+    <dd>Declare a terminal symbol (token type name) that is
+        right-associative.</dd>
+    <dt><a href="#precedence"><font color="#0000FF"><tt>%left</tt></font></a></dt>
+    <dd>Declare a terminal symbol (token type name) that is
+        left-associative.</dd>
+    <dt><a href="#precedence"><font color="#0000FF"><tt>%nonassoc</tt></font></a></dt>
+    <dd>Declare a terminal symbol (token type name) that is
+        nonassociative (using it in a way that would be
+        associative is a syntax error).</dd>
+    <dt><a href="#type"><font color="#0000FF"><tt>%type</tt></font></a></dt>
+    <dd>Declare the type of semantic values for a nonterminal
+        symbol.</dd>
+    <dt><a href="#start"><font color="#0000FF"><tt>%start</tt></font></a></dt>
+    <dd>Specify the grammar's start symbol.</dd>
+    <dt><a href="#expect"><font color="#0000FF"><tt>%expect</tt></font></a></dt>
+    <dd>Declare the expected number of shift-reduce conflicts.</dd>
+</dl>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="description.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="symbols.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

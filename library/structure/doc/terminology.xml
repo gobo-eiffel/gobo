@@ -1,0 +1,565 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Terminology"
+
+	library: "Gobo Eiffel Structure Library"
+	copyright: "Copyright (c) 1997-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="structure/terminology">
+<chapterinfo>
+	<copyright>
+		<year>1999-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>26 December 2016</date>
+</chapterinfo>
+
+<title>Terminology</title>
+
+<section><title>Class names</title>
+
+<para>
+In order to avoid classname clashes between different
+libraries, some Eiffel compilers support class renaming in the
+Ace file or equivalent. But some don't. Since it is a priority
+for the library to be portable across all Eiffel compilers
+available on the market today, the name of the classes of the
+<libraryname>Gobo Eiffel Structure Library</libraryname> have
+been systematically prefixed with the two-letter library-code
+<classname>DS</classname>, which stands for <classname>D</classname>ata
+<classname>S</classname>tructures. For example the class name
+for lists implemented with linkable cells will be
+<classname>DS_LINKED_LIST</classname>.
+</para>
+
+<para>
+Apart from this library-code prefix, class names generally
+follow the same convention as those adopted in
+<link linkend="see_also#eiffelbase"><libraryname>EiffelBase</libraryname></link>,
+with some exceptions mainly for consistency reasons. Names of classes
+which describe an abstract property are typically adjectives,
+such as <classname>DS_TRAVERSABLE</classname> or
+<classname>DS_RESIZABLE</classname>. More concrete, but still
+deferred, classes are <classname>DS_LIST</classname>,
+<classname>DS_STACK</classname> or <classname>DS_TABLE</classname>
+for instance. And finally these data structures are given various
+implementations in descendant classes. There are five main kinds
+of implementations. Data structures implemented with singly
+linkable cells have their names prefixed by <classname>LINKED</classname>
+such as <classname>DS_LINKED_LIST</classname>
+or <classname>DS_LINKED_STACK</classname>.
+Other containers like <classname>DS_BILINKED_LIST</classname>
+are made up of doubly linkable cells. A third alternative is to
+use an array internally, as in <classname>DS_ARRAYED_LIST</classname>
+or <classname>DS_ARRAYED_STACK</classname>.
+To avoid too many resizing of these internal arrays, some
+containers are implemented with a list of array chunks, such as
+<classname>DS_MULTIARRAYED_STACK</classname>.
+And finally data structures using a hashing mechanism will have
+their class names prefixed by <classname>HASH</classname>,
+<classname>DS_HASH_TABLE</classname>
+being an example of such class naming.
+</para>
+</section>
+
+<section id="feature_names"><title>Feature names</title>
+
+<para>
+The <libraryname>Gobo Eiffel Structure Library</libraryname> follows the
+conventions specified in Dr Meyer's book:
+<citetitle pubwork="book"><link linkend="see_also#reusable_software">Reusable
+Software</link>, the base object-oriented component libraries</citetitle>.
+Apart from the Eiffel
+<link linkend="see_also#style_guidelines">style guidelines</link>,
+which are enforced in all <projectname>Gobo Eiffel</projectname> libraries, this
+book also describes the <emphasis role="strong">principle of naming
+consistency</emphasis> and explains why it is so important
+when writing resuable libraries. Since I won't be able to explain
+it better than Bertrand Meyer, I'll let you read section 3.8 of
+his book, <citetitle pubwork="chapter">Naming Issues</citetitle>,
+for a detailed description. If unfortunately you don't own a copy
+of this book, you can still read the article
+<ulink url="http://www.drdobbs.com/rules-for-component-builders/184415684"><citetitle pubwork="article">Rules
+of Component Builders</citetitle></ulink> published in <citetitle>Software
+Development</citetitle> online magazine and from which the following
+paragraphs are extracted:
+
+<blockquote>
+<para>
+One lesson my colleagues and I learned early in the
+development of Eiffel libraries is that some issues viewed as
+cosmetic in non-component application development take on a
+critical role in component development. Naming is one of
+them. [...] The consistency principles imply that the names
+must not only be clear but also uniform.
+</para>
+<para>
+In the first iteration of <libraryname>EiffelBase</libraryname>,
+class <classname>STACK</classname> had operations
+<featurecall><featurename>push</featurename><arguments><argument>x</argument></arguments></featurecall>,
+<featurename>pop</featurename>, <featurename>top</featurename> for an element
+<argument>x</argument>; class <classname>ARRAY</classname> had
+<featurecall><featurename>enter</featurename><arguments><argument>x</argument>
+<argument>i</argument></arguments></featurecall>, and
+<featurecall><featurename>entry</featurename><arguments><argument>i</argument></arguments></featurecall>
+for an integer <argument>i</argument>; class <classname>HASH_TABLE</classname> had
+<featurecall><featurename>add</featurename><arguments><argument>x</argument>
+<argument>k</argument></arguments></featurecall>, and
+<featurecall><featurename>value</featurename><arguments><argument>k</argument></arguments></featurecall>
+for a key <argument>k</argument>. Using
+such well-accepted names, each well-adapted to each kind of
+structure, emphasized specificity rather than generality.
+This practice is not a problem with a few library classes,
+but with hundreds of components it doesn't work with the
+<quote><emphasis role="strong">ease of learning</emphasis></quote>
+requirement: it amounts to requiring the library user to
+learn a specific programming language for every new kind of
+structure. In each case the effort isn't much, but
+compounded over the practice of large-scale component reuse
+it can defeat the best intentions. As a result of these
+observations, we went to a set of completely systematic
+naming conventions, which I detailed in
+<link linkend="see_also#reusable_software"><citetitle>Reusable Software</citetitle></link>:
+<itemizedlist>
+	<listitem><para>
+		The basic replacement or addition operation is always
+		called <featurename>put</featurename> (replacing
+		<featurename>push</featurename>, <featurename>enter</featurename>,
+		<featurename>add</featurename>, and so on).
+	</para></listitem>
+	<listitem><para>
+		The basic access operation is always called
+		<featurename>item</featurename>.
+	</para></listitem>
+	<listitem><para>
+		The basic removal operation is always called
+		<featurename>remove</featurename> or <featurename>prune</featurename>.
+	</para></listitem>
+</itemizedlist>
+</para>
+</blockquote>
+</para>
+
+<para>
+Of course this may look unusual for programmers used to
+<featurename>push</featurename>, <featurename>pop</featurename> and the like, but
+this principle has been well accepted by the Eiffel community.
+This is mainly because it is much more important when considering
+a class library as a whole to emphasize the commonalities rather
+than the differences. The <libraryname>Gobo Eiffel Structure Library</libraryname>
+follows the principle of naming consistency and the standardized
+feature names used throughout the library classes are described
+in the table below:
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<featurename>after</featurename>, <featurename>*_after</featurename>
+		</term>
+		<listitem><para>
+			Indicate that all items have been visited when
+			traversing a container forward.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>append</featurename>, <featurename>append_*</featurename>
+		</term>
+		<listitem><para>
+			Add several items to the container. This is the same
+			as <featurename>extend</featurename> except that the container
+			is automatically resized when there is not enough room left.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>back</featurename>, <featurename>*_back</featurename>
+		</term>
+		<listitem><para>
+			Move the cursor backward.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>before</featurename>, <featurename>*_before</featurename>
+		</term>
+		<listitem><para>
+			Indicate that all items have been visited when
+			traversing a container backward.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>capacity</featurename>
+		</term>
+		<listitem><para>
+			Maximum number of items that the container can hold.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>count</featurename>
+		</term>
+		<listitem><para>
+			Number of items in the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>delete</featurename>
+		</term>
+		<listitem><para>
+			Remove all occurrences of an item from the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>extend</featurename>, <featurename>extend_*</featurename>
+		</term>
+		<listitem><para>
+			Add several items to the container. Contrary to
+			<featurename>append</featurename>, <featurename>extend</featurename> has a
+			precondition (<featurename>extendible</featurename>)
+			which checks whether there is enough room left in the
+			container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>extendible</featurename>
+		</term>
+		<listitem><para>
+			Indicate whether there is enough room left in the
+			container to add a given number of items.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>finish</featurename>
+		</term>
+		<listitem><para>
+			Move the cursor to the last item in the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>first</featurename>, <featurename>*_first</featurename>
+		</term>
+		<listitem><para>
+			First item in the container, or operations which will
+			change this first item.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>force</featurename>, <featurename>force_*</featurename>
+		</term>
+		<listitem><para>
+			Add an item to the container. This is the same as
+			<featurename>put</featurename> except
+			that the container is automatically resized when
+			there is not enough room left.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>forth</featurename>, <featurename>*_forth</featurename>
+		</term>
+		<listitem><para>
+			Move the cursor forward.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>has</featurename>
+		</term>
+		<listitem><para>
+			Indicate whether an item is included in the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>is_empty</featurename>
+		</term>
+		<listitem><para>
+			Indicate whether the data structure contains at least
+			one item.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>is_full</featurename>
+		</term>
+		<listitem><para>
+			Indicate whether the maximum number of items limit
+			(<featurename>capacity</featurename>) has been reached.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>item</featurename>, <featurename>item_for_iteration</featurename>
+		</term>
+		<listitem><para>
+			Access an item in the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>keep</featurename>, <featurename>keep_*</featurename>
+		</term>
+		<listitem><para>
+			Keep several successive items in the container, and
+			remove all the others.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>key</featurename>, <featurename>key_for_iteration</featurename>
+		</term>
+		<listitem><para>
+			Access a key in the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>last</featurename>, <featurename>*_last</featurename>
+		</term>
+		<listitem><para>
+			Last item in the container, or operations which will
+			change this last item.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>*_left</featurename>
+		</term>
+		<listitem><para>
+			Operation to be performed to the left of cursor position.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>occurrences</featurename>
+		</term>
+		<listitem><para>
+			Number of times an item appears in the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>prune</featurename>, <featurename>prune_*</featurename>
+		</term>
+		<listitem><para>
+			Remove several successive items from the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>put</featurename>, <featurename>put_*</featurename>
+		</term>
+		<listitem><para>
+			Add an item to the container, provided that it is not
+			full (see <featurename>is_full</featurename>).
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>remove</featurename>, <featurename>remove_*</featurename>
+		</term>
+		<listitem><para>
+			Remove an item from the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>replace</featurename>
+		</term>
+		<listitem><para>
+			Replace an item by another one in the container. The
+			number of items in the container (<featurename>count</featurename>)
+			is not affected by this operation.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>resize</featurename>
+		</term>
+		<listitem><para>
+			Resize the container so that it will have a new
+			<featurename>capacity</featurename>. <featurename>count</featurename>
+			is not affected by this operation.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>*_right</featurename>
+		</term>
+		<listitem><para>
+			Operation to be performed to the right of cursor position.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>start</featurename>
+		</term>
+		<listitem><para>
+			Move the cursor to the first item in the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<featurename>wipe_out</featurename>
+		</term>
+		<listitem><para>
+			Remove all items from the container.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</para>
+
+<para>
+Some feature names will be a combination of two of these
+standardized names containing an asterisk, such as
+<featurename>put_right</featurename> or <featurename>remove_first</featurename>.
+Their meaning should be straightforward: the first routine will add an
+item to the right of the cursor position, and the second will
+remove the first item of the container.
+</para>
+</section>
+
+<section><title>Feature categories</title>
+
+<para>
+To facilitate class learning, the numerous features of the
+<libraryname>Gobo Eiffel Structure Library</libraryname>
+have been organized into categories. The Eiffel language
+is very helpful here with its <constructname>Feature_clause</constructname>
+construct. Once again consistency is very important. The
+standardized feature categories used throughout the library
+classes are described in the table below:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<comment>Initialization</comment>
+		</term>
+		<listitem><para>
+			Creation procedures.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Access</comment>
+		</term>
+		<listitem><para>
+			Queries used to get elements or properties about the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Measurement</comment>
+		</term>
+		<listitem><para>
+			Queries concerning the number of elements and size of
+			the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Status report</comment>
+		</term>
+		<listitem><para>
+			Queries used to determine general boolean properties
+			of the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Comparison</comment>
+		</term>
+		<listitem><para>
+			Equality tests between containers.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Duplication</comment>
+		</term>
+		<listitem><para>
+			Features which produce copies of the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Setting</comment>
+		</term>
+		<listitem><para>
+			Procedures which change the general properties of the
+			container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Cursor movement</comment>
+		</term>
+		<listitem><para>
+			Procedures that change the cursor position.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Element change</comment>
+		</term>
+		<listitem><para>
+			Commands which add or change items in the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Removal</comment>
+		</term>
+		<listitem><para>
+			Commands which remove items from the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Resizing</comment>
+		</term>
+		<listitem><para>
+			Commands which change the size of the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Implementation</comment>
+		</term>
+		<listitem><para>
+			Secret features used for implementation purposes.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</para>
+
+<para>
+In order to make the search of features easier throughout the
+class text and flat-short forms, the feature categories generally
+appear in the same predictable order in the classes.
+</para>
+
+</section>
+</chapter>

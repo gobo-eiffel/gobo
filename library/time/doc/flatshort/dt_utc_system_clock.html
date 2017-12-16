@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Class DT_SYSTEM_CLOCK</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Class DT_UTC_SYSTEM_CLOCK</strong></font></td>
+        <td align="right"><a href="dt_time_zone.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><font color="#000080"><em><strong>note</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>description</em>:
+
+<font color="#800000"><em>    &quot;UTC system clocks (precision to the second)&quot;
+
+</em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Time Library&quot;
+</em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
+href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
+color="#800000"><em>&gt;&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 2001, Eric Bezault and others&quot;
+</em></font><em>license:   </em><font color="#800000"><em> &quot;MIT License&quot;</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>class interface</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>DT_UTC_SYSTEM_CLOCK</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
+
+<blockquote>
+    <pre><a href="dt_clock.html"><em>DT_CLOCK</em></a><em>
+    </em><a href="dt_date_handler.html"><em>DT_DATE_HANDLER</em></a><em>
+    </em><a href="dt_time_handler.html"><em>DT_TIME_HANDLER</em></a><em>
+    </em><a href="dt_date_time_handler.html"><em>DT_DATE_TIME_HANDLER</em></a></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>create</strong></em></font></pre>
+
+<blockquote>
+    <pre><a name="make"><em>make</em></a><em>
+</em><font color="#008000">        -- Create a new system clock.</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Access</font></pre>
+
+<blockquote>
+    <pre><a name="time_now"><em>time_now</em></a>:<em> </em><a
+href="dt_time.html"><em>DT_TIME</em></a><em>
+</em><font color="#008000">        -- Current time
+        -- (Create a new time object at each call.)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="dt_clock.html#time_now"><font color="#008000"><em>DT_CLOCK</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        time_now_not_void</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="date_now"><em>date_now</em></a>: <a
+href="dt_date.html"><em>DT_DATE</em></a><em>
+</em><font color="#008000">        -- Current date
+        -- (Create a new date object at each call.)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="dt_clock.html#date_now"><font color="#008000"><em>DT_CLOCK</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        date_now_not_void</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="date_time_now"><em>date_time_now</em></a>:<em> </em><a
+href="dt_date_time.html"><em>DT_DATE_TIME</em></a><em>
+</em><font color="#008000">        -- Current date time
+        -- (Create a new date time object at each call.)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="dt_clock.html#date_time_now"><font color="#008000"><em>DT_CLOCK</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        date_time_now_not_void</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font> <font
+color="#008000">-- Setting</font></pre>
+
+<blockquote>
+    <pre><a name="set_time_to_now"><em>set_time_to_now</em></a><em> </em>(<em>a_time</em>:<em> </em><a
+href="dt_time.html"><em>DT_TIME</em></a>)<em>
+</em><font color="#008000">        -- Set </font><em>a_time</em><font
+color="#008000"> to current UTC time.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="dt_clock.html#set_time_to_now"><font color="#008000"><em>DT_CLOCK</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_time_not_void</em>:<em> a_time </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="set_date_to_now"><em>set_date_to_now</em></a><em> </em>(<em>a_date</em>: <a
+href="dt_date.html"><em>DT_DATE</em></a>)<em>
+</em><font color="#008000">        -- Set </font><em>a_date</em><font
+color="#008000"> to current UTC date.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="dt_clock.html#set_date_to_now"><font color="#008000"><em>DT_CLOCK</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_date_not_void</em>:<em> a_date </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="set_date_time_to_now"><em>set_date_time_to_now</em></a><em> </em>(<em>a_date_time</em>:<em> </em><a
+href="dt_date_time.html"><em>DT_DATE_TIME</em></a>)<em>
+</em><font color="#008000">        -- Set </font><em>a_date_time</em><font
+color="#008000"> to current UTC date time.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="dt_clock.html#set_date_time_to_now"><font color="#008000"><em>DT_CLOCK</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_date_time_not_void</em>:<em> a_date_time </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>end</strong></em></font><font
+color="#008000"> -- class DT_UTC_SYSTEM_CLOCK</font></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2001</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 10 October 2001</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$" -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="dt_time_zone.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

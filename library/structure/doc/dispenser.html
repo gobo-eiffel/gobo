@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Dispensers</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Dispensers</strong></font></td>
+        <td align="right"><a href="set.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="flatshort/index.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p align="center"><!--webbot bot="ImageMap" startspan
+rectangle=" (332,241) (443, 271)  flatshort/ds_linked_queue.html"
+rectangle=" (164,241) (281, 272)  flatshort/ds_linked_stack.html"
+rectangle=" (14,241) (131, 271)  flatshort/ds_arrayed_stack.html"
+rectangle=" (341,168) (433, 197)  flatshort/ds_queue.html"
+rectangle=" (101,167) (191, 196)  flatshort/ds_stack.html"
+rectangle=" (206,92) (328, 122)  flatshort/ds_dispenser.html"
+rectangle=" (214,16) (319, 47)  flatshort/ds_searchable.html"
+src="image/dispenser.gif" border="0" width="459" height="285" --><MAP NAME="FrontPageMap0"><AREA SHAPE="RECT" COORDS="332, 241, 443, 271" HREF="flatshort/ds_linked_queue.html"><AREA SHAPE="RECT" COORDS="164, 241, 281, 272" HREF="flatshort/ds_linked_stack.html"><AREA SHAPE="RECT" COORDS="14, 241, 131, 271" HREF="flatshort/ds_arrayed_stack.html"><AREA SHAPE="RECT" COORDS="341, 168, 433, 197" HREF="flatshort/ds_queue.html"><AREA SHAPE="RECT" COORDS="101, 167, 191, 196" HREF="flatshort/ds_stack.html"><AREA SHAPE="RECT" COORDS="206, 92, 328, 122" HREF="flatshort/ds_dispenser.html"><AREA SHAPE="RECT" COORDS="214, 16, 319, 47" HREF="flatshort/ds_searchable.html"></MAP><img src="image/dispenser.gif" border="0" width="459" height="285" usemap="#FrontPageMap0"><!--webbot
+bot="ImageMap" i-checksum="1158" endspan --></p>
+
+<h2>Class <em><tt>DS_DISPENSER</tt></em></h2>
+
+<p>A dispenser is called that way because of the analogy with
+drinks machine in which there is only one button. If you press
+the button and the dispenser is not empty, you get one can of
+drink in the exit tray at the bottom, but you cannot choose that
+can: the machine does. There is also an input slot at the top
+into which you may deposit new cans. But you have no control over
+the order in which successive button press operations will
+retrieve these cans.</p>
+
+<p>Class <a href="flatshort/ds_dispenser.html"><font
+color="#008080"><em><tt>DS_DISPENSER</tt></em></font></a>
+provides facilities such as <a
+href="flatshort/ds_dispenser.html#item"><font color="#008080"><em><tt>item</tt></em></font></a>
+to get an item from the container (without removing it), <a
+href="flatshort/ds_dispenser.html#remove"><font color="#008080"><em><tt>remove</tt></em></font></a>
+to get rid of this item and <a
+href="flatshort/ds_dispenser.html#put"><font color="#008080"><em><tt>put</tt></em></font></a>
+to add a new item to the container. Other routines are also
+available in <font color="#008080"><em><tt>DS_DISPENSER</tt></em></font>,
+but they are provided for convenience only since they are all
+based on these three basic features. See their flat-short forms
+for details.</p>
+
+<h2>Class <em><tt>DS_STACK</tt></em></h2>
+
+<p>A stack is a dispenser with a last-in first-out (LIFO) access
+policy: the items come out in reverse order of their insertion.
+Class <a href="flatshort/ds_stack.html"><font color="#008080"><em><tt>DS_STACK</tt></em></font></a>
+provides more or less the same interface as <a
+href="flatshort/ds_dispenser.html"><font color="#008080"><em><tt>DS_DISPENSER</tt></em></font></a>.
+This may look unusal at first to programmers used to routine
+names <font color="#008080"><em><tt>push</tt></em></font> and <font
+color="#008080"><em><tt>pop</tt></em></font> instead of <a
+href="flatshort/ds_stack.html#put"><font color="#008080"><em><tt>put</tt></em></font></a>,
+<a href="flatshort/ds_stack.html#item"><font color="#008080"><em><tt>item</tt></em></font></a>
+and <a href="flatshort/ds_stack.html#remove"><font
+color="#008080"><em><tt>remove</tt></em></font></a>. The reasons
+for this approach are the consistency with the naming conventions
+used in other containers, as already discussed in the <a
+href="terminology.html#feature_names">Terminology section</a> of
+this documentation, and the programming style of Eiffel not to
+use functions with side-effects.</p>
+
+<p>Two implementations of stacks are provided: one based on
+arrays, class <a href="flatshort/ds_arrayed_stack.html"><font
+color="#008080"><em><tt>DS_ARRAYED_STACK</tt></em></font></a>,
+and the other using linkable cells, class <a
+href="flatshort/ds_linked_stack.html"><font color="#008080"><em><tt>DS_LINKED_STACK</tt></em></font></a>.
+Note that contrary to <a href="list.html">lists</a>, there is no
+need for a stack implementation using doubly linkable cells
+thanks to the property of stacks. All features of <font
+color="#008080"><em><tt>DS_LINKED_STACK </tt></em></font>are
+already optimal and providing a new class<font color="#008080"><em><tt>
+DS_BILINKED_STACK </tt></em></font>would not bring anything new
+apart from a waste of memory space (for the second link in the
+cells) and of execution time (for managing this second link).
+Furthermore, since there is only one way to insert and access
+items in stacks, the difference of performance and the
+implementation tradeoff between features of the same class that
+we observed between <font color="#008080"><em><tt>DS_LINKED_LIST</tt></em></font>
+and <font color="#008080"><em><tt>DS_ARRAYED_LIST</tt></em></font>
+is not relevant for stacks. All basic features of <font
+color="#008080"><em><tt>DS_LINKED_STACK </tt></em></font>and <font
+color="#008080"><em><tt>DS_ARRAYED_STACK </tt></em></font>are in
+O(1), which means that their execution time is bounded by a
+constant regardless of the number of items in the stack. You may
+want to use <font color="#008080"><em><tt>DS_ARRAYED_STACK </tt></em></font>if
+you know in advance the number of items that will be stored in
+the stack, and <font color="#008080"><em><tt>DS_LINKED_STACK </tt></em></font>if
+this number may vary greatly during the execution of the program.</p>
+
+<h2>Class <em><tt>DS_QUEUE</tt></em></h2>
+
+<p>A queue is a dispenser with a first-in first-out (FIFO) access
+policy: the items come out in the order of their insertion. Class
+<a href="flatshort/ds_queue.html"><font color="#008080"><em><tt>DS_QUEUE</tt></em></font></a>
+provides the same interface as <a
+href="flatshort/ds_dispenser.html"><font color="#008080"><em><tt>DS_DISPENSER</tt></em></font></a>.
+One implementation of queue using linkable cells is provided:
+class <a href="flatshort/ds_linked_queue.html"><font
+color="#008080"><em><tt>DS_LINKED_QUEUE</tt></em></font></a>. All
+basic features of <font color="#008080"><em><tt>DS_LINKED_QUEUE </tt></em></font>are
+already optimal, so as already explained for stacks, there is no
+need for a new class <font color="#008080"><em><tt>DS_BILINKED_QUEUE</tt></em></font>.
+Note that there is no class <font color="#008080"><em><tt>DS_ARRAYED_QUEUE
+</tt></em></font>neither. This is because the only optimal way to
+use arrays is to insert and remove items at the same end of the
+array. This worked fine with stacks but it is in contradiction
+with the queue abstraction where items should be inserted at one
+end and removed at the other end of the data structure.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1999-2016</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 26 December 2016</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="set.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="flatshort/index.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Supported Eiffel Compilers"
+
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/compilers">
+<chapterinfo>
+	<copyright>
+		<year>2001-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>23 December 2016</date>
+</chapterinfo>
+
+<title>Supported Eiffel Compilers</title>
+
+<para>
+The classes provided in the <projectname>Gobo Eiffel</projectname> package should 
+compile and work without any change on the currently supported Eiffel 
+compilers. These compilers are those
+which are as close as possible to the 
+<ulink url="http://www.ecma-international.org/publications/standards/Ecma-367.htm">ECMA standard</ulink> 
+and the <ulink url="https://github.com/EiffelSoftware/FreeELKS">FreeELKS</ulink> kernel library.
+In order to make things easier, only the latest public release of each compiler 
+will be supported. This latest release can be a beta version provided that it is 
+deemed stable enough.
+</para>
+
+<para>
+The currently supported Eiffel compilers are:
+</para>
+
+<para>
+<itemizedlist>
+	<listitem><para>
+		See <link linkend="../index#eiffel_compilers">Eiffel compilers</link> 
+		and <ulink url="http://www.gobosoft.com/eiffel/gobo/Release_notes.md">Release_notes.md</ulink>.
+	</para></listitem>
+</itemizedlist>
+</para>
+
+<para>
+Developers should use these compilers when <link linkend="test">testing</link> 
+their libraries.
+</para>
+
+</chapter>

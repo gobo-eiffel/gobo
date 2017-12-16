@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Quick Start</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Quick Start</strong></font></td>
+    <td align="right"><a href="index.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="examples.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   Inheriting from <font color="#008080"><i><tt>ST_FORMATTING_ROUTINES</tt></i></font> adds the feature
+   <font color="#008080"><i><tt>format</tt></i></font> to the current class. 
+   <font color="#008080"><i><tt>format</tt></i></font> takes two arguments: a string containing 
+   <a href="scientific_format.html">formatting specifications</a> and an array of 
+   parameters. This array must be an array of references. For example 
+   <font color="#008080"><i><tt>ARRAY</tt></i></font> [<font color="#008080"><i><tt>BOOLEAN</tt></i></font>] does
+   not work with <a href="http://smarteiffel.loria.fr/">SmartEiffel</a>.
+   Because <font color="#008080"><i><tt>BOOLEAN</tt></i></font> does not conform to <font color="#008080"><i><tt>ANY</tt></i></font> is SmartEiffel 2.1, we need to use 
+   <font color="#008080"><i><tt>ARRAY</tt></i></font> [<font color="#008080"><i><tt>DS_CELL</tt></i></font> [<font color="#008080"><i><tt>BOOLEAN</tt></i></font>]]
+   in that case.
+   
+  </p>
+  <p>
+   <font color="#008080"><i><tt>format</tt></i></font> returns a <font color="#008080"><i><tt>STRING</tt></i></font> where 
+   all formatting specifications have been replaced by their corresponding 
+   formatted parameters.
+   
+  </p>
+  <p>
+   <pre>
+class TEST
+
+inherit
+
+    ST_FORMATTING_ROUTINES
+
+create
+
+    make
+
+feature -- Initialization
+
+    make is
+        do
+            print (format ("$s $i", &lt;&lt;"hello", integer_cell (2)&gt;&gt;))
+        end
+
+end
+</pre>
+   </p>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004-2005, Berend de Boer</b><br /><b>mailto:</b><a href="mailto:berend@pobox.com">berend@pobox.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 March 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="examples.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

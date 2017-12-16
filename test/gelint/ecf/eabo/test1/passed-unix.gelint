@@ -1,2 +1,0 @@
-[EABO] ECF ${GOBO}/test/gelint/ecf/eabo/test1/lib1/lib1.ecf (7,23): 'uuid' attribute is missing in element 'system' describing a library.
-	Used in ECF ${GOBO}/test/gelint/ecf/eabo/test1/system.ecf (12,48)

@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Class DS_PAIR</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Class DS_PAIR</strong></font></td>
+        <td align="right"><a
+        href="ds_multiarrayed_sparse_table_cursor.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_queue.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><font color="#000080"><em><strong>note</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>description</em>:
+
+<font color="#800000"><em>    &quot;Cells containing two items&quot;
+
+</em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
+</em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
+href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
+color="#800000"><em>&gt;&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999, Eric Bezault and others&quot;
+</em></font><em>license:   </em><font color="#800000"><em> &quot;MIT License&quot;</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>class interface</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>DS_PAIR </em>[<em>G</em>,<em> H</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
+
+<blockquote>
+    <pre><a href="ds_cell.html"><em>DS_CELL</em></a><em> </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>create</strong></em></font></pre>
+
+<blockquote>
+    <pre><a name="make"><em>make</em></a><em> </em>(<em>v</em>:<em> G</em>;<em> w</em>:<em> H</em>)<em>
+        </em><font color="#008000">-- Create a new cell containing </font><em>v</em><font
+color="#008000"> and </font><em>w</em><font color="#008000">.</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        first_set</em>:<em> </em><a href="#first"><em>first</em></a><em> </em>=<em> v
+        second_set</em>:<em> </em><a href="#second"><em>second</em></a><em> </em>=<em> w</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Access</font></pre>
+
+<blockquote>
+    <pre><a name="first"><em>first</em></a>:<em> G
+       </em><font color="#008000"> -- First item of cell
+        -- (From </font><a href="ds_cell.html#item"><font
+color="#008000"><em>item</em></font></a><font color="#008000"> is </font><a
+href="ds_cell.html#item"><font color="#008000"><em>DS_CELL</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="second"><em>second</em></a>:<em> H</em><font
+color="#008000">
+        -- Second item of cell</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Element change</font></pre>
+
+<blockquote>
+    <pre><a name="put_first"><em>put_first</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Insert </font><em>v</em><font
+color="#008000"> in cell.</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        inserted</em>:<em> </em><a href="#first"><em>first</em></a><em> </em>=<em> v</em></pre>
+    <pre><a name="put_second"><em>put_second</em></a><em> </em>(<em>w</em>:<em> H</em>)<em>
+        </em><font color="#008000">-- Insert </font><em>w</em><font
+color="#008000"> in cell.</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        inserted: </em><a href="#second"><em>second</em></a><em> = w</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>end</strong></em></font><font
+color="#008000"> -- class DS_PAIR</font></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1999</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 8 August 1999</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a
+        href="ds_multiarrayed_sparse_table_cursor.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_queue.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

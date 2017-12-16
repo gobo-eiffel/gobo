@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>About Unicode normalization</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>About Unicode normalization</strong></font></td>
+    <td align="right"><a href="case.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="routines.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   	Unicode normalization is all about comparing strings for equality.
+   
+  </p>
+  <div>
+   
+   <h2>But I know how to compare two strings</h2>
+   
+   <p>
+    	But I already know how to compare two Unicode strings - I call 
+    	<font color="#008080"><i><tt>STRING_.same_string</tt></i></font> or
+    	<font color="#008080"><i><tt>STRING_.same_case_insensitive</tt></i></font>, so why do I need normalization?
+    
+   </p>
+   
+   <p>
+    	The problem with <font color="#008080"><i><tt>STRING_.same_string</tt></i></font> is that it compares two
+    	strings code-point by code-point, and assumes that if two code-points are the same, 
+    	then the abstract characters they represent are the same. Well, that's true enough. 
+    	But it also assumes that if two code-points are <i>not</i> the same, then
+    	the abstract characters that they represent are not the same. This is a reasonable assumption
+    	(ignoring surrogate code-points, which we can because we don't have a <font color="#008080"><i><tt>UC_UTF16_STRING</tt></i></font>
+    	yet - and when we do, <font color="#008080"><i><tt>STRING_.same_string</tt></i></font> would have to take that into 
+    	account when comparing a <font color="#008080"><i><tt>UC_UTF16_STRING</tt></i></font> with a <font color="#008080"><i><tt>UC_UTF8_STRING</tt></i></font>.)
+    
+   </p>
+   
+   <p>
+    	The reason this assumption fails is due to history - Unicode has been designed for round-trip
+    	compatibility with a number of legacy encodings, such as ISO-8859-1 (Latin-1). Latin-1 has a number of
+    	accented characters. One example LATIN CAPITAL LETTER A WITH GRAVE, to give it it's Unicode name, which has
+    	a code-point of 192.
+    
+   </p>
+   
+   <p>
+    	Other encodings enable you to compose accented characters out of a combination of a base character
+    	(in this case LATIN CAPITAL LETTER A at code-point 65 and COMBINING GRAVE ACCENT at code-point 768).
+    	Now should these two possibilites within Unicode be considered the same abstract character or not?
+    	In most cases, you will want to consider them the same, but <font color="#008080"><i><tt>STRING_.same_string</tt></i></font>
+    	will consider them to be different, and so return <font color="#008080"><i><tt>False</tt></i></font> even if the strings 
+    	differ in that one respect only.
+    
+   </p>
+   
+   <p>
+    	There are other characters where the situation is not so clear. What about the character 
+    	MATHEMATICAL BOLD CAPITAL A (code-point 119808)? Is this the same abstract character as
+    	LATIN CAPITAL LETTER A with just a slight presentational difference, or are they two
+    	distinct characters? This rather depends upon your application.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Canonical and Compatibility compositions and decompositions</h2>
+   
+   <p>
+    	Unicode answers these questions by giving you some choice in how they are answered.
+    	The basic idea is you convert your strings so that the same kind of representation for
+    	characters is used throughout, and then you can perform a binary comparison
+    	(with <font color="#008080"><i><tt>STRING_.same_string</tt></i></font>, for instance). This process is called 
+    	<i>Normalization</i>. But you have a choice of 
+    	four different ways of performing the normalization, depending upon the requirements
+    	of your application.
+    
+   </p>
+   
+   <p>
+    	The basic choice you have to make is whether to represent your characters using composed forms
+    	(such as LATIN CAPITAL LETTER A WITH GRAVE), or decomposed forms (such as LATIN CAPITAL LETTER A
+    	followed by COMBINING GRAVE ACCENT).
+    
+   </p>
+   
+   <p>
+    	The other choice you have to make is whether minor presentational variations such as
+    	MATHEMATICAL BOLD CAPITAL A versus LATIN CAPITAL LETTER A are significant or not.
+    	In this case, Unicode has a bias - such distinctions are assumed meaningful by default.
+    	That is, decompositions of this kind (MATHEMATICAL BOLD CAPITAL A decomposes to
+    	LATIN CAPITAL LETTER A) are labelled 
+    	<i>Compatibility</i> decompositions, whereas decompositions
+    	of the first kind (such as LATIN CAPITAL LETTER A WITH GRAVE decomposing to
+    	LATIN CAPITAL LETTER A followed by COMBINING GRAVE ACCENT) are known as 
+    	<i>Canonical</i> decompositions.
+    	Note that all compositions are canonical - you cannot reverse a compatibility decomposition.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>The four normalization forms</h2>
+   
+   <p>
+    	Accordingly, there are four <i>Normalization forms</i> defined
+    	in Unicode (there are additional forms defined by the 
+    	W3C's Character Model - see <a href="http://www.w3.org/TR/charmod-norm/">Character Model for the World Wide Web 1.0: Normalization</a>).
+    
+    	
+    <dl>
+     
+     	
+     <dt>NFD</dt>
+     <dd>Normal Form Decomposition.
+      <p>This is obtained by replacing all composed characters by their canonical decompositions.</p>
+     </dd>
+     
+     	
+     <dt>NFKD</dt>
+     <dd>Normal Form Kompatibility Decomposition.
+      <p>
+       				This is obtained by replacing all composed characters by their decompositions, whether
+       				they are canonical or compatibility decompositions.
+       			
+      </p>
+     </dd>
+     
+     	
+     <dt>NFC</dt>
+     <dd>Normal Form Composition.
+      <p>
+       				This is obtained by replacing all composed characters by their canonical decompositions, and then
+       				in turn replacing all decomposed sequences by their canonical compositions.
+       			
+      </p>
+     </dd>
+     
+     	
+     <dt>NFKC</dt>
+     <dd>Normal Form Kompatibility Composition.
+      <p>
+       				This is obtained by replacing all composed characters by their decompositions (whether canonical or compatibility), and
+       then
+       				in turn replacing all decomposed sequences by their canonical compositions.
+       			
+      </p>
+     </dd>
+     
+     	
+    </dl>
+    
+    
+   </p>
+   
+   <p>
+    	NFD and NFKD tend to be longer than NFC and NFKC. Note that a pure ASCII string
+    	is unchanged by any of these transformations. Not so for a Latin-1 string, however.
+    
+   </p>
+   
+   <p>
+    	Since compatibility decompositions tend to equate to presentational differences, these are most
+    	naturally useful if you wish to do a case-insensitive comparison (since case is fundamentally a presentation
+    	difference in itself). Note however, that simply converting to NFKC or NFKD does not fold
+    	case differences. You have to further apply case folding to the resultant strings. (see TODO).
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005, Colin Adams</b><br /><b>mailto:</b><a href="mailto:colin-adams@users.sourceforge.net">colin-adams@users.sourceforge.net</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>4 November 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../image/toc.gif" alt="Toc" border="0" /></a><a href="case.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="routines.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

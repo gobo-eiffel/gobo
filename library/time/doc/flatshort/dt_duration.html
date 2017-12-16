@@ -1,0 +1,297 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Class DT_DURATION</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Class DT_DURATION</strong></font></td>
+        <td align="right"><a href="dt_date_value.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a
+        href="dt_gregorian_calendar.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><font color="#000080"><em><strong>note</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>description</em>:
+
+<font color="#800000"><em>    &quot;Durations&quot;
+
+</em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Time Library&quot;
+</em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
+href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
+color="#800000"><em>&gt;&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 2000-2001, Eric Bezault and others&quot;
+</em></font><em>license:   </em><font color="#800000"><em> &quot;MIT License&quot;</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>deferred class interface</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>DT_DURATION</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>KL_PART_COMPARABLE
+</em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em></a></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Access</font></pre>
+
+<blockquote>
+    <pre><a name="absolute_time"><em>absolute_time</em></a><em> </em>(<em>a_time</em>:<em> </em><a
+href="dt_absolute_time.html"><em>DT_ABSOLUTE_TIME</em></a>): <a
+href="dt_absolute_time.html"><em>DT_ABSOLUTE_TIME</em></a><em>
+</em><font color="#008000">        -- Addition of current duration to </font><em>a_time</em><font
+color="#008000">
+        -- (Create a new object at each call.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_time_not_void</em>:<em> a_time </em>/= <font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        absolute_time_not_void</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        definition</em>:<em> </em><font color="#008080"><em>Result</em></font>.<a
+href="dt_absolute_time.html#is_equal"><em>is_equal</em></a><em> </em>(<em>a_time </em><a
+href="dt_absolute_time.html#infix_plus">+</a><em> </em><font
+color="#008080"><em>Current</em></font>)</pre>
+    <pre><a name="hash_code"><em>hash_code</em></a>: <a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>
+        <font color="#008000">-- Hash code value</font>
+<em>        </em><font color="#008000">-- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html#hash_code"><font
+color="#008000"><em>HASHABLE</em></font></a><font color="#008000">.)</font>
+    <font color="#000080"><em><strong>deferred</strong></em>
+    <em><strong>ensure</strong></em></font>
+        <em>good_hash_value</em>: <font color="#008080"><em>Result</em></font> &gt;= <font
+color="#808000"><em>0</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Basic operations</font></pre>
+
+<blockquote>
+    <pre><a name="infix_plus"><font color="#000080"><em><strong>infix</strong></em></font><em> </em><font
+color="#800000"><em>&quot;+&quot;</em></font></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>):<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font><em>
+</em><font color="#008000">        -- Sum of current duration with </font><em>other
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+</em>    <font color="#000080"><em><strong>deferred</strong></em>
+    <em><strong>ensure</strong></em></font><em>
+        addition_not_void</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="infix_minus"><font color="#000080"><em><strong>infix</strong></em></font><em> </em><font
+color="#800000"><em>&quot;-&quot;</em></font></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>):<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font><em>
+</em><font color="#008000">        -- Difference with </font><em>other
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+</em>    <font color="#000080"><em><strong>deferred</strong></em>
+    <em><strong>ensure</strong></em></font><em>
+        subtraction_not_void</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="prefix_plus"><font color="#000080"><em><strong>prefix</strong></em></font><em> </em><font
+color="#800000"><em>&quot;+&quot;</em></font></a>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font><em>
+</em><font color="#008000">        -- Unary plus</font><em>
+</em><font color="#000080">    <em><strong>ensure</strong></em></font><em>
+        unary_plus_not_void</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        same_object</em>:<em> </em><font color="#008080"><em>Result </em></font><em>= </em><font
+color="#008080"><em>Current</em></font></pre>
+    <pre><a name="prefix_minus"><font color="#000080"><em><strong>prefix</strong></em></font><em> &quot;-&quot;</em></a>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font><em>
+</em><font color="#008000">        -- Unary minus</font><em>
+</em>    <font color="#000080"><em><strong>deferred</strong></em>
+    <em><strong>ensure</strong></em></font><em>
+        unary_minus_not_void</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font> <font
+color="#008000">-- Comparison</font></pre>
+
+<blockquote>
+    <pre><a name="lt"><font color="#000080"><em><strong>infix</strong></em></font> <font
+color="#800000"><em>&quot;&lt;&quot;</em></font></a> (<em>other</em>: <font
+color="#000080"><em><strong>like</strong></em></font> <font
+color="#008080"><em>Current</em></font>): <a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a>
+        <font color="#008000">-- Is current object less than </font><em>other</em><font
+color="#008000">?</font>
+<em>        </em><font color="#008000">-- (From <em>KL_PART_COMPARABLE</em>.)</font>
+    <font color="#000080"><em><strong>require</strong></em></font>
+        <em>other_not_void</em>: <em>other</em> /= <font
+color="#008080"><em>Void</em></font>
+    <font color="#000080"><em><strong>deferred</strong></em></font></pre>
+</blockquote>
+
+<blockquote>
+    <pre><a name="lt"><font color="#000080"><em><strong>infix</strong></em></font></a><a
+name="le"> <font color="#800000"><em>&quot;&lt;=&quot;</em></font></a> (<em>other</em>: <font
+color="#000080"><em><strong>like</strong></em></font> <font
+color="#008080"><em>Current</em></font>): <a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a>
+        <font color="#008000">-- Is current object less than or equal to </font><em>other</em><font
+color="#008000">?</font>
+<em>        </em><font color="#008000">-- (From <em>KL_PART_COMPARABLE</em>.)</font>
+    <font color="#000080"><em><strong>require</strong></em></font>
+        <em>other_not_void</em>: <em>other</em> /= <font
+color="#008080"><em>Void</em></font>
+    <font color="#000080"><em><strong>ensure</strong></em></font>
+        <em>definition</em>: <font color="#008080"><em>Result</em></font> = ((<font
+color="#008080"><em>Current</em></font> <a href="#lt">&lt;</a> <em>other</em>) <font
+color="#000080"><em><strong>or</strong></em></font> <a
+href="#is_equal"><em>is_equal</em></a> (<em>other</em>))</pre>
+</blockquote>
+
+<blockquote>
+    <pre><a name="lt"><font color="#000080"><em><strong>infix</strong></em></font></a><a
+name="ge"> <font color="#800000"><em>&quot;&gt;=&quot;</em></font></a> (<em>other</em>: <font
+color="#000080"><em><strong>like</strong></em></font> <font
+color="#008080"><em>Current</em></font>): <a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a>
+        <font color="#008000">-- Is current object greater than or equal to </font><em>other</em><font
+color="#008000">?</font>
+<em>        </em><font color="#008000">-- (From <em>KL_PART_COMPARABLE</em>.)</font>
+    <font color="#000080"><em><strong>require</strong></em></font>
+        <em>other_not_void</em>: <em>other</em> /= <font
+color="#008080"><em>Void</em></font>
+    <font color="#000080"><em><strong>ensure</strong></em></font>
+        <em>definition</em>: <font color="#008080"><em>Result</em></font> = (<em>other</em> <a
+href="#le">&lt;=</a> <font color="#008080"><em>Current</em></font>)</pre>
+</blockquote>
+
+<blockquote>
+    <pre><a name="lt"><font color="#000080"><em><strong>infix</strong></em></font></a><a
+name="gt"> <font color="#800000"><em>&quot;&gt;&quot;</em></font></a> (<em>other</em>: <font
+color="#000080"><em><strong>like</strong></em></font> <font
+color="#008080"><em>Current</em></font>): <a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a>
+        <font color="#008000">-- Is current object greater than </font><em>other</em><font
+color="#008000">?</font>
+<em>        </em><font color="#008000">-- (From <em>KL_PART_COMPARABLE</em>.)</font>
+    <font color="#000080"><em><strong>require</strong></em></font>
+        <em>other_not_void</em>: <em>other</em> /= <font
+color="#008080"><em>Void</em></font>
+    <font color="#000080"><em><strong>ensure</strong></em></font>
+        <em>definition</em>: <font color="#008080"><em>Result</em></font> = ((<em>other</em> &lt; <font
+color="#008080"><em>Current</em></font>) <font color="#000080"><em><strong>or</strong></em></font> <a
+href="#is_equal"><em>is_equal</em></a> (<em>other</em>))</pre>
+</blockquote>
+
+<blockquote>
+    <pre><a name="is_equal"><em>is_equal</em></a> (<em>other</em>: <font
+color="#000080"><em><strong>like</strong></em></font> <font
+color="#008080"><em>Current</em></font>): <a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a>
+        <font color="#008000">-- Is </font><em>other</em><font
+color="#008000"> attached to an object considered equal
+        -- to current object?
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#is_equal"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font>
+    <font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>: <em>other</em> /= <font
+color="#008080"><em>Void</em></font>
+    <font color="#000080"><em><strong>ensure</strong></em></font>
+        <em>symmetric</em>: <font color="#008080"><em>Result</em></font> <font
+color="#000080"><em><strong>implies</strong></em></font> <em>other</em>.<a
+href="#is_equal"><em>is_equal</em></a> (<font color="#008080"><em>Current</em></font>)
+        <em>consistent</em>: <a
+href="../../../../../www/eiffel/nice/elks95/general.html#standard_is_equal"><em>standard_is_equal</em></a> (<em>other</em>) <font
+color="#000080"><em><strong>implies</strong></em></font> <font
+color="#008080"><em>Result</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font> <font
+color="#008000">-- Duplication</font></pre>
+
+<blockquote>
+    <pre><a name="copy"><em>copy</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>)<em>
+        </em><font color="#008000">-- Copy </font><em>other</em><font
+color="#008000"> to current duration.
+        -- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#copy"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        type_identity</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        is_equal</em>:<em> </em><a href="#is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>)</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>end</strong></em></font><font
+color="#008000"> -- class DT_DURATION</font></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000-2001</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 8 April 2001</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$" -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="dt_date_value.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a
+        href="dt_gregorian_calendar.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

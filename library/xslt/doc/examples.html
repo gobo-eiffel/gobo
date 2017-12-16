@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Examples of using the library</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Examples of using the library</strong></font></td>
+    <td align="right"><a href="extension_functions.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="conformance.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   This chapter deals with examples of how to invoke XSLT transformations
+   from within your Eiffel programs. It does not cover writing XSLT programs. For that
+   you should look elsewhere (a good starting point is the <a href="http://www.dpawson.co.uk/xsl">XSLT FAQ</a>).
+   
+  </p>
+  <div>
+   
+   <h2>A Schematron validator</h2>
+   
+   <p>
+    In $GOBO/library/xslt/example/schematron , there is a complete example of using the
+    library. This is a command-line validator using the Schematron language. See the Readme.md
+    file for instructions on compiling and using the program.
+    
+   </p>
+   
+   <p>
+    The creation procedure <font color="#008080"><i><tt>make</tt></i></font> starts by creating a configuration,
+    and then it sets the recovery policy to recover from recoverable errors without writing
+    any error messages. Because the program uses Eiffel <font color="#008080"><i><tt>STRING</tt></i></font>s for the
+    result of a transformation (and also for the source of a stylesheet), it next goes on
+    to create a <font color="#008080"><i><tt>XM_STRING_URI_RESOLVER</tt></i></font>, so that the XML parser can
+    locate the <font color="#008080"><i><tt>STRING</tt></i></font>s involved.
+    
+   </p>
+   
+   <p>
+    After processing the command line arguments, it then performs the first stage - a transformation
+    of a Schematron rules file (a schema) into a stylesheet (which will be used to perform the 
+    actual validation). This is performed by <font color="#008080"><i><tt>transform_schematron_rules</tt></i></font>. This is fairly
+    straightforward. The only thing of particular note is that the resulting <font color="#008080"><i><tt>STRING</tt></i></font> has
+    to be plugged into the resolver, as the XML parser needs to find it in the next stage of the program
+    
+   </p>
+   
+   <p>
+    At this point, we have the result of <font color="#008080"><i><tt>transform_schematron_rules</tt></i></font> in a
+    <font color="#008080"><i><tt>STRING</tt></i></font>. Interestingly, the contents of this <font color="#008080"><i><tt>STRING</tt></i></font> is
+    another XSLT stylesheet. We now go on to use this stylesheet to perform a transformation against the
+    file which is to be validated. This is done in <font color="#008080"><i><tt>create_report</tt></i></font>. The interesting code
+    in this case arises if the user has requested output to a file, rather than standard output. Notice that although
+    the program takes filenames (for the convenience of the user), the <font color="#008080"><i><tt>transform</tt></i></font> feature
+    of <font color="#008080"><i><tt>XM_XSLT_TRANSFORMER</tt></i></font> takes arguments that require URIs for their creation procedures.
+    This is a requirement of the XSLT specification.
+    
+   </p>
+   
+   <p>
+    The Schematron validator program writes a report to standard output or to a file, if validation fails.
+    If validation is successful, then no output is produced. This situation could be detected by writing the output to a
+    <font color="#008080"><i><tt>STRING</tt></i></font> instead, and checking if it's <font color="#008080"><i><tt>count</tt></i></font> were zero (successful validation),
+    or not (an error report has been produced). So if you wanted to use the XSLT library to perform Schematron validation
+    from within your own programs, then this is how you would do it.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Gexslt</h2>
+   
+   <p>
+    The Gobo Eiffel XSLT command line processor comes close to being the ultimate
+    example of how to use the XSLT library, in as much as it allows most options to be used. You can 
+    see the source in $GOBO/src/gexslt/gexslt.e .
+    
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Gestalt</h2>
+   
+   <p>
+    Other examples are in the Gestalt distribution (see <a href="http://gestalt.sourceforge.net">Gestalt</a>).
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005-2017, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>8 January 2017</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="extension_functions.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="conformance.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

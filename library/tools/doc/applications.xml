@@ -1,0 +1,106 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Applications using the Gobo Eiffel Tools Library"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/applications">
+<chapterinfo>
+	<copyright>
+		<year>2006-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>27 December 2016</date>
+</chapterinfo>
+
+<title>Applications using the Gobo Eiffel Tools Library</title>
+
+<para>
+The <projectname>Gobo Eiffel Tools Library</projectname> is an Eiffel class
+library useful for writing tools that expect Eiffel souce code as input. Here
+are a few examples using this library:
+</para>
+
+<section><title>Compilers and interpreters</title>
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term><link linkend="${tool/gec}/index">gec</link></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</section>
+
+<section><title>Lint-like tools</title>
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term><link linkend="${tool/gelint}/index">gelint</link></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</section>
+
+<section><title>Test tools</title>
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term><link linkend="${tool/getest}/index">getest</link></term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term><ulink url="http://se.inf.ethz.ch/old/people/leitner/test_studio/">TestStudio</ulink> (superseded by <ulink url="http://se.inf.ethz.ch/research/autotest/">AutoTest</ulink>)</term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</section>
+
+<section><title>Ctags-like tools</title>
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term><ulink url="https://github.com/oligot/Erl-G/tree/master/src/gutentag">gutentag</ulink></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</section>
+
+<section><title>Reflection generators</title>
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term><ulink url="https://github.com/oligot/Erl-G">Erl-G</ulink></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</section>
+
+<section><title>Preprocessing tools</title>
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term><ulink url="http://se.inf.ethz.ch/old/people/arslan/data/scoop/workshops/Plzen_2003/SCOOPLI_on_.NET.pdf">SCOOP to SCOOPLI preprocessor</ulink></term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</section>
+
+</chapter>

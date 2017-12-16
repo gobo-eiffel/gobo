@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Fileset</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Fileset</strong></font></td>
+    <td align="right"><a href="tasks.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="map_element.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="fileset_description"></a>
+   
+   <h2>Description</h2>
+   
+   <p>
+    A fileset is a group of files. The files included in the fileset are
+    defined through a directory representing the start point in a filesystem
+    and patterns describing which files in or underneath that directory should
+    be included in the fileset respectively excluded from the fileset.
+    As a fileset is not a task but a general element it cannot be used
+    on its own. It can only be used by tasks supporting filesets as
+    nested element.
+    
+   </p>
+   
+  </div>
+  <div><a name="fileset_detailes"></a>
+   
+   <h2>Details</h2>
+   
+   <p>
+    	By default all files with names matching the inclusion criteria
+    	and not matching the exclusion criteria are included in the fileset.
+    	From the matched filenames a list of filename pairs is constructed.
+    	Each entry in the list consists of the 'filename' and a 'mapped_filename':
+    	['filename', 'mapped_filename'].
+    	When this element does not contain a nested 'map' element 'filename' and
+    	'mapped_filename' are the same. If it contains a map 'mapped_filename'
+    	is constructed by passing 'filename' to the 'map' element which will
+    	construct a 'mapped_filename' based on the type of map.
+    
+   </p>
+   
+   <p>
+    	Example: Say file 'a.ge' matches the filesets criteria. When the fileset
+    	does not contain a nested 'map' element its list will contain one
+    	entry ['a.ge', 'a.ge']. However if it contains a nested map element
+    	of type 'glob' mapping '*.ge' to '*.e' then the entry will be
+    	['a.ge', 'a.e'].
+    
+   </p>
+   
+   <p>
+    	Filesets are used in combination with other tasks. Tasks 'copy', 'delete',
+    	'move', 'exec' and 'geant' are tasks making use of filesets as nested
+    	elements. Some of these tasks like 'copy' are very specific in what they
+    	do and others like 'exec' or 'geant' are very general.
+    
+   </p>
+   
+   <p>
+    	If we look at 'copy'
+    	for example in most situation we only want to copy the files in the fileset
+    	if the target files ('mapped_filename': 'a.e') are older than their corresponding
+    	source files ('filename': 'a.ge'). Therefore the 'copy' task checks whether
+    	it is necessary to copy the file or not.
+    
+   </p>
+   
+   <p>
+    	The general task 'exec' does not know what the value of it's attribute 'executable'
+    	contains. Say it invokes some commandline tool taking the filenames included in
+    	the fileset and generates some other files from them.
+    	But what if we want to generate only those files necessary? Then we need the
+    	intlligence which is built in into task copy in the 'fileset' element itself (it
+    	cannot be built into task 'exec' since it is too general). The 'fileset' element
+    	provides an attribute 'force' which you can set to 'false'. If that is the case
+    	only filenames are included where the source file is newer than the target file.
+    
+   </p>
+   
+   <p>
+    	Since the fileset itself is able to perform these checks (when attribute 'force'
+    	is set to 'false') it can be a bit confusing when it is used in combination
+    	with a specific task. You could for example use a 'fileset' element having set
+    	attribute 'force' to false inside a 'copy' task. As already described this is
+    	not necessary and not recommended since the 'copy' task checks itself whether
+    	it is necessary to copy the file or not. Since a fileset is used within such
+    	specific tasks this is also the reason why the default value for attribute
+    	'force' is 'true'.
+    
+   </p>
+   
+   <p>
+    	The comparison works as follows: For a filename pair
+    	[filename, mapped_filename] (e.g. ['a.ge', 'a.ge']) the file named
+    	'filename' is compared to the file named 'mapped_filename'.
+    	If the file named 'filename' for example is newer than the file
+    	named 'mapped_filename' or the file named 'mapped_filename'
+    	does not exist at all the filename pair is added to the fileset.
+    	Note that the comparison is is looking for files related to
+    	the current working directory. Use fileset's attribute 'dir'
+    	if you have to change the current working directory for the time
+    	constructing the fileset.
+    
+   </p>
+   
+   <p>
+    	Note again that setting the attribute 'force' to 'true' or not
+    	specifying it at all turns the checking off so that for each matched filename a
+    	filename pair ['filename', 'mapped_filename'] is added to the fileset.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="fileset_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>include</dt>
+    <dd><i>Description: </i>Pattern for names of files to be included in fileset
+     <p><i>Domain: </i>Valid LX DFA Wildcard (see below)
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>exclude</dt>
+    <dd><i>Description: </i>Pattern for names of files to be excluded from fileset
+     <p><i>Domain: </i>Valid LX DFA Wildcard (see below)
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>force</dt>
+    <dd>
+     						<i>Description: </i>Include matched filenames even when the
+     						matched file is not out of date. See section 'Details' for
+     						more information.
+     					
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>true
+     </p>
+    </dd>
+    
+    			
+    <dt>filename_directory</dt>
+    <dd><i>Description: </i>Prepend value of this attribute
+     					before determined `filename' which is used for the entry in the
+     					fileset (['filename', 'mapped_filename']).
+     					
+     <p><i>Domain: </i>Valid directoryname
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>mapped_filename_directory</dt>
+    <dd><i>Description: </i>Prepend value of this attribute
+     					before determined `mapped_filename' which is used for the entry in the
+     					fileset (['filename', 'mapped_filename']).
+     					
+     <p><i>Domain: </i>Valid directoryname
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="fileset_nested_parameters"></a>
+   		
+   <h2>Parameters specified as nested elements</h2>
+   
+   		
+   <dl>
+    			
+    <dt>include</dt>
+    <dd><i>Description: </i>Name of individual file to be included in fileset
+     <p><i>Domain: </i>Valid filename pointing to existing file
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>exclude</dt>
+    <dd><i>Description: </i>Name of individual file to be excluded from fileset
+     <p><i>Domain: </i>Valid filename
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>map</dt>
+    <dd><i>Description: </i>Map element used to determine 'mapped_filename'.
+     					See section 'Details' for more information.
+     					
+     <p><i>Domain: </i>Valid map element
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="fileset_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="fileset"&gt;
+    &lt;element name="fileset"&gt;
+      &lt;ref name="dir_if_unless"/&gt;
+      &lt;attribute name="include"/&gt;
+      &lt;optional&gt;
+        &lt;attribute name="exclude"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="force"&gt;
+          &lt;!-- runtime evaluation
+          &lt;choice&gt;
+            &lt;value&gt;true&lt;/value&gt;
+            &lt;value&gt;false&lt;/value&gt;
+          &lt;/choice&gt;
+          --&gt;
+        &lt;/attribute&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="filename_directory"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="mapped_filename_directory"/&gt;
+      &lt;/optional&gt;
+      &lt;zeroOrMore&gt;
+        &lt;element name="include"&gt;
+          &lt;attribute name="name"/&gt;
+        &lt;/element&gt;
+      &lt;/zeroOrMore&gt;
+      &lt;zeroOrMore&gt;
+        &lt;element name="exclude"&gt;
+          &lt;attribute name="name"/&gt;
+        &lt;/element&gt;
+      &lt;/zeroOrMore&gt;
+      &lt;optional&gt;
+        &lt;ref name="map"/&gt;
+      &lt;/optional&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+		        
+
+	</pre>
+   	</div>
+  <div><a name="fileset_examples"></a>
+   		
+   <h2>Examples</h2>
+   	<pre>
+  &lt;fileset include="@(**/*.ge|**/*.?ace)"/&gt;
+
+  &lt;fileset dir="kernel" include="@(**/*.ge|**/*.?ace)"/&gt;
+
+  &lt;fileset include="@(**/*.ge|**/*.?ace)" mapped_filename_directory="kernel"/&gt;
+
+  &lt;fileset include="@(**/*.ge)"&gt;
+    &lt;map type="glob" from="*.ge" to="*.e"/&gt;
+  &lt;/fileset&gt;
+
+  &lt;fileset include="@(**/*.ge)" force="false"&gt;
+    &lt;map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"&gt;
+      &lt;map type="flat"/&gt;
+    &lt;/map&gt;
+  &lt;/fileset&gt;
+
+	</pre>
+   	</div>
+  <div><a name="lx_dfa_wildcard"></a>
+   		
+   <h2>LX DFA Wildcards</h2>
+   		
+   <p>
+    			To specify the attributes `include' and `exclude' you have to use special
+    			wildcard expressions which are very close to the wildcards used by Linux'
+    			bash. In addition it provides the means to match filenames in any directory
+    			depth by using the '**' wildcard.
+    		
+   </p>
+   		
+   <p>
+    			Here is the pattern syntax of LX DFA Wildcards (implemented in GOBO's class LX_DFA_WILDCARD):
+    		
+   </p>
+   	<pre>
+    x          match the character 'x'.
+    ?          any character except '/'.
+    *          zero or more occurrences of any character except '/'.
+    **/        zero or more occurrences of (one or more characters other
+               than '/', followed by '/').
+    \X         if 'X' is an 'a', 'b', 'f', 'n', 'r', 't', or 'v', then
+               the ANSI-C interpretation of \X. Otherwise, a literal 'X'
+               (used to escape operators such as '*').
+    \0         a null character (ASCII code 0).
+    \123       the character with octal value 123.
+    \x2a       the character with hexadecimal value 2a.
+    [xyz]      a character class; in this case, the pattern matches
+               either an 'x', a 'y' or a 'z'.
+    [abj-oZ]   a character class with a range in it; matches an 'a', a
+               'b', any letter from 'j' through 'o', or a 'Z'.
+    [^A-Z]     a negated character class, i.e., any character but those
+               in the class. In this case, any character except an
+               uppercase letter.
+    [^A-Z\n]   any character except an uppercase letter or a newline.
+    wv         the wildcard w followed by the wildcard v; called
+               concatenation.
+    %"[xyz]\%"foo%"     the literal string: '[xyz]%"foo'.
+    ?(pattern-list)  zero or one occurrence of the given patterns.
+    *(pattern-list)  zero or more occurrences of the given patterns.
+    +(pattern-list)  one or more occurrences of the given patterns.
+    @(pattern-list)  exactly one of the given patterns.
+                     where pattern-list is a list of one or more
+                     patterns separated by a '|'.
+	</pre>
+   	</div>
+  <div><a name="obsolete_fileset_element"></a>
+   
+   <h2>Obsolete (GOBO 3.1) Fileset format</h2>
+   
+   <p>
+    To alleviate the migration of the former fileset format to the current one the
+    following list describes the old format.
+    
+   </p>
+   
+  </div>
+  <div><a name="fileset_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>directory</dt>
+    <dd><i>Description: </i>
+     						The directory taken as root to find files matching the given criteria `include'
+     						and `exclude'
+     					
+     <p><i>Domain: </i>Valid directoryname
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>include</dt>
+    <dd><i>Description: </i>Pattern for names of files to be included in fileset
+     <p><i>Domain: </i>Valid LX DFA Wildcard (see below)
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>exclude</dt>
+    <dd><i>Description: </i>Pattern for names of files to be excluded from fileset
+     <p><i>Domain: </i>Valid LX DFA Wildcard (see below)
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>force</dt>
+    <dd>
+     						<i>Description: </i>Include matched filenames even when the
+     						matched file is not out of date.
+     					
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>true
+     </p>
+    </dd>
+    
+    			
+    <dt>concat</dt>
+    <dd><i>Description: </i>Prepend value of attribute `directory' before determined `mapped_filename'
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="fileset_nested_parameters"></a>
+   		
+   <h2>Parameters specified as nested elements</h2>
+   
+   		
+   <dl>
+    			
+    <dt>include</dt>
+    <dd><i>Description: </i>Name of individual file to be included in fileset
+     <p><i>Domain: </i>Valid filename pointing to existing file
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>exclude</dt>
+    <dd><i>Description: </i>Name of individual file to be excluded from fileset
+     <p><i>Domain: </i>Valid filename
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>map</dt>
+    <dd><i>Description: </i>Map element used to determine 'mapped_filename'.
+     					See section 'Detailes' for more information.
+     					
+     <p><i>Domain: </i>Valid map element
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="fileset_specification"></a>
+   		
+   <h2>Obsolete (GOBO 3.1) RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="fileset"&gt;
+    &lt;element name="fileset"&gt;
+      &lt;attribute name="directory"/&gt;
+      &lt;attribute name="include"/&gt;
+      &lt;optional&gt;
+        &lt;attribute name="exclude"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="force"&gt;
+          &lt;!-- runtime evaluation
+          &lt;choice&gt;
+            &lt;value&gt;true&lt;/value&gt;
+            &lt;value&gt;false&lt;/value&gt;
+          &lt;/choice&gt;
+          --&gt;
+        &lt;/attribute&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="filename_directory"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="concat"/&gt;
+      &lt;/optional&gt;
+      &lt;zeroOrMore&gt;
+        &lt;element name="include"&gt;
+          &lt;attribute name="name"/&gt;
+        &lt;/element&gt;
+      &lt;/zeroOrMore&gt;
+      &lt;zeroOrMore&gt;
+        &lt;element name="exclude"&gt;
+          &lt;attribute name="name"/&gt;
+        &lt;/element&gt;
+      &lt;/zeroOrMore&gt;
+      &lt;optional&gt;
+        &lt;ref name="map"/&gt;
+      &lt;/optional&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+		        
+
+	</pre>
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="tasks.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="map_element.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -4,13 +4,13 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Math Library"
 		library: "Gobo Eiffel Math Library"
-		copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
+		copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="math" location="${GOBO}/library/math">
+	<cluster name="math" location="${GOBO}/library/math/src">
 		<option name="abstract" value="true"/>
 		<cluster name="decimal"/>
 	</cluster>

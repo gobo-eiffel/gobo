@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="decimal" default="help">
+
+	<description>
+		system: "Gobo Eiffel Decimal Library Unit Tester"
+		copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/test_all.eant"/>
+	</inherit>
+
+</project>

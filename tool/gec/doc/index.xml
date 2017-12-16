@@ -1,0 +1,130 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Gobo Eiffel Compiler"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/index">
+<chapterinfo>
+	<copyright>
+		<year>2006-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>27 December 2016</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Compiler</title>
+
+<para>
+The <projectname>Gobo Eiffel Compiler</projectname>, or <projectname>gec</projectname>
+for short, is an open source command-line Eiffel compiler. The Eiffel community is
+already equipped with several Eiffel compilers, all supporting their own dialect
+despite the efforts of standardization of the Eiffel language and kernel library.
+So why yet another Eiffel compiler? The goal of <projectname>gec</projectname> is
+not to augment the number of incompatible Eiffel compilers but to provide both the
+open source community and the industry with a compiler fully compatible with ISE
+Eiffel and compliant with the ECMA Eiffel standard. OK, so what is the benefit of
+having a clone of ISE Eiffel? First <projectname>gec</projectname> is not a clone
+of ISE Eiffel. It uses different compilation techniques which make the compiler
+and the compiled applications perform better in some contexts or in some parts of
+the development cycle. Then, <projectname>gec</projectname> also provides an alternative
+to ISE Eiffel for those who invest a lot in the Eiffel technology and don't want
+to be tied to a single vendor.
+</para>
+<para>
+<projectname>gec</projectname> is the only open source Eiffel compiler
+that is released under a <link linkend="${library/common}/license">less constraining
+license</link> than GNU GPL. To my knowledge it is also the first and only one whose
+source code can be compiled by all its major Eiffel compiler competitors, as is the
+case of all other classes provided in the <link linkend="${library/common}/index"><projectname>Gobo
+Eiffel Project</projectname></link>. However, note that although it is already
+able to compile all Eiffel classes included in the <projectname>Gobo Eiffel
+Project</projectname>, <projectname>gec</projectname> is still under development.
+You can have a look at the list of <link linkend="limitations">functionalities
+not yet implemented</link> as well as at the list of <link linkend="future">possible
+future developments</link>, should you want to contribute to the project.
+</para>
+
+<para>
+This documentation of <projectname>gec</projectname> is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="usage">Using <projectname>gec</projectname></link>
+		</term>
+		<listitem><para>
+			Configuration, compiler options, Ace files.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="technology">Compiler Technology</link>
+		</term>
+		<listitem><para>
+			Compilation techniques used in <projectname>gec</projectname>.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="limitations">Limitations</link>
+		</term>
+		<listitem><para>
+			Limitations, bugs, incompatibilities with ISE Eiffel or the
+			ECMA Eiffel standard, and other deficiencies.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="future">Future Work</link>
+		</term>
+		<listitem><para>
+			List of possible enhancements and future developments.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="platforms">Supported Platforms</link>
+		</term>
+		<listitem><para>
+			List of C compilers, operating systems, hardware on which
+			<projectname>gec</projectname> has been tested.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="see_also">See Also</link>
+		</term>
+		<listitem><para>
+			Bibliographical references, related resources and
+			acknowledgments.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

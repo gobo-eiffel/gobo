@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Configuring the XSLT processor</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Configuring the XSLT processor</strong></font></td>
+    <td align="right"><a href="overview.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="output_resolver.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   The configuration of the processor is controlled by <font color="#008080"><i><tt>XM_XSLT_CONFIGURATION</tt></i></font>.
+   This has two creation procedures, <font color="#008080"><i><tt>make</tt></i></font> and <font color="#008080"><i><tt>make_with_defaults</tt></i></font>.
+   The latter creation procedure takes no arguments, and sets up convenient defaults (as used by the command-line processor gexslt).
+   We will look in detail at the arguments to <font color="#008080"><i><tt>make</tt></i></font>.
+   
+  </p>
+  <div>
+   
+   <h2>The Entity Resolver</h2>
+   
+   <p>
+    The first argument is an <font color="#008080"><i><tt>XM_URI_EXTERNAL_RESOLVER</tt></i></font>, for use by 
+    the XML parser to resolve
+    <font color="#008080">PUBLIC</font> and <font color="#008080">SYSTEM</font> external identifiers.
+    The creation procedure <font color="#008080"><i><tt>make_with_defaults</tt></i></font> uses a <a href="../../../library/xml/doc/catalogs.html">catalog resolver</a>, <font color="#008080"><i><tt>XM_CATALOG_RESOLVER</tt></i></font>,
+    to look up the external identifiers in an OASIS ETRC XML catalog.
+    
+   </p>
+   
+   <p>
+    You can disable the actual catalog lookup by inheriting from  <font color="#008080"><i><tt>XM_SHARED_CATALOG_MANAGER</tt></i></font>
+    and calling <font color="#008080"><i><tt>shared_catalog_manager.suppress_catalogs</tt></i></font>. In which case
+    you will get resolution of the <font color="#008080">SYSTEM</font> identifier, providing it's URI scheme is one of the registered
+    schemes. By default, only <font color="#008080">file</font> and <font color="#008080">data</font> are registered. You can register handlers for additional
+    URI schemes by creating a descendant of <font color="#008080"><i><tt>XM_URI_RESOLVER</tt></i></font> and passing it as the sole argument to
+    <font color="#008080"><i><tt>shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme</tt></i></font>.
+    You can do this even if you don't disable the catalog lookup.
+    
+   </p>
+   
+   <p>
+    Despite the flexibility of the catalog resolver, you may still want to provide your own resolver (if you
+    want to resolve external entities from a relational database manager, for instance). Just create your own, and
+    pass it as the first argument to <font color="#008080"><i><tt>make</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>The URI Resolver</h2>
+   
+   <p>
+    The second argument is an <font color="#008080"><i><tt>XM_URI_REFERENCE_RESOLVER</tt></i></font>. This is used
+    to resolve URIs given by the <font color="#008080">xsl:include</font> and <font color="#008080">xsl:import</font>
+    instructions, and the <font color="#008080">document()</font> function. <font color="#008080"><i><tt>make_with_defaults</tt></i></font>
+    passes the same catalog resolver as it does for the first argument, but there is no obligation that the
+    two arguments must receive the same object.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>The Output Resolver</h2>
+   
+   <p>
+    The third argument is an <a href="output_resolver.html"><font color="#008080"><i><tt>XM_XSLT_OUTPUT_URI_RESOLVER</tt></i></font></a>. This is used to resolve
+    the destination URI specified by the <font color="#008080"><i><tt>href</tt></i></font> attribute of <font color="#008080"><i><tt>xsl:result-document</tt></i></font>. 
+    It is <i>not</i> used to resolve the principal output destination, as that is under the direct control of
+    the user of the XSLT library, not the stylesheet author.
+    
+   </p>
+   
+   <p>
+    <font color="#008080"><i><tt>make_with_defaults</tt></i></font> passes an <font color="#008080"><i><tt>XM_XSLT_DEFAULT_OUTPUT_URI_RESOLVER</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>The Error Listener</h2>
+   
+   <p>
+    The fourth argument is an <a href="error_listener.html"><font color="#008080"><i><tt>XM_XSLT_ERROR_LISTENER</tt></i></font></a>. This receives
+    notifications of warnings, recoverable errors and fatal errors.
+    
+   </p>
+   
+   <p>
+    <font color="#008080"><i><tt>make_with_defaults</tt></i></font> passes an <font color="#008080"><i><tt>XM_XSLT_DEFAULT_ERROR_LISTENER</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>The Encoder Factory</h2>
+   
+   <p>
+    The fifth argument is an <font color="#008080"><i><tt>XM_XSLT_ENCODER_FACTORY</tt></i></font>. This creates
+    output encoders for the various character encodings supported by the library.
+    
+   </p>
+   
+   <p>
+    If you need to create output files in an encoding which is <i>not</i> supported
+    by the library, then you will need to create a descendant of <font color="#008080"><i><tt>XM_XSLT_OUTPUT_ENCODER</tt></i></font>,
+    and a descendant of <font color="#008080"><i><tt>XM_XSLT_ENCODER_FACTORY</tt></i></font> to create your encoder (but better would be to
+    offer your encoder to Gobo, for inclusion in the library, if that is possible for you).
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>The Message Emitter Factory</h2>
+   
+   <p>
+    To control the destination of output fron <font color="#008080">xsl:message</font> instructions, the configuration
+    supports a feature <font color="#008080"><i><tt>set_message_emitter_factory</tt></i></font>. This takes as a single argument
+    an object of type <font color="#008080"><i><tt>XM_XSLT_MESSAGE_EMITTER_FACTORY</tt></i></font>. The default factory creates
+    an object of type <font color="#008080"><i><tt>XM_XSLT_MESSAGE_EMITTER</tt></i></font>, but if you look at the source code, then 
+    you will see that the interface fror the created objects is only an <font color="#008080"><i><tt>XM_XPATH_RECEIVER</tt></i></font>.
+    
+   </p>
+   
+   <p>
+    The sole feature of the factory is <font color="#008080"><i><tt>new_message_emitter</tt></i></font>. As arguments, this receives a
+    reference to the transformer, an <font color="#008080"><i><tt>XM_OUTPUT</tt></i></font> for performing output (configured to write to standard error
+    by default, but you can freely change this within <font color="#008080"><i><tt>new_message_emitter</tt></i></font>), and an <font color="#008080"><i><tt>XM_XSLT_OUTPUT_PROPERTIES</tt></i></font>.
+    This last object is initialized to the defaults for the <font color="#008080">xml output method</font>. it is present for use by an <font color="#008080"><i><tt>XM_XSLT_XML_EMITTER</tt></i></font>, but
+    there is currently no way that the XSLT programmer can set it's contents. If programmers see a need, then we could add a User-defined
+    Data Element which would enable
+    stylesheet authors to code the same parameters as you can currently code on <font color="#008080">xsl:output</font> or <font color="#008080">xsl:result-document</font>, to affect the way in which
+    <font color="#008080">xsl:message</font> output is serialized.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Other features of the configuration</h2>
+   
+   <p>
+    The following other features are of interest to the Eiffel programmer:
+    
+    <dl>
+     	
+     <dt><font color="#008080"><i><tt>set_trace_listener (a_trace_listener: XM_XSLT_TRACE_LISTENER)</tt></i></font></dt>
+     <dd>
+      	      This sets the <font color="#008080"><i><tt>trace_listener</tt></i></font>. Setting it to a non-<font color="#008080"><i><tt>Void</tt></i></font>
+      	      value turns on stylesheet execution tracing. See <a href="tracing.html">XM_XSLT_TRACE_LISTENER</a>
+      	      for more details.
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>set_line_numbering (on_or_off: BOOLEAN)</tt></i></font></dt>
+     <dd>
+      	      Turns line numbering on and off in diagnostic messages (providing the error listener makes use of the information).
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>set_timing (on_or_off: BOOLEAN)</tt></i></font></dt>
+     <dd>
+      	      Turns the timing facility on or off.
+      	    
+      <p>
+       	      If the timing facility is on, then each execution phase
+       	      and build of a document tree prints timing information
+       	      on the standard error stream.
+       	    
+      </p>
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>use_tiny_tree_model (true_or_false: BOOLEAN)</tt></i></font></dt>
+     <dd>
+      	      Selects use of the tiny tree model for building in-memory representations of XML source documents (not used for the
+      stylesheet).
+      	      This is supposed to save memory, at the possible expense of execution time. 
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>set_digits (digits: INTEGER)</tt></i></font></dt>
+     <dd>
+      	      Sets the number of digits to be used when performing decimal arithmetic with
+      	      XPath expressions. The default is 18 digits, and it may not be set lower than this.
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>set_entity_resolver</tt></i></font></dt>
+     <dd>
+      	      Sets the entity resolver for XML parsing.
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>set_uri_resolver</tt></i></font></dt>
+     <dd>
+      	      Set the URI reference resolver for <font color="#008080">xsl:import/include</font>
+      	      processing, and for the <font color="#008080">document()</font> function.
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>suppress_dtd</tt></i></font></dt>
+     <dd>
+      	      Prevents the XML parser from reading external DTDs.
+      	      This applies to all uses of the fn:doc(), fn:document() and fn:collection() functions,
+      	      as well as the principal source document and all tranformation modules.
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>set_recovery_policy (a_recovery_policy: INTEGER)</tt></i></font></dt>
+     <dd>
+      	      Sets the recovery policy for error listeners.
+      	    
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004-2016, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 December 2016</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="overview.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="output_resolver.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

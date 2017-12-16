@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<project name="xslt_doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel XSLT Library documentation"
+		library: "Gobo Eiffel XSLT Library"
+		copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/doc.eant">
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+	
+<!-- Implementation -->
+	
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+
+		<geant target="${target}" arguments="overview"/>
+		<geant target="${target}" arguments="configuration"/>
+		<geant target="${target}" arguments="output_resolver"/>
+		<geant target="${target}" arguments="security_manager"/>
+		<geant target="${target}" arguments="transformer"/>
+		<geant target="${target}" arguments="transforming"/>
+		<geant target="${target}" arguments="results"/>
+		<geant target="${target}" arguments="error_listener"/>
+		<geant target="${target}" arguments="tracing"/>
+		<geant target="${target}" arguments="transformation_result"/>
+		<geant target="${target}" arguments="transformation_source"/>
+		<geant target="${target}" arguments="output_extensions"/>
+		<geant target="${target}" arguments="extension_functions"/>
+		<geant target="${target}" arguments="examples"/>
+		<geant target="${target}" arguments="conformance"/>
+		<geant target="${target}" arguments="xslt_serializer"/>
+	</target>
+
+</project>

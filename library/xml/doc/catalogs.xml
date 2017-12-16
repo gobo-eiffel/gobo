@@ -1,0 +1,203 @@
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml_catalogs">
+<chapterinfo>
+	<copyright>
+		<year>2005-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>27 December 2016</date>
+</chapterinfo>
+
+<title>XML catalogs and the Catalog Resolver</title>
+
+<section id="about_catalogs">
+<title>About OASIS ERTC XML Catalogs</title>
+
+<para>
+The resolvers mentioned in the previous chapter are take a string from
+an xml document, and attempt to open an input stream for the parser or application
+to read from. This is all very well, if the string concerned can easily be mapped
+to a local resource. 
+</para>
+
+<para>
+The moment you start to think beyond the local machine, this approach has limitations. 
+For instance, if a <exmlsyntax>SYSTEM</exmlsyntax> id refers to a network resource, 
+you don't have many options. If you have a local copy of the resource, you could edit
+the source document and change the <exmlsyntax>SYSTEM</exmlsyntax> id. But you may
+have to do a lot of editing, and if you want to distribute the document, it gets complicated.
+Alternatively, you might have a resolver available that handles the http protocol, but
+if you lose your network connection, or the remote server goes down, you are in trouble.
+</para>
+
+<para>
+Using a string-based resolver can releave some of these problems, but having to code, or configure
+in code, a dedicated class is not very flexible. A good answer to these problems is the catalog resolver.
+</para>
+
+</section>
+
+<section>
+<title>The Catalog Resolver</title>
+
+<para>
+<classname>XM_CATALOG_RESOLVER</classname> is a resolver that implements a two-stage 
+resolution process. In the first stage, it uses XML catalogs (as defined by the
+<ulink url="http://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html">
+OASIS Entity Resolution Technical Committee's 1.1 specification of 7th October 2005</ulink>) to look up
+a <exmlsyntax>SYSTEM</exmlsyntax> or <exmlsyntax>PUBLIC</exmlsyntax> id, or a 
+URI reference from the source document, and fetches another URI reference
+to feed into the second stage.
+</para>
+
+<para>
+In the second stage, an <classname>XM_URI_EXTERNAL_RESOLVER</classname> is used to open a stream
+to the mapped URI reference.
+</para>
+
+<para>
+The actual format of an OASIS ERTC XML Catalog is quite complex, and allows delegation and URI re-writing.
+Read the specification to understand the full power of these catalogs.
+</para>
+
+</section>
+
+<section>
+<title>Configuring the Catalog Resolver</title>
+
+<para>
+A number of options control the way the ctaalog resolver finds catalogs, and the resolution itself.
+
+<variablelist>
+	<varlistentry>
+		<term>System catalog list</term>
+		<listitem>
+		<para>
+			The initial list of system catalogs searched by the resolver is taken from
+			the environment variable <envar>XML_CATALOG_FILES</envar>, which
+			must be a list of file names separated by colons or semi-colons. If this list
+			is empty, then the file <filename class="catalog">/etc/xml/catalog</filename>
+			is used, unless <featurecall><featurename>suppress_default_system_catalog_file</featurename></featurecall>
+			is called on <classname>XM_SHARED_CATALOG_MANAGER</classname>.
+		</para>
+		</listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>Document control of catalog files</term>
+		<listitem>
+		<para>
+			Additional catalogs are searched for particular documents if one or more
+			<exmlsyntax>oasis-xml-catalog</exmlsyntax> processing instructions appear
+			within that documents (see <ulink url="http://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html#oasis-er-tc-abc">
+			the specification for restrictions</ulink>).
+			This behaviour can be suppressed by calling <featurename>suppress_processing_instructions</featurename>.
+		</para>
+		</listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>Public/System preference</term>
+		<listitem>
+		<para>
+			If the <exmlsyntax>prefer</exmlsyntax> attribute is not coded for a particular catalog,
+			then the default is <exmlsyntax>prefer="public"</exmlsyntax>. This can be changed to
+			<exmlsyntax>prefer="system"</exmlsyntax> by calling <featurecall><featurename>set_prefer_system</featurename></featurecall>.
+		</para>
+		</listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>Debugging</term>
+		<listitem>
+		<para>
+			To assist in creating catalogs, or to find possible bugs in the resolver, you can get
+			debugging messages written to the standard error stream, by calling
+			<featurename>set_debug_level (a_level: INTEGER)</featurename>. Level 0 is the default,
+			and level 10 gives the most voluminous ouptut. It is quite a good idea to turn on
+			level 1 at least, as it will tell you if there are serious errors in your catalogs.
+		</para>
+		</listitem>
+	</varlistentry>
+</variablelist>
+
+</para>
+
+<section>
+<title>Debug level settings</title>
+
+<para>
+The level parameter controls which classes of debugging messages are generated thus:
+</para>
+
+<orderedlist>
+	<listitem>
+	<para>
+		Any errors that cause a catalog to fail parsing.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		Near-errors, loading catalogs, or switching to a delegated catalog.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		Catalogs that do not exist, traces of calls to resolve routines,
+		and setting options on the catalog manager.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		Parsing a named catalog, and entries encountered within it.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		Resolution results. Setting xml:base. 
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		Preference status of found public entries. Duplicates.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		Catalog's base URI. Identity of retrieved catalogs, and whether they fail parsing.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		Normalization messages. Number of system catalogs.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		Checking for delegates, next catalogs and re-write rules. Matches found/not-found.
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+		Prefix strings. Candidate matches.
+	</para>
+	</listitem>
+</orderedlist>
+
+</section>
+
+</section>
+
+</chapter>

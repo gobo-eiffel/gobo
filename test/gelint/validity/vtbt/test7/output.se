@@ -1,5 +1,0 @@
-****** Fatal Error : Expected constant for BIT_N type declaration.
-Line 5 column 10 in BB (b.e) :
-	CC [BIT -0]
-	        ^
-------

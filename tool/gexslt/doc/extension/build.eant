@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<project name="gexslt_extensions_doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel XSLT Extensions documentation"
+		system: "Gobo Eiffel XSLT"
+		copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/doc.eant">
+			<redefine target="init"/>
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="init" export="NONE">
+		<precursor/>
+		<set name="path_to_doc" value="../"/>
+	</target>
+
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+
+		<geant target="${target}" arguments="index"/>
+	</target>
+
+</project>

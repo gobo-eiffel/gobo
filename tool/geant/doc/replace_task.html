@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>replace</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>replace</strong></font></td>
+    <td align="right"><a href="precursor_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="set_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="replace_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Replace a pattern from a file
+    		
+   </p>
+   	
+  </div>
+  <div><a name="replace_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>file</dt>
+    <dd><i>Description: </i>File to be processed.
+     <p><i>Domain: </i>Valid filename pointing to existing file
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>to_file</dt>
+    <dd><i>Description: </i>File to save replacement's result to. If not defined `file' is used as `to_file' value.
+     <p><i>Domain: </i>Valid filename
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>to_directory</dt>
+    <dd><i>Description: </i>Directory to which file(s)'s result should be saved to
+     <p><i>Domain: </i>Valid directoryname pointing to existing directory
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>match</dt>
+    <dd><i>Description: </i>Regular expressions defining the pattern to be replaced by
+     <p><i>Domain: </i>valid regular expression
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>			
+    			
+    <dt>token</dt>
+    <dd><i>Description: </i>Text to be replaced by
+     <p><i>Domain: </i>-
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>			
+    			
+    <dt>variable_pattern</dt>
+    <dd><i>Description: </i>Replace all occurrences of Geant variables
+     <p><i>Domain: </i>a string that contains a single underscore '_', which is replaced by the variable name
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>			
+    			
+    <dt>replace</dt>
+    <dd><i>Description: </i>Replace `match' or `token' entities by this value. This value can use regexp patterns such as \1\.
+     <p><i>Domain: </i>-
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>		
+    			
+    <dt>flags</dt>
+    <dd><i>Description: </i>Flags to precise match replacement (g: global, i: caseless; m: multiline; s: singeline)
+     <p><i>Domain: </i>string composed by g, i, m or s.
+     </p>
+     <p><i>Default: </i>non global, non caseless and singleline-
+     </p>
+    </dd>			
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="replace_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="replace"&gt;
+    &lt;element name="replace"&gt;
+      &lt;ref name="dir_if_unless"/&gt;
+      &lt;choice&gt;
+        &lt;group&gt;
+          &lt;attribute name="file"/&gt;
+        &lt;/group&gt;
+        &lt;group&gt;
+          &lt;attribute name="file"/&gt;
+          &lt;attribute name="to_file"/&gt;
+        &lt;/group&gt;
+        &lt;group&gt;
+          &lt;attribute name="file"/&gt;
+          &lt;attribute name="to_directory"/&gt;
+        &lt;/group&gt;
+        &lt;group&gt;
+          &lt;attribute name="to_directory"/&gt;
+          &lt;ref name="fileset"/&gt;
+        &lt;/group&gt;
+      &lt;/choice&gt;
+	  &lt;choice&gt;
+		  &lt;group&gt;
+			&lt;attribute name="token" /&gt;
+			&lt;attribute name="replace" /&gt;
+		  &lt;/group&gt;
+		  &lt;group&gt;
+			&lt;attribute name="match" /&gt;
+			&lt;attribute name="replace" /&gt;
+		  &lt;/group&gt;
+		  &lt;group&gt;
+			&lt;attribute name="variable_pattern" /&gt;
+		  &lt;/group&gt;
+      &lt;/choice&gt;
+      &lt;optional&gt;
+		&lt;attribute name="flags" /&gt;
+      &lt;/optional&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+
+		</pre>
+   	</div>
+  <div><a name="replace_examples"></a>
+   		
+   <h2>Examples</h2>
+   
+   		<pre>
+  &lt;replace file="test.txt" to_file="new_test.txt" token="foo" replace="BAR" flags="gi" /&gt;
+  &lt;replace file="new_test.txt" match="([0-9]+)" replace="NUM(\1\)" flags="gi" /&gt;
+  &lt;replace file="new_test.txt" match="((.)\2)" replace="[\1\]" flags="gi"  /&gt;
+  &lt;replace dir="${cwd}" token="123" replace="321" flags="g" &gt;
+	  &lt;fileset include="@(**/*.txt)" /&gt;
+  &lt;/replace&gt;
+  &lt;replace file="in.txt" to_file="out.txt" variable_pattern="${_}"/&gt;
+
+		</pre>
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2006, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>18 January 2007</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="precursor_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="set_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

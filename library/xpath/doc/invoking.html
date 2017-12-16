@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Invoking the stand-alone XPath evaluator</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Invoking the stand-alone XPath evaluator</strong></font></td>
+    <td align="right"><a href="invoking.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="collection.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   
+   <p><font color="#FF0000">
+     All the following is out-of-date, almost certainly wrong, and not supported.
+     </font></p>
+   To evaluate an XPath expression in a stand-alone environment 
+   (or equivalently, from a host language of your own devising), follow the following steps:
+   
+   <ul>
+    <li><a href="invoking.html#xpath_stand_alone_invoke_create_evaluator">Create an instance of <font color="#008080"><i><tt>XM_XPATH_EVALUATOR</tt></i></font></a></li>
+    <li><a href="invoking.html#xpath_stand_alone_invoke_static_context">Build a static context.</a></li>
+    <li><a href="invoking.html#xpath_stand_alone_invoke_evaluate">Call <font color="#008080"><i><tt>evaluate</tt></i></font> on the evaluator.</a></li>
+    <li><a href="invoking.html#xpath_stand_alone_invoke_check_errors">Check for evaluation errors.</a></li>
+    <li><a href="invoking.html#xpath_stand_alone_invoke_results">Retrieving the results.</a></li>
+   </ul>
+   
+  </p>
+  <div><a name="xpath_stand_alone_invoke_create_evaluator"></a>
+   
+   <h2>Creating an evaluator</h2>
+   
+   <p>Call creation procedure <font color="#008080"><i><tt>make (digits, on_or_off)</tt></i></font> from class <font color="#008080"><i><tt>XM_XPATH_EVALUATOR</tt></i></font>.
+    <font color="#008080"><i><tt>Digits</tt></i></font> is the precision for decimal arithmetic. It should be at least 18 (or 0, for infinite precision).
+    <font color="#008080"><i><tt>On_or_off</tt></i></font> indicates wheter or not line numbering should be turned on for error messages.
+    
+   </p>
+   
+   <p><font color="#008080"><i><tt>XM_XPATH_EVALUATOR</tt></i></font> inherits from <font color="#008080"><i><tt>XM_STRING_MODE</tt></i></font>, so you should then
+    call one of the string-mode setting procedures from that class on the evaluator. It will in turn
+    call the same procedure on the Eiffel XML parser.
+   </p>
+   
+  </div>
+  <div><a name="xpath_stand_alone_invoke_static_context"></a>
+   
+   <h2>Building a static context</h2>
+   
+   <p>Before calling <font color="#008080"><i><tt>evaluate</tt></i></font>, it is first necessary to create a static context. 
+    Two features are provided to do this:
+    
+    <ul>
+     <li>
+      	    <font color="#008080"><i><tt>build_static_context</tt></i><tt> (</tt><i><tt>a_source_uri: STRING</tt></i><tt>, </tt><i><tt>xpath_one_compatibility: BOOLEAN</tt></i><tt>, </tt><i><tt>warnings: BOOLEAN</tt></i><tt>, </tt><i><tt>use_tiny_tree_model: BOOLEAN</tt></i><tt>, </tt><i><tt>compact_tree: BOOLEAN</tt></i><tt>)</tt></font>
+      	  
+      <p>The first argument is the URI of an XML source, against which the XPath expression will be evaluated.</p>
+      <p>The second argument specifies if we should run in XPath 1.0 compatibility mode.</p>
+      <p>The third argument requests warnings of differences between XPath 1.0 and  XPath 1.0 compatibility mode. 
+       	   It is only meaningful if the second argument is True.
+       	  
+      </p>
+      <p>The fourth argument specifies the tree model to use. If performace and/or memory usage
+       	  are important to your application, then you should make measurements to see
+       	  which tree model suits you best.
+      </p>
+      <p>The fifth argument specifies whether or not to compact the tree after parsing. it is not
+       	  implemented at the time of writing.
+      </p>
+      <p>
+       	    This feature parses <font color="#008080"><i><tt>a_source_uri</tt></i></font> as XML, and builds an instance of <font color="#008080"><i><tt>XM_XPATH_DOCUMENT</tt></i></font>.
+       	    It sets <font color="#008080"><i><tt>was_build_error</tt></i></font> to true if any error was found, in which case <font color="#008080"><i><tt>error_message</tt></i></font>
+       	    will contain the text of the parse error.
+       	  
+      </p>
+      <p>If no error was detected, it then creates a static context, using the document node as the context item.
+       	  
+      </p>
+     </li>
+     <li>
+      	    <font color="#008080"><i><tt>set_static_context</tt></i><tt> (</tt><i><tt>a_static_context: XM_XPATH_STAND_ALONE_CONTEXT</tt></i><tt>)</tt></font>
+      	  
+      <p>This feature enables you to supply a tailored static context. 
+       	  You can also use it if you wish to perform an XPath evaluation without 
+       	  referencing an XML document (this is of rather limited usefulness, but 
+       	  you might want to use it for evaluating environment variables as
+       	  booleans, for instance).
+       	  
+      </p>
+      <p>Having built your static context, you may then declare variables, if you wish.</p>
+     </li>
+    </ul>
+    
+   </p>
+   
+  </div>
+  <div><a name="xpath_stand_alone_invoke_evaluate"></a>
+   
+   <h2>Performing the evaluation</h2>
+   
+   <p>The sole argument to
+    <font color="#008080"><i><tt>evaluate</tt></i><tt> (</tt><i><tt>an_expression_text: STRING</tt></i><tt>)</tt></font>
+    is the text of the XPath expression which you wish to evaluate.
+    
+   </p>
+   
+  </div>
+  <div><a name="xpath_stand_alone_invoke_check_errors"></a>
+   
+   <h2>Checking for evaluation errors</h2>
+   
+   <p>After calling <font color="#008080"><i><tt>evaluate</tt></i></font>, check 
+    <font color="#008080"><i><tt>is_error</tt></i></font>
+    to see if an error occurred. if it did, then feature
+    <font color="#008080"><i><tt>error_value</tt></i></font>
+    contains the details of the error. See <font color="#008080"><i><tt>XM_XPATH_ERROR_VALUE</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div><a name="xpath_stand_alone_invoke_results"></a>
+   
+   <h2>Retrieving the results of an evaluation</h2>
+   
+   <p>If the evaluation was successful, <font color="#008080"><i><tt>evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]</tt></i></font>
+    contains a list of results. These are all of type <font color="#008080"><i><tt>XM_XPATH_ITEM</tt></i></font>, representing
+    an XPath item. An item may either be a node (<font color="#008080"><i><tt>XM_XPATH_NODE</tt></i></font>), or an atomic value
+    (<font color="#008080"><i><tt>XM_XPATH_ATOMIC_VALUE</tt></i></font>).
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004-2016, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 December 2016</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="invoking.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="invoking.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="collection.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

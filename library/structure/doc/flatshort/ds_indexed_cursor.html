@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Class DS_INDEXED_CURSOR</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Class DS_INDEXED_CURSOR</strong></font></td>
+        <td align="right"><a href="ds_indexable_sorter.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_linear.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><font color="#000080"><em><strong>note</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>description</em>:
+
+<font color="#800000"><em>    &quot;Indexed cursors for data structure traversals&quot;
+
+</em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
+</em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
+href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
+color="#800000"><em>&gt;&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999, Eric Bezault and others&quot;
+</em></font><em>license:   </em><font color="#800000"><em> &quot;MIT License&quot;</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>deferred class interface</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>DS_INDEXED_CURSOR </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
+
+<blockquote>
+    <pre><a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Access</font></pre>
+
+<blockquote>
+    <pre><a name="item"><em>item</em></a>:<em> G
+</em><font color="#008000">        -- Item at cursor position
+        -- (From </font><a href="ds_cursor.html#item"><font
+color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+    </em><font color="#000080"><em><strong>deferred</strong></em></font></pre>
+    <pre><a name="index"><em>index</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+        </em><font color="#008000">-- Index of current position</font><em>
+    </em><font color="#000080"><em><strong>deferred
+    ensure</strong></em></font><em>
+        valid_index</em>:<em> </em><a href="#valid_index"><em>valid_index</em></a><em> </em>(<font
+color="#008080"><em>Result</em></font>)</pre>
+    <pre><a name="container"><em>container</em></a>:<em> </em><a
+href="ds_traversable.html"><em>DS_TRAVERSABLE</em></a><em> </em>[<em>G</em>]<em>
+       </em><font color="#008000"> -- Data structure traversed</font><font
+color="#000080"><em><strong>
+</strong></em></font><font color="#008000">        -- (From </font><a
+href="ds_cursor.html#container"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font><font color="#000080"><em><strong>
+    deferred</strong></em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Status report</font></pre>
+
+<blockquote>
+    <pre><a name="off"><em>off</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is there no item at cursor position?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_cursor.html#off"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>deferred</strong></em></font></pre>
+    <pre><a name="same_position"><em>same_position</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is current cursor at same position as </font><em>other</em><font
+color="#008000">?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_cursor.html#same_position"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><font color="#000080"><em><strong>
+    deferred</strong></em></font></pre>
+    <pre><a name="valid_index"><em>valid_index</em></a><em> </em>(<em>i</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is </font><em>i</em><font
+color="#008000"> a valid index value?</font><em>
+    </em><font color="#000080"><em><strong>deferred</strong></em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Cursor movement</font></pre>
+
+<blockquote>
+    <pre><a name="go_to"><em>go_to</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>)<em>
+        </em><font color="#008000">-- Move cursor to </font><em>other</em><font
+color="#008000">'s position.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_cursor.html#go_to"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        valid_cursor</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_traversable.html#valid_cursor"><em>valid_cursor</em></a><em> </em>(<em>other</em>)<em>
+    </em><font color="#000080"><em><strong>deferred
+    ensure</strong></em></font><em>
+        same_position</em>:<em> </em><a href="#same_position"><em>same_position</em></a><em> </em>(<em>other</em>)</pre>
+    <pre><a name="go_i_th"><em>go_i_th</em></a><em> </em>(<em>i</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+        </em><font color="#008000">-- Move cursor to </font><em>i</em><font
+color="#008000">-th position.</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_index</em>:<em> </em><a href="#valid_index"><em>valid_index</em></a><em> </em>(<em>i</em>)<em>
+    </em><font color="#000080"><em><strong>deferred
+    ensure</strong></em></font><em>
+        moved</em>:<em> </em><a href="#index"><em>index</em></a><em> </em>=<em> i</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Comparison</font></pre>
+
+<blockquote>
+    <pre><a name="is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font><em>)</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Are </font><em>other</em><font
+color="#008000"> and current cursor at the same position?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#is_equal"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        consistent</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#standard_is_equal"><em>standard_is_equal</em></a><em> </em>(<em>other</em>)<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#008080"><em>Result</em></font><em>
+        same_type</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<em>
+        symmetric</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> other</em>.<a
+href="#is_equal"><em>is_equal</em></a><em> </em>(<font
+color="#008080"><em>Current</em></font>)</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font> <font
+color="#008000">-- Duplication</font></pre>
+
+<blockquote>
+    <pre><a name="copy"><em>copy</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>)<em>
+        </em><font color="#008000">-- Copy </font><em>other</em><font
+color="#008000"> to current cursor.
+        -- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#copy"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        type_identity</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        is_equal</em>:<em> </em><a href="#is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>)</pre>
+</blockquote>
+
+<pre><a name="invariant"><font color="#000080"><em><strong>invariant</strong></em></font></a></pre>
+
+<blockquote>
+    <pre><em>container_not_void</em>:<em> </em><a
+href="#container"><em>container</em></a><em> </em>/= <font
+color="#008080"><em>Void</em></font><em>
+empty_constraint</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_traversable.html#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+</em><font color="#008000">    -- (From </font><a
+href="ds_cursor.html#invariant"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>end</strong></em></font><font
+color="#008000"> -- class DS_INDEXED_CURSOR</font></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1999</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 31 July 1999</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="ds_indexable_sorter.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="ds_linear.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

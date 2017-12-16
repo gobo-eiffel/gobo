@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>XSLT 2.0 serializer</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>XSLT 2.0 serializer</strong></font></td>
+    <td align="right"><a href="conformance.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="overview.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   
+   <h2>About the XSLT 2.0 serializer</h2>
+   
+   
+   <p>
+    The XSLT serializer is a component designed for the purpose of providing the XSLT engine with a serialization facility,
+    but it can also be used by any other XML-processing program.
+    
+   </p>
+   
+   
+  </div>
+  <div>
+   
+   <h2>Invoking the serializer without using XSLT</h2>
+   
+   
+   <p>
+    To invoke the serializer from a non-XSLT program you must follow the following steps:
+    
+   </p>
+   
+   
+   <ol>
+    <li>
+     Create a descedent of <font color="#008080"><i><tt>XM_XSLT_SERIALIZER</tt></i></font>. You will need to provide
+     implementations for the two deferred routines <font color="#008080"><i><tt>error_listener</tt></i></font>
+     and <font color="#008080"><i><tt>encoder_factory</tt></i></font>. See <a href="overview.html">Overview for more details</a>.
+     
+    </li>
+    <li>
+     Create an <font color="#008080"><i><tt>XM_XSLT_OUTPUT_PROPERTIES</tt></i></font> object. The sole argument for the creation routine is designed for the
+     use of XSLT's <font color="#008080">xsl:import</font> declaration, to establish import precedence. It seems to me highly unlikely that you will
+     want to use it if you are not using XSLT. Simply pass zero.
+     
+    </li>
+    <li>
+     Call command from the Element change paragraph to set the serialization options that you want. These are explained in more
+     detail below.
+     
+    </li>
+    <li>
+     Set up an event stream and feed it to the serializer. This is explained in more detail below.
+     
+    </li>
+   </ol>
+   
+   
+  </div>
+  <div>
+   
+   <h2>Setting serialization options</h2>
+   
+   
+   <p>
+    I suggest you point your web browser at <a href="http://www.w3.org/TR/xslt20/#element-output">Serialization</a> whilst reading this section.
+    You might also look in <font color="#800000"><i><tt>${GOBO}/library/xslt/example/serializer</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    When you create an <font color="#008080"><i><tt>XM_XSLT_OUTPUT_PROPERTIES</tt></i></font> object, the serialization options are identical to those
+    you obtain by default from XSLT - that is, if you do not code an xsl:output declaration in an XSLT transformation. The following
+    features are documented in terms of the attributes on xsl:output to which they correspond. In all cases it is recommended
+    that you pass zero for the import precedence.
+    
+   </p>
+   
+   
+   <div>
+    
+    <h3>Choosing the output method</h3>
+    
+    
+    <ul>
+     <li>
+      Calling <font color="#008080"><i><tt>set_xml_defaults</tt></i></font> is equivalent to xsl:output method="xml".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_html_defaults</tt></i></font> is equivalent to xsl:output method="html".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_xhtml_defaults</tt></i></font> is equivalent to xsl:output method="xhtml".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_text_defaults</tt></i></font> is equivalent to xsl:output method="text".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_method</tt></i></font> is equivalent to xsl:output method=qname-but-not-ncname. In order to
+      do this, you have to first write your own custom serializer. See <a href="output_extensions.html">Output extensions</a> for details.
+      
+     </li>
+    </ul>
+    
+    
+   </div>
+   
+   
+   <div>
+    
+    <h3>Generating the XML declaration</h3>
+    
+    
+    <ul>
+     <li>
+      Calling <font color="#008080"><i><tt>set_byte_order_mark_required</tt></i></font> is equivalent to xsl:output byte-order-mark="?".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_omit_xml_declaration</tt></i></font> is equivalent to xsl:output omit-xml-declaration="?".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_version</tt></i></font> is equivalent to xsl:output version="?".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_standalone</tt></i></font> is equivalent to xsl:output standalone="?".
+      
+     </li>
+    </ul>
+    
+    
+   </div>
+   
+   
+   <div>
+    
+    <h3>Generating the Document Type Declaration</h3>
+    
+    
+    <ul>
+     <li>
+      Calling <font color="#008080"><i><tt>set_doctype_public</tt></i></font> is equivalent to xsl:output doctype-public="?".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_doctype_system</tt></i></font> is equivalent to xsl:output doctype-system="?".
+      
+     </li>
+    </ul>
+    
+    
+   </div>
+   
+   
+   <div>
+    
+    <h3>Generating (X)HTML meta tags</h3>
+    
+    
+    <ul>
+     <li>
+      Calling <font color="#008080"><i><tt>set_include_content_type</tt></i></font> is equivalent to xsl:output include-content-type="?".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_media_type</tt></i></font> is equivalent to xsl:output media-type="?".
+      
+     </li>
+    </ul>
+    
+    
+   </div>
+   
+   
+   <div>
+    
+    <h3>Miscellaneous</h3>
+    
+    
+    <ul>
+     <li>
+      Calling <font color="#008080"><i><tt>set_normalization_form</tt></i></font> is equivalent to xsl:output normalization-form="?".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_undeclare_prefixes</tt></i></font> is equivalent to xsl:output undeclare-prefixes="?".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_indent</tt></i></font> is equivalent to xsl:output indent="?".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_escape_uri_attributes</tt></i></font> is equivalent to xsl:output escape-uri-attributes="?".
+      
+     </li>
+     <li>
+      Calling <font color="#008080"><i><tt>set_cdata_sections</tt></i></font> or <font color="#008080"><i><tt>merge_cdata_sections</tt></i></font> is equivalent to xsl:output cdata-section-elements="?".
+      
+     </li>
+    </ul>
+    
+    
+   </div>
+   
+   
+  </div>
+  <div>
+   
+   <h2>Invoking the serializer from the XSLT engine</h2>
+   
+   
+   <p>
+    In order to have the <font color="#008080"><i><tt>XM_XSLT_TRANSFORMER</tt></i></font> invoke the serializer, you need to pass an
+    <font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font> to the <font color="#008080"><i><tt>transform</tt></i></font> command which is created 
+    with the creation procedure named <font color="#008080"><i><tt>make</tt></i></font>. Almost all examples within Gobo use this feature.
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2007-2016, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 December 2016</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="conformance.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="overview.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

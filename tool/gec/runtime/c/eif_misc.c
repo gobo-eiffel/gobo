@@ -4,7 +4,7 @@
 		"C functions used to implement class EXECUTION_ENVIRONMENT"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,6 +12,13 @@
 
 #ifndef EIF_MISC_C
 #define EIF_MISC_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef EIF_MISC_H
+#include "eif_misc.h"
+#endif
 
 #include <stdlib.h>
 #ifdef WIN32
@@ -28,7 +35,8 @@
 extern "C" {
 #endif
 
-EIF_INTEGER eif_system(EIF_NATIVE_CHAR* s) {
+EIF_INTEGER eif_system(EIF_NATIVE_CHAR* s)
+{
 #ifdef EIF_WINDOWS
 	return (EIF_INTEGER)_wsystem(s);
 #else
@@ -36,7 +44,8 @@ EIF_INTEGER eif_system(EIF_NATIVE_CHAR* s) {
 #endif
 }
 
-void eif_system_asynchronous(EIF_NATIVE_CHAR* cmd) {
+void eif_system_asynchronous(EIF_NATIVE_CHAR* cmd)
+{
 #ifdef EIF_WINDOWS
 	STARTUPINFOW siStartInfo;
 	PROCESS_INFORMATION procinfo;
@@ -44,7 +53,7 @@ void eif_system_asynchronous(EIF_NATIVE_CHAR* cmd) {
 	EIF_INTEGER result;
 
 	current_dir = (wchar_t*)_wgetcwd(NULL, PATH_MAX);
-	memset(&siStartInfo, 0, sizeof siStartInfo);
+	memset(&siStartInfo, 0, sizeof(siStartInfo));
 	siStartInfo.cb = sizeof(STARTUPINFO);
 	siStartInfo.lpTitle = NULL;
 	siStartInfo.lpReserved = NULL;
@@ -127,7 +136,7 @@ void eif_sleep(EIF_INTEGER_64 nanoseconds)
 	while (total_time > 0) {
 			/* Sleep for maximum timeout not exceeding time left */
 		if (timeout > total_time) {
-			timeout = (EIF_SLEEP_TYPE) total_time;
+			timeout = (EIF_SLEEP_TYPE)total_time;
 		}
 		EIF_SLEEP_FUNCTION(timeout);
 		total_time -= timeout;

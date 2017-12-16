@@ -1,0 +1,388 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gelex: Scanner Skeleton</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Scanner Skeleton</strong></font></td>
+        <td align="right"><a href="actions.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="limitations.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><em><strong>note</strong></em><em>
+
+    description</em>:<em> &quot;General lexical analyzers&quot;
+    library</em>:<em> &quot;Gobo Eiffel Lexical Library&quot;
+    copyright</em>:<em> &quot;Copyright (c) 2001, Eric Bezault and others&quot;
+    license</em>:<em> &quot;MIT License&quot;
+
+</em><em><strong>deferred</strong></em><em> </em><em><strong>class</strong></em><em> YY_SCANNER
+
+</em><em><strong>create</strong></em><em>
+
+    </em><a href="scanner.html#make" name="make"><em>make</em></a><em>
+           </em> -- Create a new scanner with
+            -- standard input as input file.<em>
+
+    </em><a href="scanner.html#make_with_file"
+name="make_with_file"><em>make_with_file</em></a><em> </em>(<em>a_file</em>:<em> FILE</em>)<em>
+            </em>-- Create a new scanner with<em>
+            </em>-- <em>a_file</em> as input file.<em>
+        </em><em><strong>require</strong></em><em>
+            a_file_not_void</em>:<em> a_file </em>/= <em>Void
+            a_file_open_read</em>:<em> a_file.is_open_read
+
+    </em><a href="scanner.html#make_with_buffer"
+name="make_with_buffer"><em>make_with_buffer</em></a><em> </em>(<em>a_buffer</em>:<em> </em><em><strong>like</strong></em><em> input_buffer</em>)<em>
+            </em>-- Create a new scanner with
+            -- <em>a_buffer</em> as input buffer.<em>
+        </em><em><strong>require</strong></em><em>
+            a_buffer_not_void</em>:<em> a_buffer </em>/=<em> Void
+        </em><em><strong>ensure</strong></em><em>
+            input_buffer_set</em>:<em> input_buffer </em>=<em> a_buffer
+
+</em><em><strong>feature</strong></em><em> </em>-- Initialization<em>
+
+    </em><a href="scanner.html#reset" name="reset"><em>reset</em></a><em>
+            </em>-- Reset scanner before scanning next input source.
+            -- (This routine can be called in <em>wrap</em> before scanning
+            -- another input buffer.)<em>
+
+</em><em><strong>feature</strong></em><em> </em>-- Access<em>
+
+    </em><a href="actions.html#last_token" name="last_token"><em>last_token</em></a><em>: INTEGER
+            </em>-- Code of last token read
+            -- (0 means that the end-of-input has been reached,
+            -- non-positive values mean that an error occurred
+            -- (see header-comment of <em>scanning_error</em>.))
+<em>
+    </em><a href="actions.html#text" name="text"><em>text</em></a>:<em> STRING
+            </em>-- Text of last token read
+            -- (Create a new string at each call.)<em>
+        </em><em><strong>ensure</strong></em><em>
+            text_not_void</em>:<em> Result </em>/= <em>Void
+            correct_count</em>:<em> Result.count </em>=<em> text_count
+
+    </em><a href="actions.html#text_item" name="text_item"><em>text_item</em></a><em> </em>(<em>i</em>:<em> INTEGER</em>):<em> CHARACTER
+            </em>-- <em>i</em>-th character of last token read<em>
+        </em><em><strong>require</strong></em><em>
+            i_large_enough</em>:<em> i </em>&gt;= <em>1
+            i_small_enough</em>:<em> i </em>&lt;= <em>text_count
+        </em><em><strong>ensure</strong></em><em>
+            definition</em>:<em> Result </em>=<em> text.item </em>(<em>i</em>)<em>
+
+    </em><a href="actions.html#text_substring"
+name="text_substring"><em>text_substring</em></a><em> </em>(<em>s</em>,<em> e</em>:<em> INTEGER</em>):<em> STRING
+            </em>-- Substring of last token read
+            -- (Create a new string at each call.)<em>
+            </em>-- (For efficiency reason, this function can bypass the
+            -- call to <em>text</em> and create the substring directly from
+            -- the input buffer.)<em>
+        </em><em><strong>require</strong></em><em>
+            meaningful_start</em>:<em> 1 </em>&lt;=<em> s
+            meaningful_interval</em>:<em> s </em>&lt;=<em> e </em>+<em> 1
+            meaningful_end</em>:<em> e </em>&lt;= <em>text_count
+        </em><em><strong>ensure</strong></em><em>
+            text_substring_not_void</em>:<em> Result </em>/=<em> Void
+            text_substring_empty</em>:<em> </em>(<em>s </em>&gt;<em> e</em>)<em> </em><em><strong>implies</strong></em><em> Result.empty
+            definition</em>:<em> s </em>&lt;=<em> e </em><em><strong>implies</strong></em><em> Result.is_equal </em>(<em>text.substring </em>(<em>s</em>,<em> e</em>))<em>
+
+    </em><a href="actions.html#start_condition"
+name="start_condition"><em>start_condition</em></a>:<em> INTEGER
+            </em>-- Start condition<em>
+
+</em><em><strong>feature</strong></em><em> </em>-- Measurement<em>
+
+    </em><a href="actions.html#text_count" name="text_count"><em>text_count</em></a>:<em> INTEGER
+            </em>-- Length of last token read<em>
+        </em><em><strong>ensure</strong></em><em>
+            positive_count</em>:<em> Result </em>&gt;=<em> 0
+
+    </em><a href="actions.html#line" name="line"><em>line</em></a>:<em> INTEGER
+            </em>-- Line number of last token read when
+            -- '<em>%option line</em>' has been specified<em>
+        </em><em><strong>ensure</strong></em><em>
+            line_positive</em>:<em> Result </em>&gt;=<em> 1
+
+    </em><a href="actions.html#column" name="column"><em>column</em></a>:<em> INTEGER
+            </em>-- Column number of last token read when
+            -- '<em>%option line</em>' has been specified<em>
+        </em><em><strong>ensure</strong></em><em>
+            column_positive</em>:<em> Result </em>&gt;= <em>1
+
+    </em><a href="actions.html#position" name="position"><em>position</em></a>:<em> INTEGER
+            </em>-- Position of last token read (i.e. number of
+            -- characters from the start of the input source)
+            -- when '<em>%option position</em>' has been specified<em>
+        </em><em><strong>ensure</strong></em><em>
+            position_positive</em>:<em> Result </em>&gt;=<em> 1
+
+</em><em><strong>feature </strong></em>-- Status report<em>
+
+    </em><a href="actions.html#end_of_file" name="end_of_file"><em>end_of_file</em></a>:<em> BOOLEAN
+            </em>-- Has the end of input buffer been reached?<em>
+            </em>-- This means that <em>last_token</em> has been set
+            -- to 0 indicating &quot;all done&quot;.<em>
+
+    </em><a href="actions.html#scanning_error"
+name="scanning_error"><em>scanning_error</em></a>:<em> BOOLEAN
+            </em>-- Has an error occurred during scanning?<em>
+            </em>-- This can occur when too many <em>reject</em> are called (and hence
+            -- nothing can be matched anymore) or when the option &quot;nodefault&quot;
+            -- (or option -s) has been specified but the default rule is
+            -- matched nevertheless.<em>
+
+    valid_start_condition </em>(<em>sc</em>:<em> INTEGER</em>):<em> BOOLEAN
+            </em>-- Is <em>sc</em> a valid start condition?<em>
+</em><em><strong>
+feature</strong></em><em> </em>-- Setting<em>
+
+    </em><a href="actions.html#set_last_token"
+name="set_last_token"><em>set_last_token</em></a><em> </em>(<em>a_token</em>:<em> INTEGER</em>)<em>
+            </em>-- Set <em>last_token</em> to <em>a_token</em>.<em>
+        </em><em><strong>ensure</strong></em><em>
+            last_token_set</em>: <em>last_token </em>= <em>a_token
+
+    </em><a href="actions.html#set_start_condition"
+name="set_start_condition"><em>set_start_condition</em></a><em> </em>(<em>a_start_condition</em>:<em> INTEGER</em>)<em>
+            </em>-- Set <em>start_condition</em> to <em>a_start_condition</em>.<em>
+        </em><em><strong>require</strong></em><em>
+            valid_start_condition</em>:<em> valid_start_condition </em>(<em>a_start_condition</em>)<em>
+        </em><em><strong>ensure</strong></em><em>
+            start_condition_set</em>:<em> start_condition </em>=<em> a_start_condition
+
+</em><em><strong>feature</strong></em><em> </em>-- Scanning<em>
+
+    </em><a href="scanner.html#scan" name="scan"><em>scan</em></a><em>
+           </em> -- Scan <em>input_buffer</em> until end of file is found.<em>
+        </em><em><strong>ensure</strong></em><em>
+            end_of_file</em>:<em> </em><em><strong>not</strong></em><em> scanning_error </em><em><strong>implies</strong></em><em> end_of_file
+
+    </em><a href="scanner.html#read_token" name="read_token"><em>read_token</em></a><em>
+            </em>-- Read a token from <em>input_buffer</em>.
+            -- Make result available in <em>last_token</em>.<em>
+
+</em><em><strong>feature</strong></em><em> </em>-- Element change<em>
+
+    </em><a href="actions.html#append_text_to_string"
+name="append_text_to_string"><em>append_text_to_string</em></a><em> </em>(<em>a_string</em>:<em> STRING</em>)<em>
+            </em>-- Append <em>text</em> at end of <em>a_string</em>.
+            -- (For efficiency reason, this feature can bypass the
+            -- call to <em>text</em> and directly copy the characters from
+            -- the input buffer.)<em>
+        </em><em><strong>require</strong></em><em>
+            a_string_not_void</em>:<em> a_string </em>/= <em>Void
+
+    </em><a href="actions.html#append_text_substring_to_string"
+name="append_text_substring_to_string"><em>append_text_substring_to_string</em></a><em> </em>(<em>s</em>,<em> e</em>:<em> INTEGER</em>;<em> a_string</em>:<em> STRING</em>)<em>
+            </em>-- Append <em>text_substring</em> at end of <em>a_string</em>.
+            -- (For efficiency reason, this feature can bypass
+            -- the call to <em>text_substring</em> and directly copy
+            -- the characters from the input buffer.)<em>
+        </em><em><strong>require</strong></em><em>
+            a_string_not_void</em>:<em> a_string </em>/=<em> Void
+            s_large_enough</em>:<em> 1 </em>&lt;=<em> s
+            valid_interval: s </em>&lt;=<em> e </em>+<em> 1
+            e_small_enough</em>:<em> e </em>&lt;=<em> text_count
+
+    </em><a href="actions.html#terminate" name="terminate"><em>terminate</em></a><em>
+            </em>-- Terminate scanner and set <em>last_token</em>
+            -- to 0 indicating &quot;all done&quot;.<em>
+
+    </em><a href="matching_rules.html#eof_rules" name="wrap"><em>wrap</em></a>:<em> BOOLEAN
+            </em>-- Should current scanner terminate when end of file is reached?
+            -- This function can be redefined to switch to another input
+            -- buffer (but don't forget to update <em>start_condition</em>).<em>
+            </em>-- (Default: True.)<em>
+
+    </em><a href="actions.html#more" name="more"><em>more</em></a><em>
+            </em>-- Tell scanner to append the next matched token
+            -- to current value of <em>text</em> instead of
+            -- replacing it.<em>
+
+    </em><a href="actions.html#less" name="less"><em>less</em></a><em> </em>(<em>n</em>:<em> INTEGER</em>)<em>
+            </em>-- Return all but the first <em>n</em> matched
+            -- characters back to <em>input_buffer</em>.<em>
+        </em><em><strong>require</strong></em><em>
+            n_large_enough</em>:<em> n </em>&gt;=<em> 0
+            n_small_enough</em>: <em>n </em>&lt;=<em> text_count
+        </em><em><strong>ensure</strong></em><em>
+            text_count_set</em>:<em> text_count</em> =<em> n
+
+    </em><a href="actions.html#unread_character"
+name="unread_character"><em>unread_character</em></a><em> </em>(<em>c</em>:<em> CHARACTER</em>)<em>
+            </em>-- Put <em>c</em> back to <em>input_buffer</em>. This will alter both
+            -- <em>text</em> and the content of <em>input_buffer</em>.<em>
+
+    </em><a href="actions.html#read_character"
+name="read_character"><em>read_character</em></a><em>
+            </em>-- Read a character from <em>input_buffer</em>.
+            -- Make result available in <em>last_character</em>.<em>
+
+    </em><a href="actions.html#last_character"
+name="last_character"><em>last_character</em></a>:<em> CHARACTER
+            </em>-- Last character read by <em>read_character
+
+</em><em><strong>feature</strong></em><em> </em>-- Input<em>
+
+    </em><a href="actions.html#input_buffer" name="input_buffer"><em>input_buffer</em></a>:<em> YY_BUFFER
+           </em> -- Input buffer<em>
+
+    </em><a href="actions.html#set_input_buffer"
+name="set_input_buffer"><em>set_input_buffer</em></a><em> </em>(<em>a_buffer</em>:<em> </em><em><strong>like</strong></em><em> input_buffer</em>)<em>
+            </em>-- Set <em>input_buffer</em> to <em>a_buffer</em>.<em>
+        </em><em><strong>require</strong></em><em>
+            a_buffer_not_void</em>:<em> a_buffer </em>/=<em> Void
+        </em><em><strong>ensure</strong></em><em>
+            input_buffer_set</em>:<em> input_buffer</em> =<em> a_buffer
+
+    </em><a href="actions.html#flush_input_buffer"
+name="flush_input_buffer"><em>flush_input_buffer</em></a><em>
+            </em>-- Flush <em>input_buffer</em>. <em>input_buffer</em> will be automatically
+            -- refilled unless end of file has been found.<em>
+        </em><em><strong>ensure</strong></em><em>
+            flushed</em>: <em>input_buffer.count </em>=<em> 0
+
+    </em><a href="actions.html#new_file_buffer"
+name="new_file_buffer"><em>new_file_buffer</em></a><em> </em>(<em>a_file</em>:<em> FILE</em>):<em> YY_FILE_BUFFER
+            </em>-- New input buffer for <em>a_file
+        </em><em><strong>require</strong></em><em>
+            a_file_not_void</em>:<em> a_file </em>/= <em>Void
+            a_file_open_read</em>:<em> a_file.is_open_read
+        </em><em><strong>ensure</strong></em><em>
+            new_buffer_not_void</em>:<em> Result</em> /=<em> Void
+
+    </em><a href="actions.html#new_string_buffer"
+name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</em>:<em> STRING</em>):<em> YY_BUFFER
+            </em>-- New input buffer for <em>a_string
+        </em><em><strong>require</strong></em><em>
+            a_string_not_void</em>:<em> a_string </em>/=<em> Void
+        </em><em><strong>ensure</strong></em><em>
+            new_buffer_not_void</em>:<em> Result </em>/=<em> Void
+
+    </em><a href="actions.html#Empty_buffer" name="Empty_buffer"><em>Empty_buffer</em></a>:<em> YY_BUFFER
+           </em> -- Empty input buffer<em>
+        </em><em><strong>ensure</strong></em><em>
+            empty_buffer_not_void</em>:<em> Result </em>/=<em> Void
+
+</em><em><strong>feature</strong></em><em> </em>-- Output<em>
+
+    </em><a href="actions.html#output" name="output"><em>output</em></a><em> </em>(<em>a_text: </em><em><strong>like</strong></em><em> text</em>)<em>
+            </em>-- Output <em>a_text</em>.
+            -- (Note: this routine can be redefined in descendant
+            -- classes. Default: print <em>a_text</em> to standard output.)<em>
+        </em><em><strong>require</strong></em><em>
+            a_text_not_void</em>:<em> a_text </em>/= <em>Void
+
+    </em><a href="actions.html#echo" name="echo"><em>echo</em></a><em>
+            </em>-- Output <em>text</em> using feature <em>output</em>.<em>
+
+</em><em><strong>feature</strong></em><em> </em>-- Action<em>
+
+    </em><a href="actions.html#pre_action" name="pre_action"><em>pre_action</em></a><em>
+            </em>-- Action executed before every semantic action
+            -- when <em>'%option pre-action</em>' has been specified.
+            -- (Note: this routine can be redefined in descendant
+            -- classes. Default: do nothing.)
+<em>
+    </em><a href="actions.html#post_action" name="post_action"><em>post_action</em></a><em>
+            </em>-- Action executed after every semantic action
+            -- when <em>'%option post-action' </em>has been specified.
+            -- (Note: this routine can be redefined in descendant
+            -- classes. Default: do nothing.)<em>
+
+    </em><a href="actions.html#pre_eof_action"
+name="pre_eof_action"><em>pre_eof_action</em></a><em>
+            </em>-- Action executed before every end-of-file semantic action
+            -- (i.e. <em>&lt;&lt;EOF&gt;&gt;</em>) when '<em>%option pre-eof-action</em>' has been specified.
+            -- (Note: this routine can be redefined in descendant classes.
+            -- Default: do nothing.)<em>
+
+    </em><a href="actions.html#post_eof_action"
+name="post_eof_action"><em>post_eof_action</em></a><em>
+            </em>-- Action executed after every end-of-file semantic action
+            -- (i.e. <em>&lt;&lt;EOF&gt;&gt;</em>) when '<em>%option post-eof-action'</em> has been specified.
+            -- (Note: this routine can be redefined in descendant classes.
+            -- Default: do nothing.)<em>
+
+    </em><a href="matching_rules.html#default_rule"
+name="default_action"><em>default_action</em></a><em>
+           </em> -- Action executed when default rule is matched.<em>
+            </em>-- (Note: this routine can be redefined in descendant classes.
+            -- Default: print last character read to standard output.)<em>
+
+</em><em><strong>feature</strong></em><em> </em>-- Error handling<em>
+
+    </em><a name="fatal_error"><em>fatal_error</em></a><em> </em>(<em>a_message</em>:<em> STRING</em>)<em>
+            </em>-- A fatal error occurred.
+            -- Print <em>a_message</em>.<em>
+        </em><em><strong>require</strong></em><em>
+            a_message_not_void</em>:<em> a_message</em> /=<em> Void
+
+</em><em><strong>feature</strong></em><em> </em>-- Debugging<em>
+
+    </em><a href="actions.html#print_last_token"
+name="print_last_token"><em>print_last_token</em></a><em>
+</em>            -- Print to standard error debug information
+            -- about the last token read. Can be redefined
+            -- in descendant classes to print more information.
+            -- (Called at the end of <em>read_token</em> when compiled
+            -- with 'debug (&quot;GELEX&quot;)' enabled).<em>
+
+</em><em><strong>invariant</strong></em><em>
+
+    input_buffer_not_void</em>:<em> input_buffer </em>/=<em> Void
+    valid_start_condition</em>:<em> valid_start_condition </em>(<em>start_condition</em>)<em>
+
+</em><em><strong>end</strong></em></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2001-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault and others</strong><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 16 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="actions.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="limitations.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

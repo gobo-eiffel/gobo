@@ -1,0 +1,257 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc: Operator Precedence</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Operator Precedence</strong></font></td>
+        <td align="right"><a href="algorithm.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="context.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>A situation where <a href="algorithm.html#shift_reduce">shift/reduce
+conflicts</a> appear is in arithmetic expressions. Here shifting
+is not always the preferred resolution; the <em>geyacc</em>
+declarations for operator precedence allow you to specify when to
+shift and when to reduce.</p>
+
+<h2>When Precedence is Needed</h2>
+
+<p>Consider the following ambiguous grammar fragment (ambiguous
+because the input <font color="#808000"><tt>1 - 2 * 3</tt></font>
+can be parsed in two different ways):</p>
+
+<blockquote>
+    <pre><font color="#800080">expr</font><font color="#0000FF">:</font> <font
+color="#800080">expr</font> <font color="#FF0000">'-'</font> <font
+color="#800080">expr</font>
+    <font color="#0000FF">|</font> <font color="#800080">expr</font> <font
+color="#FF0000">'*'</font> <font color="#800080">expr</font>
+    <font color="#0000FF">|</font> <font color="#800080">expr</font> <font
+color="#FF0000">'&lt;'</font> <font color="#800080">expr</font>
+    <font color="#0000FF">|</font> <font color="#FF0000">'('</font> <font
+color="#800080">expr</font> <font color="#FF0000">')'</font>
+    ...
+    <font color="#0000FF">;</font></pre>
+</blockquote>
+
+<p>Suppose the parser has seen the tokens <font color="#808000"><tt>1</tt></font>,
+<font color="#808000"><tt>-</tt></font> and <font color="#808000"><tt>2</tt></font>;
+should it reduce them via the rule for the subtraction operator? It
+depends on the next token. Of course, if the next token is <font
+color="#808000"><tt>)</tt></font>, we must reduce; shifting is
+invalid because no single rule can reduce the token sequence <font
+color="#808000"><tt>- 2 )</tt></font> or anything starting with
+that. But if the next token is <font color="#808000" size="4"><tt>*</tt></font>
+or <font color="#808000"><tt>&lt;</tt></font>, we have a choice:
+either shifting or reduction would allow the parse to complete,
+but with different results.</p>
+
+<p>To decide which one <em>geyacc</em> should do, we must
+consider the results. If the next operator token <font
+color="#808000"><tt>OP</tt></font> is shifted, then it must be
+reduced first in order to permit another opportunity to reduce
+the sum. The result is (in effect) <font color="#808000"><tt>1 -
+(2 OP 3)</tt></font>. On the other hand, if the subtraction is
+reduced before shifting <font color="#808000"><tt>OP</tt></font>,
+the result is <font color="#808000"><tt>(1 - 2) OP 3</tt></font>.
+Clearly, then, the choice of shift or reduce should depend on the
+relative precedence of the operators <font color="#808000"><tt>-</tt></font>
+and <font color="#808000"><tt>OP</tt></font>: <font
+color="#808000" size="4"><tt>*</tt></font> should be shifted
+first, but not <font color="#808000"><tt>&lt;</tt></font>.</p>
+
+<p>What about input such as <font color="#808000"><tt>1 - 2 - 5</tt></font>;
+should this be <font color="#808000"><tt>(1 - 2) - 5</tt></font>
+or should it be <font color="#808000"><tt>1 - (2 - 5)</tt></font>?
+For most operators we prefer the former, which is called <em><strong>left
+association</strong></em>. The latter alternative, <em><strong>right
+association</strong></em>, is desirable for assignment operators.
+The choice of left or right association is a matter of whether
+the parser chooses to shift or reduce when the stack contains <font
+color="#808000"><tt>1 - 2</tt></font> and the look-ahead token is
+<font color="#808000"><tt>-</tt></font>: shifting makes
+right-associativity.</p>
+
+<h2>Specifying Operator Precedence</h2>
+
+<p><em>Geyacc</em> allows you to specify these choices with the
+operator precedence declarations <font color="#0000FF"><tt>%left</tt></font>
+and <font color="#0000FF"><tt>%right</tt></font>. Each such
+declaration contains a list of tokens, which are operators whose
+precedence and associativity is being declared. The <font
+color="#0000FF"><tt>%left</tt></font> declaration makes all those
+operators left-associative and the <font color="#0000FF"><tt>%right</tt></font>
+declaration makes them right-associative. A third alternative is <font
+color="#0000FF"><tt>%nonassoc</tt></font>, which declares that it
+is a syntax error to find the same operator twice &quot;in a
+row&quot;.</p>
+
+<p>The relative precedence of different operators is controlled
+by the order in which they are declared. The first <font
+color="#0000FF"><tt>%left</tt></font> or <font color="#0000FF"><tt>%right</tt></font>
+declaration in the file declares the operators whose precedence
+is lowest, the next such declaration declares the operators whose
+precedence is a little higher, and so on.</p>
+
+<h2>Precedence Examples</h2>
+
+<p>In our example, we would want the following declarations:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%left</font> <font color="#FF0000">'&lt;'</font>
+<font color="#0000FF">%left</font> <font color="#FF0000">'-'</font>
+<font color="#0000FF">%left</font> <font color="#FF0000">'*'</font></pre>
+</blockquote>
+
+<p>In a more complete example, which supports other operators as
+well, we would declare them in groups of equal precedence. For
+example,<font color="#FF0000" size="2" face="Courier New"> </font><font
+color="#FF0000"><tt>'+'</tt></font> is declared with <font
+color="#FF0000"><tt>'-'</tt></font>:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%left </font><font color="#FF0000">'&lt;' '&gt;' '=' NE LE GE</font><font
+color="#0000FF">
+%left </font><font color="#FF0000">'+' '-'</font><font
+color="#0000FF">
+%left </font><font color="#FF0000">'*' '/'</font></pre>
+</blockquote>
+
+<p>Here <font color="#FF0000"><tt>NE</tt></font> and so on stand
+for the operators for &quot;not equal&quot; and so on. We assume
+that these tokens are more than one character long and therefore
+are represented by names, not character literals.</p>
+
+<h2>How Precedence Works</h2>
+
+<p>The first effect of the precedence declarations is to assign
+precedence levels to the terminal symbols declared. The second
+effect is to assign precedence levels to certain rules: each rule
+gets its precedence from the last terminal symbol mentioned in
+the components. (You can also specify explicitly the <a
+href="#context">precedence of a rule</a>.)</p>
+
+<p>Finally, the resolution of conflicts works by comparing the
+precedence of the rule being considered with that of the
+look-ahead token. If the token's precedence is higher, the choice
+is to shift. If the rule's precedence is higher, the choice is to
+reduce. If they have equal precedence, the choice is made based
+on the associativity of that precedence level. The verbose output
+file made by <a href="options.html#-v"><font color="#800000"><tt>-v</tt></font></a>
+says how each conflict was resolved.</p>
+
+<p>Not all rules and not all tokens have precedence. If either
+the rule or the look-ahead token has no precedence, then the
+default is to shift.</p>
+
+<h2><a name="context">Context-Dependent Precedence</a></h2>
+
+<p>Often the precedence of an operator depends on the context.
+This sounds outlandish at first, but it is really very common.
+For example, a minus sign typically has a very high precedence as
+a unary operator, and a somewhat lower precedence (lower than
+multiplication) as a binary operator.</p>
+
+<p>The <em>geyacc</em> precedence declarations, <font
+color="#0000FF"><tt>%left</tt></font>, <font color="#0000FF"><tt>%right</tt></font>
+and <font color="#0000FF"><tt>%nonassoc</tt></font>, can only be
+used once for a given token; so a token has only one precedence
+declared in this way. For context-dependent precedence, you need
+to use an additional mechanism: the <font color="#0000FF"><tt>%prec</tt></font>
+modifier for rules. The <font color="#0000FF"><tt>%prec</tt></font>
+modifier declares the precedence of a particular rule by
+specifying a terminal symbol whose precedence should be used for
+that rule. It's not necessary for that symbol to appear otherwise
+in the rule. The modifier's syntax is:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%prec</font> TERMINAL-SYMBOL</pre>
+</blockquote>
+
+<p>and it is written after the components of the rule. Its effect
+is to assign the rule the precedence of <font size="2"
+face="Courier New">TERMINAL-SYMBOL</font>, overriding the
+precedence that would be deduced for it in the ordinary way. The
+altered rule precedence then affects how conflicts involving that
+rule are resolved.</p>
+
+<p>Here is how <font color="#0000FF"><tt>%prec</tt></font> solves
+the problem of unary minus. First, declare a precedence for a
+fictitious terminal symbol named <font color="#FF0000"><tt>UMINUS</tt></font>.
+There are no tokens of this type, but the symbol serves to stand
+for its precedence:</p>
+
+<blockquote>
+    <pre>...
+<font color="#0000FF">%left </font><font color="#FF0000">'+' '-'</font><font
+color="#0000FF">
+%left </font><font color="#FF0000">'*'</font><font
+color="#0000FF">
+%left</font> <font color="#FF0000">UMINUS</font></pre>
+</blockquote>
+
+<p>Now the precedence of <font color="#FF0000"><tt>UMINUS</tt></font>
+can be used in specific rules:</p>
+
+<blockquote>
+    <pre><font color="#800080">exp</font><font color="#0000FF">:</font> ...
+    <font color="#0000FF">|</font> <font color="#800080">exp</font> <font
+color="#FF0000">'-'</font> <font color="#800080">exp</font>
+    ...
+    <font color="#0000FF">|</font> <font color="#FF0000">'-'</font> <font
+color="#800080">exp</font> <font color="#0000FF">%prec</font> <font
+color="#FF0000">UMINUS</font></pre>
+</blockquote>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto://www.gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="algorithm.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="context.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

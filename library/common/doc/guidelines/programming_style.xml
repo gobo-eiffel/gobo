@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Programming Style"
+
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/programming_style">
+<chapterinfo>
+	<copyright>
+		<year>2001-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>22 December 20016</date>
+</chapterinfo>
+
+<title>Programming Style</title>
+
+<section id="assertions"><title>Assertions</title>
+
+<para>
+Routines should be properly equipped with pre- and postconditions and classes 
+with invariants. This is useful as documentation in addition to the header 
+comments to make sure that the routines and class instances are correctly used. 
+These assertions can also be enabled when running the 
+<link linkend="test">test suite</link> in 
+<filename>$GOBO/library/&lt;library-name&gt;/test</filename> in order to check the 
+correctness of the library classes.
+</para>
+
+<para>
+All assertions should have a tag, as in the following example:
+</para>
+
+<para>
+<programlisting>
+<text>_   </text>foo_not_void: <featurename>foo</featurename> /= Void
+</programlisting>
+</para>
+
+<para>
+Note that in the example above the tag <quote>foo_not_void</quote> is preferred
+to <quote>foo_exists</quote> as it may cause confusion when 
+<featurename>exists</featurename> is a feature of the class of 
+<featurename>foo</featurename>. So using systematically <quote>*_not_void</quote> 
+is a good way to avoid such possible confusion.
+</para>
+
+</section>
+
+<section id="note_clause"><title>Note Clause</title>
+
+<para>
+Each class should have a note clause at the top of the file which looks like 
+that:
+</para>
+
+<para>
+<programlisting>
+note
+<text>
+_   </text>description:
+<text>
+_   _   </text>"Short description of the class"
+<text>
+_   </text>library:    "Gobo Eiffel Lexical Library"
+<text>_   </text>copyright:  "Copyright (c) 2000-2016, Eric Bezault and others"
+<text>_   </text>license:    "MIT License"
+<text>_   </text>date:       "$Date$"
+<text>_   </text>revision:   "$Revision$"
+</programlisting>
+</para>
+
+<para>
+Put a short description of the class in the <quote>description</quote> field.
+Replace <quote>Lexical</quote> in the <quote>library</quote> field by the name 
+of your library. Replace <quote>Eric Bezault</quote> by your name in the 
+<quote>copyright</quote> field. The fields <quote>date</quote> and 
+<quote>revision</quote> are automatically expanded by the Version
+Control Systems supporting these keyword expansions. Note that 
+<link linkend="git">Git</link> does not support such expansion.
+</para>
+
+</section>
+
+<section id="header_comments"><title>Header Comments</title>
+
+<para>
+Every feature and feature clause should have a header comment such as:
+</para>
+
+<para>
+<programlisting>
+feature <comment>Access</comment>
+<text>
+_   </text><featurename>title</featurename>: <classname>STRING</classname>
+<text>_   _   _   </text><comment>Title displayed in the title bar</comment>
+<text>
+</text>feature <comment>Setting</comment>
+<text>
+_   </text><featurename>set_title</featurename> (<argument>a_title</argument>: like <featurename>title</featurename>)
+<text>_   _   _   </text><comment>Set `<featurename>title</featurename>' to `<argument>a_title</argument>'.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_title_not_void: <argument>a_title</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text><assign><target><featurename>title</featurename></target>
+				<expression><argument>a_title</argument></expression></assign>
+<text>_   _   </text>ensure
+<text>_   _   _   </text>title_set: <equal><expression><featurename>title</featurename></expression>
+					<expression><argument>a_title</argument></expression></equal>
+<text>_   _   </text>end
+</programlisting>
+</para>
+
+<para>
+(Borrow guidelines to write good header comments from OOSC2 section 26.4 
+page 886-888.)
+</para>
+
+</section>
+
+<section id="free_comments"><title>Free Comments</title>
+
+<para>
+They should give useful information and not just paraphrase the software text. 
+They should appear on the line before the instruction(s) to be explained and 
+should have one more indentation level to the right than the instruction(s).
+</para>
+
+</section>
+
+<section id="semicolons"><title>Semicolons</title>
+
+<para>
+Semicolons are optional in Eiffel. For consistency reason, they should not be 
+used in the <projectname>Gobo Eiffel</projectname> classes. The only places where 
+they are used are:
+
+<itemizedlist>
+	<listitem><para>to separate formal arguments of routines:
+		<informalexample><programlisting>
+<featurename>f</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>; <argument>a_bar</argument>: <classname>BAR</classname>)</programlisting></informalexample>
+	</para></listitem>
+	
+	<listitem><para>to separate several instructions on the same line, 
+		although this programming style is not recommended:
+		<informalexample><programlisting>
+<featurecall>
+	<featurename>print</featurename>
+	<arguments><argument>"Hello "</argument></arguments>
+</featurecall>; <featurecall>
+	<featurename>print</featurename> 
+	<arguments><argument><featurecall>
+		<target><featurename>you</featurename></target>
+		<featurename>name</featurename></featurecall></argument></arguments>
+</featurecall></programlisting></informalexample>
+	</para></listitem>
+
+	<listitem><para>to remove parsing ambiguity:
+		<informalexample><programlisting>
+<featurecall>
+	<target><featurename>foo</featurename></target>
+	<featurename>bar</featurename></featurecall>; <featurecall>
+<target>(<featurename>baz</featurename>)</target>
+<featurename>do_something</featurename></featurecall></programlisting></informalexample>
+		
+	</para></listitem>	
+</itemizedlist>
+
+</para>
+
+</section>
+
+<section id="exceptions"><title>Exceptions</title>
+
+<para>
+Exceptions should only be raised when an unexpected behavior occurs. Reading an 
+integer from the standard input when the user actually typed <quote>hello</quote>, 
+or trying to open a file in read mode when the file does not exist (it could just 
+have been deleted) are not considered as unexpected behaviors in my point of view.
+</para>
+
+<para>
+Also raising exceptions in the creation routine should be avoided since it is not 
+clear to me what should happen in that particular case. It is preferred to properly 
+create the objects and  then call the routines which may raise the exception.
+</para>
+
+<para>
+Routines which may raise exceptions should make it clear in their header comment. 
+(There is no need to report the fact that a No_more_memory exception can be 
+raised in each routine creating objects though ;-))
+</para>
+
+</section>
+
+</chapter>

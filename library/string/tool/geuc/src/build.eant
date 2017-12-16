@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<project name="geuc_source" default="help">
+
+	<description>
+		description: "Eiffel Ant file for 'geuc'"
+		system: "Gobo Eiffel generator for Unicode Classes"
+		copyright: "Copyright (c) 2005, Colin Adams and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
+			<redefine target="init_system"/>
+			<redefine target="other_clean"/>
+		</parent>
+	</inherit>
+
+	<target name="deploy" depend="init">
+		<description>
+			Copy generated files.
+		</description>
+
+		<move to_directory="${GOBO}/library/string/src/unicode">
+			<fileset include="@(st_*.e)" />
+		</move>
+		<move to_directory="${GOBO}/library/kernel/src/unicode">
+			<fileset include="@(uc_*.e)" />
+		</move>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="geuc"/>
+		<set name="system_dir" value="${GOBO}/library/string/tool/${system}/src"/>
+	</target>
+
+	<target name="other_clean" depend="init" export="NONE">
+		<description>
+			Remove generated classes.
+		</description>
+
+		<delete>
+			<fileset include="@(uc_*.e)" />
+		</delete>
+		<delete>
+			<fileset include="@(st_*.e)" />
+		</delete>
+	</target>
+
+</project>

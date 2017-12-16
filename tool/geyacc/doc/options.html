@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc: Command-line Options</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Command-line Options</strong></font></td>
+        <td align="right"><a href="parser.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="algorithm.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>The usual way to invoke <em>geyacc</em> is as follows:</p>
+
+<blockquote>
+    <pre><font color="#800000">geyacc -o filename1 filename2</font></pre>
+</blockquote>
+
+<p>Here <font color="#800000"><tt>filename2</tt></font> is the
+grammar file name, which usually ends with <font size="2">'</font><font
+color="#800000"><tt>.y</tt></font><font size="2">'</font>, and
+the Eiffel parser class is generated in <font color="#800000"><tt>filename1</tt></font>.
+Thus, the <font color="#800000"><tt>geyacc -o foo.e foo.y </tt></font>yields
+an Eiffel class in <font color="#800000"><tt>foo.e</tt></font>
+describing a parser whose grammar is specified in <font
+color="#800000"><tt>foo.y</tt></font>.</p>
+
+<p><em>Geyacc</em> supports both traditional single-letter
+options and mnemonic long option names. Long option names are
+indicated with <font color="#800000"><tt>--</tt></font> instead
+of <font color="#800000"><tt>-</tt></font>. When a long option
+takes an argument, like <font color="#800000"><tt>--output-file</tt></font>,
+connect the option name and the argument with <font
+color="#800000"><tt>=</tt></font>. </p>
+
+<p>Here is a list of options that can be used with <em>geyacc</em>:</p>
+
+<dl>
+    <dt><font color="#800000"><tt>--doc=format</tt></font></dt>
+    <dd>Write the documentation about the grammar to the <font
+        color="#800000"><tt>output-file</tt></font> (or to the
+        standard output if not specified) instead of generating
+        the corresponding parser. Use the output <font
+        color="#800000"><tt>format</tt></font> specified.
+        Currently supported formats: <font color="#800000"><tt>html</tt></font>
+        and <font color="#800000"><tt>xml</tt></font>.</dd>
+    <dt><a name="-t"><font color="#800000"><tt>-t</tt></font></a><font
+        color="#800000"><tt> classname<br>
+        --tokens=classname</tt></font></dt>
+    <dd>Write an extra class named <font color="#800000"><tt>classname</tt></font>
+        (in upper-case) containing integer constants for the
+        token type names defined in the grammar. This class is
+        saved in file <font color="#800000"><tt>classname.e</tt></font>
+        (in lower-case) unless the option <a href="#-k"><font
+        color="#800000"><tt>-k</tt></font></a> or <font
+        color="#800000"><tt>--tokens-file</tt></font> has been
+        specified. This class is essential if you wish to put the
+        definition of routine <font color="#008080"><em><tt>read_token</tt></em></font>
+        in a separate class, because <font color="#008080"><em><tt>read_token</tt></em></font><font
+        color="#008080" size="2" face="Courier New"><em> </em></font>needs
+        to be able to refer to token type codes. This class also
+        contains the routine <a href="actions.html#token_name"><font
+        color="#008080"><em><tt>token_name</tt></em></font></a>
+        which is particularly useful to make debugging messages
+        more human-readable.<br>
+        <br>
+        [The options <font color="#800000"><tt>-d classname</tt></font>
+        and <font color="#800000"><tt>--defines=classname</tt></font>
+        are still available for compatibility with previous
+        version of <em>geyacc</em>. These options will be removed
+        in future releases.]</dd>
+    <dt><a name="-k"><font color="#800000"><tt>-k</tt></font></a><font
+        color="#800000"><tt> filename<br>
+        --tokens-file=filename</tt></font></dt>
+    <dd>Name of the file where the extra class containing integer
+        constants for the token type names will be written. If
+        the <a href="#-t"><font color="#800000"><tt>-t</tt></font></a>
+        or <font color="#800000"><tt>--tokens</tt></font> option
+        has not been specified, then nothing will be written to
+        that file.</dd>
+    <dt><font color="#800000"><tt>-h<br>
+        -?<br>
+        --help</tt></font></dt>
+    <dd>Print a summary of the command-line options to <em>geyacc</em>
+        and exit.</dd>
+    <dt><font color="#800000"><tt>--pragma=[no]line</tt></font></dt>
+    <dd>Specify whether the code generated for the semantic
+        actions will contain or not indication about the line
+        number where it originally appeared in the input grammar
+        file.</dd>
+    <dt><font color="#800000"><tt>-o filename<br>
+        --output-file=filename</tt></font></dt>
+    <dd>Specify the name <font color="#800000"><tt>filename</tt></font>
+        for the parser file. If this option is not specified, the
+        parser is generated to the standard ouptut.</dd>
+    <dt><a name="-v"><font color="#800000"><tt>-v</tt></font></a><font
+        color="#800000"><tt> filename<br>
+        --verbose=filename</tt></font></dt>
+    <dd>Write an extra output file containing verbose
+        descriptions of the parser states and what is done for
+        each type of look-ahead token in that state. This is very
+        useful when debugging your grammar with Eiffel <a
+        href="stages.html#debug">debug instructions</a> spread
+        out in the parser skeleton class. This file also
+        describes all the conflicts, both those resolved by
+        operator precedence and the unresolved ones.</dd>
+    <dt><font color="#800000"><tt>-V<br>
+        --version</tt></font></dt>
+    <dd>Print the version number of <em>geyacc</em> and exit.</dd>
+    <dt><font color="#800000"><tt>-x</tt></font></dt>
+    <dd>Write each semantic action into a separate routine. The
+        default is to write all semantic actions into the same
+        routine, which can become too large for C back-end
+        compilers to handle.</dd>
+    <dt><font color="#800000"><tt>--array-size=size</tt></font></dt>
+    <dd><font size="3">Some Eiffel compilers experience
+        difficulties to process big manifest arrays. This option
+        directs <em>geyacc</em> to split manifest arrays with more
+        than </font><font color="#800000"><tt>size</tt></font><font
+        size="3"> elements into several smaller arrays. This
+        option can be disabled by setting </font><font
+        color="#800000"><tt>size</tt></font><font size="3"> to </font><font
+        color="#800000"><tt>0</tt></font><font size="3">.
+        [default: </font><font color="#800000"><tt>200</tt></font><font
+        size="3">]</font></dd>
+    <dt><font color="#800000"><tt>--rescue-on-abort</tt></font></dt>
+    <dd>Write a rescue clause in the action routines to catch abort exceptions. Useful when compiling in void-safe mode.</dd>
+</dl>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2001-2016</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 22 April 2016</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="parser.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="algorithm.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

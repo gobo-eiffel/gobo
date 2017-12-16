@@ -1,0 +1,1298 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Class DS_MULTIARRAYED_HASH_TABLE</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Class
+        DS_MULTIARRAYED_HASH_TABLE</strong></font></td>
+        <td align="right"><a
+        href="ds_multiarrayed_hash_set_cursor.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a
+        href="ds_multiarrayed_hash_table_cursor.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><font color="#000080"><em><strong>note</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>description</em>:
+
+<font color="#800000"><em>    &quot;Hash tables implemented with multi-arrays. %
+    %Keys are hashed using </em></font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html#hash_code"><font
+color="#800000"><em>hash_code</em></font></a><font
+color="#800000"><em> from </em></font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><font
+color="#800000"><em>HASHABLE</em></font></a><font color="#800000"><em>.&quot;
+
+</em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
+</em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
+href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
+color="#800000"><em>&gt;&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 2001, Eric Bezault and others&quot;
+</em></font><em>license:   </em><font color="#800000"><em> &quot;MIT License&quot;</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>class interface</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>DS_MULTIARRAYED_SPARSE_TABLE </em>[<em>G</em>, <em>K </em>-&gt; <a
+href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em></a>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
+
+<blockquote>
+    <pre><a href="ds_multiarrayed_sparse_table.html"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></a><em> </em>[<em>G</em>, <em>K</em>]
+    <a href="ds_sparse_table.html"><em>DS_SPARSE_TABLE</em></a><em> </em>[<em>G</em>, <em>K</em>]
+        <a href="ds_table.html"><em>DS_TABLE</em></a><em> </em>[<em>G</em>, <em>K</em>]
+            <a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]
+<em>        </em><a href="ds_bilinear.html"><em>DS_BILINEAR</em></a><em> </em>[<em>G</em>]
+            <a href="ds_linear.html"><em>DS_LINEAR</em></a><em> </em>[<em>G</em>]
+            <em>    </em><a href="ds_traversable.html"><em>DS_TRAVERSABLE</em></a><em> </em>[<em>G</em>]<em>
+                    </em><a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]
+<em>                </em><a href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]<em>
+                    </em><a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]
+<em>        </em><a href="ds_resizable.html"><em>DS_RESIZABLE</em></a><em> </em>[<em>G</em>]
+            <a href="ds_container.html"><em>DS_CONTAINER</em></a><em> </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>create</strong></em></font></pre>
+
+<blockquote>
+    <pre><a name="make"><em>make</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
+        -- a size of </font><a href="#default_chunk_size"><em>default_chunk_size</em></a><font
+color="#008000">.
+        -- Use `=' as comparison criterion for items.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> </em><a
+href="#default_chunk_size"><em>default_chunk_size</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_equal"><em>make_equal</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
+        -- a size of </font><a href="#default_chunk_size"><em>default_chunk_size</em></a><font
+color="#008000">.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for items.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> </em><a
+href="#default_chunk_size"><em>default_chunk_size</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_with_chunk_size"><em>make_with_chunk_size</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
+        -- a size of </font><em>a_chunk_size</em><font
+color="#008000">.
+        -- Use `=' as comparison criterion for items.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_multiarrayed_sparse_table.html"><font color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+        a_chunk_size_positive</em>:<em> a_chunk_size </em>&gt;<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> a_chunk_size
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_equal_with_chunk_size"><em>make_equal_with_chunk_size</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
+        -- a size of </font><em>a_chunk_size</em><font
+color="#008000">.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for items.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_multiarrayed_sparse_table.html"><font color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+        a_chunk_size_positive</em>:<em> a_chunk_size </em>&gt;<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> a_chunk_size
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_default"><em>make_default</em></a><em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><a href="#default_capacity"><em>default_capacity</em></a><font
+color="#008000"> items.  Array
+        -- chunks will have a size of </font><a
+href="#default_chunk_size"><em>default_chunk_size</em></a><font
+color="#008000">.
+        -- Use `=' as comparison criterion for items.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_container.html#make_default"><font color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> </em><a
+href="#default_capacity"><em>default_capacity</em></a><em>
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> </em><a
+href="#default_chunk_size"><em>default_chunk_size</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_map"><em>make_map</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
+        -- a size of </font><a href="#default_chunk_size"><em>default_chunk_size</em></a><font
+color="#008000">.
+        -- Use `=' as comparison criterion for items.
+        -- Use `=' as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> </em><a
+href="#default_chunk_size"><em>default_chunk_size</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_map_equal"><em>make_map_equal</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
+        -- a size of </font><a href="#default_chunk_size"><em>default_chunk_size</em></a><font
+color="#008000">.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for items.
+        -- Use `=' as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> </em><a
+href="#default_chunk_size"><em>default_chunk_size</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_map_with_chunk_size"><em>make_map_with_chunk_size</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
+        -- a size of </font><em>a_chunk_size</em><font
+color="#008000">.
+        -- Use `=' as comparison criterion for items.
+        -- Use `=' as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_multiarrayed_sparse_table.html"><font color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+        a_chunk_size_positive</em>:<em> a_chunk_size </em>&gt;<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> a_chunk_size
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_map_equal_with_chunk_size"><em>make_map_equal_with_chunk_size</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
+        -- a size of </font><em>a_chunk_size</em><font
+color="#008000">.
+        -- Use </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+color="#008000"> as comparison criterion for items.
+        -- Use `=' as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_multiarrayed_sparse_table.html"><font color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+        a_chunk_size_positive</em>:<em> a_chunk_size </em>&gt;<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> a_chunk_size
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_map_default"><em>make_map_default</em></a><em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space
+        -- for at least </font><a href="#default_capacity"><em>default_capacity</em></a><font
+color="#008000"> items.  Array
+        -- chunks will have a size of </font><a
+href="#default_chunk_size"><em>default_chunk_size</em></a><font
+color="#008000">.
+        -- Use `=' as comparison criterion for items.
+        -- Use `=' as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> </em><a
+href="#default_capacity"><em>default_capacity</em></a><em>
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> </em><a
+href="#default_chunk_size"><em>default_chunk_size</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="make_with_equality_testers"><em>make_with_equality_testers</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em>
+    an_item_tester</em>:<em> </em><font color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#equality_tester"><em>equality_tester</em></a>;<em>
+    a_key_tester</em>:<em> </em><font color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#key_equality_tester"><em>key_equality_tester</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space for at
+        -- least </font><em>n</em><font color="#008000"> items. Array chunks will have a size of
+        -- </font><a href="#default_chunk_size"><em>default_chunk_size</em></a><font
+color="#008000">.
+        -- Use </font><em>an_item_tester</em><font
+color="#008000"> as comparison criterion for items.
+        -- Use </font><em>a_key_tester</em><font color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_multiarrayed_sparse_table.html"><font color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> </em><a
+href="#default_capacity"><em>default_capacity</em></a><em>
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> </em><a
+href="#default_chunk_size"><em>default_chunk_size</em></a><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a><em>
+        equality_tester_set</em>:<em> </em><a
+href="#equality_tester"><em>equality_tester</em></a><em> </em>=<em> an_item_tester
+        key_equality_tester_set</em>:<em> </em><a
+href="#key_equality_tester"><em>key_equality_tester</em></a><em> </em>=<em> a_key_tester</em></pre>
+    <pre><a name="make_with_chunk_size_and_equality_testers"><em>make_with_chunk_size_and_equality_testers</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em>
+    a_chunk_size</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> an_item_tester</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#equality_tester"><em>equality_tester</em></a>;<em>
+    a_key_tester</em>:<em> </em><font color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#key_equality_tester"><em>key_equality_tester</em></a>)<em>
+</em><font color="#008000">        -- Create an empty table and allocate memory space for at
+        -- least </font><em>n</em><font color="#008000"> items. Array chunks will have a size of </font><em>a_chunk_size</em><font
+color="#008000">.
+        -- Use </font><em>an_item_tester</em><font
+color="#008000"> as comparison criterion for items.
+        -- Use </font><em>a_key_tester</em><font color="#008000"> as comparison criterion for keys.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_multiarrayed_sparse_table.html"><font color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        positive_n</em>:<em> n </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> </em><a
+href="#default_capacity"><em>default_capacity</em></a><em>
+        chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> a_chunk_size
+        before</em>:<em> </em><a href="#before"><em>before</em></a><em>
+        equality_tester_set</em>:<em> </em><a
+href="#equality_tester"><em>equality_tester</em></a><em> </em>=<em> an_item_tester
+        key_equality_tester_set</em>:<em> </em><a
+href="#key_equality_tester"><em>key_equality_tester</em></a><em> </em>=<em> a_key_tester</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Access</font></pre>
+
+<blockquote>
+    <pre><a name="infix_at"><font color="#000080"><em><strong>infix</strong></em></font><em> </em><font
+color="#800000"><em>&quot;@&quot;</em></font></a>,<em> </em><a
+name="item"><em>item</em></a><em> </em>(<em>k</em>:<em> K</em>):<em> G
+        </em><font color="#008000">-- Item associated with </font><em>k
+</em><font color="#008000">        -- (From </font><a
+href="ds_table.html#item"><font color="#008000"><em>DS_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_entry</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)</pre>
+    <pre><a name="key"><em>key</em></a><em> </em>(<em>k</em>:<em> K</em>):<em> K
+        </em><font color="#008000">-- Key associated with </font><em>k
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#key"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        has_k</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)</pre>
+    <pre><a name="found_item"><em>found_item</em></a>:<em> G
+        </em><font color="#008000">-- Item found by last call to </font><a
+href="#search"><em>search</em></a><font color="#008000">
+        -- (From </font><a href="ds_sparse_table.html#found_item"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)
+    </font><font color="#000080"><em><strong>require</strong></em></font><font
+color="#008000">
+</font><em>        item_found</em>:<em> </em><a href="#found"><em>found</em></a></pre>
+    <pre><a name="found_key"><em>found_key</em></a>:<em> K
+</em><font color="#008000">        -- Key of item found by last call to </font><a
+href="#search"><em>search</em></a><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#found_key"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+</em><font color="#008000">    </font><font color="#000080"><em><strong>require</strong></em></font><font
+color="#008000">
+</font><em>        key_found</em>:<em> </em><a href="#found"><em>found</em></a></pre>
+    <pre><a name="item_for_iteration"><em>item_for_iteration</em></a>:<em> G
+        </em><font color="#008000">-- Item at internal cursor position</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_traversable.html#item_for_iteration"><font
+color="#008000"><em>DS_TRAVERSABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a></pre>
+    <pre><a name="key_for_iteration"><em>key_for_iteration</em></a>:<em> K
+        </em><font color="#008000">-- Key at internal cursor position</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#key_for_iteration"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a></pre>
+    <pre><a name="first"><em>first</em></a>:<em> G
+        </em><font color="#008000">-- First item in table</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_linear.html#first"><font color="#008000"><em>DS_LINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        has_first</em>: <a href="#has_item"><em>has_item</em></a><em> </em>(<font
+color="#008080"><em>Result</em></font>)</pre>
+    <pre><a name="last"><em>last</em></a><em>: G
+        </em><font color="#008000">-- Last item in table</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_bilinear.html#last"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        has_last</em>: <a href="#has_item"><em>has_item</em></a><em> </em>(<font
+color="#008080"><em>Result</em></font>)</pre>
+    <pre><a name="new_cursor"><em>new_cursor</em></a><em>: </em><a
+href="ds_multiarrayed_hash_table_cursor.html"><em>DS_MULTIARRAYED_HASH_TABLE_CURSOR</em></a><em> </em>[<em>G</em>, <em>K</em>]<em>
+        </em><font color="#008000">-- New external cursor for traversal</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_traversable.html#new_cursor"><font color="#008000"><em>DS_TRAVERSABLE</em></font></a><font
+color="#008000">.)</font><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        cursor_not_void</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        valid_cursor</em>:<em> </em><a href="#valid_cursor"><em>valid_cursor</em></a><em> </em>(<font
+color="#008080"><em>Result</em></font>)</pre>
+    <pre><a name="equality_tester"><em>equality_tester</em></a>:<em> </em><a
+href="ds_equality_tester.html"><em>DS_EQUALITY_TESTER</em></a><em> </em>[<em>G</em>]<em>
+        </em><font color="#008000">-- Equality tester;
+        -- A void equality tester means that `='
+        -- will be used as comparison criterion.
+        -- (From </font><a
+href="ds_searchable.html#equality_tester"><font color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="key_equality_tester"><em>key_equality_tester</em></a>:<em> </em><a
+href="ds_equality_tester.html"><em>DS_EQUALITY_TESTER</em></a><em> </em>[<em>K</em>]<em>
+</em><font color="#008000">        -- Equality tester for keys;
+        -- A void equality tester means that `='
+        -- will be used as comparison criterion.
+        -- (From </font><a
+href="ds_sparse_table.html#key_equality_tester"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Measurement</font></pre>
+
+<blockquote>
+    <pre><a name="count"><em>count</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><font
+color="#000080"><em><strong>
+        </strong></em></font><font color="#008000">-- Number of items in table
+        -- (From </font><a href="ds_container.html#count"><font
+color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="capacity"><em>capacity</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+        </em><font color="#008000">-- Maximum number of items in table</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_resizable.html#capacity"><font color="#008000"><em>DS_RESIZABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="default_capacity"><em>default_capacity</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+</em><font color="#008000">        -- Initial capacity in </font><a
+href="#make_default"><em>make_default</em></a><em>
+</em><font color="#008000">        -- (Default value: 10)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_resizable.html#default_capacity"><font color="#008000"><em>DS_RESIZABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        default_capacity_positive</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font></pre>
+    <pre><a name="chunk_size"><em>chunk_size</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+</em><font color="#008000">        -- Size of array chunks
+        -- (From </font><a
+href="ds_multiarrayed_sparse_table.html#chunk_size"><font
+color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="default_chunk_size"><em>default_chunk_size</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+</em><font color="#008000">        -- Default value for </font><a
+href="#chunk_size"><em>chunk_size</em></a><font color="#008000">
+        -- (Default value: 30000)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_multiarrayed_sparse_table.html#default_chunk_size"><font
+color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        default_chunk_size_positive</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>&gt;<em> </em><font
+color="#808000"><em>0</em></font></pre>
+    <pre><a name="occurrences"><em>occurrences</em></a><em> </em>(<em>v</em>:<em> G</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+        </em><font color="#008000">-- Number of times </font><em>v</em><font
+color="#008000"> appears in table
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)
+        -- (From </font><a href="ds_searchable.html#occurrences"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        positive</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+        has</em>:<em> </em><a href="#has_item"><em>has_item</em></a><em> </em>(<em>v</em>)<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#008080"><em>Result</em></font><em> </em>&gt;=<em> </em><font
+color="#808000"><em>1</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Status report</font></pre>
+
+<blockquote>
+    <pre><a name="has"><em>has</em></a><em> </em>(<em>k</em>:<em> K</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+</em><font color="#008000">        -- Is there an item associated with </font><em>k</em><font
+color="#008000">?</font><em>
+</em><font color="#008000">        -- (From in </font><a
+href="ds_table.html#has"><font color="#008000"><em>DS_TABLE</em></font></a><font
+color="#008000">.)</font><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        valid_key</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>)</pre>
+    <pre><a name="has_item"><em>has_item</em></a><em> </em>(<em>v</em>:<em> G</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Does table include </font><em>v</em><font
+color="#008000">?
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#has"><font color="#008000"><em>has</em></font></a><font
+color="#008000"> in </font><a href="ds_searchable.html#has"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a></pre>
+    <pre><a name="found"><em>found</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Did last call to </font><a
+href="#search"><em>search</em></a><font color="#008000"> succeed?
+        -- (From </font><a href="ds_sparse_table.html#found"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="is_empty"><em>is_empty</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><font
+color="#000080"><em><strong>
+       </strong></em></font><font color="#008000"> -- Is table empty?
+        -- (From </font><a href="ds_container.html#is_empty"><font
+color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="is_full"><em>is_full</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><font
+color="#008000">
+        -- Is table full?
+        -- (From </font><a href="ds_resizable.html#is_full"><font
+color="#008000"><em>DS_RESIZABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="is_first"><em>is_first</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is internal cursor on first item?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_linear.html#is_first"><font color="#008000"><em>DS_LINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a><em>
+        not_off</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+        definition</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#item_for_iteration"><em>item_for_iteration</em></a><em> </em>= <a
+href="#first"><em>first</em></a>)</pre>
+    <pre><a name="is_last"><em>is_last</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is internal cursor on last item?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_bilinear.html#is_last"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a><em>
+        not_off</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+        definition</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#item_for_iteration"><em>item_for_iteration</em></a><em> </em>= <a
+href="#last"><em>last</em></a>)</pre>
+    <pre><a name="after"><em>after</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is there no valid position to right of internal cursor?
+        -- (From </font><a href="ds_linear.html#after"><font
+color="#008000"><em>DS_LINEAR</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="before"><em>before</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is there no valid position to left of internal cursor?
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="ds_bilinear.html#before"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="off"><em>off</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is there no item at internal cursor position?
+        -- (From </font><a href="ds_traversable.html#off"><font
+color="#008000"><em>DS_TRAVERSABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="same_position"><em>same_position</em></a><em> </em>(<em>a_cursor</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#new_cursor"><em>new_cursor</em></a>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is internal cursor at same position as </font><em>a_cursor</em><font
+color="#008000">?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_traversable.html#same_position"><font color="#008000"><em>DS_TRAVERSABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_cursor_not_void</em>:<em> a_cursor </em>/= <font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="valid_cursor"><em>valid_cursor</em></a><em> </em>(<em>a_cursor</em>:<em> </em><a
+href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is </font><em>a_cursor</em><font
+color="#008000"> a valid cursor?
+        -- (From </font><a
+href="ds_traversable.html#valid_cursor"><font color="#008000"><em>DS_TRAVERSABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_cursor_not_void</em>:<em> a_cursor </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>:<em> K</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is </font><em>k</em><font
+color="#008000"> a valid key?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_table.html#valid_key"><font color="#008000"><em>DS_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure
+        </strong></em></font><em>defintion</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>=<em> </em><font
+color="#808000"><em>True</em></font></pre>
+    <pre><a name="same_items"><em>same_items</em></a><em> </em>(<em>v</em>,<em> u</em>:<em> G</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Are </font><em>v</em><font
+color="#008000"> and </font><em>u</em><font color="#008000"> considered equal?
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#same_items"><font color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="same_equality_tester"><em>same_equality_tester</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Does container use the same comparison
+        -- criterion as </font><em>other</em><font
+color="#008000">?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#same_equality_tester"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="equality_tester_settable"><em>equality_tester_settable</em></a><em> </em>(<em>a_tester</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#equality_tester"><em>equality_tester</em></a>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+</em><font color="#008000">        -- Can </font><a
+href="#set_equality_tester"><em>set_equality_tester</em></a><font
+color="#008000"> be called with </font><em>a_tester</em><font
+color="#008000">
+        -- as argument in current state of container?
+        -- (Default answer: True.)
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#equality_tester_settable"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Search</font></pre>
+
+<blockquote>
+    <pre><a name="search"><em>search</em></a><em> </em>(<em>k</em>:<em> K</em>)<em>
+        </em><font color="#008000">-- Search for item at key </font><em>k</em><font
+color="#008000">.
+        -- If found, set </font><a href="#found"><em>found</em></a><font
+color="#008000"> to true, and set
+        -- </font><a href="#found_item"><em>found_item</em></a><font
+color="#008000"> to item associated with </font><em>k</em><font
+color="#008000">.
+        -- (From </font><a href="ds_sparse_table.html#search"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)
+    </font><font color="#000080"><em><strong>ensure</strong></em></font><font
+color="#008000">
+        </font><em>found_set</em>: <a href="#found"><em>found</em></a> =<em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>)<em>
+        found_item_set</em>:<em> </em><a href="#found"><em>found</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#found_item"><em>found_item</em></a> = <a href="#item"><em>item</em></a><em> </em>(<em>k</em>))</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Comparison</font></pre>
+
+<blockquote>
+    <pre><a name="is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font><em>)</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is current table equal to </font><em>other</em><font
+color="#008000">?</font><em>
+        </em><font color="#008000">-- Do not take cursor positions, </font><a
+href="#capacity"><em>capacity</em></a><font color="#008000">
+        -- nor </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000"> into account.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#is_equal"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        consistent</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#standard_is_equal"><em>standard_is_equal</em></a><em> </em>(<em>other</em>)<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#008080"><em>Result</em></font><em>
+        same_type</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<em>
+        symmetric</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> other</em>.<a
+href="#is_equal"><em>is_equal</em></a><em> </em>(<font
+color="#008080"><em>Current</em></font>)<em>
+        same_count</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> count </em>=<em> other</em>.<a
+href="#count"><em>count</em></a></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font> <font
+color="#008000">-- Duplication</font></pre>
+
+<blockquote>
+    <pre><a name="copy"><em>copy</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>)<em>
+        </em><font color="#008000">-- Copy </font><em>other</em><font
+color="#008000"> to current table.
+        -- Move all cursors </font><a href="#off"><em>off</em></a><font
+color="#008000"> (unless </font><em>other</em><font
+color="#008000"> = </font><font color="#008080"><em>Current</em></font><font
+color="#008000">).
+        -- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#copy"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        type_identity</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        is_equal</em>:<em> </em><a href="#is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>)</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Setting</font></pre>
+
+<blockquote>
+    <pre><a name="set_equality_tester"><em>set_equality_tester</em></a><em> </em>(<em>a_tester</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#equality_tester"><em>equality_tester</em></a>)<em>
+        </em><font color="#008000">-- Set </font><a
+href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000"> to </font><em>a_tester</em><font color="#008000">.
+        -- A void equality tester means that `='
+        -- will be used as comparison criterion.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#set_equality_tester"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><em>
+</em><font color="#000080"><em><strong>    require</strong></em></font><em>
+        equality_tester_settable</em>:<em> </em><a
+href="#equality_tester_settable"><em>equality_tester_settable</em></a><em> </em>(<em>a_tester</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        equality_tester_set</em>:<em> </em><a
+href="#equality_tester"><em>equality_tester</em></a><em> </em>= <em>a_tester</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Cursor movement</font></pre>
+
+<blockquote>
+    <pre><a name="start"><em>start</em></a><em>
+        </em><font color="#008000">-- Move internal cursor to first position.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_linear.html#start"><font color="#008000"><em>DS_LINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty_behavior</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#after"><em>after</em></a><em>
+        not_empty_behavior</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#is_first"><em>is_first</em></a></pre>
+    <pre><a name="finish"><em>finish</em></a><em>
+        </em><font color="#008000">-- Move internal cursor to last position.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_bilinear.html#finish"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty_behavior</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#before"><em>before</em></a><em>
+        not_empty_behavior</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#is_last"><em>is_last</em></a></pre>
+    <pre><a name="forth"><em>forth</em></a><em>
+        </em><font color="#008000">-- Move internal cursor to next position.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_linear.html#forth"><font color="#008000"><em>DS_LINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_after</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#after"><em>after</em></a></pre>
+    <pre><a name="back"><em>back</em></a><em>
+        </em><font color="#008000">-- Move internal cursor to previous position.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_bilinear.html#back"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_before</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#before"><em>before</em></a></pre>
+    <pre><a name="search_forth"><em>search_forth</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Move internal cursor to first position at or after current
+        -- position where </font><a href="#item_for_iteration"><em>item_for_iteration</em></a><font
+color="#008000"> and </font><em>v</em><font color="#008000"> are equal.
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)
+        -- Move </font><a href="#after"><em>after</em></a><font
+color="#008000"> if not found.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_linear.html#search_forth"><font color="#008000"><em>DS_LINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em> </em><font color="#000080"><em><strong>or</strong></em></font><em> </em><a
+href="#after"><em>after</em></a></pre>
+    <pre><a name="search_back"><em>search_back</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Move internal cursor to first position at or before current
+        -- position where </font><a href="#item_for_iteration"><em>item_for_iteration</em></a><font
+color="#008000"> and </font><em>v</em><font color="#008000"> are equal.
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)
+        -- Move </font><a href="#before"><em>before</em></a><font
+color="#008000"> if not found.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_bilinear.html#search_back"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em> </em><font color="#000080"><em><strong>or</strong></em></font><em> </em><a
+href="#before"><em>before</em></a></pre>
+    <pre><a name="go_after"><em>go_after</em></a><em>
+        </em><font color="#008000">-- Move cursor to </font><a
+href="#after"><em>after</em></a><font color="#008000"> position.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_linear.html#go_after"><font color="#008000"><em>DS_LINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        after</em>:<em> </em><a href="#after"><em>after</em></a></pre>
+    <pre><a name="go_before"><em>go_before</em></a><em>
+        </em><font color="#008000">-- Move cursor to </font><a
+href="#before"><em>before</em></a><font color="#008000"> position.</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_bilinear.html#go_before"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        before: </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="go_to"><em>go_to</em></a><em> </em>(<em>a_cursor</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#new_cursor"><em>new_cursor</em></a>)<em>
+        </em><font color="#008000">-- Move internal cursor to </font><em>a_cursor</em><font
+color="#008000">'s position.
+        -- (From </font><a href="ds_traversable.html#go_to"><font
+color="#008000"><em>DS_TRAVERSABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        cursor_not_void</em>:<em> a_cursor </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        valid_cursor</em>:<em> </em><a href="#valid_cursor"><em>valid_cursor</em></a><em> </em>(<em>a_cursor</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        same_position</em>:<em> </em><a href="#same_position"><em>same_position</em></a><em> </em>(<em>a_cursor</em>)</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Element change</font></pre>
+
+<blockquote>
+    <pre><a name="replace"><em>replace</em></a><em> </em>(<em>v</em>:<em> G</em>;<em> k</em>:<em> K</em>)<em>
+        </em><font color="#008000">-- Replace item associated with </font><em>k</em><font
+color="#008000"> by </font><em>v</em><font color="#008000">.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_table.html#replace"><font color="#008000"><em>DS_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_entry</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        replaced</em>:<em> </em><a href="#item"><em>item</em></a><em> </em>(<em>k</em>) =<em> v
+        same_count</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>= <font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a></pre>
+    <pre><a name="replace_found_item"><em>replace_found_item</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Replace item associated with
+        -- the key of </font><a href="#found_item"><em>found_item</em></a><font
+color="#008000"> by </font><em>v</em><font color="#008000">.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#replace_found_item"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        item_found</em>:<em> </em><a href="#found"><em>found</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        replaced</em>:<em> </em><a href="#found_item"><em>found_item</em></a><em> </em>=<em> v
+        same_count</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>= <font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a></pre>
+    <pre><a name="put"><em>put</em></a><em> </em>(<em>v</em>:<em> G</em>;<em> k</em>:<em> K</em>)<em>
+        </em><font color="#008000">-- Associate </font><em>v</em><font
+color="#008000"> with key </font><em>k</em><font color="#008000">.</font><em>
+</em><font color="#008000">        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#put"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_full</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_full"><em>is_full</em></a><em>
+        valid_key</em>:<em> </em><a href="#valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        inserted</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)<em> </em><font
+color="#000080"><em><strong>and then</strong></em></font><em> </em><a
+href="#item"><em>item</em></a><em> </em>(<em>k</em>) =<em> v
+        same_count</em>: (<font color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>))<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a>)<em>
+        one_more</em>: (<font color="#000080"><em><strong>not old</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>))<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font>)</pre>
+    <pre><a name="put_new"><em>put_new</em></a> (<em>v</em>: <em>G</em>; <em>k</em>: <em>K</em>)
+        <font color="#008000">-- Associate </font><em>v</em><font
+color="#008000"> with key </font><em>k</em><font color="#008000">.
+        -- Do not move cursors.
+        -- (From </font><a href="ds_sparse_table.html#put_new"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)
+</font><em>    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_full</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_full"><em>is_full</em></a><em>
+        valid_key</em>:<em> </em><a href="#valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>)<em>
+        new_item</em>: <font color="#000080"><em><strong>not</strong></em></font> <a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        one_more</em>: <a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font>
+<em>        inserted</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)<em> </em><font
+color="#000080"><em><strong>and then</strong></em></font><em> </em><a
+href="#item"><em>item</em></a><em> </em>(<em>k</em>) =<em> v</em></pre>
+    <pre><a name="force"><em>force</em></a><em> </em>(<em>v</em>:<em> G</em>;<em> k</em>:<em> K</em>)<em>
+        </em><font color="#008000">-- Associate </font><em>v</em><font
+color="#008000"> with key </font><em>k</em><font color="#008000">.</font><em>
+        </em><font color="#008000">-- Resize table if necessary.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_table.html#put"><font color="#008000"><em>put</em></font></a><font
+color="#008000"> in </font><a href="ds_table.html#put"><font
+color="#008000"><em>DS_TABLE</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_key</em>:<em> </em><a href="#valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        inserted</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)<em> </em><font
+color="#000080"><em><strong>and then</strong></em></font><em> </em><a
+href="#item"><em>item</em></a><em> </em>(<em>k</em>) =<em> v
+        same_count</em>: (<font color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>))<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a>)<em>
+        one_more</em>: (<font color="#000080"><em><strong>not old</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>))<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font>)</pre>
+    <pre><a name="force_new"><em>force_new</em></a> (<em>v</em>: <em>G</em>; <em>k</em>: <em>K</em>)
+        <font color="#008000">-- Associate </font><em>v</em><font
+color="#008000"> with key </font><em>k</em><font color="#008000">.
+</font><em>        </em><font color="#008000">-- Resize table if necessary.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_table.html#put_new"><font color="#008000"><em>put_new</em></font></a><font
+color="#008000"> in </font><a href="ds_table.html#put_new"><font
+color="#008000"><em>DS_TABLE</em></font></a><font color="#008000">.)
+</font><em>    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_key</em>:<em> </em><a href="#valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>)<em>
+        new_item</em>: <font color="#000080"><em><strong>not</strong></em></font> <a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        one_more</em>: <a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font>
+<em>        inserted</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)<em> </em><font
+color="#000080"><em><strong>and then</strong></em></font><em> </em><a
+href="#item"><em>item</em></a><em> </em>(<em>k</em>) =<em> v</em></pre>
+    <pre><a name="force_last"><em>force_last</em></a><em> </em>(<em>v</em>: <em>G</em>; <em>k</em>: <em>K</em>)<em>
+</em><font color="#008000">        -- Associate </font><em>v</em><font
+color="#008000"> with key </font><em>k</em><font color="#008000">. Put </font><em>v</em><font
+color="#008000"> at the end of table
+        -- if no item was already associated with </font><em>k</em><font
+color="#008000">, or replace
+        -- existing item otherwise.
+        -- Resize table if necessary.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#force_last"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+</em><font color="#000080"><em><strong>    ensure</strong></em></font><em>
+        same_count</em>:<em> </em>(<font color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>)) <font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a>)<em>
+        one_more</em>: (<font color="#000080"><em><strong>not</strong></em></font><em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>))<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font>)<em>
+        inserted</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)<em> </em><font
+color="#000080"><em><strong>and then</strong></em></font><em> </em><a
+href="#item"><em>item</em></a><em> </em>(<em>k</em>) =<em> v
+        last</em>: (<font color="#000080"><em><strong>not</strong></em></font><em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>))<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#last"><em>last</em></a><em> </em>=<em> v</em></pre>
+    <pre><a name="swap"><em>swap</em></a><em> </em>(<em>k</em>,<em> l</em>:<em> K</em>)<em>
+        </em><font color="#008000">-- Exchange items associated with </font><em>k</em><font
+color="#008000"> and </font><em>l</em><font color="#008000">.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_table.html#swap"><font color="#008000"><em>DS_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_k</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)<em>
+        valid_l</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>l</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        same_count</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em>
+        new_k</em>:<em> </em><a href="#item"><em>item</em></a><em> </em>(<em>k</em>) =<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#item"><em>item</em></a><em> </em>(<em>l</em>)<em>
+        new_l</em>:<em> </em><a href="#item"><em>item</em></a><em> </em>(<em>l</em>) =<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#item"><em>item</em></a><em> </em>(<em>k</em>)</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Removal</font></pre>
+
+<blockquote>
+    <pre><a name="remove"><em>remove</em></a><em> </em>(<em>k</em>:<em> K</em>)<em>
+        </em><font color="#008000">-- Remove item associated with </font><em>k</em><font
+color="#008000">.
+        -- Move any cursors at this position </font><a
+href="#forth"><em>forth</em></a><font color="#008000">.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_table.html#remove"><font color="#008000"><em>DS_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_key</em>:<em> </em><a href="#valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        same_count</em>:<em> </em>(<font color="#000080"><em><strong>not old</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>))<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a>)<em>
+        one_less</em>:<em> </em>(<font color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>))<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>- <font color="#808000"><em>1</em></font>)<em>
+        removed</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>)</pre>
+    <pre><a name="remove_found_item"><em>remove_found_item</em></a><em>
+</em><font color="#008000">        -- Remove item found by last call to </font><a
+href="#search"><em>search</em></a><font color="#008000">.
+        -- Move any cursors at this position </font><a
+href="#forth"><em>forth</em></a><font color="#008000">.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#remove_found_item"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        item_found</em>:<em> </em><a href="#found"><em>found</em></a><em>
+</em><font color="#000080"><em><strong>    ensure</strong></em></font><em>
+        one_less</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>- <font color="#808000"><em>1</em></font></pre>
+    <pre><a name="wipe_out"><em>wipe_out</em></a><em>
+        </em><font color="#008000">-- Remove all items from table.
+        -- Move all cursors </font><a href="#off"><em>off</em></a><font
+color="#008000">.
+        -- (From </font><a href="ds_container.html#wipe_out"><font
+color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        wiped_out</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Resizing</font></pre>
+
+<blockquote>
+    <pre><a name="resize"><em>resize</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+        </em><font color="#008000">-- Resize table so that it can contain
+        -- at least </font><em>n</em><font color="#008000"> items. Do not lose any item.</font><em>
+</em><font color="#008000">        -- Move all cursors </font><a
+href="#off"><em>off</em></a><font color="#008000">.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_resizable.html#resize"><font color="#008000"><em>DS_RESIZABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        n_large_enough</em>:<em> n </em>&gt;=<em> </em><a
+href="#capacity"><em>capacity</em></a><font color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        capacity_set</em>:<em> </em><a href="#capacity"><em>capacity</em></a><em> </em>=<em> n</em></pre>
+</blockquote>
+
+<pre><a name="invariant"><font color="#000080"><em><strong>invariant</strong></em></font></a></pre>
+
+<blockquote>
+    <pre><em>positive_count</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>&gt;=<em> </em><font
+color="#808000"><em>0</em></font><em>
+empty_definition</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em> </em>= (<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#808000"><em>0</em></font>)
+    <font color="#008000">-- (From </font><a
+href="ds_container.html#invariant"><font color="#008000"><em>DS_CONTAINER</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><em>empty_constraint</em>:<em> </em><a href="#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+    </em><font color="#008000">-- (From </font><a
+href="ds_traversable.html#invariant"><font color="#008000"><em>DS_TRAVERSABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><em>after_constraint</em>:<em> </em><a href="#after"><em>after</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+    </em><font color="#008000">-- (From </font><a
+href="ds_linear.html#invariant"><font color="#008000"><em>DS_LINEAR</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><em>not_both</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em>(<a
+href="#after"><em>after</em></a><em> </em><font color="#000080"><em><strong>and</strong></em></font><em> </em><a
+href="#before"><em>before</em></a>)<em>
+before_constraint</em>:<em> </em><a href="#before"><em>before</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+    </em><font color="#008000">-- (From </font><a
+href="ds_bilinear.html#invariant"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><em>count_constraint</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>&lt;= <a
+href="#capacity"><em>capacity</em></a><em>
+full_definition</em>:<em> </em><a href="#is_full"><em>is_full</em></a><em> </em>= (<a
+href="#count"><em>count</em></a><em> </em>=<em> </em><a
+href="#capacity"><em>capacity</em></a>)
+<em>    </em><font color="#008000">-- (From </font><a
+href="ds_resizable.html#invariant"><font color="#008000"><em>DS_RESIZABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><em>chunk_size_positive</em>:<em> </em><a
+href="#chunk_size"><em>chunk_size</em></a><em> </em>&gt;<em> </em><font
+color="#808000"><em>0
+</em></font><font color="#008000">    -- (From </font><a
+href="ds_multiarrayed_sparse_table.html#invariant"><font
+color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>end</strong></em></font><font
+color="#008000"> -- class DS_MULTIARRAYED_HASH_TABLE</font></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2001</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 2 April 2001</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$" -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a
+        href="ds_multiarrayed_hash_set_cursor.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a
+        href="ds_multiarrayed_hash_table_cursor.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

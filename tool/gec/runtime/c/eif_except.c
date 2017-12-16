@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTIONS"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,186 +12,133 @@
 
 #ifndef EIF_EXCEPT_C
 #define EIF_EXCEPT_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef EIF_EXCEPT_H
+#include "eif_except.h"
+#endif
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void eraise(char* name, long code) {
-	GE_raise((int)code);
+/*
+ * Raise an Eiffel exception.
+ */
+void eraise(const char* name, long code)
+{
+	GE_raise_with_message(code, name);
 }
-
-void esdie(int code) {
-	exit(code);
-}
-
-EIF_REFERENCE eename(long except) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eename' in 'eif_except.h' not implemented\n");
-	return GE_ms8("Not implemented yet",19);
-}
-
-EIF_REFERENCE eeltag(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeltag' in 'eif_except.h' not implemented\n");
-	return GE_ms8("Not implemented yet",19);
-}
-
-EIF_REFERENCE eelrout(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eelrout' in 'eif_except.h' not implemented\n");
-	return GE_ms8("Not implemented yet",19);
-}
-
-EIF_REFERENCE eelclass(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eelclass' in 'eif_except.h' not implemented\n");
-	return GE_ms8("Not implemented yet",19);
-}
-
-long eelcode(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eelcode' in 'eif_except.h' not implemented\n");
-	return 0;
-}
-
-EIF_REFERENCE stack_trace_string(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'stack_trace_string' in 'eif_except.h' not implemented\n");
-	return GE_ms8("Not implemented yet",19);
-}
-
-EIF_REFERENCE eeotag(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeotag' in 'eif_except.h' not implemented\n");
-	return GE_ms8("Not implemented yet",19);
-}
-
-long eeocode(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeocode' in 'eif_except.h' not implemented\n");
-	return 0;
-}
-
-EIF_REFERENCE eeorout(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeorout' in 'eif_except.h' not implemented\n");
-	return GE_ms8("Not implemented yet",19);
-}
-
-EIF_REFERENCE eeoclass(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeoclass' in 'eif_except.h' not implemented\n");
-	return GE_ms8("Not implemented yet",19);
-}
-
-char eedefined(long ex) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eedefined' in 'eif_except.h' not implemented\n");
-	return '\1';
-}
-
-void eecatch(long code) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eecatch' in 'eif_except.h' not implemented\n");
-}
-
-void eeignore(long code) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeignore' in 'eif_except.h' not implemented\n");
-}
-
-void eetrace(char b) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eetrace' in 'eif_except.h' not implemented\n");
-}
-
-#ifdef EIF_WINDOWS
-void set_windows_exception_filter() {
-	/* TODO: Needed to compile some code at AXAR */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'set_windows_exception_filter' in 'eif_except.h' not implemented\n");
-}
-#endif
 
 /*
  * Raise an Eiffel exception of the given code with no associated tag.
  */
-void xraise(int code) {
-	eraise(NULL, (long)code);
+void xraise(int code)
+{
+	GE_raise((long)code);
 }
 
 /*
- * Raise 'Operating system error' exception.
+ * Raise an "Operating system error" exception.
  */
-void esys(void) {
+void esys(void)
+{
 	if (errno == 0) {
 			/* External event */
-		xraise(EN_EXT);
+		GE_raise(GE_EX_EXT);
 	} else {
 			/* Operating system error */
-		xraise(EN_SYS);
+		GE_raise(GE_EX_SYS);
 	}
 }
 
 /*
- * As a special case, an I/O error is raised when a system call which is
- * I/O bound fails.
+ * As a special case, an I/O error is raised when a system call which is I/O bound fails.
  */
-void eise_io(char *tag) {
-	eraise(tag, EN_ISE_IO);		/* I/O error */
+void eise_io(const char* tag)
+{
+	GE_raise_with_message(GE_EX_ISE_IO, tag);
 }
 
 /*
- * Raise "out of mnemory" exception.
+ * Raise a "No more memory" exception.
  */
  void enomem(void) {
-	xraise(EN_OMEM);
+	GE_raise(GE_EX_OMEM);
  }
+
+/*
+ * Raise EiffelCOM exception.
+ */
+void com_eraise(const char* tag, long num)
+{
+	GE_raise_with_message(num, tag);
+}
+
+/*
+ * Terminate execution with exit status `code',
+ * without triggering an exception.
+ */
+void esdie(int code)
+{
+/* TODO: check that the Boehm GC triggers the 'dispose' routines. */
+	exit(code);
+}
+
+/*
+ * Exception tag associated with `code'.
+ * This is a duplication from Eiffel classes, but still used for trace printing and in EiffelCom.
+ */
+EIF_REFERENCE eename(long code)
+{
+	return GE_str(GE_exception_tag(code));
+}
+
+/*
+ * Is exception `ex' defined?
+ * Used in EiffelCOM.
+ */
+char eedefined(long ex)
+{
+	return (char)((ex > 0 && ex <= GE_EX_NEX)? 1 : 0);
+}
+
+/*
+ * Enable/diable printing of the exception trace.
+ * Per thead information.
+ */
+void eetrace(char b) {
+	GE_context* context;
+
+	context = GE_current_context();
+	context->exception_trace_enabled = b;
+}
+
+/*
+ * Is current execution during rescue?
+ */
+EIF_BOOLEAN eif_is_in_rescue(void)
+{
+	GE_context* context;
+
+	context = GE_current_context();
+	return (EIF_TEST(context->in_rescue > 0));
+}
+
+#ifdef EIF_WINDOWS
+/*
+ * Set default exception handler.
+ */
+void set_windows_exception_filter()
+{
+	GE_set_windows_exception_filter();
+}
+#endif
 
 #ifdef __cplusplus
 }

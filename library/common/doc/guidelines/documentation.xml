@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Documentation"
+
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/documentation">
+<chapterinfo>
+	<copyright>
+		<year>2001-2016</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>22 December 2016</date>
+</chapterinfo>
+
+<title>Documentation</title>
+
+<para>
+Each Eiffel library or tool should come with some documentation to be placed in 
+<filename>$GOBO/library/&lt;library-name&gt;/doc</filename> or
+<filename>$GOBO/tool/&lt;tool-name&gt;/doc</filename>. Documentation should 
+be written in American English. It is possible to provide the documentation in 
+other languages (French, Spanish, Dutch, German, ...), but it should at least be 
+available in American English.
+</para>
+
+<para>
+Documentation format: 
+<ulink url="http://www.oreilly.com/catalog/docbook/chapter/book/docbook.html">DocBook</ulink> 
+XML DTD?
+...
+</para>
+
+<para>
+Graphviz could probably be used to generate class inheritance graphs. Graphiz is 
+an open source graph drawing software. Have a look at:
+<blockquote>
+<ulink url="http://www.graphviz.org">http://www.graphviz.org</ulink>
+</blockquote>
+</para>
+
+<para>
+For example, with the following <filename>list.dot</filename> file:
+</para>
+
+<para>
+<informalexample>
+<programlisting>
+digraph G {
+	edge [dir=back, color=maroon];
+	node [height=0.35, fontsize=8, style=filled, color=paleturquoise3];
+
+	ds_list [label="DS_LIST*"];
+	ds_linked_list [label="DS_LINKED_LIST"];
+	ds_bilinked_list [label="DS_BILINKED_LIST"];
+	ds_arrayed_list [label="DS_ARRAYED_LIST"];
+
+	ds_list -> ds_linked_list -> ds_bilinked_list;
+	ds_list -> ds_arrayed_list;
+}
+</programlisting>
+</informalexample>
+</para>
+
+<para>
+I managed to generate a <filename>list.gif</filename> file similar to those used 
+in the existing <projectname>Gobo Eiffel</projectname> documentation with the 
+command-line:
+</para>
+
+<para>
+<informalexample>
+<programlisting>
+  dot -Tgif -o <filename>list.gif</filename> <filename>list.dot</filename>
+</programlisting>
+</informalexample>
+</para>
+
+<para>
+I don't know yet how to simulate the client relationship double-arrow with 
+graphviz though.
+</para>
+
+<para>
+(Thank you to Franck Arnaud for letting me know about this graphviz tool.)
+</para>
+
+</chapter>

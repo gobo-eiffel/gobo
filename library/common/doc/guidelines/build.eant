@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<project name="guidelines_doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel Developer Guidelines"
+		copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/doc.eant">
+			<redefine target="init"/>
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+	
+<!-- Implementation -->
+
+	<target name="init" export="NONE">
+		<precursor/>
+		<set name="path_to_doc" value="../"/>
+	</target>
+	
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+
+		<geant target="${target}" arguments="index"/>
+		<geant target="${target}" arguments="compilers"/>
+		<geant target="${target}" arguments="language"/>
+		<geant target="${target}" arguments="naming_conventions"/>
+		<geant target="${target}" arguments="class_layout"/>
+		<geant target="${target}" arguments="programming_style"/>
+		<geant target="${target}" arguments="documentation"/>
+		<geant target="${target}" arguments="examples"/>
+		<geant target="${target}" arguments="test"/>
+		<geant target="${target}" arguments="git"/>
+		<geant target="${target}" arguments="installation"/>
+		<geant target="${target}" arguments="license"/>
+	</target>
+
+</project>

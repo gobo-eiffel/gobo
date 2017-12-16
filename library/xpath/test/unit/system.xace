@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+
+<system name="xpath">
+	<description>
+		system: "Gobo Eiffel XPath Library Unit Tester: Eiffel XPath test suite"
+		copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<root class="XPATH" creation="make"/>
+	<option name="console_application" value="true"/>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true"/>
+		<option if="${GOBO_EIFFEL}=ise">
+			<!--
+				In finized mode, it takes a huge amount of time to compile a big generated C file.
+				The option below turn off some optimizations to make the C compilation faster.
+			-->
+			<option name="inlining" value="none"/>
+		</option>
+	</option>
+	<option if="${DEBUG}">
+		<option name="case_insensitive" value="true" />
+		<option name="trace" value="false" />
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="internal"/> 
+		<option name="gc_info" value="false"/> 
+		<option name="finalize" value="false"/>
+		<!-- <option name="debug_tag" value="XPath expressions"/> -->
+		<!-- <option name="debug_tag" value="XPath Axis Expression"/> -->
+		<!-- <option name="debug_tag" value="XPath expression factory"/> -->
+		<!-- <option name="debug_tag" value="XPath Expression Parser"/> -->
+		<!-- <option name="debug_tag" value="XPath Expression Parser - tokens"/> -->
+		<!-- <option name="debug_tag" value="XPath tokens"/> -->
+		<!-- <option name="debug_tag" value="XPath bindings"/> -->
+		<!-- <option name="debug_tag" value="XPath evaluator"/> -->
+		<!-- <option name="debug_tag" value="XPath expression replacement"/> -->
+		<!-- <option name="debug_tag" value="XPath path iterator"/> -->
+		<!-- <option name="debug_tag" value="XPath stand-alone context"/> -->
+		<!-- <option name="debug_tag" value="XPath content emitter"/> -->
+		<!-- <option name="debug_tag" value="XPath descendants enumeration"/> -->
+		<!-- <option name="debug_tag" value="XPath preceding enumeration"/> -->
+		<!-- <option name="debug_tag" value="XPath tiny builder"/> -->
+		<!-- <option name="debug_tag" value="XPath tiny node"/> -->
+		<!-- <option name="debug_tag" value="XPath tiny sibling enumeration"/> -->
+		<!-- <option name="debug_tag" value="XPath tiny document"/> -->
+		<!-- <option name="debug_tag" value="XPath abstract node"/> -->
+		<!-- <option name="debug_tag" value="XPath name pool"/> -->
+		<!-- <option name="debug_tag" value="XPath name pool allocation"/> -->
+		<!-- <option name="debug_tag" value="XPath mapping iterator"/> -->
+		<!-- <option name="debug_tag" value="Xpath sequence extent"/> -->
+		<!-- <option name="debug_tag" value="XPath Integer values"/> -->
+		<!-- <option name="debug_tag" value="XPath Double values"/> -->
+	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
+
+	<cluster name="xpath_tester" location="${GOBO}/library/xpath/test/unit"/>
+	<cluster name="eiffel_testgen" location="TESTGEN"/>
+	<mount location="${GOBO}/library/test/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/time/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/parse/library.xace"/>
+	<mount location="${GOBO}/library/lexical/library.xace"/>
+	<mount location="${GOBO}/library/xml/library.xace"/>
+	<mount location="${GOBO}/library/xpath/library.xace"/>
+	<mount location="${GOBO}/library/xslt/library.xace"/>
+	<mount location="${GOBO}/library/kernel.xace" />
+	<mount location="${GOBO}/library/string/library.xace"/>
+	<mount location="${GOBO}/library/math/library.xace"/>
+</system>

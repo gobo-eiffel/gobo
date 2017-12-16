@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Client /Supplier Adaptation Technique</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Client/Supplier Adaptation
+        Technique</strong></font></td>
+        <td align="right"><a href="inheritance.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="gepp.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>
+[Note that the examples used below to illustrate this adaptation technique
+may be out of date and not relevant anymore for recent versions
+of the supported Eiffel compilers.]
+</p>
+
+<p><font size="3">Although it is the most object-oriented way to
+adapt existing classes, the </font><a href="inheritance.html"><font
+size="3">inheritance mechanism</font></a><font size="3">
+sometimes fails to fulfill its job when dealing with kernel
+classes. This is typically the case for basic types such as </font><font
+color="#008080"><em><tt>INTEGER</tt></em></font><font size="3">
+or </font><font color="#008080"><em><tt>CHARACTER</tt></em></font><font
+size="3">, or optimized classes such as </font><font
+color="#008080"><em><tt>ARRAY</tt></em></font><font size="3"> or </font><font
+color="#008080"><em><tt>STRING</tt></em></font><font size="3">.</font><font
+size="2"> </font><font size="3">To get around this problem,
+another technique using client/supplier relationship can be
+adopted.</font></p>
+
+<h2>Description</h2>
+
+<p>This technique, which admittedly doesn't look nice in a pure
+object-oriented environment, consists in writing features which
+need to be adapted in a client class instead of in a descendant
+class. For example in <font size="2">ELKS '95</font> there is no
+way to get a <font color="#008080"><em><tt>CHARACTER</tt></em></font>
+knowing its <font size="2">ASCII</font> code. What is needed is
+an extra routine in class <font color="#008080"><em><tt>INTEGER</tt></em></font>:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>to_character</em>: <em>CHARACTER</em>
+        -- Character whose ASCII code is <em>Current</em>
+    <em><strong>require</strong></em>
+        <em>large_enough</em>: <em>Current</em> &gt;= <em>Minimum_character_code</em>
+        <em>small_enough</em>: <em>Current</em> &lt;= <em>Maximum_character_code</em>
+    <em><strong>ensure</strong></em>
+        <em>valid_character_code</em>: <em>Result</em>.<em>code</em> = <em>Current</em></font></pre>
+</blockquote>
+
+<p>Some Eiffel compilers already support this routine in class <font
+color="#008080"><em><tt>INTEGER</tt></em></font>. The other
+compilers provide other means to get the same result. But class <font
+color="#008080"><em><tt>INTEGER</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>is
+half built-in in most compilers, so adapting this class through
+inheritance would result in run-time misbehaviors. The solution
+adopted here is to introduce a facility class <font
+color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>
+containing the following routine:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>to_character </em>(<em>an_integer</em>:<em> INTEGER</em>): <em>CHARACTER</em>
+        -- Character whose ASCII code is `<em>an_integer</em>'
+    <em><strong>require</strong></em>
+        <em>an_integer_large_enough</em>: <em>an_integer</em> &gt;= <em>Minimum_character_code</em>
+        <em>an_integer_small_enough</em>: <em>an_integer</em> &lt;= <em>Maximum_character_code</em>
+    <em><strong>ensure</strong></em>
+        <em>valid_character_code</em>: <em>Result</em>.<em>code</em> = <em>an_integer</em></font></pre>
+</blockquote>
+
+<p>and other such adapted routines to be applied to <font
+color="#008080"><em><tt>INTEGER</tt></em></font>s. As with the
+inheritance technique, there will be a different cluster for each
+supported Eiffel compiler, and each such cluster will have the
+same set of classes. These classes are facility classes, such as <font
+color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>,
+associated with a given kernel class. They contain a set of
+routines whose first argument is the object that routine should
+be applied to.</p>
+
+<p>There are two typical ways to use the classes described above.
+They can be used as <em>mixin</em> classes. This means that a
+given class will inherit from one of these classes to have access
+to its features, as shown below:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>FOO</em>
+
+<em><strong>inherit</strong></em>
+
+    <em>KL_INTEGER_ROUTINES</em>
+        <em><strong>export</strong></em>
+            {<em>NONE</em>} <em><strong>all</strong></em>
+        <em><strong>end</strong></em>
+
+<em><strong>feature</strong></em> -- Basic operations
+
+    <em>do_something</em> <em><strong>is</strong></em>
+            -- Do something with a character obtained from
+            -- its ASCII code provided as input by the user.
+        <em><strong>local</strong></em>
+            <em>c</em>: <em>CHARACTER</em>
+        <em><strong>do</strong></em>
+            <em>io</em>.<em>read_integer</em>
+            <em>c</em> := <em>to_character</em> (<em>io</em>.<em>last_integer</em>)
+            ...
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>(Note that all features of <font color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>have
+been made secret since this class is inherited for implementation
+only.) The disadvantage of this method is that it rapidly pollutes
+the name space in the application classes. A possible way to handle
+this problem would be to declare facility classes, such as
+<font color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>, as
+expanded and use them in local variables:
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>expanded</strong></em> <em><strong>class</strong></em> <em>KL_INTEGER_ROUTINES</em>
+
+<em><strong>feature</strong></em>
+
+            ...
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>FOO</em>
+
+<em><strong>feature</strong></em> -- Basic operations
+
+    <em>do_something</em>
+            -- Do something with a character obtained from
+            -- its ASCII code provided as input by the user.
+        <em><strong>local</strong></em><em>
+            integer_routines</em>: <em>KL_INTEGER_ROUTINES</em>
+            <em>c</em>: <em>CHARACTER</em>
+        <em><strong>do</strong></em>
+            <em>io</em>.<em>read_integer</em>
+            <em>c</em> := <em>integer_routines.to_character</em> (<em>io</em>.<em>last_integer</em>)
+            ...
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>Some Eiffel compilers will even optimized the code above by
+inlining the call to <font color="#008080"><em><tt>to_character</tt></em></font>
+and hence avoiding the (implicit) creation of the expanded
+object. Unfortunately, <em>user-defined expanded types</em> are not properly
+supported by all Eiffel compilers, making it impossible to use
+this mechanism in portable code. To work around this problem and
+to avoid having to create an instance of these <font
+color="#008080"><em><tt>_ROUTINES</tt></em></font> classes
+&quot;by hand&quot; each time they are used, they can be accessed
+through once functions. For example, for class <font
+color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>, the
+following class will be provided:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_IMPORTED_INTEGER_ROUTINES</em>
+
+<em><strong>feature</strong></em> -- Access
+
+    <em>INTEGER_</em>: <em>KL_INTEGER_ROUTINES</em>
+            -- Routines that ought to be in class INTEGER
+        <em><strong>once</strong></em>
+            <em><strong>create</strong></em> <em>Result
+        </em><em><strong>ensure</strong></em><em>
+            integer_routines_not_void</em>:<em> Result </em>/=<em> Void</em>
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>and class <font color="#008080"><em><tt>FOO</tt></em></font>
+will become:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>FOO</em>
+
+<em><strong>inherit</strong></em>
+
+    <em>KL_IMPORTED_INTEGER_ROUTINES</em>
+
+<em><strong>feature</strong></em> -- Basic operations
+
+    <em>do_something</em>
+            -- Do something with a character obtained from
+            -- its ASCII code provided as input by the user.
+        <em><strong>local</strong></em><em>
+            c</em>: <em>CHARACTER</em>
+        <em><strong>do</strong></em>
+            <em>io</em>.<em>read_integer</em>
+            <em>c</em> := <em>INTEGER_.to_character</em> (<em>io</em>.<em>last_integer</em>)
+            ...
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>The class name convention <font color="#008080"><em><tt>_IMPORTED_</tt></em></font><em>
+</em>has been adopted after reading an article from Richie Bielak
+which appeared in <em>Eiffel Outlook</em> in May 1994 (volume 3,
+number 5, page 6). The use of <font color="#008080"><em><tt>INTEGER_</tt></em></font>,
+all characters in uppercase (instead of the typical style
+guideline which states that <em>once</em> function names should
+have their first letter capitalized and all remaining in
+lowercase), has been chosen to make it clear that these routines
+really ought to be implemented in class <font color="#008080"><em><tt>INTEGER
+</tt></em></font>itself. The underscore at the end is to avoid
+compilation problems with some Eiffel compilers which could consider,
+with no good reasons in my opinion, <font color="#008080"><em><tt>INTEGER</tt></em></font>
+as one of Eiffel's reserved
+words.</p>
+
+<h2>Caveats</h2>
+
+<p>The technique described above is not what we can call a
+masterpiece of object-oriented programming, but it has the
+advantage of getting around the drawbacks of the other technique
+using <a href="inheritance.html">adaptation by inheritance</a>.
+However the two techniques presented so far only take care of
+class and feature incompatibilities, but for the sake of
+interoperability, they will fail to deal with language
+differences (also known as dialects) due to bugs or extensions
+provided by some Eiffel compilers. The use of a simple <a
+href="gepp.html">preprocessor</a> will help in such situations.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1998-2016</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>maito:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 23 December 2016</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="inheritance.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="gepp.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<p align="left">&nbsp;</p>
+</body>
+</html>

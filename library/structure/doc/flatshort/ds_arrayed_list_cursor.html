@@ -1,0 +1,847 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Class DS_ARRAYED_LIST_CURSOR</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Class DS_ARRAYED_LIST_CURSOR</strong></font></td>
+        <td align="right"><a href="ds_arrayed_list.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a
+        href="ds_arrayed_sparse_set.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<pre><font color="#000080"><em><strong>note</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>description</em>:
+
+<font color="#800000"><em>    &quot;Cursors for arrayed list traversals&quot;
+
+</em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
+</em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
+href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
+color="#800000"><em>&gt;&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999, Eric Bezault and others&quot;
+</em></font><em>license:   </em><font color="#800000"><em> &quot;MIT License&quot;</em></font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>class interface</strong></em></font></pre>
+
+<blockquote>
+    <pre><em>DS_ARRAYED_LIST_CURSOR </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
+
+<blockquote>
+    <pre><a href="ds_list_cursor.html"><em>DS_LIST_CURSOR</em></a><em> </em>[<em>G</em>]
+    <a href="ds_bilinear_cursor.html"><em>DS_BILINEAR_CURSOR</em></a><em> </em>[<em>G</em>]
+        <a href="ds_linear_cursor.html"><em>DS_LINEAR_CURSOR</em></a><em> </em>[<em>G</em>]
+            <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]
+<em>    </em><a href="ds_dynamic_cursor.html"><em>DS_DYNAMIC_CURSOR</em></a><em> </em>[<em>G</em>]
+        <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]
+<em>    </em><a href="ds_indexed_cursor.html"><em>DS_INDEXED_CURSOR</em></a><em> </em>[<em>G</em>]
+        <a href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>create</strong></em></font></pre>
+
+<blockquote>
+    <pre><a name="make"><em>make</em></a><em> </em>(a_<em>list</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><a
+href="#container"><em>container</em></a>)<em>
+       </em><font color="#008000"> -- Create a new cursor for </font>a_<em>list</em><font
+color="#008000">.</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_list_not_void</em>:<em> a_list </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        container_set</em>:<em> </em><a href="#container"><em>container</em></a><em> </em>=<em> a_list
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Access</font></pre>
+
+<blockquote>
+    <pre><a name="item"><em>item</em></a>:<em> G
+       </em><font color="#008000"> -- Item at cursor position</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_cursor.html#item"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a></pre>
+    <pre><a name="index"><em>index</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+        </em><font color="#008000">-- Index of current position</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_indexed_cursor.html#index"><font color="#008000"><em>DS_INDEXED_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        valid_index</em>:<em> </em><a href="#valid_index"><em>valid_index</em></a><em> </em>(<font
+color="#008080"><em>Result</em></font>)</pre>
+    <pre><a name="container"><em>container</em></a>:<em> </em><a
+href="ds_arrayed_list.html"><em>DS_ARRAYED_LIST</em></a><em> </em>[<em>G</em>]<em>
+       </em><font color="#008000"> -- List traversed</font><font
+color="#000080"><em><strong>
+</strong></em></font><font color="#008000">        -- (From </font><a
+href="ds_cursor.html#container"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Status report</font></pre>
+
+<blockquote>
+    <pre><a name="is_first"><em>is_first</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is cursor on first item?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_linear_cursor.html#is_first"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies not </strong></em></font><a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#is_empty"><em>is_empty</em></a><em>
+        not_off</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+        definition</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#item"><em>item</em></a><em> </em>=<em> </em><a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#first"><em>first</em></a>)</pre>
+    <pre><a name="is_last"><em>is_last</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is cursor on last item?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_bilinear_cursor.html#is_last"><font color="#008000"><em>DS_BILINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies not </strong></em></font><a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#is_empty"><em>is_empty</em></a><em>
+        not_off</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+        definition</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
+href="#item"><em>item</em></a><em> </em>=<em> </em><a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#last"><em>last</em></a><em>)</em></pre>
+    <pre><a name="after"><em>after</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is there no valid position to right of cursor?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_linear_cursor.html#after"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="before"><em>before</em></a><em>: </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Is there no valid position to left of cursor?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_bilinear_cursor.html#before"><font color="#008000"><em>DS_BILINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="off"><em>off</em></a>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is there no item at cursor position?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_cursor.html#off"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="same_position"><em>same_position</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is current cursor at same position as </font><em>other</em><font
+color="#008000">?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_cursor.html#same_position"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="valid_index"><em>valid_index</em></a><em> </em>(<em>i</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Is </font><em>i</em><font
+color="#008000"> a valid index value?</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_indexed_cursor.html#valid_index"><font color="#008000"><em>DS_INDEXED_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure
+        </strong></em></font><em>definition</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>= (<font
+color="#808000"><em>0</em></font><em> </em>&lt;=<em> i </em><font
+color="#000080"><em><strong>and</strong></em></font><em> i </em>&lt;= (<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font>))</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Cursor movement</font></pre>
+
+<blockquote>
+    <pre><a name="start"><em>start</em></a><em>
+        </em><font color="#008000">-- Move cursor to first position.</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_linear_cursor.html#start"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty_behavior</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#after"><em>after</em></a><em>
+        not_empty_behavior</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#is_first"><em>is_first</em></a></pre>
+    <pre><a name="finish"><em>finish</em></a><em>
+        </em><font color="#008000">-- Move cursor to last position.</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_bilinear_cursor.html#finish"><font color="#008000"><em>DS_BILINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        empty_behavior</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#before"><em>before</em></a><em>
+        not_empty_behavior</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#is_last"><em>is_last</em></a></pre>
+    <pre><a name="forth"><em>forth</em></a><em>
+        </em><font color="#008000">-- Move cursor to next position.</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_linear_cursor.html#forth"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_after</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#after"><em>after</em></a></pre>
+    <pre><a name="back"><em>back</em></a><em>
+       </em><font color="#008000"> -- Move cursor to previous position.</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_bilinear_cursor.html#back"><font color="#008000"><em>DS_BILINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_before</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#before"><em>before</em></a></pre>
+    <pre><a name="search_forth"><em>search_forth</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Move to first position at or after current
+        -- position where </font><a href="#item"><em>item</em></a><font
+color="#008000"> and </font><em>v</em><font color="#008000"> are equal.
+        -- (Use </font><a
+href="ds_arrayed_list.html#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s criterion from </font><a href="#container"><em>container</em></a><font
+color="#008000">
+        -- if not void, use `=' criterion otherwise.)
+        -- Move </font><a href="#after"><em>after</em></a><font
+color="#008000"> if not found.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_linear_cursor.html#search_forth"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em> </em><font color="#000080"><em><strong>or</strong></em></font><em> </em><a
+href="#after"><em>after</em></a></pre>
+    <pre><a name="search_back"><em>search_back</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Move to first position at or before current
+        -- position where </font><a href="#item"><em>item</em></a><font
+color="#008000"> and </font><em>v</em><font color="#008000"> are equal.
+        -- (Use </font><a
+href="ds_arrayed_list.html#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s criterion from </font><a href="#container"><em>container</em></a><font
+color="#008000">
+        -- if not void, use `=' criterion otherwise.)
+        -- Move </font><a href="#before"><em>before</em></a><font
+color="#008000"> if not found.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_bilinear_cursor.html#search_back"><font color="#008000"><em>DS_BILINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em> </em><font color="#000080"><em><strong>or</strong></em></font><em> </em><a
+href="#before"><em>before</em></a></pre>
+    <pre><a name="go_after"><em>go_after</em></a><em>
+        </em><font color="#008000">-- Move cursor to </font><a
+href="#after"><em>after</em></a><font color="#008000"> position.</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_linear_cursor.html#go_after"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        after</em>:<em> </em><a href="#after"><em>after</em></a></pre>
+    <pre><a name="go_before"><em>go_before</em></a><em>
+        </em><font color="#008000">-- Move cursor to </font><a
+href="#before"><em>before</em></a><font color="#008000"> position.</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_bilinear_cursor.html#go_before"><font color="#008000"><em>DS_BILINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
+    <pre><a name="go_to"><em>go_to</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>)<em>
+        </em><font color="#008000">-- Move cursor to </font><em>other</em><font
+color="#008000">'s position.
+        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_cursor.html#go_to"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        valid_cursor</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#valid_cursor"><em>valid_cursor</em></a><em> </em>(<em>other</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        same_position</em>:<em> </em><a href="#same_position"><em>same_position</em></a><em> </em>(<em>other</em>)</pre>
+    <pre><a name="go_i_th"><em>go_i_th</em></a><em> </em>(<em>i</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+        </em><font color="#008000">-- Move cursor to </font><em>i</em><font
+color="#008000">-th position.</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_indexed_cursor.html#go_i_th"><font color="#008000"><em>DS_INDEXED_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_index</em>:<em> </em><a href="#valid_index"><em>valid_index</em></a><em> </em>(<em>i</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        moved</em>:<em> </em><a href="#index"><em>index</em></a><em> </em>=<em> i</em></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font><font
+color="#008000"> -- Comparison</font></pre>
+
+<blockquote>
+    <pre><a name="is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font><em>)</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+        </em><font color="#008000">-- Are </font><em>other</em><font
+color="#008000"> and current cursor at the same position?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#is_equal"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        consistent</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#standard_is_equal"><em>standard_is_equal</em></a><em> </em>(<em>other</em>)<em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><font
+color="#008080"><em>Result</em></font><em>
+        same_type</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<em>
+        symmetric</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> other</em>.<a
+href="#is_equal"><em>is_equal</em></a><em> </em>(<font
+color="#008080"><em>Current</em></font>)</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature</strong></em></font> <font
+color="#008000">-- Duplication</font></pre>
+
+<blockquote>
+    <pre><a name="copy"><em>copy</em></a><em> </em>(<em>other</em>:<em> </em><font
+color="#000080"><em><strong>like</strong></em></font><em> </em><font
+color="#008080"><em>Current</em></font>)<em>
+        </em><font color="#008000">-- Copy </font><em>other</em><font
+color="#008000"> to current cursor.
+        -- (From </font><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#copy"><font
+color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        type_identity</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        is_equal</em>:<em> </em><a href="#is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>)</pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Element change</font></pre>
+
+<blockquote>
+    <pre><a name="put_left"><em>put_left</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Add </font><em>v</em><font
+color="#008000"> to left of cursor position.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#put_left"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        extendible</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#extendible"><em>extendible</em></a><em> </em>(<font
+color="#808000"><em>1</em></font>)<em>
+        not_before</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#before"><em>before</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        one_more</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>) +<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="put_right"><em>put_right</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Add </font><em>v</em><font
+color="#008000"> to right of cursor position.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#put_right"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        extendible</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#extendible"><em>extendible</em></a><em> </em>(<font
+color="#808000"><em>1</em></font>)<em>
+        not_after</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#after"><em>after</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        one_more</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>) +<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="force_left"><em>force_left</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Add </font><em>v</em><font
+color="#008000"> to left of cursor position.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">)[+resizing].)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#force_left"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_before</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#before"><em>before</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        one_more</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>) +<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="force_right"><em>force_right</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Add </font><em>v</em><font
+color="#008000"> to right of cursor position.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">)[+resizing].)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#force_right"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_after</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#after"><em>after</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        one_more</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>) +<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="replace"><em>replace</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Replace item at cursor position by </font><em>v</em><font
+color="#008000">.</font><em>
+</em><font color="#008000">        -- (Performance: O(1).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_dynamic_cursor.html#replace"><font color="#008000"><em>DS_DYNAMIC_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        replaced</em>:<em> </em><a href="#item"><em>item</em></a><em> </em>=<em> v</em></pre>
+    <pre><a name="swap"><em>swap</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_dynamic_cursor.html"><em>DS_DYNAMIC_CURSOR</em></a><em> </em>[<em>G</em>])<em>
+        </em><font color="#008000">-- Exchange items at current and </font><em>other</em><font
+color="#008000">'s positions.
+        -- Note: cursors may reference two different containers.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_dynamic_cursor.html#swap"><font color="#008000"><em>DS_DYNAMIC_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        other_not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> other</em>.<a
+href="ds_dynamic_cursor.html#off"><em>off</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        new_item</em>:<em> </em><a href="#item"><em>item</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<em>other</em>.<a
+href="ds_dynamic_cursor.html#item"><em>item</em></a>)<em>
+        new_other</em>:<em> other</em>.<a
+href="ds_dynamic_cursor.html#item"><em>item</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#item"><em>item</em></a></pre>
+    <pre><a name="extend_left"><em>extend_left</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_linear.html"><em>DS_LINEAR</em></a><em> </em>[<em>G</em>])<em>
+        </em><font color="#008000">-- Add items of </font><em>other</em><font
+color="#008000"> to left of cursor position.
+        -- Keep items of </font><em>other</em><font
+color="#008000"> in the same order.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">+</font><em>other</em><font color="#008000">.</font><a
+href="ds_linear.html#count"><em>count</em></a><font
+color="#008000">).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#extend_left"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        extendible</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#extendible"><em>extendible</em></a><em> </em>(<em>other</em>.<a
+href="ds_linear.html#count"><em>count</em></a>)<em>
+        not_before</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#before"><em>before</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        new_count</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>) +<em> other.</em><a
+href="ds_linear.html#count"><em>count</em></a></pre>
+    <pre><a name="extend_right"><em>extend_right</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_linear.html"><em>DS_LINEAR</em></a><em> </em>[<em>G</em>])<em>
+        </em><font color="#008000">-- Add items of </font><em>other</em><font
+color="#008000"> to right of cursor position.
+        -- Keep items of </font><em>other</em><font
+color="#008000"> in the same order.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">+</font><em>other</em><font color="#008000">.</font><a
+href="ds_linear.html#count"><em>count</em></a><font
+color="#008000">).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#extend_right"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        extendible</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#extendible"><em>extendible</em></a><em> </em>(<em>other</em>.<a
+href="ds_linear.html#count"><em>count</em></a>)<em>
+        not_after</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#after"><em>after</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        new_count</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>) +<em> other.</em><a
+href="ds_linear.html#count"><em>count</em></a></pre>
+    <pre><a name="append_left"><em>append_left</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_linear.html"><em>DS_LINEAR</em></a><em> </em>[<em>G</em>])<em>
+        </em><font color="#008000">-- Add items of </font><em>other</em><font
+color="#008000"> to left of cursor position.
+        -- Keep items of </font><em>other</em><font
+color="#008000"> in the same order.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">+</font><em>other</em><font color="#008000">.</font><a
+href="ds_linear.html#count"><em>count</em></a><font
+color="#008000">)[+resizing].)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#append_left"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        not_before</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#before"><em>before</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        new_count</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>) +<em> other.</em><a
+href="ds_linear.html#count"><em>count</em></a></pre>
+    <pre><a name="append_right"><em>append_right</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_linear.html"><em>DS_LINEAR</em></a><em> </em>[<em>G</em>])<em>
+        </em><font color="#008000">-- Add items of </font><em>other</em><font
+color="#008000"> to right of cursor position.
+        -- Keep items of </font><em>other</em><font
+color="#008000"> in the same order.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">+</font><em>other</em><font color="#008000">.</font><a
+href="ds_linear.html#count"><em>count</em></a><font
+color="#008000">)[+resizing].)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#append_right"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/= <font
+color="#008080"><em>Void</em></font><em>
+        not_after</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#after"><em>after</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        new_count</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>) +<em> other.</em><a
+href="ds_linear.html#count"><em>count</em></a></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>feature </strong></em></font><font
+color="#008000">-- Removal</font></pre>
+
+<blockquote>
+    <pre><a name="remove"><em>remove</em></a><em>
+        </em><font color="#008000">-- Remove item at cursor position.
+        -- Move any cursors at this position </font><a
+href="#forth"><em>forth</em></a><font color="#008000">.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#remove"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_off</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        one_less</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>)<em> </em>-<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="remove_left"><em>remove_left</em></a><em>
+        </em><font color="#008000">-- Remove item to left of cursor position.
+        -- Move any cursors at this position </font><a
+href="#forth"><em>forth</em></a><font color="#008000">.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#remove_left"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#is_empty"><em>is_empty</em></a><em>
+        not_before</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#before"><em>before</em></a><em>
+        not_first</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_first"><em>is_first</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        one_less</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>)<em> </em>-<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="remove_right"><em>remove_right</em></a><em>
+        </em><font color="#008000">-- Remove item to right of cursor position.
+        -- Move any cursors at this position </font><a
+href="#forth"><em>forth</em></a><font color="#008000">.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#remove_right"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_empty</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#is_empty"><em>is_empty</em></a><em>
+        not_after</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#after"><em>after</em></a><em>
+        not_last</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_last"><em>is_last</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        one_less</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>)<em> </em>-<em> </em><font
+color="#808000"><em>1</em></font></pre>
+    <pre><a name="prune_left"><em>prune_left</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+        </em><font color="#008000">-- Remove </font><em>n</em><font
+color="#008000"> items to left of cursor position.
+        -- Move all cursors </font><a href="#off"><em>off</em></a><font
+color="#008000">.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#prune_left"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_n</em>:<em> </em><font color="#808000"><em>0</em></font><em> </em>&lt;=<em> n </em><font
+color="#000080"><em><strong>and</strong></em></font><em> n </em>&lt;<em> </em><a
+href="#index"><em>index</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        new_count</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>)<em> </em>-<em> n</em></pre>
+    <pre><a name="prune_right"><em>prune_right</em></a><em> </em>(<em>n</em>:<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+        </em><font color="#008000">-- Remove </font><em>n</em><font
+color="#008000"> items to right of cursor position.
+        -- Move all cursors </font><a href="#off"><em>off</em></a><font
+color="#008000">.</font><em>
+</em><font color="#008000">        -- (Performance: O(</font><a
+href="#container"><em>container</em></a><font color="#008000">.</font><a
+href="ds_arrayed_list.html#count"><em>count</em></a><font
+color="#008000">-</font><a href="#index"><em>index</em></a><font
+color="#008000">-</font><em>n</em><font color="#008000">).)</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_list_cursor.html#prune_right"><font color="#008000"><em>DS_LIST_CURSOR</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_n</em>:<em> </em><font color="#808000"><em>0</em></font><em> </em>&lt;=<em> n </em><font
+color="#000080"><em><strong>and</strong></em></font><em> n </em>&lt;= (<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>-<em> </em><a
+href="#index"><em>index</em></a>)<em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        new_count</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em>(<a
+href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#count"><em>count</em></a>)<em> </em>-<em> n</em></pre>
+</blockquote>
+
+<pre><a name="invariant"><font color="#000080"><em><strong>invariant</strong></em></font></a></pre>
+
+<blockquote>
+    <pre><em>container_not_void</em>:<em> </em><a
+href="#container"><em>container</em></a><em> </em>/= <font
+color="#008080"><em>Void</em></font><em>
+empty_constraint</em>:<em> </em><a href="#container"><em>container</em></a>.<a
+href="ds_arrayed_list.html#is_empty"><em>is_empty</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+</em><font color="#008000">    -- (From </font><a
+href="ds_cursor.html#invariant"><font color="#008000"><em>DS_CURSOR</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><em>after_constraint</em>:<em> </em><a href="#after"><em>after</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+</em><font color="#008000">    -- (From </font><a
+href="ds_linear_cursor.html#invariant"><font color="#008000"><em>DS_LINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><em>not_both</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em>(<a
+href="#after"><em>after</em></a><em> </em><font color="#000080"><em><strong>and</strong></em></font><em> </em><a
+href="#before"><em>before</em></a>)<em>
+before_constraint</em>:<em> </em><a href="#before"><em>before</em></a><em> </em><font
+color="#000080"><em><strong>implies</strong></em></font><em> </em><a
+href="#off"><em>off</em></a><em>
+</em><font color="#008000">    -- (From </font><a
+href="ds_bilinear_cursor.html#invariant"><font color="#008000"><em>DS_BILINEAR_CURSOR</em></font></a><font
+color="#008000">.)</font></pre>
+</blockquote>
+
+<pre><font color="#000080"><em><strong>end</strong></em></font><font
+color="#008000"> -- class DS_ARRAYED_LIST_CURSOR</font></pre>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1999</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 31 July 1999</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0"
+        width="40" height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="ds_arrayed_list.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a
+        href="ds_arrayed_sparse_set.html"><img
+        src="../image/next.gif" alt="Next" border="0"
+        width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

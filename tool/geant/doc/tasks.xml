@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Task Overview"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002-2016, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_tasks">
+<chapterinfo>
+	<copyright>
+		<year>2002-2016</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>27 December 2016</date>
+</chapterinfo>
+
+	<title>Geant's Tasks</title>
+
+	<para>
+		This chapter lists all tasks Geant provides, their syntax and examples.
+	</para>
+
+	<para>
+		<link linkend="available_task">available</link>
+	</para>
+	<para>
+		<link linkend="copy_task">copy</link>
+	</para>
+	<para>
+		<link linkend="delete_task">delete</link>
+	</para>
+	<para>
+		<link linkend="echo_task">echo</link>
+	</para>
+	<para>
+		<link linkend="exec_task">exec</link>
+	</para>
+	<para>
+		<link linkend="exit_task">exit</link>
+	</para>
+	<para>
+		<link linkend="fileset_element">fileset</link>
+	</para>
+	<para>
+		<link linkend="geant_task">geant</link>
+	</para>
+	<para>
+		<link linkend="gec_task">gec</link>
+	</para>
+	<para>
+		<link linkend="gelex_task">gelex</link>
+	</para>
+	<para>
+		<link linkend="gepp_task">gepp</link>
+	</para>
+	<para>
+		<link linkend="getest_task">getest</link>
+	</para>
+	<para>
+		<link linkend="gexace_task">gexace</link>
+	</para>
+	<para>
+		<link linkend="geyacc_task">geyacc</link>
+	</para>
+	<para>
+		<link linkend="input_task">input</link>
+	</para>
+	<para>
+		<link linkend="ise_task">ise</link>
+	</para>
+	<para>
+		<link linkend="map_element">map</link>
+	</para>
+	<para>
+		<link linkend="mkdir_task">mkdir</link>
+	</para>
+	<para>
+		<link linkend="move_task">move</link>
+	</para>
+	<para>
+		<link linkend="outofdate_task">outofdate</link>
+	</para>
+	<para>
+		<link linkend="precursor_task">precursor</link>
+	</para>
+	<para>
+		<link linkend="replace_task">replace</link>
+	</para>
+	<para>
+		<link linkend="setenv_task">setenv</link>
+	</para>
+	<para>
+		<link linkend="set_task">set</link>
+	</para>
+	<para>
+		<link linkend="unset_task">unset</link>
+	</para>
+	<para>
+		<link linkend="xslt_task">xslt</link>
+	</para>
+
+</chapter>

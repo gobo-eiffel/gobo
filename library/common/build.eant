@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="gobo" default="help">
+
+	<description>
+		description: "Gobo Eiffel Common Library"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/library.eant"/>
+	</inherit>
+
+</project>

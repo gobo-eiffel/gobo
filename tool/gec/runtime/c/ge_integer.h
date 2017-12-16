@@ -4,7 +4,7 @@
 		"C functions used to implement class INTEGER"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,6 +12,9 @@
 
 #ifndef GE_INTEGER_H
 #define GE_INTEGER_H
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include <math.h>
 

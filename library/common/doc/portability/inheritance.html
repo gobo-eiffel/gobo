@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Adaptation by Inheritance Technique</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Adaptation by Inheritance
+        Technique</strong></font></td>
+        <td align="right"><a href="index.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="client.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>
+[Note that the examples used below to illustrate this adaptation technique
+may be out of date and not relevant anymore for recent versions
+of the supported Eiffel compilers.]
+</p>
+
+<p><font size="2">NICE</font> (Nonprofit International Consortium
+for Eiffel) has provided us with a kernel library standard that
+we can rely on for interoperability between Eiffel compilers.
+This standard is made up of a set of classes, such as <font
+color="#008080"><em><tt>ANY</tt></em></font>, <font
+color="#008080"><em><tt>INTEGER</tt></em></font> or <font
+color="#008080"><em><tt>STRING</tt></em></font>, and a set of
+features that all Eiffel compilers should implement. However,
+some compilers fail to support some these classes or features,
+making it difficult to write portable Eiffel code. Moreover, some
+useful features are also missing in the standard. Some compilers
+may provide implementation for these features, but some don't.</p>
+
+<h2>Description</h2>
+
+<p>One way to get around this problem without having to directly
+edit the library classes is to put a layer of classes between the
+kernel library and the application classes. In that layer, there
+will be a different cluster for each supported Eiffel compiler.
+Each such cluster will contain the same set of classes, each of
+these classes adapting a corresponding kernel class through
+inheritance. For example, <font size="2">ELKS '95</font> states
+that class <font color="#008080"><em><tt>PLATFORM</tt></em></font>
+among other things should have the two following features:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>Minimum_character_code</em>: <em>INTEGER</em>
+        -- Smallest supported code for CHARACTER values
+    <em><strong>ensure</strong></em>
+        <em>meaningful</em>: <em>Result</em> &lt;= <em>0</em>
+
+<em>Maximum_character_code</em>: <em>INTEGER</em>
+        -- Largest supported code for CHARACTER values
+    <em><strong>ensure</strong></em>
+        <em>meaningful</em>: <em>Result</em> &gt;= <em>127</em></font></pre>
+</blockquote>
+
+<p>However these two features were missing in class <font
+color="#008080"><em><tt>PLATFORM</tt></em></font> provided with
+ISE Eiffel 4.2 and Halstenbach 2.0. The solution to this problem
+is to use class <font color="#008080"><em><tt>KL_PLATFORM</tt></em></font>
+in the client code, where <font color="#008080"><em><tt>KL_PLATFORM</tt></em></font>
+had the following form in the clusters associated with ISE
+Eiffel and Halstenbach:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_PLATFORM</em>
+
+<em><strong>inherit</strong></em>
+
+    <em>PLATFORM</em>
+
+<em><strong>feature</strong></em> -- Access
+
+    <em>Minimum_character_code</em>: <em>INTEGER</em> <em><strong>=</strong></em> <em>0</em>
+    <em>Maximum_character_code</em>: <em>INTEGER</em> <em><strong>=</strong></em> <em>255</em>
+            -- Smallest and largest supported codes for CHARACTER values
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>and the following form in all other clusters:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_PLATFORM</em>
+
+<em><strong>inherit</strong></em>
+
+    <em>PLATFORM</em>
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>That way, a call to <font color="#008080"><em><tt>Minimum_character_code</tt></em></font>
+from a client of class <font color="#008080"><em><tt>KL_PLATFORM</tt></em></font>
+will always work, regardless of the Eiffel compiler used. This
+wouldn't be true for clients of <font color="#008080"><em><tt>PLATFORM</tt></em></font>.</p>
+
+<p>This technique can also be used to supply missing classes. For
+example the class <font color="#008080"><em><tt>EXCEPTIONS</tt></em></font>
+was not provided in SmallEiffel -0.81. However this class is
+useful when a system has to be terminated using feature <font
+color="#008080"><em><tt>die</tt></em></font>. This routine could
+easily be implemented using SmallEiffel's built-in <font
+color="#008080"><em><tt>die_with_code</tt></em></font> feature.
+SmallEiffel kernel adaptation cluster hence ended up with the
+following class:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_EXCEPTIONS</em>
+
+<em><strong>feature</strong></em> -- Basic operations
+
+    <em>die</em> (<em>a_code</em>: <em>INTEGER</em>)
+            -- Terminate execution with exit status <em>a_code</em>
+            -- without triggering an exception.
+        <em><strong>do</strong></em>
+            <em>die_with_code</em> (<em>a_code</em>)
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>whereas clusters for other compilers already supporting this
+facility contained this simple class:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_EXCEPTIONS</em>
+
+<em><strong>inherit</strong></em>
+
+    <em>EXCEPTIONS</em>
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>Sometimes, the required functionality will be provided but
+under another feature name or with an inefficient implementation.
+Once again one can in these situations inherit from the
+corresponding classes and rename or redefine the proper features.
+This is for example the case in class <font color="#008080"><em><tt>EXCEPTIONS</tt></em></font>
+from Halstenbach 2.0 where feature <font color="#008080"><em><tt>die</tt></em></font>
+was obsolete and feature <font color="#008080"><em><tt>new_die</tt></em></font>
+had to be used instead:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_EXCEPTIONS</em>
+
+<em><strong>inherit</strong></em>
+
+    <em>EXCEPTIONS</em>
+        <em><strong>rename</strong></em>
+            <em>die </em><em><strong>as</strong></em><em> old_die</em>,
+            <em>new_die </em><em><strong>as</strong></em><em> die</em>
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>Finally, some useful features are missing from the standard.
+For example class <font color="#008080"><em><tt>ARRAY</tt></em></font>
+is not equipped with a feature <font color="#008080"><em><tt>clear_all</tt></em></font>
+which would reset all items in the array to their default values.
+Some compilers already provide an efficient implementation of
+this routine, but some don't. When it is not already provided, it
+is easy to add this routine to the corresponding class <font
+color="#008080"><em><tt>KL_ARRAY</tt></em></font>.</p>
+
+<h2>Caveats</h2>
+
+<p>Although the technique described above seems attractive, it
+still has some drawbacks. One of these disadvantages is when
+using manifest constants. For the adaptation by inheritance
+solution to work properly, the application code should now always
+use the <font color="#008080"><em><tt>KL_</tt></em></font>
+classes instead of the kernel classes they inherit from. But the
+following code:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>my_string</em>: <em>KL_STRING</em>
+<em>my_array</em>: <em>KL_ARRAY</em> [<em>INTEGER</em>]
+...
+<em>my_string</em> := &quot;<em>Hello World!</em>&quot;
+<em>my_array</em> := &lt;&lt;<em>1</em>, <em>2</em>, <em>3</em>&gt;&gt;</font></pre>
+</blockquote>
+
+<p>will not compile because <font color="#008080"><em><tt>&quot;hello
+World!&quot;</tt></em></font> is a <font color="#008080"><em><tt>STRING</tt></em></font>
+which does not conform to <font color="#008080"><em><tt>KL_STRING</tt></em></font>,
+and <font color="#008080"><em><tt>&lt;&lt;1,2,3&gt;&gt;</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>is
+an <font color="#008080"><em><tt>ARRAY</tt></em></font> which
+does not conform to <font color="#008080"><em><tt>KL_ARRAY</tt></em></font>
+(although <font color="#008080"><em><tt>KL_STRING</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>conforms
+to <font color="#008080"><em><tt>STRING</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>and <font
+color="#008080"><em><tt>KL_ARRAY</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>conforms
+to <font color="#008080"><em><tt>ARRAY</tt></em></font>). To
+solve this problem, one would then have to write:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>create</strong> my_string</em>.<em>make_from_string</em> (&quot;<em>Hello World!</em>&quot;)
+<em><strong>create</strong> my_array</em>.<em>make_from_array</em> (&lt;&lt;<em>1</em>, <em>2</em>, <em>3</em>&gt;&gt;)</font></pre>
+</blockquote>
+
+<p>which is cumbersome and inefficient with some compilers.</p>
+
+<p>Another problem encountered with this technique is that most
+Eiffel compilers do not support some of their kernel classes to
+be adapted using inheritance. This is for example the case for
+basic types such as <font color="#008080"><em><tt>INTEGER</tt></em></font>
+or <font color="#008080"><em><tt>CHARACTER</tt></em></font>, and
+also for some other classes such <font color="#008080"><em><tt>ARRAY</tt></em></font>
+or <font color="#008080"><em><tt>STRING</tt></em></font> where
+some built-in features hard-coded for optimization purposes
+cannot even be renamed in descendant classes without breaking the
+run-time system (try to rename feature <font color="#008080"><em><tt>count</tt></em></font>
+from class <font color="#008080"><em><tt>ARRAY</tt></em></font>
+in a descendant class with SmallEiffel to convince yourself).</p>
+
+<p>Finally, the kernel library standard specifies that compatible
+implementations may provide more features than those required.
+This implies that using these classes by inheritance, as the
+technique described here does, the extra features will pollute
+the name space and might cause name clashes dependent on the
+Eiffel compiler used.</p>
+
+<p>Another <a href="client.html">adaptation technique</a>, using
+the client/supplier relationship, gets around these problems.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1998-2016</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 23 December 2016</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="client.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

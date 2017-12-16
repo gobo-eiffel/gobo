@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Unicode full case mappings</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Unicode full case mappings</strong></font></td>
+    <td align="right"><a href="classes.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="about.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   
+   <h2>About full case mappings</h2>
+   
+   
+   <p>
+    	Traditionally, <font color="#008080"><i><tt>STRING</tt></i></font> provides <font color="#008080"><i><tt>as_lower</tt></i></font> and <font color="#008080"><i><tt>as_upper</tt></i></font>
+    	for casing Latin-1 strings. The Gobo kernel library adds full Unicode versions in class <font color="#008080"><i><tt>UC_TYPE</tt></i></font> (and additionally
+    	a routine for providing a title-cased string. Title casing differs from upper casing the first character and lower-casing
+    the rest, as some Unicode
+    	characters have a different form for title casing than for upper casing). However all these routines assume that strings
+    don't change length
+    	under case mappings. This is not always true. For example, the german word "eßen" (to eat) traditionally upper cases to "ESSEN".
+    	The upper cased version is one character longer than the lower cased version.
+    
+   </p>
+   	Except in legacy applications which expect strings not to change length, the traditional casing routines should not be used.
+   Instead the full case mapping
+   	routines provided in this library should be used to get correct behaviour. Note that these casings are default mappings.
+   The Unicode database provides additional
+   	locale-dependent and contextual forms (an example of the latter is final Greek sigma). These additional forms will be provided
+   in the future on demand.
+   
+   <p>
+    
+   </p>
+   
+   
+  </div>
+  <div>
+   
+   <h2>How to access the full case mapping routines provided by the library</h2>
+   
+   
+   <p>
+    	The full case mapping routines provided by the library are defined in the deferred class 
+    	<font color="#008080"><i><tt>ST_UNICODE_CASE_MAPPING_INTERFACE</tt></i></font>. In order to gain access to these routines
+    	you can either inherit from <font color="#008080"><i><tt>ST_UNICODE_FULL_CASE_MAPPING</tt></i></font>, which
+    	provides information from the latest available version of unicode. Or you can inherit from a class
+    	for a particular version of Unicode (e.g. <font color="#008080"><i><tt>ST_UNICODE_V5000_FULL_CASE_MAPPING</tt></i></font> for Unicode version 5.0.0).
+    
+   </p>
+   
+   
+   <p>
+    	Alternatively, you can access these classes as clients, by inheriting from <font color="#008080"><i><tt>ST_IMPORTED_UNICODE_FULL_CASE_MAPPING</tt></i></font> 
+    	or <font color="#008080"><i><tt>ST_IMPORTED_UNICODE_V500_FULL_CASE_MAPPING</tt></i></font>, which provide the routines
+    	<font color="#008080"><i><tt>case_mapping</tt></i></font> and <font color="#008080"><i><tt>case_mapping_v500</tt></i></font> respectively.
+    
+   </p>
+   
+   
+   <p>
+    	The latter method is necessary if you want to be able to use full case mappings from two different versions of Unicode within
+    	the same class.
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2007, Colin Adams</b><br /><b>mailto:</b><a href="mailto:colin-adams@users.sourceforge.net">colin-adams@users.sourceforge.net</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>4 November 2007</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../image/toc.gif" alt="Toc" border="0" /></a><a href="classes.html"><img src="../image/previous.gif" alt="Previous" border="0" /></a><a href="about.html"><img src="../image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

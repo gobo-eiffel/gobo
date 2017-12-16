@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Tables</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Tables</strong></font></td>
+        <td align="right"><a href="list.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="set.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p align="center"><!--webbot bot="ImageMap" startspan
+rectangle=" (227,318) (399, 348)  flatshort/ds_multiarrayed_hash_table.html"
+rectangle=" (60,318) (158, 349)  flatshort/ds_hash_table.html"
+rectangle=" (218,242) (406, 273)  flatshort/ds_multiarrayed_sparse_table.html"
+rectangle=" (29,242) (189, 274)  flatshort/ds_arrayed_sparse_table.html"
+rectangle=" (141,167) (262, 198)  flatshort/ds_sparse_table.html"
+rectangle=" (279,93) (367, 124)  flatshort/ds_resizable.html"
+rectangle=" (158,93) (247, 124)  flatshort/ds_bilinear.html"
+rectangle=" (41,91) (127, 123)  flatshort/ds_table.html"
+rectangle=" (36,18) (130, 49)  flatshort/ds_container.html"
+src="image/table.gif" border="0" width="451" height="374" --><MAP NAME="FrontPageMap0"><AREA SHAPE="RECT" COORDS="227, 318, 399, 348" HREF="flatshort/ds_multiarrayed_hash_table.html"><AREA SHAPE="RECT" COORDS="60, 318, 158, 349" HREF="flatshort/ds_hash_table.html"><AREA SHAPE="RECT" COORDS="218, 242, 406, 273" HREF="flatshort/ds_multiarrayed_sparse_table.html"><AREA SHAPE="RECT" COORDS="29, 242, 189, 274" HREF="flatshort/ds_arrayed_sparse_table.html"><AREA SHAPE="RECT" COORDS="141, 167, 262, 198" HREF="flatshort/ds_sparse_table.html"><AREA SHAPE="RECT" COORDS="279, 93, 367, 124" HREF="flatshort/ds_resizable.html"><AREA SHAPE="RECT" COORDS="158, 93, 247, 124" HREF="flatshort/ds_bilinear.html"><AREA SHAPE="RECT" COORDS="41, 91, 127, 123" HREF="flatshort/ds_table.html"><AREA SHAPE="RECT" COORDS="36, 18, 130, 49" HREF="flatshort/ds_container.html"></MAP><img src="image/table.gif" border="0" width="451" height="374" usemap="#FrontPageMap0"><!--webbot
+bot="ImageMap" i-checksum="43993" endspan --></p>
+
+<h2>Class <em><tt>DS_TABLE</tt></em></h2>
+
+<p>Tables are data structures whose items are accessible by keys.
+Therefore the class <a href="flatshort/ds_table.html"><font
+color="#008080"><em><tt>DS_TABLE</tt></em></font></a> has two
+generic parameters. As for all other container classes, the first
+parameter <font color="#008080"><em><tt>G </tt></em></font>represents
+the type of the items, whereas the second parameter <font
+color="#008080"><em><tt>K</tt></em></font> is the type of the
+keys which are associated with the items. The features provided
+by class <font color="#008080"><em><tt>DS_TABLE </tt></em></font>are
+very similar to some of those of class <a
+href="container.html#ds_indexable"><font color="#008080"><em><tt>DS_INDEXABLE</tt></em></font></a>.
+The difference comes from the fact that in <font color="#008080"><em><tt>DS_INDEXABLE
+</tt></em></font>keys are contiguous integers whereas in <font
+color="#008080"><em><tt>DS_TABLE </tt></em></font>keys can be of
+any type, and hence not necessarily contiguous. The main features
+introduced in class <font color="#008080"><em><tt>DS_TABLE </tt></em></font>are
+<a href="flatshort/ds_table.html#item"><font color="#008080"><em><tt>item</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>to access items by key,
+<a href="flatshort/ds_table.html#put"><font color="#008080"><em><tt>put</tt></em></font></a>
+to insert new items and <a href="flatshort/ds_table.html#replace"><font
+color="#008080"><em><tt>replace</tt></em></font></a> to associate
+an existing key with another item, <a
+href="flatshort/ds_table.html#remove"><font color="#008080"><em><tt>remove</tt></em></font></a>
+to remove an item and its associated key from the table, <a
+href="flatshort/ds_table.html#valid_key"><font color="#008080"><em><tt>valid_key</tt></em></font></a>
+to check whether a key can be used in the table and <a
+href="flatshort/ds_table.html#has"><font color="#008080"><em><tt>has</tt></em></font></a>
+to check whether an item has already been inserted in the table
+with a given key.</p>
+
+<h2>Class <a name="DS_HASH_TABLE"><em><tt>DS_HASH_TABLE</tt></em></a></h2>
+
+<p>One possible implementation of tables is hash tables. A hash
+table is typically made up of an array where items are accessed
+by integer index. Therefore the keys used in the hash tables
+should provide a means to yield such integer value through a
+hashing mechanism. This is exactly what feature <font
+color="#008080"><em><tt>hash_code</tt></em></font> from <font
+color="#008080"><em><tt>HASHABLE</tt></em></font> is for, and
+therefore the second generic parameter of <a
+href="flatshort/ds_hash_table.html"><font color="#008080"><em><tt>DS_HASH_TABLE</tt></em></font></a>
+is constrained by <font color="#008080"><em><tt>HASHABLE</tt></em></font>.
+Thanks to this implementation, features of hash tables are
+usually more efficient than linked implementations since access
+time in an array is bounded by a constant regardless of the
+number of items in the container. However the hash code
+associated with the keys is not necessarily unique, and therefore
+collisions may happen and hence slow down the process. The
+efficiency of hash tables hence depends on the number of
+collisions that may occur in the table. Therefore the
+implementation for the <font color="#008080"><em><tt>hash_code</tt></em></font>
+of the keys is very important since returning often the same
+value for different keys will trigger too many collisions and
+yield performance degradations. If the default implementation of <font
+color="#008080"><em><tt>hash_code </tt></em></font>is not optimal
+for a given set of keys, one can inherit from <font
+color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>and
+redefine its feature <font color="#008080"><em><tt>hash_position </tt></em></font>to
+provide a better implementation. For example, consider a school
+which keeps track of project assignments in a table indexed by
+students. The obvious solution is to declare:</p>
+
+<blockquote>
+    <pre><em>assignments</em>: <em>DS_HASH_TABLE</em> [<em>PROJECT</em>, <em>STUDENT</em>]</pre>
+</blockquote>
+
+<p>However the implementation of <font color="#008080"><em><tt>hash_code
+</tt></em></font>in class <font color="#008080"><em><tt>STUDENT</tt></em></font>
+inherited from <font color="#008080"><em><tt>PERSON</tt></em></font>
+just returns the age of the person. This implementation of <font
+color="#008080"><em><tt>hash_code</tt></em></font> in class <font
+color="#008080"><em><tt>PERSON</tt></em></font> is perfectly
+valid in most cases, but it is clear that when dealing with
+students in the same classroom it is likely that they will all
+have more or less the same age and hence the same hash code. In
+this particular case it is better to provide a better
+implementation for <font color="#008080"><em><tt>hash_position </tt></em></font>in
+<font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>to
+avoid the numerous collisions:</p>
+
+<blockquote>
+    <pre><font color="#000080"><em><strong>class</strong></em></font><em> ASSIGNMENTS
+</em><font color="#000080"><em><strong>inherit</strong></em></font><em>
+    DS_HASH_TABLE </em>[<em>PROJECT</em>,<em> STUDENT</em>]<em>
+        </em><font color="#000080"><em><strong>redefine</strong></em></font><em>
+            hash_position
+        </em><font color="#000080"><em><strong>end
+create</strong></em></font><em>
+    make
+</em><font color="#000080"><em><strong>feature</strong></em></font><em> </em>{<em>NONE</em>} <font
+color="#008000">-- Implementation</font><em>
+    hash_position </em>(<em>s</em>:<em> STUDENT</em>):<em> INTEGER </em><font
+color="#000080"><em><strong>is</strong></em></font><em>
+            </em><font color="#008000">-- Hash position of student</font> <em>s</em><font
+color="#008000"> in internal array</font><em>
+        </em><font color="#000080"><em><strong>do</strong></em></font><em>
+            </em><font color="#000080"><em><strong>if</strong></em></font><em> s </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em> </em><font
+color="#000080"><em><strong>then</strong></em></font><em>
+                </em><font color="#008080"><em>Result</em></font><em> </em>:=<em> s</em>.<em>name</em>.<em>hash_code </em>\\<em> modulus
+            </em><font color="#000080"><em><strong>else</strong></em></font><em>
+                </em><font color="#008080"><em>Result</em></font><em> </em>:=<em> modulus
+            </em><font color="#000080"><em><strong>end</strong></em></font><em>
+        </em><font color="#000080"><em><strong>end
+end</strong></em></font><em> </em></pre>
+</blockquote>
+
+<p>The keys are directly stored in the hash table without being
+copied. Therefore it is important that the hash code associated
+with each key doesn't change while the key is stored in the hash
+table. Otherwise the hashing mechanism would be broken and it
+would be impossible to access the item associated with this key.
+Likewise, keys are compared in the hash table using the feature <a
+href="flatshort/ds_hash_table.html#key_equality_tester"><font
+color="#008080"><em><tt>key_equality_tester</tt></em></font></a>
+of type <a href="flatshort/ds_equality_tester.html"><font
+color="#008080"><em><tt>DS_EQUALITY_TESTER</tt></em></font></a>.
+Therefore if the critera used to implement the function <a
+href="flatshort/ds_equality_tester.html#test"><font
+color="#008080"><em><tt>test</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>in <font
+color="#008080"><em><tt>DS_EQUALITY_TESTER </tt></em></font>are
+changed while the key is stored in the hash table, this key might
+not be recognized properly anymore within this hash table.
+Needless to say that if two keys are considered equal, they
+should have the same hash code. The solution when the hash code
+or equality criteria of a key are likely to vary while the key is
+stored in the hash table is to clone that key when inserting an item
+associated with it.</p>
+
+<p>The class <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>provides
+traversal facilities inherited from <a
+href="traversal.html#ds_bilinear"><font color="#008080"><em><tt>DS_BILINEAR</tt></em></font></a>.
+Although all items will be visited once and only once during a
+traversal, they will be traversed in an unpredictable order and
+subsequent traversals may traverse the items in different orders.
+This is because a hash table is not an ordered container as can
+a list be. Items are not inserted before or after other items in
+the hash table but based on a hashing mechanism and
+collision-resolution algorithm. The only way to get a guaranteed
+ordered hash table with the current implementation is to use
+exclusively feature <a
+href="flatshort/ds_hash_table.html#force_last"><font
+color="#008080"><em><tt>force_last</tt></em></font></a> to insert
+items.</p>
+
+<p>As you may now realize after reading the first paragraph
+above, the performance of hash tables is one of their <em>raison
+d'être</em>. This had of course to be taken into account when
+implementing the routines inherited from <font color="#008080"><em><tt>DS_TABLE</tt></em></font>.
+Because of the precondition of <a
+href="flatshort/ds_hash_table.html#item"><font color="#008080"><em><tt>item</tt></em></font></a>
+which states that in order to be able to query an item associated
+with a given key, that item has to exist in the first place, one
+has to write:</p>
+
+<blockquote>
+    <pre><font color="#000080"><em><strong>if</strong></em></font><em> table</em>.<em>has </em>(<em>k</em>)<em> </em><font
+color="#000080"><em><strong>then</strong></em></font><em>
+    v </em>:= <em>table</em>.<em>item </em>(<em>k</em>)<em>
+</em><font color="#000080"><em><strong>else</strong></em></font><em>
+    ...
+</em><font color="#000080"><em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>However, both <a href="flatshort/ds_hash_table.html#has"><font
+color="#008080"><em><tt>has</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>and <a
+href="flatshort/ds_hash_table.html#item"><font color="#008080"><em><tt>item</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>will have to compute
+the hash code of <font color="#008080"><em><tt>k</tt></em></font>
+and deal with possible collisions in the hash table. In other
+words we do twice the same thing. The solution adopted in the
+current implementation of <font color="#008080"><em><tt>DS_HASH_TABLE
+</tt></em></font>is to keep track of the result of the last
+hashing operation in the hash table in a cache. Therefore, in the
+code above, most of the work of accessing the item at key <font
+color="#008080"><em><tt>k</tt></em></font> will be done only once
+in the routine <font color="#008080"><em><tt>has</tt></em></font>,
+and <font color="#008080"><em><tt>item </tt></em></font>will
+realize that the key given as argument is the same and hence
+avoid calling the hashing mechanism again.</p>
+
+<p>Another solution to avoid that would have been to get rid of
+the precondition in <font color="#008080"><em><tt>item </tt></em></font>and
+return <font color="#008080"><em><tt>Void</tt></em></font> when
+there is no item associated with key <font color="#008080"><em><tt>k</tt></em></font>.
+However this solution goes against the principle of <em>Design by
+Contract</em> since getting <font color="#008080"><em><tt>Void</tt></em></font>
+could either mean that there is no item for key <font
+color="#008080"><em><tt>k</tt></em></font> or that there is
+actually one which happens to be <font color="#008080"><em><tt>Void</tt></em></font>.
+Therefore this solution has not been adopted in <font
+color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>but a
+better designed alternative also based on the <em>try-and-see</em>
+principle is available:</p>
+
+<blockquote>
+    <pre><em>table</em>.<em>search </em>(<em>k</em>)
+<font color="#000080"><em><strong>if</strong></em></font><em> table</em>.<em>found </em><font
+color="#000080"><em><strong>then</strong></em></font><em>
+    v </em>:= <em>table</em>.<em>found_item
+</em><font color="#000080"><em><strong>else</strong></em></font><em>
+    ...
+</em><font color="#000080"><em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>Both code excerpts should have the same execution time
+performance thanks to <font color="#008080"><em><tt>DS_HASH_TABLE</tt></em></font>'s
+internal optimizations. Using one or the other is just a question
+of taste.</p>
+
+<h2>Class <em><tt>DS_MULTIARRAYED_HASH_TABLE</tt></em></h2>
+
+<p>When hash tables contain a very large number of items, the
+implementation of <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>may
+reach some limits since the internal arrays become too huge and
+resizing them may yield memory problems. The class <a
+href="flatshort/ds_multiarrayed_hash_table.html"><font
+color="#008080"><em><tt>DS_MULTIARRAYED_HASH_TABLE</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>provides the same
+functionalities as <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>but
+uses a sequence of fixed size arrays instead of a single array
+for its implementation. These array chunks are only created when
+first accessed and resizing the whole table does only require to
+add one or several chunks to the sequence and therefore avoids
+having to resize big arrays.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000-2016</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 26 December 2016</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="list.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="set.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

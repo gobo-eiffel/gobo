@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Transformation Result</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Transformation Result</strong></font></td>
+    <td align="right"><a href="tracing.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="transformation_source.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   <font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font> is a wrapper for the various classes which might receive
+   a result document from a transformation.
+   
+  </p>
+  <div>
+   
+   <h2>Creation Procedures</h2>
+   
+   <p>
+    The creation procedure <font color="#008080"><i><tt>make_secondary_stream</tt></i></font> is only used for
+    creating secondary streams, that is, those created by an <font color="#008080">xsl:result-document</font>. 
+    Accordingly, users of the library will not use it directly.
+    
+   </p>
+   
+   <p>
+    The other creation procedures are for creating the primary result. Since the Eiffel programmer
+    <i>must</i> use one of these when invoking <font color="#008080"><i><tt>transform</tt></i></font>,
+    it is worth going into them in some detail.
+    
+   </p>
+   
+   <dl>
+    
+    <dt><font color="#008080"><i><tt>make (a_stream: XM_OUTPUT; a_system_id:STRING)</tt></i></font></dt>
+    <dd>
+     	    This will be the one you normally want to use. You create <font color="#008080"><i><tt>a_stream</tt></i></font>
+     	    using whichever creation procedure of <font color="#008080"><i><tt>XM_OUTPUT</tt></i></font> you find appropriate, and
+     	    you couple a <font color="#008080">SYSTEM</font> id with it.
+     	    
+     <p><font color="#FF0000">
+       		This should be an absolute URI, especially if you use any <font color="#008080">xsl:result-document</font>s
+       		with relative URIs for their <font color="#008080">href</font> attribute, as they will be resolved realative
+       		to the one you supply.
+       	    </font></p>
+     	    
+     <p><font color="#FF0000">
+       	      If you use any <font color="#008080">xsl:result-document</font>s with relative URIs for their <font color="#008080">href</font> 
+       	      attribute, then make sure that your URI scheme is one that 
+       	      <a href="output_resolver.html">your output resolver</a> can cope with.
+       	    </font></p>
+     	  
+    </dd>
+    
+    <dt><font color="#008080"><i><tt>make_receiver (a_receiver: XM_XPATH_RECEIVER)</tt></i></font></dt>
+    <dd>
+     	    With this creation procedure, you direct the output to an XPath library event stream. This
+     	    would be an appropriate choice if you wanted to immediately run another transformation
+     	    against the output from the first transformation.
+     	  
+     <p>
+      	    I have added an extension attribute to <font color="#008080">xsl:output/xsl:result-document</font> so
+      	    that you will be able to specify a next transformation to run automatically. But even so,
+      	    this option might be useful in some circumstances.
+      	  
+     </p>
+    </dd>
+    
+    <dt><font color="#008080"><i><tt>make_emitter (an_emitter: XM_XSLT_EMITTER)</tt></i></font></dt>
+    <dd>
+     	    This creation procedure enables you to direct output directly to an emitter
+     	    (which is the XSLT library's serialization class). Normally the transformer will create
+     	    an emitter for you, based on the attributes specified on <font color="#008080">xsl:output/xsl:result-document</font>,
+     	    so I don't think this creation procedure is needed, but you might decide otherwise.
+     	  
+     <p>
+      	    I'm trying to think of a scenario in which this might be wanted. The only far-fetched idea I've been able to
+      	    come up with, is if you have a chain of transformations, and you want to use the output attributes from the 
+      	    <font color="#008080">xsl:output</font> in the first stylesheet (rather than the last, which is the normal situation). In which
+      	    case you could create an emitter based on the initial <font color="#008080">xsl:output</font>, and then pass it to this creation
+      	    procedure. You would then pass the created transformation result to the last transform in the chain (and use 
+      	    <font color="#008080"><i><tt>make_receiver</tt></i></font> for the previous steps in the chain).
+      	  
+     </p>
+    </dd>
+    
+   </dl>    
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Wednesday, October 20th, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="tracing.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="transformation_source.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

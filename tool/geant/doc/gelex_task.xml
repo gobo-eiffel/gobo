@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gelex Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002-2016, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelex_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2016</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date> 22 April 2016</date>
+</chapterinfo>
+
+	<title>gelex</title>
+
+	<section id="gelex_description">
+		<title>Description</title>
+		<para>
+			Execute gelex.
+		</para>
+	</section>
+
+	<section id="gelex_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>input</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>input</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>output</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>output</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>array_size</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>array_size</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Integer</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>200</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>backup</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>backup</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>ecs</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>ecs</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>full</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>full</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>case_insensitive</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>case_insensitive</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>meta_ecs</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>meta_ecs</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>no_default</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>no_default</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>no_warn</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>no_warn</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>separate_actions</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>separate_actions</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>False</para>
+				</listitem>
+			</varlistentry>
+			
+			<varlistentry>
+				<term>inspect_actions</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>inspect_actions</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>True</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</section>
+
+	<section id="gelex_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="gelex">
+    <element name="gelex">
+      <ref name="dir_if_unless"/>
+      <attribute name="input"/>
+      <optional>
+        <attribute name="output"/>
+      </optional>
+      <optional>
+        <attribute name="backup"/>
+      </optional>
+      <optional>
+        <attribute name="array_size"/>
+      </optional>
+      <optional>
+        <attribute name="ecs"/>
+      </optional>
+        <choice>
+          <optional>
+            <attribute name="full"/>
+          </optional>
+          <optional>
+            <attribute name="meta_ecs"/>
+          </optional>
+        </choice>
+      <optional>
+        <attribute name="case_insensitive"/>
+      </optional>
+      <optional>
+        <attribute name="no_default"/>
+      </optional>
+      <optional>
+        <attribute name="no_warn"/>
+      </optional>
+      <optional>
+        <attribute name="separate_actions"/>
+      </optional>
+      <optional>
+        <attribute name="inspect_actions"/>
+      </optional>
+    </element>
+  </define>
+]]>
+	</programlisting>
+
+	<para>
+		Note: when attribute <emphasis>full</emphasis> is set attribute <emphasis>meta_ecs</emphasis>
+		must not be set.
+	</para>
+
+	</section>
+
+	<section id="gelex_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <gelex input="ascii2ps.l"/>
+]]>
+	</programlisting>
+	</section>
+
+</chapter>

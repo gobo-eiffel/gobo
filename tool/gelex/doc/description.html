@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gelex: Scanner Description File</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Scanner Description File</strong></font></td>
+        <td align="right"><a href="examples.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="scanner.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>The <em>gelex</em> input file consists of three sections,
+separated by a line with just <font color="#0000FF"><tt>%%</tt></font>
+in it:</p>
+
+<blockquote>
+    <pre><tt>declarations
+</tt><font color="#0000FF"><tt>%%</tt></font><tt>
+rules
+</tt><font color="#0000FF"><tt>%%</tt></font><tt>
+user code</tt></pre>
+</blockquote>
+
+<p>Comments follow Eiffel style conventions and have no effect on
+the description's semantics.</p>
+
+<h2><a name="declarations">Declarations section</a></h2>
+
+<p>The declarations section contains declarations of <a
+href="options.html">options</a> and <a
+href="start_conditions.html">start conditions</a> which are
+explained elsewhere, declarations of simple name definitions to
+simplify the scanner specification, and declarations of Eiffel
+code to be copied at the beginning of the generated scanner
+class.</p>
+
+<h4><a name="definitions">Name definitions</a></h4>
+
+<p>Name definitions have the form:</p>
+
+<blockquote>
+    <pre><font color="#800080"><tt>name</tt></font><tt>  </tt><font
+color="#FF0000"><tt>definition</tt></font></pre>
+</blockquote>
+
+<p>The <font color="#800080"><tt>name</tt></font> is a word
+beginning with a letter and followed by zero or more letters,
+digits, or underscores. It must appear at the beginning of the
+line and is case-insensitive, which means that the three
+following lines are equivalent:</p>
+
+<blockquote>
+    <pre><font color="#800080">name</font>  <font color="#FF0000">definition</font>
+<font color="#800080">NAME</font>  <font color="#FF0000">definition</font>
+<font color="#800080">nAmE</font>  <font color="#FF0000">definition</font></pre>
+</blockquote>
+
+<p>The definition is taken to begin at the first non-whitespace
+character following the name and continuing to the end of the
+line. The definition can subsequently be referred to using <font
+color="#FF0000"><tt>{name}</tt></font>, which will expand to <font
+color="#FF0000"><tt>(definition)</tt></font>. For example,</p>
+
+<blockquote>
+    <pre><font color="#800080"><tt>DIGIT</tt></font><tt> </tt><font
+color="#FF0000"><tt> [0-9]</tt></font><tt>
+</tt><font color="#800080"><tt>ID</tt></font><tt>     </tt><font
+color="#FF0000"><tt>[a-z][a-z0-9]*</tt></font></pre>
+</blockquote>
+
+<p>defines <font color="#800080"><tt>DIGIT</tt></font> to be a <a
+href="patterns.html">regular expression</a> which matches a
+single digit, and <font color="#800080"><tt>ID</tt></font> to be
+a regular expression which matches a letter followed by
+zero-or-more letters-or-digits. A subsequent reference to:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">{DIGIT}+&quot;.&quot;{DIGIT}*</font></pre>
+</blockquote>
+
+<p>is identical to:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">([0-9])+&quot;.&quot;([0-9])*</font></pre>
+</blockquote>
+
+<p>and matches one-or-more digits followed by a dot followed by
+zero-or-more digits.</p>
+
+<p>Note that the <font color="#FF0000">definition </font>part can
+be defined in terms of other definitions. For example:</p>
+
+<blockquote>
+    <pre><font color="#800080"><tt>ID</tt></font><font
+color="#FF0000"><tt>     {LETTER}({LETTER}|{DIGIT})*
+</tt></font><font color="#800080"><tt>DIGIT</tt></font><tt> </tt><font
+color="#FF0000"><tt> [0-9]</tt></font><font color="#800080"><tt>
+LETTER</tt></font><tt> </tt><font color="#FF0000"><tt>[a-z]</tt></font></pre>
+</blockquote>
+
+<p>Then a subsequent reference to:</p>
+
+<blockquote>
+    <pre><font color="#FF0000"><tt>{ID}</tt></font></pre>
+</blockquote>
+
+<p>is identical to:</p>
+
+<blockquote>
+    <pre><font color="#FF0000"><tt>([a-z])(([a-z])|([0-9]))*</tt></font></pre>
+</blockquote>
+
+<p>As opposed to <a href="start_conditions.html">start conditions</a>,
+the name definition mechanism has its own name space. Names that
+are otherwise used as feature names in the generated scanner
+class can therefore be used as definition names without
+ambiguity.</p>
+
+<h4><a name="eiffel_declarations">Eiffel declarations</a></h4>
+
+<p>The declarations section may also contain Eiffel code to be
+copied verbatim to the beginning of the generated scanner class.
+The Eiffel text has to be enclosed between two unindented lines
+containing the two marks <font color="#0000FF"><tt>%{</tt></font>
+and <font color="#0000FF"><tt>%}</tt></font> such as in the
+following example:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%{</font>
+<font color="#008080"><em><strong>class</strong></em><em> MY_SCANNER
+
+</em><em><strong>inherit</strong></em><em>
+
+    YY_COMPRESSED_SCANNER_SKELETON
+
+</em><em><strong>create</strong></em><em>
+
+    make</em></font>
+<font color="#0000FF">%}</font></pre>
+</blockquote>
+
+<p><em>Gelex</em> does not generate the note, class header,
+formal generics, obsolete, inheritance and creation clauses. As
+the example above shows, Eiffel declarations are used to specify
+such clauses in order to ensure that the generated scanner class
+is syntactically and semantically correct. Here, the name of the
+generated class is <font color="#008080"><em><tt>MY_SCANNER</tt></em></font>
+and its creation procedure is <font color="#008080"><em><tt>make</tt></em></font>,
+a routine inherited from class <font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font>.
+This class contains the pattern-matching engine <font size="4"
+face="Courier New">-</font> a Deterministic Finite Automaton (or <font
+size="2">DFA</font> for short) <font size="4" face="Courier New">-</font>
+which is optimized in size, hence the name of the class. It also
+provides numerous facilities such as routine <font
+color="#008080"><em><tt>scan</tt></em></font> for analyzing a
+given input text. The generated scanner class has to inherit from
+one such class to work properly. Other alternatives are <font
+color="#008080"><em><tt>YY_FULL_SCANNER_SKELETON</tt></em></font>,
+whose <font size="2">DFA</font> is optimized in speed but not in
+space, and <font color="#008080"><em><tt>YY_INTERACTIVE_SCANNER_SKELETON</tt></em></font><font
+size="3">, whose </font><font size="2">DFA</font><font size="3">
+can deal with interactive input such as input from the keyboard.</font></p>
+
+<p>If several of these Eiffel blocks appear in the declarations
+section, they are all copied to the generated scanner class in
+their order of appearance in the input file.</p>
+
+<h2><a name="rules">Rules section</a></h2>
+
+<p>The rules section of the <em>gelex</em> input contains a
+series of rules of the form:</p>
+
+<blockquote>
+    <pre><font color="#FF0000">pattern</font> <font
+color="#008080">action</font></pre>
+</blockquote>
+
+<p>where the pattern can be indented and the action must begin on
+the same line. A further description of <a href="patterns.html">patterns</a>
+and <a href="actions.html">actions</a> is provided in other
+chapters.</p>
+
+<h2><a name="user_code">User code section</a></h2>
+
+<p>Finally, the user code section is simply copied verbatim to
+the end of the generated scanner class. <em>Gelex</em> does not
+generate the invariant clause and the end of class keyword. This
+section is hence used to specify such clauses and also to define
+features called from the semantic actions. The presence of this
+section is optional (if it is missing, the second <font
+color="#0000FF"><tt>%%</tt></font> in the input file may be
+skipped, too) but is highly recommended if only to specify the
+end of the generated scanner class and thus ensure that this
+class is syntactically correct.</p>
+
+<p>Names of implementation features in inherited classes <font
+color="#008080"><em><tt>YY_*_SCANNER_SKELETON</tt></em></font>
+are prefixed by <font color="#008080"><em><tt>yy</tt></em></font>.
+As a consequence, user-declarared feature names beginning with
+this prefix should be avoided. </p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1997-2005</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 21 February 2005</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$
+$Revision$"
+            -->
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="examples.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="scanner.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

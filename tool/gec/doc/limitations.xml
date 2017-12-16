@@ -1,0 +1,97 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Limitations"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/limitations">
+<chapterinfo>
+	<copyright>
+		<year>2006-2017</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>5 Mai 2017</date>
+</chapterinfo>
+
+<title>Gec Limitations</title>
+
+<para>
+The following Eiffel constructs have not been implemented yet:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>Assertions</term>
+		<listitem><para>
+			not monitored at runtime
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Garbage Collection</term>
+		<listitem><para>
+			no internal GC, the Boehm GC can be plugged instead
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Storable</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>User-defined expanded classes</term>
+		<listitem><para>
+			semantics of attachement and comparison not fully implemented
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Unique constants</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Non-conforming inheritance</term>
+		<listitem><para>
+			feature replication still uses the pre-ECMA semantics of 'select'
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Once-per-object</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>SCOOP</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Debugger</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Profiler</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Cecil (C to Eiffel interface)</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Eiffel for .Net</term>
+		<listitem></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+Note that this list is not exhaustive.
+</para>
+
+</chapter>
