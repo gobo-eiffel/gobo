@@ -5,7 +5,7 @@ note
 		"ECF dotnet conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_ECF_DOTNET_CONDITION
 
 inherit
 
-	ET_ECF_CONDITION
+	ET_ECF_CONDITION_ITEM
 
 create
 

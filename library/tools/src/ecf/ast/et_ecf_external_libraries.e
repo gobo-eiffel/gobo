@@ -14,7 +14,7 @@ class ET_ECF_EXTERNAL_LIBRARIES
 
 inherit
 
-	ET_ECF_EXTERNAL_VALUES
+	ET_ECF_EXTERNAL_PATHNAMES
 		rename
 			fill_external_values as fill_external_libraries
 		redefine

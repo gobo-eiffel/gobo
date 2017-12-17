@@ -14,7 +14,7 @@ class ET_ECF_PLATFORM_CONDITION
 
 inherit
 
-	ET_ECF_CONDITION
+	ET_ECF_CONDITION_ITEM
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -73,8 +73,8 @@ feature -- Status report
 			else
 				l_expected_value := {ET_ECF_SETTING_NAMES}.unix_setting_value
 			end
-			if value.has (' ') then
-				create l_splitter.make_with_separators (" ")
+			if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
+				create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
 				Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive (?, l_expected_value))
 			else
 				Result := STRING_.same_case_insensitive (value, l_expected_value)

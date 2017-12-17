@@ -329,7 +329,7 @@ feature -- Basic operations
 			if attached parent as l_parent then
 				l_parent.update_state (a_state)
 			end
-			l_value := capabilities.value ({ET_ECF_CAPABILITY_NAMES}.concurrency_use_capability_name)
+			l_value := capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
 			if l_value /= Void then
 				if STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.thread_capability_value) then
 					a_state.set_multithreaded (True)
@@ -485,9 +485,9 @@ feature -- Basic operations
 			l_value: detachable STRING
 		do
 				-- "concurrency".
-			l_value := capabilities.value ({ET_ECF_CAPABILITY_NAMES}.concurrency_use_capability_name)
+			l_value := capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
 			if l_value = Void then
-				l_value := capabilities.value ({ET_ECF_CAPABILITY_NAMES}.concurrency_support_capability_name)
+				l_value := capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
 			end
 			if l_value /= Void then
 				if STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.thread_capability_value) then
@@ -499,9 +499,9 @@ feature -- Basic operations
 				end
 			end
 				-- void_safety.
-			l_value := capabilities.value ({ET_ECF_CAPABILITY_NAMES}.void_safety_use_capability_name)
+			l_value := capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
 			if l_value = Void then
-				l_value := capabilities.value ({ET_ECF_CAPABILITY_NAMES}.void_safety_support_capability_name)
+				l_value := capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
 			end
 			if l_value = Void or else STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
 				a_system.set_attachment_type_conformance_mode (False)

@@ -106,6 +106,14 @@ feature -- AST factory
 			adapted_library_not_void: Result /= Void
 		end
 
+	new_anded_conditions: ET_ECF_ANDED_CONDITIONS
+			-- New and-ed condition list
+		do
+			create Result.make_empty
+		ensure
+			anded_conditions_not_void: Result /= Void
+		end
+
 	new_build_condition (a_value: STRING; a_excluded: BOOLEAN): ET_ECF_BUILD_CONDITION
 			-- New build condition
 		do
@@ -178,26 +186,6 @@ feature -- AST factory
 			end
 		ensure
 			condition_not_void: Result /= Void
-		end
-
-	new_condition: ET_ECF_CONDITIONS
-			-- New condition
-		do
-			create Result.make_anded_empty
-		ensure
-			condition_not_void: Result /= Void
-			condition_anded: not Result.is_ored
-		end
-
-	new_conditions (a_condition: ET_ECF_CONDITIONS): ET_ECF_CONDITIONS
-			-- New condition list
-		require
-			a_condition_not_void: a_condition /= Void
-		do
-			create Result.make_ored (a_condition)
-		ensure
-			conditions_not_void: Result /= Void
-			conditions_ored: Result.is_ored
 		end
 
 	new_custom_condition (a_name, a_value: STRING; a_excluded: BOOLEAN): ET_ECF_CUSTOM_CONDITION
@@ -415,20 +403,22 @@ feature -- AST factory
 			library_not_void: Result /= Void
 		end
 
-	new_multithreaded_condition (a_value: BOOLEAN): ET_ECF_MULTITHREADED_CONDITION
-			-- New multithreaded condition
-		do
-			create Result.make (a_value)
-		ensure
-			condition_not_void: Result /= Void
-		end
-
 	new_options: ET_ECF_OPTIONS
 			-- New options
 		do
 			create Result.make
 		ensure
 			options_not_void: Result /= Void
+		end
+
+	new_ored_conditions (a_conditions: ET_ECF_ANDED_CONDITIONS): ET_ECF_ORED_CONDITIONS
+			-- New or-ed condition list
+		require
+			a_conditions_not_void: a_conditions /= Void
+		do
+			create Result.make (a_conditions)
+		ensure
+			ored_conditions_not_void: Result /= Void
 		end
 
 	new_platform_condition (a_value: STRING; a_excluded: BOOLEAN): ET_ECF_PLATFORM_CONDITION

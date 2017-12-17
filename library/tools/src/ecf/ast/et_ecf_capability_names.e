@@ -14,117 +14,45 @@ class ET_ECF_CAPABILITY_NAMES
 
 feature -- Names
 
-	support_capability_prefix: STRING = "support."
-			-- Prefix for "support" capabilities
-
-	use_capability_prefix: STRING = "use."
-			-- Prefix for "use" capabilities
-
-	catcall_detection_capability_unqualified_name: STRING = "catcall_detection"
+	catcall_detection_capability_name: STRING = "catcall_detection"
 			-- Name of capability "catcall_detection"
-			--
-			-- Values: none|conformance|all
-
-	catcall_detection_support_capability_name: STRING = "support.catcall_detection"
-			-- Name of "support" capability "catcall_detection"
 			--
 			-- Values: none|conformance|all
 			-- Note: ordered (none<conformance<all).
 
-	catcall_detection_use_capability_name: STRING = "use.catcall_detection"
-			-- Name of "use" capability "catcall_detection"
-			--
-			-- Values: none|conformance|all
-
-	code_capability_unqualified_name: STRING = "code"
-			-- Name of capability "code"
-			--
-			-- Values: standard|dotnet
-			--
-			-- Note: this was supposed to supersede the setting 'msil_generation'
-			-- in ECF 1.16.0, but ISE does not support the capability 'code' yet
-			-- and still uses the setting 'msil_generation'.
-
-	code_support_capability_name: STRING = "support.code"
+	code_capability_name: STRING = "code"
 			-- Name of "support" capability "code"
 			--
 			-- Values: standard|dotnet
-			-- Note: unordered, "support" can list both (I don't know what the separator is).
+			-- Note: unordered, "support" can list both.
 			-- Note: if not specificed, then any code kind is supported.
 			--
 			-- Note: this was supposed to supersede the setting 'msil_generation'
 			-- in ECF 1.16.0, but ISE does not support the capability 'code' yet
 			-- and still uses the setting 'msil_generation'.
 
-	code_use_capability_name: STRING = "use.code"
-			-- Name of "use" capability "code"
-			--
-			-- Values: standard|dotnet
-			--
-			-- Note: this was supposed to supersede the setting 'msil_generation'
-			-- in ECF 1.16.0, but ISE does not support the capability 'code' yet
-			-- and still uses the setting 'msil_generation'.
-
-	concurrency_capability_unqualified_name: STRING = "concurrency"
-			-- Name of capability "concurrency"
-			--
-			-- Values: thread|none|scoop
-
-	concurrency_support_capability_name: STRING = "support.concurrency"
+	concurrency_capability_name: STRING = "concurrency"
 			-- Name of "support" capability "concurrency"
 			--
 			-- Values: thread|none|scoop
 			-- Note: ordered (thread<none<scoop).
 
-	concurrency_use_capability_name: STRING = "use.concurrency"
-			-- Name of "use" capability "concurrency"
-			--
-			-- Values: thread|none|scoop
-
-	platform_capability_unqualified_name: STRING = "platform"
-			-- Name of capability "platform"
-			--
-			-- Values: windows|unix|macintosh|vxworks
-			--
-			-- Note: this was supposed to supersede the setting 'platform'
-			-- in ECF 1.16.0, but ISE does not support the capability 'platform' yet
-			-- and still uses the setting 'platform'.
-
-	platform_support_capability_name: STRING = "support.platform"
+	platform_capability_name: STRING = "platform"
 			-- Name of "support" capability "platform"
 			--
 			-- Values: windows|unix|macintosh|vxworks
-			-- Note: unordered, "support" can list both (I don't know what the separator is).
+			-- Note: unordered, "support" can list both.
 			-- Note: if not specificed, then any platform is supported.
 			--
 			-- Note: this was supposed to supersede the setting 'platform'
 			-- in ECF 1.16.0, but ISE does not support the capability 'platform' yet
 			-- and still uses the setting 'platform'.
 
-	platform_use_capability_name: STRING = "use.platform"
-			-- Name of "use" capability "platform"
-			--
-			-- Values: windows|unix|macintosh|vxworks
-			--
-			-- Note: this was supposed to supersede the setting 'platform'
-			-- in ECF 1.16.0, but ISE does not support the capability 'platform' yet
-			-- and still uses the setting 'platform'.
-
-	void_safety_capability_unqualified_name: STRING = "void_safety"
-			-- Name of capability "void_safety"
-			--
-			-- Values: none|conformance|initialization|transitional|all
-
-	void_safety_support_capability_name: STRING = "support.void_safety"
+	void_safety_capability_name: STRING = "void_safety"
 			-- Name of "support" capability "void_safety"
 			--
 			-- Values: none|conformance|initialization|transitional|all
 			-- Note: ordered (none<conformance<initialization<transitional<all).
-
-	void_safety_use_capability_name: STRING = "use.void_safety"
-			-- Name of "use" capability "void_safety"
-			--
-			-- Values: none|conformance|initialization|transitional|all
 
 feature -- Values
 
@@ -192,6 +120,13 @@ feature -- Values
 			-- Value "unix"
 			--
 			-- Used in "platform".
+
+	value_separator: CHARACTER = ' '
+			-- Separator used in case of multiple values
+
+	value_separators: STRING = " "
+			-- Separator used in case of multiple values
+			-- (To be used in ST_SPLITTER.)
 
 	vxworks_capability_value: STRING = "vxworks"
 			-- Value "vxworks"

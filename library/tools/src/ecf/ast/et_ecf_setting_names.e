@@ -219,6 +219,11 @@ feature -- Values
 	false_setting_value: STRING = "false"
 			-- Value "false"
 
+	finalize_setting_value: STRING = "finalize"
+			-- Value "finalize"
+			--
+			-- Use in condition "build"
+
 	macintosh_setting_value: STRING = "macintosh"
 			-- Value "macintosh"
 			--
@@ -257,5 +262,10 @@ feature -- Values
 			-- Value "windows"
 			--
 			-- Used in "platform".
+
+	workbench_setting_value: STRING = "workbench"
+			-- Value "workbench"
+			--
+			-- Use in condition "build"
 
 end

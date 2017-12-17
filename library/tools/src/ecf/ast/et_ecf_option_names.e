@@ -14,65 +14,32 @@ class ET_ECF_OPTION_NAMES
 
 feature -- Names
 
-	assertions_option_prefix: STRING = "assertions."
-			-- Prefix for "assertions" options
-
-	assertions_check_option_name: STRING = "assertions.check"
+	assertions_check_option_name: STRING = "check"
 			-- Name of "assertions" option "check"
 			--
 			-- Values: true|false
 
-	assertions_check_option_unqualified_name: STRING = "check"
-			-- Unqualified name of "assertions" option "check"
-			--
-			-- Values: true|false
-
-	assertions_invariant_option_unqualified_name: STRING = "invariant"
-			-- Unqualified name of "assertions" option "invariant"
-			--
-			-- Values: true|false
-
-	assertions_invariant_option_name: STRING = "assertions.invariant"
+	assertions_invariant_option_name: STRING = "invariant"
 			-- Name of "assertions" option "invariant"
 			--
 			-- Values: true|false
 
-	assertions_loop_option_unqualified_name: STRING = "loop"
-			-- Unqualified name of "assertions" option "loop"
-			--
-			-- Values: true|false
-
-	assertions_loop_option_name: STRING = "assertions.loop"
+	assertions_loop_option_name: STRING = "loop"
 			-- Name of "assertions" option "loop"
 			--
 			-- Values: true|false
 
-	assertions_postcondition_option_unqualified_name: STRING = "postcondition"
-			-- Unqualified name of "assertions" option "postcondition"
-			--
-			-- Values: true|false
-
-	assertions_postcondition_option_name: STRING = "assertions.postcondition"
+	assertions_postcondition_option_name: STRING = "postcondition"
 			-- Name of "assertions" option "postcondition"
 			--
 			-- Values: true|false
 
-	assertions_precondition_option_unqualified_name: STRING = "precondition"
-			-- Unqualified name of "assertions" option "precondition"
-			--
-			-- Values: true|false
-
-	assertions_precondition_option_name: STRING = "assertions.precondition"
+	assertions_precondition_option_name: STRING = "precondition"
 			-- Name of "assertions" option "precondition"
 			--
 			-- Values: true|false
 
-	assertions_supplier_precondition_option_unqualified_name: STRING = "supplier_precondition"
-			-- Unqualified name of "assertions" option "supplier_precondition"
-			--
-			-- Values: true|false
-
-	assertions_supplier_precondition_option_name: STRING = "assertions.supplier_precondition"
+	assertions_supplier_precondition_option_name: STRING = "supplier_precondition"
 			-- Name of "assertions" option "supplier_precondition"
 			--
 			-- Values: true|false
@@ -88,9 +55,6 @@ feature -- Names
 			-- Name of option "debug"
 			--
 			-- Values: true|false
-
-	debug_option_prefix: STRING = "debug."
-			-- Prefix for "debug" options
 
 	full_class_checking_option_name: STRING = "full_class_checking"
 			-- Name of option "full_class_checking"
@@ -151,149 +115,74 @@ feature -- Names
 			--
 			-- Values: true|false
 
-	warning_option_prefix: STRING = "warning."
-			-- Prefix for "warning" options
-
-	warning_export_class_missing_option_unqualified_name: STRING = "export_class_missing"
-			-- Unqualified name of "warning" option "export_class_missing"
-			--
-			-- Values: true|false
-
-	warning_export_class_missing_option_name: STRING = "warning.export_class_missing"
+	warning_export_class_missing_option_name: STRING = "export_class_missing"
 			-- Name of "warning" option "export_class_missing"
 			--
 			-- Values: true|false
 
-	warning_manifest_array_type_unqualified_name: STRING = "manifest_array_type"
-			-- Unqualified name of "warning" option "manifest_array_type"
-			--
-			-- Values: true|false
-			--
-			-- Note: introduced in ECF 1.17.0.
-
-	warning_manifest_array_type_option_name: STRING = "warning.manifest_array_type"
+	warning_manifest_array_type_name: STRING = "manifest_array_type"
 			-- Name of "warning" option "manifest_array_type"
 			--
 			-- Values: true|false
 			--
 			-- Note: introduced in ECF 1.17.0.
 
-	warning_obsolete_class_option_unqualified_name: STRING = "obsolete_class"
-			-- Unqualified name of "warning" option "obsolete_class"
-			--
-			-- Values: true|false
-
-	warning_obsolete_class_option_name: STRING = "warning.obsolete_class"
+	warning_obsolete_class_option_name: STRING = "obsolete_class"
 			-- Name of "warning" option "obsolete_class"
 			--
 			-- Values: true|false
 
-	warning_obsolete_feature_option_unqualified_name: STRING = "obsolete_feature"
-			-- Unqualified name of "warning" option "obsolete_feature"
-			--
-			-- Values: true|false
-
-	warning_obsolete_feature_option_name: STRING = "warning.obsolete_feature"
+	warning_obsolete_feature_option_name: STRING = "obsolete_feature"
 			-- Name of "warning" option "obsolete_feature"
 			--
 			-- Values: true|false
 
-	warning_old_verbatim_strings_option_unqualified_name: STRING = "old_verbatim_strings"
-			-- Unqualified name of "warning" option "old_verbatim_strings"
-			--
-			-- Values: true|false
-
-	warning_old_verbatim_strings_option_name: STRING = "warning.old_verbatim_strings"
+	warning_old_verbatim_strings_option_name: STRING = "old_verbatim_strings"
 			-- Name of "warning" option "old_verbatim_strings"
 			--
 			-- Values: true|false
 
-	warning_once_in_generic_option_unqualified_name: STRING = "once_in_generic"
-			-- Unqualified name of "warning" option "once_in_generic"
-			--
-			-- Values: true|false
-
-	warning_once_in_generic_option_name: STRING = "warning.once_in_generic"
+	warning_once_in_generic_option_name: STRING = "once_in_generic"
 			-- Name of "warning" option "once_in_generic"
 			--
 			-- Values: true|false
 
-	warning_option_unknown_class_option_unqualified_name: STRING = "option_unknown_class"
-			-- Unqualified name of "warning" option "option_unknown_class"
-			--
-			-- Values: true|false
-
-	warning_option_unknown_class_option_name: STRING = "warning.option_unknown_class"
+	warning_option_unknown_class_option_name: STRING = "option_unknown_class"
 			-- Name of "warning" option "option_unknown_class"
 			--
 			-- Values: true|false
 
-	warning_renaming_unknown_class_option_unqualified_name: STRING = "renaming_unknown_class"
-			-- Unqualified name of "warning" option "renaming_unknown_class"
-			--
-			-- Values: true|false
-
-	warning_renaming_unknown_class_option_name: STRING = "warning.renaming_unknown_class"
+	warning_renaming_unknown_class_option_name: STRING = "renaming_unknown_class"
 			-- Name of "warning" option "renaming_unknown_class"
 			--
 			-- Values: true|false
 
-	warning_same_uuid_option_unqualified_name: STRING = "same_uuid"
-			-- Unqualified name of "warning" option "same_uuid"
-			--
-			-- Values: true|false
-
-	warning_same_uuid_option_name: STRING = "warning.same_uuid"
+	warning_same_uuid_option_name: STRING = "same_uuid"
 			-- Name of "warning" option "same_uuid"
 			--
 			-- Values: true|false
 
-	warning_syntax_option_unqualified_name: STRING = "syntax"
-			-- Unqualified name of "warning" option "syntax"
-			--
-			-- Values: true|false
-
-	warning_syntax_option_name: STRING = "warning.syntax"
+	warning_syntax_option_name: STRING = "syntax"
 			-- Name of "warning" option "syntax"
 			--
 			-- Values: true|false
 
-	warning_unused_local_option_unqualified_name: STRING = "unused_local"
-			-- Unqualified name of "warning" option "unused_local"
-			--
-			-- Values: true|false
-
-	warning_unused_local_option_name: STRING = "warning.unused_local"
+	warning_unused_local_option_name: STRING = "unused_local"
 			-- Name of "warning" option "unused_local"
 			--
 			-- Values: true|false
 
-	warning_vjrv_option_unqualified_name: STRING = "vjrv"
-			-- Unqualified name of "warning" option "vjrv"
-			--
-			-- Values: true|false
-
-	warning_vjrv_option_name: STRING = "warning.vjrv"
+	warning_vjrv_option_name: STRING = "vjrv"
 			-- Name of "warning" option "vjrv"
 			--
 			-- Values: true|false
 
-	warning_vwab_option_unqualified_name: STRING = "vwab"
-			-- Unqualified name of "warning" option "vwab"
-			--
-			-- Values: true|false
-
-	warning_vwab_option_name: STRING = "warning.vwab"
+	warning_vwab_option_name: STRING = "vwab"
 			-- Name of "warning" option "vwab"
 			--
 			-- Values: true|false
 
-	warning_vweq_option_unqualified_name: STRING = "vweq"
-			-- Unqualified name of "warning" option "vweq"
-			--
-			-- Values: true|false
-
-	warning_vweq_option_name: STRING = "warning.vweq"
+	warning_vweq_option_name: STRING = "vweq"
 			-- Name of "warning" option "vweq"
 			--
 			-- Values: true|false

@@ -5,76 +5,37 @@ note
 		"ECF condition lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_ECF_CONDITIONS
+deferred class ET_ECF_CONDITIONS
 
 inherit
 
 	ET_ECF_CONDITION
 
-create
-
-	make_anded,
-	make_ored,
-	make_anded_empty,
-	make_ored_empty
-
 feature {NONE} -- Initialization
 
-	make_anded (a_condition: like condition)
+	make (a_condition: like condition)
 			-- Create a new condition list with initially one condition `a_condition'.
-			-- Conditions will be and-ed when calling `is_enabled'.
 		require
 			a_condition_not_void: a_condition /= Void
 		do
 			create conditions.make (Initial_conditions_capacity)
 			conditions.put_last (a_condition)
-			is_ored := False
 		ensure
 			one_condition: conditions.count = 1
 			conditions_set: conditions.last = a_condition
-			is_anded: not is_ored
 		end
 
-	make_ored (a_condition: like condition)
-			-- Create a new condition list with initially one condition `a_condition'.
-			-- Conditions will be or-ed when calling `is_enabled'.
-		require
-			a_condition_not_void: a_condition /= Void
-		do
-			create conditions.make (Initial_conditions_capacity)
-			conditions.put_last (a_condition)
-			is_ored := True
-		ensure
-			one_condition: conditions.count = 1
-			conditions_set: conditions.last = a_condition
-			is_ored: is_ored
-		end
-
-	make_anded_empty
+	make_empty
 			-- Create a new empty condition list.
-			-- Conditions will be and-ed when calling `is_enabled'.
 		do
 			create conditions.make (Initial_conditions_capacity)
-			is_ored := False
 		ensure
-			is_empty: conditions.is_empty
-			is_anded: not is_ored
-		end
-
-	make_ored_empty
-			-- Create a new empty condition list.
-			-- Conditions will be or-ed when calling `is_enabled'.
-		do
-			create conditions.make (Initial_conditions_capacity)
-			is_ored := True
-		ensure
-			is_empty: conditions.is_empty
-			is_ored: is_ored
+			is_empty: is_empty
 		end
 
 feature -- Status report
@@ -98,6 +59,8 @@ feature -- Status report
 
 	is_ored: BOOLEAN
 			-- Should the conditions be or-ed when calling `is_enabled'?
+		deferred
+		end
 
 	is_empty: BOOLEAN
 			-- Is the list of conditions empty?
@@ -149,7 +112,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ET_ECF_CONDITION])
+	do_all (an_action: PROCEDURE [like condition])
 			-- Apply `an_action' to every condition, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require

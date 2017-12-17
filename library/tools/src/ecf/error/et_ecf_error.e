@@ -19,26 +19,6 @@ inherit
 create
 
 	make_syntax,
-	make_eaae,
-	make_eaaf,
-	make_eaag,
-	make_eaah,
-	make_eaan,
-	make_eaao,
-	make_eaap,
-	make_eaaq,
-	make_eaar,
-	make_eaas,
-	make_eaat,
-	make_eaau,
-	make_eaav,
-	make_eaaw,
-	make_eaax,
-	make_eaay,
-	make_eaaz,
-	make_eaba,
-	make_eabb,
-	make_eabc,
 	make_eabf,
 	make_eabg,
 	make_eabh,
@@ -48,10 +28,6 @@ create
 	make_eabw,
 	make_eabx,
 	make_eaby,
-	make_eadb,
-	make_eadc,
-	make_eadd,
-	make_eade,
 	make_eadf,
 	make_eadg,
 	make_eadh,
@@ -65,7 +41,9 @@ create
 	make_eate,
 	make_eati,
 	make_eatm,
+	make_eatn,
 	make_eats,
+	make_eatx,
 	make_eltm
 
 feature {NONE} -- Initialization
@@ -95,498 +73,6 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = message
-		end
-
-	make_eaae (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAE error: cannot have both value and excluded_value in build condition.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_excluded_value_attribute_name.position
-			code := eaae_code
-			default_template := default_message_template (eaae_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaaf (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAF error: the value in build condition is empty.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_value_attribute_name.position
-			code := eaaf_code
-			default_template := default_message_template (eaaf_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaag (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAG error: the excluded value in build condition is empty.
-		require
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_excluded_value_attribute_name.position
-			code := eaag_code
-			default_template := default_message_template (eaag_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaah (a_build_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAH error: value or excluded value missing in build condition.
-		require
-			a_build_element_name_not_void: a_build_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_build_element_name.position
-			code := eaah_code
-			default_template := default_message_template (eaah_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaan (a_custom_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAN error: the name of the custom condition is missing.
-		require
-			a_custom_element_name_not_void: a_custom_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_custom_element_name.position
-			code := eaan_code
-			default_template := default_message_template (eaan_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaao (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAO error: the name of the custom condition is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_name_attribute_name.position
-			code := eaao_code
-			default_template := default_message_template (eaao_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaap (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAP error: cannot have both value and excluded_value in custom condition.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_excluded_value_attribute_name.position
-			code := eaap_code
-			default_template := default_message_template (eaap_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaaq (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAQ error: the value in custom condition is empty.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_value_attribute_name.position
-			code := eaaq_code
-			default_template := default_message_template (eaaq_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaar (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAR error: the excluded value in custom condition is empty.
-		require
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_excluded_value_attribute_name.position
-			code := eaar_code
-			default_template := default_message_template (eaar_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaas (a_custom_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAS error: value or excluded value missing in custom condition.
-		require
-			a_custom_element_name_not_void: a_custom_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_custom_element_name.position
-			code := eaas_code
-			default_template := default_message_template (eaas_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaat (a_dotnet_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAT error: the value of the dotnet condition is missing.
-		require
-			a_dotnet_element_name_not_void: a_dotnet_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_dotnet_element_name.position
-			code := eaat_code
-			default_template := default_message_template (eaat_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaau (a_value_attribute_name: ET_IDENTIFIER; a_value_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAU error: the value attribute of the dotnet condition should be a boolean.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_value_value_not_void: a_value_value /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_value_attribute_name.position
-			code := eaau_code
-			default_template := default_message_template (eaau_default_template)
-			create parameters.make_filled (empty_string, 1, 5)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (a_value_value, 5)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = value value
-		end
-
-	make_eaav (a_dynamic_runtime_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAV error: the value of the dynamic_runtime condition is missing.
-		require
-			a_dynamic_runtime_element_name_not_void: a_dynamic_runtime_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_dynamic_runtime_element_name.position
-			code := eaav_code
-			default_template := default_message_template (eaav_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaaw (a_value_attribute_name: ET_IDENTIFIER; a_value_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAW error: the value attribute of the dynamic_runtime condition should be a boolean.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_value_value_not_void: a_value_value /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_value_attribute_name.position
-			code := eaaw_code
-			default_template := default_message_template (eaaw_default_template)
-			create parameters.make_filled (empty_string, 1, 5)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (a_value_value, 5)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = value value
-		end
-
-	make_eaax (a_multithreaded_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAX error: the value of the multithreaded condition is missing.
-		require
-			a_multithreaded_element_name_not_void: a_multithreaded_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_multithreaded_element_name.position
-			code := eaax_code
-			default_template := default_message_template (eaax_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaay (a_value_attribute_name: ET_IDENTIFIER; a_value_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAY error: the value attribute of the multithreaded condition should be a boolean.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_value_value_not_void: a_value_value /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_value_attribute_name.position
-			code := eaay_code
-			default_template := default_message_template (eaay_default_template)
-			create parameters.make_filled (empty_string, 1, 5)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (a_value_value, 5)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = value value
-		end
-
-	make_eaaz (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EAAZ error: cannot have both value and excluded_value in platform condition.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_excluded_value_attribute_name.position
-			code := eaaz_code
-			default_template := default_message_template (eaaz_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eaba (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EABA error: the value in platform condition is empty.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_value_attribute_name.position
-			code := eaba_code
-			default_template := default_message_template (eaba_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eabb (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EABB error: the excluded value in platform condition is empty.
-		require
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_excluded_value_attribute_name.position
-			code := eabb_code
-			default_template := default_message_template (eabb_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eabc (a_platform_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EABC error: value or excluded value missing in platform condition.
-		require
-			a_platform_element_name_not_void: a_platform_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_platform_element_name.position
-			code := eabc_code
-			default_template := default_message_template (eabc_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
 		end
 
 	make_eabf (a_min_attribute_name: ET_IDENTIFIER; a_min_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
@@ -817,103 +303,6 @@ feature {NONE} -- Initialization
 			position := a_system_element_name.position
 			code := eaby_code
 			default_template := default_message_template (eaby_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eadb (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EADB error: cannot have both value and excluded_value in concurrency condition.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_excluded_value_attribute_name.position
-			code := eadb_code
-			default_template := default_message_template (eadb_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eadc (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EADC error: the value in concurrency condition is empty.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_value_attribute_name.position
-			code := eadc_code
-			default_template := default_message_template (eadc_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eadd (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EADD error: the excluded value in concurrency condition is empty.
-		require
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_excluded_value_attribute_name.position
-			code := eadd_code
-			default_template := default_message_template (eadd_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			universe_set: universe = a_universe
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-		end
-
-	make_eade (a_platform_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Create a new EADE error: value or excluded value missing in concurrency condition.
-		require
-			a_platform_element_name_not_void: a_platform_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-			position := a_platform_element_name.position
-			code := eade_code
-			default_template := default_message_template (eade_default_template)
 			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
@@ -1339,6 +728,41 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = element name
 		end
 
+	make_eatn (a_attribute_name_1, a_attribute_name_2: STRING; a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EATN error: attribute `a_attribute_name_1' or `a_attribute_name_2'
+			-- is missing in element `a_element_name'.
+			--
+			-- EATM: Ecf ATtribute missiNg
+		require
+			a_attribute_name_1_not_void: a_attribute_name_1 /= Void
+			a_attribute_name_2_not_void: a_attribute_name_2 /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_element_name.position
+			code := eatn_code
+			default_template := default_message_template (eatn_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (a_attribute_name_1, 5)
+			parameters.put (a_attribute_name_2, 6)
+			parameters.put (a_element_name.name, 7)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = first attribute name
+			-- dollar6: $6 = second attribute name
+			-- dollar7: $7 = element name
+		end
+
 	make_eats (a_attribute_name: STRING; a_other_attribute_name, a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Create a new EATS error: attribute `a_attribute_name' is missing
 			-- in element `a_element_name' when `a_other_attribute_name' is specified.
@@ -1371,6 +795,41 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = missing attribute name
 			-- dollar6: $6 = other attribute name
+			-- dollar7: $7 = element name
+		end
+
+	make_eatx (a_attribute_name_1, a_attribute_name_2, a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new EATX error: cannot have both attributes `a_attribute_name_1' and `a_attribute_name_2'
+			-- in element `a_element_name'.
+			--
+			-- EATM: Ecf ATtributes mutually eXclusive
+		require
+			a_attribute_name_1_not_void: a_attribute_name_1 /= Void
+			a_attribute_name_2_not_void: a_attribute_name_2 /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+			position := a_attribute_name_1.position
+			code := eatx_code
+			default_template := default_message_template (eatx_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (a_attribute_name_1.name, 5)
+			parameters.put (a_attribute_name_2.name, 6)
+			parameters.put (a_element_name.name, 7)
+		ensure
+			universe_set: universe = a_universe
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = first attribute name
+			-- dollar6: $6 = second attribute name
 			-- dollar7: $7 = element name
 		end
 
@@ -1482,26 +941,6 @@ feature {NONE} -- Implementation
 		end
 
 	syntax_default_template: STRING = "$5"
-	eaae_default_template: STRING = "cannot have both 'value' and 'excluded_value' in 'build' condition."
-	eaaf_default_template: STRING = "'value' attribute in 'build' condition is empty."
-	eaag_default_template: STRING = "'excluded_value' attribute in 'build' condition is empty."
-	eaah_default_template: STRING = "'value' or 'excluded_value' attribute is missing in 'build' condition."
-	eaan_default_template: STRING = "'name' attribute is missing in 'custom' condition."
-	eaao_default_template: STRING = "'name' attribute in 'custom' condition is empty."
-	eaap_default_template: STRING = "cannot have both 'value' and 'excluded_value' in 'custom' condition."
-	eaaq_default_template: STRING = "'value' attribute in 'custom' condition is empty."
-	eaar_default_template: STRING = "'excluded_value' attribute in 'custom' condition is empty."
-	eaas_default_template: STRING = "'value' or 'excluded_value' attribute is missing in 'custom' condition."
-	eaat_default_template: STRING = "'value' attribute is missing in 'dotnet' condition."
-	eaau_default_template: STRING = "'value' attribute %"$5%" in 'dotnet' condition should be a boolean."
-	eaav_default_template: STRING = "'value' attribute is missing in 'dynamic_runtime' condition."
-	eaaw_default_template: STRING = "'value' attribute %"$5%" in 'dynamic_runtime' condition should be a boolean."
-	eaax_default_template: STRING = "'value' attribute is missing in 'multithreaded' condition."
-	eaay_default_template: STRING = "'value' attribute %"$5%" in 'multithreaded' condition should be a boolean."
-	eaaz_default_template: STRING = "cannot have both 'value' and 'excluded_value' in 'platform' condition."
-	eaba_default_template: STRING = "'value' attribute in 'platform' condition is empty."
-	eabb_default_template: STRING = "'excluded_value' attribute in 'platform' condition is empty."
-	eabc_default_template: STRING = "'value' or 'excluded_value' attribute is missing in 'platform' condition."
 	eabf_default_template: STRING = "'min' attribute %"$5%" in 'version' condition should be of the form %"N.N.N.N%"."
 	eabg_default_template: STRING = "'max' attribute %"$5%" in 'version' condition should be of the form %"N.N.N.N%"."
 	eabh_default_template: STRING = "'max' attribute %"$6%" should be greater than or equal to 'min' attribute %"$5%" in 'version' condition."
@@ -1511,10 +950,6 @@ feature {NONE} -- Implementation
 	eabw_default_template: STRING = "no library target specified in library ECF file %"$5%"."
 	eabx_default_template: STRING = "root element of ECF file should be 'system' and not '$5'."
 	eaby_default_template: STRING = "no 'target' element found in element 'system'."
-	eadb_default_template: STRING = "cannot have both 'value' and 'excluded_value' in 'concurrency' condition."
-	eadc_default_template: STRING = "'value' attribute in 'concurrency' condition is empty."
-	eadd_default_template: STRING = "'excluded_value' attribute in 'concurrency' condition is empty."
-	eade_default_template: STRING = "'value' or 'excluded_value' attribute is missing in 'concurrency' condition."
 	eadf_default_template: STRING = "cannot open redirected ECF file %"$5%"."
 	eadg_default_template: STRING = "'location' attribute is missing in element 'redirection'."
 	eadh_default_template: STRING = "'location' attribute in element 'redirection' is empty."
@@ -1528,31 +963,13 @@ feature {NONE} -- Implementation
 	eate_default_template: STRING = "attribute '$5' is empty in element '$6'."
 	eati_default_template: STRING = "attribute '$5' with value %"$6%" in element '$7' should be an unsigned integer."
 	eatm_default_template: STRING = "attribute '$5' is missing in element '$6'."
+	eatn_default_template: STRING = "attribute '$5' or '$6' is missing in element '$7'."
 	eats_default_template: STRING = "attribute '$6' specified in element '$7' but '$5' is missing."
+	eatx_default_template: STRING = "cannot have both attributes '$5' and '$6' in element '$7'."
 	eltm_default_template: STRING = "attribute 'library_target' with value %"$5%" in element 'system' is not the name of an existing target."
 			-- Default templates
 
 	syntax_code: STRING = "ESYN"
-	eaae_code: STRING = "EAAE"
-	eaaf_code: STRING = "EAAF"
-	eaag_code: STRING = "EAAG"
-	eaah_code: STRING = "EAAH"
-	eaan_code: STRING = "EAAN"
-	eaao_code: STRING = "EAAO"
-	eaap_code: STRING = "EAAP"
-	eaaq_code: STRING = "EAAQ"
-	eaar_code: STRING = "EAAR"
-	eaas_code: STRING = "EAAS"
-	eaat_code: STRING = "EAAT"
-	eaau_code: STRING = "EAAU"
-	eaav_code: STRING = "EAAV"
-	eaaw_code: STRING = "EAAW"
-	eaax_code: STRING = "EAAX"
-	eaay_code: STRING = "EAAY"
-	eaaz_code: STRING = "EAAZ"
-	eaba_code: STRING = "EABA"
-	eabb_code: STRING = "EABB"
-	eabc_code: STRING = "EABC"
 	eabf_code: STRING = "EABF"
 	eabg_code: STRING = "EABG"
 	eabh_code: STRING = "EABH"
@@ -1562,10 +979,6 @@ feature {NONE} -- Implementation
 	eabw_code: STRING = "EABW"
 	eabx_code: STRING = "EABX"
 	eaby_code: STRING = "EABY"
-	eadb_code: STRING = "EADB"
-	eadc_code: STRING = "EADC"
-	eadd_code: STRING = "EADD"
-	eade_code: STRING = "EADE"
 	eadf_code: STRING = "EADF"
 	eadg_code: STRING = "EADG"
 	eadh_code: STRING = "EADH"
@@ -1579,8 +992,10 @@ feature {NONE} -- Implementation
 	eate_code: STRING = "EATE"
 	eati_code: STRING = "EATI"
 	eatm_code: STRING = "EATM"
-	eltm_code: STRING = "ELTM"
+	eatn_code: STRING = "EATN"
 	eats_code: STRING = "EATS"
+	eatx_code: STRING = "EATX"
+	eltm_code: STRING = "ELTM"
 			-- Error codes
 
 invariant

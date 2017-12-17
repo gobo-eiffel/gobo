@@ -5,7 +5,7 @@ note
 		"ECF build conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_ECF_BUILD_CONDITION
 
 inherit
 
-	ET_ECF_CONDITION
+	ET_ECF_CONDITION_ITEM
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -61,8 +61,22 @@ feature -- Status report
 
 	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
+		local
+			l_expected_value: STRING
+			l_splitter: ST_SPLITTER
 		do
-			Result := (is_excluded /= (a_state.finalize_mode = STRING_.same_case_insensitive (value, "finalize")))
+			if a_state.finalize_mode then
+				l_expected_value := {ET_ECF_SETTING_NAMES}.finalize_setting_value
+			else
+				l_expected_value := {ET_ECF_SETTING_NAMES}.workbench_setting_value
+			end
+			if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
+				create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
+				Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive (?, l_expected_value))
+			else
+				Result := STRING_.same_case_insensitive (value, l_expected_value)
+			end
+			Result := (is_excluded /= Result)
 		end
 
 	is_excluded: BOOLEAN

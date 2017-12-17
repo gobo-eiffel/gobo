@@ -50,6 +50,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	is_empty: BOOLEAN
+			-- Is the list of clusters empty?
+		do
+			Result := (count = 0)
+		ensure
+			definition: Result = (count = 0)
+		end
+
 	has_subcluster (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Is `a_cluster' (recursively) one of the subclusters
 			-- of current clusters?

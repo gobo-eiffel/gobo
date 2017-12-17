@@ -53,252 +53,6 @@ feature -- Syntax error
 
 feature -- Reporting errors
 
-	report_eaae_error (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAE error: cannot have both value and excluded_value in build condition.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaae (a_value_attribute_name, a_excluded_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaaf_error (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAF error: the value in build condition is empty.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaaf (a_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaag_error (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAG error: the excluded value in build condition is empty.
-		require
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaag (a_excluded_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaah_error (a_build_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAH error: value or excluded value missing in build condition.
-		require
-			a_build_element_name_not_void: a_build_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaah (a_build_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaan_error (a_custom_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAN error: the name of the custom condition is missing.
-		require
-			a_custom_element_name_not_void: a_custom_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaan (a_custom_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaao_error (a_name_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAO error: the name of the custom condition is empty.
-		require
-			a_name_attribute_name_not_void: a_name_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaao (a_name_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaap_error (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAP error: cannot have both value and excluded_value in custom condition.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaap (a_value_attribute_name, a_excluded_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaaq_error (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAQ error: the value in custom condition is empty.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaaq (a_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaar_error (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAR error: the excluded value in custom condition is empty.
-		require
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaar (a_excluded_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaas_error (a_custom_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAS error: value or excluded value missing in custom condition.
-		require
-			a_custom_element_name_not_void: a_custom_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaas (a_custom_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaat_error (a_dotnet_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAT error: the value of the dotnet condition is missing.
-		require
-			a_dotnet_element_name_not_void: a_dotnet_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaat (a_dotnet_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaau_error (a_value_attribute_name: ET_IDENTIFIER; a_value_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAU error: the value attribute of the dotnet condition should be a boolean.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_value_value_not_void: a_value_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaau (a_value_attribute_name, a_value_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaav_error (a_dynamic_runtime_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAV error: the value of the dynamic_runtime condition is missing.
-		require
-			a_dynamic_runtime_element_name_not_void: a_dynamic_runtime_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaav (a_dynamic_runtime_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaaw_error (a_value_attribute_name: ET_IDENTIFIER; a_value_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAW error: the value attribute of the dynamic_runtime condition should be a boolean.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_value_value_not_void: a_value_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaaw (a_value_attribute_name, a_value_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaax_error (a_multithreaded_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAX error: the value of the multithreaded condition is missing.
-		require
-			a_multithreaded_element_name_not_void: a_multithreaded_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaax (a_multithreaded_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaay_error (a_value_attribute_name: ET_IDENTIFIER; a_value_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAY error: the value attribute of the multithreaded condition should be a boolean.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_value_value_not_void: a_value_value /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaay (a_value_attribute_name, a_value_value, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaaz_error (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EAAZ error: cannot have both value and excluded_value in platform condition.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaaz (a_value_attribute_name, a_excluded_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eaba_error (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABA error: the value in platform condition is empty.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaba (a_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabb_error (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABB error: the excluded value in platform condition is empty.
-		require
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabb (a_excluded_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eabc_error (a_platform_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EABC error: value or excluded value missing in platform condition.
-		require
-			a_platform_element_name_not_void: a_platform_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eabc (a_platform_element_name, a_universe)
-			report_error (l_error)
-		end
-
 	report_eabf_error (a_min_attribute_name: ET_IDENTIFIER; a_min_value: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Report EABF error: wrong format for min attribute in version condition.
 			-- It should be of the form "N.N.N.N".
@@ -414,55 +168,6 @@ feature -- Reporting errors
 			l_error: ET_ECF_ERROR
 		do
 			create l_error.make_eaby (a_system_element_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eadb_error (a_value_attribute_name, a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EADB error: cannot have both value and excluded_value in concurrency condition.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eadb (a_value_attribute_name, a_excluded_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eadc_error (a_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EADC error: the value in concurrency condition is empty.
-		require
-			a_value_attribute_name_not_void: a_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eadc (a_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eadd_error (a_excluded_value_attribute_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EADD error: the excluded value in concurrency condition is empty.
-		require
-			a_excluded_value_attribute_name_not_void: a_excluded_value_attribute_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eadd (a_excluded_value_attribute_name, a_universe)
-			report_error (l_error)
-		end
-
-	report_eade_error (a_platform_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
-			-- Report EADE error: value or excluded value missing in platform condition.
-		require
-			a_platform_element_name_not_void: a_platform_element_name /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eade (a_platform_element_name, a_universe)
 			report_error (l_error)
 		end
 
@@ -657,6 +362,23 @@ feature -- Reporting errors
 			report_error (l_error)
 		end
 
+	report_eatn_error (a_attribute_name_1, a_attribute_name_2: STRING; a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EATN error: attribute `a_attribute_name_1' or `a_attribute_name_2'
+			-- is missing in element `a_element_name'.
+			--
+			-- EATM: Ecf ATtribute missiNg
+		require
+			a_attribute_name_1_not_void: a_attribute_name_1 /= Void
+			a_attribute_name_2_not_void: a_attribute_name_2 /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eatn (a_attribute_name_1, a_attribute_name_2, a_element_name, a_universe)
+			report_error (l_error)
+		end
+
 	report_eats_error (a_attribute_name: STRING; a_other_attribute_name, a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Report EATS error: attribute `a_attribute_name' is missing
 			-- in element `a_element_name' when `a_other_attribute_name' is specified.
@@ -671,6 +393,23 @@ feature -- Reporting errors
 			l_error: ET_ECF_ERROR
 		do
 			create l_error.make_eats (a_attribute_name, a_other_attribute_name, a_element_name, a_universe)
+			report_error (l_error)
+		end
+
+	report_eatx_error (a_attribute_name_1, a_attribute_name_2, a_element_name: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Report EATX error: cannot have both attributes `a_attribute_name_1' and `a_attribute_name_2'
+			-- in element `a_element_name'.
+			--
+			-- EATM: Ecf ATtributes mutually eXclusive
+		require
+			a_attribute_name_1_not_void: a_attribute_name_1 /= Void
+			a_attribute_name_2_not_void: a_attribute_name_2 /= Void
+			a_element_name_not_void: a_element_name /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_eatx (a_attribute_name_1, a_attribute_name_2, a_element_name, a_universe)
 			report_error (l_error)
 		end
 

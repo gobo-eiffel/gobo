@@ -14,7 +14,7 @@ class ET_ECF_EXTERNAL_CFLAGS
 
 inherit
 
-	ET_ECF_EXTERNAL_VALUES
+	ET_ECF_EXTERNAL_FLAGS
 		rename
 			fill_external_values as fill_external_cflags
 		redefine

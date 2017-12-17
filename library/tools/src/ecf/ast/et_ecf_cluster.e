@@ -32,7 +32,7 @@ inherit
 
 create
 
-	make
+	make, make_relative
 
 feature {NONE} -- Initialization
 
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			pathname := a_pathname
-			is_relative := (a_pathname = Void or else (a_pathname.count > 2 and then a_pathname.item (1) = '$' and then (once "|/\").has (a_pathname.item (2))))
+			is_relative := a_pathname.count > 2 and then a_pathname.item (1) = '$' and then (once "|/\").has (a_pathname.item (2))
 			universe := a_universe
 			set_scm_mapping_constraint_enabled (True)
 			if attached universe.ecf_version as l_ecf_version and then l_ecf_version <= ecf_1_4_0 then
@@ -57,7 +57,31 @@ feature {NONE} -- Initialization
 			pathname_set: pathname = a_pathname
 			universe_set: universe = a_universe
 			prefixed_name_set: prefixed_name = a_name
-			is_relative: is_relative = (a_pathname = Void or else (a_pathname.count > 2 and then a_pathname.item (1) = '$' and then (once "|/\").has (a_pathname.item (2))))
+			is_relative: is_relative = (a_pathname.count > 2 and then a_pathname.item (1) = '$' and then (once "|/\").has (a_pathname.item (2)))
+			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
+		end
+
+	make_relative (a_name: like name; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+			-- Create a new cluster whose pathname is its name relative to its parent cluster if any.		
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_universe_not_void: a_universe /= Void
+		do
+			name := a_name
+			pathname := a_name
+			is_relative := True
+			universe := a_universe
+			set_scm_mapping_constraint_enabled (True)
+			if attached universe.ecf_version as l_ecf_version and then l_ecf_version <= ecf_1_4_0 then
+				set_use_obsolete_syntax (True)
+			end
+		ensure
+			name_set: name = a_name
+			pathname_set: pathname = a_name
+			universe_set: universe = a_universe
+			prefixed_name_set: prefixed_name = a_name
+			is_relative: is_relative
 			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
 		end
 
@@ -392,7 +416,7 @@ feature {NONE} -- Implementation
 	new_recursive_cluster (a_name: STRING): like Current
 			-- New recursive cluster
 		do
-			create Result.make (a_name, a_name, universe)
+			create Result.make_relative (a_name, universe)
 			Result.set_parent (Current)
 			Result.set_file_rules (file_rules)
 			Result.set_recursive (True)

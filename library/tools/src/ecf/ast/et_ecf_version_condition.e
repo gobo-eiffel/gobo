@@ -5,7 +5,7 @@ note
 		"ECF version conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class ET_ECF_VERSION_CONDITION
 
 inherit
 
-	ET_ECF_CONDITION
+	ET_ECF_CONDITION_ITEM
 
 feature {NONE} -- Initialization
 

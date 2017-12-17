@@ -26,6 +26,9 @@
 * Added support for class routines, similar to instance-free features
   above, except that they are declared with `class` in the postcondition
   instead of `option: instance_free` in the `note` clause.
+* Improved support for ECF, including capabilities and redirection. 
+  Even if not all ECF options are supported by the Gobo tools, it is now 
+  possible to read an ECF file, make some modifications and write it back.
 
 ## Version 4.2 - 14 July 2017
 
