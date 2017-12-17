@@ -198,6 +198,8 @@
 				</cluster>
 				<cluster name="et_ecf_error" location="$|error">
 				</cluster>
+				<cluster name="et_ecf_generator" location="$|generator">
+				</cluster>
 				<cluster name="et_ecf_parser" location="$|parser">
 				</cluster>
 			</cluster>

@@ -144,6 +144,7 @@
 			<option name="abstract" value="true"/>
 			<cluster name="ast"/>
 			<cluster name="error"/>
+			<cluster name="generator"/>
 			<cluster name="parser"/>
 		</cluster>
 		<cluster name="xace" prefix="et_xace_">
