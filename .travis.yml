@@ -41,4 +41,5 @@ script:
   # Test
   - cd $GOBO/$TRAVIS_GOBO_TEST_DIR
   - geant test_debug_$TRAVIS_GOBO_EIFFEL
+  - ls -al $GOBO/tool/gedoc/test/tool
   - cat $GOBO/tool/gedoc/test/tool/*
