@@ -54,7 +54,7 @@ feature -- Test
 			a_geant_filename := geant_filename
 			assert_execute ("geant -b " + a_geant_filename + " compile_" + a_debug + eiffel_compiler.vendor + output_log)
 				-- Clean.
-			--assert_execute ("geant -b " + a_geant_filename + " clean" + output_log)
+			assert_execute ("geant -b " + a_geant_filename + " clean" + output_log)
 				-- Check compilation.
 			assert ("program_exists", file_system.file_exists (program_exe))
 		end
