@@ -287,6 +287,12 @@ feature -- Validity checking
 				if not current_class.interface_checked or else current_class.has_interface_error then
 						-- The error should have already been reported.
 					set_fatal_error
+				elseif current_class.implementation_checked and then current_class.has_implementation_error then
+						-- An implementation error has already been found when checking
+						-- all features of this class. This can happen when calling 'gec'
+						-- in full class checking mode. In that case, we don't want flat
+						-- Degree 3 errors to be reported twice.
+					set_fatal_error
 				else
 					if current_system.attachment_type_conformance_mode then
 						if l_class = l_class_impl then
