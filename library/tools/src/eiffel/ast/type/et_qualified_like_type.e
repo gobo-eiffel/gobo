@@ -80,7 +80,7 @@ feature -- Type processing
 			l_target_type := target_type
 			l_resolved_target_type := l_target_type.resolved_formal_parameters (a_parameters)
 			l_type_mark := overridden_type_mark (a_type_mark)
-			if l_type_mark /= type_mark or l_target_type /= l_target_type then
+			if l_type_mark /= type_mark or l_resolved_target_type /= l_target_type then
 				create Result.make (l_type_mark, l_resolved_target_type, qualified_name)
 			else
 				Result := Current
