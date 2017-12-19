@@ -1943,17 +1943,9 @@ feature -- Class mapping
 
 feature -- Compilation options
 
-	attachment_type_conformance_mode: BOOLEAN
-			-- Should attachment status be taken into account when checking
-			-- conformance of types in current universe?
-
 	implicit_attachment_type_mark: detachable ET_TYPE_MARK
 			-- Implicit attachment type mark when a type in a class of the
 			-- current universe is declared with no explicit attachment type mark
-
-	target_type_attachment_mode: BOOLEAN
-			-- Should the attachment status of the target of qualified calls
-			-- be checked at compile time?
 
 	obsolete_routine_type_mode: BOOLEAN
 			-- Should the first generic parameter of routine types (ROUTINE, PROCEDURE, FUNCTION, PREDICATE)
@@ -1962,28 +1954,12 @@ feature -- Compilation options
 
 feature -- Compilation options setting
 
-	set_attachment_type_conformance_mode (b: BOOLEAN)
-			-- Set `attachment_type_conformance_mode' to `b'.
-		do
-			attachment_type_conformance_mode := b
-		ensure
-			attachment_type_conformance_mode_set: attachment_type_conformance_mode = b
-		end
-
 	set_implicit_attachment_type_mark (a_type_mark: like implicit_attachment_type_mark)
 			-- Set `implicit_attachment_type_mark' to `a_type_mark'.
 		do
 			implicit_attachment_type_mark := a_type_mark
 		ensure
 			implicit_attachment_type_mark_set: implicit_attachment_type_mark = a_type_mark
-		end
-
-	set_target_type_attachment_mode (b: BOOLEAN)
-			-- Set `target_type_attachment_mode' to `b'.
-		do
-			target_type_attachment_mode := b
-		ensure
-			target_type_attachment_mode_set: target_type_attachment_mode = b
 		end
 
 	set_obsolete_routine_type_mode (b: BOOLEAN)

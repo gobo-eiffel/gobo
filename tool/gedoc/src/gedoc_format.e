@@ -429,8 +429,8 @@ feature {NONE} -- Processing
 			system_processor.set_ise_version (ise_version)
 			system_processor.set_unknown_builtin_reported (False)
 			a_system.set_unique_universe_names
-			a_system.universes_do_all (agent {ET_UNIVERSE}.set_attachment_type_conformance_mode (False))
-			a_system.universes_do_all (agent {ET_UNIVERSE}.set_target_type_attachment_mode (False))
+			a_system.set_attachment_type_conformance_mode (False)
+			a_system.set_target_type_attachment_mode (False)
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark))
 			create l_ast_factory.make
 			l_ast_factory.set_keep_all_comments (True)
@@ -559,7 +559,7 @@ feature {NONE} -- Output
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	new_output_file (a_filename: STRING): KL_BUFFERED_TEXT_OUTPUT_FILE

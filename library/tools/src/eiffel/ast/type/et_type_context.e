@@ -285,9 +285,9 @@ feature -- Status report
 
 	attachment_type_conformance_mode: BOOLEAN
 			-- Should attachment status be taken into account when checking
-			-- conformance of types in the universe of the base class of `root_context'?
+			-- conformance of types?
 		do
-			Result := root_context.base_class.universe.attachment_type_conformance_mode
+			Result := root_context.base_class.current_system.attachment_type_conformance_mode
 		end
 
 	scoop_mode: BOOLEAN

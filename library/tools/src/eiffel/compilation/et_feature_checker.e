@@ -288,7 +288,7 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_class = l_class_impl then
 							if attached l_feature_impl.preconditions as l_preconditions and then not l_preconditions.validity_checked then
 									-- Make sure to mark as boolean expression infix and prefix expressions
@@ -442,7 +442,7 @@ feature -- Validity checking
 								-- by "and then" operators.
 							object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
 							has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
-							if current_universe.attachment_type_conformance_mode then
+							if current_system.attachment_type_conformance_mode then
 								attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
 							end
 						end
@@ -554,7 +554,7 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_current_class = l_class_impl then
 							if attached l_feature_impl.preconditions as l_preconditions and then not l_preconditions.validity_checked then
 									-- Make sure to mark as boolean expression infix and prefix expressions
@@ -587,7 +587,7 @@ feature -- Validity checking
 								-- by "and then" operators.
 							object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
 							has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
-							if current_universe.attachment_type_conformance_mode then
+							if current_system.attachment_type_conformance_mode then
 								attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
 							end
 						end
@@ -710,7 +710,7 @@ feature -- Validity checking
 								-- by "and then" operators.
 							object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
 							has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
-							if current_universe.attachment_type_conformance_mode then
+							if current_system.attachment_type_conformance_mode then
 								attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
 							end
 						end
@@ -1055,7 +1055,7 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				l_compound := a_feature.compound
 				l_rescue_compound := a_feature.rescue_clause
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_rescue_compound /= Void and l_compound /= Void then
 						l_rescue_initialization_scope := current_initialization_scope
 						current_initialization_scope := new_attachment_scope
@@ -1069,7 +1069,7 @@ feature {NONE} -- Feature validity
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
 						if system_processor.is_ise and then current_attachment_scope.has_result then
 								-- In ISE Eiffel, local variables (including 'Result') are considered
@@ -1088,7 +1088,7 @@ feature {NONE} -- Feature validity
 					end
 				end
 				if l_rescue_compound /= Void then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
 							l_main_attachment_scope := current_attachment_scope
 							l_main_initialization_scope := current_initialization_scope
@@ -1098,7 +1098,7 @@ feature {NONE} -- Feature validity
 					end
 					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
 							free_attachment_scope (current_attachment_scope)
 							free_attachment_scope (current_initialization_scope)
@@ -1146,7 +1146,7 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				l_compound := a_feature.compound
 				l_rescue_compound := a_feature.rescue_clause
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_rescue_compound /= Void and l_compound /= Void then
 						l_rescue_initialization_scope := current_initialization_scope
 						current_initialization_scope := new_attachment_scope
@@ -1161,7 +1161,7 @@ feature {NONE} -- Feature validity
 					had_error := had_error or has_fatal_error
 				end
 				if l_rescue_compound /= Void then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
 							l_main_attachment_scope := current_attachment_scope
 							l_main_initialization_scope := current_initialization_scope
@@ -1171,7 +1171,7 @@ feature {NONE} -- Feature validity
 					end
 					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
 							free_attachment_scope (current_attachment_scope)
 							free_attachment_scope (current_initialization_scope)
@@ -1312,7 +1312,7 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				l_compound := a_feature.compound
 				l_rescue_compound := a_feature.rescue_clause
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_rescue_compound /= Void and l_compound /= Void then
 						l_rescue_initialization_scope := current_initialization_scope
 						current_initialization_scope := new_attachment_scope
@@ -1326,7 +1326,7 @@ feature {NONE} -- Feature validity
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_compound /= Void and then l_compound.has_non_null_instruction then
 							-- Check that the 'Result' entity has been initialized when
 							-- declared as attached only when the body is not empty.
@@ -1348,7 +1348,7 @@ feature {NONE} -- Feature validity
 					end
 				end
 				if l_rescue_compound /= Void then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
 							l_main_attachment_scope := current_attachment_scope
 							l_main_initialization_scope := current_initialization_scope
@@ -1358,7 +1358,7 @@ feature {NONE} -- Feature validity
 					end
 					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
 							free_attachment_scope (current_attachment_scope)
 							free_attachment_scope (current_initialization_scope)
@@ -1491,7 +1491,7 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				l_compound := a_feature.compound
 				l_rescue_compound := a_feature.rescue_clause
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_rescue_compound /= Void and l_compound /= Void then
 						l_rescue_initialization_scope := current_initialization_scope
 						current_initialization_scope := new_attachment_scope
@@ -1505,7 +1505,7 @@ feature {NONE} -- Feature validity
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
 						if system_processor.is_ise and then current_attachment_scope.has_result then
 								-- In ISE Eiffel, local variables (including 'Result') are considered
@@ -1524,7 +1524,7 @@ feature {NONE} -- Feature validity
 					end
 				end
 				if l_rescue_compound /= Void then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
 							l_main_attachment_scope := current_attachment_scope
 							l_main_initialization_scope := current_initialization_scope
@@ -1534,7 +1534,7 @@ feature {NONE} -- Feature validity
 					end
 					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
 							free_attachment_scope (current_attachment_scope)
 							free_attachment_scope (current_initialization_scope)
@@ -1591,7 +1591,7 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				l_compound := a_feature.compound
 				l_rescue_compound := a_feature.rescue_clause
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_rescue_compound /= Void and l_compound /= Void then
 						l_rescue_initialization_scope := current_initialization_scope
 						current_initialization_scope := new_attachment_scope
@@ -1606,7 +1606,7 @@ feature {NONE} -- Feature validity
 					had_error := had_error or has_fatal_error
 				end
 				if l_rescue_compound /= Void then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
 							l_main_attachment_scope := current_attachment_scope
 							l_main_initialization_scope := current_initialization_scope
@@ -1616,7 +1616,7 @@ feature {NONE} -- Feature validity
 					end
 					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
 							free_attachment_scope (current_attachment_scope)
 							free_attachment_scope (current_initialization_scope)
@@ -2691,7 +2691,7 @@ feature {NONE} -- Instruction validity
 						end
 					end
 				end
-				if current_universe.target_type_attachment_mode then
+				if current_system.target_type_attachment_mode then
 					if not l_target_context.is_type_attached and then not is_entity_attached (l_target) then
 							-- Error: the target of the call is not attached.
 						set_fatal_error
@@ -2766,7 +2766,7 @@ feature {NONE} -- Instruction validity
 				else
 					check l_target_base_class_not_void: l_target_base_class /= Void end
 					if l_target_base_class /= Void then
-						if current_universe.target_type_attachment_mode then
+						if current_system.target_type_attachment_mode then
 							if not l_target_context.is_type_attached and then not is_entity_attached (l_target) then
 									-- Error: the target of the call is not attached.
 								set_fatal_error
@@ -2965,7 +2965,7 @@ feature {NONE} -- Instruction validity
 			if not has_fatal_error then
 					-- Both source and target are valid. Check whether the type of the
 					-- source conforms or converts to the type of the target.
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					l_target_type_detachable := l_target_context.is_type_detachable
 					l_target_type_attached := l_target_context.is_type_attached
 					l_source_type_attached := l_source_context.is_type_attached
@@ -2999,7 +2999,7 @@ feature {NONE} -- Instruction validity
 					then
 						-- Compatibility with ISE 5.6.0610.
 					else
-						if current_universe.attachment_type_conformance_mode then
+						if current_system.attachment_type_conformance_mode then
 							if l_source_entity_attached then
 								l_source_context.remove_last
 							end
@@ -3010,7 +3010,7 @@ feature {NONE} -- Instruction validity
 					end
 				end
 				if not has_fatal_error then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if attached {ET_RESULT} l_target then
 							if not l_target_type_detachable then
 								current_initialization_scope.add_result
@@ -3181,7 +3181,7 @@ feature {NONE} -- Instruction validity
 						-- by "and then" operators.
 					object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
 					had_error := had_error or object_test_scope_builder.has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
 					end
 				end
@@ -3522,7 +3522,7 @@ feature {NONE} -- Instruction validity
 						set_fatal_error
 					end
 					if not has_fatal_error then
-						if current_universe.attachment_type_conformance_mode then
+						if current_system.attachment_type_conformance_mode then
 							if attached {ET_RESULT} l_target then
 								if not l_target_context.is_type_detachable then
 									current_initialization_scope.add_result
@@ -3561,14 +3561,14 @@ feature {NONE} -- Instruction validity
 			if attached an_instruction.compound as l_compound then
 				l_old_initialization_scope := current_initialization_scope
 				l_old_attachment_scope := current_attachment_scope
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					current_initialization_scope := new_attachment_scope
 					current_initialization_scope.copy_scope (l_old_initialization_scope)
 					current_attachment_scope := new_attachment_scope
 					current_attachment_scope.copy_scope (l_old_attachment_scope)
 				end
 				check_instructions_validity (l_compound)
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					free_attachment_scope (current_attachment_scope)
 					free_attachment_scope (current_initialization_scope)
 					current_attachment_scope := l_old_attachment_scope
@@ -3621,7 +3621,7 @@ feature {NONE} -- Instruction validity
 			had_error := had_error or object_test_scope_builder.has_fatal_error
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -3644,14 +3644,14 @@ feature {NONE} -- Instruction validity
 			object_test_scope_builder.build_negated_scope (l_conditional, current_object_test_scope, current_class_impl)
 			had_error := had_error or object_test_scope_builder.has_fatal_error
 			if attached an_instruction.elseif_parts as l_elseif_parts then
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					current_attachment_scope := new_attachment_scope
 					current_initialization_scope := new_attachment_scope
 				end
 				nb := l_elseif_parts.count
 				from i := 1 until i > nb loop
 					l_elseif := l_elseif_parts.item (i)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						current_initialization_scope.copy_scope (l_old_initialization_scope)
 						current_attachment_scope.copy_scope (l_old_attachment_scope)
 					end
@@ -3673,7 +3673,7 @@ feature {NONE} -- Instruction validity
 					l_old_elseif_object_test_scope := current_object_test_scope.count
 					object_test_scope_builder.build_scope (l_conditional, current_object_test_scope, current_class_impl)
 					had_error := had_error or object_test_scope_builder.has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
 						attachment_scope_builder.build_negated_scope (l_conditional, l_old_attachment_scope)
 					end
@@ -3684,7 +3684,7 @@ feature {NONE} -- Instruction validity
 						end
 					end
 					current_object_test_scope.keep_object_tests (l_old_elseif_object_test_scope)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						l_if_attachment_scope.merge_scope (current_attachment_scope)
 						l_if_initialization_scope.merge_scope (current_initialization_scope)
 					end
@@ -3695,12 +3695,12 @@ feature {NONE} -- Instruction validity
 					had_error := had_error or object_test_scope_builder.has_fatal_error
 					i := i + 1
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					free_attachment_scope (current_initialization_scope)
 					free_attachment_scope (current_attachment_scope)
 				end
 			end
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := l_old_initialization_scope
 				current_attachment_scope := l_old_attachment_scope
 			end
@@ -3711,7 +3711,7 @@ feature {NONE} -- Instruction validity
 				end
 			end
 			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_attachment_scope.merge_scope (l_if_attachment_scope)
 				current_initialization_scope.merge_scope (l_if_initialization_scope)
 				free_attachment_scope (l_if_attachment_scope)
@@ -3955,13 +3955,13 @@ feature {NONE} -- Instruction validity
 				free_context (l_value_context)
 				l_old_initialization_scope := current_initialization_scope
 				l_old_attachment_scope := current_attachment_scope
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					current_initialization_scope := new_attachment_scope
 					current_attachment_scope := new_attachment_scope
 				end
 				from i := 1 until i > nb loop
 					l_when_part := l_when_parts.item (i)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						current_initialization_scope.copy_scope (l_old_initialization_scope)
 						current_attachment_scope.copy_scope (l_old_attachment_scope)
 					end
@@ -3971,7 +3971,7 @@ feature {NONE} -- Instruction validity
 							had_error := True
 						end
 					end
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_inspect_attachment_scope = Void then
 							l_inspect_attachment_scope := new_attachment_scope
 							l_inspect_attachment_scope.copy_scope (current_attachment_scope)
@@ -3987,14 +3987,14 @@ feature {NONE} -- Instruction validity
 					end
 					i := i + 1
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					free_attachment_scope (current_initialization_scope)
 					free_attachment_scope (current_attachment_scope)
 				end
 			else
 				free_context (l_value_context)
 			end
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := l_old_initialization_scope
 				current_attachment_scope := l_old_attachment_scope
 			end
@@ -4005,7 +4005,7 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				if l_inspect_attachment_scope /= Void then
 					if l_else_compound /= Void then
 						current_attachment_scope.merge_scope (l_inspect_attachment_scope)
@@ -4129,7 +4129,7 @@ feature {NONE} -- Instruction validity
 			has_fatal_error := False
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -4140,7 +4140,7 @@ feature {NONE} -- Instruction validity
 				if has_fatal_error then
 					had_error := True
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					current_initialization_scope.copy_scope (l_old_initialization_scope)
 					current_attachment_scope.copy_scope (l_old_attachment_scope)
 				end
@@ -4150,7 +4150,7 @@ feature {NONE} -- Instruction validity
 				if has_fatal_error then
 					had_error := True
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					current_initialization_scope.copy_scope (l_old_initialization_scope)
 					current_attachment_scope.copy_scope (l_old_attachment_scope)
 				end
@@ -4171,7 +4171,7 @@ feature {NONE} -- Instruction validity
 				free_context (l_expression_context)
 			end
 			if attached an_instruction.loop_compound as l_loop_compound and then not l_loop_compound.is_empty then
-				if current_universe.attachment_type_conformance_mode and l_until_expression /= Void then
+				if current_system.attachment_type_conformance_mode and l_until_expression /= Void then
 					attachment_scope_builder.build_negated_scope (l_until_expression, current_attachment_scope)
 				end
 				l_old_object_test_scope := current_object_test_scope.count
@@ -4186,7 +4186,7 @@ feature {NONE} -- Instruction validity
 				if has_fatal_error then
 					had_error := True
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if not had_error and not l_old_attachment_scope.is_subset (current_attachment_scope) then
 							-- Some local variables declared as detachable which were attached
 							-- before the first execution of the loop invariant, variant, until
@@ -4200,7 +4200,7 @@ feature {NONE} -- Instruction validity
 			if had_error then
 				set_fatal_error
 			end
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_attachment_scope)
 				free_attachment_scope (current_initialization_scope)
 				current_attachment_scope := l_old_attachment_scope
@@ -4243,7 +4243,7 @@ feature {NONE} -- Instruction validity
 						-- by "and then" operators.
 					object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
 					had_error := had_error or object_test_scope_builder.has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 							-- `current_attachment_scope' will be reset in `check_loop_instruction_no_from_validity'
 							-- before processing the other parts of the loop, so that the analysis of the
 							-- attachment statuses still works even when loop invariant monitoring is turned off.
@@ -5487,7 +5487,7 @@ feature {NONE} -- Expression validity
 			current_across_cursor_scope.add_across_component (an_expression)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -5498,7 +5498,7 @@ feature {NONE} -- Expression validity
 				if has_fatal_error then
 					had_error := True
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					current_initialization_scope.copy_scope (l_old_initialization_scope)
 					current_attachment_scope.copy_scope (l_old_attachment_scope)
 				end
@@ -5508,7 +5508,7 @@ feature {NONE} -- Expression validity
 				if has_fatal_error then
 					had_error := True
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					current_initialization_scope.copy_scope (l_old_initialization_scope)
 					current_attachment_scope.copy_scope (l_old_attachment_scope)
 				end
@@ -5531,7 +5531,7 @@ feature {NONE} -- Expression validity
 			l_iteration_expression := an_expression.iteration_conditional.expression
 			l_old_object_test_scope := current_object_test_scope.count
 			if l_until_expression /= Void then
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					attachment_scope_builder.build_negated_scope (l_until_expression, current_attachment_scope)
 				end
 				object_test_scope_builder.build_negated_scope (l_until_expression, current_object_test_scope, current_class_impl)
@@ -5555,7 +5555,7 @@ feature {NONE} -- Expression validity
 				free_context (current_across_cursor_types.found_item)
 				current_across_cursor_types.remove_found_item
 			end
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_attachment_scope)
 				free_attachment_scope (current_initialization_scope)
 				current_attachment_scope := l_old_attachment_scope
@@ -5814,7 +5814,7 @@ feature {NONE} -- Expression validity
 						else
 							l_class := l_creation_type.base_class (a_context)
 							a_context.force_last (l_creation_type)
-							if current_universe.attachment_type_conformance_mode then
+							if current_system.attachment_type_conformance_mode then
 									-- When we have:
 									--
 									--   create {detachable FOO}.make
@@ -5887,7 +5887,7 @@ feature {NONE} -- Expression validity
 						-- of `current_type'.
 					l_class := l_creation_type.base_class (a_context)
 					a_context.force_last (l_creation_type)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 							-- When we have:
 							--
 							--   create {detachable FOO}.make
@@ -6781,7 +6781,7 @@ feature {NONE} -- Expression validity
 					l_formal := l_arguments.formal_argument (l_seed)
 					l_type := l_formal.type
 					a_context.force_last (l_type)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if not a_context.is_type_attached and then current_attachment_scope.has_formal_argument (a_name) then
 								-- Even though this formal argument has not been declared as attached,
 								-- we can guarantee that at this stage this entity is attached.
@@ -6850,7 +6850,7 @@ feature {NONE} -- Expression validity
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			l_else_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -6877,7 +6877,7 @@ feature {NONE} -- Expression validity
 				nb := l_elseif_parts.count
 				from i := 1 until i > nb loop
 					l_elseif := l_elseif_parts.item (i)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						current_attachment_scope.copy_scope (l_else_attachment_scope)
 					end
 					l_conditional := l_elseif.conditional.expression
@@ -6895,7 +6895,7 @@ feature {NONE} -- Expression validity
 					l_old_elseif_object_test_scope := current_object_test_scope.count
 					object_test_scope_builder.build_scope (l_conditional, current_object_test_scope, current_class_impl)
 					had_error := had_error or object_test_scope_builder.has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
 						attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
 					end
@@ -6913,7 +6913,7 @@ feature {NONE} -- Expression validity
 					i := i + 1
 				end
 			end
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_attachment_scope.copy_scope (l_else_attachment_scope)
 			end
 			l_expression_context := new_context (current_type)
@@ -6925,7 +6925,7 @@ feature {NONE} -- Expression validity
 				update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 			end
 			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_attachment_scope)
 				free_attachment_scope (l_else_attachment_scope)
 				free_attachment_scope (current_initialization_scope)
@@ -7086,7 +7086,7 @@ feature {NONE} -- Expression validity
 				if l_query /= Void then
 					check l_class_not_void: l_class /= Void end
 					if l_class /= Void then
-						if current_universe.target_type_attachment_mode then
+						if current_system.target_type_attachment_mode then
 							if not a_context.is_type_attached and then not is_entity_attached (l_target) then
 									-- Error: the target of the call is not attached.
 								set_fatal_error
@@ -7220,7 +7220,7 @@ feature {NONE} -- Expression validity
 								object_test_scope_builder.build_scope (l_target, current_object_test_scope, current_class_impl)
 								had_error := had_error or object_test_scope_builder.has_fatal_error
 								l_old_attachment_scope := current_attachment_scope
-								if current_universe.attachment_type_conformance_mode then
+								if current_system.attachment_type_conformance_mode then
 									current_attachment_scope := new_attachment_scope
 									current_attachment_scope.copy_scope (l_old_attachment_scope)
 									attachment_scope_builder.build_scope (l_target, current_attachment_scope)
@@ -7230,7 +7230,7 @@ feature {NONE} -- Expression validity
 									l_scope_changed := True
 									current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 								end
-								if current_universe.attachment_type_conformance_mode then
+								if current_system.attachment_type_conformance_mode then
 									if not current_attachment_scope.is_subset (l_old_attachment_scope) then
 										l_scope_changed := True
 									end
@@ -7242,7 +7242,7 @@ feature {NONE} -- Expression validity
 								object_test_scope_builder.build_negated_scope (l_target, current_object_test_scope, current_class_impl)
 								had_error := had_error or object_test_scope_builder.has_fatal_error
 								l_old_attachment_scope := current_attachment_scope
-								if current_universe.attachment_type_conformance_mode then
+								if current_system.attachment_type_conformance_mode then
 									current_attachment_scope := new_attachment_scope
 									current_attachment_scope.copy_scope (l_old_attachment_scope)
 									attachment_scope_builder.build_negated_scope (l_target, current_attachment_scope)
@@ -7252,7 +7252,7 @@ feature {NONE} -- Expression validity
 									l_scope_changed := True
 									current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 								end
-								if current_universe.attachment_type_conformance_mode then
+								if current_system.attachment_type_conformance_mode then
 									if not current_attachment_scope.is_subset (l_old_attachment_scope) then
 										l_scope_changed := True
 									end
@@ -7441,7 +7441,7 @@ feature {NONE} -- Expression validity
 									object_test_scope_builder.build_scope (l_target, current_object_test_scope, current_class_impl)
 									had_error := object_test_scope_builder.has_fatal_error
 									l_old_attachment_scope := current_attachment_scope
-									if current_universe.attachment_type_conformance_mode then
+									if current_system.attachment_type_conformance_mode then
 										current_attachment_scope := new_attachment_scope
 										current_attachment_scope.copy_scope (l_old_attachment_scope)
 										attachment_scope_builder.build_scope (l_target, current_attachment_scope)
@@ -7449,7 +7449,7 @@ feature {NONE} -- Expression validity
 									check_expression_validity (l_actual, a_context, l_formal_context)
 									has_fatal_error := has_fatal_error or had_error
 									current_object_test_scope.keep_object_tests (l_old_object_test_scope)
-									if current_universe.attachment_type_conformance_mode then
+									if current_system.attachment_type_conformance_mode then
 										free_attachment_scope (current_attachment_scope)
 										current_attachment_scope := l_old_attachment_scope
 									end
@@ -7458,7 +7458,7 @@ feature {NONE} -- Expression validity
 									object_test_scope_builder.build_negated_scope (l_target, current_object_test_scope, current_class_impl)
 									had_error := object_test_scope_builder.has_fatal_error
 									l_old_attachment_scope := current_attachment_scope
-									if current_universe.attachment_type_conformance_mode then
+									if current_system.attachment_type_conformance_mode then
 										current_attachment_scope := new_attachment_scope
 										current_attachment_scope.copy_scope (l_old_attachment_scope)
 										attachment_scope_builder.build_negated_scope (l_target, current_attachment_scope)
@@ -7466,7 +7466,7 @@ feature {NONE} -- Expression validity
 									check_expression_validity (l_actual, a_context, l_formal_context)
 									has_fatal_error := has_fatal_error or had_error
 									current_object_test_scope.keep_object_tests (l_old_object_test_scope)
-									if current_universe.attachment_type_conformance_mode then
+									if current_system.attachment_type_conformance_mode then
 										free_attachment_scope (current_attachment_scope)
 										current_attachment_scope := l_old_attachment_scope
 									end
@@ -7737,7 +7737,7 @@ feature {NONE} -- Expression validity
 					l_local := l_locals.local_variable (l_seed)
 					l_type := l_local.type
 					a_context.force_last (l_type)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if not a_context.is_type_attached then
 							if current_attachment_scope.has_local_variable (a_name) then
 									-- Even though this local variable has not been declared as attached,
@@ -8308,7 +8308,7 @@ feature {NONE} -- Expression validity
 			else
 				check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_any_type)
 			end
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				if not l_expression_context.is_type_attached then
 						-- The type of the object-test local is attached even
 						-- when not explicitly declared as attached.
@@ -9068,7 +9068,7 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			l_name := a_call.name
 				-- Check that the target of the call is attached.
-			if current_universe.target_type_attachment_mode then
+			if current_system.target_type_attachment_mode then
 				if not a_context.is_type_attached and then not is_entity_attached (a_call.target) then
 						-- Error: the target of the call is not attached.
 					set_fatal_error
@@ -9164,7 +9164,7 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			l_name := a_call.name
 				-- Check that the target of the call is attached.
-			if current_universe.target_type_attachment_mode then
+			if current_system.target_type_attachment_mode then
 				if not a_context.is_type_attached and then not is_entity_attached (a_call.target) then
 						-- Error: the target of the call is not attached.
 					set_fatal_error
@@ -9438,7 +9438,7 @@ feature {NONE} -- Expression validity
 					end
 				else
 					a_context.force_last (l_type)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if not a_context.is_type_attached then
 							if current_attachment_scope.has_result then
 									-- Even though this 'Result' entity has not been declared as attached,
@@ -10317,7 +10317,7 @@ feature {NONE} -- Expression validity
 					end
 				else
 					a_context.force_last (l_type)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if not a_context.is_type_detachable and not a_context.is_type_expanded then
 							if system_processor.is_ise then
 									-- In ISE Eiffel, local variables (including 'Result') are considered
@@ -10343,7 +10343,7 @@ feature {NONE} -- Expression validity
 						l_local := l_locals.local_variable (l_seed)
 						l_type := l_local.type
 						a_context.force_last (l_type)
-						if current_universe.attachment_type_conformance_mode then
+						if current_system.attachment_type_conformance_mode then
 							if not a_context.is_type_detachable and not a_context.is_type_expanded then
 								if system_processor.is_ise then
 										-- In ISE Eiffel, local variables (including 'Result') are considered
@@ -10726,7 +10726,7 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						had_error := True
 					else
-						if current_universe.attachment_type_conformance_mode then
+						if current_system.attachment_type_conformance_mode then
 							l_formal_type_detachable := l_formal_context.is_type_detachable
 							l_actual_type_attached := l_actual_context.is_type_attached
 							if not l_formal_type_detachable and not l_actual_type_attached then
@@ -10780,7 +10780,7 @@ feature {NONE} -- Expression validity
 									i := i - 1
 
 								else
-									if current_universe.attachment_type_conformance_mode then
+									if current_system.attachment_type_conformance_mode then
 										if l_actual_entity_attached then
 											l_actual_context.remove_last
 										end
@@ -11485,7 +11485,7 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 					check_expression_validity (a_target, a_context, l_detachable_any_type)
 					if not has_fatal_error then
-						if current_universe.attachment_type_conformance_mode then
+						if current_system.attachment_type_conformance_mode then
 							if not a_context.is_type_attached and is_entity_attached (a_target) then
 								a_context.force_last (tokens.attached_like_current)
 							end
@@ -11577,7 +11577,7 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 				check_expression_validity (a_target, a_context, l_detachable_any_type)
 				if not has_fatal_error then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if not a_context.is_type_attached and is_entity_attached (a_target) then
 							a_context.force_last (tokens.attached_like_current)
 						end
@@ -11601,7 +11601,7 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 				check_expression_validity (a_target, a_context, l_detachable_any_type)
 				if not has_fatal_error then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if not a_context.is_type_attached and is_entity_attached (a_target) then
 							a_context.force_last (tokens.attached_like_current)
 						end
@@ -11628,7 +11628,7 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 				check_expression_validity (a_target, a_context, l_detachable_any_type)
 				if not has_fatal_error then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if not a_context.is_type_attached and is_entity_attached (a_target) then
 							a_context.force_last (tokens.attached_like_current)
 						end
@@ -11682,7 +11682,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_seed := a_name.seed
-			if current_universe.target_type_attachment_mode then
+			if current_system.target_type_attachment_mode then
 				if not a_context.is_type_attached then
 						-- Error: the target of the call is not attached.
 					set_fatal_error
@@ -11755,7 +11755,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_seed := a_name.seed
-			if current_universe.target_type_attachment_mode then
+			if current_system.target_type_attachment_mode then
 				if not a_context.is_type_attached then
 						-- Error: the target of the call is not attached.
 					set_fatal_error
@@ -11811,7 +11811,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := False
 			l_name := an_expression.name
 			l_index := l_name.seed
-			if current_universe.target_type_attachment_mode then
+			if current_system.target_type_attachment_mode then
 				if not a_context.is_type_attached then
 						-- Error: the target of the call is not attached.
 					set_fatal_error
@@ -12266,7 +12266,7 @@ feature {NONE} -- Agent validity
 			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -12305,7 +12305,7 @@ feature {NONE} -- Agent validity
 			if not had_error then
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_rescue_compound /= Void and l_compound /= Void then
 						l_rescue_initialization_scope := current_initialization_scope
 						current_initialization_scope := new_attachment_scope
@@ -12319,7 +12319,7 @@ feature {NONE} -- Agent validity
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
 						if system_processor.is_ise and then current_attachment_scope.has_result then
 								-- In ISE Eiffel, local variables (including 'Result') are considered
@@ -12338,7 +12338,7 @@ feature {NONE} -- Agent validity
 					end
 				end
 				if l_rescue_compound /= Void then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
 							l_main_attachment_scope := current_attachment_scope
 							l_main_initialization_scope := current_initialization_scope
@@ -12348,7 +12348,7 @@ feature {NONE} -- Agent validity
 					end
 					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
 							free_attachment_scope (current_attachment_scope)
 							free_attachment_scope (current_initialization_scope)
@@ -12364,7 +12364,7 @@ feature {NONE} -- Agent validity
 				-- Restore the scope across cursors declared
 				-- in the enclosing feature or inline agent.
 			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
 				free_attachment_scope (current_attachment_scope)
@@ -12417,7 +12417,7 @@ feature {NONE} -- Agent validity
 			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -12449,7 +12449,7 @@ feature {NONE} -- Agent validity
 			if not had_error then
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_rescue_compound /= Void and l_compound /= Void then
 						l_rescue_initialization_scope := current_initialization_scope
 						current_initialization_scope := new_attachment_scope
@@ -12464,7 +12464,7 @@ feature {NONE} -- Agent validity
 					had_error := had_error or has_fatal_error
 				end
 				if l_rescue_compound /= Void then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
 							l_main_attachment_scope := current_attachment_scope
 							l_main_initialization_scope := current_initialization_scope
@@ -12474,7 +12474,7 @@ feature {NONE} -- Agent validity
 					end
 					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
 							free_attachment_scope (current_attachment_scope)
 							free_attachment_scope (current_initialization_scope)
@@ -12490,7 +12490,7 @@ feature {NONE} -- Agent validity
 				-- Restore the scope across cursors declared
 				-- in the enclosing feature or inline agent.
 			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
 				free_attachment_scope (current_attachment_scope)
@@ -12538,7 +12538,7 @@ feature {NONE} -- Agent validity
 			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -12576,7 +12576,7 @@ feature {NONE} -- Agent validity
 				-- Restore the scope across cursors declared
 				-- in the enclosing feature or inline agent.
 			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
 				free_attachment_scope (current_attachment_scope)
@@ -12628,7 +12628,7 @@ feature {NONE} -- Agent validity
 			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -12659,7 +12659,7 @@ feature {NONE} -- Agent validity
 				-- Restore the scope across cursors declared
 				-- in the enclosing feature or inline agent.
 			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
 				free_attachment_scope (current_attachment_scope)
@@ -12719,7 +12719,7 @@ feature {NONE} -- Agent validity
 			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -12760,7 +12760,7 @@ feature {NONE} -- Agent validity
 			if not had_error then
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_rescue_compound /= Void and l_compound /= Void then
 						l_rescue_initialization_scope := current_initialization_scope
 						current_initialization_scope := new_attachment_scope
@@ -12774,7 +12774,7 @@ feature {NONE} -- Agent validity
 					check_instructions_validity (l_compound)
 					had_error := had_error or has_fatal_error
 				end
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
 						if system_processor.is_ise and then current_attachment_scope.has_result then
 								-- In ISE Eiffel, local variables (including 'Result') are considered
@@ -12793,7 +12793,7 @@ feature {NONE} -- Agent validity
 					end
 				end
 				if l_rescue_compound /= Void then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
 							l_main_attachment_scope := current_attachment_scope
 							l_main_initialization_scope := current_initialization_scope
@@ -12803,7 +12803,7 @@ feature {NONE} -- Agent validity
 					end
 					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
 							free_attachment_scope (current_attachment_scope)
 							free_attachment_scope (current_initialization_scope)
@@ -12819,7 +12819,7 @@ feature {NONE} -- Agent validity
 				-- Restore the scope across cursors declared
 				-- in the enclosing feature or inline agent.
 			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
 				free_attachment_scope (current_attachment_scope)
@@ -12878,7 +12878,7 @@ feature {NONE} -- Agent validity
 			current_across_cursor_scope.hide_across_components (current_across_cursor_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
@@ -12912,7 +12912,7 @@ feature {NONE} -- Agent validity
 			if not had_error then
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if l_rescue_compound /= Void and l_compound /= Void then
 						l_rescue_initialization_scope := current_initialization_scope
 						current_initialization_scope := new_attachment_scope
@@ -12927,7 +12927,7 @@ feature {NONE} -- Agent validity
 					had_error := had_error or has_fatal_error
 				end
 				if l_rescue_compound /= Void then
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_rescue_attachment_scope /= Void and l_rescue_initialization_scope /= Void then
 							l_main_attachment_scope := current_attachment_scope
 							l_main_initialization_scope := current_initialization_scope
@@ -12937,7 +12937,7 @@ feature {NONE} -- Agent validity
 					end
 					check_rescue_validity (l_rescue_compound)
 					had_error := had_error or has_fatal_error
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						if l_main_attachment_scope /= Void and l_main_initialization_scope /= Void then
 							free_attachment_scope (current_attachment_scope)
 							free_attachment_scope (current_initialization_scope)
@@ -12953,7 +12953,7 @@ feature {NONE} -- Agent validity
 				-- Restore the scope across cursors declared
 				-- in the enclosing feature or inline agent.
 			current_across_cursor_scope.hide_across_components (l_old_hidden_across_cursor_scope)
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
 				free_attachment_scope (current_attachment_scope)
@@ -13187,7 +13187,7 @@ feature {NONE} -- Agent validity
 							if has_fatal_error then
 								-- Do nothing.
 							else
-								if current_universe.attachment_type_conformance_mode then
+								if current_system.attachment_type_conformance_mode then
 									l_formal_type_detachable := l_formal_context.is_type_detachable
 									l_actual_type_attached := l_actual_context.is_type_attached
 									if not l_formal_type_detachable and not l_actual_type_attached then
@@ -13213,7 +13213,7 @@ feature {NONE} -- Agent validity
 											l_actual_list.put (l_convert_expression, i)
 										end
 									else
-										if current_universe.attachment_type_conformance_mode then
+										if current_system.attachment_type_conformance_mode then
 											if l_actual_entity_attached then
 												l_actual_context.remove_last
 											end

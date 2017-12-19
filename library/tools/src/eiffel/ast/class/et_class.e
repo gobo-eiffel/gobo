@@ -1169,7 +1169,7 @@ feature -- Class header
 				Result := l_class_mark.is_attached_mark
 			elseif attached universe.implicit_attachment_type_mark as l_type_mark and then l_type_mark.is_attachment_mark then
 				Result := l_type_mark.is_attached_mark
-			elseif universe.attachment_type_conformance_mode then
+			elseif current_system.attachment_type_conformance_mode then
 				Result := True
 			else
 				Result := False

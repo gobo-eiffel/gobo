@@ -533,7 +533,7 @@ feature -- Basic operations
 				else
 					a_universe.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark)
 				end
-			elseif a_universe.attachment_type_conformance_mode then
+			elseif a_universe.current_system.attachment_type_conformance_mode then
 				a_universe.set_implicit_attachment_type_mark (tokens.implicit_attached_type_mark)
 			else
 				a_universe.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark)

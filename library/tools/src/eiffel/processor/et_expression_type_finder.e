@@ -1023,7 +1023,7 @@ feature {NONE} -- Expression processing
 				l_formal := l_arguments.formal_argument (l_seed)
 				l_type := l_formal.type
 				a_context.force_last (l_type)
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if not a_context.is_type_attached and then current_attachment_scope.has_formal_argument (a_name) then
 							-- Even though this formal argument has not been declared as attached,
 							-- we can guarantee that at this stage this entity is attached.
@@ -1067,7 +1067,7 @@ feature {NONE} -- Expression processing
 			l_conditional := a_expression.conditional.expression
 			l_old_attachment_scope := current_attachment_scope
 			l_else_attachment_scope := current_attachment_scope
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_attachment_scope := new_attachment_scope
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
 				l_else_attachment_scope := new_attachment_scope
@@ -1090,11 +1090,11 @@ feature {NONE} -- Expression processing
 				nb := l_elseif_parts.count
 				from i := 1 until i > nb loop
 					l_elseif := l_elseif_parts.item (i)
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						current_attachment_scope.copy_scope (l_else_attachment_scope)
 					end
 					l_conditional := l_elseif.conditional.expression
-					if current_universe.attachment_type_conformance_mode then
+					if current_system.attachment_type_conformance_mode then
 						attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
 						attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
 					end
@@ -1109,7 +1109,7 @@ feature {NONE} -- Expression processing
 					i := i + 1
 				end
 			end
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				current_attachment_scope.copy_scope (l_else_attachment_scope)
 			end
 			l_expression_context := new_context (current_type)
@@ -1120,7 +1120,7 @@ feature {NONE} -- Expression processing
 			else
 				update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 			end
-			if current_universe.attachment_type_conformance_mode then
+			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_attachment_scope)
 				free_attachment_scope (l_else_attachment_scope)
 				current_attachment_scope := l_old_attachment_scope
@@ -1284,7 +1284,7 @@ feature {NONE} -- Expression processing
 				l_local := l_locals.local_variable (l_seed)
 				l_type := l_local.type
 				a_context.force_last (l_type)
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if not a_context.is_type_attached then
 						if current_attachment_scope.has_local_variable (a_name) then
 								-- Even though this local variable has not been declared as attached,
@@ -2014,7 +2014,7 @@ feature {NONE} -- Expression processing
 				end
 			else
 				a_context.force_last (l_type)
-				if current_universe.attachment_type_conformance_mode then
+				if current_system.attachment_type_conformance_mode then
 					if not a_context.is_type_attached then
 						if current_attachment_scope.has_result then
 								-- Even though this 'Result' entity has not been declared as attached,
