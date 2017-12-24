@@ -56,7 +56,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			read_results_file (from_saxon_html_filename)
 			-- TODO: this %N will need removing when indentation is rationalized
 			assert ("Correct result", STRING_.same_string (l_output.last_output + "%N", last_latin1_string))
@@ -90,7 +90,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			read_results_file (from_saxon_xml_filename)
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_latin1_string))
 		end
@@ -123,7 +123,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			read_results_file (structure_index_xhtml_filename)
 			-- TODO: this %N will need removing when indentation is rationalized
 			assert ("Correct result", STRING_.same_string (l_output.last_output + "%N", last_latin1_string))

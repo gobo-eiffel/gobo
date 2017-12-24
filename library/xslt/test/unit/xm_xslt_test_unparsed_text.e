@@ -5,7 +5,7 @@ note
 		"Test unparsed-text() function."
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,7 +58,7 @@ feature -- Test
 -- 			an_output.set_output_to_string
 -- 			create a_result.make (an_output, "string:")
 -- 			a_transformer.transform (Void, a_result)
--- 			assert ("Transform successfull", not a_transformer.is_error)
+-- 			assert ("Transform successful", not a_transformer.is_error)
 -- 			assert ("Correct", an_output.last_output.count = 935)
 -- 		end
 
@@ -87,7 +87,7 @@ feature -- Test
 -- 			an_output.set_output_to_string
 -- 			create a_result.make (an_output, "string:")
 -- 			a_transformer.transform (Void, a_result)
--- 			assert ("Transform successfull", not a_transformer.is_error)
+-- 			assert ("Transform successful", not a_transformer.is_error)
 -- 			print (an_output.last_output.count)
 -- 			assert ("Correct", an_output.last_output.count = 935)
 -- 		end
@@ -117,7 +117,7 @@ feature -- Test
 -- 			an_output.set_output_to_string
 -- 			create a_result.make (an_output, "string:")
 -- 			a_transformer.transform (Void, a_result)
--- 			assert ("Transform unsuccessfull", a_transformer.is_error)
+-- 			assert ("Transform unsuccessful", a_transformer.is_error)
 -- 		end
 
 feature {NONE} -- Debug

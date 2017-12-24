@@ -49,7 +49,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("collection ('unknown:')")
 			assert ("Error FODC0004", an_evaluator.is_error and then STRING_.same_string (an_evaluator.error_value.code, "FODC0004"))
 		end
@@ -62,7 +62,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("collection ('../data/')")
 			assert ("No error", not an_evaluator.is_error)
 			assert ("At least 10 documents", an_evaluator.evaluated_items.count >= 10)
@@ -77,7 +77,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("collection ()")
 			assert ("No error", not an_evaluator.is_error)
 			if attached (create {KL_DIRECTORY}.make (file_system.current_working_directory)).filenames as l_current_directory_filenames then
@@ -90,19 +90,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("doc-available('books.xsl')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Result is True", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Result is True", a_boolean_value.value)
+			end
 		end
 
 	test_doc_function
@@ -110,19 +111,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("doc('books.xsl')/child::*[1]/attribute::version eq '2.0'")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Result is True", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Result is True", a_boolean_value.value)
+			end
 		end
 
 	test_doc_parse_error
@@ -133,7 +135,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("doc('boooks.xsl')/child::*[1]/attribute::version eq '2.0'")
 			assert ("No evaluation error", an_evaluator.is_error)
 			assert ("FODC0005", STRING_.same_string (an_evaluator.error_value.code, "FODC0005"))

@@ -5,7 +5,7 @@ note
 		"Test features of class XM_EIFFEL_PARSER"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,16 +54,16 @@ feature -- Test
 
 	test_position
 			-- Test feature `position' with erroneous input string.
-		local
-			a_position: XM_DEFAULT_POSITION
 		do
 			create parser.make
 			parser.parse_from_string ("%N%N  <a?>")
-			a_position ?= parser.position
-			assert ("position_not_void", a_position /= Void)
-			assert_integers_equal ("row_correct", 3, a_position.row)
-			assert_integers_equal ("column_correct", 5, a_position.column)
-			assert_integers_equal ("byte_index_correct", 7, a_position.byte_index)
+			if not attached {XM_DEFAULT_POSITION} parser.position as a_position then
+				assert ("position_not_void", False)
+			else
+				assert_integers_equal ("row_correct", 3, a_position.row)
+				assert_integers_equal ("column_correct", 5, a_position.column)
+				assert_integers_equal ("byte_index_correct", 7, a_position.byte_index)
+			end
 		end
 
 	test_end_tag

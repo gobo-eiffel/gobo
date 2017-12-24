@@ -5,7 +5,7 @@ note
 		"Test system ids and line numbers"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2001-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2001-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,11 +54,7 @@ feature -- Test. These tests check the system_id and base_uri routines
 			system_id: STRING
 			document: XM_XPATH_TREE_DOCUMENT
 			tiny_document: XM_XPATH_TINY_DOCUMENT
-			document_element, books_element, item_element: XM_XPATH_ELEMENT
-			a_tiny_element: XM_XPATH_TINY_ELEMENT
-			a_tree_element: XM_XPATH_TREE_ELEMENT
-			an_element: XM_XPATH_TREE_ELEMENT
-			a_pi: XM_XPATH_PROCESSING_INSTRUCTION
+			document_element, item_element: XM_XPATH_ELEMENT
 			a_base_uri: STRING
 			a_fingerprint, counter: INTEGER
 			tiny_descendants: XM_XPATH_TINY_DESCENDANT_ENUMERATION
@@ -91,20 +87,25 @@ feature -- Test. These tests check the system_id and base_uri routines
 			end
 
 			-- Test document_element
+			document_element := Void
 			if is_tiny then
-				a_tiny_element ?= tiny_document.document_element
-				document_element := a_tiny_element
+				if attached {XM_XPATH_TINY_ELEMENT} tiny_document.document_element as l_tiny_element then
+					document_element := l_tiny_element
+				end
 			else
-				a_tree_element ?= document.document_element
-				document_element := a_tree_element
+				if attached {XM_XPATH_TREE_ELEMENT} document.document_element as l_tree_element then
+					document_element := l_tree_element
+				end
 			end
 			assert ("Document element not void", document_element /= Void)
 			assert ("Document element line number is 7", document_element.line_number = 7)
-			books_element ?= document_element.first_child
-			assert ("Books", books_element /= Void)
-			assert ("Books element line number is 2", books_element.line_number = 2)
-			a_base_uri := resolved_uri_string ("booklist.xml")
-			assert_strings_case_insensitive_equal ("SYSTEM ID for BOOKS", a_base_uri, books_element.base_uri)
+			if not attached {XM_XPATH_ELEMENT} document_element.first_child as books_element then
+				assert ("Books", False)
+			else
+				assert ("Books element line number is 2", books_element.line_number = 2)
+				a_base_uri := resolved_uri_string ("booklist.xml")
+				assert_strings_case_insensitive_equal ("SYSTEM ID for BOOKS", a_base_uri, books_element.base_uri)
+			end
 
 			-- look for "ITEM" number 6 descendant of the document_element
 
@@ -114,67 +115,85 @@ feature -- Test. These tests check the system_id and base_uri routines
 				a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
 			end
 			create element_test.make (Element_node, a_fingerprint, "ITEM")
+			item_element := Void
 			if is_tiny then
-				a_tiny_element ?= document_element
-				create tiny_descendants.make (tiny_document.tree, a_tiny_element, element_test, False)
-				from
-					tiny_descendants.start
-					counter := 1
-				until
-					counter = 6
-				loop
-					counter := counter + 1
-					tiny_descendants.forth
+				if not attached {XM_XPATH_TINY_ELEMENT} document_element as l_tiny_element then
+					assert ("is_tiny", False)
+				else
+					create tiny_descendants.make (tiny_document.tree, l_tiny_element, element_test, False)
+					from
+						tiny_descendants.start
+						counter := 1
+					until
+						counter = 6
+					loop
+						counter := counter + 1
+						tiny_descendants.forth
+					end
+					if attached {XM_XPATH_TINY_ELEMENT} tiny_descendants.item as l_tiny_item_element then
+						item_element := l_tiny_item_element
+					end
 				end
-				a_tiny_element ?= tiny_descendants.item
-				item_element := a_tiny_element
 			else
-				an_element ?= document_element
-				create descendants.make (an_element, element_test, False)
-				from
-					descendants.start
-					counter := 1
-				until
-					counter = 6
-				loop
-					counter := counter + 1
-					descendants.forth
+				if not attached {XM_XPATH_TREE_ELEMENT} document_element as l_tree_element then
+					assert ("not_is_tiny", False)
+				else
+					create descendants.make (l_tree_element, element_test, False)
+					from
+						descendants.start
+						counter := 1
+					until
+						counter = 6
+					loop
+						counter := counter + 1
+						descendants.forth
+					end
+					if attached {XM_XPATH_TREE_ELEMENT} descendants.item as l_tree_item_element then
+						item_element := l_tree_item_element
+					end
 				end
-				a_tree_element ?= descendants.item
-				item_element := a_tree_element
 			end
 			assert ("sixth item", item_element /= Void)
 			assert_strings_case_insensitive_equal ("SYSTEM ID for ITEM", a_base_uri, item_element.system_id)
 			assert_strings_equal ("Base URI for ITEM", "http://www.gobosoft.com/xml-tests/AAMilne-book", item_element.base_uri)
 			assert ("Item element line number is 35", item_element.line_number = 35)
-			a_pi ?= item_element.first_child
-			assert ("PI child 1 not_void", a_pi /= Void)
-			assert_strings_equal ("PI child 1", "testpi1", a_pi.node_name)
-			assert_strings_equal ("Base URI for PI 1", "http://www.gobosoft.com/xml-tests/AAMilne-book", a_pi.base_uri)
-			assert ("PI1 line number is 36", a_pi.line_number = 36)
+			if not attached {XM_XPATH_PROCESSING_INSTRUCTION} item_element.first_child as a_pi then
+				assert ("PI child 1 not_void", False)
+			else
+				assert_strings_equal ("PI child 1", "testpi1", a_pi.node_name)
+				assert_strings_equal ("Base URI for PI 1", "http://www.gobosoft.com/xml-tests/AAMilne-book", a_pi.base_uri)
+				assert ("PI1 line number is 36", a_pi.line_number = 36)
+			end
+			item_element := Void
 			if is_tiny then
 				tiny_descendants.forth
 				tiny_descendants.forth
-				a_tiny_element ?= tiny_descendants.item
-				item_element := a_tiny_element
+				if attached {XM_XPATH_TINY_ELEMENT} tiny_descendants.item as l_tiny_item_element then
+					item_element := l_tiny_item_element
+				end
 			else
 				descendants.forth
 				descendants.forth
-				a_tree_element ?= descendants.item
-				item_element := a_tree_element
+				if attached {XM_XPATH_TREE_ELEMENT} descendants.item as l_tree_item_element then
+					item_element := l_tree_item_element
+				end
 			end
 			assert ("eighth item", item_element /= Void)
 			assert_strings_case_insensitive_equal ("SYSTEM ID for ITEM 2", a_base_uri, item_element.system_id)
 			assert_strings_case_insensitive_equal ("Base URI for ITEM 2", a_base_uri, item_element.base_uri)
-			a_pi ?= item_element.first_child
-			assert ("PI child 2 not_void", a_pi /= Void)
-			assert_strings_equal ("PI child 2", "testpi2", a_pi.node_name)
-			assert_strings_case_insensitive_equal ("Base URI for PI 2", a_base_uri, a_pi.base_uri)
-			a_pi ?= item_element.next_sibling
-			assert ("PI sibling not_void", a_pi /= Void)
-			assert_strings_equal ("PI sibling", "testpi3", a_pi.node_name)
-			assert_strings_case_insensitive_equal ("Base URI for PI 3", a_base_uri, a_pi.base_uri)
-			assert ("PI3 line number is 57", a_pi.line_number = 57)
+			if not attached {XM_XPATH_PROCESSING_INSTRUCTION} item_element.first_child as a_pi then
+				assert ("PI child 2 not_void", False)
+			else
+				assert_strings_equal ("PI child 2", "testpi2", a_pi.node_name)
+				assert_strings_case_insensitive_equal ("Base URI for PI 2", a_base_uri, a_pi.base_uri)
+			end
+			if not attached {XM_XPATH_PROCESSING_INSTRUCTION} item_element.next_sibling as a_pi then
+				assert ("PI sibling not_void", False)
+			else
+				assert_strings_equal ("PI sibling", "testpi3", a_pi.node_name)
+				assert_strings_case_insensitive_equal ("Base URI for PI 3", a_base_uri, a_pi.base_uri)
+				assert ("PI3 line number is 57", a_pi.line_number = 57)
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -649,6 +649,6 @@ feature {NONE} -- Implementation
 			-- Last sucessfully parsed pattern
 
 	last_parsed_pattern_step: detachable XM_XSLT_LOCATION_PATH_PATTERN
-			-- last successfull parsed pattern step
+			-- last successfulparsed pattern step
 
 end

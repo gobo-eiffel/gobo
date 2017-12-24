@@ -5,7 +5,7 @@ note
 		"Test XPath Cast Expressions and type constructors"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2001-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2001-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:untypedAtomic")
 --			diagnose_evaluation_error (an_evaluator)
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -68,7 +68,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:string")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -85,7 +85,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:anyURI")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -101,7 +101,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:NOTATION")
 			-- xs:NOTATION not supported by basic-level processor
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -115,7 +115,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:float")
 			assert ("Evaluation error", an_evaluator.is_error)
 		end
@@ -125,17 +125,19 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_float_value: XM_XPATH_FLOAT_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic (' 17.5E-12') cast as xs:float")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_float_value ?= evaluated_items.item (1)
-			assert ("Correct value", a_float_value /= Void and then a_float_value.value <= 17.5E-12 and then a_float_value.value >= 17.4E-12)
+			if not attached {XM_XPATH_FLOAT_VALUE} evaluated_items.item (1) as a_float_value then
+				assert ("a_float_value_not_void", False)
+			else
+				assert ("Correct value", a_float_value.value <= 17.5E-12 and then a_float_value.value >= 17.4E-12)
+			end
 		end
 
 	test_untyped_atomic_to_double_unsucessful
@@ -146,7 +148,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:double")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
@@ -156,17 +158,19 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_double_value: XM_XPATH_DOUBLE_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic (' 17.5E-12') cast as xs:double")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_double_value ?= evaluated_items.item (1)
-			assert ("Correct value", a_double_value /= Void and then a_double_value.value = 17.5E-12)
+			if not attached {XM_XPATH_DOUBLE_VALUE} evaluated_items.item (1) as a_double_value then
+				assert ("a_double_value_not_void", False)
+			else
+				assert ("Correct value", a_double_value.value = 17.5E-12)
+			end
 		end
 
 	test_untyped_atomic_to_decimal_unsucessful
@@ -177,7 +181,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:decimal")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
@@ -187,19 +191,21 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
 			a_decimal: MA_DECIMAL
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic (' 256.7198003 ') cast as xs:decimal")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			create a_decimal.make_from_string ("256.7198003")
-			a_decimal_value ?= evaluated_items.item (1)
-			assert ("Correct value", a_decimal_value /= Void and then a_decimal_value.value.is_equal (a_decimal))
+			if not attached {XM_XPATH_DECIMAL_VALUE} evaluated_items.item (1) as a_decimal_value then
+				assert ("a_decimal_value_not_void", False)
+			else
+				assert ("Correct value", a_decimal_value.value.is_equal (a_decimal))
+			end
 		end
 
 	test_untyped_atomic_to_integer_unsucessful
@@ -210,7 +216,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:integer")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
@@ -220,17 +226,19 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic (' 56 ') cast as xs:integer")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("Correct value", an_integer_value /= Void and then an_integer_value.value = 56)
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
+				assert ("an_integer_value_not_void", False)
+			else
+				assert ("Correct value", an_integer_value.value = 56)
+			end
 		end
 
 	test_untyped_atomic_to_boolean_unsucessful
@@ -241,7 +249,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:boolean")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
@@ -251,17 +259,19 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic (' true ') cast as xs:boolean")
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Correct value", a_boolean_value /= Void and then a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void", False)
+			else
+				assert ("Correct value", a_boolean_value.value)
+			end
 		end
 
 	test_untyped_atomic_to_qname_unsucessful
@@ -272,7 +282,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('xs:b:fred') cast as xs:QName")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
@@ -285,7 +295,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('xs:untypedAtomic') cast as xs:QName")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
@@ -295,17 +305,15 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_date_value: XM_XPATH_DATE_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09-08Z') cast as xs:date")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_date_value ?= evaluated_items.item (1)
-			assert ("Date value", a_date_value /= Void)
+			assert ("Date value", attached {XM_XPATH_DATE_VALUE} evaluated_items.item (1))
 		end
 
 	test_untyped_atomic_to_zoneless_date
@@ -313,17 +321,15 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_date_value: XM_XPATH_DATE_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09-08') cast as xs:date")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_date_value ?= evaluated_items.item (1)
-			assert ("Date value", a_date_value /= Void)
+			assert ("Date value", attached {XM_XPATH_DATE_VALUE} evaluated_items.item (1))
 		end
 
 	test_untyped_atomic_to_date_unsucessful
@@ -334,7 +340,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('fred') cast as xs:date")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
@@ -344,17 +350,15 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_time_value: XM_XPATH_TIME_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('12:05:35.465987') cast as xs:time")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_time_value ?= evaluated_items.item (1)
-			assert ("Time value", a_time_value /= Void)
+			assert ("Time value", attached {XM_XPATH_TIME_VALUE} evaluated_items.item (1))
 		end
 
 	test_untyped_atomic_to_date_time
@@ -362,17 +366,15 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_date_time_value: XM_XPATH_DATE_TIME_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09-08T12:07:40.5Z') cast as xs:dateTime")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_date_time_value ?= evaluated_items.item (1)
-			assert ("DateTime value", a_date_time_value /= Void)
+			assert ("DateTime value", attached {XM_XPATH_DATE_TIME_VALUE} evaluated_items.item (1))
 		end
 
 	test_untyped_atomic_to_duration
@@ -380,17 +382,15 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_duration_value: XM_XPATH_DURATION_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('P2Y5MT12H09M08.5674S') cast as xs:duration")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_duration_value ?= evaluated_items.item (1)
-			assert ("Duration value", a_duration_value /= Void)
+			assert ("Duration value", attached {XM_XPATH_DURATION_VALUE} evaluated_items.item (1))
 		end
 
 	test_untyped_atomic_to_year_month_duration
@@ -398,17 +398,15 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_duration_value: XM_XPATH_MONTHS_DURATION_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('P2Y5M') cast as xs:yearMonthDuration")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_duration_value ?= evaluated_items.item (1)
-			assert ("YearMonthDuration value", a_duration_value /= Void)
+			assert ("YearMonthDuration value", attached {XM_XPATH_MONTHS_DURATION_VALUE} evaluated_items.item (1))
 		end
 
 	test_untyped_atomic_to_day_time_duration
@@ -416,17 +414,15 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_duration_value: XM_XPATH_SECONDS_DURATION_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('P3DT4H7M') cast as xs:dayTimeDuration")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_duration_value ?= evaluated_items.item (1)
-			assert ("DayTimeDuration value", a_duration_value /= Void)
+			assert ("DayTimeDuration value", attached {XM_XPATH_SECONDS_DURATION_VALUE} evaluated_items.item (1))
 		end
 
 	test_untyped_atomic_to_g_year_month
@@ -434,28 +430,31 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_value: XM_XPATH_YEAR_MONTH_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09') castable as xs:gYearMonth")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_1", False)
+			else
+				assert ("Castable", a_boolean_value.value)
+			end
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005-09') cast as xs:gYearMonth")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_value ?= evaluated_items.item (1)
-			assert ("gYearMonth value", a_value /= Void)
+			assert ("gYearMonth value", attached {XM_XPATH_YEAR_MONTH_VALUE} evaluated_items.item (1))
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gYearMonth")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_2", False)
+			else
+				assert ("Not castable", not a_boolean_value.value)
+			end
 		end
 
 	test_untyped_atomic_to_g_year
@@ -463,28 +462,31 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_value: XM_XPATH_YEAR_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005') castable as xs:gYear")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_1", False)
+			else
+				assert ("Castable", a_boolean_value.value)
+			end
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005') cast as xs:gYear")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_value ?= evaluated_items.item (1)
-			assert ("gYear value", a_value /= Void)
+			assert ("gYear value",  attached {XM_XPATH_YEAR_VALUE} evaluated_items.item (1))
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gYear")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_2", False)
+			else
+				assert ("Not castable", not a_boolean_value.value)
+			end
 		end
 
 	test_untyped_atomic_to_g_month
@@ -492,28 +494,31 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_value: XM_XPATH_MONTH_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('--09') castable as xs:gMonth")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_1", False)
+			else
+				assert ("Castable", a_boolean_value.value)
+			end
 			an_evaluator.evaluate ("xs:untypedAtomic ('--09') cast as xs:gMonth")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_value ?= evaluated_items.item (1)
-			assert ("gMonth value", a_value /= Void)
+			assert ("gMonth value", attached {XM_XPATH_MONTH_VALUE} evaluated_items.item (1))
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gMonth")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_2", False)
+			else
+				assert ("Not castable", not a_boolean_value.value)
+			end
 		end
 
 	test_untyped_atomic_to_g_month_day
@@ -521,28 +526,31 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_value: XM_XPATH_MONTH_DAY_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('--05-09') castable as xs:gMonthDay")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_1", False)
+			else
+				assert ("Castable", a_boolean_value.value)
+			end
 			an_evaluator.evaluate ("xs:untypedAtomic ('--05-09') cast as xs:gMonthDay")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_value ?= evaluated_items.item (1)
-			assert ("gMonthDay value", a_value /= Void)
+			assert ("gMonthDay value", attached {XM_XPATH_MONTH_DAY_VALUE} evaluated_items.item (1))
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gMonthDay")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_2", False)
+			else
+				assert ("Not castable", not a_boolean_value.value)
+			end
 		end
 
 	test_untyped_atomic_to_g_day
@@ -550,28 +558,31 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_value: XM_XPATH_DAY_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('---09') castable as xs:gDay")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_1", False)
+			else
+				assert ("Castable", a_boolean_value.value)
+			end
 			an_evaluator.evaluate ("xs:untypedAtomic ('---09') cast as xs:gDay")
 			assert ("No evaluation error 2", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_value ?= evaluated_items.item (1)
-			assert ("gDay value", a_value /= Void)
+			assert ("gDay value", attached {XM_XPATH_DAY_VALUE} evaluated_items.item (1))
 			an_evaluator.evaluate ("xs:untypedAtomic ('2005--09') castable as xs:gDay")
 			assert ("No evaluation error 3", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_2", False)
+			else
+				assert ("Not castable", not a_boolean_value.value)
+			end
 		end
 
 	test_untyped_atomic_to_base64
@@ -579,23 +590,23 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_value: XM_XPATH_BASE64_BINARY_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:untypedAtomic ('" + encoded_string + "') castable as xs:base64Binary")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_1", False)
+			else
+				assert ("Castable", a_boolean_value.value)
+			end
 			an_evaluator.evaluate ("xs:untypedAtomic ('" + encoded_string + "') cast as xs:base64Binary")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_value ?= evaluated_items.item (1)
-			assert ("base64Binary value", a_value /= Void)
+			assert ("base64Binary value", attached {XM_XPATH_BASE64_BINARY_VALUE} evaluated_items.item (1))
 		end
 
 	test_base64_to_hex_binary
@@ -603,23 +614,23 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_value: XM_XPATH_HEX_BINARY_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:base64Binary ('" + encoded_string + "') castable as xs:hexBinary")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("a_boolean_value_not_void_1", False)
+			else
+				assert ("Castable", a_boolean_value.value)
+			end
 			an_evaluator.evaluate ("xs:base64Binary ('" + encoded_string + "') cast as xs:hexBinary")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			a_value ?= evaluated_items.item (1)
-			assert ("hexBinary value", a_value /= Void)
+			assert ("hexBinary value", attached {XM_XPATH_HEX_BINARY_VALUE} evaluated_items.item (1))
 		end
 
 feature -- Set up

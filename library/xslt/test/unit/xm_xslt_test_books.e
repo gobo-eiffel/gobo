@@ -5,7 +5,7 @@ note
 		"Test transforming books.xml with books.xsl"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,7 +58,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			-- No check on the output, as it includes the formatted current date-time, and the time zone
 			-- may differ, so we can't even check the length.
 			-- Anyway, this was just a development-driving-forward mechanism, not a true regression test, so it

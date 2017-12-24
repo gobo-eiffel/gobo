@@ -62,7 +62,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Correct output", STRING_.same_string (l_output.last_output, expected_output_1))
 		end
 
@@ -94,7 +94,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Correct output", STRING_.same_string (l_output.last_output, expected_output_1))
 		end
 
@@ -127,7 +127,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Correct output", STRING_.same_string (l_output.last_output, expected_output_2))
 		end
 
@@ -159,7 +159,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Correct output", l_output.last_output.count = 173)
 		end
 
@@ -196,7 +196,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Correct output", l_output.last_output.count = 309)
 		end
 
@@ -233,7 +233,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Correct output", l_output.last_output.count = 295)
 		end
 
@@ -265,7 +265,7 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.set_initial_template ("initial")
 			l_transformer.transform (Void, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Correct output", l_output.last_output.count = 81)
 		end
 

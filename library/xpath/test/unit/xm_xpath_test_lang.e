@@ -5,7 +5,7 @@ note
 		"Test XPath lang() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,19 +46,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/*/para[1]/lang('en')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("True", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("True", a_boolean_value.value)
+			end
 		end
 
 	test_lang_two
@@ -66,19 +67,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/*/div/para[1]/lang('en')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("True", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("True", a_boolean_value.value)
+			end
 		end
 
 	test_lang_three
@@ -86,19 +88,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/*/para[2]/lang('en')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("True", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("True", a_boolean_value.value)
+			end
 		end
 
 	test_lang_four
@@ -106,19 +109,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/*/para[3]/lang('en')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("True", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("True", a_boolean_value.value)
+			end
 		end
 
 	test_lang_five
@@ -126,19 +130,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/*/para[3]/lang('fr')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("False", not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("False", not a_boolean_value.value)
+			end
 		end
 
 	test_lang_six
@@ -146,19 +151,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/*/para[4]/lang('de')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("True", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("True", a_boolean_value.value)
+			end
 		end
 
 	set_up

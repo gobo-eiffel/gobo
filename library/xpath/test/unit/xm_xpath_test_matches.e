@@ -5,7 +5,7 @@ note
 		"Test XPath matches() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,19 +49,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches('abracadabra', 'bra')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Matches", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Matches", a_boolean_value.value)
+			end
 		end
 
 	test_matches_two
@@ -69,19 +70,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches('abracadabra', '^a.*a$')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Matches", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Matches", a_boolean_value.value)
+			end
 		end
 
 	test_matches_three
@@ -89,19 +91,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches('abracadabra', '^bra')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Doesnt match", not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Doesnt match", not a_boolean_value.value)
+			end
 		end
 
 	test_matches_four
@@ -109,19 +112,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*krähen')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Doesnt match", not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Doesnt match", not a_boolean_value.value)
+			end
 		end
 
 	test_matches_five
@@ -129,19 +133,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*krähen', 's')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Matches", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Matches", a_boolean_value.value)
+			end
 		end
 
 	test_matches_four_chinese
@@ -149,13 +154,12 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_regular_expression: STRING
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (chinese_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			a_regular_expression := STRING_.concat ("matches(/*[1], '", chinese_character_one)
 			a_regular_expression := STRING_.appended_string (a_regular_expression, ".*")
 			a_regular_expression := STRING_.appended_string (a_regular_expression, chinese_character_two)
@@ -164,9 +168,11 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Doesnt match", not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Doesnt match", not a_boolean_value.value)
+			end
 		end
 
 	test_matches_five_chinese
@@ -174,13 +180,12 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_regular_expression: STRING
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (chinese_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			a_regular_expression := STRING_.concat ("matches(/*[1], '", chinese_character_one)
 			a_regular_expression := STRING_.appended_string (a_regular_expression, ".*")
 			a_regular_expression := STRING_.appended_string (a_regular_expression, chinese_character_two)
@@ -189,9 +194,11 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Matches", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Matches", a_boolean_value.value)
+			end
 		end
 
 	test_matches_six
@@ -199,19 +206,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], '^Kaum.*gesehen,', 'm')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Matches", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Matches", a_boolean_value.value)
+			end
 		end
 
 
@@ -220,19 +228,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], '^Kaum.*gesehen,$')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Doesnt match", not a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Doesnt match", not a_boolean_value.value)
+			end
 		end
 
 	test_matches_eight
@@ -240,19 +249,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], 'kiki', 'i')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_boolean_value ?= evaluated_items.item (1)
-			assert ("Boolean value", a_boolean_value /= Void)
-			assert ("Matches", a_boolean_value.value)
+			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
+				assert ("Boolean value", False)
+			else
+				assert ("Matches", a_boolean_value.value)
+			end
 		end
 
 	set_up

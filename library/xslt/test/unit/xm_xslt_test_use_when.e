@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,7 +64,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Correct result", STRING_.same_string (l_output.last_output, "OK"))
 		end
 

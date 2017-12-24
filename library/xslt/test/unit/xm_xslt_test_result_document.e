@@ -58,7 +58,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:/")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Toc", l_configuration.output_resolver.output_destinations.item ("string:/toc.html").stream.last_output.count = 594)
 			assert ("Section 1", l_configuration.output_resolver.output_destinations.item ("string:/section1.html").stream.last_output.count = 414)
 			assert ("Section 2", l_configuration.output_resolver.output_destinations.item ("string:/section2.html").stream.last_output.count = 414)
@@ -91,7 +91,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:/")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform not successfull", l_transformer.is_error)
+			assert ("Transform not successful", l_transformer.is_error)
 			assert ("XTDE1490", l_error_listener.has (xtde1490))
 		end
 
@@ -121,7 +121,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:/")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform not successfull", l_transformer.is_error)
+			assert ("Transform not successful", l_transformer.is_error)
 			assert ("XTDE1490", l_error_listener.has (xtde1490))
 		end
 

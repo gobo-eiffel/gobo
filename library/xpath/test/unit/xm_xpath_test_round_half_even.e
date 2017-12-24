@@ -71,7 +71,7 @@ feature -- Tests
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii
 -- 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
--- 			assert ("Build successfull", not an_evaluator.was_build_error)
+-- 			assert ("Build successful", not an_evaluator.was_build_error)
 -- 			an_evaluator.evaluate ("round-half-to-even(0.5)")
 -- 			assert ("No evaluation error", not an_evaluator.is_error)
 -- 			evaluated_items := an_evaluator.evaluated_items
@@ -91,7 +91,7 @@ feature -- Tests
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii
 -- 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
--- 			assert ("Build successfull", not an_evaluator.was_build_error)
+-- 			assert ("Build successful", not an_evaluator.was_build_error)
 -- 			an_evaluator.evaluate ("round-half-to-even(1.5)")
 -- 			assert ("No evaluation error", not an_evaluator.is_error)
 -- 			evaluated_items := an_evaluator.evaluated_items
@@ -111,7 +111,7 @@ feature -- Tests
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii
 -- 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
--- 			assert ("Build successfull", not an_evaluator.was_build_error)
+-- 			assert ("Build successful", not an_evaluator.was_build_error)
 -- 			an_evaluator.evaluate ("round-half-to-even(2.5)")
 -- 			assert ("No evaluation error", not an_evaluator.is_error)
 -- 			evaluated_items := an_evaluator.evaluated_items
@@ -131,7 +131,7 @@ feature -- Tests
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii
 -- 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
--- 			assert ("Build successfull", not an_evaluator.was_build_error)
+-- 			assert ("Build successful", not an_evaluator.was_build_error)
 -- 			an_evaluator.evaluate ("round-half-to-even(3.567812E+3, 2)")
 -- 			assert ("No evaluation error", not an_evaluator.is_error)
 -- 			evaluated_items := an_evaluator.evaluated_items
@@ -153,7 +153,7 @@ feature -- Tests
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii
 -- 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
--- 			assert ("Build successfull", not an_evaluator.was_build_error)
+-- 			assert ("Build successful", not an_evaluator.was_build_error)
 -- 			an_evaluator.evaluate ("round-half-to-even(4.7564E-3, 2)")
 -- 			assert ("No evaluation error", not an_evaluator.is_error)
 -- 			evaluated_items := an_evaluator.evaluated_items
@@ -173,7 +173,7 @@ feature -- Tests
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii
 -- 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
--- 			assert ("Build successfull", not an_evaluator.was_build_error)
+-- 			assert ("Build successful", not an_evaluator.was_build_error)
 -- 			an_evaluator.evaluate ("round-half-to-even(35612.25, -2)")
 -- 			assert ("No evaluation error", not an_evaluator.is_error)
 -- 			evaluated_items := an_evaluator.evaluated_items
@@ -193,7 +193,7 @@ feature -- Tests
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii
 -- 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
--- 			assert ("Build successfull", not an_evaluator.was_build_error)
+-- 			assert ("Build successful", not an_evaluator.was_build_error)
 -- 			an_evaluator.evaluate ("round-half-to-even(35612, -2)")
 -- 			assert ("No evaluation error", not an_evaluator.is_error)
 -- 			evaluated_items := an_evaluator.evaluated_items
@@ -214,7 +214,7 @@ feature -- Tests
 -- 			create an_evaluator.make (18, False)
 -- 			an_evaluator.set_string_mode_ascii
 -- 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
--- 			assert ("Build successfull", not an_evaluator.was_build_error)
+-- 			assert ("Build successful", not an_evaluator.was_build_error)
 -- 			an_evaluator.evaluate ("round-half-to-even(35600, 2)")
 -- 			assert ("No evaluation error", not an_evaluator.is_error)
 -- 			evaluated_items := an_evaluator.evaluated_items

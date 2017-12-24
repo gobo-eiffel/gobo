@@ -5,7 +5,7 @@ note
 		"Test schematron"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,6 @@ feature -- Test
 			l_output, l_second_output: XM_OUTPUT
 			l_test_string: STRING
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
-			l_catalog_resolver: XM_CATALOG_RESOLVER
 			l_string_resolver: XM_STRING_URI_RESOLVER
 			l_test_file: KL_TEXT_INPUT_FILE
 			l_factory: XM_XSLT_NULL_MESSAGE_EMITTER_FACTORY
@@ -73,16 +72,14 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:/transform")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 
 			-- now plug the string into the bootstrap resolver so it can be found
 			--  by the XML parser
 
-			l_catalog_resolver ?= l_configuration.entity_resolver
-			check
-				catalog_resolver: l_catalog_resolver /= Void
-				-- because `make_with_defaults'
-			end
+			-- because `make_with_defaults'
+			assert ("catalog_resolver", attached {XM_CATALOG_RESOLVER} l_configuration.entity_resolver)
+
 			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.resize (2 * shared_catalog_manager.bootstrap_resolver.well_known_system_ids.count)
 			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.put (l_output.last_output, "string:/transform")
 
@@ -101,7 +98,7 @@ feature -- Test
 			l_second_output.set_output_to_string
 			create l_result.make (l_second_output, "string:/report")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			create l_test_file.make (expected_report_filename)
 			assert ("Test file exists", l_test_file /= Void)
 			l_test_file.open_read

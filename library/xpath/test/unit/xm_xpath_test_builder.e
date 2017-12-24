@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2001-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2001-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,6 @@ feature -- Test
 			-- Simple tree.
 		local
 			document: XM_XPATH_TREE_DOCUMENT
-			document_element, an_element: XM_XPATH_TREE_ELEMENT
 			a_name: STRING
 		do
 			conformance.set_basic_xslt_processor
@@ -55,38 +54,48 @@ feature -- Test
 
 			-- Test document_element
 
-			document_element ?= document.document_element
-			assert ("Document element not void", document_element /= Void)
-			a_name := document_element.node_name
-			assert_strings_equal ("root name", "doc", a_name)
+			if not attached {XM_XPATH_TREE_ELEMENT} document.document_element as document_element then
+				assert ("Document element not void", False)
+			else
+				a_name := document_element.node_name
+				assert_strings_equal ("root name", "doc", a_name)
 
-			-- Test last_child
+				-- Test last_child
 
-			an_element ?= document_element.last_child
-			assert ("Last child not void", an_element /= Void)
-			a_name := an_element.node_name
-			assert_strings_equal ("Last child name", "b", a_name)
+				if not attached {XM_XPATH_TREE_ELEMENT} document_element.last_child as an_element_1 then
+					assert ("Last child not void", False)
+				else
+					a_name := an_element_1.node_name
+					assert_strings_equal ("Last child name", "b", a_name)
+				end
 
-			-- Test first_child
+				-- Test first_child
 
-			an_element ?= document_element.first_child
-			assert ("First child not void", an_element /= Void)
-			a_name := an_element.node_name
-			assert_strings_equal ("First child name", "a", a_name)
+				if not attached {XM_XPATH_TREE_ELEMENT} document_element.first_child as an_element_2 then
+					assert ("First child not void", False)
+				else
+					a_name := an_element_2.node_name
+					assert_strings_equal ("First child name", "a", a_name)
 
-			-- Test next_sibling
+					-- Test next_sibling
 
-			an_element ?= an_element.next_sibling
-			assert ("Second child not void", an_element /= Void)
-			a_name := an_element.node_name
-			assert_strings_equal ("Second child name", "b", a_name)
+					if not attached {XM_XPATH_TREE_ELEMENT} an_element_2.next_sibling as an_element_3 then
+						assert ("Second child not void", False)
+					else
+						a_name := an_element_3.node_name
+						assert_strings_equal ("Second child name", "b", a_name)
 
-			-- Test previous_sibling
+						-- Test previous_sibling
 
-			an_element ?= an_element.previous_sibling
-			assert ("Previous sibling not void", an_element /= Void)
-			a_name := an_element.node_name
-			assert_strings_equal ("Previous sibling name", "a", a_name)
+						if not attached {XM_XPATH_TREE_ELEMENT} an_element_3.previous_sibling as an_element_4 then
+							assert ("Previous sibling not void", False)
+						else
+							a_name := an_element_4.node_name
+							assert_strings_equal ("Previous sibling name", "a", a_name)
+						end
+					end
+				end
+			end
 		end
 
 	test_with_dtd
@@ -94,9 +103,7 @@ feature -- Test
 		local
 			system_id: STRING
 			document: XM_XPATH_TREE_DOCUMENT
-			document_element, books_element, an_element, item_element, categories_element: XM_XPATH_TREE_ELEMENT
-			an_attribute: XM_XPATH_TREE_ATTRIBUTE
-			a_pi: XM_XPATH_TREE_PROCESSING_INSTRUCTION
+			an_element: XM_XPATH_TREE_ELEMENT
 			a_node: XM_XPATH_NODE
 			a_name: STRING
 			a_fingerprint, counter: INTEGER
@@ -119,176 +126,173 @@ feature -- Test
 
 			-- Test document_element
 
-			document_element ?= document.document_element
-			assert ("Document element not void", document_element /= Void)
-			a_name := document_element.node_name
-			assert_strings_equal ("root name", "BOOKLIST", a_name)
+			if not attached {XM_XPATH_TREE_ELEMENT} document.document_element as document_element then
+				assert ("Document element not void", False)
+			else
+				a_name := document_element.node_name
+				assert_strings_equal ("root name", "BOOKLIST", a_name)
 
-			-- Test first_child
+				-- Test first_child
 
-			books_element ?= document_element.first_child
-			assert ("First child not void", books_element /= Void)
-			a_name := books_element.node_name
-			assert_strings_equal ("First child name", "BOOKS", a_name)
+				if not attached {XM_XPATH_TREE_ELEMENT} document_element.first_child as books_element then
+					assert ("First child not void", False)
+				else
+					a_name := books_element.node_name
+					assert_strings_equal ("First child name", "BOOKS", a_name)
 
-			-- Test parent
+					-- Test parent
 
-			assert ("Parent", document_element.is_same_node (books_element.parent))
+					assert ("Parent", document_element.is_same_node (books_element.parent))
 
-			-- Test first_child of first child
+					-- Test first_child of first child
 
-			item_element ?= books_element.first_child
-			assert ("First child not void", item_element /= Void)
-			a_name := item_element.node_name
-			assert_strings_equal ("First child 2 name", "ITEM", a_name)
+					if not attached {XM_XPATH_TREE_ELEMENT} books_element.first_child as item_element then
+						assert ("First child not void", False)
+					else
+						a_name := item_element.node_name
+						assert_strings_equal ("First child 2 name", "ITEM", a_name)
 
-			-- Test next_sibling loop to last child
+						-- Test next_sibling loop to last child
 
-			from
-				counter := 1
-				a_node := item_element
-					check
-						initial_node_not_void: a_node /= Void
+						from
+							counter := 1
+							a_node := item_element
+								check
+									initial_node_not_void: a_node /= Void
+								end
+						until
+							a_node = Void
+						loop
+							a_node := a_node.next_sibling
+							if attached {XM_XPATH_TREE_ELEMENT} a_node as an_element_1 then
+								a_name := an_element_1.node_name
+								assert_strings_equal ("Sibling name", "ITEM", a_name)
+								counter := counter + 1
+							end
+						end
+						assert ("Eight Items 1", counter = 8)
+
+						-- Test descendant axis - look for "ITEM" descendants of the document_element
+
+						a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
+						create element_test.make (Element_node, a_fingerprint, "ITEM")
+						create descendants.make (document_element, element_test, False)
+
+						from
+							descendants.start
+							counter := 1
+						until
+							descendants.after
+						loop
+							counter := counter + 1
+							descendants.forth
+						end
+						assert ("Eight descendants", counter = 9)
+
+						-- Test ancestor axis - look for "BOOKLIST" ancestor of "ITEM"
+
+						create ancestors.make (item_element, any_node_test, False)
+
+						ancestors.start
+						ancestors.forth
+						a_node := ancestors.item
+							check
+								ancestor_node_not_void: a_node /= Void
+							end
+						if not attached {XM_XPATH_TREE_ELEMENT} a_node as an_element_2 then
+							assert ("element_ancestor", False)
+						else
+							assert_strings_equal ("BOOKLIST ancestor", "BOOKLIST", an_element_2.node_name)
+						end
+
+						-- Test all_elements
+
+						a_fingerprint := shared_name_pool.fingerprint ("", "CATEGORY")
+						element_list_1 := document.all_elements (a_fingerprint)
+						assert ("Element list not void", element_list_1 /= Void)
+						assert ("Five items", element_list_1.count = 5)
+
+						-- Test preceding axis - find all PI's prior to CATEGORIES element
+
+						if not attached {XM_XPATH_TREE_ELEMENT} document_element.last_child as categories_element then
+							assert ("categories_element_not_void", False)
+						else
+							create any_pi_test.make (Processing_instruction_node)
+							create preceding.make (categories_element, any_pi_test)
+								check
+									preceding_before: preceding.before
+								end
+							from
+								counter := 1
+								preceding.start
+							until
+								preceding.after
+							loop
+								a_node := preceding.item
+									check
+										preceding_node_not_void: a_node /= Void
+									end
+								assert ("processing_instruction_node", attached {XM_XPATH_TREE_PROCESSING_INSTRUCTION} a_node)
+								preceding.forth
+								counter := counter + 1
+							end
+							assert ("Three preceding processing-instructions", counter = 4)
+						end
+
+						-- Test following axis - look for elements following the BOOKS element
+
+						create any_element_test.make (Element_node)
+						create following.make (books_element, any_element_test)
+							check
+								following_before: following.before
+							end
+						from
+							counter := 1
+							following.start
+						until
+							following.after
+						loop
+							a_node := following.item
+								check
+									following_node_not_void: a_node /= Void
+								end
+							assert ("tree_element", attached {XM_XPATH_TREE_ELEMENT} a_node)
+							following.forth
+							counter := counter + 1
+						end
+						assert ("Six following elements", counter = 7)
+
+						-- Test attributes axis - look for NOTE attribute on CATEGORY element
+
+						a_fingerprint := shared_name_pool.fingerprint ("", "NOTE")
+						an_element := element_list_1.item (2)
+
+						create attribute_test.make (Attribute_node, a_fingerprint, "NOTE")
+						create attributes.make (an_element, attribute_test)
+							check
+								attributes_before: attributes.before
+							end
+						attributes.start
+						a_node := attributes.item
+							check
+								attribute_node_not_void: a_node /= Void
+							end
+						if not attached {XM_XPATH_TREE_ATTRIBUTE} a_node as an_attribute_1 then
+							assert ("tree_attribute", False)
+						else
+							assert_strings_equal ("NOTE attribute", "NOTE", an_attribute_1.node_name)
+							assert_strings_equal ("NOTE attribute value", "Limited Stock", an_attribute_1.string_value)
+						end
+
+						-- Test all_elements - cached result
+
+						a_fingerprint := shared_name_pool.fingerprint ("", "CATEGORY")
+						element_list_2 := document.all_elements (a_fingerprint)
+						assert ("Element list 2 not void", element_list_2 /= Void)
+						assert_equal ("Cached list", element_list_1, element_list_2)
 					end
-			until
-				a_node = Void
-			loop
-				a_node := a_node.next_sibling
-				an_element ?= a_node
-				if an_element /= Void then
-					a_name := an_element.node_name
-					assert_strings_equal ("Sibling name", "ITEM", a_name)
-					counter := counter + 1
 				end
 			end
-			assert ("Eight Items 1", counter = 8)
-
-			-- Test descendant axis - look for "ITEM" descendants of the document_element
-
-			a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
-			create element_test.make (Element_node, a_fingerprint, "ITEM")
-			create descendants.make (document_element, element_test, False)
-
-			from
-				descendants.start
-				counter := 1
-			until
-				descendants.after
-			loop
-				counter := counter + 1
-				descendants.forth
-			end
-			assert ("Eight descendants", counter = 9)
-
-			-- Test ancestor axis - look for "BOOKLIST" ancestor of "ITEM"
-
-			create ancestors.make (item_element, any_node_test, False)
-
-			ancestors.start
-			ancestors.forth
-			a_node := ancestors.item
-				check
-					ancestor_node_not_void: a_node /= Void
-				end
-			an_element ?= a_node
-				check
-					element_ancestor: an_element /= Void
-				end
-			assert_strings_equal ("BOOKLIST ancestor", "BOOKLIST", an_element.node_name)
-
-			-- Test all_elements
-
-			a_fingerprint := shared_name_pool.fingerprint ("", "CATEGORY")
-			element_list_1 := document.all_elements (a_fingerprint)
-			assert ("Element list not void", element_list_1 /= Void)
-			assert ("Five items", element_list_1.count = 5)
-
-			-- Test preceding axis - find all PI's prior to CATEGORIES element
-
-			categories_element ?= document_element.last_child
-				check
-					categories_element_not_void: categories_element /= Void
-				end
-			create any_pi_test.make (Processing_instruction_node)
-			create preceding.make (categories_element, any_pi_test)
-				check
-					preceding_before: preceding.before
-				end
-			from
-				counter := 1
-				preceding.start
-			until
-				preceding.after
-			loop
-				a_node := preceding.item
-					check
-						preceding_node_not_void: a_node /= Void
-					end
-				a_pi ?= a_node
-					check
-						processing_instruction_node: a_pi /= Void
-					end
-				preceding.forth
-				counter := counter + 1
-			end
-			assert ("Three preceding processing-instructions", counter = 4)
-
-			-- Test following axis - look for elements following the BOOKS element
-
-			create any_element_test.make (Element_node)
-			create following.make (books_element, any_element_test)
-				check
-					following_before: following.before
-				end
-			from
-				counter := 1
-				following.start
-			until
-				following.after
-			loop
-				a_node := following.item
-					check
-						following_node_not_void: a_node /= Void
-					end
-				an_element ?= a_node
-					check
-						element_node: an_element /= Void
-					end
-				following.forth
-				counter := counter + 1
-			end
-			assert ("Six following elements", counter = 7)
-
-			-- Test attributes axis - look for NOTE attribute on CATEGORY element
-
-			a_fingerprint := shared_name_pool.fingerprint ("", "NOTE")
-			an_element := element_list_1.item (2)
-
-			create attribute_test.make (Attribute_node, a_fingerprint, "NODE")
-			create attributes.make (an_element, attribute_test)
-				check
-					attributes_before: attributes.before
-				end
-			attributes.start
-			a_node := attributes.item
-				check
-					attribute_node_not_void: a_node /= Void
-				end
-			an_attribute ?= a_node
-				check
-					attribute_node: an_attribute /= Void
-				end
-
-			assert_strings_equal ("NOTE attribute", "NOTE", an_attribute.node_name)
-			assert_strings_equal ("NOTE attribute value", "Limited Stock", an_attribute.string_value)
-
-			-- Test all_elements - cached result
-
-			a_fingerprint := shared_name_pool.fingerprint ("", "CATEGORY")
-			element_list_2 := document.all_elements (a_fingerprint)
-			assert ("Element list 2 not void", element_list_2 /= Void)
-			assert_equal ("Cached list", element_list_1, element_list_2)
-
 		end
 
 	test_with_namespaces
@@ -296,7 +300,6 @@ feature -- Test
 		local
 			system_id: STRING
 			document: XM_XPATH_TREE_DOCUMENT
-			document_element: XM_XPATH_TREE_ELEMENT
 			a_name: STRING
 		do
 			conformance.set_basic_xslt_processor
@@ -309,10 +312,12 @@ feature -- Test
 
 			-- Test document_element
 
-			document_element ?= document.document_element
-			assert ("Document element not void", document_element /= Void)
-			a_name := document_element.node_name
-			assert_strings_equal ("root name", "BOOKLIST", a_name)
+			if not attached {XM_XPATH_TREE_ELEMENT} document.document_element as document_element then
+				assert ("Document element not void", False)
+			else
+				a_name := document_element.node_name
+				assert_strings_equal ("root name", "BOOKLIST", a_name)
+			end
 		end
 
 	test_document_in_error

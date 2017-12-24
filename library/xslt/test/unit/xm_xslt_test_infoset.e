@@ -58,7 +58,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:/one")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			l_configuration.use_tiny_tree_model (True)
 			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
 			l_transformer := l_transformer_factory.created_transformer
@@ -68,7 +68,7 @@ feature -- Test
 			l_second_output.set_output_to_string
 			create l_result.make (l_second_output, "string:/two")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Files are canonically the same", STRING_.same_string (l_output.last_output, l_second_output.last_output))
 		end
 

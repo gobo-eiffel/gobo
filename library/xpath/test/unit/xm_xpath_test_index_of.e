@@ -5,7 +5,7 @@ note
 		"Test XPath index-of() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("index-of ((10, 20, 30, 40), 35)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -62,20 +62,25 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("index-of ((10, 20, 30, 30, 20, 10), 20)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Two items", evaluated_items /= Void and then evaluated_items.count = 2)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("First position is 2", an_integer_value /= Void and then an_integer_value.value = 2)
-			an_integer_value ?= evaluated_items.item (2)
-			assert ("Second position is 5", an_integer_value /= Void and then an_integer_value.value = 5)
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
+				assert ("an_integer_value_not_void_1", False)
+			else
+				assert ("First position is 2", an_integer_value.value = 2)
+			end
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (2) as an_integer_value then
+				assert ("an_integer_value_not_void_2", False)
+			else
+				assert ("Second position is 5", an_integer_value.value = 5)
+			end
 		end
 
 	test_index_of_three
@@ -83,20 +88,25 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("index-of (('a', 'sport', 'and', 'a', 'pastime'), 'a')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Two items", evaluated_items /= Void and then evaluated_items.count = 2)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("First position is 1", an_integer_value /= Void and then an_integer_value.value = 1)
-			an_integer_value ?= evaluated_items.item (2)
-			assert ("Second position is 4", an_integer_value /= Void and then an_integer_value.value = 4)
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
+				assert ("an_integer_value_not_void_1", False)
+			else
+				assert ("First position is 1", an_integer_value.value = 1)
+			end
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (2) as an_integer_value then
+				assert ("an_integer_value_not_void_2", False)
+			else
+				assert ("Second position is 4", an_integer_value.value = 4)
+			end
 		end
 
 	test_index_of_error
@@ -107,7 +117,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("index-of (('a', 7, 'and', 'a', 'pastime'), 'a')")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert ("Error FOTY0012", STRING_.same_string (an_evaluator.error_value.code, "FOTY0012"))
@@ -121,7 +131,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("index-of (('a', (1,2)/last(), 'and', 'a', 'pastime'), 'a')")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert ("Error XPTY0019", STRING_.same_string (an_evaluator.error_value.code, "XPTY0019"))

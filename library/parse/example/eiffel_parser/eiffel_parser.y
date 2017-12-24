@@ -5,7 +5,7 @@ note
 
 		"Eiffel parsers"
 
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -893,11 +893,8 @@ feature -- Error handling
 
 	report_error (a_message: STRING)
 			-- Print error message.
-		local
-			f_buffer: YY_FILE_BUFFER
 		do
-			f_buffer ?= input_buffer
-			if f_buffer /= Void then
+			if attached {YY_FILE_BUFFER} input_buffer as f_buffer then
 				std.error.put_string (f_buffer.file.name)
 				std.error.put_string (", line ")
 			else

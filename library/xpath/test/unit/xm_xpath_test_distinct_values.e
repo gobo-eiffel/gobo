@@ -5,7 +5,7 @@ note
 		"Test XPath distinct-values() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,26 +58,30 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("distinct-values((1, 2.0, 3, 2))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Three distinct values", evaluated_items /= Void and then evaluated_items.count = 3)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("First value is integer", an_integer_value /= Void)
-			assert ("First value is one", an_integer_value.value = 1)
-			a_decimal_value ?= evaluated_items.item (2)
-			assert ("Second value is decimal", a_decimal_value /= Void)
-			assert ("Second value is two", a_decimal_value.value.is_equal (two))
-			an_integer_value ?= evaluated_items.item (3)
-			assert ("Third value is integer", an_integer_value /= Void)
-			assert ("Third value is three", an_integer_value.value = 3)
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
+				assert ("First value is integer", False)
+			else
+				assert ("First value is one", an_integer_value.value = 1)
+			end
+			if not attached {XM_XPATH_DECIMAL_VALUE} evaluated_items.item (2) as a_decimal_value then
+				assert ("Second value is decimal", False)
+			else
+				assert ("Second value is two", a_decimal_value.value.is_equal (two))
+			end
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (3) as an_integer_value then
+				assert ("Third value is integer", False)
+			else
+				assert ("Third value is three", an_integer_value.value = 3)
+			end
 		end
 
 	set_up

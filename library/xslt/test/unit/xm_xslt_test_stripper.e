@@ -60,7 +60,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "stdout:")
 			l_transformer.transform (l_second_uri_source, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			create l_test_file.make (strip_out_filename)
 			assert ("Test file exists", l_test_file /= Void)
 			l_test_file.open_read

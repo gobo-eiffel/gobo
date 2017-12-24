@@ -5,7 +5,7 @@ note
 		"Group element"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2005, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2017, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,13 +50,10 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize current Group
 		local
-			a_xml_element: XM_ELEMENT
-			a_description_element: XM_ELEMENT
+			a_description_element: detachable XM_ELEMENT
 		do
-			a_xml_element := xml_element
-
 				-- description:
-			a_description_element := a_xml_element.element_by_name (Description_element_name)
+			a_description_element := xml_element.element_by_name (Description_element_name)
 			if a_description_element /= Void then
 				set_description (a_description_element.text)
 			else
@@ -75,18 +72,17 @@ feature -- Access
 	description: STRING
 			-- Description of Current
 
-	parent: GEANT_GROUP
+	parent: detachable GEANT_GROUP
 			-- Parent group
 
-	associated_target: GEANT_TARGET
+	associated_target: detachable GEANT_TARGET
 			-- Associated target
 		do
-			Result ?= parent
-			if Result = Void and parent /= Void then
-				Result := parent.associated_target
+			if attached {GEANT_TARGET} parent as l_target_parent then
+				Result := l_target_parent
+			elseif attached parent as l_parent then
+				Result := l_parent.associated_target
 			end
-		ensure
-			target_not_void: Result /= Void
 		end
 
 feature -- Setting
@@ -103,8 +99,6 @@ feature -- Setting
 
 	set_parent (a_parent: like parent)
 			-- Set `parent' to `a_parent'.
-		require
-			a_parent_not_void: a_parent /= Void
 		do
 			parent := a_parent
 		ensure
@@ -164,7 +158,6 @@ feature {NONE} -- Execution implementation
 	execute_nested_tasks
 			-- Process all elements from `xml_element'
 		local
-			l_xml_element: XM_ELEMENT
 			cs: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
 			cs := xml_element.new_cursor
@@ -173,8 +166,7 @@ feature {NONE} -- Execution implementation
 			until
 				cs.after or not is_enabled
 			loop
-				l_xml_element ?= cs.item
-				if l_xml_element /= Void then
+				if attached {XM_ELEMENT} cs.item as l_xml_element then
 					if STRING_.same_string (l_xml_element.name, Group_element_name) then
 						execute_group_element (l_xml_element)
 					else
@@ -276,5 +268,9 @@ feature {NONE} -- Constants
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
 		end
+
+invariant
+
+	description_not_void: description /= Void
 
 end

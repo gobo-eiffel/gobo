@@ -5,7 +5,7 @@ note
 		"Test XPath QName functions."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ feature -- Test
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("resolve-QName('hello', /*[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -68,7 +68,7 @@ feature -- Test
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("resolve-QName('eg:myFunc', /*[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -87,7 +87,7 @@ feature -- Test
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("QName('http://www.example.com/example', 'ht:person')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -106,7 +106,7 @@ feature -- Test
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("QName('http://www.example.com/example', 'person')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -125,7 +125,7 @@ feature -- Test
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("namespace-uri-from-QName(QName('http://www.example.com/example', 'person'))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -142,7 +142,7 @@ feature -- Test
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("local-name-from-QName(QName('http://www.example.com/example', 'person'))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -159,7 +159,7 @@ feature -- Test
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("prefix-from-QName(QName('http://www.example.com/example', 'person'))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -174,7 +174,7 @@ feature -- Test
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("prefix-from-QName(QName('http://www.example.com/example', 'people:person'))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items

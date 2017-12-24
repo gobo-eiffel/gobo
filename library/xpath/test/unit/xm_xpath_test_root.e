@@ -5,7 +5,7 @@ note
 		"Test XPath root() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,19 +46,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_document: XM_XPATH_DOCUMENT
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/*/para[1]/root()")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_document ?= evaluated_items.item (1)
-			assert ("Document", a_document /= Void)
-			assert ("Same node", a_document = an_evaluator.document)
+			if not attached {XM_XPATH_DOCUMENT} evaluated_items.item (1) as a_document then
+				assert ("Document", False)
+			else
+				assert ("Same node", a_document = an_evaluator.document)
+			end
 		end
 
 	test_root_two
@@ -66,19 +67,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_document: XM_XPATH_DOCUMENT
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("root(*/para[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_document ?= evaluated_items.item (1)
-			assert ("Document", a_document /= Void)
-			assert ("Same node", a_document = an_evaluator.document)
+			if not attached {XM_XPATH_DOCUMENT} evaluated_items.item (1) as a_document then
+				assert ("Document", False)
+			else
+				assert ("Same node", a_document = an_evaluator.document)
+			end
 		end
 
 	set_up

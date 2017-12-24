@@ -5,7 +5,7 @@ note
 		"Test XPath base-uri() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,18 +89,19 @@ feature -- Tests
 			-- Test fn:base-uri().
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri()")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_case_insensitive_equal ("Correct base-URI", document_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_case_insensitive_equal ("Correct base-URI", document_uri, a_uri.string_value)
+			end
 		end
 
 	test_context_item_not_a_node
@@ -111,7 +112,7 @@ feature -- Tests
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("(1,2,3)[base-uri() eq 'fred']")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert_strings_equal ("Error FORG0006", "FORG0006", an_evaluator.error_value.code)
@@ -125,7 +126,7 @@ feature -- Tests
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("Empty sequence",  an_evaluator.evaluated_items.count = 0)
@@ -139,7 +140,7 @@ feature -- Tests
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("Empty sequence",  an_evaluator.evaluated_items.count = 0)
@@ -149,180 +150,190 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
+			end
 		end
 
 	test_element_with_xml_base_tiny_tree
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
+			end
 		end
 
 	test_element
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			end
 		end
 
 	test_element_tiny_tree
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			end
 		end
 
 	test_nested_element
 			-- Test fn:base-uri(/*[1]/*[2]/nested-element).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/nested-element)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", xml_base_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_equal ("Correct base-URI", xml_base_uri, a_uri.string_value)
+			end
 		end
 
 	test_nested_element_tiny_tree
 			-- Test fn:base-uri(/*[1]/*[2]/nested-element).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/nested-element)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", xml_base_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_equal ("Correct base-URI", xml_base_uri, a_uri.string_value)
+			end
 		end
 
 	test_pi_child_of_element_with_xml_base
 			-- Test fn:base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction())")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
+			end
 		end
 
 	test_pi_child_of_element_with_xml_base_tiny_tree
 			-- Test fn:base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction())")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
+			end
 		end
 
 	test_pi_at_top_level
 			-- Test fn:base-uri(/*[1]/*[1]/processing-instruction()[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/processing-instruction()[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			end
 		end
 
 	test_pi_at_top_level_tiny_tree
 			-- Test fn:base-uri(/*[1]/*[1]/processing-instruction()[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/processing-instruction()[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			a_uri ?= an_evaluator.evaluated_items.item (1)
-			assert ("AnyURI value", a_uri /= Void)
-			assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+				assert ("AnyURI value", False)
+			else
+				assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
+			end
 		end
 
 	set_up

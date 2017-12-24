@@ -5,7 +5,7 @@ note
 		"Test xpointer evaluation for the XPath implementation"
 
 	library: "Gobo Eiffel XPointer Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,9 +44,7 @@ feature -- Test
 			a_processor: XM_XPATH_XPOINTER
 			a_document: XM_XPATH_DOCUMENT
 			system_id: STRING
-			a_node_value: XM_XPATH_SINGLETON_NODE
 			a_node: XM_XPATH_NODE
-			an_element: XM_XPATH_ELEMENT
 		do
 			conformance.set_basic_xslt_processor
 			system_id := books_xml_uri.full_reference
@@ -58,13 +56,18 @@ feature -- Test
 			create a_processor.make (False)
 			a_processor.evaluate ("S", a_document)
 			assert ("Evaluated without error", a_processor.value /= Void and then not a_processor.value.is_error)
-			a_node_value ?= a_processor.value
-			assert ("Singleton node", a_node_value /= Void)
-			a_node := a_node_value.node
-			assert ("One element", a_node /= Void and then a_node.node_type = Element_node)
-			an_element ?= a_node
-			assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
-			assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+			if not attached {XM_XPATH_SINGLETON_NODE} a_processor.value as a_node_value then
+				assert ("Singleton node", False)
+			else
+				a_node := a_node_value.node
+				assert ("One element", a_node /= Void and then a_node.node_type = Element_node)
+				if not attached {XM_XPATH_ELEMENT} a_node as an_element then
+					assert ("an_element_not_void" , False)
+				else
+					assert ("Category element", STRING_.same_string (an_element.local_part, "CATEGORY"))
+					assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+				end
+			end
 		end
 
 	test_element_scheme
@@ -73,9 +76,7 @@ feature -- Test
 			a_processor: XM_XPATH_XPOINTER
 			a_document: XM_XPATH_DOCUMENT
 			system_id: STRING
-			a_node_value: XM_XPATH_SINGLETON_NODE
 			a_node: XM_XPATH_NODE
-			an_element: XM_XPATH_ELEMENT
 			an_element_scheme: XM_XPATH_XPOINTER_ELEMENT_SCHEME
 			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 		do
@@ -93,23 +94,26 @@ feature -- Test
 			a_processor.register_scheme (an_xmlns_scheme)
 			a_processor.evaluate ("xmlns(fred = urn:fred:jane) element(/1/2/1)", a_document)
 			assert ("Evaluated without error", a_processor.value /= Void and then not a_processor.value.is_error)
-			a_node_value ?= a_processor.value
-			assert ("Singleton node", a_node_value /= Void)
-			a_node := a_node_value.node
-			assert ("One element", a_node /= Void and then a_node.node_type = Element_node)
-			an_element ?= a_node
-			assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
-			assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+			if not attached {XM_XPATH_SINGLETON_NODE} a_processor.value as a_node_value then
+				assert ("Singleton node", False)
+			else
+				a_node := a_node_value.node
+				assert ("One element", a_node /= Void and then a_node.node_type = Element_node)
+				if not attached {XM_XPATH_ELEMENT} a_node as an_element then
+					assert ("an_element_not_void" , False)
+				else
+					assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
+					assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+				end
+			end
 		end
 
 	test_gexslt_xpath_scheme
 			-- Test gexslt:xpath() scheme.
-			local
+		local
 			a_processor: XM_XPATH_XPOINTER
 			a_document: XM_XPATH_DOCUMENT
 			system_id: STRING
-			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			an_element: XM_XPATH_ELEMENT
 			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
 			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 		do
@@ -127,12 +131,17 @@ feature -- Test
 			a_processor.register_scheme (an_xmlns_scheme)
 			a_processor.evaluate ("xmlns(gexslt = " + Gexslt_eiffel_type_uri + ") gexslt:xpath(/BOOKLIST/CATEGORIES/CATEGORY[1])", a_document)
 			assert ("Evaluated without error", a_processor.value /= Void and then not a_processor.value.is_error)
-			a_sequence_extent ?= a_processor.value
-			assert ("Sequence_extent", a_sequence_extent /= Void)
-			assert ("One item", a_sequence_extent.count = 1)
-			an_element ?= a_sequence_extent.item_at (1)
-			assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
-			assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+			if not attached {XM_XPATH_SEQUENCE_EXTENT} a_processor.value as a_sequence_extent then
+				assert ("Sequence_extent", False)
+			else
+				assert ("One item", a_sequence_extent.count = 1)
+				if not attached {XM_XPATH_ELEMENT} a_sequence_extent.item_at (1) as an_element then
+					assert ("an_element_not_void" , False)
+				else
+					assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
+					assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+				end
+			end
 		end
 
 	test_xpath_scheme
@@ -141,8 +150,6 @@ feature -- Test
 			a_processor: XM_XPATH_XPOINTER
 			a_document: XM_XPATH_DOCUMENT
 			system_id: STRING
-			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			an_element: XM_XPATH_ELEMENT
 			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
 			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 		do
@@ -160,12 +167,18 @@ feature -- Test
 			a_processor.register_scheme (an_xmlns_scheme)
 			a_processor.evaluate ("xpath2(/BOOKLIST/CATEGORIES/CATEGORY[1])", a_document)
 			assert ("Evaluated without error", a_processor.value /= Void and then not a_processor.value.is_error)
-			a_sequence_extent ?= a_processor.value
-			assert ("Sequence_extent", a_sequence_extent /= Void)
-			assert ("One item", a_sequence_extent.count = 1)
-			an_element ?= a_sequence_extent.item_at (1)
-			assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
-			assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+			if not attached {XM_XPATH_SEQUENCE_EXTENT} a_processor.value as a_sequence_extent then
+				assert ("Sequence_extent", False)
+			else
+				assert ("Sequence_extent", a_sequence_extent /= Void)
+				assert ("One item", a_sequence_extent.count = 1)
+				if not attached {XM_XPATH_ELEMENT} a_sequence_extent.item_at (1) as an_element then
+					assert ("an_element_not_void" , False)
+				else
+					assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
+					assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

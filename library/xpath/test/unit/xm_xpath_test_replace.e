@@ -5,7 +5,7 @@ note
 		"Test XPath replace() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,19 +46,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("replace('abracadabra', 'bra', '*')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "a*cada*"))
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert ("Correct result", STRING_.same_string (a_string_value.string_value, "a*cada*"))
+			end
 		end
 
 	test_replace_two
@@ -66,19 +67,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("replace('abracadabra', 'a.*a', '*')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert ("Star", STRING_.same_string (a_string_value.string_value, "*"))
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert ("Star", STRING_.same_string (a_string_value.string_value, "*"))
+			end
 		end
 
 	test_replace_three
@@ -86,19 +88,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("replace('abracadabra', 'a.*?a', '*')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "*c*bra"))
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert ("Correct result", STRING_.same_string (a_string_value.string_value, "*c*bra"))
+			end
 		end
 
 	test_replace_four
@@ -106,19 +109,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("replace('abracadabra', 'a', '')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "brcdbr"))
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert ("Correct result", STRING_.same_string (a_string_value.string_value, "brcdbr"))
+			end
 		end
 
 	test_replace_five
@@ -126,19 +130,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("replace('abracadabra', 'a(.)', 'a$1$1')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "abbraccaddabbra"))
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert ("Correct result", STRING_.same_string (a_string_value.string_value, "abbraccaddabbra"))
+			end
 		end
 
 	test_replace_six
@@ -149,7 +154,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("replace('abracadabra', '.*?', '$1')")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert ("Error FORX0003", STRING_.same_string (an_evaluator.error_value.code, "FORX0003"))
@@ -160,19 +165,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("replace('AAAA', 'A+', 'b')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "b"))
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert ("Correct result", STRING_.same_string (a_string_value.string_value, "b"))
+			end
 		end
 
 	test_replace_eight
@@ -180,19 +186,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("replace('AAAA', 'A+?', 'b')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "bbbb"))
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert ("Correct result", STRING_.same_string (a_string_value.string_value, "bbbb"))
+			end
 		end
 
 	test_replace_nine
@@ -200,19 +207,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("replace('darted', '^(.*?)d(.*)$', '$1c$2')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "carted"))
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert ("Correct result", STRING_.same_string (a_string_value.string_value, "carted"))
+			end
 		end
 
 	set_up

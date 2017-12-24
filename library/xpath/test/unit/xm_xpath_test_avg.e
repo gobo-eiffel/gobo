@@ -5,7 +5,7 @@ note
 		"Test XPath statistical functions avg(), count(), sum(), min(), max()."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,19 +56,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("avg((3, 4, 5))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_decimal_value ?= evaluated_items.item (1)
-			assert ("Decimal value", a_decimal_value /= Void)
-			assert ("Result is four", a_decimal_value.value.is_equal (four))
+			if not attached {XM_XPATH_DECIMAL_VALUE} evaluated_items.item (1) as a_decimal_value then
+				assert ("Decimal value", False)
+			else
+				assert ("Result is four", a_decimal_value.value.is_equal (four))
+			end
 		end
 
 	test_avg_empty
@@ -80,7 +81,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("avg(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -92,18 +93,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_double_value: XM_XPATH_DOUBLE_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("avg((xs:double ('INF'), xs:double ('-INF')))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_double_value ?= an_evaluator.evaluated_items.item (1)
-			assert ("NaN", a_double_value /= Void and then a_double_value.is_nan)
+			if not attached {XM_XPATH_DOUBLE_VALUE} an_evaluator.evaluated_items.item (1) as a_double_value then
+				assert ("a_double_value_not_void", False)
+			else
+				assert ("NaN", a_double_value.is_nan)
+			end
 		end
 
 	test_avg_error
@@ -114,7 +117,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("avg(('a', 5))")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
@@ -128,7 +131,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("avg(((3, 4, 5), xs:yearMonthDuration('P10M')))")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
@@ -139,19 +142,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_ymd: XM_XPATH_MONTHS_DURATION_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("avg((xs:yearMonthDuration('P20Y'), xs:yearMonthDuration('P10M')))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_ymd ?= evaluated_items.item (1)
-			assert ("YearMonthDuration value", a_ymd /= Void)
-			assert ("125 Months", a_ymd.months = 125)
+			if not attached {XM_XPATH_MONTHS_DURATION_VALUE} evaluated_items.item (1) as a_ymd then
+				assert ("YearMonthDuration value", False)
+			else
+				assert ("125 Months", a_ymd.months = 125)
+			end
 		end
 
 	test_sum_one
@@ -159,19 +163,21 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("sum((3, 4, 5))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("Integer value", an_integer_value /= Void and then an_integer_value.is_platform_integer)
-			assert ("Result is 12", an_integer_value.as_integer = 12)
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
+				assert ("an_integer_value_not_void", False)
+			else
+				assert ("Integer value", an_integer_value.is_platform_integer)
+				assert ("Result is 12", an_integer_value.as_integer = 12)
+			end
 		end
 
 	test_sum_empty_is_zero
@@ -179,19 +185,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("sum(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One item", evaluated_items /= Void and then evaluated_items.count = 1)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("Integer value", an_integer_value /= Void)
-			assert ("Result is 0", an_integer_value.is_zero)
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
+				assert ("Integer value", False)
+			else
+				assert ("Result is 0", an_integer_value.is_zero)
+			end
 		end
 
 	test_sum_empty
@@ -203,7 +210,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("sum((), ())")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -215,19 +222,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("sum((1 to 100)[.<0], 0)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One item", evaluated_items /= Void and then evaluated_items.count = 1)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("Integer value", an_integer_value /= Void)
-			assert ("Result is 0", an_integer_value.is_zero)
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
+				assert ("Integer value", False)
+			else
+				assert ("Result is 0", an_integer_value.is_zero)
+			end
 		end
 
 	test_sum_year_month
@@ -235,19 +243,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_ymd: XM_XPATH_MONTHS_DURATION_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("sum((xs:yearMonthDuration('P20Y'), xs:yearMonthDuration('P10M')))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_ymd ?= evaluated_items.item (1)
-			assert ("YearMonthDuration value", a_ymd /= Void)
-			assert ("250 Months", a_ymd.months = 250)
+			if not attached {XM_XPATH_MONTHS_DURATION_VALUE} evaluated_items.item (1) as a_ymd then
+				assert ("YearMonthDuration value", False)
+			else
+				assert ("250 Months", a_ymd.months = 250)
+			end
 		end
 
 	test_mixed_sum_error
@@ -258,7 +267,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("sum((xs:yearMonthDuration('P20Y'), 9E1))")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
@@ -269,19 +278,21 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("max((3, 4, 5))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("Integer value", an_integer_value /= Void and then an_integer_value.is_platform_integer)
-			assert ("Result is 5", an_integer_value.as_integer = 5)
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
+				assert ("an_integer_value_not_void", False)
+			else
+				assert ("Integer value", an_integer_value.is_platform_integer)
+				assert ("Result is 5", an_integer_value.as_integer = 5)
+			end
 		end
 
 	test_max_mixed_numeric
@@ -289,19 +300,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_double_value: XM_XPATH_DOUBLE_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("max((5, 5.0e0))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_double_value ?= evaluated_items.item (1)
-			assert ("Double value", a_double_value /= Void)
-			assert ("Result is 5.0", a_double_value.as_double = 5.0)
+			if not attached {XM_XPATH_DOUBLE_VALUE} evaluated_items.item (1) as a_double_value then
+				assert ("Double value", False)
+			else
+				assert ("Result is 5.0", a_double_value.as_double = 5.0)
+			end
 		end
 
 	test_mixed_max_error
@@ -312,7 +324,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("max((3,4,'Zero'))")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
@@ -325,12 +337,11 @@ feature -- Test
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_duration: DT_TIME_DURATION
-			a_dt: XM_XPATH_DATE_TIME_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			create a_duration.make (-5, 0, 0)
 			create a_time_zone.make (a_duration)
 			an_evaluator.set_implicit_timezone (a_time_zone)
@@ -338,9 +349,12 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_dt ?= evaluated_items.item (1)
-			assert ("Zoneless dateTime value", a_dt /= Void and then not a_dt.zoned)
-			assert ("Local hour is 0", a_dt.local_date_time.time.hour = 0)
+			if not attached {XM_XPATH_DATE_TIME_VALUE} evaluated_items.item (1) as a_dt then
+				assert ("a_dt_not_void", False)
+			else
+				assert ("Zoneless dateTime value", not a_dt.zoned)
+				assert ("Local hour is 0", a_dt.local_date_time.time.hour = 0)
+			end
 		end
 
 	test_max_strings
@@ -348,19 +362,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("max(('a', 'b', 'c'))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert_strings_equal ("Result is c", "c", a_string_value.string_value)
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert_strings_equal ("Result is c", "c", a_string_value.string_value)
+			end
 		end
 
 	test_min_one
@@ -368,19 +383,21 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("min((3, 4, 5))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			an_integer_value ?= evaluated_items.item (1)
-			assert ("Integer value", an_integer_value /= Void and then an_integer_value.is_platform_integer)
-			assert ("Result is 5", an_integer_value.as_integer = 3)
+			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
+				assert ("an_integer_value_not_void", False)
+			else
+				assert ("Integer value", an_integer_value.is_platform_integer)
+				assert ("Result is 5", an_integer_value.as_integer = 3)
+			end
 		end
 
 	test_min_mixed_numeric
@@ -388,19 +405,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_double_value: XM_XPATH_DOUBLE_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("min((5, 5.0e0))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_double_value ?= evaluated_items.item (1)
-			assert ("Double value", a_double_value /= Void)
-			assert ("Result is 5.0", a_double_value.as_double = 5.0)
+			if not attached {XM_XPATH_DOUBLE_VALUE} evaluated_items.item (1) as a_double_value then
+				assert ("Double value", False)
+			else
+				assert ("Result is 5.0", a_double_value.as_double = 5.0)
+			end
 		end
 
 	test_mixed_min_error
@@ -411,7 +429,7 @@ feature -- Test
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("min((3,4,'Zero'))")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert_strings_equal ("FORG0006", "FORG0006", an_evaluator.error_value.code)
@@ -424,12 +442,11 @@ feature -- Test
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_duration: DT_TIME_DURATION
-			a_dt: XM_XPATH_DATE_TIME_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			create a_duration.make (-5, 0, 0)
 			create a_time_zone.make (a_duration)
 			an_evaluator.set_implicit_timezone (a_time_zone)
@@ -437,9 +454,12 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_dt ?= evaluated_items.item (1)
-			assert ("Zoned dateTime value", a_dt /= Void and then a_dt.zoned)
-			assert ("Local hour is 4", a_dt.zoned_date_time.date_time.hour = 4)
+			if not attached {XM_XPATH_DATE_TIME_VALUE} evaluated_items.item (1) as a_dt then
+				assert ("a_dt_not_void", False)
+			else
+				assert ("Zoned dateTime value", a_dt.zoned)
+				assert ("Local hour is 4", a_dt.zoned_date_time.date_time.hour = 4)
+			end
 		end
 
 	test_min_strings
@@ -447,19 +467,20 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("min(('a', 'b', 'c'))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
-			a_string_value ?= evaluated_items.item (1)
-			assert ("String value", a_string_value /= Void)
-			assert_strings_equal ("Result is a", "a", a_string_value.string_value)
+			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
+				assert ("String value", False)
+			else
+				assert_strings_equal ("Result is a", "a", a_string_value.string_value)
+			end
 		end
 
 	set_up

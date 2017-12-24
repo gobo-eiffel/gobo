@@ -5,7 +5,7 @@ note
 		"xsl:transform or xsl:stylesheet element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -393,7 +393,7 @@ feature -- Status report
 		end
 
 	executable: XM_XSLT_EXECUTABLE
-			-- Result of successfull call to `compile_stylesheet'
+			-- Result of successful call to `compile_stylesheet'
 
 feature -- Status setting
 

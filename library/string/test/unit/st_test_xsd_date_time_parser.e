@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2008, Colin Adams and others"
+	copyright: "Copyright (c) 2008-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -94,7 +94,6 @@ feature -- Test
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
 			a_parser: ST_XSD_DATE_TIME_PARSER
-			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
 			assert ("24th March 2000 UTC", a_parser.is_zoned_date ("2000-03-24Z"))
@@ -104,21 +103,27 @@ feature -- Test
 			assert ("24th March 2000 +00:00 is UTC", a_parser.is_zoned_date ("2000-03-24+00:00"))
 			d1 := a_parser.string_to_zoned_date ("2000-03-24+00:00")
 			assert ("Date is 24th March 2000 UTC 2", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("24th March 2000 -00:00 is UTC", a_parser.is_zoned_date ("2000-03-24-00:00"))
 			d1 := a_parser.string_to_zoned_date ("2000-03-24-00:00")
 			assert ("Date is 24th March 2000 UTC 3", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 2", a_time_zone /= Void)
-			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
-			assert ("24th March 2000 -01:30", a_parser.is_zoned_date ("2000-03-24-01:30"))
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 2", False)
+			else
+				assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
+				assert ("24th March 2000 -01:30", a_parser.is_zoned_date ("2000-03-24-01:30"))
 			d1 := a_parser.string_to_zoned_date ("2000-03-24-01:30")
 			assert ("Date is 24th March - 1.5 hours", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 3", False)
+			else
+				assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			end
 			assert ("Duplicate time zone", not a_parser.is_zoned_date ("2000-03-24+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_date ("2000-03-24 +00:00"))
 			create a_parser.make_1_1
@@ -129,21 +134,27 @@ feature -- Test
 			assert ("24th March 2000 +00:00 is UTC", a_parser.is_zoned_date ("2000-03-24+00:00"))
 			d1 := a_parser.string_to_zoned_date ("2000-03-24+00:00")
 			assert ("Date is 24th March 2000 UTC 2", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("24th March 2000 -00:00 is UTC", a_parser.is_zoned_date ("2000-03-24-00:00"))
 			d1 := a_parser.string_to_zoned_date ("2000-03-24-00:00")
 			assert ("Date is 24th March 2000 UTC 3", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 2", a_time_zone /= Void)
-			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 2", False)
+			else
+				assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("24th March 2000 -01:30", a_parser.is_zoned_date ("2000-03-24-01:30"))
 			d1 := a_parser.string_to_zoned_date ("2000-03-24-01:30")
 			assert ("Date is 24th March - 1.5 hours", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 3", False)
+			else
+				assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			end
 			assert ("Duplicate time zone", not a_parser.is_zoned_date ("2000-03-24+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_date ("2000-03-24 +00:00"))
 		end
@@ -208,7 +219,6 @@ feature -- Test
 		local
 			t1: DT_FIXED_OFFSET_ZONED_TIME
 			a_parser: ST_XSD_DATE_TIME_PARSER
-			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
 			assert ("01:54 UTC", a_parser.is_zoned_time ("01:54:00Z"))
@@ -219,16 +229,20 @@ feature -- Test
 			t1 := a_parser.string_to_zoned_time ("01:54:00.00003+00:00")
 			assert ("Time is 01:54 UTC 2",t1.time.hour = 1 and then t1.time.minute = 54 and then t1.time.second = 0
 				and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
-			a_time_zone ?= t1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} t1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("01:54 -00:00 is UTC", a_parser.is_zoned_time ("01:54:00.00-00:00"))
 			t1 := a_parser.string_to_zoned_time ("01:54:00.00-00:00")
 			assert ("Time is 01:54 UTC 3",t1.time.hour = 1 and then t1.time.minute = 54 and then t1.time.second = 0
 				and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
-			a_time_zone ?= t1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} t1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			create a_parser.make_1_1
 			assert ("01:54 UTC", a_parser.is_zoned_time ("01:54:00Z"))
 			t1 := a_parser.string_to_zoned_time ("01:54:00Z")
@@ -238,16 +252,20 @@ feature -- Test
 			t1 := a_parser.string_to_zoned_time ("01:54:00.00003+00:00")
 			assert ("Time is 01:54 UTC 2",t1.time.hour = 1 and then t1.time.minute = 54 and then t1.time.second = 0
 					  and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
-			a_time_zone ?= t1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} t1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("01:54 -00:00 is UTC", a_parser.is_zoned_time ("01:54:00.00-00:00"))
 			t1 := a_parser.string_to_zoned_time ("01:54:00.00-00:00")
 			assert ("Time is 01:54 UTC 3",t1.time.hour = 1 and then t1.time.minute = 54 and then t1.time.second = 0
 					  and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
-			a_time_zone ?= t1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} t1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 		end
 
 	test_string_to_date_time
@@ -579,7 +597,6 @@ feature -- Test
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
 			a_parser: ST_XSD_DATE_TIME_PARSER
-			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
 			assert ("March 2000 UTC", a_parser.is_zoned_year_month ("2000-03Z"))
@@ -589,21 +606,27 @@ feature -- Test
 			assert ("March 2000 +00:00 is UTC", a_parser.is_zoned_year_month ("2000-03+00:00"))
 			d1 := a_parser.string_to_zoned_year_month ("2000-03+00:00")
 			assert ("Date is March 2000 UTC 2", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("March 2000 -00:00 is UTC", a_parser.is_zoned_year_month ("2000-03-00:00"))
 			d1 := a_parser.string_to_zoned_year_month ("2000-03-00:00")
 			assert ("Date is March 2000 UTC 3", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 2", a_time_zone /= Void)
-			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 2", False)
+			else
+				assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("March 2000 -01:30", a_parser.is_zoned_year_month ("2000-03-01:30"))
 			d1 := a_parser.string_to_zoned_year_month ("2000-03-01:30")
 			assert ("Date is March - 1.5 hours", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 3", False)
+			else
+				assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			end
 			assert ("Duplicate time zone", not a_parser.is_zoned_year_month ("2000-03+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_year_month ("2000-03 +00:00"))
 			create a_parser.make_1_1
@@ -614,21 +637,27 @@ feature -- Test
 			assert ("March 2000 +00:00 is UTC", a_parser.is_zoned_year_month ("2000-03+00:00"))
 			d1 := a_parser.string_to_zoned_year_month ("2000-03+00:00")
 			assert ("Date is March 2000 UTC 2", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("March 2000 -00:00 is UTC", a_parser.is_zoned_year_month ("2000-03-00:00"))
 			d1 := a_parser.string_to_zoned_year_month ("2000-03-00:00")
 			assert ("Date is March 2000 UTC 3", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 2", a_time_zone /= Void)
-			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 2", False)
+			else
+				assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("March 2000 -01:30", a_parser.is_zoned_year_month ("2000-03-01:30"))
 			d1 := a_parser.string_to_zoned_year_month ("2000-03-01:30")
 			assert ("Date is March - 1.5 hours", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 3", False)
+			else
+				assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			end
 			assert ("Duplicate time zone", not a_parser.is_zoned_year_month ("2000-03+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_year_month ("2000-03 +00:00"))
 		end
@@ -688,7 +717,6 @@ feature -- Test
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
 			a_parser: ST_XSD_DATE_TIME_PARSER
-			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
 			assert ("2000 UTC", a_parser.is_zoned_year ("2000Z"))
@@ -698,21 +726,27 @@ feature -- Test
 			assert ("Year 2000 +00:00 is UTC", a_parser.is_zoned_year ("2000+00:00"))
 			d1 := a_parser.string_to_zoned_year ("2000+00:00")
 			assert ("Date is2000 UTC 2", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("Year 2000 -00:00 is UTC", a_parser.is_zoned_year ("2000-00:00"))
 			d1 := a_parser.string_to_zoned_year ("2000-00:00")
 			assert ("Date is 2000 UTC 3", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 2", a_time_zone /= Void)
-			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 2", False)
+			else
+				assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("Year 2000 -01:30", a_parser.is_zoned_year ("2000-01:30"))
 			d1 := a_parser.string_to_zoned_year ("2000-01:30")
 			assert ("Date is - 1.5 hours", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 3", False)
+			else
+				assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			end
 			assert ("Duplicate time zone", not a_parser.is_zoned_year ("2000+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_year ("2000 +00:00"))
 			create a_parser.make_1_1
@@ -723,21 +757,27 @@ feature -- Test
 			assert ("Year 2000 +00:00 is UTC", a_parser.is_zoned_year ("2000+00:00"))
 			d1 := a_parser.string_to_zoned_year ("2000+00:00")
 			assert ("Date is2000 UTC 2", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("Year 2000 -00:00 is UTC", a_parser.is_zoned_year ("2000-00:00"))
 			d1 := a_parser.string_to_zoned_year ("2000-00:00")
 			assert ("Date is 2000 UTC 3", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 2", a_time_zone /= Void)
-			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 2", False)
+			else
+				assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
+			end
 			assert ("Year 2000 -01:30", a_parser.is_zoned_year ("2000-01:30"))
 			d1 := a_parser.string_to_zoned_year ("2000-01:30")
 			assert ("Date is - 1.5 hours", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset 3", a_time_zone /= Void)
-			assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset 3", False)
+			else
+				assert ("-01:30", a_time_zone.fixed_offset.hour = -1 and then a_time_zone.fixed_offset.minute = -30)
+			end
 			assert ("Duplicate time zone", not a_parser.is_zoned_year ("2000+00:00Z"))
 			assert ("Space before time zone", not a_parser.is_zoned_year ("2000 +00:00"))
 		end
@@ -765,7 +805,6 @@ feature -- Test
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
 			a_parser: ST_XSD_DATE_TIME_PARSER
-			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
 			assert ("21st March UTC", a_parser.is_zoned_month_day ("--03-21Z"))
@@ -775,9 +814,11 @@ feature -- Test
 			assert ("21st March +05:00", a_parser.is_zoned_month_day ("--03-21+05:00"))
 			d1 := a_parser.string_to_zoned_month_day ("--03-21+05:00")
 			assert ("day of month is 21st March", d1.date.year = 1 and then d1.date.month = 3 and then d1.date.day = 21)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			end
 			create a_parser.make_1_1
 			assert ("21st March UTC", a_parser.is_zoned_month_day ("--03-21Z"))
 			d1 := a_parser.string_to_zoned_month_day ("--03-21Z")
@@ -786,9 +827,11 @@ feature -- Test
 			assert ("21st March +05:00", a_parser.is_zoned_month_day ("--03-21+05:00"))
 			d1 := a_parser.string_to_zoned_month_day ("--03-21+05:00")
 			assert ("day of month is 21st March", d1.date.year = 1 and then d1.date.month = 3 and then d1.date.day = 21)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			end
 		end
 
 	test_string_to_day
@@ -812,7 +855,6 @@ feature -- Test
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
 			a_parser: ST_XSD_DATE_TIME_PARSER
-			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
 			assert ("21st UTC", a_parser.is_zoned_day ("---21Z"))
@@ -822,9 +864,11 @@ feature -- Test
 			assert ("21st +05:00", a_parser.is_zoned_day ("---21+05:00"))
 			d1 := a_parser.string_to_zoned_day ("---21+05:00")
 			assert ("Day is 21st", d1.date.year = 1 and then d1.date.month = 1 and then d1.date.day = 21)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			end
 			create a_parser.make_1_1
 			assert ("21st UTC", a_parser.is_zoned_day ("---21Z"))
 			d1 := a_parser.string_to_zoned_day ("---21Z")
@@ -833,9 +877,11 @@ feature -- Test
 			assert ("21st +05:00", a_parser.is_zoned_day ("---21+05:00"))
 			d1 := a_parser.string_to_zoned_day ("---21+05:00")
 			assert ("Day is 21st", d1.date.year = 1 and then d1.date.month = 1 and then d1.date.day = 21)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			end
 		end
 
 	test_string_to_month
@@ -861,7 +907,6 @@ feature -- Test
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
 			a_parser: ST_XSD_DATE_TIME_PARSER
-			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
 			assert ("March UTC", a_parser.is_zoned_month ("--03Z"))
@@ -871,9 +916,11 @@ feature -- Test
 			assert ("March +05:00", a_parser.is_zoned_month ("--03+05:00"))
 			d1 := a_parser.string_to_zoned_month ("--03+05:00")
 			assert ("Month is March", d1.date.year = 1 and then d1.date.month = 3 and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			end
 			create a_parser.make_1_1
 			assert ("March UTC", a_parser.is_zoned_month ("--03Z"))
 			d1 := a_parser.string_to_zoned_month ("--03Z")
@@ -882,9 +929,11 @@ feature -- Test
 			assert ("March +05:00", a_parser.is_zoned_month ("--03+05:00"))
 			d1 := a_parser.string_to_zoned_month ("--03+05:00")
 			assert ("Month is March", d1.date.year = 1 and then d1.date.month = 3 and then d1.date.day = 1)
-			a_time_zone ?= d1.time_zone
-			assert ("Time zone is fixed offset", a_time_zone /= Void)
-			assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			if not attached {DT_FIXED_OFFSET_TIME_ZONE} d1.time_zone as a_time_zone then
+				assert ("Time zone is fixed offset", False)
+			else
+				assert ("Zone is +05:00", a_time_zone.fixed_offset.hour = 5)
+			end
 		end
 
 	test_year_month_to_string

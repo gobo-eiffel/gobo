@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -412,18 +412,19 @@ feature -- Test
 			-- Test feature `item_code'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
 			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1))
 			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2))
 			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3))
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.put_item_code (543, 2)
-			assert_integers_equal ("item_code4", 543, a_string.item_code (2))
-			utf8.put_item_code (134, 2)
-			assert_integers_equal ("item_code5", 134, a_string.item_code (2))
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.put_item_code (543, 2)
+				assert_integers_equal ("item_code4", 543, a_string.item_code (2))
+				utf8.put_item_code (134, 2)
+				assert_integers_equal ("item_code5", 134, a_string.item_code (2))
+			end
 		end
 
 	test_item1
@@ -456,16 +457,17 @@ feature -- Test
 			-- Test feature `item'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
 			assert_characters_equal ("item1", 'b', a_string.item (1))
 			assert_characters_equal ("item2", 'a', a_string.item (2))
 			assert_characters_equal ("item3", 'r', a_string.item (3))
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.put_item_code (too_big_character, 2)
-			assert_characters_equal ("item4", '%U', a_string.item (2))
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.put_item_code (too_big_character, 2)
+				assert_characters_equal ("item4", '%U', a_string.item (2))
+			end
 		end
 
 	test_infix_at1
@@ -498,16 +500,17 @@ feature -- Test
 			-- Test feature `infix "@"'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
 			assert_characters_equal ("item1", 'b', a_string @ 1)
 			assert_characters_equal ("item2", 'a', a_string @ 2)
 			assert_characters_equal ("item3", 'r', a_string @ 3)
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.put_item_code (too_big_character, 2)
-			assert_characters_equal ("item4", '%U', a_string @ 2)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.put_item_code (too_big_character, 2)
+				assert_characters_equal ("item4", '%U', a_string @ 2)
+			end
 		end
 
 	test_put_unicode1
@@ -693,7 +696,7 @@ feature -- Test
 			-- Test feature `substring'.
 		local
 			a_string: STRING
-			utf8, a_string2: UC_UTF8_STRING
+			a_string2: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
 			create a_string2.make_from_string ("bar")
@@ -707,14 +710,16 @@ feature -- Test
 			create {UC_UTF8_STRING} a_string.make_from_string ("")
 			assert_equal ("substring5", a_string2, a_string.substring (1, 0))
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.append_item_code (541)
-			a_string.append_string ("foo")
-			create a_string2.make_from_string ("ar")
-			a_string2.append_item_code (541)
-			a_string2.append_string ("fo")
-			assert_equal ("substring6", a_string2, a_string.substring (2, 6))
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.append_item_code (541)
+				a_string.append_string ("foo")
+				create a_string2.make_from_string ("ar")
+				a_string2.append_item_code (541)
+				a_string2.append_string ("fo")
+				assert_equal ("substring6", a_string2, a_string.substring (2, 6))
+			end
 		end
 
 	test_is_equal
@@ -784,17 +789,18 @@ feature -- Test
 			-- Test feature `out'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
 			assert_equal ("out1", "bar", a_string.out)
 			create {UC_UTF8_STRING} a_string.make_from_string ("")
 			assert_equal ("out2", "", a_string.out)
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.put_item_code (934, 2)
-			assert_equal ("out3", "f%%/934/o", a_string.out)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.put_item_code (934, 2)
+				assert_equal ("out3", "f%%/934/o", a_string.out)
+			end
 		end
 
 	test_to_utf8_1
@@ -1017,7 +1023,7 @@ feature -- Test
 			-- Test feature `append_string'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
+			l_utf8_string: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
 			a_string.append_string ("bar")
@@ -1028,22 +1034,24 @@ feature -- Test
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
 			a_string.append_string ("")
 			assert_equal ("append_string3", "foo", a_string.out)
-			create utf8.make (4)
-			utf8.append_item_code (265)
-			utf8.append_item_code (1021)
-			utf8.append_character ('f')
-			utf8.append_item_code (23456)
-			a_string.append_string (utf8)
+			create l_utf8_string.make (4)
+			l_utf8_string.append_item_code (265)
+			l_utf8_string.append_item_code (1021)
+			l_utf8_string.append_character ('f')
+			l_utf8_string.append_item_code (23456)
+			a_string.append_string (l_utf8_string)
 			assert_equal ("append_string4", "foo%%/265/%%/1021/f%%/23456/", a_string.out)
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
 			a_string.append_string (a_string)
 			assert_equal ("append_string5", "foofoo", a_string.out)
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.put_item_code (888, 2)
-			a_string.append_string (a_string)
-			assert_equal ("append_string6", "b%%/888/rb%%/888/r", a_string.out)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.put_item_code (888, 2)
+				a_string.append_string (a_string)
+				assert_equal ("append_string6", "b%%/888/rb%%/888/r", a_string.out)
+			end
 		end
 
 	test_infix_plus1
@@ -1306,33 +1314,34 @@ feature -- Test
 			-- Test feature `index_of'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.put_item_code (too_big_character, 2)
-			assert_integers_equal ("index_of_b1", 1, a_string.index_of ('b', 1))
-			assert_integers_equal ("index_of_b2", 0, a_string.index_of ('b', 2))
-			assert_integers_equal ("index_of_b3", 0, a_string.index_of ('b', 3))
-			assert_integers_equal ("index_of_b4", 0, a_string.index_of ('b', 4))
-			assert_integers_equal ("index_of_567_1", 2, a_string.index_of ('%U', 1))
-			assert_integers_equal ("index_of_567_2", 2, a_string.index_of ('%U', 2))
-			assert_integers_equal ("index_of_567_3", 0, a_string.index_of ('%U', 3))
-			assert_integers_equal ("index_of_567_4", 0, a_string.index_of ('%U', 4))
-			assert_integers_equal ("index_of_r1", 3, a_string.index_of ('r', 1))
-			assert_integers_equal ("index_of_r2", 3, a_string.index_of ('r', 2))
-			assert_integers_equal ("index_of_r3", 3, a_string.index_of ('r', 3))
-			assert_integers_equal ("index_of_r4", 0, a_string.index_of ('r', 4))
-			assert_integers_equal ("index_of_z1", 0, a_string.index_of ('z', 1))
-			assert_integers_equal ("index_of_z2", 0, a_string.index_of ('z', 2))
-			assert_integers_equal ("index_of_z3", 0, a_string.index_of ('z', 3))
-			assert_integers_equal ("index_of_z4", 0, a_string.index_of ('z', 4))
-			utf8.put_item_code (0, 2)
-			assert_integers_equal ("index_of_null1", 2, a_string.index_of ('%U', 1))
-			assert_integers_equal ("index_of_null2", 2, a_string.index_of ('%U', 2))
-			assert_integers_equal ("index_of_null3", 0, a_string.index_of ('%U', 3))
-			assert_integers_equal ("index_of_null4", 0, a_string.index_of ('%U', 4))
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.put_item_code (too_big_character, 2)
+				assert_integers_equal ("index_of_b1", 1, a_string.index_of ('b', 1))
+				assert_integers_equal ("index_of_b2", 0, a_string.index_of ('b', 2))
+				assert_integers_equal ("index_of_b3", 0, a_string.index_of ('b', 3))
+				assert_integers_equal ("index_of_b4", 0, a_string.index_of ('b', 4))
+				assert_integers_equal ("index_of_567_1", 2, a_string.index_of ('%U', 1))
+				assert_integers_equal ("index_of_567_2", 2, a_string.index_of ('%U', 2))
+				assert_integers_equal ("index_of_567_3", 0, a_string.index_of ('%U', 3))
+				assert_integers_equal ("index_of_567_4", 0, a_string.index_of ('%U', 4))
+				assert_integers_equal ("index_of_r1", 3, a_string.index_of ('r', 1))
+				assert_integers_equal ("index_of_r2", 3, a_string.index_of ('r', 2))
+				assert_integers_equal ("index_of_r3", 3, a_string.index_of ('r', 3))
+				assert_integers_equal ("index_of_r4", 0, a_string.index_of ('r', 4))
+				assert_integers_equal ("index_of_z1", 0, a_string.index_of ('z', 1))
+				assert_integers_equal ("index_of_z2", 0, a_string.index_of ('z', 2))
+				assert_integers_equal ("index_of_z3", 0, a_string.index_of ('z', 3))
+				assert_integers_equal ("index_of_z4", 0, a_string.index_of ('z', 4))
+				utf8.put_item_code (0, 2)
+				assert_integers_equal ("index_of_null1", 2, a_string.index_of ('%U', 1))
+				assert_integers_equal ("index_of_null2", 2, a_string.index_of ('%U', 2))
+				assert_integers_equal ("index_of_null3", 0, a_string.index_of ('%U', 3))
+				assert_integers_equal ("index_of_null4", 0, a_string.index_of ('%U', 4))
+			end
 			create {UC_UTF8_STRING} a_string.make_from_string ("")
 			assert_integers_equal ("index_of_o1", 0, a_string.index_of ('o', 1))
 		end
@@ -1481,17 +1490,18 @@ feature -- Test
 			-- Test feature `has'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.append_item_code (too_big_character)
-			assert ("has_b", a_string.has ('b'))
-			assert ("has_a", a_string.has ('a'))
-			assert ("has_r", a_string.has ('r'))
-			assert ("has_null", a_string.has ('%U'))
-			assert ("not_has_o", not a_string.has ('o'))
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.append_item_code (too_big_character)
+				assert ("has_b", a_string.has ('b'))
+				assert ("has_a", a_string.has ('a'))
+				assert ("has_r", a_string.has ('r'))
+				assert ("has_null", a_string.has ('%U'))
+				assert ("not_has_o", not a_string.has ('o'))
+			end
 			create {UC_UTF8_STRING} a_string.make_from_string ("")
 			assert ("not_has_f", not a_string.has ('f'))
 		end
@@ -1674,21 +1684,22 @@ feature -- Test
 			-- Test feature `occurrences'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.append_item_code (too_big_character)
-			utf8.append_item_code (too_big_character)
-			utf8.append_item_code (too_big_character)
-			assert_integers_equal ("b", 1, a_string.occurrences ('b'))
-			assert_integers_equal ("a", 1, a_string.occurrences ('a'))
-			assert_integers_equal ("r", 1, a_string.occurrences ('r'))
-			assert_integers_equal ("o", 2, a_string.occurrences ('o'))
-			assert_integers_equal ("f", 1, a_string.occurrences ('f'))
-			assert_integers_equal ("z", 0, a_string.occurrences ('z'))
-			assert_integers_equal ("null", 3, a_string.occurrences ('%U'))
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.append_item_code (too_big_character)
+				utf8.append_item_code (too_big_character)
+				utf8.append_item_code (too_big_character)
+				assert_integers_equal ("b", 1, a_string.occurrences ('b'))
+				assert_integers_equal ("a", 1, a_string.occurrences ('a'))
+				assert_integers_equal ("r", 1, a_string.occurrences ('r'))
+				assert_integers_equal ("o", 2, a_string.occurrences ('o'))
+				assert_integers_equal ("f", 1, a_string.occurrences ('f'))
+				assert_integers_equal ("z", 0, a_string.occurrences ('z'))
+				assert_integers_equal ("null", 3, a_string.occurrences ('%U'))
+			end
 			create {UC_UTF8_STRING} a_string.make_from_string ("")
 			assert_integers_equal ("x", 0, a_string.occurrences ('x'))
 			assert_integers_equal ("null", 0, a_string.occurrences ('%U'))
@@ -2030,41 +2041,50 @@ feature -- Test
 			-- Test feature `hash_code'.
 		local
 			a_string, a_string2: STRING
-			utf8: UC_UTF8_STRING
 			s: STRING
 			c: CHARACTER
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
-			utf8 ?= a_string
-			assert ("utf8_1", utf8 /= Void)
-			utf8.append_item_code (978)
-			assert ("hash_code1", a_string.hash_code = a_string.hash_code)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8_1", False)
+			else
+				utf8.append_item_code (978)
+				assert ("hash_code1", a_string.hash_code = a_string.hash_code)
+			end
 			create {UC_UTF8_STRING} a_string2.make_from_string ("foobar")
-			utf8 ?= a_string2
-			assert ("utf8_2", utf8 /= Void)
-			utf8.append_item_code (978)
-			assert ("hash_code2", a_string.hash_code = a_string2.hash_code)
+			if not attached {UC_UTF8_STRING} a_string2 as utf8 then
+				assert ("utf8_2", False)
+			else
+				utf8.append_item_code (978)
+				assert ("hash_code2", a_string.hash_code = a_string2.hash_code)
+			end
 			s := "foobar"
 			create {UC_UTF8_STRING} a_string.make_from_string (STRING_.cloned_string (s))
-			utf8 ?= a_string
-			assert ("uc_string3", utf8 /= Void)
-			assert ("same_string1", utf8.same_string (s))
-			assert_integers_equal ("same_hash_code1", s.hash_code, a_string.hash_code)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("uc_string3", False)
+			else
+				assert ("same_string1", utf8.same_string (s))
+				assert_integers_equal ("same_hash_code1", s.hash_code, a_string.hash_code)
+			end
 			s := ""
 			create {UC_UTF8_STRING} a_string.make_from_string (STRING_.cloned_string (s))
-			utf8 ?= a_string
-			assert ("uc_string4", utf8 /= Void)
-			assert ("same_string2", utf8.same_string (s))
-			assert_integers_equal ("same_hash_code2", s.hash_code, a_string.hash_code)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("uc_string4", False)
+			else
+				assert ("same_string2", utf8.same_string (s))
+				assert_integers_equal ("same_hash_code2", s.hash_code, a_string.hash_code)
+			end
 			s := "foo"
 			c := INTEGER_.to_character (Platform.Maximum_character_code)
 			s.append_character (c)
 			s.append_string ("bar")
 			create {UC_UTF8_STRING} a_string.make_from_string (STRING_.cloned_string (s))
-			utf8 ?= a_string
-			assert ("uc_string5", utf8 /= Void)
-			assert ("same_string3", utf8.same_string (s))
-			assert_integers_equal ("same_hash_code3", s.hash_code, a_string.hash_code)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("uc_string5", False)
+			else
+				assert ("same_string3", utf8.same_string (s))
+				assert_integers_equal ("same_hash_code3", s.hash_code, a_string.hash_code)
+			end
 		end
 
 	test_same_string1
@@ -2756,7 +2776,7 @@ feature -- Test
 			a_string.replace_substring (a_string2, 4, 3)
 			assert_equal ("replaced6", "foototobar", a_string.out)
 		end
-			
+
 	test_replace_substring_by_string1
 			-- Test feature `replace_substring_by_string'.
 		local
@@ -2957,7 +2977,7 @@ feature -- Test
 			assert_integers_equal ("item4_1", ('a').code, l_str_utf8.item_code (4))
 			assert_integers_equal ("item5_1", ('r').code, l_str_utf8.item_code (5))
 		end
-		
+
 	test_insert_unicode_character1
 			-- Test feature `insert_unicode_character'.
 		local
@@ -3226,7 +3246,6 @@ feature -- Test
 			-- Test feature `wipe_out'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
 			a_string.wipe_out
@@ -3235,12 +3254,14 @@ feature -- Test
 			a_string.wipe_out
 			assert_equal ("wiped_out2", "", a_string.out)
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.append_item_code (888)
-			utf8.append_string ("bar")
-			a_string.wipe_out
-			assert_equal ("wiped_out3", "", a_string.out)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.append_item_code (888)
+				utf8.append_string ("bar")
+				a_string.wipe_out
+				assert_equal ("wiped_out3", "", a_string.out)
+			end
 		end
 
 	test_remove1
@@ -3277,18 +3298,19 @@ feature -- Test
 			-- Test feature `remove'.
 		local
 			a_string: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
-			utf8 ?= a_string
-			assert ("utf8", utf8 /= Void)
-			utf8.put_item_code (367, 4)
-			a_string.remove (1)
-			assert_equal ("removed1", "oo%%/367/ar", a_string.out)
-			a_string.remove (5)
-			assert_equal ("removed2", "oo%%/367/a", a_string.out)
-			a_string.remove (3)
-			assert_equal ("removed3", "ooa", a_string.out)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8", False)
+			else
+				utf8.put_item_code (367, 4)
+				a_string.remove (1)
+				assert_equal ("removed1", "oo%%/367/ar", a_string.out)
+				a_string.remove (5)
+				assert_equal ("removed2", "oo%%/367/a", a_string.out)
+				a_string.remove (3)
+				assert_equal ("removed3", "ooa", a_string.out)
+			end
 		end
 
 	test_to_lower1
@@ -3485,7 +3507,6 @@ feature -- Test
 			-- Test feature `infix "<"'.
 		local
 			a_string, a_string2: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
 			create {UC_UTF8_STRING} a_string2.make_from_string ("bar")
@@ -3505,13 +3526,17 @@ feature -- Test
 			assert ("not_less5", not (a_string < a_string2))
 			assert ("not_less6", not (a_string2 < a_string))
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
-			utf8 ?= a_string
-			assert ("utf8_1", utf8 /= Void)
-			utf8.append_item_code (3333)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8_1", False)
+			else
+				utf8.append_item_code (3333)
+			end
 			create {UC_UTF8_STRING} a_string2.make_from_string ("foo")
-			utf8 ?= a_string2
-			assert ("utf8_2", utf8 /= Void)
-			utf8.append_item_code (9999)
+			if not attached {UC_UTF8_STRING} a_string2 as utf8 then
+				assert ("utf8_2", False)
+			else
+				utf8.append_item_code (9999)
+			end
 			assert ("less4", a_string < a_string2)
 			assert ("not_less7", not (a_string2 < a_string))
 		end
@@ -3580,7 +3605,6 @@ feature -- Test
 			-- Test feature `infix "<="'.
 		local
 			a_string, a_string2: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
 			create {UC_UTF8_STRING} a_string2.make_from_string ("bar")
@@ -3600,13 +3624,17 @@ feature -- Test
 			assert ("less5", a_string <= a_string2)
 			assert ("less6", a_string2 <= a_string)
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
-			utf8 ?= a_string
-			assert ("utf8_1", utf8 /= Void)
-			utf8.append_item_code (3333)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8_1", False)
+			else
+				utf8.append_item_code (3333)
+			end
 			create {UC_UTF8_STRING} a_string2.make_from_string ("foo")
-			utf8 ?= a_string2
-			assert ("utf8_2", utf8 /= Void)
-			utf8.append_item_code (9999)
+			if not attached {UC_UTF8_STRING} a_string2 as utf8 then
+				assert ("utf8_2", False)
+			else
+				utf8.append_item_code (9999)
+			end
 			assert ("less7", a_string <= a_string2)
 			assert ("not_less4", not (a_string2 <= a_string))
 		end
@@ -3675,7 +3703,6 @@ feature -- Test
 			-- Test feature `infix ">"'.
 		local
 			a_string, a_string2: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
 			create {UC_UTF8_STRING} a_string2.make_from_string ("foo")
@@ -3695,13 +3722,17 @@ feature -- Test
 			assert ("not_greater5", not (a_string > a_string2))
 			assert ("not_greater6", not (a_string2 > a_string))
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
-			utf8 ?= a_string
-			assert ("utf8_1", utf8 /= Void)
-			utf8.append_item_code (9999)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8_1", False)
+			else
+				utf8.append_item_code (9999)
+			end
 			create {UC_UTF8_STRING} a_string2.make_from_string ("foo")
-			utf8 ?= a_string2
-			assert ("utf8_2", utf8 /= Void)
-			utf8.append_item_code (3333)
+			if not attached {UC_UTF8_STRING} a_string2 as utf8 then
+				assert ("utf8_2", False)
+			else
+				utf8.append_item_code (3333)
+			end
 			assert ("greater4", a_string > a_string2)
 			assert ("not_greater7", not (a_string2 > a_string))
 		end
@@ -3770,7 +3801,6 @@ feature -- Test
 			-- Test feature `infix ">="'.
 		local
 			a_string, a_string2: STRING
-			utf8: UC_UTF8_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
 			create {UC_UTF8_STRING} a_string2.make_from_string ("foo")
@@ -3790,13 +3820,17 @@ feature -- Test
 			assert ("greater5", a_string >= a_string2)
 			assert ("greater6", a_string2 >= a_string)
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
-			utf8 ?= a_string
-			assert ("utf8_1", utf8 /= Void)
-			utf8.append_item_code (9999)
+			if not attached {UC_UTF8_STRING} a_string as utf8 then
+				assert ("utf8_1", False)
+			else
+				utf8.append_item_code (9999)
+			end
 			create {UC_UTF8_STRING} a_string2.make_from_string ("foo")
-			utf8 ?= a_string2
-			assert ("utf8_2", utf8 /= Void)
-			utf8.append_item_code (3333)
+			if not attached {UC_UTF8_STRING} a_string2 as utf8 then
+				assert ("utf8_2", False)
+			else
+				utf8.append_item_code (3333)
+			end
 			assert ("greater7", a_string >= a_string2)
 			assert ("not_greater4", not (a_string2 >= a_string))
 		end
@@ -4029,5 +4063,5 @@ feature {NONE} -- Implementation
 			too_big: Result > Platform.Maximum_character_code
 			different: Result /= too_big_character
 		end
-   
+
 end

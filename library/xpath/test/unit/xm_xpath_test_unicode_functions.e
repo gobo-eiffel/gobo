@@ -5,7 +5,7 @@ note
 		"Test XPath unicode functions."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,7 @@ feature -- Tests
 		do
 			create l_evaluator.make (18, False)
 			l_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not l_evaluator.was_build_error)
+			assert ("Build successful", not l_evaluator.was_build_error)
 			l_function := STRING_.concat ("upper-case('", Lower_essen)
 			l_evaluator.evaluate (STRING_.appended_string (l_function, "')"))
 			assert ("No evaluation error", not l_evaluator.is_error)
@@ -70,7 +70,7 @@ feature -- Tests
 		do
 			create l_evaluator.make (18, False)
 			l_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not l_evaluator.was_build_error)
+			assert ("Build successful", not l_evaluator.was_build_error)
 			l_evaluator.evaluate ("lower-case('ESSEN')")
 			assert ("No evaluation error", not l_evaluator.is_error)
 			l_evaluated_items := l_evaluator.evaluated_items
@@ -87,7 +87,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("codepoints-to-string((2309, 2358, 2378, 2325))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -103,7 +103,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("string-to-codepoints ('Thérèse')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -139,7 +139,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("codepoint-equal('abc', 'ab')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
@@ -156,7 +156,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
+			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("normalize-unicode(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items

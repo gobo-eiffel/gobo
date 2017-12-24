@@ -5,7 +5,7 @@ note
 		"Geant elements"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2017, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,13 +57,11 @@ feature -- Access
 			a_name_not_empty: a_name.count > 0
 		local
 			cs: DS_LINKED_LIST_CURSOR [XM_NODE]
-			e: XM_ELEMENT
 		do
 			create Result.make
 			cs := xml_element.new_cursor
 			from cs.start until cs.after loop
-				e ?= cs.item
-				if e /= Void and then STRING_.same_string (e.name, a_name) then
+				if attached {XM_ELEMENT} cs.item as e and then STRING_.same_string (e.name, a_name) then
 					Result.force_last (e)
 				end
 				cs.forth

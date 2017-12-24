@@ -5,7 +5,7 @@ note
 
 		"Parsers for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -242,11 +242,9 @@ feature -- Error handling
 			-- Report a syntax error.
 		local
 			an_error: UT_SYNTAX_ERROR
-			file_buffer: YY_FILE_BUFFER
 			filename: STRING
 		do
-			file_buffer ?= input_buffer
-			if file_buffer /= Void then
+			if attached {YY_FILE_BUFFER} input_buffer as file_buffer then
 				filename := file_buffer.file.name
 			else
 				filename := "string"

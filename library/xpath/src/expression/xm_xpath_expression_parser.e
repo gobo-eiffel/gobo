@@ -2768,11 +2768,9 @@ feature {NONE} -- Implementation
 			-- Text of last parse error encountered
 
 	internal_last_parsed_expression: detachable XM_XPATH_EXPRESSION
-			-- Result of last parsing command, if successfull
-
+			-- Result of last parsing command, if successful
 	internal_last_parsed_sequence: detachable XM_XPATH_SEQUENCE_TYPE
-			-- Result of last sequence-type parsing command, if successfull
-
+			-- Result of last sequence-type parsing command, if successful
 	internal_last_parsed_node_test: detachable XM_XPATH_NODE_TEST
 			-- Result of last sucessfull call to `parse_node_test'
 

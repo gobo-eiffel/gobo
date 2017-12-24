@@ -825,7 +825,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
 	frozen on_external_entity_reference_procedure (context_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER): BOOLEAN
 			-- Return False if parsing of external entity was not
-			-- successfull. You only come here if you have called
+			-- successful You only come here if you have called
 			-- `enable_parameter_entity_parsing'.
 			-- We recursively keep on sending events to this the parser,
 			-- saving parents on the stack.

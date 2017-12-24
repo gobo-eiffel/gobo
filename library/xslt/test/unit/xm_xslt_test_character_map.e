@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,7 +67,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			assert ("Correct result", STRING_.same_string (l_output.last_output, expected_result))
 		end
 
@@ -96,7 +96,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			read_utf8_results_file (character_map2_results_filename)
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
@@ -126,7 +126,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			read_utf8_results_file (character_map4_results_filename)
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
@@ -156,7 +156,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			read_utf8_results_file (character_map5_results_filename)
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
@@ -186,7 +186,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			read_utf8_results_file (character_map6_results_filename)
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
@@ -219,7 +219,7 @@ feature -- Test
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (Void, l_result)
-			assert ("Transform successfull", not l_transformer.is_error)
+			assert ("Transform successful", not l_transformer.is_error)
 			read_utf8_results_file (qname_output_results_filename)
 			assert ("Correct result", STRING_.same_string (l_output.last_output, last_utf8_string))
 		end
