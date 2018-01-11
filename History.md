@@ -29,6 +29,8 @@
 * Improved support for ECF, including capabilities and redirection. 
   Even if not all ECF options are supported by the Gobo tools, it is now 
   possible to read an ECF file, make some modifications and write it back.
+* Fixed data race in `ET_CLASS.formal_parameter_type` when executed in
+  multi-threaded mode.
 
 ## Version 4.2 - 14 July 2017
 

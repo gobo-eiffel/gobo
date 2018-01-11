@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #46 $"
@@ -81,6 +81,7 @@ feature {NONE} -- Initialization
 			group := tokens.unknown_group
 			create status_mutex.make
 			create processing_mutex.make
+			create formal_parameter_types_mutex.make
 			named_base_class := Current
 			time_stamp := no_time_stamp
 			class_code := class_codes.class_code (a_name)
@@ -1381,6 +1382,7 @@ feature -- Genericity
 			if attached formal_parameters as l_formal_parameters and then i <= l_formal_parameters.count then
 				Result := l_formal_parameters.formal_parameter (i)
 			else
+				formal_parameter_types_mutex.lock
 				l_formal_parameter_types := formal_parameter_types
 				if l_formal_parameter_types = Void then
 					create l_formal_parameter_types.make (10)
@@ -1403,6 +1405,7 @@ feature -- Genericity
 					create Result.make (Void, l_name, i, Current)
 					l_formal_parameter_types.replace (Result, i)
 				end
+				formal_parameter_types_mutex.unlock
 			end
 		ensure
 			formal_parameter_type_not_void: Result /= Void
@@ -1448,6 +1451,10 @@ feature {NONE} -- Genericity
 			-- Note that some entries in the list may be Void if
 			-- the corresponding formal parameter type has not
 			-- been requested yet.
+
+	formal_parameter_types_mutex: MUTEX
+			-- Mutex to get exclusive access to `formal_parameter_types'
+			-- in a multi-threaded environment
 
 feature -- Ancestors
 
@@ -2842,5 +2849,6 @@ invariant
 	no_void_supplier: attached suppliers as l_suppliers implies not l_suppliers.has_void
 	no_void_provider: attached providers as l_providers implies not l_providers.has_void
 	tuple_constraint_position: tuple_constraint_position /= 0 implies attached formal_parameters as l_formal_parameters and then (tuple_constraint_position >= 1 and tuple_constraint_position <= l_formal_parameters.count)
+	formal_parameter_types_mutex_not_void: formal_parameter_types_mutex /= Void
 
 end
