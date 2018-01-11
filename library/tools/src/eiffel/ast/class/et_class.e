@@ -1385,7 +1385,7 @@ feature -- Genericity
 				formal_parameter_types_mutex.lock
 				l_formal_parameter_types := formal_parameter_types
 				if l_formal_parameter_types = Void then
-					create l_formal_parameter_types.make (10)
+					create l_formal_parameter_types.make (i.max (10))
 					formal_parameter_types := l_formal_parameter_types
 				end
 				nb := l_formal_parameter_types.count
