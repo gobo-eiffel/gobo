@@ -816,34 +816,6 @@ void GE_condition_variable_signal(EIF_POINTER a_condition_variable)
 	}
 }
 
-/*
- * Block calling thread on condition variable.
- * Do not raise an exception in case of error (just return a status).
- */
-static int GE_unprotected_condition_variable_wait(EIF_POINTER a_condition_variable, EIF_POINTER a_mutex)
-{
-#ifdef GE_USE_POSIX_THREADS
-	if (pthread_cond_wait((EIF_COND_TYPE*)a_condition_variable, (EIF_MUTEX_TYPE*)a_mutex)) {
-		return GE_THREAD_ERROR;
-	}
-	return GE_THREAD_OK;
-#elif defined EIF_WINDOWS
-	return GE_unprotected_condition_variable_wait_with_timeout(a_condition_variable, a_mutex, (uintptr_t)INFINITE);
-#else
-	return GE_THREAD_ERROR;
-#endif
-}
-
-/*
- * Block calling thread on condition variable.
- */
-void GE_condition_variable_wait(EIF_POINTER a_condition_variable, EIF_POINTER a_mutex)
-{
-	if (GE_unprotected_condition_variable_wait(a_condition_variable, a_mutex) != GE_THREAD_OK) {
-		GE_raise_with_message(GE_EX_EXT, "Cannot wait on condition variable");
-	}
-}
-
 #ifdef GE_USE_POSIX_THREADS
 /*
  * Given a timeout in milliseconds, computes a timespec structure equivalent.
@@ -948,6 +920,34 @@ EIF_INTEGER GE_condition_variable_wait_with_timeout(EIF_POINTER a_condition_vari
 	default:
 		GE_raise_with_message(GE_EX_EXT, "Cannot wait with timeout on condition variable");
 		return -1;
+	}
+}
+
+/*
+ * Block calling thread on condition variable.
+ * Do not raise an exception in case of error (just return a status).
+ */
+static int GE_unprotected_condition_variable_wait(EIF_POINTER a_condition_variable, EIF_POINTER a_mutex)
+{
+#ifdef GE_USE_POSIX_THREADS
+	if (pthread_cond_wait((EIF_COND_TYPE*)a_condition_variable, (EIF_MUTEX_TYPE*)a_mutex)) {
+		return GE_THREAD_ERROR;
+	}
+	return GE_THREAD_OK;
+#elif defined EIF_WINDOWS
+	return GE_unprotected_condition_variable_wait_with_timeout(a_condition_variable, a_mutex, (uintptr_t)INFINITE);
+#else
+	return GE_THREAD_ERROR;
+#endif
+}
+
+/*
+ * Block calling thread on condition variable.
+ */
+void GE_condition_variable_wait(EIF_POINTER a_condition_variable, EIF_POINTER a_mutex)
+{
+	if (GE_unprotected_condition_variable_wait(a_condition_variable, a_mutex) != GE_THREAD_OK) {
+		GE_raise_with_message(GE_EX_EXT, "Cannot wait on condition variable");
 	}
 }
 
