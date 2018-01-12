@@ -35217,7 +35217,7 @@ void GE_show_console(void)
 		int hCrt;
 #ifndef EIF_BORLAND
 		FILE *hf;
-extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
+extern _CRTIMP FILE * __cdecl _fdopen(int, const char *); /* Needed for lcc-win32 */
 #endif
 
 		bSuccess = AllocConsole();
