@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -159,7 +159,7 @@ extern GE_context* GE_main_context;
 /*
  * Execution context of current thread.
  */
-extern GE_context* GE_current_context();
+extern GE_context* GE_current_context(void);
 
 /*
  * Initialization of exception handling.
@@ -270,7 +270,7 @@ extern void* GE_check_null(void* ptr);
 /*
  * Set default exception handler.
  */
-extern void GE_set_windows_exception_filter();
+extern void GE_set_windows_exception_filter(void);
 #endif
 
 #ifdef __cplusplus

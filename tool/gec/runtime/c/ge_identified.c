@@ -4,7 +4,7 @@
 		"C functions used to implement class IDENTIFIED"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,7 +41,8 @@ typedef struct GE_weak_pointer {
 /*
  * Create a new weak pointer to `object'.
  */
-GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object) {
+GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object)
+{
 	GE_weak_pointer* wp;
 
 	if (object == 0) {
@@ -59,7 +60,8 @@ GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object) {
 /*
  * Direct access to the object held in the weak pointer.
  */
-EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp) {
+EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp)
+{
 	if (wp == 0) {
 		return (EIF_REFERENCE)0;
 	} else {
@@ -71,7 +73,8 @@ EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp) {
  * Access to the object held in the weak pointer.
  */
 #ifdef GE_USE_BOEHM_GC
-EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp) {
+EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp)
+{
 	return (EIF_REFERENCE)GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, wp);
 }
 #else /* No GC */
@@ -116,7 +119,8 @@ EIF_INTEGER_32 GE_last_object_id;
 /*
  * Initialize data to keep track of object ids.
  */
-void GE_init_identified(void) {
+void GE_init_identified(void)
+{
 	GE_id_objects = (GE_weak_pointer***)0;
 	GE_id_objects_capacity = 0;
 	GE_last_object_id = 0;
@@ -125,7 +129,8 @@ void GE_init_identified(void) {
 /*
  * Get a new id for `object', assuming it is NOT in the stack.
  */
-EIF_INTEGER_32 GE_object_id(EIF_OBJECT object) {
+EIF_INTEGER_32 GE_object_id(EIF_OBJECT object)
+{
 	GE_weak_pointer** id_object_chunk;
 	EIF_INTEGER_32 i;
 	EIF_INTEGER_32 l_old_capacity;
@@ -154,7 +159,8 @@ EIF_INTEGER_32 GE_object_id(EIF_OBJECT object) {
 /*
  * Return the object associated with `id'.
  */
-EIF_REFERENCE GE_id_object(EIF_INTEGER_32 id) {
+EIF_REFERENCE GE_id_object(EIF_INTEGER_32 id)
+{
 	GE_weak_pointer** id_object_chunk;
 	GE_weak_pointer* wp;
 	EIF_REFERENCE object;
@@ -192,7 +198,8 @@ EIF_REFERENCE GE_id_object(EIF_INTEGER_32 id) {
 /*
  * Remove the object associated with `id' from the stack.
  */
-void GE_object_id_free(EIF_INTEGER_32 id) {
+void GE_object_id_free(EIF_INTEGER_32 id)
+{
 	GE_weak_pointer** id_object_chunk;
 	GE_weak_pointer* wp;
 	EIF_REFERENCE object;

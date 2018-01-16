@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,11 @@
 #endif
 
 #ifdef EIF_WINDOWS
+#ifdef __LCC__
+#include <windows.h>
+#else
 #include <winbase.h>
+#endif
 #endif
 
 #ifdef __cplusplus
@@ -420,7 +424,7 @@ GE_context* GE_main_context;
 /*
  * Execution context of current thread.
  */
-GE_context* GE_current_context()
+GE_context* GE_current_context(void)
 {
 #ifdef GE_USE_THREADS
 	return GE_thread_current_context();
@@ -810,7 +814,7 @@ static LONG WINAPI GE_windows_exception_filter(LPEXCEPTION_POINTERS a_exception)
 /*
  * Set default exception handler.
  */
-void GE_set_windows_exception_filter()
+void GE_set_windows_exception_filter(void)
 {
 	LPTOP_LEVEL_EXCEPTION_FILTER old_exception_handler = NULL;
 	old_exception_handler = SetUnhandledExceptionFilter (GE_windows_exception_filter);

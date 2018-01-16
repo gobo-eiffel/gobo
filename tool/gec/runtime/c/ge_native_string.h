@@ -4,7 +4,7 @@
 		"C functions used to manipulate native strings"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2013-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2013-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,13 @@
 #endif
 
 #include <string.h>
-#ifndef EIF_WINDOWS
+#ifdef EIF_WINDOWS
+#ifdef __LCC__
+/* With lcc-win32, stat.h should be included before wchar.h. */
+#include <sys/stat.h>
+#endif
+#include <wchar.h>
+#else
 #include <sys/types.h>
 #endif
 

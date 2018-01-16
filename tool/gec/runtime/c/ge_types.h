@@ -4,7 +4,7 @@
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -480,13 +480,13 @@ extern EIF_BOOLEAN GE_is_field_expanded_of_type_index(EIF_INTEGER i, EIF_TYPE_IN
  * Get a lock on `GE_mark_object' and `GE_unmark_object' routines so that
  * 2 threads cannot `GE_mark_object' and `GE_unmark_object' at the same time.
  */
-extern void GE_lock_marking();
+extern void GE_lock_marking(void);
 
 /*
  * Release a lock on `GE_mark_object' and `GE_unmark_object', so that another
  * thread can use `GE_mark_object' and `GE_unmark_object'.
  */
-extern void GE_unlock_marking();
+extern void GE_unlock_marking(void);
 
 /*
  * Is `obj' marked?

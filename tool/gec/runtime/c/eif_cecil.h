@@ -4,7 +4,7 @@
 		"Part of ISE Eiffel runtime. Needed to compile the EiffelCOM library."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2010-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,14 +70,13 @@ extern EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * const 
  */
 #define eif_make_from_c(eif_array, c_array, nelts, type) \
 	{ \
-		EIF_REFERENCE area = eif_field (eif_array, \
-										"area", EIF_REFERENCE); \
-		memcpy ((type *) area, c_array, nelts * sizeof (type));\
+		EIF_REFERENCE area = eif_field(eif_array, "area", EIF_REFERENCE); \
+		memcpy((type *)area, c_array, nelts * sizeof(type));\
 	}
 
 #define eif_type eiftype /* Dynamic type ID */
 extern EIF_TYPE_ID eiftype(EIF_OBJECT object); /* Give dynamic type of EIF_OBJECT. Obsolete, use "eif_type_by_object". */
-extern EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object);
+extern EIF_TYPE_ID eif_type_by_reference(EIF_REFERENCE object);
 extern EIF_TYPE_INDEX eif_gen_param_id(EIF_TYPE_INDEX dftype, uint32_t pos);
 
 #ifdef __cplusplus

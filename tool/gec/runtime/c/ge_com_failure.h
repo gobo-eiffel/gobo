@@ -4,7 +4,7 @@
 		"C functions used to implement class COM_FAILURE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ extern EIF_INTEGER_32 GE_ccom_strlen(EIF_POINTER ptr);
 /*
  * Number of bytes occupied by a TCHAR.
  */
-extern EIF_INTEGER_32 GE_ccom_character_size();
+extern EIF_INTEGER_32 GE_ccom_character_size(void);
 
 /*
  * Free `a_ptr' using LocalFree.

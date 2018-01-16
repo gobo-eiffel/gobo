@@ -32,7 +32,8 @@ EIF_NATIVE_CHAR** GE_argv;
 
 	/* Clean up function */
 typedef void (* EIF_CLEANUP)(EIF_BOOLEAN);
-void eif_register_cleanup(EIF_CLEANUP f){
+void eif_register_cleanup(EIF_CLEANUP f)
+{
 	/* TODO: Needed to compile some code at AXAR */
 	GE_show_console();
 	fprintf(stderr, "'eif_register_cleanup' in 'ge_arguments.h' not implemented\n");

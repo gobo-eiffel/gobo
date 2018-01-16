@@ -4,7 +4,7 @@
 		"Part of ISE Eiffel runtime. Needed to compile the EiffelCOM library."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2010-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,7 +51,8 @@ EIF_REFERENCE_FUNCTION eif_reference_function(char* rout, EIF_TYPE_ID cid)
 	return (EIF_REFERENCE_FUNCTION)0;
 }
 
-EIF_POINTER_FUNCTION eif_pointer_function(char* rout, EIF_TYPE_ID cid) {
+EIF_POINTER_FUNCTION eif_pointer_function(char* rout, EIF_TYPE_ID cid)
+{
 	/* TODO */
 	GE_show_console();
 	fprintf(stderr, "'eif_pointer_function' in 'eif_cecil.c' not implemented\n");
@@ -74,7 +75,8 @@ EIF_REAL_32_FUNCTION eif_real_32_function(char* rout, EIF_TYPE_ID cid)
 	return (EIF_REAL_32_FUNCTION)0;
 }
 
-EIF_REAL_64_FUNCTION eif_real_64_function(char* rout, EIF_TYPE_ID cid) {
+EIF_REAL_64_FUNCTION eif_real_64_function(char* rout, EIF_TYPE_ID cid)
+{
 	/* TODO */
 	GE_show_console();
 	fprintf(stderr, "'eif_real_64_function' in 'eif_cecil.c' not implemented\n");
@@ -119,13 +121,13 @@ EIF_TYPE_ID eiftype(EIF_OBJECT object)
 	return (EIF_TYPE_ID)object->id;
 }
 
-EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object)
+EIF_TYPE_ID eif_type_by_reference(EIF_REFERENCE object)
 {
 		/* Return type id of the direct reference "object" */
 	return (EIF_TYPE_ID)object->id;
 }
 
-EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32_t pos)
+EIF_TYPE_INDEX eif_gen_param_id(EIF_TYPE_INDEX dftype, uint32_t pos)
 {
 	GE_show_console();
 	fprintf(stderr, "'eif_gen_param_id' in 'eif_cecil.c' not implemented\n");

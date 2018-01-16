@@ -182,6 +182,9 @@ static void GE_uint16_to_escaped_str32(uint16_t c, EIF_CHARACTER_32* a_buffer)
 	a_buffer[i] = (EIF_CHARACTER_32)GE_to_hex(c & 0x000F);
 }
 
+#ifndef __LCC__
+/* lcc-win32 complains about this used static function. */
+
 /*
  * Copy escaped version of `c' to `a_buffer'.
  * `a_buffer' is expected to have enough space for 3 characters.
@@ -196,6 +199,7 @@ static void GE_uint8_to_escaped_str32(uint8_t c, EIF_CHARACTER_32* a_buffer)
 	i++;
 	a_buffer[i] = (EIF_CHARACTER_32)GE_to_hex((uint16_t)(c & 0x0F));
 }
+#endif
 
 /*
  * Copy to `a_buffer' the EIF_CHARACTER_32 characters corresponding to the

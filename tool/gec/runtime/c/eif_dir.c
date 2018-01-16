@@ -4,7 +4,7 @@
 		"C functions used to implement class DIRECTORY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,7 @@
 #include "eif_dir.h"
 #endif
 
+#include <sys/stat.h>
 #ifdef EIF_WINDOWS
 #ifdef __cplusplus
 extern "C" {
@@ -39,7 +40,6 @@ typedef struct {
 #include <dirent.h>
 #include <unistd.h>
 #endif
-#include <sys/stat.h>
 #include <string.h>
 
 #ifndef PATH_MAX
@@ -78,6 +78,11 @@ typedef struct {
 #endif
 #ifndef S_IFCHR
 #define S_IFCHR 0020000
+#endif
+#ifdef __LCC__
+#ifndef _S_IFCHR
+#define _S_IFCHR S_IFCHR
+#endif
 #endif
 #ifndef S_IFBLK
 #define S_IFBLK 0060000
@@ -136,7 +141,9 @@ extern "C" {
 #endif
 
 #ifdef EIF_WINDOWS
-#	ifdef EIF_64_BITS
+#	ifdef __LCC__
+#		define rt_stat_buf	struct stat
+#	elif defined EIF_64_BITS
 #		define rt_stat_buf	struct _stat64
 #	else
 #		define rt_stat_buf	struct _stat64i32
@@ -146,7 +153,10 @@ extern "C" {
 #endif
 
 #ifdef EIF_WINDOWS
-#	ifdef EIF_64_BITS
+#	ifdef __LCC__
+#		define rt_stat		_wstat
+#		define rt_fstat		fstat
+#	elif defined(EIF_64_BITS)
 #		define rt_stat		_wstat64
 #		define rt_fstat		_fstat64
 #	else
@@ -156,7 +166,6 @@ extern "C" {
 #	define rt_access		_waccess
 #else
 #	define rt_stat			stat
-#	define rt_lstat			lstat
 #	define rt_fstat			fstat
 #	define rt_access		access
 #endif
@@ -199,7 +208,7 @@ EIF_POINTER eif_dir_next(EIF_POINTER dir)
 				wcscat(wname , L"\\*");
 			}
 			h = FindFirstFileW(wname, &(GE_dir->last_entry));
-			free (wname);
+			free(wname);
 			if (h != INVALID_HANDLE_VALUE) {
 				GE_dir->handle = h;
 				r = EIF_TRUE;
@@ -258,13 +267,13 @@ EIF_BOOLEAN eif_dir_exists(EIF_FILENAME dirname)
 {
 	rt_stat_buf buf;
 
-	return (EIF_BOOLEAN) ((!rt_stat (dirname, &buf) && S_ISDIR(buf.st_mode)) ? EIF_TRUE : EIF_FALSE);
+	return (EIF_BOOLEAN)((!rt_stat (dirname, &buf) && S_ISDIR(buf.st_mode)) ? EIF_TRUE : EIF_FALSE);
 }
 
 EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME dirname)
 {
 #ifdef EIF_WINDOWS
-	return (EIF_BOOLEAN) (_waccess (dirname, R_OK) != -1);
+	return (EIF_BOOLEAN)(_waccess (dirname, R_OK) != -1);
 #else
 	int uid, gid;
 	int euid, egid;
@@ -295,7 +304,7 @@ EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME dirname)
 EIF_BOOLEAN eif_dir_is_executable(EIF_FILENAME dirname)
 {
 #ifdef EIF_WINDOWS
-	return (EIF_BOOLEAN)(_waccess (dirname, F_OK) != -1);
+	return (EIF_BOOLEAN)(_waccess(dirname, F_OK) != -1);
 #else
 	int uid, gid;
 	int euid, egid;
@@ -326,7 +335,7 @@ EIF_BOOLEAN eif_dir_is_executable(EIF_FILENAME dirname)
 EIF_BOOLEAN eif_dir_is_writable(EIF_FILENAME dirname)
 {
 #ifdef EIF_WINDOWS
-	return (EIF_BOOLEAN)(_waccess (dirname, W_OK) != -1);
+	return (EIF_BOOLEAN)(_waccess(dirname, W_OK) != -1);
 #else
 	int uid, gid;
 	int euid, egid;
@@ -378,7 +387,7 @@ EIF_INTEGER eif_dir_current(EIF_FILENAME a_buffer, EIF_INTEGER a_count)
 	drive [0] = '.';
 	drive [1] = '\0';
 		/* First calculate the length of the buffer we need to hold the current working directory. */
-	l_nbytes = (GetFullPathNameW(drive, 0, NULL, &subpart) + 1) * sizeof(wchar_t) ;
+	l_nbytes = (GetFullPathNameW(drive, 0, NULL, &subpart) + 1) * sizeof(wchar_t);
 
 	if (l_nbytes == 0) {
 			/* Failure: we cannot retrieve our current directory. */
@@ -389,7 +398,6 @@ EIF_INTEGER eif_dir_current(EIF_FILENAME a_buffer, EIF_INTEGER a_count)
 		}
 	}
 	return l_nbytes;
-
 #else
 	char *cwd;
 	cwd = getcwd(NULL, PATH_MAX);

@@ -4,7 +4,7 @@
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -92,14 +92,18 @@
 #include <stdlib.h>
 #include <ctype.h>
 #ifdef EIF_WINDOWS
-#if defined (__BORLANDC__) && (__BORLANDC__ < 0x600) /* Borland before 6.0 */
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600) /* Borland before 6.0 */
 #include <utime.h>
 #else
 #include <sys/utime.h>
-extern int utime(const char *, struct utimbuf *); /* Needed for lcc-win32 */
+#ifdef __LCC__
+extern int utime(const char *, struct utimbuf *);
+#include <sys/stat.h>
+#endif
 #endif
 #include <io.h> /* for access, chmod */
 #include <direct.h> /* for (ch|mk|rm)dir */
+#include <wchar.h>
 #else
 #include <utime.h>
 #include <unistd.h>
@@ -147,6 +151,11 @@ extern int utime(const char *, struct utimbuf *); /* Needed for lcc-win32 */
 #endif
 #ifndef S_IFCHR
 #define S_IFCHR 0020000
+#endif
+#ifdef __LCC__
+#ifndef _S_IFCHR
+#define _S_IFCHR S_IFCHR
+#endif
 #endif
 #ifndef S_IFBLK
 #define S_IFBLK 0060000
@@ -211,7 +220,10 @@ extern "C" {
 #endif
 
 #ifdef EIF_WINDOWS
-#	ifdef EIF_64_BITS
+#	ifdef __LCC__
+#		define rt_stat		_wstat
+#		define rt_fstat		fstat
+#	elif defined(EIF_64_BITS)
 #		define rt_stat		_wstat64
 #		define rt_fstat		_fstat64
 #	else
@@ -301,7 +313,8 @@ static int rt_utime(EIF_FILENAME path, struct utimbuf* times)
 /*
  * Swallow next character if it is a new line.
  */
-static void rt_swallow_nl(FILE* f) {
+static void rt_swallow_nl(FILE* f)
+{
 		/* getc() cannot be used as it doesn't set the EOF flag */
 
 	if (f != stdin) {
@@ -589,6 +602,9 @@ void eif_file_flush(FILE* fp)
 		 * http://support.microsoft.com/kb/66052
 		 * We ignore bad file descriptor case, as it is most likely when calling it on one of the standard
 		 * input/outputs. */
+#ifdef __LCC__
+extern int _commit(int);
+#endif
 	if ((0 != _commit(fileno(fp))) && (errno != EBADF)) {
 		esys();
 	}
@@ -1431,7 +1447,7 @@ static EIF_BOOLEAN eif_group_in_list(int gid)
 			xraise(EN_IO);
 			return EIF_FALSE;
 		} else {
-			for (i=0; i< nb_groups; i++)
+			for (i = 0; i < nb_groups; i++)
 				if (group_list[i] == gid) {
 					free(group_list);
 					return EIF_TRUE;
@@ -1476,8 +1492,8 @@ EIF_BOOLEAN eif_file_eaccess(rt_stat_buf* buf, int op)
 			return ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 		else
-#endif
 			return ((mode & S_IROTH) ? EIF_TRUE : EIF_FALSE);
+#endif
 	case 1: /* Is file writable */
 #ifdef EIF_WINDOWS
 		return ((mode & S_IWRITE) ? EIF_TRUE : EIF_FALSE);
@@ -1496,8 +1512,8 @@ EIF_BOOLEAN eif_file_eaccess(rt_stat_buf* buf, int op)
 			return ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 		else
-#endif
 			return ((mode & S_IWOTH) ? EIF_TRUE : EIF_FALSE);
+#endif
 	case 2: /* Is file executable */
 #ifdef EIF_WINDOWS
 		return EIF_TRUE;
@@ -1516,8 +1532,8 @@ EIF_BOOLEAN eif_file_eaccess(rt_stat_buf* buf, int op)
 			return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 		else
-#endif
 			return ((mode & S_IXOTH) ? EIF_TRUE : EIF_FALSE);
+#endif
 	case 3: /* Is file setuid */
 #ifdef EIF_WINDOWS
 		return EIF_FALSE;
@@ -1785,7 +1801,7 @@ void eif_file_prb(FILE* f, EIF_REAL_32 number)
 void eif_file_pdb(FILE* f, EIF_REAL_64 val)
 {
 	errno = 0;
-	if (fwrite (&val, sizeof(EIF_REAL_64), 1, f) != 1) {
+	if (fwrite(&val, sizeof(EIF_REAL_64), 1, f) != 1) {
 		eise_io("FILE: unable to write REAL_64 value.");
 	}
 }
@@ -1856,7 +1872,7 @@ static EIF_INTEGER eif_file_date_for(EIF_FILENAME name, int mode)
  * Modification time of a file.
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  */
-EIF_INTEGER eif_file_date (EIF_FILENAME name)
+EIF_INTEGER eif_file_date(EIF_FILENAME name)
 {
 	return eif_file_date_for(name, 1);
 }
@@ -1865,7 +1881,7 @@ EIF_INTEGER eif_file_date (EIF_FILENAME name)
  * Access time of a file.
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  */
-EIF_INTEGER eif_file_access_date (EIF_FILENAME name)
+EIF_INTEGER eif_file_access_date(EIF_FILENAME name)
 {
 	return eif_file_date_for(name, 0);
 }

@@ -4,7 +4,7 @@
 		"C functions used to implement class CONSOLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,9 +75,11 @@ void GE_show_console(void)
 		BOOL bLaunched;
 		BOOL bSuccess;
 		int hCrt;
-#ifndef EIF_BORLAND
+#ifdef __LCC__
+extern FILE * __cdecl _fdopen(int, const char *);
+extern int _open_osfhandle(long, int);
+#elif !defined EIF_BORLAND
 		FILE *hf;
-extern _CRTIMP FILE * __cdecl _fdopen(int, const char *); /* Needed for lcc-win32 */
 #endif
 
 		bSuccess = AllocConsole();
@@ -117,7 +119,7 @@ extern _CRTIMP FILE * __cdecl _fdopen(int, const char *); /* Needed for lcc-win3
 					with Microsoft which explains the ifdef statement.
 				*/
 			hCrt = _open_osfhandle((intptr_t)hconout, _O_TEXT);
-#ifdef EIF_BORLAND
+#if defined(__LCC__) || defined(EIF_BORLAND)
 			dup2(hCrt, _fileno(stdout));
 #else
 			hf = _fdopen (hCrt, "w");
@@ -125,7 +127,7 @@ extern _CRTIMP FILE * __cdecl _fdopen(int, const char *); /* Needed for lcc-win3
 #endif
 			setvbuf(stdout, NULL, _IONBF, 0);
 			hCrt = _open_osfhandle((intptr_t)hconerr, _O_TEXT);
-#ifdef EIF_BORLAND
+#if defined(__LCC__) || defined(EIF_BORLAND)
 			dup2(hCrt, _fileno(stderr));
 #else
 			hf = _fdopen(hCrt, "w");
@@ -133,7 +135,7 @@ extern _CRTIMP FILE * __cdecl _fdopen(int, const char *); /* Needed for lcc-win3
 #endif
 			setvbuf(stderr, NULL, _IONBF, 0);
 			hCrt = _open_osfhandle((intptr_t)hconin, _O_TEXT | _O_RDONLY);
-#ifdef EIF_BORLAND
+#if defined(__LCC__) || defined(EIF_BORLAND)
 			dup2(hCrt, _fileno(stdin));
 #else
 			hf = _fdopen(hCrt, "r");

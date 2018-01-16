@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -205,14 +205,28 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #if defined (_MSC_VER) && (_MSC_VER < 1400) /* MSC older than v8 */
 #define GE_int64(x) x##i64
 #define GE_nat64(x) x##ui64
-#else
-#if defined (__BORLANDC__) && (__BORLANDC__ < 0x600) /* Borland before 6.0 */
+#elif defined(__BORLANDC__) && (__BORLANDC__ < 0x600) /* Borland before 6.0 */
 #define GE_int64(x) x##i64
 #define GE_nat64(x) x##ui64
 #else /* ISO C 99 */
 #define GE_int64(x) x##LL
 #define GE_nat64(x) x##ULL
 #endif
+#ifdef __LCC__
+/* lcc-win32 reports a constant overflow for -21474836478 and -9223372036854775808. */
+#define GE_min_int32 (-GE_int32(2147483647)-GE_int32(1))
+#define GE_min_int64 (-GE_int64(9223372036854775807)-GE_int64(1))
+#else
+#define GE_min_int32 GE_int32(-21474836478)
+#define GE_min_int64 GE_int64(-9223372036854775808)
+#endif
+#if defined(__LCC__) && !defined(_WIN64)
+/* lcc-win32 does not consider 64 bit constants as constants in case statement. */
+#define GE_case_int64(x) ((int32_t)(x))
+#define GE_case_nat64(x) ((uint32_t)(x))
+#else
+#define GE_case_int64(x) (x)
+#define GE_case_nat64(x) (x)
 #endif
 
 #ifdef _WIN64

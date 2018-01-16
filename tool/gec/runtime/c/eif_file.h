@@ -4,7 +4,7 @@
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,9 @@ extern "C" {
 /* Let's define the stat structure for our platforms. */
 /* The definition is the same for both ANSI and Unicode versions on Windows. */
 #ifdef EIF_WINDOWS
-#	ifdef EIF_64_BITS
+#	ifdef __LCC__
+#		define rt_stat_buf	struct stat
+#	elif defined EIF_64_BITS
 #		define rt_stat_buf	struct _stat64
 #	else
 #		define rt_stat_buf	struct _stat64i32

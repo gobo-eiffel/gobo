@@ -4,7 +4,7 @@
 		"C functions used to implement class PATH_NAME"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,7 +71,8 @@ void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER_8* p, EIF_CHARACTE
 	strcat((char*)p, (char*)v);
 }
 
-void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER_8* p, EIF_CHARACTER_8* v) {
+void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER_8* p, EIF_CHARACTER_8* v)
+{
 #ifdef EIF_WINDOWS
 	strcat((char*)p, (char*)v);
 #else
