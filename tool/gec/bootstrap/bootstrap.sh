@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-# copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
+# copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -13,7 +13,7 @@ echo "Executing bootstrap.sh..."
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v] <c_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | mingw | cc | icc | tcc | no_c"
+	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | cc | icc | tcc | no_c"
 }
 
 if [ "$1" = "-v" ]; then
@@ -101,7 +101,7 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	echo bcc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 	$RM *.tds
-elif [ "$CC" = "lcc-win32" -o "$CC" = "lcc" ]; then
+elif [ "$CC" = "lcc-win32" ]; then
 	CC='lcc'
 	EXE=.exe
 #	CFLAGS='-O'   -- Problem when gec is compiled with the -O option.
@@ -111,6 +111,17 @@ elif [ "$CC" = "lcc-win32" -o "$CC" = "lcc" ]; then
 	LFLAG_OUT='-o '
 	LLIBS=''
 	echo lcc-win32 > $GOBO/tool/gec/config/c/default.cfg
+	c_compilation
+elif [ "$CC" = "lcc-win64" -o "$CC" = "lcc" ]; then
+	CC='lcc64'
+	EXE=.exe
+#	CFLAGS='-O'   -- Problem when gec is compiled with the -O option.
+	CFLAGS=''
+	LD=lcclnk64
+	LFLAGS='-s -subsystem Console'
+	LFLAG_OUT='-o '
+	LLIBS=''
+	echo lcc-win64 > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "gcc" ]; then
 	CC=gcc

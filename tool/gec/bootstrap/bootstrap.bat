@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-rem copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
+rem copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -60,7 +60,8 @@ if .%EIF%. == .. goto usage
 if .%CC%. == .msc. goto msc
 if .%CC%. == .cl. goto msc
 if .%CC%. == .lcc-win32. goto lcc-win32
-if .%CC%. == .lcc. goto lcc-win32
+if .%CC%. == .lcc-win64. goto lcc-win64
+if .%CC%. == .lcc. goto lcc-win64
 if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .gcc. goto gcc
@@ -101,6 +102,17 @@ goto exit
 	set LFLAG_OUT=-o 
 	set LLIBS=
 	echo lcc-win32 > %GOBO%\tool\gec\config\c\default.cfg
+	goto c_compilation
+
+:lcc-win64
+	set CC=lcc64
+	rem set CFLAGS=-O   -- Problem when gec is compiled with the -O option.
+	set CFLAGS=
+	set LD=lcclnk64
+	set LFLAGS=-s -subsystem Console
+	set LFLAG_OUT=-o 
+	set LLIBS=
+	echo lcc-win64 > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
 :gcc
@@ -198,7 +210,7 @@ goto exit
 
 :usage
 	echo usage: bootstrap.bat [-v] ^<c_compiler^>
-	echo    c_compiler:  msc ^| lcc-win32 ^| bcc ^| gcc ^| mingw ^| cc ^| icc ^| tcc ^| no_c
+	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| cc ^| icc ^| tcc ^| no_c
 	goto exit
 
 :exit

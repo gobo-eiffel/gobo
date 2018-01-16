@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Install Gobo Eiffel tools"
-# copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+# copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -13,7 +13,7 @@ echo "Executing install.sh..."
 
 gobo_usage() {
 	echo "usage: install.sh [-v][-t] <c_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | mingw | cc | icc | tcc | no_c"
+	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | cc | icc | tcc | no_c"
 }
 
 VERBOSE=
