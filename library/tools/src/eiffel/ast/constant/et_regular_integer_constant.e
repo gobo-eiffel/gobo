@@ -5,7 +5,7 @@ note
 		"Eiffel integer constants with no underscore"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,6 +35,20 @@ feature {NONE} -- Initialization
 			literal_set: literal = a_literal
 			line_set: line = no_line
 			column_set: column = no_column
+		end
+
+feature -- Setting
+
+	set_value (a_value: like value)
+			-- Set `value' to `a_value'.
+		do
+			value := a_value
+			literal := a_value.out
+			has_overflow := False
+		ensure
+			value_set: value = a_value
+			literal_set: literal ~ a_value.out
+			no_overflow: not has_overflow
 		end
 
 feature -- Processing

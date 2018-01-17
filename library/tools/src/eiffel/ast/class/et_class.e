@@ -1110,6 +1110,8 @@ feature -- Parsing status
 			parent_clauses := Void
 			queries := tokens.empty_queries
 			procedures := tokens.empty_procedures
+			registered_feature_count := 0
+			registered_inline_constant_count := 0
 			leading_break := Void
 			providers := Void
 			status_mutex.unlock
@@ -2315,6 +2317,38 @@ feature -- Features
 			end
 		end
 
+feature -- Feature registration
+
+	register_feature (a_feature: ET_FEATURE)
+			-- Register `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			registered_feature_count := registered_feature_count + 1
+			a_feature.set_id (id |<< 14 | registered_feature_count)
+		ensure
+			a_feature_registered: a_feature.is_registered
+		end
+
+feature -- Feature registration
+
+	registered_feature_count: INTEGER
+			-- Number of features already registered
+
+feature -- Inline constant registration
+
+	register_inline_constant (a_constant: ET_INLINE_CONSTANT)
+			-- Register `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
+		do
+			registered_inline_constant_count := registered_inline_constant_count + 1
+			a_constant.set_id (id |<< 14 | registered_inline_constant_count)
+		end
+
+	registered_inline_constant_count: INTEGER
+			-- Number of inline constants already registered
+
 feature -- Redeclared signature conformance checking
 
 	redeclared_signatures_checked: BOOLEAN
@@ -2400,6 +2434,7 @@ feature -- Feature flattening status
 			unprotected_features_flattened := False
 			has_deferred_features := False
 			redeclared_signatures_checked := False
+			registered_feature_count := queries.declared_count + procedures.declared_count
 			status_mutex.unlock
 		ensure
 			features_not_flattened: not features_flattened

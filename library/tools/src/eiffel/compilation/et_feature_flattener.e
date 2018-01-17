@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -940,7 +940,7 @@ feature {NONE} -- Feature processing
 				l_duplicated := True
 			end
 			if l_duplicated then
-				current_system.register_feature (l_flattened_feature)
+				current_class.register_feature (l_flattened_feature)
 				if l_keep_same_version then
 					l_flattened_feature.set_version (l_parent_feature.precursor_feature.version)
 				else

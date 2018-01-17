@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -43,8 +43,6 @@ feature {NONE} -- Initialization
 		do
 			initialize
 			create register_class_mutex.make
-			create register_feature_mutex.make
-			create register_inline_constant_mutex.make
 			create external_include_pathnames.make (20)
 			create external_object_pathnames.make (20)
 			create external_library_pathnames.make (20)
@@ -250,46 +248,6 @@ feature -- Class registration
 
 	register_class_mutex: MUTEX
 			-- Mutex for `register_class'
-
-feature -- Feature registration
-
-	register_feature (a_feature: ET_FEATURE)
-			-- Register `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-			register_feature_mutex.lock
-			registered_feature_count := registered_feature_count + 1
-			a_feature.set_id (registered_feature_count)
-			register_feature_mutex.unlock
-		ensure
-			a_feature_registered: a_feature.is_registered
-		end
-
-	registered_feature_count: INTEGER
-			-- Number of features already registered
-
-	register_feature_mutex: MUTEX
-			-- Mutex for `register_feature'
-
-feature -- Inline constant registration
-
-	register_inline_constant (a_constant: ET_INLINE_CONSTANT)
-			-- Register `a_constant'.
-		require
-			a_constant_not_void: a_constant /= Void
-		do
-			register_inline_constant_mutex.lock
-			registered_inline_constant_count := registered_inline_constant_count + 1
-			a_constant.set_id (registered_inline_constant_count)
-			register_inline_constant_mutex.unlock
-		end
-
-	registered_inline_constant_count: INTEGER
-			-- Number of inline constants already registered
-
-	register_inline_constant_mutex: MUTEX
-			-- Mutex for `register_inline_constant'
 
 feature -- Setting
 
@@ -724,5 +682,7 @@ invariant
 	no_void_external_cflag: not external_cflags.has_void
 	external_linker_flags_not_void: external_linker_flags /= Void
 	no_void_external_linker_flag: not external_linker_flags.has_void
+		-- Concurrency.
+	register_class_mutex_not_void: register_class_mutex /= Void
 
 end

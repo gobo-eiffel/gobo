@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -515,7 +515,6 @@ feature {NONE} -- Basic operations
 			-- Register `a_query' in `last_class'.
 		do
 			if a_query /= Void then
-				current_system.register_feature (a_query)
 				queries.force_last (a_query)
 				queries.finish
 				if attached last_object_tests as l_last_object_tests then
@@ -537,7 +536,6 @@ feature {NONE} -- Basic operations
 			-- Register `a_query' in `last_class'.
 		do
 			if a_query /= Void then
-				current_system.register_feature (a_query)
 				if queries.before then
 					queries.forth
 				end
@@ -550,7 +548,6 @@ feature {NONE} -- Basic operations
 			-- Register `a_procedure' in `last_class'.
 		do
 			if a_procedure /= Void then
-				current_system.register_feature (a_procedure)
 				procedures.force_last (a_procedure)
 				procedures.finish
 				if attached last_object_tests as l_last_object_tests then
@@ -572,7 +569,6 @@ feature {NONE} -- Basic operations
 			-- Register `a_procedure' in `last_class'.
 		do
 			if a_procedure /= Void then
-				current_system.register_feature (a_procedure)
 				if procedures.before then
 					procedures.forth
 				end
@@ -658,7 +654,9 @@ feature {NONE} -- Basic operations
 		local
 			a_class: like last_class
 			l_queries: ET_QUERY_LIST
+			l_query: ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
+			l_procedure: ET_PROCEDURE
 			i, nb: INTEGER
 		do
 			a_class := last_class
@@ -669,12 +667,25 @@ feature {NONE} -- Basic operations
 					l_queries.put_first (queries.item (i))
 					i := i - 1
 				end
+					-- Register the queries in the order they have
+					-- been written in `a_class' so that unique attribute
+					-- synonyms get their values in the right order.
+				from i := 1 until i > nb loop
+					l_query := queries.item (i)
+					a_class.register_feature (l_query)
+					if attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
+						l_unique_attribute.constant.set_value (l_unique_attribute.id.to_natural_64)
+					end
+					i := i + 1
+				end
 				l_queries.set_declared_count (nb)
 				a_class.set_queries (l_queries)
 				nb := procedures.count
 				create l_procedures.make_with_capacity (nb)
 				from i := nb until i < 1 loop
-					l_procedures.put_first (procedures.item (i))
+					l_procedure := procedures.item (i)
+					l_procedures.put_first (l_procedure)
+					a_class.register_feature (l_procedure)
 					i := i - 1
 				end
 				l_procedures.set_declared_count (nb)
@@ -1798,7 +1809,7 @@ feature {NONE} -- AST factory
 		do
 			Result := ast_factory.new_once_manifest_string (a_once, a_string)
 			if Result /= Void then
-				current_system.register_inline_constant (Result)
+				current_class.register_inline_constant (Result)
 			end
 		end
 

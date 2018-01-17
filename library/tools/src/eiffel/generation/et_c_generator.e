@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -7319,8 +7319,8 @@ feature {NONE} -- Instruction generation
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			l_has_case: BOOLEAN
-			l_lower: ET_CHOICE_CONSTANT
-			l_upper: ET_CHOICE_CONSTANT
+			l_lower: detachable ET_CONSTANT
+			l_upper: detachable ET_CONSTANT
 			l_lower_integer: detachable ET_INTEGER_CONSTANT
 			l_upper_integer: detachable ET_INTEGER_CONSTANT
 			l_lower_character: detachable ET_CHARACTER_CONSTANT
@@ -7361,24 +7361,12 @@ feature {NONE} -- Instruction generation
 							l_choice := l_choices.choice (j)
 							if l_choice.is_range then
 -- TODO
-								l_lower := l_choice.lower
-								l_upper := l_choice.upper
+								l_lower := choice_constant (l_choice.lower)
+								l_upper := choice_constant (l_choice.upper)
 								if attached {ET_INTEGER_CONSTANT} l_lower as l_integer_constant then
 									l_lower_integer := l_integer_constant
 									l_lower_character := Void
 								elseif attached {ET_CHARACTER_CONSTANT} l_lower as l_character_constant then
-									l_lower_character := l_character_constant
-									l_lower_integer := Void
-								elseif not attached {ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION} l_lower as l_feature_call then
-									l_lower_integer := Void
-									l_lower_character := Void
-								elseif not attached {ET_CONSTANT_ATTRIBUTE} current_type.base_class.seeded_query (l_feature_call.name.seed) as l_constant_attribute then
-									l_lower_integer := Void
-									l_lower_character := Void
-								elseif attached {ET_INTEGER_CONSTANT} l_constant_attribute.constant as l_integer_constant then
-									l_lower_integer := l_integer_constant
-									l_lower_character := Void
-								elseif attached {ET_CHARACTER_CONSTANT} l_constant_attribute.constant as l_character_constant then
 									l_lower_character := l_character_constant
 									l_lower_integer := Void
 								else
@@ -7389,18 +7377,6 @@ feature {NONE} -- Instruction generation
 									l_upper_integer := l_integer_constant
 									l_upper_character := Void
 								elseif attached {ET_CHARACTER_CONSTANT} l_upper as l_character_constant then
-									l_upper_character := l_character_constant
-									l_upper_integer := Void
-								elseif not attached {ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION} l_upper as l_feature_call then
-									l_upper_integer := Void
-									l_upper_character := Void
-								elseif not attached {ET_CONSTANT_ATTRIBUTE} current_type.base_class.seeded_query (l_feature_call.name.seed) as l_constant_attribute then
-									l_upper_integer := Void
-									l_upper_character := Void
-								elseif attached {ET_INTEGER_CONSTANT} l_constant_attribute.constant as l_integer_constant then
-									l_upper_integer := l_integer_constant
-									l_upper_character := Void
-								elseif attached {ET_CHARACTER_CONSTANT} l_constant_attribute.constant as l_character_constant then
 									l_upper_character := l_character_constant
 									l_upper_integer := Void
 								else
@@ -7419,8 +7395,7 @@ feature {NONE} -- Instruction generation
 										print_indentation
 										current_file.put_string (c_case)
 										current_file.put_character (' ')
-										print_type_cast (l_value_type, current_file)
-										current_file.put_integer (k)
+										print_integer_value (k.abs.to_natural_64, k < 0, l_value_type, True)
 										current_file.put_character (':')
 										current_file.put_new_line
 										k := k + 1
@@ -7437,13 +7412,15 @@ feature {NONE} -- Instruction generation
 										print_indentation
 										current_file.put_string (c_case)
 										current_file.put_character (' ')
-										print_type_cast (l_value_type, current_file)
 										if current_system.character_32_type.same_named_type (l_value_type.base_type, current_type.base_type, current_type.base_type) then
 											current_file.put_string (c_ge_nat32)
 											current_file.put_character ('(')
-											INTEGER_FORMATTER_.put_decimal_natural_32 (current_file, l_i_nat32)
+											current_file.put_natural_32 (l_i_nat32)
 											current_file.put_character (')')
 										else
+												-- Type cast needed when compiling with mingw when the character
+												-- is represented by '\xyz' where x is not 0.
+											print_type_cast (l_value_type, current_file)
 											print_escaped_character_8 (l_i_nat32.to_character_8)
 										end
 										current_file.put_character (':')
@@ -7463,8 +7440,27 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 								print_indentation
 								current_file.put_string (c_case)
 								current_file.put_character (' ')
-								print_type_cast (l_value_type, current_file)
-								print_expression (l_choice.lower)
+								l_lower := choice_constant (l_choice.lower)
+								if attached {ET_INTEGER_CONSTANT} l_lower as l_integer_constant then
+									print_integer_value (l_integer_constant.value, l_integer_constant.is_negative, l_value_type, True)
+								elseif attached {ET_CHARACTER_CONSTANT} l_lower as l_character_constant then
+									if current_system.character_32_type.same_named_type (l_value_type.base_type, current_type.base_type, current_type.base_type) then
+										current_file.put_string (c_ge_nat32)
+										current_file.put_character ('(')
+										current_file.put_natural_32 (l_character_constant.value.natural_32_code)
+										current_file.put_character (')')
+									else
+											-- Type cast needed when compiling with mingw when the character
+											-- is represented by '\xyz' where x is not 0.
+										print_type_cast (l_value_type, current_file)
+										print_escaped_character_8 (l_character_constant.value.to_character_8)
+									end
+								else
+									if l_value_type /= dynamic_type_set (l_choice.lower).static_type then
+										print_type_cast (l_value_type, current_file)
+									end
+									print_expression (l_choice.lower)
+								end
 								current_file.put_character (':')
 								current_file.put_new_line
 							end
@@ -7515,6 +7511,49 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			print_indentation
 			current_file.put_character ('}')
 			current_file.put_new_line
+		end
+
+	choice_constant (a_choice_constant: ET_CHOICE_CONSTANT): detachable ET_CONSTANT
+			-- Constant value of the inspect choice `a_choice_constant',
+			-- or Void if it appears not to be a constant after all
+			--
+			-- Note that validity `a_choice_constant' as an expression
+			-- is assumed to have already been checked.
+			-- It will just return Void if something unexpected is encountered.
+		require
+			a_choice_constant_not_void: a_choice_constant /= Void
+		local
+			l_query: detachable ET_QUERY
+			l_seed: INTEGER
+			l_target_type: ET_DYNAMIC_TYPE
+		do
+			if attached {ET_CONSTANT} a_choice_constant as l_constant then
+				Result := l_constant
+			else
+				if attached {ET_IDENTIFIER} a_choice_constant as l_identifier then
+					if l_identifier.is_argument then
+							-- This is not a constant.
+					elseif l_identifier.is_local then
+							-- This is not a constant.
+					elseif l_identifier.is_object_test_local then
+							-- This is not a constant.
+					elseif l_identifier.is_across_cursor then
+							-- This is not a constant.
+					else
+						l_seed := l_identifier.seed
+						l_query := current_type.base_class.seeded_query (l_seed)
+					end
+				elseif attached {ET_UNQUALIFIED_FEATURE_CALL} a_choice_constant as l_unqualified_call and then l_unqualified_call.arguments_count = 0 then
+					l_seed := l_unqualified_call.name.seed
+					l_query := current_type.base_class.seeded_query (l_seed)
+				elseif attached {ET_STATIC_CALL_EXPRESSION} a_choice_constant as l_static_call then
+					l_target_type := current_dynamic_system.dynamic_type (l_static_call.type, current_type.base_type)
+					l_query := l_target_type.base_class.seeded_query (l_static_call.name.seed)
+				end
+				if attached {ET_CONSTANT_QUERY} l_query as l_constant_query then
+					Result := l_constant_query.constant
+				end
+			end
 		end
 
 	print_instruction (an_instruction: ET_INSTRUCTION)
@@ -9328,7 +9367,7 @@ feature {NONE} -- Expression generation
 				if current_system.character_32_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
 					current_file.put_string (c_ge_nat32)
 					current_file.put_character ('(')
-					INTEGER_FORMATTER_.put_decimal_natural_32 (current_file, a_constant.value.natural_32_code)
+					current_file.put_natural_32 (a_constant.value.natural_32_code)
 					current_file.put_character (')')
 				else
 					print_escaped_character_8 (a_constant.value.to_character_8)
@@ -10450,14 +10489,12 @@ feature {NONE} -- Expression generation
 		end
 
 	print_integer_constant (a_constant: ET_INTEGER_CONSTANT)
-			-- Check validity of `a_constant'.
+			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
 		local
 			l_temp: ET_IDENTIFIER
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_integer_32_value: INTEGER_32
-			l_integer_64_value: INTEGER_64
 		do
 			if in_operand then
 				if in_target then
@@ -10482,114 +10519,98 @@ feature {NONE} -- Expression generation
 				l_dynamic_type := dynamic_type_set (a_constant).static_type
 				print_type_cast (l_dynamic_type, current_file)
 				current_file.put_character ('(')
-				if current_universe_impl.integer_8_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
-					if not a_constant.is_integer_8 then
-							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						current_file.put_string (c_ge_int8)
-						current_file.put_character ('(')
-						current_file.put_integer_8 (a_constant.to_integer_8)
-						current_file.put_character (')')
-					end
-				elseif current_universe_impl.integer_16_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
-					if not a_constant.is_integer_16 then
-							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						current_file.put_string (c_ge_int16)
-						current_file.put_character ('(')
-						current_file.put_integer_16 (a_constant.to_integer_16)
-						current_file.put_character (')')
-					end
-				elseif current_universe_impl.integer_32_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
-					if not a_constant.is_integer_32 then
-							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						current_file.put_string (c_ge_int32)
-						current_file.put_character ('(')
-						l_integer_32_value := a_constant.to_integer_32
-						if l_integer_32_value = {INTEGER_32}.Min_value then
-							current_file.put_character ('-')
-							current_file.put_integer_32 ({INTEGER_32}.Max_value)
-							current_file.put_string (")-1")
-						else
-							current_file.put_integer_32 (l_integer_32_value)
-							current_file.put_character (')')
-						end
-					end
-				elseif current_universe_impl.integer_64_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
-					if not a_constant.is_integer_64 then
-							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						current_file.put_string (c_ge_int64)
-						current_file.put_character ('(')
-						l_integer_64_value := a_constant.to_integer_64
-						if l_integer_64_value = {INTEGER_64}.Min_value then
-							current_file.put_character ('-')
-							current_file.put_integer_64 ({INTEGER_64}.Max_value)
-							current_file.put_string (")-1")
-						else
-							current_file.put_integer_64 (l_integer_64_value)
-							current_file.put_character (')')
-						end
-					end
-				elseif current_universe_impl.natural_8_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
-					if not a_constant.is_natural_8 then
-							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						current_file.put_string (c_ge_nat8)
-						current_file.put_character ('(')
-						current_file.put_natural_8 (a_constant.to_natural_8)
-						current_file.put_character (')')
-					end
-				elseif current_universe_impl.natural_16_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
-					if not a_constant.is_natural_16 then
-							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						current_file.put_string (c_ge_nat16)
-						current_file.put_character ('(')
-						current_file.put_natural_16 (a_constant.to_natural_16)
-						current_file.put_character (')')
-					end
-				elseif current_universe_impl.natural_32_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
-					if not a_constant.is_natural_32 then
-							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						current_file.put_string (c_ge_nat32)
-						current_file.put_character ('(')
-						current_file.put_natural_32 (a_constant.to_natural_32)
-						current_file.put_character (')')
-					end
-				elseif current_universe_impl.natural_64_type.same_named_type (l_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
-					if not a_constant.is_natural_64 then
-							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						current_file.put_string (c_ge_nat64)
-						current_file.put_character ('(')
-						current_file.put_natural_64 (a_constant.to_natural_64)
-						current_file.put_character (')')
-					end
-				else
-						-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				end
+				print_integer_value (a_constant.value, a_constant.is_negative, l_dynamic_type, False)
 				current_file.put_character (')')
+			end
+		end
+
+	print_integer_value (a_abs_value: NATURAL_64; a_is_negative: BOOLEAN; a_dynamic_type: ET_DYNAMIC_TYPE; a_in_case_statement: BOOLEAN)
+			-- Print integer of type `a_dynamic_type' with absolute value `a_abs_value'
+			-- with a minus sign if `a_is_negative'.
+			-- `a_in_case_statement' is used because lcc-win32 does not consider 64 bit constants as constants in case statement.
+			-- We have to cast them down to 32 bit constants, with the risk that they do not fit in 32 bits.
+		require
+			a_dynamic_type_not_void: a_dynamic_type /= Void
+		do
+			if current_universe_impl.integer_8_type.same_named_type (a_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
+				current_file.put_string (c_ge_int8)
+				current_file.put_character ('(')
+				if a_is_negative then
+					current_file.put_character ('-')
+				end
+				current_file.put_natural_64 (a_abs_value)
+				current_file.put_character (')')
+			elseif current_universe_impl.integer_16_type.same_named_type (a_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
+				current_file.put_string (c_ge_int16)
+				current_file.put_character ('(')
+				if a_is_negative then
+					current_file.put_character ('-')
+				end
+				current_file.put_natural_64 (a_abs_value)
+				current_file.put_character (')')
+			elseif current_universe_impl.integer_32_type.same_named_type (a_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
+				if a_is_negative and then a_abs_value = {INTEGER_32}.Max_value.to_natural_64 + 1 then
+					current_file.put_string (c_ge_min_int32)
+				else
+					current_file.put_string (c_ge_int32)
+					current_file.put_character ('(')
+					if a_is_negative then
+						current_file.put_character ('-')
+					end
+					current_file.put_natural_64 (a_abs_value)
+					current_file.put_character (')')
+				end
+			elseif current_universe_impl.integer_64_type.same_named_type (a_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
+				if a_in_case_statement then
+					current_file.put_string (c_ge_case_int64)
+					current_file.put_character ('(')
+				end
+				if a_is_negative and then a_abs_value = {INTEGER_64}.Max_value.to_natural_64 + 1 then
+					current_file.put_string (c_ge_min_int64)
+				else
+					current_file.put_string (c_ge_int64)
+					current_file.put_character ('(')
+					if a_is_negative then
+						current_file.put_character ('-')
+					end
+					current_file.put_natural_64 (a_abs_value)
+					current_file.put_character (')')
+				end
+				if a_in_case_statement then
+					current_file.put_character (')')
+				end
+			elseif current_universe_impl.natural_8_type.same_named_type (a_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
+				current_file.put_string (c_ge_nat8)
+				current_file.put_character ('(')
+				current_file.put_natural_64 (a_abs_value)
+				current_file.put_character (')')
+			elseif current_universe_impl.natural_16_type.same_named_type (a_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
+				current_file.put_string (c_ge_nat16)
+				current_file.put_character ('(')
+				current_file.put_natural_64 (a_abs_value)
+				current_file.put_character (')')
+			elseif current_universe_impl.natural_32_type.same_named_type (a_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
+				current_file.put_string (c_ge_nat32)
+				current_file.put_character ('(')
+				current_file.put_natural_64 (a_abs_value)
+				current_file.put_character (')')
+			elseif current_universe_impl.natural_64_type.same_named_type (a_dynamic_type.base_type, current_type.base_type, current_type.base_type) then
+				if a_in_case_statement then
+					current_file.put_string (c_ge_case_nat64)
+					current_file.put_character ('(')
+				end
+				current_file.put_string (c_ge_nat64)
+				current_file.put_character ('(')
+				current_file.put_natural_64 (a_abs_value)
+				current_file.put_character (')')
+				if a_in_case_statement then
+					current_file.put_character (')')
+				end
+			else
+				if a_is_negative then
+					current_file.put_character ('-')
+				end
+				current_file.put_natural_64 (a_abs_value)
 			end
 		end
 
@@ -12456,17 +12477,18 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					l_constant.set_index (old_index)
 				end
 			elseif l_query.is_unique_attribute then
-				l_dynamic_type_set := dynamic_type_set (a_expression)
-				l_dynamic_type := l_dynamic_type_set.static_type
-				print_type_cast (l_dynamic_type, current_file)
-				current_file.put_character ('(')
-					-- In the current implementation unique values is based on
-					-- the id of the implementation feature (the feature in the
-					-- class where this unique attribute has been written). For
-					-- synonyms the fetaure id is in the reverse order, hence the
-					-- arithmetic below.
-				current_file.put_integer (current_system.registered_feature_count - l_query.implementation_feature.id + 1)
-				current_file.put_character (')')
+				if not attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_dynamic_type_set := dynamic_type_set (a_expression)
+					l_dynamic_type := l_dynamic_type_set.static_type
+					print_type_cast (l_dynamic_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_integer (l_unique_attribute.constant.to_integer_32)
+					current_file.put_character (')')
+				end
 			else
 				l_dynamic_feature := a_target_type.dynamic_query (l_query, current_dynamic_system)
 				if not l_dynamic_feature.is_static_generated then
@@ -14171,12 +14193,7 @@ feature {NONE} -- Query call generation
 -- TODO: Need to check whether the target is Void or not, even though it does not matter here.
 				print_type_cast (l_result_type_set.static_type, current_file)
 				current_file.put_character ('(')
-					-- In the current implementation unique values is based on
-					-- the id of the implementation feature (the feature in the
-					-- class where this unique attribute has been written). For
-					-- synonyms the feature id is in the reverse order, hence the
-					-- arithmetic below.
-				current_file.put_integer (current_system.registered_feature_count - l_unique_attribute.implementation_feature.id + 1)
+				current_file.put_integer (l_unique_attribute.constant.to_integer_32)
 				current_file.put_character (')')
 			elseif attached {ET_ATTRIBUTE} l_static_query as l_attribute then
 				l_target := call_operands.first
@@ -28847,23 +28864,28 @@ feature {NONE} -- C function generation
 			header_file.put_character ('(')
 			current_file.put_character ('(')
 			nb := l_item_type_sets.count
-			from i := 1 until i > nb loop
-				if i /= 1 then
-					header_file.put_character (',')
+			if nb = 0 then
+				header_file.put_string (c_void)
+				current_file.put_string (c_void)
+			else
+				from i := 1 until i > nb loop
+					if i /= 1 then
+						header_file.put_character (',')
+						header_file.put_character (' ')
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					end
+					l_item_type := l_item_type_sets.item (i).static_type
+					print_type_declaration (l_item_type, header_file)
+					print_type_declaration (l_item_type, current_file)
 					header_file.put_character (' ')
-					current_file.put_character (',')
+					header_file.put_character ('a')
+					header_file.put_integer (i)
 					current_file.put_character (' ')
+					current_file.put_character ('a')
+					current_file.put_integer (i)
+					i := i + 1
 				end
-				l_item_type := l_item_type_sets.item (i).static_type
-				print_type_declaration (l_item_type, header_file)
-				print_type_declaration (l_item_type, current_file)
-				header_file.put_character (' ')
-				header_file.put_character ('a')
-				header_file.put_integer (i)
-				current_file.put_character (' ')
-				current_file.put_character ('a')
-				current_file.put_integer (i)
-				i := i + 1
 			end
 			header_file.put_character (')')
 			current_file.put_character (')')
@@ -35669,6 +35691,8 @@ feature {NONE} -- Constants
 	c_ge_boolean_field_at: STRING = "GE_boolean_field_at"
 	c_ge_boxed: STRING = "GE_boxed"
 	c_ge_call: STRING = "GE_call"
+	c_ge_case_int64: STRING = "GE_case_int64"
+	c_ge_case_nat64: STRING = "GE_case_nat64"
 	c_ge_catcall: STRING = "GE_catcall"
 	c_ge_ccom_character_size: STRING = "GE_ccom_character_size"
 	c_ge_ccom_error_text: STRING = "GE_ccom_error_text"
@@ -35753,6 +35777,8 @@ feature {NONE} -- Constants
 	c_ge_malloc_cleared: STRING = "GE_malloc_cleared"
 	c_ge_malloc_atomic_cleared: STRING = "GE_malloc_atomic_cleared"
 	c_ge_mark_object: STRING = "GE_mark_object"
+	c_ge_min_int32: STRING = "GE_min_int32"
+	c_ge_min_int64: STRING = "GE_min_int64"
 	c_ge_ms: STRING = "GE_ms"
 	c_ge_ms8: STRING = "GE_ms8"
 	c_ge_ms32: STRING = "GE_ms32"

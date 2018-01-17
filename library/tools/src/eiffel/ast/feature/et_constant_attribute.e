@@ -5,7 +5,7 @@ note
 		"Eiffel constant attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_CONSTANT_ATTRIBUTE
 
 inherit
 
-	ET_QUERY
+	ET_CONSTANT_QUERY
 		redefine
 			is_constant_attribute,
 			is_static,
@@ -168,7 +168,6 @@ feature -- Processing
 invariant
 
 	is_keyword_not_void: is_keyword /= Void
-	constant_not_void: constant /= Void
 	is_constant_attribute: arguments = Void
 
 end

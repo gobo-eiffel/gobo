@@ -5,7 +5,7 @@ note
 		"Eiffel unique attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_UNIQUE_ATTRIBUTE
 
 inherit
 
-	ET_QUERY
+	ET_CONSTANT_QUERY
 		redefine
 			is_unique_attribute,
 			is_static,
@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			is_keyword := tokens.is_keyword
 			unique_keyword := tokens.unique_keyword
 			clients := tokens.empty_clients
+			create constant.make ("1")
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure
@@ -68,6 +69,9 @@ feature -- Access
 
 	unique_keyword: ET_KEYWORD
 			-- 'unique' keyword
+
+	constant: ET_REGULAR_INTEGER_CONSTANT
+			-- Constant value
 
 	header_break: detachable ET_BREAK
 			-- Break which appears where the header comment is expected
