@@ -169,7 +169,7 @@ feature -- Test
 			if not attached {XM_XPATH_DOUBLE_VALUE} evaluated_items.item (1) as a_double_value then
 				assert ("a_double_value_not_void", False)
 			else
-				assert ("Correct value", a_double_value.value = 17.5E-12)
+				assert_doubles_equal_with_tolerance ("Correct value", 17.5E-12, a_double_value.value, 1.0E-25)
 			end
 		end
 
