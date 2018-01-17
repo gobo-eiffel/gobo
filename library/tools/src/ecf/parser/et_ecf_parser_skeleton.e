@@ -5,7 +5,7 @@ note
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1728,6 +1728,8 @@ feature {NONE} -- AST factory
 							if attached new_root (l_child, a_position_table, a_universe) as l_root then
 								Result.set_root (l_root)
 							end
+						elseif STRING_.same_case_insensitive (l_child.name, xml_setting) then
+							add_setting (Result.settings, l_child, a_position_table, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_variable) then
 							add_variable (Result.variables, l_child, a_position_table, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_version) then

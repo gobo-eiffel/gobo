@@ -20,6 +20,7 @@
 			<exclude>/\.git$</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true"/>
+		<setting name="console_application" value="true"/>
 		<capability>
 			<void_safety use="all" support="all"/>
 		</capability>
