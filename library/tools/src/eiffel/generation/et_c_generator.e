@@ -394,12 +394,8 @@ feature {NONE} -- Compilation script generation
 			l_c_config: DS_HASH_TABLE [STRING, STRING]
 			l_obj_filenames: STRING
 			l_variables: DS_HASH_TABLE [STRING, STRING]
-			l_file: KL_TEXT_OUTPUT_FILE
-			l_command_name: STRING
-			l_cc_template: STRING
 			l_link_template: STRING
 			l_filename: STRING
-			l_script_filename: STRING
 			l_base_name: STRING
 			i, nb: INTEGER
 			l_obj: STRING
@@ -411,8 +407,6 @@ feature {NONE} -- Compilation script generation
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_object_pathnames: DS_ARRAYED_LIST [STRING]
-			l_external_resource_pathnames: DS_ARRAYED_LIST [STRING]
-			l_external_make_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_cflags: DS_ARRAYED_LIST [STRING]
 			l_external_linker_flags: DS_ARRAYED_LIST [STRING]
 			l_includes: STRING
@@ -424,10 +418,6 @@ feature {NONE} -- Compilation script generation
 			l_pathname: STRING
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 			l_external_c_filenames: DS_HASH_TABLE [STRING, STRING]
-			l_rc_template: STRING
-			l_rc_filename: STRING
-			l_res_filename: STRING
-			l_make_template: STRING
 		do
 			l_base_name := a_system_name
 			l_c_config := c_config
@@ -535,15 +525,17 @@ feature {NONE} -- Compilation script generation
 				-- Object files.
 			create l_obj_filenames.make (100)
 			l_obj := l_c_config.item ("obj")
+			-- List objects in reverse order so that it looks like
+			-- a countdown when compiling since the filenames are numbered.
 			l_cursor := c_filenames.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				if not l_cursor.is_first then
+			from l_cursor.finish until l_cursor.before loop
+				if not l_cursor.is_last then
 					l_obj_filenames.append_character (' ')
 				end
 				l_filename := l_cursor.key
 				l_obj_filenames.append_string (l_filename)
 				l_obj_filenames.append_string (l_obj)
-				l_cursor.forth
+				l_cursor.back
 			end
 			l_external_object_pathnames := current_system.external_object_pathnames
 			nb := l_external_object_pathnames.count
@@ -575,6 +567,47 @@ feature {NONE} -- Compilation script generation
 			end
 			l_variables.force (l_obj_filenames, "objs")
 				-- Script.
+			if operating_system.is_windows then
+				generate_compilation_shell_script (l_base_name, l_variables, l_obj_filenames, l_pathname, l_replacement, l_env_regexp, l_external_c_filenames)
+			else
+				generate_compilation_makefile (l_base_name, l_variables, l_obj_filenames, l_pathname, l_replacement, l_env_regexp, l_external_c_filenames)
+			end
+		end
+
+	generate_compilation_shell_script (a_system_name: STRING; a_variables: like c_config; an_obj_filenames, a_pathname, a_replacement: STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
+		local
+			l_base_name: STRING
+			l_script_filename: STRING
+			l_file: KL_TEXT_OUTPUT_FILE
+			l_c_config: DS_HASH_TABLE [STRING, STRING]
+			l_variables: DS_HASH_TABLE [STRING, STRING]
+			l_link_template: STRING
+			l_command_name: STRING
+			l_obj_filenames: like an_obj_filenames
+			l_rc_template: STRING
+			l_rc_filename: STRING
+			l_res_filename: STRING
+			l_make_template: STRING
+			l_pathname: like a_pathname
+			i, nb: INTEGER
+			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_external_make_pathnames: DS_ARRAYED_LIST [STRING]
+			l_replacement: STRING
+			l_external_resource_pathnames: DS_ARRAYED_LIST [STRING]
+			l_cc_template: STRING
+			l_filename: STRING
+			l_external_c_filenames: like an_external_c_filenames
+		do
+			l_base_name := a_system_name
+			l_c_config := c_config
+			l_variables := a_variables
+			l_obj_filenames := an_obj_filenames
+			l_pathname := a_pathname
+			l_replacement := a_replacement
+			l_env_regexp := an_env_regexp
+			l_external_c_filenames := an_external_c_filenames
+
 			if operating_system.is_windows then
 				l_script_filename := l_base_name + bat_file_extension
 			else
@@ -681,6 +714,63 @@ feature {NONE} -- Compilation script generation
 			end
 		end
 
+	generate_compilation_makefile (a_system_name: STRING; a_variables: like c_config; an_obj_filenames, a_pathname, a_replacement: STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
+		local
+			l_base_name: STRING
+			l_c_config: DS_HASH_TABLE [STRING, STRING]
+			l_variables: DS_HASH_TABLE [STRING, STRING]
+			l_obj_filenames: like an_obj_filenames
+			l_pathname: like a_pathname
+			l_replacement: STRING
+			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_external_c_filenames: like an_external_c_filenames
+			l_makefile_filename: STRING
+			l_script_filename: STRING
+			l_file: KL_TEXT_OUTPUT_FILE
+			l_filename: STRING
+			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			l_link_template: STRING
+			l_command_name: STRING
+		do
+			l_base_name := a_system_name
+			l_c_config := c_config
+			l_variables := a_variables
+			l_obj_filenames := an_obj_filenames
+			l_pathname := a_pathname
+			l_replacement := a_replacement
+			l_env_regexp := an_env_regexp
+			l_external_c_filenames := an_external_c_filenames
+
+			l_makefile_filename := l_base_name + make_file_extension
+			create l_file.make (l_makefile_filename)
+			l_file.open_write
+			if l_file.is_open_write then
+				l_variables.force (l_base_name + ".h", "header")
+				l_link_template := l_c_config.item ("Makefile")
+				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
+				l_file.put_line (l_command_name)
+
+				l_file.close
+
+				l_script_filename := l_base_name + sh_file_extension
+				create l_file.make (l_script_filename)
+				l_file.open_write
+				if l_file.is_open_write then
+					l_file.put_line ("#!/bin/sh")
+					l_file.put_line ("make -f " + l_makefile_filename)
+					l_file.close
+					-- Set executable mode.
+					l_file.change_mode (0c777)
+				else
+					set_fatal_error
+					report_cannot_write_error (l_script_filename)
+				end
+			else
+				set_fatal_error
+				report_cannot_write_error (l_makefile_filename)
+			end
+		end
+
 	c_config: DS_HASH_TABLE [STRING, STRING]
 			-- C compiler configuration
 		local
@@ -712,7 +802,7 @@ feature {NONE} -- Compilation script generation
 				if operating_system.is_windows then
 					l_name := "msc"
 				else
-					l_name := "gcc"
+					l_name := "cc"
 				end
 			end
 			create Result.make_map (10)
@@ -732,6 +822,48 @@ feature {NONE} -- Compilation script generation
 				Result.put_new ("", "exe")
 				Result.put_new ("", "cflags")
 				Result.put_new ("", "lflags")
+				Result.put_new ("[
+#
+# Makefile generated by gec.
+#
+
+.PHONY: all install clean distclean uninstall
+
+all: $exe
+
+prefix = /usr/local
+exec_prefix = $(prefix)
+bindir = $(exec_prefix)/bin
+mandir = $(prefix)/man
+man1dir = $(mandir)/man1
+
+INSTALL = install -C
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL_DATA = $(INSTALL)
+
+CFLAGS += $cflags $includes $gc_includes
+LDFLAGS += $lflags $lflags_threads
+LDLIBS += -lm $gc_libs $libs
+OBJS = $objs
+
+$exe: $(OBJS) $header
+	$(CC) $(LDFLAGS) -o $exe $(OBJS) $(LDLIBS)
+
+clean:
+	-rm $(OBJS) $exe
+
+distclean: clean
+
+install:
+	$(INSTALL_PROGRAM) -d $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $exe $(DESTDIR)$(bindir)
+
+uninstall:
+	-rm -f $(DESTDIR)$(bindir)/$exe
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+]", "Makefile")
 			end
 			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", l_name>>)
 			l_filename := Execution_environment.interpreted_string (l_filename)
@@ -16878,10 +17010,10 @@ feature {NONE} -- Polymorphic call functions generation
 								elseif attached {ET_MANIFEST_TUPLE} l_args2.actual_argument (1) then
 									Result := False
 								else
-						 			Result := same_declaration_types (l_type_set1.static_type, l_type_set2.static_type)
-						 		end
-						 	else
-						 		Result := same_declaration_types (l_type_set1.static_type, l_type_set2.static_type)
+									Result := same_declaration_types (l_type_set1.static_type, l_type_set2.static_type)
+								end
+							else
+								Result := same_declaration_types (l_type_set1.static_type, l_type_set2.static_type)
 							end
 							i := i + 1
 						elseif same_declaration_types (l_type_set1.static_type, l_type_set2.static_type) then
@@ -25557,7 +25689,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 						-- these items are of the expected types, regardless of the type of the tuple
 						-- itself. For example it is OK to pass a "TUPLE [ANY]" to an Agent which expects
 						-- a "TUPLE [STRING]" provided that the dynamic type of the item of this tuple
-				 		-- conforms to type STRING.
+						-- conforms to type STRING.
 					nb := l_routine_type.open_operand_type_sets.count
 					if not attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_source_type_set.static_type as l_source_tuple_type or else l_source_tuple_type.item_type_sets.count < nb then
 							-- There is not enough items in the tuple. Keep the real tuple target
@@ -25626,8 +25758,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 						current_file.put_character ('(')
 							-- Print attribute 'rout_disp'.
 						print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
-                        current_file.put_character (')')
-                        current_file.put_character (')')
+								current_file.put_character (')')
+								current_file.put_character (')')
 						current_file.put_character ('(')
 						current_file.put_string (c_ac)
 						current_file.put_character (',')
@@ -35955,6 +36087,7 @@ feature {NONE} -- Constants
 	res_file_extension: STRING = ".res"
 	rc_file_extension: STRING = ".rc"
 	sh_file_extension: STRING = ".sh"
+	make_file_extension: STRING = ".make"
 			-- File extensions
 
 invariant
