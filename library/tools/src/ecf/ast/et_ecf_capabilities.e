@@ -5,7 +5,7 @@ note
 		"ECF capabilities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,10 +24,7 @@ inherit
 
 create
 
-	make,
-	make_default_1_16_0,
-	make_default_1_15_0,
-	make_default_1_14_0
+	make
 
 feature {NONE} -- Initialization
 
@@ -45,27 +42,6 @@ feature {NONE} -- Initialization
 			primary_support_capabilities.set_hash_function (l_hash_function)
 		end
 
-	make_default_1_16_0
-			-- Create a new ECF capabilities already filled in with the default values of ECF 1.16.0.
-		do
-			make
-			set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, {ET_ECF_CAPABILITY_NAMES}.none_capability_value)
-			set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, {ET_ECF_CAPABILITY_NAMES}.scoop_capability_value)
-			set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, {ET_ECF_CAPABILITY_NAMES}.all_capability_value)
-		end
-
-	make_default_1_15_0
-			-- Create a new ECF capabilities already filled in with the default values of ECF 1.15.0.
-		do
-			make_default_1_16_0
-		end
-
-	make_default_1_14_0
-			-- Create a new ECF capabilities already filled in with the default values of ECF 1.14.0.
-		do
-			make_default_1_15_0
-		end
-
 feature -- Status report
 
 	is_capability_supported (a_capability_name, a_capability_value: STRING): BOOLEAN
@@ -75,7 +51,6 @@ feature -- Status report
 			a_capability_value_not_void: a_capability_value /= Void
 		local
 			l_order: DS_HASH_TABLE [INTEGER, STRING]
-			l_splitter: ST_SPLITTER
 			l_rank: INTEGER
 		do
 			if not attached support_value (a_capability_name) as l_value then
@@ -95,11 +70,7 @@ feature -- Status report
 						end
 					end
 				else
-						-- Not ordered.
-					if l_value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
-						create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
-						Result := l_splitter.split (l_value).there_exists (agent STRING_.same_case_insensitive (?, a_capability_value))
-					end
+					Result := False
 				end
 			end
 		end
@@ -224,7 +195,7 @@ feature {NONE} -- Implementation
 			l_hash_function: KL_AGENT_HASH_FUNCTION [STRING]
 			l_order: DS_HASH_TABLE [INTEGER, STRING]
 		once
-			create Result.make_map (5)
+			create Result.make_map (3)
 			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
 			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
 			Result.set_hash_function (l_hash_function)

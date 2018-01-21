@@ -5,7 +5,7 @@ note
 		"ECF options"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,10 +24,7 @@ inherit
 
 create
 
-	make,
-	make_default_1_16_0,
-	make_default_1_15_0,
-	make_default_1_14_0
+	make
 
 feature {NONE} -- Initialization
 
@@ -49,41 +46,6 @@ feature {NONE} -- Initialization
 			create primary_warnings.make_map (15)
 			primary_warnings.set_key_equality_tester (case_insensitive_string_equality_tester)
 			primary_warnings.set_hash_function (l_hash_function)
-		end
-
-	make_default_1_16_0
-			-- Create a new ECF options already filled in with the default values of ECF 1.16.0.
-		do
-			make
-			set_primary_value ({ET_ECF_OPTION_NAMES}.debug_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
-			set_primary_value ({ET_ECF_OPTION_NAMES}.is_attached_by_default_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
-			set_primary_value ({ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_value ({ET_ECF_OPTION_NAMES}.msil_application_optimize_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_value ({ET_ECF_OPTION_NAMES}.optimize_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_value ({ET_ECF_OPTION_NAMES}.profile_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
-			set_primary_value ({ET_ECF_OPTION_NAMES}.trace_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_invariant_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_loop_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_postcondition_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_precondition_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_supplier_precondition_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-		end
-
-	make_default_1_15_0
-			-- Create a new ECF options already filled in with the default values of ECF 1.15.0.
-		do
-			make_default_1_16_0
-		end
-
-	make_default_1_14_0
-			-- Create a new ECF options already filled in with the default values of ECF 1.14.0.
-		do
-			make_default_1_15_0
-			set_primary_value ({ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 		end
 
 feature -- Access

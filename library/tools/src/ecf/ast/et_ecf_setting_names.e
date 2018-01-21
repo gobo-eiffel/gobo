@@ -5,7 +5,7 @@ note
 		"ECF setting names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,6 +13,13 @@ note
 class ET_ECF_SETTING_NAMES
 
 feature -- Names
+
+	absent_explicit_assertion_setting_name: STRING = "absent_explicit_assertion"
+			-- Name of setting "absent_explicit_assertion"
+			--
+			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.17.0.
 
 	address_expression_setting_name: STRING = "address_expression"
 			-- Name of setting "address_expression"
@@ -33,6 +40,8 @@ feature -- Names
 			-- Name of setting "check_for_void_target"
 			--
 			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.11.0.
 
 	check_generic_creation_constraint_setting_name: STRING = "check_generic_creation_constraint"
 			-- Name of setting "check_generic_creation_constraint"
@@ -44,8 +53,8 @@ feature -- Names
 			--
 			-- Values: true|false
 
-	console_application_setting_name: STRING = "console_application"
-			-- Name of setting "console_application"
+	cls_compliant_setting_name: STRING = "cls_compliant"
+			-- Name of setting "cls_compliant"
 			--
 			-- Values: true|false
 
@@ -54,10 +63,11 @@ feature -- Names
 			--
 			-- Values: none|thread|scoop
 			--
+			-- Note: introduced in ECF 1.7.0.
 			-- Note: superseded by the capability "concurrency" in ECF 1.16.0.
 
-	cls_compliant_setting_name: STRING = "cls_compliant"
-			-- Name of setting "cls_compliant"
+	console_application_setting_name: STRING = "console_application"
+			-- Name of setting "console_application"
 			--
 			-- Values: true|false
 
@@ -97,6 +107,13 @@ feature -- Names
 			--
 			-- Values: true|false
 
+	full_type_checking_setting_name: STRING = "full_type_checking"
+			-- Name of setting "full_type_checking"
+			--
+			-- Values: true|false
+			--
+			-- Note: superseded by option "full_class_checking" in ECF 1.2.0.
+
 	il_verifiable_setting_name: STRING = "il_verifiable"
 			-- Name of setting "il_verifiable"
 			--
@@ -110,13 +127,19 @@ feature -- Names
 	inlining_size_setting_name: STRING = "inlining_size"
 			-- Name of setting "inlining_size"
 			--
-			-- Values: Integers >= 0
+			-- Values: Integers >= 0 and <= 100
 
 	java_generation_setting_name: STRING = "java_generation"
 			-- Name of setting "java_generation"
+			--
+			-- Values: true|false
 
 	library_root_setting_name: STRING = "library_root"
 			-- Name of setting "library_root"
+			--
+			-- This setting is used as root location to use for relative paths.
+			-- The default is the location of the ECF file.
+			-- It is also uses to replace the value of $ECF_CONFIG_PATH.
 
 	line_generation_setting_name: STRING = "line_generation"
 			-- Name of setting "line_generation"
@@ -131,6 +154,8 @@ feature -- Names
 
 	msil_classes_per_module_setting_name: STRING = "msil_classes_per_module"
 			-- Name of setting "msil_classes_per_module"
+			--
+			-- Values: Integers > 0
 
 	msil_clr_version_setting_name: STRING = "msil_clr_version"
 			-- Name of setting "msil_clr_version"
@@ -142,10 +167,6 @@ feature -- Names
 			-- Name of setting "msil_generation"
 			--
 			-- Values: true|false
-			--
-			-- Note: this was supposed to be superseded by the capability 'code'
-			-- in ECF 1.16.0, but ISE does not support the capability 'code' yet
-			-- and still uses the setting 'msil_generation'.
 
 	msil_generation_type_setting_name: STRING = "msil_generation_type"
 			-- Name of setting "msil_generation_type"
@@ -171,6 +192,8 @@ feature -- Names
 			-- Name of setting "old_feature_replication"
 			--
 			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.4.0.
 
 	old_verbatim_strings_setting_name: STRING = "old_verbatim_strings"
 			-- Name of setting "old_verbatim_strings"
@@ -181,10 +204,6 @@ feature -- Names
 			-- Name of setting "msil_generation"
 			--
 			-- Values: windows|unix|macintosh|vxworks
-			--
-			-- Note: this was supposed to be superseded by the capability 'platform'
-			-- in ECF 1.16.0, but ISE does not support the capability 'platform' yet
-			-- and still uses the setting 'platform'.
 
 	shared_library_definition_setting_name: STRING = "shared_library_definition"
 			-- Name of setting "shared_library_definition"
@@ -193,14 +212,16 @@ feature -- Names
 			-- Name of setting "total_order_on_reals"
 			--
 			-- Values: true|false
-
-	use_cluster_name_as_namespace_setting_name: STRING = "use_cluster_name_as_namespace"
-			-- Name of setting "use_cluster_name_as_namespace"
 			--
-			-- Values: true|false
+			-- Note: introduced in ECF 1.6.0.
 
 	use_all_cluster_name_as_namespace_setting_name: STRING = "use_all_cluster_name_as_namespace"
 			-- Name of setting "use_all_cluster_name_as_namespace"
+			--
+			-- Values: true|false
+
+	use_cluster_name_as_namespace_setting_name: STRING = "use_cluster_name_as_namespace"
+			-- Name of setting "use_cluster_name_as_namespace"
 			--
 			-- Values: true|false
 
@@ -228,7 +249,6 @@ feature -- Values
 			-- Value "macintosh"
 			--
 			-- Used in "platform".
-
 
 	none_setting_value: STRING = "none"
 			-- Value "none"

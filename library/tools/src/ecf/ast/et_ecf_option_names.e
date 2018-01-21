@@ -5,7 +5,7 @@ note
 		"ECF option names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,12 +43,16 @@ feature -- Names
 			-- Name of "assertions" option "supplier_precondition"
 			--
 			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.2.0.
 
 	cat_call_detection_option_name: STRING = "cat_call_detection"
 			-- Name of option "cat_call_detection"
 			--
 			-- Values: none|conformance|all
+			-- Was: true|false until ECF 1.13.0 included.
 			--
+			-- Note: introduced in ECF 1.10.0.
 			-- Note: superseded by the capability "catcall_detection" in ECF 1.16.0.
 
 	debug_option_name: STRING = "debug"
@@ -60,11 +64,15 @@ feature -- Names
 			-- Name of option "full_class_checking"
 			--
 			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.2.0.
 
 	is_attached_by_default_option_name: STRING = "is_attached_by_default"
 			-- Name of option "is_attached_by_default"
 			--
 			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.3.0.
 
 	is_obsolete_routine_type_option_name: STRING = "is_obsolete_routine_type"
 			-- Name of option "is_obsolete_routine_type"
@@ -72,6 +80,20 @@ feature -- Names
 			-- Values: true|false
 			--
 			-- Note: introduced in ECF 1.15.0.			
+
+	is_void_safe_option_name: STRING = "is_void_safe"
+			-- Name of option "is_void_safe"
+			--
+			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.3.0.
+			-- Note: superseded by "void_safety" in ECF 1.5.0,
+			--       where "false" had the meaning of "none",
+			--       and "true" had the meaning of "all" in ECF 1.5.0, and then "transitional" in ECF 1.11.0,
+			-- Note: introduced again in ECF 1.9.0.
+			-- Note: merged into "void_safety" in ECF 1.11.0,
+			--       where "true" had the meaning of "all",
+			--       and "false" was just ignored.
 
 	msil_application_optimize_option_name: STRING = "msil_application_optimize"
 			-- Name of option "msil_application_optimize"
@@ -97,6 +119,16 @@ feature -- Names
 			-- Name of option "syntax"
 			--
 			-- Values: obsolete|transitional|standard|provisional
+			--
+			-- Note: introduced in ECF 1.5.0.
+
+	syntax_level_option_name: STRING = "syntax_level"
+			-- Name of option "syntax_level"
+			--
+			-- Values: 0|1|2
+			--
+			-- Note: introduced in ECF 1.4.0.
+			-- Note: supersed by "syntax" in ECF 1.5.0.
 
 	trace_option_name: STRING = "trace"
 			-- Name of option "trace"
@@ -107,7 +139,10 @@ feature -- Names
 			-- Name of option "void_safety"
 			--
 			-- Values: none|conformance|initialization|transitional|all
+			-- Was: none|initialization|all until ECF 1.10.0 included,
+			--      where "all" had the menaing of "transitional".
 			--
+			-- Note: introduced in ECF 1.5.0.
 			-- Note: superseded by the capability "void_safety" in ECF 1.16.0.
 
 	warning_option_name: STRING = "warning"
@@ -181,6 +216,8 @@ feature -- Names
 			-- Name of "warning" option "vwab"
 			--
 			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.10.0.
 
 	warning_vweq_option_name: STRING = "vweq"
 			-- Name of "warning" option "vweq"

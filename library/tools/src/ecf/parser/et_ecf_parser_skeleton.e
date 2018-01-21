@@ -19,6 +19,15 @@ inherit
 	ET_ECF_ELEMENT_NAMES
 		export {NONE} all end
 
+	ET_ECF_OPTION_DEFAULTS
+		export {NONE} all end
+
+	ET_ECF_SETTING_DEFAULTS
+		export {NONE} all end
+
+	ET_ECF_CAPABILITY_DEFAULTS
+		export {NONE} all end
+
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
@@ -1307,7 +1316,7 @@ feature {NONE} -- AST factory
 	new_multithreaded_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CONCURRENCY_CONDITION
 			-- New multithreaded condition built from `an_element'
 			--
-			-- Note: condition multithreaded"" was superseded by condition "concurrency" in ECF 1.8.0.
+			-- Note: condition "multithreaded" was superseded by condition "concurrency" in ECF 1.8.0.
 		require
 			a_element_not_void: a_element /= Void
 			is_multithreaded: STRING_.same_case_insensitive (a_element.name, xml_multithreaded)
@@ -1619,12 +1628,13 @@ feature {NONE} -- AST factory
 		end
 
 	new_target (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_settings: ET_ECF_SETTINGS; a_default_capabilities: ET_ECF_CAPABILITIES;
+		a_ecf_version: UT_VERSION; a_default_settings: ET_ECF_SETTINGS; a_default_capabilities: ET_ECF_CAPABILITIES;
 		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_TARGET
 			-- New target built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_target: STRING_.same_case_insensitive (a_element.name, xml_target)
+			a_ecf_version_not_void: a_ecf_version /= Void
 			a_default_settings_not_void: a_default_settings /= Void
 			a_default_capabilities_not_void: a_default_capabilities /= Void
 			a_default_options_not_void: a_default_options /= Void
@@ -1646,6 +1656,8 @@ feature {NONE} -- AST factory
 			l_pre_compile_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
 			l_post_compile_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
 			l_multithreaded_capability: STRING
+			l_void_safety_capability: STRING
+			l_catcall_detection_capability: STRING
 			l_parent_name: detachable XM_ATTRIBUTE
 			l_parent_target: detachable ET_ECF_TARGET
 			l_current_capabilities: ET_ECF_CAPABILITIES
@@ -1758,8 +1770,38 @@ feature {NONE} -- AST factory
 						not attached Result.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) and
 						not attached Result.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
 					then
-						Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety)
-						Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety)
+						if a_ecf_version < ecf_1_11_0 and then STRING_.same_case_insensitive (l_void_safety, {ET_ECF_OPTION_NAMES}.all_option_value) then
+								-- Until ECF 1.10.0 included, "all" had the meaning of "transitional" introduced in ECF 1.11.0.
+							l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value
+						else
+							l_void_safety_capability := l_void_safety
+						end
+						Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+						Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+					end
+				end
+					-- Option "is_void_safe" superseded by option "void_safety" in ECF 1.5.0 and again in ECF 1.11.0,
+					-- and then by capability "void_safety" in ECF 1.16.0.
+				if attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name) as l_is_void_safe then
+					if
+						not attached Result.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) and
+						not attached Result.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
+					then
+						if a_ecf_version < ecf_1_5_0 then
+							if is_true (l_is_void_safe) then
+								l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value
+							else
+								l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.none_capability_value
+							end
+							Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+							Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+						else
+							if is_true (l_is_void_safe) then
+								l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.all_capability_value
+								Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+								Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+							end
+						end
 					end
 				end
 					-- Option "cat_call_detection" superseded by capability "catcall_detection" in ECF 1.16.0.
@@ -1768,8 +1810,19 @@ feature {NONE} -- AST factory
 						not attached Result.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) and
 						not attached Result.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name)
 					then
-						Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection)
-						Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection)
+						if l_catcall_detection.is_boolean then
+								-- Values were true|false until ECF 1.13.0 included.
+							if is_true (l_catcall_detection) then
+								l_catcall_detection_capability := {ET_ECF_CAPABILITY_NAMES}.all_capability_value
+							else
+								l_catcall_detection_capability := {ET_ECF_CAPABILITY_NAMES}.none_capability_value
+							end
+							Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection_capability)
+							Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection_capability)
+						else
+							Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection)
+							Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection)
+						end
 					end
 				end
 					-- Setting "concurrency" superseded by the capability "concurrency" in ECF 1.16.0.
@@ -1782,7 +1835,8 @@ feature {NONE} -- AST factory
 						Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_concurrency)
 					end
 				end
-					-- Setting "multithreaded" superseded by setting "concurrency" in ECF 1.7.0.
+					-- Setting "multithreaded" superseded by setting "concurrency" in ECF 1.7.0,
+					-- and then by the capability "concurrency" in ECF 1.16.0.
 				if attached Result.settings.primary_value ({ET_ECF_SETTING_NAMES}.multithreaded_setting_name) as l_multithreaded_option then
 					if
 						not attached Result.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) and
@@ -1795,6 +1849,29 @@ feature {NONE} -- AST factory
 						end
 						Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_multithreaded_capability)
 						Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_multithreaded_capability)
+					end
+				end
+					-- Setting "full_type_checking" superseded by option "full_class_checking" in ECF 1.2.0.
+				if attached Result.settings.primary_value ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name) as l_full_type_checking then
+					if not attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) then
+						Result.options.set_primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name, l_full_type_checking)
+					end
+				end
+					-- Option "syntax_level" superseded by option "syntax" in ECF 1.5.0.
+				if attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name) as l_syntax_level then
+					if not attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name) then
+						if l_syntax_level.is_integer then
+							inspect l_syntax_level.to_integer
+							when 0 then
+								Result.options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.obsolete_option_value)
+							when 1 then
+								Result.options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.transitional_option_value)
+							when 2 then
+								Result.options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
+							else
+								-- Unsupported syntax level.
+							end
+						end
 					end
 				end
 				if l_parent_target /= Void and l_parent_name /= Void then
@@ -1835,19 +1912,20 @@ feature {NONE} -- AST factory
 		end
 
 	new_targets (a_targets: detachable ET_ECF_TARGETS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_settings: ET_ECF_SETTINGS; a_default_capabilities: ET_ECF_CAPABILITIES;
+		a_ecf_version: UT_VERSION; a_default_settings: ET_ECF_SETTINGS; a_default_capabilities: ET_ECF_CAPABILITIES;
 		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_TARGETS
 			-- New targets (or `a_targets' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_target: STRING_.same_case_insensitive (a_element.name, xml_target)
+			a_ecf_version_not_void: a_ecf_version /= Void
 			a_default_settings_not_void: a_default_settings /= Void
 			a_default_capabilities_not_void: a_default_capabilities /= Void
 			a_default_options_not_void: a_default_options /= Void
 			a_universe_not_void: a_universe /= Void
 		do
 			Result := a_targets
-			if attached new_target (a_element, a_position_table, a_default_settings, a_default_capabilities, a_default_options, a_universe) as l_target then
+			if attached new_target (a_element, a_position_table, a_ecf_version, a_default_settings, a_default_capabilities, a_default_options, a_universe) as l_target then
 				if Result = Void then
 					Result := ast_factory.new_targets (l_target)
 				else
@@ -2080,19 +2158,12 @@ feature {NONE} -- Element change
 			a_system_config.set_ecf_namespace (l_namespace_uri)
 			l_ecf_version := ecf_version (l_namespace_uri)
 			a_system_config.set_ecf_version (l_ecf_version)
-			if l_ecf_version = Void or else l_ecf_version < ecf_1_15_0 then
-				create l_default_settings.make_default_1_14_0
-				create l_default_capabilities.make_default_1_14_0
-				create l_default_options.make_default_1_14_0
-			elseif l_ecf_version < ecf_1_16_0 then
-				create l_default_settings.make_default_1_15_0
-				create l_default_capabilities.make_default_1_15_0
-				create l_default_options.make_default_1_15_0
-			else
-				create l_default_settings.make_default_1_16_0
-				create l_default_capabilities.make_default_1_16_0
-				create l_default_options.make_default_1_16_0
+			if l_ecf_version = Void then
+				l_ecf_version := ecf_latest
 			end
+			l_default_settings := default_settings (l_ecf_version)
+			l_default_capabilities := default_capabilities (l_ecf_version)
+			l_default_options := default_options (l_ecf_version)
 			l_cursor := a_element.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				if attached {XM_ELEMENT} l_cursor.item as l_child then
@@ -2101,7 +2172,7 @@ feature {NONE} -- Element change
 							a_system_config.set_description (l_text)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_target) then
-						l_targets := new_targets (l_targets, l_child, a_position_table, l_default_settings, l_default_capabilities, l_default_options, a_universe)
+						l_targets := new_targets (l_targets, l_child, a_position_table, l_ecf_version, l_default_settings, l_default_capabilities, l_default_options, a_universe)
 						a_system_config.set_targets (l_targets)
 					end
 				elseif attached {XM_ATTRIBUTE} l_cursor.item as l_child then
