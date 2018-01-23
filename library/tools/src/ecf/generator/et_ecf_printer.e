@@ -5,7 +5,7 @@ note
 		"ECF file printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -802,11 +802,13 @@ feature -- Output
 			a_file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_location)
 			a_file.put_character ('=')
 			print_quoted_string (a_library.pathname, a_file)
+			a_file.put_character (' ')
+			a_file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_readonly)
+			a_file.put_character ('=')
 			if a_library.is_read_only then
-				a_file.put_character (' ')
-				a_file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_readonly)
-				a_file.put_character ('=')
 				print_quoted_string ({ET_ECF_SETTING_NAMES}.true_setting_value, a_file)
+			else
+				print_quoted_string ({ET_ECF_SETTING_NAMES}.false_setting_value, a_file)
 			end
 			if a_library.use_application_options then
 				a_file.put_character (' ')
@@ -993,6 +995,9 @@ feature -- Output
 					print_indentation (a_indent, a_file)
 					a_file.put_character ('<')
 					a_file.put_string (l_xml_name)
+					l_start_printed := True
+				end
+				if not l_end_printed then
 					a_file.put_character ('>')
 					a_file.put_new_line
 					l_start_printed := True
@@ -1005,6 +1010,9 @@ feature -- Output
 					print_indentation (a_indent, a_file)
 					a_file.put_character ('<')
 					a_file.put_string (l_xml_name)
+					l_start_printed := True
+				end
+				if not l_end_printed then
 					a_file.put_character ('>')
 					a_file.put_new_line
 					l_start_printed := True
@@ -1033,6 +1041,9 @@ feature -- Output
 							print_indentation (a_indent, a_file)
 							a_file.put_character ('<')
 							a_file.put_string (l_xml_name)
+							l_start_printed := True
+						end
+						if not l_end_printed then
 							a_file.put_character ('>')
 							a_file.put_new_line
 							l_start_printed := True
@@ -1056,11 +1067,14 @@ feature -- Output
 			end
 			across a_options.primary_warnings as l_warnings loop
 				l_name := l_warnings.key
-				if l_option_names.has (l_name) then
+				if l_warning_names.has (l_name) then
 					if not l_start_printed then
 						print_indentation (a_indent, a_file)
 						a_file.put_character ('<')
 						a_file.put_string (l_xml_name)
+						l_start_printed := True
+					end
+					if not l_end_printed then
 						a_file.put_character ('>')
 						a_file.put_new_line
 						l_start_printed := True
@@ -1281,7 +1295,7 @@ feature -- Output
 			across a_renamings as l_renamings loop
 				print_indentation (a_indent, a_file)
 				a_file.put_character ('<')
-				a_file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_mapping)
+				a_file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_renaming)
 				a_file.put_character (' ')
 				a_file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_old_name)
 				a_file.put_character ('=')
