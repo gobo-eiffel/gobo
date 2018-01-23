@@ -5,7 +5,7 @@ note
 		"ECF Eiffel internal universes (i.e. either systems or libraries)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,8 @@ inherit
 
 	ET_ECF_SYSTEM_CONFIG
 		undefine
-			set_read_only
+			set_read_only,
+			set_name
 		redefine
 			name,
 			is_read_only

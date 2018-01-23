@@ -5,7 +5,7 @@ note
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -142,6 +142,16 @@ feature -- Status setting
 		end
 
 feature -- Setting
+
+	set_name (a_name: like name)
+			-- Set `name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
 
 	set_clusters (a_clusters: like clusters)
 			-- Set `clusters' to `a_clusters'.
