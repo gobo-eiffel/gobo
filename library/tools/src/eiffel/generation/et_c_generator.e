@@ -394,7 +394,6 @@ feature {NONE} -- Compilation script generation
 			l_c_config: DS_HASH_TABLE [STRING, STRING]
 			l_obj_filenames: STRING
 			l_variables: DS_HASH_TABLE [STRING, STRING]
-			l_link_template: STRING
 			l_filename: STRING
 			l_base_name: STRING
 			i, nb: INTEGER
@@ -525,8 +524,8 @@ feature {NONE} -- Compilation script generation
 				-- Object files.
 			create l_obj_filenames.make (100)
 			l_obj := l_c_config.item ("obj")
-			-- List objects in reverse order so that it looks like
-			-- a countdown when compiling since the filenames are numbered.
+				-- List objects in reverse order so that it looks like
+				-- a countdown when compiling since the filenames are numbered.
 			l_cursor := c_filenames.new_cursor
 			from l_cursor.finish until l_cursor.before loop
 				if not l_cursor.is_last then
@@ -566,6 +565,8 @@ feature {NONE} -- Compilation script generation
 				l_cursor.forth
 			end
 			l_variables.force (l_obj_filenames, "objs")
+				-- Header file.
+			l_variables.force (l_base_name + h_file_extension, "header")
 				-- Script.
 			if operating_system.is_windows then
 				generate_compilation_shell_script (l_base_name, l_variables, l_obj_filenames, l_pathname, l_replacement, l_env_regexp, l_external_c_filenames)
@@ -574,7 +575,7 @@ feature {NONE} -- Compilation script generation
 			end
 		end
 
-	generate_compilation_shell_script (a_system_name: STRING; a_variables: like c_config; an_obj_filenames, a_pathname, a_replacement: STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
+	generate_compilation_shell_script (a_system_name: STRING; a_variables: like c_config; an_obj_filenames: STRING; a_pathname, a_replacement: detachable STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
 		local
 			l_base_name: STRING
 			l_script_filename: STRING
@@ -714,7 +715,7 @@ feature {NONE} -- Compilation script generation
 			end
 		end
 
-	generate_compilation_makefile (a_system_name: STRING; a_variables: like c_config; an_obj_filenames, a_pathname, a_replacement: STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
+	generate_compilation_makefile (a_system_name: STRING; a_variables: like c_config; an_obj_filenames: STRING; a_pathname, a_replacement: detachable STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
 		local
 			l_base_name: STRING
 			l_c_config: DS_HASH_TABLE [STRING, STRING]
@@ -727,8 +728,6 @@ feature {NONE} -- Compilation script generation
 			l_makefile_filename: STRING
 			l_script_filename: STRING
 			l_file: KL_TEXT_OUTPUT_FILE
-			l_filename: STRING
-			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 			l_link_template: STRING
 			l_command_name: STRING
 		do
@@ -745,13 +744,10 @@ feature {NONE} -- Compilation script generation
 			create l_file.make (l_makefile_filename)
 			l_file.open_write
 			if l_file.is_open_write then
-				l_variables.force (l_base_name + ".h", "header")
 				l_link_template := l_c_config.item ("Makefile")
 				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
 				l_file.put_line (l_command_name)
-
 				l_file.close
-
 				l_script_filename := l_base_name + sh_file_extension
 				create l_file.make (l_script_filename)
 				l_file.open_write
@@ -759,7 +755,7 @@ feature {NONE} -- Compilation script generation
 					l_file.put_line ("#!/bin/sh")
 					l_file.put_line ("make -f " + l_makefile_filename)
 					l_file.close
-					-- Set executable mode.
+						-- Set executable mode.
 					l_file.change_mode (0c777)
 				else
 					set_fatal_error
@@ -816,8 +812,8 @@ feature {NONE} -- Compilation script generation
 				Result.put_new ("", "cflags")
 				Result.put_new ("", "lflags")
 			else
-				Result.put_new ("gcc $cflags $includes -c $c", "cc")
-				Result.put_new ("gcc $lflags -o $exe $objs $libs", "link")
+				Result.put_new ("cc $cflags $includes -c $c", "cc")
+				Result.put_new ("cc $lflags -o $exe $objs $libs", "link")
 				Result.put_new (".o", "obj")
 				Result.put_new ("", "exe")
 				Result.put_new ("", "cflags")
@@ -25775,8 +25771,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 						current_file.put_character ('(')
 							-- Print attribute 'rout_disp'.
 						print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
-								current_file.put_character (')')
-								current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_character (')')
 						current_file.put_character ('(')
 						current_file.put_string (c_ac)
 						current_file.put_character (',')
