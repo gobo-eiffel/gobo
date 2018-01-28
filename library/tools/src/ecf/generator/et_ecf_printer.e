@@ -16,7 +16,19 @@ inherit
 
 	ANY
 
+	ET_ECF_SETTING_DEFAULTS
+		export {NONE} all end
+
+	ET_ECF_CAPABILITY_DEFAULTS
+		export {NONE} all end
+
+	ET_ECF_OPTION_DEFAULTS
+		export {NONE} all end
+
 	UT_SHARED_ECF_VERSIONS
+		export {NONE} all end
+
+	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
 	XM_MARKUP_CONSTANTS
@@ -31,13 +43,33 @@ feature {NONE} -- Initialization
 	make
 			-- Create a new ECF printer.
 		do
-			ecf_version := ecf_1_16_0
+			ecf_version := ecf_1_17_0
 		end
 
 feature -- Access
 
 	ecf_version: UT_VERSION
 			-- Version of ECF used by the printer
+			--
+			-- Note that the printer will use the options/settings/capabilities
+			-- held in the ECF system config to be printed as known in the most
+			-- recent version of Eiffel, and then find their equivalents in the
+			-- version `ecf_version'. If `ecf_version' is older than the ECF
+			-- version of the ECF system config to be printed, then some
+			-- options/settings/capabilities may be lost or replaced by their
+			-- closest equilavents.
+
+feature -- Setting
+
+	set_ecf_version (a_version: like ecf_version)
+			-- Set `ecf_version' to `a_version'.
+		require
+			a_version_not_void: a_version /= Void
+		do
+			ecf_version := a_version
+		ensure
+			ecf_version_set: ecf_version = a_version
+		end
 
 feature -- Output
 
@@ -174,7 +206,7 @@ feature -- Output
 					a_file.put_new_line
 					l_end_printed := True
 				end
-				print_options (l_options, Void, a_indent + 1, a_file)
+				print_options (adapted_options (l_options), Void, a_indent + 1, a_file)
 			end
 			if attached a_assembly.class_renamings as l_renamings then
 				if not l_end_printed then
@@ -190,7 +222,9 @@ feature -- Output
 					a_file.put_new_line
 					l_end_printed := True
 				end
-				l_class_options.do_all_with_key (agent print_options (?, {STRING}?, a_indent + 1, a_file))
+				across l_class_options as l_options_by_class loop
+					print_options (adapted_options (l_options_by_class.item), l_options_by_class.key, a_indent + 1, a_file)
+				end
 			end
 			if attached a_assembly.conditions as l_conditions then
 				if not l_end_printed then
@@ -245,15 +279,15 @@ feature -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			l_capability_names: DS_HASH_SET [STRING]
+			l_capability_names: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
 			l_capability_name: STRING
 			l_outer_printed: BOOLEAN
 			l_inner_printed: BOOLEAN
 		do
-			l_capability_names := a_capabilities.capability_names_1_16_0
+			l_capability_names := valid_capabilities (ecf_version)
 			across l_capability_names as i_capability_names loop
 				l_inner_printed := False
-				l_capability_name := i_capability_names.item
+				l_capability_name := i_capability_names.key
 				if attached a_capabilities.primary_use_value (l_capability_name) as l_use then
 					if not l_outer_printed then
 						print_indentation (a_indent, a_file)
@@ -380,7 +414,7 @@ feature -- Output
 					a_file.put_new_line
 					l_end_printed := True
 				end
-				print_options (l_options, Void, a_indent + 1, a_file)
+				print_options (adapted_options (l_options), Void, a_indent + 1, a_file)
 			end
 			if attached a_cluster.class_mappings as l_mappings then
 				if not l_end_printed then
@@ -404,7 +438,9 @@ feature -- Output
 					a_file.put_new_line
 					l_end_printed := True
 				end
-				l_class_options.do_all_with_key (agent print_options (?, {STRING}?, a_indent + 1, a_file))
+				across l_class_options as l_options_by_class loop
+					print_options (adapted_options (l_options_by_class.item), l_options_by_class.key, a_indent + 1, a_file)
+				end
 			end
 			if attached a_cluster.visible_classes as l_visibles then
 				if not l_end_printed then
@@ -834,7 +870,7 @@ feature -- Output
 					a_file.put_new_line
 					l_end_printed := True
 				end
-				print_options (l_options, Void, a_indent + 1, a_file)
+				print_options (adapted_options (l_options), Void, a_indent + 1, a_file)
 			end
 			if attached a_library.class_renamings as l_renamings then
 				if not l_end_printed then
@@ -850,7 +886,9 @@ feature -- Output
 					a_file.put_new_line
 					l_end_printed := True
 				end
-				l_class_options.do_all_with_key (agent print_options (?, {STRING}?, a_indent + 1, a_file))
+				across l_class_options as l_options_by_class loop
+					print_options (adapted_options (l_options_by_class.item), l_options_by_class.key, a_indent + 1, a_file)
+				end
 			end
 			if attached a_library.visible_classes as l_visibles then
 				if not l_end_printed then
@@ -950,18 +988,18 @@ feature -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			l_option_names: DS_HASH_SET [STRING]
-			l_assertion_names: DS_HASH_SET [STRING]
-			l_warning_names: DS_HASH_SET [STRING]
+			l_option_names: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+			l_assertion_names: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+			l_warning_names: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
 			l_name: STRING
 			l_start_printed: BOOLEAN
 			l_end_printed: BOOLEAN
 			l_assertions_printed: BOOLEAN
 			l_xml_name: STRING
 		do
-			l_option_names := a_options.option_names_1_16_0
-			l_assertion_names := a_options.assertion_names_1_16_0
-			l_warning_names := a_options.warning_names_1_16_0
+			l_option_names := valid_options (ecf_version)
+			l_assertion_names := valid_assertions (ecf_version)
+			l_warning_names := valid_warnings (ecf_version)
 			if a_class_name /= Void then
 				l_xml_name := {ET_ECF_ELEMENT_NAMES}.xml_class_option
 				print_indentation (a_indent, a_file)
@@ -1212,7 +1250,7 @@ feature -- Output
 					a_file.put_new_line
 					l_end_printed := True
 				end
-				print_options (l_options, Void, a_indent + 1, a_file)
+				print_options (adapted_options (l_options), Void, a_indent + 1, a_file)
 			end
 			if attached a_precompiled_library.class_renamings as l_renamings then
 				if not l_end_printed then
@@ -1228,7 +1266,9 @@ feature -- Output
 					a_file.put_new_line
 					l_end_printed := True
 				end
-				l_class_options.do_all_with_key (agent print_options (?, {STRING}?, a_indent + 1, a_file))
+				across l_class_options as l_options_by_class loop
+					print_options (adapted_options (l_options_by_class.item), l_options_by_class.key, a_indent + 1, a_file)
+				end
 			end
 			if attached a_precompiled_library.visible_classes as l_visibles then
 				if not l_end_printed then
@@ -1363,18 +1403,20 @@ feature -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			l_setting_names: DS_HASH_SET [STRING]
+			l_setting_names: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+			l_name: STRING
 		do
-			l_setting_names := a_settings.setting_names_1_16_0
+			l_setting_names := valid_settings (ecf_version)
 			across a_settings.primary_settings as l_settings loop
-				if l_setting_names.has (l_settings.key) then
+				l_name := l_settings.key
+				if l_setting_names.has (l_name) then
 					print_indentation (a_indent, a_file)
 					a_file.put_character ('<')
 					a_file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_setting)
 					a_file.put_character (' ')
 					a_file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_name)
 					a_file.put_character ('=')
-					print_quoted_string (l_settings.key, a_file)
+					print_quoted_string (l_name, a_file)
 					a_file.put_character (' ')
 					a_file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_value)
 					a_file.put_character ('=')
@@ -1517,30 +1559,24 @@ feature -- Output
 				end
 				print_file_rules (l_file_rules, a_indent + 1, a_file)
 			end
-			if attached a_target.options as l_options then
-				if not l_end_printed then
-					a_file.put_character ('>')
-					a_file.put_new_line
-					l_end_printed := True
-				end
-				print_options (l_options, Void, a_indent + 1, a_file)
+			if not l_end_printed then
+				a_file.put_character ('>')
+				a_file.put_new_line
+				l_end_printed := True
 			end
-			if attached a_target.settings as l_settings then
-				if not l_end_printed then
-					a_file.put_character ('>')
-					a_file.put_new_line
-					l_end_printed := True
-				end
-				print_settings (l_settings, a_indent + 1, a_file)
+			print_options (adapted_target_options (a_target), Void, a_indent + 1, a_file)
+			if not l_end_printed then
+				a_file.put_character ('>')
+				a_file.put_new_line
+				l_end_printed := True
 			end
-			if attached a_target.capabilities as l_capabilities then
-				if not l_end_printed then
-					a_file.put_character ('>')
-					a_file.put_new_line
-					l_end_printed := True
-				end
-				print_capabilities (l_capabilities, a_indent + 1, a_file)
+			print_settings (adapted_settings (a_target), a_indent + 1, a_file)
+			if not l_end_printed then
+				a_file.put_character ('>')
+				a_file.put_new_line
+				l_end_printed := True
 			end
+			print_capabilities (adapted_capabilities (a_target), a_indent + 1, a_file)
 			if attached a_target.class_mappings as l_mappings then
 				if not l_end_printed then
 					a_file.put_character ('>')
@@ -1549,14 +1585,12 @@ feature -- Output
 				end
 				print_mappings (l_mappings, a_indent + 1, a_file)
 			end
-			if attached a_target.variables as l_variables then
-				if not l_end_printed then
-					a_file.put_character ('>')
-					a_file.put_new_line
-					l_end_printed := True
-				end
-				print_variables (l_variables, a_indent + 1, a_file)
+			if not l_end_printed then
+				a_file.put_character ('>')
+				a_file.put_new_line
+				l_end_printed := True
 			end
+			print_variables (a_target.variables, a_indent + 1, a_file)
 			if attached a_target.pre_compile_actions as l_pre_compile_actions and then not l_pre_compile_actions.is_empty then
 				if not l_end_printed then
 					a_file.put_character ('>')
@@ -1968,6 +2002,444 @@ feature {NONE} -- Implementation
 				a_file.put_integer (ecf_version.revision)
 			else
 				a_file.put_character ('0')
+			end
+		end
+
+feature {NONE} -- Adaptation
+
+	adapted_settings (a_target: ET_ECF_TARGET): ET_ECF_SETTINGS
+			-- Settings from `a_target', adapted so that old settings as
+			-- known in `ecf_version' are populated with the equivalent
+			-- values of those as known in the most recent version of ECF.
+			-- Also promote to primary values the settings whose default
+			-- value was different in `ecf_version'.
+		require
+			a_target_not_void: a_target /= Void
+		local
+			l_original_settings: ET_ECF_SETTINGS
+			l_default_settings: ET_ECF_SETTINGS
+			l_default_capabilities: ET_ECF_CAPABILITIES
+			l_default_options: ET_ECF_OPTIONS
+			l_concurrency_value: detachable STRING
+			l_multithreaded_value: STRING
+		do
+			l_default_settings := default_settings (ecf_version)
+			l_original_settings := a_target.settings
+			if a_target.parent /= Void or l_original_settings.secondary_settings = l_default_settings then
+				if ecf_version >= ecf_1_16_0 then
+					Result := l_original_settings
+				else
+					create Result.make
+					across l_original_settings.primary_settings as l_primary_settings loop
+						Result.set_primary_value (l_primary_settings.key, l_primary_settings.item)
+					end
+				end
+			else
+				Result := explicit_settings (l_original_settings, l_default_settings)
+			end
+			if ecf_version < ecf_1_16_0 then
+					-- Setting "multithreaded" has been superseded by setting "concurrency" in ECF 1.7.0,
+					-- Setting "concurrency" has been superseded by capability "concurrency" in ECF 1.16.0.
+				Result.primary_settings.remove ({ET_ECF_SETTING_NAMES}.multithreaded_setting_name)
+				Result.primary_settings.remove ({ET_ECF_SETTING_NAMES}.concurrency_setting_name)
+				if attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) as l_value then
+					l_concurrency_value := l_value
+				elseif attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) as l_value then
+					l_concurrency_value := l_value
+				elseif a_target.parent = Void then
+					l_default_capabilities := default_capabilities (ecf_version)
+					if attached a_target.capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) as l_value then
+						if attached l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) as l_default_value then
+							if not STRING_.same_case_insensitive (l_value, l_default_value) then
+								l_concurrency_value := l_value
+							end
+						end
+					elseif attached a_target.capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) as l_value then
+						if attached l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) as l_default_value then
+							if not STRING_.same_case_insensitive (l_value, l_default_value) then
+								l_concurrency_value := l_value
+							end
+						end
+					end
+				end
+				if l_concurrency_value /= Void then
+					if ecf_version >= ecf_1_7_0 then
+						Result.set_primary_value (l_concurrency_value, {ET_ECF_SETTING_NAMES}.concurrency_setting_name)
+					else
+						if STRING_.same_case_insensitive (l_concurrency_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
+							l_multithreaded_value := {ET_ECF_SETTING_NAMES}.false_setting_value
+						else
+							l_multithreaded_value := {ET_ECF_SETTING_NAMES}.true_setting_value
+						end
+						Result.set_primary_value (l_multithreaded_value, {ET_ECF_SETTING_NAMES}.multithreaded_setting_name)
+					end
+				end
+			end
+			if ecf_version < ecf_1_2_0 then
+					-- Setting "full_type_checking" has been superseded
+					-- by option "full_class_checking" in ECF 1.2.0.
+				Result.primary_settings.remove ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
+				if attached a_target.options.primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) as l_value then
+					Result.set_primary_value (l_value, {ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
+				elseif a_target.parent = Void then
+					l_default_options := default_options (ecf_version)
+					if attached a_target.options.value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) as l_value then
+						if attached l_default_options.value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) as l_default_value then
+							if not STRING_.same_case_insensitive (l_value, l_default_value) then
+								Result.set_primary_value (l_value, {ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
+							end
+						end
+					end
+				end
+			end
+		ensure
+			adapted_settings_not_void: Result /= Void
+		end
+
+	explicit_settings (a_original_settings, a_default_settings: ET_ECF_SETTINGS): ET_ECF_SETTINGS
+			-- New settings object with the same primary values as in
+			-- `a_original_settings', plus secondary values which are
+			-- promoted to primary when they have a different value
+			-- from the one in `a_default_settings'.
+			--
+			-- Only consider settings as known in the most recent version of ECF.
+		require
+			a_original_settings_not_void: a_original_settings /= Void
+			a_default_settings_not_void: a_default_settings /= Void
+		local
+			l_name: STRING
+		do
+			create Result.make
+			across valid_settings_latest as l_setting_names loop
+				l_name := l_setting_names.key
+				if attached a_original_settings.primary_value (l_name) as l_value then
+					Result.set_primary_value (l_name, l_value)
+				elseif attached a_default_settings.value (l_name) as l_default_value then
+					if attached a_original_settings.value (l_name) as l_value then
+						if not STRING_.same_case_insensitive (l_value, l_default_value) then
+							Result.set_primary_value (l_name, l_value)
+						end
+					end
+				end
+			end
+		ensure
+			explicit_settings_not_void: Result /= Void
+			new_object: Result /= a_original_settings
+		end
+
+	adapted_capabilities (a_target: ET_ECF_TARGET): ET_ECF_CAPABILITIES
+			-- Capabilities from `a_target', adapted so that old capabilities
+			-- as known in `ecf_version' are populated with the equivalent
+			-- values of those as known in the most recent version of ECF.
+			-- Also promote to primary values the capabilities whose default
+			-- value was different in `ecf_version'.
+		require
+			a_target_not_void: a_target /= Void
+		local
+			l_original_capabilities: ET_ECF_CAPABILITIES
+			l_default_capabilities: ET_ECF_CAPABILITIES
+		do
+			l_default_capabilities := default_capabilities (ecf_version)
+			l_original_capabilities := a_target.capabilities
+			if a_target.parent /= Void or l_original_capabilities.secondary_capabilities = l_default_capabilities then
+				Result := l_original_capabilities
+			else
+				Result := explicit_capabilities (l_original_capabilities, l_default_capabilities)
+			end
+		end
+
+	explicit_capabilities (a_original_capabilities, a_default_capabilities: ET_ECF_CAPABILITIES): ET_ECF_CAPABILITIES
+			-- New capabilities object with the same primary values as in
+			-- `a_original_capabilities', plus secondary values which are
+			-- promoted to primary when they have a different value
+			-- from the one in `a_default_capabilities'.
+			--
+			-- Only consider capabilities as known in the most recent version of ECF.
+		require
+			a_original_capabilities_not_void: a_original_capabilities /= Void
+			a_default_capabilities_not_void: a_default_capabilities /= Void
+		local
+			l_name: STRING
+		do
+			create Result.make
+			across valid_capabilities_latest as l_capability_names loop
+				l_name := l_capability_names.key
+				if attached a_original_capabilities.primary_support_value (l_name) as l_value then
+					Result.set_primary_support_value (l_name, l_value)
+				elseif attached a_default_capabilities.support_value (l_name) as l_default_value then
+					if attached a_original_capabilities.support_value (l_name) as l_value then
+						if not STRING_.same_case_insensitive (l_value, l_default_value) then
+							Result.set_primary_support_value (l_name, l_value)
+						end
+					end
+				end
+				if attached a_original_capabilities.primary_use_value (l_name) as l_value then
+					Result.set_primary_use_value (l_name, l_value)
+				elseif attached a_default_capabilities.use_value (l_name) as l_default_value then
+					if attached a_original_capabilities.use_value (l_name) as l_value then
+						if not STRING_.same_case_insensitive (l_value, l_default_value) then
+							Result.set_primary_use_value (l_name, l_value)
+						end
+					end
+				end
+			end
+		ensure
+			explicit_capabilities_not_void: Result /= Void
+			new_object: Result /= a_original_capabilities
+		end
+
+	adapted_target_options (a_target: ET_ECF_TARGET): ET_ECF_OPTIONS
+			-- Options from `a_target', adapted so that old options as
+			-- known in `ecf_version' are populated with the equivalent
+			-- values of those as known in the most recent version of ECF.
+			-- Also promote to primary values the options whose default
+			-- value was different in `ecf_version'.
+		require
+			a_target_not_void: a_target /= Void
+		local
+			l_original_options: ET_ECF_OPTIONS
+			l_default_options: ET_ECF_OPTIONS
+			l_default_capabilities: ET_ECF_CAPABILITIES
+			l_catcall_detection_value: detachable STRING
+			l_catcall_detection_boolean_value: STRING
+			l_void_safety_value: detachable STRING
+			l_void_safety_boolean_value: STRING
+		do
+			l_default_options := default_options (ecf_version)
+			l_original_options := a_target.options
+			if a_target.parent /= Void or l_original_options.secondary_options = l_default_options then
+				if ecf_version >= ecf_1_16_0 then
+					Result := l_original_options
+				else
+					create Result.make
+					across l_original_options.primary_options as l_primary_options loop
+						Result.set_primary_value (l_primary_options.key, l_primary_options.item)
+					end
+					across l_original_options.primary_assertions as l_primary_assertions loop
+						Result.set_primary_assertion_value (l_primary_assertions.key, l_primary_assertions.item)
+					end
+					across l_original_options.primary_debugs as l_primary_debugs loop
+						Result.set_primary_debug_value (l_primary_debugs.key, l_primary_debugs.item)
+					end
+					across l_original_options.primary_warnings as l_primary_warnings loop
+						Result.set_primary_warning_value (l_primary_warnings.key, l_primary_warnings.item)
+					end
+				end
+			else
+				Result := explicit_options (l_original_options, l_default_options)
+			end
+			if ecf_version < ecf_1_16_0 then
+					-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
+				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+				if ecf_version >= ecf_1_10_0 then
+					if attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
+						l_catcall_detection_value := l_value
+					elseif attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
+						l_catcall_detection_value := l_value
+					elseif a_target.parent = Void then
+						l_default_capabilities := default_capabilities (ecf_version)
+						if attached a_target.capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
+							if attached l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_default_value then
+								if not STRING_.same_case_insensitive (l_value, l_default_value) then
+									l_catcall_detection_value := l_value
+								end
+							end
+						elseif attached a_target.capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
+							if attached l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_default_value then
+								if not STRING_.same_case_insensitive (l_value, l_default_value) then
+									l_catcall_detection_value := l_value
+								end
+							end
+						end
+					end
+					if l_catcall_detection_value /= Void then
+						if ecf_version >= ecf_1_14_0 then
+							Result.set_primary_value (l_catcall_detection_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+						else
+							if STRING_.same_case_insensitive (l_catcall_detection_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
+								l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.false_option_value
+							else
+								l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
+							end
+							Result.set_primary_value (l_catcall_detection_boolean_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+						end
+					end
+				end
+					-- Option "void_safety" has been superseded by capability "void_safety" in ECF 1.16.0.
+					-- Option "is_void_safe" has been superseded by option "void_safety" in ECF 1.5.0 and again in ECF 1.11.0.
+				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.void_safety_option_name)
+				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+				if ecf_version >= ecf_1_3_0 then
+					if attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
+						l_void_safety_value := l_value
+					elseif attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
+						l_void_safety_value := l_value
+					elseif a_target.parent = Void then
+						l_default_capabilities := default_capabilities (ecf_version)
+						if attached a_target.capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
+							if attached l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_default_value then
+								if not STRING_.same_case_insensitive (l_value, l_default_value) then
+									l_void_safety_value := l_value
+								end
+							end
+						elseif attached a_target.capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
+							if attached l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_default_value then
+								if not STRING_.same_case_insensitive (l_value, l_default_value) then
+									l_void_safety_value := l_value
+								end
+							end
+						end
+					end
+					if l_void_safety_value /= Void then
+						if ecf_version < ecf_1_5_0 then
+							if STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
+								l_void_safety_boolean_value := {ET_ECF_OPTION_NAMES}.false_option_value
+							else
+								l_void_safety_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
+							end
+							Result.set_primary_value (l_void_safety_boolean_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+						elseif ecf_version < ecf_1_11_0 then
+							if STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.all_capability_value) then
+								if ecf_version < ecf_1_9_0 then
+									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.true_option_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+								else
+									Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+								end
+							elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value) then
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.all_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+							elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
+								Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+							else
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.initialization_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+							end
+						else
+							Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+						end
+					end
+				end
+				adapt_options (Result)
+			end
+		ensure
+			adapted_target_options_not_void: Result /= Void
+		end
+
+	adapted_options (a_options: ET_ECF_OPTIONS): ET_ECF_OPTIONS
+			-- Options `a_options', adapted so that old options as
+			-- known in `ecf_version' are populated with the equivalent
+			-- values of those as known in the most recent version of ECF.
+		require
+			a_options_not_void: a_options /= Void
+		local
+			l_default_options: ET_ECF_OPTIONS
+		do
+			l_default_options := default_options (ecf_version)
+			if ecf_version >= ecf_1_16_0 then
+				Result := a_options
+			else
+				create Result.make
+				across a_options.primary_options as l_primary_options loop
+					Result.set_primary_value (l_primary_options.key, l_primary_options.item)
+				end
+				across a_options.primary_assertions as l_primary_assertions loop
+					Result.set_primary_assertion_value (l_primary_assertions.key, l_primary_assertions.item)
+				end
+				across a_options.primary_debugs as l_primary_debugs loop
+					Result.set_primary_debug_value (l_primary_debugs.key, l_primary_debugs.item)
+				end
+				across a_options.primary_warnings as l_primary_warnings loop
+					Result.set_primary_warning_value (l_primary_warnings.key, l_primary_warnings.item)
+				end
+			end
+			if ecf_version < ecf_1_16_0 then
+					-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
+				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+					-- Option "void_safety" has been superseded by capability "void_safety" in ECF 1.16.0.
+					-- Option "is_void_safe" has been superseded by option "void_safety" in ECF 1.5.0 and again in ECF 1.11.0.
+				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.void_safety_option_name)
+				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+				adapt_options (Result)
+			end
+		ensure
+			adapted_options_not_void: Result /= Void
+		end
+
+	explicit_options (a_original_options, a_default_options: ET_ECF_OPTIONS): ET_ECF_OPTIONS
+			-- New options object with the same primary values as in
+			-- `a_original_options', plus secondary values which are
+			-- promoted to primary when they have a different value
+			-- from the one in `a_default_options'.
+			--
+			-- Only consider options as known in the most recent version of ECF.
+		require
+			a_original_options_not_void: a_original_options /= Void
+			a_default_options_not_void: a_default_options /= Void
+		local
+			l_name: STRING
+		do
+			create Result.make
+			across valid_options_latest as l_option_names loop
+				l_name := l_option_names.key
+				if attached a_original_options.primary_value (l_name) as l_value then
+					Result.set_primary_value (l_name, l_value)
+				elseif attached a_default_options.value (l_name) as l_default_value then
+					if attached a_original_options.value (l_name) as l_value then
+						if not STRING_.same_case_insensitive (l_value, l_default_value) then
+							Result.set_primary_value (l_name, l_value)
+						end
+					end
+				end
+			end
+			across valid_assertions_latest as l_assertion_names loop
+				l_name := l_assertion_names.key
+				if attached a_original_options.primary_assertion_value (l_name) as l_value then
+					Result.set_primary_assertion_value (l_name, l_value)
+				elseif attached a_default_options.assertion_value (l_name) as l_default_value then
+					if attached a_original_options.assertion_value (l_name) as l_value then
+						if not STRING_.same_case_insensitive (l_value, l_default_value) then
+							Result.set_primary_assertion_value (l_name, l_value)
+						end
+					end
+				end
+			end
+			across valid_warnings_latest as l_warning_names loop
+				l_name := l_warning_names.key
+				if attached a_original_options.primary_warning_value (l_name) as l_value then
+					Result.set_primary_warning_value (l_name, l_value)
+				elseif attached a_default_options.warning_value (l_name) as l_default_value then
+					if attached a_original_options.warning_value (l_name) as l_value then
+						if not STRING_.same_case_insensitive (l_value, l_default_value) then
+							Result.set_primary_warning_value (l_name, l_value)
+						end
+					end
+				end
+			end
+			across a_original_options.primary_debugs as l_primary_debugs loop
+				Result.set_primary_debug_value (l_primary_debugs.key, l_primary_debugs.item)
+			end
+		ensure
+			explicit_options_not_void: Result /= Void
+			new_object: Result /= a_original_options
+		end
+
+	adapt_options (a_options: ET_ECF_OPTIONS)
+			-- Adapt `a_options' so that old options as known in `ecf_version'
+			-- are populated with the equivalent values of those as known in the
+			-- most recent version of ECF.
+		require
+			a_options_not_void: a_options /= Void
+		do
+			if ecf_version >= ecf_1_4_0 and ecf_version < ecf_1_5_0 then
+					-- Option "syntax_level" has been superseded by option "syntax" in ECF 1.5.0.
+				a_options.primary_options.remove ({ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+				if attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name) as l_value then
+					if STRING_.same_case_insensitive (l_value, {ET_ECF_OPTION_NAMES}.obsolete_option_value) then
+						a_options.set_primary_value ("0", {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+					elseif STRING_.same_case_insensitive (l_value, {ET_ECF_OPTION_NAMES}.transitional_option_value) then
+						a_options.set_primary_value ("1", {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+					else
+						a_options.set_primary_value ("2", {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+					end
+				end
 			end
 		end
 

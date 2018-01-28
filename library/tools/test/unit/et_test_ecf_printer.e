@@ -54,6 +54,9 @@ feature -- Test
 			l_output_file.open_write
 			assert ("is_open_write", l_output_file.is_open_write)
 			create l_printer.make
+			if attached l_ecf_system.ecf_version as l_ecf_version then
+				l_printer.set_ecf_version (l_ecf_version)
+			end
 			l_printer.print_system (l_ecf_system, 0, l_output_file)
 			l_output_file.close
 			assert_files_equal ("ecf_diff", input_filename, "gobo.txt")

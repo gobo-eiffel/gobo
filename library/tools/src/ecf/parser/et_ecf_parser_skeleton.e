@@ -271,8 +271,14 @@ feature {NONE} -- AST factory
 					end
 					l_cursor.forth
 				end
-				Result.set_options (l_options)
-				Result.set_class_options (l_class_options)
+				if l_options /= Void then
+					adapt_options (l_options)
+					Result.set_options (l_options)
+				end
+				if l_class_options /= Void then
+					l_class_options.do_all (agent adapt_options)
+					Result.set_class_options (l_class_options)
+				end
 				Result.set_class_renamings (l_renamings)
 				Result.set_conditions (l_conditions)
 			end
@@ -367,8 +373,14 @@ feature {NONE} -- AST factory
 					end
 					l_cursor.forth
 				end
-				Result.set_options (l_options)
-				Result.set_class_options (l_class_options)
+				if l_options /= Void then
+					adapt_options (l_options)
+					Result.set_options (l_options)
+				end
+				if l_class_options /= Void then
+					l_class_options.do_all (agent adapt_options)
+					Result.set_class_options (l_class_options)
+				end
 				Result.set_class_renamings (l_renamings)
 				Result.set_visible_classes (l_visible_classes)
 				Result.set_conditions (l_conditions)
@@ -466,8 +478,14 @@ feature {NONE} -- AST factory
 					end
 					l_cursor.forth
 				end
-				Result.set_options (l_options)
-				Result.set_class_options (l_class_options)
+				if l_options /= Void then
+					adapt_options (l_options)
+					Result.set_options (l_options)
+				end
+				if l_class_options /= Void then
+					l_class_options.do_all (agent adapt_options)
+					Result.set_class_options (l_class_options)
+				end
 				Result.set_class_renamings (l_renamings)
 				Result.set_visible_classes (l_visible_classes)
 				Result.set_conditions (l_conditions)
@@ -622,8 +640,14 @@ feature {NONE} -- AST factory
 				end
 				Result.set_conditioned_subclusters (l_subclusters)
 				Result.set_conditioned_file_rules (l_file_rules)
-				Result.set_options (l_options)
-				Result.set_class_options (l_class_options)
+				if l_options /= Void then
+					adapt_options (l_options)
+					Result.set_options (l_options)
+				end
+				if l_class_options /= Void then
+					l_class_options.do_all (agent adapt_options)
+					Result.set_class_options (l_class_options)
+				end
 				Result.set_class_renamings (l_renamings)
 				Result.set_class_mappings (l_mappings)
 				Result.set_visible_classes (l_visible_classes)
@@ -1469,8 +1493,14 @@ feature {NONE} -- AST factory
 				end
 				Result.set_conditioned_subclusters (l_subclusters)
 				Result.set_conditioned_file_rules (l_file_rules)
-				Result.set_options (l_options)
-				Result.set_class_options (l_class_options)
+				if l_options /= Void then
+					adapt_options (l_options)
+					Result.set_options (l_options)
+				end
+				if l_class_options /= Void then
+					l_class_options.do_all (agent adapt_options)
+					Result.set_class_options (l_class_options)
+				end
 				Result.set_class_renamings (l_renamings)
 				Result.set_class_mappings (l_mappings)
 				Result.set_visible_classes (l_visible_classes)
@@ -1857,23 +1887,7 @@ feature {NONE} -- AST factory
 						Result.options.set_primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name, l_full_type_checking)
 					end
 				end
-					-- Option "syntax_level" superseded by option "syntax" in ECF 1.5.0.
-				if attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name) as l_syntax_level then
-					if not attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name) then
-						if l_syntax_level.is_integer then
-							inspect l_syntax_level.to_integer
-							when 0 then
-								Result.options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.obsolete_option_value)
-							when 1 then
-								Result.options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.transitional_option_value)
-							when 2 then
-								Result.options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
-							else
-								-- Unsupported syntax level.
-							end
-						end
-					end
-				end
+				adapt_options (Result.options)
 				if l_parent_target /= Void and l_parent_name /= Void then
 						-- Check capabilities compatibility.
 					l_current_capabilities := Result.capabilities
@@ -2370,6 +2384,31 @@ feature {NONE} -- Element change
 					a_options.set_primary_value (l_name, l_attribute.value)
 				end
 				l_cursor.forth
+			end
+		end
+
+	adapt_options (a_options: ET_ECF_OPTIONS)
+			-- Adapt `a_options' so that options as known in most recent version of ECF
+			-- are populated with the equivalent values of those as found in the ECF file.
+		require
+			a_options_not_void: a_options /= Void
+		do
+				-- Option "syntax_level" superseded by option "syntax" in ECF 1.5.0.
+			if attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name) as l_syntax_level then
+				if not attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name) then
+					if l_syntax_level.is_integer then
+						inspect l_syntax_level.to_integer
+						when 0 then
+							a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.obsolete_option_value)
+						when 1 then
+							a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.transitional_option_value)
+						when 2 then
+							a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
+						else
+							-- Unsupported syntax level.
+						end
+					end
+				end
 			end
 		end
 

@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,11 +30,19 @@ feature -- Access
 
 	last_system_config: detachable ET_ECF_SYSTEM_CONFIG
 			-- ECF system config being parsed
+			--
+			-- Note that when the ECF version of the file is old, the parsed
+			-- ECF system config will contain old options/settings/capabilities
+			-- as well as their equivalents in the most recent version of ECF.
 
 feature -- Parsing
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse ECF file `a_file'.
+			--
+			-- Note that when the ECF version of the file is old, the parsed
+			-- ECF system config will contain old options/settings/capabilities
+			-- as well as their equivalents in the most recent version of ECF.
 		do
 			last_system_config := Void
 			precursor (a_file)

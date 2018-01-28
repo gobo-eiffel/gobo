@@ -128,7 +128,7 @@ feature -- Names
 			-- Values: 0|1|2
 			--
 			-- Note: introduced in ECF 1.4.0.
-			-- Note: supersed by "syntax" in ECF 1.5.0.
+			-- Note: superseded by "syntax" in ECF 1.5.0.
 
 	trace_option_name: STRING = "trace"
 			-- Name of option "trace"
@@ -140,7 +140,7 @@ feature -- Names
 			--
 			-- Values: none|conformance|initialization|transitional|all
 			-- Was: none|initialization|all until ECF 1.10.0 included,
-			--      where "all" had the menaing of "transitional".
+			--      where "all" had the meaning of "transitional".
 			--
 			-- Note: introduced in ECF 1.5.0.
 			-- Note: superseded by the capability "void_safety" in ECF 1.16.0.

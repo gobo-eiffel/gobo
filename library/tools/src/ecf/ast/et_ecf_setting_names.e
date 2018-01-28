@@ -64,7 +64,7 @@ feature -- Names
 			-- Values: none|thread|scoop
 			--
 			-- Note: introduced in ECF 1.7.0.
-			-- Note: superseded by the capability "concurrency" in ECF 1.16.0.
+			-- Note: superseded by capability "concurrency" in ECF 1.16.0.
 
 	console_application_setting_name: STRING = "console_application"
 			-- Name of setting "console_application"
@@ -186,7 +186,7 @@ feature -- Names
 			--
 			-- Values: true|false
 			--
-			-- Note: superseded by "concurrency" in ECF 1.7.0.
+			-- Note: superseded by setting "concurrency" in ECF 1.7.0.
 
 	old_feature_replication_setting_name: STRING = "old_feature_replication"
 			-- Name of setting "old_feature_replication"

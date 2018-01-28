@@ -5,7 +5,7 @@ note
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,6 +73,10 @@ feature -- Parsing
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse ECF file `a_file'.
+			--
+			-- Note that when the ECF version of the file is old, the parsed
+			-- ECF system config will contain old options/settings/capabilities
+			-- as well as their equivalents in the most recent version of ECF.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
