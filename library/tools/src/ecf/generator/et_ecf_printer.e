@@ -534,21 +534,57 @@ feature -- Output
 			-- Print `a_condition' to `file'.
 		require
 			a_condition_not_void: a_condition /= Void
+		local
+			l_value: STRING
+			l_expected_value: STRING
+			l_multithreaded_value: STRING
+			l_splitter: ST_SPLITTER
 		do
-			print_indentation
-			file.put_character ('<')
-			file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_concurrency)
-			file.put_character (' ')
-			if a_condition.is_excluded then
-				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_excluded_value)
+			if ecf_version >= ecf_1_8_0 then
+				print_indentation
+				file.put_character ('<')
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_concurrency)
+				file.put_character (' ')
+				if a_condition.is_excluded then
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_excluded_value)
+				else
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_value)
+				end
+				file.put_character ('=')
+				print_quoted_string (a_condition.value)
+				file.put_character ('/')
+				file.put_character ('>')
+				file.put_new_line
 			else
+					-- The <concurrency> condition was introduced in ECF 1.8.0.
+					-- It superseded the <multithreaded> condition.
+				l_value := a_condition.value
+				l_expected_value := {ET_ECF_CAPABILITY_NAMES}.thread_capability_value
+				if a_condition.value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
+					create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
+					if l_splitter.split (l_value).there_exists (agent STRING_.same_case_insensitive (?, l_expected_value)) = a_condition.is_excluded then
+						l_multithreaded_value := {ET_ECF_SETTING_NAMES}.false_setting_value
+					else
+						l_multithreaded_value := {ET_ECF_SETTING_NAMES}.true_setting_value
+					end
+				else
+					if STRING_.same_case_insensitive (l_value, l_expected_value) = a_condition.is_excluded then
+						l_multithreaded_value := {ET_ECF_SETTING_NAMES}.false_setting_value
+					else
+						l_multithreaded_value := {ET_ECF_SETTING_NAMES}.true_setting_value
+					end
+				end
+				print_indentation
+				file.put_character ('<')
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_multithreaded)
+				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_value)
+				file.put_character ('=')
+				print_quoted_string (l_multithreaded_value)
+				file.put_character ('/')
+				file.put_character ('>')
+				file.put_new_line
 			end
-			file.put_character ('=')
-			print_quoted_string (a_condition.value)
-			file.put_character ('/')
-			file.put_character ('>')
-			file.put_new_line
 		end
 
 	print_condition (a_condition: ET_ECF_CONDITION_ITEM)
@@ -815,10 +851,13 @@ feature -- Output
 				print_quoted_string ({ET_ECF_SETTING_NAMES}.false_setting_value)
 			end
 			if a_library.use_application_options then
-				file.put_character (' ')
-				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_use_application_options)
-				file.put_character ('=')
-				print_quoted_string ({ET_ECF_SETTING_NAMES}.true_setting_value)
+				if ecf_version >= ecf_1_2_0 then
+						-- The attribute "use_application_options" was introduced i n ECF 1.2.0.
+					file.put_character (' ')
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_use_application_options)
+					file.put_character ('=')
+					print_quoted_string ({ET_ECF_SETTING_NAMES}.true_setting_value)
+				end
 			end
 			if attached a_library.classname_prefix as l_prefix then
 				file.put_character (' ')
@@ -1376,6 +1415,16 @@ feature -- Output
 				file.put_character ('=')
 				print_quoted_string (l_uuid)
 				file.put_new_line
+			else
+				if ecf_version < ecf_1_2_0 then
+						-- The attribute "uuid" was required before ECF 1.2.0.
+						-- Print some dummy uuid.
+					print_indentation
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_uuid)
+					file.put_character ('=')
+					print_quoted_string ("5C1DCBEA-B051-4C4B-BA3D-03BB72306C8C")
+					file.put_new_line
+				end
 			end
 			if a_system.is_read_only then
 				print_indentation
@@ -1516,7 +1565,12 @@ feature -- Output
 					print_external_values (l_external_includes, {ET_ECF_ELEMENT_NAMES}.xml_external_include, {ET_ECF_ELEMENT_NAMES}.xml_location)
 				end
 				if attached a_target.external_cflags as l_external_cflags and then not l_external_cflags.is_empty then
-					print_external_values (l_external_cflags, {ET_ECF_ELEMENT_NAMES}.xml_external_cflag, {ET_ECF_ELEMENT_NAMES}.xml_value)
+					if ecf_version >= ecf_1_10_0 then
+						print_external_values (l_external_cflags, {ET_ECF_ELEMENT_NAMES}.xml_external_cflag, {ET_ECF_ELEMENT_NAMES}.xml_value)
+					else
+							-- <external_cflag> was introduced in ECF 1.10.0.
+						print_external_values (l_external_cflags, {ET_ECF_ELEMENT_NAMES}.xml_external_object, {ET_ECF_ELEMENT_NAMES}.xml_value)
+					end
 				end
 				if attached a_target.external_objects as l_external_objects and then not l_external_objects.is_empty then
 					print_external_values (l_external_objects, {ET_ECF_ELEMENT_NAMES}.xml_external_object, {ET_ECF_ELEMENT_NAMES}.xml_location)
@@ -1528,7 +1582,12 @@ feature -- Output
 					print_external_values (l_external_resources, {ET_ECF_ELEMENT_NAMES}.xml_external_resource, {ET_ECF_ELEMENT_NAMES}.xml_location)
 				end
 				if attached a_target.external_linker_flags as l_external_linker_flags and then not l_external_linker_flags.is_empty then
-					print_external_values (l_external_linker_flags, {ET_ECF_ELEMENT_NAMES}.xml_external_linker_flag, {ET_ECF_ELEMENT_NAMES}.xml_value)
+					if ecf_version >= ecf_1_10_0 then
+						print_external_values (l_external_linker_flags, {ET_ECF_ELEMENT_NAMES}.xml_external_linker_flag, {ET_ECF_ELEMENT_NAMES}.xml_location)
+					else
+							-- <external_linker_flag> was introduced in ECF 1.10.0.
+						print_external_values (l_external_linker_flags, {ET_ECF_ELEMENT_NAMES}.xml_external_library, {ET_ECF_ELEMENT_NAMES}.xml_location)
+					end
 				end
 				if attached a_target.external_makes as l_external_makes and then not l_external_makes.is_empty then
 					print_external_values (l_external_makes, {ET_ECF_ELEMENT_NAMES}.xml_external_make, {ET_ECF_ELEMENT_NAMES}.xml_location)
