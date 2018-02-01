@@ -770,7 +770,7 @@ feature {NONE} -- Basic operations
 				l_old_count := assertion_counters.last
 			end
 			if assertions.count > l_old_count then
-				if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.expression = Void then
+				if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.untagged_assertion = Void then
 					if a_untagged_assertion /= Void then
 						l_tagged.set_untagged_assertion (a_untagged_assertion)
 						if a_semicolon /= Void then
@@ -817,7 +817,7 @@ feature {NONE} -- Basic operations
 					l_old_count := assertion_counters.last
 				end
 				if assertions.count > l_old_count then
-					if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.expression = Void then
+					if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.untagged_assertion = Void then
 						if a_tag = Void then
 							l_position := current_position
 						else
