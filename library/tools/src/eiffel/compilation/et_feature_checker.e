@@ -975,9 +975,14 @@ feature {NONE} -- Feature validity
 			end
 			if a_feature.is_static then
 					-- Error: deferred features cannot be used in static calls.
-				set_fatal_error
-				error_handler.report_vffd9b_error (current_class, a_feature)
-				had_error := True
+				if not system_processor.is_ise then
+						-- ISE accepts deferred features to be marked as class routines,
+						-- but will not allow the target type of a static call to
+						-- be deferred.
+					set_fatal_error
+					error_handler.report_vffd9b_error (current_class, a_feature)
+					had_error := True
+				end
 			end
 			has_fatal_error := had_error
 		end
@@ -1006,9 +1011,14 @@ feature {NONE} -- Feature validity
 			end
 			if a_feature.is_static then
 					-- Error: deferred features cannot be used in static calls.
-				set_fatal_error
-				error_handler.report_vffd9b_error (current_class, a_feature)
-				had_error := True
+				if not system_processor.is_ise then
+						-- ISE accepts deferred features to be marked as class routines,
+						-- but will not allow the target type of a static call to
+						-- be deferred.
+					set_fatal_error
+					error_handler.report_vffd9b_error (current_class, a_feature)
+					had_error := True
+				end
 			end
 			has_fatal_error := had_error
 		end
