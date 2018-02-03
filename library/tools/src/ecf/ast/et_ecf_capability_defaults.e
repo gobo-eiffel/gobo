@@ -142,6 +142,23 @@ feature -- Access
 			no_void_capability_name: not Result.has_void
 		end
 
+	supported_concurrency_capability_values: DS_HASH_SET [STRING]
+			-- Supported values for capability "concurrency"
+		local
+			l_hash_function: KL_AGENT_HASH_FUNCTION [STRING]
+		once
+			create Result.make (3)
+			Result.set_equality_tester (case_insensitive_string_equality_tester)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			Result.set_hash_function (l_hash_function)
+			Result.put_last ({ET_ECF_CAPABILITY_NAMES}.thread_capability_value)
+			Result.put_last ({ET_ECF_CAPABILITY_NAMES}.none_capability_value)
+			Result.put_last ({ET_ECF_CAPABILITY_NAMES}.scoop_capability_value)
+		ensure
+			supported_concurrency_capability_values_not_void: Result /= Void
+			no_void_supported_concurrency_capability_value: not Result.has_void
+		end
+
 feature -- Setting
 
 	set_default_capabilities_latest (a_capabilities: ET_ECF_CAPABILITIES)

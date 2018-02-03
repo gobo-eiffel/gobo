@@ -6,7 +6,7 @@ note
 
 	remark: "Supersedes condition 'multithreaded' in ECF 1.8.0."
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,13 @@ class ET_ECF_CONCURRENCY_CONDITION
 inherit
 
 	ET_ECF_CONDITION_ITEM
+		redefine
+			is_capability_aware,
+			is_capability_supported
+		end
+
+	ET_ECF_CAPABILITY_DEFAULTS
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -84,6 +91,57 @@ feature -- Status report
 
 	is_excluded: BOOLEAN
 			-- Should the concurrency mode not be equal to `value'?
+
+	is_capability_aware (a_capability_name: STRING): BOOLEAN
+			-- Can this individual condition have an influence on capability `a_capability_name'?
+		do
+			Result := STRING_.same_case_insensitive (a_capability_name, {ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
+		end
+
+	is_capability_supported (a_capability_name: STRING; a_target_capabilities, a_other_capabilities: ET_ECF_CAPABILITIES): BOOLEAN
+			-- Is capability `a_capability_name' of the enclosing target with
+			-- capabilities `a_target_capabilities', possibly restricted by the
+			-- current condition, supported by the capabilities `a_other_capabilities'?
+		local
+			l_splitter: ST_SPLITTER
+			l_values: DS_HASH_SET [STRING]
+			l_hash_function: KL_AGENT_HASH_FUNCTION [STRING]
+			l_value: STRING
+		do
+			create l_values.make (3)
+			l_values.set_equality_tester (case_insensitive_string_equality_tester)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			l_values.set_hash_function (l_hash_function)
+			if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
+				create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
+				if is_excluded then
+					l_values.append_last (supported_concurrency_capability_values)
+					l_splitter.split (value).do_all (agent l_values.remove)
+				else
+					l_values.append_last (l_splitter.split (value))
+				end
+			else
+				if is_excluded then
+					l_values.append_last (supported_concurrency_capability_values)
+					l_values.remove (value)
+				else
+					l_values.put_last (value)
+				end
+			end
+			Result := True
+			from l_values.start until l_values.after loop
+				l_value := l_values.item_for_iteration
+				if not a_target_capabilities.is_capability_supported (a_capability_name, l_value) then
+					l_values.forth
+				elseif a_other_capabilities.is_capability_supported (a_capability_name, l_value) then
+					l_values.forth
+				else
+					Result := False
+						-- Jump out of the loop.
+					l_values.go_after
+				end
+			end
+		end
 
 invariant
 

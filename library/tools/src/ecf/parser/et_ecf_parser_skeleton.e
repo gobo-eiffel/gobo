@@ -1685,13 +1685,11 @@ feature {NONE} -- AST factory
 			l_mappings: detachable DS_HASH_TABLE [STRING, STRING]
 			l_pre_compile_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
 			l_post_compile_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
-			l_multithreaded_capability: STRING
-			l_void_safety_capability: STRING
-			l_catcall_detection_capability: STRING
 			l_parent_name: detachable XM_ATTRIBUTE
 			l_parent_target: detachable ET_ECF_TARGET
 			l_current_capabilities: ET_ECF_CAPABILITIES
 			l_parent_capabilities: ET_ECF_CAPABILITIES
+			l_capability_name: STRING
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
@@ -1794,117 +1792,18 @@ feature {NONE} -- AST factory
 					l_cursor.forth
 				end
 					-- Conversions from old ECF versions.
-					-- Option "void_safety" superseded by capability "void_safety" in ECF 1.16.0.
-				if attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name) as l_void_safety then
-					if
-						not attached Result.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) and
-						not attached Result.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
-					then
-						if a_ecf_version < ecf_1_11_0 and then STRING_.same_case_insensitive (l_void_safety, {ET_ECF_OPTION_NAMES}.all_option_value) then
-								-- Until ECF 1.10.0 included, "all" had the meaning of "transitional" introduced in ECF 1.11.0.
-							l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value
-						else
-							l_void_safety_capability := l_void_safety
-						end
-						Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
-						Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
-					end
-				end
-					-- Option "is_void_safe" superseded by option "void_safety" in ECF 1.5.0 and again in ECF 1.11.0,
-					-- and then by capability "void_safety" in ECF 1.16.0.
-				if attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name) as l_is_void_safe then
-					if
-						not attached Result.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) and
-						not attached Result.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
-					then
-						if a_ecf_version < ecf_1_5_0 then
-							if is_true (l_is_void_safe) then
-								l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value
-							else
-								l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.none_capability_value
-							end
-							Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
-							Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
-						else
-							if is_true (l_is_void_safe) then
-								l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.all_capability_value
-								Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
-								Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
-							end
-						end
-					end
-				end
-					-- Option "cat_call_detection" superseded by capability "catcall_detection" in ECF 1.16.0.
-				if attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name) as l_catcall_detection then
-					if
-						not attached Result.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) and
-						not attached Result.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name)
-					then
-						if l_catcall_detection.is_boolean then
-								-- Values were true|false until ECF 1.13.0 included.
-							if is_true (l_catcall_detection) then
-								l_catcall_detection_capability := {ET_ECF_CAPABILITY_NAMES}.all_capability_value
-							else
-								l_catcall_detection_capability := {ET_ECF_CAPABILITY_NAMES}.none_capability_value
-							end
-							Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection_capability)
-							Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection_capability)
-						else
-							Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection)
-							Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection)
-						end
-					end
-				end
-					-- Setting "concurrency" superseded by the capability "concurrency" in ECF 1.16.0.
-				if attached Result.settings.primary_value ({ET_ECF_SETTING_NAMES}.concurrency_setting_name) as l_concurrency then
-					if
-						not attached Result.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) and
-						not attached Result.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
-					then
-						Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_concurrency)
-						Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_concurrency)
-					end
-				end
-					-- Setting "multithreaded" superseded by setting "concurrency" in ECF 1.7.0,
-					-- and then by the capability "concurrency" in ECF 1.16.0.
-				if attached Result.settings.primary_value ({ET_ECF_SETTING_NAMES}.multithreaded_setting_name) as l_multithreaded_option then
-					if
-						not attached Result.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) and
-						not attached Result.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
-					then
-						if is_true (l_multithreaded_option) then
-							l_multithreaded_capability := {ET_ECF_CAPABILITY_NAMES}.thread_capability_value
-						else
-							l_multithreaded_capability := {ET_ECF_CAPABILITY_NAMES}.none_capability_value
-						end
-						Result.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_multithreaded_capability)
-						Result.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_multithreaded_capability)
-					end
-				end
-					-- Setting "full_type_checking" superseded by option "full_class_checking" in ECF 1.2.0.
-				if attached Result.settings.primary_value ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name) as l_full_type_checking then
-					if not attached Result.options.primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) then
-						Result.options.set_primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name, l_full_type_checking)
-					end
-				end
-				adapt_options (Result.options)
+				adapt_capabilities (Result, a_ecf_version)
+				adapt_target_options (Result)
 				if l_parent_target /= Void and l_parent_name /= Void then
 						-- Check capabilities compatibility.
 					l_current_capabilities := Result.capabilities
 					l_parent_capabilities := l_parent_target.capabilities
-					if attached l_current_capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_catcall_detection then
-						if not l_parent_capabilities.is_capability_supported ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection) then
-							error_handler.report_eads_error ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection, attribute_value (l_parent_name, a_position_table), a_universe)
-						end
-					end
-					if attached l_current_capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) as l_concurrency then
-						if not l_parent_capabilities.is_capability_supported ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_concurrency) then
-							error_handler.report_eads_error ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_concurrency, attribute_value (l_parent_name, a_position_table), a_universe)
-						end
-					end
-					if attached l_current_capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_void_safety then
-						if not l_parent_capabilities.is_capability_supported ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety) then
-							error_handler.report_eads_error ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety, attribute_value (l_parent_name, a_position_table), a_universe)
+					across valid_capabilities_latest as l_capability_names loop
+						l_capability_name := l_capability_names.key
+						if attached l_current_capabilities.primary_support_value (l_capability_name) as l_capability_value then
+							if not l_parent_capabilities.is_capability_supported (l_capability_name, l_capability_value) then
+								error_handler.report_eads_error (l_capability_name, l_capability_value, attribute_value (l_parent_name, a_position_table), a_universe)
+							end
 						end
 					end
 				end
@@ -2387,31 +2286,6 @@ feature {NONE} -- Element change
 			end
 		end
 
-	adapt_options (a_options: ET_ECF_OPTIONS)
-			-- Adapt `a_options' so that options as known in most recent version of ECF
-			-- are populated with the equivalent values of those as found in the ECF file.
-		require
-			a_options_not_void: a_options /= Void
-		do
-				-- Option "syntax_level" superseded by option "syntax" in ECF 1.5.0.
-			if attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name) as l_syntax_level then
-				if not attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name) then
-					if l_syntax_level.is_integer then
-						inspect l_syntax_level.to_integer
-						when 0 then
-							a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.obsolete_option_value)
-						when 1 then
-							a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.transitional_option_value)
-						when 2 then
-							a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
-						else
-							-- Unsupported syntax level.
-						end
-					end
-				end
-			end
-		end
-
 	add_provider_group (a_provider_groups: DS_ARRAYED_LIST [STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Add to `a_provider_groups' the provider group held in `a_element'.
 		require
@@ -2535,6 +2409,146 @@ feature {NONE} -- Element change
 			end
 		end
 
+	adapt_capabilities (a_target: ET_ECF_TARGET; a_ecf_version: UT_VERSION)
+			-- Adapt capabilities of `a_target' so that capabilities as known in most recent version of ECF
+			-- are populated with the equivalent values of those as found in the ECF file.
+		require
+			a_target_not_void: a_target /= Void
+			a_ecf_version_not_void: a_ecf_version /= Void
+		local
+			l_multithreaded_capability: STRING
+			l_void_safety_capability: STRING
+			l_catcall_detection_capability: STRING
+		do
+				-- Option "void_safety" superseded by capability "void_safety" in ECF 1.16.0.
+			if attached a_target.options.primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name) as l_void_safety then
+				if
+					not attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) and
+					not attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
+				then
+					if a_ecf_version < ecf_1_11_0 and then STRING_.same_case_insensitive (l_void_safety, {ET_ECF_OPTION_NAMES}.all_option_value) then
+							-- Until ECF 1.10.0 included, "all" had the meaning of "transitional" introduced in ECF 1.11.0.
+						l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value
+					else
+						l_void_safety_capability := l_void_safety
+					end
+					a_target.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+					a_target.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+				end
+			end
+				-- Option "is_void_safe" superseded by option "void_safety" in ECF 1.5.0 and again in ECF 1.11.0,
+				-- and then by capability "void_safety" in ECF 1.16.0.
+			if attached a_target.options.primary_value ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name) as l_is_void_safe then
+				if
+					not attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) and
+					not attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
+				then
+					if a_ecf_version < ecf_1_5_0 then
+						if is_true (l_is_void_safe) then
+							l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value
+						else
+							l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.none_capability_value
+						end
+						a_target.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+						a_target.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+					else
+						if is_true (l_is_void_safe) then
+							l_void_safety_capability := {ET_ECF_CAPABILITY_NAMES}.all_capability_value
+							a_target.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+							a_target.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety_capability)
+						end
+					end
+				end
+			end
+				-- Option "cat_call_detection" superseded by capability "catcall_detection" in ECF 1.16.0.
+			if attached a_target.options.primary_value ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name) as l_catcall_detection then
+				if
+					not attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) and
+					not attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name)
+				then
+					if l_catcall_detection.is_boolean then
+							-- Values were true|false until ECF 1.13.0 included.
+						if is_true (l_catcall_detection) then
+							l_catcall_detection_capability := {ET_ECF_CAPABILITY_NAMES}.all_capability_value
+						else
+							l_catcall_detection_capability := {ET_ECF_CAPABILITY_NAMES}.none_capability_value
+						end
+						a_target.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection_capability)
+						a_target.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection_capability)
+					else
+						a_target.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection)
+						a_target.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection)
+					end
+				end
+			end
+				-- Setting "concurrency" superseded by the capability "concurrency" in ECF 1.16.0.
+			if attached a_target.settings.primary_value ({ET_ECF_SETTING_NAMES}.concurrency_setting_name) as l_concurrency then
+				if
+					not attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) and
+					not attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
+				then
+					a_target.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_concurrency)
+					a_target.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_concurrency)
+				end
+			end
+				-- Setting "multithreaded" superseded by setting "concurrency" in ECF 1.7.0,
+				-- and then by the capability "concurrency" in ECF 1.16.0.
+			if attached a_target.settings.primary_value ({ET_ECF_SETTING_NAMES}.multithreaded_setting_name) as l_multithreaded_option then
+				if
+					not attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) and
+					not attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
+				then
+					if is_true (l_multithreaded_option) then
+						l_multithreaded_capability := {ET_ECF_CAPABILITY_NAMES}.thread_capability_value
+					else
+						l_multithreaded_capability := {ET_ECF_CAPABILITY_NAMES}.none_capability_value
+					end
+					a_target.capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_multithreaded_capability)
+					a_target.capabilities.set_primary_use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_multithreaded_capability)
+				end
+			end
+		end
+
+	adapt_options (a_options: ET_ECF_OPTIONS)
+			-- Adapt `a_options' so that options as known in most recent version of ECF
+			-- are populated with the equivalent values of those as found in the ECF file.
+		require
+			a_options_not_void: a_options /= Void
+		do
+				-- Option "syntax_level" superseded by option "syntax" in ECF 1.5.0.
+			if attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name) as l_syntax_level then
+				if not attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name) then
+					if l_syntax_level.is_integer then
+						inspect l_syntax_level.to_integer
+						when 0 then
+							a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.obsolete_option_value)
+						when 1 then
+							a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.transitional_option_value)
+						when 2 then
+							a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
+						else
+							-- Unsupported syntax level.
+						end
+					end
+				end
+			end
+		end
+		
+	adapt_target_options (a_target: ET_ECF_TARGET)
+			-- Adapt options of `a_target' so that options as known in most recent version of ECF
+			-- are populated with the equivalent values of those as found in the ECF file.
+		require
+			a_target_not_void: a_target /= Void
+		do
+				-- Setting "full_type_checking" superseded by option "full_class_checking" in ECF 1.2.0.
+			if attached a_target.settings.primary_value ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name) as l_full_type_checking then
+				if not attached a_target.options.primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) then
+					a_target.options.set_primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name, l_full_type_checking)
+				end
+			end
+			adapt_options (a_target.options)
+		end
+
 	parse_libraries (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
 			-- Parse libraries referenced in `a_universe' when in `a_state'.
 		require
@@ -2550,6 +2564,7 @@ feature {NONE} -- Element change
 			l_filename: STRING
 			l_current_capabilities: ET_ECF_CAPABILITIES
 			l_library_capabilities: ET_ECF_CAPABILITIES
+			l_capability_name: STRING
 		do
 			l_libraries := a_universe.libraries
 			l_library_parser := library_parser
@@ -2595,19 +2610,16 @@ feature {NONE} -- Element change
 							if attached a_universe.selected_target as l_current_target and l_target /= Void then
 								l_current_capabilities := l_current_target.capabilities
 								l_library_capabilities := l_target.capabilities
-								if attached l_current_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_catcall_detection then
-									if not l_library_capabilities.is_capability_supported ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection) then
-										error_handler.report_eadp_error ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, l_catcall_detection, l_adapted_library.name_id, a_universe)
-									end
-								end
-								if attached l_current_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name) as l_concurrency then
-									if not l_library_capabilities.is_capability_supported ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_concurrency) then
-										error_handler.report_eadp_error ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, l_concurrency, l_adapted_library.name_id, a_universe)
-									end
-								end
-								if attached l_current_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_void_safety then
-									if not l_library_capabilities.is_capability_supported ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety) then
-										error_handler.report_eadp_error ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, l_void_safety, l_adapted_library.name_id, a_universe)
+								across valid_capabilities_latest as l_capability_names loop
+									l_capability_name := l_capability_names.key
+									if not attached l_current_capabilities.support_value (l_capability_name) as l_capability_value then
+										-- OK.
+									elseif l_library_capabilities.is_capability_supported (l_capability_name, l_capability_value) then
+										-- OK.
+									elseif attached l_adapted_library.conditions as l_conditions and then l_conditions.is_capability_supported (l_capability_name, l_current_capabilities, l_library_capabilities) then
+										-- OK.
+									else
+										error_handler.report_eadp_error (l_capability_name, l_capability_value, l_adapted_library.name_id, a_universe)
 									end
 								end
 							end
