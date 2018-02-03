@@ -128,6 +128,9 @@ feature -- Access
 	description: detachable STRING
 			-- Description
 
+	notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
+			-- Notes
+
 	version: detachable ET_ECF_VERSION
 			-- Version, if any
 
@@ -315,6 +318,16 @@ feature -- Setting
 			description := a_description
 		ensure
 			description_set: description = a_description
+		end
+
+	set_notes (a_notes: like notes)
+			-- Set `notes' to `a_notes'.
+		require
+			no_void_note: a_notes /= Void implies not a_notes.has_void
+		do
+			notes := a_notes
+		ensure
+			notes_set: notes = a_notes
 		end
 
 	set_version (a_version: like version)
@@ -574,5 +587,6 @@ invariant
 	no_void_old_class_mapping: attached class_mappings as l_class_mappings implies not l_class_mappings.has_void_item
 	no_void_pre_compile_action: attached pre_compile_actions as l_pre_compile_actions implies not l_pre_compile_actions.has_void
 	no_void_post_compile_action: attached post_compile_actions as l_post_compile_actions implies not l_post_compile_actions.has_void
+	no_void_note: attached notes as l_notes implies not l_notes.has_void
 
 end

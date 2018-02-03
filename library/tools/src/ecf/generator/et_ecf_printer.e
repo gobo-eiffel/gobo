@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			a_file_is_open_write: a_file.is_open_write
 		do
 			file := a_file
-			ecf_version := ecf_1_17_0
+			ecf_version := ecf_last_known
 		ensure
 			file_set: file = a_file
 		end
@@ -255,6 +255,7 @@ feature -- Output
 			end
 			if
 				a_assembly.description /= Void or
+				(attached a_assembly.notes as l_notes and then not l_notes.is_empty) or
 				a_assembly.options /= Void or
 				a_assembly.class_renamings /= Void or
 				(attached a_assembly.class_options as l_class_options and then not l_class_options.is_empty) or
@@ -265,6 +266,9 @@ feature -- Output
 				indent
 				if attached a_assembly.description as l_description then
 					print_description (l_description)
+				end
+				if attached a_assembly.notes as l_notes and then not l_notes.is_empty then
+					l_notes.do_all (agent print_note_element)
 				end
 				if attached a_assembly.options as l_options then
 					print_options (adapted_options (l_options), Void)
@@ -435,6 +439,7 @@ feature -- Output
 			end
 			if
 				a_cluster.description /= Void or
+				(attached a_cluster.notes as l_notes and then not l_notes.is_empty) or
 				a_cluster.conditioned_file_rules /= Void or
 				a_cluster.options /= Void or
 				a_cluster.class_mappings /= Void or
@@ -451,6 +456,9 @@ feature -- Output
 				indent
 				if attached a_cluster.description as l_description then
 					print_description (l_description)
+				end
+				if attached a_cluster.notes as l_notes and then not l_notes.is_empty then
+					l_notes.do_all (agent print_note_element)
 				end
 				if attached a_cluster.conditioned_file_rules as l_file_rules then
 					print_file_rules (l_file_rules)
@@ -867,6 +875,7 @@ feature -- Output
 			end
 			if
 				a_library.description /= Void or
+				(attached a_library.notes as l_notes and then not l_notes.is_empty) or
 				a_library.options /= Void or
 				a_library.class_renamings /= Void or
 				(attached a_library.class_options as l_class_options and then not l_class_options.is_empty) or
@@ -878,6 +887,9 @@ feature -- Output
 				indent
 				if attached a_library.description as l_description then
 					print_description (l_description)
+				end
+				if attached a_library.notes as l_notes and then not l_notes.is_empty then
+					l_notes.do_all (agent print_note_element)
 				end
 				if attached a_library.options as l_options then
 					print_options (adapted_options (l_options), Void)
@@ -961,6 +973,49 @@ feature -- Output
 			file.put_character ('/')
 			file.put_character ('>')
 			file.put_new_line
+		end
+
+	print_note_element (a_note_element: ET_ECF_NOTE_ELEMENT)
+			-- Print `a_note_element' to `file'.
+		require
+			a_note_element_not_void: a_note_element /= Void
+		do
+			if ecf_version >= ecf_1_4_0 then
+					-- The <note> element was introducted in ECF 1.4.0.
+				print_indentation
+				file.put_character ('<')
+				file.put_string (a_note_element.name)
+				across a_note_element.attributes as l_attributes loop
+					file.put_character (' ')
+					file.put_string (l_attributes.key)
+					file.put_character ('=')
+					print_quoted_string (l_attributes.item)
+				end
+				if
+					not a_note_element.elements.is_empty or
+					(attached a_note_element.content as l_content and then not l_content.is_empty)
+				then
+					file.put_character ('>')
+					file.put_new_line
+					indent
+					a_note_element.elements.do_all (agent print_note_element)
+					if attached a_note_element.content as l_content and then not l_content.is_empty then
+						print_indentation
+						print_escaped_string (l_content)
+						file.put_new_line
+					end
+					dedent
+					print_indentation
+					file.put_character ('<')
+					file.put_character ('/')
+					file.put_string (a_note_element.name)
+					file.put_character ('>')
+				else
+					file.put_character ('/')
+					file.put_character ('>')
+				end
+				file.put_new_line
+			end
 		end
 
 	print_options (a_options: ET_ECF_OPTIONS; a_class_name: detachable STRING)
@@ -1218,6 +1273,7 @@ feature -- Output
 			end
 			if
 				a_precompiled_library.description /= Void or
+				(attached a_precompiled_library.notes as l_notes and then not l_notes.is_empty) or
 				a_precompiled_library.options /= Void or
 				a_precompiled_library.class_renamings /= Void or
 				(attached a_precompiled_library.class_options as l_class_options and then not l_class_options.is_empty) or
@@ -1229,6 +1285,9 @@ feature -- Output
 				indent
 				if attached a_precompiled_library.description as l_description then
 					print_description (l_description)
+				end
+				if attached a_precompiled_library.notes as l_notes and then not l_notes.is_empty then
+					l_notes.do_all (agent print_note_element)
 				end
 				if attached a_precompiled_library.options as l_options then
 					print_options (adapted_options (l_options), Void)
@@ -1446,11 +1505,15 @@ feature -- Output
 			file.put_new_line
 			if
 				a_system.description /= Void or
+				(attached a_system.notes as l_notes and then not l_notes.is_empty) or
 				a_system.targets /= Void
 			then
 				indent
 				if attached a_system.description as l_description then
 					print_description (l_description)
+				end
+				if attached a_system.notes as l_notes and then not l_notes.is_empty then
+					l_notes.do_all (agent print_note_element)
 				end
 				if attached a_system.targets as l_targets then
 					l_targets.do_all (agent print_target)
@@ -1498,6 +1561,7 @@ feature -- Output
 			l_capabilities := adapted_capabilities (a_target)
 			if
 				a_target.description /= Void or
+				(attached a_target.notes as l_notes and then not l_notes.is_empty) or
 				a_target.version /= Void or
 				a_target.root /= Void or
 				(attached a_target.file_rules as l_file_rules and then not l_file_rules.is_empty) or
@@ -1529,6 +1593,9 @@ feature -- Output
 				indent
 				if attached a_target.description as l_description then
 					print_description (l_description)
+				end
+				if attached a_target.notes as l_notes and then not l_notes.is_empty then
+					l_notes.do_all (agent print_note_element)
 				end
 				if attached a_target.version as l_version then
 					print_version (l_version)

@@ -72,6 +72,9 @@ feature -- Access
 	description: detachable STRING
 			-- Description
 
+	notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
+			-- Notes
+
 feature -- Status setting
 
 	set_read_only (b: BOOLEAN)
@@ -143,10 +146,21 @@ feature -- Setting
 			description_set: description = a_description
 		end
 
+	set_notes (a_notes: like notes)
+			-- Set `notes' to `a_notes'.
+		require
+			no_void_note: a_notes /= Void implies not a_notes.has_void
+		do
+			notes := a_notes
+		ensure
+			notes_set: notes = a_notes
+		end
+
 invariant
 
 	name_not_void: name /= Void
 	name_not_empty: not name.is_empty
 	filename_not_void: filename /= Void
+	no_void_note: attached notes as l_notes implies not l_notes.has_void
 
 end

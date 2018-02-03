@@ -167,12 +167,20 @@ feature -- Access
 			ecf_1_17_0_not_void: Result /= Void
 		end
 
+	ecf_last_known: UT_VERSION
+			-- Last known ECF version
+		once
+			Result := ecf_1_17_0
+		ensure
+			ecf_last_known_not_void: Result /= Void
+		end
+
 	ecf_latest: UT_VERSION
 			-- After the last ECF version
 		once
 			create Result.make_latest
 		ensure
-			ecma_latest_not_void: Result /= Void
+			ecf_latest_not_void: Result /= Void
 		end
 
 end

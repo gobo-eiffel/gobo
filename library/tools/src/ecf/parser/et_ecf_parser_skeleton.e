@@ -219,6 +219,7 @@ feature {NONE} -- AST factory
 			l_renamings: detachable DS_HASH_TABLE [STRING, STRING]
 			l_options: detachable ET_ECF_OPTIONS
 			l_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
+			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
@@ -242,6 +243,8 @@ feature {NONE} -- AST factory
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
+						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
 							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
@@ -281,6 +284,7 @@ feature {NONE} -- AST factory
 				end
 				Result.set_class_renamings (l_renamings)
 				Result.set_conditions (l_conditions)
+				Result.set_notes (l_notes)
 			end
 		end
 
@@ -318,6 +322,7 @@ feature {NONE} -- AST factory
 			l_options: detachable ET_ECF_OPTIONS
 			l_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
 			l_visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
+			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
@@ -341,6 +346,8 @@ feature {NONE} -- AST factory
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
+						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
 							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
@@ -384,6 +391,7 @@ feature {NONE} -- AST factory
 				Result.set_class_renamings (l_renamings)
 				Result.set_visible_classes (l_visible_classes)
 				Result.set_conditions (l_conditions)
+				Result.set_notes (l_notes)
 			end
 		end
 
@@ -421,6 +429,7 @@ feature {NONE} -- AST factory
 			l_options: detachable ET_ECF_OPTIONS
 			l_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
 			l_visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
+			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
@@ -444,6 +453,8 @@ feature {NONE} -- AST factory
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
+						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
 							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
@@ -566,6 +577,7 @@ feature {NONE} -- AST factory
 			l_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
 			l_visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
 			l_provider_groups: detachable DS_ARRAYED_LIST [STRING]
+			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
@@ -595,6 +607,8 @@ feature {NONE} -- AST factory
 							l_file_rules := new_file_rules (l_file_rules, l_child, a_position_table, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_mapping) then
 							l_mappings := new_mappings (l_mappings, l_child, a_position_table, a_universe)
+						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
 							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
@@ -653,6 +667,7 @@ feature {NONE} -- AST factory
 				Result.set_visible_classes (l_visible_classes)
 				Result.set_provider_groups (l_provider_groups)
 				Result.set_conditions (l_conditions)
+				Result.set_notes (l_notes)
 			end
 		end
 
@@ -1362,6 +1377,47 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_note_element (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_NOTE_ELEMENT
+			-- New note element built from `a_element'
+		require
+			a_element_not_void: a_element /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+		do
+			Result := ast_factory.new_note (a_element.name)
+			l_cursor := a_element.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				if attached {XM_ATTRIBUTE} l_cursor.item as l_child then
+					Result.add_attribute (l_child.name, l_child.value)
+				elseif attached {XM_ELEMENT} l_cursor.item as l_child then
+					if attached new_note_element (l_child, a_position_table, a_universe) as l_note_element then
+						Result.add_element (l_note_element)
+					end
+				end
+				l_cursor.forth
+			end
+			if attached a_element.text as l_text and then not l_text.is_empty then
+				Result.set_content (l_text)
+			end
+		end
+
+	new_notes (a_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
+			-- New notes (or `a_notes' if not Void) built from `a_element'
+		require
+			a_element_not_void: a_element /= Void
+			is_note: STRING_.same_case_insensitive (a_element.name, xml_note)
+			a_universe_not_void: a_universe /= Void
+		do
+			Result := a_notes
+			if attached new_note_element (a_element, a_position_table, a_universe) as l_note then
+				if Result = Void then
+					Result := ast_factory.new_notes
+				end
+				Result.force_last (l_note)
+			end
+		end
+
 	new_options (a_options: detachable ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
 		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_OPTIONS
 			-- New options (or `a_options' if not Void) built from `a_element'
@@ -1685,6 +1741,7 @@ feature {NONE} -- AST factory
 			l_mappings: detachable DS_HASH_TABLE [STRING, STRING]
 			l_pre_compile_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
 			l_post_compile_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
+			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 			l_parent_name: detachable XM_ATTRIBUTE
 			l_parent_target: detachable ET_ECF_TARGET
 			l_current_capabilities: ET_ECF_CAPABILITIES
@@ -1751,6 +1808,8 @@ feature {NONE} -- AST factory
 							l_libraries := new_adapted_libraries (l_libraries, l_child, a_position_table, a_default_options, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_mapping) then
 							l_mappings := new_mappings (l_mappings, l_child, a_position_table, a_universe)
+						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
 							add_options (Result.options, l_child, a_position_table, a_default_options, a_universe)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_post_compile_action) then
@@ -1821,6 +1880,7 @@ feature {NONE} -- AST factory
 				Result.set_external_resources (l_external_resources)
 				Result.set_pre_compile_actions (l_pre_compile_actions)
 				Result.set_post_compile_actions (l_post_compile_actions)
+				Result.set_notes (l_notes)
 			end
 		end
 
@@ -2066,6 +2126,7 @@ feature {NONE} -- Element change
 			l_default_capabilities: ET_ECF_CAPABILITIES
 			l_default_options: ET_ECF_OPTIONS
 			l_value: STRING
+			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 		do
 			l_namespace_uri := a_element.namespace.uri
 			a_system_config.set_ecf_namespace (l_namespace_uri)
@@ -2084,6 +2145,9 @@ feature {NONE} -- Element change
 						if attached l_child.text as l_text and then not l_text.is_empty then
 							a_system_config.set_description (l_text)
 						end
+					elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
+						l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
+						a_system_config.set_notes (l_notes)
 					elseif STRING_.same_case_insensitive (l_child.name, xml_target) then
 						l_targets := new_targets (l_targets, l_child, a_position_table, l_ecf_version, l_default_settings, l_default_capabilities, l_default_options, a_universe)
 						a_system_config.set_targets (l_targets)
@@ -2533,7 +2597,7 @@ feature {NONE} -- Element change
 				end
 			end
 		end
-		
+
 	adapt_target_options (a_target: ET_ECF_TARGET)
 			-- Adapt options of `a_target' so that options as known in most recent version of ECF
 			-- are populated with the equivalent values of those as found in the ECF file.

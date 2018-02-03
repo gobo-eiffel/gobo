@@ -5,7 +5,7 @@ note
 		"ECF Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -401,6 +401,25 @@ feature -- AST factory
 			create Result.make (a_name, a_filename, a_system)
 		ensure
 			library_not_void: Result /= Void
+		end
+
+	new_note (a_name: STRING): ET_ECF_NOTE_ELEMENT
+			-- New note element
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			create Result.make (a_name)
+		ensure
+			note_not_void: Result /= Void
+		end
+
+	new_notes: DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
+			-- New note elements
+		do
+			create Result.make (10)
+		ensure
+			notes_not_void: Result /= Void
 		end
 
 	new_options: ET_ECF_OPTIONS

@@ -5,7 +5,7 @@ note
 		"ECF XML element names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -175,6 +175,9 @@ feature -- Constants
 
 	xml_new_name: STRING = "new_name"
 			-- "new_name" attribute name
+
+	xml_note: STRING = "note"
+			-- "note" element name
 
 	xml_location: STRING = "location"
 			-- "location" attribute name

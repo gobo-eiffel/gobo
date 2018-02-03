@@ -5,7 +5,7 @@ note
 		"ECF Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -91,6 +91,9 @@ feature -- Access
 	description: detachable STRING
 			-- Description
 
+	notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
+			-- Notes
+
 feature -- Setting
 
 	set_options (a_options: like options)
@@ -120,11 +123,22 @@ feature -- Setting
 			description_set: description = a_description
 		end
 
+	set_notes (a_notes: like notes)
+			-- Set `notes' to `a_notes'.
+		require
+			no_void_note: a_notes /= Void implies not a_notes.has_void
+		do
+			notes := a_notes
+		ensure
+			notes_set: notes = a_notes
+		end
+
 invariant
 
 	no_void_old_class_renamings: attached class_renamings as l_class_renamings implies not l_class_renamings.has_void
 	no_void_new_class_renamings: attached class_renamings as l_class_renamings implies not l_class_renamings.has_void_item
 	no_void_class_option_name: attached class_options as l_class_options implies not l_class_options.has_void
 	no_void_class_option: attached class_options as l_class_options implies not l_class_options.has_void_item
+	no_void_note: attached notes as l_notes implies not l_notes.has_void
 
 end
