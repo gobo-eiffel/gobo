@@ -128,6 +128,18 @@ feature -- Setting
 			unique_keyword_set: unique_keyword = a_unique
 		end
 
+	set_constant (a_constant: like constant)
+			-- Set `constant' to `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
+			a_constant_is_integer_32: a_constant.is_integer_32
+			a_constant_positive: a_constant.to_integer_32 > 0
+		do
+			constant := a_constant
+		ensure
+			constant_set: constant = a_constant
+		end
+
 feature -- Duplication
 
 	new_synonym (a_name: like extended_name): like Current
@@ -143,6 +155,7 @@ feature -- Duplication
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
 			Result.set_across_components (across_components)
+			Result.set_constant (constant)
 			Result.set_synonym (Current)
 		end
 
@@ -166,6 +179,7 @@ feature -- Conversion
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
 			Result.set_across_components (across_components)
+			Result.set_constant (constant)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end
@@ -183,5 +197,7 @@ invariant
 	is_keyword_not_void: is_keyword /= Void
 	unique_keyword_not_void: unique_keyword /= Void
 	is_unique_attribute: arguments = Void
+	constant_is_integer_32: constant.is_integer_32
+	constant_positive: constant.to_integer_32 > 0
 
 end
