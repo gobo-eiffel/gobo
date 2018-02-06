@@ -5,7 +5,7 @@ note
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -213,9 +213,11 @@ feature {NONE} -- Processing
 							end
 							i1 := i1 + 1
 						end
-						if not l_parent_not_checked then
+						if l_parent_not_checked then
 								-- When some parents have not been fully checked yet,
 								-- then we postpone the processing of `current_class'.
+							system_processor.report_class_postponed (current_class)
+						else
 							error_handler.report_compilation_status (Current, current_class, system_processor)
 							if a_error_in_parent then
 								set_fatal_error (current_class)

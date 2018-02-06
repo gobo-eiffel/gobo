@@ -5,7 +5,7 @@ note
 		"Eiffel system processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1426,6 +1426,7 @@ feature -- Processing
 			until
 				l_done
 			loop
+				postponed_class_count := 0
 				from i := 1 until i > nb loop
 					if stop_requested then
 							-- Jump out of the loops.
@@ -1440,10 +1441,11 @@ feature -- Processing
 					i := i + 1
 				end
 				if not l_done then
-					l_done := processed_class_count = 0
+					l_done := processed_class_count = 0 and postponed_class_count = 0
 				end
 				reset_processed_class_count
 			end
+			postponed_class_count := 0
 			eiffel_parser := l_eiffel_parser
 			ancestor_builder := l_ancestor_builder
 			feature_flattener := l_feature_flattener
@@ -1642,7 +1644,7 @@ feature -- Iteration
 feature -- Metrics
 
 	report_class_processed (a_class: ET_CLASS)
-			-- report that `a_class' has been processed.
+			-- Report that `a_class' has been processed.
 		require
 			a_class_not_void: a_class /= Void
 		do
@@ -1694,6 +1696,17 @@ feature -- Metrics
 			processed_class_count_reset: processed_class_count = 0
 			processed_class_count_stack_wiped_out: processed_class_count_stack.is_empty
 		end
+
+	report_class_postponed (a_class: ET_CLASS)
+			-- Report that the processing of `a_class' has been postponed.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			postponed_class_count := postponed_class_count + 1
+		end
+
+	postponed_class_count: INTEGER
+			-- Number of classes whose processing has been processed
 
 feature {ET_SYSTEM_MULTIPROCESSOR} -- Metrics
 
