@@ -2,6 +2,10 @@
 
 ## Version 4.3 - ??
 
+### gexace
+
+* Added documentation about `Xace` and `gexace`.
+
 ### Gobo Eiffel Kernel Library
 
 * Removed support for ISE Eiffel 16.05.

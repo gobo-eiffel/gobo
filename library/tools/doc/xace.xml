@@ -6,7 +6,7 @@
 		"Xace Files"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,26 +15,43 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/xace">
 <chapterinfo>
 	<copyright>
-		<year>2010</year>
+		<year>2010-2018</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>28 Febrary 2010</date>
+	<date>8 February 2018</date>
 </chapterinfo>
 
 <title>Xace Files</title>
 
 <para>
-Under construction
+Xace is a notation to specify the information needed to compile an Eiffel program.
+It stands for XML Assembly of Classes in Eiffel. It was initially designed to be
+independent of Eiffel compilers and then be converted to the supported Eiffel
+compilers' own notations with the tool <projectname>gexace</projectname>. That
+way only one file needs to be written and maintained. Xace is also natively supported
+by the Gobo tools without the need to be converted first.
+</para>
+
+<para>
+This documentation is structured as follows:
 
 <blockquote>
 <variablelist>
 	<varlistentry>
 		<term>
-			<link linkend="new_xace_option">Adding Xace option</link>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/gexace/xace.html">Xace Files</ulink>
+		</term>
+		<listitem><para>
+			Definition of the Xace notation and how it is converted to other notations.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="new_xace_option">Adding Xace options</link>
 		</term>
 		<listitem><para>
 			How to add a new Xace option.
@@ -43,5 +60,4 @@ Under construction
 </variablelist>
 </blockquote>
 </para>
-
 </chapter>

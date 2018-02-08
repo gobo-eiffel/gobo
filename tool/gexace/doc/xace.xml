@@ -1,0 +1,2841 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Xace Files"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexace/xace">
+<chapterinfo>
+	<copyright>
+		<year>2010-2018</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>8 February 2018</date>
+</chapterinfo>
+
+<title>Xace Files</title>
+
+<para>
+Xace is a notation to specify the information needed to compile an Eiffel program.
+It stands for XML Assembly of Classes in Eiffel. It was initially designed to be
+independent of Eiffel compilers and then be converted to the supported Eiffel
+compilers' own notations with the tool <projectname>gexace</projectname>. That
+way only one file needs to be written and maintained. Xace is also natively supported
+by the Gobo tools without the need to be converted first.
+</para>
+
+<section><title>Syntax</title>
+<para>
+The syntax of Xace is very simple. As mentioned above, an Xace file is an XML file.
+The root element is either <filename>system</filename> or <filename>library</filename>
+depending on whether the file describes an Eiffel program or library.
+
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>system</filename>
+		</term>
+		<listitem>
+		<para>
+			Root element of an Xace file describing an Eiffel program.
+		</para>
+		<para>
+		<emphasis role="strong">Attributes:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>name</filename>
+				</term>
+				<listitem>
+				<para>
+					Name of the system. Required
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		<para>
+		<emphasis role="strong">Elements:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>description</filename>
+				</term>
+				<listitem>
+				<para>
+					Free text. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>root</filename>
+				</term>
+				<listitem>
+				<para>
+					Root class and procedure of the Eiffel system. Several such
+					elements can be specified, but after processing its 
+					<filename>if</filename>/<filename>unless</filename> attributes,
+					no more than one should remain.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>option</filename>
+				</term>
+				<listitem>
+				<para>
+					System-level options.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>cluster</filename>
+				</term>
+				<listitem>
+				<para>
+					Cluster containing the Eiffel classes of this system.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>mount</filename>
+				</term>
+				<listitem>
+				<para>
+					Library used by this system.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>library</filename>
+		</term>
+		<listitem>
+		<para>
+			Root element of an Xace file describing an Eiffel library.
+		</para>
+		<para>
+		<emphasis role="strong">Attributes:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>name</filename>
+				</term>
+				<listitem>
+				<para>
+					Name of the system. Required
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>prefix</filename>
+				</term>
+				<listitem>
+				<para>
+					Prefix to be applied to the names of the clusters
+					of this library when mounted. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		<para>
+		<emphasis role="strong">Elements:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>description</filename>
+				</term>
+				<listitem>
+				<para>
+					Free text. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>option</filename>
+				</term>
+				<listitem>
+				<para>
+					Library-level options.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>cluster</filename>
+				</term>
+				<listitem>
+				<para>
+					Cluster containing the Eiffel classes of this library.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>mount</filename>
+				</term>
+				<listitem>
+				<para>
+					Library used by this library.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>root</filename>
+		</term>
+		<listitem>
+		<para>
+			Eiffel root class and creation procedure of the system.
+		</para>
+		<para>
+		<emphasis role="strong">Attributes:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>class</filename>
+				</term>
+				<listitem>
+				<para>
+					Name of the root class. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>creation</filename>
+				</term>
+				<listitem>
+				<para>
+					Name of the root creation procedure. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>if</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is not satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>unless</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>option</filename>
+		</term>
+		<listitem>
+		<para>
+			Options used to compile the system. There are several kinds of options,
+			at the system level, at the cluster level, at the class level and at the 
+			feature level. Options have either a name and a value, or no name and
+			no value but are used to group several options together to apply a
+			common <filename>if</filename>/<filename>unless</filename> condition.
+		</para>
+		<para>
+		<emphasis role="strong">Attributes:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>name</filename>
+				</term>
+				<listitem>
+				<para>
+					Name of the option. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>value</filename>
+				</term>
+				<listitem>
+				<para>
+					Value of this option. Required when <filename>name</filename>
+					is provided.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>if</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is not satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>unless</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		<para>
+		<emphasis role="strong">Elements:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>option</filename>
+				</term>
+				<listitem>
+				<para>
+					Nested option. Useful when grouping together options with
+					the same <filename>if</filename>/<filename>unless</filename> condition. 
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>cluster</filename>
+		</term>
+		<listitem>
+		<para>
+			Cluster containing Eiffel classes.
+		</para>
+		<para>
+		<emphasis role="strong">Attributes:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>name</filename>
+				</term>
+				<listitem>
+				<para>
+					Name of the cluster. Required.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>location</filename>
+				</term>
+				<listitem>
+				<para>
+					Pathname of this cluster. Default value: use the name of the
+					cluster as pathname. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>relative</filename>
+				</term>
+				<listitem>
+				<para>
+					Is the pathname of this cluster relative to the pathname
+					of its parent cluster? Default value: false when 
+					<filename>location</filename> is provided, true when
+					<filename>name</filename> is used instead. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>prefix</filename>
+				</term>
+				<listitem>
+				<para>
+					Prefix to be added to the name of this cluster and recursively
+					to its subclusters. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>if</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is not satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>unless</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		<para>
+		<emphasis role="strong">Elements:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>option</filename>
+				</term>
+				<listitem>
+				<para>
+					Cluster-level options.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>cluster</filename>
+				</term>
+				<listitem>
+				<para>
+					Subcluster.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>class</filename>
+				</term>
+				<listitem>
+				<para>
+					Used to specify class-level options for classes of this cluster.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>mount</filename>
+				</term>
+				<listitem>
+				<para>
+					Library used by this cluster.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>class</filename>
+		</term>
+		<listitem>
+		<para>
+			Used to specify class-level options.
+		</para>
+		<para>
+		<emphasis role="strong">Attributes:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>name</filename>
+				</term>
+				<listitem>
+				<para>
+					Name of the class. Required.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>if</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is not satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>unless</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		<para>
+		<emphasis role="strong">Elements:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>option</filename>
+				</term>
+				<listitem>
+				<para>
+					Class-level options.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>feature</filename>
+				</term>
+				<listitem>
+				<para>
+					Used to specify feature-level options for features of this class.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>feature</filename>
+		</term>
+		<listitem>
+		<para>
+			Used to specify feature-level options.
+		</para>
+		<para>
+		<emphasis role="strong">Attributes:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>name</filename>
+				</term>
+				<listitem>
+				<para>
+					Name of the feature. Required.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>if</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is not satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>unless</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		<para>
+		<emphasis role="strong">Elements:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>option</filename>
+				</term>
+				<listitem>
+				<para>
+					Feature-level options.
+					Zero or more such elements can be specified.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		</listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>mount</filename>
+		</term>
+		<listitem>
+		<para>
+			Use clusters defined in a library defined in another Xace file.
+		</para>
+		<para>
+		<emphasis role="strong">Attributes:</emphasis>
+		<variablelist>
+			<varlistentry>
+				<term>
+					<filename>location</filename>
+				</term>
+				<listitem>
+				<para>
+					Pathname of the Xace file of the mounted library. Required.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>prefix</filename>
+				</term>
+				<listitem>
+				<para>
+					Prefix to be added to the names of the clusters
+					of the mounted library. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>if</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is not satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>
+					<filename>unless</filename>
+				</term>
+				<listitem>
+				<para>
+					Ignore this element if the expression is satisfied.
+					Expressions can be of two forms: Just "${FOO}" which evaluates
+					to true if the variable FOO is defined, and "${FOO}=bar"
+					or "${FOO}=${BAR}" which evaluates to true if the variable
+					FOO is set to "bar" or if variables FOO and BAR expand to
+					the same value. Cannot have both <filename>if</filename> and 
+					<filename>unless</filename>. Optional.
+				</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+		</listitem>
+	</varlistentry>
+</variablelist>
+</para>
+</section>
+
+<section><title>System-level options</title>
+<para>
+Following is the list of system-level and library-level options supported in Xace
+(of the form <filename>&lt;option name="..." value="..."/&gt;</filename>), and
+how they are translated to the Eiffel compiler dependent notations. 
+"N/A" does not necessarily mean that the corresponding Eiffel compiler does not
+support this facility, it could just be that the facility is not parameterizable
+or is activated from the command-line or from a separate tool rather than from
+the Eiffel configuration file. When an entry is marked "N/A" the option
+will be silently ignored and nothing will be generated in the Eiffel compiler
+dependent configuration file for this option. Likewise when the name of an
+option is not supported in Xace.
+</para>
+<para>
+The <emphasis role="strong">Default</emphasis> section shows Xace default value
+when this option is not explicitly specified in the Xace file. It can be different
+from the default value used by the various Eiffel compiler dependent notations.
+For further details about each option, please refer to the
+documentation provided with the Eiffel compilers.
+</para>
+<para>
+<variablelist>
+<varlistentry>
+	<term><filename>address_expression</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Enable expressions of the form '$(s.to_c)' instead
+			of having to declare 'a' of type ANY, and then having to 
+			assign 's.to_c' to 'a' and passing '$a'. Turn this option on
+			only if you have advanced knowledge of the garbage collector
+			insides, since using this syntax illegally can lead to bugs
+			very hard to trace.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="address_expression" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="address_expression" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>array_optimization</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable array optimization in loops when the array
+			has been declared as local variable or formal argument.
+		</term><term>
+			The system needs to be compiled in finalized mode
+			in order for this option to have any effect.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="array_optimization" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="array_optimization" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>assertion</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>
+			none | require | supplier_precondition | ensure | invariant | loop_invariant | loop_variant | check | all
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>require</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Set default assertion level of the Eiffel system.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			none => <filename>&lt;option/&gt;</filename>
+		</term><term>
+			require => <filename>&lt;option&gt;&lt;assertions precondition="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			supplier_precondition => <filename>&lt;option&gt;&lt;assertions supplier_precondition="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			ensure => <filename>&lt;option&gt;&lt;assertions ensure="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			invariant => <filename>&lt;option&gt;&lt;assertions invariant="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			loop_invariant => <filename>&lt;option&gt;&lt;assertions loop="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			loop_variant => <filename>&lt;option&gt;&lt;assertions loop="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			check => <filename>&lt;option&gt;&lt;assertions check="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			all => <filename>&lt;option&gt;&lt;assertions precondition="true" supplier_precondition="true" ensure="true" invariant="true" loop="true" check="true"/&gt;&lt;/option&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>attached_by_default</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Are types attached by default when no attachment mark is specified?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option is_attached_by_default="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option is_attached_by_default="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>automatic_backup</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Automatically generate a backup during recompilation.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="automatic_backup" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="automatic_backup" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>c_compiler_options</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>C options</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify options to be passed to the C compiler
+			which is responsible for compiling the C code that has been
+			generated from the Eiffel system.
+		</term><term>
+			Several of these options can be specified.
+		</term><term>
+			This option makes only sense for Eiffel compilers which generate C code.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			options => <filename>&lt;external_cflag value="</filename>options<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>check_generic_creation_constraint</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>true</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Check generic creation constraint.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="check_generic_creation_constraint" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="check_generic_creation_constraint" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>check_vape</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>true</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Report VAPE validity errors (ETL 2nd edition page 122).
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="check_vape" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="check_vape" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>cls_compliant</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>true</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			When compiling to the .NET framework. Is the generated
+			code CLS compliant?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="cls_compliant" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="cls_compliant" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>console_application</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>true</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Under Windows, generate either a console or a windows application.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="console_application" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="console_application" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>dead_code_removal</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>none | low_level | feature | class | all</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>all</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Do not include dead code in the generated application.
+		</term><term>
+			'low_level' means that unreachable chuncks of code are not included.
+		</term><term>
+			'feature' means that features which are never called are not included.
+		</term><term>
+			'class' means the classes which are in the system but which are
+			never instanciated in the living code are not included.
+		</term><term>
+			The system needs to be compiled in finalized mode
+			in order for this option to have any effect.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			none => <filename>&lt;setting name="dead_code_removal" value="false"/&gt;</filename>
+		</term><term>
+			low_level => <filename>&lt;setting name="dead_code_removal" value="false"/&gt;</filename>
+		</term><term>
+			feature => <filename>&lt;setting name="dead_code_removal" value="true"/&gt;</filename>
+		</term><term>
+			class => <filename>&lt;setting name="dead_code_removal" value="false"/&gt;</filename>
+		</term><term>
+			all => <filename>&lt;setting name="dead_code_removal" value="true"/&gt;</filename>
+		</term><term>
+			If several occurrences of ECF options would need to be generated,
+			only one occurrence would actually be generated with value 'true'
+			if there is at least one 'true' and 'false' otherwise.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>debug</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Enable debug instructions.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option debug="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option debug="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>debug_tag</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Debug tag</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable debug instructions with tag 'tag'.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			tag => <filename>&lt;option&gt;&lt;debug name="</filename>tag<filename>" enabled=true"/&gt;&lt;/option&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>dotnet_naming_convention</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			When compiling to the .NET framework. Should the
+			Eiffel code use .NET naming convention when calling routines
+			from the assembly (use Eiffel naming convention otherwise)?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="dotnet_naming_convention" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="dotnet_naming_convention" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>dynamic_runtime</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Enable the use of the Eiffel runtime as a
+			DLL or shared library.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="dynamic_runtime" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="dynamic_runtime" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>enforce_unique_class_names</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Should class names be unique even across libraries?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="enforce_unique_class_names" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="enforce_unique_class_names" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>exception_trace</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Enable to see a complete exception trace
+			when a finalized application is crashing.
+			The system needs to be compiled in finalized mode
+			in order for this option to have any effect.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="exception_trace" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="exception_trace" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>external_runtime</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Use external runtime located in 'pathname'.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;setting name="external_runtime" value="</filename>pathname<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>force_32bits</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Force compilation for 32bits (.NET only).
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="force_32bits" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="force_32bits" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>full_class_checking</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Run flat Degree 3.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option full_class_checking="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option full_class_checking="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>garbage_collector</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>none | internal | boehm</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>internal</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Select garbage collector.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para>
+			N/A
+		</para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>header</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify a directory containing C header files.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;external_include location="</filename>pathname<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>il_verifiable</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>true</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			When compiling to the .NET framework.
+			Is the generated code IL verifiable?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="il_verifiable" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="il_verifiable" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>inlining</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis> </term>
+		<listitem><para>none | array | constant | once | all</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>all</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable inlining. 'array' means ARRAY and STRING
+			inlining, 'constants' means constant inlining, 'once' means
+			once-feature inlining, and 'all' means anything that can
+			be inlined.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			none => <filename>&lt;setting name="inlining" value="false"/&gt;</filename>
+		</term><term>
+			array => <filename>&lt;setting name="inlining" value="true"/&gt;</filename>
+		</term><term>
+			constant => <filename>&lt;setting name="inlining" value="true"/&gt;</filename>
+		</term><term>
+			once => <filename>&lt;setting name="inlining" value="true"/&gt;</filename>
+		</term><term>
+			all => <filename>&lt;setting name="inlining" value="true"/&gt;</filename>
+		</term><term>
+			If several occurrences of ECF options would need to be generated,
+			only one occurrence would actually be generated with value 'true'
+			if there is at least one 'true' and 'false' otherwise.
+		</term><term>
+			The option has effect only in finalized mode.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>inlining_size</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis> </term>
+		<listitem><para>Integer value</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>0</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify maximum size of routines to be inlined.
+		</term><term>
+			No effect if 'inlining' is disabled.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			value => <filename>&lt;setting name="inlining_size" value="</filename>value<filename>"/&gt;</filename>
+		</term><term>
+			The default value in ECF is 4.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>line_generation</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Generate C pragmas '#line x' in generated C code.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="line_generation" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="line_generation" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>link</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify object files, library files or command
+  			line options to be passed to the linker.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;external_library location="</filename>pathname<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>metadata_cache_path</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			When compiling to the .NET framework. Specify pathname
+  			where XML files describing DLLs assemblies will be generated.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;setting name="metadata_cache_path" value="</filename>pathname<filename>"/&gt;</filename>
+		</term><term>
+			ISE's default: $ISE_EIFFEL\dotnet\assemblies
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>msil_assembly_compatibility</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>"None" | "Same domain" | "Same machine" | "Same process"</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			When compiling to the .NET framework. Assembly compatibility.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			value => <filename>&lt;setting name="msil_assembly_compatibility" value="</filename>value<filename>"/&gt;</filename>
+		</term><term>
+			Not used in ECF.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>msil_classes_per_module</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Integer value > 0</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>5</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Number of classes generated per .NET module during
+			incremental compilation. Increasing this value will slow down
+			the incremental recompilation, but speed up the time to load
+			the assembly while debugging in workbench mode.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			value => <filename>&lt;setting name="msil_classes_per_module" value="</filename>value<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>msil_clr_version</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Version</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Example:</emphasis></term>
+		<listitem><para>v1.1.4322</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			When compiling to the .NET framework. Specify version
+			of .NET framework to be used.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			version => <filename>&lt;setting name="msil_clr_version" value="</filename>version<filename>"/&gt;</filename>
+		</term><term>
+			ISE's ECF default: highest installed .NET version.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>msil_culture</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Culture</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			When compiling to the .NET framework. MSIL culture.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			culture => <filename>&lt;setting name="msil_culture" value="</filename>culture<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>msil_generation</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Compile to the .NET framework.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="msil_generation" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="msil_generation" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>msil_key_file_name</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			When compiling to the .NET framework. Key to be
+			able to add the generated binary to the Global Assembly
+			Cache (GAC).
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;setting name="msil_key_file_name" value="</filename>pathname<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>msil_use_optimized_precompile</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			When compiling to the .NET framework. Use an
+			optimized version of a precompile.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="msil_use_optimized_precompile" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="msil_use_optimized_precompile" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>multithreaded</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Enable generation of a multithreaded application.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="concurrency" value="thread"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="concurrency" value="none"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>namespace</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Namespace</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			When compiling to the .NET framework. Specify the
+			namespace to be used for the classes of this system.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			namespace => <filename>&lt;option namespace="</filename>namespace<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>old_verbatim_strings</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Use the old format for verbatim strings.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="old_verbatim_strings" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="old_verbatim_strings" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>override_cluster</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Cluster name</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable all classes of 'cluster_name' to override
+			the classes with the same names located in other clusters.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			cluster_name => <filename>&lt;override name="</filename>cluster_name<filename>" location="..."/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>profile</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Enable Eiffel profiling.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option profile="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option profile="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>shared_library_definition</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>filename.def</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify the file where the Eiffel compiler will
+			look when generating the exported functions of a
+			shared library.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			filename.def => <filename>&lt;setting name="shared_library_definition" value="</filename>filename.def<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>syntax</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>obsolete | transitional | standard</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>standard</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Instruct the Eiffel parser to accept or reject some
+			syntax notations for some Eiffel constructs. This is typically
+			used during transitional periods.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			obsolete => <filename>&lt;option syntax="obsolete"/&gt;</filename>
+		</term><term>
+			transitional => <filename>&lt;option syntax="transitional"/&gt;</filename>
+		</term><term>
+			standard => <filename>&lt;option syntax="standard"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>target</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>exe | dll | com | no_main</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>exe</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Specify the output target of the application.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			exe => <filename>&lt;setting name="msil_generation_type" value="exe"/&gt;</filename>
+		</term><term>
+			dll => <filename>&lt;setting name="msil_generation_type" value="dll"/&gt;</filename>
+		</term><term>
+			com => <filename>&lt;setting name="msil_generation_type" value="exe"/&gt;</filename>
+		</term><term>
+			no_main => <filename>&lt;setting name="msil_generation_type" value="exe"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>trace</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Enable trace mode.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option trace="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option trace="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>use_cluster_name_as_namespace</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>true</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			When compiling to the .NET framework. Should the
+			cluster name be used as namespace (e.g. base.STRING)?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="use_cluster_name_as_namespace" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="use_cluster_name_as_namespace" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>use_full_cluster_name_as_namespace</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>true</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			When compiling to the .NET framework. Should the
+			cluster name be used as namespace (e.g. base.STRING)?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;setting name="use_all_cluster_name_as_namespace" value="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;setting name="use_all_cluster_name_as_namespace" value="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>void_safety</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>none | on_demand | complete</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>none</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Should void-safety rules be checked?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			none => <filename>&lt;option void_safety="none"/&gt;</filename>
+		</term><term>
+			on_demand => <filename>&lt;option void_safety="initialization"/&gt;</filename>
+		</term><term>
+			complete => <filename>&lt;option void_safety="all"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>warning</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>none | style | default | all</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify warning level.
+		</term><term>
+			'style' means that Eiffel style warnings (e.g. having 
+			feature names in all upper-case) are emitted.
+		</term><term>
+			'default' means that warnings such as local
+			variables unused are emitted.
+		</term><term>
+			'all' means that all warnings are emitted.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			none => <filename>&lt;option warning="false"/&gt;</filename>
+		</term><term>
+			style => <filename>&lt;option warning="true"/&gt;</filename>
+		</term><term>
+			default => <filename>&lt;option warning="true"/&gt;</filename>
+		</term><term>
+			all => <filename>&lt;option warning="true"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+</variablelist>
+</para>
+</section>
+
+<section><title>Cluster-level options</title>
+<para>
+Following is the list of cluster-level options supported in Xace
+(of the form <filename>&lt;option name="..." value="..."/&gt;</filename>), and
+how they are translated to the Eiffel compiler dependent notations. 
+"N/A" does not necessarily mean that the corresponding Eiffel compiler does not
+support this facility, it could just be that the facility is not parameterizable
+or is activated from the command-line or from a separate tool rather than from
+the Eiffel configuration file. When an entry is marked "N/A" the option
+will be silently ignored and nothing will be generated in the Eiffel compiler
+dependent configuration file for this option. Likewise when the name of an
+option is not supported in Xace.
+</para>
+<para>
+The <emphasis role="strong">Default</emphasis> section shows Xace default value
+when this option is not explicitly specified in the Xace file. It can be different
+from the default value used by the various Eiffel compiler dependent notations.
+For further details about each option, please refer to the
+documentation provided with the Eiffel compilers.
+</para>
+<para>
+<variablelist>
+<varlistentry>
+	<term><filename>abstract</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Specify that this cluster should not be searched
+			for Eiffel classes (but its subclusters can if they
+			don't have this option set).
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry>
+			<term>true =></term>
+			<listitem><para><variablelist><varlistentry>
+				<term>
+					if there is at least one non-abstract subcluster =>
+				</term>
+				<listitem><para>
+					<filename>&lt;cluster name="</filename>...<filename>" location="</filename>...<filename>"/&gt;</filename>
+				</para></listitem>
+			</varlistentry><varlistentry>
+				<term>
+					if there is no non-abstract subcluster =>
+				</term>
+				<listitem><para>
+					No output
+				</para></listitem>		
+			</varlistentry></variablelist></para></listitem>
+		</varlistentry><varlistentry><term>
+			false => <filename>&lt;cluster name="</filename>...<filename>" location="</filename>...<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>assembly</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Name</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify that the cluster is in fact a .NET assembly.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			name => <filename>&lt;assembly name="</filename>cluster_name<filename>" location="</filename>cluster_pathname<filename>" assembly_name="</filename>name<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>assertion</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>
+			none | generate | require | supplier_precondition | ensure | invariant | loop_invariant | loop_variant | check | all
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Set default assertion level for the classes of
+			this cluster.
+		</term><term>
+			Override the assertion level specified at the system level.
+		</term><term>
+			The purpose of 'generate' is to generate the code of
+			the assertions in the generated code even if these assertions
+			are turned off.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			none => <filename>&lt;option/&gt;</filename>
+		</term><term>
+			generate => <filename>&lt;option/&gt;</filename>
+		</term><term>
+			require => <filename>&lt;option&gt;&lt;assertions precondition="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			supplier_precondition => <filename>&lt;option&gt;&lt;assertions supplier_precondition="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			ensure => <filename>&lt;option&gt;&lt;assertions ensure="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			invariant => <filename>&lt;option&gt;&lt;assertions invariant="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			loop_invariant => <filename>&lt;option&gt;&lt;assertions loop="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			loop_variant => <filename>&lt;option&gt;&lt;assertions loop="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			check => <filename>&lt;option&gt;&lt;assertions check="true"/&gt;&lt;/option&gt;</filename>
+		</term><term>
+			all => <filename>&lt;option&gt;&lt;assertions precondition="true" supplier_precondition="true" ensure="true" invariant="true" loop="true" check="true"/&gt;&lt;/option&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>attached_by_default</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Are types attached by default when no attachment mark is specified?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option is_attached_by_default="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option is_attached_by_default="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>culture</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Culture</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>neutral</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify the culture of the .NET assembly.
+		</term><term>
+			The option 'assembly' should be set in order for this
+			option to have any effect.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			culture => <filename>&lt;assembly name="</filename>cluster_name<filename>" location="</filename>cluster_pathname<filename>" assembly_culture="</filename>culture<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>debug</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable debug instructions for the classes of this cluster.
+		</term><term>
+			Override the 'debug' option specified at the system level.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option debug="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option debug="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>debug_tag</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Debug tag</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable debug instructions with tag 'tag' for the
+			classes of this cluster.
+		</term><term>
+			Override the 'debug_tag' option specified at the system level.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			tag => <filename>&lt;option&gt;&lt;debug name="</filename>tag<filename>" enabled=true"/&gt;&lt;/option&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>ecf_library</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify that the cluster is the root of a library
+			that is otherwise described by the ECF file 'pathname'.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;library name="</filename>cluster_name<filename>" location="</filename>pathname<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>exclude</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify a filename, or a directory name when the
+			'recursive' option is set, that should not be taken into
+			account when searching the cluster for Eiffel classes.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;file_rule&gt;&lt;exclude&gt;/</filename>pathname<filename>$&lt;/exclude&gt;&lt;/file_rule&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>full_class_checking</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Run flat Degree 3.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option full_class_checking="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option full_class_checking="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>header</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify a directory containing C header files.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;external_include location="</filename>pathname<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>include</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify a filename that should be taken into
+			account when searching the cluster for Eiffel classes,
+			even though it does not necessarily have a .e extension.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;file_rule&gt;&lt;include&gt;/</filename>pathname<filename>$&lt;/include&gt;&lt;/file_rule&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>link</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Pathname</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify object files, library files or command
+  			line options to be passed to the linker.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			pathname => <filename>&lt;external_library location="</filename>pathname<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>namespace</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Namespace</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			When compiling to the .NET framework. Specify the
+			namespace to be used for the classes of this cluster.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			namespace => <filename>&lt;option namespace="</filename>namespace<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>prefix</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Prefix</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify the class name prefix for classes of this
+			cluster or .NET assembly.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			assembly_prefix => <filename>&lt;assembly name="</filename>cluster_name<filename>" location="</filename>cluster_pathname<filename>" prefix="</filename>assembly_prefix<filename>"/&gt;</filename>
+		</term><term>
+			cluster_prefix => <filename>&lt;cluster name="</filename>cluster_name<filename>" location="</filename>cluster_pathname<filename>" prefix="</filename>cluster_prefix<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>profile</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable Eiffel profiling for the classes of this cluster.
+		</term><term>
+			Override the 'profile' option specified at the system level.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option profile="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option profile="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>public_key_token</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Public key token</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>b77a5c561934e089</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify the public_key_token of the .NET assembly.
+		</term><term>
+			The option 'assembly' should be set in order for this
+			option to have any effect.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			public_key_token => <filename>&lt;assembly name="</filename>cluster_name<filename>" location="</filename>cluster_pathname<filename>" assembly_key="</filename>public_key_token<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>read_only</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify that the classes in the cluster
+			directory should be considered as read-only by the
+			underlying Eiffel tool.
+		</term><term>
+			This option is only supported by ISE's EiffelStudio
+			when the cluster is also 'recursive'. Otherwise it
+			has no effect
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;cluster readonly="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;cluster readonly="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>recursive</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify that the cluster directory and its
+			subdirectories should be recursively traversed to find
+			Eiffel classes.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;cluster recursive="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;cluster recursive="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>syntax</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>obsolete | transitional | standard</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>transitional</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Instruct the Eiffel parser to accept or reject some
+			syntax notations for some Eiffel constructs. This is typically
+			used during transitional periods.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			obsolete => <filename>&lt;option syntax="obsolete"/&gt;</filename>
+		</term><term>
+			transitional => <filename>&lt;option syntax="transitional"/&gt;</filename>
+		</term><term>
+			standard => <filename>&lt;option syntax="standard"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>trace</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable trace mode for the classes of this cluster.
+		</term><term>
+			Override the 'trace' option specified at the system level.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;option trace="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;option trace="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>version</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Version</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>1.0.5000.0</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify the version of the .NET assembly.
+		</term><term>
+			The option 'assembly' should be set in order for this
+			option to have any effect.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			version => <filename>&lt;assembly name="</filename>cluster_name<filename>" location="</filename>cluster_pathname<filename>" assembly_version="</filename>version<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>void_safety</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>none | on_demand | complete</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>none</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Should void-safety rules be checked?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			none => <filename>&lt;option void_safety="none"/&gt;</filename>
+		</term><term>
+			on_demand => <filename>&lt;option void_safety="initialization"/&gt;</filename>
+		</term><term>
+			complete => <filename>&lt;option void_safety="all"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+</variablelist>
+</para>
+</section>
+
+<section><title>Class-level options</title>
+<para>
+Following is the list of class-level options supported in Xace
+(of the form <filename>&lt;option name="..." value="..."/&gt;</filename>), and
+how they are translated to the Eiffel compiler dependent notations. 
+"N/A" does not necessarily mean that the corresponding Eiffel compiler does not
+support this facility, it could just be that the facility is not parameterizable
+or is activated from the command-line or from a separate tool rather than from
+the Eiffel configuration file. When an entry is marked "N/A" the option
+will be silently ignored and nothing will be generated in the Eiffel compiler
+dependent configuration file for this option. Likewise when the name of an
+option is not supported in Xace.
+</para>
+<para>
+The <emphasis role="strong">Default</emphasis> section shows Xace default value
+when this option is not explicitly specified in the Xace file. It can be different
+from the default value used by the various Eiffel compiler dependent notations.
+For further details about each option, please refer to the
+documentation provided with the Eiffel compilers.
+</para>
+<para>
+<variablelist>
+<varlistentry>
+	<term><filename>assertion</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>
+			none | generate | require | supplier_precondition | ensure | invariant | loop_invariant | loop_variant | check | all
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Set default assertion level for this class.
+		</term><term>
+			Override the assertion level specified at the cluster and system levels.
+		</term><term>
+			The purpose of 'generate' is to generate the code of
+			the assertions in the generated code even if these assertions
+			are turned off.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			none => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"/&gt;</filename>
+		</term><term>
+			generate => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"/&gt;</filename>
+		</term><term>
+			require => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"&gt;&lt;assertions precondition="true"/&gt;&lt;/class_option&gt;</filename>
+		</term><term>
+			supplier_precondition => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"&gt;&lt;assertions supplier_precondition="true"/&gt;&lt;/class_option&gt;</filename>
+		</term><term>
+			ensure => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"&gt;&lt;assertions ensure="true"/&gt;&lt;/class_option&gt;</filename>
+		</term><term>
+			invariant => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"&gt;&lt;assertions invariant="true"/&gt;&lt;/class_option&gt;</filename>
+		</term><term>
+			loop_invariant => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"&gt;&lt;assertions loop="true"/&gt;&lt;/class_option&gt;</filename>
+		</term><term>
+			loop_variant => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"&gt;&lt;assertions loop="true"/&gt;&lt;/class_option&gt;</filename>
+		</term><term>
+			check => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"&gt;&lt;assertions check="true"/&gt;&lt;/class_option&gt;</filename>
+		</term><term>
+			all => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"&gt;&lt;assertions precondition="true" supplier_precondition="true" ensure="true" invariant="true" loop="true" check="true"/&gt;&lt;/class_option&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>attached_by_default</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Are types attached by default when no attachment mark is specified?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" is_attached_by_default="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" is_attached_by_default="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>debug</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable debug instructions for this class.
+		</term><term>
+			Override the 'debug' option specified at the cluster and system levels.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" debug="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" debug="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>debug_tag</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>Debug tag</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable debug instructions with tag 'tag' for this class.
+		</term><term>
+			Override the 'debug_tag' option specified at the cluster and system levels.
+		</term><term>
+			Several of these options can be specified.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			tag => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"&gt;&lt;debug name="</filename>tag<filename>" enabled=true"/&gt;&lt;/class_option&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>export</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>External name</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify that this class and its features should
+			be visible from C when using Cecil for example.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			external_name => <filename>&lt;visible class="</filename>CLASS_NAME<filename>" class_rename="</filename>external_name<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>full_class_checking</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Run flat Degree 3.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" full_class_checking="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" full_class_checking="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>syntax</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>obsolete | transitional | standard</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>transitional</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Instruct the Eiffel parser to accept or reject some
+			syntax notations for some Eiffel constructs. This is typically
+			used during transitional periods.
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			obsolete => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" syntax="obsolete"/&gt;</filename>
+		</term><term>
+			transitional => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" syntax="transitional"/&gt;</filename>
+		</term><term>
+			standard => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" syntax="standard"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>trace</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>true | false</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Enable trace mode for this class.
+		</term><term>
+			Override the 'trace' option specified at the cluster and system levels.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			true => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" trace="true"/&gt;</filename>
+		</term><term>
+			false => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>" trace="false"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+<varlistentry>
+	<term><filename>void_safety</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>none | on_demand | complete</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>none</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para>
+			Should void-safety rules be checked?
+		</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			none => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"  void_safety="none"/&gt;</filename>
+		</term><term>
+			on_demand => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"  void_safety="initialization"/&gt;</filename>
+		</term><term>
+			complete => <filename>&lt;class_option class="</filename>CLASS_NAME<filename>"  void_safety="all"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+</variablelist>
+</para>
+</section>
+
+<section><title>Feature-level options</title>
+<para>
+Following is the list of feature-level options supported in Xace
+(of the form <filename>&lt;option name="..." value="..."/&gt;</filename>), and
+how they are translated to the Eiffel compiler dependent notations. 
+"N/A" does not necessarily mean that the corresponding Eiffel compiler does not
+support this facility, it could just be that the facility is not parameterizable
+or is activated from the command-line or from a separate tool rather than from
+the Eiffel configuration file. When an entry is marked "N/A" the option
+will be silently ignored and nothing will be generated in the Eiffel compiler
+dependent configuration file for this option. Likewise when the name of an
+option is not supported in Xace.
+</para>
+<para>
+The <emphasis role="strong">Default</emphasis> section shows Xace default value
+when this option is not explicitly specified in the Xace file. It can be different
+from the default value used by the various Eiffel compiler dependent notations.
+For further details about each option, please refer to the
+documentation provided with the Eiffel compilers.
+</para>
+<para>
+<variablelist>
+<varlistentry>
+	<term><filename>export</filename></term>
+	<listitem><para><variablelist><varlistentry>
+		<term><emphasis role="strong">Values:</emphasis></term>
+		<listitem><para>External name</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Default:</emphasis></term>
+		<listitem><para>No default</para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">Description:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			Specify that this feature should be visible
+			from C when using Cecil for example.
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry><varlistentry>
+		<term><emphasis role="strong">ISE ECF:</emphasis></term>
+		<listitem><para><variablelist><varlistentry><term>
+			external_name => <filename>&lt;visible class="</filename>CLASS_NAME<filename>" feature="</filename>feature_name<filename>" feature_rename="</filename>external_name<filename>"/&gt;</filename>
+		</term></varlistentry></variablelist></para></listitem>
+	</varlistentry></variablelist></para><para></para></listitem>
+</varlistentry>
+</variablelist>
+</para>
+</section>
+</chapter>

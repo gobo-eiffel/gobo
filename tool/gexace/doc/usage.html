@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Using gexace</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Using gexace</strong></font></td>
+    <td align="right"><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   <h2>Command-line options</h2>
+   
+   <p>
+    The usual way to invoke <i>gexace</i> is as follows:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gexace --system=&lt;compiler&gt; &lt;xace_file&gt;</tt></i></font>
+     
+    </blockquote>
+    This will read the Xace file <font color="#800000"><i><tt>&lt;xace_file&gt;</tt></i></font>, convert 
+    it to the kind of configuration file commonly used by the compiler specified
+    (e.g. ECF for <font color="#800000"><i><tt>ise</tt></i></font>), and write it to an output file
+    whose name is of the form <font color="#800000"><i><tt>&lt;compiler&gt;.&lt;extension&gt;</tt></i></font>
+    (e.g. <font color="#800000"><i><tt>ise.ecf</tt></i></font> or <font color="#800000"><i><tt>ge.xace</tt></i></font>).
+    Note that the input file <font color="#800000"><i><tt>&lt;xace_file&gt;</tt></i></font> is optional.
+    By default it will use <font color="#800000"><i><tt>system.xace</tt></i></font> when the 
+    <font color="#800000"><i><tt>--system</tt></i></font> option is specified, or <font color="#800000"><i><tt>library.xace</tt></i></font>
+    when the  <font color="#800000"><i><tt>--library</tt></i></font> option is specified.
+    
+   </p>
+   <p>
+    Here is the list of options that can be used with <i>gexace</i>:
+    
+    <dl>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-h</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--help</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Print a summary of the command-line options of <i>gexace</i> and exit.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--define="NAME[=VALUE]( NAME[=VALUE])*"</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Define variables to be used when reading Xace files. Several variables
+      			can be defined with this option, separated by a space. The value of the
+      			variables is optional.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--system=&lt;compiler&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			The input Xace file is expected to represent the description of an
+      			Eiffel system and the generated file is meant to work with the given
+      			compiler. The supported values for <font color="#800000"><i><tt>&lt;compiler&gt;</tt></i></font>
+      			are <font color="#800000"><i><tt>ise</tt></i></font> or <font color="#800000"><i><tt>ge</tt></i></font>.
+      			Note that this option cannot be used with the other options
+      			<font color="#800000"><i><tt>--library</tt></i></font> or <font color="#800000"><i><tt>--validate</tt></i></font>.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--library=&lt;compiler&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			The input Xace file is expected to represent the description of an
+      			Eiffel library and the generated file is meant to work with the given
+      			compiler. The supported values for <font color="#800000"><i><tt>&lt;compiler&gt;</tt></i></font>
+      			are <font color="#800000"><i><tt>ise</tt></i></font> or <font color="#800000"><i><tt>ge</tt></i></font>.
+      			Note that this option cannot be used with the other options
+      			<font color="#800000"><i><tt>--system</tt></i></font> or <font color="#800000"><i><tt>--validate</tt></i></font>.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--format=&lt;format_name&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Format for the output file. The supported values are <font color="#800000"><i><tt>ecf</tt></i></font>
+      			or <font color="#800000"><i><tt>xace</tt></i></font>. By default, the format will be 
+      			<font color="#800000"><i><tt>ecf</tt></i></font> when the compiler specified in <font color="#800000"><i><tt>--system</tt></i></font>
+      			or <font color="#800000"><i><tt>--library</tt></i></font> is <font color="#800000"><i><tt>ise</tt></i></font>,
+      			and <font color="#800000"><i><tt>xace</tt></i></font> when the compiler is <font color="#800000"><i><tt>ge</tt></i></font>.
+      			Note that this option cannot be used with the option
+      			<font color="#800000"><i><tt>--validate</tt></i></font>.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--output=&lt;output_filename&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Name of output file. By default, it will be <font color="#800000"><i><tt>&lt;compiler&gt;.&lt;format&gt;</tt></i></font>
+      			(e.g. <font color="#800000"><i><tt>ise.ecf</tt></i></font> or <font color="#800000"><i><tt>ge.xace</tt></i></font>).
+      			Note that this option cannot be used with the option
+      			<font color="#800000"><i><tt>--validate</tt></i></font>.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--validate</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Check that the input file is a valid Xace file.
+      			Note that this option cannot be used with the other options
+      			<font color="#800000"><i><tt>--system</tt></i></font> or <font color="#800000"><i><tt>--library</tt></i></font>.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--shallow</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Do not process mounted Xace files. By default they are processed recursively
+      			and their clusters are included in the generated file in place of the mounted
+      			libraries.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--verbose</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Run <i>gexace</i> in verbose mode.
+      		
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2017, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>26 December 2017</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

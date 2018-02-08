@@ -3,7 +3,7 @@
 <!--
 	description: "Eiffel Xace RelaxNG specification"
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2003, Berend de Boer and others"
+	copyright: "Copyright (c) 2003-2017, Berend de Boer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,14 +32,16 @@
 			<optional>
 				<attribute name="prefix"/>
 			</optional>
-			<ref name="description"/>
-			<oneOrMore>
+			<optional>
+				<ref name="description"/>
+			</optional>
+			<ZeroOrMore>
 				<choice>
 					<ref name="option"/>
 					<ref name="cluster"/>
 					<ref name="mount"/>
 				</choice>
-			</oneOrMore>
+			</ZeroOrMore>
 		</element>
 	</define>
 
@@ -48,20 +50,26 @@
 	<define name="system">
 		<element name="system">
 			<attribute name="name"/>
-			<ref name="description"/>
-			<oneOrMore> <!-- use if/unless flags to enable/disable just one -->
+			<optional>
+				<ref name="description"/>
+			</optional>
+			<ZeroOrMore> <!-- use if/unless flags to enable/disable just one -->
 				<element name="root">
-					<attribute name="class"/>
-					<attribute name="creation"/>
+					<optional>
+						attribute name="class"/>
+					</optional>
+					<optional>
+						<attribute name="creation"/>
+					</optional>
 				</element>
-			</oneOrMore>
-			<oneOrMore>
+			</ZeroOrMore>
+			<ZeroOrMore>
 				<choice>
 					<ref name="option"/>
 					<ref name="cluster"/>
 					<ref name="mount"/>
 				</choice>
-			</oneOrMore>
+			</ZeroOrMore>
 		</element>
 	</define>
 
@@ -91,6 +99,7 @@
 					<ref name="option"/>
 					<ref name="cluster"/>
 					<ref name="class"/>
+					<ref name="mount"/>
 				</choice>
 			</zeroOrMore>
 		</element>
@@ -122,6 +131,9 @@
 	<define name="mount">
 		<element name="mount">
 			<attribute name="location"/>
+			<optional>
+				<attribute name="prefix"/>
+			</optional>
 			<ref name="ifUnless"/>
 		</element>
 	</define>

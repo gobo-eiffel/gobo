@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			equal_index: INTEGER
 		do
 			if a_string.occurrences ('=') > 0 then
-				-- expression is a comparsion of two constants or variables
+				-- expression is a comparison of two constants or variables
 				equal_index := a_string.index_of ('=', 1)
 				if equal_index = 1 then
 					a_left_side := STRING_.new_empty_string (a_string, 0)

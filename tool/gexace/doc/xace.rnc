@@ -1,6 +1,6 @@
 # description: "Eiffel Xace RelaxNG specification"
 # system: "Gobo Eiffel Xace"
-# copyright: "Copyright (c) 2003, Berend de Boer and others"
+# copyright: "Copyright (c) 2003-2017, Berend de Boer and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -14,20 +14,20 @@ library =
   element library {
     attribute name { text },
     attribute prefix { text }?,
-    description,
-    (option | cluster | mount)+
+    description?,
+    (option | cluster | mount)*
   }
 # Definition for <system/> follows
 system =
   element system {
     attribute name { text },
-    description,
+    description?,
     # use if/unless flags to enable/disable just one
     element root {
-      attribute class { text },
-      attribute creation { text }
-    }+,
-    (option | cluster | mount)+
+      attribute class { text }?,
+      attribute creation { text }?
+    }*,
+    (option | cluster | mount)*
   }
 # Elements used in both libraries and systems
 description = element description { text }
@@ -38,7 +38,7 @@ cluster =
     attribute relative { xsd:boolean }?,
     attribute location { text }?,
     ifUnless,
-    (option | cluster | class)*
+    (option | cluster | class | mount)*
   }
 class =
   element class {
@@ -55,6 +55,7 @@ feature =
 mount =
   element mount {
     attribute location { text },
+    attribute prefix { text }?,
     ifUnless
   }
 option =
