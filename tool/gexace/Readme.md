@@ -28,10 +28,10 @@ This folder contains the source code of *Gobo Eiffel Xace* (`gexace`).
 
         defines:  --define="VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*"
         options:  --verbose|--shallow
-        command:  --system=(ge|ise) [--format=(ace|ecf|xace)][--output=<filename>]
-        command:  --library=(ge|ise) [--format=(ace|ecf|xace)][--output=<filename>]
+        command:  --system=(ge|ise) [--format=(ecf|xace)][--output=<filename>]
+        command:  --library=(ge|ise) [--format=(ecf|xace)][--output=<filename>]
         command:  --validate
 
 ## Authors
 
-Copyright (c) 2001-2017, Eric Bezault and others
+Copyright (c) 2001-2018, Eric Bezault and others

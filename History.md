@@ -5,6 +5,7 @@
 ### gexace
 
 * Added documentation about `Xace` and `gexace`.
+* Removed support for Ace files.
 
 ### Gobo Eiffel Kernel Library
 
