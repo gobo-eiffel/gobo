@@ -241,11 +241,12 @@ feature -- Output
 				file.put_character ('=')
 				print_quoted_string (l_assembly_key)
 			end
-			if a_assembly.is_read_only then
+			if not a_assembly.is_read_only then
+					-- Assemblies are read-only by default.
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_readonly)
 				file.put_character ('=')
-				print_quoted_string ({ET_ECF_SETTING_NAMES}.true_setting_value)
+				print_quoted_string ({ET_ECF_SETTING_NAMES}.false_setting_value)
 			end
 			if attached a_assembly.classname_prefix as l_prefix then
 				file.put_character (' ')
