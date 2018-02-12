@@ -5,7 +5,7 @@ note
 		"Data structures whose items are accessible through keys"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,7 +74,7 @@ feature -- Status report
 		local
 			k: detachable K
 		do
-			if attached {DS_TABLE [G, detachable K]} Current as l_current and k = Void then
+			if not ({K}).is_attached and then attached {DS_TABLE [G, detachable K]} Current as l_current and k = Void then
 				Result := l_current.has (k)
 			end
 		ensure

@@ -19,7 +19,7 @@ note
 		the binary search tree container classes.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2017, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2018, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #11 $"
@@ -288,7 +288,7 @@ feature {NONE} -- Status report
 		local
 			k: detachable K
 		do
-			if attached {DS_BINARY_SEARCH_TREE_CONTAINER [G, detachable K]} Current as l_current and k = Void then
+			if not ({K}).is_attached and then  attached {DS_BINARY_SEARCH_TREE_CONTAINER [G, detachable K]} Current as l_current and k = Void then
 				Result := l_current.has_key (k)
 			end
 		end
