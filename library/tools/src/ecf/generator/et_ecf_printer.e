@@ -1582,7 +1582,7 @@ feature -- Output
 				(attached a_target.external_includes as l_external_includes and then not l_external_includes.is_empty) or
 				(attached a_target.external_cflags as l_external_cflags and then not l_external_cflags.is_empty) or
 				(attached a_target.external_objects as l_external_objects and then not l_external_objects.is_empty) or
-				(attached a_target.external_objects as l_external_libraries and then not l_external_libraries.is_empty) or
+				(attached a_target.external_libraries as l_external_libraries and then not l_external_libraries.is_empty) or
 				(attached a_target.external_resources as l_external_resources and then not l_external_resources.is_empty) or
 				(attached a_target.external_linker_flags as l_external_linker_flags and then not l_external_linker_flags.is_empty) or
 				(attached a_target.external_makes as l_external_makes and then not l_external_makes.is_empty) or
@@ -1642,7 +1642,7 @@ feature -- Output
 				if attached a_target.external_objects as l_external_objects and then not l_external_objects.is_empty then
 					print_external_values (l_external_objects, {ET_ECF_ELEMENT_NAMES}.xml_external_object, {ET_ECF_ELEMENT_NAMES}.xml_location)
 				end
-				if attached a_target.external_objects as l_external_libraries and then not l_external_libraries.is_empty then
+				if attached a_target.external_libraries as l_external_libraries and then not l_external_libraries.is_empty then
 					print_external_values (l_external_libraries, {ET_ECF_ELEMENT_NAMES}.xml_external_library, {ET_ECF_ELEMENT_NAMES}.xml_location)
 				end
 				if attached a_target.external_resources as l_external_resources and then not l_external_resources.is_empty then
