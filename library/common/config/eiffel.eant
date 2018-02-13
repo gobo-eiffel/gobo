@@ -108,7 +108,7 @@
 		<set name="compatible" value="true" if="${GOBO_COMPATIBLE}"/>
 		<set name="project_path" value="${GOBO_BUILD_PREFIX}" if="${GOBO_BUILD_PREFIX}"/>
 		<set name="project_path" value="" unless="${GOBO_BUILD_PREFIX}"/>
-		<ise ace="${ace_filename}" system="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true" project-path="${project_path}"/>
+		<ise ace="${ace_filename}" system="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true" project_path="${project_path}"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<set name="compilation_directory" value="EIFGENs" unless="${GOBO_BUILD_PREFIX}"/>
@@ -175,7 +175,7 @@
 		<set name="project_path" value="${GOBO_BUILD_PREFIX}" if="${GOBO_BUILD_PREFIX}"/>
 		<set name="project_path" value="" unless="${GOBO_BUILD_PREFIX}"/>
 		<gec clean="${system}"/>
-		<ise clean="${system}" project-path="${project_path}"/>
+		<ise clean="${system}" project_path="${project_path}"/>
 		<delete file="compile_ge.ace"/>
 		<delete file="compile_ge.xace"/>
 		<delete file="compile_ise.ace"/>
