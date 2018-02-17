@@ -5,7 +5,7 @@ note
 		"Delete commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,19 +40,17 @@ feature -- Status report
 	is_file_executable: BOOLEAN
 			-- Can command be executed on a file?
 		do
-			Result := file /= Void and then file.count > 0
+			Result := attached file as l_file and then l_file.count > 0
 		ensure
-			file_not_void: Result implies file /= Void
-			file_not_empty: Result implies file.count > 0
+			file_not_void_and_not_empty: Result implies attached file as l_file and then l_file.count > 0
 		end
 
 	is_directory_executable: BOOLEAN
 			-- Can command be executed on a directory?
 		do
-			Result := directory /= Void and then directory.count > 0
+			Result := attached directory as l_directory and then l_directory.count > 0
 		ensure
-			directory_not_void: Result implies directory /= Void
-			directory_not_empty: Result implies directory.count > 0
+			directory_not_void_and_not_empty: Result implies attached directory as l_directory and then l_directory.count > 0
 		end
 
 	is_fileset_executable: BOOLEAN
@@ -87,16 +85,16 @@ feature -- Status report
 
 feature -- Access
 
-	directory: STRING
+	directory: detachable STRING
 			-- Directory to delete
 
-	file: STRING
+	file: detachable STRING
 			-- File to delete
 
-	fileset: GEANT_FILESET
+	fileset: detachable GEANT_FILESET
 		-- Fileset for current command
 
-	directoryset: GEANT_DIRECTORYSET
+	directoryset: detachable GEANT_DIRECTORYSET
 		-- Directoryset for current command
 
 feature -- Setting
@@ -160,8 +158,8 @@ feature -- Execution
 			i: INTEGER
 		do
 			exit_code := 0
-			if is_directory_executable then
-				a_name := file_system.pathname_from_file_system (directory, unix_file_system)
+			if is_directory_executable and then attached directory as l_directory then
+				a_name := file_system.pathname_from_file_system (l_directory, unix_file_system)
 				project.trace (<<"  [delete] ", a_name>>)
 				if not project.options.no_exec then
 					file_system.recursive_delete_directory (a_name)
@@ -185,8 +183,8 @@ feature -- Execution
 						end
 					end
 				end
-			elseif is_file_executable then
-				a_name := file_system.pathname_from_file_system (file, unix_file_system)
+			elseif is_file_executable and then attached file as l_file then
+				a_name := file_system.pathname_from_file_system (l_file, unix_file_system)
 				project.trace (<<"  [delete] ", a_name>>)
 				if not project.options.no_exec then
 					file_system.delete_file (a_name)
@@ -214,8 +212,8 @@ feature -- Execution
 				check is_fileset_executable_or_is_directoryset_executable:
 					is_fileset_executable or is_directoryset_executable
 				end
-				if is_fileset_executable then
-					if not fileset.is_executable then
+				if is_fileset_executable and then attached fileset as l_fileset then
+					if not l_fileset.is_executable then
 						project.log (<<"  [delete] error: fileset definition wrong">>)
 						exit_code := 1
 					end
@@ -226,14 +224,14 @@ feature -- Execution
 							-- out of date.
 							-- A value of 'False' for `fileset.force' does not make sense here since the delete
 							-- command does not compare files.
-						fileset.set_force (True)
-						fileset.execute
+						l_fileset.set_force (True)
+						l_fileset.execute
 						from
-							fileset.start
+							l_fileset.start
 						until
-							fileset.after or else exit_code /= 0
+							l_fileset.after or else exit_code /= 0
 						loop
-							a_name := file_system.pathname_from_file_system (fileset.item_mapped_filename, unix_file_system)
+							a_name := file_system.pathname_from_file_system (l_fileset.item_mapped_filename, unix_file_system)
 							project.trace (<<"  [delete] ", a_name>>)
 							if not project.options.no_exec then
 								file_system.delete_file (a_name)
@@ -257,24 +255,24 @@ feature -- Execution
 									end
 								end
 							end
-							fileset.forth
+							l_fileset.forth
 						end
 					end
 				end
-				if is_directoryset_executable then
-					if not directoryset.is_executable then
+				if is_directoryset_executable and then attached directoryset as l_directoryset then
+					if not l_directoryset.is_executable then
 						project.log (<<"  [delete] error: directoryset definition wrong">>)
 						exit_code := 1
 					end
 					if exit_code = 0 then
-						directoryset.execute
+						l_directoryset.execute
 						from
-							directoryset.start
+							l_directoryset.start
 						until
-							directoryset.after or else exit_code /= 0
+							l_directoryset.after or else exit_code /= 0
 						loop
 							a_name := file_system.pathname_from_file_system (
-								directoryset.item_directory_name, unix_file_system)
+								l_directoryset.item_directory_name, unix_file_system)
 							project.trace (<<"  [delete] ", a_name>>)
 							if not project.options.no_exec then
 								file_system.recursive_delete_directory (a_name)
@@ -298,7 +296,7 @@ feature -- Execution
 									end
 								end
 							end
-							directoryset.forth
+							l_directoryset.forth
 						end
 					end
 				end

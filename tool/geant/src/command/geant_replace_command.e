@@ -5,7 +5,7 @@ note
 		"Replace commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2006, Sven Ehrke and others"
+	copyright: "Copyright (c) 2006-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,27 +28,26 @@ feature -- Status report
 	is_replace_executable: BOOLEAN
 			-- Can command be executed using `match' xor `token' ?
 		do
-			Result := (match /= Void and then match.count > 0)
-					xor	(token /= Void and then token.count > 0)
-					xor (variable_pattern /= Void and then variable_pattern.count > 0)
+			Result := (attached match as l_match and then l_match.count > 0)
+					xor	(attached token as l_token and then l_token.count > 0)
+					xor (attached variable_pattern as l_variable_pattern and then l_variable_pattern.count > 0)
 		ensure
 			param_not_void: Result implies (match /= Void or token /= Void or variable_pattern /= Void)
-			param_not_empty: Result implies (match /= Void and then match.count > 0) or (token /= Void and then token.count > 0) or
-				(variable_pattern /= Void and then variable_pattern.count > 0)
+			param_not_empty: Result implies (attached match as l_match and then l_match.count > 0) or (attached token as l_token and then l_token.count > 0) or
+				(attached variable_pattern as l_variable_pattern and then l_variable_pattern.count > 0)
 		end
 
 	is_file_to_file_executable: BOOLEAN
 			-- Can command be executed on sourcefile `file' to targetfile `to_file'
 			-- with `match' ?
 		do
-			Result := file /= Void and then file.count > 0 and then
-				(to_file = Void or else to_file.count > 0) and then
+			Result := attached file as l_file and then l_file.count > 0 and then
+				(not attached to_file as l_to_file or else l_to_file.count > 0) and then
 				is_replace_executable
 		ensure
 			is_replace_executable: is_replace_executable
-			file_not_void: Result implies file /= Void
-			file_not_empty: Result implies file.count > 0
-			to_file_not_empty: Result implies (to_file = Void or else to_file.count > 0)
+			file_not_void_and_not_empty: Result implies attached file as l_file and then l_file.count > 0
+			to_file_not_empty: Result implies (not attached to_file as l_to_file or else l_to_file.count > 0)
 		end
 
 	is_fileset_to_directory_executable: BOOLEAN
@@ -69,31 +68,31 @@ feature -- Status report
 
 feature -- Access
 
-	token: STRING
+	token: detachable STRING
 			-- Token to be replaced by `replace'
 
-	variable_pattern: STRING
+	variable_pattern: detachable STRING
 			-- Pattern for variables to be replaced by their values, '_' as a placeholder for the name
 
-	match: STRING
+	match: detachable STRING
 			-- Pattern to be replaced by `replace'
 
-	replace: STRING
+	replace: detachable STRING
 			-- Text to replace `token' or `match' entities.
 			-- This value can use regexp patterns such as '\1\'.
 
-	flags: STRING
+	flags: detachable STRING
 
-	file: STRING
+	file: detachable STRING
 			-- Name of source file to process
 
-	to_file: STRING
+	to_file: detachable STRING
 			-- Name of destination file
 
-	to_directory: STRING
+	to_directory: detachable STRING
 			-- Name of destination directory
 
-	fileset: GEANT_FILESET
+	fileset: detachable GEANT_FILESET
 			-- Fileset for current command
 
 feature -- Setting
@@ -205,44 +204,46 @@ feature -- Execution
 			a_to_file: like to_file
 		do
 			exit_code := 0
-			if is_file_to_file_executable then
-				execute_replace (file, to_file)
+			if is_file_to_file_executable and then attached file as l_file then
+				execute_replace (l_file, to_file)
 			else
-				check is_fileset_to_directory_executable: is_fileset_to_directory_executable end
+				check is_fileset_to_directory_executable: is_fileset_to_directory_executable and then attached fileset as l_fileset then
 
-				if not fileset.is_executable then
-					project.log (<<"  [replace] error: fileset definition wrong">>)
-					exit_code := 1
-				end
+					if not l_fileset.is_executable then
+						project.log (<<"  [replace] error: fileset definition wrong">>)
+						exit_code := 1
+					end
 
-				if exit_code = 0 then
-					fileset.execute
-					from
-						fileset.start
-					until
-						fileset.after or else exit_code /= 0
-					loop
-						if fileset.is_in_gobo_31_format then
-							a_from_file := unix_file_system.pathname (fileset.directory_name, fileset.item_filename)
-						else
-							a_from_file := fileset.item_filename
-						end
-						if to_directory /= Void then
-							a_to_file := unix_file_system.pathname (to_directory, fileset.item_mapped_filename)
-						end
-							-- Create target directory if necessary:
-						if a_to_file /= Void and then a_to_file.count > 0 then
-							create_directory_for_pathname (a_to_file)
-						end
-						execute_replace (a_from_file, a_to_file)
+					if exit_code = 0 then
+						l_fileset.execute
+						from
+							l_fileset.start
+						until
+							l_fileset.after or else exit_code /= 0
+						loop
+							if l_fileset.is_in_gobo_31_format and then attached l_fileset.directory_name as l_fileset_directory_name then
+								a_from_file := unix_file_system.pathname (l_fileset_directory_name, l_fileset.item_filename)
+							else
+								a_from_file := l_fileset.item_filename
+							end
+							if attached to_directory as l_to_directory then
+								a_to_file := unix_file_system.pathname (l_to_directory, l_fileset.item_mapped_filename)
+							end
+								-- Create target directory if necessary:
+							if a_to_file /= Void and then a_to_file.count > 0 then
+								create_directory_for_pathname (a_to_file)
+							end
+							execute_replace (a_from_file, a_to_file)
 
-						fileset.forth
+							l_fileset.forth
+						end
 					end
 				end
 			end
 		end
 
-	execute_replace (a_filename, a_to_filename: like file)
+	execute_replace (a_filename: STRING; a_to_filename: like to_file)
+			-- Replace command.
 		require
 			a_filename_valid: a_filename /= Void and then a_filename.count > 0
 		local
@@ -252,21 +253,21 @@ feature -- Execution
 			if l_to_filename = Void then
 				l_to_filename := a_filename
 			end
-			if variable_pattern /= Void and then variable_pattern.count > 0 then
-				execute_replace_variable_pattern (a_filename, l_to_filename)
-			elseif match /= Void and then match.count > 0 then
-				execute_replace_regexp (a_filename, l_to_filename)
-			elseif token /= Void and then token.count > 0 then
-				execute_replace_token (a_filename, l_to_filename)
+			if attached variable_pattern as l_variable_pattern and then l_variable_pattern.count > 0 then
+				execute_replace_variable_pattern (a_filename, l_to_filename, l_variable_pattern)
+			elseif attached match as l_match and then l_match.count > 0 then
+				execute_replace_regexp (a_filename, l_to_filename, l_match)
+			elseif attached token as l_token and then l_token.count > 0 then
+				execute_replace_token (a_filename, l_to_filename, l_token)
 			end
 		end
 
-	execute_replace_variable_pattern (a_filename, a_to_filename: like file)
+	execute_replace_variable_pattern (a_filename, a_to_filename, a_variable_pattern: STRING)
 			-- Replace variables on the basis of the variable pattern
 		require
 			a_filename_nod_void: a_filename /= Void
 			a_to_filename_nod_void: a_to_filename /= Void
-			variable_pattern_valid: variable_pattern /= Void and then variable_pattern.count > 0
+			variable_pattern_valid: a_variable_pattern /= Void and then a_variable_pattern.count > 0
 			not_match: match = Void
 		local
 			a_from_file: KL_TEXT_INPUT_FILE
@@ -280,7 +281,7 @@ feature -- Execution
 			l_vars: GEANT_VARIABLES
 			l_vars_array: ARRAY [GEANT_VARIABLES]
 		do
-			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" variable_pattern=", variable_pattern >>)
+			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" variable_pattern=", a_variable_pattern >>)
 
 			if not file_system.file_exists (a_filename) then
 				project.log (<<"  [replace] error: file %"" + a_filename + "%" does not exists">>)
@@ -288,7 +289,7 @@ feature -- Execution
 			end
 
 			if exit_code = 0 then
-				i := variable_pattern.occurrences (placeholder_character)
+				i := a_variable_pattern.occurrences (placeholder_character)
 				if i = 0 then
 					project.log (<<"  [replace] error: variable_pattern is missing a %"" + placeholder_character.out + "%" character">>)
 					exit_code := 1
@@ -299,9 +300,9 @@ feature -- Execution
 				end
 			end
 			if exit_code = 0 then
-				pos := variable_pattern.index_of (placeholder_character, 1)
- 				a_prefix := variable_pattern.substring (1, pos - 1)
-				a_postfix := variable_pattern.substring (pos + 1, variable_pattern.count)
+				pos := a_variable_pattern.index_of (placeholder_character, 1)
+ 				a_prefix := a_variable_pattern.substring (1, pos - 1)
+				a_postfix := a_variable_pattern.substring (pos + 1, a_variable_pattern.count)
 
 				if not file_system.file_exists (a_filename) then
 					project.log (<<"  [replace] error: file %"" + a_filename + "%" does not exists">>)
@@ -366,12 +367,12 @@ feature -- Execution
 			end
 		end
 
-	execute_replace_token (a_filename, a_to_filename: like file)
-			-- Replace `token' with `replace'
+	execute_replace_token (a_filename, a_to_filename, a_token: STRING)
+			-- Replace `a_token' with `replace'
 		require
 			a_filename_nod_void: a_filename /= Void
 			a_to_filename_nod_void: a_to_filename /= Void
-			token_valid: token /= Void and then token.count > 0
+			token_valid: a_token /= Void and then a_token.count > 0
 			not_match: match = Void
 		local
 			a_from_file: KL_TEXT_INPUT_FILE
@@ -379,11 +380,14 @@ feature -- Execution
 
 			s: STRING
 			a_is_global: BOOLEAN
-			a_token: STRING
-			a_replace: STRING
-			a_flags: STRING
+			a_replace: detachable STRING
+			a_flags: detachable STRING
 		do
-			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" token=", token, " replace=", replace >>)
+			a_replace := replace
+			if a_replace = Void then
+				a_replace := ""
+			end
+			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" token=", a_token, " replace=", a_replace >>)
 
 			if not file_system.file_exists (a_filename) then
 				project.log (<<"  [replace] error: file %"" + a_filename + "%" does not exists">>)
@@ -391,17 +395,104 @@ feature -- Execution
 			end
 
 			if exit_code = 0 then
-				a_token := token
-				a_replace := replace
-				if a_replace = Void then
-					a_replace := ""
-				end
 				a_flags := flags
 
-				if a_token = Void then
-					project.log (<<"  [replace] error: token is empty">>)
-					exit_code := 1
+				a_from_file := tmp_input_file
+				a_from_file.reset (a_filename)
+				a_from_file.open_read
+				if a_from_file.is_open_read then
+					from
+						create s.make_empty
+						a_from_file.read_string (read_chunk_size)
+					until
+						a_from_file.end_of_file
+					loop
+						s.append_string (a_from_file.last_string)
+						a_from_file.read_string (read_chunk_size)
+					end
+					a_from_file.close
+					a_from_file := Void
+
+					a_to_file := tmp_output_file
+					a_to_file.reset (a_to_filename)
+					a_to_file.open_write
+					if a_to_file.is_open_write then
+						if a_flags /= Void then
+							a_is_global := a_flags.has ('g')
+							if
+								a_flags.has ('i')
+								or a_flags.has ('m')
+								or a_flags.has ('s')
+							then
+								project.log (<<"  [replace] warning: flags i,m,s are ignored for token replacement">>)
+							end
+						end
+						if a_is_global then
+							s := STRING_.replaced_all_substrings (s, a_token, a_replace)
+						else
+							s := STRING_.replaced_first_substring (s, a_token, a_replace)
+						end
+						a_to_file.put_string (s)
+						a_to_file.close
+						a_to_file := Void
+					else
+						project.log (<<"  [replace] error: file %"" + a_to_file.name + "%" is not writable">>)
+						exit_code := 1
+					end
 				else
+					project.log (<<"  [replace] error: file %"" + a_from_file.name + "%" is not readable">>)
+					exit_code := 1
+				end
+			end
+		end
+
+	execute_replace_regexp (a_filename, a_to_filename, a_match: STRING)
+			-- Replace `a_match' with `replace'
+		require
+			a_filename_nod_void: a_filename /= Void
+			a_to_filename_nod_void: a_to_filename /= Void
+			match_valid: a_match /= Void and then a_match.count > 0
+			not_token: token = Void
+		local
+			a_from_file: KL_TEXT_INPUT_FILE
+			a_to_file: KL_TEXT_OUTPUT_FILE
+
+			s: STRING
+			a_replace: detachable STRING
+			a_flags: detachable STRING
+			a_is_global: BOOLEAN
+
+			regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			a_replace := replace
+			if a_replace = Void then
+				a_replace := ""
+			end
+			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" match=", a_match, " replace=", a_replace >>)
+
+			if not file_system.file_exists (a_filename) then
+				project.log (<<"  [replace] error: file %"" + a_filename + "%" does not exists">>)
+				exit_code := 1
+			end
+
+			if exit_code = 0 then
+				a_flags := flags
+
+				create regexp.make
+				if a_flags /= Void then
+					a_is_global := a_flags.has ('g')
+					regexp.set_caseless (a_flags.has ('i'))
+					if a_flags.has ('m') and a_flags.has ('s') then
+						project.log (<<"  [replace] warning: flags 'm' and 's' are both enabled, use default: 's' .">>)
+					elseif a_flags.has ('s') then
+						regexp.set_multiline (False)
+					elseif a_flags.has ('m') then
+						regexp.set_multiline (True)
+					end
+				end
+
+				regexp.compile (a_match)
+				if regexp.is_compiled then
 					a_from_file := tmp_input_file
 					a_from_file.reset (a_filename)
 					a_from_file.open_read
@@ -418,133 +509,29 @@ feature -- Execution
 						a_from_file.close
 						a_from_file := Void
 
-						a_to_file := tmp_output_file
-						a_to_file.reset (a_to_filename)
-						a_to_file.open_write
-						if a_to_file.is_open_write then
-							if a_flags /= Void then
-								a_is_global := a_flags.has ('g')
-								if
-									a_flags.has ('i')
-									or a_flags.has ('m')
-									or a_flags.has ('s')
-								then
-									project.log (<<"  [replace] warning: flags i,m,s are ignored for token replacement">>)
+						regexp.match (s)
+						if regexp.has_matched then
+							project.trace (<<"  [replace] match_count = ", regexp.match_count.out >>)
+							a_to_file := tmp_output_file
+							a_to_file.reset (a_to_filename)
+							a_to_file.open_write
+							if a_to_file.is_open_write then
+								if a_is_global then
+									s := regexp.replace_all (a_replace)
+								else
+									s := regexp.replace (a_replace)
 								end
-							end
-							if a_is_global then
-								s := STRING_.replaced_all_substrings (s, a_token, a_replace)
+								a_to_file.put_string (s)
+								a_to_file.close
+								a_to_file := Void
 							else
-								s := STRING_.replaced_first_substring (s, a_token, a_replace)
+								project.log (<<"  [replace] error: file %"" + a_to_file.name + "%" is not writable">>)
+								exit_code := 1
 							end
-							a_to_file.put_string (s)
-							a_to_file.close
-							a_to_file := Void
-						else
-							project.log (<<"  [replace] error: file %"" + a_to_file.name + "%" is not writable">>)
-							exit_code := 1
 						end
 					else
 						project.log (<<"  [replace] error: file %"" + a_from_file.name + "%" is not readable">>)
 						exit_code := 1
-					end
-				end
-			end
-		end
-
-	execute_replace_regexp (a_filename, a_to_filename: like file)
-			-- Replace `match' with `replace'
-		require
-			a_filename_nod_void: a_filename /= Void
-			a_to_filename_nod_void: a_to_filename /= Void
-			match_valid: match /= Void and then match.count > 0
-			not_token: token = Void
-		local
-			a_from_file: KL_TEXT_INPUT_FILE
-			a_to_file: KL_TEXT_OUTPUT_FILE
-
-			s: STRING
-			a_match: STRING
-			a_replace: STRING
-			a_flags: STRING
-			a_is_global: BOOLEAN
-
-			regexp: RX_PCRE_REGULAR_EXPRESSION
-		do
-			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" match=", match, " replace=", replace >>)
-
-			if not file_system.file_exists (a_filename) then
-				project.log (<<"  [replace] error: file %"" + a_filename + "%" does not exists">>)
-				exit_code := 1
-			end
-
-			if exit_code = 0 then
-				a_match := match
-				a_replace := replace
-				if a_replace = Void then
-					a_replace := ""
-				end
-				a_flags := flags
-
-				if a_match = Void or else a_match.count = 0 then
-					project.log (<<"  [replace] error: match definition is missing or empty">>)
-					exit_code := 1
-				else
-					create regexp.make
-					if a_flags /= Void then
-						a_is_global := a_flags.has ('g')
-						regexp.set_caseless (a_flags.has ('i'))
-						if a_flags.has ('m') and a_flags.has ('s') then
-							project.log (<<"  [replace] warning: flags 'm' and 's' are both enabled, use default: 's' .">>)
-						elseif a_flags.has ('s') then
-							regexp.set_multiline (False)
-						elseif a_flags.has ('m') then
-							regexp.set_multiline (True)
-						end
-					end
-
-					regexp.compile (a_match)
-					if regexp.is_compiled then
-						a_from_file := tmp_input_file
-						a_from_file.reset (file)
-						a_from_file.open_read
-						if a_from_file.is_open_read then
-							from
-								create s.make_empty
-								a_from_file.read_string (read_chunk_size)
-							until
-								a_from_file.end_of_file
-							loop
-								s.append_string (a_from_file.last_string)
-								a_from_file.read_string (read_chunk_size)
-							end
-							a_from_file.close
-							a_from_file := Void
-
-							regexp.match (s)
-							if regexp.has_matched then
-								project.trace (<<"  [replace] match_count = ", regexp.match_count.out >>)
-								a_to_file := tmp_output_file
-								a_to_file.reset (a_to_filename)
-								a_to_file.open_write
-								if a_to_file.is_open_write then
-									if a_is_global then
-										s := regexp.replace_all (a_replace)
-									else
-										s := regexp.replace (a_replace)
-									end
-									a_to_file.put_string (s)
-									a_to_file.close
-									a_to_file := Void
-								else
-									project.log (<<"  [replace] error: file %"" + a_to_file.name + "%" is not writable">>)
-									exit_code := 1
-								end
-							end
-						else
-							project.log (<<"  [replace] error: file %"" + a_from_file.name + "%" is not readable">>)
-							exit_code := 1
-						end
 					end
 				end
 			end

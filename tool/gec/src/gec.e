@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,8 +68,8 @@ feature -- Execution
 					parse_ace_file (a_file)
 				end
 				a_file.close
-				if last_system /= Void then
-					process_system (last_system)
+				if attached last_system as l_last_system then
+					process_system (l_last_system)
 					debug ("stop")
 						std.output.put_line ("Press Enter...")
 						std.input.read_character
@@ -93,7 +93,7 @@ feature -- Access
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
-	last_system: ET_SYSTEM
+	last_system: detachable ET_SYSTEM
 			-- Last Eiffel system parsed, if any
 
 feature {NONE} -- Eiffel config file parsing
@@ -213,11 +213,11 @@ feature {NONE} -- Processing
 			l_root_type: ET_BASE_TYPE
 			l_generator: ET_C_GENERATOR
 			l_command: KL_SHELL_COMMAND
-			l_filename: STRING
 			l_system_name: STRING
 			l_file: KL_TEXT_INPUT_FILE
 			l_type_names: DS_HASH_SET [STRING]
 			s: STRING
+			l_script_filename: STRING
 		do
 			if is_silent then
 -- TODO.
@@ -239,8 +239,7 @@ feature {NONE} -- Processing
 			end
 			l_system.set_catcall_error_mode (catcall_error_mode)
 			l_system.set_catcall_warning_mode (catcall_warning_mode)
-			if new_instance_types_option.was_found then
-				l_filename := new_instance_types_option.parameter
+			if new_instance_types_option.was_found and then attached new_instance_types_option.parameter as l_filename then
 				create l_file.make (l_filename)
 				l_file.open_read
 				if l_file.is_open_read then
@@ -305,11 +304,11 @@ feature {NONE} -- Processing
 					Exceptions.die (1)
 				elseif not no_c_compile then
 					if operating_system.is_windows then
-						l_filename := l_system_name + ".bat"
+						l_script_filename := l_system_name + ".bat"
 					else
-						l_filename := l_system_name + ".sh"
+						l_script_filename := l_system_name + ".sh"
 					end
-					create l_command.make (file_system.absolute_pathname (l_filename))
+					create l_command.make (file_system.absolute_pathname (l_script_filename))
 					l_command.execute
 					if l_command.exit_code /= 0 then
 						Exceptions.die (1)
@@ -358,13 +357,13 @@ feature -- Status report
 	catcall_error_mode: BOOLEAN
 			-- Are CAT-call errors considered as fatal errors?
 		do
-			Result := catcall_option.was_found and then STRING_.same_string (catcall_option.parameter, "error")
+			Result := catcall_option.was_found and then attached catcall_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "error")
 		end
 
 	catcall_warning_mode: BOOLEAN
 			-- Are CAT-call errors considered just as warnings?
 		do
-			Result := not catcall_option.was_found or else STRING_.same_string (catcall_option.parameter, "warning")
+			Result := not catcall_option.was_found or else attached catcall_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "warning")
 		end
 
 	no_c_compile: BOOLEAN
@@ -385,7 +384,7 @@ feature -- Status report
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 		do
-			Result := gc_option.was_found and then STRING_.same_string (gc_option.parameter, "boehm")
+			Result := gc_option.was_found and then attached gc_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "boehm")
 		end
 
 	is_silent: BOOLEAN
@@ -508,9 +507,11 @@ feature -- Argument parsing
 			a_parser.parse_arguments
 			if version_flag.was_found then
 				report_version_number
+				ace_filename := ""
 				Exceptions.die (0)
 			elseif a_parser.parameters.count /= 1 then
 				error_handler.report_info_message (a_parser.help_option.full_usage_instruction (a_parser))
+				ace_filename := ""
 				Exceptions.die (1)
 			else
 				ace_filename := a_parser.parameters.first

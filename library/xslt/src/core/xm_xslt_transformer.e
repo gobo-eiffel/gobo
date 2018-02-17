@@ -5,7 +5,7 @@ note
 		"XSLT transformers"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -613,7 +613,7 @@ feature -- Basic operations
 
 feature -- Transformation
 
-	transform (a_source: XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT)
+	transform (a_source: detachable XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT)
 			-- Transform `a_source' to `a_result' using `executable'.
 		require
 			initial_template_or_source_not_void: a_source = Void implies initial_template /= Void

@@ -5,7 +5,7 @@ note
 		"XSLT commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2005, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,14 +44,13 @@ feature -- Status report
 		do
 			Result := (input_filename /= Void and then input_filename.count > 0) and
 				(output_filename /= Void and then output_filename.count > 0) and
-				(stylesheet_filename /= Void and then stylesheet_filename.count > 0)
+				(attached stylesheet_filename as l_stylesheet_filename and then l_stylesheet_filename.count > 0)
 		ensure then
 			input_filename_not_void: Result implies input_filename /= Void
 			input_filename_not_empty: Result implies input_filename.count > 0
 			output_filename_not_void: Result implies output_filename /= Void
 			output_filename_not_empty: Result implies output_filename.count > 0
-			stylesheet_filename_not_void: Result implies stylesheet_filename /= Void
-			stylesheet_filename_not_empty: Result implies stylesheet_filename.count > 0
+			stylesheet_filename_not_void_and_not_empty: Result implies attached stylesheet_filename as l_stylesheet_filename and then l_stylesheet_filename.count > 0
 		end
 
 feature -- Access
@@ -62,7 +61,7 @@ feature -- Access
 	output_filename: STRING
 			-- Output filename
 
-	stylesheet_filename: STRING
+	stylesheet_filename: detachable STRING
 			-- XSL filename
 
 	parameters: DS_ARRAYED_LIST [DS_PAIR [STRING, STRING]]
@@ -71,16 +70,16 @@ feature -- Access
 	processor: INTEGER
 			-- Identifier for used XSLT processor
 
-	format: STRING
+	format: detachable STRING
 			-- Format for output
 
 	indent: STRING
 			-- Number of spaces for output indentation
 
-	extdirs: STRING
+	extdirs: detachable STRING
 			-- semicolon separated list of directories for extensions (java processors only)
 
-	classpath: STRING
+	classpath: detachable STRING
 			-- classpath for java processors
 
 	force: BOOLEAN
@@ -231,36 +230,38 @@ feature -- Execution
 			a_execute: BOOLEAN
 			a_variables: GEANT_VARIABLES
 		do
-			a_input_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			a_stylesheet_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
-			a_output_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-			create a_variables.make
-			a_variables.put (a_output_filename, "output_filename")
-			a_variables.put (a_stylesheet_filename, "stylesheet_filename")
-			a_variables.put (a_input_filename, "input_filename")
-			a_variables.put (indent, "indent")
+			check is_executable: attached stylesheet_filename as l_stylesheet_filename then
+				a_input_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
+				a_stylesheet_filename := file_system.pathname_from_file_system (l_stylesheet_filename, unix_file_system)
+				a_output_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+				create a_variables.make
+				a_variables.put (a_output_filename, "output_filename")
+				a_variables.put (a_stylesheet_filename, "stylesheet_filename")
+				a_variables.put (a_input_filename, "input_filename")
+				a_variables.put (indent, "indent")
 
-			a_execute := force
-			if not a_execute then
-				a_execute := is_file_outofdate (a_input_filename, a_output_filename)
-				a_execute := a_execute or else is_file_outofdate (a_stylesheet_filename, a_output_filename)
+				a_execute := force
 				if not a_execute then
-					project.trace_debug (<<"  [*xslt] not necessary to transform '",
-						a_input_filename, "' + '", a_stylesheet_filename, "' to '", a_output_filename, "'">>)
+					a_execute := is_file_outofdate (a_input_filename, a_output_filename)
+					a_execute := a_execute or else is_file_outofdate (a_stylesheet_filename, a_output_filename)
+					if not a_execute then
+						project.trace_debug (<<"  [*xslt] not necessary to transform '",
+							a_input_filename, "' + '", a_stylesheet_filename, "' to '", a_output_filename, "'">>)
+					end
 				end
-			end
-			if a_execute then
-				if processor = Processor_xalan_cpp then
-					execute_xalan_cpp (a_variables)
-				elseif processor = Processor_xalan_java then
-					execute_xalan_java (a_variables)
-				elseif processor = Processor_xsltproc then
-					execute_xsltproc (a_variables)
-				elseif processor = Processor_gexslt then
-					execute_gexslt (a_variables)
-				else
-					project.log (<<"  [xslt]: unknown processor">>)
-					exit_code := 1
+				if a_execute then
+					if processor = Processor_xalan_cpp then
+						execute_xalan_cpp (a_variables)
+					elseif processor = Processor_xalan_java then
+						execute_xalan_java (a_variables)
+					elseif processor = Processor_xsltproc then
+						execute_xsltproc (a_variables)
+					elseif processor = Processor_gexslt then
+						execute_gexslt (a_variables)
+					else
+						project.log (<<"  [xslt]: unknown processor">>)
+						exit_code := 1
+					end
 				end
 			end
 		end
@@ -275,9 +276,8 @@ feature -- Execution
 			template: STRING
 		do
 			create si.make
-			create vr.make
+			create vr.make (a_variables)
 			si.set_variable_resolver (vr)
-			vr.set_variables (a_variables)
 
 			create template.make (128)
 
@@ -310,27 +310,26 @@ feature -- Execution
 			template: STRING
 		do
 			create si.make
-			create vr.make
+			create vr.make (a_variables)
 			si.set_variable_resolver (vr)
-			vr.set_variables (a_variables)
 
 			create template.make (128)
 
 			template.append_string ("java")
-			if extdirs /= Void and then extdirs.count > 0 then
+			if attached extdirs as l_extdirs and then l_extdirs.count > 0 then
 				template.append_string (" -Djava.ext.dirs=")
-				template := STRING_.appended_string (template, extdirs)
+				template := STRING_.appended_string (template, l_extdirs)
 			end
 
-			if classpath /= Void and then classpath.count > 0 then
+			if attached classpath as l_classpath and then l_classpath.count > 0 then
 				template.append_string (" -classpath=")
-				template := STRING_.appended_string (template, classpath)
+				template := STRING_.appended_string (template, l_classpath)
 			end
 			template.append_string (" org.apache.xalan.xslt.Process -in ${input_filename} -xsl ${stylesheet_filename} -out ${output_filename} -INDENT ${indent}")
 
-			if format /= Void and then format.count > 0 then
+			if attached format as l_format and then l_format.count > 0 then
 				template.append_string (" -")
-				template := STRING_.appended_string (template, format)
+				template := STRING_.appended_string (template, l_format)
 			end
 
 				-- Add parameters:
@@ -357,9 +356,8 @@ feature -- Execution
 			template: STRING
 		do
 			create si.make
-			create vr.make
+			create vr.make (a_variables)
 			si.set_variable_resolver (vr)
-			vr.set_variables (a_variables)
 
 			create template.make (128)
 			template.append_string ("xsltproc -o ${output_filename}")
@@ -392,9 +390,8 @@ feature -- Execution
 			vr: GEANT_VARIABLES_VARIABLE_RESOLVER
 		do
 			create si.make
-			create vr.make
+			create vr.make (a_variables)
 			si.set_variable_resolver (vr)
-			vr.set_variables (a_variables)
 
 			create template.make (128)
 			template.append_string ("gexslt --output=${output_filename}")

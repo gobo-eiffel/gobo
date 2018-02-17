@@ -4,7 +4,7 @@ note
 
 		"Unicode data for one code point"
 
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 		local
 			a_decimal: INTEGER
 			a_hex_code: STRING
+			l_decomposition_mapping: like decomposition_mapping
 		do
 			code := a_code
 			name := a_name
@@ -110,8 +111,9 @@ feature {NONE} -- Initialization
 				decomposition_mapping := Void
 			elseif is_valid_decomposition_type (some_fields.item (6)) then
 				decomposition_type := encoded_decomposition_type (some_fields.item (6))
-				decomposition_mapping := mapped_decomposition (some_fields.item (6))
-				is_valid := not decomposition_mapping.is_empty
+				l_decomposition_mapping := mapped_decomposition (some_fields.item (6))
+				decomposition_mapping := l_decomposition_mapping
+				is_valid := not l_decomposition_mapping.is_empty
 			else
 				is_valid := False
 			end
@@ -152,10 +154,10 @@ feature -- Access
 	decomposition_type: INTEGER
 			-- Decomposition type
 
-	decomposition_mapping: DS_ARRAYED_LIST [INTEGER]
+	decomposition_mapping: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Decomposition mapping;
 
-	lower_mapping: DS_ARRAYED_LIST [INTEGER]
+	lower_mapping: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Full mapping to lower case
 		do
 			Result := optional_lower_mapping
@@ -167,7 +169,7 @@ feature -- Access
 			end
 		end
 
-	title_mapping: DS_ARRAYED_LIST [INTEGER]
+	title_mapping: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Full mapping to title case
 		do
 			Result := optional_title_mapping
@@ -179,7 +181,7 @@ feature -- Access
 			end
 		end
 
-	upper_mapping: DS_ARRAYED_LIST [INTEGER]
+	upper_mapping: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Full mapping to upper case
 		do
 			Result := optional_upper_mapping
@@ -412,7 +414,7 @@ feature -- Setting
 			a_title_not_void: a_title /= Void
 			a_upper_not_void: a_upper /= Void
 		local
-			l_result: DS_CELL [DS_ARRAYED_LIST [INTEGER]]
+			l_result: DS_CELL [detachable DS_ARRAYED_LIST [INTEGER]]
 		do
 			create l_result.make (Void)
 			create_special_casing_codes (l_result, a_lower)
@@ -431,16 +433,16 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	optional_lower_mapping: DS_ARRAYED_LIST [INTEGER]
+	optional_lower_mapping: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Optional special mapping to lower case
 
-	optional_title_mapping: DS_ARRAYED_LIST [INTEGER]
+	optional_title_mapping: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Optional special mapping to title case
 
-	optional_upper_mapping: DS_ARRAYED_LIST [INTEGER]
+	optional_upper_mapping: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Optional special mapping to upper case
 
-	create_special_casing_codes (a_result: DS_CELL [DS_ARRAYED_LIST [INTEGER]]; a_string: STRING)
+	create_special_casing_codes (a_result: DS_CELL [detachable DS_ARRAYED_LIST [INTEGER]]; a_string: STRING)
 			-- Create sequence of code-points decoded from `a_string' and place in `a_result'.
 		require
 			a_result_not_void: a_result /= Void

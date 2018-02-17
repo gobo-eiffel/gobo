@@ -5,7 +5,7 @@ note
 		"Directorysets"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,38 +54,37 @@ feature -- Status report
 	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
-			Result := (directory_name /= Void and then directory_name.count > 0)
+			Result := (attached directory_name as l_directory_name and then l_directory_name.count > 0)
 			if not Result then
 				project.log (<<"  [directoryset] error: attribute 'directory' is mandatory">>)
 			end
 			if Result then
-				Result := include_wildcard = Void or else include_wildcard.is_compiled
+				Result := not attached include_wildcard as l_include_wildcard or else l_include_wildcard.is_compiled
 				if not Result then
 					project.log (<<"  [directoryset] error: attribute 'include' is not valid">>)
 				end
 			end
 			if Result then
-				Result := exclude_wildcard = Void or else exclude_wildcard.is_compiled
+				Result := not attached exclude_wildcard as l_exclude_wildcard or else l_exclude_wildcard.is_compiled
 				if not Result then
 					project.log (<<"  [directoryset] error: attribute 'exclude' is not valid">>)
 				end
 			end
 		ensure
-			directory_name_not_void: Result implies directory_name /= Void
-			directory_name_not_empty: Result implies directory_name.count > 0
-			include_wildcard_compiled: Result implies (include_wildcard = Void or else include_wildcard.is_compiled)
-			exclude_wildcard_compiled: Result implies (exclude_wildcard = Void or else exclude_wildcard.is_compiled)
+			directory_name_not_void_and_not_empty: Result implies attached directory_name as l_directory_name and then l_directory_name.count > 0
+			include_wildcard_compiled: Result implies (not attached include_wildcard as l_include_wildcard or else l_include_wildcard.is_compiled)
+			exclude_wildcard_compiled: Result implies (not attached exclude_wildcard as l_exclude_wildcard or else l_exclude_wildcard.is_compiled)
 		end
 
 feature -- Access
 
-	directory_name: STRING
+	directory_name: detachable STRING
 			-- Name of directory serving as root for recursive scanning
 
-	include_wc_string: STRING
+	include_wc_string: detachable STRING
 			-- Wildcard against which directory_names are matched for inclusion
 
-	exclude_wc_string: STRING
+	exclude_wc_string: detachable STRING
 			-- Wildcard against which directory_names are matched for exclusion
 
 	convert_to_filesystem: BOOLEAN
@@ -133,7 +132,7 @@ feature -- Access
 		do
 			if not after then
 				Result := project.variables.has (directory_name_variable_name) and then
-					STRING_.same_string (project.variables.value (directory_name_variable_name),
+					STRING_.same_string (project.variables.item (directory_name_variable_name),
 						item_directory_name)
 			else
 				Result := not project.variables.has (directory_name_variable_name)
@@ -142,7 +141,7 @@ feature -- Access
 			directory_name_variable_name_exists: not after implies
 				(Result implies project.variables.has (directory_name_variable_name))
 			directory_name_variable_name_set: not after implies (Result implies
-				STRING_.same_string (project.variables.value (directory_name_variable_name), item_directory_name))
+				STRING_.same_string (project.variables.item (directory_name_variable_name), item_directory_name))
 			directory_name_variable_name_not_exists: after implies
 				(Result implies not project.variables.has (directory_name_variable_name))
 		end
@@ -156,38 +155,44 @@ feature -- Setting
 		do
 			directory_name := a_directory_name
 		ensure
-			directory_name_set: directory_name.is_equal (a_directory_name)
+			directory_name_set: directory_name = a_directory_name
 		end
 
-	set_include_wc_string (a_include_wc_string: like include_wc_string)
+	set_include_wc_string (a_include_wc_string: STRING)
 			-- Set `include_wc_string' to `a_include_wc_string' and
 			-- make a compiled version available in `include_wildcard'
 		require
 			a_include_wc_string_not_void : a_include_wc_string /= Void
 			a_include_wc_string_not_empty: a_include_wc_string.count > 0
+		local
+			l_include_wildcard: like include_wildcard
 		do
 			include_wc_string := a_include_wc_string
 				-- Setup wildcard for include patterns:
-			create {LX_DFA_WILDCARD} include_wildcard.compile (include_wc_string, True)
-			if not include_wildcard.is_compiled then
-				project.log (<<"  [directoryset] error: invalid include wildcard: '", include_wc_string, "%'">>)
+			create {LX_DFA_WILDCARD} l_include_wildcard.compile (a_include_wc_string, True)
+			include_wildcard := l_include_wildcard
+			if not l_include_wildcard.is_compiled then
+				project.log (<<"  [directoryset] error: invalid include wildcard: '", a_include_wc_string, "%'">>)
 			end
 		ensure
 			include_wc_string_set: include_wc_string = a_include_wc_string
 		end
 
-	set_exclude_wc_string (a_exclude_wc_string: like exclude_wc_string)
+	set_exclude_wc_string (a_exclude_wc_string: STRING)
 			-- Set `exclude_wc_string' to `a_exclude_wc_string' and
 			-- make a compiled version available in `exclude_wildcard'
 		require
 			a_exclude_wc_string_not_void : a_exclude_wc_string /= Void
 			a_exclude_wc_string_not_empty: a_exclude_wc_string.count > 0
+		local
+			l_exclude_wildcard: like exclude_wildcard
 		do
 			exclude_wc_string := a_exclude_wc_string
 				-- Setup wildcard for exclude patterns:
-			create {LX_DFA_WILDCARD} exclude_wildcard.compile (exclude_wc_string, True)
-			if not exclude_wildcard.is_compiled then
-				project.log (<<"  [directoryset] error: invalid exclude wildcard: '", exclude_wc_string, "%'">>)
+			create {LX_DFA_WILDCARD} l_exclude_wildcard.compile (a_exclude_wc_string, True)
+			exclude_wildcard := l_exclude_wildcard
+			if not l_exclude_wildcard.is_compiled then
+				project.log (<<"  [directoryset] error: invalid exclude wildcard: '", a_exclude_wc_string, "%'">>)
 			end
 		ensure
 			exclude_wc_string_set: exclude_wc_string = a_exclude_wc_string
@@ -234,8 +239,8 @@ feature -- Element change
 			a_entry: GEANT_FILESET_ENTRY
 			an_directory_name: STRING
 		do
-			if concat then
-				an_directory_name := unix_file_system.pathname (directory_name, a_directory_name)
+			if concat and attached directory_name as l_directory_name then
+				an_directory_name := unix_file_system.pathname (l_directory_name, a_directory_name)
 			else
 				an_directory_name := a_directory_name
 			end
@@ -301,37 +306,40 @@ feature -- Execution
 			al_directory_name: STRING
 			cs: DS_SET_CURSOR [STRING]
 		do
-			project.trace_debug (<<"  [*directoryset] directory_name: ", directory_name>>)
-			if include_wc_string /= Void then
-				project.trace_debug (<<"  [*directoryset] include_wc_string: ", include_wc_string>>)
-			end
-			al_directory_name := unix_file_system.canonical_pathname (directory_name)
-				-- Add entries from filesystem scan:
-			scan_internal (al_directory_name)
-				-- Add single includes:
-			cs := single_includes.new_cursor
-			from cs.start until cs.after loop
-				add_fileset_entry_if_necessary (cs.item)
-				cs.forth
-			end
-				-- Remove single excludes:
-			cs := single_excludes.new_cursor
-			from cs.start until cs.after loop
-				remove_fileset_entry (cs.item)
-				cs.forth
-			end
-			if project.options.debug_mode then
-				from start until after loop
-					project.trace_debug (<<"  [*directoryset] entry: [", item_directory_name, "]">>)
-					forth
+			if attached directory_name as l_directory_name then
+					-- `directory_name' is attached, otherwise `is_executable' is False.
+				project.trace_debug (<<"  [*directoryset] directory_name: ", l_directory_name>>)
+				if attached include_wc_string as l_include_wc_string then
+					project.trace_debug (<<"  [*directoryset] include_wc_string: ", l_include_wc_string>>)
+				end
+				al_directory_name := unix_file_system.canonical_pathname (l_directory_name)
+					-- Add entries from filesystem scan:
+				scan_internal (al_directory_name, al_directory_name)
+					-- Add single includes:
+				cs := single_includes.new_cursor
+				from cs.start until cs.after loop
+					add_fileset_entry_if_necessary (cs.item)
+					cs.forth
+				end
+					-- Remove single excludes:
+				cs := single_excludes.new_cursor
+				from cs.start until cs.after loop
+					remove_fileset_entry (cs.item)
+					cs.forth
+				end
+				if project.options.debug_mode then
+					from start until after loop
+						project.trace_debug (<<"  [*directoryset] entry: [", item_directory_name, "]">>)
+						forth
+					end
 				end
 			end
 		end
 
-	include_wildcard: LX_WILDCARD
+	include_wildcard: detachable LX_WILDCARD
 			-- Expression defining directory_names for inclusion
 
-	exclude_wildcard: LX_WILDCARD
+	exclude_wildcard: detachable LX_WILDCARD
 			-- Expression defining directory_names for exclusion
 
 feature {NONE} -- Implementation/Access
@@ -350,10 +358,13 @@ feature {NONE} -- Implementation/Access
 
 feature {NONE} -- Implementation/Processing
 
-	scan_internal (a_directory_name: STRING)
-			-- Scan directory named `directory_name' recursivley;
+	scan_internal (a_directory_name, a_root_directory_name: STRING)
+			-- Scan directory named `a_directory_name' recursively;
 			-- put directory_names found matching `include_wildcard' and not matching
 			-- `exclude_wildcard' into `directory_names';
+		require
+			a_directory_name_not_void: a_directory_name /= Void
+			a_root_directory_name_not_void: a_root_directory_name /= Void
 		local
 			a_dir: KL_DIRECTORY
 			a_name: STRING
@@ -374,15 +385,15 @@ feature {NONE} -- Implementation/Processing
 						if file_system.is_directory_readable (s) then
 								-- Handle files:
 --!!				project.trace_debug (<<"directoryname: ", s>>)
-							smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
+							smatch := s.substring (a_root_directory_name.count + 2, s.count)	-- 2 because of '/'
 --!!				project.trace_debug (<<"  trying to match: ", smatch>>)
-							if include_wildcard /= Void and then include_wildcard.recognizes (smatch) then
+							if attached include_wildcard as l_include_wildcard and then l_include_wildcard.recognizes (smatch) then
 								add_fileset_entry_if_necessary (smatch)
 							end
-							if exclude_wildcard /= Void and then exclude_wildcard.recognizes (smatch) then
+							if attached exclude_wildcard as l_exclude_wildcard and then l_exclude_wildcard.recognizes (smatch) then
 								remove_fileset_entry (smatch)
 							end
-							scan_internal (s)
+							scan_internal (s, a_root_directory_name)
 						else
 							-- Files are not handled
 						end

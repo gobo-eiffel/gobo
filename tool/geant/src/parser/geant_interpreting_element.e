@@ -5,7 +5,7 @@ note
 		"Geant interpreting elements"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,9 +39,9 @@ feature {NONE} -- Initialization
 		do
 			element_make (a_xml_element)
 			set_project (a_project)
-			if project.position_table /= Void then
-				if project.position_table.has (xml_element) then
-					position := project.position_table.item (xml_element)
+			if attached project.position_table as l_position_table then
+				if l_position_table.has (xml_element) then
+					position := l_position_table.item (xml_element)
 				else
 					project.trace_debug (<<"  [*GEANT_INTERPRETING_ELEMENT] position Void for element '", xml_element.name, "'">>)
 				end
@@ -80,14 +80,14 @@ feature -- Status report
 			if_condition := True
 			unless_condition := False
 				-- Look for an 'if' XML attribute
-			if has_attribute (If_attribute_name) then
-				a_string := xml_element.attribute_by_name (If_attribute_name).value
+			if attached xml_element.attribute_by_name (If_attribute_name) as l_if_attribute then
+				a_string := l_if_attribute.value
 				if_condition := Project_variables_resolver.boolean_condition_value (a_string)
 				project.trace_debug (<<" if: '", a_string, "': ", if_condition.out>>)
 			end
 				-- Look for an 'unless' XML attribute
-			if has_attribute (Unless_attribute_name) then
-				a_string := xml_element.attribute_by_name (Unless_attribute_name).value
+			if attached xml_element.attribute_by_name (Unless_attribute_name) as l_unless_attribute then
+				a_string := l_unless_attribute.value
 				unless_condition := Project_variables_resolver.boolean_condition_value (a_string)
 
 				project.trace_debug (<<" unless: '", a_string, "'=", unless_condition.out>>)
@@ -116,7 +116,7 @@ feature -- Access/XML attribute and content values
 			a_attribute: XM_ATTRIBUTE
 		do
 			a_attribute := xml_element.attribute_by_name (an_attr_name)
-			if a_attribute /= Void then
+			check precondition: a_attribute /= Void then
 				Result := a_attribute.value
 				if Result /= Void and then Result.count > 0 then
 					create a_string_interpreter.make
@@ -139,14 +139,14 @@ feature -- Access/XML attribute and content values
 			end
 		end
 
-	content: STRING
+	content: detachable STRING
 			-- Content of element if any; Void otherwise
 		local
 			a_string_interpreter: GEANT_STRING_INTERPRETER
 		do
 			Result := xml_element.text
 			if Result /= Void then
-				if  not Result.is_empty then
+				if not Result.is_empty then
 					create a_string_interpreter.make
 						-- Resolve possible variables:
 					Project_variables_resolver.set_variables (project.variables)

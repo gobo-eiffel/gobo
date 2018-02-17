@@ -5,7 +5,7 @@ note
 		"Interpreters for Strings using variable resolvers"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Copyright (c) 2004, Sven Ehrke and others"
+	copyright:"Copyright (c) 2004-2018, Sven Ehrke and others"
 	license:"MIT License"
 	date: "$Date$"
 	revision:"$Revision$"
@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source_string: STRING
+	source_string: detachable STRING
 			-- Source string to be interpreted
 
-	variable_resolver: GEANT_VARIABLE_RESOLVER
+	variable_resolver: detachable GEANT_VARIABLE_RESOLVER
 			-- Variable resolver used for interpretation of `source_string'
 
 	interpreted_source_string: STRING
@@ -50,7 +50,11 @@ feature -- Access
 		require
 			source_string_not_void: source_string /= Void
 		do
-			Result := interpreted_string (source_string)
+			check precondition: attached source_string as l_source_string then
+				Result := interpreted_string (l_source_string)
+			end
+		ensure
+			interpreted_source_string_not_void: Result /= Void
 		end
 
 	interpreted_string (a_string: STRING): STRING
@@ -181,8 +185,8 @@ feature {NONE} -- Implementation
 				Result := default_variable_value (a_name)
 			end
 			if Result = Void then
-				if variable_resolver.has (a_name) then
-					Result := variable_resolver.value (a_name)
+				if attached variable_resolver as l_variable_resolver and then l_variable_resolver.has (a_name) then
+					Result := l_variable_resolver.value (a_name)
 					if Result /= Void then
 						Result := expanded_variable_value (Result)
 					end

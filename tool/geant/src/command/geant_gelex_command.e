@@ -5,7 +5,7 @@ note
 		"Gelex commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -209,9 +209,9 @@ feature -- Execution
 			create cmd.make (128)
 			cmd.append_string ("gelex ")
 				-- Option -a
-			if array_size /= Void and then array_size.count > 0 then
+			if attached array_size as l_array_size and then l_array_size.count > 0 then
 				cmd.append_string ("--array-size=")
-				cmd := STRING_.appended_string (cmd, array_size.out)
+				cmd := STRING_.appended_string (cmd, l_array_size.out)
 			end
 				-- Option -b
 			if backup then
@@ -248,9 +248,9 @@ feature -- Execution
 				cmd.append_string ("-x ")
 			end
 				-- Option --inspect_actions
-			if inspect_actions /= Void and then not inspect_actions.is_empty then
+			if attached inspect_actions as l_inspect_actions and then not l_inspect_actions.is_empty then
 				cmd.append_string ("--inspect-actions=")
-				cmd.append_string (inspect_actions)
+				cmd.append_string (l_inspect_actions)
 				cmd.append_character (' ')
 			end
 				-- Option -o

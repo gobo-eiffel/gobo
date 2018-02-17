@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Yacc: syntactical analyzer generator"
 
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,22 +48,22 @@ feature -- Processing
 			array_size := -1
 			read_command_line
 			parse_input_file
-			if grammar /= Void then
-				if doc_format /= Void then
-					if doc_format.is_equal ("xml") then
-						create {PR_XML_DOC_GENERATOR} doc_generator.make (grammar)
+			if attached grammar as l_grammar then
+				if attached doc_format as l_doc_format then
+					if l_doc_format.is_equal ("xml") then
+						create {PR_XML_DOC_GENERATOR} doc_generator.make (l_grammar)
 					else
-						create {PR_HTML_DOC_GENERATOR} doc_generator.make (grammar)
+						create {PR_HTML_DOC_GENERATOR} doc_generator.make (l_grammar)
 						doc_generator.set_lhs_shared (True)
 					end
-					if output_filename /= Void then
-						create out_file.make (output_filename)
+					if attached output_filename as l_output_filename then
+						create out_file.make (l_output_filename)
 						out_file.open_write
 						if out_file.is_open_write then
 							doc_generator.print_grammar (out_file)
 							out_file.close
 						else
-							create cannot_write.make (output_filename)
+							create cannot_write.make (l_output_filename)
 							error_handler.report_error (cannot_write)
 							Exceptions.die (1)
 						end
@@ -71,52 +71,53 @@ feature -- Processing
 						doc_generator.print_grammar (std.output)
 					end
 				else
-					if verbose_filename /= Void then
+					if attached verbose_filename as l_verbose_filename then
 							-- Verbose mode.
-						create verbose_file.make (verbose_filename)
+						create verbose_file.make (l_verbose_filename)
 						verbose_file.open_write
 						if verbose_file.is_open_write then
-							create fsm.make_verbose (grammar, error_handler, verbose_file)
+							create fsm.make_verbose (l_grammar, error_handler, verbose_file)
 							verbose_file.close
 						else
-							create cannot_write.make (verbose_filename)
+							create cannot_write.make (l_verbose_filename)
 							error_handler.report_error (cannot_write)
+							create fsm.make (l_grammar, error_handler)
 							Exceptions.die (1)
 						end
 					else
-						create fsm.make (grammar, error_handler)
+						create fsm.make (l_grammar, error_handler)
 					end
 					create parser_generator.make (fsm)
 					parser_generator.set_line_pragma (line_pragma)
 					if array_size >= 0 then
 						parser_generator.set_array_size (array_size)
 					end
-					if input_filename /= Void then
-						parser_generator.set_input_filename (input_filename)
+					if attached input_filename as l_input_filename then
+						parser_generator.set_input_filename (l_input_filename)
 					end
-					if token_classname /= Void then
+					if attached token_filename as l_token_filename and attached token_classname as l_token_classname then
 							-- Print class text with token code constants.
-						create token_file.make (token_filename)
+						create token_file.make (l_token_filename)
 						token_file.open_write
 						if token_file.is_open_write then
-							parser_generator.print_token_class (token_classname, Version_number, token_file)
+							parser_generator.print_token_class (l_token_classname, Version_number, token_file)
 							token_file.close
 						else
-							create cannot_write.make (token_filename)
+							create cannot_write.make (l_token_filename)
 							error_handler.report_error (cannot_write)
 							Exceptions.die (1)
 						end
 					else
 						tokens_needed := True
 					end
-					if output_filename /= Void then
-						create out_file.make (output_filename)
+					if attached output_filename as l_output_filename then
+						create out_file.make (l_output_filename)
 						out_file.open_write
 						if out_file.is_open_write then
 							parser_generator.print_parser (tokens_needed, actions_separated, rescue_on_abort, out_file)
 							out_file.close
 						else
-							create cannot_write.make (output_filename)
+							create cannot_write.make (l_output_filename)
 							error_handler.report_error (cannot_write)
 							Exceptions.die (1)
 						end
@@ -135,14 +136,14 @@ feature -- Processing
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			create parser.make (error_handler)
-			if input_filename /= Void then
-				create a_file.make (input_filename)
+			if attached input_filename as l_input_filename then
+				create a_file.make (l_input_filename)
 				a_file.open_read
 				if a_file.is_open_read then
 					parser.parse_file (a_file)
 					a_file.close
 				else
-					create cannot_read.make (input_filename)
+					create cannot_read.make (l_input_filename)
 					error_handler.report_error (cannot_read)
 					Exceptions.die (1)
 				end
@@ -163,6 +164,9 @@ feature -- Processing
 			arg: STRING
 			a_pragma: STRING
 			l_string: STRING
+			l_token_filename: like token_filename
+			l_token_classname: like token_classname
+			l_doc_format: like doc_format
 		do
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
@@ -176,23 +180,29 @@ feature -- Processing
 					if i > nb then
 						report_usage_error
 					else
-						token_classname := Arguments.argument (i).as_upper
+						l_token_classname := Arguments.argument (i).as_upper
+						token_classname := l_token_classname
 						if token_filename = Void then
-							token_filename := token_classname.as_lower
-							token_filename.append_string (Eiffel_extension)
+							l_token_filename := l_token_classname.as_lower
+							l_token_filename.append_string (Eiffel_extension)
+							token_filename := l_token_filename
 						end
 					end
 				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--tokens=") then
-					token_classname := arg.substring (10, arg.count).as_upper
+					l_token_classname := arg.substring (10, arg.count).as_upper
+					token_classname := l_token_classname
 					if token_filename = Void then
-						token_filename := token_classname.as_lower
-						token_filename.append_string (Eiffel_extension)
+						l_token_filename := l_token_classname.as_lower
+						l_token_filename.append_string (Eiffel_extension)
+						token_filename := l_token_filename
 					end
 				elseif arg.count > 10 and then arg.substring (1, 10).is_equal ("--defines=") then
-					token_classname := arg.substring (11, arg.count).as_upper
+					l_token_classname := arg.substring (11, arg.count).as_upper
+					token_classname := l_token_classname
 					if token_filename = Void then
-						token_filename := token_classname.as_lower
-						token_filename.append_string (Eiffel_extension)
+						l_token_filename := l_token_classname.as_lower
+						l_token_filename.append_string (Eiffel_extension)
+						token_filename := l_token_filename
 					end
 				elseif arg.is_equal ("-k") then
 					i := i + 1
@@ -235,8 +245,9 @@ feature -- Processing
 				elseif arg.is_equal ("--new_typing") then
 					-- The default.
 				elseif arg.count > 6 and then arg.substring (1, 6).is_equal ("--doc=") then
-					doc_format := arg.substring (7, arg.count)
-					if not doc_format.is_equal ("html") and not doc_format.is_equal ("xml") then
+					l_doc_format := arg.substring (7, arg.count)
+					doc_format := l_doc_format
+					if not l_doc_format.is_equal ("html") and not l_doc_format.is_equal ("xml") then
 							-- Doc format not supported.
 						report_usage_error
 					end
@@ -263,18 +274,18 @@ feature -- Processing
 
 feature -- Access
 
-	input_filename: STRING
-	output_filename: STRING
-	token_classname: STRING
-	token_filename: STRING
-	verbose_filename: STRING
+	input_filename: detachable STRING
+	output_filename: detachable STRING
+	token_classname: detachable STRING
+	token_filename: detachable STRING
+	verbose_filename: detachable STRING
 	actions_separated: BOOLEAN
 
 	rescue_on_abort: BOOLEAN
 			-- Should a rescue clause be generated in the action routines
 			-- to catch abort exceptions? Useful when compiling in void-safe mode.
 
-	doc_format: STRING
+	doc_format: detachable STRING
 			-- Command line arguments
 
 	line_pragma: BOOLEAN
@@ -283,7 +294,7 @@ feature -- Access
 	array_size: INTEGER
 			-- Maximum size supported for manifest arrays
 
-	grammar: PR_GRAMMAR
+	grammar: detachable PR_GRAMMAR
 			-- Grammar description
 
 	error_handler: UT_ERROR_HANDLER

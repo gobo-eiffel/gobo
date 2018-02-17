@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -140,8 +140,8 @@ feature -- Execution
 						parse_ace_file (a_file)
 					end
 					a_file.close
-					if last_system /= Void then
-						process_system (last_system)
+					if attached last_system as l_last_system then
+						process_system (l_last_system)
 						debug ("stop")
 							std.output.put_line ("Press Enter...")
 							io.read_line
@@ -165,15 +165,15 @@ feature -- Execution
 
 feature -- Status report
 
-	defined_variables: STRING
+	defined_variables: detachable STRING
 	is_verbose: BOOLEAN
 	benchmark_flag: BOOLEAN
 	metrics_flag: BOOLEAN
 	is_flat: BOOLEAN
 	is_flat_dbc: BOOLEAN
 	is_catcall: BOOLEAN
-	ecma_version: UT_VERSION
-	ise_version: UT_VERSION
+	ecma_version: detachable UT_VERSION
+	ise_version: detachable UT_VERSION
 	is_silent: BOOLEAN
 	thread_count: INTEGER
 			-- Command-line options
@@ -183,7 +183,7 @@ feature -- Access
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
-	last_system: ET_SYSTEM
+	last_system: detachable ET_SYSTEM
 			-- Last system parsed, if any
 
 feature {NONE} -- Eiffel config file parsing
@@ -235,9 +235,9 @@ feature {NONE} -- Eiffel config file parsing
 			else
 				l_xace_variables.force_last ("ge", "GOBO_EIFFEL")
 			end
-			if defined_variables /= Void then
+			if attached defined_variables as l_defined_variables then
 				create l_splitter.make
-				l_cursor := l_splitter.split (defined_variables).new_cursor
+				l_cursor := l_splitter.split (l_defined_variables).new_cursor
 				from l_cursor.start until l_cursor.after loop
 					l_definition := l_cursor.item
 					if l_definition.count > 0 then
@@ -282,8 +282,8 @@ feature {NONE} -- Eiffel config file parsing
 			end
 			create l_ecf_error_handler.make_standard
 			create l_ecf_parser.make (l_ecf_error_handler)
-			if ise_version /= Void then
-				l_ecf_parser.set_ise_version (ise_version)
+			if attached ise_version as l_ise_version then
+				l_ecf_parser.set_ise_version (l_ise_version)
 			end
 			l_ecf_parser.parse_file (a_file)
 			if not l_ecf_error_handler.has_error then

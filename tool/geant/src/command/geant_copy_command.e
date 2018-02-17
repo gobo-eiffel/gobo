@@ -5,7 +5,7 @@ note
 		"Copy commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,36 +28,31 @@ feature -- Status report
 	is_file_to_file_executable: BOOLEAN
 			-- Can command be executed on sourcefile `file' to targetfile `to_file'?
 		do
-			Result := file /= Void and then file.count > 0 and then
-				to_file /= Void and then to_file.count > 0
+			Result := attached file as l_file and then l_file.count > 0 and then
+				attached to_file as l_to_file and then l_to_file.count > 0
 		ensure
-			file_not_void: Result implies file /= Void
-			file_not_empty: Result implies file.count > 0
-			to_file_not_void: Result implies to_file /= Void
-			to_file_not_empty: Result implies to_file.count > 0
+			file_not_void_and_not_empty: Result implies attached file as l_file and then l_file.count > 0
+			to_file_not_void_and_not_empty: Result implies attached to_file as l_to_file and then l_to_file.count > 0
 		end
 
 	is_file_to_directory_executable: BOOLEAN
 			-- Can command be executed on sourcefile `file' to targetdirectory `to_directory'?
 		do
-			Result := file /= Void and then file.count > 0 and then
-				to_directory /= Void and then to_directory.count > 0
+			Result := attached file as l_file and then l_file.count > 0 and then
+				attached to_directory as l_to_directory and then l_to_directory.count > 0
 		ensure
-			file_not_void: Result implies file /= Void
-			file_not_empty: Result implies file.count > 0
-			to_directory_not_void: Result implies to_directory /= Void
-			to_directory_not_empty: Result implies to_directory.count > 0
+			file_not_void_and_not_empty: Result implies attached file as l_file and then l_file.count > 0
+			to_directory_not_void_and_not_empty: Result implies attached to_directory as l_to_directory and then l_to_directory.count > 0
 		end
 
 	is_fileset_to_directory_executable: BOOLEAN
 			-- Can command be executed on source fileset `fileset' to targetdirectory `to_directory'?
 		do
 			Result := fileset /= Void and then
-				to_directory /= Void and then to_directory.count > 0
+				attached to_directory as l_to_directory and then l_to_directory.count > 0
 		ensure
 			fileset_not_void: Result implies fileset /= Void
-			to_directory_not_void: Result implies to_directory /= Void
-			to_directory_not_empty: Result implies to_directory.count > 0
+			to_directory_not_void_and_not_empty: Result implies attached to_directory as l_to_directory and then l_to_directory.count > 0
 		end
 
 	is_executable: BOOLEAN
@@ -72,16 +67,16 @@ feature -- Status report
 
 feature -- Access
 
-	file: STRING
+	file: detachable STRING
 			-- Name of source file to copy
 
-	to_file: STRING
+	to_file: detachable STRING
 			-- Name of destination file
 
-	to_directory: STRING
+	to_directory: detachable STRING
 			-- Name of destination directory
 
-	fileset: GEANT_FILESET
+	fileset: detachable GEANT_FILESET
 			-- Fileset for current command
 
 	force: BOOLEAN
@@ -153,43 +148,44 @@ feature -- Execution
 		do
 			exit_code := 0
 
-			if is_file_to_directory_executable then
+			if is_file_to_directory_executable and then attached file as l_file and then attached to_directory as l_to_directory then
 					-- Make sure directory named `to_directory' exists:
-				create_directory (to_directory)
+				create_directory (l_to_directory)
 
 				if exit_code = 0 then
-					a_basename := unix_file_system.basename (file)
-					a_to_file := unix_file_system.pathname (to_directory, a_basename)
-					copy_file (file, a_to_file)
+					a_basename := unix_file_system.basename (l_file)
+					a_to_file := unix_file_system.pathname (l_to_directory, a_basename)
+					copy_file (l_file, a_to_file)
 				end
-			elseif is_file_to_file_executable then
-				copy_file (file, to_file)
+			elseif is_file_to_file_executable and then attached file as l_file and then attached to_file as l_to_file then
+				copy_file (l_file, l_to_file)
 			else
-				check is_fileset_to_directory_executable: is_fileset_to_directory_executable end
+				check is_fileset_to_directory_executable: is_fileset_to_directory_executable and then attached fileset as l_fileset and then attached to_directory as l_to_directory then
 
-				if not fileset.is_executable then
-					project.log (<<"  [copy] error: fileset definition wrong">>)
-					exit_code := 1
-				end
+					if not l_fileset.is_executable then
+						project.log (<<"  [copy] error: fileset definition wrong">>)
+						exit_code := 1
+					end
 
-				if exit_code = 0 then
-					fileset.execute
-					from
-						fileset.start
-					until
-						fileset.after or else exit_code /= 0
-					loop
-						if fileset.is_in_gobo_31_format then
-							a_from_file := unix_file_system.pathname (fileset.directory_name, fileset.item_filename)
-						else
-							a_from_file := fileset.item_filename
+					if exit_code = 0 then
+						l_fileset.execute
+						from
+							l_fileset.start
+						until
+							l_fileset.after or else exit_code /= 0
+						loop
+							if l_fileset.is_in_gobo_31_format and then attached l_fileset.directory_name as l_fileset_directory_name then
+								a_from_file := unix_file_system.pathname (l_fileset_directory_name, l_fileset.item_filename)
+							else
+								a_from_file := l_fileset.item_filename
+							end
+							a_to_file := unix_file_system.pathname (l_to_directory, l_fileset.item_mapped_filename)
+								-- Create target directory if necessary:
+							create_directory_for_pathname (a_to_file)
+							copy_file (a_from_file, a_to_file)
+
+							l_fileset.forth
 						end
-						a_to_file := unix_file_system.pathname (to_directory, fileset.item_mapped_filename)
-							-- Create target directory if necessary:
-						create_directory_for_pathname (a_to_file)
-						copy_file (a_from_file, a_to_file)
-
-						fileset.forth
 					end
 				end
 			end

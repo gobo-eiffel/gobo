@@ -9,7 +9,7 @@ note
 			ec -filter html-stylesheet -all -config project.ecf
 	]"
 
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,7 @@ inherit
 			make,
 			output_directory,
 			is_output_directory_required,
+			class_output_directory,
 			prepare_system
 		end
 
@@ -968,6 +969,18 @@ feature {NONE} -- Output
 				a_file.put_line (navigation_line_16)
 			end
 			a_file.put_string (navigation_line_17)
+		end
+
+	class_output_directory (a_class: ET_CLASS): STRING
+			-- Where to generate files for `a_class';
+			-- Void if this directory could not be determined
+			-- (e.g. `output_directory' was not specified and
+			-- `a_class' is in a .NET assembly).
+		do
+			Result := output_directory
+			if library_prefix_flag then
+				Result := file_system.pathname (Result, universe_lower_name (a_class.universe))
+			end
 		end
 
 feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output

@@ -5,7 +5,7 @@ note
 
 		"Scanners for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -187,7 +187,7 @@ feature -- Access
 		deferred
 		ensure
 			include_stack_not_void: Result /= Void
-			no_void_buffer: not Result.has (Void)
+			no_void_buffer: not Result.has_void
 		end
 
 	line_nb_stack: DS_STACK [INTEGER]

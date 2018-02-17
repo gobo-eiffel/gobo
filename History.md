@@ -37,6 +37,10 @@
 * Fixed data race in `ET_CLASS.formal_parameter_type` when executed in
   multi-threaded mode.
 
+### Miscellaneous
+
+* All Gobo tools now compile in void-safe mode.
+
 ## Version 4.2 - 14 July 2017
 
 ### gec
@@ -431,7 +435,7 @@
   `$GOBO/library/xpath` and `$GOBO/library/xslt`
 * Moved the doc/examples/tests to their new library folders.
 
-### Miscellaneous:
+### Miscellaneous
 
 * Removed classes and features that had been marked as obsolete
   in 2004 or before.

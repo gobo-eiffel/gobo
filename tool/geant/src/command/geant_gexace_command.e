@@ -5,7 +5,7 @@ note
 		"Gexace commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,19 +63,17 @@ feature -- Status report
 	is_system_executable: BOOLEAN
 			-- Can 'system' command be executed?
 		do
-			Result := (system_command /= Void and then system_command.count > 0)
+			Result := (attached system_command as l_system_command and then l_system_command.count > 0)
 		ensure
-			system_command_not_void: Result implies system_command /= Void
-			system_command_not_empty: Result implies system_command.count > 0
+			system_command_not_void_and_not_empty: Result implies attached system_command as l_system_command and then l_system_command.count > 0
 		end
 
 	is_library_executable: BOOLEAN
 			-- Can 'library' command be executed?
 		do
-			Result := (library_command /= Void and then library_command.count > 0)
+			Result := (attached library_command as l_library_command and then l_library_command.count > 0)
 		ensure
-			library_command_not_void: Result implies library_command /= Void
-			library_command_not_empty: Result implies library_command.count > 0
+			library_command_not_void_and_not_empty: Result implies attached library_command as l_library_command and then l_library_command.count > 0
 		end
 
 feature -- Access
@@ -83,23 +81,23 @@ feature -- Access
 	verbose: BOOLEAN
 			-- Gexace '--verbose' command-line options
 
-	system_command: STRING
+	system_command: detachable STRING
 			-- System command compiler name
 
-	library_command: STRING
+	library_command: detachable STRING
 			-- Library command compiler name
 
 	validate_command: BOOLEAN
 			-- Validate command
 
-	format: STRING
+	format: detachable STRING
 			-- Eiffel config file format
 			-- (e.g. ace, ecf, ...)
 
-	xace_filename: STRING
+	xace_filename: detachable STRING
 			-- xace filename
 
-	output_filename: STRING
+	output_filename: detachable STRING
 			-- Output filename
 
 	defines: DS_HASH_TABLE [STRING, STRING]
@@ -210,29 +208,29 @@ feature -- Execution
 			if is_validate_executable then
 				cmd.append_string (" --validate")
 			else
-				if is_system_executable then
+				if is_system_executable and then attached system_command as l_system_command then
 					cmd.append_string (" --system=%"")
-					cmd := STRING_.appended_string (cmd, system_command)
+					cmd := STRING_.appended_string (cmd, l_system_command)
 					cmd.append_string ("%"")
-				elseif is_library_executable then
+				elseif is_library_executable and then attached library_command as l_library_command then
 					cmd.append_string (" --library=%"")
-					cmd := STRING_.appended_string (cmd, library_command)
+					cmd := STRING_.appended_string (cmd, l_library_command)
 					cmd.append_string ("%"")
 				end
-				if format /= Void and then not format.is_empty then
+				if attached format as l_format and then not l_format.is_empty then
 					cmd.append_string (" --format=%"")
-					cmd := STRING_.appended_string (cmd, format)
+					cmd := STRING_.appended_string (cmd, l_format)
 					cmd.append_string ("%"")
 				end
-				if output_filename /= Void then
+				if attached output_filename as l_output_filename then
 					cmd.append_string (" --output=%"")
-					a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+					a_filename := file_system.pathname_from_file_system (l_output_filename, unix_file_system)
 					cmd := STRING_.appended_string (cmd, a_filename)
 					cmd.append_string ("%"")
 				end
 			end
-			if xace_filename /= Void then
-				a_filename := file_system.pathname_from_file_system (xace_filename, unix_file_system)
+			if attached xace_filename as l_xace_filename then
+				a_filename := file_system.pathname_from_file_system (l_xace_filename, unix_file_system)
 				cmd.append_string (" ")
 				cmd := STRING_.appended_string (cmd, a_filename)
 			end
@@ -243,7 +241,7 @@ feature -- Execution
 invariant
 
 	defines_not_void: defines /= Void
-	no_void_define_name: not defines.has (Void)
-	no_void_define_value: not defines.has_item (Void)
+	no_void_define_name: not defines.has_void
+	no_void_define_value: not defines.has_void_item
 
 end

@@ -5,7 +5,7 @@ note
 		"'system' commands for 'gexace'"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,9 +58,9 @@ feature -- Execution
 				a_system := a_parser.last_system
 				if
 					a_system /= Void and then
-					((a_system.system_name /= Void and then a_system.system_name.count > 0) and
-					(a_system.root_class_name /= Void and then a_system.root_class_name.count > 0) and
-					(a_system.creation_procedure_name /= Void and then a_system.creation_procedure_name.count > 0))
+					((attached a_system.system_name as l_system_name and then l_system_name.count > 0) and
+					(attached a_system.root_class_name as l_root_class_name and then l_root_class_name.count > 0) and
+					(attached a_system.creation_procedure_name as l_creation_procedure_name and then l_creation_procedure_name.count > 0))
 				then
 					execute_generators (a_system)
 				end
@@ -73,12 +73,12 @@ feature -- Execution
 			-- Execute Ace file generators.
 		require
 			a_system_not_void: a_system /= Void
-			system_name_not_void: a_system.system_name /= Void
-			system_name_not_empty: a_system.system_name.count > 0
-			root_class_name_not_void: a_system.root_class_name /= Void
-			root_class_name_not_empty: a_system.root_class_name.count > 0
-			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
-			creation_procedure_name_not_empty: a_system.creation_procedure_name.count > 0
+			system_name_not_void: attached a_system.system_name as l_system_name
+			system_name_not_empty: l_system_name.count > 0
+			root_class_name_not_void: attached a_system.root_class_name as l_root_class_name
+			root_class_name_not_empty: l_root_class_name.count > 0
+			creation_procedure_name_not_void: attached a_system.creation_procedure_name as l_creation_procedure_name
+			creation_procedure_name_not_empty: l_creation_procedure_name.count > 0
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_GENERATOR]
 			a_generator: ET_XACE_GENERATOR
@@ -88,8 +88,8 @@ feature -- Execution
 			a_cursor := generators.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_generator := a_cursor.item
-				if output_filename /= Void then
-					a_filename := output_filename
+				if attached output_filename as l_output_filename then
+					a_filename := l_output_filename
 				else
 					a_filename := a_generator.default_system_output_filename
 				end

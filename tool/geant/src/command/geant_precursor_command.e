@@ -5,7 +5,7 @@ note
 		"Precursor commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2005, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,18 +40,19 @@ feature -- Status report
 	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
-			check current_target_not_void: project.current_target /= Void end
-			Result := project.current_target.precursor_target /= Void
-			if not Result then
-				project.log (<<"  [precursor] error: precursor does not exist.">>)
+			if attached project.current_target as l_current_target then
+				Result := l_current_target.precursor_target /= Void
+				if not Result then
+					project.log (<<"  [precursor] error: precursor does not exist.">>)
+				end
 			end
 		ensure then
-			precursor_not_void: Result implies project.current_target.precursor_target /= Void
+			precursor_not_void: Result implies attached project.current_target as l_current_target and then l_current_target.precursor_target /= Void
 		end
 
 feature -- Access
 
-	parent: STRING
+	parent: detachable STRING
 			-- Parent on which precursor command should be applied
 
 	arguments: GEANT_ARGUMENT_VARIABLES
@@ -74,11 +75,15 @@ feature -- Execution
 	execute
 			-- Execute command.
 		local
-			a_precursor_target: GEANT_TARGET
+			a_precursor_target: detachable GEANT_TARGET
 		do
-			a_precursor_target := project.current_target.precursor_target
-			arguments := a_precursor_target.prepared_arguments_from_formal_arguments (arguments)
-			a_precursor_target.project.execute_target (a_precursor_target, arguments, True, False)
+			check is_executable: attached project.current_target as l_current_target then
+				a_precursor_target := l_current_target.precursor_target
+				if a_precursor_target /= Void then
+					arguments := a_precursor_target.prepared_arguments_from_formal_arguments (arguments)
+					a_precursor_target.project.execute_target (a_precursor_target, arguments, True, False)
+				end
+			end
 		end
 
 end

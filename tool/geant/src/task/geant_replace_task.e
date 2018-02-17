@@ -5,7 +5,7 @@ note
 		"Replace tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2006, Sven Ehrke and others"
+	copyright: "Copyright (c) 2006-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,8 +66,8 @@ feature {NONE} -- Initialization
 					command.set_token (a_value)
 				end
 			end
-			if has_attribute (Variable_pattern_attribute_name) then
-				a_value := xml_element.attribute_by_name (Variable_pattern_attribute_name).value
+			if attached xml_element.attribute_by_name (Variable_pattern_attribute_name) as l_variable_pattern_attribute then
+				a_value := l_variable_pattern_attribute.value
 				if a_value.count > 0 then
 					command.set_variable_pattern (a_value)
 				end

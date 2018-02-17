@@ -5,7 +5,7 @@ note
 		"Setenv commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,19 +28,18 @@ feature -- Status report
 	is_executable : BOOLEAN
 			-- Can command be executed?
 		do
-			Result := (name /= Void and then name.count > 0) and value /= Void
+			Result := (attached name as l_name and then l_name.count > 0) and value /= Void
 		ensure then
-			name_not_void: Result implies name /= Void
-			name_not_empty: Result implies name.count > 0
+			name_not_void_and_not_empty: Result implies attached name as l_name and then l_name.count > 0
 			value_not_void: Result implies value /= Void
 		end
 
 feature -- Access
 
-	name: STRING
+	name: detachable STRING
 			-- Name of environment variable
 
-	value: STRING
+	value: detachable STRING
 			-- Value of environment variable
 
 feature -- Setting
@@ -71,11 +70,13 @@ feature -- Execution
 	execute
 			-- Put variable in project variables pool.
 		do
-			project.trace (<<"  [setenv] ", name, "=", value>>)
-			if not project.options.no_exec then
-				Execution_environment.set_variable_value (name, value)
+			check is_executable: attached name as l_name and attached value as l_value then
+				project.trace (<<"  [setenv] ", l_name, "=", l_value>>)
+				if not project.options.no_exec then
+					Execution_environment.set_variable_value (l_name, l_value)
+				end
+				exit_code := 0
 			end
-			exit_code := 0
 		end
 
 end

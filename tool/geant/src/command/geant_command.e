@@ -5,7 +5,7 @@ note
 		"Geant commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,7 +59,7 @@ feature -- Access
 	project: GEANT_PROJECT
 			-- Project to which this command belongs to
 
-	log_validation_messages_agent_cell: DS_CELL [PROCEDURE]
+	log_validation_messages_agent_cell: DS_CELL [detachable PROCEDURE]
 			-- Agent cell to log validation messages
 
 feature -- Setting

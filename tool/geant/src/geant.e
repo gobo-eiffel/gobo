@@ -5,7 +5,7 @@ note
 		"Gobo Eiffel Ant: build tool for Eiffel, based on the concepts of Jakarta Ant"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 		do
 			Arguments.set_program_name ("geant")
 			create error_handler.make_standard
+			build_filename := Default_build_filename
 			read_command_line
 
 				-- Verbose:
@@ -57,9 +58,6 @@ feature {NONE} -- Initialization
 			a_project_options.set_debug_mode (debug_mode)
 			a_project_options.set_no_exec (no_exec)
 
-			if build_filename = Void then
-				build_filename := Default_build_filename
-			end
 				-- Store absolute pathname of buildfile in project variable:
 			s1 := file_system.pathname_from_file_system (build_filename, unix_file_system)
 			s := file_system.dirname (file_system.absolute_pathname (s1))
@@ -70,33 +68,38 @@ feature {NONE} -- Initialization
 				-- Store basename of buildfile in project variable:
 			s := file_system.basename (s1)
 			a_variables.set_variable_value ("current.filename", s)
-					
+
 			create a_project_loader.make (build_filename)
 
 			a_project_loader.load (a_variables, a_project_options)
-			a_project := a_project_loader.project_element.project
-			a_project.merge_in_parent_projects
-			if start_target_name /= Void and then start_target_name.count > 0 then
-				if not a_project.targets.has (start_target_name) then
-					exit_application (1, <<"Project '", a_project.name,
-						"' does not contain a target named `", start_target_name + "%'">>)
+			if attached a_project_loader.project_element as l_project_element then
+				a_project := l_project_element.project
+				a_project.merge_in_parent_projects
+				if attached start_target_name as l_start_target_name and then l_start_target_name.count > 0 then
+					if not attached a_project.targets as l_project_targets or else not l_project_targets.has (l_start_target_name) then
+						exit_application (1, <<"Project '", a_project.name,
+							"' does not contain a target named `", l_start_target_name + "%'">>)
+					else
+						a_target := l_project_targets.item (l_start_target_name)
+							-- Check export status of `a_target':
+						if not a_target.is_exported_to_any then
+							exit_application (1, <<"target: `", a_target.full_name, "%' is not exported.">>)
+						end
+						a_project.set_start_target_name (l_start_target_name)
+					end
 				end
-				a_target := a_project.targets.item (start_target_name)
-					-- Check export status of `a_target':
-				if not a_target.is_exported_to_any then
-					exit_application (1, <<"target: `", a_target.full_name, "%' is not exported.">>)
-				end
-				a_project.set_start_target_name (start_target_name)
-			end
 
-			if show_target_info then
-				a_project.show_target_info
+				if show_target_info then
+					a_project.show_target_info
+				else
+					a_target := a_project.start_target
+					a_project.build (commandline_arguments)
+				end
+
+				if not a_project.build_successful then
+					exit_application (1, Void)
+				end
 			else
-				a_target := a_project.start_target
-				a_project.build (commandline_arguments)
-			end
-
-			if not a_project.build_successful then
 				exit_application (1, Void)
 			end
 		end
@@ -109,7 +112,7 @@ feature -- Access
 	build_filename: STRING
 			-- Build filename for geant.
 
-	start_target_name: STRING
+	start_target_name: detachable STRING
 			-- Name of the target the build process starts with
 
 	verbose: BOOLEAN
@@ -139,9 +142,8 @@ feature {NONE} -- Command line parsing
 			targets_flag: AP_FLAG
 			argument_option: AP_STRING_OPTION
 			arg_parser: AP_PARSER
-			l_cursor: DS_LIST_CURSOR [STRING]
+			l_cursor: DS_LIST_CURSOR [detachable STRING]
 			p: INTEGER
-			arg: STRING
 			a_variable_name: STRING
 			a_variable_value: STRING
 			error: AP_ERROR
@@ -194,38 +196,40 @@ feature {NONE} -- Command line parsing
 			set_verbose (verbose_flag.was_found)
 			set_no_exec (noexec_flag.was_found)
 			set_debug_mode (debug_flag.was_found)
-			if buildfilename_option.was_found then
-				build_filename := buildfilename_option.parameter
+			if buildfilename_option.was_found and then attached buildfilename_option.parameter as l_build_filename then
+				build_filename := l_build_filename
 			end
 			set_show_target_info (targets_flag.was_found)
 			l_cursor := argument_option.parameters.new_cursor
 			from l_cursor.start until l_cursor.after loop
-				arg := l_cursor.item
-				p := arg.index_of ('=', 1)
-				if p > 0 then
-						-- Define commandline argument with value.
-					a_variable_name := arg.substring (1, p - 1)
-					a_variable_value := arg.substring (p + 1, arg.count)
-					commandline_arguments.force (a_variable_value, a_variable_name)
-				else
-					create error.make_invalid_parameter_error (argument_option, arg)
-					arg_parser.error_handler.report_error (error)
-					arg_parser.final_error_action
+				if attached l_cursor.item as arg then
+					p := arg.index_of ('=', 1)
+					if p > 0 then
+							-- Define commandline argument with value.
+						a_variable_name := arg.substring (1, p - 1)
+						a_variable_value := arg.substring (p + 1, arg.count)
+						commandline_arguments.force (a_variable_value, a_variable_name)
+					else
+						create error.make_invalid_parameter_error (argument_option, arg)
+						arg_parser.error_handler.report_error (error)
+						arg_parser.final_error_action
+					end
 				end
 				l_cursor.forth
 			end
 			l_cursor := define_option.parameters.new_cursor
 			from l_cursor.start until l_cursor.after loop
-				arg := l_cursor.item
-				p := arg.index_of ('=', 1)
-				if p > 0 then
-						-- Define commandline variable with value.
-					a_variable_name := arg.substring (1, p - 1)
-					a_variable_value := arg.substring (p + 1, arg.count)
-					Commandline_variables.force (a_variable_value, a_variable_name)
-				else
-						-- Define commandline variable.
-					Commandline_variables.force ("true", arg)
+				if attached l_cursor.item as arg then
+					p := arg.index_of ('=', 1)
+					if p > 0 then
+							-- Define commandline variable with value.
+						a_variable_name := arg.substring (1, p - 1)
+						a_variable_value := arg.substring (p + 1, arg.count)
+						Commandline_variables.force (a_variable_value, a_variable_name)
+					else
+							-- Define commandline variable.
+						Commandline_variables.force ("true", arg)
+					end
 				end
 				l_cursor.forth
 			end

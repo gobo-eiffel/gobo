@@ -5,7 +5,7 @@ note
 		"Geant project laoders"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,7 +69,7 @@ feature -- Access
 			-- Name of the file containing the configuration
 			-- information to build a project
 
-	project_element: GEANT_PROJECT_ELEMENT
+	project_element: detachable GEANT_PROJECT_ELEMENT
 			-- Project element of build script
 
 feature -- Processing

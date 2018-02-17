@@ -5,7 +5,7 @@ note
 		"Lcc C-compiler commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,21 +25,19 @@ feature -- Status report
 	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
-			Result := (executable /= Void and then executable.count > 0) and
-				(source_filename /= Void and then source_filename.count > 0)
+			Result := (attached executable as l_executable and then l_executable.count > 0) and
+				(attached source_filename as l_source_filename and then l_source_filename.count > 0)
 		ensure then
-			executable_not_void: Result implies executable /= Void
-			executable_not_empty: Result implies executable.count > 0
-			source_filename_not_void: Result implies source_filename /= Void
-			source_filename_not_empty: Result implies source_filename.count > 0
+			executable_not_void_and_not_empty: Result implies attached executable as l_executable and then l_executable.count > 0
+			source_filename_not_void_and_not_empty: Result implies attached source_filename as l_source_filename and then l_source_filename.count > 0
 		end
 
 feature -- Access
 
-	executable: STRING
+	executable: detachable STRING
 			-- Option -Fo
 
-	source_filename: STRING
+	source_filename: detachable STRING
 			-- C source filename
 
 feature -- Setting
@@ -74,16 +72,18 @@ feature -- Execution
 			cmd: STRING
 			a_filename: STRING
 		do
-			create cmd.make (128)
-			cmd.append_string ("lcc")
-			cmd.append_string (" -Fo")
-			a_filename := file_system.pathname_from_file_system (executable, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
-			cmd.append_string (" ")
-			a_filename := file_system.pathname_from_file_system (source_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
-			project.trace (<<"  [lcc] ", cmd>>)
-			execute_shell (cmd)
+			check is_executable: attached executable as l_executable and attached source_filename as l_source_filename then
+				create cmd.make (128)
+				cmd.append_string ("lcc")
+				cmd.append_string (" -Fo")
+				a_filename := file_system.pathname_from_file_system (l_executable, unix_file_system)
+				cmd := STRING_.appended_string (cmd, a_filename)
+				cmd.append_string (" ")
+				a_filename := file_system.pathname_from_file_system (l_source_filename, unix_file_system)
+				cmd := STRING_.appended_string (cmd, a_filename)
+				project.trace (<<"  [lcc] ", cmd>>)
+				execute_shell (cmd)
+			end
 		end
 
 end

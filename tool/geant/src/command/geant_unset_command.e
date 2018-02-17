@@ -5,7 +5,7 @@ note
 		"Unset commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,15 +25,14 @@ feature -- Status report
 	is_executable : BOOLEAN
 			-- Can command be executed?
 		do
-			Result := name /= Void and then name.count > 0
+			Result := attached name as l_name and then l_name.count > 0
 		ensure then
-			name_not_void: Result implies name /= Void
-			name_not_empty: Result implies name.count > 0
+			name_not_void_and_not_empty: Result implies attached name as l_name and then l_name.count > 0
 		end
 
 feature -- Access
 
-	name: STRING
+	name: detachable STRING
 			-- Name of variable
 
 feature -- Setting
@@ -54,20 +53,22 @@ feature -- Execution
 	execute
 			-- Remove variable from project variables pool.
 		do
-			if project.current_target.formal_arguments.has (name) then
-				project.trace (<<"  [unset] name=", name >>)
-				project.log (<<"  [unset] warning: you can not unset arguments variable (name='", name, "')" >>)
-			else
-				if project.options.verbose then
-					if project.is_local_variable (name) then
-						project.trace (<<"  [unset local] name=", name >>)
-					else
-						project.trace (<<"  [unset global] name=", name >>)
+			check is_executable: attached name as l_name then
+				if attached project.current_target as l_current_target and then l_current_target.formal_arguments.has (l_name) then
+					project.trace (<<"  [unset] name=", l_name >>)
+					project.log (<<"  [unset] warning: you can not unset arguments variable (name='", l_name, "')" >>)
+				else
+					if project.options.verbose then
+						if project.is_local_variable (l_name) then
+							project.trace (<<"  [unset local] name=", l_name >>)
+						else
+							project.trace (<<"  [unset global] name=", l_name >>)
+						end
 					end
-				end
 
-				project.unset_variable (name)
-				exit_code := 0
+					project.unset_variable (l_name)
+					exit_code := 0
+				end
 			end
 		end
 

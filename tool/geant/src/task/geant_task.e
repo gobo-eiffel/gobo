@@ -5,12 +5,12 @@ note
 		"Geant Tasks using a XML definitions"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class GEANT_TASK
+deferred class GEANT_TASK
 
 inherit
 
@@ -112,8 +112,8 @@ feature -- Execution
 		do
 			a_old_task_cwd := file_system.current_working_directory
 				-- Change to task directory if "dir" attribute is provided:
-			if xml_element.has_attribute_by_name (Dir_attribute_name) then
-				a_new_task_cwd := xml_element.attribute_by_name (Dir_attribute_name).value
+			if attached xml_element.attribute_by_name (Dir_attribute_name) as l_dir_attribute then
+				a_new_task_cwd := l_dir_attribute.value
 				create a_string_interpreter.make
 				a_string_interpreter.set_variable_resolver (Project_variables_resolver)
 				a_new_task_cwd := a_string_interpreter.interpreted_string (a_new_task_cwd)
@@ -138,8 +138,8 @@ feature -- Errorhandling
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
-			if position /= Void then
-				project.log (<<"ERROR AT: ", position.source_name, " (", position.row.out, ":", position.column.out, ")">>)
+			if attached position as l_position then
+				project.log (<<"ERROR AT: ", l_position.source_name, " (", l_position.row.out, ":", l_position.column.out, ")">>)
 			else
 				project.log (<<"ERROR:%N">>)
 			end

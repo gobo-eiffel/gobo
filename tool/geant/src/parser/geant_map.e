@@ -5,7 +5,7 @@ note
 		"Map"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,20 +76,20 @@ feature -- Status report
 					end
 				end
 				if STRING_.same_string (type, Type_attribute_value_glob) then
-					Result := source_pattern /= Void and then source_pattern.index_of ('*', 1) > 0
+					Result := attached source_pattern as l_source_pattern and then l_source_pattern.index_of ('*', 1) > 0
 					if not Result then
 						project.log (<<"  [map] error: in mode 'glob' attribute 'from' must be set and contain a '*' character">>)
 					end
 					if Result then
-						Result := target_pattern /= Void and then target_pattern.index_of ('*', 1) > 0
+						Result := attached target_pattern as l_target_pattern and then l_target_pattern.index_of ('*', 1) > 0
 						if not Result then
 							project.log (<<"  [map] error: in mode 'glob' attribute 'to' must be set and contain a '*' character">>)
 						end
 					end
 				end
 			end
-			if Result and then map /= Void then
-				Result := map.is_executable
+			if Result and then attached map as l_map then
+				Result := l_map.is_executable
 				if not Result then
 					project.log (<<"  [map] error: nested element 'map' is not defined correctly">>)
 				end
@@ -103,10 +103,10 @@ feature -- Status report
 				STRING_.same_string (type, Type_attribute_value_regexp) or else
 				STRING_.same_string (type, Type_attribute_value_glob))
 			good_glob_source: Result implies (STRING_.same_string (type, Type_attribute_value_glob) implies
-				(source_pattern /= Void and then source_pattern.index_of ('*', 1) > 0))
+				(attached source_pattern as l_source_pattern and then l_source_pattern.index_of ('*', 1) > 0))
 			good_glob_target: Result implies (STRING_.same_string (type, Type_attribute_value_glob) implies
-				(target_pattern /= Void and then target_pattern.index_of ('*', 1) > 0))
-			nested_map_executable: Result implies (map /= Void implies map.is_executable)
+				(attached target_pattern as l_target_pattern and then l_target_pattern.index_of ('*', 1) > 0))
+			nested_map_executable: Result implies (attached map as l_map implies l_map.is_executable)
 		end
 
 feature -- Access
@@ -114,13 +114,13 @@ feature -- Access
 	type: STRING
 			-- Mapping type
 
-	source_pattern: STRING
+	source_pattern: detachable STRING
 			-- Source pattern for mapping
 
-	target_pattern: STRING
+	target_pattern: detachable STRING
 			-- Target pattern for mapping
 
-	map: GEANT_MAP
+	map: detachable GEANT_MAP
 			-- Nested Map
 
 	mapped_filename (a_filename: STRING): STRING
@@ -134,27 +134,25 @@ feature -- Access
 			is_executable: is_executable
 		local
 			s: STRING
-			a_map_filename: STRING
+			a_map_filename: detachable STRING
 			source_prefix: STRING
 			source_postfix: STRING
 			filename_prefix: STRING
 			filename_postfix: STRING
 			target_prefix: STRING
 			target_postfix: STRING
-			a_exit_code: INTEGER
 			regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
-			if map /= Void then
-				if map.is_executable then
-					a_map_filename := map.mapped_filename (a_filename)
+			if attached map as l_map then
+				if l_map.is_executable then
+					a_map_filename := l_map.mapped_filename (a_filename)
 				else
 					project.log (<<"  [map] error: map definition wrong">>)
-					a_exit_code := 1
 				end
 			else
 				a_map_filename := a_filename
 			end
-			if a_exit_code = 0 then
+			if a_map_filename /= Void then
 				if STRING_.same_string (type, Type_attribute_value_identity) then
 						-- handle identity mapping:
 					Result := a_map_filename
@@ -163,29 +161,39 @@ feature -- Access
 					Result := unix_file_system.basename (a_map_filename)
 				elseif STRING_.same_string (type, Type_attribute_value_merge) then
 						-- handle merge mapping:
-					Result := target_pattern
+					if attached target_pattern as l_target_pattern then
+						Result := l_target_pattern
+					else
+						Result := ""
+					end
 				elseif STRING_.same_string (type, Type_attribute_value_regexp) then
 						-- handle regexp mapping:
-					create regexp.make
-					regexp.compile (source_pattern)
-					if regexp.is_compiled then
-						regexp.match (a_map_filename)
-						if regexp.has_matched then
-							Result := regexp.replace_all (target_pattern)
+					if attached source_pattern as l_source_pattern and attached target_pattern as l_target_pattern then
+						create regexp.make
+						regexp.compile (l_source_pattern)
+						if regexp.is_compiled then
+							regexp.match (a_map_filename)
+							if regexp.has_matched then
+								Result := regexp.replace_all (l_target_pattern)
+							else
+								project.trace_debug (<<"  [*map] no match for '", a_map_filename, "%'">>)
+								Result := a_map_filename
+							end
 						else
-							project.trace_debug (<<"  [*map] no match for '", a_map_filename, "%'">>)
 							Result := a_map_filename
+							project.log (<<"regexp ", l_source_pattern," could not be compiled">>)
 						end
 					else
-						project.log (<<"regexp ", source_pattern," could not be compiled">>)
+						Result := a_map_filename
+						project.trace_debug (<<"  [*map] no match for '", a_map_filename, "%'">>)
 					end
-				else
+				elseif attached source_pattern as l_source_pattern and attached target_pattern as l_target_pattern then
 						-- handle glob mapping:
 					check type_is_glob: STRING_.same_string (type, Type_attribute_value_glob) end
-					source_prefix := glob_prefix (source_pattern)
-					source_postfix := glob_postfix (source_pattern)
-					target_prefix := glob_prefix (target_pattern)
-					target_postfix := glob_postfix (target_pattern)
+					source_prefix := glob_prefix (l_source_pattern)
+					source_postfix := glob_postfix (l_source_pattern)
+					target_prefix := glob_prefix (l_target_pattern)
+					target_postfix := glob_postfix (l_target_pattern)
 					filename_prefix := STRING_.cloned_string (a_map_filename)
 					filename_prefix.keep_head (source_prefix.count)
 					filename_postfix := STRING_.cloned_string (a_map_filename)
@@ -204,8 +212,12 @@ feature -- Access
 						project.trace_debug (<<"  [*map] no match for '", a_map_filename, "%'">>)
 						Result := a_map_filename
 					end
+				else
+					Result := ""
 				end
 				project.trace_debug (<<"  [*map] mapping '", a_map_filename, "' to '", Result, "%'">>)
+			else
+				Result := ""
 			end
 		ensure
 			mapped_filename_not_void: Result /= Void

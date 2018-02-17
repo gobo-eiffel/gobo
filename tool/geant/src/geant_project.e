@@ -5,7 +5,7 @@ note
 		"Contents of geant project files"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2011, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,10 +66,10 @@ feature -- Access
 	name: STRING
 			-- Name of project
 
-	start_target_name: STRING
+	start_target_name: detachable STRING
 			-- Name of first target to be built
 
-	description: STRING
+	description: detachable STRING
 			-- Project description
 
 	variables: GEANT_PROJECT_VARIABLES
@@ -79,10 +79,7 @@ feature -- Access
 			-- Array of available variables sets
 			-- i.e: arguments, locals, variables
 		do
-			create Result.make_filled (Void, 1, 3)
-			Result[1] := target_arguments_stack.item
-			Result[2] := target_locals_stack.item
-			Result[3] := variables
+			Result := <<target_arguments_stack.item, target_locals_stack.item, variables>>
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -90,28 +87,32 @@ feature -- Access
 	options: GEANT_PROJECT_OPTIONS
 			-- Project options
 
-	targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
+	targets: detachable DS_HASH_TABLE [GEANT_TARGET, STRING]
 			-- Immediate targets
 
 	selected_targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
 			-- Targets selected in heir
 
-	preferred_start_target: GEANT_TARGET
+	preferred_start_target: detachable GEANT_TARGET
 			-- Preferred target to start build process
 		do
-			if start_target_name /= Void and then start_target_name.count > 0 then
-				if targets.has (start_target_name) then
-					Result := targets.item (start_target_name)
+			if attached start_target_name as l_start_target_name and then l_start_target_name.count > 0 then
+				if attached targets as l_targets then
+					if l_targets.has (l_start_target_name) then
+						Result := l_targets.item (l_start_target_name)
+					end
 				end
 			end
 		end
 
-	default_target: GEANT_TARGET
+	default_target: detachable GEANT_TARGET
 			-- Target to start build process in case `preferred_start_target' is Void
 		do
-			if default_target_name /= Void and then default_target_name.count > 0 then
-				if targets.has (default_target_name) then
-					Result := targets.item (default_target_name)
+			if attached default_target_name as l_default_target_name and then l_default_target_name.count > 0 then
+				if attached targets as l_targets then
+					if l_targets.has (l_default_target_name) then
+						Result := l_targets.item (l_default_target_name)
+					end
 				end
 			end
 		end
@@ -120,15 +121,16 @@ feature -- Access
 			-- `preferred_start_target' if not Void; `default_target' otherwise
 		do
 			Result := default_target
-			if start_target_name /= Void and then start_target_name.count > 0 then
-				if preferred_start_target = Void then
-					exit_application (1, <<"Cannot determine start target `", start_target_name + "%'">>)
+			if attached start_target_name as l_start_target_name and then l_start_target_name.count > 0 then
+				if not attached preferred_start_target as l_preferred_start_target then
+					exit_application (1, <<"Cannot determine start target `", l_start_target_name + "%'">>)
 				else
-					Result := preferred_start_target
+					Result := l_preferred_start_target
 				end
 			end
 			if Result = Void then
 				exit_application (1, <<"Cannot determine start target.">>)
+				check exited: False then end
 			end
 		ensure
 			start_target_not_void: Result /= Void
@@ -137,7 +139,7 @@ feature -- Access
 	build_successful: BOOLEAN
 			-- Was last build successful?
 
-	inherit_clause: GEANT_INHERIT
+	inherit_clause: detachable GEANT_INHERIT
 			-- Inherit clause
 
 	old_inherit: BOOLEAN
@@ -148,18 +150,21 @@ feature -- Access
 			-- Name of target `a_target' within context of current project
 		require
 			a_target_not_void: a_target /= Void
-			targets_not_void: targets /= Void
-			has_target: targets.has_item (a_target)
+			targets_not_void: attached targets as l_targets
+			has_target: l_targets.has_item (a_target)
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
 		do
-			a_cursor := targets.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				if a_target = a_cursor.item then
-					Result := a_cursor.key
-					a_cursor.go_after -- Jump out of the loop.
-				else
-					a_cursor.forth
+			check precondition: attached targets as l_targets then
+				Result := ""
+				a_cursor := l_targets.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					if a_target = a_cursor.item then
+						Result := a_cursor.key
+						a_cursor.go_after -- Jump out of the loop.
+					else
+						a_cursor.forth
+					end
 				end
 			end
 		ensure
@@ -167,10 +172,10 @@ feature -- Access
 			target_name_not_empty: Result.count > 0
 		end
 
-	default_target_name: STRING
+	default_target_name: detachable STRING
 			-- Name of default target if set
 
-	position_table: XM_POSITION_TABLE
+	position_table: detachable XM_POSITION_TABLE
 			-- Position table for XM_NODES
 
 feature -- Status report
@@ -182,8 +187,8 @@ feature -- Status report
 			a_parent_project: GEANT_PROJECT
 			a_parents: DS_ARRAYED_LIST [GEANT_PARENT]
 		do
-			if inherit_clause /= Void then
-				a_parents := inherit_clause.parents
+			if attached inherit_clause as l_inherit_clause then
+				a_parents := l_inherit_clause.parents
 				nb := a_parents.count
 				from i := 1 until i > nb loop
 					a_parent_project := a_parents.item (i).parent_project
@@ -243,7 +248,7 @@ feature -- Setting
 		require
 			a_start_target_name_not_void: a_start_target_name /= Void
 			a_start_target_name_not_empty: a_start_target_name.count > 0
-			targets_has_a_start_target_name: targets.has (a_start_target_name)
+			targets_has_a_start_target_name: attached targets as l_targets and then l_targets.has (a_start_target_name)
 		do
 			start_target_name := a_start_target_name
 		ensure
@@ -322,15 +327,15 @@ feature -- Setting
 
 feature {GEANT_GROUP, GEANT_TARGET} -- Task factory
 
-	new_task (a_xml_element: XM_ELEMENT): GEANT_TASK
+	new_task (a_xml_element: XM_ELEMENT): detachable GEANT_TASK
 			-- New GEANT_TASK for `a_xml_element'
-		require
-			task_factory_not_void: task_factory /= Void
 		do
-			Result := task_factory.new_task (a_xml_element)
+			if attached task_factory as l_task_factory then
+				Result := l_task_factory.new_task (a_xml_element)
+			end
 		end
 
-	task_factory: GEANT_TASK_FACTORY
+	task_factory: detachable GEANT_TASK_FACTORY
 			-- Task factory associated to Current
 
 feature -- Processing
@@ -344,9 +349,9 @@ feature -- Processing
 			a_target_cursor: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
 		do
 				-- Handle inherit_clause:
-			if inherit_clause /= Void then
+			if attached inherit_clause as l_inherit_clause then
 					-- Prepare parent projects:
-				a_parent_cursor := inherit_clause.parents.new_cursor
+				a_parent_cursor := l_inherit_clause.parents.new_cursor
 				from a_parent_cursor.start until a_parent_cursor.after loop
 					a_parent := a_parent_cursor.item
 					check parents_parent_project_not_void: a_parent.parent_project /= Void end
@@ -354,25 +359,27 @@ feature -- Processing
 					a_parent_cursor.forth
 				end
 					-- Merge parent projects:
-				a_parent_cursor := inherit_clause.parents.new_cursor
+				a_parent_cursor := l_inherit_clause.parents.new_cursor
 				from a_parent_cursor.start until a_parent_cursor.after loop
 					a_parent := a_parent_cursor.item
-					inherit_clause.merge_in_parent_project (a_parent)
+					l_inherit_clause.merge_in_parent_project (a_parent)
 					a_parent_cursor.forth
 				end
-				inherit_clause.apply_selects
+				l_inherit_clause.apply_selects
 					-- List all targets:
-				from
-					a_target_cursor := targets.new_cursor
-					a_target_cursor.start
-					trace_debug (<<"Project '", name, "': target list:">>)
-				until
-					a_target_cursor.after
-				loop
-					a_target := a_target_cursor.item
-					trace_debug (<<"  target `", a_target_cursor.key, "' (", a_target.full_name, ")">>)
-					a_target.show_precursors
-					a_target_cursor.forth
+				if attached targets as l_targets then
+					from
+						a_target_cursor := l_targets.new_cursor
+						a_target_cursor.start
+						trace_debug (<<"Project '", name, "': target list:">>)
+					until
+						a_target_cursor.after
+					loop
+						a_target := a_target_cursor.item
+						trace_debug (<<"  target `", a_target_cursor.key, "' (", a_target.full_name, ")">>)
+						a_target.show_precursors
+						a_target_cursor.forth
+					end
 				end
 			end
 		end
@@ -422,17 +429,19 @@ feature -- Processing
 			a_cursor: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
 			a_target: GEANT_TARGET
 		do
-			a_cursor := targets.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_target := a_cursor.item
-				if a_target.is_exported_to_any then
-					output_file.put_line (a_target.full_name)
-					if a_target.obsolete_message /= Void then
-						output_file.put_line ("  obsolete. " + a_target.obsolete_message)
+			check precondition: attached targets as l_targets then
+				a_cursor := l_targets.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_target := a_cursor.item
+					if a_target.is_exported_to_any then
+						output_file.put_line (a_target.full_name)
+						if attached a_target.obsolete_message as l_obsolete_message then
+							output_file.put_line ("  obsolete. " + l_obsolete_message)
+						end
+						output_file.put_line ("  " + a_target.description)
 					end
-					output_file.put_line ("  " + a_target.description)
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 		end
 
@@ -623,9 +632,11 @@ feature {GEANT_COMMAND} -- Change variable
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 		do
-			if current_target.formal_locals.has (a_name) then
+			if not attached current_target as l_current_target then
+				Result := options.variable_local_by_default
+			elseif l_current_target.formal_locals.has (a_name) then
 				Result := True
-			elseif current_target.formal_globals.has (a_name) then
+			elseif l_current_target.formal_globals.has (a_name) then
 				Result := False
 			else
 				Result := options.variable_local_by_default
@@ -637,7 +648,7 @@ feature {GEANT_COMMAND} -- Access GEANT_COMMAND
 	targets_stack: DS_STACK [GEANT_TARGET]
 			-- Stack of targets
 
-	current_target: GEANT_TARGET
+	current_target: detachable GEANT_TARGET
 			-- Currently executing target;
 			-- Set during processing `execute_target'
 		do
@@ -650,7 +661,7 @@ invariant
 
 	name_not_void: name /= Void
 	name_not_empty: not name.is_empty
-	no_void_target: targets /= Void implies not targets.has (Void)
+	no_void_target: attached targets as l_targets implies not l_targets.has_void
 	output_file_not_void: output_file /= Void
 	output_file_open_write: output_file.is_open_write
 	variables_not_void: variables /= Void

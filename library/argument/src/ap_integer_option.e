@@ -5,7 +5,7 @@ note
 		"Options that need an integer argument"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,7 +55,7 @@ feature -- Status setting
 			default_parameter_set: default_parameter = 0
 		end
 
-feature {AP_PARSER} -- Parser Interface
+feature {AP_BASIC_PARSER} -- Parser Interface
 
 	reset
 			-- Reset the option to a clean state before parsing.
@@ -63,7 +63,7 @@ feature {AP_PARSER} -- Parser Interface
 			create {DS_LINKED_LIST [INTEGER]} parameters.make
 		end
 
-	record_occurrence (a_parser: AP_PARSER)
+	record_occurrence (a_parser: AP_BASIC_PARSER)
 			-- Record the occurrence of the option with `a_parameter'.
 		local
 			error: AP_ERROR

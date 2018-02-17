@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Lex command lines"
 
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -148,8 +148,8 @@ feature -- Parsing
 				report_version_number
 			end
 
-			if a_pragma_option.was_found then
-				options.set_line_pragma (STRING_.same_string (a_pragma_option.parameter, "line"))
+			if a_pragma_option.was_found and then attached a_pragma_option.parameter as l_pragma_option_parameter then
+				options.set_line_pragma (STRING_.same_string (l_pragma_option_parameter, "line"))
 			end
 
 			if an_output_option.was_found then
@@ -219,9 +219,9 @@ feature -- Parsing
 			if a_parser.parameters.count /= 1 then
 				error_handler.report_info_message (a_parser.help_option.full_usage_instruction (a_parser))
 				Exceptions.die (1)
+			else
+				options.set_input_filename (a_parser.parameters.first)
 			end
-
-			options.set_input_filename (a_parser.parameters.first)
 		end
 
 feature{NONE} -- Reporting

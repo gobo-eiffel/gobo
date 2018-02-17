@@ -5,7 +5,7 @@ note
 		"Fileset"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,16 +53,16 @@ feature -- Access
 	project: GEANT_PROJECT
 			-- Project to which Current belongs to
 
-	dir_name: STRING
+	dir_name: detachable STRING
 			-- Current working directory for execution
 
-	directory_name: STRING
+	directory_name: detachable STRING
 			-- Name of directory serving as root for recursive scanning
 
-	include_wc_string: STRING
+	include_wc_string: detachable STRING
 			-- Wildcard against which filenames are matched for inclusion
 
-	exclude_wc_string: STRING
+	exclude_wc_string: detachable STRING
 			-- Wildcard against which filenames are matched for exclusion
 
 	convert_to_filesystem: BOOLEAN
@@ -70,7 +70,7 @@ feature -- Access
 			-- of the current filesystem?
 			-- Note: Result = false implies that both features' Result is in unix format
 
-	map: GEANT_MAP
+	map: detachable GEANT_MAP
 			-- Map for filenames
 
 	has_map: BOOLEAN
@@ -93,10 +93,10 @@ feature -- Access
 	concat: BOOLEAN
 			-- Should `directory_name' be prepended to matched filenames?
 
-	filename_directory_name: STRING
+	filename_directory_name: detachable STRING
 			-- Name of directory prepended to matched filenames
 
-	mapped_filename_directory_name: STRING
+	mapped_filename_directory_name: detachable STRING
 			-- Name of directory prepended to mapped filenames
 
 	filename_variable_name: STRING
@@ -145,36 +145,35 @@ feature -- Status report
 			Result := is_in_gobo_31_format or else is_in_gobo_32_format
 			if Result then
 				if is_in_gobo_31_format then
-					Result := (directory_name /= Void and then directory_name.count > 0)
+					Result := (attached directory_name as l_directory_name and then l_directory_name.count > 0)
 					if not Result then
 						project.log (<<"  [fileset] error: attribute 'directory' is mandatory">>)
 					end
 				end
 			end
 			if Result then
-				Result := include_wildcard = Void or else include_wildcard.is_compiled
+				Result := not attached include_wildcard as l_include_wildcard or else l_include_wildcard.is_compiled
 				if not Result then
 					project.log (<<"  [fileset] error: attribute 'include' is not valid">>)
 				end
 			end
 			if Result then
-				Result := exclude_wildcard = Void or else exclude_wildcard.is_compiled
+				Result := not attached exclude_wildcard as l_exclude_wildcard or else l_exclude_wildcard.is_compiled
 				if not Result then
 					project.log (<<"  [fileset] error: attribute 'exclude' is not valid">>)
 				end
 			end
 			if Result then
-				Result := map = Void or else map.is_executable
+				Result := not attached map as l_map or else l_map.is_executable
 				if not Result then
 					project.log (<<"  [fileset] error: element 'map' is not defined correctly">>)
 				end
 			end
 		ensure
-			directory_name_not_void: (Result and is_in_gobo_31_format) implies directory_name /= Void
-			directory_name_not_empty: (Result and is_in_gobo_31_format) implies directory_name.count > 0
-			include_wildcard_compiled: Result implies (include_wildcard = Void or else include_wildcard.is_compiled)
-			exclude_wildcard_compiled: Result implies (exclude_wildcard = Void or else exclude_wildcard.is_compiled)
-			map_executable: Result implies (map = Void or else map.is_executable)
+			directory_name_not_void_and_not_empty: (Result and is_in_gobo_31_format) implies attached directory_name as l_directory_name and then l_directory_name.count > 0
+			include_wildcard_compiled: Result implies (not attached include_wildcard as l_include_wildcard or else l_include_wildcard.is_compiled)
+			exclude_wildcard_compiled: Result implies (not attached exclude_wildcard as l_exclude_wildcard or else l_exclude_wildcard.is_compiled)
+			map_executable: Result implies (not attached map as l_map or else l_map.is_executable)
 			correct_format: Result implies is_in_gobo_31_format or else is_in_gobo_32_format
 		end
 
@@ -205,9 +204,9 @@ feature -- Status report
 		do
 			if not off then
 				Result := project.variables.has (filename_variable_name) and then
-					STRING_.same_string (project.variables.value (filename_variable_name), item_filename) and then
+					STRING_.same_string (project.variables.item (filename_variable_name), item_filename) and then
 					project.variables.has (mapped_filename_variable_name) and then
-					STRING_.same_string (project.variables.value (mapped_filename_variable_name), item_mapped_filename)
+					STRING_.same_string (project.variables.item (mapped_filename_variable_name), item_mapped_filename)
 			else
 				Result := not (project.variables.has (filename_variable_name) or
 					project.variables.has (mapped_filename_variable_name))
@@ -216,11 +215,11 @@ feature -- Status report
 			filename_variable_name_exists: not off implies
 				(Result implies project.variables.has (filename_variable_name))
 			filename_variable_name_set: not off implies (Result implies
-				STRING_.same_string (project.variables.value (filename_variable_name), item_filename))
+				STRING_.same_string (project.variables.item (filename_variable_name), item_filename))
 			mapped_filename_variable_name_exists: not off implies
 				(Result implies project.variables.has (mapped_filename_variable_name))
 			mapped_filename_variable_name_set: not off implies (Result implies
-				STRING_.same_string (project.variables.value (mapped_filename_variable_name), item_mapped_filename))
+				STRING_.same_string (project.variables.item (mapped_filename_variable_name), item_mapped_filename))
 			filename_variable_name_not_exists: off implies
 				(Result implies not project.variables.has (filename_variable_name))
 			mapped_filename_variable_name_not_exists: off implies
@@ -254,7 +253,7 @@ feature -- Element change
 		do
 			dir_name := a_dir_name
 		ensure
-			dir_name_set: dir_name.is_equal (a_dir_name)
+			dir_name_set: dir_name = a_dir_name
 		end
 
 	set_directory_name (a_directory_name: STRING)
@@ -264,38 +263,44 @@ feature -- Element change
 		do
 			directory_name := a_directory_name
 		ensure
-			directory_name_set: directory_name.is_equal (a_directory_name)
+			directory_name_set: directory_name = a_directory_name
 		end
 
-	set_include_wc_string (a_include_wc_string: like include_wc_string)
+	set_include_wc_string (a_include_wc_string: STRING)
 			-- Set `include_wc_string' to `a_include_wc_string' and
 			-- make a compiled version available in `include_wildcard'
 		require
 			a_include_wc_string_not_void : a_include_wc_string /= Void
 			a_include_wc_string_not_empty: a_include_wc_string.count > 0
+		local
+			l_include_wildcard: like include_wildcard
 		do
 			include_wc_string := a_include_wc_string
 				-- Setup wildcard for include patterns:
-			create {LX_DFA_WILDCARD} include_wildcard.compile (include_wc_string, True)
-			if not include_wildcard.is_compiled then
-				project.log (<<"  [fileset] error: invalid include wildcard: '", include_wc_string, "%'">>)
+			create {LX_DFA_WILDCARD} l_include_wildcard.compile (a_include_wc_string, True)
+			include_wildcard := l_include_wildcard
+			if not l_include_wildcard.is_compiled then
+				project.log (<<"  [fileset] error: invalid include wildcard: '", a_include_wc_string, "%'">>)
 			end
 		ensure
 			include_wc_string_set: include_wc_string = a_include_wc_string
 		end
 
-	set_exclude_wc_string (a_exclude_wc_string: like exclude_wc_string)
+	set_exclude_wc_string (a_exclude_wc_string: STRING)
 			-- Set `exclude_wc_string' to `a_exclude_wc_string' and
 			-- make a compiled version available in `exclude_wildcard'
 		require
 			a_exclude_wc_string_not_void : a_exclude_wc_string /= Void
 			a_exclude_wc_string_not_empty: a_exclude_wc_string.count > 0
+		local
+			l_exclude_wildcard: like exclude_wildcard
 		do
 			exclude_wc_string := a_exclude_wc_string
 				-- Setup wildcard for exclude patterns:
-			create {LX_DFA_WILDCARD} exclude_wildcard.compile (exclude_wc_string, True)
-			if not exclude_wildcard.is_compiled then
-				project.log (<<"  [fileset] error: invalid exclude wildcard: '", exclude_wc_string, "%'">>)
+			create {LX_DFA_WILDCARD} l_exclude_wildcard.compile (a_exclude_wc_string, True)
+			exclude_wildcard := l_exclude_wildcard
+			if not l_exclude_wildcard.is_compiled then
+				project.log (<<"  [fileset] error: invalid exclude wildcard: '", a_exclude_wc_string, "%'">>)
 			end
 		ensure
 			exclude_wc_string_set: exclude_wc_string = a_exclude_wc_string
@@ -342,7 +347,7 @@ feature -- Element change
 		do
 			filename_directory_name := a_filename_directory_name
 		ensure
-			filename_directory_name_set: filename_directory_name.is_equal (a_filename_directory_name)
+			filename_directory_name_set: filename_directory_name = a_filename_directory_name
 		end
 
 	set_mapped_filename_directory_name (a_mapped_filename_directory_name: STRING)
@@ -352,7 +357,7 @@ feature -- Element change
 		do
 			mapped_filename_directory_name := a_mapped_filename_directory_name
 		ensure
-			mapped_filename_directory_name_set: mapped_filename_directory_name.is_equal (a_mapped_filename_directory_name)
+			mapped_filename_directory_name_set: mapped_filename_directory_name = a_mapped_filename_directory_name
 		end
 
 	set_filename_variable_name (a_filename_variable_name: STRING)
@@ -396,21 +401,21 @@ feature -- Element change
 		do
 			project.trace_debug (<<"  [*fileset] trying to add: '", a_filename, "%'">>)
 			an_filename := a_filename
-			if map /= Void then
-				an_mapped_filename := map.mapped_filename (an_filename)
+			if attached map as l_map then
+				an_mapped_filename := l_map.mapped_filename (an_filename)
 			else
 				an_mapped_filename := an_filename
 			end
 				-- Remove support for 'gobo32_format' after obsolete period:
-			if concat then
-				an_mapped_filename := unix_file_system.pathname (directory_name, an_mapped_filename)
+			if concat and attached directory_name as l_directory_name then
+				an_mapped_filename := unix_file_system.pathname (l_directory_name, an_mapped_filename)
 			end
 
-			if filename_directory_name /= Void then
-				an_filename := unix_file_system.pathname (filename_directory_name, an_filename)
+			if attached filename_directory_name as l_filename_directory_name then
+				an_filename := unix_file_system.pathname (l_filename_directory_name, an_filename)
 			end
-			if mapped_filename_directory_name /= Void then
-				an_mapped_filename := unix_file_system.pathname (mapped_filename_directory_name,
+			if attached mapped_filename_directory_name as l_mapped_filename_directory_name then
+				an_mapped_filename := unix_file_system.pathname (l_mapped_filename_directory_name,
 					an_mapped_filename)
 			end
 			if force or else is_file_outofdate (an_filename, an_mapped_filename) then
@@ -498,30 +503,30 @@ feature -- Execution
 
 			a_old_cwd := file_system.current_working_directory
 				-- Change to directory `dir_name' if specified:
-			if dir_name /= Void then
-				project.trace_debug (<<"  [*fileset] dir: '", dir_name, "%'">>)
-				project.trace_debug (<<"  [*fileset] changing to directory: '", dir_name, "%'">>)
-				file_system.set_current_working_directory (dir_name)
+			if attached dir_name as l_dir_name then
+				project.trace_debug (<<"  [*fileset] dir: '", l_dir_name, "%'">>)
+				project.trace_debug (<<"  [*fileset] changing to directory: '", l_dir_name, "%'">>)
+				file_system.set_current_working_directory (l_dir_name)
 			end
-			if directory_name /= Void then
-				project.trace_debug (<<"  [*fileset] directory_name: ", directory_name>>)
+			if attached directory_name as l_directory_name then
+				project.trace_debug (<<"  [*fileset] directory_name: ", l_directory_name>>)
 			end
-			if include_wc_string /= Void then
-				project.trace_debug (<<"  [*fileset] include_wc_string: ", include_wc_string>>)
+			if attached include_wc_string as l_include_wc_string then
+				project.trace_debug (<<"  [*fileset] include_wc_string: ", l_include_wc_string>>)
 			end
-			if filename_directory_name /= Void then
-				project.trace_debug (<<"  [*fileset] filename_directory: ", filename_directory_name>>)
+			if attached filename_directory_name as l_filename_directory_name then
+				project.trace_debug (<<"  [*fileset] filename_directory: ", l_filename_directory_name>>)
 			end
-			if mapped_filename_directory_name /= Void then
-				project.trace_debug (<<"  [*fileset] mapped_filename_directory: ", mapped_filename_directory_name>>)
+			if attached mapped_filename_directory_name as l_mapped_filename_directory_name then
+				project.trace_debug (<<"  [*fileset] mapped_filename_directory: ", l_mapped_filename_directory_name>>)
 			end
-			if directory_name /= Void then
-				al_directory_name := unix_file_system.canonical_pathname (directory_name)
+			if attached directory_name as l_directory_name then
+				al_directory_name := unix_file_system.canonical_pathname (l_directory_name)
 			else
 				create al_directory_name.make_from_string (".")
 			end
 				-- Add entries from filesystem scan:
-			scan_internal (al_directory_name)
+			scan_internal (al_directory_name, al_directory_name)
 				-- Add single includes:
 			cs := single_includes.new_cursor
 			from cs.start until cs.after loop
@@ -545,10 +550,10 @@ feature -- Execution
 			file_system.set_current_working_directory (a_old_cwd)
 		end
 
-	include_wildcard: LX_WILDCARD
+	include_wildcard: detachable LX_WILDCARD
 			-- Expression defining filenames for inclusion
 
-	exclude_wildcard: LX_WILDCARD
+	exclude_wildcard: detachable LX_WILDCARD
 			-- Expression defining filenames for exclusion
 
 feature {NONE} -- Implementation/Access
@@ -569,10 +574,13 @@ feature {NONE} -- Implementation/Access
 
 feature {NONE} -- Implementation/Processing
 
-	scan_internal (a_directory_name: STRING)
+	scan_internal (a_directory_name, a_root_directory_name: STRING)
 			-- Scan directory named `a_directory_name' recursivley;
 			-- put filenames found matching `include_wildcard' and not matching `exclude_wildcard'
 			-- into `filenames';
+		require
+			a_directory_name_not_void: a_directory_name /= Void
+			a_root_directory_name_not_void: a_root_directory_name /= Void
 		local
 			a_dir: KL_DIRECTORY
 			a_name: STRING
@@ -591,20 +599,20 @@ feature {NONE} -- Implementation/Processing
 						s := unix_file_system.pathname (a_directory_name, a_name)
 							-- Recurse for directories:
 						if file_system.is_directory_readable (s) then
-							scan_internal (s)
+							scan_internal (s, a_root_directory_name)
 						else
 								-- Handle files:
 --!!							project.trace_debug (<<"filename: ", s, "%N">>)
 							if is_in_gobo_31_format then
-								smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
+								smatch := s.substring (a_root_directory_name.count + 2, s.count)	-- 2 because of '/'
 							else
 								smatch := s.substring (3, s.count)	-- 3 because of './'
 							end
 --!!							project.trace_debug (<<"  trying to match: ", smatch, "%N">>)
-							if include_wildcard /= Void and then include_wildcard.recognizes (smatch) then
+							if attached include_wildcard as l_include_wildcard and then l_include_wildcard.recognizes (smatch) then
 								add_fileset_entry_if_necessary (smatch)
 							end
-							if exclude_wildcard /= Void and then exclude_wildcard.recognizes (smatch) then
+							if attached exclude_wildcard as l_exclude_wildcard and then l_exclude_wildcard.recognizes (smatch) then
 								remove_fileset_entry (smatch)
 							end
 						end

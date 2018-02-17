@@ -5,7 +5,7 @@ note
 		"Compilation commands for ISE Eiffel"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,36 +26,34 @@ feature -- Status report
 			-- Can command be executed?
 		do
 			Result := is_compilable xor is_cleanable
-			Result := Result and then (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
+			Result := Result and then (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		ensure then
 			compilable_xor_cleanable: Result implies (is_compilable xor is_cleanable)
-			exit_code_variable_name_void_or_not_empty: Result implies (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
+			exit_code_variable_name_void_or_not_empty: Result implies (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		end
 
 	is_compilable: BOOLEAN
 			-- Can system be compiled?
 		do
-			Result := system_name /= Void and then system_name.count > 0
+			Result := attached system_name as l_system_name and then l_system_name.count > 0
 		ensure
-			system_name_not_void: Result implies system_name /= Void
-			system_name_not_empty: Result implies system_name.count > 0
+			system_name_not_void_and_not_empty: Result implies attached system_name as l_system_name and then l_system_name.count > 0
 		end
 
 	is_cleanable: BOOLEAN
 			-- Can system be cleaned?
 		do
-			Result := clean /= Void and then clean.count > 0
+			Result := attached clean as l_clean and then l_clean.count > 0
 		ensure
-			clean_not_void: Result implies clean /= Void
-			clean_not_empty: Result implies clean.count > 0
+			clean_not_void_and_not_empty: Result implies attached clean as l_clean and then l_clean.count > 0
 		end
 
 feature -- Access
 
-	ace_filename: STRING
+	ace_filename: detachable STRING
 			-- Ace filename
 
-	system_name: STRING
+	system_name: detachable STRING
 			-- System name
 
 	compatible_mode: BOOLEAN
@@ -67,13 +65,13 @@ feature -- Access
 	finish_freezing: BOOLEAN
 			-- Should 'finish_freezing' be executed?
 
-	clean: STRING
+	clean: detachable STRING
 			-- Name of system to be cleaned
 
-	exit_code_variable_name: STRING
+	exit_code_variable_name: detachable STRING
 			-- Name of variable holding exit code of se compilation process
 
-	project_path: STRING
+	project_path: detachable STRING
 			-- Default is the current path
 
 	eifgen_directory: STRING
@@ -185,80 +183,82 @@ feature -- Execution
 			eifgen, project_dir: STRING
 			a_filename: STRING
 		do
-			create cmd.make (128)
-			cmd.append_string ("ec -batch")
-			if ace_filename /= Void and then ace_filename.count > 0 then
-				cmd.append_string (" -config ")
-				a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
-				cmd := STRING_.appended_string (cmd, a_filename)
-			end
-			if compatible_mode then
-				cmd.append_string (" -compat")
-			end
-			if finalize_mode then
-				cmd.append_string (" -finalize")
-			end
-			a_filename := system_name + ".epr"
-			eifgen := file_system.pathname (eifgen_directory, system_name)
-			if
-				file_system.file_exists (a_filename) and
-				file_system.directory_exists (eifgen)
-			then
-				cmd.append_string (" -project ")
-				cmd := STRING_.appended_string (cmd, a_filename)
-			end
-			if attached project_path as l_project_path and then not l_project_path.is_empty then
-				cmd.append_string (" -project_path ")
-				cmd := STRING_.appended_string (cmd, l_project_path)
-			end
-			project.trace (<<"  [ise] ", cmd>>)
-			execute_shell (cmd)
-			if exit_code_variable_name /= Void then
-					-- Store return_code of ise compilation process:
-				project.set_variable_value (exit_code_variable_name, exit_code.out)
-			end
-			if exit_code = 0 and then finish_freezing then
-				if finalize_mode then
-					project_dir := file_system.pathname (eifgen, "F_code")
-				else
-					project_dir := file_system.pathname (eifgen, "W_code")
-				end
-				project.trace (<<"  [ise] cd ", project_dir>>)
-				old_cwd := file_system.cwd
-				file_system.cd (project_dir)
+			check is_compilable: attached system_name as l_system_name then
 				create cmd.make (128)
-				cmd.append_string ("finish_freezing -silent")
+				cmd.append_string ("ec -batch")
+				if attached ace_filename as l_ace_filename and then l_ace_filename.count > 0 then
+					cmd.append_string (" -config ")
+					a_filename := file_system.pathname_from_file_system (l_ace_filename, unix_file_system)
+					cmd := STRING_.appended_string (cmd, a_filename)
+				end
+				if compatible_mode then
+					cmd.append_string (" -compat")
+				end
+				if finalize_mode then
+					cmd.append_string (" -finalize")
+				end
+				a_filename := l_system_name + ".epr"
+				eifgen := file_system.pathname (eifgen_directory, l_system_name)
+				if
+					file_system.file_exists (a_filename) and
+					file_system.directory_exists (eifgen)
+				then
+					cmd.append_string (" -project ")
+					cmd := STRING_.appended_string (cmd, a_filename)
+				end
+				if attached project_path as l_project_path and then not l_project_path.is_empty then
+					cmd.append_string (" -project_path ")
+					cmd := STRING_.appended_string (cmd, l_project_path)
+				end
 				project.trace (<<"  [ise] ", cmd>>)
 				execute_shell (cmd)
-				if exit_code_variable_name /= Void then
+				if attached exit_code_variable_name as l_exit_code_variable_name then
 						-- Store return_code of ise compilation process:
-					project.set_variable_value (exit_code_variable_name, exit_code.out)
+					project.set_variable_value (l_exit_code_variable_name, exit_code.out)
 				end
-				if not project.options.no_exec then
-					if exit_code = 0 then
-						a_filename := STRING_.concat (system_name, file_system.exe_extension)
-						if not file_system.file_exists (a_filename) then
-							exit_code := -1
-							if exit_code_variable_name /= Void then
-									-- Store return_code of ise compilation process:
-								project.set_variable_value (exit_code_variable_name, exit_code.out)
-							end
-						elseif not finalize_mode then
-							a_filename := system_name + ".melted"
+				if exit_code = 0 and then finish_freezing then
+					if finalize_mode then
+						project_dir := file_system.pathname (eifgen, "F_code")
+					else
+						project_dir := file_system.pathname (eifgen, "W_code")
+					end
+					project.trace (<<"  [ise] cd ", project_dir>>)
+					old_cwd := file_system.cwd
+					file_system.cd (project_dir)
+					create cmd.make (128)
+					cmd.append_string ("finish_freezing -silent")
+					project.trace (<<"  [ise] ", cmd>>)
+					execute_shell (cmd)
+					if attached exit_code_variable_name as l_exit_code_variable_name then
+							-- Store return_code of ise compilation process:
+						project.set_variable_value (l_exit_code_variable_name, exit_code.out)
+					end
+					if not project.options.no_exec then
+						if exit_code = 0 then
+							a_filename := STRING_.concat (l_system_name, file_system.exe_extension)
 							if not file_system.file_exists (a_filename) then
-									-- Eiffel for .NET 5.2.0928 does not
-									-- generate .melted files.
-								-- exit_code := -2
+								exit_code := -1
+								if attached exit_code_variable_name as l_exit_code_variable_name then
+										-- Store return_code of ise compilation process:
+									project.set_variable_value (l_exit_code_variable_name, exit_code.out)
+								end
+							elseif not finalize_mode then
+								a_filename := l_system_name + ".melted"
+								if not file_system.file_exists (a_filename) then
+										-- Eiffel for .NET 5.2.0928 does not
+										-- generate .melted files.
+									-- exit_code := -2
+								end
 							end
 						end
 					end
+					file_system.cd (old_cwd)
 				end
-				file_system.cd (old_cwd)
-			end
-			if exit_code_variable_name /= Void then
-					-- Reset `exit_code' since return_code of process is available through
-					-- variable 'exit_code_variable_name':
-				exit_code := 0
+				if exit_code_variable_name /= Void then
+						-- Reset `exit_code' since return_code of process is available through
+						-- variable 'exit_code_variable_name':
+					exit_code := 0
+				end
 			end
 		end
 
@@ -269,62 +269,64 @@ feature -- Execution
 		local
 			a_name: STRING
 		do
-			a_name := clean + ".epr"
-			if file_system.file_exists (a_name) then
-				project.trace (<<"  [ise] delete ", a_name>>)
-				if not project.options.no_exec then
-					file_system.delete_file (a_name)
-				end
-			end
-			a_name := clean + ".rc"
-			if file_system.file_exists (a_name) then
-				project.trace (<<"  [ise] delete ", a_name>>)
-				if not project.options.no_exec then
-					file_system.delete_file (a_name)
-				end
-			end
-			a_name := clean + ".res"
-			if file_system.file_exists (a_name) then
-				project.trace (<<"  [ise] delete ", a_name>>)
-				if not project.options.no_exec then
-					file_system.delete_file (a_name)
-				end
-			end
-			a_name := "exception_trace.log"
-			if file_system.file_exists (a_name) then
-				project.trace (<<"  [ise] delete ", a_name>>)
-				if not project.options.no_exec then
-					file_system.delete_file (a_name)
-				end
-			end
-			a_name := "preferences.wb"
-			if file_system.file_exists (a_name) then
-				project.trace (<<"  [ise] delete ", a_name>>)
-				if not project.options.no_exec then
-					file_system.delete_file (a_name)
-				end
-			end
-			a_name := "arguments.wb"
-			if file_system.file_exists (a_name) then
-				project.trace (<<"  [ise] delete ", a_name>>)
-				if not project.options.no_exec then
-					file_system.delete_file (a_name)
-				end
-			end
-			a_name := file_system.pathname (eifgen_directory, clean)
-			if file_system.directory_exists (a_name) then
-				project.trace (<<"  [ise] delete ", a_name>>)
-				if not project.options.no_exec then
-					file_system.recursive_delete_directory (a_name)
-					if file_system.is_directory_empty (eifgen_directory) then
-						file_system.delete_directory (eifgen_directory)
+			check is_cleanable: attached clean as l_clean then
+				a_name := l_clean + ".epr"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [ise] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
 					end
 				end
-			end
-			if file_system.directory_exists ("EIFGEN") then
-				project.trace (<<"  [ise] delete EIFGEN">>)
-				if not project.options.no_exec then
-					file_system.recursive_delete_directory ("EIFGEN")
+				a_name := l_clean + ".rc"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [ise] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
+				a_name := l_clean + ".res"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [ise] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
+				a_name := "exception_trace.log"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [ise] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
+				a_name := "preferences.wb"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [ise] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
+				a_name := "arguments.wb"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [ise] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
+				a_name := file_system.pathname (eifgen_directory, l_clean)
+				if file_system.directory_exists (a_name) then
+					project.trace (<<"  [ise] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.recursive_delete_directory (a_name)
+						if file_system.is_directory_empty (eifgen_directory) then
+							file_system.delete_directory (eifgen_directory)
+						end
+					end
+				end
+				if file_system.directory_exists ("EIFGEN") then
+					project.trace (<<"  [ise] delete EIFGEN">>)
+					if not project.options.no_exec then
+						file_system.recursive_delete_directory ("EIFGEN")
+					end
 				end
 			end
 		end

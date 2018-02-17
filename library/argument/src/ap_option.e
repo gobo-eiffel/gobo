@@ -5,7 +5,7 @@ note
 		"Abstract representations of an option, that might or might not require an extra argument"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2013, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -299,9 +299,9 @@ feature -- Removal
 			short_form_remove: not has_short_form
 		end
 
-feature {AP_PARSER} -- Parser Interface
+feature {AP_BASIC_PARSER} -- Parser Interface
 
-	record_occurrence (a_parser: AP_PARSER)
+	record_occurrence (a_parser: AP_BASIC_PARSER)
 			-- This option was found during parsing by `a_parser'.
 		require
 			a_parser_not_void: a_parser /= Void

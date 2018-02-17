@@ -5,7 +5,7 @@ note
 		"Out of date commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,24 +15,35 @@ class GEANT_OUTOFDATE_COMMAND
 inherit
 
 	GEANT_FILESYSTEM_COMMAND
+		redefine
+			make
+		end
 
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT)
+			-- <Precursor>
+		do
+			precursor (a_project)
+			set_true_value ("true")
+			set_false_value ("false")
+		end
 
 feature -- Status report
 
 	is_file_executable: BOOLEAN
 			-- Can command be executed on sourcefile `source_filename' to targetfile `target_filename'?
 		do
-			Result := source_filename /= Void and then source_filename.count > 0
-			Result := Result and then target_filename /= Void and then target_filename.count > 0
+			Result := attached source_filename as l_source_filename and then l_source_filename.count > 0
+			Result := Result and then attached target_filename as l_target_filename and then l_target_filename.count > 0
 			Result := Result and then fileset = Void
 		ensure
-			source_filename_not_void: Result implies source_filename /= Void
-			source_filename_not_empty: Result implies source_filename.count > 0
-			target_filename_not_void: Result implies target_filename /= Void
-			target_filename_not_empty: Result implies target_filename.count > 0
+			source_filename_not_void_and_not_empty: Result implies attached source_filename as l_source_filename and then l_source_filename.count > 0
+			target_filename_not_void_and_not_empty: Result implies attached target_filename as l_target_filename and then l_target_filename.count > 0
 			fileset_void: Result implies fileset = Void
 		end
 
@@ -41,10 +52,9 @@ feature -- Status report
 		do
 			Result := source_filename = Void
 			Result := Result and then target_filename = Void
-			Result := Result and then fileset /= Void and then fileset.is_executable
+			Result := Result and then attached fileset as l_fileset and then l_fileset.is_executable
 		ensure
-			fileset_not_void: Result implies fileset /= Void
-			fileset_executable: Result implies fileset.is_executable
+			fileset_not_void_and_executable: Result implies attached fileset as l_fileset and then l_fileset.is_executable
 			source_filename_void: Result implies source_filename = Void
 			target_filename_void: Result implies target_filename = Void
 		end
@@ -59,10 +69,10 @@ feature -- Status report
 
 feature -- Access
 
-	source_filename: STRING
+	source_filename: detachable STRING
 			-- Source filesname
 
-	target_filename: STRING
+	target_filename: detachable STRING
 			-- Output filename
 
 	is_out_of_date: BOOLEAN
@@ -70,7 +80,7 @@ feature -- Access
 			-- the one named `target_filename'?;
 			-- available after `execute' has been processed
 
-	variable_name: STRING
+	variable_name: detachable STRING
 			-- Name of variable to set
 
 	true_value: STRING
@@ -81,7 +91,7 @@ feature -- Access
 			-- Value to be set for variable named `variable_name'
 			-- in case `is_out_of_date' is evaluated to `False'
 
-	fileset: GEANT_FILESET
+	fileset: detachable GEANT_FILESET
 			-- Fileset for current command
 
 feature -- Setting
@@ -158,56 +168,61 @@ feature -- Execution
 			a_from_file: STRING
 			a_to_file: STRING
 		do
-			if is_file_executable then
-				a_from_file := file_system.pathname_from_file_system (source_filename, unix_file_system)
+			if is_file_executable and then attached source_filename as l_source_filename and then attached target_filename as l_target_filename then
+				a_from_file := file_system.pathname_from_file_system (l_source_filename, unix_file_system)
 				if not file_system.file_exists (a_from_file) then
 					project.log (<<"  [outofdate] error: cannot find source file '", a_from_file, "%'">>)
 					exit_code := 1
 				end
 				if exit_code = 0 then
-					a_to_file := file_system.pathname_from_file_system (target_filename, unix_file_system)
+					a_to_file := file_system.pathname_from_file_system (l_target_filename, unix_file_system)
 					is_out_of_date := is_file_outofdate (a_from_file, a_to_file)
-					if is_out_of_date then
-						project.set_variable_value (variable_name, true_value)
-					else
-						project.set_variable_value (variable_name, false_value)
+					if attached variable_name as l_variable_name then
+						if is_out_of_date then
+							project.set_variable_value (l_variable_name, true_value)
+						else
+							project.set_variable_value (l_variable_name, false_value)
+						end
 					end
 				end
 			else
-				check is_fileset_executable: is_fileset_executable end
-				if not fileset.is_executable then
-					project.log (<<"  [outofdate] error: fileset definition wrong">>)
-					exit_code := 1
-				end
-				if exit_code = 0 then
-					fileset.execute
-					from
-						fileset.start
-					until
-						is_out_of_date or else fileset.after or else exit_code /= 0
-					loop
-						a_from_file := file_system.pathname_from_file_system (fileset.item_filename, unix_file_system)
-						if not file_system.file_exists (a_from_file) then
-							project.log (<<"  [outofdate] error: cannot find source file '", a_from_file, "%'">>)
-							exit_code := 1
+				check is_fileset_executable: is_fileset_executable and then attached fileset as l_fileset then
+					if not l_fileset.is_executable then
+						project.log (<<"  [outofdate] error: fileset definition wrong">>)
+						exit_code := 1
+					end
+					if exit_code = 0 then
+						l_fileset.execute
+						from
+							l_fileset.start
+						until
+							is_out_of_date or else l_fileset.after or else exit_code /= 0
+						loop
+							a_from_file := file_system.pathname_from_file_system (l_fileset.item_filename, unix_file_system)
+							if not file_system.file_exists (a_from_file) then
+								project.log (<<"  [outofdate] error: cannot find source file '", a_from_file, "%'">>)
+								exit_code := 1
+							end
+							if exit_code = 0 then
+								a_to_file := file_system.pathname_from_file_system (l_fileset.item_mapped_filename, unix_file_system)
+							project.trace_debug (<<"  [*outofdate] checking file %'", a_from_file, "%' against file %'",
+								a_to_file, "%'">>)
+								is_out_of_date := is_file_outofdate (a_from_file, a_to_file)
+								if is_out_of_date then
+									project.trace_debug (<<"  [*outofdate] detected file which is out of date.">>)
+								end
+							end
+							l_fileset.forth
 						end
-						if exit_code = 0 then
-							a_to_file := file_system.pathname_from_file_system (fileset.item_mapped_filename, unix_file_system)
-						project.trace_debug (<<"  [*outofdate] checking file %'", a_from_file, "%' against file %'",
-							a_to_file, "%'">>)
-							is_out_of_date := is_file_outofdate (a_from_file, a_to_file)
+							-- Make sure fileset iteration is cleaned up:
+						l_fileset.go_after
+						if attached variable_name as l_variable_name then
 							if is_out_of_date then
-								project.trace_debug (<<"  [*outofdate] detected file which is out of date.">>)
+								project.set_variable_value (l_variable_name, true_value)
+							else
+								project.set_variable_value (l_variable_name, false_value)
 							end
 						end
-						fileset.forth
-					end
-						-- Make sure fileset iteration is cleaned up:
-					fileset.go_after
-					if is_out_of_date then
-						project.set_variable_value (variable_name, true_value)
-					else
-						project.set_variable_value (variable_name, false_value)
 					end
 				end
 			end

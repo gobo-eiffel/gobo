@@ -5,7 +5,7 @@ note
 		"Set commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,19 +25,18 @@ feature -- Status report
 	is_executable : BOOLEAN
 			-- Can command be executed?
 		do
-			Result := (name /= Void and then name.count > 0) and value /= Void
+			Result := (attached name as l_name and then l_name.count > 0) and value /= Void
 		ensure then
-			name_not_void: Result implies name /= Void
-			name_not_empty: Result implies name.count > 0
+			name_not_void_and_not_empty: Result implies attached name as l_name and then l_name.count > 0
 			value_not_void: Result implies value /= Void
 		end
 
 feature -- Access
 
-	name: STRING
+	name: detachable STRING
 			-- Name of variable
 
-	value: STRING
+	value: detachable STRING
 			-- Value of variable
 
 feature -- Setting
@@ -68,21 +67,23 @@ feature -- Execution
 	execute
 			-- Put variable in project variables pool.
 		do
-			if Default_builtin_variables.has (name) then
-				project.log (<<"  [set] ",
-					"warning: you are using the name of the builtin variable '", name, "' in a <set> task" >>)
-			end
-
-			if project.options.verbose then
-				if project.is_local_variable (name) then
-					project.trace (<<"  [set local] ", name, "=", value >>)
-				else
-					project.trace (<<"  [set global] ", name, "=", value >>)
+			check is_executable: attached name as l_name and attached value as l_value then
+				if Default_builtin_variables.has (l_name) then
+					project.log (<<"  [set] ",
+						"warning: you are using the name of the builtin variable '", l_name, "' in a <set> task" >>)
 				end
-			end
 
-			project.set_variable_value (name, value)
-			exit_code := 0
+				if project.options.verbose then
+					if project.is_local_variable (l_name) then
+						project.trace (<<"  [set local] ", l_name, "=", l_value >>)
+					else
+						project.trace (<<"  [set global] ", l_name, "=", l_value >>)
+					end
+				end
+
+				project.set_variable_value (l_name, l_value)
+				exit_code := 0
+			end
 		end
 
 end

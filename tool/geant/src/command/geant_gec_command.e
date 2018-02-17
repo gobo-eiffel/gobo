@@ -5,7 +5,7 @@ note
 		"Gec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2012, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,33 +42,31 @@ feature -- Status report
 			-- Can command be executed?
 		do
 			Result := is_ace_configuration or is_cleanable
-			Result := Result and then (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
+			Result := Result and then (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		ensure then
 			definition: Result implies (is_ace_configuration or is_cleanable)
-			exit_code_variable_name_void_or_not_empty: Result implies (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
+			exit_code_variable_name_void_or_not_empty: Result implies (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		end
 
 	is_ace_configuration: BOOLEAN
 			-- Does ace file configuration apply?
 		do
-			Result := (ace_filename /= Void and then ace_filename.count > 0)
+			Result := (attached ace_filename as l_ace_filename and then l_ace_filename.count > 0)
 		ensure
-			ace_filename_not_void: Result implies ace_filename /= Void
-			ace_filename_not_empty: Result implies ace_filename.count > 0
+			ace_filename_not_void_and_not_empty: Result implies attached ace_filename as l_ace_filename and then l_ace_filename.count > 0
 		end
 
 	is_cleanable: BOOLEAN
 			-- Can system be cleaned?
 		do
-			Result := clean /= Void and then clean.count > 0
+			Result := attached clean as l_clean and then l_clean.count > 0
 		ensure
-			clean_not_void: Result implies clean /= Void
-			clean_not_empty: Result implies clean.count > 0
+			clean_not_void: Result implies attached clean as l_clean and then l_clean.count > 0
 		end
 
 feature -- Access
 
-	ace_filename: STRING
+	ace_filename: detachable STRING
 			-- Ace filename
 
 	c_compile: BOOLEAN
@@ -80,7 +78,7 @@ feature -- Access
 	gelint: BOOLEAN
 			-- Should gelint be run on the full content of each class being compiled?
 
-	catcall_mode: STRING
+	catcall_mode: detachable STRING
 			-- Should CAT-calls be considered as fatal errors, as warnings or just ignored?
 
 	split_mode: BOOLEAN
@@ -89,13 +87,13 @@ feature -- Access
 	split_size: INTEGER
 			-- Size (in bytes) of generated C files in bytes when in split mode
 
-	garbage_collector: STRING
+	garbage_collector: detachable STRING
 			-- Name of GC being used
 
-	clean: STRING
+	clean: detachable STRING
 			-- Name of system to be cleaned
 
-	exit_code_variable_name: STRING
+	exit_code_variable_name: detachable STRING
 			-- Name of variable holding exit code of gec compilation process
 
 feature -- Setting
@@ -202,15 +200,15 @@ feature -- Execution
 			stop: BOOLEAN
 		do
 			exit_code := 0
-			if is_cleanable then
-				a_name := clean + ".c"
+			if is_cleanable and then attached clean as l_clean then
+				a_name := l_clean + ".c"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".cpp"
+				a_name := l_clean + ".cpp"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
@@ -219,7 +217,7 @@ feature -- Execution
 				end
 				from i := 1 until stop loop
 					stop := True
-					a_name := clean + i.out + ".c"
+					a_name := l_clean + i.out + ".c"
 					if file_system.file_exists (a_name) then
 						project.trace (<<"  [gec] delete ", a_name>>)
 						if not project.options.no_exec then
@@ -227,7 +225,7 @@ feature -- Execution
 						end
 						stop := False
 					end
-					a_name := clean + i.out + ".cpp"
+					a_name := l_clean + i.out + ".cpp"
 					if file_system.file_exists (a_name) then
 						project.trace (<<"  [gec] delete ", a_name>>)
 						if not project.options.no_exec then
@@ -237,14 +235,14 @@ feature -- Execution
 					end
 					i := i + 1
 				end
-				a_name := clean + ".h"
+				a_name := l_clean + ".h"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".obj"
+				a_name := l_clean + ".obj"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
@@ -253,7 +251,7 @@ feature -- Execution
 				end
 				stop := False
 				from i := 1 until stop loop
-					a_name := clean + i.out + ".obj"
+					a_name := l_clean + i.out + ".obj"
 					if file_system.file_exists (a_name) then
 						project.trace (<<"  [gec] delete ", a_name>>)
 						if not project.options.no_exec then
@@ -264,7 +262,7 @@ feature -- Execution
 					end
 					i := i + 1
 				end
-				a_name := clean + ".o"
+				a_name := l_clean + ".o"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
@@ -273,7 +271,7 @@ feature -- Execution
 				end
 				stop := False
 				from i := 1 until stop loop
-					a_name := clean + i.out + ".o"
+					a_name := l_clean + i.out + ".o"
 					if file_system.file_exists (a_name) then
 						project.trace (<<"  [gec] delete ", a_name>>)
 						if not project.options.no_exec then
@@ -284,28 +282,28 @@ feature -- Execution
 					end
 					i := i + 1
 				end
-				a_name := clean + ".tds"
+				a_name := l_clean + ".tds"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".res"
+				a_name := l_clean + ".res"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".bat"
+				a_name := l_clean + ".bat"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".sh"
+				a_name := l_clean + ".sh"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
@@ -316,9 +314,9 @@ feature -- Execution
 				cmd := new_ace_cmdline
 				project.trace (<<"  [gec] ", cmd>>)
 				execute_shell (cmd)
-				if exit_code_variable_name /= Void then
+				if attached exit_code_variable_name as l_exit_code_variable_name then
 						-- Store return_code of compilation process:
-					project.set_variable_value (exit_code_variable_name, exit_code.out)
+					project.set_variable_value (l_exit_code_variable_name, exit_code.out)
 						-- Reset `exit_code' since return_code of process is available through
 						-- variable 'exit_code_variable_name':
 					exit_code := 0
@@ -350,9 +348,9 @@ feature -- Command-line
 			if not c_compile then
 				Result.append_string ("--cc=no ")
 			end
-			if catcall_mode /= Void and then not catcall_mode.is_empty then
+			if attached catcall_mode as l_catcall_mode and then not l_catcall_mode.is_empty then
 				Result.append_string ("--catcall=")
-				Result.append_string (catcall_mode)
+				Result.append_string (l_catcall_mode)
 				Result.append_character (' ')
 			end
 			if not split_mode then
@@ -363,13 +361,15 @@ feature -- Command-line
 				INTEGER_.append_decimal_integer (split_size, Result)
 				Result.append_character (' ')
 			end
-			if garbage_collector /= Void and then not garbage_collector.is_empty then
+			if attached garbage_collector as l_garbage_collector and then not l_garbage_collector.is_empty then
 				Result.append_string ("--gc=")
 				Result.append_string (garbage_collector)
 				Result.append_character (' ')
 			end
-			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
-			Result := STRING_.appended_string (Result, a_filename)
+			check is_ace_configuration: attached ace_filename as l_ace_filename then
+				a_filename := file_system.pathname_from_file_system (l_ace_filename, unix_file_system)
+				Result := STRING_.appended_string (Result, a_filename)
+			end
 		ensure
 			command_line_not_void: Result /= Void
 			command_line_not_empty: Result.count > 0

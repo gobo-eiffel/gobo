@@ -5,7 +5,7 @@ note
 		"Geant elements"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2017, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,7 +47,7 @@ feature -- Access
 	xml_element: XM_ELEMENT
 			-- XML Element defining current element
 
-	position: XM_POSITION
+	position: detachable XM_POSITION
 			-- Position of element in source document
 
 	elements_by_name (a_name: STRING): DS_LINKED_LIST [XM_ELEMENT]
@@ -115,7 +115,9 @@ feature -- Access/XML attribute values
 			a_default_value_not_void: a_default_value /= Void
 		do
 			if xml_element.has_attribute_by_name (an_attr_name) then
-				Result := xml_element.attribute_by_name (an_attr_name).value
+				check has_attribute: attached xml_element.attribute_by_name (an_attr_name) as l_attribute then
+					Result := l_attribute.value
+				end
 			else
 				Result := a_default_value
 			end
@@ -130,10 +132,12 @@ feature -- Access/XML attribute values
 			an_attr_name_not_empty: an_attr_name.count > 0
 			has_attribute: has_attribute (an_attr_name)
 		do
-			Result := xml_element.attribute_by_name (an_attr_name).value
+			check precondition: attached xml_element.attribute_by_name (an_attr_name) as l_attribute then
+				Result := l_attribute.value
+			end
 		end
 
-	attribute_value_if_existing (a_attribute_name: STRING): STRING
+	attribute_value_if_existing (a_attribute_name: STRING): detachable STRING
 			-- Value of attribute `a_attribute_name' if existing; Void otherwise
         require
             a_attribute_name_not_void: a_attribute_name /= Void
@@ -144,7 +148,7 @@ feature -- Access/XML attribute values
 			end
 		end
 
-	content: STRING
+	content: detachable STRING
 			-- Content of element if any; Void otherwise
 		do
 			Result := xml_element.text
@@ -174,9 +178,9 @@ feature -- Access/XML attribute values
 				-- Make sure not both, attribute and element content have been specified:
 			a_has_attribute := has_attribute (a_attribute_name)
 			if a_has_content_text and a_has_attribute then
-				if position /= Void then
-					log_messages (<<"  [", xml_element.name, "] ERROR (", position.source_name,
-						", ", position.row.out, ":", position.column.out, "):">>)
+				if attached position as l_position then
+					log_messages (<<"  [", xml_element.name, "] ERROR (", l_position.source_name,
+						", ", l_position.row.out, ":", l_position.column.out, "):">>)
 				else
 					log_messages (<<"  [", xml_element.name, "]", " ERROR:">>)
 				end
@@ -185,9 +189,9 @@ feature -- Access/XML attribute values
 			end
 				-- Make sure either attribute 'message' or element content text have been specified:
  			if not a_has_content_text and not a_has_attribute then
-				if position /= Void then
-					log_messages (<<"  [", xml_element.name, "] ERROR (", position.source_name,
-						", ", position.row.out, ":", position.column.out, "):">>)
+				if attached position as l_position then
+					log_messages (<<"  [", xml_element.name, "] ERROR (", l_position.source_name,
+						", ", l_position.row.out, ":", l_position.column.out, "):">>)
 				else
 					log_messages (<<"  [", xml_element.name, "]", " ERROR:">>)
 				end
@@ -198,8 +202,9 @@ feature -- Access/XML attribute values
  			if a_has_attribute then
  				Result := attribute_value (a_attribute_name)
  			else
- 				check a_has_content_text end
- 				Result := a_content_text
+ 				check has_context_text: a_content_text /= Void then
+ 					Result := a_content_text
+ 				end
  			end
 		end
 

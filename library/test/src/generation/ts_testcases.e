@@ -5,7 +5,7 @@ note
 		"Test config testcases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/08 $"
 	revision: "$Revision: #17 $"
@@ -115,8 +115,8 @@ feature -- Generation
 			create new_name.make (a_class_name.count + l_class_prefix.count)
 			new_name.append_string (l_class_prefix)
 			new_name.append_string (a_class_name)
-			if testgen /= Void and then testgen.count > 0 then
-				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
+			if attached testgen as l_testgen and then l_testgen.count > 0 then
+				a_dirname := file_system.pathname_from_file_system (l_testgen, unix_file_system)
 				a_dirname := Execution_environment.interpreted_string (a_dirname)
 				create a_dir.make (a_dirname)
 				if not a_dir.exists then
@@ -174,8 +174,8 @@ feature -- Generation
 			a_dir: KL_DIRECTORY
 			upper_class_name: STRING
 		do
-			if testgen /= Void and then testgen.count > 0 then
-				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
+			if attached testgen as l_testgen and then l_testgen.count > 0 then
+				a_dirname := file_system.pathname_from_file_system (l_testgen, unix_file_system)
 				a_dirname := Execution_environment.interpreted_string (a_dirname)
 				create a_dir.make (a_dirname)
 				if not a_dir.exists then
@@ -392,7 +392,7 @@ feature {NONE} -- Generation
 
 feature -- Access
 
-	testgen: STRING
+	testgen: detachable STRING
 			-- Directory where test classes are generated;
 			-- Void means current directory
 

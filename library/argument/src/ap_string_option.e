@@ -5,7 +5,7 @@ note
 		"Options that take arbitrary string arguments"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature -- Status setting
 			default_parameter_set: default_parameter = Void
 		end
 
-feature {AP_PARSER} -- Parser Interface
+feature {AP_BASIC_PARSER} -- Parser Interface
 
 	reset
 			-- Reset the option to a clean state before parsing.
@@ -51,7 +51,7 @@ feature {AP_PARSER} -- Parser Interface
 			create {DS_ARRAYED_LIST [detachable STRING]} parameters.make (1)
 		end
 
-	record_occurrence (a_parser: AP_PARSER)
+	record_occurrence (a_parser: AP_BASIC_PARSER)
 			-- This option was found during parsing by `a_parser'.
 		do
 			if not attached a_parser.last_option_parameter as l_last_option_parameter then

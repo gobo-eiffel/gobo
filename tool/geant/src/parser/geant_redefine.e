@@ -5,7 +5,7 @@ note
 		"Redefines"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,15 +28,14 @@ feature -- Status report
 	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
-			Result := name /= Void and then name.count > 0
+			Result := attached name as l_name and then l_name.count > 0
 		ensure
-			name_not_void: Result implies name /= Void
-			name_not_empty: Result implies name.count > 0
+			name_not_void_and_not_empty: Result implies attached name as l_name and then l_name.count > 0
 		end
 
 feature -- Access
 
-	name: STRING
+	name: detachable STRING
 			-- Name of target to be redefined
 
 feature -- Setting

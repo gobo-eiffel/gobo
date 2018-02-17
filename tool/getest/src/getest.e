@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Test"
 
-	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,44 +38,48 @@ feature -- Processing
 			create variables.make
 			create error_handler.make_standard
 			read_command_line
-			create a_file.make (config_filename)
-			a_file.open_read
-			if a_file.is_open_read then
-				if must_generate then
-					std.output.put_line ("Preparing Test Cases")
-				elseif must_compile then
-					std.output.put_line ("Compiling Test Cases")
-				elseif must_execute then
-					std.output.put_line ("Running Test Cases")
-					std.output.put_new_line
-				end
-				create config_parser.make (variables, error_handler)
-				config_parser.set_fail_on_rescue (fail_on_rescue)
-				config_parser.set_compiler_ge (compiler_ge)
-				config_parser.set_compiler_ise (compiler_ise)
-				config_parser.parse (a_file)
-				a_file.close
-				a_config := config_parser.last_config
-				if compile_command /= Void then
-					a_config.set_compile (compile_command)
-				end
-				if class_regexp /= Void then
-					a_config.set_class_regexp (class_regexp)
-				end
-				if feature_regexp /= Void then
-					a_config.set_feature_regexp (feature_regexp)
-				end
-				if default_test_included then
-					a_config.set_default_test_included (default_test_included)
-				end
-				process (a_config)
-				if error_handler.error_reported then
+			check postcondition_of_read_command_line: attached config_filename as l_config_filename then
+				create a_file.make (l_config_filename)
+				a_file.open_read
+				if a_file.is_open_read then
+					if must_generate then
+						std.output.put_line ("Preparing Test Cases")
+					elseif must_compile then
+						std.output.put_line ("Compiling Test Cases")
+					elseif must_execute then
+						std.output.put_line ("Running Test Cases")
+						std.output.put_new_line
+					end
+					create config_parser.make (variables, error_handler)
+					config_parser.set_fail_on_rescue (fail_on_rescue)
+					config_parser.set_compiler_ge (compiler_ge)
+					config_parser.set_compiler_ise (compiler_ise)
+					config_parser.parse (a_file)
+					a_file.close
+					a_config := config_parser.last_config
+					if a_config /= Void then
+						if attached compile_command as l_compile_command then
+							a_config.set_compile (l_compile_command)
+						end
+						if attached class_regexp as l_class_regexp then
+							a_config.set_class_regexp (l_class_regexp)
+						end
+						if attached feature_regexp as l_feature_regexp then
+							a_config.set_feature_regexp (l_feature_regexp)
+						end
+						if default_test_included then
+							a_config.set_default_test_included (default_test_included)
+						end
+						process (a_config)
+						if error_handler.error_reported then
+							Exceptions.die (1)
+						end
+					end
+				else
+					create cannot_read.make (l_config_filename)
+					error_handler.report_error (cannot_read)
 					Exceptions.die (1)
 				end
-			else
-				create cannot_read.make (config_filename)
-				error_handler.report_error (cannot_read)
-				Exceptions.die (1)
 			end
 		end
 
@@ -176,18 +180,18 @@ feature -- Processing
 
 feature -- Access
 
-	config_filename: STRING
+	config_filename: detachable STRING
 			-- Configuration filename
 
-	compile_command: STRING
+	compile_command: detachable STRING
 			-- Compilation command-line given with
 			-- the option --compile=...
 
-	class_regexp: LX_REGULAR_EXPRESSION
+	class_regexp: detachable LX_REGULAR_EXPRESSION
 			-- Class regular expression given with
 			-- the option --class=...
 
-	feature_regexp: LX_REGULAR_EXPRESSION
+	feature_regexp: detachable LX_REGULAR_EXPRESSION
 			-- Feature regular expression given with
 			-- the option --feature=...
 
@@ -245,6 +249,8 @@ feature {NONE} -- Command line
 			i, nb: INTEGER
 			arg: STRING
 			a_file: KL_TEXT_INPUT_FILE
+			l_class_regexp: like class_regexp
+			l_feature_regexp: like feature_regexp
 		do
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
@@ -290,8 +296,10 @@ feature {NONE} -- Command line
 				elseif arg.count >= 8 and then arg.substring (1, 8).is_equal ("--class=") then
 					if arg.count > 8 then
 						arg := arg.substring (9, arg.count)
-						create {LX_DFA_REGULAR_EXPRESSION} class_regexp.compile_case_insensitive (arg)
-						if not class_regexp.is_compiled then
+						create {LX_DFA_REGULAR_EXPRESSION} l_class_regexp.compile_case_insensitive (arg)
+						if l_class_regexp.is_compiled then
+							class_regexp := l_class_regexp
+						else
 							class_regexp := Void
 							error_handler.report_option_regexp_syntax_error ("--class=", arg)
 						end
@@ -301,8 +309,10 @@ feature {NONE} -- Command line
 				elseif arg.count >= 10 and then arg.substring (1, 10).is_equal ("--feature=") then
 					if arg.count > 10 then
 						arg := arg.substring (11, arg.count)
-						create {LX_DFA_REGULAR_EXPRESSION} feature_regexp.compile_case_insensitive (arg)
-						if not feature_regexp.is_compiled then
+						create {LX_DFA_REGULAR_EXPRESSION} l_feature_regexp.compile_case_insensitive (arg)
+						if l_feature_regexp.is_compiled then
+							feature_regexp := l_feature_regexp
+						else
 							feature_regexp := Void
 							error_handler.report_option_regexp_syntax_error ("--feature=", arg)
 						end
@@ -351,8 +361,9 @@ feature {NONE} -- Command line
 			end
 			if config_filename = Void then
 				config_filename := Execution_environment.variable_value (Getest_config_variable)
-				if config_filename = Void or else config_filename.count = 0 then
+				if not attached config_filename as l_config_filename or else l_config_filename.count = 0 then
 					report_undefined_environment_variable_error (Getest_config_variable)
+					config_filename := ""
 				end
 			end
 			if not (must_generate or must_compile or must_execute) then
@@ -466,7 +477,7 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	variables_not_void: variables /= Void
-	compiled_class_regexp: class_regexp /= Void implies class_regexp.is_compiled
-	compiled_feature_regexp: feature_regexp /= Void implies feature_regexp.is_compiled
+	compiled_class_regexp: attached class_regexp as l_class_regexp implies l_class_regexp.is_compiled
+	compiled_feature_regexp: attached feature_regexp as l_feature_regexp implies l_feature_regexp.is_compiled
 
 end

@@ -283,16 +283,16 @@ feature {NONE} -- Command-line processing
 			s_not_void: s /= Void
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
-			a_definition: DS_PAIR [STRING, STRING]
+			a_definition: DS_PAIR [STRING, detachable STRING]
 		do
 			a_cursor := split_string (s, ' ').new_cursor
 			from a_cursor.start until a_cursor.after loop
 				if a_cursor.item.count /= 0 then
 					a_definition := split_on_first (a_cursor.item, '=')
-					if a_definition.second = Void then
+					if not attached a_definition.second as l_second then
 						variables.force_last ("", a_cursor.item)
 					else
-						variables.force_last (a_definition.second, a_definition.first)
+						variables.force_last (l_second, a_definition.first)
 					end
 				end
 				a_cursor.forth
@@ -340,7 +340,7 @@ invariant
 
 	variables_not_void: variables /= Void
 	commands_not_void: commands /= Void
-	no_void_command: not commands.has (Void)
+	no_void_command: not commands.has_void
 	error_handler_not_void: error_handler /= Void
 
 end

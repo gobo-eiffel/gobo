@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Lex: lexical analyzer generator"
 
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -151,20 +151,22 @@ feature -- Processing
 			a_file: KL_TEXT_OUTPUT_FILE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
-			filename := description.output_filename
-			if filename /= Void then
-				create a_file.make (filename)
-				a_file.open_write
-				if a_file.is_open_write then
-					dfa.print_scanner (a_file)
-					a_file.close
+			check precondition: attached dfa as l_dfa then
+				filename := description.output_filename
+				if filename /= Void then
+					create a_file.make (filename)
+					a_file.open_write
+					if a_file.is_open_write then
+						l_dfa.print_scanner (a_file)
+						a_file.close
+					else
+						create cannot_write.make (filename)
+						error_handler.report_error (cannot_write)
+						Exceptions.die (1)
+					end
 				else
-					create cannot_write.make (filename)
-					error_handler.report_error (cannot_write)
-					Exceptions.die (1)
+					l_dfa.print_scanner (std.output)
 				end
-			else
-				dfa.print_scanner (std.output)
 			end
 		end
 
@@ -177,21 +179,23 @@ feature -- Processing
 			a_file: KL_TEXT_OUTPUT_FILE
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
-			if description.backing_up_report then
-				filename := description.backing_up_filename
-				if filename /= Void then
-					create a_file.make (filename)
-					a_file.open_write
-					if a_file.is_open_write then
-						dfa.print_backing_up_report (a_file)
-						a_file.close
+			check precondition: attached dfa as l_dfa then
+				if description.backing_up_report then
+					filename := description.backing_up_filename
+					if filename /= Void then
+						create a_file.make (filename)
+						a_file.open_write
+						if a_file.is_open_write then
+							l_dfa.print_backing_up_report (a_file)
+							a_file.close
+						else
+							create cannot_write.make (filename)
+							error_handler.report_error (cannot_write)
+							Exceptions.die (1)
+						end
 					else
-						create cannot_write.make (filename)
-						error_handler.report_error (cannot_write)
-						Exceptions.die (1)
+						l_dfa.print_backing_up_report (std.output)
 					end
-				else
-					dfa.print_backing_up_report (std.output)
 				end
 			end
 		end
@@ -204,7 +208,7 @@ feature -- Access
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
-	dfa: LX_GENERATABLE_DFA
+	dfa: detachable LX_GENERATABLE_DFA
 			-- Generated DFA
 
 feature {NONE} -- Implementation

@@ -5,7 +5,7 @@ note
 		"Properties for Geant tasks and commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2008-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2008-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,11 +33,16 @@ feature -- Access
 		require
 			is_defined: is_defined
 		do
-			if not has_been_retrieved then
-				retrieved_string_value := string_value_agent.item ([])
-				has_been_retrieved := True
-			end
 			Result := retrieved_string_value
+			if Result = Void then
+				check
+					precondition_1: attached string_value_agent as l_string_value_agent
+					precondition_2: attached l_string_value_agent.item ([]) as l_retrieved_string_value
+				then
+					retrieved_string_value := l_retrieved_string_value
+					Result := l_retrieved_string_value
+				end
+			end
 		end
 
 	value: G
@@ -78,7 +83,7 @@ feature -- Status report
 	is_defined: BOOLEAN
 			-- Is a string value for this property available?
 		do
-			Result := string_value_agent /= Void and then string_value_agent.item ([]) /= Void
+			Result := attached string_value_agent as l_string_value_agent and then l_string_value_agent.item ([]) /= Void
 		end
 
 feature -- Setting
@@ -93,13 +98,10 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	has_been_retrieved: BOOLEAN
-			-- Has `string_value' been called before?
-
-	retrieved_string_value: STRING
+	retrieved_string_value: detachable STRING
 			-- string value retrieved through `string_value_agent' if `string_value' has been called before
 
-	string_value_agent: FUNCTION [STRING]
+	string_value_agent: detachable FUNCTION [detachable STRING]
 			-- string value agent
 
 end

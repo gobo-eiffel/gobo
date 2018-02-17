@@ -5,7 +5,7 @@ note
 		"XML project parsers"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_project_element: GEANT_PROJECT_ELEMENT
+	last_project_element: detachable GEANT_PROJECT_ELEMENT
 			-- Root element
 
 	build_filename: STRING
@@ -68,6 +68,7 @@ feature -- Parsing
 		local
 			a_document: XM_DOCUMENT
 			a_root_element: XM_ELEMENT
+			l_last_project_element: like last_project_element
 		do
 			last_project_element := Void
 			xml_parser.parse_from_stream (a_file)
@@ -75,8 +76,9 @@ feature -- Parsing
 				if not tree_pipe.error.has_error then
 					a_document := tree_pipe.document
 					a_root_element := a_document.root_element
-					create last_project_element.make (a_root_element, variables, options, build_filename)
-					last_project_element.project.set_position_table (tree_pipe.tree.last_position_table)
+					create l_last_project_element.make (a_root_element, variables, options, build_filename)
+					l_last_project_element.project.set_position_table (tree_pipe.tree.last_position_table)
+					last_project_element := l_last_project_element
 				else
 					std.error.put_string (tree_pipe.last_error)
 					std.error.flush

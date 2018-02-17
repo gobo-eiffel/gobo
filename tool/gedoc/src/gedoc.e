@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Doc"
 
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -241,7 +241,7 @@ feature -- Argument parsing
 			a_format_not_void: a_format /= Void
 		local
 			l_ise_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_ise_version: UT_VERSION
+			l_ise_version: detachable UT_VERSION
 		do
 			if not a_option.was_found then
 				l_ise_version := ise_latest
@@ -272,7 +272,9 @@ feature -- Argument parsing
 					Exceptions.die (1)
 				end
 			end
-			a_format.set_ise_version (l_ise_version)
+			if l_ise_version /= Void then
+				a_format.set_ise_version (l_ise_version)
+			end
 		end
 
 	set_defined_variables (a_option: like define_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
@@ -301,16 +303,18 @@ feature -- Argument parsing
 			if not a_option.parameters.is_empty then
 				create l_splitter.make
 				across a_option.parameters as l_variables loop
-					across l_splitter.split (l_variables.item) as l_variable loop
-						l_definition := l_variable.item
-						if l_definition.count > 0 then
-							l_index := l_definition.index_of ('=', 1)
-							if l_index = 0 then
-								l_defined_variables.force_last ("", l_definition)
-							elseif l_index = l_definition.count then
-								l_defined_variables.force_last ("", l_definition.substring (1, l_index - 1))
-							elseif l_index /= 1 then
-								l_defined_variables.force_last (l_definition.substring (l_index + 1, l_definition.count), l_definition.substring (1, l_index - 1))
+					if attached l_variables.item as l_variables_item then
+						across l_splitter.split (l_variables_item) as l_variable loop
+							l_definition := l_variable.item
+							if l_definition.count > 0 then
+								l_index := l_definition.index_of ('=', 1)
+								if l_index = 0 then
+									l_defined_variables.force_last ("", l_definition)
+								elseif l_index = l_definition.count then
+									l_defined_variables.force_last ("", l_definition.substring (1, l_index - 1))
+								elseif l_index /= 1 then
+									l_defined_variables.force_last (l_definition.substring (l_index + 1, l_definition.count), l_definition.substring (1, l_index - 1))
+								end
 							end
 						end
 					end

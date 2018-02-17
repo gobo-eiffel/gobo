@@ -5,7 +5,7 @@ note
 		"Group element"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2017, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,8 +54,8 @@ feature {NONE} -- Initialization
 		do
 				-- description:
 			a_description_element := xml_element.element_by_name (Description_element_name)
-			if a_description_element /= Void then
-				set_description (a_description_element.text)
+			if a_description_element /= Void and then attached a_description_element.text as l_text then
+				set_description (l_text)
 			else
 				set_description ("")
 			end
@@ -110,24 +110,30 @@ feature -- Processing
 	execute
 			-- Execute all tasks of `Current' in sequential order.
 		local
-			a_old_cwd: STRING
+			a_old_cwd: detachable STRING
 			a_new_cwd: STRING
 			a_string_interpreter: GEANT_STRING_INTERPRETER
+			l_target_name: STRING
 		do
 			if is_enabled then
 					-- Change to the specified directory if "dir" attribute is provided:
-				if xml_element.has_attribute_by_name (Dir_attribute_name) then
+				if attached xml_element.attribute_by_name (Dir_attribute_name) as l_dir_attribute then
 					create a_string_interpreter.make
 					Project_variables_resolver.set_variables (project.variables)
 					a_string_interpreter.set_variable_resolver (Project_variables_resolver)
 					a_new_cwd := a_string_interpreter.interpreted_string (
-						xml_element.attribute_by_name (Dir_attribute_name).value.out)
+						l_dir_attribute.value.out)
 
 					project.trace_debug (<<"changing to directory: '", a_new_cwd, "%'">>)
 					a_old_cwd := file_system.current_working_directory
 					if not file_system.directory_exists (a_new_cwd) then
+						if attached associated_target as l_associated_target then
+							l_target_name := project.target_name (l_associated_target)
+						else
+							l_target_name := ""
+						end
 						exit_application (1, <<"target `", project.name, ".",
-							project.target_name (associated_target), "%' : directory %'", a_new_cwd,
+							l_target_name, "%' : directory %'", a_new_cwd,
 							"%' does not exist">>)
 					end
 					file_system.set_current_working_directory (a_new_cwd)
@@ -141,7 +147,7 @@ feature -- Processing
 				execute_nested_tasks
 
 					-- Change back to original directory before group was entered:
-				if has_attribute (Dir_attribute_name) then
+				if has_attribute (Dir_attribute_name) and a_old_cwd /= Void then
 					project.trace_debug (<<"changing to directory: '", a_old_cwd, "%'">>)
 					file_system.set_current_working_directory (a_old_cwd)
 				end
@@ -183,13 +189,19 @@ feature {NONE} -- Execution implementation
 			a_xml_element_is_group: a_xml_element /= Void and then STRING_.same_string (a_xml_element.name, Group_element_name)
 		local
 			grp: GEANT_GROUP
+			l_target_name: STRING
 		do
 			create grp.make (project, a_xml_element)
 			grp.set_parent (Current)
 			if grp.is_enabled then
-				project.trace_debug (<<"entering group from target: '", project.target_name (associated_target) , "%'">>)
+				if attached associated_target as l_associated_target then
+					l_target_name := project.target_name (l_associated_target)
+				else
+					l_target_name := ""
+				end
+				project.trace_debug (<<"entering group from target: '", l_target_name, "%'">>)
 				grp.execute
-				project.trace_debug (<<"leaving group from target: '", project.target_name (associated_target) , "%'">>)
+				project.trace_debug (<<"leaving group from target: '", l_target_name, "%'">>)
 			end
 		end
 
@@ -218,25 +230,26 @@ feature {NONE} -- Execution implementation
 		require
 			a_xml_element_not_void: a_xml_element /= Void
 		local
-			a_task: GEANT_TASK
+			a_task: detachable GEANT_TASK
 		do
 			a_task := project.new_task (a_xml_element)
 
 				-- Execute task:
 			if a_task = Void then
 				exit_application (1, <<"unknown task : ", a_xml_element.name>>)
-			end
-			if not a_task.is_executable then
-				a_task.log_validation_messages
-				exit_application (1, <<"cannot execute task : ", a_xml_element.name>>)
-			end
-			if a_task.is_enabled then
-				a_task.execute
-				if a_task.is_exit_command or a_task.exit_code /= 0 then
-					exit_application (a_task.exit_code, Void)
-				end
 			else
-				project.trace_debug (<<"task is disabled">>)
+				if not a_task.is_executable then
+					a_task.log_validation_messages
+					exit_application (1, <<"cannot execute task : ", a_xml_element.name>>)
+				end
+				if a_task.is_enabled then
+					a_task.execute
+					if a_task.is_exit_command or a_task.exit_code /= 0 then
+						exit_application (a_task.exit_code, Void)
+					end
+				else
+					project.trace_debug (<<"task is disabled">>)
+				end
 			end
 		end
 

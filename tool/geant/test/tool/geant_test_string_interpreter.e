@@ -5,7 +5,7 @@ note
 		"Test features of classes GEANT_STRING_INTERPRETER and GEANT_VARIABLES_VARIABLE_RESOLVER"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,9 +46,12 @@ feature -- Execution
 
 	set_up
 			-- Setup for a test.
+		local
+			a_variables: GEANT_VARIABLES
 		do
 			create si.make
-			create vr.make
+			create a_variables.make
+			create vr.make (a_variables)
 			si.set_variable_resolver (vr)
 		end
 

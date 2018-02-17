@@ -5,7 +5,7 @@ note
 		"Target of geant build file"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2011, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,21 +43,23 @@ feature {NONE} -- Initialization
 			a_xml_element := xml_element
 
 				-- name:
-			if not a_xml_element.has_attribute_by_name (Name_attribute_name) then
+			if not attached xml_element.attribute_by_name (Name_attribute_name) as l_name_attribute then
 				exit_application (1, <<"Element 'target' without attribute 'name' found.",
 					" Make sure each target has an associated attribute 'name'.">>)
+				set_name ("no_name")
+			else
+				set_name (l_name_attribute.value)
 			end
-			set_name (xml_element.attribute_by_name (Name_attribute_name).value)
 				-- obsolete:
 			a_obsolete_element := a_xml_element.element_by_name (Obsolete_element_name)
-			if a_obsolete_element /= Void then
-				set_obsolete_message (a_obsolete_element.text)
+			if a_obsolete_element /= Void and then attached a_obsolete_element.text as l_text then
+				set_obsolete_message (l_text)
 			end
 
 				-- export:
-			if a_xml_element.has_attribute_by_name (Export_attribute_name) then
+			if attached a_xml_element.attribute_by_name (Export_attribute_name) as l_export_attribute then
 				a_exports := string_tokens (
-					a_xml_element.attribute_by_name (Export_attribute_name).value, ',')
+					l_export_attribute.value, ',')
 			else
 				create a_exports.make (1)
 				a_exports.put (Project_name_any, 1)
@@ -98,7 +100,7 @@ feature {NONE} -- Initialization
 					create a_local_element.make (cs.item)
 					if a_local_element.has_name and then a_local_element.name.count > 0 then
 						a_name := a_local_element.name
-						formal_locals.force_last (Void, a_name)	--| this is formal variable, the value is ignored at this point.
+						formal_locals.force_last ("", a_name)	--| this is formal variable, the value is ignored at this point.
 						project.trace_debug (<<"found local declaration '", a_name, "'%N">>)
 						if formal_arguments.has (a_name) then
 							project.log (<<"  [local] name=", a_name, " warning: conflict with arguments variable." >>)
@@ -119,7 +121,7 @@ feature {NONE} -- Initialization
 					create a_global_element.make (cs.item)
 					if a_global_element.has_name and then a_global_element.name.count > 0 then
 						a_name := a_global_element.name
-						formal_globals.force_last (Void, a_name) --| this is formal variable, the value is ignored at this point.
+						formal_globals.force_last ("", a_name) --| this is formal variable, the value is ignored at this point.
 						--| if a_global_element.has_value, the value will be set, when the element is processed
 						project.trace_debug (<<"found global declaration '", a_name, "'%N">>)
 						if formal_arguments.has (a_name) then
@@ -133,7 +135,6 @@ feature {NONE} -- Initialization
 			end
 
 			Precursor {GEANT_GROUP}
-
 		end
 
 feature -- Access
@@ -146,7 +147,9 @@ feature -- Access
 		require
 			has_dependencies: has_dependencies
 		do
-			Result := xml_element.attribute_by_name (Depend_attribute_name).value
+			check precondition: attached xml_element.attribute_by_name (Depend_attribute_name) as l_depend_attribute then
+				Result := l_depend_attribute.value
+			end
 		ensure
 			dependencies_not_void: Result /= Void
 		end
@@ -154,7 +157,7 @@ feature -- Access
 	name: STRING
 			-- Name of target
 
-	obsolete_message: STRING
+	obsolete_message: detachable STRING
 			-- Obsolete message if any
 
 	exports: DS_ARRAYED_LIST [STRING]
@@ -185,11 +188,11 @@ feature -- Access
 			definition: STRING_.same_string (Result, STRING_.concat (STRING_.concat (project.name, "."), name))
 		end
 
-	precursor_target: like Current
+	precursor_target: detachable like Current
 			-- Precursor of current target if this target
 			-- was redefined
 
-	redefining_target: like Current
+	redefining_target: detachable like Current
 			-- Redefining target of current target if present;
 			-- Used for polymorphic calls
 
@@ -199,11 +202,10 @@ feature -- Access
 			from
 				Result := Current
 			until
-				Result.precursor_target = Void
+				not attached Result.precursor_target as l_precursor_target
 			loop
-				Result := Result.precursor_target
+				Result := l_precursor_target
 			end
-
 		ensure
 			seed_not_void: Result /= Void
 			current_if_no_precursor_target: precursor_target = Void implies Result = Current
@@ -216,11 +218,10 @@ feature -- Access
 			from
 				Result := Current
 			until
-				Result.redefining_target = Void
+				not attached Result.redefining_target as l_redefining_target
 			loop
-				Result := Result.redefining_target
+				Result := l_redefining_target
 			end
-
 		ensure
 			final_target_not_void: Result /= Void
 			current_if_no_redefining_target: redefining_target = Void implies Result = Current
@@ -285,23 +286,6 @@ feature -- Access
 			end
 		end
 
-	prepared_locals_from_formal_locals (a_locals: like formal_locals): like formal_locals
-			-- Prepared actual locals for `formal_locals';
-		require
-			a_locals_not_void: a_locals /= Void
-			formal_locals_not_void: formal_locals /= Void
-		local
-			cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
-		do
-			Result := a_locals
-				-- Default Result is `a_arguments' if nothing needs to be changed:
-			cursor := formal_locals.new_cursor
-			from cursor.start until cursor.after loop
-				Result.force_last (cursor.item, cursor.key)
-				cursor.forth
-			end
-		end
-
 feature -- Status report
 
 	is_executed: BOOLEAN
@@ -358,11 +342,11 @@ feature -- Status report
 	valid_xml_element (an_xml_element: like xml_element): BOOLEAN
 			-- Is `an_xml_element' a valid xml element?
 		do
-			Result := an_xml_element.has_attribute_by_name (Name_attribute_name) and then
-				an_xml_element.attribute_by_name (Name_attribute_name).value.count > 0
+			Result := attached an_xml_element.attribute_by_name (Name_attribute_name) as l_name_attribute and then
+				l_name_attribute.value.count > 0
 		ensure then
 			has_name_attribute: Result implies an_xml_element.has_attribute_by_name (Name_attribute_name)
-			has_non_empty_name_attribute: Result implies an_xml_element.attribute_by_name (Name_attribute_name).value.count > 0
+			has_non_empty_name_attribute: Result implies attached an_xml_element.attribute_by_name (Name_attribute_name) as l_name_attribute and then l_name_attribute.value.count > 0
 		end
 
 	conflicts_with (a_target: like Current): BOOLEAN
@@ -527,8 +511,8 @@ feature -- Processing
 						project.trace (<<project.name, ".", project.target_name (Current), ":">>)
 						project.trace (<<"">>)
 					end
-					if obsolete_message /= Void then
-						project.log (<<"target `", project.name, ".", project.target_name (Current), "%' is obsolete. ", obsolete_message>>)
+					if attached obsolete_message as l_obsolete_message then
+						project.log (<<"target `", project.name, ".", project.target_name (Current), "%' is obsolete. ", l_obsolete_message>>)
 					end
 
 					Precursor {GEANT_GROUP}
@@ -628,8 +612,8 @@ feature -- Dependencies
 					-- Find all targets.
 				from i := 1 until i > a_dependent_targets.count loop
 					a_value := a_dependent_targets.item (i)
-					if project.targets.has (a_value) then
-						a_dependent_target := project.targets.item (a_value).final_target
+					if attached project.targets as l_targets and then l_targets.has (a_value) then
+						a_dependent_target := l_targets.item (a_value).final_target
 						Result.force (a_dependent_target)
 					else
 						exit_application (1, <<"geant error: unknown dependent target '", a_value, "%'">>)
@@ -730,6 +714,6 @@ feature {NONE} -- Constants
 
 invariant
 
-	no_void_export: exports /= Void implies not exports.has (Void)
+	no_void_export: exports /= Void implies not exports.has_void
 
 end

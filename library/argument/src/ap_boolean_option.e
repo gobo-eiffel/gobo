@@ -5,7 +5,7 @@ note
 		"Options that need a yes or no parameter"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -102,7 +102,7 @@ feature -- Status setting
 			default_parameter_set: default_parameter = True
 		end
 
-feature {AP_PARSER} -- Parser Interface
+feature {AP_BASIC_PARSER} -- Parser Interface
 
 	reset
 			-- Reset the option to a clean state before parsing.
@@ -110,7 +110,7 @@ feature {AP_PARSER} -- Parser Interface
 			create {DS_LINKED_LIST [BOOLEAN]} parameters.make
 		end
 
-	record_occurrence (a_parser: AP_PARSER)
+	record_occurrence (a_parser: AP_BASIC_PARSER)
 			-- This option was found during parsing by `a_parser'.
 		local
 			error: AP_ERROR

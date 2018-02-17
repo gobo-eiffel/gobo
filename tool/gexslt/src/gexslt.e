@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel XSLT 2.0 processor"
 
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -151,13 +151,13 @@ feature -- Status report
 	is_line_numbering: BOOLEAN
 			-- Will diagnostics include line numbers?
 
-	initial_template_name: STRING
+	initial_template_name: detachable STRING
 			-- Name of initial template to be invoked
 
-	initial_mode_name: STRING
+	initial_mode_name: detachable STRING
 			-- Name of initial mode
 
-	initial_context: STRING
+	initial_context: detachable STRING
 			-- XPath expression to determine initial context node
 
 	is_tracing: BOOLEAN
@@ -179,6 +179,7 @@ feature -- Setting
 			a_string_splitter: ST_SPLITTER
 			a_component_list: DS_LIST [STRING]
 			a_parameter_name, a_parameter_value: STRING
+			l_parameters: like parameters
 		do
 			create a_string_splitter.make
 			a_string_splitter.set_separators ("=")
@@ -202,14 +203,16 @@ feature -- Setting
 				a_parameter_value := a_parameter_value.substring (2, a_parameter_value.count - 1)
 			end
 
-			if parameters = Void then
-				create parameters.make_with_equality_testers (3, string_equality_tester, string_equality_tester)
+			l_parameters := parameters
+			if l_parameters = Void then
+				create l_parameters.make_with_equality_testers (3, string_equality_tester, string_equality_tester)
+				parameters := l_parameters
 			end
-			if parameters.has (a_parameter_name) then
+			if l_parameters.has (a_parameter_name) then
 				report_duplicate_parameter_name (a_parameter_name)
 				Exceptions.die (1)
 			else
-				parameters.force_new (a_parameter_value, a_parameter_name)
+				l_parameters.force_new (a_parameter_value, a_parameter_name)
 			end
 		end
 
@@ -236,13 +239,13 @@ feature -- Setting
 			end
 			a_parameter_value := a_component_list.item (2)
 
-			if xpath_parameters = Void then
+			if not attached xpath_parameters as l_xpath_parameters then
 				create xpath_parameters.make_with_equality_testers (3, string_equality_tester, string_equality_tester)
-			elseif xpath_parameters.has (a_parameter_name) then
+			elseif l_xpath_parameters.has (a_parameter_name) then
 				report_duplicate_parameter_name (a_parameter_name)
 				Exceptions.die (1)
 			else
-				xpath_parameters.put_new (a_parameter_value, a_parameter_name)
+				l_xpath_parameters.put_new (a_parameter_value, a_parameter_name)
 			end
 		end
 
@@ -265,13 +268,13 @@ feature -- Access
 	uris: DS_ARRAYED_LIST [STRING]
 			-- Stylesheet and source document URIs
 
-	parameters: DS_HASH_TABLE [STRING, STRING]
+	parameters: detachable DS_HASH_TABLE [STRING, STRING]
 			-- String parameter values indexed by expanded name
 
-	xpath_parameters: DS_HASH_TABLE [STRING, STRING]
+	xpath_parameters: detachable DS_HASH_TABLE [STRING, STRING]
 			-- XPath parameter values indexed by expanded name
 
-	output_destination: STRING
+	output_destination: detachable STRING
 			-- Output destination URL (if `Void' use standard output)
 
 	highly_secure: BOOLEAN
@@ -482,7 +485,7 @@ feature {NONE} -- Implementation
 	configuration: XM_XSLT_CONFIGURATION
 			-- Configuration
 
-	trace_file: KI_TEXT_OUTPUT_FILE
+	trace_file: detachable KI_TEXT_OUTPUT_FILE
 			-- File fro trace output
 
 	suppress_output_extensions: BOOLEAN
@@ -494,10 +497,10 @@ feature {NONE} -- Implementation
 	suppress_network_protocols: BOOLEAN
 			-- Suppress URI schemes that access the network.
 
-	medium: STRING
+	medium: detachable STRING
 			-- Target medium (for use with  xml-stylesheet PIs)
 
-	title: STRING
+	title: detachable STRING
 			-- Target style (for use with  xml-stylesheet PIs)
 
 	set_digits (a_value: STRING)
@@ -790,6 +793,7 @@ feature {NONE} -- Implementation
 			l_source: XM_XSLT_URI_SOURCE
 			l_stylesheet_source: XM_XSLT_SOURCE
 			l_chooser: XM_XSLT_PI_CHOOSER
+			l_medium: like medium
 		do
 			conformance.set_basic_xslt_processor
 			configuration.use_tiny_tree_model (is_tiny_tree_model)
@@ -817,25 +821,28 @@ feature {NONE} -- Implementation
 			create transformer_factory.make (configuration)
 			if use_processing_instruction then
 				create l_source.make (uris.item (1))
-				if medium = Void then
-					medium := "screen"
-				elseif medium.is_equal ("all") then
+				l_medium := medium
+				if l_medium = Void then
+					l_medium := "screen"
+					medium := l_medium
+				elseif l_medium.is_equal ("all") then
 					report_processing_error ("Forbidden option value", "Medium must not be 'all'")
 					Exceptions.die (1)
 				end
-				if title /= Void and then title.count > 1 then
-					if title.item (1) = '"' and then title.item (title.count) = '"' then
-						title := title.substring (2, title.count - 1)
+				if attached title as l_title and then l_title.count > 1 then
+					if l_title.item (1) = '"' and then l_title.item (l_title.count) = '"' then
+						title := l_title.substring (2, l_title.count - 1)
 					end
 				end
-				if title = Void then
+				if not attached title as l_title then
 					create {XM_XSLT_PREFERRED_PI_CHOOSER} l_chooser.make
 				else
-					create {XM_XSLT_PI_CHOOSER_BY_NAME} l_chooser.make (title)
+					create {XM_XSLT_PI_CHOOSER_BY_NAME} l_chooser.make (l_title)
 				end
-				l_stylesheet_source := transformer_factory.associated_stylesheet (l_source.system_id, medium, l_chooser)
+				l_stylesheet_source := transformer_factory.associated_stylesheet (l_source.system_id, l_medium, l_chooser)
 				if l_stylesheet_source = Void then
 					report_processing_error ("Unable to compile stylesheet",  "Xml-stylesheet processing instuction(s) did not lead to a stylesheet being compiled sucessfully..")
+					create {XM_XSLT_URI_SOURCE} l_stylesheet_source.make (uris.item (1))
 					Exceptions.die (2)
 				end
 			else
@@ -843,8 +850,10 @@ feature {NONE} -- Implementation
 			end
 			transformer_factory.create_new_transformer (l_stylesheet_source, current_directory_base)
 			if transformer_factory.was_error then
-				report_processing_error ("Could not compile stylesheet", transformer_factory.last_error_message)
-				Exceptions.die (2)
+				check invariant_of_XM_XSLT_TRANSFORMER_FACTORY: attached transformer_factory.last_error_message as l_last_error_message then
+					report_processing_error ("Could not compile stylesheet", l_last_error_message)
+					Exceptions.die (2)
+				end
 			end
 		ensure
 			transformer_factory_not_void: transformer_factory /= Void
@@ -858,53 +867,51 @@ feature {NONE} -- Implementation
 			no_error: not transformer_factory.was_error
 			transformer_created: transformer_factory.created_transformer /= Void
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_source: XM_XSLT_URI_SOURCE
+			a_source: detachable XM_XSLT_URI_SOURCE
 			a_destination: XM_OUTPUT
 			a_destination_system_id: STRING
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			a_stream: KL_TEXT_OUTPUT_FILE
+			a_stream: detachable KL_TEXT_OUTPUT_FILE
 			a_uri: UT_URI
 		do
-			a_transformer := transformer_factory.created_transformer
-			process_parameters (a_transformer)
-			if uris.count = 2 then
-				create a_source.make (uris.item (2))
-			end
-			if initial_template_name /= Void then
-				a_transformer.set_initial_template (initial_template_name)
-			end
-			if not a_transformer.is_error and initial_mode_name /= Void then
-				a_transformer.set_initial_mode (initial_mode_name)
-			end
-			if not a_transformer.is_error and initial_context /= Void then
-				a_transformer.set_initial_context (initial_context)
-			end
-			if not a_transformer.is_error then
-				create a_destination -- To standard output
-				if output_destination /= Void then
-					create a_stream.make (output_destination)
-					a_stream.open_write
-					a_destination.set_output_stream (a_stream)
-					create a_uri.make_resolve_uri (current_directory_base,
-														File_uri.filename_to_uri (output_destination))
-					a_destination_system_id := a_uri.full_reference
-				else
-					a_destination_system_id := "stdout:"
+			check preconditiopn: attached transformer_factory.created_transformer as a_transformer then
+				process_parameters (a_transformer)
+				if uris.count = 2 then
+					create a_source.make (uris.item (2))
 				end
-				create a_result.make (a_destination, a_destination_system_id)
-			end
-			if not a_transformer.is_error then
-				a_transformer.transform (a_source, a_result)
-			end
-			if a_stream /= Void then
-				a_stream.close
-			end
-			if trace_file /= Void then
-				trace_file.close
-			end
-			if a_transformer.is_error then
-				Exceptions.die (3) -- the error listener has already reported the error.message
+				if attached initial_template_name as l_initial_template_name then
+					a_transformer.set_initial_template (l_initial_template_name)
+				end
+				if not a_transformer.is_error and attached initial_mode_name as l_initial_mode_name then
+					a_transformer.set_initial_mode (l_initial_mode_name)
+				end
+				if not a_transformer.is_error and attached initial_context as l_initial_context then
+					a_transformer.set_initial_context (l_initial_context)
+				end
+				if not a_transformer.is_error then
+					create a_destination -- To standard output
+					if attached output_destination as l_output_destination then
+						create a_stream.make (l_output_destination)
+						a_stream.open_write
+						a_destination.set_output_stream (a_stream)
+						create a_uri.make_resolve_uri (current_directory_base,
+															File_uri.filename_to_uri (l_output_destination))
+						a_destination_system_id := a_uri.full_reference
+					else
+						a_destination_system_id := "stdout:"
+					end
+					create a_result.make (a_destination, a_destination_system_id)
+					a_transformer.transform (a_source, a_result)
+				end
+				if a_stream /= Void then
+					a_stream.close
+				end
+				if attached trace_file as l_trace_file then
+					l_trace_file.close
+				end
+				if a_transformer.is_error then
+					Exceptions.die (3) -- the error listener has already reported the error.message
+				end
 			end
 		end
 
@@ -916,8 +923,8 @@ feature {NONE} -- Implementation
 			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 			a_string: STRING
 		do
-			if parameters /= Void then
-				a_cursor := parameters.new_cursor
+			if attached parameters as l_parameters then
+				a_cursor := l_parameters.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_string := a_cursor.item
 					if a_string.count > 1 and then a_string.item (1) = '%'' and then a_string.item (a_string.count) = '%'' then
@@ -928,8 +935,8 @@ feature {NONE} -- Implementation
 					a_cursor.forth
 				end
 			end
-			if xpath_parameters /= Void then
-				a_cursor := xpath_parameters.new_cursor
+			if attached xpath_parameters as l_xpath_parameters then
+				a_cursor := l_xpath_parameters.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_string := a_cursor.item
 					a_transformer.set_xpath_parameter (a_string, a_cursor.key)
@@ -988,10 +995,13 @@ feature {NONE} -- Implementation
 			-- Set trace output to `a_filename'.
 		require
 			file_name_not_void: a_filename /= Void
+		local
+			l_trace_file: like trace_file
 		do
-			trace_file := file_system.new_output_file (a_filename)
-			trace_file.open_write
-			error_handler.set_info_file (trace_file)
+			l_trace_file := file_system.new_output_file (a_filename)
+			trace_file := l_trace_file
+			l_trace_file.open_write
+			error_handler.set_info_file (l_trace_file)
 		end
 
 	set_warning_threshold (a_warning_threshold: STRING)
@@ -1090,10 +1100,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- HTTP basic authentication
 
-	user_name: STRING
+	user_name: detachable STRING
 			-- User name for HTTP basic authentication
 
-	password: STRING
+	password: detachable STRING
 			-- Password for HTTP basic authentication
 
 	is_authentication_requested: BOOLEAN
@@ -1101,7 +1111,7 @@ feature {NONE} -- HTTP basic authentication
 		do
 			Result := user_name /= Void and password /= Void
 		ensure
-			definition: Result implies ((user_name /= Void and then not user_name.is_empty) and (password /= Void and then not password.is_empty))
+			definition: Result implies ((attached user_name as l_user_name and then not l_user_name.is_empty) and (attached password as l_password and then not l_password.is_empty))
 		end
 
 	set_user_name (a_name: STRING)

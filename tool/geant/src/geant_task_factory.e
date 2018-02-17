@@ -5,7 +5,7 @@ note
 		"Geant tasks factory"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2016, Sven Ehrke, Jocelyn Fiat, and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke, Jocelyn Fiat, and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature {NONE} -- Property
 
 feature -- Access
 
-	new_task (a_xml_element: XM_ELEMENT): GEANT_TASK
+	new_task (a_xml_element: XM_ELEMENT): detachable GEANT_TASK
 			-- New GEANT_TASK for `a_xml_element'
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -374,6 +374,6 @@ invariant
 
 	project_not_void: project /= Void
 	builders_not_void: builders /= Void
-	no_void_builder: not builders.has_item (Void)
+	no_void_builder: not builders.has_void_item
 
 end

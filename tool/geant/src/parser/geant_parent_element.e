@@ -5,7 +5,7 @@ note
 		"Parent Elements"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2015, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ feature -- Initialization
 			a_project_not_void: a_project /= Void
 			a_xml_element_not_void: a_xml_element /= Void
 		local
-			s: STRING
+			s: detachable STRING
 			xml_elements: DS_LINKED_LIST [XM_ELEMENT]
 			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			a_rename_element: GEANT_RENAME_ELEMENT
@@ -55,9 +55,11 @@ feature -- Initialization
 					end
 					create a_project_loader.make (a_string)
 					a_project_loader.load (a_project.variables, a_project.options)
-					a_parent_project := a_project_loader.project_element.project
-					parent.set_parent_project (a_parent_project)
-					a_parent_project.merge_in_parent_projects
+					if attached a_project_loader.project_element as l_project_element then
+						a_parent_project := l_project_element.project
+						parent.set_parent_project (a_parent_project)
+						a_parent_project.merge_in_parent_projects
+					end
 				end
 			end
 				-- Handle renames:
@@ -66,20 +68,24 @@ feature -- Initialization
 			from cs.start until cs.after loop
 				create a_rename_element.make (project, cs.item)
 				s := a_rename_element.rename_clause.original_name
-				if parent.renames.has (s) then
-					create msg.make (9)
-					msg.put_last ("%NLOAD ERROR:%N")
-					msg.put_last ("  Project '")
-					msg.put_last (project.name)
-					msg.put_last ("': VHRC-2: old_name `")
-					msg.put_last (s)
-					msg.put_last ("' appears more than once as the first element")
-					msg.put_last (" of a Rename_pair in the same Rename subclause of parent '")
-					msg.put_last (parent.parent_project.name)
-					msg.put_last ("%'")
-					exit_application (1, msg.to_array)
+				if s /= Void then
+					if parent.renames.has (s) then
+						create msg.make (9)
+						msg.put_last ("%NLOAD ERROR:%N")
+						msg.put_last ("  Project '")
+						msg.put_last (project.name)
+						msg.put_last ("': VHRC-2: old_name `")
+						msg.put_last (s)
+						msg.put_last ("' appears more than once as the first element")
+						msg.put_last (" of a Rename_pair in the same Rename subclause of parent '")
+						if attached parent.parent_project as l_parent_project then
+							msg.put_last (l_parent_project.name)
+						end
+						msg.put_last ("%'")
+						exit_application (1, msg.to_array)
+					end
+					parent.renames.force_last (a_rename_element.rename_clause, s)
 				end
-				parent.renames.force_last (a_rename_element.rename_clause, s)
 				cs.forth
 			end
 				-- Handle redefines:
@@ -88,7 +94,9 @@ feature -- Initialization
 			from cs.start until cs.after loop
 				create a_redefine_element.make (project, cs.item)
 				s := a_redefine_element.redefine_clause.name
-				parent.redefines.force_last (a_redefine_element.redefine_clause, s)
+				if s /= Void then
+					parent.redefines.force_last (a_redefine_element.redefine_clause, s)
+				end
 				cs.forth
 			end
 				-- Handle selects:
@@ -97,7 +105,9 @@ feature -- Initialization
 			from cs.start until cs.after loop
 				create a_select_element.make (project, cs.item)
 				s := a_select_element.select_clause.name
-				parent.selects.force_last (a_select_element.select_clause, s)
+				if s /= Void then
+					parent.selects.force_last (a_select_element.select_clause, s)
+				end
 				cs.forth
 			end
 		end
@@ -122,9 +132,11 @@ feature -- Initialization
 			if a_string.count > 0 then
 				create a_project_loader.make (a_string)
 				a_project_loader.load (a_project.variables, a_project.options)
-				a_parent_project := a_project_loader.project_element.project
-				parent.set_parent_project (a_parent_project)
-				a_parent_project.merge_in_parent_projects
+				if attached a_project_loader.project_element as l_project_element then
+					a_parent_project := l_project_element.project
+					parent.set_parent_project (a_parent_project)
+					a_parent_project.merge_in_parent_projects
+				end
 			else
 				exit_application (1, <<"%NLOAD ERROR:%N", "  project '", project.name, "' invalid inherit clause.">>)
 			end

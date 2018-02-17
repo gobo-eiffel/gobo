@@ -5,7 +5,7 @@ note
 		"Renames"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,23 +32,22 @@ feature -- Status report
 	is_executable: BOOLEAN
 			-- Can element be executed?
 		do
-			Result := original_name /= Void and then original_name.count > 0 and
-				new_name /= Void and then new_name.count > 0 and then
-				not STRING_.same_string (original_name, new_name)
+			Result := attached original_name as l_original_name and then l_original_name.count > 0 and then
+				attached new_name as l_new_name and then l_new_name.count > 0 and then
+				not STRING_.same_string (l_original_name, l_new_name)
 		ensure
-			original_name_not_void: Result implies original_name /= Void
-			original_name_not_empty: Result implies original_name.count > 0
-			new_name_not_void: Result implies new_name /= Void
-			new_name_not_empty: Result implies new_name.count > 0
-			original_name_and_new_name_not_equal: Result implies not STRING_.same_string (original_name, new_name)
+			original_name_and_new_name_not_equal: Result implies
+				attached original_name as l_original_name and then l_original_name.count > 0 and then
+				attached new_name as l_new_name and then l_new_name.count > 0 and then
+				not STRING_.same_string (l_original_name, l_new_name)
 		end
 
 feature -- Access
 
-	original_name: STRING
+	original_name: detachable STRING
 			-- Original target name
 
-	new_name: STRING
+	new_name: detachable STRING
 			-- New target name
 
 feature -- Setting

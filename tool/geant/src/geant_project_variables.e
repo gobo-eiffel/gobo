@@ -5,7 +5,7 @@ note
 		"Project variables for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Copyright (c) 2001-2004, Sven Ehrke and others"
+	copyright:"Copyright (c) 2001-2018, Sven Ehrke and others"
 	license:"MIT License"
 	date: "$Date$"
 	revision:"$Revision$"
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			-- Create a new variables object.
 		local
 			a_name: STRING
-			a_value: STRING
+			a_value: detachable STRING
 		do
 			Precursor
 				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe
@@ -45,7 +45,10 @@ feature {NONE} -- Initialization
 
 			a_name := gobo_os_name
 			if not Project_variables_resolver.has (a_name) then
-				set_variable_value (a_name, Default_builtin_variables.value (a_name))
+				a_value := Default_builtin_variables.value (a_name)
+				if a_value /= Void then
+					set_variable_value (a_name, a_value)
+				end
 			end
 			a_name := is_windows_name
 			if not Project_variables_resolver.has (a_name) then
@@ -63,16 +66,21 @@ feature {NONE} -- Initialization
 			end
 			a_name := path_separator_name
 			if not Project_variables_resolver.has (a_name) then
-				set_variable_value (a_name, Default_builtin_variables.value (a_name))
+				a_value := Default_builtin_variables.value (a_name)
+				if a_value /= Void then
+					set_variable_value (a_name, a_value)
+				end
 			end
 			a_name := exe_name
 			if not Project_variables_resolver.has (exe_name) then
-				set_variable_value (a_name, Default_builtin_variables.value (a_name))
+				a_value := Default_builtin_variables.value (a_name)
+				if a_value /= Void then
+					set_variable_value (a_name, a_value)
+				end
 			end
 			a_name := verbose_name
-			if not Project_variables_resolver.has (a_name) and
-				Default_builtin_variables.has (a_name) then
-				set_variable_value (a_name, Default_builtin_variables.value (a_name))
+			if not Project_variables_resolver.has (a_name) and Default_builtin_variables.has (a_name) then
+				set_variable_value (a_name, Default_builtin_variables.item (a_name))
 			end
 		end
 

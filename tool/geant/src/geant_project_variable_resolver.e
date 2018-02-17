@@ -5,7 +5,7 @@ note
 		"Variable resolvers"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2004, Sven Ehrke and others"
+	copyright: "Copyright (c) 2004-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value (a_name: STRING): STRING
+	value (a_name: STRING): detachable STRING
 			-- Value of variable `a_name' as a result of searching in
 			-- current target's arguments, commandline variables, project variables, environment variables
 			-- in this order; Void if not found
@@ -75,9 +75,11 @@ feature -- Access
 
 			if Result = Void then
 					-- Search project variables:
-				variables.search (a_name)
-				if variables.found then
-					Result := variables.found_item
+				if attached variables as l_variables then
+					l_variables.search (a_name)
+					if l_variables.found then
+						Result := l_variables.found_item
+					end
 				end
 			end
 
@@ -148,7 +150,7 @@ feature -- Access
 			end
 		end
 
-	variables: GEANT_VARIABLES
+	variables: detachable GEANT_VARIABLES
 			-- Variables used for resolving
 
 feature -- Status report
@@ -188,8 +190,10 @@ feature -- Status report
 
 			if not Result then
 					-- Search project variables:
-				variables.search (a_name)
-				Result := variables.found
+				if attached variables as l_variables then
+					l_variables.search (a_name)
+					Result := l_variables.found
+				end
 			end
 
 			if not Result then

@@ -5,7 +5,7 @@ note
 		"Geyacc commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Access
 	array_size: detachable STRING
 			-- --array-size option, default: 200
 
-	verbose_filename: STRING
+	verbose_filename: detachable STRING
 			-- -v option
 
 	rescue_on_abort: BOOLEAN
@@ -59,10 +59,10 @@ feature -- Access
 	separate_actions: BOOLEAN
 			-- -x option, default: false
 
-	tokens_classname: STRING
+	tokens_classname: detachable STRING
 			-- -t option
 
-	tokens_filename: STRING
+	tokens_filename: detachable STRING
 			-- -k option
 
 	output_filename: STRING
@@ -166,13 +166,13 @@ feature -- Execution
 			create cmd.make (128)
 			cmd.append_string ("geyacc ")
 				-- Option --array-size
-			if array_size /= Void and then array_size.count > 0 then
+			if attached array_size as l_array_size and then l_array_size.count > 0 then
 				cmd.append_string ("--array-size=")
-				cmd := STRING_.appended_string (cmd, array_size.out)
+				cmd := STRING_.appended_string (cmd, l_array_size.out)
 			end
 				-- Option -v
-			if verbose_filename /= Void and then verbose_filename.count > 0 then
-				a_filename := file_system.pathname_from_file_system (verbose_filename, unix_file_system)
+			if attached verbose_filename as l_verbose_filename and then l_verbose_filename.count > 0 then
+				a_filename := file_system.pathname_from_file_system (l_verbose_filename, unix_file_system)
 				cmd.append_string ("-v ")
 				cmd := STRING_.appended_string (cmd, a_filename)
 				cmd.append_string (" ")
@@ -186,15 +186,15 @@ feature -- Execution
 				cmd.append_string ("--rescue-on-abort ")
 			end
 				-- Option -t
-			if tokens_classname /= Void and then tokens_classname.count > 0 then
+			if attached tokens_classname as l_tokens_classname and then l_tokens_classname.count > 0 then
 				cmd.append_string ("-t ")
-				cmd := STRING_.appended_string (cmd, tokens_classname)
+				cmd := STRING_.appended_string (cmd, l_tokens_classname)
 				cmd.append_string (" ")
 			end
 				-- Option -k
-			if tokens_filename /= Void and then tokens_filename.count > 0 then
+			if attached tokens_filename as l_tokens_filename and then l_tokens_filename.count > 0 then
 				cmd.append_string ("-k ")
-				cmd := STRING_.appended_string (cmd, tokens_filename)
+				cmd := STRING_.appended_string (cmd, l_tokens_filename)
 				cmd.append_string (" ")
 			end
 				-- Option -o

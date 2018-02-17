@@ -5,7 +5,7 @@ note
 		"Options that need a value from a enumerated set"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,9 +88,9 @@ feature -- Status setting
 			set_parameter_description (new_name)
 		end
 
-feature {AP_PARSER} -- Parser Interface
+feature {AP_BASIC_PARSER} -- Parser Interface
 
-	record_occurrence (a_parser: AP_PARSER)
+	record_occurrence (a_parser: AP_BASIC_PARSER)
 			-- This option was found during parsing by `a_parser'.
 		local
 			error: AP_ERROR

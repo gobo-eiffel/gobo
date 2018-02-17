@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,9 +37,9 @@ feature -- Tests
 	test_make_empty
 			-- Can we make an empty parser?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 		do
-			create p.make_empty
+			create p.make
 			assert_integers_equal ("has_no_alternative_set", 0, p.alternative_options_lists.count)
 			assert_integers_equal ("has_no_options_in_basic", 0, p.options.count)
 			assert_integers_equal ("has_no_options", 0, p.all_options.count)
@@ -48,10 +48,10 @@ feature -- Tests
 	test_parse_array
 			-- Can we parse a given array of arguments?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 			o1: AP_FLAG
 		do
-			create p.make_empty
+			create p.make
 			create o1.make ('f', "foo")
 			p.options.force_last (o1)
 			p.parse_array (<< "--foo", "x" >>)
@@ -63,11 +63,11 @@ feature -- Tests
 	test_parse_list
 			-- Can we parse a given list of arguments?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 			o1: AP_FLAG
 			ll: DS_LINKED_LIST [STRING]
 		do
-			create p.make_empty
+			create p.make
 			create o1.make ('f', "foo")
 			create ll.make
 			p.options.force_last (o1)
@@ -80,12 +80,12 @@ feature -- Tests
 	test_complex_parse
 			-- Can we parse more complex sets of argument?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 			o1: AP_FLAG
 			o2: AP_STRING_OPTION
 			o3: AP_FLAG
 		do
-			create p.make_empty
+			create p.make
 			create o1.make ('f', "foo")
 			create o2.make ('b', "bar")
 			create o3.make ('x', "xxx")
@@ -102,10 +102,10 @@ feature -- Tests
 	test_parse_flags
 			-- Can we parse flags?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 			o1: AP_FLAG
 		do
-			create p.make_empty
+			create p.make
 			create o1.make ('f', "flag")
 			p.options.force_last (o1)
 			p.parse_array (<< "-f" >>)
@@ -119,10 +119,10 @@ feature -- Tests
 	test_parse_string_options
 			-- Can we parse string options?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 			o1: AP_STRING_OPTION
 		do
-			create p.make_empty
+			create p.make
 			create o1.make ('o', "option")
 			p.options.force_last (o1)
 			p.parse_array (<< "-o", "aaa" >>)
@@ -144,10 +144,10 @@ feature -- Tests
 	test_parse_option_with_optional_parameter
 			-- Can we parse an option that has an optional parameter?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 			o1: AP_STRING_OPTION
 		do
-			create p.make_empty
+			create p.make
 			create o1.make_with_long_form ("option")
 			o1.set_parameter_as_optional
 			p.options.force_last (o1)
@@ -165,10 +165,10 @@ feature -- Tests
 	test_parse_integer_options
 			-- Can we parse integer options?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 			o1: AP_INTEGER_OPTION
 		do
-			create p.make_empty
+			create p.make
 			create o1.make ('o', "option")
 			p.options.force_last (o1)
 			p.parse_array (<< "-o", "23" >>)
@@ -190,10 +190,10 @@ feature -- Tests
 	test_parse_boolean_options
 			-- Can we parse boolean options?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 			o1: AP_BOOLEAN_OPTION
 		do
-			create p.make_empty
+			create p.make
 			create o1.make ('o', "option")
 			p.options.force_last (o1)
 			p.parse_array (<< "-o", "true" >>)
@@ -231,10 +231,10 @@ feature -- Tests
 	test_parse_enumeration_option
 			-- Can we parse enumeration options?
 		local
-			p: AP_PARSER
+			p: AP_BASIC_PARSER
 			o1: AP_ENUMERATION_OPTION
 		do
-			create p.make_empty
+			create p.make
 			create o1.make ('o', "option")
 			p.options.force_last (o1)
 			o1.extend ("one")

@@ -5,7 +5,7 @@ note
 		"Project Elements"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,8 +63,8 @@ feature {NONE} -- Initialization
 			end
 			create project.make (a_variables, a_options, attribute_value (Name_attribute_name))
 				-- Determine description if available:
-			if xml_element.has_element_by_name (Description_element_name) then
-				project.set_description (xml_element.element_by_name (Description_element_name).text)
+			if attached xml_element.element_by_name (Description_element_name) as l_element and then attached l_element.text as l_text then
+				project.set_description (l_text)
 			end
 
 				-- Store absolute pathname of buildfile in project variable:
@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 			-- Load parent projects if present.
 		local
 			a_inherit_element: GEANT_INHERIT_ELEMENT
-			a_xml_element: XM_ELEMENT
+			a_xml_element: detachable XM_ELEMENT
 		do
 				-- Check that not both, inherit_attribute and inherit_element have been specified:
 				-- TODO: modify after obsolete period
@@ -141,8 +141,10 @@ feature {NONE} -- Initialization
 			if has_inherit_element then
 				check no_inherit_attribute: not has_attribute (Inherit_attribute_name) end
 				a_xml_element := xml_element.element_by_name (Inherit_element_name)
-				create a_inherit_element.make (project, a_xml_element)
-				project.set_inherit_clause (a_inherit_element.geant_inherit)
+				if a_xml_element /= Void then
+					create a_inherit_element.make (project, a_xml_element)
+					project.set_inherit_clause (a_inherit_element.geant_inherit)
+				end
 			end
 		end
 

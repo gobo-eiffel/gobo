@@ -5,7 +5,7 @@ note
 		"Build commands for 'gexace'"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,11 +21,11 @@ feature -- Access
 	generators: DS_LINKED_LIST [ET_XACE_GENERATOR]
 			-- Eiffel config file generators
 
-	format: STRING
+	format: detachable STRING
 			-- Name of Eiffel config file format
 			-- (e.g. ace, ecf, ...)
 
-	output_filename: STRING
+	output_filename: detachable STRING
 			-- Output filename
 
 feature -- Setting
@@ -49,6 +49,6 @@ feature -- Setting
 invariant
 
 	generators_not_void: generators /= Void
-	no_void_generator: not generators.has (Void)
+	no_void_generator: not generators.has_void
 
 end

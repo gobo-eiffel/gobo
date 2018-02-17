@@ -5,7 +5,7 @@ note
 		"Flags (options that do not require extra arguments)"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,9 +41,9 @@ feature -- Status report
 			Result := False
 		end
 
-feature {AP_PARSER} -- Parser Interface
+feature {AP_BASIC_PARSER} -- Parser Interface
 
-	record_occurrence (a_parser: AP_PARSER)
+	record_occurrence (a_parser: AP_BASIC_PARSER)
 			-- This option was found during parsing.
 		do
 			occurrences := occurrences + 1

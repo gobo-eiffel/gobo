@@ -5,7 +5,7 @@ note
 		"Geant commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2005, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,22 +37,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	filename: STRING
+	filename: detachable STRING
 			-- Geant build file to invoke
 
-	fileset: GEANT_FILESET
+	fileset: detachable GEANT_FILESET
 			-- Fileset for current command
 
 	reuse_variables: BOOLEAN
 			-- Are variables reused in new project?
 
-	start_target_name: STRING
+	start_target_name: detachable STRING
 			-- Name of target the build process starts with
 
 	arguments: GEANT_ARGUMENT_VARIABLES
 			-- Actual arguments
 
-	exit_code_variable_name: STRING
+	exit_code_variable_name: detachable STRING
 			-- Name of variable holding exit code of execution
 
 feature -- Status report
@@ -60,19 +60,17 @@ feature -- Status report
 	is_filename_executable: BOOLEAN
 			-- Can command be executed on a project file?
 		do
-			Result := filename /= Void and then filename.count > 0
+			Result := attached filename as l_filename and then l_filename.count > 0
 		ensure
-			filename_not_void: Result implies filename /= Void
-			filename_not_empty: Result implies filename.count > 0
+			filename_not_void_and_not_empty: Result implies attached filename as l_filename and then l_filename.count > 0
 		end
 
 	is_target_executable: BOOLEAN
 			-- Can command be executed on a target?
 		do
-			Result := start_target_name /= Void and then start_target_name.count > 0
+			Result := attached start_target_name as l_start_target_name and then l_start_target_name.count > 0
 		ensure
-			target_not_void: Result implies start_target_name /= Void
-			target_not_empty: Result implies start_target_name.count > 0
+			target_not_void_and_not_empty: Result implies attached start_target_name as l_start_target_name and then l_start_target_name.count > 0
 		end
 
 	is_fileset_executable: BOOLEAN
@@ -167,7 +165,7 @@ feature -- Execution
 			a_fork: BOOLEAN
 		do
 			exit_code := 0
-			if is_filename_executable then
+			if is_filename_executable and then attached filename as l_filename then
 				if has_fork_been_set then
 					a_fork := fork
 				else
@@ -175,31 +173,32 @@ feature -- Execution
 					a_fork := True
 				end
 					-- Create a new project and run it's build process:
-				a_filename := file_system.pathname_from_file_system (filename, unix_file_system)
+				a_filename := file_system.pathname_from_file_system (l_filename, unix_file_system)
 				if a_fork then
 					execute_forked_with_filename_and_target (a_filename, start_target_name)
 				else
 					execute_with_filename (a_filename)
 				end
 			else
-				check target_executable: is_target_executable end
-				if has_fork_been_set then
-					a_fork := fork
-				else
-						-- Set default value for fork:
-					a_fork := False
-				end
-					-- Call target of current project:
-				if a_fork then
-					execute_forked_with_target (start_target_name)
-				else
-					execute_with_target (start_target_name)
+				check target_executable: attached start_target_name as l_start_target_name then
+					if has_fork_been_set then
+						a_fork := fork
+					else
+							-- Set default value for fork:
+						a_fork := False
+					end
+						-- Call target of current project:
+					if a_fork then
+						execute_forked_with_target (l_start_target_name)
+					else
+						execute_with_target (l_start_target_name)
+					end
 				end
 			end
 
-			if exit_code_variable_name /= Void then
+			if attached exit_code_variable_name as l_exit_code_variable_name then
 					-- Store return_code of execution:
-				project.set_variable_value (exit_code_variable_name, exit_code.out)
+				project.set_variable_value (l_exit_code_variable_name, exit_code.out)
 					-- Reset `exit_code' since return code of execution is available through
 					-- variable 'exit_code_variable_name':
 				exit_code := 0
@@ -209,7 +208,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	execute_forked_with_filename_and_target (a_filename: STRING; a_target_name: STRING)
+	execute_forked_with_filename_and_target (a_filename: STRING; a_target_name: detachable STRING)
 			-- Spawn new geant process to execute scriptfile named `a_filename';
 			-- If `a_target_name' is not Void and not empty pass it as start target name.
 			-- TODO: support filesets
@@ -217,10 +216,15 @@ feature {NONE} -- Implementation
 			cmd: STRING
 			a_level: STRING
 		do
-			project.trace_debug (<<"  [*geant] execute_forked_with_filename_and_target: '", a_filename, "', '", a_target_name, "'">>)
+			a_level := ""
+			if a_target_name /= Void and then a_target_name.count > 0 then
+				project.trace_debug (<<"  [*geant] execute_forked_with_filename_and_target: '", a_filename, "', '", a_target_name, "'">>)
+			else
+				project.trace_debug (<<"  [*geant] execute_forked_with_filename_and_target: '", a_filename, "'">>)
+			end
 			if project.options.debug_mode then
-				if Project_variables_resolver.has ("geant.geant.level") then
-					a_level := STRING_.concat (Project_variables_resolver.value ("geant.geant.level"), "#")
+				if Project_variables_resolver.has ("geant.geant.level") and then attached Project_variables_resolver.value ("geant.geant.level") as l_geant_geant_level then
+					a_level := STRING_.concat (l_geant_geant_level, "#")
 				else
 					project.trace_debug (<<"  [*geant] no variable 'geant.geant.level' found">>)
 					a_level := "#"
@@ -289,51 +293,56 @@ feature {NONE} -- Implementation
 			end
 			create a_project_loader.make (a_filename)
 			a_project_loader.load (a_variables, project.options)
-			a_project := a_project_loader.project_element.project
-			a_project.merge_in_parent_projects
+			if attached a_project_loader.project_element as l_project_element then
+				a_project := l_project_element.project
+				a_project.merge_in_parent_projects
 
-				-- Load build configuration:
-			if start_target_name /= Void and then start_target_name.count > 0 then
-				if not a_project.targets.has (start_target_name) then
-					exit_application (1, <<"Project '", a_project.name,
-						"' does not contain a target named `", start_target_name + "%'">>)
-				end
-					-- Check export status of target to be called:
-				a_target := a_project.targets.item (start_target_name)
-				if not (a_target.is_exported_to_any or else
-					a_target.is_exported_to_project (project)) then
-					exit_application (1, <<"target: `", a_target.full_name,
-						"%' is not exported to project '", project.name, "'">>)
-				end
+					-- Load build configuration:
+				if attached start_target_name as l_start_target_name and then l_start_target_name.count > 0 then
+					if not attached a_project.targets as l_project_targets or else not l_project_targets.has (l_start_target_name) then
+						exit_application (1, <<"Project '", a_project.name,
+							"' does not contain a target named `", l_start_target_name + "%'">>)
+					else
+							-- Check export status of target to be called:
+						a_target := l_project_targets.item (l_start_target_name)
+						if not (a_target.is_exported_to_any or else
+							a_target.is_exported_to_project (project)) then
+							exit_application (1, <<"target: `", a_target.full_name,
+								"%' is not exported to project '", project.name, "'">>)
+						end
 
-				a_project.set_start_target_name (start_target_name)
-			end
-				-- Start build process:
-			if exit_code = 0 then
-				if is_fileset_executable then
-					if not fileset.is_executable then
-						project.log (<<"  [geant] error: fileset definition wrong">>)
-						exit_code := 1
+						a_project.set_start_target_name (l_start_target_name)
 					end
-					if exit_code = 0 then
-						fileset.execute
-						from fileset.start until fileset.after or else exit_code /= 0 loop
-							a_target := a_project.start_target
-							a_project.build (arguments)
-							if not a_project.build_successful then
-								exit_code := 1
-							end
+				end
+					-- Start build process:
+				if exit_code = 0 then
+					if is_fileset_executable and then attached fileset as l_fileset then
+						if not l_fileset.is_executable then
+							project.log (<<"  [geant] error: fileset definition wrong">>)
+							exit_code := 1
+						end
+						if exit_code = 0 then
+							l_fileset.execute
+							from l_fileset.start until l_fileset.after or else exit_code /= 0 loop
+								a_target := a_project.start_target
+								a_project.build (arguments)
+								if not a_project.build_successful then
+									exit_code := 1
+								end
 
-							fileset.forth
+								l_fileset.forth
+							end
+						end
+					else
+						a_target := a_project.start_target
+						a_project.build (arguments)
+						if not a_project.build_successful then
+							exit_code := 1
 						end
 					end
-				else
-					a_target := a_project.start_target
-					a_project.build (arguments)
-					if not a_project.build_successful then
-						exit_code := 1
-					end
 				end
+			else
+				exit_code := 1
 			end
 		end
 
@@ -344,29 +353,31 @@ feature {NONE} -- Implementation
 		local
 			a_target: GEANT_TARGET
 		do
-			if project.targets.has (start_target_name) then
-				if is_fileset_executable then
-					if not fileset.is_executable then
-						project.log (<<"  [geant] error: fileset definition wrong">>)
-						exit_code := 1
-					end
-					if exit_code = 0 then
-						fileset.execute
-						a_target := project.targets.item (start_target_name)
-						a_target := a_target.final_target
-						from fileset.start until fileset.after or else exit_code /= 0 loop
-							a_target.project.build_target (a_target, arguments)
-							fileset.forth
+			check precondition: attached start_target_name as l_start_target_name then
+				if attached project.targets as l_project_targets and then l_project_targets.has (l_start_target_name) then
+					if is_fileset_executable and then attached fileset as l_fileset then
+						if not l_fileset.is_executable then
+							project.log (<<"  [geant] error: fileset definition wrong">>)
+							exit_code := 1
 						end
+						if exit_code = 0 then
+							l_fileset.execute
+							a_target := l_project_targets.item (l_start_target_name)
+							a_target := a_target.final_target
+							from l_fileset.start until l_fileset.after or else exit_code /= 0 loop
+								a_target.project.build_target (a_target, arguments)
+								l_fileset.forth
+							end
+						end
+					else
+						a_target := l_project_targets.item (l_start_target_name)
+						a_target := a_target.final_target
+						a_target.project.build_target (a_target, arguments)
 					end
 				else
-					a_target := project.targets.item (start_target_name)
-					a_target := a_target.final_target
-					a_target.project.build_target (a_target, arguments)
+					project.log (<<"  [geant] error: unknown target: `", l_start_target_name, "%'">>)
+					exit_code := 1
 				end
-			else
-				project.log (<<"  [geant] error: unknown target: `", start_target_name, "%'">>)
-				exit_code := 1
 			end
 		end
 
