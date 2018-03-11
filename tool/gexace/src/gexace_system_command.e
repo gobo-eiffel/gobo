@@ -49,7 +49,6 @@ feature -- Execution
 		do
 			create a_parser.make_with_variables (variables, error_handler)
 			a_parser.set_shallow (is_shallow)
-			a_parser.set_ve (is_ve)
 			create a_file.make (xace_filename)
 			a_file.open_read
 			if a_file.is_open_read then
@@ -58,8 +57,7 @@ feature -- Execution
 				a_system := a_parser.last_system
 				if
 					a_system /= Void and then
-					((attached a_system.system_name as l_system_name and then l_system_name.count > 0) and
-					(attached a_system.root_class_name as l_root_class_name and then l_root_class_name.count > 0) and
+					((attached a_system.root_class_name as l_root_class_name and then l_root_class_name.count > 0) and
 					(attached a_system.creation_procedure_name as l_creation_procedure_name and then l_creation_procedure_name.count > 0))
 				then
 					execute_generators (a_system)
@@ -73,8 +71,6 @@ feature -- Execution
 			-- Execute Ace file generators.
 		require
 			a_system_not_void: a_system /= Void
-			system_name_not_void: attached a_system.system_name as l_system_name
-			system_name_not_empty: l_system_name.count > 0
 			root_class_name_not_void: attached a_system.root_class_name as l_root_class_name
 			root_class_name_not_empty: l_root_class_name.count > 0
 			creation_procedure_name_not_void: attached a_system.creation_procedure_name as l_creation_procedure_name

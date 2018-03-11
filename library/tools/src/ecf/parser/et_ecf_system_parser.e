@@ -14,9 +14,13 @@ class ET_ECF_SYSTEM_PARSER
 
 inherit
 
-	ET_ECF_PARSER
+	ET_ECF_SYSTEM_CONFIG_PARSER
+		rename
+			last_system_config as last_system
 		redefine
-			parse_file
+			last_system,
+			parse_file,
+			build_system_config
 		end
 
 create

@@ -5,7 +5,7 @@ note
 		"Commands for 'gexace'"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,10 +41,6 @@ feature -- Status report
 	is_shallow: BOOLEAN
 			-- Should parsing of Xace files not follow mounted libraries?
 
-	is_ve: BOOLEAN
-			-- Should parsing of Xace files not follow mounted libraries
-			-- whose pathnames contains ${VE_Lib}?
-
 feature -- Status setting
 
 	set_shallow (b: BOOLEAN)
@@ -53,14 +49,6 @@ feature -- Status setting
 			is_shallow := b
 		ensure
 			shallow_set: is_shallow = b
-		end
-
-	set_ve (b: BOOLEAN)
-			-- Set `is_ve' to `b'.
-		do
-			is_ve := b
-		ensure
-			ve_set: is_ve = b
 		end
 
 feature -- Execution

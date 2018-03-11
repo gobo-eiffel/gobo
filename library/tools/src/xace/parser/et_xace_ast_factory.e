@@ -5,7 +5,7 @@ note
 		"Xace Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,10 +47,12 @@ feature -- AST factory
 			clusters_not_void: Result /= Void
 		end
 
-	new_library: ET_XACE_LIBRARY_CONFIG
+	new_library (a_target: ET_XACE_TARGET): ET_XACE_LIBRARY_CONFIG
 			-- New Xace library
+		require
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make
+			create Result.make (a_target)
 		ensure
 			library_not_void: Result /= Void
 		end
@@ -107,12 +109,26 @@ feature -- AST factory
 			feature_options_not_void: Result /= Void
 		end
 
-	new_system: ET_XACE_SYSTEM_CONFIG
+	new_system (a_target: ET_XACE_TARGET): ET_XACE_SYSTEM_CONFIG
 			-- New Xace system
+		require
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make
+			create Result.make (a_target)
 		ensure
 			system_not_void: Result /= Void
+		end
+
+	new_target (a_name: STRING): ET_XACE_TARGET
+			-- New Xace target
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			create Result.make (a_name)
+		ensure
+			target_not_void: Result /= Void
+			name_set: Result.name = a_name
 		end
 
 end

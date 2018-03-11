@@ -5,7 +5,7 @@ note
 		"Xace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ inherit
 	ET_XACE_ELEMENT_NAMES
 		export {NONE} all end
 
-	ET_XACE_OPTION_NAMES
+	ET_XACE_OPTION_DEFAULTS
 		export {NONE} all end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -85,10 +85,6 @@ feature -- Status report
 	is_shallow: BOOLEAN
 			-- Should parsing of Xace files not follow mounted libraries?
 
-	is_ve: BOOLEAN
-			-- Should parsing of Xace files not follow mounted libraries
-			-- whose pathnames contains ${VE_Lib}?
-
 feature -- Status setting
 
 	set_shallow (b: BOOLEAN)
@@ -102,48 +98,84 @@ feature -- Status setting
 			shallow_set: is_shallow = b
 		end
 
-	set_ve (b: BOOLEAN)
-			-- Set `is_ve' to `b'.
-		do
-			is_ve := b
-			if library_parser.is_ve /= b then
-				library_parser.set_ve (b)
-			end
-		ensure
-			ve_set: is_ve = b
-		end
-
 feature {NONE} -- AST factory
 
 	new_system (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): ET_XACE_SYSTEM_CONFIG
-			-- New Xace system build from `an_element'
+			-- New Xace system built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_system: STRING_.same_string (an_element.name, uc_system)
+		local
+			l_target: ET_XACE_TARGET
 		do
-			Result := ast_factory.new_system
+			l_target := new_named_target (an_element, a_position_table)
+			Result := ast_factory.new_system (l_target)
 			fill_system (Result, an_element, a_position_table, tokens.unknown_system)
+			Result.select_target (l_target, error_handler)
 			Result.mount_libraries
 		ensure
 			new_system_not_void: Result /= Void
 		end
 
 	new_library (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): ET_XACE_LIBRARY_CONFIG
-			-- New library build from `an_element'
+			-- New library built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_library: STRING_.same_string (an_element.name, uc_library) or
 				STRING_.same_string (an_element.name, uc_cluster)
+		local
+			l_target: ET_XACE_TARGET
 		do
-			Result := ast_factory.new_library
+			l_target := new_named_target (an_element, a_position_table)
+			Result := ast_factory.new_library (l_target)
 			fill_library (Result, an_element, a_position_table, tokens.unknown_system)
+			Result.select_target (l_target, error_handler)
 			Result.mount_libraries
 		ensure
 			new_library_not_void: Result /= Void
 		end
 
+	new_named_target (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): ET_XACE_TARGET
+			-- New (empty) target with name found in `a_element'.
+		require
+			a_element_not_void: a_element /= Void
+			is_target: STRING_.same_string (a_element.name, uc_target) or
+				STRING_.same_string (a_element.name, uc_system) or
+				STRING_.same_string (a_element.name, uc_library) or
+				STRING_.same_string (a_element.name, uc_cluster)
+		local
+			l_name: detachable STRING
+		do
+			if attached a_element.attribute_by_name (uc_name) as l_name_attribute then
+				l_name := l_name_attribute.value
+			end
+			if l_name = Void or else l_name.is_empty then
+				l_name := new_name
+			end
+			Result := ast_factory.new_target (l_name)
+			Result.options.set_secondary_options (default_options)
+		ensure
+			new_named_target_not_void: Result /= Void
+		end
+
+	new_target (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM): ET_XACE_TARGET
+			-- New target build from `a_element'.
+		require
+			a_element_not_void: a_element /= Void
+			is_target: STRING_.same_string (a_element.name, uc_target) or
+				STRING_.same_string (a_element.name, uc_system) or
+				STRING_.same_string (a_element.name, uc_library) or
+				STRING_.same_string (a_element.name, uc_cluster)
+			a_eiffel_system_not_void: a_eiffel_system /= Void
+		do
+			Result := new_named_target (a_element, a_position_table)
+			fill_target (Result, a_element, a_position_table, a_eiffel_system)
+		ensure
+			new_target_not_void: Result /= Void
+		end
+
 	new_cluster (an_element: XM_ELEMENT; a_parent_prefix: STRING; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_UNIVERSE): detachable ET_XACE_CLUSTER
-			-- New cluster build from `an_element'
+			-- New cluster built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_cluster: STRING_.same_string (an_element.name, uc_cluster)
@@ -177,12 +209,12 @@ feature {NONE} -- AST factory
 							if an_option = Void then
 								an_option := ast_factory.new_options
 							end
-							an_option.set_abstract (True)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.abstract_option_name, a_bool)
 						elseif is_false (a_bool) then
 							if an_option = Void then
 								an_option := ast_factory.new_options
 							end
-							an_option.set_abstract (False)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.abstract_option_name, a_bool)
 						end
 					end
 					if attached an_element.attribute_by_name (uc_relative) as l_relative_attribute then
@@ -228,9 +260,9 @@ feature {NONE} -- AST factory
 								end
 							elseif STRING_.same_string (a_child.name, uc_option) then
 								if an_option /= Void then
-									fill_options (an_option, a_child, a_position_table)
+									fill_options (an_option, valid_cluster_options, a_child, a_position_table)
 								else
-									an_option := new_options (a_child, a_position_table)
+									an_option := new_options (a_child, valid_cluster_options, a_position_table)
 								end
 							elseif STRING_.same_string (a_child.name, uc_class) then
 								a_class := new_class (a_child, a_position_table)
@@ -247,15 +279,9 @@ feature {NONE} -- AST factory
 						a_cursor.forth
 					end
 					if an_option /= Void then
-						if an_option.is_abstract_declared then
-							Result.set_abstract (an_option.abstract)
-						end
-						if an_option.is_recursive_declared then
-							Result.set_recursive (an_option.recursive)
-						end
-						if an_option.is_read_only_declared then
-							Result.set_read_only (an_option.read_only)
-						end
+						Result.set_abstract (attached an_option.value ({ET_XACE_OPTION_NAMES}.abstract_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value))
+						Result.set_recursive (attached an_option.value ({ET_XACE_OPTION_NAMES}.recursive_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value))
+						Result.set_read_only (attached an_option.value ({ET_XACE_OPTION_NAMES}.read_only_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value))
 					end
 					Result.set_options (an_option)
 					Result.set_subclusters (subclusters)
@@ -284,7 +310,7 @@ feature {NONE} -- AST factory
 					from a_cursor.start until a_cursor.after loop
 						if attached {XM_ELEMENT} a_cursor.item as a_child then
 							if STRING_.same_string (a_child.name, uc_option) then
-								fill_options (an_option, a_child, a_position_table)
+								fill_options (an_option, valid_class_options, a_child, a_position_table)
 							elseif STRING_.same_string (a_child.name, uc_feature) then
 								a_feature := new_feature (a_child, a_position_table)
 								if a_feature /= Void then
@@ -317,7 +343,7 @@ feature {NONE} -- AST factory
 					from a_cursor.start until a_cursor.after loop
 						if attached {XM_ELEMENT} a_cursor.item as a_child then
 							if STRING_.same_string (a_child.name, uc_option) then
-								fill_options (an_option, a_child, a_position_table)
+								fill_options (an_option, valid_feature_options, a_child, a_position_table)
 							end
 						end
 						a_cursor.forth
@@ -338,6 +364,7 @@ feature {NONE} -- AST factory
 			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
 			a_prefix: STRING
+			l_target: ET_XACE_TARGET
 		do
 			if attached an_element.attribute_by_name (uc_location) as l_location_attribute then
 				a_pathname := l_location_attribute.value
@@ -345,14 +372,16 @@ feature {NONE} -- AST factory
 				if parsed_libraries.found then
 					a_library := parsed_libraries.found_item
 				else
-					a_library := ast_factory.new_library
+					l_target := ast_factory.new_target (new_name)
+					a_library := ast_factory.new_library (l_target)
 					parsed_libraries.force_new (a_library, a_pathname)
-					if not is_shallow and then (not is_ve or else not a_pathname.has_substring ("${VE_Lib}")) then
+					if not is_shallow then
 						a_filename := Execution_environment.interpreted_string (a_pathname)
 						create a_file.make (a_filename)
 						a_file.open_read
 						if a_file.is_open_read then
 							library_parser.parse_library (a_library, a_file, a_eiffel_system)
+							a_library.select_target (l_target, error_handler)
 							a_file.close
 						else
 							error_handler.report_cannot_read_file_error (a_pathname)
@@ -367,20 +396,22 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_options (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): ET_XACE_OPTIONS
+	new_options (an_element: XM_ELEMENT; a_valid_options: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]; a_position_table: detachable XM_POSITION_TABLE): ET_XACE_OPTIONS
 			-- New option clause build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
+			a_valid_options_not_void: a_valid_options /= Void
 			is_option: STRING_.same_string (an_element.name, uc_option)
 		do
 			Result := ast_factory.new_options
-			fill_options (Result, an_element, a_position_table)
+			fill_options (Result, a_valid_options, an_element, a_position_table)
 		ensure
 			options_not_void: Result /= Void
 		end
 
 	new_export (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): detachable ET_XACE_CLASS_OPTIONS
 			-- New export clause build from `an_element'
+			-- Old syntax.
 		require
 			an_element_not_void: an_element /= Void
 			is_export: STRING_.same_string (an_element.name, uc_export)
@@ -406,7 +437,7 @@ feature {NONE} -- AST factory
 						a_cursor.forth
 					end
 					if not attached Result.feature_options as l_feature_options or else l_feature_options.is_empty then
-						an_option.set_export_option (a_name)
+						an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.export_option_name, a_name)
 					end
 				end
 			end
@@ -414,6 +445,7 @@ feature {NONE} -- AST factory
 
 	new_exported_feature (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): detachable ET_XACE_FEATURE_OPTIONS
 			-- New exported feature build from `an_element'
+			-- Old syntax.
 		require
 			an_element_not_void: an_element /= Void
 			is_feature: STRING_.same_string (an_element.name, uc_feature)
@@ -431,7 +463,7 @@ feature {NONE} -- AST factory
 				end
 				if a_name.count > 0 and an_alias.count > 0 then
 					an_option := ast_factory.new_options
-					an_option.set_export_option (an_alias)
+					an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.export_option_name, an_alias)
 					Result := ast_factory.new_feature_options (a_name, an_option)
 				end
 			end
@@ -446,164 +478,8 @@ feature {NONE} -- Element change
 			an_element_not_void: an_element /= Void
 			is_system: STRING_.same_string (an_element.name, uc_system)
 			a_eiffel_system_not_void: a_eiffel_system /= Void
-		local
-			a_name: detachable STRING
-			a_class: detachable STRING
-			a_creation: detachable STRING
-			a_cursor, old_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_cluster: detachable ET_XACE_CLUSTER
-			an_option: detachable ET_XACE_OPTIONS
-			a_clusters: detachable ET_XACE_CLUSTERS
-			a_mount: detachable ET_XACE_MOUNTED_LIBRARY
-			a_mounts: detachable ET_XACE_MOUNTED_LIBRARIES
-			i, nb: INTEGER
-			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
-			l_other_library: detachable ET_XACE_MOUNTED_LIBRARY
-			l_cursor: DS_HASH_SET_CURSOR [STRING]
-			l_override_cluster: detachable ET_CLUSTER
 		do
-			if attached an_element.attribute_by_name (uc_name) as l_name_attribute then
-				a_name := l_name_attribute.value
-			end
-			if attached an_element.element_by_name (uc_root) as l_root_element then
-				if attached l_root_element.attribute_by_name (uc_class) as l_class_attribute then
-					a_class := l_class_attribute.value
-				end
-				if attached l_root_element.attribute_by_name (uc_creation) as l_creation_attribute then
-					a_creation := l_creation_attribute.value
-				end
-			end
-			a_cursor := an_element.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				if attached {XM_ELEMENT} a_cursor.item as a_child then
-					if STRING_.same_string (a_child.name, uc_cluster) then
-						if a_child.has_attribute_by_name (uc_name) then
-							a_cluster := new_cluster (a_child, empty_prefix, a_position_table, a_eiffel_system)
-							if a_cluster /= Void then
-								if a_clusters = Void then
-									a_clusters := ast_factory.new_clusters (a_cluster)
-								else
-									a_clusters.put_last (a_cluster)
-								end
-							end
-						else
-								-- Old syntax.
-							old_cursor := a_child.new_cursor
-							from old_cursor.start until old_cursor.after loop
-								if attached {XM_ELEMENT} old_cursor.item as a_old_child then
-									if STRING_.same_string (a_old_child.name, uc_cluster) then
-										a_cluster := new_cluster (a_old_child, empty_prefix, a_position_table, a_eiffel_system)
-										if a_cluster /= Void then
-											if a_clusters = Void then
-												a_clusters := ast_factory.new_clusters (a_cluster)
-											else
-												a_clusters.put_last (a_cluster)
-											end
-										end
-									elseif STRING_.same_string (a_old_child.name, uc_mount) then
-										a_mount := new_mount (a_old_child, a_position_table, a_eiffel_system)
-										if a_mount /= Void then
-											if a_mounts = Void then
-												a_mounts := ast_factory.new_mounted_libraries
-											end
-											l_other_library := a_mounts.item (a_mount.pathname)
-											if l_other_library /= Void then
-												if not a_mount.same_library_prefix (l_other_library) then
-													error_handler.report_multiple_library_prefix_error (a_mount, l_other_library)
-												end
-											else
-												a_mounts.put_last (a_mount)
-											end
-										end
-									elseif STRING_.same_string (a_old_child.name, uc_option) then
-										if an_option /= Void then
-											fill_options (an_option, a_old_child, a_position_table)
-										else
-											an_option := new_options (a_old_child, a_position_table)
-										end
-									elseif STRING_.same_string (a_old_child.name, uc_external) then
-										if an_option = Void then
-											an_option := ast_factory.new_options
-										end
-										fill_externals (an_option, Void, a_old_child, a_position_table)
-									end
-								end
-								old_cursor.forth
-							end
-						end
-					elseif STRING_.same_string (a_child.name, uc_mount) then
-						a_mount := new_mount (a_child, a_position_table, a_eiffel_system)
-						if a_mount /= Void then
-							if a_mounts = Void then
-								a_mounts := ast_factory.new_mounted_libraries
-							end
-							l_other_library := a_mounts.item (a_mount.pathname)
-							if l_other_library /= Void then
-								if not a_mount.same_library_prefix (l_other_library) then
-									error_handler.report_multiple_library_prefix_error (a_mount, l_other_library)
-								end
-							else
-								a_mounts.put_last (a_mount)
-							end
-						end
-					elseif STRING_.same_string (a_child.name, uc_option) then
-						if an_option /= Void then
-							fill_options (an_option, a_child, a_position_table)
-						else
-							an_option := new_options (a_child, a_position_table)
-						end
-					elseif STRING_.same_string (a_child.name, uc_external) then
-						if an_option = Void then
-							an_option := ast_factory.new_options
-						end
-						fill_externals (an_option, Void, a_child, a_position_table)
-					end
-				end
-				a_cursor.forth
-			end
-			if a_clusters /= Void then
-				if an_option /= Void then
-						-- Set override clusters.
-					if an_option.is_override_cluster_declared then
-						l_cursor := an_option.override_cluster.new_cursor
-						from l_cursor.start until l_cursor.after loop
-							l_override_cluster := a_clusters.cluster_by_name (l_cursor.item)
-							if l_override_cluster /= Void then
-								l_override_cluster.set_override (True)
-							end
-							l_cursor.forth
-						end
-					end
-				end
-				if a_mounts = Void then
-					a_mounts := ast_factory.new_mounted_libraries
-				end
-				a_clusters.merge_libraries (a_mounts, error_handler)
-				if a_mounts.libraries.is_empty then
-					a_mounts := Void
-				end
-			end
-			if a_mounts /= Void then
-				a_mounts.set_root (True)
-				a_library_list := a_mounts.libraries
-				nb := a_library_list.count
-				from i := 1 until i > nb loop
-					a_library_list.item (i).library.merge_libraries (a_mounts, error_handler)
-					i := i + 1
-				end
-			end
-			if an_option = Void then
-					-- Make sure that default values are taken into account.
-				an_option := ast_factory.new_options
-			end
-			if a_clusters /= Void then
-				a_system.set_clusters (a_clusters)
-			end
-			a_system.set_system_name (a_name)
-			a_system.set_root_class_name (a_class)
-			a_system.set_creation_procedure_name (a_creation)
-			a_system.set_options (an_option)
-			a_system.set_libraries (a_mounts)
+			fill_target (a_system.targets.last, an_element, a_position_table, a_eiffel_system)
 		end
 
 	fill_library (a_library: ET_XACE_LIBRARY_CONFIG; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM)
@@ -615,130 +491,155 @@ feature {NONE} -- Element change
 				STRING_.same_string (an_element.name, uc_cluster)
 			a_eiffel_system_not_void: a_eiffel_system /= Void
 		local
-			a_name: STRING
 			a_prefix: STRING
-			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_cluster: detachable ET_XACE_CLUSTER
-			an_option: detachable ET_XACE_OPTIONS
-			a_clusters: detachable ET_XACE_CLUSTERS
-			a_mount: detachable ET_XACE_MOUNTED_LIBRARY
-			a_mounts: detachable ET_XACE_MOUNTED_LIBRARIES
-			a_pathname: detachable STRING
-			i, nb: INTEGER
-			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
+		do
+			fill_target (a_library.targets.last, an_element, a_position_table, a_eiffel_system)
+			if attached an_element.attribute_by_name (uc_prefix) as l_prefix_attribute then
+				a_prefix := l_prefix_attribute.value
+				a_library.set_library_prefix (a_prefix)
+			end
+		end
+
+	fill_target (a_target: ET_XACE_TARGET; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM)
+			-- Fill Xace target `a_target' with data found in `an_element'.
+		require
+			a_target_not_void: a_target /= Void
+			an_element_not_void: an_element /= Void
+			is_target: STRING_.same_string (an_element.name, uc_target) or
+				STRING_.same_string (an_element.name, uc_system) or
+				STRING_.same_string (an_element.name, uc_library) or
+				STRING_.same_string (an_element.name, uc_cluster)
+			a_eiffel_system_not_void: a_eiffel_system /= Void
+		local
+			l_name: STRING
+			a_class: detachable STRING
+			a_creation: detachable STRING
+			a_cursor, old_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			l_options: ET_XACE_OPTIONS
+			l_clusters: ET_XACE_CLUSTERS
+			l_mounts: ET_XACE_MOUNTED_LIBRARIES
 			l_other_library: detachable ET_XACE_MOUNTED_LIBRARY
-			l_cursor: DS_HASH_SET_CURSOR [STRING]
 			l_override_cluster: detachable ET_CLUSTER
+			a_pathname: detachable STRING
 		do
 			if attached an_element.attribute_by_name (uc_name) as l_name_attribute then
-				a_name := l_name_attribute.value
-				if a_name.count > 0 then
-					a_library.set_name (a_name)
+				l_name := l_name_attribute.value
+				if not l_name.is_empty then
+					a_target.set_name (l_name)
 				end
 			end
+			l_options := a_target.options
+			l_clusters := a_target.clusters
+			l_mounts := a_target.libraries
 			if STRING_.same_string (an_element.name, uc_cluster) then
+					-- Old syntax.
 				error_handler.report_element_obsoleted_by_element_warning (an_element, "<library>", an_element.position (a_position_table))
-				a_cluster := new_cluster (an_element, empty_prefix, a_position_table, a_eiffel_system)
-				if a_cluster /= Void then
-					a_library.set_name (a_cluster.name)
-					a_pathname := a_cluster.pathname
-					if a_pathname = Void and a_cluster.is_abstract then
-						a_library.set_name (a_cluster.name)
-						a_library.set_options (a_cluster.options)
-						a_clusters := a_cluster.subclusters
-						a_mounts := a_cluster.libraries
+				if attached new_cluster (an_element, empty_prefix, a_position_table, a_eiffel_system) as l_cluster then
+					a_target.set_name (l_cluster.name)
+					a_pathname := l_cluster.pathname
+					if a_pathname = Void and l_cluster.is_abstract then
+						if attached l_cluster.options as l_cluster_options then
+							a_target.set_options (l_cluster_options)
+							l_options := l_cluster_options
+						end
+						if attached l_cluster.subclusters as l_cluster_subclusters then
+							a_target.set_clusters (l_cluster_subclusters)
+							l_clusters := l_cluster_subclusters
+						end
+						if attached l_cluster.libraries as l_cluster_libraries then
+							a_target.set_libraries (l_cluster_libraries)
+							l_mounts := l_cluster_libraries
+						end
 					else
-						a_clusters := ast_factory.new_clusters (a_cluster)
+						l_clusters.put_last (l_cluster)
 					end
 				end
 			else
-				if attached an_element.attribute_by_name (uc_prefix) as l_prefix_attribute then
-					a_prefix := l_prefix_attribute.value
-					a_library.set_library_prefix (a_prefix)
+				if attached an_element.element_by_name (uc_root) as l_root_element then
+					if attached l_root_element.attribute_by_name (uc_class) as l_class_attribute then
+						a_class := l_class_attribute.value
+					end
+					if attached l_root_element.attribute_by_name (uc_creation) as l_creation_attribute then
+						a_creation := l_creation_attribute.value
+					end
 				end
+				a_target.set_root_class_name (a_class)
+				a_target.set_creation_procedure_name (a_creation)
 				a_cursor := an_element.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					if attached {XM_ELEMENT} a_cursor.item as a_child then
 						if STRING_.same_string (a_child.name, uc_cluster) then
-							a_cluster := new_cluster (a_child, empty_prefix, a_position_table, a_eiffel_system)
-							if a_cluster /= Void then
-								if a_clusters = Void then
-									a_clusters := ast_factory.new_clusters (a_cluster)
-								else
-									a_clusters.put_last (a_cluster)
+							if a_child.has_attribute_by_name (uc_name) then
+								if attached new_cluster (a_child, empty_prefix, a_position_table, a_eiffel_system) as l_cluster then
+									l_clusters.put_last (l_cluster)
+								end
+							else
+									-- Old syntax.
+								old_cursor := a_child.new_cursor
+								from old_cursor.start until old_cursor.after loop
+									if attached {XM_ELEMENT} old_cursor.item as a_old_child then
+										if STRING_.same_string (a_old_child.name, uc_cluster) then
+											if attached new_cluster (a_old_child, empty_prefix, a_position_table, a_eiffel_system) as l_cluster then
+												l_clusters.put_last (l_cluster)
+											end
+										elseif STRING_.same_string (a_old_child.name, uc_mount) then
+											if attached new_mount (a_old_child, a_position_table, a_eiffel_system) as l_mount then
+												l_other_library := l_mounts.item (l_mount.pathname)
+												if l_other_library /= Void then
+													if not l_mount.same_library_prefix (l_other_library) then
+														error_handler.report_multiple_library_prefix_error (l_mount, l_other_library)
+													end
+												else
+													l_mounts.put_last (l_mount)
+												end
+											end
+										elseif STRING_.same_string (a_old_child.name, uc_option) then
+											fill_options (l_options, valid_system_options, a_old_child, a_position_table)
+										elseif STRING_.same_string (a_old_child.name, uc_external) then
+											fill_externals (l_options, Void, a_old_child, a_position_table)
+										end
+									end
+									old_cursor.forth
 								end
 							end
 						elseif STRING_.same_string (a_child.name, uc_mount) then
-							a_mount := new_mount (a_child, a_position_table, a_eiffel_system)
-							if a_mount /= Void then
-								if a_mounts = Void then
-									a_mounts := ast_factory.new_mounted_libraries
-								end
-								l_other_library := a_mounts.item (a_mount.pathname)
+							if attached new_mount (a_child, a_position_table, a_eiffel_system) as l_mount then
+								l_other_library := l_mounts.item (l_mount.pathname)
 								if l_other_library /= Void then
-									if not a_mount.same_library_prefix (l_other_library) then
-										error_handler.report_multiple_library_prefix_error (a_mount, l_other_library)
+									if not l_mount.same_library_prefix (l_other_library) then
+										error_handler.report_multiple_library_prefix_error (l_mount, l_other_library)
 									end
 								else
-									a_mounts.put_last (a_mount)
+									l_mounts.put_last (l_mount)
 								end
 							end
 						elseif STRING_.same_string (a_child.name, uc_option) then
-							if an_option /= Void then
-								fill_options (an_option, a_child, a_position_table)
-							else
-								an_option := new_options (a_child, a_position_table)
-							end
+							fill_options (l_options, valid_system_options, a_child, a_position_table)
 						elseif STRING_.same_string (a_child.name, uc_external) then
-							if an_option = Void then
-								an_option := ast_factory.new_options
-							end
-							fill_externals (an_option, Void, a_child, a_position_table)
+								-- Old syntax.
+							fill_externals (l_options, Void, a_child, a_position_table)
 						end
 					end
 					a_cursor.forth
 				end
 			end
-			if a_clusters /= Void then
-				if an_option /= Void then
-						-- Set override clusters.
-					if an_option.is_override_cluster_declared then
-						l_cursor := an_option.override_cluster.new_cursor
-						from l_cursor.start until l_cursor.after loop
-							l_override_cluster := a_clusters.cluster_by_name (l_cursor.item)
-							if l_override_cluster /= Void then
-								l_override_cluster.set_override (True)
-							end
-							l_cursor.forth
-						end
+				-- Set override clusters.
+			if attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.override_cluster_option_name) as l_multivalue then
+				across l_multivalue as l_override_cluster_names loop
+					l_override_cluster := l_clusters.cluster_by_name (l_override_cluster_names.item)
+					if l_override_cluster /= Void then
+						l_override_cluster.set_override (True)
 					end
 				end
-				if a_mounts = Void then
-					a_mounts := ast_factory.new_mounted_libraries
-				end
-				a_clusters.merge_libraries (a_mounts, error_handler)
-				if a_mounts.libraries.is_empty then
-					a_mounts := Void
-				end
 			end
-			if a_mounts /= Void then
-				a_mounts.set_root (True)
-				a_library_list := a_mounts.libraries
-				nb := a_library_list.count
-				from i := 1 until i > nb loop
-					a_library_list.item (i).library.merge_libraries (a_mounts, error_handler)
-					i := i + 1
-				end
-			end
-			a_library.set_options (an_option)
-			a_library.set_clusters (a_clusters)
-			a_library.set_libraries (a_mounts)
+			l_clusters.merge_libraries (l_mounts, error_handler)
 		end
 
-	fill_options (an_option: ET_XACE_OPTIONS; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE)
+	fill_options (an_option: ET_XACE_OPTIONS; a_valid_options: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE)
 			-- Fill Xace option `an_option' with data found in `an_element'.
 		require
 			an_option_not_void: an_option /= Void
+			a_valid_options_not_void: a_valid_options /= Void
 			an_element_not_void: an_element /= Void
 			is_option: STRING_.same_string (an_element.name, uc_option)
 		local
@@ -746,7 +647,6 @@ feature {NONE} -- Element change
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_name: STRING
 			a_value: STRING
-			an_int: INTEGER
 			a_bool: STRING
 			a_key: STRING
 		do
@@ -758,601 +658,13 @@ feature {NONE} -- Element change
 					-- Error already reported by the validator.
 				else
 					a_value := l_value_attribute.value
-					option_codes.search (a_name)
-					if option_codes.found then
-						inspect option_codes.found_item
-						when abstract_code then
-							if is_true (a_value) then
-								an_option.set_abstract (True)
-							elseif is_false (a_value) then
-								an_option.set_abstract (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when address_expression_code then
-							if is_true (a_value) then
-								an_option.set_address_expression (True)
-							elseif is_false (a_value) then
-								an_option.set_address_expression (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when arguments_code then
-							an_option.set_arguments (a_value)
-						when array_optimization_code then
-							if is_true (a_value) then
-								an_option.set_array_optimization (True)
-							elseif is_false (a_value) then
-								an_option.set_array_optimization (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when assembly_code then
-							if a_value.count > 0 then
-								an_option.set_assembly (a_value)
-							else
-								error_handler.report_non_empty_attribute_expected_error (an_element, uc_value, an_element.position (a_position_table))
-							end
-						when assertion_code then
-							if an_option.valid_assertion.has (a_value) then
-								an_option.set_assertion (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_assertion, an_element.position (a_position_table))
-							end
-						when attached_by_default_code then
-							if is_true (a_value) then
-								an_option.set_attached_by_default (True)
-							elseif is_false (a_value) then
-								an_option.set_attached_by_default (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when automatic_backup_code then
-							if is_true (a_value) then
-								an_option.set_automatic_backup (True)
-							elseif is_false (a_value) then
-								an_option.set_automatic_backup (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when callback_code then
-							if an_option.valid_callback.has (a_value) then
-								an_option.set_callback (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_callback, an_element.position (a_position_table))
-							end
-						when case_insensitive_code then
-							if is_true (a_value) then
-								an_option.set_case_insensitive (True)
-							elseif is_false (a_value) then
-								an_option.set_case_insensitive (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when check_generic_creation_constraint_code then
-							if is_true (a_value) then
-								an_option.set_check_vape (True)
-							elseif is_false (a_value) then
-								an_option.set_check_vape (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when check_vape_code then
-							if is_true (a_value) then
-								an_option.set_check_vape (True)
-							elseif is_false (a_value) then
-								an_option.set_check_vape (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when clean_code then
-							if is_true (a_value) then
-								an_option.set_clean (True)
-							elseif is_false (a_value) then
-								an_option.set_clean (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when cls_compliant_code then
-							if is_true (a_value) then
-								an_option.set_cls_compliant (True)
-							elseif is_false (a_value) then
-								an_option.set_cls_compliant (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when component_code then
-							if a_value.count > 0 then
-								an_option.set_component (a_value)
-							else
-								error_handler.report_non_empty_attribute_expected_error (an_element, uc_value, an_element.position (a_position_table))
-							end
-						when console_application_code then
-							if is_true (a_value) then
-								an_option.set_console_application (True)
-							elseif is_false (a_value) then
-								an_option.set_console_application (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when create_keyword_extension_code then
-							if is_true (a_value) then
-								an_option.set_create_keyword_extension (True)
-							elseif is_false (a_value) then
-								an_option.set_create_keyword_extension (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when culture_code then
-							an_option.set_culture (a_value)
-						when c_compiler_options_code then
-							an_option.set_c_compiler_options (a_value)
-						when dead_code_removal_code then
-							if an_option.valid_dead_code_removal.has (a_value) then
-								an_option.set_dead_code_removal (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_dead_code_removal, an_element.position (a_position_table))
-							end
-						when debug_option_code then
-							if is_true (a_value) then
-								an_option.set_debug_option (True)
-							elseif is_false (a_value) then
-								an_option.set_debug_option (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when debug_tag_code then
-							an_option.set_debug_tag (a_value)
-						when debugger_code then
-							if is_true (a_value) then
-								an_option.set_debugger (True)
-							elseif is_false (a_value) then
-								an_option.set_debugger (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when document_code then
-							an_option.set_document (a_value)
-						when dotnet_naming_convention_code then
-							if is_true (a_value) then
-								an_option.set_dotnet_naming_convention (True)
-							elseif is_false (a_value) then
-								an_option.set_dotnet_naming_convention (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when dynamic_runtime_code then
-							if is_true (a_value) then
-								an_option.set_dynamic_runtime (True)
-							elseif is_false (a_value) then
-								an_option.set_dynamic_runtime (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when ecf_library_code then
-							an_option.set_ecf_library (a_value)
-						when enforce_unique_class_names_code then
-							if is_true (a_value) then
-								an_option.set_enforce_unique_class_names (True)
-							elseif is_false (a_value) then
-								an_option.set_enforce_unique_class_names (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when exception_trace_code then
-							if is_true (a_value) then
-								an_option.set_exception_trace (True)
-							elseif is_false (a_value) then
-								an_option.set_exception_trace (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when exclude_code then
-							an_option.set_exclude (a_value)
-						when export_option_code then
-							an_option.set_export_option (a_value)
-						when external_runtime_code then
-							an_option.set_external_runtime (a_value)
-						when finalize_option_code then
-							if is_true (a_value) then
-								an_option.set_finalize_option (True)
-							elseif is_false (a_value) then
-								an_option.set_finalize_option (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when flat_fst_optimization_code then
-							if is_true (a_value) then
-								an_option.set_flat_fst_optimization (True)
-							elseif is_false (a_value) then
-								an_option.set_flat_fst_optimization (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when force_32bits_code then
-							if is_true (a_value) then
-								an_option.set_force_32bits (True)
-							elseif is_false (a_value) then
-								an_option.set_force_32bits (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when fst_expansion_factor_code then
-							if a_value.is_integer then
-								an_int := a_value.to_integer
-								if an_int >= 0 then
-									an_option.set_fst_expansion_factor (an_int)
-								else
-									error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-								end
-							else
-								error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when fst_optimization_code then
-							if is_true (a_value) then
-								an_option.set_fst_optimization (True)
-							elseif is_false (a_value) then
-								an_option.set_fst_optimization (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when full_class_checking_code then
-							if is_true (a_value) then
-								an_option.set_full_class_checking (True)
-							elseif is_false (a_value) then
-								an_option.set_full_class_checking (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when garbage_collector_code then
-							if an_option.valid_garbage_collector.has (a_value) then
-								an_option.set_garbage_collector (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_garbage_collector, an_element.position (a_position_table))
-							end
-						when gc_info_code then
-							if is_true (a_value) then
-								an_option.set_gc_info (True)
-							elseif is_false (a_value) then
-								an_option.set_gc_info (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when heap_size_code then
-							if a_value.is_integer then
-								an_int := a_value.to_integer
-								if an_int >= 0 then
-									an_option.set_heap_size (an_int)
-								else
-									error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-								end
-							else
-								error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when header_code then
-							an_option.set_header (a_value)
-						when high_memory_compiler_code then
-							if is_true (a_value) then
-								an_option.set_high_memory_compiler (True)
-							elseif is_false (a_value) then
-								an_option.set_high_memory_compiler (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when il_verifiable_code then
-							if is_true (a_value) then
-								an_option.set_il_verifiable (True)
-							elseif is_false (a_value) then
-								an_option.set_il_verifiable (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when include_code then
-							an_option.set_include (a_value)
-						when inlining_code then
-							if an_option.valid_inlining.has (a_value) then
-								an_option.set_inlining (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_inlining, an_element.position (a_position_table))
-							end
-						when inlining_size_code then
-							if a_value.is_integer then
-								an_int := a_value.to_integer
-								if an_int >= 0 then
-									an_option.set_inlining_size (an_int)
-								else
-									error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-								end
-							else
-								error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when jumps_optimization_code then
-							if is_true (a_value) then
-								an_option.set_jumps_optimization (True)
-							elseif is_false (a_value) then
-								an_option.set_jumps_optimization (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when layout_code then
-							if an_option.valid_layout.has (a_value) then
-								an_option.set_layout (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_layout, an_element.position (a_position_table))
-							end
-						when layout_optimization_code then
-							if is_true (a_value) then
-								an_option.set_layout_optimization (True)
-							elseif is_false (a_value) then
-								an_option.set_layout_optimization (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when leaves_optimization_code then
-							if is_true (a_value) then
-								an_option.set_leaves_optimization (True)
-							elseif is_false (a_value) then
-								an_option.set_leaves_optimization (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when line_generation_code then
-							if is_true (a_value) then
-								an_option.set_line_generation (True)
-							elseif is_false (a_value) then
-								an_option.set_line_generation (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when link_code then
-							an_option.set_link (a_value)
-						when linker_code then
-							if an_option.valid_linker.has (a_value) then
-								an_option.set_linker (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_linker, an_element.position (a_position_table))
-							end
-						when linux_fpu_double_precision_code then
-							if is_true (a_value) then
-								an_option.set_linux_fpu_double_precision (True)
-							elseif is_false (a_value) then
-								an_option.set_linux_fpu_double_precision (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when manifest_string_trace_code then
-							if is_true (a_value) then
-								an_option.set_manifest_string_trace (True)
-							elseif is_false (a_value) then
-								an_option.set_manifest_string_trace (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when map_code then
-							if is_true (a_value) then
-								an_option.set_map (True)
-							elseif is_false (a_value) then
-								an_option.set_map (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when metadata_cache_path_code then
-							an_option.set_metadata_cache_path (a_value)
-						when msil_assembly_compatibility_code then
-							an_option.set_msil_assembly_compatibility (a_value)
-						when msil_classes_per_module_code then
-							if a_value.is_integer then
-								an_int := a_value.to_integer
-								if an_int > 0 then
-									an_option.set_msil_classes_per_module (an_int)
-								else
-									error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-								end
-							else
-								error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when msil_clr_version_code then
-							an_option.set_msil_clr_version (a_value)
-						when msil_culture_code then
-							an_option.set_msil_culture (a_value)
-						when msil_generation_code then
-							if is_true (a_value) then
-								an_option.set_msil_generation (True)
-							elseif is_false (a_value) then
-								an_option.set_msil_generation (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when msil_generation_version_code then
-							an_option.set_msil_generation_version (a_value)
-						when msil_key_file_name_code then
-							an_option.set_msil_key_file_name (a_value)
-						when msil_use_optimized_precompile_code then
-							if is_true (a_value) then
-								an_option.set_msil_use_optimized_precompile (True)
-							elseif is_false (a_value) then
-								an_option.set_msil_use_optimized_precompile (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when multithreaded_code then
-							if is_true (a_value) then
-								an_option.set_multithreaded (True)
-							elseif is_false (a_value) then
-								an_option.set_multithreaded (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when namespace_code then
-							an_option.set_namespace (a_value)
-						when no_default_lib_code then
-							if is_true (a_value) then
-								an_option.set_no_default_lib (True)
-							elseif is_false (a_value) then
-								an_option.set_no_default_lib (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when old_verbatim_strings_code then
-							if is_true (a_value) then
-								an_option.set_old_verbatim_strings (True)
-							elseif is_false (a_value) then
-								an_option.set_old_verbatim_strings (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when override_cluster_code then
-							an_option.set_override_cluster (a_value)
-						when portable_code_generation_code then
-							if is_true (a_value) then
-								an_option.set_portable_code_generation (True)
-							elseif is_false (a_value) then
-								an_option.set_portable_code_generation (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when precompiled_code then
-							an_option.set_precompiled (a_value)
-						when prefix_option_code then
-							an_option.set_prefix_option (a_value)
-						when profile_code then
-							if is_true (a_value) then
-								an_option.set_profile (True)
-							elseif is_false (a_value) then
-								an_option.set_profile (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when public_key_token_code then
-							an_option.set_public_key_token (a_value)
-						when read_only_code then
-							if is_true (a_value) then
-								an_option.set_read_only (True)
-							elseif is_false (a_value) then
-								an_option.set_read_only (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when recursive_code then
-							if is_true (a_value) then
-								an_option.set_recursive (True)
-							elseif is_false (a_value) then
-								an_option.set_recursive (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when reloads_optimization_code then
-							if is_true (a_value) then
-								an_option.set_reloads_optimization (True)
-							elseif is_false (a_value) then
-								an_option.set_reloads_optimization (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when shared_library_definition_code then
-							an_option.set_shared_library_definition (a_value)
-						when split_code then
-							if is_true (a_value) then
-								an_option.set_split (True)
-							elseif is_false (a_value) then
-								an_option.set_split (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when stack_size_code then
-							if a_value.is_integer then
-								an_int := a_value.to_integer
-								if an_int >= 0 then
-									an_option.set_stack_size (an_int)
-								else
-									error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-								end
-							else
-								error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when storable_filename_code then
-							an_option.set_storable_filename (a_value)
-						when strip_option_code then
-							if is_true (a_value) then
-								an_option.set_strip_option (True)
-							elseif is_false (a_value) then
-								an_option.set_strip_option (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when syntax_code then
-							if an_option.valid_syntax.has (a_value) then
-								an_option.set_syntax (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_syntax, an_element.position (a_position_table))
-							end
-						when target_code then
-							if an_option.valid_target.has (a_value) then
-								an_option.set_target (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_target, an_element.position (a_position_table))
-							end
-						when trace_code then
-							if is_true (a_value) then
-								an_option.set_trace (True)
-							elseif is_false (a_value) then
-								an_option.set_trace (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when use_cluster_name_as_namespace_code then
-							if is_true (a_value) then
-								an_option.set_use_cluster_name_as_namespace (True)
-							elseif is_false (a_value) then
-								an_option.set_use_cluster_name_as_namespace (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when use_full_cluster_name_as_namespace_code then
-							if is_true (a_value) then
-								an_option.set_use_full_cluster_name_as_namespace (True)
-							elseif is_false (a_value) then
-								an_option.set_use_full_cluster_name_as_namespace (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when verbose_code then
-							if is_true (a_value) then
-								an_option.set_verbose (True)
-							elseif is_false (a_value) then
-								an_option.set_verbose (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						when version_code then
-							an_option.set_version (a_value)
-						when visible_filename_code then
-							an_option.set_visible_filename (a_value)
-						when void_safety_code then
-							if an_option.valid_void_safety.has (a_value) then
-								an_option.set_void_safety (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_void_safety, an_element.position (a_position_table))
-							end
-						when warning_code then
-							if an_option.valid_warning.has (a_value) then
-								an_option.set_warning (a_value)
-							else
-								error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_warning, an_element.position (a_position_table))
-							end
-						when wedit_code then
-							if is_true (a_value) then
-								an_option.set_wedit (True)
-							elseif is_false (a_value) then
-								an_option.set_wedit (False)
-							else
-								error_handler.report_boolean_expected_error (an_element, uc_value, a_value, an_element.position (a_position_table))
-							end
-						else
-							-- Unknown option.
+					an_option.set_primary_value (a_name, a_value)
+					if not a_valid_options.has (a_name) then
+-- TODO: unknown option.
+					elseif attached a_valid_options.item (a_name) as l_regexp then
+						if not l_regexp.recognizes (a_value) then
+-- TODO: invalid value.							
 						end
-					else
-						-- Unknown option.
 					end
 				end
 			end
@@ -1362,96 +674,92 @@ feature {NONE} -- Element change
 					if not is_enclosing_option then
 						-- Error already reported by the validator.
 					elseif STRING_.same_string (a_child.name, uc_option) then
-						fill_options (an_option, a_child, a_position_table)
+						fill_options (an_option, a_valid_options, a_child, a_position_table)
 					elseif STRING_.same_string (a_child.name, uc_require) then
+							-- Old syntax.
 						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"require%"/>", a_child.position (a_position_table))
 						if attached a_child.attribute_by_name (uc_enable) as l_enable_attribute then
 							a_bool := l_enable_attribute.value
 							if is_true (a_bool) then
-								an_option.set_assertion (require_value)
+								an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.require_option_value)
 							end
 						else
-							an_option.set_assertion (require_value)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.require_option_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_ensure) then
+							-- Old syntax.
 						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"ensure%"/>", a_child.position (a_position_table))
 						if attached a_child.attribute_by_name (uc_enable) as l_enable_attribute then
 							a_bool := l_enable_attribute.value
 							if is_true (a_bool) then
-								an_option.set_assertion (ensure_value)
+								an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.ensure_option_value)
 							end
 						else
-							an_option.set_assertion (ensure_value)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.ensure_option_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_invariant) then
+							-- Old syntax.
 						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"invariant%"/>", a_child.position (a_position_table))
 						if attached a_child.attribute_by_name (uc_enable) as l_enable_attribute then
 							a_bool := l_enable_attribute.value
 							if is_true (a_bool) then
-								an_option.set_assertion (invariant_value)
+								an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.invariant_option_value)
 							end
 						else
-							an_option.set_assertion (invariant_value)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.invariant_option_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_loop) then
+							-- Old syntax.
 						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"loop_[in]variant%"/>", a_child.position (a_position_table))
 						if attached a_child.attribute_by_name (uc_enable) as l_enable_attribute then
 							a_bool := l_enable_attribute.value
 							if is_true (a_bool) then
-								an_option.set_assertion (loop_invariant_value)
-								an_option.set_assertion (loop_variant_value)
+								an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.loop_invariant_option_value)
+								an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.loop_variant_option_value)
 							end
 						else
-							an_option.set_assertion (loop_invariant_value)
-							an_option.set_assertion (loop_variant_value)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.loop_invariant_option_value)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.loop_variant_option_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_check) then
+							-- Old syntax.
 						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"check%"/>", a_child.position (a_position_table))
 						if attached a_child.attribute_by_name (uc_enable) as l_enable_attribute then
 							a_bool := l_enable_attribute.value
 							if is_true (a_bool) then
-								an_option.set_assertion (check_value)
+								an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.check_option_value)
 							end
 						else
-							an_option.set_assertion (check_value)
-						end
-					elseif STRING_.same_string (a_child.name, uc_optimize) then
-						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"finalize%" value=%"true%"/>", a_child.position (a_position_table))
-						if attached a_child.attribute_by_name (uc_enable) as l_enable_attribute then
-							a_bool := l_enable_attribute.value
-							if is_true (a_bool) then
-								an_option.set_finalize_option (True)
-							end
-						else
-							an_option.set_finalize_option (True)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.assertion_option_name, {ET_XACE_OPTION_NAMES}.check_option_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_debug) then
+							-- Old syntax.
 						if attached a_child.attribute_by_name (uc_name) as l_name_attribute then
 							a_key := l_name_attribute.value
 							error_handler.report_element_obsoleted_by_element_warning (a_child, STRING_.concat ("<option name=%"debug_tag%" value=%"", a_key) + "%"/>", a_child.position (a_position_table))
 							if attached a_child.attribute_by_name (uc_enable) as l_enable_attribute then
 								a_bool := l_enable_attribute.value
 								if is_true (a_bool) then
-									an_option.set_debug_tag (a_key)
+									an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.debug_tag_option_name, a_key)
 								end
 							else
-								an_option.set_debug_tag (a_key)
+								an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.debug_tag_option_name, a_key)
 							end
 						else
 							if attached a_child.attribute_by_name (uc_enable) as l_enable_attribute then
 								a_bool := l_enable_attribute.value
 								if is_true (a_bool) then
 									error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"debug%" value=%"true%"/>", a_child.position (a_position_table))
-									an_option.set_debug_option (True)
+									an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.debug_option_name, a_bool)
 								elseif is_false (a_bool) then
 									error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"debug%" value=%"false%"/>", a_child.position (a_position_table))
-									an_option.set_debug_option (False)
+									an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.debug_option_name, a_bool)
 								else
 									error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"debug%" value=%"true/false%"/>", a_child.position (a_position_table))
 								end
 							else
 								error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"debug%" value=%"true%"/>", a_child.position (a_position_table))
-								an_option.set_debug_option (True)
+								an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.debug_option_name, {ET_XACE_OPTION_NAMES}.true_option_value)
 							end
 						end
 					end
@@ -1462,6 +770,7 @@ feature {NONE} -- Element change
 
 	fill_externals (an_option: ET_XACE_OPTIONS; a_cluster: detachable ET_XACE_CLUSTER; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE)
 			-- Fill Xace externals with data found in `an_element'.
+			-- Old syntax.
 		require
 			an_option_not_void: an_option /= Void
 			an_element_not_void: an_element /= Void
@@ -1477,12 +786,12 @@ feature {NONE} -- Element change
 					if STRING_.same_string (a_child.name, uc_link_library) then
 						if attached a_child.attribute_by_name (uc_location) as l_name_attribute then
 							a_value := l_name_attribute.value
-							an_option.set_link (a_value)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.link_option_name, a_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_include_dir) then
 						if attached a_child.attribute_by_name (uc_location) as l_location_attribute then
 							a_value := l_location_attribute.value
-							an_option.set_header (a_value)
+							an_option.set_primary_value ({ET_XACE_OPTION_NAMES}.header_option_name, a_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_export) then
 						if a_cluster /= Void then
@@ -1496,6 +805,21 @@ feature {NONE} -- Element change
 				a_cursor.forth
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	new_name: STRING
+			-- Unique name when not explicitly specified
+		do
+			new_name_count := new_name_count + 1
+			Result := "name_" + new_name_count.out
+		ensure
+			new_name_not_void: Result /= Void
+			new_name_not_empty: not Result.is_empty
+		end
+
+	new_name_count: INTEGER
+			-- Counter for `new_name'
 
 feature {NONE} -- Status report
 

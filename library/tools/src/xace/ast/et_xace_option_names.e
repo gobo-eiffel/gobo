@@ -5,7 +5,7 @@ note
 		"Xace option names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,345 +16,429 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
-feature -- Option names
+feature -- Names
 
-	abstract_name: STRING = "abstract"
-	address_expression_name: STRING = "address_expression"
-	arguments_name: STRING = "arguments"
-	array_optimization_name: STRING = "array_optimization"
-	assembly_name: STRING = "assembly"
-	assertion_name: STRING = "assertion"
-	attached_by_default_name: STRING = "attached_by_default"
-	automatic_backup_name: STRING = "automatic_backup"
-	callback_name: STRING = "callback"
-	case_insensitive_name: STRING = "case_insensitive"
-	check_generic_creation_constraint_name: STRING = "check_generic_creation_constraint"
-	check_vape_name: STRING = "check_vape"
-	clean_name: STRING = "clean"
-	cls_compliant_name: STRING = "cls_compliant"
-	component_name: STRING = "component"
-	console_application_name: STRING = "console_application"
-	create_keyword_extension_name: STRING = "create_keyword_extension"
-	culture_name: STRING = "culture"
-	c_compiler_options_name: STRING = "c_compiler_options"
-	dead_code_removal_name: STRING = "dead_code_removal"
+	abstract_option_name: STRING = "abstract"
+			-- Name of option "abstract"
+			--
+			-- Values: true|false
+
+	address_expression_option_name: STRING = "address_expression"
+			-- Name of option "address_expression"
+			--
+			-- Values: true|false
+
+	array_optimization_option_name: STRING = "array_optimization"
+			-- Name of option "array_optimization"
+			--
+			-- Values: true|false
+
+	assembly_option_name: STRING = "assembly"
+			-- Name of option "assembly"
+
+	assertion_option_name: STRING = "assertion"
+			-- Name of option "assertion"
+			--
+			-- Values: none|generate|require|supplier_precondition|ensure|invariant|loop_invariant|loop_variant|check|all
+
+	attached_by_default_option_name: STRING = "attached_by_default"
+			-- Name of option "attached_by_default"
+			--
+			-- Values: true|false
+
+	automatic_backup_option_name: STRING = "automatic_backup"
+			-- Name of option "automatic_backup"
+			--
+			-- Values: true|false
+
+	c_compiler_options_option_name: STRING = "c_compiler_options"
+			-- Name of option "c_compiler_options"
+
+	check_generic_creation_constraint_option_name: STRING = "check_generic_creation_constraint"
+			-- Name of option "check_generic_creation_constraint"
+			--
+			-- Values: true|false
+
+	check_vape_option_name: STRING = "check_vape"
+			-- Name of option "check_vape"
+			--
+			-- Values: true|false
+
+	cls_compliant_option_name: STRING = "cls_compliant"
+			-- Name of option "cls_compliant"
+			--
+			-- Values: true|false
+
+	console_application_option_name: STRING = "console_application"
+			-- Name of option "console_application"
+			--
+			-- Values: true|false
+
+	culture_option_name: STRING = "culture"
+			-- Name of option "culture"
+
+	dead_code_removal_option_name: STRING = "dead_code_removal"
+			-- Name of option "dead_code_removal"
+			--
+			-- Values: none|low_level|feature|class|all
+
 	debug_option_name: STRING = "debug"
-	debug_tag_name: STRING = "debug_tag"
-	debugger_name: STRING = "debugger"
-	document_name: STRING = "document"
-	dotnet_naming_convention_name: STRING = "dotnet_naming_convention"
-	dynamic_runtime_name: STRING = "dynamic_runtime"
-	ecf_library_name: STRING = "ecf_library"
-	enforce_unique_class_names_name: STRING = "enforce_unique_class_names"
-	exception_trace_name: STRING = "exception_trace"
-	exclude_name: STRING = "exclude"
+			-- Name of option "debug"
+			--
+			-- Values: true|false
+
+	debug_tag_option_name: STRING = "debug_tag"
+			-- Name of option "debug_tag"
+
+	dotnet_naming_convention_option_name: STRING = "dotnet_naming_convention"
+			-- Name of option "dotnet_naming_convention"
+			--
+			-- Values: true|false
+
+	dynamic_runtime_option_name: STRING = "dynamic_runtime"
+			-- Name of option "dynamic_runtime"
+			--
+			-- Values: true|false
+
+	ecf_library_option_name: STRING = "ecf_library"
+			-- Name of option "ecf_library"
+
+	enforce_unique_class_names_option_name: STRING = "enforce_unique_class_names"
+			-- Name of option "enforce_unique_class_names"
+			--
+			-- Values: true|false
+
+	exception_trace_option_name: STRING = "exception_trace"
+			-- Name of option "exception_trace"
+			--
+			-- Values: true|false
+
+	exclude_option_name: STRING = "exclude"
+			-- Name of option "exclude"
+
 	export_option_name: STRING = "export"
-	external_runtime_name: STRING = "external_runtime"
-	finalize_option_name: STRING = "finalize"
-	flat_fst_optimization_name: STRING = "flat_fst_optimization"
-	force_32bits_name: STRING = "force_32bits"
-	fst_expansion_factor_name: STRING = "fst_expansion_factor"
-	fst_optimization_name: STRING = "fst_optimization"
-	full_class_checking_name: STRING = "full_class_checking"
-	garbage_collector_name: STRING = "garbage_collector"
-	gc_info_name: STRING = "gc_info"
-	heap_size_name: STRING = "heap_size"
-	header_name: STRING = "header"
-	high_memory_compiler_name: STRING = "high_memory_compiler"
-	il_verifiable_name: STRING = "il_verifiable"
-	include_name: STRING = "include"
-	inlining_name: STRING = "inlining"
-	inlining_size_name: STRING = "inlining_size"
-	jumps_optimization_name: STRING = "jumps_optimization"
-	layout_name: STRING = "layout"
-	layout_optimization_name: STRING = "layout_optimization"
-	leaves_optimization_name: STRING = "leaves_optimization"
-	line_generation_name: STRING = "line_generation"
-	link_name: STRING = "link"
-	linker_name: STRING = "linker"
-	linux_fpu_double_precision_name: STRING = "linux_fpu_double_precision"
-	manifest_string_trace_name: STRING = "manifest_string_trace"
-	map_name: STRING = "map"
-	metadata_cache_path_name: STRING = "metadata_cache_path"
-	msil_assembly_compatibility_name: STRING = "msil_assembly_compatibility"
-	msil_classes_per_module_name: STRING = "msil_classes_per_module"
-	msil_clr_version_name: STRING = "msil_clr_version"
-	msil_culture_name: STRING = "msil_culture"
-	msil_generation_name: STRING = "msil_generation"
-	msil_generation_version_name: STRING = "msil_generation_version"
-	msil_key_file_name_name: STRING = "msil_key_file_name"
-	msil_use_optimized_precompile_name: STRING = "msil_use_optimized_precompile"
-	multithreaded_name: STRING = "multithreaded"
-	namespace_name: STRING = "namespace"
-	no_default_lib_name: STRING = "no_default_lib"
-	old_verbatim_strings_name: STRING = "old_verbatim_strings"
-	override_cluster_name: STRING = "override_cluster"
-	portable_code_generation_name: STRING = "portable_code_generation"
-	precompiled_name: STRING = "precompiled"
+			-- Name of option "export"
+
+	external_runtime_option_name: STRING = "external_runtime"
+			-- Name of option "external_runtime"
+
+	force_32bits_option_name: STRING = "force_32bits"
+			-- Name of option "force_32bits"
+			--
+			-- Values: true|false
+
+	full_class_checking_option_name: STRING = "full_class_checking"
+			-- Name of option "full_class_checking"
+			--
+			-- Values: true|false
+
+	garbage_collector_option_name: STRING = "garbage_collector"
+			-- Name of option "garbage_collector"
+			--
+			-- Values: none|internal|boehm
+
+	header_option_name: STRING = "header"
+			-- Name of option "header"
+
+	il_verifiable_option_name: STRING = "il_verifiable"
+			-- Name of option "il_verifiable"
+			--
+			-- Values: true|false
+
+	include_option_name: STRING = "include"
+			-- Name of option "include"
+
+	inlining_option_name: STRING = "inlining"
+			-- Name of option "inlining"
+			--
+			-- Values: none|array|constant|once|all
+
+	inlining_size_option_name: STRING = "inlining_size"
+			-- Name of option "inlining_size"
+			--
+			-- Values: Integers >= 0 and <= 100
+
+	line_generation_option_name: STRING = "line_generation"
+			-- Name of option "line_generation"
+			--
+			-- Values: true|false
+
+	link_option_name: STRING = "link"
+			-- Name of option "link"
+
+	metadata_cache_path_option_name: STRING = "metadata_cache_path"
+			-- Name of option "metadata_cache_path"
+
+	msil_classes_per_module_option_name: STRING = "msil_classes_per_module"
+			-- Name of option "msil_classes_per_module"
+			--
+			-- Values: Integers > 0
+
+	msil_clr_version_option_name: STRING = "msil_clr_version"
+			-- Name of option "msil_clr_version"
+
+	msil_culture_option_name: STRING = "msil_culture"
+			-- Name of option "msil_culture"
+
+	msil_generation_option_name: STRING = "msil_generation"
+			-- Name of option "msil_generation"
+			--
+			-- Values: true|false
+
+	msil_key_file_name_option_name: STRING = "msil_key_file_name"
+			-- Name of option "msil_key_file_name"
+
+	msil_use_optimized_precompile_option_name: STRING = "msil_use_optimized_precompile"
+			-- Name of option "msil_use_optimized_precompile"
+			--
+			-- Values: true|false
+
+	multithreaded_option_name: STRING = "multithreaded"
+			-- Name of option "multithreaded"
+			--
+			-- Values: true|false
+
+	namespace_option_name: STRING = "namespace"
+			-- Name of option "namespace"
+
+	old_verbatim_strings_option_name: STRING = "old_verbatim_strings"
+			-- Name of option "old_verbatim_strings"
+			--
+			-- Values: true|false
+
+	override_cluster_option_name: STRING = "override_cluster"
+			-- Name of option "override_cluster"
+
 	prefix_option_name: STRING = "prefix"
-	profile_name: STRING = "profile"
-	public_key_token_name: STRING = "public_key_token"
-	read_only_name: STRING = "read_only"
-	recursive_name: STRING = "recursive"
-	reloads_optimization_name: STRING = "reloads_optimization"
-	shared_library_definition_name: STRING = "shared_library_definition"
-	split_name: STRING = "split"
-	stack_size_name: STRING = "stack_size"
-	storable_name: STRING = "storable"
-	storable_filename_name: STRING = "storable_filename"
-	strip_option_name: STRING = "strip"
-	syntax_name: STRING = "syntax"
-	target_name: STRING = "target"
-	trace_name: STRING = "trace"
-	use_cluster_name_as_namespace_name: STRING = "use_cluster_name_as_namespace"
-	use_full_cluster_name_as_namespace_name: STRING = "use_full_cluster_name_as_namespace"
-	verbose_name: STRING = "verbose"
-	version_name: STRING = "version"
-	visible_filename_name: STRING = "visible_filename"
-	void_safety_name: STRING = "void_safety"
-	warning_name: STRING = "warning"
-	wedit_name: STRING = "wedit"
+			-- Name of option "prefix"
 
-feature -- Option codes
+	profile_option_name: STRING = "profile"
+			-- Name of option "profile"
+			--
+			-- Values: true|false
 
-	abstract_code: INTEGER = 1
-	address_expression_code: INTEGER = 2
-	arguments_code: INTEGER = 3
-	array_optimization_code: INTEGER = 4
-	assembly_code: INTEGER = 5
-	assertion_code: INTEGER = 6
-	attached_by_default_code: INTEGER = 7
-	automatic_backup_code: INTEGER = 8
-	callback_code: INTEGER = 9
-	case_insensitive_code: INTEGER = 10
-	check_generic_creation_constraint_code: INTEGER = 11
-	check_vape_code: INTEGER = 12
-	clean_code: INTEGER = 13
-	cls_compliant_code: INTEGER = 14
-	component_code: INTEGER = 15
-	console_application_code: INTEGER = 16
-	create_keyword_extension_code: INTEGER = 17
-	culture_code: INTEGER = 18
-	c_compiler_options_code: INTEGER = 19
-	dead_code_removal_code: INTEGER = 20
-	debug_option_code: INTEGER = 21
-	debug_tag_code: INTEGER = 22
-	debugger_code: INTEGER = 23
-	document_code: INTEGER = 24
-	dotnet_naming_convention_code: INTEGER = 25
-	dynamic_runtime_code: INTEGER = 26
-	ecf_library_code: INTEGER = 27
-	enforce_unique_class_names_code: INTEGER = 28
-	exception_trace_code: INTEGER = 29
-	exclude_code: INTEGER = 30
-	export_option_code: INTEGER = 31
-	external_runtime_code: INTEGER = 32
-	finalize_option_code: INTEGER = 33
-	flat_fst_optimization_code: INTEGER = 34
-	force_32bits_code: INTEGER = 35
-	fst_expansion_factor_code: INTEGER = 36
-	fst_optimization_code: INTEGER = 37
-	full_class_checking_code: INTEGER = 38
-	garbage_collector_code: INTEGER = 39
-	gc_info_code: INTEGER = 40
-	heap_size_code: INTEGER = 41
-	header_code: INTEGER = 42
-	high_memory_compiler_code: INTEGER = 43
-	il_verifiable_code: INTEGER = 44
-	include_code: INTEGER = 45
-	inlining_code: INTEGER = 46
-	inlining_size_code: INTEGER = 47
-	jumps_optimization_code: INTEGER = 48
-	layout_code: INTEGER = 49
-	layout_optimization_code: INTEGER = 50
-	leaves_optimization_code: INTEGER = 51
-	line_generation_code: INTEGER = 52
-	link_code: INTEGER = 53
-	linker_code: INTEGER = 54
-	linux_fpu_double_precision_code: INTEGER = 55
-	manifest_string_trace_code: INTEGER = 56
-	map_code: INTEGER = 57
-	metadata_cache_path_code: INTEGER = 58
-	msil_assembly_compatibility_code: INTEGER = 59
-	msil_classes_per_module_code: INTEGER = 60
-	msil_clr_version_code: INTEGER = 61
-	msil_culture_code: INTEGER = 62
-	msil_generation_code: INTEGER = 63
-	msil_generation_version_code: INTEGER = 64
-	msil_key_file_name_code: INTEGER = 65
-	msil_use_optimized_precompile_code: INTEGER = 66
-	multithreaded_code: INTEGER = 67
-	namespace_code: INTEGER = 68
-	no_default_lib_code: INTEGER = 69
-	old_verbatim_strings_code: INTEGER = 70
-	override_cluster_code: INTEGER = 71
-	portable_code_generation_code: INTEGER = 72
-	precompiled_code: INTEGER = 73
-	prefix_option_code: INTEGER = 74
-	profile_code: INTEGER = 75
-	public_key_token_code: INTEGER = 76
-	read_only_code: INTEGER = 77
-	recursive_code: INTEGER = 78
-	reloads_optimization_code: INTEGER = 79
-	shared_library_definition_code: INTEGER = 80
-	split_code: INTEGER = 81
-	stack_size_code: INTEGER = 82
-	storable_code: INTEGER = 83
-	storable_filename_code: INTEGER = 84
-	strip_option_code: INTEGER = 85
-	syntax_code: INTEGER = 86
-	target_code: INTEGER = 87
-	trace_code: INTEGER = 88
-	use_cluster_name_as_namespace_code: INTEGER = 89
-	use_full_cluster_name_as_namespace_code: INTEGER = 90
-	verbose_code: INTEGER = 91
-	version_code: INTEGER = 92
-	visible_filename_code: INTEGER = 93
-	void_safety_code: INTEGER = 94
-	warning_code: INTEGER = 95
-	wedit_code: INTEGER = 96
+	public_key_token_option_name: STRING = "public_key_token"
+			-- Name of option "public_key_token"
 
-	option_codes: DS_HASH_TABLE [INTEGER, STRING]
-			-- Mapping option names -> option codes
-		once
-			create Result.make_map (96)
-			Result.set_key_equality_tester (string_equality_tester)
-			Result.put_new (abstract_code, abstract_name)
-			Result.put_new (address_expression_code, address_expression_name)
-			Result.put_new (arguments_code, arguments_name)
-			Result.put_new (array_optimization_code, array_optimization_name)
-			Result.put_new (assembly_code, assembly_name)
-			Result.put_new (assertion_code, assertion_name)
-			Result.put_new (attached_by_default_code, attached_by_default_name)
-			Result.put_new (automatic_backup_code, automatic_backup_name)
-			Result.put_new (callback_code, callback_name)
-			Result.put_new (case_insensitive_code, case_insensitive_name)
-			Result.put_new (check_generic_creation_constraint_code, check_generic_creation_constraint_name)
-			Result.put_new (check_vape_code, check_vape_name)
-			Result.put_new (clean_code, clean_name)
-			Result.put_new (cls_compliant_code, cls_compliant_name)
-			Result.put_new (component_code, component_name)
-			Result.put_new (console_application_code, console_application_name)
-			Result.put_new (create_keyword_extension_code, create_keyword_extension_name)
-			Result.put_new (culture_code, culture_name)
-			Result.put_new (c_compiler_options_code, c_compiler_options_name)
-			Result.put_new (dead_code_removal_code, dead_code_removal_name)
-			Result.put_new (debug_option_code, debug_option_name)
-			Result.put_new (debug_tag_code, debug_tag_name)
-			Result.put_new (debugger_code, debugger_name)
-			Result.put_new (document_code, document_name)
-			Result.put_new (dotnet_naming_convention_code, dotnet_naming_convention_name)
-			Result.put_new (dynamic_runtime_code, dynamic_runtime_name)
-			Result.put_new (ecf_library_code, ecf_library_name)
-			Result.put_new (enforce_unique_class_names_code, enforce_unique_class_names_name)
-			Result.put_new (exception_trace_code, exception_trace_name)
-			Result.put_new (exclude_code, exclude_name)
-			Result.put_new (export_option_code, export_option_name)
-			Result.put_new (external_runtime_code, external_runtime_name)
-			Result.put_new (finalize_option_code, finalize_option_name)
-			Result.put_new (flat_fst_optimization_code, flat_fst_optimization_name)
-			Result.put_new (force_32bits_code, force_32bits_name)
-			Result.put_new (fst_expansion_factor_code, fst_expansion_factor_name)
-			Result.put_new (fst_optimization_code, fst_optimization_name)
-			Result.put_new (full_class_checking_code, full_class_checking_name)
-			Result.put_new (garbage_collector_code, garbage_collector_name)
-			Result.put_new (gc_info_code, gc_info_name)
-			Result.put_new (heap_size_code, heap_size_name)
-			Result.put_new (header_code, header_name)
-			Result.put_new (high_memory_compiler_code, high_memory_compiler_name)
-			Result.put_new (il_verifiable_code, il_verifiable_name)
-			Result.put_new (include_code, include_name)
-			Result.put_new (inlining_code, inlining_name)
-			Result.put_new (inlining_size_code, inlining_size_name)
-			Result.put_new (jumps_optimization_code, jumps_optimization_name)
-			Result.put_new (layout_code, layout_name)
-			Result.put_new (layout_optimization_code, layout_optimization_name)
-			Result.put_new (leaves_optimization_code, leaves_optimization_name)
-			Result.put_new (line_generation_code, line_generation_name)
-			Result.put_new (link_code, link_name)
-			Result.put_new (linker_code, linker_name)
-			Result.put_new (linux_fpu_double_precision_code, linux_fpu_double_precision_name)
-			Result.put_new (manifest_string_trace_code, manifest_string_trace_name)
-			Result.put_new (map_code, map_name)
-			Result.put_new (metadata_cache_path_code, metadata_cache_path_name)
-			Result.put_new (msil_assembly_compatibility_code, msil_assembly_compatibility_name)
-			Result.put_new (msil_classes_per_module_code, msil_classes_per_module_name)
-			Result.put_new (msil_clr_version_code, msil_clr_version_name)
-			Result.put_new (msil_culture_code, msil_culture_name)
-			Result.put_new (msil_generation_code, msil_generation_name)
-			Result.put_new (msil_generation_version_code, msil_generation_version_name)
-			Result.put_new (msil_key_file_name_code, msil_key_file_name_name)
-			Result.put_new (msil_use_optimized_precompile_code, msil_use_optimized_precompile_name)
-			Result.put_new (multithreaded_code, multithreaded_name)
-			Result.put_new (namespace_code, namespace_name)
-			Result.put_new (no_default_lib_code, no_default_lib_name)
-			Result.put_new (old_verbatim_strings_code, old_verbatim_strings_name)
-			Result.put_new (override_cluster_code, override_cluster_name)
-			Result.put_new (portable_code_generation_code, portable_code_generation_name)
-			Result.put_new (precompiled_code, precompiled_name)
-			Result.put_new (prefix_option_code, prefix_option_name)
-			Result.put_new (profile_code, profile_name)
-			Result.put_new (public_key_token_code, public_key_token_name)
-			Result.put_new (read_only_code, read_only_name)
-			Result.put_new (recursive_code, recursive_name)
-			Result.put_new (reloads_optimization_code, reloads_optimization_name)
-			Result.put_new (shared_library_definition_code, shared_library_definition_name)
-			Result.put_new (split_code, split_name)
-			Result.put_new (stack_size_code, stack_size_name)
-			Result.put_new (storable_code, storable_name)
-			Result.put_new (storable_filename_code, storable_filename_name)
-			Result.put_new (strip_option_code, strip_option_name)
-			Result.put_new (syntax_code, syntax_name)
-			Result.put_new (target_code, target_name)
-			Result.put_new (trace_code, trace_name)
-			Result.put_new (use_cluster_name_as_namespace_code, use_cluster_name_as_namespace_name)
-			Result.put_new (use_full_cluster_name_as_namespace_code, use_full_cluster_name_as_namespace_name)
-			Result.put_new (verbose_code, verbose_name)
-			Result.put_new (version_code, version_name)
-			Result.put_new (visible_filename_code, visible_filename_name)
-			Result.put_new (void_safety_code, void_safety_name)
-			Result.put_new (warning_code, warning_name)
-			Result.put_new (wedit_code, wedit_name)
-		ensure
-			options_code_not_void: Result /= Void
-			no_void_option_name: not Result.has_void
-		end
+	read_only_option_name: STRING = "read_only"
+			-- Name of option "read_only"
+			--
+			-- Values: true|false
 
-feature -- Option values
+	recursive_option_name: STRING = "recursive"
+			-- Name of option "recursive"
+			--
+			-- Values: true|false
 
-	all_value: STRING = "all"
-	array_value: STRING = "array"
-	auto_value: STRING = "auto"
-	boehm_value: STRING = "boehm"
-	check_value: STRING = "check"
-	class_value: STRING = "class"
-	com_value: STRING = "com"
-	complete_value: STRING = "complete"
-	constant_value: STRING = "constant"
-	default_value: STRING = "default"
-	dll_value: STRING = "dll"
-	ensure_value: STRING = "ensure"
-	exe_value: STRING = "exe"
-	feature_value: STRING = "feature"
-	generate_value: STRING = "generate"
-	internal_value: STRING = "internal"
-	invariant_value: STRING = "invariant"
-	loop_invariant_value: STRING = "loop_invariant"
-	loop_variant_value: STRING = "loop_variant"
-	low_level_value: STRING = "low_level"
-	microsoft_value: STRING = "microsoft"
-	no_main_value: STRING = "no_main"
-	none_value: STRING = "none"
-	obsolete_value: STRING = "obsolete"
-	once_value: STRING = "once"
-	on_demand_value: STRING = "on_demand"
-	require_value: STRING = "require"
-	sequential_value: STRING = "sequential"
-	standard_value: STRING = "standard"
-	style_value: STRING = "style"
-	supplier_precondition_value: STRING = "supplier_precondition"
-	transitional_value: STRING = "transitional"
-	utf8_value: STRING = "utf8"
-	winapi_value: STRING = "winapi"
+	shared_library_definition_option_name: STRING = "shared_library_definition"
+			-- Name of option "shared_library_definition"
+
+	syntax_option_name: STRING = "syntax"
+			-- Name of option "syntax"
+			--
+			-- Values: obsolete|transitional|standard|provisional
+
+	target_option_name: STRING = "target"
+			-- Name of option "target"
+			--
+			-- Values: exe|dll|com|no_main
+
+	trace_option_name: STRING = "trace"
+			-- Name of option "trace"
+			--
+			-- Values: true|false
+
+	use_cluster_name_as_namespace_option_name: STRING = "use_cluster_name_as_namespace"
+			-- Name of option "use_cluster_name_as_namespace"
+			--
+			-- Values: true|false
+
+	use_full_cluster_name_as_namespace_option_name: STRING = "use_full_cluster_name_as_namespace"
+			-- Name of option "use_full_cluster_name_as_namespace"
+			--
+			-- Values: true|false
+
+	version_option_name: STRING = "version"
+			-- Name of option "version"
+
+	void_safety_option_name: STRING = "void_safety"
+			-- Name of option "void_safety"
+			--
+			-- Values: none|on_demand|complete
+
+	warning_option_name: STRING = "warning"
+			-- Name of option "warning"
+			--
+			-- Values: none|style|default|all
+
+feature -- values
+
+	all_option_value: STRING = "all"
+			-- Value "all"
+			--
+			-- Used in "assertion", "dead_code_removal", "inlining" and "warning".
+
+	array_option_value: STRING = "array"
+			-- Value "array"
+			--
+			-- Used in "inlining".
+
+	boehm_option_value: STRING = "boehm"
+			-- Value "boehm"
+			--
+			-- Used in "garbage_collector".
+
+	check_option_value: STRING = "check"
+			-- Value "check"
+			--
+			-- Used in "assertion".
+
+	class_option_value: STRING = "class"
+			-- Value "class"
+			--
+			-- Used in "dead_code_removal".
+
+	com_option_value: STRING = "com"
+			-- Value "com"
+			--
+			-- Used in "target".
+
+	complete_option_value: STRING = "complete"
+			-- Value "complete"
+			--
+			-- Used in "void_safety".
+
+	constant_option_value: STRING = "constant"
+			-- Value "constant"
+			--
+			-- Used in "inlining".
+
+	default_option_value: STRING = "default"
+			-- Value "default"
+			--
+			-- Used in "warning".
+
+	default_public_key_token_option_value: STRING = "b77a5c561934e089"
+			-- Default value for option "public_key_token"
+
+	default_version_option_value: STRING = "1.0.5000.0"
+			-- Default value for option "version"
+
+	dll_option_value: STRING = "dll"
+			-- Value "dll"
+			--
+			-- Used in "target".
+
+	ensure_option_value: STRING = "ensure"
+			-- Value "ensure"
+			--
+			-- Used in "assertion".
+
+	exe_option_value: STRING = "exe"
+			-- Value "exe"
+			--
+			-- Used in "target".
+
+	false_option_value: STRING = "false"
+			-- Value "false"
+
+	feature_option_value: STRING = "feature"
+			-- Value "feature"
+			--
+			-- Used in "dead_code_removal".
+
+	generate_option_value: STRING = "generate"
+			-- Value "generate"
+			--
+			-- Used in "assertion".	
+
+	internal_option_value: STRING = "internal"
+			-- Value "internal"
+			--
+			-- Used in "garbage_collector".
+
+	invariant_option_value: STRING = "invariant"
+			-- Value "invariant"
+			--
+			-- Used in "assertion".
+
+	loop_invariant_option_value: STRING = "loop_invariant"
+			-- Value "loop_invariant"
+			--
+			-- Used in "assertion".	
+
+	loop_variant_option_value: STRING = "loop_variant"
+			-- Value "loop_variant"
+			--
+			-- Used in "assertion".	
+
+	low_level_option_value: STRING = "low_level"
+			-- Value "low_level"
+			--
+			-- Used in "dead_code_removal".
+
+	neutral_option_value: STRING = "neutral"
+			-- Value "neutral"
+			--
+			-- Used in "culture".
+
+	no_main_option_value: STRING = "no_main"
+			-- Value "no_main"
+			--
+			-- Used in "target".
+
+	none_option_value: STRING = "none"
+			-- Value "none"
+			--
+			-- Used in "assertion", "dead_code_removal", "garbage_collector",
+			-- "inlining", "void_safety" and "warning".
+
+	obsolete_option_value: STRING = "obsolete"
+			-- Value "obsolete"
+			--
+			-- Used in "syntax".
+
+	on_demand_option_value: STRING = "on_demand"
+			-- Value "on_demand"
+			--
+			-- Used in "void_safety".
+
+	once_option_value: STRING = "on_demand"
+			-- Value "once"
+			--
+			-- Used in "inlining".
+
+	provisional_option_value: STRING = "provisional"
+			-- Value "provisional"
+			--
+			-- Used in "syntax".
+
+	require_option_value: STRING = "require"
+			-- Value "require"
+			--
+			-- Used in "assertion".
+
+	standard_option_value: STRING = "standard"
+			-- Value "standard"
+			--
+			-- Used in "syntax".
+
+	style_option_value: STRING = "style"
+			-- Value "style"
+			--
+			-- Used in "warning".
+
+	supplier_precondition_option_value: STRING = "supplier_precondition"
+			-- Value "supplier_precondition"
+			--
+			-- Used in "assertion".
+
+	transitional_option_value: STRING = "transitional"
+			-- Value "transitional"
+			--
+			-- Used in "syntax".
+
+	true_option_value: STRING = "true"
+			-- Value "true"
 
 end

@@ -14,11 +14,15 @@ class ET_ECF_LIBRARY_PARSER
 
 inherit
 
-	ET_ECF_PARSER
+	ET_ECF_SYSTEM_CONFIG_PARSER
+		rename
+			last_system_config as last_library
 		redefine
+			last_library,
+			parse_file,
+			build_system_config,
 			make_with_factory,
-			create_library_parser,
-			parse_file
+			create_library_parser
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS

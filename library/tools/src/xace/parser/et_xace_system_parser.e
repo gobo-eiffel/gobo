@@ -5,7 +5,7 @@ note
 		"Xace Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2017, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,9 +19,6 @@ inherit
 			parse_file,
 			last_system, new_system
 		end
-
-	ET_SHARED_XACE_OPTION_NAMES
-		export {NONE} all end
 
 	UT_STRING_ROUTINES
 		export {NONE} all end
@@ -86,31 +83,28 @@ feature {NONE} -- Xace AST factory
 			-- New Eiffel system build from `an_element'
 		local
 			l_externals: ET_XACE_EXTERNALS
+			l_external_cflags: DS_ARRAYED_LIST [STRING]
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
 			l_pathname: STRING
 			l_cursor: DS_LINKED_LIST_CURSOR [STRING]
-			l_options: detachable ET_XACE_OPTIONS
-			l_name_attribute: detachable XM_ATTRIBUTE
+			l_options: ET_XACE_OPTIONS
+			l_target: ET_XACE_TARGET
 		do
-			l_name_attribute := an_element.attribute_by_name (uc_name)
-			if l_name_attribute /= Void and then not l_name_attribute.value.is_empty then
-				create Result.make (l_name_attribute.value)
-			else
-					-- The "name" attribute is not optional.
-					-- The Xace file is not valid.
-				create Result.make ("*unknown*")
-			end
+			l_target := new_named_target (an_element, a_position_table)
+			create Result.make (l_target)
 			fill_system (Result, an_element, a_position_table, Result)
+			Result.select_target (l_target, error_handler)
 			Result.mount_libraries
 			create l_externals.make
 			Result.merge_externals (l_externals)
-			l_external_include_pathnames := Result.external_include_pathnames
+			l_external_cflags := Result.external_cflags
 			l_cursor := l_externals.c_compiler_options.new_cursor
 			from l_cursor.start until l_cursor.after loop
-				l_external_include_pathnames.force_last ("some123/fake432/path567 " + l_cursor.item)
+				l_external_cflags.force_last (l_cursor.item)
 				l_cursor.forth
 			end
+			l_external_include_pathnames := Result.external_include_pathnames
 			l_cursor := l_externals.include_directories.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_pathname := l_cursor.item
@@ -129,19 +123,11 @@ feature {NONE} -- Xace AST factory
 				l_cursor.forth
 			end
 			l_options := Result.options
-			if l_options /= Void then
-				Result.set_console_application_mode (l_options.console_application)
-				Result.set_exception_trace_mode (l_options.exception_trace)
-				Result.set_trace_mode (l_options.trace)
-				Result.set_use_boehm_gc (STRING_.same_string (l_options.garbage_collector, options.boehm_value))
-				Result.set_multithreaded_mode (l_options.multithreaded)
-			else
-				Result.set_console_application_mode (True)
-				Result.set_exception_trace_mode (False)
-				Result.set_trace_mode (False)
-				Result.set_use_boehm_gc (False)
-				Result.set_multithreaded_mode (False)
-			end
+			Result.set_console_application_mode (not attached l_options.value ({ET_XACE_OPTION_NAMES}.console_application_option_name) as l_value or else STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value))
+			Result.set_exception_trace_mode (attached l_options.value ({ET_XACE_OPTION_NAMES}.exception_trace_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value))
+			Result.set_trace_mode (attached l_options.value ({ET_XACE_OPTION_NAMES}.trace_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value))
+			Result.set_use_boehm_gc (attached l_options.value ({ET_XACE_OPTION_NAMES}.garbage_collector_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.boehm_option_value))
+			Result.set_multithreaded_mode (attached l_options.value ({ET_XACE_OPTION_NAMES}.multithreaded_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value))
 		end
 
 end

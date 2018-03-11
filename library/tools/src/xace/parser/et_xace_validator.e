@@ -5,7 +5,7 @@ note
 		"Xace XML validators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,10 +19,10 @@ inherit
 	ET_XACE_ELEMENT_NAMES
 		export {NONE} all end
 
-	KL_IMPORTED_STRING_ROUTINES
+	ET_XACE_OPTION_DEFAULTS
 		export {NONE} all end
 
-	ET_SHARED_XACE_OPTION_NAMES
+	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
 create
@@ -141,7 +141,7 @@ feature {NONE} -- Validation
 				elseif STRING_.same_string (a_child.name, uc_mount) then
 					validate_mount (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_option) then
-					validate_option (a_child, a_position_table)
+					validate_option (a_child, valid_system_options, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
 					error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"header/link/export%" ...>", a_child.position (a_position_table))
@@ -178,7 +178,7 @@ feature {NONE} -- Validation
 				elseif STRING_.same_string (a_child.name, uc_mount) then
 					validate_mount (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_option) then
-					validate_option (a_child, a_position_table)
+					validate_option (a_child, valid_system_options, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
 					error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"header/link/export%" ...>", a_child.position (a_position_table))
@@ -246,7 +246,7 @@ feature {NONE} -- Validation
 				elseif STRING_.same_string (a_child.name, uc_mount) then
 					validate_mount (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_option) then
-					validate_option (a_child, a_position_table)
+					validate_option (a_child, valid_cluster_options, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_class) then
 					validate_class (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_external) then
@@ -279,7 +279,7 @@ feature {NONE} -- Validation
 				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_option) then
-					validate_option (a_child, a_position_table)
+					validate_option (a_child, valid_class_options, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_feature) then
 					validate_feature (a_child, a_position_table)
 				else
@@ -308,7 +308,7 @@ feature {NONE} -- Validation
 				if not attached {XM_ELEMENT} a_cursor.item as a_child then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_option) then
-					validate_option (a_child, a_position_table)
+					validate_option (a_child, valid_feature_options, a_position_table)
 				else
 					has_error := True
 					error_handler.report_unknown_element_error (a_feature, a_child, a_child.position (a_position_table))
@@ -345,11 +345,12 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_option (an_option: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE)
+	validate_option (an_option: XM_ELEMENT; a_valid_options: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]; a_position_table: detachable XM_POSITION_TABLE)
 			-- Check whether `an_option' is a valid Xace 'option' element.
 			-- Set `has_error' to True if not.
 		require
 			an_option_not_void: an_option /= Void
+			a_valid_options_not_void: a_valid_options /= Void
 			an_option_is_cluster: STRING_.same_string (an_option.name, uc_option)
 		local
 			has_name: BOOLEAN
@@ -361,8 +362,9 @@ feature {NONE} -- Validation
 			if attached an_option.attribute_by_name (uc_name) as l_name_attribute then
 				has_name := True
 				a_name := l_name_attribute.value
-				if not options.option_codes.has (a_name) then
-					error_handler.report_unknown_option_warning (an_option, an_option.position (a_position_table))
+				if not a_valid_options.has (a_name) then
+-- TODO: we don't necessarily want a warning here.
+--					error_handler.report_unknown_option_warning (an_option, an_option.position (a_position_table))
 				end
 			end
 			if attached an_option.attribute_by_name (uc_value) then
@@ -396,7 +398,7 @@ feature {NONE} -- Validation
 								has_error := True
 								error_handler.report_unknown_element_error (an_option, a_child, a_child.position (a_position_table))
 							elseif STRING_.same_string (a_child_name, uc_option) then
-								validate_option (a_child, a_position_table)
+								validate_option (a_child, a_valid_options, a_position_table)
 							end
 						else
 							has_error := True

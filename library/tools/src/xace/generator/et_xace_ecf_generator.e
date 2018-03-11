@@ -6,7 +6,7 @@ note
 
 	remark: "Generate ECF version 1.15"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,6 +44,11 @@ feature -- Access
 			Result := compiler + ".ecf"
 		end
 
+feature -- Status report
+
+	default_values_ignored: BOOLEAN = True
+			-- Do not print values when they are the default value?
+
 feature -- Output
 
 	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM)
@@ -64,8 +69,6 @@ feature {NONE} -- Output
 			-- Print ECF version of `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
-			system_name_not_void: attached a_system.system_name as l_system_name
-			system_name_not_empty: l_system_name.count > 0
 			root_class_name_not_void: attached a_system.root_class_name as l_root_class_name
 			root_class_name_not_empty: l_root_class_name.count > 0
 			creation_procedure_name_not_void: attached a_system.creation_procedure_name as l_creation_procedure_name
@@ -74,29 +77,19 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			l_clusters: detachable ET_XACE_CLUSTERS
-			l_mounted_libraries: detachable ET_XACE_MOUNTED_LIBRARIES
 			l_option: detachable ET_XACE_OPTIONS
 			l_external: ET_XACE_EXTERNALS
+			l_target: ET_XACE_TARGET
 		do
 			a_file.put_line ("<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>")
 			a_file.put_string ("<system ")
 			print_ecf_namespaces (a_file)
 			a_file.put_string (" name=%"")
-			if attached a_system.system_name as l_system_name then
-				print_quote_escaped_string (l_system_name, a_file)
-			else
-					-- Should never happen according to the precondition.
-				check False end
-			end
+			print_quote_escaped_string (a_system.name, a_file)
 			a_file.put_line ("%">")
 			print_indentation (1, a_file)
 			a_file.put_string ("<target name=%"")
-			if attached a_system.system_name as l_system_name then
-				print_quote_escaped_string (l_system_name, a_file)
-			else
-					-- Should never happen according to the precondition.
-				check False end
-			end
+			print_quote_escaped_string (a_system.name, a_file)
 			a_file.put_line ("%">")
 			print_indentation (2, a_file)
 			a_file.put_string ("<root class=%"")
@@ -104,57 +97,63 @@ feature {NONE} -- Output
 				print_quote_escaped_string (l_root_class_name, a_file)
 			else
 					-- Should never happen according to the precondition.
-				check False end
+				check precondition: False end
 			end
 			a_file.put_string ("%" feature=%"")
 			if attached a_system.creation_procedure_name as l_creation_procedure_name then
 				print_quote_escaped_string (l_creation_procedure_name, a_file)
 			else
 					-- Should never happen according to the precondition.
-				check False end
+				check precondition: False end
 			end
 			a_file.put_line ("%"/>")
-				-- Options and settings.
-			l_option := a_system.options
-			if l_option /= Void then
-					-- Default options for systems.
-				if not l_option.is_warning_declared then
-					l_option.set_warning (options.default_value)
-				end
-				if not l_option.is_trace_declared then
-					l_option.set_trace (False)
-				end
-				if not l_option.is_profile_declared then
-					l_option.set_profile (False)
-				end
-				if not l_option.is_debug_option_declared then
-					l_option.set_debug_option (False)
-				end
-				if not l_option.is_void_safety_declared then
-					l_option.set_void_safety (options.none_value)
-				end
-				print_options (l_option, 2, a_file)
+			if is_shallow then
+				l_target := a_system.selected_target
+					-- Options and settings.
+				l_option := l_target.options
+				print_options (l_option, Void, 2, a_file)
 				print_settings (l_option, 2, a_file)
-			end
-				-- Externals.
-			create l_external.make
-			a_system.merge_externals (l_external)
-			if l_external.has_include_directories then
-				print_external_includes (l_external.include_directories, 2, a_file)
-			end
-			if l_external.has_c_compiler_options then
-				print_external_c_compiler_options (l_external.c_compiler_options, 2, a_file)
-			end
-			if l_external.has_link_libraries then
-				print_external_libraries (l_external.link_libraries, 2, a_file)
-			end
-				-- Libraries.
-			l_mounted_libraries := a_system.libraries
-			if l_mounted_libraries /= Void then
-				print_mounted_libraries (l_mounted_libraries, 2, a_file)
-			end
-			l_clusters := a_system.clusters
-			if l_clusters /= Void then
+					-- Externals.
+				create l_external.make
+				a_system.merge_externals (l_external)
+				if l_external.has_include_directories then
+					print_external_includes (l_external.include_directories, 2, a_file)
+				end
+				if l_external.has_c_compiler_options then
+					print_external_c_compiler_options (l_external.c_compiler_options, 2, a_file)
+				end
+				if l_external.has_link_libraries then
+					print_external_libraries (l_external.link_libraries, 2, a_file)
+				end
+					-- Libraries.
+				print_mounted_libraries (l_target.libraries, 2, a_file)
+				l_clusters := l_target.clusters
+					-- Libraries.
+				print_ecf_clusters (l_clusters, 2, a_file)
+					-- Assemblies.
+				print_assemblies (l_clusters, 2, a_file)
+					-- Clusters.
+				print_clusters (l_clusters, 2, a_file)
+					-- Override clusters.
+				print_override_clusters (l_clusters, 2, a_file)
+			else
+					-- Options and settings.
+				l_option := a_system.options
+				print_options (l_option, Void, 2, a_file)
+				print_settings (l_option, 2, a_file)
+					-- Externals.
+				create l_external.make
+				a_system.merge_externals (l_external)
+				if l_external.has_include_directories then
+					print_external_includes (l_external.include_directories, 2, a_file)
+				end
+				if l_external.has_c_compiler_options then
+					print_external_c_compiler_options (l_external.c_compiler_options, 2, a_file)
+				end
+				if l_external.has_link_libraries then
+					print_external_libraries (l_external.link_libraries, 2, a_file)
+				end
+				l_clusters := a_system.clusters
 					-- Libraries.
 				print_ecf_clusters (l_clusters, 2, a_file)
 					-- Assemblies.
@@ -173,73 +172,75 @@ feature {NONE} -- Output
 			-- Print ECF version of `a_library' to `a_file'.
 		require
 			a_library_not_void: a_library /= Void
-			a_library_name_not_void: attached a_library.name as l_library_name
-			a_library_name_not_empty: l_library_name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
 			l_clusters: detachable ET_XACE_CLUSTERS
-			l_mounted_libraries: detachable ET_XACE_MOUNTED_LIBRARIES
 			l_option: detachable ET_XACE_OPTIONS
 			l_external: ET_XACE_EXTERNALS
+			l_target: ET_XACE_TARGET
 		do
 			a_file.put_line ("<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>")
 			a_file.put_string ("<system ")
 			print_ecf_namespaces (a_file)
 			a_file.put_string (" name=%"")
-			if attached a_library.name as l_library_name then
-				print_quote_escaped_string (l_library_name, a_file)
-			else
-					-- Should never happen according to the precondition.
-				check False end
-			end
+			print_quote_escaped_string (a_library.name, a_file)
 			a_file.put_string ("%" library_target=%"")
-			if attached a_library.name as l_library_name then
-				print_quote_escaped_string (l_library_name, a_file)
-			else
-					-- Should never happen according to the precondition.
-				check False end
-			end
+			print_quote_escaped_string (a_library.name, a_file)
 			a_file.put_line ("%">")
 			print_indentation (1, a_file)
 			a_file.put_string ("<target name=%"")
-			if attached a_library.name as l_library_name then
-				print_quote_escaped_string (l_library_name, a_file)
-			else
-					-- Should never happen according to the precondition.
-				check False end
-			end
+			print_quote_escaped_string (a_library.name, a_file)
 			a_file.put_line ("%">")
 			print_indentation (2, a_file)
 			a_file.put_line ("<root all_classes=%"true%"/>")
-				-- Options and settings.
-			l_option := a_library.options
-			if l_option /= Void then
-				if not l_option.is_void_safety_declared then
-					l_option.set_void_safety (options.none_value)
-				end
-				print_options (l_option, 2, a_file)
+			if is_shallow then
+				l_target := a_library.selected_target
+					-- Options and settings.
+				l_option := l_target.options
+				print_options (l_option, Void, 2, a_file)
 				print_settings (l_option, 2, a_file)
-			end
-				-- Externals.
-			create l_external.make
-			a_library.merge_externals (l_external)
-			if l_external.has_include_directories then
-				print_external_includes (l_external.include_directories, 2, a_file)
-			end
-			if l_external.has_c_compiler_options then
-				print_external_c_compiler_options (l_external.c_compiler_options, 2, a_file)
-			end
-			if l_external.has_link_libraries then
-				print_external_libraries (l_external.link_libraries, 2, a_file)
-			end
-				-- Libraries.
-			l_mounted_libraries := a_library.libraries
-			if l_mounted_libraries /= Void then
-				print_mounted_libraries (l_mounted_libraries, 2, a_file)
-			end
-			l_clusters := a_library.clusters
-			if l_clusters /= Void then
+					-- Externals.
+				create l_external.make
+				a_library.merge_externals (l_external)
+				if l_external.has_include_directories then
+					print_external_includes (l_external.include_directories, 2, a_file)
+				end
+				if l_external.has_c_compiler_options then
+					print_external_c_compiler_options (l_external.c_compiler_options, 2, a_file)
+				end
+				if l_external.has_link_libraries then
+					print_external_libraries (l_external.link_libraries, 2, a_file)
+				end
+					-- Libraries.
+				print_mounted_libraries (a_library.libraries, 2, a_file)
+				l_clusters := a_library.clusters
+					-- Libraries.
+				print_ecf_clusters (l_clusters, 2, a_file)
+					-- Assemblies.
+				print_assemblies (l_clusters, 2, a_file)
+					-- Clusters.
+				print_clusters (l_clusters, 2, a_file)
+					-- Override clusters.
+				print_override_clusters (l_clusters, 2, a_file)
+			else
+					-- Options and settings.
+				l_option := a_library.options
+				print_options (l_option, Void, 2, a_file)
+				print_settings (l_option, 2, a_file)
+					-- Externals.
+				create l_external.make
+				a_library.merge_externals (l_external)
+				if l_external.has_include_directories then
+					print_external_includes (l_external.include_directories, 2, a_file)
+				end
+				if l_external.has_c_compiler_options then
+					print_external_c_compiler_options (l_external.c_compiler_options, 2, a_file)
+				end
+				if l_external.has_link_libraries then
+					print_external_libraries (l_external.link_libraries, 2, a_file)
+				end
+				l_clusters := a_library.clusters
 					-- Libraries.
 				print_ecf_clusters (l_clusters, 2, a_file)
 					-- Assemblies.
@@ -254,7 +255,7 @@ feature {NONE} -- Output
 			a_file.put_line ("</system>")
 		end
 
-	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
+	print_options (an_option: ET_XACE_OPTIONS; a_class_name: detachable STRING; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print ECF options found in `an_option' to `a_file'.
 		require
 			an_option_not_void: an_option /= Void
@@ -264,157 +265,217 @@ feature {NONE} -- Output
 		local
 			l_option_attribute_printed: BOOLEAN
 			l_option_element_printed: BOOLEAN
-			l_cursor: DS_HASH_SET_CURSOR [STRING]
+			l_name: STRING
+			l_default: STRING
 		do
-				-- trace
-			if an_option.is_trace_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
-				end
-				if an_option.trace then
-					a_file.put_string (" trace=%"true%"")
-				else
-					a_file.put_string (" trace=%"false%"")
-				end
-			end
-				-- profile
-			if an_option.is_profile_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
-				end
-				if an_option.profile then
-					a_file.put_string (" profile=%"true%"")
-				else
-					a_file.put_string (" profile=%"false%"")
+				-- is_attached_by_default
+			l_name := {ET_XACE_OPTION_NAMES}.attached_by_default_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.true_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					if not l_option_attribute_printed then
+						print_indentation (indent, a_file)
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_character ('%"')
+						else
+							a_file.put_string ("<option")
+						end
+						l_option_attribute_printed := True
+					end
+					a_file.put_string (" is_attached_by_default=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_string ("%"")
 				end
 			end
-				-- optimize
--- TODO: Not supported yet.
 				-- debug
-			if an_option.is_debug_option_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
-				end
-				if an_option.debug_option then
-					a_file.put_string (" debug=%"true%"")
-				else
-					a_file.put_string (" debug=%"false%"")
+			l_name := {ET_XACE_OPTION_NAMES}.debug_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					if not l_option_attribute_printed then
+						print_indentation (indent, a_file)
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_character ('%"')
+						else
+							a_file.put_string ("<option")
+						end
+						l_option_attribute_printed := True
+					end
+					a_file.put_string (" debug=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_string ("%"")
 				end
 			end
-				-- warning
-			if an_option.is_warning_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
-				end
-				if an_option.warning.same_string (options.none_value) then
-					a_file.put_string (" warning=%"false%"")
-				else
-					a_file.put_string (" warning=%"true%"")
+				-- full_class_checking
+			l_name := {ET_XACE_OPTION_NAMES}.full_class_checking_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.true_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					if not l_option_attribute_printed then
+						print_indentation (indent, a_file)
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_character ('%"')
+						else
+							a_file.put_string ("<option")
+						end
+						l_option_attribute_printed := True
+					end
+					a_file.put_string (" full_class_checking=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_string ("%"")
 				end
 			end
 				-- namespace
-			if an_option.is_namespace_declared and then attached an_option.declared_namespace as l_declared_namespace then
+			l_name := {ET_XACE_OPTION_NAMES}.namespace_option_name
+			if attached an_option.primary_value (l_name) as l_value then
 				if not l_option_attribute_printed then
 					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
+					if a_class_name /= Void then
+						a_file.put_string ("<class_option class=%"")
+						print_quote_escaped_string (a_class_name, a_file)
+						a_file.put_character ('%"')
+					else
+						a_file.put_string ("<option")
+					end
 					l_option_attribute_printed := True
 				end
 				a_file.put_string (" namespace=%"")
-				print_quote_escaped_string (l_declared_namespace, a_file)
-				a_file.put_character ('%"')
+				print_quote_escaped_string (l_value, a_file)
+				a_file.put_string ("%"")
 			end
-				-- msil_application_optimize
--- TODO: Not supported yet.
-				-- full_class_checking
-			if an_option.is_full_class_checking_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
-				end
-				if an_option.full_class_checking then
-					a_file.put_string (" full_class_checking=%"true%"")
-				else
-					a_file.put_string (" full_class_checking=%"false%"")
+				-- profile
+			l_name := {ET_XACE_OPTION_NAMES}.profile_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					if not l_option_attribute_printed then
+						print_indentation (indent, a_file)
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_character ('%"')
+						else
+							a_file.put_string ("<option")
+						end
+						l_option_attribute_printed := True
+					end
+					a_file.put_string (" profile=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_string ("%"")
 				end
 			end
 				-- syntax
-			if an_option.is_syntax_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
+			l_name := {ET_XACE_OPTION_NAMES}.syntax_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.standard_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					if not l_option_attribute_printed then
+						print_indentation (indent, a_file)
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_character ('%"')
+						else
+							a_file.put_string ("<option")
+						end
+						l_option_attribute_printed := True
+					end
+					a_file.put_string (" syntax=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_string ("%"")
 				end
-				a_file.put_string (" syntax=%"")
-				a_file.put_string (an_option.syntax)
-				a_file.put_character ('%"')
 			end
-				-- is_attached_by_default
-			if an_option.is_attached_by_default_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
+				-- trace
+			l_name := {ET_XACE_OPTION_NAMES}.trace_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					if not l_option_attribute_printed then
+						print_indentation (indent, a_file)
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_character ('%"')
+						else
+							a_file.put_string ("<option")
+						end
+						l_option_attribute_printed := True
+					end
+					a_file.put_string (" trace=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_string ("%"")
 				end
-				a_file.put_string (" is_attached_by_default=%"")
-				if an_option.attached_by_default then
-					a_file.put_string ("true")
-				else
-					a_file.put_string ("false")
-				end
-				a_file.put_character ('%"')
 			end
 				-- void_safety
-			if an_option.is_void_safety_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
-				end
-				a_file.put_string (" void_safety=%"")
-				if an_option.void_safety.same_string (options.none_value) then
-					a_file.put_string ("none")
-				elseif an_option.void_safety.same_string (options.on_demand_value) then
-					a_file.put_string ("initialization")
-				else
-					a_file.put_string ("all")
-				end
-				a_file.put_character ('%"')
-			end
-				-- debug
-			if an_option.is_debug_tag_declared then
-				l_cursor := an_option.debug_tag.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					if not l_option_element_printed then
-						if not l_option_attribute_printed then
-							print_indentation (indent, a_file)
-							a_file.put_line ("<option>")
+			l_name := {ET_XACE_OPTION_NAMES}.void_safety_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.complete_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					if not l_option_attribute_printed then
+						print_indentation (indent, a_file)
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_character ('%"')
 						else
-							a_file.put_line (">")
+							a_file.put_string ("<option")
 						end
-						l_option_element_printed := True
+						l_option_attribute_printed := True
 					end
-					print_indentation (indent + 1, a_file)
-					a_file.put_string ("<debug name=%"")
-					print_quote_escaped_string (l_cursor.item, a_file)
-					a_file.put_line ("%" enabled=%"true%"/>")
-					l_cursor.forth
+					a_file.put_string (" void_safety=%"")
+					if STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.on_demand_option_value) then
+						print_quote_escaped_string ("initialization", a_file)
+					elseif STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.complete_option_value) then
+						print_quote_escaped_string ("all", a_file)
+					else
+						print_quote_escaped_string (l_value, a_file)
+					end
+					a_file.put_string ("%"")
+				end
+			end
+				-- warning
+			l_name := {ET_XACE_OPTION_NAMES}.warning_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.none_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					if not l_option_attribute_printed then
+						print_indentation (indent, a_file)
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_character ('%"')
+						else
+							a_file.put_string ("<option")
+						end
+						l_option_attribute_printed := True
+					end
+					a_file.put_string (" warning=%"")
+					if STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.none_option_value) then
+						print_quote_escaped_string ("false", a_file)
+					else
+						print_quote_escaped_string ("true", a_file)
+					end
+					a_file.put_string ("%"")
 				end
 			end
 				-- assertions
-			if an_option.is_assertion_declared and then attached an_option.declared_assertion as l_assertions then
+			if attached an_option.multivalue ({ET_XACE_OPTION_NAMES}.assertion_option_name) as l_assertions and then not l_assertions.is_empty then
 				if not l_option_element_printed then
 					if not l_option_attribute_printed then
 						print_indentation (indent, a_file)
-						a_file.put_line ("<option>")
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_string ("%">")
+						else
+							a_file.put_string ("<option>")
+						end
 					else
 						a_file.put_line (">")
 					end
@@ -423,46 +484,62 @@ feature {NONE} -- Output
 				print_indentation (indent + 1, a_file)
 				a_file.put_string ("<assertions")
 					-- precondition
-				if l_assertions.has (options.require_value) or l_assertions.has (options.all_value) then
+				if l_assertions.has ({ET_XACE_OPTION_NAMES}.require_option_value) or l_assertions.has ({ET_XACE_OPTION_NAMES}.all_option_value) then
 					a_file.put_string (" precondition=%"true%"")
-				else
-					a_file.put_string (" precondition=%"false%"")
 				end
 					-- supplier_precondition
-				if l_assertions.has (options.supplier_precondition_value) or l_assertions.has (options.all_value) then
+				if l_assertions.has ({ET_XACE_OPTION_NAMES}.supplier_precondition_option_value) or l_assertions.has ({ET_XACE_OPTION_NAMES}.all_option_value) then
 					a_file.put_string (" supplier_precondition=%"true%"")
 				end
 					-- postcondition
-				if l_assertions.has (options.ensure_value) or l_assertions.has (options.all_value) then
+				if l_assertions.has ({ET_XACE_OPTION_NAMES}.ensure_option_value) or l_assertions.has ({ET_XACE_OPTION_NAMES}.all_option_value) then
 					a_file.put_string (" postcondition=%"true%"")
-				else
-					a_file.put_string (" postcondition=%"false%"")
 				end
 					-- check
-				if l_assertions.has (options.check_value) or l_assertions.has (options.all_value) then
+				if l_assertions.has ({ET_XACE_OPTION_NAMES}.check_option_value) or l_assertions.has ({ET_XACE_OPTION_NAMES}.all_option_value) then
 					a_file.put_string (" check=%"true%"")
-				else
-					a_file.put_string (" check=%"false%"")
 				end
 					-- invariant
-				if l_assertions.has (options.invariant_value) or l_assertions.has (options.all_value) then
+				if l_assertions.has ({ET_XACE_OPTION_NAMES}.invariant_option_value) or l_assertions.has ({ET_XACE_OPTION_NAMES}.all_option_value) then
 					a_file.put_string (" invariant=%"true%"")
-				else
-					a_file.put_string (" invariant=%"false%"")
 				end
 					-- loop
-				if l_assertions.has (options.loop_variant_value) or l_assertions.has (options.loop_invariant_value) or l_assertions.has (options.all_value) then
+				if l_assertions.has ({ET_XACE_OPTION_NAMES}.loop_variant_option_value) or l_assertions.has ({ET_XACE_OPTION_NAMES}.loop_invariant_option_value) or l_assertions.has ({ET_XACE_OPTION_NAMES}.all_option_value) then
 					a_file.put_string (" loop=%"true%"")
-				else
-					a_file.put_string (" loop=%"false%"")
 				end
 				a_file.put_line ("/>")
 			end
-				-- warning
--- TODO: Not supported yet.
+				-- debug
+			if attached an_option.multivalue ({ET_XACE_OPTION_NAMES}.debug_tag_option_name) as l_debug_tags and then not l_debug_tags.is_empty then
+				if not l_option_element_printed then
+					if not l_option_attribute_printed then
+						print_indentation (indent, a_file)
+						if a_class_name /= Void then
+							a_file.put_string ("<class_option class=%"")
+							print_quote_escaped_string (a_class_name, a_file)
+							a_file.put_string ("%">")
+						else
+							a_file.put_string ("<option>")
+						end
+					else
+						a_file.put_line (">")
+					end
+					l_option_element_printed := True
+				end
+				across l_debug_tags as l_debug_tag loop
+					print_indentation (indent + 1, a_file)
+					a_file.put_string ("<debug name=%"")
+					print_quote_escaped_string (l_debug_tag.item, a_file)
+					a_file.put_line ("%" enabled=%"true%"/>")
+				end
+			end
 			if l_option_element_printed then
 				print_indentation (indent, a_file)
-				a_file.put_line ("</option>")
+				if a_class_name /= Void then
+					a_file.put_line ("</class_option>")
+				else
+					a_file.put_line ("</option>")
+				end
 			elseif l_option_attribute_printed then
 				a_file.put_line ("/>")
 			end
@@ -476,289 +553,336 @@ feature {NONE} -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			l_dead_code_removal: DS_HASH_SET [STRING]
-			l_inlining: DS_HASH_SET [STRING]
-			l_target: STRING
+			l_name: STRING
+			l_default: STRING
 		do
 				-- address_expression
-			if an_option.is_address_expression_declared then
-				print_indentation (indent, a_file)
-				if an_option.address_expression then
-					a_file.put_line ("<setting name=%"address_expression%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"address_expression%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.address_expression_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"address_expression%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
-				-- array_optimisation
-			if an_option.is_array_optimization_declared then
-				print_indentation (indent, a_file)
-				if an_option.array_optimization then
-					a_file.put_line ("<setting name=%"array_optimization%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"array_optimization%" value=%"false%"/>")
+				-- array_optimization
+			l_name := {ET_XACE_OPTION_NAMES}.array_optimization_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"array_optimization%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- automatic_backup
-			if an_option.is_automatic_backup_declared then
-				print_indentation (indent, a_file)
-				if an_option.automatic_backup then
-					a_file.put_line ("<setting name=%"automatic_backup%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"automatic_backup%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.automatic_backup_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"automatic_backup%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- check_generic_creation_constraint
-			if an_option.is_check_generic_creation_constraint_declared then
-				print_indentation (indent, a_file)
-				if an_option.check_generic_creation_constraint then
-					a_file.put_line ("<setting name=%"check_generic_creation_constraint%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"check_generic_creation_constraint%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.check_generic_creation_constraint_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.true_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"check_generic_creation_constraint%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- check_vape
-			if an_option.is_check_vape_declared then
-				print_indentation (indent, a_file)
-				if an_option.check_vape then
-					a_file.put_line ("<setting name=%"check_vape%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"check_vape%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.check_vape_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.true_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"check_vape%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- cls_compliant
-			if an_option.is_cls_compliant_declared then
-				print_indentation (indent, a_file)
-				if an_option.cls_compliant then
-					a_file.put_line ("<setting name=%"cls_compliant%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"cls_compliant%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.cls_compliant_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.true_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"cls_compliant%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- console_application
-				-- Note that contrary to Xace, the default value of 'console_application'
-				-- in ECF is false.
-			print_indentation (indent, a_file)
-			if an_option.console_application then
-				a_file.put_line ("<setting name=%"console_application%" value=%"true%"/>")
-			else
-				a_file.put_line ("<setting name=%"console_application%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.console_application_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"console_application%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
+				end
 			end
 				-- dead_code_removal
-			if an_option.is_dead_code_removal_declared then
-				print_indentation (indent, a_file)
-				l_dead_code_removal := an_option.dead_code_removal
-				if l_dead_code_removal.has (options.all_value) then
-					a_file.put_line ("<setting name=%"dead_code_removal%" value=%"true%"/>")
-				elseif l_dead_code_removal.has (options.feature_value) then
-					a_file.put_line ("<setting name=%"dead_code_removal%" value=%"true%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.dead_code_removal_option_name
+			if attached an_option.multivalue (l_name) as l_multivalue and then not l_multivalue.is_empty then
+				if l_multivalue.has ({ET_XACE_OPTION_NAMES}.all_option_value) or l_multivalue.has ({ET_XACE_OPTION_NAMES}.feature_option_value) then
+					if not default_values_ignored and attached an_option.primary_multivalue (l_name) then
+						print_indentation (indent, a_file)
+						a_file.put_line ("<setting name=%"dead_code_removal%" value=%"true%"/>")
+					end
 				else
+					print_indentation (indent, a_file)
 					a_file.put_line ("<setting name=%"dead_code_removal%" value=%"false%"/>")
 				end
 			end
 				-- dotnet_naming_convention
-			if an_option.is_dotnet_naming_convention_declared then
-				print_indentation (indent, a_file)
-				if an_option.dotnet_naming_convention then
-					a_file.put_line ("<setting name=%"dotnet_naming_convention%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"dotnet_naming_convention%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.dotnet_naming_convention_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"dotnet_naming_convention%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- dynamic_runtime
-			if an_option.is_dynamic_runtime_declared then
-				print_indentation (indent, a_file)
-				if an_option.dynamic_runtime then
-					a_file.put_line ("<setting name=%"dynamic_runtime%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"dynamic_runtime%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.dynamic_runtime_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"dynamic_runtime%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- enforce_unique_class_names
-			if an_option.is_enforce_unique_class_names_declared then
-				print_indentation (indent, a_file)
-				if an_option.enforce_unique_class_names then
-					a_file.put_line ("<setting name=%"enforce_unique_class_names%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"enforce_unique_class_names%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.enforce_unique_class_names_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"enforce_unique_class_names%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- exception_trace
-			if an_option.is_exception_trace_declared then
-				print_indentation (indent, a_file)
-				if an_option.exception_trace then
-					a_file.put_line ("<setting name=%"exception_trace%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"exception_trace%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.exception_trace_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"exception_trace%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- external_runtime
-			if an_option.is_external_runtime_declared and then attached an_option.declared_external_runtime as l_declared_external_runtime then
+			l_name := {ET_XACE_OPTION_NAMES}.external_runtime_option_name
+			if attached an_option.primary_value (l_name) as l_value then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<setting name=%"external_runtime%" value=%"")
-				print_quote_escaped_string (l_declared_external_runtime, a_file)
+				print_quote_escaped_string (l_value, a_file)
 				a_file.put_line ("%"/>")
 			end
 				-- force_32bits
-			if an_option.is_force_32bits_declared then
-				print_indentation (indent, a_file)
-				if an_option.force_32bits then
-					a_file.put_line ("<setting name=%"force_32bits%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"force_32bits%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.force_32bits_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"force_32bits%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- il_verifiable
-			if an_option.is_il_verifiable_declared then
-				print_indentation (indent, a_file)
-				if an_option.il_verifiable then
-					a_file.put_line ("<setting name=%"il_verifiable%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"il_verifiable%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.il_verifiable_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.true_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"il_verifiable%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- inlining
-			if an_option.is_inlining_declared then
-				print_indentation (indent, a_file)
-				l_inlining := an_option.inlining
-				if l_inlining.has (options.all_value) then
-					a_file.put_line ("<setting name=%"inlining%" value=%"true%"/>")
-				elseif l_inlining.has (options.array_value) then
-					a_file.put_line ("<setting name=%"inlining%" value=%"true%"/>")
-				elseif l_inlining.has (options.constant_value) then
-					a_file.put_line ("<setting name=%"inlining%" value=%"true%"/>")
-				elseif l_inlining.has (options.once_value) then
-					a_file.put_line ("<setting name=%"inlining%" value=%"true%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.inlining_option_name
+			if attached an_option.multivalue (l_name) as l_multivalue and then not l_multivalue.is_empty then
+				if l_multivalue.has ({ET_XACE_OPTION_NAMES}.array_option_value) or l_multivalue.has ({ET_XACE_OPTION_NAMES}.constant_option_value) or l_multivalue.has ({ET_XACE_OPTION_NAMES}.once_option_value) or l_multivalue.has ({ET_XACE_OPTION_NAMES}.all_option_value) then
+					if not default_values_ignored and attached an_option.primary_multivalue (l_name) then
+						print_indentation (indent, a_file)
+						a_file.put_line ("<setting name=%"inlining%" value=%"true%"/>")
+					end
 				else
+					print_indentation (indent, a_file)
 					a_file.put_line ("<setting name=%"inlining%" value=%"false%"/>")
 				end
 			end
 				-- inlining_size
-			if an_option.is_inlining_size_declared then
-				print_indentation (indent, a_file)
-				a_file.put_string ("<setting name=%"inlining_size%" value=%"")
-				a_file.put_integer (an_option.inlining_size)
-				a_file.put_line ("%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.inlining_size_option_name
+			l_default := "4"
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"inlining_size%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
+				end
 			end
 				-- line_generation
-			if an_option.is_line_generation_declared then
-				print_indentation (indent, a_file)
-				if an_option.line_generation then
-					a_file.put_line ("<setting name=%"line_generation%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"line_generation%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.line_generation_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"line_generation%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- metadata_cache_path
-			if an_option.is_metadata_cache_path_declared and then attached an_option.declared_metadata_cache_path as l_declared_metadata_cache_path then
+			l_name := {ET_XACE_OPTION_NAMES}.metadata_cache_path_option_name
+			if attached an_option.primary_value (l_name) as l_value then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<setting name=%"metadata_cache_path%" value=%"")
-				print_quote_escaped_string (l_declared_metadata_cache_path, a_file)
-				a_file.put_line ("%"/>")
-			end
-				-- msil_assembly_compatibility
-			if an_option.is_msil_assembly_compatibility_declared and then attached an_option.declared_msil_assembly_compatibility as l_declared_msil_assembly_compatibility then
-				print_indentation (indent, a_file)
-				a_file.put_string ("<setting name=%"msil_assembly_compatibility%" value=%"")
-				print_quote_escaped_string (l_declared_msil_assembly_compatibility, a_file)
+				print_quote_escaped_string (l_value, a_file)
 				a_file.put_line ("%"/>")
 			end
 				-- msil_classes_per_module
-			if an_option.is_msil_classes_per_module_declared then
+			l_name := {ET_XACE_OPTION_NAMES}.msil_classes_per_module_option_name
+			if attached an_option.value (l_name) as l_value then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<setting name=%"msil_classes_per_module%" value=%"")
-				a_file.put_integer (an_option.msil_classes_per_module)
+				print_quote_escaped_string (l_value, a_file)
 				a_file.put_line ("%"/>")
 			end
 				-- msil_clr_version
-			if an_option.is_msil_clr_version_declared and then attached an_option.declared_msil_clr_version as l_declared_msil_clr_version then
+			l_name := {ET_XACE_OPTION_NAMES}.msil_clr_version_option_name
+			if attached an_option.primary_value (l_name) as l_value then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<setting name=%"msil_clr_version%" value=%"")
-				print_quote_escaped_string (l_declared_msil_clr_version, a_file)
+				print_quote_escaped_string (l_value, a_file)
 				a_file.put_line ("%"/>")
 			end
 				-- msil_culture
-			if an_option.is_msil_culture_declared and then attached an_option.declared_msil_culture as l_declared_msil_culture then
+			l_name := {ET_XACE_OPTION_NAMES}.msil_culture_option_name
+			if attached an_option.primary_value (l_name) as l_value then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<setting name=%"msil_culture%" value=%"")
-				print_quote_escaped_string (l_declared_msil_culture, a_file)
+				print_quote_escaped_string (l_value, a_file)
 				a_file.put_line ("%"/>")
 			end
 				-- msil_generation
-			if an_option.is_msil_generation_declared then
-				print_indentation (indent, a_file)
-				if an_option.msil_generation then
-					a_file.put_line ("<setting name=%"msil_generation%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"msil_generation%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.msil_generation_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"msil_generation%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- msil_generation_type
-			if an_option.is_target_declared then
-				print_indentation (indent, a_file)
-				l_target := an_option.target
-				if STRING_.same_string (l_target, options.dll_value) then
-					a_file.put_line ("<setting name=%"msil_generation_type%" value=%"dll%"/>")
-				else
-					a_file.put_line ("<setting name=%"msil_generation_type%" value=%"exe%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.target_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.exe_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"msil_generation_type%" value=%"")
+					if STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.dll_option_value) then
+						print_quote_escaped_string ({ET_XACE_OPTION_NAMES}.dll_option_value, a_file)
+					else
+						print_quote_escaped_string ({ET_XACE_OPTION_NAMES}.exe_option_value, a_file)
+					end
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- msil_key_file_name
-			if an_option.is_msil_key_file_name_declared and then attached an_option.declared_msil_key_file_name as l_declared_msil_key_file_name then
+			l_name := {ET_XACE_OPTION_NAMES}.msil_key_file_name_option_name
+			if attached an_option.primary_value (l_name) as l_value then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<setting name=%"msil_key_file_name%" value=%"")
-				print_quote_escaped_string (l_declared_msil_key_file_name, a_file)
+				print_quote_escaped_string (l_value, a_file)
 				a_file.put_line ("%"/>")
 			end
 				-- msil_use_optimized_precompile
-			if an_option.is_msil_use_optimized_precompile_declared then
-				print_indentation (indent, a_file)
-				if an_option.msil_use_optimized_precompile then
-					a_file.put_line ("<setting name=%"msil_use_optimized_precompile%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"msil_use_optimized_precompile%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.msil_use_optimized_precompile_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"msil_use_optimized_precompile%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- multithreaded
-			if an_option.is_multithreaded_declared then
+			l_name := {ET_XACE_OPTION_NAMES}.multithreaded_option_name
+			if attached an_option.value (l_name) as l_value then
 				print_indentation (indent, a_file)
-				if an_option.multithreaded then
-					a_file.put_line ("<setting name=%"concurrency%" value=%"thread%"/>")
+				a_file.put_string ("<setting name=%"concurrency%" value=%"")
+				if STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value) then
+					print_quote_escaped_string ("thread", a_file)
 				else
-					a_file.put_line ("<setting name=%"concurrency%" value=%"none%"/>")
+					print_quote_escaped_string ({ET_XACE_OPTION_NAMES}.none_option_value, a_file)
 				end
+				a_file.put_line ("%"/>")
 			end
 				-- old_verbatim_strings
-			if an_option.is_old_verbatim_strings_declared then
-				print_indentation (indent, a_file)
-				if an_option.old_verbatim_strings then
-					a_file.put_line ("<setting name=%"old_verbatim_strings%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"old_verbatim_strings%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.old_verbatim_strings_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.false_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"old_verbatim_strings%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- shared_library_definition
-			if an_option.is_shared_library_definition_declared and then attached an_option.declared_shared_library_definition as l_declared_shared_library_definition then
+			l_name := {ET_XACE_OPTION_NAMES}.shared_library_definition_option_name
+			if attached an_option.primary_value (l_name) as l_value then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<setting name=%"shared_library_definition%" value=%"")
-				print_quote_escaped_string (l_declared_shared_library_definition, a_file)
+				print_quote_escaped_string (l_value, a_file)
 				a_file.put_line ("%"/>")
 			end
 				-- use_cluster_name_as_namespace
-			if an_option.is_use_cluster_name_as_namespace_declared then
-				print_indentation (indent, a_file)
-				if an_option.use_cluster_name_as_namespace then
-					a_file.put_line ("<setting name=%"use_cluster_name_as_namespace%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"use_cluster_name_as_namespace%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.use_cluster_name_as_namespace_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.true_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"use_cluster_name_as_namespace%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 				-- use_all_cluster_name_as_namespace
-			if an_option.is_use_full_cluster_name_as_namespace_declared then
-				print_indentation (indent, a_file)
-				if an_option.use_full_cluster_name_as_namespace then
-					a_file.put_line ("<setting name=%"use_all_cluster_name_as_namespace%" value=%"true%"/>")
-				else
-					a_file.put_line ("<setting name=%"use_all_cluster_name_as_namespace%" value=%"false%"/>")
+			l_name := {ET_XACE_OPTION_NAMES}.use_full_cluster_name_as_namespace_option_name
+			l_default := {ET_XACE_OPTION_NAMES}.true_option_value
+			if attached an_option.value (l_name) as l_value then
+				if not STRING_.same_case_insensitive (l_value, l_default) or (not default_values_ignored and attached an_option.primary_value (l_name)) then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<setting name=%"use_all_cluster_name_as_namespace%" value=%"")
+					print_quote_escaped_string (l_value, a_file)
+					a_file.put_line ("%"/>")
 				end
 			end
 		end
@@ -771,26 +895,29 @@ feature {NONE} -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			l_cursor: DS_HASH_SET_CURSOR [STRING]
+			l_includes: detachable DS_HASH_SET [STRING]
+			l_excludes: detachable DS_HASH_SET [STRING]
 		do
-			if an_option.is_include_declared or an_option.is_exclude_declared then
+			l_includes := an_option.multivalue ({ET_XACE_OPTION_NAMES}.include_option_name)
+			l_excludes := an_option.multivalue ({ET_XACE_OPTION_NAMES}.exclude_option_name)
+			if l_includes /= Void and then not l_includes.is_empty or l_excludes /= Void and then not l_excludes.is_empty then
 				print_indentation (indent, a_file)
 				a_file.put_line ("<file_rule>")
-				l_cursor := an_option.include.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					print_indentation (indent + 1, a_file)
-					a_file.put_string ("<include>/")
-					print_escaped_string (l_cursor.item, a_file)
-					a_file.put_line ("$</include>")
-					l_cursor.forth
+				if l_includes /= Void and then not l_includes.is_empty then
+					across l_includes as l_include loop
+						print_indentation (indent + 1, a_file)
+						a_file.put_string ("<include>/")
+						print_escaped_string (l_include.item, a_file)
+						a_file.put_line ("$</include>")
+					end
 				end
-				l_cursor := an_option.exclude.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					print_indentation (indent + 1, a_file)
-					a_file.put_string ("<exclude>/")
-					print_escaped_string (l_cursor.item, a_file)
-					a_file.put_line ("$</exclude>")
-					l_cursor.forth
+				if l_excludes /= Void and then not l_excludes.is_empty then
+					across l_excludes as l_exclude loop
+						print_indentation (indent + 1, a_file)
+						a_file.put_string ("<exclude>/")
+						print_escaped_string (l_exclude.item, a_file)
+						a_file.put_line ("$</exclude>")
+					end
 				end
 				print_indentation (indent, a_file)
 				a_file.put_line ("</file_rule>")
@@ -834,18 +961,18 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			l_cursor: DS_LINKED_LIST_CURSOR [STRING]
-			l_pathname: STRING
+			l_value: STRING
 		do
 			l_cursor := an_options.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				print_indentation (indent, a_file)
-				a_file.put_string ("<external_include location=%"some123/fake432/path567 ")
-				l_pathname := l_cursor.item
+				a_file.put_string ("<external_cflags value=%"")
+				l_value := l_cursor.item
 				if is_windows then
-					l_pathname := replace_all_characters (l_pathname, '{', '(')
-					l_pathname := replace_all_characters (l_pathname, '}', ')')
+					l_value := replace_all_characters (l_value, '{', '(')
+					l_value := replace_all_characters (l_value, '}', ')')
 				end
-				print_quote_escaped_string (l_pathname, a_file)
+				print_quote_escaped_string (l_value, a_file)
 				a_file.put_line ("%"/>")
 				l_cursor.forth
 			end
@@ -915,7 +1042,7 @@ feature {NONE} -- Output
 			subclusters: detachable ET_XACE_CLUSTERS
 			a_class_options: detachable DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
 		do
-			if (not is_shallow or else not a_cluster.is_mounted) and then not a_cluster.is_fully_ecf_abstract then
+			if not a_cluster.is_fully_ecf_abstract then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<cluster name=%"")
 				print_quote_escaped_string (a_cluster.prefixed_name, a_file)
@@ -951,15 +1078,15 @@ feature {NONE} -- Output
 				if an_option = Void and a_class_options = Void and subclusters = Void then
 					a_file.put_line ("/>")
 				else
-					if an_option /= Void and then an_option.is_prefix_option_declared and then attached an_option.declared_prefix_option as l_declared_prefix_option then
+					if an_option /= Void and then attached an_option.value ({ET_XACE_OPTION_NAMES}.prefix_option_name) as l_prefix then
 						a_file.put_string (" prefix=%"")
-						print_quote_escaped_string (l_declared_prefix_option, a_file)
+						print_quote_escaped_string (l_prefix, a_file)
 						a_file.put_character ('%"')
 					end
 					a_file.put_line (">")
 					if an_option /= Void then
 						print_file_rules (an_option, indent + 1, a_file)
-						print_options (an_option, indent + 1, a_file)
+						print_options (an_option, Void, indent + 1, a_file)
 					end
 					if a_class_options /= Void then
 						a_class_options.do_all (agent print_class_options (?, indent + 1, a_file))
@@ -995,21 +1122,21 @@ feature {NONE} -- Output
 			from l_cursor.start until l_cursor.after loop
 				l_cluster := l_cursor.item
 				l_option := l_cluster.options
-				if l_option /= Void and then l_option.is_ecf_library_declared and then attached l_option.declared_ecf_library as l_declared_ecf_library then
+				if l_option /= Void and then attached l_option.value ({ET_XACE_OPTION_NAMES}.ecf_library_option_name) as l_ecf_library then
 					print_indentation (indent, a_file)
 					a_file.put_string ("<library name=%"")
 					print_quote_escaped_string (l_cluster.name, a_file)
 					a_file.put_string ("%" location=%"")
-					print_quote_escaped_string (l_declared_ecf_library, a_file)
+					print_quote_escaped_string (l_ecf_library, a_file)
 					a_file.put_character ('%"')
 					if l_cluster.is_read_only then
 						a_file.put_string (" readonly=%"true%"")
 					else
 						a_file.put_string (" readonly=%"false%"")
 					end
-					if l_option.is_prefix_option_declared and then attached l_option.declared_prefix_option as l_declared_prefix_option then
+					if attached l_option.value ({ET_XACE_OPTION_NAMES}.prefix_option_name) as l_prefix then
 						a_file.put_string (" prefix=%"")
-						print_quote_escaped_string (l_declared_prefix_option, a_file)
+						print_quote_escaped_string (l_prefix, a_file)
 						a_file.put_character ('%"')
 					end
 					a_file.put_line ("/>")
@@ -1056,7 +1183,7 @@ feature {NONE} -- Output
 			subclusters: detachable ET_XACE_CLUSTERS
 			a_class_options: detachable DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
 		do
-			if (not is_shallow or else not a_cluster.is_mounted) and then not a_cluster.is_fully_abstract then
+			if not a_cluster.is_fully_abstract then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<override name=%"")
 				print_quote_escaped_string (a_cluster.prefixed_name, a_file)
@@ -1092,15 +1219,15 @@ feature {NONE} -- Output
 				if an_option = Void and a_class_options = Void and subclusters = Void then
 					a_file.put_line ("/>")
 				else
-					if an_option /= Void and then an_option.is_prefix_option_declared and then attached an_option.declared_prefix_option as l_declared_prefix_option then
+					if an_option /= Void and then attached an_option.value ({ET_XACE_OPTION_NAMES}.prefix_option_name) as l_prefix then
 						a_file.put_string (" prefix=%"")
-						print_quote_escaped_string (l_declared_prefix_option, a_file)
+						print_quote_escaped_string (l_prefix, a_file)
 						a_file.put_character ('%"')
 					end
 					a_file.put_line (">")
 					if an_option /= Void then
 						print_file_rules (an_option, indent + 1, a_file)
-						print_options (an_option, indent + 1, a_file)
+						print_options (an_option, Void, indent + 1, a_file)
 					end
 					if a_class_options /= Void then
 						a_class_options.do_all (agent print_class_options (?, indent + 1, a_file))
@@ -1176,205 +1303,8 @@ feature {NONE} -- Output
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
-		local
-			l_option_attribute_printed: BOOLEAN
-			l_option_element_printed: BOOLEAN
-			l_cursor: DS_HASH_SET_CURSOR [STRING]
-			l_class_name: STRING
-			l_option: ET_XACE_OPTIONS
 		do
-			l_class_name := a_class_option.class_name
-			l_option := a_class_option.options
-				-- trace
-			if l_option.is_trace_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<class_option class=%"")
-					print_quote_escaped_string (l_class_name, a_file)
-					a_file.put_character ('%"')
-					l_option_attribute_printed := True
-				end
-				if l_option.trace then
-					a_file.put_string (" trace=%"true%"")
-				else
-					a_file.put_string (" trace=%"false%"")
-				end
-			end
-				-- profile
-			if l_option.is_profile_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<class_option class=%"")
-					print_quote_escaped_string (l_class_name, a_file)
-					a_file.put_character ('%"')
-					l_option_attribute_printed := True
-				end
-				if l_option.profile then
-					a_file.put_string (" profile=%"true%"")
-				else
-					a_file.put_string (" profile=%"false%"")
-				end
-			end
-				-- optimize
--- TODO: Not supported yet.
-				-- debug
-			if l_option.is_debug_option_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<class_option class=%"")
-					print_quote_escaped_string (l_class_name, a_file)
-					a_file.put_character ('%"')
-					l_option_attribute_printed := True
-				end
-				if l_option.debug_option then
-					a_file.put_string (" debug=%"true%"")
-				else
-					a_file.put_string (" debug=%"false%"")
-				end
-			end
-				-- warning
-			if l_option.is_warning_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<class_option class=%"")
-					print_quote_escaped_string (l_class_name, a_file)
-					a_file.put_character ('%"')
-					l_option_attribute_printed := True
-				end
-				if l_option.warning.same_string (options.none_value) then
-					a_file.put_string (" warning=%"false%"")
-				else
-					a_file.put_string (" warning=%"true%"")
-				end
-			end
-				-- namespace
-			if l_option.is_namespace_declared and then attached l_option.declared_namespace as l_declared_namespace then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<class_option class=%"")
-					print_quote_escaped_string (l_class_name, a_file)
-					a_file.put_character ('%"')
-					l_option_attribute_printed := True
-				end
-				a_file.put_string (" namespace=%"")
-				print_quote_escaped_string (l_declared_namespace, a_file)
-				a_file.put_character ('%"')
-			end
-				-- msil_application_optimize
--- TODO: Not supported yet.
-				-- full_class_checking
-			if l_option.is_full_class_checking_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<class_option class=%"")
-					print_quote_escaped_string (l_class_name, a_file)
-					a_file.put_character ('%"')
-					l_option_attribute_printed := True
-				end
-				if l_option.full_class_checking then
-					a_file.put_string (" full_class_checking=%"true%"")
-				else
-					a_file.put_string (" full_class_checking=%"false%"")
-				end
-			end
-				-- syntax
-			if l_option.is_syntax_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<class_option class=%"")
-					print_quote_escaped_string (l_class_name, a_file)
-					a_file.put_character ('%"')
-					l_option_attribute_printed := True
-				end
-				a_file.put_string (" syntax=%"")
-				a_file.put_string (l_option.syntax)
-				a_file.put_character ('%"')
-			end
-				-- is_attached_by_default
--- TODO: Not supported yet.
-				-- is_void_safe
--- TODO: Not supported yet.
-				-- debug
-			if l_option.is_debug_tag_declared then
-				l_cursor := l_option.debug_tag.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					if not l_option_element_printed then
-						if not l_option_attribute_printed then
-							print_indentation (indent, a_file)
-							a_file.put_string ("<class_option class=%"")
-							print_quote_escaped_string (l_class_name, a_file)
-							a_file.put_line ("%">")
-						else
-							a_file.put_line (">")
-						end
-						l_option_element_printed := True
-					end
-					print_indentation (indent + 1, a_file)
-					a_file.put_string ("<debug name=%"")
-					print_quote_escaped_string (l_cursor.item, a_file)
-					a_file.put_line ("%" enabled=%"true%"/>")
-					l_cursor.forth
-				end
-			end
-				-- assertions
-			if l_option.is_assertion_declared and then attached l_option.declared_assertion as l_assertions then
-				if not l_option_element_printed then
-					if not l_option_attribute_printed then
-						print_indentation (indent, a_file)
-						a_file.put_string ("<class_option class=%"")
-						print_quote_escaped_string (l_class_name, a_file)
-						a_file.put_line ("%">")
-					else
-						a_file.put_line (">")
-					end
-					l_option_element_printed := True
-				end
-				print_indentation (indent + 1, a_file)
-				a_file.put_string ("<assertions")
-					-- precondition
-				if l_assertions.has (options.require_value) or l_assertions.has (options.all_value) then
-					a_file.put_string (" precondition=%"true%"")
-				else
-					a_file.put_string (" precondition=%"false%"")
-				end
-					-- supplier_precondition
-				if l_assertions.has (options.supplier_precondition_value) or l_assertions.has (options.all_value) then
-					a_file.put_string (" supplier_precondition=%"true%"")
-				end
-					-- postcondition
-				if l_assertions.has (options.ensure_value) or l_assertions.has (options.all_value) then
-					a_file.put_string (" postcondition=%"true%"")
-				else
-					a_file.put_string (" postcondition=%"false%"")
-				end
-					-- check
-				if l_assertions.has (options.check_value) or l_assertions.has (options.all_value) then
-					a_file.put_string (" check=%"true%"")
-				else
-					a_file.put_string (" check=%"false%"")
-				end
-					-- invariant
-				if l_assertions.has (options.invariant_value) or l_assertions.has (options.all_value) then
-					a_file.put_string (" invariant=%"true%"")
-				else
-					a_file.put_string (" invariant=%"false%"")
-				end
-					-- loop
-				if l_assertions.has (options.loop_variant_value) or l_assertions.has (options.loop_invariant_value) or l_assertions.has (options.all_value) then
-					a_file.put_string (" loop=%"true%"")
-				else
-					a_file.put_string (" loop=%"false%"")
-				end
-				a_file.put_line ("/>")
-			end
-				-- warning
--- TODO: Not supported yet.
-			if l_option_element_printed then
-				print_indentation (indent, a_file)
-				a_file.put_line ("</class_option>")
-			elseif l_option_attribute_printed then
-				a_file.put_line ("/>")
-			end
+			print_options (a_class_option.options, a_class_option.class_name, indent, a_file)
 		end
 
 	print_class_visible (a_class_option: ET_XACE_CLASS_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
@@ -1390,7 +1320,7 @@ feature {NONE} -- Output
 			l_class_name: STRING
 		do
 			l_class_name := a_class_option.class_name
-			if a_class_option.options.is_export_option_declared and then attached a_class_option.options.export_option as l_external_name then
+			if attached a_class_option.options.value ({ET_XACE_OPTION_NAMES}.export_option_name) as l_external_name then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<visible class=%"")
 				print_quote_escaped_string (l_class_name, a_file)
@@ -1419,7 +1349,7 @@ feature {NONE} -- Output
 		local
 			l_feature_name: STRING
 		do
-			if a_feature_option.options.is_export_option_declared and then attached a_feature_option.options.export_option as l_external_name then
+			if attached a_feature_option.options.value ({ET_XACE_OPTION_NAMES}.export_option_name) as l_external_name then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<visible class=%"")
 				print_quote_escaped_string (a_class_name, a_file)
@@ -1449,32 +1379,31 @@ feature {NONE} -- Output
 			a_dirname: STRING
 			a_name: STRING
 		do
-			if is_shallow then
-				library_list := a_mounted_libraries.libraries
-				nb := library_list.count
-				from i := 1 until i > nb loop
-					a_library := library_list.item (i)
-					if a_library.is_root then
-						a_pathname := STRING_.cloned_string (a_library.pathname)
-						a_pathname.remove_tail (unix_file_system.extension (a_pathname).count)
-						a_dirname := Execution_environment.interpreted_string (a_pathname)
+			library_list := a_mounted_libraries.libraries
+			nb := a_mounted_libraries.count
+			from i := 1 until i > nb loop
+				a_library := library_list.item (i)
+				a_pathname := STRING_.cloned_string (a_library.pathname)
+				a_pathname.remove_tail (unix_file_system.extension (a_pathname).count)
+				a_dirname := Execution_environment.interpreted_string (a_pathname)
+				a_name := a_library.library.name
+				if a_name.starts_with ("name_") then
+					a_name := unix_file_system.basename (a_dirname)
+					if a_name.same_string ("library") then
+						a_dirname := unix_file_system.dirname (a_dirname)
 						a_name := unix_file_system.basename (a_dirname)
-						if a_name.same_string ("library") then
-							a_dirname := unix_file_system.dirname (a_dirname)
-							a_name := unix_file_system.basename (a_dirname)
-							if a_name.is_empty then
-								a_name := "unknown"
-							end
+						if a_name.is_empty then
+							a_name := a_library.library.name
 						end
-						print_indentation (indent, a_file)
-						a_file.put_string ("<library name=%"")
-						print_quote_escaped_string (a_name, a_file)
-						a_file.put_string ("%" location=%"")
-						print_quote_escaped_string (a_pathname + ".ecf", a_file)
-						a_file.put_line ("%"/>")
 					end
-					i := i + 1
 				end
+				print_indentation (indent, a_file)
+				a_file.put_string ("<library name=%"")
+				print_quote_escaped_string (a_name, a_file)
+				a_file.put_string ("%" location=%"")
+				print_quote_escaped_string (a_pathname + ".ecf", a_file)
+				a_file.put_line ("%"/>")
+				i := i + 1
 			end
 		end
 

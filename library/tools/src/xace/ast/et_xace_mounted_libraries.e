@@ -5,7 +5,7 @@ note
 		"Xace mounted library lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_XACE_MOUNTED_LIBRARIES
 
 inherit
 
-	ANY -- Needed by SE 2.1.
+	ANY
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -70,23 +70,58 @@ feature -- Access
 			same_pathname: Result /= Void implies STRING_.same_string (Result.pathname, a_pathname)
 		end
 
+	root_item (a_pathname: STRING): detachable ET_XACE_MOUNTED_LIBRARY
+			-- Library in `libraries' with pathname `a_pathname' which is mounted
+			-- directly to the top level system or library;
+			-- Void if not found
+		require
+			a_pathname_not_void: a_pathname /= Void
+		local
+			i, nb: INTEGER
+			a_library: ET_XACE_MOUNTED_LIBRARY
+		do
+			nb := root_count
+			from i := 1 until i > nb loop
+				a_library := libraries.item (i)
+				if STRING_.same_string (a_library.pathname, a_pathname) then
+					Result := a_library
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			same_pathname: Result /= Void implies STRING_.same_string (Result.pathname, a_pathname)
+		end
+
 	libraries: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
 			-- Libraries
 
-feature -- Status setting
+feature -- Measurement
 
-	set_root (b: BOOLEAN)
-			-- For each library in `libraries', set `is_root' to `b'.
-		local
-			i, nb: INTEGER
+	count: INTEGER
+			-- Number of mounted libraries
 		do
-			nb := libraries.count
-			from i := 1 until i > nb loop
-				libraries.item (i).set_root (b)
-				i := i + 1
-			end
+			Result := libraries.count
 		ensure
-			-- root_set: forall item in libraries, item.is_root = b
+			definition: Result = libraries.count
+		end
+
+	root_count: INTEGER
+			-- Number of libraries mounted directly to the top level system or library.
+			-- They are listed first in `libraries'.
+
+feature -- Setting
+
+	set_root_count (a_root_count: INTEGER)
+			-- Set `root_count' to `a_root_count'.
+		require
+			a_root_count_not_negative: a_root_count >= 0
+			a_root_count_small_enough: a_root_count <= count
+		do
+			root_count := a_root_count
+		ensure
+			root_count_set: root_count = a_root_count
 		end
 
 feature -- Element change
@@ -149,16 +184,12 @@ feature -- Basic operations
 				a_library := libraries.item (i)
 				other_library := a_libraries.item (a_library.pathname)
 				if other_library /= Void then
-					if not other_library.is_root then
-						if not a_library.same_library_prefix (other_library) then
+					if not a_library.same_library_prefix (other_library) then
+						if a_libraries.root_item (a_library.pathname) = Void then
 							an_error_handler.report_multiple_library_prefix_error (a_library, other_library)
 						end
 					end
 				else
-					if a_library.is_root then
-						a_library := a_library.cloned_object
-						a_library.set_root (False)
-					end
 					a_libraries.put_last (a_library)
 				end
 				i := i + 1
@@ -171,28 +202,26 @@ feature -- Basic operations
 			an_externals_not_void: an_externals /= Void
 		local
 			i, nb: INTEGER
-			a_cursor: DS_HASH_SET_CURSOR [STRING]
-			a_link_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 			an_options: detachable ET_XACE_OPTIONS
 		do
 			nb := libraries.count
 			from i := 1 until i > nb loop
 				an_options := libraries.item (i).library.options
 				if an_options /= Void then
-					a_cursor := an_options.c_compiler_options.new_cursor
-					from a_cursor.start until a_cursor.after loop
-						an_externals.put_c_compiler_options (a_cursor.item)
-						a_cursor.forth
+					if attached an_options.multivalue ({ET_XACE_OPTION_NAMES}.c_compiler_options_option_name) as l_multivalue then
+						across l_multivalue as l_c_compiler_options loop
+							an_externals.put_c_compiler_options (l_c_compiler_options.item)
+						end
 					end
-					a_cursor := an_options.header.new_cursor
-					from a_cursor.start until a_cursor.after loop
-						an_externals.put_include_directory (a_cursor.item)
-						a_cursor.forth
+					if attached an_options.multivalue ({ET_XACE_OPTION_NAMES}.header_option_name) as l_multivalue then
+						across l_multivalue as l_includes loop
+							an_externals.put_include_directory (l_includes.item)
+						end
 					end
-					a_link_cursor := an_options.link.new_cursor
-					from a_link_cursor.start until a_link_cursor.after loop
-						an_externals.put_link_library (a_link_cursor.item)
-						a_link_cursor.forth
+					if attached an_options.multivalue ({ET_XACE_OPTION_NAMES}.link_option_name) as l_multivalue then
+						across l_multivalue as l_links loop
+							an_externals.put_link_library (l_links.item)
+						end
 					end
 				end
 				i := i + 1
@@ -208,5 +237,7 @@ invariant
 
 	libraries_not_void: libraries /= Void
 	not_void_library: not libraries.has_void
+	root_count_not_negative: root_count >= 0
+	root_count_small_enough: root_count <= count
 
 end

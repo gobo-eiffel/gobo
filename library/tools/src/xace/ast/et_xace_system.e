@@ -5,7 +5,7 @@ note
 		"Xace Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,33 +15,47 @@ class ET_XACE_SYSTEM
 inherit
 
 	ET_SYSTEM
+		rename
+			make as make_system
 		redefine
-			clusters, system_name
+			name,
+			clusters
 		end
 
 	ET_XACE_SYSTEM_CONFIG
 		rename
-			make as make_system,
 			libraries as mounted_libraries,
 			set_libraries as set_mounted_libraries
 		undefine
-			set_clusters, set_system_name
+			set_name,
+			set_clusters
 		redefine
+			make, name,
 			clusters, set_root_class_name,
-			set_creation_procedure_name, system_name
+			set_creation_procedure_name
 		end
 
 create
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_target: ET_XACE_TARGET)
+			-- Create a new Eiffel system.
+		do
+			precursor (a_target)
+			make_system (a_target.name)
+			system_name := name
+		end
+
 feature -- Access
+
+	name: STRING
+			-- Name of system
 
 	clusters: ET_XACE_CLUSTERS
 			-- Clusters
-
-	system_name: detachable STRING
-			-- Name of system
 
 feature -- Setting
 

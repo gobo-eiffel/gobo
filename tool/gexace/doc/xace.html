@@ -719,11 +719,12 @@
    
   </div>
   <div>
-   <h2>System-level options</h2>
+   <h2>Options</h2>
    
    <p>
-    Following is the list of system-level and library-level options supported in Xace
-    (of the form <font color="#800000"><i><tt>&lt;option name="..." value="..."/&gt;</tt></i></font>), and
+    Following is the list of options supported in Xace (of the form
+    <font color="#800000"><i><tt>&lt;option name="..." value="..."/&gt;</tt></i></font>) at the
+    various levels (system/library, cluster, class and feature), and
     how they are translated to the Eiffel compiler dependent notations. 
     "N/A" does not necessarily mean that the corresponding Eiffel compiler does not
     support this facility, it could just be that the facility is not parameterizable
@@ -748,6 +749,57 @@
     
     <dl>
      
+     <dt><font color="#800000"><i><tt>abstract</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>true | false</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>cluster</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        			Specify that this cluster should not be searched
+        			for Eiffel classes (but its subclusters can if they
+        			don't have this option set).
+        		
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>true =&gt;</dt>
+         <dd>
+          <dl>
+           <dt>
+            					if there is at least one non-abstract subcluster =&gt;
+            				
+           </dt>
+           <dd>
+            					<font color="#800000"><i><tt>&lt;cluster name="</tt></i></font>...<font color="#800000"><i><tt>" location="</tt></i></font>...<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+            				
+           </dd>
+           <dt>
+            					if there is no non-abstract subcluster =&gt;
+            				
+           </dt>
+           <dd>
+            					No output
+            				
+           </dd>
+          </dl>
+         </dd>
+         <dt>
+          			false =&gt; <font color="#800000"><i><tt>&lt;cluster name="</tt></i></font>...<font color="#800000"><i><tt>" location="</tt></i></font>...<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
      <dt><font color="#800000"><i><tt>address_expression</tt></i></font></dt>
      <dd>
       <dl>
@@ -755,6 +807,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Enable expressions of the form '$(s.to_c)' instead
@@ -790,6 +844,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -824,21 +880,62 @@
       <p></p>
      </dd>
      
+     <dt><font color="#800000"><i><tt>assembly</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>Name</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>cluster</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			Specify that the cluster is in fact a .NET assembly.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			name =&gt; <font color="#800000"><i><tt>&lt;assembly name="</tt></i></font>cluster_name<font color="#800000"><i><tt>" location="</tt></i></font>cluster_pathname<font color="#800000"><i><tt>" assembly_name="</tt></i></font>name<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
      <dt><font color="#800000"><i><tt>assertion</tt></i></font></dt>
      <dd>
       <dl>
        <dt><i><b>Values:</b></i></dt>
        <dd>
-        			none | require | supplier_precondition | ensure | invariant | loop_invariant | loop_variant | check | all
+        			none | generate | require | supplier_precondition | ensure | invariant | loop_invariant | loop_variant | check | all
         		
        </dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>require</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
          <dt>
-          			Set default assertion level of the Eiffel system.
+          			Set default assertion level.
+          		
+         </dt>
+         <dt>
+          			The purpose of 'generate' is to generate the code of
+          			the assertions in the generated code even if these assertions
+          			are turned off.
           		
          </dt>
          <dt>
@@ -853,6 +950,10 @@
         <dl>
          <dt>
           			none =&gt; <font color="#800000"><i><tt>&lt;option/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			generate =&gt; <font color="#800000"><i><tt>&lt;option/&gt;</tt></i></font>
           		
          </dt>
          <dt>
@@ -887,6 +988,10 @@
           			all =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;assertions precondition="true" supplier_precondition="true" ensure="true" invariant="true" loop="true" check="true"/&gt;&lt;/option&gt;</tt></i></font>
           		
          </dt>
+         <dt>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
+          		
+         </dt>
          <dd></dd>
         </dl>
        </dd>
@@ -901,6 +1006,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Are types attached by default when no attachment mark is specified?
@@ -917,6 +1024,10 @@
           			false =&gt; <font color="#800000"><i><tt>&lt;option is_attached_by_default="false"/&gt;</tt></i></font>
           		
          </dt>
+         <dt>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
+          		
+         </dt>
          <dd></dd>
         </dl>
        </dd>
@@ -931,6 +1042,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Automatically generate a backup during recompilation.
@@ -961,6 +1074,8 @@
        <dd>C options</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1002,6 +1117,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>true</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Check generic creation constraint.
@@ -1032,6 +1149,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>true</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Report VAPE validity errors (ETL 2nd edition page 122).
@@ -1062,6 +1181,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>true</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			When compiling to the .NET framework. Is the generated
@@ -1093,6 +1214,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>true</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Under Windows, generate either a console or a windows application.
@@ -1116,6 +1239,44 @@
       <p></p>
      </dd>
      
+     <dt><font color="#800000"><i><tt>culture</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>Culture</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>neutral</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>cluster</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			Specify the culture of the .NET assembly.
+          		
+         </dt>
+         <dt>
+          			The option 'assembly' should be set in order for this
+          			option to have any effect.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			culture =&gt; <font color="#800000"><i><tt>&lt;assembly name="</tt></i></font>cluster_name<font color="#800000"><i><tt>" location="</tt></i></font>cluster_pathname<font color="#800000"><i><tt>" assembly_culture="</tt></i></font>culture<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
      <dt><font color="#800000"><i><tt>dead_code_removal</tt></i></font></dt>
      <dd>
       <dl>
@@ -1123,6 +1284,8 @@
        <dd>none | low_level | feature | class | all</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>all</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1198,6 +1361,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Enable debug instructions.
@@ -1214,6 +1379,10 @@
           			false =&gt; <font color="#800000"><i><tt>&lt;option debug="false"/&gt;</tt></i></font>
           		
          </dt>
+         <dt>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
+          		
+         </dt>
          <dd></dd>
         </dl>
        </dd>
@@ -1228,6 +1397,8 @@
        <dd>Debug tag</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1249,6 +1420,10 @@
           			tag =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;debug name="</tt></i></font>tag<font color="#800000"><i><tt>" enabled=true"/&gt;&lt;/option&gt;</tt></i></font>
           		
          </dt>
+         <dt>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
+          		
+         </dt>
          <dd></dd>
         </dl>
        </dd>
@@ -1263,6 +1438,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			When compiling to the .NET framework. Should the
@@ -1295,6 +1472,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Enable the use of the Eiffel runtime as a
@@ -1319,6 +1498,40 @@
       <p></p>
      </dd>
      
+     <dt><font color="#800000"><i><tt>ecf_library</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>Pathname</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>cluster</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			Specify that the cluster is the root of a library
+          			that is otherwise described by the ECF file 'pathname'.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			pathname =&gt; <font color="#800000"><i><tt>&lt;library name="</tt></i></font>cluster_name<font color="#800000"><i><tt>" location="</tt></i></font>pathname<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
      <dt><font color="#800000"><i><tt>enforce_unique_class_names</tt></i></font></dt>
      <dd>
       <dl>
@@ -1326,6 +1539,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Should class names be unique even across libraries?
@@ -1356,6 +1571,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Enable to see a complete exception trace
@@ -1382,6 +1599,82 @@
       <p></p>
      </dd>
      
+     <dt><font color="#800000"><i><tt>exclude</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>Pathname</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			Specify a filename, or a directory name, that should not be taken into
+          			account when searching the clusters for Eiffel classes.
+          		
+         </dt>
+         <dt>
+          			Several of these options can be specified.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			pathname =&gt; <font color="#800000"><i><tt>&lt;file_rule&gt;&lt;exclude&gt;/</tt></i></font>pathname<font color="#800000"><i><tt>$&lt;/exclude&gt;&lt;/file_rule&gt;</tt></i></font>
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
+     <dt><font color="#800000"><i><tt>export</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>External name</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>class, feature</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			Specify that this class (and its features) or this feature
+          			should be visible from C when using Cecil for example.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			external_class_name =&gt; <font color="#800000"><i><tt>&lt;visible class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" class_rename="</tt></i></font>external_class_name<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			external_feature_name =&gt; <font color="#800000"><i><tt>&lt;visible class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" feature="</tt></i></font>feature_name<font color="#800000"><i><tt>" feature_rename="</tt></i></font>external_feature_name<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
      <dt><font color="#800000"><i><tt>external_runtime</tt></i></font></dt>
      <dd>
       <dl>
@@ -1389,6 +1682,8 @@
        <dd>Pathname</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Use external runtime located in 'pathname'.
@@ -1415,6 +1710,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Force compilation for 32bits (.NET only).
@@ -1445,6 +1742,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Run flat Degree 3.
@@ -1461,6 +1760,10 @@
           			false =&gt; <font color="#800000"><i><tt>&lt;option full_class_checking="false"/&gt;</tt></i></font>
           		
          </dt>
+         <dt>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
+          		
+         </dt>
          <dd></dd>
         </dl>
        </dd>
@@ -1475,6 +1778,8 @@
        <dd>none | internal | boehm</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>internal</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Select garbage collector.
@@ -1496,6 +1801,20 @@
        <dd>Pathname</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			system/library
+          		
+         </dt>
+         <dt>
+          			Accepted at the cluster-level for backward compatibility.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1531,6 +1850,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>true</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			When compiling to the .NET framework.
@@ -1555,6 +1876,45 @@
       <p></p>
      </dd>
      
+     <dt><font color="#800000"><i><tt>include</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>Pathname</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			Specify a filename that should be taken into
+          			account when searching the clusters for Eiffel classes,
+          			even though it does not necessarily have a .e extension.
+          		
+         </dt>
+         <dt>
+          			Several of these options can be specified.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			pathname =&gt; <font color="#800000"><i><tt>&lt;file_rule&gt;&lt;include&gt;/</tt></i></font>pathname<font color="#800000"><i><tt>$&lt;/include&gt;&lt;/file_rule&gt;</tt></i></font>
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
      <dt><font color="#800000"><i><tt>inlining</tt></i></font></dt>
      <dd>
       <dl>
@@ -1563,6 +1923,8 @@
        <dd>none | array | constant | once | all</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>all</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1625,9 +1987,11 @@
       <dl>
        <dt><i><b>Values:</b></i> 
        </dt>
-       <dd>Integer value</dd>
+       <dd>Integer value &gt;= 0 and &lt;= 100</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>0</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1667,6 +2031,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Generate C pragmas '#line x' in generated C code.
@@ -1697,6 +2063,20 @@
        <dd>Pathname</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			system/library
+          		
+         </dt>
+         <dt>
+          			Accepted at the cluster-level for backward compatibility.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1733,6 +2113,8 @@
        <dd>Pathname</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1762,41 +2144,6 @@
       <p></p>
      </dd>
      
-     <dt><font color="#800000"><i><tt>msil_assembly_compatibility</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>"None" | "Same domain" | "Same machine" | "Same process"</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			When compiling to the .NET framework. Assembly compatibility.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			value =&gt; <font color="#800000"><i><tt>&lt;setting name="msil_assembly_compatibility" value="</tt></i></font>value<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			Not used in ECF.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
      <dt><font color="#800000"><i><tt>msil_classes_per_module</tt></i></font></dt>
      <dd>
       <dl>
@@ -1804,6 +2151,8 @@
        <dd>Integer value &gt; 0</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>5</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1838,6 +2187,8 @@
        <dd>Version</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Example:</b></i></dt>
        <dd>v1.1.4322</dd>
        <dt><i><b>Description:</b></i></dt>
@@ -1876,6 +2227,8 @@
        <dd>Culture</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1907,6 +2260,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Compile to the .NET framework.
@@ -1937,6 +2292,8 @@
        <dd>Pathname</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -1970,6 +2327,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			When compiling to the .NET framework. Use an
@@ -2001,6 +2360,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Enable generation of a multithreaded application.
@@ -2010,11 +2371,11 @@
        <dd>
         <dl>
          <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;setting name="concurrency" value="thread"/&gt;</tt></i></font>
+          			true =&gt; <font color="#800000"><i><tt>&lt;capability&gt;&lt;concurrency use="thread" support="thread"/&gt;&lt;/capability&gt;</tt></i></font>
           		
          </dt>
          <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;setting name="concurrency" value="none"/&gt;</tt></i></font>
+          			false =&gt; <font color="#800000"><i><tt>&lt;capability&gt;&lt;concurrency use="none" support="none"/&gt;&lt;/capability&gt;</tt></i></font>
           		
          </dt>
          <dd></dd>
@@ -2031,12 +2392,14 @@
        <dd>Namespace</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
          <dt>
           			When compiling to the .NET framework. Specify the
-          			namespace to be used for the classes of this system.
+          			namespace to be used for the classes.
           		
          </dt>
          <dd></dd>
@@ -2047,6 +2410,10 @@
         <dl>
          <dt>
           			namespace =&gt; <font color="#800000"><i><tt>&lt;option namespace="</tt></i></font>namespace<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
           		
          </dt>
          <dd></dd>
@@ -2063,6 +2430,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Use the old format for verbatim strings.
@@ -2093,6 +2462,8 @@
        <dd>Cluster name</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -2122,910 +2493,6 @@
       <p></p>
      </dd>
      
-     <dt><font color="#800000"><i><tt>profile</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>false</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Enable Eiffel profiling.
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;option profile="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;option profile="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>shared_library_definition</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>filename.def</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify the file where the Eiffel compiler will
-          			look when generating the exported functions of a
-          			shared library.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			filename.def =&gt; <font color="#800000"><i><tt>&lt;setting name="shared_library_definition" value="</tt></i></font>filename.def<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>syntax</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>obsolete | transitional | standard</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>standard</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Instruct the Eiffel parser to accept or reject some
-        			syntax notations for some Eiffel constructs. This is typically
-        			used during transitional periods.
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			obsolete =&gt; <font color="#800000"><i><tt>&lt;option syntax="obsolete"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			transitional =&gt; <font color="#800000"><i><tt>&lt;option syntax="transitional"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			standard =&gt; <font color="#800000"><i><tt>&lt;option syntax="standard"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>target</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>exe | dll | com | no_main</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>exe</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Specify the output target of the application.
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			exe =&gt; <font color="#800000"><i><tt>&lt;setting name="msil_generation_type" value="exe"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			dll =&gt; <font color="#800000"><i><tt>&lt;setting name="msil_generation_type" value="dll"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			com =&gt; <font color="#800000"><i><tt>&lt;setting name="msil_generation_type" value="exe"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			no_main =&gt; <font color="#800000"><i><tt>&lt;setting name="msil_generation_type" value="exe"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>trace</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>false</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Enable trace mode.
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;option trace="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;option trace="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>use_cluster_name_as_namespace</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>true</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			When compiling to the .NET framework. Should the
-        			cluster name be used as namespace (e.g. base.STRING)?
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;setting name="use_cluster_name_as_namespace" value="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;setting name="use_cluster_name_as_namespace" value="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>use_full_cluster_name_as_namespace</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>true</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			When compiling to the .NET framework. Should the
-        			cluster name be used as namespace (e.g. base.STRING)?
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;setting name="use_all_cluster_name_as_namespace" value="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;setting name="use_all_cluster_name_as_namespace" value="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>void_safety</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>none | on_demand | complete</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>none</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Should void-safety rules be checked?
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			none =&gt; <font color="#800000"><i><tt>&lt;option void_safety="none"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			on_demand =&gt; <font color="#800000"><i><tt>&lt;option void_safety="initialization"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			complete =&gt; <font color="#800000"><i><tt>&lt;option void_safety="all"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>warning</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>none | style | default | all</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify warning level.
-          		
-         </dt>
-         <dt>
-          			'style' means that Eiffel style warnings (e.g. having 
-          			feature names in all upper-case) are emitted.
-          		
-         </dt>
-         <dt>
-          			'default' means that warnings such as local
-          			variables unused are emitted.
-          		
-         </dt>
-         <dt>
-          			'all' means that all warnings are emitted.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			none =&gt; <font color="#800000"><i><tt>&lt;option warning="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			style =&gt; <font color="#800000"><i><tt>&lt;option warning="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			default =&gt; <font color="#800000"><i><tt>&lt;option warning="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			all =&gt; <font color="#800000"><i><tt>&lt;option warning="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-    </dl>
-    
-   </p>
-   
-  </div>
-  <div>
-   <h2>Cluster-level options</h2>
-   
-   <p>
-    Following is the list of cluster-level options supported in Xace
-    (of the form <font color="#800000"><i><tt>&lt;option name="..." value="..."/&gt;</tt></i></font>), and
-    how they are translated to the Eiffel compiler dependent notations. 
-    "N/A" does not necessarily mean that the corresponding Eiffel compiler does not
-    support this facility, it could just be that the facility is not parameterizable
-    or is activated from the command-line or from a separate tool rather than from
-    the Eiffel configuration file. When an entry is marked "N/A" the option
-    will be silently ignored and nothing will be generated in the Eiffel compiler
-    dependent configuration file for this option. Likewise when the name of an
-    option is not supported in Xace.
-    
-   </p>
-   
-   <p>
-    The <i><b>Default</b></i> section shows Xace default value
-    when this option is not explicitly specified in the Xace file. It can be different
-    from the default value used by the various Eiffel compiler dependent notations.
-    For further details about each option, please refer to the
-    documentation provided with the Eiffel compilers.
-    
-   </p>
-   
-   <p>
-    
-    <dl>
-     
-     <dt><font color="#800000"><i><tt>abstract</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>false</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Specify that this cluster should not be searched
-        			for Eiffel classes (but its subclusters can if they
-        			don't have this option set).
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>true =&gt;</dt>
-         <dd>
-          <dl>
-           <dt>
-            					if there is at least one non-abstract subcluster =&gt;
-            				
-           </dt>
-           <dd>
-            					<font color="#800000"><i><tt>&lt;cluster name="</tt></i></font>...<font color="#800000"><i><tt>" location="</tt></i></font>...<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-            				
-           </dd>
-           <dt>
-            					if there is no non-abstract subcluster =&gt;
-            				
-           </dt>
-           <dd>
-            					No output
-            				
-           </dd>
-          </dl>
-         </dd>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;cluster name="</tt></i></font>...<font color="#800000"><i><tt>" location="</tt></i></font>...<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>assembly</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Name</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify that the cluster is in fact a .NET assembly.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			name =&gt; <font color="#800000"><i><tt>&lt;assembly name="</tt></i></font>cluster_name<font color="#800000"><i><tt>" location="</tt></i></font>cluster_pathname<font color="#800000"><i><tt>" assembly_name="</tt></i></font>name<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>assertion</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>
-        			none | generate | require | supplier_precondition | ensure | invariant | loop_invariant | loop_variant | check | all
-        		
-       </dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Set default assertion level for the classes of
-          			this cluster.
-          		
-         </dt>
-         <dt>
-          			Override the assertion level specified at the system level.
-          		
-         </dt>
-         <dt>
-          			The purpose of 'generate' is to generate the code of
-          			the assertions in the generated code even if these assertions
-          			are turned off.
-          		
-         </dt>
-         <dt>
-          			Several of these options can be specified.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			none =&gt; <font color="#800000"><i><tt>&lt;option/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			generate =&gt; <font color="#800000"><i><tt>&lt;option/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			require =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;assertions precondition="true"/&gt;&lt;/option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			supplier_precondition =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;assertions supplier_precondition="true"/&gt;&lt;/option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			ensure =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;assertions ensure="true"/&gt;&lt;/option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			invariant =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;assertions invariant="true"/&gt;&lt;/option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			loop_invariant =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;assertions loop="true"/&gt;&lt;/option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			loop_variant =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;assertions loop="true"/&gt;&lt;/option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			check =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;assertions check="true"/&gt;&lt;/option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			all =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;assertions precondition="true" supplier_precondition="true" ensure="true" invariant="true" loop="true" check="true"/&gt;&lt;/option&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>attached_by_default</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>false</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Are types attached by default when no attachment mark is specified?
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;option is_attached_by_default="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;option is_attached_by_default="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>culture</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Culture</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>neutral</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify the culture of the .NET assembly.
-          		
-         </dt>
-         <dt>
-          			The option 'assembly' should be set in order for this
-          			option to have any effect.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			culture =&gt; <font color="#800000"><i><tt>&lt;assembly name="</tt></i></font>cluster_name<font color="#800000"><i><tt>" location="</tt></i></font>cluster_pathname<font color="#800000"><i><tt>" assembly_culture="</tt></i></font>culture<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>debug</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Enable debug instructions for the classes of this cluster.
-          		
-         </dt>
-         <dt>
-          			Override the 'debug' option specified at the system level.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;option debug="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;option debug="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>debug_tag</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Debug tag</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Enable debug instructions with tag 'tag' for the
-          			classes of this cluster.
-          		
-         </dt>
-         <dt>
-          			Override the 'debug_tag' option specified at the system level.
-          		
-         </dt>
-         <dt>
-          			Several of these options can be specified.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			tag =&gt; <font color="#800000"><i><tt>&lt;option&gt;&lt;debug name="</tt></i></font>tag<font color="#800000"><i><tt>" enabled=true"/&gt;&lt;/option&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>ecf_library</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Pathname</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify that the cluster is the root of a library
-          			that is otherwise described by the ECF file 'pathname'.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			pathname =&gt; <font color="#800000"><i><tt>&lt;library name="</tt></i></font>cluster_name<font color="#800000"><i><tt>" location="</tt></i></font>pathname<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>exclude</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Pathname</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify a filename, or a directory name when the
-          			'recursive' option is set, that should not be taken into
-          			account when searching the cluster for Eiffel classes.
-          		
-         </dt>
-         <dt>
-          			Several of these options can be specified.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			pathname =&gt; <font color="#800000"><i><tt>&lt;file_rule&gt;&lt;exclude&gt;/</tt></i></font>pathname<font color="#800000"><i><tt>$&lt;/exclude&gt;&lt;/file_rule&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>full_class_checking</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>false</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Run flat Degree 3.
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;option full_class_checking="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;option full_class_checking="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>header</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Pathname</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify a directory containing C header files.
-          		
-         </dt>
-         <dt>
-          			Several of these options can be specified.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			pathname =&gt; <font color="#800000"><i><tt>&lt;external_include location="</tt></i></font>pathname<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>include</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Pathname</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify a filename that should be taken into
-          			account when searching the cluster for Eiffel classes,
-          			even though it does not necessarily have a .e extension.
-          		
-         </dt>
-         <dt>
-          			Several of these options can be specified.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			pathname =&gt; <font color="#800000"><i><tt>&lt;file_rule&gt;&lt;include&gt;/</tt></i></font>pathname<font color="#800000"><i><tt>$&lt;/include&gt;&lt;/file_rule&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>link</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Pathname</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify object files, library files or command
-          			line options to be passed to the linker.
-          		
-         </dt>
-         <dt>
-          			Several of these options can be specified.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			pathname =&gt; <font color="#800000"><i><tt>&lt;external_library location="</tt></i></font>pathname<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>namespace</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Namespace</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			When compiling to the .NET framework. Specify the
-          			namespace to be used for the classes of this cluster.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			namespace =&gt; <font color="#800000"><i><tt>&lt;option namespace="</tt></i></font>namespace<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
      <dt><font color="#800000"><i><tt>prefix</tt></i></font></dt>
      <dd>
       <dl>
@@ -3033,6 +2500,8 @@
        <dd>Prefix</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>cluster</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -3068,20 +2537,13 @@
        <dt><i><b>Values:</b></i></dt>
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
+       <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
-        <dl>
-         <dt>
-          			Enable Eiffel profiling for the classes of this cluster.
-          		
-         </dt>
-         <dt>
-          			Override the 'profile' option specified at the system level.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
+        			Enable Eiffel profiling.
+        		
        </dd>
        <dt><i><b>ISE ECF:</b></i></dt>
        <dd>
@@ -3092,6 +2554,10 @@
          </dt>
          <dt>
           			false =&gt; <font color="#800000"><i><tt>&lt;option profile="false"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
           		
          </dt>
          <dd></dd>
@@ -3108,6 +2574,8 @@
        <dd>Public key token</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>b77a5c561934e089</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>cluster</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -3144,6 +2612,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>cluster</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -3187,6 +2657,8 @@
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>cluster</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -3217,13 +2689,50 @@
       <p></p>
      </dd>
      
+     <dt><font color="#800000"><i><tt>shared_library_definition</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>filename.def</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>No default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			Specify the file where the Eiffel compiler will
+          			look when generating the exported functions of a
+          			shared library.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			filename.def =&gt; <font color="#800000"><i><tt>&lt;setting name="shared_library_definition" value="</tt></i></font>filename.def<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
      <dt><font color="#800000"><i><tt>syntax</tt></i></font></dt>
      <dd>
       <dl>
        <dt><i><b>Values:</b></i></dt>
-       <dd>obsolete | transitional | standard</dd>
+       <dd>obsolete | transitional | standard | provisional</dd>
        <dt><i><b>Default:</b></i></dt>
-       <dd>transitional</dd>
+       <dd>standard</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Instruct the Eiffel parser to accept or reject some
@@ -3246,6 +2755,54 @@
           			standard =&gt; <font color="#800000"><i><tt>&lt;option syntax="standard"/&gt;</tt></i></font>
           		
          </dt>
+         <dt>
+          			provisional =&gt; <font color="#800000"><i><tt>&lt;option syntax="provisional"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
+     <dt><font color="#800000"><i><tt>target</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>exe | dll | com | no_main</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>exe</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        			Specify the output target of the application.
+        		
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			exe =&gt; <font color="#800000"><i><tt>&lt;setting name="msil_generation_type" value="exe"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			dll =&gt; <font color="#800000"><i><tt>&lt;setting name="msil_generation_type" value="dll"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			com =&gt; <font color="#800000"><i><tt>&lt;setting name="msil_generation_type" value="exe"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			no_main =&gt; <font color="#800000"><i><tt>&lt;setting name="msil_generation_type" value="exe"/&gt;</tt></i></font>
+          		
+         </dt>
          <dd></dd>
         </dl>
        </dd>
@@ -3259,20 +2816,13 @@
        <dt><i><b>Values:</b></i></dt>
        <dd>true | false</dd>
        <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
+       <dd>false</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
-        <dl>
-         <dt>
-          			Enable trace mode for the classes of this cluster.
-          		
-         </dt>
-         <dt>
-          			Override the 'trace' option specified at the system level.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
+        			Enable trace mode.
+        		
        </dd>
        <dt><i><b>ISE ECF:</b></i></dt>
        <dd>
@@ -3283,6 +2833,76 @@
          </dt>
          <dt>
           			false =&gt; <font color="#800000"><i><tt>&lt;option trace="false"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
+     <dt><font color="#800000"><i><tt>use_cluster_name_as_namespace</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>true | false</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>true</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        			When compiling to the .NET framework. Should the
+        			cluster name be used as namespace (e.g. base.STRING)?
+        		
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			true =&gt; <font color="#800000"><i><tt>&lt;setting name="use_cluster_name_as_namespace" value="true"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			false =&gt; <font color="#800000"><i><tt>&lt;setting name="use_cluster_name_as_namespace" value="false"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dd></dd>
+        </dl>
+       </dd>
+      </dl>
+      <p></p>
+     </dd>
+     
+     <dt><font color="#800000"><i><tt>use_full_cluster_name_as_namespace</tt></i></font></dt>
+     <dd>
+      <dl>
+       <dt><i><b>Values:</b></i></dt>
+       <dd>true | false</dd>
+       <dt><i><b>Default:</b></i></dt>
+       <dd>true</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
+       <dt><i><b>Description:</b></i></dt>
+       <dd>
+        			When compiling to the .NET framework. Should the
+        			cluster name be used as namespace (e.g. base.STRING)?
+        		
+       </dd>
+       <dt><i><b>ISE ECF:</b></i></dt>
+       <dd>
+        <dl>
+         <dt>
+          			true =&gt; <font color="#800000"><i><tt>&lt;setting name="use_all_cluster_name_as_namespace" value="true"/&gt;</tt></i></font>
+          		
+         </dt>
+         <dt>
+          			false =&gt; <font color="#800000"><i><tt>&lt;setting name="use_all_cluster_name_as_namespace" value="false"/&gt;</tt></i></font>
           		
          </dt>
          <dd></dd>
@@ -3299,6 +2919,8 @@
        <dd>Version</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>1.0.5000.0</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>cluster</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
@@ -3335,6 +2957,8 @@
        <dd>none | on_demand | complete</dd>
        <dt><i><b>Default:</b></i></dt>
        <dd>none</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         			Should void-safety rules be checked?
@@ -3362,70 +2986,34 @@
       <p></p>
      </dd>
      
-    </dl>
-    
-   </p>
-   
-  </div>
-  <div>
-   <h2>Class-level options</h2>
-   
-   <p>
-    Following is the list of class-level options supported in Xace
-    (of the form <font color="#800000"><i><tt>&lt;option name="..." value="..."/&gt;</tt></i></font>), and
-    how they are translated to the Eiffel compiler dependent notations. 
-    "N/A" does not necessarily mean that the corresponding Eiffel compiler does not
-    support this facility, it could just be that the facility is not parameterizable
-    or is activated from the command-line or from a separate tool rather than from
-    the Eiffel configuration file. When an entry is marked "N/A" the option
-    will be silently ignored and nothing will be generated in the Eiffel compiler
-    dependent configuration file for this option. Likewise when the name of an
-    option is not supported in Xace.
-    
-   </p>
-   
-   <p>
-    The <i><b>Default</b></i> section shows Xace default value
-    when this option is not explicitly specified in the Xace file. It can be different
-    from the default value used by the various Eiffel compiler dependent notations.
-    For further details about each option, please refer to the
-    documentation provided with the Eiffel compilers.
-    
-   </p>
-   
-   <p>
-    
-    <dl>
-     
-     <dt><font color="#800000"><i><tt>assertion</tt></i></font></dt>
+     <dt><font color="#800000"><i><tt>warning</tt></i></font></dt>
      <dd>
       <dl>
        <dt><i><b>Values:</b></i></dt>
-       <dd>
-        			none | generate | require | supplier_precondition | ensure | invariant | loop_invariant | loop_variant | check | all
-        		
-       </dd>
+       <dd>none | style | default | all</dd>
        <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
+       <dd>default</dd>
+       <dt><i><b>Scope:</b></i></dt>
+       <dd>system/library, cluster, class</dd>
        <dt><i><b>Description:</b></i></dt>
        <dd>
         <dl>
          <dt>
-          			Set default assertion level for this class.
+          			Specify warning level.
           		
          </dt>
          <dt>
-          			Override the assertion level specified at the cluster and system levels.
+          			'style' means that Eiffel style warnings (e.g. having 
+          			feature names in all upper-case) are emitted.
           		
          </dt>
          <dt>
-          			The purpose of 'generate' is to generate the code of
-          			the assertions in the generated code even if these assertions
-          			are turned off.
+          			'default' means that warnings such as local
+          			variables unused are emitted.
           		
          </dt>
          <dt>
-          			Several of these options can be specified.
+          			'all' means that all warnings are emitted.
           		
          </dt>
          <dd></dd>
@@ -3435,389 +3023,23 @@
        <dd>
         <dl>
          <dt>
-          			none =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          			none =&gt; <font color="#800000"><i><tt>&lt;option warning="false"/&gt;</tt></i></font>
           		
          </dt>
          <dt>
-          			generate =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          			style =&gt; <font color="#800000"><i><tt>&lt;option warning="true"/&gt;</tt></i></font>
           		
          </dt>
          <dt>
-          			require =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"&gt;&lt;assertions precondition="true"/&gt;&lt;/class_option&gt;</tt></i></font>
+          			default =&gt; <font color="#800000"><i><tt>&lt;option warning="true"/&gt;</tt></i></font>
           		
          </dt>
          <dt>
-          			supplier_precondition =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"&gt;&lt;assertions supplier_precondition="true"/&gt;&lt;/class_option&gt;</tt></i></font>
+          			all =&gt; <font color="#800000"><i><tt>&lt;option warning="true"/&gt;</tt></i></font>
           		
          </dt>
          <dt>
-          			ensure =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"&gt;&lt;assertions ensure="true"/&gt;&lt;/class_option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			invariant =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"&gt;&lt;assertions invariant="true"/&gt;&lt;/class_option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			loop_invariant =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"&gt;&lt;assertions loop="true"/&gt;&lt;/class_option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			loop_variant =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"&gt;&lt;assertions loop="true"/&gt;&lt;/class_option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			check =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"&gt;&lt;assertions check="true"/&gt;&lt;/class_option&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			all =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"&gt;&lt;assertions precondition="true" supplier_precondition="true" ensure="true" invariant="true" loop="true" check="true"/&gt;&lt;/class_option&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>attached_by_default</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>false</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Are types attached by default when no attachment mark is specified?
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" is_attached_by_default="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" is_attached_by_default="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>debug</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Enable debug instructions for this class.
-          		
-         </dt>
-         <dt>
-          			Override the 'debug' option specified at the cluster and system levels.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" debug="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" debug="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>debug_tag</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>Debug tag</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Enable debug instructions with tag 'tag' for this class.
-          		
-         </dt>
-         <dt>
-          			Override the 'debug_tag' option specified at the cluster and system levels.
-          		
-         </dt>
-         <dt>
-          			Several of these options can be specified.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			tag =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"&gt;&lt;debug name="</tt></i></font>tag<font color="#800000"><i><tt>" enabled=true"/&gt;&lt;/class_option&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>export</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>External name</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify that this class and its features should
-          			be visible from C when using Cecil for example.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			external_name =&gt; <font color="#800000"><i><tt>&lt;visible class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" class_rename="</tt></i></font>external_name<font color="#800000"><i><tt>"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>full_class_checking</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>false</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Run flat Degree 3.
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" full_class_checking="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" full_class_checking="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>syntax</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>obsolete | transitional | standard</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>transitional</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Instruct the Eiffel parser to accept or reject some
-        			syntax notations for some Eiffel constructs. This is typically
-        			used during transitional periods.
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			obsolete =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" syntax="obsolete"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			transitional =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" syntax="transitional"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			standard =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" syntax="standard"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>trace</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>true | false</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Enable trace mode for this class.
-          		
-         </dt>
-         <dt>
-          			Override the 'trace' option specified at the cluster and system levels.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			true =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" trace="true"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			false =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" trace="false"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-     <dt><font color="#800000"><i><tt>void_safety</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>none | on_demand | complete</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>none</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        			Should void-safety rules be checked?
-        		
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			none =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"  void_safety="none"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			on_demand =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"  void_safety="initialization"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dt>
-          			complete =&gt; <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>"  void_safety="all"/&gt;</tt></i></font>
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-      </dl>
-      <p></p>
-     </dd>
-     
-    </dl>
-    
-   </p>
-   
-  </div>
-  <div>
-   <h2>Feature-level options</h2>
-   
-   <p>
-    Following is the list of feature-level options supported in Xace
-    (of the form <font color="#800000"><i><tt>&lt;option name="..." value="..."/&gt;</tt></i></font>), and
-    how they are translated to the Eiffel compiler dependent notations. 
-    "N/A" does not necessarily mean that the corresponding Eiffel compiler does not
-    support this facility, it could just be that the facility is not parameterizable
-    or is activated from the command-line or from a separate tool rather than from
-    the Eiffel configuration file. When an entry is marked "N/A" the option
-    will be silently ignored and nothing will be generated in the Eiffel compiler
-    dependent configuration file for this option. Likewise when the name of an
-    option is not supported in Xace.
-    
-   </p>
-   
-   <p>
-    The <i><b>Default</b></i> section shows Xace default value
-    when this option is not explicitly specified in the Xace file. It can be different
-    from the default value used by the various Eiffel compiler dependent notations.
-    For further details about each option, please refer to the
-    documentation provided with the Eiffel compilers.
-    
-   </p>
-   
-   <p>
-    
-    <dl>
-     
-     <dt><font color="#800000"><i><tt>export</tt></i></font></dt>
-     <dd>
-      <dl>
-       <dt><i><b>Values:</b></i></dt>
-       <dd>External name</dd>
-       <dt><i><b>Default:</b></i></dt>
-       <dd>No default</dd>
-       <dt><i><b>Description:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			Specify that this feature should be visible
-          			from C when using Cecil for example.
-          		
-         </dt>
-         <dd></dd>
-        </dl>
-       </dd>
-       <dt><i><b>ISE ECF:</b></i></dt>
-       <dd>
-        <dl>
-         <dt>
-          			external_name =&gt; <font color="#800000"><i><tt>&lt;visible class="</tt></i></font>CLASS_NAME<font color="#800000"><i><tt>" feature="</tt></i></font>feature_name<font color="#800000"><i><tt>" feature_rename="</tt></i></font>external_name<font color="#800000"><i><tt>"/&gt;</tt></i></font>
+          			Replace <font color="#800000"><i><tt>&lt;option&gt;</tt></i></font> by <font color="#800000"><i><tt>&lt;class_option class="</tt></i></font>...<font color="#800000"><i><tt>"&gt;</tt></i></font> in case of class-level option.
           		
          </dt>
          <dd></dd>

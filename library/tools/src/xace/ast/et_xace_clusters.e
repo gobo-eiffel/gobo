@@ -114,42 +114,6 @@ feature -- Basic operations
 			end
 		end
 
-	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE])
-			-- Merge current clusters' exported features and those
-			-- of subclusters to `an_export'.
-		require
-			an_export_not_void: an_export /= Void
-			no_void_export: not an_export.has_void
-		local
-			i, nb: INTEGER
-		do
-			nb := clusters.count
-			from i := 1 until i > nb loop
-				clusters.item (i).merge_exported_features (an_export)
-				i := i + 1
-			end
-		ensure
-			no_void_export: not an_export.has_void
-		end
-
-	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT])
-			-- Merge current clusters' components and those
-			-- of subclusters to `a_components'.
-		require
-			a_components_not_void: a_components /= Void
-			no_void_component: not a_components.has_void
-		local
-			i, nb: INTEGER
-		do
-			nb := clusters.count
-			from i := 1 until i > nb loop
-				clusters.item (i).merge_components (a_components)
-				i := i + 1
-			end
-		ensure
-			no_void_component: not a_components.has_void
-		end
-
 	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY])
 			-- Merge current clusters' assemblies and those
 			-- of subclusters to `an_assemblies'.

@@ -49,17 +49,13 @@ feature -- Execution
 		do
 			create a_parser.make_with_variables (variables, error_handler)
 			a_parser.set_shallow (is_shallow)
-			a_parser.set_ve (is_ve)
 			create a_file.make (xace_filename)
 			a_file.open_read
 			if a_file.is_open_read then
 				a_parser.parse_file (a_file)
 				a_file.close
 				a_library := a_parser.last_library
-				if
-					a_library /= Void and then
-					attached a_library.name as l_library_name and then l_library_name.count > 0
-				then
+				if a_library /= Void then
 					execute_generators (a_library)
 				end
 			else
@@ -71,8 +67,6 @@ feature -- Execution
 			-- Execute Ace file generators.
 		require
 			a_library_not_void: a_library /= Void
-			a_library_name_not_void: attached a_library.name as l_library_name
-			a_library_name_not_empty: l_library_name.count > 0
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_GENERATOR]
 			a_generator: ET_XACE_GENERATOR

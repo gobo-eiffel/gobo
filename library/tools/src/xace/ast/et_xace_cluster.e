@@ -5,7 +5,7 @@ note
 		"Xace Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -116,7 +116,7 @@ feature -- Status report
 		do
 			if is_override then
 				Result := True
-			elseif attached options as l_options and then l_options.is_ecf_library_declared then
+			elseif attached options as l_options and then attached l_options.value ({ET_XACE_OPTION_NAMES}.ecf_library_option_name) then
 				Result := True
 			elseif is_abstract then
 				Result := True
@@ -138,16 +138,13 @@ feature -- Status report
 	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel filename which has
 			-- not been excluded?
-		local
-			an_exclude: DS_HASH_SET [STRING]
 		do
 			if precursor (a_filename) then
-				if attached options as l_options and then l_options.is_exclude_declared then
-					an_exclude := l_options.exclude
+				if attached options as l_options and then attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.exclude_option_name) as l_excludes then
 					if operating_system.is_windows then
-						Result := not has_case_insensitive (an_exclude, a_filename)
+						Result := not has_case_insensitive (l_excludes, a_filename)
 					else
-						Result := not an_exclude.has (a_filename)
+						Result := not l_excludes.has (a_filename)
 					end
 				else
 					Result := True
@@ -158,16 +155,13 @@ feature -- Status report
 	is_valid_directory_name (a_dirname: STRING): BOOLEAN
 			-- Is `a_dirname' a directory name other than "." and
 			-- ".." and which has not been excluded?
-		local
-			an_exclude: DS_HASH_SET [STRING]
 		do
 			if precursor (a_dirname) then
-				if attached options as l_options and then l_options.is_exclude_declared then
-					an_exclude := l_options.exclude
+				if attached options as l_options and then attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.exclude_option_name) as l_excludes then
 					if operating_system.is_windows then
-						Result := not has_case_insensitive (an_exclude, a_dirname)
+						Result := not has_case_insensitive (l_excludes, a_dirname)
 					else
-						Result := not an_exclude.has (a_dirname)
+						Result := not l_excludes.has (a_dirname)
 					end
 				else
 					Result := True
@@ -277,92 +271,27 @@ feature -- Basic operations
 			-- of subclusters to `an_externals'.
 		require
 			an_externals_not_void: an_externals /= Void
-		local
-			a_cursor: DS_HASH_SET_CURSOR [STRING]
-			a_link_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
 			if attached options as l_options then
-				a_cursor := l_options.c_compiler_options.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					an_externals.put_c_compiler_options (a_cursor.item)
-					a_cursor.forth
+				if attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.c_compiler_options_option_name) as l_multivalue then
+					across l_multivalue as l_c_compiler_options loop
+						an_externals.put_c_compiler_options (l_c_compiler_options.item)
+					end
 				end
-				a_cursor := l_options.header.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					an_externals.put_include_directory (a_cursor.item)
-					a_cursor.forth
+				if attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.header_option_name) as l_multivalue then
+					across l_multivalue as l_includes loop
+						an_externals.put_include_directory (l_includes.item)
+					end
 				end
-				a_link_cursor := l_options.link.new_cursor
-				from a_link_cursor.start until a_link_cursor.after loop
-					an_externals.put_link_library (a_link_cursor.item)
-					a_link_cursor.forth
+				if attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.link_option_name) as l_multivalue then
+					across l_multivalue as l_links loop
+						an_externals.put_link_library (l_links.item)
+					end
 				end
 			end
 			if attached subclusters as l_subclusters then
 				l_subclusters.merge_externals (an_externals)
 			end
-		end
-
-	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE])
-			-- Merge current cluster's exported features and those
-			-- of subclusters to `an_export'.
-		require
-			an_export_not_void: an_export /= Void
-			no_void_export: not an_export.has_void
-		local
-			an_exported_feature: ET_XACE_EXPORTED_FEATURE
-			a_class_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_CLASS_OPTIONS]
-			a_class_options: ET_XACE_CLASS_OPTIONS
-			a_feature_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_FEATURE_OPTIONS]
-			a_feature_options: ET_XACE_FEATURE_OPTIONS
-			an_options: ET_XACE_OPTIONS
-		do
-			if attached class_options as l_class_options then
-				a_class_cursor := l_class_options.new_cursor
-				from a_class_cursor.start until a_class_cursor.after loop
-					a_class_options := a_class_cursor.item
-					if attached a_class_options.feature_options as l_feature_options_list then
-						a_feature_cursor := l_feature_options_list.new_cursor
-						from a_feature_cursor.start until a_feature_cursor.after loop
-							a_feature_options := a_feature_cursor.item
-							an_options := a_feature_options.options
-							if an_options.is_export_option_declared and then attached an_options.export_option as l_export_option then
-								create an_exported_feature.make (a_class_options.class_name, a_feature_options.feature_name, l_export_option)
-								an_export.force_last (an_exported_feature)
-							end
-							a_feature_cursor.forth
-						end
-					end
-					a_class_cursor.forth
-				end
-			end
-			if attached subclusters as l_subclusters then
-				l_subclusters.merge_exported_features (an_export)
-			end
-		ensure
-			no_void_export: not an_export.has_void
-		end
-
-	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT])
-			-- Merge current cluster's components and those
-			-- of subclusters to `a_components'.
-		require
-			a_components_not_void: a_components /= Void
-			no_void_component: not a_components.has_void
-		local
-			a_component: ET_XACE_COMPONENT
-		do
-			if attached options as l_options then
-				if l_options.is_component_declared and then attached l_options.component as l_component then
-					create a_component.make (name, l_component)
-					a_components.force_last (a_component)
-				end
-			end
-			if attached subclusters as l_subclusters then
-				l_subclusters.merge_components (a_components)
-			end
-		ensure
-			no_void_component: not a_components.has_void
 		end
 
 	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY])
@@ -373,16 +302,31 @@ feature -- Basic operations
 			no_void_assembly: not an_assemblies.has_void
 		local
 			an_assembly: ET_XACE_ASSEMBLY
+			l_version: STRING
+			l_culture: STRING
+			l_public_key_token: STRING
 		do
-			if attached options as l_options then
-				if l_options.is_assembly_declared and then attached l_options.assembly as l_assembly then
-					create an_assembly.make (name, l_assembly, l_options.version,
-						l_options.culture, l_options.public_key_token, l_options.prefix_option)
-					if pathname /= Void then
-						an_assembly.set_assembly_pathname (full_pathname)
-					end
-					an_assemblies.force_last (an_assembly)
+			if attached options as l_options and then attached l_options.value ({ET_XACE_OPTION_NAMES}.assembly_option_name) as l_assembly then
+				if attached l_options.value ({ET_XACE_OPTION_NAMES}.version_option_name) as l_value then
+					l_version := l_value
+				else
+					l_version := {ET_XACE_OPTION_NAMES}.default_version_option_value
 				end
+				if attached l_options.value ({ET_XACE_OPTION_NAMES}.culture_option_name) as l_value then
+					l_culture := l_value
+				else
+					l_culture := {ET_XACE_OPTION_NAMES}.neutral_option_value
+				end
+				if attached l_options.value ({ET_XACE_OPTION_NAMES}.public_key_token_option_name) as l_value then
+					l_public_key_token := l_value
+				else
+					l_public_key_token := {ET_XACE_OPTION_NAMES}.default_public_key_token_option_value
+				end
+				create an_assembly.make (name, l_assembly, l_version, l_culture, l_public_key_token, l_options.value ({ET_XACE_OPTION_NAMES}.prefix_option_name))
+				if pathname /= Void then
+					an_assembly.set_assembly_pathname (full_pathname)
+				end
+				an_assemblies.force_last (an_assembly)
 			end
 			if attached subclusters as l_subclusters then
 				l_subclusters.merge_assemblies (an_assemblies)
@@ -416,7 +360,7 @@ feature -- Basic operations
 			an_ecf_clusters_not_void: an_ecf_clusters /= Void
 			no_void_ecf_cluster: not an_ecf_clusters.has_void
 		do
-			if attached options as l_options and then l_options.is_ecf_library_declared then
+			if attached options as l_options and then attached l_options.value ({ET_XACE_OPTION_NAMES}.ecf_library_option_name) then
 				an_ecf_clusters.force_last (Current)
 			end
 			if attached subclusters as l_subclusters then
