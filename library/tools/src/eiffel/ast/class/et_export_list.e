@@ -5,7 +5,7 @@ note
 		"Eiffel export clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,10 +61,16 @@ feature -- Access
 			-- Is there at least one non-null export in current export clause?
 		local
 			i, nb: INTEGER
+			l_export: ET_EXPORT
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				if not storage.item (i).is_semicolon then
+				l_export := storage.item (i)
+				if l_export.is_semicolon then
+					-- Is null.
+				elseif attached {ET_FEATURE_EXPORT} l_export as l_feature_export and then l_feature_export.is_empty then
+					-- Is null.
+				else
 					Result := True
 						-- Jump out of the loop.
 					i := nb

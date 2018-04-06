@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/06 $"
 	revision: "$Revision: #12 $"
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process_feature (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
+	process_feature (a_feature: ET_STANDALONE_CLOSURE; a_current_type: ET_BASE_TYPE)
 			-- Traverse `a_feature' in `a_current_type' and report when feature calls
 			-- are found using 'report_*'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -174,7 +174,7 @@ feature -- Processing
 			a_current_type_valid: a_current_type.is_valid_context
 			a_current_class_preparsed: a_current_type.base_class.is_preparsed
 		local
-			l_feature_impl: ET_FEATURE
+			l_feature_impl: ET_STANDALONE_CLOSURE
 			l_class_impl: ET_CLASS
 			old_feature: ET_STANDALONE_CLOSURE
 			old_feature_impl: ET_STANDALONE_CLOSURE
@@ -221,12 +221,18 @@ feature -- Status report
 			-- Note that in the current implementation, inherited assertions
 			-- and class invariants are not taken into account even when
 			-- this boolean query is set to True.
+			-- For invariants, one needs to call `process_feature' explicitly
+			-- on the corresponding class invariants.
 
 	debug_instructions_enabled: BOOLEAN
 			-- Should feature calls appearing in debug instructions be reported?
 
 	anchored_types_enabled: BOOLEAN
 			-- Should feature appearing as anchor of an anchored type be reported?
+
+	assigner_queries_enabled: BOOLEAN
+			-- Should the query associated with an assigner instruction be reported?
+			-- For example 'item' in 'a.item := 5'
 
 	internal_error_enabled: BOOLEAN
 			-- Should an internal error be reported even when errors have already
@@ -256,6 +262,14 @@ feature -- Status setting
 			anchored_types_enabled := b
 		ensure
 			anchored_types_enabled_set: anchored_types_enabled = b
+		end
+
+	set_assigner_queries_enabled (b: BOOLEAN)
+			-- Set `assigner_queries_enabled' to `b'.
+		do
+			assigner_queries_enabled := b
+		ensure
+			assigner_queries_enabled_set: assigner_queries_enabled = b
 		end
 
 	set_internal_error_enabled (b: BOOLEAN)
@@ -825,8 +839,15 @@ feature {ET_AST_NODE} -- Processing
 	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			l_had_error: BOOLEAN
 		do
 			process_qualified_feature_call_instruction (an_instruction)
+			if assigner_queries_enabled then
+				l_had_error := has_fatal_error
+				process_qualified_feature_call_expression (an_instruction.call)
+				reset_fatal_error (l_had_error or has_fatal_error)
+			end
 		end
 
 	process_assignment (an_instruction: ET_ASSIGNMENT)

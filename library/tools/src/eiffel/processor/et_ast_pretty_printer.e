@@ -5,7 +5,7 @@ note
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -3285,6 +3285,8 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 			l_instruction: ET_INSTRUCTION
+			l_has_leading_semicolon: BOOLEAN
+			l_last_leaf: ET_AST_LEAF
 		do
 			nb := a_list.count
 				-- Start to skip all leading null instructions.
@@ -3293,8 +3295,26 @@ feature {ET_AST_NODE} -- Processing
 			until
 				i > nb or else not a_list.item (i).is_semicolon
 			loop
+				l_has_leading_semicolon := True
 				comment_finder.find_comments (a_list.item (i), comment_list)
 				i := i + 1
+			end
+			if l_has_leading_semicolon and i <= nb then
+				if attached {ET_SYMBOL} a_list.item (i).first_leaf as l_symbol and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket or l_symbol.is_left_brace) then
+						-- Print a semicolon in order to avoid syntax error with ISE Eiffel.
+						-- For example if we have:
+						--
+						--  once
+						--     ("OBJECT").f
+						--
+						-- it could also be seen by ISE Eiffel as:
+						--
+						--  once ("OBJECT")
+						--     .f
+						--
+						-- even if this is not syntactically correct.
+					tokens.semicolon_symbol.process (Current)
+				end
 			end
 			process_comments
 			from until i > nb loop
@@ -3311,7 +3331,8 @@ feature {ET_AST_NODE} -- Processing
 					i := i + 1
 				end
 				if i <= nb then
-					if attached {ET_IDENTIFIER} l_instruction.last_leaf and attached {ET_SYMBOL} a_list.item (i).first_leaf as l_symbol and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
+					l_last_leaf := l_instruction.last_leaf
+					if (attached {ET_IDENTIFIER} l_last_leaf or attached {ET_PRECURSOR_KEYWORD} l_last_leaf) and attached {ET_SYMBOL} a_list.item (i).first_leaf as l_symbol and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
 							-- Print a semicolon in order to avoid syntax ambiguity.
 							-- For example if we have:
 							--
@@ -4287,7 +4308,7 @@ feature {ET_AST_NODE} -- Processing
 						print_space
 						an_end_keyword.process (Current)
 					end
-				else
+				elseif an_exports.has_non_null_export then
 					print_new_line
 					process_comments
 					an_exports.process (Current)
@@ -4296,6 +4317,13 @@ feature {ET_AST_NODE} -- Processing
 						process_comments
 						an_end_keyword.process (Current)
 					end
+				else
+					comment_finder.find_comments (an_exports, comment_list)
+						-- Do not print the 'end' keyword if any.
+					if an_end_keyword /= Void then
+						comment_finder.find_comments (an_end_keyword, comment_list)
+					end
+					process_comments
 				end
 			else
 				if a_renames /= Void then
@@ -4306,9 +4334,13 @@ feature {ET_AST_NODE} -- Processing
 					set_target_type (Void)
 				end
 				if an_exports /= Void then
-					print_new_line
-					process_comments
-					an_exports.process (Current)
+					if an_exports.has_non_null_export then
+						print_new_line
+						process_comments
+						an_exports.process (Current)
+					else
+						comment_finder.find_comments (an_exports, comment_list)
+					end
 				end
 				if an_undefines /= Void then
 					print_new_line

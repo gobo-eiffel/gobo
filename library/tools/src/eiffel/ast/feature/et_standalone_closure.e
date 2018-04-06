@@ -5,7 +5,7 @@ note
 		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -149,6 +149,15 @@ feature -- Conversion
 			check is_invariants: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR)
+			-- Process current node.
+		require
+			a_processor_not_void: a_processor /= Void
+		deferred
 		end
 
 end

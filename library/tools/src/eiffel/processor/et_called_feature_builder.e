@@ -20,7 +20,9 @@ inherit
 			make as make_feature_call_handler
 		redefine
 			report_polymorphic_feature_call,
-			report_monomorphic_feature_call
+			report_monomorphic_feature_call,
+			report_anchored_type,
+			report_qualified_anchored_type
 		end
 
 create
@@ -72,7 +74,7 @@ feature -- Setting
 
 feature -- Processing
 
-	build_called_features (a_feature: ET_FEATURE)
+	build_called_features (a_feature: ET_STANDALONE_CLOSURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- depends on (i.e. they might be called directly from `a_feature')
@@ -88,7 +90,7 @@ feature -- Processing
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
 		local
-			l_feature: ET_FEATURE
+			l_feature: ET_STANDALONE_CLOSURE
 			l_class: ET_CLASS
 		do
 			l_feature := a_feature.implementation_feature
@@ -118,6 +120,20 @@ feature {NONE} -- Event handling
 			-- `a_target_class' should not be taken into account.
 		do
 			called_features.add_monomorphic_feature (a_feature, a_target_class)
+		end
+
+	report_anchored_type (a_type: ET_LIKE_FEATURE; a_query: ET_QUERY)
+			-- Report that the anchored type `a_type' has been processed
+			-- with `a_query' as its anchor.
+		do
+			called_features.add_polymorphic_feature (a_query, current_class)
+		end
+
+	report_qualified_anchored_type (a_type: ET_QUALIFIED_LIKE_IDENTIFIER; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
+			-- Report that the qualified anchored type `a_type' has been processed
+			-- with `a_query' from `a_target_type' as its anchor.
+		do
+			called_features.add_polymorphic_feature (a_query, a_target_type.base_class)
 		end
 
 invariant
