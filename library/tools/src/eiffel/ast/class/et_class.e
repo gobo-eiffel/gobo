@@ -2683,7 +2683,7 @@ feature -- Implementation checking status
 			suppliers_reset: suppliers = Void
 		end
 
-feature {ET_IMPLEMENTATION_CHECKER} -- Implementation checking status
+feature {ET_IMPLEMENTATION_CHECKER, ET_FEATURE_CHECKER} -- Implementation checking status
 
 	is_checking_implementation: BOOLEAN
 			-- Is the implementation of current class being checked?

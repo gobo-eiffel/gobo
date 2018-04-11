@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -287,7 +287,7 @@ feature -- Validity checking
 				if not current_class.interface_checked or else current_class.has_interface_error then
 						-- The error should have already been reported.
 					set_fatal_error
-				elseif current_class.implementation_checked and then current_class.has_implementation_error then
+				elseif current_class.implementation_checked and then current_class.has_implementation_error and then not current_class.is_checking_implementation then
 						-- An implementation error has already been found when checking
 						-- all features of this class. This can happen when calling 'gec'
 						-- in full class checking mode. In that case, we don't want flat
