@@ -2,15 +2,15 @@ note
 
 	description:
 
-		"Test features of class ET_AST_PRINTER"
+		"Test features of class ET_AST_TOKENIZER"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_TEST_AST_PRINTER
+class ET_TEST_AST_TOKENIZER
 
 inherit
 
@@ -71,7 +71,7 @@ feature -- Setting
 feature -- Test
 
 	test_printer
-			-- Test printer with the Eiffel classes of `ecf_filename'.
+			-- Test tokenizer with the Eiffel classes of `ecf_filename'.
 		local
 			l_ecf_filename: STRING
 			l_ecf_file: KL_TEXT_INPUT_FILE
@@ -122,13 +122,13 @@ feature -- Test
 feature {NONE} -- Test
 
 	check_class (a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Check that after parsing `a_class' and printing back its AST,
-			-- we get the same class text.
+			-- Check that after parsing `a_class' and printing its AST tokens,
+			-- we get the same tokens.
 		require
 			a_class_not_void: a_class /= Void
 			a_system_processor_not_void: a_system_processor /= Void
 		local
-			l_printer: ET_AST_PRINTER
+			l_tokenizer: ET_AST_TOKENIZER
 			l_output: KL_STRING_OUTPUT_STREAM
 		do
 			if a_class.is_in_cluster then
@@ -136,16 +136,111 @@ feature {NONE} -- Test
 				assert (a_class.lower_name + "_parsed", a_class.is_parsed)
 				assert (a_class.lower_name + "_no_syntax_error", not a_class.has_syntax_error)
 				create l_output.make_empty
-				create l_printer.make_null
-				l_printer.set_file (l_output)
-				a_class.process (l_printer)
-				l_printer.set_null_file
-				assert_file_equal_to_string (a_class.lower_name + "_diff", a_class.filename, l_output.string)
+				create l_tokenizer.make_null
+				l_tokenizer.set_separator ("")
+				l_tokenizer.set_file (l_output)
+				a_class.process (l_tokenizer)
+				l_tokenizer.set_null_file
+				assert_strings_equal (a_class.lower_name + "_diff", stripped_file (a_class.filename), stripped_string (l_output.string))
 			end
 		end
 
 feature {NONE} -- Implementation
 
+	stripped_string (a_string: STRING): STRING
+			-- Version of `a_string' where spaces, tabs,
+			-- new-lines and comments have been removed.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			l_splitter: ST_SPLITTER
+			l_line: STRING
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			create Result.make (a_string.count)
+			create l_splitter.make_with_separators ("%N%R")
+			across l_splitter.split (a_string) as l_lines loop
+				l_line := l_lines.item
+				from
+					i := 1
+					nb := l_line.count
+				until
+					i > nb
+				loop
+					c := l_line.item (i)
+					inspect c
+					when '-' then
+						if i < nb and then l_line.item (i + 1) = '-' then
+								-- Skip comments.
+								-- Jump out of the loop.
+							i := nb + 1
+						else
+							Result.append_character (c)
+						end
+					when ' ', '%T' then
+						-- Skip spaces.
+					else
+						Result.append_character (c)
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			stripped_string_not_void: Result /= Void
+		end
+
+	stripped_file (a_filename: STRING): STRING
+			-- Content of `a_filename' where spaces, tabs,
+			-- new-lines and comments have been removed.
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			l_file: KL_TEXT_INPUT_FILE
+			l_line: STRING
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			create l_file.make (a_filename)
+			l_file.open_read
+			assert ("class_file_opened", l_file.is_open_read)
+			create Result.make (1000)
+			from
+				l_file.read_line
+			until
+				l_file.end_of_file
+			loop
+				l_line := l_file.last_string
+				from
+					i := 1
+					nb := l_line.count
+				until
+					i > nb
+				loop
+					c := l_line.item (i)
+					inspect c
+					when '-' then
+						if i < nb and then l_line.item (i + 1) = '-' then
+								-- Skip comments.
+								-- Jump out of the loop.
+							i := nb + 1
+						else
+							Result.append_character (c)
+						end
+					when ' ', '%T' then
+						-- Skip spaces.
+					else
+						Result.append_character (c)
+					end
+					i := i + 1
+				end
+				l_file.read_line
+			end
+			l_file.close
+		ensure
+			stripped_file_not_void: Result /= Void
+		end
+		
 	default_ecf_filename: STRING
 			-- Default name of ECF file used for the test
 		once

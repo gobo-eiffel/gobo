@@ -731,6 +731,110 @@ feature {TS_TEST_HANDLER} -- Files
 			assertions.set_exception_on_error (l_fatal)
 		end
 
+	assert_file_equal_to_string (a_tag: STRING; a_filename, a_string: STRING)
+			-- Assert that there is no difference between the
+			-- content of the file named `a_filename' and `a_string'.
+			-- (Expand environment variables in filename.)
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+			a_string_not_void: a_string /= Void
+		local
+			a_file: KL_TEXT_INPUT_FILE
+			a_message: detachable STRING
+			done: BOOLEAN
+			i: INTEGER
+			l_start, l_end, l_count: INTEGER
+		do
+			assertions.add_assertion
+			create a_file.make (Execution_environment.interpreted_string (a_filename))
+			a_file.open_read
+			if a_file.is_open_read then
+				from
+					l_count := a_string.count
+				until
+					done
+				loop
+					a_file.read_line
+					l_start := l_end + 1
+					l_end := a_string.index_of ('%N', l_start)
+					if l_end = 0 then
+						l_end := l_count + 1
+					end
+					i := i + 1
+					if a_file.end_of_file then
+						if l_start <= l_count then
+							create a_message.make (50)
+							a_message.append_string (a_tag)
+							a_message.append_string (" (diff between files '")
+							a_message.append_string (a_filename)
+							a_message.append_string ("' and string at line ")
+							INTEGER_.append_decimal_integer (i, a_message)
+							a_message.append_string (")")
+							a_file.close
+							done := True
+						else
+							a_file.close
+							done := True
+						end
+					elseif l_start > l_count then
+						create a_message.make (50)
+						a_message.append_string (a_tag)
+						a_message.append_string (" (diff between files '")
+						a_message.append_string (a_filename)
+						a_message.append_string ("' and string at line ")
+						INTEGER_.append_decimal_integer (i, a_message)
+						a_message.append_string (")")
+						a_file.close
+						done := True
+					elseif not a_file.last_string.is_equal (a_string.substring (l_start, l_end - 1)) then
+						create a_message.make (50)
+						a_message.append_string (a_tag)
+						a_message.append_string (" (diff between files '")
+						a_message.append_string (a_filename)
+						a_message.append_string ("' and string at line ")
+						INTEGER_.append_decimal_integer (i, a_message)
+						a_message.append_string (")")
+						a_file.close
+						done := True
+					end
+				end
+			else
+				create a_message.make (50)
+				a_message.append_string (a_tag)
+				a_message.append_string (" (cannot read file '")
+				a_message.append_string (a_filename)
+				a_message.append_string ("')")
+			end
+			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
+				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_file_equal_to_string (a_tag: STRING; a_filename, a_string: STRING)
+			-- Check that there is no difference between the
+			-- content of the file named `a_filename' and `a_string'.
+			-- (Expand environment variables in filename.)
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+			a_string_not_void: a_string /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_file_equal_to_string (a_tag, a_filename, a_string)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_filenames_equal (a_tag: STRING; a_filename1, a_filename2: STRING)
 			-- Assert that filenames `a_filename1' and `a_filename2'
 			-- only differ by the letters '/' and '\'.
