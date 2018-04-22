@@ -141,54 +141,11 @@ feature {NONE} -- Test
 				l_tokenizer.set_file (l_output)
 				a_class.process (l_tokenizer)
 				l_tokenizer.set_null_file
-				assert_strings_equal (a_class.lower_name + "_diff", stripped_file (a_class.filename), stripped_string (l_output.string))
+				assert_strings_equal (a_class.lower_name + "_diff", stripped_file (a_class.filename), l_output.string)
 			end
 		end
 
 feature {NONE} -- Implementation
-
-	stripped_string (a_string: STRING): STRING
-			-- Version of `a_string' where spaces, tabs,
-			-- new-lines and comments have been removed.
-		require
-			a_string_not_void: a_string /= Void
-		local
-			l_splitter: ST_SPLITTER
-			l_line: STRING
-			i, nb: INTEGER
-			c: CHARACTER
-		do
-			create Result.make (a_string.count)
-			create l_splitter.make_with_separators ("%N%R")
-			across l_splitter.split (a_string) as l_lines loop
-				l_line := l_lines.item
-				from
-					i := 1
-					nb := l_line.count
-				until
-					i > nb
-				loop
-					c := l_line.item (i)
-					inspect c
-					when '-' then
-						if i < nb and then l_line.item (i + 1) = '-' then
-								-- Skip comments.
-								-- Jump out of the loop.
-							i := nb + 1
-						else
-							Result.append_character (c)
-						end
-					when ' ', '%T' then
-						-- Skip spaces.
-					else
-						Result.append_character (c)
-					end
-					i := i + 1
-				end
-			end
-		ensure
-			stripped_string_not_void: Result /= Void
-		end
 
 	stripped_file (a_filename: STRING): STRING
 			-- Content of `a_filename' where spaces, tabs,
@@ -200,6 +157,9 @@ feature {NONE} -- Implementation
 			l_line: STRING
 			i, nb: INTEGER
 			c: CHARACTER
+			l_in_character: BOOLEAN
+			l_in_string: BOOLEAN
+			l_in_verbatim_string: BOOLEAN
 		do
 			create l_file.make (a_filename)
 			l_file.open_read
@@ -219,8 +179,40 @@ feature {NONE} -- Implementation
 				loop
 					c := l_line.item (i)
 					inspect c
+					when '%"' then
+						if not l_in_string then
+							if not l_in_character then
+								l_in_string := True
+								if i < nb and then (l_line.item (i + 1) = '[' or l_line.item (i + 1) = '{') then
+									l_in_verbatim_string := True
+								end
+							end
+						else
+							if l_in_verbatim_string then
+								if i > 1 and then (l_line.item (i - 1) = ']' or l_line.item (i - 1) = '}') then
+									l_in_verbatim_string := False
+									l_in_string := False
+								end
+							else
+								if i > 1 and then l_line.item (i - 1) = '%%' then
+									-- Double quote in string.
+								else
+									l_in_string := False
+								end
+							end
+						end
+						Result.append_character (c)
+					when '%'' then
+						if not l_in_character then
+							if not l_in_string then
+								l_in_character := True
+							end
+						else
+							l_in_character := False
+						end
+						Result.append_character (c)
 					when '-' then
-						if i < nb and then l_line.item (i + 1) = '-' then
+						if (not l_in_string and not l_in_character) and then i < nb and then l_line.item (i + 1) = '-' then
 								-- Skip comments.
 								-- Jump out of the loop.
 							i := nb + 1
@@ -228,7 +220,9 @@ feature {NONE} -- Implementation
 							Result.append_character (c)
 						end
 					when ' ', '%T' then
-						-- Skip spaces.
+						if l_in_string or l_in_character then
+							Result.append_character (c)
+						end
 					else
 						Result.append_character (c)
 					end

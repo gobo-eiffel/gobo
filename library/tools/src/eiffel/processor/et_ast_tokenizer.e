@@ -21,6 +21,8 @@ inherit
 			process_actual_parameter_list,
 			process_break,
 			process_constant_attribute,
+			process_export_list,
+			process_feature_export,
 			process_keyword,
 			process_local_variable_list,
 			process_postconditions,
@@ -73,6 +75,9 @@ feature -- Status report
 	empty_actual_parameters_ignored: BOOLEAN
 			-- Should empty actual parameters be ignored?
 
+	empty_exports_ignored: BOOLEAN
+			-- Should empty exports be ignored?
+
 	empty_locals_ignored: BOOLEAN
 			-- Should empty locals be ignored?
 
@@ -110,6 +115,14 @@ feature -- Status setting
 			empty_actual_parameters_ignored := b
 		ensure
 			empty_actual_parameters_ignored_set: empty_actual_parameters_ignored = b
+		end
+
+	set_empty_exports_ignored (b: BOOLEAN)
+			-- Set `empty_exports_ignored' to `b'.
+		do
+			empty_exports_ignored := b
+		ensure
+			empty_exports_ignored_set: empty_exports_ignored = b
 		end
 
 	set_empty_locals_ignored (b: BOOLEAN)
@@ -222,6 +235,22 @@ feature {ET_AST_NODE} -- Processing
 			a_feature.constant.process (Current)
 			if attached a_feature.semicolon as l_semicolon then
 				l_semicolon.process (Current)
+			end
+		end
+
+	process_export_list (a_list: ET_EXPORT_LIST)
+			-- <Precursor>
+		do
+			if not empty_exports_ignored or else a_list.has_non_null_export then
+				precursor (a_list)
+			end
+		end
+
+	process_feature_export (an_export: ET_FEATURE_EXPORT)
+			-- <Precursor>
+		do
+			if not empty_exports_ignored or else not an_export.is_empty then
+				precursor (an_export)
 			end
 		end
 
