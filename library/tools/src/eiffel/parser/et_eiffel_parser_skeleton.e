@@ -1747,15 +1747,13 @@ feature {NONE} -- AST factory
 		a_generics: detachable ET_ACTUAL_PARAMETER_LIST): detachable ET_TYPE
 			-- New Eiffel class type or formal generic paramater
 		local
-			a_parameter: detachable ET_FORMAL_PARAMETER
 			a_last_class: like last_class
 			l_class: ET_MASTER_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
 		do
-			a_last_class := last_class
-			if a_last_class /= Void and a_name /= Void then
-				a_parameter := a_last_class.formal_parameter (a_name)
-				if a_parameter /= Void then
+			if a_name /= Void then
+				a_last_class := last_class
+				if a_last_class /= Void and then attached a_last_class.formal_parameter (a_name) as a_parameter then
 					if a_generics /= Void then
 						-- TODO: Error
 					end

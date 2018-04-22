@@ -1,3 +1,7 @@
+note
+
+	assembly_metadata: create {DEBUGGABLE_ATTRIBUTE}.make (True, True) end
+
 deferred class PRETTY_PRINTED1 [G -> ARRAY [STRING] create make, make_from_array end, H, I]
 
 inherit

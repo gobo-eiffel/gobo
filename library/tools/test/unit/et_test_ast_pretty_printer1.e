@@ -85,7 +85,7 @@ feature {NONE} -- Test
 					a_class.process (a_system_processor.eiffel_parser)
 					assert (a_class.lower_name + "_parsed", a_class.is_parsed)
 					assert (a_class.lower_name + "_no_syntax_error", not a_class.has_syntax_error)
-					create l_file.make ("gobo.txt")
+					create l_file.make ("gobo1.txt")
 					l_file.open_write
 					assert ("is_open_write", l_file.is_open_write)
 					create l_printer.make_null
@@ -93,7 +93,7 @@ feature {NONE} -- Test
 					a_class.process (l_printer)
 					l_printer.set_null_file
 					l_file.close
-					assert_files_equal (a_class.lower_name + "_diff", a_class.filename, "gobo.txt")
+					assert_files_equal (a_class.lower_name + "_diff", a_class.filename, "gobo1.txt")
 				end
 			end
 		end
