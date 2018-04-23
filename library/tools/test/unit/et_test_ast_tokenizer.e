@@ -160,6 +160,9 @@ feature {NONE} -- Implementation
 			l_in_character: BOOLEAN
 			l_in_string: BOOLEAN
 			l_in_verbatim_string: BOOLEAN
+			l_verbatim_marker: CHARACTER
+			l_string_new_line: BOOLEAN
+			l_first_line: BOOLEAN
 		do
 			create l_file.make (a_filename)
 			l_file.open_read
@@ -167,12 +170,17 @@ feature {NONE} -- Implementation
 			create Result.make (1000)
 			from
 				l_file.read_line
+				l_first_line := True
 			until
 				l_file.end_of_file
 			loop
 				l_line := l_file.last_string
 				from
-					i := 1
+					if l_first_line and then l_line.starts_with (bom) then
+						i := bom.count + 1
+					else
+						i := 1
+					end
 					nb := l_line.count
 				until
 					i > nb
@@ -183,23 +191,34 @@ feature {NONE} -- Implementation
 						if not l_in_string then
 							if not l_in_character then
 								l_in_string := True
-								if i < nb and then (l_line.item (i + 1) = '[' or l_line.item (i + 1) = '{') then
+								if i = nb - 1 and then l_line.item (i + 1) = '[' then
 									l_in_verbatim_string := True
+									l_verbatim_marker := ']'
+								elseif i = nb - 1 and then l_line.item (i + 1) = '{' then
+									l_in_verbatim_string := True
+									l_verbatim_marker := '}'
 								end
 							end
 						else
 							if l_in_verbatim_string then
-								if i > 1 and then (l_line.item (i - 1) = ']' or l_line.item (i - 1) = '}') then
+								if i > 1 and then l_line.item (i - 1) = l_verbatim_marker and then l_line.area.for_all_in_bounds (agent {CHARACTER}.is_space, 0, i - 3) then
 									l_in_verbatim_string := False
 									l_in_string := False
 								end
 							else
-								if i > 1 and then l_line.item (i - 1) = '%%' then
-									-- Double quote in string.
-								else
-									l_in_string := False
-								end
+								l_in_string := False
 							end
+						end
+						Result.append_character (c)
+					when '%%' then
+						if l_in_string and not l_in_verbatim_string and l_string_new_line then
+							l_string_new_line := False
+						elseif (l_in_character or l_in_string and not l_in_verbatim_string) and i < nb then
+							Result.append_character (c)
+							i := i + 1
+							c := l_line.item (i)
+						elseif l_in_string and not l_in_verbatim_string and i = nb then
+							l_string_new_line := True
 						end
 						Result.append_character (c)
 					when '%'' then
@@ -229,6 +248,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				l_file.read_line
+				l_first_line := False
 				if l_in_string and then not l_file.end_of_file then
 					Result.append_character ('%N')
 				end

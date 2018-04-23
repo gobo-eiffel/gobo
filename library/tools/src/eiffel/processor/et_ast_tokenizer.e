@@ -23,8 +23,12 @@ inherit
 			process_constant_attribute,
 			process_export_list,
 			process_feature_export,
+			process_formal_argument_list,
+			process_invariants,
 			process_keyword,
 			process_local_variable_list,
+			process_loop_invariants,
+			process_parent,
 			process_postconditions,
 			process_preconditions,
 			process_semicolon_symbol,
@@ -78,6 +82,12 @@ feature -- Status report
 	empty_exports_ignored: BOOLEAN
 			-- Should empty exports be ignored?
 
+	empty_formal_arguments_ignored: BOOLEAN
+			-- Should empty formal arguments be ignored?
+			
+	empty_invariants_ignored: BOOLEAN
+			-- Should empty invariants be ignored?
+			
 	empty_locals_ignored: BOOLEAN
 			-- Should empty locals be ignored?
 
@@ -125,6 +135,22 @@ feature -- Status setting
 			empty_exports_ignored_set: empty_exports_ignored = b
 		end
 
+	set_empty_formal_arguments_ignored (b: BOOLEAN)
+			-- Set `empty_formal_arguments_ignored' to `b'.
+		do
+			empty_formal_arguments_ignored := b
+		ensure
+			empty_formal_arguments_ignored_set: empty_formal_arguments_ignored = b
+		end
+		
+	set_empty_invariants_ignored (b: BOOLEAN)
+			-- Set `empty_invariants_ignored' to `b'.
+		do
+			empty_invariants_ignored := b
+		ensure
+			empty_invariants_ignored_set: empty_invariants_ignored = b
+		end
+		
 	set_empty_locals_ignored (b: BOOLEAN)
 			-- Set `empty_locals_ignored' to `b'.
 		do
@@ -254,6 +280,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST)
+			-- <Precursor>
+		do
+			if not empty_formal_arguments_ignored or else not a_list.is_empty then
+				precursor (a_list)
+			end
+		end
+		
 	process_keyword (a_keyword: ET_KEYWORD)
 			-- <Precursor>
 		do
@@ -261,7 +295,15 @@ feature {ET_AST_NODE} -- Processing
 				precursor (a_keyword)
 			end
 		end
-
+		
+	process_invariants (a_list: ET_INVARIANTS)
+			-- <Precursor>
+		do
+			if not empty_invariants_ignored or else not a_list.is_empty then
+				precursor (a_list)
+			end
+		end
+		
 	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST)
 			-- <Precursor>
 		do
@@ -270,6 +312,49 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_loop_invariants (a_list: ET_LOOP_INVARIANTS)
+			-- <Precursor>
+		do
+			if not empty_invariants_ignored or else not a_list.is_empty then
+				precursor (a_list)
+			end
+		end
+		
+	process_parent (a_parent: ET_PARENT)
+			-- <Precursor>
+		local
+			l_end_needed: BOOLEAN
+		do
+			a_parent.type.process (Current)
+			if attached a_parent.renames as l_renames then
+				l_renames.process (Current)
+				l_end_needed := True
+			end
+			if attached a_parent.exports as l_exports then
+				l_exports.process (Current)
+				if not empty_exports_ignored or else l_exports.has_non_null_export then
+					l_end_needed := True
+				end
+			end
+			if attached a_parent.undefines as l_undefines then
+				l_undefines.process (Current)
+				l_end_needed := True
+			end
+			if attached a_parent.redefines as l_redefines then
+				l_redefines.process (Current)
+				l_end_needed := True
+			end
+			if attached a_parent.selects as l_selects then
+				l_selects.process (Current)
+				l_end_needed := True
+			end
+			if attached a_parent.end_keyword as l_end_keyword then
+				if not empty_exports_ignored or else l_end_needed then
+					l_end_keyword.process (Current)
+				end
+			end
+		end
+		
 	process_postconditions (a_list: ET_POSTCONDITIONS)
 			-- <Precursor>
 		do
@@ -325,6 +410,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if token_lower_case then
 				file.put_string (a_token.text.as_lower)
+				process_break (a_token.break)
 			else
 				precursor (a_token)
 			end

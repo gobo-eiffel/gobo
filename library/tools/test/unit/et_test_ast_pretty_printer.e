@@ -153,6 +153,8 @@ feature {NONE} -- Test
 				l_tokenizer.set_empty_actual_arguments_ignored (True)
 				l_tokenizer.set_empty_actual_parameters_ignored (True)
 				l_tokenizer.set_empty_exports_ignored (True)
+				l_tokenizer.set_empty_formal_arguments_ignored (True)
+				l_tokenizer.set_empty_invariants_ignored (True)
 				l_tokenizer.set_empty_locals_ignored (True)
 				l_tokenizer.set_empty_postconditions_ignored (True)
 				l_tokenizer.set_empty_preconditions_ignored (True)

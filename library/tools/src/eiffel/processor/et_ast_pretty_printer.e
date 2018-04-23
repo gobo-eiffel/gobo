@@ -1044,6 +1044,28 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 			end
 			if attached a_class.second_indexing as l_indexing then
+				if (not attached a_class.invariants as l_invariants or else l_invariants.is_empty) and then a_class.queries.declared_count > 0 and then a_class.queries.item (a_class.queries.declared_count).is_attribute and then (a_class.procedures.declared_count = 0 or else a_class.procedures.item (a_class.procedures.declared_count).position < a_class.queries.item (a_class.queries.declared_count).position) then
+						-- Print a semicolon in order to avoid syntax error.
+						-- For example if we have:
+						--
+						--     feature
+						--         attr: INTEGER
+						--     note
+						--         license: "..."
+						--     end
+						--
+						-- it could also be seen as:
+						--
+						--     feature
+						--         attr: INTEGER
+						--             note
+						--                  license: "..."
+						--             end
+						--
+						-- even if this is not syntactically correct since the end
+						-- of the class is missing.
+					tokens.semicolon_symbol.process (Current)				
+				end
 				l_indexing.process (Current)
 				process_comments
 				print_new_line
