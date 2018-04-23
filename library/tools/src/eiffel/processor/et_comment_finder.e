@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,6 +74,7 @@ inherit
 			process_convert_to_expression,
 			process_create_expression,
 			process_create_instruction,
+			process_creation_region,
 			process_creator,
 			process_creator_list,
 			process_current_address,
@@ -746,6 +747,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_instruction) then
 				precursor (an_instruction)
+			end
+		end
+
+	process_creation_region (a_region: ET_CREATION_REGION)
+			-- Process `a_region'.
+		do
+			if not excluded_nodes.has (a_region) then
+				precursor (a_region)
 			end
 		end
 

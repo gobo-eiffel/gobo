@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -3694,6 +3694,14 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	greater_than_symbol: ET_SYMBOL_OPERATOR
+			-- '>' symbol
+		once ("PROCESS")
+			create Result.make_gt
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
 	left_array_symbol: ET_SYMBOL
 			-- '<<' symbol
 		once ("PROCESS")
@@ -3722,6 +3730,14 @@ feature -- Symbols
 			-- '(' symbol
 		once ("PROCESS")
 			create Result.make_left_parenthesis
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	less_than_symbol: ET_SYMBOL_OPERATOR
+			-- '<' symbol
+		once ("PROCESS")
+			create Result.make_lt
 		ensure
 			symbol_not_void: Result /= Void
 		end

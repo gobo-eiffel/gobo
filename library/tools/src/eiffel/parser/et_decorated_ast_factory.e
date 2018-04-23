@@ -5,7 +5,7 @@ note
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2199,7 +2199,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_create_expression (a_create: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+	new_create_expression (a_create: detachable ET_KEYWORD; a_region: detachable ET_CREATION_REGION; a_type: detachable ET_TARGET_TYPE;
 		a_call: detachable ET_QUALIFIED_CALL): detachable ET_CREATE_EXPRESSION
 			-- New create expression
 		do
@@ -2208,10 +2208,13 @@ feature -- AST nodes
 				if a_create /= Void then
 					Result.set_create_keyword (a_create)
 				end
+				if a_region /= Void then
+					Result.set_creation_region (a_region)
+				end
 			end
 		end
 
-	new_create_instruction (a_create: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+	new_create_instruction (a_create: detachable ET_KEYWORD; a_region: detachable ET_CREATION_REGION; a_type: detachable ET_TARGET_TYPE;
 		a_target: detachable ET_WRITABLE; a_call: detachable ET_QUALIFIED_CALL): detachable ET_CREATE_INSTRUCTION
 			-- New create instruction
 		do
@@ -2219,6 +2222,9 @@ feature -- AST nodes
 				create Result.make (a_type, a_target, a_call)
 				if a_create /= Void then
 					Result.set_create_keyword (a_create)
+				end
+				if a_region /= Void then
+					Result.set_creation_region (a_region)
 				end
 			end
 		end

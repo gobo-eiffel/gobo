@@ -5,7 +5,7 @@ note
 		"Eiffel create instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,6 +41,9 @@ feature -- Access
 
 	create_keyword: ET_KEYWORD
 			-- 'create' keyword
+
+	creation_region: detachable ET_CREATION_REGION
+			-- Creation region (for SCOOP)
 
 	creation_type: detachable ET_TARGET_TYPE
 			-- Creation type surrounded by braces
@@ -92,6 +95,14 @@ feature -- Setting
 			create_keyword := a_create
 		ensure
 			create_keyword_set: create_keyword = a_create
+		end
+
+	set_creation_region (a_region: like creation_region)
+			-- Set `creation_region' to `a_region'.
+		do
+			creation_region := a_region
+		ensure
+			creation_region_set: creation_region = a_region
 		end
 
 feature -- Processing

@@ -1320,9 +1320,20 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_creation_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
+			l_class_name: ET_CLASS_NAME
 		do
 			an_expression.create_keyword.process (Current)
 			print_space
+			if attached an_expression.creation_region as l_creation_region then
+				tokens.less_than_symbol.process (Current)
+				l_class_name := l_creation_region.class_name
+				l_class_name.process (Current)
+				tokens.greater_than_symbol.process (Current)
+				comment_finder.add_excluded_node (l_class_name)
+				comment_finder.find_comments (l_creation_region, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+			end
 			l_creation_type := an_expression.creation_type
 			l_type := l_creation_type.type
 			tokens.left_brace_symbol.process (Current)
@@ -1342,9 +1353,20 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		local
 			l_type: detachable ET_TYPE
+			l_class_name: ET_CLASS_NAME
 		do
 			an_instruction.create_keyword.process (Current)
 			print_space
+			if attached an_instruction.creation_region as l_creation_region then
+				tokens.less_than_symbol.process (Current)
+				l_class_name := l_creation_region.class_name
+				l_class_name.process (Current)
+				tokens.greater_than_symbol.process (Current)
+				comment_finder.add_excluded_node (l_class_name)
+				comment_finder.find_comments (l_creation_region, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+			end
 			if attached an_instruction.creation_type as l_creation_type then
 				l_type := l_creation_type.type
 				tokens.left_brace_symbol.process (Current)

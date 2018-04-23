@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -651,6 +651,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			an_expression.create_keyword.process (Current)
+			if attached an_expression.creation_region as l_creation_region then
+				l_creation_region.process (Current)
+			end
 			an_expression.creation_type.process (Current)
 			if attached an_expression.creation_call as l_creation_call then
 				l_creation_call.process (Current)
@@ -661,6 +664,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		do
 			an_instruction.create_keyword.process (Current)
+			if attached an_instruction.creation_region as l_creation_region then
+				l_creation_region.process (Current)
+			end
 			if attached an_instruction.creation_type as l_creation_type then
 				l_creation_type.process (Current)
 			end
@@ -668,6 +674,14 @@ feature {ET_AST_NODE} -- Processing
 			if attached an_instruction.creation_call as l_creation_call then
 				l_creation_call.process (Current)
 			end
+		end
+
+	process_creation_region (a_region: ET_CREATION_REGION)
+			-- Process `a_region'.
+		do
+			a_region.left_symbol.process (Current)
+			a_region.class_name.process (Current)
+			a_region.right_symbol.process (Current)
 		end
 
 	process_creator (a_list: ET_CREATOR)

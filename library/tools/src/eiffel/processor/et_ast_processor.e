@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -449,6 +449,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		deferred
+		end
+
+	process_creation_region (a_region: ET_CREATION_REGION)
+			-- Process `a_region'.
+		require
+			a_region_not_void: a_region /= Void
 		deferred
 		end
 

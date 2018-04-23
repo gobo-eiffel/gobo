@@ -5,7 +5,7 @@ note
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -324,6 +324,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Process `an_instruction'.
+		do
+		end
+
+	process_creation_region (a_region: ET_CREATION_REGION)
+			-- Process `a_region'.
 		do
 		end
 

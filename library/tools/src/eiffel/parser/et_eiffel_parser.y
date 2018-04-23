@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -147,6 +147,7 @@ create
 %type <detachable ET_CONVERT_FEATURE_ITEM> Convert_feature_comma
 %type <detachable ET_CONVERT_FEATURE_LIST> Convert_clause_opt Convert_clause Convert_list
 %type <detachable ET_CREATE_EXPRESSION> Create_expression
+%type <detachable ET_CREATION_REGION> Creation_region
 %type <detachable ET_CREATOR> Creation_clause Creation_procedure_list
 %type <detachable ET_CREATOR_LIST> Creators_opt Creators_list
 %type <detachable ET_DEBUG_INSTRUCTION> Debug_instruction
@@ -3153,23 +3154,24 @@ Creation_instruction: '!' Type_no_bang_identifier '!' Writable
 	;
 
 Create_instruction: E_CREATE Creation_region '{' Type '}' Writable
-		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($3, $4, $5), $6, Void) }
+		{ $$ := ast_factory.new_create_instruction ($1, $2, ast_factory.new_target_type ($3, $4, $5), $6, Void) }
 	| E_CREATE Creation_region '{' Type '}' Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($3, $4, $5), $6, ast_factory.new_qualified_call (new_dot_feature_name ($7, $8), $9)) }
+		{ $$ := ast_factory.new_create_instruction ($1, $2, ast_factory.new_target_type ($3, $4, $5), $6, ast_factory.new_qualified_call (new_dot_feature_name ($7, $8), $9)) }
 	| E_CREATE Creation_region Writable
-		{ $$ := ast_factory.new_create_instruction ($1, Void, $3, Void) }
+		{ $$ := ast_factory.new_create_instruction ($1, $2, Void, $3, Void) }
 	| E_CREATE Creation_region Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_instruction ($1, Void, $3, ast_factory.new_qualified_call (new_dot_feature_name ($4, $5), $6)) }
+		{ $$ := ast_factory.new_create_instruction ($1, $2, Void, $3, ast_factory.new_qualified_call (new_dot_feature_name ($4, $5), $6)) }
 	;
 
 Create_expression: E_CREATE Creation_region '{' Type '}' 
-		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($3, $4, $5), Void) }
+		{ $$ := ast_factory.new_create_expression ($1, $2, ast_factory.new_target_type ($3, $4, $5), Void) }
 	| E_CREATE Creation_region '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_qualified_call (new_dot_feature_name ($6, $7), $8)) }
+		{ $$ := ast_factory.new_create_expression ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_qualified_call (new_dot_feature_name ($6, $7), $8)) }
 	;
 
 Creation_region: -- Empty
 	| '<' Class_name '>'
+		{ $$ := ast_factory.new_creation_region ($1, $2, $3) }
 	;
 
 ------------------------------------------------------------------------------------
