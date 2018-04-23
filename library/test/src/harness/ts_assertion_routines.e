@@ -5,7 +5,7 @@ note
 		"Assertion routines"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/03/17 $"
 	revision: "$Revision: #17 $"
@@ -746,7 +746,7 @@ feature {TS_TEST_HANDLER} -- Files
 			a_message: detachable STRING
 			done: BOOLEAN
 			i: INTEGER
-			l_start, l_end, l_count: INTEGER
+			l_start, l_end, l_actual_end, l_count: INTEGER
 		do
 			assertions.add_assertion
 			create a_file.make (Execution_environment.interpreted_string (a_filename))
@@ -762,6 +762,10 @@ feature {TS_TEST_HANDLER} -- Files
 					l_end := a_string.index_of ('%N', l_start)
 					if l_end = 0 then
 						l_end := l_count + 1
+					end
+					l_actual_end := l_end
+					if l_start < l_end and then a_string.item (l_end - 1) = '%R' then
+						l_actual_end := l_actual_end - 1
 					end
 					i := i + 1
 					if a_file.end_of_file then
@@ -789,7 +793,11 @@ feature {TS_TEST_HANDLER} -- Files
 						a_message.append_string (")")
 						a_file.close
 						done := True
-					elseif not a_file.last_string.is_equal (a_string.substring (l_start, l_end - 1)) then
+					elseif a_file.last_string.is_equal (a_string.substring (l_start, l_actual_end - 1)) then
+						-- OK.
+					elseif i = 1 and then a_file.last_string.starts_with (bom) and then a_file.last_string.substring (bom.count + 1, a_file.last_string.count).is_equal (a_string.substring (l_start, l_actual_end - 1)) then
+						-- OK.
+					else
 						create a_message.make (50)
 						a_message.append_string (a_tag)
 						a_message.append_string (" (diff between files '")
@@ -1448,4 +1456,9 @@ feature {NONE} -- Messages
 			message_not_void: Result /= Void
 		end
 
+feature {NONE} -- Implementation
+
+	bom: STRING = "%/239/%/187/%/191/"
+			-- Byte Order Mark
+			
 end

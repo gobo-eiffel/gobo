@@ -5,7 +5,7 @@ note
 		"Positions in Eiffel texts, compressed in memory"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,16 +49,16 @@ feature -- Access
 
 	line: INTEGER
 			-- Line number
-			-- (between 1 and 8388607, 0 if unknown or overflow)
+			-- (between 1 and 4194303, 0 if unknown or overflow)
 		do
-			Result := compressed_position // 256
+			Result := compressed_position // 512
 		end
 
 	column: INTEGER
 			-- Column number
-			-- (between 1 and 255, 0 if unknown or overflow)
+			-- (between 1 and 511, 0 if unknown or overflow)
 		do
-			Result := compressed_position \\ 256
+			Result := compressed_position \\ 512
 		end
 
 feature -- Setting
@@ -81,7 +81,7 @@ feature -- Setting
 			else
 				c := a_column
 			end
-			compressed_position := 256 * l + c
+			compressed_position := 512 * l + c
 		ensure
 			line_set: a_line <= maximum_line implies line = a_line
 			no_line_set: a_line > maximum_line implies line = no_line
@@ -91,18 +91,18 @@ feature -- Setting
 
 feature -- Constants
 
-	maximum_line: INTEGER = 8388607
-			-- Maxumum line number (2^23-1)
+	maximum_line: INTEGER = 4194303
+			-- Maxumum line number (2^22-1)
 
-	maximum_column: INTEGER = 255
-			-- Maximum column number (2^8-1)
+	maximum_column: INTEGER = 511
+			-- Maximum column number (2^9-1)
 
 feature {NONE} -- Implementation
 
 	compressed_position: INTEGER
 			-- Compressed position
-			-- column: 8 first bits
-			-- line: 23 next bits
+			-- column: 9 first bits
+			-- line: 22 next bits
 
 invariant
 

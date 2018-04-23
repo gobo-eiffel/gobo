@@ -229,6 +229,9 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				l_file.read_line
+				if l_in_string and then not l_file.end_of_file then
+					Result.append_character ('%N')
+				end
 			end
 			l_file.close
 		ensure
