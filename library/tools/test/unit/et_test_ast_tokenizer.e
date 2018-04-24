@@ -67,7 +67,7 @@ feature -- Setting
 		ensure
 			ecf_filename_set: ecf_filename = a_filename
 		end
-			
+
 feature -- Test
 
 	test_printer
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 							end
 						else
 							if l_in_verbatim_string then
-								if i > 1 and then l_line.item (i - 1) = l_verbatim_marker and then l_line.area.for_all_in_bounds (agent {CHARACTER}.is_space, 0, i - 3) then
+								if i > 1 and then l_line.item (i - 1) = l_verbatim_marker and then l_line.area.for_all_in_bounds (agent is_space_character, 0, i - 3) then
 									l_in_verbatim_string := False
 									l_in_string := False
 								end
@@ -257,7 +257,15 @@ feature {NONE} -- Implementation
 		ensure
 			stripped_file_not_void: Result /= Void
 		end
-		
+
+	is_space_character (c: CHARACTER): BOOLEAN
+			-- is `c' a space character?
+		do
+			Result := c.is_space
+		ensure
+			definition: Result = c.is_space
+		end
+
 	default_ecf_filename: STRING
 			-- Default name of ECF file used for the test
 		once
