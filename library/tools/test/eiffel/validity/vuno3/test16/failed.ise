@@ -1,0 +1,23 @@
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+Invalid_object      make_with_tag_and_trace
+                                           Segmentation violation:
+<XXXXXXXXXXXXXXXX>  (From EXCEPTION)       Operating system signal.      Fail
+-------------------------------------------------------------------------------
+Invalid_object      make_with_tag_and_trace
+<XXXXXXXXXXXXXXXX>  (From EXCEPTION)       Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  f @1                                                
+<XXXXXXXXXXXXXXXX>  (From CC)              Precondition violated.        Fail
+-------------------------------------------------------------------------------
+AA                  make @1                                             
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------

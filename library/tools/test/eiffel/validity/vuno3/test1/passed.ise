@@ -1,14 +1,15 @@
 -------------------------------------------------------------------------------
 
-Error code: VSTA(2)
+Error code: VUNO
 
-Error: feature is not available for static access.
-What to do: make sure that feature is either a C external routine
-    without assertions, a .NET static external or a constant.
+f used in the non-object call is not a class feature.
+
+What to do:
+	- make sure the non-object call uses a class feature or
+	- replace the non-object call with an object call.
 
 Class: AA
 Feature: make
-Not valid for static call: f from BB
 Line: 11
       do
 ->      {BB}.f

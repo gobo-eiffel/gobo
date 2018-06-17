@@ -5,7 +5,7 @@ note
 		"Eiffel conversion-to expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,8 @@ inherit
 	ET_QUALIFIED_FEATURE_CALL_EXPRESSION
 		rename
 			target as expression
+		undefine
+			is_instance_free
 		end
 
 create

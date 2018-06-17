@@ -5,7 +5,7 @@ note
 		"Eiffel parenthesized expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,14 +18,16 @@ inherit
 		redefine
 			unparenthesized_expression,
 			reset, index, is_current,
-			is_false, is_true
+			is_false, is_true,
+			is_instance_free
 		end
 
 	ET_AGENT_TARGET
 		undefine
 			reset, set_index
 		redefine
-			index
+			index,
+			is_instance_free
 		end
 
 create
@@ -115,6 +117,18 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := right_parenthesis
+		end
+
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := expression.is_instance_free
 		end
 
 feature -- Setting

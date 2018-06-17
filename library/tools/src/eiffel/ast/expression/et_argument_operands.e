@@ -5,7 +5,7 @@ note
 		"Eiffel actual argument operand lists (either feature call or agent actual arguments)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,6 +36,28 @@ feature -- Status report
 			Result := i >= 1 and i <= count
 		ensure
 			definition: Result = (i >= 1 and i <= count)
+		end
+
+	is_instance_free: BOOLEAN
+			-- Are all arguments instance-free (i.e. not dependent
+			-- on 'Current' or its attributes)?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		local
+			i, nb: INTEGER
+		do
+			Result := True
+			nb := count
+			from i := 1 until i > nb loop
+				if not actual_argument (i).is_instance_free then
+					Result := False
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
 		end
 
 feature -- Access

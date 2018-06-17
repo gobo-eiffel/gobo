@@ -2,10 +2,10 @@
 
 <system name="aa">
 	<root class="AA" creation="make"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="vuno3_test5" location="${GOBO}/library/tools/test/eiffel/validity/vuno3/test5"/>
 	<cluster name="ge" location="${GOBO}/library"/>
 	<cluster name="free_elks" location="${GOBO}/library/free_elks/src" prefix="fe_">

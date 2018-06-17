@@ -5,7 +5,7 @@ note
 		"Eiffel agent implicit 'Current' targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	ET_AGENT_TARGET
 		redefine
+			is_instance_free,
 			break
 		end
 
@@ -62,6 +63,18 @@ feature -- Access
 	break: detachable ET_BREAK
 			-- Break which appears just after current node
 		do
+		end
+
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Does current operand not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := False
 		end
 
 feature -- Processing

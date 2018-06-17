@@ -5,7 +5,7 @@ note
 		"Eiffel precursor expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,8 @@ inherit
 	ET_EXPRESSION
 		undefine
 			reset
+		redefine
+			is_instance_free
 		end
 
 create
@@ -32,6 +34,18 @@ feature -- Access
 
 	parenthesis_call: detachable ET_PARENTHESIS_EXPRESSION
 			-- <Precursor>
+
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := False
+		end
 
 feature -- Setting
 

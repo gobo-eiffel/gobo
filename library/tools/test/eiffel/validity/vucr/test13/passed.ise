@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: VUCR
+
+Error: The class feature f calls the non-class feature g.
+What to do:
+	- remove the call to g from the code or
+	- make f a non-class feature or
+	- make g a class feature.
+Class: CC
+Source class: BB
+Feature: f
+Line: 7
+      require
+->      g
+      deferred
+
+-------------------------------------------------------------------------------

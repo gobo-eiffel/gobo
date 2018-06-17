@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,8 +15,20 @@ class ET_IDENTIFIER_COMMA
 inherit
 
 	ET_LOCAL_NAME
+		redefine
+			is_instance_free
+		end
+
 	ET_ARGUMENT_NAME
+		redefine
+			is_instance_free
+		end
+
 	ET_OBJECT_TEST_LOCAL_NAME
+		redefine
+			is_instance_free
+		end
+
 	ET_LABEL
 
 create
@@ -63,6 +75,18 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := comma
+		end
+
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := identifier.is_instance_free
 		end
 
 feature -- Processing

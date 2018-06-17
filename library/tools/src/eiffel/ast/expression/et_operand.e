@@ -5,7 +5,7 @@ note
 		"Eiffel argument or target components appearing in feature calls or agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,16 @@ feature -- Status setting
 			-- Is current operand open?
 		do
 			-- Result := False
+		end
+
+	is_instance_free: BOOLEAN
+			-- Does current operand not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := True
 		end
 
 feature -- Access

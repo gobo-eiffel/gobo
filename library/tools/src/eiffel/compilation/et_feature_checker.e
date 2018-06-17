@@ -792,7 +792,7 @@ feature {NONE} -- Feature validity
 			if a_feature.is_static then
 					-- Error: attributes cannot be used in static calls.
 				set_fatal_error
-				error_handler.report_vffd9a_error (current_class, a_feature)
+				error_handler.report_vucr0a_error (current_class, a_feature)
 				had_error := True
 			end
 			has_fatal_error := had_error
@@ -973,17 +973,6 @@ feature {NONE} -- Feature validity
 				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
 			end
-			if a_feature.is_static then
-					-- Error: deferred features cannot be used in static calls.
-				if not system_processor.is_ise then
-						-- ISE accepts deferred features to be marked as class routines,
-						-- but will not allow the target type of a static call to
-						-- be deferred.
-					set_fatal_error
-					error_handler.report_vffd9b_error (current_class, a_feature)
-					had_error := True
-				end
-			end
 			has_fatal_error := had_error
 		end
 
@@ -1008,17 +997,6 @@ feature {NONE} -- Feature validity
 			if attached a_feature.across_components as l_across_components then
 				check_across_components_validity (l_across_components, a_feature)
 				had_error := had_error or has_fatal_error
-			end
-			if a_feature.is_static then
-					-- Error: deferred features cannot be used in static calls.
-				if not system_processor.is_ise then
-						-- ISE accepts deferred features to be marked as class routines,
-						-- but will not allow the target type of a static call to
-						-- be deferred.
-					set_fatal_error
-					error_handler.report_vffd9b_error (current_class, a_feature)
-					had_error := True
-				end
 			end
 			has_fatal_error := had_error
 		end
@@ -1387,7 +1365,7 @@ feature {NONE} -- Feature validity
 			if a_feature.is_static then
 					-- Error: attributes cannot be used in static calls.
 				set_fatal_error
-				error_handler.report_vffd9a_error (current_class, a_feature)
+				error_handler.report_vucr0a_error (current_class, a_feature)
 				had_error := True
 			end
 			has_fatal_error := had_error
@@ -1563,7 +1541,7 @@ feature {NONE} -- Feature validity
 			if a_feature.is_static and a_feature.is_once_per_object then
 					-- Error: once-per-object features cannot be used in static calls.
 				set_fatal_error
-				error_handler.report_vffd9c_error (current_class, a_feature)
+				error_handler.report_vucr0b_error (current_class, a_feature)
 				had_error := True
 			end
 			has_fatal_error := had_error or had_key_error
@@ -1645,7 +1623,7 @@ feature {NONE} -- Feature validity
 			if a_feature.is_static and a_feature.is_once_per_object then
 					-- Error: once-per-object features cannot be used in static calls.
 				set_fatal_error
-				error_handler.report_vffd9c_error (current_class, a_feature)
+				error_handler.report_vucr0b_error (current_class, a_feature)
 				had_error := True
 			end
 			has_fatal_error := had_error or had_key_error
@@ -4435,7 +4413,7 @@ feature {NONE} -- Instruction validity
 			if in_static_feature and then not a_parent_procedure.is_static then
 					-- Error: we cannot call a non-static precursor from a static feature.
 				set_fatal_error
-				error_handler.report_vstb0f_error (current_class, current_class_impl, an_instruction.precursor_keyword, a_parent_procedure)
+				error_handler.report_vucr0h_error (current_class, current_class_impl, an_instruction.precursor_keyword, a_parent_procedure)
 				l_had_error := True
 			end
 			l_actual_context := new_context (current_type)
@@ -5179,7 +5157,7 @@ feature {NONE} -- Instruction validity
 					-- Error: we cannot have an unqualified call to
 					-- non-static feature in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0b_error (current_class, current_class_impl, l_name, a_procedure)
+				error_handler.report_vucr0d_error (current_class, current_class_impl, l_name, a_procedure)
 				l_had_error := True
 			end
 				-- Check that all features which are called in a precondition of `a_procedure'
@@ -6015,7 +5993,7 @@ feature {NONE} -- Expression validity
 			if in_static_feature then
 					-- Error: 'Current' cannot be used in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0d_error (current_class, current_class_impl, an_expression)
+				error_handler.report_vucr0f_error (current_class, current_class_impl, an_expression)
 			else
 				a_context.force_last (tokens.attached_like_current)
 				report_current (an_expression)
@@ -6039,7 +6017,7 @@ feature {NONE} -- Expression validity
 			if in_static_feature then
 					-- Error: '$Current' cannot be used in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0e_error (current_class, current_class_impl, an_expression)
+				error_handler.report_vucr0g_error (current_class, current_class_impl, an_expression)
 			else
 				l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
 				l_typed_pointer_class := l_typed_pointer_type.named_base_class
@@ -6401,7 +6379,7 @@ feature {NONE} -- Expression validity
 												-- Error: we cannot access the address of an attribute
 												-- from a static feature.
 											set_fatal_error
-											error_handler.report_vstb0c_error (current_class, current_class_impl, l_name, l_query)
+											error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
 										else
 											report_attribute_address (an_expression, l_query)
 											l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
@@ -6695,7 +6673,7 @@ feature {NONE} -- Expression validity
 											-- Error: we cannot access the address of an attribute
 											-- from a static feature.
 										set_fatal_error
-										error_handler.report_vstb0c_error (current_class, current_class_impl, l_name, l_query)
+										error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
 									else
 										report_attribute_address (an_expression, l_query)
 										l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
@@ -8835,7 +8813,7 @@ feature {NONE} -- Expression validity
 			if in_static_feature and then not a_parent_query.is_static then
 					-- Error: we cannot call a non-static precursor from a static feature.
 				set_fatal_error
-				error_handler.report_vstb0f_error (current_class, current_class_impl, an_expression.precursor_keyword, a_parent_query)
+				error_handler.report_vucr0h_error (current_class, current_class_impl, an_expression.precursor_keyword, a_parent_query)
 				l_had_error := True
 			end
 			l_actual_context := new_context (current_type)
@@ -9816,13 +9794,20 @@ feature {NONE} -- Expression validity
 			-- `a_class' is the base class of the static type part of the call.
 			--
 			-- To be valid, the feature needs to be explicitly declared as static,
-			-- a constant attribute, a unique attribute, an external routine with
-			-- no assertions other than a built-in non-static routine,
-			-- or a static .NET feature.
+			-- a constant attribute, a unique attribute, an external routine which
+			-- is not a built-in non-static routine and whose pre- and postconditions
+			-- (even those inherited) are instance-free (i.e. not dependent on 'Current'
+			-- or its attributes), or a static .NET feature.
 			-- For the assertions in external routines, ECMA says that it's possible to have
 			-- assertions provided that they do not involve "Current" or unqualified calls
-			-- (see ECMA VUNO-3). But ISE is more strict and does not accept any assertions
-			-- apart from empty ones or those containing only the expression "True".
+			-- (see ECMA VUNO-3). But ISE is more strict and does not accept assertions
+			-- with Precursors.
+			--
+			-- Also, the base class of the static type part should not be deferred unless
+			-- the feature is a constant attribute, a unique attribute, or an external routine
+			-- which is not a built-in non-static routine and whose pre- and postconditions
+			-- (even those inherited) are instance-free (i.e. not dependent on 'Current'
+			-- or its attributes).
 			--
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9834,6 +9819,22 @@ feature {NONE} -- Expression validity
 			if not a_feature.is_static then
 				set_fatal_error
 				error_handler.report_vuno3a_error (current_class, current_class_impl, a_call.name, a_feature, a_class)
+			end
+			if a_call.type.is_like_current then
+				set_fatal_error
+				error_handler.report_vuno5b_error (current_class, current_class_impl, a_call.type)
+			end
+			if a_class.is_deferred then
+				if attached {ET_CONSTANT_ATTRIBUTE} a_feature as l_external_routine and then l_external_routine.is_implicitly_static then
+					-- OK
+				elseif attached {ET_UNIQUE_ATTRIBUTE} a_feature as l_external_routine and then l_external_routine.is_implicitly_static then
+					-- OK
+				elseif attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_routine and then l_external_routine.is_implicitly_static then
+					-- OK
+				else
+					set_fatal_error
+					error_handler.report_vuno5a_error (current_class, current_class_impl, a_call.type, a_class)
+				end
 			end
 		end
 
@@ -10249,7 +10250,7 @@ feature {NONE} -- Expression validity
 					-- Error: we cannot have an unqualified call to
 					-- non-static feature in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0b_error (current_class, current_class_impl, l_name, a_query)
+				error_handler.report_vucr0d_error (current_class, current_class_impl, l_name, a_query)
 				l_had_error := True
 			end
 				-- Check that all features which are called in a precondition of `a_query'
@@ -10393,7 +10394,7 @@ feature {NONE} -- Expression validity
 						if in_static_feature then
 								-- Error: attributes cannot be used in static features.
 							set_fatal_error
-							error_handler.report_vstb0a_error (current_class, current_class_impl, l_identifier, l_attribute)
+							error_handler.report_vucr0c_error (current_class, current_class_impl, l_identifier, l_attribute)
 						else
 							report_current_type_needed
 							report_attribute_assignment_target (a_writable, l_attribute)
@@ -10425,7 +10426,7 @@ feature {NONE} -- Expression validity
 									if in_static_feature then
 											-- Error: attributes cannot be used in static features.
 										set_fatal_error
-										error_handler.report_vstb0a_error (current_class, current_class_impl, l_identifier, l_attribute)
+										error_handler.report_vucr0c_error (current_class, current_class_impl, l_identifier, l_attribute)
 									else
 										report_current_type_needed
 										report_attribute_assignment_target (a_writable, l_attribute)
@@ -11279,7 +11280,7 @@ feature {NONE} -- Agent validity
 			if in_static_feature then
 					-- Error: we cannot use an unqualified call agent in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0h_error (current_class, current_class_impl, an_expression)
+				error_handler.report_vucr0j_error (current_class, current_class_impl, an_expression)
 				l_had_error := True
 			end
 			a_name := an_expression.name
@@ -12291,7 +12292,7 @@ feature {NONE} -- Agent validity
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				error_handler.report_vucr0i_error (current_class, current_class_impl, an_expression)
 				had_error := True
 			end
 				-- Check the associated feature's declaration.
@@ -12442,7 +12443,7 @@ feature {NONE} -- Agent validity
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				error_handler.report_vucr0i_error (current_class, current_class_impl, an_expression)
 				had_error := True
 			end
 				-- Check the associated feature's declaration.
@@ -12563,7 +12564,7 @@ feature {NONE} -- Agent validity
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				error_handler.report_vucr0i_error (current_class, current_class_impl, an_expression)
 				had_error := True
 			end
 				-- Check the associated feature's declaration.
@@ -12653,7 +12654,7 @@ feature {NONE} -- Agent validity
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				error_handler.report_vucr0i_error (current_class, current_class_impl, an_expression)
 				had_error := True
 			end
 				-- Check the associated feature's declaration.
@@ -12744,7 +12745,7 @@ feature {NONE} -- Agent validity
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				error_handler.report_vucr0i_error (current_class, current_class_impl, an_expression)
 				had_error := True
 			end
 				-- Check the associated feature's declaration.
@@ -12903,7 +12904,7 @@ feature {NONE} -- Agent validity
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
 				set_fatal_error
-				error_handler.report_vstb0g_error (current_class, current_class_impl, an_expression)
+				error_handler.report_vucr0i_error (current_class, current_class_impl, an_expression)
 				had_error := True
 			end
 				-- Check the associated feature's declaration.

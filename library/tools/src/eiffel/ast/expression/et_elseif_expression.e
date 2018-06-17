@@ -5,7 +5,7 @@ note
 		"Eiffel 'elseif' parts of 'if' expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,6 +81,19 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := then_expression.last_leaf
+		end
+
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Does current 'elseif' part not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := conditional_expression.is_instance_free and
+				then_expression.is_instance_free
 		end
 
 feature -- Setting

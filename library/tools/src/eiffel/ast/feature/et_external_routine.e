@@ -5,7 +5,7 @@ note
 		"Eiffel external routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,19 +39,35 @@ feature -- Status report
 			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
 			--
 			-- True even if not explicitly declared as static provided that the external routine
-			-- has no assertions and is not a built-in non-static routine.
-			-- Note ECMA-367 2nd Edition says that it's possible to have assertions provided
-			-- that they do not involve "Current" or unqualified calls (see ECMA VUNO-3).
-			-- But ISE is more strict and does not accept any assertions apart from empty ones
-			-- or those containing only the expression "True".
+			-- is not a built-in non-static routine and its pre- and postconditions (even those
+			-- inherited) are instance-free (i.e. not dependent on 'Current' or its attributes).
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not. This slightly differs from ECMA-367 2nd Edition which says that it's
+			-- possible to have assertions provided that they do not involve "Current" or
+			-- unqualified calls (see ECMA VUNO-3), the case of Precursors not being mentioned.
 		do
-			if Precursor then
-				Result := True
-			elseif is_builtin and then not is_builtin_static then
+			Result := Precursor or is_implicitly_static
+		end
+
+	is_implicitly_static: BOOLEAN
+			-- An external feature is considered as a static feature, even if not explicitly
+			-- declared as such, provided that it is not a built-in non-static routine
+			-- and its pre- and postconditions (even those inherited) are instance-free
+			-- (i.e. not dependent on 'Current' or its attributes).
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not. This slightly differs from ECMA-367 2nd Edition which says that it's
+			-- possible to have assertions provided that they do not involve "Current" or
+			-- unqualified calls (see ECMA VUNO-3), the case of Precursors not being mentioned.
+		do
+			if is_builtin and then not is_builtin_static then
 				Result := False
-			elseif not are_preconditions_all_true_recursive then
+			elseif not are_preconditions_instance_free_recursive then
 				Result := False
-			elseif not are_postconditions_all_true_recursive then
+			elseif not are_postconditions_instance_free_recursive then
 				Result := False
 			else
 				Result := True

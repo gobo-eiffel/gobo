@@ -3,7 +3,7 @@ note
 	description:
 
 	"[
-		Eiffel actual aeguments of a Tuple-argument-unfolded form of a routine.
+		Eiffel actual arguments of a Tuple-argument-unfolded form of a routine.
 		For example:
 		   f -> f ([])
 		   f (a) -> f ([a])
@@ -12,7 +12,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,6 +25,7 @@ inherit
 		rename
 			make as make_actual_argument_list
 		redefine
+			is_instance_free,
 			process
 		end
 
@@ -93,6 +94,19 @@ feature -- Access
 
 	actual_arguments: detachable ET_ACTUAL_ARGUMENT_LIST
 			-- Actual arguments from which the current arguments are unfolded
+
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Are all arguments instance-free (i.e. not dependent
+			-- on 'Current' or its attributes)?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := attached actual_arguments as l_actual_arguments implies l_actual_arguments.is_instance_free
+		end
 
 feature -- Processing
 

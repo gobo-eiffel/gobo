@@ -5,7 +5,7 @@ note
 		"Eiffel call components (either feature calls or agents)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,6 +57,17 @@ feature -- Status report
 			-- Is current call a call agent?
 		do
 			Result := False
+		end
+
+	is_instance_free: BOOLEAN
+			-- Does current call not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := (attached target as l_target and then l_target.is_instance_free) and
+				(attached arguments as l_arguments implies l_arguments.is_instance_free)
 		end
 
 end

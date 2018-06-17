@@ -5,7 +5,7 @@ note
 		"Eiffel feature call expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,9 @@ inherit
 		end
 
 	ET_EXPRESSION
+		undefine
+			is_instance_free
+		end
 
 feature -- Access
 

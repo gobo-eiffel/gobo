@@ -5,7 +5,7 @@ note
 		"Eiffel across expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,8 @@ inherit
 
 	ET_EXPRESSION
 		redefine
-			reset
+			reset,
+			is_instance_free
 		end
 
 	ET_ACROSS_COMPONENT
@@ -110,6 +111,20 @@ feature -- Status report
 			-- Is `iteration_conditional' of the form "some Expression"?
 		do
 			Result := not is_all
+		end
+
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := iterable_expression.is_instance_free and
+				iteration_conditional.expression.is_instance_free and
+				(attached until_conditional as l_until_conditional implies l_until_conditional.expression.is_instance_free) and
+				(attached invariant_part as l_invariant_part implies l_invariant_part.is_instance_free) and
+				(attached variant_part as l_variant_part implies l_variant_part.expression.is_instance_free)
 		end
 
 feature -- Access

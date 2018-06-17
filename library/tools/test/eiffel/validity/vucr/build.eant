@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+
+<project name="vucr" default="help">
+
+	<description>
+		system: "Test VUCR validity rule"
+		copyright: "Copyright (c) 2018, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/test.eant">
+			<redefine target="other_install"/>
+			<redefine target="other_clean"/>
+			<redefine target="other_clobber"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="other_install" depend="init" export="NONE">
+		<description>
+			Install other items in ${system} directory.
+		</description>
+		<geant file="build.eant" target="install" dir="test1"/>
+		<geant file="build.eant" target="install" dir="test2"/>
+		<geant file="build.eant" target="install" dir="test3"/>
+		<geant file="build.eant" target="install" dir="test4"/>
+		<geant file="build.eant" target="install" dir="test5"/>
+		<geant file="build.eant" target="install" dir="test6"/>
+		<geant file="build.eant" target="install" dir="test7"/>
+		<geant file="build.eant" target="install" dir="test8"/>
+		<geant file="build.eant" target="install" dir="test9"/>
+		<geant file="build.eant" target="install" dir="test10"/>
+		<geant file="build.eant" target="install" dir="test11"/>
+		<geant file="build.eant" target="install" dir="test12"/>
+		<geant file="build.eant" target="install" dir="test13"/>
+		<geant file="build.eant" target="install" dir="test14"/>
+		<geant file="build.eant" target="install" dir="test15"/>
+		<geant file="build.eant" target="install" dir="test16"/>
+		<geant file="build.eant" target="install" dir="test17"/>
+		<geant file="build.eant" target="install" dir="test18"/>
+		<geant file="build.eant" target="install" dir="test19"/>
+		<geant file="build.eant" target="install" dir="test20"/>
+		<geant file="build.eant" target="install" dir="test21"/>
+		<geant file="build.eant" target="install" dir="test22"/>
+		<geant file="build.eant" target="install" dir="test23"/>
+		<geant file="build.eant" target="install" dir="test24"/>
+		<geant file="build.eant" target="install" dir="test25"/>
+		<geant file="build.eant" target="install" dir="test26"/>
+		<geant file="build.eant" target="install" dir="test27"/>
+		<geant file="build.eant" target="install" dir="test28"/>
+		<geant file="build.eant" target="install" dir="test29"/>
+		<geant file="build.eant" target="install" dir="test30"/>
+		<geant file="build.eant" target="install" dir="test31"/>
+		<geant file="build.eant" target="install" dir="test32"/>
+		<geant file="build.eant" target="install" dir="test33"/>
+		<geant file="build.eant" target="install" dir="test34"/>
+		<geant file="build.eant" target="install" dir="test35"/>
+		<geant file="build.eant" target="install" dir="test36"/>
+		<geant file="build.eant" target="install" dir="test37"/>
+	</target>
+
+	<target name="other_clean" depend="init" export="NONE">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+		<geant file="build.eant" target="clean" dir="test1"/>
+		<geant file="build.eant" target="clean" dir="test2"/>
+		<geant file="build.eant" target="clean" dir="test3"/>
+		<geant file="build.eant" target="clean" dir="test4"/>
+		<geant file="build.eant" target="clean" dir="test5"/>
+		<geant file="build.eant" target="clean" dir="test6"/>
+		<geant file="build.eant" target="clean" dir="test7"/>
+		<geant file="build.eant" target="clean" dir="test8"/>
+		<geant file="build.eant" target="clean" dir="test9"/>
+		<geant file="build.eant" target="clean" dir="test10"/>
+		<geant file="build.eant" target="clean" dir="test11"/>
+		<geant file="build.eant" target="clean" dir="test12"/>
+		<geant file="build.eant" target="clean" dir="test13"/>
+		<geant file="build.eant" target="clean" dir="test14"/>
+		<geant file="build.eant" target="clean" dir="test15"/>
+		<geant file="build.eant" target="clean" dir="test16"/>
+		<geant file="build.eant" target="clean" dir="test17"/>
+		<geant file="build.eant" target="clean" dir="test18"/>
+		<geant file="build.eant" target="clean" dir="test19"/>
+		<geant file="build.eant" target="clean" dir="test20"/>
+		<geant file="build.eant" target="clean" dir="test21"/>
+		<geant file="build.eant" target="clean" dir="test22"/>
+		<geant file="build.eant" target="clean" dir="test23"/>
+		<geant file="build.eant" target="clean" dir="test24"/>
+		<geant file="build.eant" target="clean" dir="test25"/>
+		<geant file="build.eant" target="clean" dir="test26"/>
+		<geant file="build.eant" target="clean" dir="test27"/>
+		<geant file="build.eant" target="clean" dir="test28"/>
+		<geant file="build.eant" target="clean" dir="test29"/>
+		<geant file="build.eant" target="clean" dir="test30"/>
+		<geant file="build.eant" target="clean" dir="test31"/>
+		<geant file="build.eant" target="clean" dir="test32"/>
+		<geant file="build.eant" target="clean" dir="test33"/>
+		<geant file="build.eant" target="clean" dir="test34"/>
+		<geant file="build.eant" target="clean" dir="test35"/>
+		<geant file="build.eant" target="clean" dir="test36"/>
+		<geant file="build.eant" target="clean" dir="test37"/>
+		<delete directory="Ttest1"/>
+		<delete directory="Ttest2"/>
+		<delete directory="Ttest3"/>
+		<delete directory="Ttest4"/>
+		<delete directory="Ttest5"/>
+		<delete directory="Ttest6"/>
+		<delete directory="Ttest7"/>
+		<delete directory="Ttest8"/>
+		<delete directory="Ttest9"/>
+		<delete directory="Ttest10"/>
+		<delete directory="Ttest11"/>
+		<delete directory="Ttest12"/>
+		<delete directory="Ttest13"/>
+		<delete directory="Ttest14"/>
+		<delete directory="Ttest15"/>
+		<delete directory="Ttest16"/>
+		<delete directory="Ttest17"/>
+		<delete directory="Ttest18"/>
+		<delete directory="Ttest19"/>
+		<delete directory="Ttest20"/>
+		<delete directory="Ttest21"/>
+		<delete directory="Ttest22"/>
+		<delete directory="Ttest23"/>
+		<delete directory="Ttest24"/>
+		<delete directory="Ttest25"/>
+		<delete directory="Ttest26"/>
+		<delete directory="Ttest27"/>
+		<delete directory="Ttest28"/>
+		<delete directory="Ttest29"/>
+		<delete directory="Ttest30"/>
+		<delete directory="Ttest31"/>
+		<delete directory="Ttest32"/>
+		<delete directory="Ttest33"/>
+		<delete directory="Ttest34"/>
+		<delete directory="Ttest35"/>
+		<delete directory="Ttest36"/>
+		<delete directory="Ttest37"/>
+	</target>
+
+	<target name="other_clobber" depend="init" export="NONE">
+		<description>
+			Remove other generated files.
+		</description>
+		<geant file="build.eant" target="clobber" dir="test1"/>
+		<geant file="build.eant" target="clobber" dir="test2"/>
+		<geant file="build.eant" target="clobber" dir="test3"/>
+		<geant file="build.eant" target="clobber" dir="test4"/>
+		<geant file="build.eant" target="clobber" dir="test5"/>
+		<geant file="build.eant" target="clobber" dir="test6"/>
+		<geant file="build.eant" target="clobber" dir="test7"/>
+		<geant file="build.eant" target="clobber" dir="test8"/>
+		<geant file="build.eant" target="clobber" dir="test9"/>
+		<geant file="build.eant" target="clobber" dir="test10"/>
+		<geant file="build.eant" target="clobber" dir="test11"/>
+		<geant file="build.eant" target="clobber" dir="test12"/>
+		<geant file="build.eant" target="clobber" dir="test13"/>
+		<geant file="build.eant" target="clobber" dir="test14"/>
+		<geant file="build.eant" target="clobber" dir="test15"/>
+		<geant file="build.eant" target="clobber" dir="test16"/>
+		<geant file="build.eant" target="clobber" dir="test17"/>
+		<geant file="build.eant" target="clobber" dir="test18"/>
+		<geant file="build.eant" target="clobber" dir="test19"/>
+		<geant file="build.eant" target="clobber" dir="test20"/>
+		<geant file="build.eant" target="clobber" dir="test21"/>
+		<geant file="build.eant" target="clobber" dir="test22"/>
+		<geant file="build.eant" target="clobber" dir="test23"/>
+		<geant file="build.eant" target="clobber" dir="test24"/>
+		<geant file="build.eant" target="clobber" dir="test25"/>
+		<geant file="build.eant" target="clobber" dir="test26"/>
+		<geant file="build.eant" target="clobber" dir="test27"/>
+		<geant file="build.eant" target="clobber" dir="test28"/>
+		<geant file="build.eant" target="clobber" dir="test29"/>
+		<geant file="build.eant" target="clobber" dir="test30"/>
+		<geant file="build.eant" target="clobber" dir="test31"/>
+		<geant file="build.eant" target="clobber" dir="test32"/>
+		<geant file="build.eant" target="clobber" dir="test33"/>
+		<geant file="build.eant" target="clobber" dir="test34"/>
+		<geant file="build.eant" target="clobber" dir="test35"/>
+		<geant file="build.eant" target="clobber" dir="test36"/>
+		<geant file="build.eant" target="clobber" dir="test37"/>
+	</target>
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="xvucr"/>
+		<set name="rule" value="vucr"/>
+		<set name="system_dir" value="${GOBO}/library/tools/test/eiffel/validity/${rule}"/>
+	</target>
+
+</project>

@@ -5,7 +5,7 @@ note
 		"Eiffel prefix expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,8 @@ inherit
 			target as expression
 		undefine
 			reset,
-			is_prefix_expression
+			is_prefix_expression,
+			is_instance_free
 		end
 
 	ET_UNARY_EXPRESSION

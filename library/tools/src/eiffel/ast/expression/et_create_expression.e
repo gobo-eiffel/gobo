@@ -16,7 +16,8 @@ inherit
 
 	ET_CREATION_EXPRESSION
 		redefine
-			reset
+			reset,
+			is_instance_free
 		end
 
 create
@@ -116,6 +117,18 @@ feature -- Access
 			else
 				Result := creation_type.last_leaf
 			end
+		end
+
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := attached arguments as l_arguments implies l_arguments.is_instance_free
 		end
 
 feature -- Setting

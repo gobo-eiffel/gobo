@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VUCR
+
+Error: The class feature f calls the non-class feature attr.
+What to do:
+	- remove the call to attr from the code or
+	- make f a non-class feature or
+	- make attr a class feature.
+Class: BB
+Feature: f
+Line: 7
+      do
+->      attr := 3
+      ensure
+
+-------------------------------------------------------------------------------

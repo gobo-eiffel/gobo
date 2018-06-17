@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+
+Error code: VUCR
+
+Error: Variable attribute f cannot be a class feature.
+What to do: Remove the class postcondition.
+Class: BB
+Feature: f
+Line: 5
+  
+->  f: INTEGER
+      attribute
+
+-------------------------------------------------------------------------------

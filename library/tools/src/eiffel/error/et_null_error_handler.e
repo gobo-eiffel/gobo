@@ -5,7 +5,7 @@ note
 		"Null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,7 +74,6 @@ inherit
 			reportable_vffd5_error,
 			reportable_vffd6_error,
 			reportable_vffd7_error,
-			reportable_vffd9_error,
 			reportable_vgcc1_error,
 			reportable_vgcc3_error,
 			reportable_vgcc5_error,
@@ -130,7 +129,6 @@ inherit
 			reportable_vrlv2_error,
 			reportable_vscn_error,
 			reportable_vsrc1_error,
-			reportable_vstb_error,
 			reportable_vtat1_error,
 			reportable_vtat2_error,
 			reportable_vtcg3_error,
@@ -142,9 +140,11 @@ inherit
 			reportable_vuar1_error,
 			reportable_vuar2_error,
 			reportable_vuar4_error,
+			reportable_vucr_error,
 			reportable_vuex1_error,
 			reportable_vuex2_error,
 			reportable_vuno3_error,
+			reportable_vuno5_error,
 			reportable_vuot1_error,
 			reportable_vuot3_error,
 			reportable_vuot4_error,
@@ -613,13 +613,6 @@ feature -- Validity error status
 			Result := False
 		end
 
-	reportable_vffd9_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VFFD-9 error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
 	reportable_vgcc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-1 error be reported when it
 			-- appears in `a_class'?
@@ -991,13 +984,6 @@ feature -- Validity error status
 			Result := False
 		end
 
-	reportable_vstb_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VSTB error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
 	reportable_vtat1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTAT-1 error be reported when it
 			-- appears in `a_class'?
@@ -1075,6 +1061,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vucr_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUCR error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vuex1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUEX-1 error be reported when it
 			-- appears in `a_class'?
@@ -1091,6 +1084,13 @@ feature -- Validity error status
 
 	reportable_vuno3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUNO-3 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vuno5_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUNO-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

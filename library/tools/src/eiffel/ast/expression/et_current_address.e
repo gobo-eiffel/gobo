@@ -5,7 +5,7 @@ note
 		"Eiffel addresses of Current"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 199-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 199-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_CURRENT_ADDRESS
 inherit
 
 	ET_ADDRESS_EXPRESSION
+		redefine
+			is_instance_free
+		end
 
 create
 
@@ -38,6 +41,18 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := current_keyword
+		end
+
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := False
 		end
 
 feature -- Setting

@@ -5,7 +5,7 @@ note
 		"Eiffel lists of 'elseif' parts of 'if' expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,6 +66,30 @@ feature -- Access
 				Result := last.last_leaf
 			else
 				Result := tokens.null_leaf
+			end
+		end
+
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Are all elseif parts instance-free (i.e. not dependent
+			-- on 'Current' or its attributes)?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		local
+			i, nb: INTEGER
+		do
+			Result := True
+			nb := count
+			from i := 1 until i > nb loop
+				if not item (i).is_instance_free then
+					Result := False
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
 			end
 		end
 

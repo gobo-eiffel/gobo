@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,7 @@ inherit
 			set_arguments as set_actual_arguments
 		redefine
 			is_inline_agent,
+			is_instance_free,
 			reset
 		end
 
@@ -94,6 +95,16 @@ feature -- Status report
 			Result := (type = Void)
 		ensure then
 			definition: Result = (type = Void)
+		end
+
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := False
 		end
 
 feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions

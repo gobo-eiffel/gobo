@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,8 @@ inherit
 		rename
 			expression as actual_argument
 		undefine
-			is_empty, valid_index
+			is_empty, valid_index,
+			is_instance_free
 		redefine
 			reset, make, make_with_capacity
 		end

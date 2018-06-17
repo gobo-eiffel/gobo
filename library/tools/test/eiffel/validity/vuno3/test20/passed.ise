@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: VUNO
+
+F used in the non-object call is not a class feature.
+
+What to do:
+	- make sure the non-object call uses a class feature or
+	- replace the non-object call with an object call.
+
+Class: AA
+Feature: make
+Line: 11
+      do
+->      print ({CC}.f)
+      end
+
+-------------------------------------------------------------------------------

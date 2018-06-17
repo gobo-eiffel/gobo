@@ -98,8 +98,39 @@ feature -- Status report
 	is_constant_attribute: BOOLEAN = True
 			-- Is feature a constant attribute?
 
-	is_static: BOOLEAN = True
+	is_static: BOOLEAN
 			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
+			--
+			-- True even if not explicitly declared as static provided that the inherited
+			-- pre- and postconditions of the constant attribute are instance-free (i.e.
+			-- not dependent on 'Current' or its attributes).
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not. This slightly differs from ECMA-367 2nd Edition which does not
+			-- put constraints on constant attributes.
+		do
+			Result := Precursor or is_implicitly_static
+		end
+
+	is_implicitly_static: BOOLEAN
+			-- A constant attribute is considered as a static feature, even if not explicitly
+			-- declared as such, provided that its inherited pre- and postconditions are
+			-- instance-free (i.e. not dependent on 'Current' or its attributes).
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not. This slightly differs from ECMA-367 2nd Edition which does not
+			-- put constraints on constant attributes.
+		do
+			if not are_preconditions_instance_free_recursive then
+				Result := False
+			elseif not are_postconditions_instance_free_recursive then
+				Result := False
+			else
+				Result := True
+			end
+		end
 
 	is_prefixable: BOOLEAN = True
 			-- Can current feature have a name of

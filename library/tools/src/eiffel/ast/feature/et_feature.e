@@ -5,7 +5,7 @@ note
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #22 $"
@@ -344,17 +344,14 @@ feature -- Status report
 	is_static: BOOLEAN
 			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
 		do
-			Result := has_static_mark or is_statically_called
+			Result := has_static_mark
 		end
 
 	has_static_mark: BOOLEAN
 			-- Has feature been explicitly marked as static?
 		do
-			Result := has_class_postcondition_recursive or (attached first_indexing as l_indexing and then l_indexing.has_tagged_indexing_term_value (tokens.option_indexing_tag, tokens.instance_free_indexing_value))
+			Result := has_class_postcondition_recursive
 		end
-
-	is_statically_called: BOOLEAN
-			-- Is feature statically called (i.e. in a call of the form {A}.f)?
 
 	is_infixable: BOOLEAN
 			-- Can current feature have a name of
@@ -392,18 +389,23 @@ feature -- Status report
 			definition: Result = (attached arguments as l_arguments and then l_arguments.count > 0)
 		end
 
-	are_preconditions_all_true_recursive: BOOLEAN
-			-- Are all precondition expressions, if any, the 'True' entity (possibly parenthesized)?
+	are_preconditions_instance_free_recursive: BOOLEAN
+			-- Are all precondition expressions, if any, instance-free (i.e. not dependent
+			-- on 'Current' or its attributes)?
 			-- Take into account inherited preconditions recursively.
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
 		local
 			i, nb: INTEGER
 			l_other_precursor: ET_FEATURE
 		do
 			Result := True
-			if attached preconditions as l_preconditions and then not l_preconditions.are_all_true then
+			if attached preconditions as l_preconditions and then not l_preconditions.is_instance_free then
 				Result := False
 			elseif attached first_precursor as l_first_precursor then
-				if not l_first_precursor.are_preconditions_all_true_recursive then
+				if not l_first_precursor.are_preconditions_instance_free_recursive then
 					Result := False
 				elseif attached other_precursors as l_other_precursors then
 					from
@@ -413,7 +415,7 @@ feature -- Status report
 						i > nb
 					loop
 						l_other_precursor := l_other_precursors.item (i)
-						if not l_other_precursor.are_preconditions_all_true_recursive then
+						if not l_other_precursor.are_preconditions_instance_free_recursive then
 							Result := False
 								 -- Jump out of the loop
 							i := nb
@@ -424,18 +426,23 @@ feature -- Status report
 			end
 		end
 
-	are_postconditions_all_true_recursive: BOOLEAN
-			-- Are all postcondition expressions, if any, the 'True' entity (possibly parenthesized)?
-			-- Take into account inherited postconditions recursively.
+	are_postconditions_instance_free_recursive: BOOLEAN
+			-- Are all postcondition expressions, if any, instance-free (i.e. not dependent
+			-- on 'Current' or its attributes)?
+			-- Take into account inherited preconditions recursively.
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
 		local
 			i, nb: INTEGER
 			l_other_precursor: ET_FEATURE
 		do
 			Result := True
-			if attached postconditions as l_postconditions and then not l_postconditions.are_all_true then
+			if attached postconditions as l_postconditions and then not l_postconditions.is_instance_free then
 				Result := False
 			elseif attached first_precursor as l_first_precursor then
-				if not l_first_precursor.are_postconditions_all_true_recursive then
+				if not l_first_precursor.are_postconditions_instance_free_recursive then
 					Result := False
 				elseif attached other_precursors as l_other_precursors then
 					from
@@ -445,7 +452,7 @@ feature -- Status report
 						i > nb
 					loop
 						l_other_precursor := l_other_precursors.item (i)
-						if not l_other_precursor.are_postconditions_all_true_recursive then
+						if not l_other_precursor.are_postconditions_instance_free_recursive then
 							Result := False
 								 -- Jump out of the loop
 							i := nb

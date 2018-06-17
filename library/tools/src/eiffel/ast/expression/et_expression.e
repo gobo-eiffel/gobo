@@ -5,7 +5,7 @@ note
 		"Eiffel expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,6 +36,8 @@ inherit
 			count as actual_argument_count,
 			is_empty as is_empty_actual_argument,
 			valid_index as valid_index_actual_argument
+		undefine
+			is_instance_free
 		end
 
 	ET_ARGUMENT_OPERAND
