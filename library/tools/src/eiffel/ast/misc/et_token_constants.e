@@ -5556,6 +5556,9 @@ feature -- Indexing clauses
 	once_indexing_tag: STRING = "once_status"
 			-- Tag in indexing clauses for once status
 
+	option_indexing_tag: STRING = "option"
+			-- Tag in indexing clauses for feature options
+
 	global_once_indexing_value: STRING = "global"
 			-- "global" indexing value for once status
 

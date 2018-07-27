@@ -5,7 +5,7 @@ note
 		"Attributes implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,8 @@ inherit
 	ET_DOTNET_QUERY
 		undefine
 			is_attribute,
+			is_transient_attribute,
+			is_stable_attribute,
 			is_prefixable
 		end
 
