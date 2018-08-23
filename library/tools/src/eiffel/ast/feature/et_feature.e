@@ -353,6 +353,20 @@ feature -- Status report
 			Result := has_class_postcondition_recursive
 		end
 
+	is_transient_attribute: BOOLEAN
+			-- Is feature a transient attribute
+			-- (i.e. not taken into account by Storable)?
+		do
+			-- Result := False
+		end
+
+	is_stable_attribute: BOOLEAN
+			-- Is feature a stable attribute
+			-- (i.e. cannot be set to Void in void-safe mode)?
+		do
+			-- Result := False
+		end
+
 	is_infixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
