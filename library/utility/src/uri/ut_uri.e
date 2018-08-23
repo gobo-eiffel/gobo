@@ -911,7 +911,9 @@ feature {NONE} -- URI parsing
 				-- Handle last part of string.
 			inspect state
 			when State_scheme, State_authority_prefix, State_path then
-				stop_path_base (start, i)
+				if state /= State_authority_prefix then
+					stop_path_base (start, i)
+				end
 				if
 					not has_absolute_path and then
 					i > start and then
