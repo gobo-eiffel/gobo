@@ -14,10 +14,10 @@ class KL_SHARED_STREAMS
 
 feature -- Access
 
-	null_input_stream: KL_STRING_INPUT_STREAM
+	null_input_stream: KI_CHARACTER_INPUT_STREAM
 			-- Null input stream
 		once
-			create Result.make ("")
+			create {KL_STRING_INPUT_STREAM} Result.make ("")
 		ensure
 			null_input_stream_not_void: Result /= Void
 		end
