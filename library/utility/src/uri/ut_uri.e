@@ -1019,6 +1019,8 @@ feature {NONE} -- URI parsing
 		end
 
 	query_item_name: detachable STRING
+			-- Track name of query item while parsing until we know the value;
+			-- Set by `stop_query_name', and only used during `parse_reference'.
 
 	start_query_part: INTEGER
 			-- Track beginning
