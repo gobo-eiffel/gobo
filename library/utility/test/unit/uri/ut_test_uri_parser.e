@@ -32,9 +32,11 @@ feature -- Tests
 			check_uri (uri, "http", "www.ics.uci.edu", "/pub/ietf/uri/", Void, "Related")
 			assert ("valid_scheme", uri.has_valid_scheme)
 			assert ("http://www.ics.uci.edu/pub/ietf/uri/#Related has an absolute path", uri.has_absolute_path)
+			assert ("No query items", not attached uri.query_items)
 
 			create uri.make ("http://www.ics.uci.edu/cgi-bin/test?id=1")
 			check_uri (uri, "http", "www.ics.uci.edu", "/cgi-bin/test", "id=1", Void)
+			assert_equal ("One query item", 1, uri.query_items.count)
 
 			create uri.make ("http:/cgi-bin/test?id=1")
 			check_uri (uri, "http", Void, "/cgi-bin/test", "id=1", Void)

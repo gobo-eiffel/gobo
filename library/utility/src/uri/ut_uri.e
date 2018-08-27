@@ -457,6 +457,10 @@ feature -- Components
 	query_item: detachable UT_URI_STRING
 			-- Query string if present
 
+	query_items: detachable DS_HASH_TABLE [STRING, STRING]
+			-- Individual items in query string if present;
+			-- if an item is duplicated, only the last value is retained
+
 	fragment_item: detachable UT_URI_STRING
 			-- Fragment string if present
 
@@ -795,12 +799,18 @@ feature {NONE} -- URI parsing
 			has_absolute_path := False
 			create path_items.make_default
 			query_item := Void
+			query_items := Void
+			query_item_name := Void
+			start_query_part := 0
 			fragment_item := Void
 		ensure
 			scheme_void: scheme = Void
 			authority_item_void: authority_item = Void
 			not_has_absolute_path: not has_absolute_path
 			query_item_void: query_item = Void
+			query_items_void: query_items = Void
+			query_item_name_void: query_item_name = Void
+			start_query_reset: start_query_part = 0
 			fragment_item_void: fragment_item = Void
 			path_items_empty: path_items.is_empty
 			not_has_parsed_authority: not has_parsed_authority
@@ -877,7 +887,25 @@ feature {NONE} -- URI parsing
 					when State_query, State_fragment then
 					end
 					start := i
+					start_query_part := i
 					state := State_query
+					create query_items.make (1)
+				when '=' then
+					inspect state
+					when State_query then
+						stop_query_name (i)
+						start_query_part := i
+					else
+						-- OK.
+					end
+				when '&' then
+					inspect state
+					when State_query then
+						stop_query_value (i)
+						start_query_part := i
+					else
+						-- OK.
+					end
 				when '#' then
 					inspect state
 					when State_scheme, State_path then
@@ -990,6 +1018,47 @@ feature {NONE} -- URI parsing
 			end
 		end
 
+	query_item_name: detachable STRING
+			-- Track name of query item while parsing until we know the value;
+			-- Set by `stop_query_name', and only used during `parse_reference'.
+
+	start_query_part: INTEGER
+			-- Track beginning
+
+	stop_query_name (stop: INTEGER)
+			-- Stop is exclusive.
+		require
+			valid_start: full_reference.valid_index (start_query_part)
+			valid_query: full_reference.item (start_query_part) = '?'
+			valid_stop: full_reference.valid_index (stop - 1)
+			full_reference_contains_query: start_query_part + 1 <= stop
+		do
+			query_item_name := full_reference.substring (start_query_part + 1, stop - 1)
+		ensure
+			scan_value: start_query_part = stop + 1
+		end
+
+	stop_query_value (stop: INTEGER)
+			-- `stop' is exclusive.
+		require
+			valid_start: full_reference.valid_index (start_query_part)
+			valid_query: full_reference.item (start_query_part) = '?'
+			valid_stop: full_reference.valid_index (stop - 1)
+			full_reference_contains_query: start_query_part + 1 <= stop
+			query_items_not_void: attached query_items
+		local
+			l_value: STRING
+		do
+			if attached query_item_name as l_name and then attached query_items as l_query_items then
+				l_value := full_reference.substring (start_query_part + 1, stop - 1)
+				l_query_items.force_last (l_value, l_name)
+				query_item_name := Void
+			end
+		ensure
+			query_item_name_void: not attached query_item_name
+			stop_query_part_scan: start_query_part = 0
+		end
+
 	stop_query (start, stop: INTEGER)
 			-- Start is inclusive, stop is exclusive.
 		require
@@ -998,6 +1067,7 @@ feature {NONE} -- URI parsing
 			valid_stop: full_reference.valid_index (stop - 1)
 			full_reference_contains_query: start + 1 <= stop
 		do
+			stop_query_value (stop)
 			create query_item.make_encoded (full_reference.substring (start + 1, stop - 1))
 		ensure
 			query_set: has_query
@@ -1133,6 +1203,7 @@ invariant
 	no_void_path_item: not path_items.has_void
 	-- no_empty_path_item: not path_items.has ("")
 		-- Contraints on parsed `authority'.
+	query_items_if_query: has_query = (attached query_items)
 	user_info_occurs_in_authority: attached user_info as l_user_info implies STRING_.substring_index (authority, l_user_info, 1) /= 0
 	host_occurs_in_authority: has_parsed_authority implies attached host_port as l_host_port and then STRING_.substring_index (authority, l_host_port.host, 1) /= 0
 
