@@ -6,7 +6,7 @@ note
 		%as input and return the formatted output."
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2013, Object-Tools and others"
+	copyright: "Copyright (c) 2004-2018, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,6 @@ inherit
 		export {NONE} all end
 
 	KL_IMPORTED_ARRAY_ROUTINES
-		export {NONE} all end
 
 	KL_SHARED_STREAMS
 		export {NONE} all end
@@ -44,25 +43,23 @@ feature {NONE} -- Initialization
 		do
 			escape_character := c
 			create string_output_stream.make (empty_string)
-			create single_parameter.make_filled (Void, 1, 1)
+			create single_parameter.make_filled (empty_string, 1, 1)
 		ensure
 			escape_character_set: escape_character = c
 		end
 
 feature -- Status report
 
-	valid_format_and_parameters (a_format: STRING; a_parameters: detachable ARRAY [detachable ANY]): BOOLEAN
+	valid_format_and_parameters (a_format: STRING; a_parameters: ARRAY [ANY]): BOOLEAN
 			-- Does `a_format' contain valid formatting specifications and
 			-- do `a_parameters' comply to these formatting specifications?
 		require
 			a_format_not_void: a_format /= Void
+			a_parameters_not_void: a_parameters /= Void
+			no_void_parameter: not ANY_ARRAY_.has_void (a_parameters)
 		do
-			if a_parameters = Void or else not ANY_ARRAY_.has_void (a_parameters) then
-				do_format_to (a_format, a_parameters, null_output_stream)
-				Result := not has_error
-			end
-		ensure
-			no_void_parameter: Result implies (a_parameters = Void or else not ANY_ARRAY_.has_void (a_parameters))
+			do_format_to (a_format, a_parameters, null_output_stream)
+			Result := not has_error
 		end
 
 feature -- Formatting
@@ -135,7 +132,7 @@ feature -- Formatting
 				do_format_to (a_format, single_parameter, string_output_stream)
 				string_output_stream.set_string (empty_string)
 			end
-			single_parameter.put (Void, 1)
+			single_parameter.put (empty_string, 1)
 		ensure
 			formatted_string_not_void: Result /= Void
 			same_type: ANY_.same_types (a_format, Result)
@@ -143,7 +140,7 @@ feature -- Formatting
 
 feature {NONE} -- Formatting
 
-	do_format_to (a_format: STRING; a_parameters: detachable ARRAY [detachable ANY]; a_stream: KI_CHARACTER_OUTPUT_STREAM)
+	do_format_to (a_format: STRING; a_parameters: ARRAY [ANY]; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Append to `a_stream' the string `a_format' where the
 			-- formatting specifications have been replaced by their
 			-- corresponding formatted parameters from `a_parameters'.
@@ -156,6 +153,8 @@ feature {NONE} -- Formatting
 			-- 'DS_CELL [INTEGER]'.)
 		require
 			a_format_not_void: a_format /= Void
+			a_parameters_not_void: a_parameters /= Void
+			no_void_parameter: not ANY_ARRAY_.has_void (a_parameters)
 			a_stream_not_void: a_stream /= Void
 			a_stream_open_write: a_stream.is_open_write
 		local
@@ -179,13 +178,8 @@ feature {NONE} -- Formatting
 			a_typechar: CHARACTER
 		do
 			reset_error
-			if a_parameters /= Void then
-				j := a_parameters.lower
-				nb2 := a_parameters.upper
-			else
-				j := 1
-				nb2 := 0
-			end
+			j := a_parameters.lower
+			nb2 := a_parameters.upper
 			nb := a_format.count
 			s := 1
 			from
@@ -321,22 +315,15 @@ feature {NONE} -- Formatting
 								elseif j > nb2 then
 									set_error ("Not enough parameters")
 								else
-									check
-											-- When j <= nb2 it means that we still have
-											-- items in `a_parameters', and therefore that
-											-- `a_parameters' is not Void.
-										a_parameters_not_void: a_parameters /= Void
-									then
-										a_parameter := a_parameters.item (j)
-										if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
-											a_width := an_integer_parameter.item
-											if a_width < 0 then
-												set_error ("Width parameter must not be negative")
-												a_width := 0
-											end
-										else
-											set_error ("Width parameter must be a cell of INTEGER")
+									a_parameter := a_parameters.item (j)
+									if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
+										a_width := an_integer_parameter.item
+										if a_width < 0 then
+											set_error ("Width parameter must not be negative")
+											a_width := 0
 										end
+									else
+										set_error ("Width parameter must be a cell of INTEGER")
 									end
 									j := j + 1
 								end
@@ -397,22 +384,15 @@ feature {NONE} -- Formatting
 									elseif j > nb2 then
 										set_error ("Not enough parameters")
 									else
-										check
-												-- When j <= nb2 it means that we still have
-												-- items in `a_parameters', and therefore that
-												-- `a_parameters' is not Void.
-											a_parameters_not_void: a_parameters /= Void
-										then
-											a_parameter := a_parameters.item (j)
-											if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
-												a_precision := an_integer_parameter.item
-												if a_precision < 0 then
-													set_error ("Precision parameter must not be negative")
-													a_precision := 0
-												end
-											else
-												set_error ("Precision parameter must be a cell of INTEGER")
+										a_parameter := a_parameters.item (j)
+										if attached {DS_CELL [INTEGER]} a_parameter as an_integer_parameter then
+											a_precision := an_integer_parameter.item
+											if a_precision < 0 then
+												set_error ("Precision parameter must not be negative")
+												a_precision := 0
 											end
+										else
+											set_error ("Precision parameter must be a cell of INTEGER")
 										end
 										j := j + 1
 									end
@@ -462,20 +442,11 @@ feature {NONE} -- Formatting
 								if j > nb2 then
 									set_error ("Not enough parameters")
 								else
-									check
-											-- When j <= nb2 it means that we still have
-											-- items in `a_parameters', and therefore that
-											-- `a_parameters' is not Void.
-										a_parameters_not_void: a_parameters /= Void
-									then
-										a_parameter := a_parameters.item (j)
-										if a_parameter = Void then
-											set_error ("Invalid parameter Void for format specification " + escape_character.out + a_typechar.out)
-										elseif a_formatter.valid_parameter (a_parameter) then
-											a_formatter.format_to (a_parameter, a_stream)
-										else
-											set_error ("Invalid parameter " + a_parameter.out + " for format specification " + escape_character.out + a_typechar.out)
-										end
+									a_parameter := a_parameters.item (j)
+									if a_formatter.valid_parameter (a_parameter) then
+										a_formatter.format_to (a_parameter, a_stream)
+									else
+										set_error ("Invalid parameter " + a_parameter.out + " for format specification " + escape_character.out + a_typechar.out)
 									end
 									j := j + 1
 								end
@@ -533,7 +504,7 @@ feature {NONE} -- Constants
 	string_output_stream: KL_STRING_OUTPUT_STREAM
 			-- String output stream used by `format'
 
-	single_parameter: ARRAY [detachable ANY]
+	single_parameter: ARRAY [ANY]
 			-- Single parameter holder
 
 	empty_string: STRING = ""

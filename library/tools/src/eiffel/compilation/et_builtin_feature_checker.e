@@ -252,8 +252,8 @@ feature {NONE} -- Built-in validity
 				builtin_features.force_last (l_builtin_features, l_builtin_class_code)
 					-- Functions.
 				register_builtin_feature (tokens.argument_count_feature_name, Void, current_universe.integer_type, tokens.builtin_arguments_32_argument_count, l_builtin_features)
-				register_builtin_feature (tokens.i_th_argument_pointer_feature_name, <<current_universe.integer_type>>, current_universe.pointer_type, tokens.builtin_arguments_32_i_th_argument_pointer, l_builtin_features)
-				register_builtin_feature (tokens.i_th_argument_string_feature_name, <<current_universe.integer_type>>, current_universe.immutable_string_32_type, tokens.builtin_arguments_32_i_th_argument_string, l_builtin_features)
+				register_builtin_feature (tokens.i_th_argument_pointer_feature_name, <<current_universe.integer_type.type>>, current_universe.pointer_type, tokens.builtin_arguments_32_i_th_argument_pointer, l_builtin_features)
+				register_builtin_feature (tokens.i_th_argument_string_feature_name, <<current_universe.integer_type.type>>, current_universe.immutable_string_32_type, tokens.builtin_arguments_32_i_th_argument_string, l_builtin_features)
 			end
 			check_expected_builtin_feature_validity (a_feature, l_builtin_class_code, l_builtin_features)
 		end
@@ -719,7 +719,7 @@ feature {NONE} -- Built-in validity
 				register_builtin_feature (tokens.set_natural_64_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.natural_64_type.type>>, Void, tokens.builtin_ise_runtime_set_natural_64_field_at, l_builtin_features)
 				register_builtin_feature (tokens.set_pointer_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.pointer_type.type>>, Void, tokens.builtin_ise_runtime_set_pointer_field, l_builtin_features)
 				register_builtin_feature (tokens.set_pointer_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.pointer_type.type>>, Void, tokens.builtin_ise_runtime_set_pointer_field_at, l_builtin_features)
-				register_builtin_feature (tokens.set_pre_ecma_mapping_feature_name, <<current_universe.boolean_type>>, Void, tokens.builtin_ise_runtime_set_pre_ecma_mapping, l_builtin_features)
+				register_builtin_feature (tokens.set_pre_ecma_mapping_feature_name, <<current_universe.boolean_type.type>>, Void, tokens.builtin_ise_runtime_set_pre_ecma_mapping, l_builtin_features)
 				register_builtin_feature (tokens.set_real_32_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.real_32_type.type>>, Void, tokens.builtin_ise_runtime_set_real_32_field, l_builtin_features)
 				register_builtin_feature (tokens.set_real_32_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.real_32_type.type>>, Void, tokens.builtin_ise_runtime_set_real_32_field_at, l_builtin_features)
 				register_builtin_feature (tokens.set_real_64_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.real_64_type.type>>, Void, tokens.builtin_ise_runtime_set_real_64_field, l_builtin_features)
