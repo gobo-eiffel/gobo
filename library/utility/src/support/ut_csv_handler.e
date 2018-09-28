@@ -5,7 +5,7 @@ note
 		"Comma-separated-value file handlers"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -126,19 +126,82 @@ feature -- Input
 			a_file_open_read: a_file.is_open_read
 			a_action_not_void: a_action /= Void
 		local
+			i, nb: INTEGER
+			l_last_string: STRING
+			l_cell: STRING
+			c: CHARACTER
+			has_quote: BOOLEAN
 			l_cells: DS_ARRAYED_LIST [STRING]
+			l_forth_done: BOOLEAN
 		do
 			if not a_file.end_of_input then
 				create l_cells.make (512)
+				create l_cell.make (100)
 				from
-					a_file.read_line
+					a_file.read_string (1024)
 				until
 					a_file.end_of_input
 				loop
-					read_row (a_file.last_string, l_cells)
+					l_forth_done := False
+					l_last_string := a_file.last_string
+					nb := l_last_string.count
+					from i := 1 until i > nb loop
+						l_forth_done := False
+						c := l_last_string.item (i)
+						if c = '%"' then
+							if has_quote then
+								i := i + 1
+								if i > nb then
+									a_file.read_string (1024)
+									if not a_file.end_of_input then
+										l_last_string := a_file.last_string
+										i := 1
+										nb := l_last_string.count
+									end
+								end
+								if i <= nb and then l_last_string.item (i) = '%"' then
+									l_cell.append_character ('%"')
+								else
+									l_forth_done := True
+									has_quote := False
+								end
+							elseif l_cell.is_empty then
+								has_quote := True
+							else
+								l_cell.append_character ('%"')
+							end
+						elseif c = separator then
+							if has_quote then
+								l_cell.append_character (c)
+							else
+								l_cells.force_last (l_cell.substring (1, l_cell.count))
+								STRING_.wipe_out (l_cell)
+							end
+						elseif c = '%N' then
+							if has_quote then
+								l_cell.append_character (c)
+							else
+								l_cells.force_last (l_cell.substring (1, l_cell.count))
+								STRING_.wipe_out (l_cell)
+								a_action.call ([l_cells])
+								l_cells.wipe_out
+							end
+						else
+							l_cell.append_character (c)
+						end
+						if not l_forth_done then
+							i := i + 1
+						end
+					end
+					if not l_forth_done then
+						a_file.read_string (1024)
+					end
+				end
+				if not l_cell.is_empty then
+					l_cells.force_last (l_cell.substring (1, l_cell.count))
+				end
+				if not l_cells.is_empty then
 					a_action.call ([l_cells])
-					l_cells.wipe_out
-					a_file.read_line
 				end
 			end
 		end

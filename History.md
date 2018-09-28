@@ -37,6 +37,11 @@
 * Fixed data race in `ET_CLASS.formal_parameter_type` when executed in
   multi-threaded mode.
 
+### Gobo Eiffel Utility Library
+
+* Made sure that `UT_CSV_HANDLER.read_file` can handle newlines embedded
+  in a cell surrounded by double-quotes.
+
 ### Miscellaneous
 
 * All Gobo tools now compile in void-safe mode.
