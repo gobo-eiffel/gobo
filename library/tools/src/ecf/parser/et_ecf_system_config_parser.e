@@ -18,9 +18,6 @@ class ET_ECF_SYSTEM_CONFIG_PARSER
 inherit
 
 	ET_ECF_PARSER
-		redefine
-			parse_file
-		end
 
 create
 
@@ -37,23 +34,25 @@ feature -- Access
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Parse ECF file `a_file'.
 			--
 			-- Note that when the ECF version of the file is old, the parsed
 			-- ECF system config will contain old options/settings/capabilities
 			-- as well as their equivalents in the most recent version of ECF.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+			a_universe_not_void: a_universe /= Void
+		local
+			l_result: DS_CELL [detachable ET_ECF_SYSTEM_CONFIG]
 		do
 			last_system_config := Void
-			precursor (a_file)
-		end
-
-feature {NONE} -- Element change
-
-	build_system_config (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING)
-			-- Build system config from `a_element'.
-		do
-			last_system_config := new_system (a_element, a_position_table, a_filename)
+			create l_result.make (Void)
+			parse_file_with_action (a_file, agent build_system_config (?, ?, ?, a_universe, l_result))
+			last_system_config := l_result.item
+		ensure
+			universe_set: attached last_system_config as l_last_system_config implies l_last_system_config.universe = a_universe
 		end
 
 end

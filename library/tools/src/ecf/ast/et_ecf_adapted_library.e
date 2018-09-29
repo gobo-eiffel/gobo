@@ -32,22 +32,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_filename: ET_IDENTIFIER; a_universe: like universe)
+	make (a_name, a_filename: ET_IDENTIFIER; a_universe: like universe; a_target: like target)
 			-- Create a new ECF adapted library.
 		require
 			a_name_not_void: a_name /= Void
 			a_filename_not_void: a_filename /= Void
 			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			name_id := a_name
 			filename_id := a_filename
 			universe := a_universe
+			target := a_target
 			make_adapted_library (a_name.name, tokens.unknown_library)
 		ensure
 			name_id_set: name_id = a_name
 			name_set: name = a_name.name
 			filename_id_set: filename_id = a_filename
 			universe_set: universe = a_universe
+			target_set: target = a_target
 		end
 
 feature -- Status report

@@ -95,6 +95,15 @@ feature -- Names
 			--       where "true" had the meaning of "all",
 			--       and "false" was just ignored.
 
+	manifest_array_type_option_name: STRING = "manifest_array_type"
+			-- Name of option "manifest_array_type"
+			--
+			-- Values: mismatch_error|mismatch_warning|standard
+			--
+			-- Note: introduced in ECF 1.18.0.
+			-- Note that this option is different from the old warning with the
+			-- same name which has been removed in ECF 1.18.0.
+
 	msil_application_optimize_option_name: STRING = "msil_application_optimize"
 			-- Name of option "msil_application_optimize"
 			--
@@ -161,6 +170,9 @@ feature -- Names
 			-- Values: true|false
 			--
 			-- Note: introduced in ECF 1.17.0.
+			-- Note: removed in ECF 1.18.0.
+			-- Note that this warning is different from the option and setting
+			-- with the same name which have been introduced in ECF 1.18.0.
 
 	warning_obsolete_class_option_name: STRING = "obsolete_class"
 			-- Name of "warning" option "obsolete_class"
@@ -244,6 +256,16 @@ feature -- Values
 			--
 			-- Used in "void_safety".
 
+	mismatch_error_option_value: STRING = "mismatch_error"
+			-- Value "mismatch_error"
+			--
+			-- Used in "manifest_array_type".
+
+	mismatch_warning_option_value: STRING = "mismatch_warning"
+			-- Value "mismatch_warning"
+			--
+			-- Used in "manifest_array_type".
+
 	none_option_value: STRING = "none"
 			-- Value "none"
 			--
@@ -262,7 +284,7 @@ feature -- Values
 	standard_option_value: STRING = "standard"
 			-- Value "standard"
 			--
-			-- Used in "syntax".
+			-- Used in "syntax" and "manifest_array_type".
 
 	transitional_option_value: STRING = "transitional"
 			-- Value "transitional"

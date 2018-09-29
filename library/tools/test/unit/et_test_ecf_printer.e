@@ -34,7 +34,7 @@ feature -- Test
 	test_printer
 			-- Test ECF printer.
 		local
-			l_ecf_parser: ET_ECF_SYSTEM_CONFIG_PARSER
+			l_ecf_parser: ET_ECF_SYSTEM_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
 			l_printer: ET_ECF_PRINTER
 			l_ecf_system: ET_ECF_SYSTEM_CONFIG
@@ -48,7 +48,7 @@ feature -- Test
 			assert ("is_open_read", l_input_file.is_open_read)
 			l_ecf_parser.parse_file (l_input_file)
 			l_input_file.close
-			l_ecf_system := l_ecf_parser.last_system_config
+			l_ecf_system := l_ecf_parser.last_system
 			assert ("no_ecf_error", not l_ecf_error_handler.has_error)
 			create l_output_file.make ("gobo.txt")
 			l_output_file.open_write

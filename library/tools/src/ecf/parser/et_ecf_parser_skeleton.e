@@ -98,29 +98,6 @@ feature -- Access
 	error_handler: ET_ECF_ERROR_HANDLER
 			-- Error handler
 
-	parsed_libraries: DS_HASH_TABLE [ET_ECF_LIBRARY, STRING]
-			-- Already parsed ECF libraries, indexed by UUID
-		deferred
-		ensure
-			parsed_libraries_not_void: Result /= Void
-			no_void_library: not Result.has_void_item
-		end
-
-	parsed_dotnet_assemblies: DS_HASH_TABLE [ET_ECF_DOTNET_ASSEMBLY, STRING]
-			-- Already parsed .NET assemblies, indexed by filenames
-		deferred
-		ensure
-			parsed_dotnet_assemblies_not_void: Result /= Void
-			no_void_dotnet_assembly: not Result.has_void_item
-		end
-
-	library_parser: ET_ECF_LIBRARY_PARSER
-			-- Library parser
-		deferred
-		ensure
-			library_parser_not_void: Result /= Void
-		end
-
 	ise_version: UT_VERSION
 			-- ISE version to be used when evaluating version conditions
 
@@ -138,28 +115,28 @@ feature -- Setting
 
 feature {NONE} -- AST factory
 
-	new_action (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ACTION
+	new_action (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_ACTION
 			-- New action built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_action: STRING_.same_case_insensitive (a_element.name, xml_pre_compile_action) or STRING_.same_case_insensitive (a_element.name, xml_post_compile_action)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_command) as l_command then
-				error_handler.report_eatm_error (xml_command, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_command, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_command.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_command, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_command, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_action (l_command.value)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
@@ -173,11 +150,11 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_must_succeed (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_working_directory) then
 							if l_child.value.is_empty then
-								error_handler.report_eate_error (attribute_name (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eate_error (attribute_name (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							else
 								Result.set_working_directory (l_child.value)
 							end
@@ -189,15 +166,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_actions (a_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
+	new_actions (a_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
 			-- New actions (or `a_actions' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_action: STRING_.same_case_insensitive (a_element.name, xml_pre_compile_action) or STRING_.same_case_insensitive (a_element.name, xml_post_compile_action)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_actions
-			if attached new_action (a_element, a_position_table, a_universe) as l_action then
+			if attached new_action (a_element, a_position_table, a_target) as l_action then
 				if Result = Void then
 					Result := ast_factory.new_actions
 				end
@@ -206,13 +183,13 @@ feature {NONE} -- AST factory
 		end
 
 	new_adapted_dotnet_assembly (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLY
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLY
 			-- New .NET assembly built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_assembly: STRING_.same_case_insensitive (a_element.name, xml_assembly)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_conditions: detachable ET_ECF_CONDITIONS
@@ -223,32 +200,32 @@ feature {NONE} -- AST factory
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_location) as l_filename then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_filename.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_filename, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_filename, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
-				Result := ast_factory.new_adapted_dotnet_assembly (attribute_value (l_name, a_position_table), attribute_value (l_filename, a_position_table), a_universe)
+				Result := ast_factory.new_adapted_dotnet_assembly (attribute_value (l_name, a_position_table), attribute_value (l_filename, a_position_table), a_target.system_config.universe, a_target)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_class_option) then
-							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_universe)
+							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
-							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_target.system_config)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_universe)
+							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
-							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_universe)
+							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
 						end
 					elseif attached {XM_ATTRIBUTE} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_assembly_culture) then
@@ -268,7 +245,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_read_only (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						end
 					end
@@ -289,16 +266,16 @@ feature {NONE} -- AST factory
 		end
 
 	new_adapted_dotnet_assemblies (a_dotnet_assemblies: detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLIES; a_element: XM_ELEMENT;
-		a_position_table: detachable XM_POSITION_TABLE; a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLIES
+		a_position_table: detachable XM_POSITION_TABLE; a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLIES
 			-- New .NET assemblies (or `a_dotnet_assemblies' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_assembly: STRING_.same_case_insensitive (a_element.name, xml_assembly)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_dotnet_assemblies
-			if attached new_adapted_dotnet_assembly (a_element, a_position_table, a_default_options, a_universe) as l_dotnet_assembly then
+			if attached new_adapted_dotnet_assembly (a_element, a_position_table, a_default_options, a_target) as l_dotnet_assembly then
 				if Result = Void then
 					Result := ast_factory.new_adapted_dotnet_assemblies (l_dotnet_assembly)
 				else
@@ -308,13 +285,13 @@ feature {NONE} -- AST factory
 		end
 
 	new_adapted_library (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ADAPTED_LIBRARY
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_ADAPTED_LIBRARY
 			-- New library built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_library: STRING_.same_case_insensitive (a_element.name, xml_library)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_conditions: detachable ET_ECF_CONDITIONS
@@ -326,34 +303,34 @@ feature {NONE} -- AST factory
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_location) as l_filename then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_filename.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_filename, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_filename, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
-				Result := ast_factory.new_adapted_library (attribute_value (l_name, a_position_table), attribute_value (l_filename, a_position_table), a_universe)
+				Result := ast_factory.new_adapted_library (attribute_value (l_name, a_position_table), attribute_value (l_filename, a_position_table), a_target.system_config.universe, a_target)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_class_option) then
-							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_universe)
+							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
-							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_target.system_config)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_universe)
+							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
-							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_universe)
+							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_visible) then
-							l_visible_classes := new_visible_classes (l_visible_classes, l_child, a_position_table, a_universe)
+							l_visible_classes := new_visible_classes (l_visible_classes, l_child, a_position_table, a_target)
 						end
 					elseif attached {XM_ATTRIBUTE} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_prefix) then
@@ -365,7 +342,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_read_only (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_use_application_options) then
 							l_value := l_child.value
@@ -374,7 +351,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_use_application_options (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						end
 					end
@@ -396,16 +373,16 @@ feature {NONE} -- AST factory
 		end
 
 	new_adapted_libraries (a_libraries: detachable ET_ECF_ADAPTED_LIBRARIES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ADAPTED_LIBRARIES
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_ADAPTED_LIBRARIES
 			-- New libraries (or `a_libraries' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_library: STRING_.same_case_insensitive (a_element.name, xml_library)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_libraries
-			if attached new_adapted_library (a_element, a_position_table, a_default_options, a_universe) as l_library then
+			if attached new_adapted_library (a_element, a_position_table, a_default_options, a_target) as l_library then
 				if Result = Void then
 					Result := ast_factory.new_adapted_libraries (l_library)
 				else
@@ -415,13 +392,13 @@ feature {NONE} -- AST factory
 		end
 
 	new_adapted_precompiled_library (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ADAPTED_PRECOMPILED_LIBRARY
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_ADAPTED_PRECOMPILED_LIBRARY
 			-- New precompiled library built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_precompile: STRING_.same_case_insensitive (a_element.name, xml_precompile)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_conditions: detachable ET_ECF_CONDITIONS
@@ -433,34 +410,34 @@ feature {NONE} -- AST factory
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_location) as l_filename then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_filename.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_filename, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_filename, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
-				Result := ast_factory.new_adapted_precompiled_library (attribute_value (l_name, a_position_table), attribute_value (l_filename, a_position_table), a_universe)
+				Result := ast_factory.new_adapted_precompiled_library (attribute_value (l_name, a_position_table), attribute_value (l_filename, a_position_table), a_target.system_config.universe, a_target)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_class_option) then
-							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_universe)
+							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
-							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_target.system_config)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_universe)
+							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
-							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_universe)
+							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_visible) then
-							l_visible_classes := new_visible_classes (l_visible_classes, l_child, a_position_table, a_universe)
+							l_visible_classes := new_visible_classes (l_visible_classes, l_child, a_position_table, a_target)
 						end
 					elseif attached {XM_ATTRIBUTE} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_eifgens_location) then
@@ -474,7 +451,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_read_only (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_use_application_options) then
 							l_value := l_child.value
@@ -483,7 +460,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_use_application_options (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						end
 					end
@@ -503,46 +480,46 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_build_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_BUILD_CONDITION
+	new_build_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_BUILD_CONDITION
 			-- New build condition built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_build: STRING_.same_case_insensitive (a_element.name, xml_build)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if attached a_element.attribute_by_name (xml_value) as l_value then
 				if attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
-					error_handler.report_eatx_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatx_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				elseif l_value.value.is_empty then
-					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				else
 					Result := ast_factory.new_build_condition (l_value.value, False)
 				end
 			elseif not attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
-				error_handler.report_eatn_error (xml_value, xml_excluded_value, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatn_error (xml_value, xml_excluded_value, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_excluded_value.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_build_condition (l_excluded_value.value, True)
 			end
 		end
 
 	new_class_options (a_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
 			-- New class options (or `a_class_options' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_class_option: STRING_.same_case_insensitive (a_element.name, xml_class_option)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_options: ET_ECF_OPTIONS
 		do
 			Result := a_class_options
 			if not attached a_element.attribute_by_name (xml_class) as l_class then
-				error_handler.report_eatm_error (xml_class, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_class, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_class.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_class, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_class, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				if Result = Void then
 					Result := ast_factory.new_class_options
@@ -554,18 +531,18 @@ feature {NONE} -- AST factory
 					l_options := ast_factory.new_options
 					Result.force_last (l_options, l_class.value.as_upper)
 				end
-				add_options (l_options, a_element, a_position_table, a_default_options, a_universe)
+				add_options (l_options, a_element, a_position_table, a_default_options, a_target)
 			end
 		end
 
 	new_cluster (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CLUSTER
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_CLUSTER
 			-- New cluster built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_cluster: STRING_.same_case_insensitive (a_element.name, xml_cluster)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_subclusters: detachable ET_ECF_CLUSTERS
@@ -581,42 +558,42 @@ feature {NONE} -- AST factory
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_location) as l_pathname then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_pathname.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
-				Result := ast_factory.new_cluster (l_name.value, l_pathname.value, a_universe)
+				Result := ast_factory.new_cluster (l_name.value, l_pathname.value, a_target.system_config.universe, a_target)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_cluster) then
-							l_subclusters := new_clusters (l_subclusters, l_child, a_position_table, a_default_options, a_universe)
+							l_subclusters := new_clusters (l_subclusters, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_class_option) then
-							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_universe)
+							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_file_rule) then
-							l_file_rules := new_file_rules (l_file_rules, l_child, a_position_table, a_universe)
+							l_file_rules := new_file_rules (l_file_rules, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_mapping) then
-							l_mappings := new_mappings (l_mappings, l_child, a_position_table, a_universe)
+							l_mappings := new_mappings (l_mappings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
-							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_target.system_config)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_universe)
+							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
-							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_universe)
+							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_uses) then
-							l_provider_groups := new_provider_groups (l_provider_groups, l_child, a_position_table, a_universe)
+							l_provider_groups := new_provider_groups (l_provider_groups, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_visible) then
-							l_visible_classes := new_visible_classes (l_visible_classes, l_child, a_position_table, a_universe)
+							l_visible_classes := new_visible_classes (l_visible_classes, l_child, a_position_table, a_target)
 						end
 					elseif attached {XM_ATTRIBUTE} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_hidden) then
@@ -626,7 +603,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_hidden (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_prefix) then
 							Result.set_classname_prefix (l_child.value)
@@ -637,7 +614,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_read_only (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_recursive) then
 							l_value := l_child.value
@@ -646,7 +623,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_recursive (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						end
 					end
@@ -672,16 +649,16 @@ feature {NONE} -- AST factory
 		end
 
 	new_clusters (a_clusters: detachable ET_ECF_CLUSTERS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CLUSTERS
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_CLUSTERS
 			-- New clusters (or `a_clusters' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_cluster: STRING_.same_case_insensitive (a_element.name, xml_cluster)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_clusters
-			if attached new_cluster (a_element, a_position_table, a_default_options, a_universe) as l_cluster then
+			if attached new_cluster (a_element, a_position_table, a_default_options, a_target) as l_cluster then
 				if Result = Void then
 					Result := ast_factory.new_clusters (l_cluster)
 				else
@@ -690,36 +667,36 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_concurrency_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CONCURRENCY_CONDITION
+	new_concurrency_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_CONCURRENCY_CONDITION
 			-- New concurrency condition built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_concurrency: STRING_.same_case_insensitive (a_element.name, xml_concurrency)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if attached a_element.attribute_by_name (xml_value) as l_value then
 				if attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
-					error_handler.report_eatx_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatx_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				elseif l_value.value.is_empty then
-					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				else
 					Result := ast_factory.new_concurrency_condition (l_value.value, False)
 				end
 			elseif not attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
-				error_handler.report_eatn_error (xml_value, xml_excluded_value, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatn_error (xml_value, xml_excluded_value, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_excluded_value.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_concurrency_condition (l_excluded_value.value, True)
 			end
 		end
 
-	new_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ANDED_CONDITIONS
+	new_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_ANDED_CONDITIONS
 			-- New condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_condition: STRING_.same_case_insensitive (an_element.name, xml_condition)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_condition: detachable ET_ECF_CONDITION_ITEM
@@ -729,42 +706,42 @@ feature {NONE} -- AST factory
 			from l_cursor.start until l_cursor.after loop
 				if attached {XM_ELEMENT} l_cursor.item as l_child then
 					if STRING_.same_case_insensitive (l_child.name, xml_build) then
-						l_condition := new_build_condition (l_child, a_position_table, a_universe)
+						l_condition := new_build_condition (l_child, a_position_table, a_target)
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_concurrency) then
-						l_condition := new_concurrency_condition (l_child, a_position_table, a_universe)
+						l_condition := new_concurrency_condition (l_child, a_position_table, a_target)
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_custom) then
-						l_condition := new_custom_condition (l_child, a_position_table, a_universe)
+						l_condition := new_custom_condition (l_child, a_position_table, a_target)
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_dotnet) then
-						l_condition := new_dotnet_condition (l_child, a_position_table, a_universe)
+						l_condition := new_dotnet_condition (l_child, a_position_table, a_target)
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_dynamic_runtime) then
-						l_condition := new_dynamic_runtime_condition (l_child, a_position_table, a_universe)
+						l_condition := new_dynamic_runtime_condition (l_child, a_position_table, a_target)
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_multithreaded) then
-						l_condition := new_multithreaded_condition (l_child, a_position_table, a_universe)
+						l_condition := new_multithreaded_condition (l_child, a_position_table, a_target)
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_platform) then
-						l_condition := new_platform_condition (l_child, a_position_table, a_universe)
+						l_condition := new_platform_condition (l_child, a_position_table, a_target)
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_version) then
-						l_condition := new_version_condition (l_child, a_position_table, a_universe)
+						l_condition := new_version_condition (l_child, a_position_table, a_target)
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
@@ -774,17 +751,17 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_conditions (a_conditions: detachable ET_ECF_CONDITIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CONDITIONS
+	new_conditions (a_conditions: detachable ET_ECF_CONDITIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_CONDITIONS
 			-- New conditions (or `a_conditions' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_condition: STRING_.same_case_insensitive (a_element.name, xml_condition)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_new_orded_conditions: ET_ECF_ORED_CONDITIONS
 		do
 			Result := a_conditions
-			if attached new_condition (a_element, a_position_table, a_universe) as l_condition then
+			if attached new_condition (a_element, a_position_table, a_target) as l_condition then
 				if Result = Void then
 					Result := l_condition
 				elseif attached {ET_ECF_ANDED_CONDITIONS} Result as l_anded_condition then
@@ -799,45 +776,50 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_custom_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CUSTOM_CONDITION
+	new_custom_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_CUSTOM_CONDITION
 			-- New custom condition built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_custom: STRING_.same_case_insensitive (a_element.name, xml_custom)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
+		local
+			l_match: detachable STRING
 		do
+			if attached a_element.attribute_by_name (xml_match) as l_match_attribute then
+				l_match := l_match_attribute.value
+			end
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif attached a_element.attribute_by_name (xml_value) as l_value then
 				if attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
-					error_handler.report_eatx_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatx_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				elseif l_value.value.is_empty then
-					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				else
-					Result := ast_factory.new_custom_condition (l_name.value, l_value.value, False)
+					Result := ast_factory.new_custom_condition (l_name.value, l_value.value, l_match, False)
 				end
 			elseif not attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
-				error_handler.report_eatn_error (xml_value, xml_excluded_value, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatn_error (xml_value, xml_excluded_value, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_excluded_value.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
-				Result := ast_factory.new_custom_condition (l_name.value, l_excluded_value.value, True)
+				Result := ast_factory.new_custom_condition (l_name.value, l_excluded_value.value, l_match, True)
 			end
 		end
 
-	new_dotnet_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_DOTNET_CONDITION
+	new_dotnet_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_DOTNET_CONDITION
 			-- New dotnet condition built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_dotnet: STRING_.same_case_insensitive (a_element.name, xml_dotnet)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_bool: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_value) as l_value then
-				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_target.system_config)
 			else
 				l_bool := l_value.value
 				if is_true (l_bool) then
@@ -845,22 +827,22 @@ feature {NONE} -- AST factory
 				elseif is_false (l_bool) then
 					Result := ast_factory.new_dotnet_condition (False)
 				else
-					error_handler.report_eatb_error (attribute_name (l_value, a_position_table), attribute_value (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatb_error (attribute_name (l_value, a_position_table), attribute_value (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 			end
 		end
 
-	new_dynamic_runtime_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_DYNAMIC_RUNTIME_CONDITION
+	new_dynamic_runtime_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_DYNAMIC_RUNTIME_CONDITION
 			-- New dynamic_runtime condition built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_dynamic_runtime: STRING_.same_case_insensitive (a_element.name, xml_dynamic_runtime)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_bool: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_value) as l_value then
-				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_target.system_config)
 			else
 				l_bool := l_value.value
 				if is_true (l_bool) then
@@ -868,32 +850,32 @@ feature {NONE} -- AST factory
 				elseif is_false (l_bool) then
 					Result := ast_factory.new_dynamic_runtime_condition (False)
 				else
-					error_handler.report_eatb_error (attribute_name (l_value, a_position_table), attribute_value (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatb_error (attribute_name (l_value, a_position_table), attribute_value (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 			end
 		end
 
-	new_external_cflag (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_CFLAG
+	new_external_cflag (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_CFLAG
 			-- New external C flag built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_cflag: STRING_.same_case_insensitive (a_element.name, xml_external_cflag)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			if not attached a_element.attribute_by_name (xml_value) as l_value then
-				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_value.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_external_cflag (l_value.value)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
@@ -906,15 +888,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_cflags (a_external_cflags: detachable ET_ECF_EXTERNAL_CFLAGS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_CFLAGS
+	new_external_cflags (a_external_cflags: detachable ET_ECF_EXTERNAL_CFLAGS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_CFLAGS
 			-- New external C flags (or `a_external_cflags' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_cflag: STRING_.same_case_insensitive (a_element.name, xml_external_cflag)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_external_cflags
-			if attached new_external_cflag (a_element, a_position_table, a_universe) as l_external_cflag then
+			if attached new_external_cflag (a_element, a_position_table, a_target) as l_external_cflag then
 				if Result = Void then
 					Result := ast_factory.new_external_cflags (l_external_cflag)
 				else
@@ -923,27 +905,27 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_include (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_INCLUDE
+	new_external_include (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_INCLUDE
 			-- New external include built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_include: STRING_.same_case_insensitive (a_element.name, xml_external_include)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			if not attached a_element.attribute_by_name (xml_location) as l_pathname then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_pathname.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_external_include (l_pathname.value)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
@@ -956,15 +938,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_includes (a_external_includes: detachable ET_ECF_EXTERNAL_INCLUDES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_INCLUDES
+	new_external_includes (a_external_includes: detachable ET_ECF_EXTERNAL_INCLUDES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_INCLUDES
 			-- New external includes (or `a_external_includes' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_include: STRING_.same_case_insensitive (a_element.name, xml_external_include)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_external_includes
-			if attached new_external_include (a_element, a_position_table, a_universe) as l_external_include then
+			if attached new_external_include (a_element, a_position_table, a_target) as l_external_include then
 				if Result = Void then
 					Result := ast_factory.new_external_includes (l_external_include)
 				else
@@ -973,27 +955,27 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_library (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_LIBRARY
+	new_external_library (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_LIBRARY
 			-- New external library built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_library: STRING_.same_case_insensitive (a_element.name, xml_external_library)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			if not attached a_element.attribute_by_name (xml_location) as l_pathname then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_pathname.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_external_library (l_pathname.value)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
@@ -1006,15 +988,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_libraries (a_external_libraries: detachable ET_ECF_EXTERNAL_LIBRARIES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_LIBRARIES
+	new_external_libraries (a_external_libraries: detachable ET_ECF_EXTERNAL_LIBRARIES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_LIBRARIES
 			-- New external libraries (or `a_external_libraries' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_library: STRING_.same_case_insensitive (a_element.name, xml_external_library)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_external_libraries
-			if attached new_external_library (a_element, a_position_table, a_universe) as l_external_library then
+			if attached new_external_library (a_element, a_position_table, a_target) as l_external_library then
 				if Result = Void then
 					Result := ast_factory.new_external_libraries (l_external_library)
 				else
@@ -1023,27 +1005,27 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_linker_flag (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_LINKER_FLAG
+	new_external_linker_flag (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_LINKER_FLAG
 			-- New external linker flag built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_linker_flag: STRING_.same_case_insensitive (a_element.name, xml_external_linker_flag)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			if not attached a_element.attribute_by_name (xml_value) as l_value then
-				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_value.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_external_linker_flag (l_value.value)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
@@ -1056,15 +1038,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_linker_flags (a_external_linker_flags: detachable ET_ECF_EXTERNAL_LINKER_FLAGS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_LINKER_FLAGS
+	new_external_linker_flags (a_external_linker_flags: detachable ET_ECF_EXTERNAL_LINKER_FLAGS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_LINKER_FLAGS
 			-- New external linker flags (or `a_external_linker_flags' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_linker_flag: STRING_.same_case_insensitive (a_element.name, xml_external_linker_flag)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_external_linker_flags
-			if attached new_external_linker_flag (a_element, a_position_table, a_universe) as l_external_linker_flag then
+			if attached new_external_linker_flag (a_element, a_position_table, a_target) as l_external_linker_flag then
 				if Result = Void then
 					Result := ast_factory.new_external_linker_flags (l_external_linker_flag)
 				else
@@ -1073,27 +1055,27 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_make (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_MAKE
+	new_external_make (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_MAKE
 			-- New external make built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_make: STRING_.same_case_insensitive (a_element.name, xml_external_make)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			if not attached a_element.attribute_by_name (xml_location) as l_pathname then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_pathname.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_external_make (l_pathname.value)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
@@ -1106,15 +1088,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_makes (a_external_makes: detachable ET_ECF_EXTERNAL_MAKES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_MAKES
+	new_external_makes (a_external_makes: detachable ET_ECF_EXTERNAL_MAKES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_MAKES
 			-- New external makes (or `a_external_makes' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_make: STRING_.same_case_insensitive (a_element.name, xml_external_make)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_external_makes
-			if attached new_external_make (a_element, a_position_table, a_universe) as l_external_make then
+			if attached new_external_make (a_element, a_position_table, a_target) as l_external_make then
 				if Result = Void then
 					Result := ast_factory.new_external_makes (l_external_make)
 				else
@@ -1123,27 +1105,27 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_object (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_OBJECT
+	new_external_object (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_OBJECT
 			-- New external object built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_object: STRING_.same_case_insensitive (a_element.name, xml_external_object)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			if not attached a_element.attribute_by_name (xml_location) as l_pathname then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_pathname.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_external_object (l_pathname.value)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
@@ -1156,15 +1138,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_objects (a_external_objects: detachable ET_ECF_EXTERNAL_OBJECTS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_OBJECTS
+	new_external_objects (a_external_objects: detachable ET_ECF_EXTERNAL_OBJECTS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_OBJECTS
 			-- New external objects (or `a_external_objects' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_object: STRING_.same_case_insensitive (a_element.name, xml_external_object)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_external_objects
-			if attached new_external_object (a_element, a_position_table, a_universe) as l_external_object then
+			if attached new_external_object (a_element, a_position_table, a_target) as l_external_object then
 				if Result = Void then
 					Result := ast_factory.new_external_objects (l_external_object)
 				else
@@ -1173,27 +1155,27 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_resource (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_RESOURCE
+	new_external_resource (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_RESOURCE
 			-- New external resource built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_resource: STRING_.same_case_insensitive (a_element.name, xml_external_resource)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			if not attached a_element.attribute_by_name (xml_location) as l_pathname then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_pathname.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_external_resource (l_pathname.value)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
@@ -1206,15 +1188,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_resources (a_external_resources: detachable ET_ECF_EXTERNAL_RESOURCES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_RESOURCES
+	new_external_resources (a_external_resources: detachable ET_ECF_EXTERNAL_RESOURCES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_EXTERNAL_RESOURCES
 			-- New external resources (or `a_external_resources' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_external_resource: STRING_.same_case_insensitive (a_element.name, xml_external_resource)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_external_resources
-			if attached new_external_resource (a_element, a_position_table, a_universe) as l_external_resource then
+			if attached new_external_resource (a_element, a_position_table, a_target) as l_external_resource then
 				if Result = Void then
 					Result := ast_factory.new_external_resources (l_external_resource)
 				else
@@ -1223,12 +1205,12 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_file_rule (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_FILE_RULE
+	new_file_rule (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_FILE_RULE
 			-- New file rule built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_file_rule: STRING_.same_case_insensitive (a_element.name, xml_file_rule)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_excluded: detachable DS_HASH_SET [STRING]
 			l_included: detachable DS_HASH_SET [STRING]
@@ -1254,7 +1236,7 @@ feature {NONE} -- AST factory
 							l_included.force_last (l_text)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_condition) then
-						l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+						l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 					elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 						if attached l_child.text as l_text and then not l_text.is_empty then
 							l_description := l_text
@@ -1268,15 +1250,15 @@ feature {NONE} -- AST factory
 			Result.set_description (l_description)
 		end
 
-	new_file_rules (a_file_rules: detachable ET_ECF_FILE_RULES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_FILE_RULES
+	new_file_rules (a_file_rules: detachable ET_ECF_FILE_RULES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_FILE_RULES
 			-- New file rules (or `a_file_rules' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_file_rule: STRING_.same_case_insensitive (a_element.name, xml_file_rule)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_file_rules
-			if attached new_file_rule (a_element, a_position_table, a_universe) as l_file_rule then
+			if attached new_file_rule (a_element, a_position_table, a_target) as l_file_rule then
 				if Result = Void then
 					Result := ast_factory.new_file_rules (l_file_rule)
 				else
@@ -1325,46 +1307,46 @@ feature {NONE} -- AST factory
 					else
 						Result := ast_factory.new_library (l_name.value, a_filename, l_system)
 						a_adapted_library.set_library (Result)
-						fill_system_config (Result, a_element, a_position_table, Result)
+						fill_system_config (Result, a_element, a_position_table)
 						l_parsed_libraries.force_last_new (Result, l_uuid.value)
 					end
 				end
 			end
 		end
 
-	new_mappings (a_mappings: detachable DS_HASH_TABLE [STRING, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable DS_HASH_TABLE [STRING, STRING]
+	new_mappings (a_mappings: detachable DS_HASH_TABLE [STRING, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable DS_HASH_TABLE [STRING, STRING]
 			-- New class mappings (or `a_mappings' if not Void) built from `a_element'
 		require
 			no_void_old_class_mapping: a_mappings /= Void implies not a_mappings.has_void
 			no_void_new_class_mapping: a_mappings /= Void implies not a_mappings.has_void_item
 			a_element_not_void: a_element /= Void
 			is_mapping: STRING_.same_case_insensitive (a_element.name, xml_mapping)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if a_mappings /= Void then
 				Result := a_mappings
 			else
 				Result := ast_factory.new_class_mappings
 			end
-			add_mapping (Result, a_element, a_position_table, a_universe)
+			add_mapping (Result, a_element, a_position_table, a_target)
 		ensure
 			no_void_old_class_mapping: Result /= Void implies not Result.has_void
 			no_void_new_class_mapping: Result /= Void implies not Result.has_void_item
 		end
 
-	new_multithreaded_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CONCURRENCY_CONDITION
+	new_multithreaded_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_CONCURRENCY_CONDITION
 			-- New multithreaded condition built from `an_element'
 			--
 			-- Note: condition "multithreaded" was superseded by condition "concurrency" in ECF 1.8.0.
 		require
 			a_element_not_void: a_element /= Void
 			is_multithreaded: STRING_.same_case_insensitive (a_element.name, xml_multithreaded)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_bool: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_value) as l_value then
-				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_target.system_config)
 			else
 				l_bool := l_value.value
 				if is_true (l_bool) then
@@ -1372,16 +1354,16 @@ feature {NONE} -- AST factory
 				elseif is_false (l_bool) then
 					Result := ast_factory.new_concurrency_condition ({ET_ECF_CAPABILITY_NAMES}.thread_capability_value, True)
 				else
-					error_handler.report_eatb_error (attribute_name (l_value, a_position_table), attribute_value (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatb_error (attribute_name (l_value, a_position_table), attribute_value (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 			end
 		end
 
-	new_note_element (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_NOTE_ELEMENT
+	new_note_element (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_system_config: ET_ECF_SYSTEM_CONFIG): detachable ET_ECF_NOTE_ELEMENT
 			-- New note element built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
-			a_universe_not_void: a_universe /= Void
+			a_system_config_not_void: a_system_config /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
@@ -1391,7 +1373,7 @@ feature {NONE} -- AST factory
 				if attached {XM_ATTRIBUTE} l_cursor.item as l_child then
 					Result.add_attribute (l_child.name, l_child.value)
 				elseif attached {XM_ELEMENT} l_cursor.item as l_child then
-					if attached new_note_element (l_child, a_position_table, a_universe) as l_note_element then
+					if attached new_note_element (l_child, a_position_table, a_system_config) as l_note_element then
 						Result.add_element (l_note_element)
 					end
 				end
@@ -1402,15 +1384,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_notes (a_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
+	new_notes (a_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_system_config: ET_ECF_SYSTEM_CONFIG): detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 			-- New notes (or `a_notes' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_note: STRING_.same_case_insensitive (a_element.name, xml_note)
-			a_universe_not_void: a_universe /= Void
+			a_system_config_not_void: a_system_config /= Void
 		do
 			Result := a_notes
-			if attached new_note_element (a_element, a_position_table, a_universe) as l_note then
+			if attached new_note_element (a_element, a_position_table, a_system_config) as l_note then
 				if Result = Void then
 					Result := ast_factory.new_notes
 				end
@@ -1419,46 +1401,46 @@ feature {NONE} -- AST factory
 		end
 
 	new_options (a_options: detachable ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_OPTIONS
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_OPTIONS
 			-- New options (or `a_options' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_option: STRING_.same_case_insensitive (a_element.name, xml_option)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if a_options /= Void then
 				Result := a_options
 			else
 				Result := ast_factory.new_options
 			end
-			add_options (Result, a_element, a_position_table, a_default_options, a_universe)
+			add_options (Result, a_element, a_position_table, a_default_options, a_target)
 		end
 
-	new_overridden_group (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable STRING
+	new_overridden_group (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable STRING
 			-- New overridden group built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_overrides: STRING_.same_case_insensitive (a_element.name, xml_overrides)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if not attached a_element.attribute_by_name (xml_group) as l_group then
-				error_handler.report_eatm_error (xml_group, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_group, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_group.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_group, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_group, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := l_group.value
 			end
 		end
 
 	new_override_cluster (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CLUSTER
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_CLUSTER
 			-- New override cluster built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_cluster: STRING_.same_case_insensitive (a_element.name, xml_cluster)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_subclusters: detachable ET_ECF_CLUSTERS
@@ -1473,45 +1455,45 @@ feature {NONE} -- AST factory
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_location) as l_pathname then
-				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_pathname.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_pathname, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
-				Result := ast_factory.new_cluster (l_name.value, l_pathname.value, a_universe)
+				Result := ast_factory.new_cluster (l_name.value, l_pathname.value, a_target.system_config.universe, a_target)
 				Result.set_override (True)
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_condition) then
-							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_universe)
+							l_conditions := new_conditions (l_conditions, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_class_option) then
-							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_universe)
+							l_class_options := new_class_options (l_class_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_file_rule) then
-							l_file_rules := new_file_rules (l_file_rules, l_child, a_position_table, a_universe)
+							l_file_rules := new_file_rules (l_file_rules, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_mapping) then
-							l_mappings := new_mappings (l_mappings, l_child, a_position_table, a_universe)
+							l_mappings := new_mappings (l_mappings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_universe)
+							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_override) then
-							l_subclusters := new_override_clusters (l_subclusters, l_child, a_position_table, a_default_options, a_universe)
+							l_subclusters := new_override_clusters (l_subclusters, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_overrides) then
-							if attached new_overridden_group (l_child, a_position_table, a_universe) as l_overridden_group then
+							if attached new_overridden_group (l_child, a_position_table, a_target) as l_overridden_group then
 								Result.set_overridden_group (l_overridden_group)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
-							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_universe)
+							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_uses) then
-							l_provider_groups := new_provider_groups (l_provider_groups, l_child, a_position_table, a_universe)
+							l_provider_groups := new_provider_groups (l_provider_groups, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_visible) then
-							l_visible_classes := new_visible_classes (l_visible_classes, l_child, a_position_table, a_universe)
+							l_visible_classes := new_visible_classes (l_visible_classes, l_child, a_position_table, a_target)
 						end
 					elseif attached {XM_ATTRIBUTE} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_hidden) then
@@ -1521,7 +1503,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_hidden (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_prefix) then
 							Result.set_classname_prefix (l_child.value)
@@ -1532,7 +1514,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_read_only (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_recursive) then
 							l_value := l_child.value
@@ -1541,7 +1523,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_recursive (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							end
 						end
 					end
@@ -1566,16 +1548,16 @@ feature {NONE} -- AST factory
 		end
 
 	new_override_clusters (a_overrides: detachable ET_ECF_CLUSTERS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CLUSTERS
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_CLUSTERS
 			-- New override clusters (or `a_overrides' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_override: STRING_.same_case_insensitive (a_element.name, xml_override)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_overrides
-			if attached new_override_cluster (a_element, a_position_table, a_default_options, a_universe) as l_override then
+			if attached new_override_cluster (a_element, a_position_table, a_default_options, a_target) as l_override then
 				if Result = Void then
 					Result := ast_factory.new_clusters (l_override)
 				else
@@ -1584,75 +1566,75 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_platform_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_PLATFORM_CONDITION
+	new_platform_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_PLATFORM_CONDITION
 			-- New platform condition built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_platform: STRING_.same_case_insensitive (a_element.name, xml_platform)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if attached a_element.attribute_by_name (xml_value) as l_value then
 				if attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
-					error_handler.report_eatx_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatx_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				elseif l_value.value.is_empty then
-					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				else
 					Result := ast_factory.new_platform_condition (l_value.value, False)
 				end
 			elseif not attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
-				error_handler.report_eatn_error (xml_value, xml_excluded_value, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatn_error (xml_value, xml_excluded_value, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_excluded_value.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_platform_condition (l_excluded_value.value, True)
 			end
 		end
 
-	new_provider_groups (a_provider_groups: detachable DS_ARRAYED_LIST [STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable DS_ARRAYED_LIST [STRING]
+	new_provider_groups (a_provider_groups: detachable DS_ARRAYED_LIST [STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable DS_ARRAYED_LIST [STRING]
 			-- New provider groups (or `a_provider_groups' if not Void) built from `a_element'
 		require
 			no_void_group: a_provider_groups /= Void implies not a_provider_groups.has_void
 			a_element_not_void: a_element /= Void
 			is_uses: STRING_.same_case_insensitive (a_element.name, xml_uses)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if a_provider_groups /= Void then
 				Result := a_provider_groups
 			else
 				Result := ast_factory.new_provider_groups
 			end
-			add_provider_group (Result, a_element, a_position_table, a_universe)
+			add_provider_group (Result, a_element, a_position_table, a_target)
 		ensure
 			no_void_group: Result /= Void implies not Result.has_void
 		end
 
-	new_renamings (a_renamings: detachable DS_HASH_TABLE [STRING, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable DS_HASH_TABLE [STRING, STRING]
+	new_renamings (a_renamings: detachable DS_HASH_TABLE [STRING, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable DS_HASH_TABLE [STRING, STRING]
 			-- New class renamings (or `a_renamings' if not Void) built from `a_element'
 		require
 			no_void_old_class_renaming: a_renamings /= Void implies not a_renamings.has_void
 			no_void_new_class_renaming: a_renamings /= Void implies not a_renamings.has_void_item
 			a_element_not_void: a_element /= Void
 			is_renaming: STRING_.same_case_insensitive (a_element.name, xml_renaming)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if a_renamings /= Void then
 				Result := a_renamings
 			else
 				Result := ast_factory.new_class_renamings
 			end
-			add_renaming (Result, a_element, a_position_table, a_universe)
+			add_renaming (Result, a_element, a_position_table, a_target)
 		ensure
 			no_void_old_class_renaming: Result /= Void implies not Result.has_void
 			no_void_new_class_renaming: Result /= Void implies not Result.has_void_item
 		end
 
-	new_root (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ROOT
+	new_root (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_ROOT
 			-- New root built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_root: STRING_.same_case_insensitive (a_element.name, xml_root)
 			a_position_table_not_void: a_position_table /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_root_class: detachable ET_ECF_ROOT_CLASS
 			l_all_classes_true: BOOLEAN
@@ -1663,28 +1645,28 @@ feature {NONE} -- AST factory
 				if is_true (l_bool) then
 					l_all_classes_true := True
 				elseif not is_false (l_bool) then
-					error_handler.report_eatb_error (attribute_name (l_all_classes, a_position_table), attribute_value (l_all_classes, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatb_error (attribute_name (l_all_classes, a_position_table), attribute_value (l_all_classes, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 			end
 			if l_all_classes_true then
 				Result := ast_factory.new_root_all_classes
 			elseif not attached a_element.attribute_by_name (xml_class) as l_class_name then
-				error_handler.report_eatm_error (xml_class, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_class, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_class_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_class_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_class_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				l_root_class := ast_factory.new_root_class (attribute_value (l_class_name, a_position_table))
 				Result := l_root_class
 				if attached a_element.attribute_by_name (xml_feature) as l_feature then
 					if l_feature.value.is_empty then
-						error_handler.report_eate_error (attribute_name (l_feature, a_position_table), element_name (a_element, a_position_table), a_universe)
+						error_handler.report_eate_error (attribute_name (l_feature, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 					else
 						l_root_class.set_creation_procedure_name (attribute_value (l_feature, a_position_table))
 					end
 				end
 				if attached a_element.attribute_by_name (xml_cluster) as l_cluster then
 					if l_cluster.value.is_empty then
-						error_handler.report_eate_error (attribute_name (l_cluster, a_position_table), element_name (a_element, a_position_table), a_universe)
+						error_handler.report_eate_error (attribute_name (l_cluster, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 					else
 						l_root_class.set_cluster_name (attribute_value (l_cluster, a_position_table))
 					end
@@ -1693,7 +1675,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_system (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING): detachable ET_ECF_SYSTEM
-			-- New system built from `an_element'
+			-- New system built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_system: STRING_.same_case_insensitive (a_element.name, xml_system)
@@ -1709,13 +1691,35 @@ feature {NONE} -- AST factory
 				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), l_unknown_universe)
 			else
 				Result := ast_factory.new_system (l_name.value, a_filename)
-				fill_system_config (Result, a_element, a_position_table, Result)
+				fill_system_config (Result, a_element, a_position_table)
+			end
+		end
+
+	new_system_config (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_SYSTEM_CONFIG
+			-- New system config built from `a_element'
+		require
+			a_element_not_void: a_element /= Void
+			is_system: STRING_.same_case_insensitive (a_element.name, xml_system)
+			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_unknown_system_config: ET_ECF_SYSTEM_CONFIG
+		do
+			if not attached a_element.attribute_by_name (xml_name) as l_name then
+				l_unknown_system_config := ast_factory.new_system_config ("*unknown*", a_filename, a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), l_unknown_system_config)
+			elseif l_name.value.is_empty then
+				l_unknown_system_config := ast_factory.new_system_config ("*unknown*", a_filename, a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), l_unknown_system_config)
+			else
+				Result := ast_factory.new_system_config (l_name.value, a_filename, a_universe)
+				fill_system_config (Result, a_element, a_position_table)
 			end
 		end
 
 	new_target (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
 		a_ecf_version: UT_VERSION; a_default_settings: ET_ECF_SETTINGS; a_default_capabilities: ET_ECF_CAPABILITIES;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_TARGET
+		a_default_options: ET_ECF_OPTIONS; a_system_config: ET_ECF_SYSTEM_CONFIG): detachable ET_ECF_TARGET
 			-- New target built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
@@ -1724,7 +1728,7 @@ feature {NONE} -- AST factory
 			a_default_settings_not_void: a_default_settings /= Void
 			a_default_capabilities_not_void: a_default_capabilities /= Void
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_system_config_not_void: a_system_config /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_clusters: detachable ET_ECF_CLUSTERS
@@ -1742,97 +1746,98 @@ feature {NONE} -- AST factory
 			l_pre_compile_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
 			l_post_compile_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
 			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
-			l_parent_name: detachable XM_ATTRIBUTE
-			l_parent_target: detachable ET_ECF_TARGET
-			l_current_capabilities: ET_ECF_CAPABILITIES
-			l_parent_capabilities: ET_ECF_CAPABILITIES
-			l_capability_name: STRING
+			l_parent_name: detachable ET_IDENTIFIER
+			l_parent_location: detachable ET_IDENTIFIER
+			l_parent: ET_ECF_TARGET_PARENT
 			l_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_system_config)
 			else
-				Result := ast_factory.new_target (l_name.value)
+				Result := ast_factory.new_target (l_name.value, a_system_config)
 				Result.settings.set_secondary_settings (a_default_settings)
 				Result.capabilities.set_secondary_capabilities (a_default_capabilities)
 				Result.options.set_secondary_options (a_default_options)
 				if attached a_element.attribute_by_name (xml_extends) as l_extends then
-						-- Note: the way ISE avoids cycle is to consider only targets
-						-- which have been specified before the current one when looking
-						-- for parent targets.
-						-- So, a parent target specified in the 'extends' attribute may
-						-- be reported as missing even if it is specified after the
-						-- current target in the ECF file.
-					l_parent_name := l_extends
-					if attached a_universe.targets as l_targets and then attached l_targets.target_by_name (l_extends.value) as l_parent then
-						l_parent_target := l_parent
-						Result.set_parent (l_parent)
+					if l_extends.value.is_empty then
+						error_handler.report_eate_error (attribute_name (l_extends, a_position_table), element_name (a_element, a_position_table), a_system_config)
 					else
-						error_handler.report_eadr_error (attribute_value (l_extends, a_position_table), a_universe)
+						l_parent_name := attribute_value (l_extends, a_position_table)
 					end
+				end
+				if attached a_element.attribute_by_name (xml_extends_location) as l_extends_location then
+					if l_extends_location.value.is_empty then
+						error_handler.report_eate_error (attribute_name (l_extends_location, a_position_table), element_name (a_element, a_position_table), a_system_config)
+					else
+						l_parent_location := attribute_value (l_extends_location, a_position_table)
+					end
+				end
+				if l_parent_name /= Void or l_parent_location /= Void then
+					create l_parent.make (l_parent_name, l_parent_location)
+					Result.set_parent (l_parent)
 				end
 				l_cursor := a_element.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached {XM_ELEMENT} l_cursor.item as l_child then
 						if STRING_.same_case_insensitive (l_child.name, xml_assembly) then
-							l_dotnet_assemblies := new_adapted_dotnet_assemblies (l_dotnet_assemblies, l_child, a_position_table, a_default_options, a_universe)
+							l_dotnet_assemblies := new_adapted_dotnet_assemblies (l_dotnet_assemblies, l_child, a_position_table, a_default_options, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_capability) then
-							add_capabilities (Result.capabilities, l_child, a_position_table, a_universe)
+							add_capabilities (Result.capabilities, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_cluster) then
-							l_clusters := new_clusters (l_clusters, l_child, a_position_table, a_default_options, a_universe)
+							l_clusters := new_clusters (l_clusters, l_child, a_position_table, a_default_options, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_external_cflag) then
-							l_external_cflags := new_external_cflags (l_external_cflags, l_child, a_position_table, a_universe)
+							l_external_cflags := new_external_cflags (l_external_cflags, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_external_include) then
-							l_external_includes := new_external_includes (l_external_includes, l_child, a_position_table, a_universe)
+							l_external_includes := new_external_includes (l_external_includes, l_child, a_position_table,Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_external_library) then
-							l_external_libraries := new_external_libraries (l_external_libraries, l_child, a_position_table, a_universe)
+							l_external_libraries := new_external_libraries (l_external_libraries, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_external_linker_flag) then
-							l_external_linker_flags := new_external_linker_flags (l_external_linker_flags, l_child, a_position_table, a_universe)
+							l_external_linker_flags := new_external_linker_flags (l_external_linker_flags, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_external_make) then
-							l_external_makes := new_external_makes (l_external_makes, l_child, a_position_table, a_universe)
+							l_external_makes := new_external_makes (l_external_makes, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_external_object) then
-							l_external_objects := new_external_objects (l_external_objects, l_child, a_position_table, a_universe)
+							l_external_objects := new_external_objects (l_external_objects, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_external_resource) then
-							l_external_resources := new_external_resources (l_external_resources, l_child, a_position_table, a_universe)
+							l_external_resources := new_external_resources (l_external_resources, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_file_rule) then
-							l_file_rules := new_file_rules (l_file_rules, l_child, a_position_table, a_universe)
+							l_file_rules := new_file_rules (l_file_rules, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_override) then
-							l_clusters := new_override_clusters (l_clusters, l_child, a_position_table, a_default_options, a_universe)
+							l_clusters := new_override_clusters (l_clusters, l_child, a_position_table, a_default_options, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_library) then
-							l_libraries := new_adapted_libraries (l_libraries, l_child, a_position_table, a_default_options, a_universe)
+							l_libraries := new_adapted_libraries (l_libraries, l_child, a_position_table, a_default_options, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_mapping) then
-							l_mappings := new_mappings (l_mappings, l_child, a_position_table, a_universe)
+							l_mappings := new_mappings (l_mappings, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
-							l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_system_config)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							add_options (Result.options, l_child, a_position_table, a_default_options, a_universe)
+							add_options (Result.options, l_child, a_position_table, a_default_options, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_post_compile_action) then
-							l_post_compile_actions := new_actions (l_post_compile_actions, l_child, a_position_table, a_universe)
+							l_post_compile_actions := new_actions (l_post_compile_actions, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_pre_compile_action) then
-							l_pre_compile_actions := new_actions (l_pre_compile_actions, l_child, a_position_table, a_universe)
+							l_pre_compile_actions := new_actions (l_pre_compile_actions, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_precompile) then
-							if attached new_adapted_precompiled_library (l_child, a_position_table, a_default_options, a_universe) as l_precompiled_library then
+							if attached new_adapted_precompiled_library (l_child, a_position_table, a_default_options, Result) as l_precompiled_library then
 								Result.set_precompiled_library (l_precompiled_library)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_root) then
 							if Result.root /= Void then
 -- TODO: warning: several roots specified.
 							end
-							if attached new_root (l_child, a_position_table, a_universe) as l_root then
+							if attached new_root (l_child, a_position_table, Result) as l_root then
 								Result.set_root (l_root)
 							end
 						elseif STRING_.same_case_insensitive (l_child.name, xml_setting) then
-							add_setting (Result.settings, l_child, a_position_table, a_universe)
+							add_setting (Result.settings, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_variable) then
-							add_variable (Result.variables, l_child, a_position_table, a_universe)
+							add_variable (Result.variables, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_version) then
-							if attached new_version (l_child, a_position_table, a_universe) as l_version then
+							if attached new_version (l_child, a_position_table, Result) as l_version then
 								Result.set_version (l_version)
 							end
 						end
@@ -1844,7 +1849,7 @@ feature {NONE} -- AST factory
 							elseif is_false (l_value) then
 								Result.set_abstract (False)
 							else
-								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_system_config)
 							end
 						end
 					end
@@ -1853,19 +1858,6 @@ feature {NONE} -- AST factory
 					-- Conversions from old ECF versions.
 				adapt_capabilities (Result, a_ecf_version)
 				adapt_target_options (Result)
-				if l_parent_target /= Void and l_parent_name /= Void then
-						-- Check capabilities compatibility.
-					l_current_capabilities := Result.capabilities
-					l_parent_capabilities := l_parent_target.capabilities
-					across valid_capabilities_latest as l_capability_names loop
-						l_capability_name := l_capability_names.key
-						if attached l_current_capabilities.primary_support_value (l_capability_name) as l_capability_value then
-							if not l_parent_capabilities.is_capability_supported (l_capability_name, l_capability_value) then
-								error_handler.report_eads_error (l_capability_name, l_capability_value, attribute_value (l_parent_name, a_position_table), a_universe)
-							end
-						end
-					end
-				end
 				Result.set_clusters (l_clusters)
 				Result.set_libraries (l_libraries)
 				Result.set_dotnet_assemblies (l_dotnet_assemblies)
@@ -1886,7 +1878,7 @@ feature {NONE} -- AST factory
 
 	new_targets (a_targets: detachable ET_ECF_TARGETS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
 		a_ecf_version: UT_VERSION; a_default_settings: ET_ECF_SETTINGS; a_default_capabilities: ET_ECF_CAPABILITIES;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_TARGETS
+		a_default_options: ET_ECF_OPTIONS; a_system_config: ET_ECF_SYSTEM_CONFIG): detachable ET_ECF_TARGETS
 			-- New targets (or `a_targets' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
@@ -1895,10 +1887,10 @@ feature {NONE} -- AST factory
 			a_default_settings_not_void: a_default_settings /= Void
 			a_default_capabilities_not_void: a_default_capabilities /= Void
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_system_config_not_void: a_system_config /= Void
 		do
 			Result := a_targets
-			if attached new_target (a_element, a_position_table, a_ecf_version, a_default_settings, a_default_capabilities, a_default_options, a_universe) as l_target then
+			if attached new_target (a_element, a_position_table, a_ecf_version, a_default_settings, a_default_capabilities, a_default_options, a_system_config) as l_target then
 				if Result = Void then
 					Result := ast_factory.new_targets (l_target)
 				else
@@ -1907,26 +1899,26 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_version (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_VERSION
+	new_version (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_VERSION
 			-- New version built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_version: STRING_.same_case_insensitive (a_element.name, xml_version)
 			a_position_table_not_void: a_position_table /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if attached a_element.attribute_by_name (xml_major) as l_major then
 				if not l_major.value.is_integer or else l_major.value.to_integer < 0 then
-					error_handler.report_eati_error (attribute_name (l_major, a_position_table), attribute_value (l_major, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eati_error (attribute_name (l_major, a_position_table), attribute_value (l_major, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				elseif attached a_element.attribute_by_name (xml_minor) as l_minor then
 					if not l_minor.value.is_integer or else l_minor.value.to_integer < 0 then
-						error_handler.report_eati_error (attribute_name (l_minor, a_position_table), attribute_value (l_minor, a_position_table), element_name (a_element, a_position_table), a_universe)
+						error_handler.report_eati_error (attribute_name (l_minor, a_position_table), attribute_value (l_minor, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 					elseif attached a_element.attribute_by_name (xml_release) as l_release then
 						if not l_release.value.is_integer or else l_release.value.to_integer < 0 then
-							error_handler.report_eati_error (attribute_name (l_release, a_position_table), attribute_value (l_release, a_position_table), element_name (a_element, a_position_table), a_universe)
+							error_handler.report_eati_error (attribute_name (l_release, a_position_table), attribute_value (l_release, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 						elseif attached a_element.attribute_by_name (xml_build) as l_build then
 							if not l_build.value.is_integer or else l_build.value.to_integer < 0 then
-								error_handler.report_eati_error (attribute_name (l_build, a_position_table), attribute_value (l_build, a_position_table), element_name (a_element, a_position_table), a_universe)
+								error_handler.report_eati_error (attribute_name (l_build, a_position_table), attribute_value (l_build, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 							else
 								create Result.make (l_major.value.to_integer, l_minor.value.to_integer, l_release.value.to_integer, l_build.value.to_integer)
 							end
@@ -1935,16 +1927,16 @@ feature {NONE} -- AST factory
 						end
 					else
 						if attached a_element.attribute_by_name (xml_build) as l_build then
-							error_handler.report_eats_error (xml_release, attribute_name (l_build, a_position_table), element_name (a_element, a_position_table), a_universe)
+							error_handler.report_eats_error (xml_release, attribute_name (l_build, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 						end
 						create Result.make_major_minor (l_major.value.to_integer, l_minor.value.to_integer)
 					end
 				else
 					if attached a_element.attribute_by_name (xml_release) as l_release then
-						error_handler.report_eats_error (xml_minor, attribute_name (l_release, a_position_table), element_name (a_element, a_position_table), a_universe)
+						error_handler.report_eats_error (xml_minor, attribute_name (l_release, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 					end
 				 	if attached a_element.attribute_by_name (xml_build) as l_build then
-						error_handler.report_eats_error (xml_minor, attribute_name (l_build, a_position_table), element_name (a_element, a_position_table), a_universe)
+						error_handler.report_eats_error (xml_minor, attribute_name (l_build, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 					end
 					create Result.make_major (l_major.value.to_integer)
 				end
@@ -1964,35 +1956,35 @@ feature {NONE} -- AST factory
 				end
 			else
 				if attached a_element.attribute_by_name (xml_minor) as l_minor then
-					error_handler.report_eats_error (xml_major, attribute_name (l_minor, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eats_error (xml_major, attribute_name (l_minor, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 				if attached a_element.attribute_by_name (xml_release) as l_release then
-					error_handler.report_eats_error (xml_major, attribute_name (l_release, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eats_error (xml_major, attribute_name (l_release, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 			 	if attached a_element.attribute_by_name (xml_build) as l_build then
-					error_handler.report_eats_error (xml_major, attribute_name (l_build, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eats_error (xml_major, attribute_name (l_build, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 				if attached a_element.attribute_by_name (xml_product) as l_product then
-					error_handler.report_eats_error (xml_major, attribute_name (l_product, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eats_error (xml_major, attribute_name (l_product, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 				if attached a_element.attribute_by_name (xml_company) as l_company then
-					error_handler.report_eats_error (xml_major, attribute_name (l_company, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eats_error (xml_major, attribute_name (l_company, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 				if attached a_element.attribute_by_name (xml_copyright) as l_copyright then
-					error_handler.report_eats_error (xml_major, attribute_name (l_copyright, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eats_error (xml_major, attribute_name (l_copyright, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 				if attached a_element.attribute_by_name (xml_trademark) as l_trademark then
-					error_handler.report_eats_error (xml_major, attribute_name (l_trademark, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eats_error (xml_major, attribute_name (l_trademark, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 			end
 		end
 
-	new_version_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_VERSION_CONDITION
+	new_version_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_VERSION_CONDITION
 			-- New version condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_version: STRING_.same_case_insensitive (an_element.name, xml_version)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_type: detachable XM_ATTRIBUTE
 			l_min: detachable XM_ATTRIBUTE
@@ -2016,7 +2008,7 @@ feature {NONE} -- AST factory
 					when 8 then
 						create l_min_version.make (l_version_regexp.captured_substring (1).to_integer, l_version_regexp.captured_substring (3).to_integer, l_version_regexp.captured_substring (5).to_integer, l_version_regexp.captured_substring (7).to_integer)
 					else
-						error_handler.report_eabf_error (attribute_name (l_min, a_position_table), l_min.value, a_universe)
+						error_handler.report_eabf_error (attribute_name (l_min, a_position_table), l_min.value, a_target.system_config)
 					end
 				end
 			end
@@ -2035,55 +2027,55 @@ feature {NONE} -- AST factory
 					when 8 then
 						create l_max_version.make (l_version_regexp.captured_substring (1).to_integer, l_version_regexp.captured_substring (3).to_integer, l_version_regexp.captured_substring (5).to_integer, l_version_regexp.captured_substring (7).to_integer)
 					else
-						error_handler.report_eabg_error (attribute_name (l_max, a_position_table), l_max.value, a_universe)
+						error_handler.report_eabg_error (attribute_name (l_max, a_position_table), l_max.value, a_target.system_config)
 					end
 				end
 			end
 			if (l_min /= Void and l_max /= Void) and then (l_min_version /= Void and l_max_version /= Void) and then l_max_version < l_min_version then
-				error_handler.report_eabh_error (attribute_name (l_min, a_position_table), l_min.value, attribute_name (l_max, a_position_table), l_max.value, a_universe)
+				error_handler.report_eabh_error (attribute_name (l_min, a_position_table), l_min.value, attribute_name (l_max, a_position_table), l_max.value, a_target.system_config)
 			end
 			l_type := an_element.attribute_by_name (xml_type)
 			if l_type = Void then
-				error_handler.report_eabi_error (element_name (an_element, a_position_table), a_universe)
+				error_handler.report_eabi_error (element_name (an_element, a_position_table), a_target.system_config)
 			elseif STRING_.same_case_insensitive (l_type.value, xml_compiler) then
 				create {ET_ECF_COMPILER_VERSION_CONDITION} Result.make (l_min_version, l_max_version)
 			elseif STRING_.same_case_insensitive (l_type.value, xml_msil_clr) then
 				create {ET_ECF_MSIL_CLR_VERSION_CONDITION} Result.make (l_min_version, l_max_version)
 			else
-				error_handler.report_eabj_error (attribute_name (l_type, a_position_table), l_type.value, a_universe)
+				error_handler.report_eabj_error (attribute_name (l_type, a_position_table), l_type.value, a_target.system_config)
 			end
 		end
 
-	new_visible_class (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_VISIBLE_CLASS
+	new_visible_class (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_VISIBLE_CLASS
 			-- New visible class built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_visible: STRING_.same_case_insensitive (a_element.name, xml_visible)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if not attached a_element.attribute_by_name (xml_class) as l_class then
-				error_handler.report_eatm_error (xml_class, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_class, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_class.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_class, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_class, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				Result := ast_factory.new_visible_class (l_class.value)
 				if attached a_element.attribute_by_name (xml_feature) as l_feature then
 					if l_feature.value.is_empty then
-						error_handler.report_eate_error (attribute_name (l_feature, a_position_table), element_name (a_element, a_position_table), a_universe)
+						error_handler.report_eate_error (attribute_name (l_feature, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 					else
 						Result.set_feature_name (l_feature.value)
 					end
 				end
 				if attached a_element.attribute_by_name (xml_class_rename) as l_class_rename then
 					if l_class_rename.value.is_empty then
-						error_handler.report_eate_error (attribute_name (l_class_rename, a_position_table), element_name (a_element, a_position_table), a_universe)
+						error_handler.report_eate_error (attribute_name (l_class_rename, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 					else
 						Result.set_new_class_name (l_class_rename.value)
 					end
 				end
 				if attached a_element.attribute_by_name (xml_feature_rename) as l_feature_rename then
 					if l_feature_rename.value.is_empty then
-						error_handler.report_eate_error (attribute_name (l_feature_rename, a_position_table), element_name (a_element, a_position_table), a_universe)
+						error_handler.report_eate_error (attribute_name (l_feature_rename, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 					else
 						Result.set_new_feature_name (l_feature_rename.value)
 					end
@@ -2091,15 +2083,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_visible_classes (a_visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
+	new_visible_classes (a_visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
 			-- New visible classes (or `a_visible_classes' if not Void) built from `a_element'
 		require
 			a_element_not_void: a_element /= Void
 			is_visible: STRING_.same_case_insensitive (a_element.name, xml_visible)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			Result := a_visible_classes
-			if attached new_visible_class (a_element, a_position_table, a_universe) as l_visible_class then
+			if attached new_visible_class (a_element, a_position_table, a_target) as l_visible_class then
 				if Result = Void then
 					Result := ast_factory.new_visible_classes
 				end
@@ -2109,13 +2101,12 @@ feature {NONE} -- AST factory
 
 feature {NONE} -- Element change
 
-	fill_system_config (a_system_config: ET_ECF_SYSTEM_CONFIG; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	fill_system_config (a_system_config: ET_ECF_SYSTEM_CONFIG; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE)
 			-- Build system `a_system_config' from `a_element'.
 		require
 			a_system_config_not_void: a_system_config /= Void
 			a_element_not_void: a_element /= Void
 			is_system: STRING_.same_case_insensitive (a_element.name, xml_system)
-			a_universe_not_void: a_universe /= Void
 		local
 			l_namespace_uri: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -2146,10 +2137,10 @@ feature {NONE} -- Element change
 							a_system_config.set_description (l_text)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
-						l_notes := new_notes (l_notes, l_child, a_position_table, a_universe)
+						l_notes := new_notes (l_notes, l_child, a_position_table, a_system_config)
 						a_system_config.set_notes (l_notes)
 					elseif STRING_.same_case_insensitive (l_child.name, xml_target) then
-						l_targets := new_targets (l_targets, l_child, a_position_table, l_ecf_version, l_default_settings, l_default_capabilities, l_default_options, a_universe)
+						l_targets := new_targets (l_targets, l_child, a_position_table, l_ecf_version, l_default_settings, l_default_capabilities, l_default_options, a_system_config)
 						a_system_config.set_targets (l_targets)
 					end
 				elseif attached {XM_ATTRIBUTE} l_cursor.item as l_child then
@@ -2162,7 +2153,7 @@ feature {NONE} -- Element change
 						elseif is_false (l_value) then
 							a_system_config.set_read_only (False)
 						else
-							error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_universe)
+							error_handler.report_eatb_error (attribute_name (l_child, a_position_table), attribute_value (l_child, a_position_table), element_name (a_element, a_position_table), a_system_config)
 						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_uuid) then
 						a_system_config.set_uuid (l_child.value)
@@ -2172,13 +2163,13 @@ feature {NONE} -- Element change
 			end
 			if l_targets = Void or else l_targets.is_empty then
 					-- No target found in the ECF file.
-				error_handler.report_eaby_error (element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eaby_error (element_name (a_element, a_position_table), a_system_config)
 			end
 			if l_library_target /= Void then
 				if l_library_target.value.is_empty then
-					error_handler.report_eate_error (attribute_name (l_library_target, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eate_error (attribute_name (l_library_target, a_position_table), element_name (a_element, a_position_table), a_system_config)
 				elseif l_targets = Void or else not attached l_targets.target_by_name (l_library_target.value) as l_target then
-					error_handler.report_eltm_error (attribute_name (l_library_target, a_position_table), attribute_value (l_library_target, a_position_table), a_universe)
+					error_handler.report_eltm_error (attribute_name (l_library_target, a_position_table), attribute_value (l_library_target, a_position_table), a_system_config)
 				else
 					a_system_config.set_library_target (l_target)
 				end
@@ -2186,14 +2177,14 @@ feature {NONE} -- Element change
 		end
 
 	add_assertions (a_options: ET_ECF_OPTIONS; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET)
 			-- Add to `a_options' the assertions held in `an_element'.
 		require
 			a_options_not_void: a_options /= Void
 			an_element_not_void: an_element /= Void
 			is_option: STRING_.same_case_insensitive (an_element.name, xml_assertions)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_name: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -2220,13 +2211,13 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_capabilities (a_capabilities: ET_ECF_CAPABILITIES; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_capabilities (a_capabilities: ET_ECF_CAPABILITIES; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET)
 			-- Add to `a_capabilities' the capabilities held in `an_element'.
 		require
 			a_capabilities_not_void: a_capabilities /= Void
 			an_element_not_void: an_element /= Void
 			is_capability: STRING_.same_case_insensitive (an_element.name, xml_capability)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_name: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -2245,34 +2236,31 @@ feature {NONE} -- Element change
 						if attached a_capabilities.primary_use_value (l_name) then
 -- TODO: warning: several capabilities with the same name! (not reported by ISE: use the last one.)
 						end
-						if not a_capabilities.is_capability_supported (l_name, l_use.value) then
-							error_handler.report_eadq_error (l_name, attribute_value (l_use, a_position_table), a_universe)
-						end
-						a_capabilities.set_primary_use_value (l_name, l_use.value)
+						a_capabilities.set_primary_use_value_id (l_name, attribute_value (l_use, a_position_table))
 					end
 				end
 				l_cursor.forth
 			end
 		end
 
-	add_debug (a_options: ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_debug (a_options: ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET)
 			-- Add to `a_options' the debug held in `a_element'.
 		require
 			a_options_not_void: a_options /= Void
 			a_element_not_void: a_element /= Void
 			is_option: STRING_.same_case_insensitive (a_element.name, xml_debug)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_debug_name: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_enabled) as l_enabled then
-				error_handler.report_eatm_error (xml_enabled, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_enabled, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_enabled.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_enabled, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_enabled, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				l_debug_name := l_name.value
 				if attached a_options.primary_debug_value (l_debug_name) then
@@ -2282,7 +2270,7 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_mapping (a_mappings: DS_HASH_TABLE [STRING, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_mapping (a_mappings: DS_HASH_TABLE [STRING, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET)
 			-- Add to `a_mappings' the class mapping held in `a_element'.
 		require
 			a_mappings_not_void: a_mappings /= Void
@@ -2290,20 +2278,20 @@ feature {NONE} -- Element change
 			no_void_old_class_mapping: not a_mappings.has_void_item
 			a_element_not_void: a_element /= Void
 			is_mapping: STRING_.same_case_insensitive (a_element.name, xml_mapping)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if not attached a_element.attribute_by_name (xml_old_name) as l_old_name then
-				error_handler.report_eatm_error (xml_old_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_old_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_old_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_old_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_old_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_new_name) as l_new_name then
-				error_handler.report_eatm_error (xml_new_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_new_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_new_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_new_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_new_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				a_mappings.search (l_new_name.value)
 				if a_mappings.found then
-					error_handler.report_eatd_error (attribute_name (l_new_name, a_position_table), attribute_value (l_new_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatd_error (attribute_name (l_new_name, a_position_table), attribute_value (l_new_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 				a_mappings.force_last (l_old_name.value.as_upper, l_new_name.value.as_upper)
 			end
@@ -2313,14 +2301,14 @@ feature {NONE} -- Element change
 		end
 
 	add_options (a_options: ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET)
 			-- Add to `a_options' the options held in `a_element'.
 		require
 			a_options_not_void: a_options /= Void
 			a_element_not_void: a_element /= Void
 			is_option: STRING_.same_case_insensitive (a_element.name, xml_option) or STRING_.same_case_insensitive (a_element.name, xml_class_option)
 			a_default_options_not_void: a_default_options /= Void
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_name: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -2329,11 +2317,11 @@ feature {NONE} -- Element change
 			from l_cursor.start until l_cursor.after loop
 				if attached {XM_ELEMENT} l_cursor.item as l_child then
 					if STRING_.same_case_insensitive (l_child.name, xml_assertions) then
-						add_assertions (a_options, l_child, a_position_table, a_default_options, a_universe)
+						add_assertions (a_options, l_child, a_position_table, a_default_options, a_target)
 					elseif STRING_.same_case_insensitive (l_child.name, xml_debug) then
-						add_debug (a_options, l_child, a_position_table, a_universe)
+						add_debug (a_options, l_child, a_position_table, a_target)
 					elseif STRING_.same_case_insensitive (l_child.name, xml_warning) then
-						add_warning (a_options, l_child, a_position_table, a_universe)
+						add_warning (a_options, l_child, a_position_table, a_target)
 					elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
 						if attached l_child.text as l_text and then not l_text.is_empty then
 							a_options.set_description (l_text)
@@ -2350,19 +2338,19 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_provider_group (a_provider_groups: DS_ARRAYED_LIST [STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_provider_group (a_provider_groups: DS_ARRAYED_LIST [STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET)
 			-- Add to `a_provider_groups' the provider group held in `a_element'.
 		require
 			a_provider_groups_not_void: a_provider_groups /= Void
 			no_void_group: not a_provider_groups.has_void
 			a_element_not_void: a_element /= Void
 			is_uses: STRING_.same_case_insensitive (a_element.name, xml_uses)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if not attached a_element.attribute_by_name (xml_group) as l_group then
-				error_handler.report_eatm_error (xml_group, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_group, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_group.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_group, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_group, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				a_provider_groups.force_last (l_group.value)
 			end
@@ -2370,7 +2358,7 @@ feature {NONE} -- Element change
 			no_void_group: not a_provider_groups.has_void
 		end
 
-	add_renaming (a_renamings: DS_HASH_TABLE [STRING, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_renaming (a_renamings: DS_HASH_TABLE [STRING, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET)
 			-- Add to `a_renamings' the class renaming held in `a_element'.
 		require
 			a_renamings_not_void: a_renamings /= Void
@@ -2378,20 +2366,20 @@ feature {NONE} -- Element change
 			no_void_new_class_renaming: not a_renamings.has_void_item
 			a_element_not_void: a_element /= Void
 			is_renaming: STRING_.same_case_insensitive (a_element.name, xml_renaming)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if not attached a_element.attribute_by_name (xml_old_name) as l_old_name then
-				error_handler.report_eatm_error (xml_old_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_old_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_old_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_old_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_old_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_new_name) as l_new_name then
-				error_handler.report_eatm_error (xml_new_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_new_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_new_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_new_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_new_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				a_renamings.search (l_old_name.value)
 				if a_renamings.found then
-					error_handler.report_eatd_error (attribute_name (l_old_name, a_position_table), attribute_value (l_old_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+					error_handler.report_eatd_error (attribute_name (l_old_name, a_position_table), attribute_value (l_old_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
 				a_renamings.force_last (l_new_name.value.as_upper, l_old_name.value.as_upper)
 			end
@@ -2400,22 +2388,22 @@ feature {NONE} -- Element change
 			no_void_new_class_renaming: not a_renamings.has_void_item
 		end
 
-	add_setting (a_settings: ET_ECF_SETTINGS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_setting (a_settings: ET_ECF_SETTINGS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET)
 			-- Add to `a_settings' the setting held in `a_element'.
 		require
 			a_settings_not_void: a_settings /= Void
 			a_element_not_void: a_element /= Void
 			is_setting: STRING_.same_case_insensitive (a_element.name, xml_setting)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_value) as l_value then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_value.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				if attached a_settings.primary_value (l_name.value) then
 -- TODO: warning: several settings with the same name! (not reported by ISE: use the last one.)
@@ -2424,20 +2412,20 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_variable (a_variables: ET_ECF_VARIABLES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_variable (a_variables: ET_ECF_VARIABLES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET)
 			-- Add to `a_variables' the variable held in `a_element'.
 		require
 			a_variables_not_void: a_variables /= Void
 			a_element_not_void: a_element /= Void
 			is_variable: STRING_.same_case_insensitive (a_element.name, xml_variable)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_value) as l_value then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			else
 				if attached a_variables.primary_value (l_name.value) then
 -- TODO: warning: several variables with the same name! (not reported by ISE: use the last one.)
@@ -2446,24 +2434,24 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_warning (a_options: ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_warning (a_options: ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET)
 			-- Add to `a_options' the warning held in `a_element'.
 		require
 			a_options_not_void: a_options /= Void
 			a_element_not_void: a_element /= Void
 			is_option: STRING_.same_case_insensitive (a_element.name, xml_warning)
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		local
 			l_warning_name: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
-				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			elseif not attached a_element.attribute_by_name (xml_enabled) as l_enabled then
-				error_handler.report_eatm_error (xml_enabled, element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eatm_error (xml_enabled, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_enabled.value.is_empty then
-				error_handler.report_eate_error (attribute_name (l_enabled, a_position_table), element_name (a_element, a_position_table), a_universe)
+				error_handler.report_eate_error (attribute_name (l_enabled, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
 				l_warning_name := l_name.value
 				if attached a_options.primary_warning_value (l_warning_name) then
@@ -2613,135 +2601,23 @@ feature {NONE} -- Element change
 			adapt_options (a_target.options)
 		end
 
-	parse_libraries (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
-			-- Parse libraries referenced in `a_universe' when in `a_state'.
-		require
-			a_universe_not_void: a_universe /= Void
-			a_state_not_void: a_state /= Void
-		local
-			l_libraries: ET_ADAPTED_LIBRARIES
-			l_library: detachable ET_ECF_LIBRARY
-			i, nb: INTEGER
-			l_file: KL_TEXT_INPUT_FILE
-			l_library_parser: like library_parser
-			l_target: detachable ET_ECF_TARGET
-			l_filename: STRING
-			l_current_capabilities: ET_ECF_CAPABILITIES
-			l_library_capabilities: ET_ECF_CAPABILITIES
-			l_capability_name: STRING
-		do
-			l_libraries := a_universe.libraries
-			l_library_parser := library_parser
-			nb := l_libraries.count
-			from i := 1 until i > nb loop
-				if attached {ET_ECF_ADAPTED_LIBRARY} l_libraries.library (i) as l_adapted_library then
-						-- Make sure that the filename of the ECF library is a canonical absolute pathname.
-					l_filename := l_adapted_library.pathname
-					l_filename := Execution_environment.interpreted_string (l_filename)
-						-- Make sure that the directory separator symbol is the
-						-- one of the current file system. We take advantage of
-						-- the fact that `windows_file_system' accepts both '\'
-						-- and '/' as directory separator.
-					l_filename := file_system.pathname_from_file_system (l_filename, windows_file_system)
-					if file_system.is_relative_pathname (l_filename) then
-						l_filename := file_system.pathname (file_system.dirname (a_universe.filename), l_filename)
-					end
-					l_filename := file_system.canonical_pathname (l_filename)
-					create l_file.make (l_filename)
-					l_file.open_read
-					if not l_file.is_open_read then
-						error_handler.report_eabv_error (l_adapted_library.filename_id, l_filename, a_universe)
-					else
-						l_library_parser.parse_adapted_library (l_file, l_adapted_library)
-						l_file.close
-						l_library := l_library_parser.last_library
-						if l_library = Void then
-								-- The error has already been reported in the parser.
-						else
-							l_adapted_library.set_library (l_library)
-							l_target := l_library.selected_target
-							if l_target = Void then
-									-- Get the library target.
-								l_target := l_library.library_target
-								if l_target = Void then
-									error_handler.report_eabw_error (l_adapted_library.filename_id, l_filename, a_universe)
-								else
-									l_library.select_target (l_target, a_state)
-									l_target.fill_options (l_library)
-								end
-							end
-								-- Check capabilities compatibility.
-							if attached a_universe.selected_target as l_current_target and l_target /= Void then
-								l_current_capabilities := l_current_target.capabilities
-								l_library_capabilities := l_target.capabilities
-								across valid_capabilities_latest as l_capability_names loop
-									l_capability_name := l_capability_names.key
-									if not attached l_current_capabilities.support_value (l_capability_name) as l_capability_value then
-										-- OK.
-									elseif l_library_capabilities.is_capability_supported (l_capability_name, l_capability_value) then
-										-- OK.
-									elseif attached l_adapted_library.conditions as l_conditions and then l_conditions.is_capability_supported (l_capability_name, l_current_capabilities, l_library_capabilities) then
-										-- OK.
-									else
-										error_handler.report_eadp_error (l_capability_name, l_capability_value, l_adapted_library.name_id, a_universe)
-									end
-								end
-							end
-						end
-					end
-				end
-				i := i + 1
-			end
-		end
-
-	parse_dotnet_assemblies (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
-			-- Parse .NET assemblies referenced in `a_universe' when in `a_state'.
-		require
-			a_universe_not_void: a_universe /= Void
-			a_state_not_void: a_state /= Void
-		local
-			l_dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
-			l_dotnet_assembly: ET_ECF_DOTNET_ASSEMBLY
-			i, nb: INTEGER
-			l_filename: STRING
-			l_parsed_dotnet_assemblies: like parsed_dotnet_assemblies
-		do
-			l_parsed_dotnet_assemblies := parsed_dotnet_assemblies
-			l_dotnet_assemblies := a_universe.dotnet_assemblies
-			nb := l_dotnet_assemblies.count
-			from i := 1 until i > nb loop
-				if attached {ET_ECF_ADAPTED_DOTNET_ASSEMBLY} l_dotnet_assemblies.dotnet_assembly (i) as l_adapted_dotnet_assembly then
-						-- Make sure that the filename of the .NET assembly is a canonical absolute pathname.
-					l_filename := l_adapted_dotnet_assembly.pathname
-					l_filename := Execution_environment.interpreted_string (l_filename)
-						-- Make sure that the directory separator symbol is the
-						-- one of the current file system. We take advantage of
-						-- the fact that `windows_file_system' accepts both '\'
-						-- and '/' as directory separator.
-					l_filename := file_system.pathname_from_file_system (l_filename, windows_file_system)
-					if file_system.is_relative_pathname (l_filename) then
-						l_filename := file_system.pathname (file_system.dirname (l_adapted_dotnet_assembly.universe.filename), l_filename)
-					end
-					l_filename := file_system.canonical_pathname (l_filename)
-					if operating_system.is_windows then
-						l_filename := l_filename.as_lower
-					end
-					l_parsed_dotnet_assemblies.search (l_filename)
-					if l_parsed_dotnet_assemblies.found then
-							-- Already parsed.
-						l_dotnet_assembly := l_parsed_dotnet_assemblies.found_item
-						l_adapted_dotnet_assembly.set_dotnet_assembly (l_dotnet_assembly)
-					else
-						l_dotnet_assembly := ast_factory.new_dotnet_assembly (l_adapted_dotnet_assembly.name, l_filename, l_adapted_dotnet_assembly.universe.current_system)
-						l_adapted_dotnet_assembly.set_dotnet_assembly (l_dotnet_assembly)
-						l_parsed_dotnet_assemblies.force_last_new (l_dotnet_assembly, l_filename)
-					end
-				end
-				i := i + 1
-			end
-		end
-
 feature {NONE} -- Implementation
+
+	parsed_libraries: DS_HASH_TABLE [ET_ECF_LIBRARY, STRING]
+			-- Already parsed ECF libraries, indexed by UUID
+		deferred
+		ensure
+			parsed_libraries_not_void: Result /= Void
+			no_void_library: not Result.has_void_item
+		end
+
+	parsed_dotnet_assemblies: DS_HASH_TABLE [ET_ECF_DOTNET_ASSEMBLY, STRING]
+			-- Already parsed .NET assemblies, indexed by filenames
+		deferred
+		ensure
+			parsed_dotnet_assemblies_not_void: Result /= Void
+			no_void_dotnet_assembly: not Result.has_void_item
+		end
 
 	element_name (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): ET_IDENTIFIER
 			-- Element name

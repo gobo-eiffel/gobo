@@ -146,11 +146,22 @@ feature -- Names
 			--
 			-- Values: true|false
 
+	manifest_array_type_setting_name: STRING = "manifest_array_type"
+			-- Name of setting "manifest_array_type"
+			--
+			-- Values: default|standard|mismatch_warning|mismatch_error
+			--
+			-- Note: introduced in ECF 1.18.0.
+			-- Note that this setting is different from the old warning with the
+			-- same name which has been removed in ECF 1.18.0.
+
 	metadata_cache_path_setting_name: STRING = "metadata_cache_path"
 			-- Name of setting "metadata_cache_path"
 
 	msil_assembly_compatibility_setting_name: STRING = "msil_assembly_compatibility"
 			-- Name of setting "msil_assembly_compatibility"
+			--
+			-- Note: removed in ECF 1.18.0
 
 	msil_classes_per_module_setting_name: STRING = "msil_classes_per_module"
 			-- Name of setting "msil_classes_per_module"
@@ -227,6 +238,11 @@ feature -- Names
 
 feature -- Values
 
+	default_setting_value: STRING = "default"
+			-- Value "default"
+			--
+			-- Used in "manifest_array_type".
+
 	dll_setting_value: STRING = "dll"
 			-- Value "dll"
 			--
@@ -250,6 +266,16 @@ feature -- Values
 			--
 			-- Used in "platform".
 
+	mismatch_error_setting_value: STRING = "mismatch_error"
+			-- Value "mismatch_error"
+			--
+			-- Used in "manifest_array_type".
+
+	mismatch_warning_setting_value: STRING = "mismatch_warning"
+			-- Value "mismatch_warning"
+			--
+			-- Used in "manifest_array_type".
+
 	none_setting_value: STRING = "none"
 			-- Value "none"
 			--
@@ -259,6 +285,11 @@ feature -- Values
 			-- Value "scoop"
 			--
 			-- Used in "concurrency".
+
+	standard_setting_value: STRING = "standard"
+			-- Value "standard"
+			--
+			-- Used in "manifest_array_type".
 
 	thread_setting_value: STRING = "thread"
 			-- Value "thread"

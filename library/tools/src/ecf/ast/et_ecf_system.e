@@ -5,7 +5,7 @@ note
 		"ECF Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,8 @@ inherit
 			make as make_system
 		redefine
 			name,
-			is_read_only
+			is_read_only,
+			universe
 		end
 
 	ET_ECF_INTERNAL_UNIVERSE
@@ -34,7 +35,8 @@ inherit
 		redefine
 			make,
 			name,
-			is_read_only
+			is_read_only,
+			universe
 		end
 
 create
@@ -46,7 +48,8 @@ feature {NONE} -- Initialization
 	make (a_name, a_filename: STRING)
 			-- Create a new ECF system.
 		do
-			precursor (a_name, a_filename)
+			name := a_name
+			filename := a_filename
 			make_system (a_name)
 		end
 
@@ -62,6 +65,11 @@ feature -- Access
 
 	name: STRING
 			-- Name of system
+
+	universe: ET_ECF_INTERNAL_UNIVERSE
+			-- Universe of current system config.
+			-- It might be different from the current system config itself when
+			-- using parent targets with an 'extension_location' attribute.
 
 feature -- Setting
 

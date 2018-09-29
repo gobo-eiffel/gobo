@@ -1,0 +1,10 @@
+-------------------------------------------------------------------------------
+
+Error code: VD00
+
+General configuration parsing error.
+What to do: fix the configuration file.
+
+Parse error: Unable to find parent target of 'aa' (${GOBO}/library/tools/test/eiffel/ecf/epur/test2/system.ecf)!
+
+-------------------------------------------------------------------------------

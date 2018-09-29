@@ -36,6 +36,7 @@
   possible to read an ECF file, make some modifications and write it back.
 * Fixed data race in `ET_CLASS.formal_parameter_type` when executed in
   multi-threaded mode.
+* Added support for ECF 1.18.0.
 
 ### Gobo Eiffel Utility Library
 

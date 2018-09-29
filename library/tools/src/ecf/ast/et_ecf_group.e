@@ -94,6 +94,16 @@ feature -- Access
 	notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 			-- Notes
 
+	universe: ET_ECF_INTERNAL_UNIVERSE
+			-- Surrounding universe
+		deferred
+		ensure
+			universe_not_void: Result /= Void
+		end
+
+	target: ET_ECF_TARGET
+			-- Target where current group has been declared
+
 feature -- Setting
 
 	set_options (a_options: like options)
@@ -140,5 +150,6 @@ invariant
 	no_void_class_option_name: attached class_options as l_class_options implies not l_class_options.has_void
 	no_void_class_option: attached class_options as l_class_options implies not l_class_options.has_void_item
 	no_void_note: attached notes as l_notes implies not l_notes.has_void
+	target_not_void: target /= Void
 
 end

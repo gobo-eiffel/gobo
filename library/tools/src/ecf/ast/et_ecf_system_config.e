@@ -18,18 +18,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_filename: STRING)
+	make (a_name, a_filename: STRING; a_universe: like universe)
 			-- Create a new ECF config.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
 		do
 			name := a_name
 			filename := a_filename
+			universe := a_universe
 		ensure
 			name_set: name = a_name
 			filename_set: filename = a_filename
+			universe_set: universe = a_universe
 		end
 
 feature -- Status report
@@ -74,6 +77,11 @@ feature -- Access
 
 	notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 			-- Notes
+
+	universe: ET_ECF_INTERNAL_UNIVERSE
+			-- Universe of current system config.
+			-- It might be different from the current system config itself when
+			-- using parent targets with an 'extension_location' attribute.
 
 feature -- Status setting
 
@@ -162,5 +170,6 @@ invariant
 	name_not_empty: not name.is_empty
 	filename_not_void: filename /= Void
 	no_void_note: attached notes as l_notes implies not l_notes.has_void
+	universe_not_void: universe /= Void
 
 end

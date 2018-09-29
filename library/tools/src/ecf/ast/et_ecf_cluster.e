@@ -5,7 +5,7 @@ note
 		"ECF Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,18 +36,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	make (a_name: like name; a_pathname: like pathname; a_universe: like universe; a_target: like target)
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_pathname_not_void: a_pathname /= Void
 			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			name := a_name
 			pathname := a_pathname
 			is_relative := a_pathname.count > 2 and then a_pathname.item (1) = '$' and then (once "|/\").has (a_pathname.item (2))
 			universe := a_universe
+			target := a_target
 			set_scm_mapping_constraint_enabled (True)
 			if attached universe.ecf_version as l_ecf_version and then l_ecf_version <= ecf_1_4_0 then
 				set_use_obsolete_syntax (True)
@@ -56,22 +58,25 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			pathname_set: pathname = a_pathname
 			universe_set: universe = a_universe
+			target_set: target = a_target
 			prefixed_name_set: prefixed_name = a_name
 			is_relative: is_relative = (a_pathname.count > 2 and then a_pathname.item (1) = '$' and then (once "|/\").has (a_pathname.item (2)))
 			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
 		end
 
-	make_relative (a_name: like name; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	make_relative (a_name: like name; a_universe: like universe; a_target: like target)
 			-- Create a new cluster whose pathname is its name relative to its parent cluster if any.		
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
 			name := a_name
 			pathname := a_name
 			is_relative := True
 			universe := a_universe
+			target := a_target
 			set_scm_mapping_constraint_enabled (True)
 			if attached universe.ecf_version as l_ecf_version and then l_ecf_version <= ecf_1_4_0 then
 				set_use_obsolete_syntax (True)
@@ -80,6 +85,7 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			pathname_set: pathname = a_name
 			universe_set: universe = a_universe
+			target_set: target = a_target
 			prefixed_name_set: prefixed_name = a_name
 			is_relative: is_relative
 			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
@@ -147,10 +153,8 @@ feature -- Access
 					Result := name
 				end
 				if file_system.is_relative_pathname (Result) then
-					if attached {ET_ECF_INTERNAL_UNIVERSE} universe as l_ecf_universe then
-						l_ecf_filename := l_ecf_universe.filename
-						Result := file_system.pathname (file_system.dirname (l_ecf_filename), Result)
-					end
+					l_ecf_filename := universe.filename
+					Result := file_system.pathname (file_system.dirname (l_ecf_filename), Result)
 				end
 			end
 		end
@@ -416,7 +420,7 @@ feature {NONE} -- Implementation
 	new_recursive_cluster (a_name: STRING): like Current
 			-- New recursive cluster
 		do
-			create Result.make_relative (a_name, universe)
+			create Result.make_relative (a_name, universe, target)
 			Result.set_parent (Current)
 			Result.set_file_rules (file_rules)
 			Result.set_recursive (True)

@@ -5,7 +5,7 @@ note
 		"ECF Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ inherit
 
 	ET_ECF_INTERNAL_UNIVERSE
 		rename
-			make as make_config,
+			make as make_universe,
 			universe as library,
 			has_class as has_class_by_name
 		undefine
@@ -54,7 +54,8 @@ feature {NONE} -- Initialization
 			a_filename_not_void: a_filename /= Void
 			a_system_not_void: a_system /= Void
 		do
-			make_config (a_name, a_filename)
+			name := a_name
+			filename := a_filename
 			make_library (a_name, a_system)
 		ensure
 			name_set: name = a_name
@@ -75,7 +76,7 @@ feature -- Access
 	name: STRING
 			-- Name
 
-	library: ET_LIBRARY
+	library: ET_ECF_LIBRARY
 			-- Eiffel library being adapted
 
 end

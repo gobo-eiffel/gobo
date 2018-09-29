@@ -17,16 +17,37 @@ inherit
 	ET_INTERNAL_UNIVERSE
 		redefine
 			name,
-			is_read_only
+			is_read_only,
+			universe
 		end
 
 	ET_ECF_SYSTEM_CONFIG
+		rename
+			make as make_system_config
 		undefine
 			set_read_only,
 			set_name
 		redefine
 			name,
-			is_read_only
+			is_read_only,
+			universe
+		end
+
+feature {NONE} -- Initialization
+
+	make (a_name, a_filename: STRING)
+			-- Create a new ECF universe.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+			a_filename_not_void: a_filename /= Void
+		do
+			name := a_name
+			filename := a_filename
+			universe := Current
+		ensure
+			name_set: name = a_name
+			filename_set: filename = a_filename
 		end
 
 feature -- Status report
@@ -45,18 +66,21 @@ feature -- Access
 	selected_target: detachable ET_ECF_TARGET
 			-- Selected target
 
+	universe: ET_ECF_INTERNAL_UNIVERSE
+			-- Universe of current system config.
+			-- It might be different from the current system config itself when
+			-- using parent targets with an 'extension_location' attribute.
+
 feature -- Setting
 
-	select_target (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE)
-			-- Select `a_target' in `a_state'.
+	select_target (a_target: ET_ECF_TARGET)
+			-- Select `a_target'.
 			-- Update `clusters' and `libraries' accordingly.
 		require
 			not_selected_yet: selected_target = Void
 			a_target_not_void: a_target /= Void
 			valid_target: attached targets as l_targets and then l_targets.has (a_target)
-			a_state_not_void: a_state /= Void
 		do
-			a_target.fill_universe (Current, a_state)
 			selected_target := a_target
 		ensure
 			selected_target_set: selected_target = a_target

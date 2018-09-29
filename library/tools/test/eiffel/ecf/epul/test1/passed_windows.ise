@@ -1,0 +1,10 @@
+-------------------------------------------------------------------------------
+
+Error code: VD00
+
+General configuration parsing error.
+What to do: fix the configuration file.
+
+Parse error (XML syntax)  in ${GOBO}\library\tools\test\eiffel\ecf\epul\test1\system.ecf (line 9, column 31): Missing parent target: bb in target aa
+
+-------------------------------------------------------------------------------

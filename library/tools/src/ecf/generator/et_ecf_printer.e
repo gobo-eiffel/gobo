@@ -665,6 +665,12 @@ feature -- Output
 			end
 			file.put_character ('=')
 			print_quoted_string (a_condition.value)
+			if ecf_version >= ecf_1_18_0 and then attached a_condition.match as l_match then
+				file.put_character (' ')
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_match)
+				file.put_character ('=')
+				print_quoted_string (l_match)
+			end
 			file.put_character ('/')
 			file.put_character ('>')
 			file.put_new_line
@@ -1552,10 +1558,18 @@ feature -- Output
 				print_quoted_string ({ET_ECF_SETTING_NAMES}.true_setting_value)
 			end
 			if attached a_target.parent as l_parent then
-				file.put_character (' ')
-				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_extends)
-				file.put_character ('=')
-				print_quoted_string (l_parent.name)
+				if attached l_parent.name as l_parent_name then
+					file.put_character (' ')
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_extends)
+					file.put_character ('=')
+					print_quoted_string (l_parent_name)
+				end
+				if attached l_parent.location as l_parent_location then
+					file.put_character (' ')
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_extends_location)
+					file.put_character ('=')
+					print_quoted_string (l_parent_location)
+				end
 			end
 			l_options := adapted_target_options (a_target)
 			l_settings := adapted_settings (a_target)
@@ -2153,7 +2167,7 @@ feature {NONE} -- Adaptation
 			l_default_options := default_options (ecf_version)
 			l_original_options := a_target.options
 			if a_target.parent /= Void or l_original_options.secondary_options = l_default_options then
-				if ecf_version >= ecf_1_16_0 then
+				if ecf_version >= ecf_1_18_0 then
 					Result := l_original_options
 				else
 					create Result.make
@@ -2173,92 +2187,94 @@ feature {NONE} -- Adaptation
 			else
 				Result := explicit_options (l_original_options, l_default_options)
 			end
-			if ecf_version < ecf_1_16_0 then
-					-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
-				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
-				if ecf_version >= ecf_1_10_0 then
-					if attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
-						l_catcall_detection_value := l_value
-					elseif attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
-						l_catcall_detection_value := l_value
-					elseif a_target.parent = Void then
-						l_default_capabilities := default_capabilities (ecf_version)
-						if attached a_target.capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
-							if attached l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_default_value then
-								if not STRING_.same_case_insensitive (l_value, l_default_value) then
-									l_catcall_detection_value := l_value
+			if ecf_version < ecf_1_18_0 then
+				if ecf_version < ecf_1_16_0 then
+						-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
+					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+					if ecf_version >= ecf_1_10_0 then
+						if attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
+							l_catcall_detection_value := l_value
+						elseif attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
+							l_catcall_detection_value := l_value
+						elseif a_target.parent = Void then
+							l_default_capabilities := default_capabilities (ecf_version)
+							if attached a_target.capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
+								if attached l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_default_value then
+									if not STRING_.same_case_insensitive (l_value, l_default_value) then
+										l_catcall_detection_value := l_value
+									end
 								end
-							end
-						elseif attached a_target.capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
-							if attached l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_default_value then
-								if not STRING_.same_case_insensitive (l_value, l_default_value) then
-									l_catcall_detection_value := l_value
+							elseif attached a_target.capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_value then
+								if attached l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name) as l_default_value then
+									if not STRING_.same_case_insensitive (l_value, l_default_value) then
+										l_catcall_detection_value := l_value
+									end
 								end
 							end
 						end
-					end
-					if l_catcall_detection_value /= Void then
-						if ecf_version >= ecf_1_14_0 then
-							Result.set_primary_value (l_catcall_detection_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
-						else
-							if STRING_.same_case_insensitive (l_catcall_detection_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
-								l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.false_option_value
+						if l_catcall_detection_value /= Void then
+							if ecf_version >= ecf_1_14_0 then
+								Result.set_primary_value (l_catcall_detection_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
 							else
-								l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
-							end
-							Result.set_primary_value (l_catcall_detection_boolean_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
-						end
-					end
-				end
-					-- Option "void_safety" has been superseded by capability "void_safety" in ECF 1.16.0.
-					-- Option "is_void_safe" has been superseded by option "void_safety" in ECF 1.5.0 and again in ECF 1.11.0.
-				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.void_safety_option_name)
-				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
-				if ecf_version >= ecf_1_3_0 then
-					if attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
-						l_void_safety_value := l_value
-					elseif attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
-						l_void_safety_value := l_value
-					elseif a_target.parent = Void then
-						l_default_capabilities := default_capabilities (ecf_version)
-						if attached a_target.capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
-							if attached l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_default_value then
-								if not STRING_.same_case_insensitive (l_value, l_default_value) then
-									l_void_safety_value := l_value
-								end
-							end
-						elseif attached a_target.capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
-							if attached l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_default_value then
-								if not STRING_.same_case_insensitive (l_value, l_default_value) then
-									l_void_safety_value := l_value
-								end
-							end
-						end
-					end
-					if l_void_safety_value /= Void then
-						if ecf_version < ecf_1_5_0 then
-							if STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
-								l_void_safety_boolean_value := {ET_ECF_OPTION_NAMES}.false_option_value
-							else
-								l_void_safety_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
-							end
-							Result.set_primary_value (l_void_safety_boolean_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
-						elseif ecf_version < ecf_1_11_0 then
-							if STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.all_capability_value) then
-								if ecf_version < ecf_1_9_0 then
-									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.true_option_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+								if STRING_.same_case_insensitive (l_catcall_detection_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
+									l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.false_option_value
 								else
-									Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+									l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
 								end
-							elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value) then
-								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.all_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
-							elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
-								Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
-							else
-								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.initialization_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+								Result.set_primary_value (l_catcall_detection_boolean_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
 							end
-						else
-							Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+						end
+					end
+						-- Option "void_safety" has been superseded by capability "void_safety" in ECF 1.16.0.
+						-- Option "is_void_safe" has been superseded by option "void_safety" in ECF 1.5.0 and again in ECF 1.11.0.
+					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.void_safety_option_name)
+					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+					if ecf_version >= ecf_1_3_0 then
+						if attached a_target.capabilities.primary_use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
+							l_void_safety_value := l_value
+						elseif attached a_target.capabilities.primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
+							l_void_safety_value := l_value
+						elseif a_target.parent = Void then
+							l_default_capabilities := default_capabilities (ecf_version)
+							if attached a_target.capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
+								if attached l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_default_value then
+									if not STRING_.same_case_insensitive (l_value, l_default_value) then
+										l_void_safety_value := l_value
+									end
+								end
+							elseif attached a_target.capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_value then
+								if attached l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name) as l_default_value then
+									if not STRING_.same_case_insensitive (l_value, l_default_value) then
+										l_void_safety_value := l_value
+									end
+								end
+							end
+						end
+						if l_void_safety_value /= Void then
+							if ecf_version < ecf_1_5_0 then
+								if STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
+									l_void_safety_boolean_value := {ET_ECF_OPTION_NAMES}.false_option_value
+								else
+									l_void_safety_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
+								end
+								Result.set_primary_value (l_void_safety_boolean_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+							elseif ecf_version < ecf_1_11_0 then
+								if STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.all_capability_value) then
+									if ecf_version < ecf_1_9_0 then
+										Result.set_primary_value ({ET_ECF_OPTION_NAMES}.true_option_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+									else
+										Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+									end
+								elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value) then
+									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.all_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+								elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
+									Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+								else
+									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.initialization_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+								end
+							else
+								Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+							end
 						end
 					end
 				end
@@ -2278,7 +2294,7 @@ feature {NONE} -- Adaptation
 			l_default_options: ET_ECF_OPTIONS
 		do
 			l_default_options := default_options (ecf_version)
-			if ecf_version >= ecf_1_16_0 then
+			if ecf_version >= ecf_1_18_0 then
 				Result := a_options
 			else
 				create Result.make
@@ -2295,13 +2311,15 @@ feature {NONE} -- Adaptation
 					Result.set_primary_warning_value (l_primary_warnings.key, l_primary_warnings.item)
 				end
 			end
-			if ecf_version < ecf_1_16_0 then
-					-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
-				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
-					-- Option "void_safety" has been superseded by capability "void_safety" in ECF 1.16.0.
-					-- Option "is_void_safe" has been superseded by option "void_safety" in ECF 1.5.0 and again in ECF 1.11.0.
-				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.void_safety_option_name)
-				Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+			if ecf_version < ecf_1_18_0 then
+				if ecf_version < ecf_1_16_0 then
+						-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
+					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+						-- Option "void_safety" has been superseded by capability "void_safety" in ECF 1.16.0.
+						-- Option "is_void_safe" has been superseded by option "void_safety" in ECF 1.5.0 and again in ECF 1.11.0.
+					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.void_safety_option_name)
+					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+				end
 				adapt_options (Result)
 			end
 		ensure

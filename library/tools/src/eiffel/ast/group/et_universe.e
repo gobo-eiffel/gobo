@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #18 $"
@@ -2761,6 +2761,7 @@ feature {NONE} -- Concurrency
 invariant
 
 	current_system_not_void: current_system /= Void
+	universe_is_current: universe = Current
 	master_classes_not_void: master_classes /= Void
 	no_void_master_class: not master_classes.has_void_item
 		-- Kernel types.

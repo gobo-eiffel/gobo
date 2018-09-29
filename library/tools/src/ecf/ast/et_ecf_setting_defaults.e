@@ -53,7 +53,9 @@ feature -- Access
 		require
 			a_ecf_version_not_void: a_ecf_version /= Void
 		do
-			if a_ecf_version >= ecf_1_17_0 then
+			if a_ecf_version >= ecf_1_18_0 then
+				Result := valid_settings_1_18_0
+			elseif a_ecf_version >= ecf_1_17_0 then
 				Result := valid_settings_1_17_0
 			elseif a_ecf_version >= ecf_1_16_0 then
 				Result := valid_settings_1_16_0
@@ -109,8 +111,8 @@ feature -- Access
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.java_generation_setting_name)
 			Result.force_last (Void, {ET_ECF_SETTING_NAMES}.library_root_setting_name)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.line_generation_setting_name)
+			Result.force_last (manifest_array_type_setting_value_regexp, {ET_ECF_SETTING_NAMES}.manifest_array_type_setting_name)
 			Result.force_last (Void, {ET_ECF_SETTING_NAMES}.metadata_cache_path_setting_name)
-			Result.force_last (Void, {ET_ECF_SETTING_NAMES}.msil_assembly_compatibility_setting_name)
 			Result.force_last (msil_classes_per_module_setting_value_regexp, {ET_ECF_SETTING_NAMES}.msil_classes_per_module_setting_name)
 			Result.force_last (Void, {ET_ECF_SETTING_NAMES}.msil_clr_version_setting_name)
 			Result.force_last (Void, {ET_ECF_SETTING_NAMES}.msil_culture_setting_name)
@@ -130,12 +132,25 @@ feature -- Access
 			no_void_setting_name: not Result.has_void
 		end
 
+	valid_settings_1_18_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+			-- Valid setting values for ECF 1.18.0 and above
+			--
+			-- A void regexp means that there is no constraint on the setting value.
+		once
+			Result := valid_settings_latest
+		ensure
+			valid_settings_1_18_0_not_void: Result /= Void
+			no_void_setting_name: not Result.has_void
+		end
+
 	valid_settings_1_17_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
 			-- Valid setting values for ECF 1.17.0 and above
 			--
 			-- A void regexp means that there is no constraint on the setting value.
 		once
-			Result := valid_settings_latest
+			Result := valid_settings_1_18_0
+			Result.remove ({ET_ECF_SETTING_NAMES}.manifest_array_type_setting_name)
+			Result.force_last (Void, {ET_ECF_SETTING_NAMES}.msil_assembly_compatibility_setting_name)
 		ensure
 			valid_settings_1_17_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
@@ -253,6 +268,7 @@ feature -- Setting
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.inlining_size_setting_name, "4")
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.java_generation_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.line_generation_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
+			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.manifest_array_type_setting_name, {ET_ECF_SETTING_NAMES}.default_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.msil_generation_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.msil_generation_type_setting_name, {ET_ECF_SETTING_NAMES}.exe_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.msil_use_optimized_precompile_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
@@ -301,6 +317,16 @@ feature {NONE} -- Implementation
 		ensure
 			inline_size_setting_value_regexp_not_void: Result /= Void
 			inline_size_setting_value_regexp_compiled: Result.is_compiled
+		end
+
+	manifest_array_type_setting_value_regexp: RX_REGULAR_EXPRESSION
+			-- Regular expression for validation of "manifest_array_type" setting values
+		once
+			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
+			Result.compile ("(?i)(" + {ET_ECF_SETTING_NAMES}.default_setting_value + "|" + {ET_ECF_SETTING_NAMES}.standard_setting_value + "|" + {ET_ECF_SETTING_NAMES}.mismatch_warning_setting_value + "|" + {ET_ECF_SETTING_NAMES}.mismatch_error_setting_value + ")")
+		ensure
+			manifest_array_type_setting_value_regexp_not_void: Result /= Void
+			manifest_array_type_setting_value_regexp_compiled: Result.is_compiled
 		end
 
 	msil_classes_per_module_setting_value_regexp: RX_REGULAR_EXPRESSION

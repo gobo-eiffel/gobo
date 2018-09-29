@@ -9,6 +9,7 @@
 	<target name="aa">
 		<root class="AA" feature="make"/>
 		<capability>
+			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">

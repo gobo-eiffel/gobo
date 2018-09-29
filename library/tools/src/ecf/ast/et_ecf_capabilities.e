@@ -83,7 +83,7 @@ feature -- Access
 		do
 			primary_use_capabilities.search (a_name)
 			if primary_use_capabilities.found then
-				Result := primary_use_capabilities.found_item
+				Result := primary_use_capabilities.found_item.name
 			elseif attached secondary_capabilities as l_secondary_capabilities then
 				Result := l_secondary_capabilities.use_value (a_name)
 			end
@@ -107,6 +107,17 @@ feature -- Access
 		require
 			a_name_not_void: a_name /= Void
 		do
+			if attached primary_use_value_id (a_name) as l_primary_use_value_id then
+				Result := l_primary_use_value_id.name
+			end
+		end
+
+	primary_use_value_id (a_name: STRING): detachable ET_IDENTIFIER
+			-- Value of capability use `a_name';
+			-- Void if capability use is not defined in `primary_use_capabilities'
+		require
+			a_name_not_void: a_name /= Void
+		do
 			primary_use_capabilities.search (a_name)
 			if primary_use_capabilities.found then
 				Result := primary_use_capabilities.found_item
@@ -125,7 +136,7 @@ feature -- Access
 			end
 		end
 
-	primary_use_capabilities: DS_HASH_TABLE [STRING, STRING]
+	primary_use_capabilities: DS_HASH_TABLE [ET_IDENTIFIER, STRING]
 			-- Capability uses explicitly defined in the target
 
 	primary_support_capabilities: DS_HASH_TABLE [STRING, STRING]
@@ -143,10 +154,24 @@ feature -- Setting
 		require
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
+		local
+			l_identifier: ET_IDENTIFIER
+		do
+			create l_identifier.make (a_value)
+			set_primary_use_value_id (a_name,l_identifier)
+		ensure
+			primary_use_value_set: primary_use_value (a_name) = a_value
+		end
+
+	set_primary_use_value_id (a_name: STRING; a_value: ET_IDENTIFIER)
+			-- Set capability use `a_name' to `a_value'.
+		require
+			a_name_not_void: a_name /= Void
+			a_value_not_void: a_value /= Void
 		do
 			primary_use_capabilities.force_last (a_value, a_name)
 		ensure
-			primary_use_value_set: primary_use_value (a_name) = a_value
+			primary_use_value_id_set: primary_use_value_id (a_name) = a_value
 		end
 
 	set_primary_support_value (a_name, a_value: STRING)

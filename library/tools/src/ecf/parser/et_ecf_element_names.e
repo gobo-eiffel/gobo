@@ -104,6 +104,9 @@ feature -- Constants
 	xml_extends: STRING = "extends"
 			-- "extends" attribute name
 
+	xml_extends_location: STRING = "extends_location"
+			-- "extends_location" attribute name
+
 	xml_external_cflag: STRING = "external_cflag"
 			-- "external_cflag" element name
 
@@ -154,6 +157,9 @@ feature -- Constants
 
 	xml_mapping: STRING = "mapping"
 			-- "mapping" element name
+
+	xml_match: STRING = "match"
+			-- "match" attribute name
 
 	xml_max: STRING = "max"
 			-- "max" attribute name

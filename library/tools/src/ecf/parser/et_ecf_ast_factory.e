@@ -50,14 +50,15 @@ feature -- AST factory
 			actions_not_void: Result /= Void
 		end
 
-	new_adapted_dotnet_assembly (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_DOTNET_ASSEMBLY
+	new_adapted_dotnet_assembly (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE; a_target: ET_ECF_TARGET): ET_ECF_ADAPTED_DOTNET_ASSEMBLY
 			-- New adpated .NET assembly
 		require
 			a_name_not_void: a_name /= Void
 			a_filename_not_void: a_filename /= Void
 			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_name, a_filename, a_universe)
+			create Result.make (a_name, a_filename, a_universe, a_target)
 		ensure
 			adapted_dotnet_assembly_not_void: Result /= Void
 		end
@@ -72,14 +73,15 @@ feature -- AST factory
 			adapted_dotnet_assemblies_not_void: Result /= Void
 		end
 
-	new_adapted_library (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_LIBRARY
+	new_adapted_library (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE; a_target: ET_ECF_TARGET): ET_ECF_ADAPTED_LIBRARY
 			-- New adpated library
 		require
 			a_name_not_void: a_name /= Void
 			a_filename_not_void: a_filename /= Void
 			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_name, a_filename, a_universe)
+			create Result.make (a_name, a_filename, a_universe, a_target)
 		ensure
 			adapted_library_not_void: Result /= Void
 		end
@@ -94,14 +96,15 @@ feature -- AST factory
 			adapted_libraries_not_void: Result /= Void
 		end
 
-	new_adapted_precompiled_library (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_PRECOMPILED_LIBRARY
+	new_adapted_precompiled_library (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE; a_target: ET_ECF_TARGET): ET_ECF_ADAPTED_PRECOMPILED_LIBRARY
 			-- New adapted precompiled library
 		require
 			a_name_not_void: a_name /= Void
 			a_filename_not_void: a_filename /= Void
 			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_name, a_filename, a_universe)
+			create Result.make (a_name, a_filename, a_universe, a_target)
 		ensure
 			adapted_library_not_void: Result /= Void
 		end
@@ -153,15 +156,16 @@ feature -- AST factory
 			class_renamings_not_void: Result /= Void
 		end
 
-	new_cluster (a_name, a_pathname: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CLUSTER
+	new_cluster (a_name, a_pathname: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE; a_target: ET_ECF_TARGET): ET_ECF_CLUSTER
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_pathname_not_void: a_pathname /= Void
 			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_name, a_pathname, a_universe)
+			create Result.make (a_name, a_pathname, a_universe, a_target)
 		ensure
 			cluster_not_void: Result /= Void
 		end
@@ -188,13 +192,13 @@ feature -- AST factory
 			condition_not_void: Result /= Void
 		end
 
-	new_custom_condition (a_name, a_value: STRING; a_excluded: BOOLEAN): ET_ECF_CUSTOM_CONDITION
+	new_custom_condition (a_name, a_value: STRING; a_match: detachable STRING; a_excluded: BOOLEAN): ET_ECF_CUSTOM_CONDITION
 			-- New custom condition
 		do
 			if a_excluded then
-				create Result.make_excluded (a_name, a_value)
+				create Result.make_excluded (a_name, a_value, a_match)
 			else
-				create Result.make (a_name, a_value)
+				create Result.make (a_name, a_value, a_match)
 			end
 		ensure
 			condition_not_void: Result /= Void
@@ -490,12 +494,26 @@ feature -- AST factory
 			system_not_void: Result /= Void
 		end
 
-	new_target (a_name: STRING): ET_ECF_TARGET
+	new_system_config (a_name, a_filename: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_SYSTEM_CONFIG
+			-- New system config
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			create Result.make (a_name, a_filename, a_universe)
+		ensure
+			system_config_not_void: Result /= Void
+		end
+
+	new_target (a_name: STRING; a_system_config: ET_ECF_SYSTEM_CONFIG): ET_ECF_TARGET
 			-- New target
 		require
 			a_name_not_void: a_name /= Void
+			a_system_config_not_void: a_system_config /= Void
 		do
-			create Result.make (a_name)
+			create Result.make (a_name, a_system_config)
 		ensure
 			target_not_void: Result /= Void
 		end

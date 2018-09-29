@@ -11,6 +11,7 @@
 		<capability>
 			<void_safety support="all"/>
 			<void_safety support="none"/>
+			<concurrency support="none" use="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
 			<condition>

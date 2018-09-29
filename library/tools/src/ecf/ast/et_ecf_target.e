@@ -34,12 +34,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: STRING; a_system_config: ET_ECF_SYSTEM_CONFIG)
 			-- Create a new ECF target.
 		require
 			a_name_not_void: a_name /= Void
+			a_system_config_not_void: a_system_config /= Void
 		do
 			name := a_name
+			system_config := a_system_config
 			create variables.make
 			variables.set_secondary_variables (Execution_environment)
 			create settings.make
@@ -47,6 +49,7 @@ feature {NONE} -- Initialization
 			create options.make
 		ensure
 			name_set: name = a_name
+			system_config_set: system_config = a_system_config
 		end
 
 feature -- Status report
@@ -71,7 +74,7 @@ feature -- Access
 	precompiled_library: detachable ET_ECF_ADAPTED_PRECOMPILED_LIBRARY
 			-- Precompiled library, if any
 
-	parent: detachable ET_ECF_TARGET
+	parent: detachable ET_ECF_TARGET_PARENT
 			-- Parent, if any
 
 	root: detachable ET_ECF_ROOT
@@ -134,6 +137,45 @@ feature -- Access
 	version: detachable ET_ECF_VERSION
 			-- Version, if any
 
+	system_config: ET_ECF_SYSTEM_CONFIG
+			-- ECF file containing the current target
+
+	parent_path (a_other_target: ET_ECF_TARGET): DS_ARRAYED_LIST [ET_ECF_TARGET_PARENT]
+			-- Path from current target to `a_other_target',
+			-- or empty if `a_other_target' is not an ancestor
+		require
+			a_other_target_not_void: a_other_target /= Void
+		local
+			l_target: ET_ECF_TARGET
+			nb: INTEGER
+		do
+			from
+				l_target := Current
+			until
+				l_target = a_other_target or else l_target = Void or else not attached l_target.parent as l_target_parent
+			loop
+				nb := nb + 1
+				l_target := l_target_parent.target
+			end
+			create Result.make (nb)
+			if nb > 0 then
+				from
+					l_target := Current
+				until
+					l_target = a_other_target or else l_target = Void or else not attached l_target.parent as l_target_parent
+				loop
+					Result.put_last (l_target_parent)
+					l_target := l_target_parent.target
+				end
+			end
+		ensure
+			path_not_void: Result /= Void
+			no_void_parent: not Result.has_void
+			first: not Result.is_empty implies Result.first = parent
+			last: not Result.is_empty implies Result.last.target = a_other_target
+			path: across Result as l_path all if not l_path.is_first then Result.item (l_path.index - 1) = l_path.item else True end end
+		end
+
 feature -- Status setting
 
 	set_abstract (b: BOOLEAN)
@@ -194,11 +236,11 @@ feature -- Setting
 			-- no_cycle: no cycle introduced
 		do
 			parent := a_parent
-			if a_parent /= Void then
-				variables.set_secondary_variables (a_parent.variables)
-				settings.set_secondary_settings (a_parent.settings)
-				capabilities.set_secondary_capabilities (a_parent.capabilities)
-				options.set_secondary_options (a_parent.options)
+			if a_parent /= Void and then attached a_parent.target as l_parent_target then
+				variables.set_secondary_variables (l_parent_target.variables)
+				settings.set_secondary_settings (l_parent_target.settings)
+				capabilities.set_secondary_capabilities (l_parent_target.capabilities)
+				options.set_secondary_options (l_parent_target.options)
 			else
 				variables.set_secondary_variables (Execution_environment)
 				settings.set_secondary_settings (Void)
@@ -349,8 +391,8 @@ feature -- Basic operations
 		local
 			l_value: detachable STRING
 		do
-			if attached parent as l_parent then
-				l_parent.update_state (a_state)
+			if attached parent as l_parent and then attached l_parent.target as l_parent_target then
+				l_parent_target.update_state (a_state)
 			end
 			l_value := capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
 			if l_value /= Void then
@@ -388,8 +430,8 @@ feature -- Basic operations
 			l_is_ecf_library: BOOLEAN
 			i, nb: INTEGER
 		do
-			if attached parent as l_parent then
-				l_parent.fill_universe (a_universe, a_state)
+			if attached parent as l_parent and then attached l_parent.target as l_parent_target then
+				l_parent_target.fill_universe (a_universe, a_state)
 			end
 			if attached clusters as l_clusters then
 				l_is_ecf_library := attached {ET_ECF_LIBRARY} a_universe
@@ -461,8 +503,8 @@ feature -- Basic operations
 		do
 			if attached root as l_root then
 				l_root.fill_root (a_system)
-			elseif attached parent as l_parent then
-				l_parent.fill_root (a_system)
+			elseif attached parent as l_parent and then attached l_parent.target as l_parent_target then
+				l_parent_target.fill_root (a_system)
 			end
 		end
 
@@ -473,8 +515,8 @@ feature -- Basic operations
 			a_file_rules_not_void: a_file_rules /= Void
 			a_state_not_void: a_state /= Void
 		do
-			if attached parent as l_parent then
-				l_parent.fill_file_rules (a_file_rules, a_state)
+			if attached parent as l_parent and then attached l_parent.target as l_parent_target then
+				l_parent_target.fill_file_rules (a_file_rules, a_state)
 			end
 			if attached file_rules as l_file_rules then
 				l_file_rules.fill_file_rules (a_file_rules, a_state)
@@ -588,5 +630,6 @@ invariant
 	no_void_pre_compile_action: attached pre_compile_actions as l_pre_compile_actions implies not l_pre_compile_actions.has_void
 	no_void_post_compile_action: attached post_compile_actions as l_post_compile_actions implies not l_post_compile_actions.has_void
 	no_void_note: attached notes as l_notes implies not l_notes.has_void
+	system_config_not_void: system_config /= Void
 
 end

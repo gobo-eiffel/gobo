@@ -2,10 +2,10 @@
 
 <system name="xezca">
 	<root class="XEZCA" creation="make"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="ezca_tester" location="${GOBO}/library/tools/test/eiffel/ecf/ezca"/>
 	<cluster name="ezca_testgen" location="TESTGEN"/>
 	<cluster name="test_common" location="${GOBO}/library/tools/test/eiffel/common"/>

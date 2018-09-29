@@ -1,0 +1,1 @@
+[EPCL] ECF ${GOBO}\library\tools\test\eiffel\ecf\epcl\test1\system.ecf (15,32): value 'none' for capability 'concurrency' not supported by parent target 'bb'.

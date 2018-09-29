@@ -1,0 +1,1 @@
+[EPCD] ECF ${GOBO}\library\tools\test\eiffel\ecf\epcd\test3\system.ecf (9,48): value 'all' for capability 'catcall_detection' not supported by library target 'bb' from parent ECF file "${GOBO}\library\tools\test\eiffel\ecf\epcd\test3\other.ecf".

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
+	name="bb"
+	uuid="966D1318-A1E8-4203-AFC6-709B94747773">
+
+	<target name="bb">
+		<capability>
+			<void_safety support="none"/>
+		</capability>
+	</target>
+</system>

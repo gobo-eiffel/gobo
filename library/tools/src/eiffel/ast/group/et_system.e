@@ -660,6 +660,7 @@ feature {NONE} -- Constants
 
 invariant
 
+	current_system_is_current: current_system = Current
 		-- Feature seeds.
 	default_create_seed_not_negative: default_create_seed >= 0
 	copy_seed_not_negative: copy_seed >= 0
