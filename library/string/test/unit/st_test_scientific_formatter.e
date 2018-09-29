@@ -39,7 +39,6 @@ feature -- Test
 			assert_equal ("test2", "berend", format ("$s", <<"berend">>))
 			assert_equal ("test3", "##", format ("#$s#", <<"">>))
 			assert_equal ("test4", "nothing", format ("nothing", empty_array))
-			assert_equal ("test5", "nothing", format ("nothing", Void))
 			assert_equal ("test6", "  a", format ("$3s", <<"a">>))
 			assert_equal ("test7", "a   ", format ("$-4s", <<"a">>))
 			assert_equal ("test8", " a ", format ("$^3s", <<"a">>))

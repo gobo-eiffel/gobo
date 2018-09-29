@@ -29,13 +29,13 @@ feature -- Test
 	test_bad_type_char
 			-- Test wrong type character.
 		do
-			assert ("test1", not valid_format_and_parameters ("$Q", Void))
+			assert ("test1", not valid_format_and_parameters ("$Q", <<>>))
 		end
 
 	test_number_of_parameters
 			-- Test if exactly required number of parameters is detected.
 		do
-			assert ("test1", not valid_format_and_parameters ("$s", Void))
+			assert ("test1", not valid_format_and_parameters ("$s", <<>>))
 			assert ("test2", not valid_format_and_parameters ("$s", <<"1", "2">>))
 		end
 
