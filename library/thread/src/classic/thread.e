@@ -93,8 +93,8 @@ feature {NONE} -- Basic operations
 	c_exit
 			-- Implementation of `exit`.
 		require
-			-- is_exit_supported: is_exit_supported
-			-- self: current_thread_id = thread_id
+			is_exit_supported: is_exit_supported
+			self: -- current_thread_id = thread_id
 		external
 			"C use %"eif_threads.h%""
 		alias
@@ -108,6 +108,8 @@ feature -- Status report
 		do
 				-- True for classic Eiffel, False in .NET
 			Result := True
+		ensure
+			is_class: class
 		end
 
 	is_launchable: BOOLEAN

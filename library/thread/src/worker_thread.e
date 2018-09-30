@@ -2,8 +2,8 @@
 	description: "Class defining an Eiffel thread of execution using an agent for its internal action."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2017-03-30 04:54:40 -0700 (Thu, 30 Mar 2017) $"
-	revision: "$Revision: 100070 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WORKER_THREAD
