@@ -10479,6 +10479,7 @@ feature {NONE} -- Expression generation
 			l_dynamic_type_set := dynamic_type_set (a_expression)
 			l_dynamic_type := l_dynamic_type_set.static_type
 			l_temp := new_temp_variable (l_dynamic_type)
+			mark_temp_variable_frozen (l_temp)
 				-- We will set the index of `l_temp' later because
 				-- it could still be used in `call_operands'.
 			l_temp_index := a_expression.index
@@ -10598,6 +10599,7 @@ feature {NONE} -- Expression generation
 					-- because it could have still been used in `call_operands'.
 				l_temp.set_index (l_temp_index)
 			end
+			mark_temp_variable_unfrozen (l_temp)
 		end
 
 	print_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
@@ -22229,40 +22231,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
-		local
-			l_argument: ET_EXPRESSION
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type: ET_DYNAMIC_TYPE
 		do
-			if call_operands.count /= 4 then
-					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				include_runtime_header_file ("ge_exception.h", False, header_file)
-				print_indentation
-				current_file.put_string (c_ge_developer_raise)
-				current_file.put_character ('(')
-				l_argument := call_operands.item (2)
-				l_actual_type_set := dynamic_type_set (l_argument)
-				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
-				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				l_argument := call_operands.item (3)
-				l_actual_type_set := dynamic_type_set (l_argument)
-				l_formal_type := argument_type_set_in_feature (2, a_feature).static_type
-				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				l_argument := call_operands.item (4)
-				l_actual_type_set := dynamic_type_set (l_argument)
-				l_formal_type := argument_type_set_in_feature (3, a_feature).static_type
-				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
+			include_runtime_header_file ("ge_exception.h", False, header_file)
+			print_builtin_procedure_c_call (a_feature, c_ge_developer_raise, True, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_attached_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
