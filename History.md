@@ -2,6 +2,11 @@
 
 ## Version 4.3 - ??
 
+### gec
+
+* Renamed command-line option `--new_instance_types` as `--new-instance-types`
+  to comply with the argument library validity constraints.
+
 ### gexace
 
 * Added documentation about `Xace` and `gexace`.

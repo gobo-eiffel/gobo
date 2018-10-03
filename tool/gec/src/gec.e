@@ -426,7 +426,7 @@ feature -- Argument parsing
 			-- Option for '--gc=<no|boehm>'
 
 	new_instance_types_option: AP_STRING_OPTION
-			-- Option for '--new_instance_types=<filename>'
+			-- Option for '--new-instance-types=<filename>'
 
 	silent_flag: AP_FLAG
 			-- Flag for '--silent'
@@ -479,7 +479,7 @@ feature -- Argument parsing
 			split_size_option.set_parameter_description ("size")
 			a_parser.options.force_last (split_size_option)
 				-- new_instance_types
-			create new_instance_types_option.make_with_long_form ("new_instance_types")
+			create new_instance_types_option.make_with_long_form ("new-instance-types")
 			new_instance_types_option.set_description ("File containing the list of types which can have instances created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'.")
 			new_instance_types_option.set_parameter_description ("filename")
 			a_parser.options.force_last (new_instance_types_option)
