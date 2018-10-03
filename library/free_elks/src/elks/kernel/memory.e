@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Facilities for tuning up the garbage collection mechanism.
 		This class may be used as ancestor by classes needing its facilities.
@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2015-12-17 05:34:17 -0800 (Thu, 17 Dec 2015) $"
-	revision: "$Revision: 98279 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MEMORY
@@ -28,6 +28,8 @@ feature -- Measurement
 				memory_type = C_memory
 		do
 			create Result.make (memory_type)
+		ensure
+			instance_free: class
 		end
 
 	gc_statistics (collector_type: INTEGER): GC_INFO
@@ -38,6 +40,8 @@ feature -- Measurement
 				collector_type = Incremental_collector
 		do
 			create Result.make (collector_type)
+		ensure
+			instance_free: class
 		end
 
 feature -- Status report
@@ -49,6 +53,8 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_mem_tget"
+		ensure
+			instance_free: class
 		end
 
 	collection_period: INTEGER
@@ -61,6 +67,8 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_mem_pget"
+		ensure
+			instance_free: class
 		end
 
 	coalesce_period: INTEGER
@@ -73,6 +81,8 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_coalesce_period"
+		ensure
+			instance_free: class
 		end
 
 	collecting: BOOLEAN
@@ -81,6 +91,8 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_gc_ison"
+		ensure
+			instance_free: class
 		end
 
 	largest_coalesced_block: INTEGER
@@ -90,6 +102,8 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_mem_largest"
+		ensure
+			instance_free: class
 		end
 
 	max_mem: INTEGER
@@ -98,6 +112,8 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_get_max_mem"
+		ensure
+			instance_free: class
 		end
 
 	chunk_size: INTEGER
@@ -110,6 +126,8 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_get_chunk_size"
+		ensure
+			instance_free: class
 		end
 
 	tenure: INTEGER
@@ -123,6 +141,8 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_tenure"
+		ensure
+			instance_free: class
 		end
 
 	generation_object_limit: INTEGER
@@ -134,6 +154,8 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_generation_object_limit"
+		ensure
+			instance_free: class
 		end
 
 	scavenge_zone_size: INTEGER
@@ -146,24 +168,32 @@ feature -- Status report
 			"C use %"eif_memory.h%""
 		alias
 			"eif_scavenge_zone_size"
+		ensure
+			instance_free: class
 		end
 
 	referers (an_object: ANY): SPECIAL [ANY]
 			-- Objects that refer to `an_object'.
 		do
 			Result := find_referers (an_object, special_any_dynamic_type)
+		ensure
+			instance_free: class
 		end
 
 	objects_instance_of (an_object: ANY): SPECIAL [ANY]
 			-- Objects that have same dynamic type as `an_object'.
 		do
 			Result := objects_instance_of_type (an_object.generating_type.type_id)
+		ensure
+			instance_free: class
 		end
 
 	objects_instance_of_type (a_type_id: INTEGER): SPECIAL [ANY]
 			-- Objects that have same dynamic type as `an_object'.
 		do
 			Result := find_instance_of (a_type_id, special_any_dynamic_type)
+		ensure
+			instance_free: class
 		end
 
 	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER]
@@ -230,6 +260,8 @@ feature -- Status report
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	memory_count_map: HASH_TABLE [INTEGER, INTEGER]
@@ -265,6 +297,8 @@ feature -- Status report
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Status setting
@@ -297,6 +331,7 @@ feature -- Status setting
 				end
 			end
 		ensure
+			instance_free: class
 			collection_status_preserved: collecting = old collecting
 		rescue
 			retried := True
@@ -309,6 +344,8 @@ feature -- Status setting
 			"C use %"eif_memory.h%""
 		alias
 			"eif_gc_stop"
+		ensure
+			instance_free: class
 		end
 
 	collection_on
@@ -317,6 +354,8 @@ feature -- Status setting
 			"C use %"eif_memory.h%""
 		alias
 			"eif_gc_run"
+		ensure
+			instance_free: class
 		end
 
 	allocate_fast
@@ -326,6 +365,8 @@ feature -- Status setting
 			"C use %"eif_memory.h%""
 		alias
 			"eif_mem_speed"
+		ensure
+			instance_free: class
 		end
 
 	allocate_compact
@@ -335,6 +376,8 @@ feature -- Status setting
 			"C use %"eif_memory.h%""
 		alias
 			"eif_mem_slow"
+		ensure
+			instance_free: class
 		end
 
 	allocate_tiny
@@ -344,18 +387,24 @@ feature -- Status setting
 			"C use %"eif_memory.h%""
 		alias
 			"eif_mem_tiny"
+		ensure
+			instance_free: class
 		end
 
 	enable_time_accounting
 			-- Enable GC time accouting, accessible in `gc_statistics'.
 		do
 			gc_monitoring (True)
+		ensure
+			instance_free: class
 		end
 
 	disable_time_accounting
 			-- Disable GC time accounting (default).
 		do
 			gc_monitoring (False)
+		ensure
+			instance_free: class
 		end
 
 	set_memory_threshold (value: INTEGER)
@@ -368,6 +417,8 @@ feature -- Status setting
 			"C use %"eif_memory.h%""
 		alias
 			"eif_mem_tset"
+		ensure
+			instance_free: class
 		end
 
 	set_collection_period (value: INTEGER)
@@ -381,6 +432,8 @@ feature -- Status setting
 			"C use %"eif_memory.h%""
 		alias
 			"eif_mem_pset"
+		ensure
+			instance_free: class
 		end
 
 	set_coalesce_period (value: INTEGER)
@@ -393,6 +446,8 @@ feature -- Status setting
 			"C use %"eif_memory.h%""
 		alias
 			"eif_set_coalesce_period"
+		ensure
+			instance_free: class
 		end
 
 	set_max_mem (value: INTEGER)
@@ -403,6 +458,8 @@ feature -- Status setting
 			"C use %"eif_memory.h%""
 		alias
 			"eif_set_max_mem"
+		ensure
+			instance_free: class
 		end
 
 feature -- Removal
@@ -424,6 +481,8 @@ feature -- Removal
 			-- referenced.
 		external
 			"built_in static"
+		ensure
+			instance_free: class
 		end
 
 	full_coalesce
@@ -434,6 +493,8 @@ feature -- Removal
 			"C use %"eif_memory.h%""
 		alias
 			"eif_mem_coalesc"
+		ensure
+			instance_free: class
 		end
 
 	collect
@@ -441,6 +502,8 @@ feature -- Removal
 			-- collection is enabled; do nothing otherwise.
 		external
 			"C use %"eif_memory.h%""
+		ensure
+			instance_free: class
 		end
 
 	full_collect
@@ -450,6 +513,8 @@ feature -- Removal
 			"C use %"eif_memory.h%""
 		alias
 			"plsc"
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -460,31 +525,41 @@ feature {NONE} -- Implementation
 			"C use %"eif_memory.h%""
 		alias
 			"eif_gc_mon"
+		ensure
+			instance_free: class
 		end
 
 	find_referers (target: ANY; result_type: INTEGER): SPECIAL [ANY]
 		external
 			"built_in static"
+		ensure
+			instance_free: class
 		end
 
 	find_instance_of (dtype, result_type: INTEGER): SPECIAL [ANY]
 		external
 			"C signature (EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""
+		ensure
+			instance_free: class
 		end
 
 	find_all_instances (result_type: INTEGER): SPECIAL [ANY]
 		external
 			"C signature (EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""
+		ensure
+			instance_free: class
 		end
 
 	special_any_dynamic_type: INTEGER
 			-- Dynamic type ID of an instance of `SPECIAL [ANY]'
 		once
 			Result := ({SPECIAL [ANY]}).type_id
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

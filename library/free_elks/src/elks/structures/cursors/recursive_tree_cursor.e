@@ -5,8 +5,8 @@ note
 	status: "See notice at end of class."
 	names: recursive_tree_cursor, cursor;
 	contents: generic;
-	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
-	revision: "$Revision: 567 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class RECURSIVE_TREE_CURSOR [G] inherit
 

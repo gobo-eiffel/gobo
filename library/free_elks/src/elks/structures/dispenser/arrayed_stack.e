@@ -8,8 +8,8 @@
 	access: fixed, lifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date: 2016-03-02 13:15:09 -0800 (Wed, 02 Mar 2016) $"
-	revision: "$Revision: 98557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ARRAYED_STACK [G] inherit
 

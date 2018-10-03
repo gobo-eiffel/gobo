@@ -2,8 +2,8 @@ note
 	description: "Constants to represent abstract types in {REFFLECTOR} and {OBJECT_PROXY}."
 	cecil: "The values are in sync with CECIL constants EIF_*_TYPE."
 	runtime: "The values represent abstract types used by run-time, e.g. {ISE_RUNTIME}.field_type_of_type."
-	date: "$Date: 2013-05-20 16:15:17 -0700 (Mon, 20 May 2013) $"
-	revision: "$Revision: 92557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	REFLECTOR_CONSTANTS

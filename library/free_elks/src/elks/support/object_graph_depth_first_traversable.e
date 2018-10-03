@@ -4,8 +4,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Stephanie Balzer"
-	date: "$Date: 2013-03-27 00:34:50 -0700 (Wed, 27 Mar 2013) $"
-	revision: "$Revision: 92359 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE

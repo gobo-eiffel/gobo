@@ -8,8 +8,8 @@ note
 	access: fixed, fifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date: 2015-08-18 22:52:35 -0700 (Tue, 18 Aug 2015) $"
-	revision: "$Revision: 97844 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ARRAYED_QUEUE [G]
 

@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-17 20:46:15 +0100 (Thu, 17 Jan 2013) $"
-	revision: "$Revision: 702 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	DEBUG_OUTPUT

@@ -5,8 +5,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-10-30 16:32:46 +0100 (Tue, 30 Oct 2012) $"
-	revision: "$Revision: 600 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen expanded class
 	CHARACTER_8

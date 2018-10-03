@@ -5,8 +5,8 @@
 	legal: "See notice at end of class."
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	date: "$Date: 2016-03-02 13:15:09 -0800 (Wed, 02 Mar 2016) $"
-	revision: "$Revision: 98557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TWO_WAY_LIST_ITERATION_CURSOR [G]

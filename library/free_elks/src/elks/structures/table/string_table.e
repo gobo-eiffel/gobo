@@ -10,8 +10,8 @@ note
 			pass a clone, not the object itself, or an immutable object, as key argument to
 			`put' and `replace_key'.
 		]"
-	date: "$Date: 2013-01-24 23:33:34 +0100 (Thu, 24 Jan 2013) $"
-	revision: "$Revision: 711 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	STRING_TABLE [G]

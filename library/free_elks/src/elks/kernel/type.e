@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-07 23:32:27 +0100 (Mon, 07 Jan 2013) $"
-	revision: "$Revision: 690 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen class
 	TYPE [G]

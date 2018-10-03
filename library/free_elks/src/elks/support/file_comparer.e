@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-11-21 00:27:25 +0100 (Wed, 21 Nov 2012) $"
-	revision: "$Revision: 620 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	FILE_COMPARER
@@ -28,10 +28,12 @@ feature -- Comparison
 			a_path2_not_empty: not a_path2.is_empty
 		do
 			Result := (create {PATH}.make_from_string (a_path1)).is_same_file_as (create {PATH}.make_from_string (a_path2))
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

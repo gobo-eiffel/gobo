@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-09-28 18:01:26 +0200 (Fri, 28 Sep 2012) $"
-	revision: "$Revision: 575 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class IO_MEDIUM
 

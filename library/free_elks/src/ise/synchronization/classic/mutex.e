@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 			is_set: is_set
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
-	owner: like current_thread_id
-			-- Debugging facility to know the THREAD owning Current. The `owner' field might be invalid
-			-- when Current is used with a condition variable.
+	owner_thread_id: like current_thread_id
+			-- Debugging facility to know the THREAD owning Current.
+			-- The field might be invalid when Current is used with a condition variable.
 
 feature -- Status report
 
@@ -53,7 +53,7 @@ feature -- Status setting
 			is_set: is_set
 		do
 			eif_thr_mutex_lock (mutex_pointer)
-			owner := current_thread_id
+			owner_thread_id := current_thread_id
 		end
 
 	try_lock: BOOLEAN
@@ -63,7 +63,7 @@ feature -- Status setting
 		do
 			Result := eif_thr_mutex_trylock (mutex_pointer)
 			if Result then
-				owner := current_thread_id
+				owner_thread_id := current_thread_id
 			end
 		end
 
@@ -72,7 +72,7 @@ feature -- Status setting
 		require
 			is_set: is_set
 		do
-			owner := default_pointer
+			owner_thread_id := default_pointer
 			eif_thr_mutex_unlock (mutex_pointer)
 		end
 
@@ -109,7 +109,7 @@ feature {NONE} -- Removal
 				-- yet, or if locked that we own the lock.
 			if
 				is_set and then
-				(owner = default_pointer or else owner = current_thread_id)
+				(owner_thread_id = default_pointer or else owner_thread_id = current_thread_id)
 			then
 				destroy
 			end
@@ -148,7 +148,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

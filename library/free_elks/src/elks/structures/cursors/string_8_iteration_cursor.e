@@ -1,8 +1,8 @@
 ﻿note
 	description: "External forward one-step iteration cursor for {STRING_8}."
 	library: "EiffelBase: Library of reusable components for Eiffel."
-	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
-	revision: "$Revision: 98619 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	STRING_8_ITERATION_CURSOR

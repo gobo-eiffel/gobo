@@ -3,8 +3,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2016-05-05 23:44:28 -0700 (Thu, 05 May 2016) $"
-	revision: "$Revision: 98665 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	INTEGER_INTERVAL

@@ -5,8 +5,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-12-26 18:57:50 -0800 (Wed, 26 Dec 2012) $"
-	revision: "$Revision: 92096 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	COM_FAILURE
@@ -57,8 +57,7 @@ feature -- Status setting
 			if r /= Void then
 				r := r.twin
 				r.remove_head (10)
-				r.left_adjust
-				r.right_adjust
+				r.adjust
 			end
 
 			if r = Void or else r.is_empty and then hresult_code > 0 then
@@ -194,7 +193,7 @@ feature {NONE} -- Accesss
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
-	revision: "$Revision: 559 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class MEM_INFO
 
@@ -178,13 +178,15 @@ feature {NONE} -- C externals
 			"C inline use %"eif_memory.h%""
 		alias
 			"return sizeof(struct emallinfo);"
+		ensure
+			is_class: class
 		end
 
 invariant
 	consistent_memory: total64 = free64 + used64 + overhead64
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

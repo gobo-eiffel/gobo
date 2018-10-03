@@ -1,8 +1,7 @@
 note
 	description: "Facility to mark objects once when traversing an object graph."
-	author: ""
-	date: "$Date: 2013-11-19 13:31:09 -0800 (Tue, 19 Nov 2013) $"
-	revision: "$Revision: 93439 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	OBJECT_GRAPH_MARKER
@@ -15,6 +14,8 @@ feature {OBJECT_GRAPH_TRAVERSABLE} -- Status report
 			object_exists: obj /= Void
 		do
 			Result := {ISE_RUNTIME}.is_object_marked ($obj)
+		ensure
+			instance_free: class
 		end
 
 feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
@@ -28,6 +29,7 @@ feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
 		do
 			{ISE_RUNTIME}.mark_object ($obj)
 		ensure
+			instance_free: class
 			is_marked: is_marked (obj)
 		end
 
@@ -40,6 +42,7 @@ feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
 		do
 			{ISE_RUNTIME}.unmark_object ($obj)
 		ensure
+			instance_free: class
 			is_not_marked: not is_marked (obj)
 		end
 
@@ -48,6 +51,8 @@ feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
 			-- `unmark' at the same time.
 		do
 			{ISE_RUNTIME}.lock_marking
+		ensure
+			instance_free: class
 		end
 
 	unlock_marking
@@ -55,10 +60,12 @@ feature  {OBJECT_GRAPH_TRAVERSABLE}-- Marking
 			-- use `mark' and `unmark'.
 		do
 			{ISE_RUNTIME}.unlock_marking
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

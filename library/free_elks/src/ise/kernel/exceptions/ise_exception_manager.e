@@ -5,8 +5,8 @@ note
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2013-05-20 16:15:17 -0700 (Mon, 20 May 2013) $"
-	revision: "$Revision: 92557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ISE_EXCEPTION_MANAGER
@@ -294,6 +294,8 @@ feature {NONE} -- Access
 			-- which is used to create exception object later.
 		do
 			Result := exception_data_cell.item
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Element change
@@ -303,6 +305,7 @@ feature {NONE} -- Element change
 		do
 			last_exception_cell.put (a_last_exception)
 		ensure
+			instance_free: class
 			last_exception_set: last_exception_cell.item = a_last_exception
 		end
 
@@ -326,6 +329,8 @@ feature {NONE} -- Element change
 					l_exception.set_type_name (eclass)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation, ignoring
@@ -334,6 +339,8 @@ feature {NONE} -- Implementation, ignoring
 			-- Ignored exceptions
 		once
 			create Result.make (0)
+		ensure
+			instance_free: class
 		end
 
 	unignorable_exceptions: HASH_TABLE [INTEGER, INTEGER]
@@ -344,6 +351,8 @@ feature {NONE} -- Implementation, ignoring
 			create Result.make (1)
 			l_type := ({VOID_TARGET}).type_id
 			Result.force (l_type, l_type)
+		ensure
+			instance_free: class
 		end
 
 	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER]
@@ -356,6 +365,8 @@ feature {NONE} -- Implementation, ignoring
 			Result.force (l_type, l_type)
 			l_type := ({OLD_VIOLATION}).type_id
 			Result.force (l_type, l_type)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Cells
@@ -364,12 +375,16 @@ feature {NONE} -- Cells
 			-- Cell to hold current exception data
 		once
 			create Result.put (Void)
+		ensure
+			instance_free: class
 		end
 
 	last_exception_cell: CELL [detachable EXCEPTION]
 			-- Cell to hold last exception
 		once
 			create Result.put (Void)
+		ensure
+			instance_free: class
 		end
 
 	no_memory_exception_object_cell: CELL [NO_MORE_MEMORY]
@@ -381,6 +396,8 @@ feature {NONE} -- Cells
 			create l_nomem
 			l_nomem.set_exception_trace (create {STRING_8}.make (4096))
 			create Result.put (l_nomem)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -393,6 +410,8 @@ feature {NONE} -- Implementation
 			else
 				Result := True
 			end
+		ensure
+			instance_free: class
 		end
 
 	exception_from_data: detachable EXCEPTION
@@ -443,6 +462,8 @@ feature {NONE} -- Implementation
 				e.set_type_name (l_data.eclass)
 				Result := e
 			end
+		ensure
+			instance_free: class
 		end
 
 	once_raise (a_exception: EXCEPTION)
@@ -468,6 +489,8 @@ feature {NONE} -- Implementation
 				end
 				developer_raise (a_exception.code, p_meaning, p_message)
 			end
+		ensure
+			instance_free: class
 		end
 
 	frozen init_exception_manager
@@ -482,6 +505,8 @@ feature {NONE} -- Implementation
 			last_exception_cell.do_nothing
 				-- Reserve memory for no more memory exception object.
 			no_memory_exception_object_cell.do_nothing
+		ensure
+			instance_free: class
 		end
 
 	frozen free_preallocated_trace
@@ -492,12 +517,16 @@ feature {NONE} -- Implementation
 			if e /= Void then
 				e.set_description (Void)
 			end
+		ensure
+			instance_free: class
 		end
 
 	developer_raise (a_code: INTEGER; a_meaning, a_message: POINTER)
 			-- Raise an exception
 		external
-			"built_in"
+			"built_in static"
+		ensure
+			instance_free: class
 		end
 
 	frozen in_rescue: BOOLEAN
@@ -506,11 +535,13 @@ feature {NONE} -- Implementation
 			"C use %"eif_except.h%""
 		alias
 			"eif_is_in_rescue"
+		ensure
+			instance_free: class
 		end
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -10,8 +10,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2015-06-24 14:53:41 -0700 (Wed, 24 Jun 2015) $"
-	revision: "$Revision: 97552 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MANAGED_POINTER

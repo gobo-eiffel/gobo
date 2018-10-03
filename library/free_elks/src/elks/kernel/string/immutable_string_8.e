@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2014-01-03 14:26:20 -0800 (Fri, 03 Jan 2014) $"
-	revision: "$Revision: 93888 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen class
 	IMMUTABLE_STRING_8

@@ -4,8 +4,8 @@ note
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	names: primes;
-	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
-	revision: "$Revision: 567 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PRIMES inherit
 
@@ -44,6 +44,8 @@ feature -- Access
 					Result := Result + Smallest_prime
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	lower_prime (n: INTEGER): INTEGER
@@ -68,6 +70,8 @@ feature -- Access
 					Result := Result - Smallest_prime
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	all_lower_primes (n: INTEGER): ARRAY [BOOLEAN]
@@ -109,6 +113,8 @@ feature -- Access
 				end
 				i := i + Smallest_prime
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_prime (n: INTEGER): BOOLEAN
@@ -132,6 +138,8 @@ feature -- Access
 					Result := True
 				end
 			end
+		ensure then
+			instance_free: class
 		end
 
 	i_th (i: INTEGER): INTEGER
@@ -166,6 +174,8 @@ feature -- Access
 					i * i - Result
 				end
 			end
+		ensure then
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -194,6 +204,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			internal_precomputed_primes_not_void: Result /= Void
 			lower_valid: Result.lower = 1
 			upper_valid: Result.upper = Precomputed_primes_count
@@ -220,11 +231,12 @@ feature {NONE} -- Implementation
 				Result := n * n
 			end
 		ensure
+			instance_free: class
 			approximation_valid: i_th (n) <= Result
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

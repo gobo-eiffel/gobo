@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-11-30 00:31:24 +0100 (Fri, 30 Nov 2012) $"
-	revision: "$Revision: 628 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SYSTEM_STRING_FACTORY

@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "Path name abstraction"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-12-17 23:05:44 +0100 (Mon, 17 Dec 2012) $"
-	revision: "$Revision: 665 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class PATH_NAME
 

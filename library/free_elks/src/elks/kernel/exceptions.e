@@ -1,13 +1,13 @@
 note
 	description: "[
-		Facilities for adapting the exception handling mechanism.
-		This class may be used as ancestor by classes needing its facilities.
+			Facilities for adapting the exception handling mechanism.
+			This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-18 11:50:31 -0800 (Fri, 18 Jan 2013) $"
-	revision: "$Revision: 92126 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EXCEPTIONS
 
@@ -24,6 +24,8 @@ feature -- Status report
 			if attached exception_manager.exception_from_code (except) as l_exception then
 				Result := l_exception.tag.as_string_8
 			end
+		ensure
+			instance_free: class
 		end
 
 	assertion_violation: BOOLEAN
@@ -32,6 +34,8 @@ feature -- Status report
 		do
 			Result := attached exception_manager.last_exception as l_exception and then
 						attached {ASSERTION_VIOLATION} l_exception.original
+		ensure
+			instance_free: class
 		end
 
 	is_developer_exception: BOOLEAN
@@ -40,6 +44,8 @@ feature -- Status report
 		do
 			Result := attached exception_manager.last_exception as l_exception and then
 						attached {DEVELOPER_EXCEPTION} l_exception.original
+		ensure
+			instance_free: class
 		end
 
 	is_developer_exception_of_name (name: detachable STRING): BOOLEAN
@@ -49,6 +55,8 @@ feature -- Status report
 			if is_developer_exception then
 				Result := developer_exception_name ~ name
 			end
+		ensure
+			instance_free: class
 		end
 
 	developer_exception_name: detachable STRING
@@ -59,6 +67,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception and then attached l_exception.original.description as l_des then
 				Result := l_des.as_string_8
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_signal: BOOLEAN
@@ -67,6 +77,8 @@ feature -- Status report
 		do
 			Result := attached exception_manager.last_exception as l_exception and then
 						attached {OPERATING_SYSTEM_SIGNAL_FAILURE} l_exception.original
+		ensure
+			instance_free: class
 		end
 
 	is_system_exception: BOOLEAN
@@ -80,6 +92,8 @@ feature -- Status report
 				Result := l_exception.original.conforms_to (l_external) or else
 						attached {OPERATING_SYSTEM_FAILURE} l_exception.original
 			end
+		ensure
+			instance_free: class
 		end
 
 	tag_name: detachable STRING
@@ -88,6 +102,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception and then attached l_exception.description as l_des then
 				Result := l_des.as_string_8
 			end
+		ensure
+			instance_free: class
 		end
 
 	recipient_name: detachable STRING
@@ -97,6 +113,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception then
 				Result := l_exception.recipient_name
 			end
+		ensure
+			instance_free: class
 		end
 
 	class_name: detachable STRING
@@ -106,6 +124,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception then
 				Result := l_exception.type_name
 			end
+		ensure
+			instance_free: class
 		end
 
 	exception: INTEGER
@@ -114,6 +134,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception then
 				Result := l_exception.code
 			end
+		ensure
+			instance_free: class
 		end
 
 	exception_trace: detachable STRING
@@ -122,6 +144,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception and then attached l_exception.original.trace as l_trace then
 				Result := l_trace.as_string_8
 			end
+		ensure
+			instance_free: class
 		end
 
 	original_tag_name: detachable STRING
@@ -131,6 +155,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception and then attached l_exception.cause.original.description as l_des then
 				Result := l_des.as_string_8
 			end
+		ensure
+			instance_free: class
 		end
 
 	original_exception: INTEGER
@@ -140,6 +166,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception then
 				Result := l_exception.cause.original.code
 			end
+		ensure
+			instance_free: class
 		end
 
 	original_recipient_name: detachable STRING
@@ -149,6 +177,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception then
 				Result := l_exception.cause.original.recipient_name
 			end
+		ensure
+			instance_free: class
 		end
 
 	original_class_name: detachable STRING
@@ -158,6 +188,8 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception then
 				Result := l_exception.cause.original.type_name
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Status setting
@@ -169,6 +201,8 @@ feature -- Status setting
 			if attached exception_manager.type_of_code (code) as l_type then
 				exception_manager.catch (l_type)
 			end
+		ensure
+			instance_free: class
 		end
 
 	ignore (code: INTEGER)
@@ -178,6 +212,8 @@ feature -- Status setting
 			if attached exception_manager.type_of_code (code) as l_type then
 				exception_manager.ignore (l_type)
 			end
+		ensure
+			instance_free: class
 		end
 
 	raise (name: detachable STRING)
@@ -188,6 +224,8 @@ feature -- Status setting
 			create l_exception
 			l_exception.set_description (name)
 			l_exception.raise
+		ensure
+			instance_free: class
 		end
 
 	raise_retrieval_exception (name: detachable STRING)
@@ -197,6 +235,8 @@ feature -- Status setting
 				l_exception.set_description (name)
 				l_exception.raise
 			end
+		ensure
+			instance_free: class
 		end
 
 	die (code: INTEGER)
@@ -227,6 +267,8 @@ feature -- Status setting
 			-- This is the default.
 		do
 			c_trace_exception (True)
+		ensure
+			instance_free: class
 		end
 
 	no_message_on_failure
@@ -234,6 +276,8 @@ feature -- Status setting
 			-- in case of failure.
 		do
 			c_trace_exception (False)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -246,7 +290,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

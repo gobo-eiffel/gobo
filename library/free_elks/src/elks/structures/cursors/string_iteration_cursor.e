@@ -1,7 +1,7 @@
 note
 	description: "External iteration cursor on {READABLE_STRING_GENERAL} based on {CHARACTER_32} item."
-	date: "$Date: 2016-04-16 03:44:12 -0700 (Sat, 16 Apr 2016) $"
-	revision: "$Revision: 98623 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	STRING_ITERATION_CURSOR

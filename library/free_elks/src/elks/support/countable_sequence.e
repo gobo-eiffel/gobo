@@ -6,8 +6,8 @@ note
 	names: countable_sequence, infinite_sequence;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
-	revision: "$Revision: 559 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class COUNTABLE_SEQUENCE [G]
 

@@ -362,7 +362,7 @@ feature -- Element change
 			-- Assign item `v' to `i'-th entry.
 			-- Resize the array if `i' falls out of currently defined bounds; preserve existing items.
 			-- In void-safe mode, if ({G}).has_default does not hold, then you can only insert between
-			-- `lower - 1' or `upper + 1' position in the ARRAY.
+			-- `lower - 1' and `upper + 1' positions in the ARRAY.
 		require
 			has_default_if_too_low:
 				(i < lower - 1 and lower /= {like lower}.min_value) implies ({G}).has_default
@@ -440,6 +440,56 @@ feature -- Element change
 			upper := new_upper
 		ensure
 			inserted: item (i) = v
+			higher_count: count >= old count
+			lower_set: lower = (old lower).min (i)
+			upper_set: upper = (old upper).max (i)
+		end
+
+	force_and_fill (v: like item; i: INTEGER)
+			-- Assign item `v` to `i`-th entry.
+			-- If `i` falls out of currently defined bounds:
+			-- 	- Resize array as needed.
+			-- 	- Fill in any new entry (in addition to the one at position `i` with value `v`).
+			-- 	- Preserve existing items.
+		local
+			old_size, new_size: INTEGER
+			new_lower, new_upper: INTEGER
+			l_offset: INTEGER
+		do
+			new_lower := lower.min (i)
+			new_upper := upper.max (i)
+			new_size := new_upper - new_lower + 1
+			old_size := area.capacity
+			if old_size = 0 then
+					-- The array is empty. First, create an empty SPECIAL of the right capacity.
+				make_empty_area (new_size.max (additional_space))
+					-- Fill the SPECIAL from `0` to `new_size - 1` with `v`.
+				area.fill_with (v, 0, new_size - 1)
+			else
+				if new_size > old_size then
+					set_area (area.aliased_resized_area (new_size.max (old_size + additional_space)))
+				end
+				if new_lower < lower then
+						-- New items are below the previous `lower`.
+						-- Shift entries towards `upper` before inserting `v`.
+					l_offset := lower - new_lower
+					area.move_data (0, l_offset, capacity)
+						-- Fill new items with `v`.
+					area.fill_with (v, 0, l_offset - 1)
+				elseif new_size > area.count then
+						-- Add new items above old `upper` position.
+					area.fill_with (v, area.count, new_size - 1)
+				else
+						-- The item is changed inside the old boundaries.
+					area.put (v, i - lower)
+				end
+			end
+			lower := new_lower
+			upper := new_upper
+		ensure
+			inserted: item (i) = v
+			filled_below_lower: across i |..| old lower as c all c.item < old lower implies item (c.item) = v end
+			filled_above_upper: across old upper |..| i as c all c.item > old upper implies item (c.item) = v end
 			higher_count: count >= old count
 			lower_set: lower = (old lower).min (i)
 			upper_set: upper = (old upper).max (i)
@@ -829,7 +879,7 @@ feature -- Duplication
 			-- Array made of items of current array within
 			-- bounds `start_pos' and `end_pos'.
 		require
-			valid_start_pos: valid_index (start_pos)
+			valid_start_pos: lower <= start_pos
 			valid_end_pos: end_pos <= upper
 			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
 		do
@@ -881,7 +931,7 @@ invariant
 --				(index_set.upper = lower + count - 1))
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

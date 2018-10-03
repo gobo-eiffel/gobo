@@ -5,8 +5,8 @@ note
 	status: "See notice at end of class."
 	names: linked_tree_cursor, cursor;
 	contents: generic;
-	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
-	revision: "$Revision: 559 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LINKED_CURSOR_TREE_CURSOR [G]
 

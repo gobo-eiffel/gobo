@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-12-14 23:41:26 +0100 (Fri, 14 Dec 2012) $"
-	revision: "$Revision: 662 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	NATIVE_STRING_HANDLER

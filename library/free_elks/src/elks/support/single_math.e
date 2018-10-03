@@ -1,14 +1,13 @@
 note
 	description: "[
-		Basic mathematical operations, single-precision.
-		This class may be used as ancestor by classes needing its facilities
+			Basic mathematical operations, single-precision.
+			This class may be used as ancestor by classes needing its facilities
 		]"
-
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
-	revision: "$Revision: 559 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SINGLE_MATH
@@ -22,6 +21,8 @@ feature -- Access
 			-- Base 2 logarithm of `v'
 		do
 			Result := log (v) / log ({REAL_32} 2.0)
+		ensure
+			instance_free: class
 		end
 
 	cosine (v: REAL_32): REAL_32
@@ -31,6 +32,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"cos"
+		ensure
+			instance_free: class
 		end
 
 	arc_cosine (v: REAL_32): REAL_32
@@ -40,6 +43,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"acos"
+		ensure
+			instance_free: class
 		end
 
 	sine (v: REAL_32): REAL_32
@@ -49,6 +54,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"sin"
+		ensure
+			instance_free: class
 		end
 
 	arc_sine (v: REAL_32): REAL_32
@@ -58,6 +65,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"asin"
+		ensure
+			instance_free: class
 		end
 
 	tangent (v: REAL_32): REAL_32
@@ -67,6 +76,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"tan"
+		ensure
+			instance_free: class
 		end
 
 	arc_tangent (v: REAL_32): REAL_32
@@ -76,36 +87,48 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"atan"
+		ensure
+			instance_free: class
 		end
 
 	sqrt (v: REAL_32): REAL_32
 			-- Square root of `v'
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			instance_free: class
 		end
 
 	exp (x: REAL_32): REAL_32
 			-- Exponential of `v'.
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			instance_free: class
 		end
 
 	log (v: REAL_32): REAL_32
 			-- Natural logarithm of `v'
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			instance_free: class
 		end
 
 	log10 (v: REAL_32): REAL_32
 			-- Base 10 logarithm of `v'
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			instance_free: class
 		end
 
 	floor (v: REAL_32): REAL_32
 			-- Greatest integral value less than or equal to `v'
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			instance_free: class
 		end
 
 	ceiling (v: REAL_32): REAL_32
@@ -114,6 +137,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"ceil"
+		ensure
+			instance_free: class
 		end
 
 	rabs (v: REAL_32): REAL_32
@@ -122,10 +147,12 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"fabs"
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

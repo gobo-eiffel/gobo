@@ -7,8 +7,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-25 20:49:00 +0100 (Fri, 25 Jan 2013) $"
-	revision: "$Revision: 712 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ANY
@@ -95,6 +95,7 @@ feature -- Comparison
 							a.is_equal (b)
 			end
 		ensure
+			instance_free: class
 			definition: Result = (a = Void and b = Void) or else
 						((a /= Void and b /= Void) and then
 						a.is_equal (b))
@@ -112,6 +113,7 @@ feature -- Comparison
 							a.standard_is_equal (b)
 			end
 		ensure
+			instance_free: class
 			definition: Result = (a = Void and b = Void) or else
 						((a /= Void and b /= Void) and then
 						a.standard_is_equal (b))
@@ -139,6 +141,7 @@ feature -- Comparison
 				Result := b /= Void and then a.is_deep_equal (b)
 			end
 		ensure
+			instance_free: class
 			shallow_implies_deep: standard_equal (a, b) implies Result
 			both_or_none_void: (a = Void) implies (Result = (b = Void))
 			same_type: (Result and (a /= Void)) implies (b /= Void and then a.same_type (b))
@@ -194,6 +197,7 @@ feature -- Duplication
 				Result := other.twin
 			end
 		ensure
+			instance_free: class
 			equal: Result ~ other
 		end
 
@@ -208,6 +212,7 @@ feature -- Duplication
 				Result := other.standard_twin
 			end
 		ensure
+			instance_free: class
 			equal: standard_equal (Result, other)
 		end
 
@@ -240,6 +245,7 @@ feature -- Duplication
 				Result := other.deep_twin
 			end
 		ensure
+			instance_free: class
 			deep_equal: deep_equal (other, Result)
 		end
 
@@ -281,6 +287,7 @@ feature -- Output
 			create Result
 			Result.set_output_default
 		ensure
+			instance_free: class
 			io_not_void: Result /= Void
 		end
 
@@ -309,6 +316,8 @@ feature -- Output
 			if o /= Void then
 				io.put_string (o.out)
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Platform
@@ -318,6 +327,7 @@ feature -- Platform
 		once
 			create Result
 		ensure
+			instance_free: class
 			operating_environment_not_void: Result /= Void
 		end
 
@@ -340,6 +350,8 @@ feature -- Basic operations
 	frozen do_nothing
 			-- Execute a null action.
 		do
+		ensure
+			instance_free: class
 		end
 
 	frozen default: detachable like Current
@@ -353,6 +365,7 @@ feature -- Basic operations
 			-- some `p' of type `POINTER'.)
 		do
 		ensure
+			instance_free: class
 			-- Result = Result.default
 		end
 
@@ -370,7 +383,7 @@ invariant
 	reflexive_conformance: conforms_to (Current)
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

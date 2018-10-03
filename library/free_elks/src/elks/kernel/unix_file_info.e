@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-24 23:27:55 +0100 (Thu, 24 Jan 2013) $"
-	revision: "$Revision: 708 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class UNIX_FILE_INFO
 

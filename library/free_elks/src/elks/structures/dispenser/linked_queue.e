@@ -7,8 +7,8 @@ note
 	representation: linked;
 	access: fixed, fifo, membership;
 	contents: generic;
-	date: "$Date: 2014-01-17 11:50:59 -0800 (Fri, 17 Jan 2014) $"
-	revision: "$Revision: 94051 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LINKED_QUEUE [G] inherit
 

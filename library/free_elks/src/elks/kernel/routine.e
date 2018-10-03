@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects representing delayed calls to a routine,
 		with some operands possibly still open
@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2015-12-16 11:42:15 -0800 (Wed, 16 Dec 2015) $"
-	revision: "$Revision: 98274 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ROUTINE [OPEN_ARGS -> detachable TUPLE create default_create end]

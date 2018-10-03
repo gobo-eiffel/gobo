@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "References to objects containing a real value"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-12-30 16:54:49 -0800 (Mon, 30 Dec 2013) $"
-	revision: "$Revision: 93855 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class REAL_32_REF inherit
 
@@ -67,18 +67,24 @@ feature -- Access
 			-- Representation of not a number (NaN)
 		external
 			"built_in static"
+		ensure
+			is_class: class
 		end
 
 	negative_infinity: REAL_32
 			-- Representation of negative infinity
 		external
 			"built_in static"
+		ensure
+			is_class: class
 		end
 
 	positive_infinity: REAL_32
 			-- Representation of positive infinity
 		external
 			"built_in static"
+		ensure
+			is_class: class
 		end
 
 	min_value: REAL_32 = -3.4028234663852885981170e+038

@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-07 23:36:00 +0100 (Mon, 07 Jan 2013) $"
-	revision: "$Revision: 692 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 
 class EXECUTION_ENVIRONMENT
@@ -18,6 +18,8 @@ feature -- Access
 			-- Arguments that were used to start current execution.
 		once
 			create Result
+		ensure
+			instance_free: class
 		end
 
 	command_line: ARGUMENTS
@@ -26,6 +28,8 @@ feature -- Access
 			"Use `arguments' instead for handling Unicode command lines. [2017-05-31]"
 		once
 			create Result
+		ensure
+			instance_free: class
 		end
 
 	current_working_path: PATH
@@ -57,6 +61,7 @@ feature -- Access
 				end
 			end
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -94,6 +99,7 @@ feature -- Access
 				end
 			end
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -105,6 +111,8 @@ feature -- Access
 			else
 				create Result.make_empty
 			end
+		ensure
+			instance_free: class
 		end
 
 	get (s: STRING): detachable STRING
@@ -121,6 +129,8 @@ feature -- Access
 					-- will be missing.
 				Result := l_val.as_string_8
 			end
+		ensure
+			instance_free: class
 		end
 
 	item (s: READABLE_STRING_GENERAL): detachable STRING_32
@@ -130,15 +140,16 @@ feature -- Access
 			s_exists: s /= Void
 			not_has_null_character: not s.has ('%U')
 		local
-			l_key, l_value: NATIVE_STRING
+			l_key: NATIVE_STRING
 			c_string: POINTER
 		do
 			create l_key.make (s)
 			c_string := eif_getenv (l_key.item)
 			if not c_string.is_default_pointer then
-				create l_value.make_from_pointer (c_string)
-				Result := l_value.string
+				Result := (create {NATIVE_STRING}.make_from_pointer (c_string)).string
 			end
+		ensure
+			instance_free: class
 		end
 
 	home_directory_path: detachable PATH
@@ -160,6 +171,8 @@ feature -- Access
 			if l_nbytes > 0 and l_nbytes <= l_count then
 				create Result.make_from_pointer (l_managed.item)
 			end
+		ensure
+			instance_free: class
 		end
 
 	user_directory_path: detachable PATH
@@ -194,6 +207,8 @@ feature -- Access
 					-- No possibility of a user directory, we let the caller handle that.
 				Result := Void
 			end
+		ensure
+			instance_free: class
 		end
 
 	home_directory_name: detachable STRING
@@ -217,6 +232,8 @@ feature -- Access
 			if l_nbytes > 0 and l_nbytes <= l_count then
 				Result := file_info.pointer_to_file_name_8 (l_managed.item)
 			end
+		ensure
+			instance_free: class
 		end
 
 	user_directory_name: detachable STRING
@@ -253,6 +270,8 @@ feature -- Access
 					-- No possibility of a user directory, we let the caller handle that.
 				Result := Void
 			end
+		ensure
+			instance_free: class
 		end
 
 	root_directory_name: STRING
@@ -268,6 +287,7 @@ feature -- Access
 				Result := "/"
 			end
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -297,6 +317,7 @@ feature -- Access
 				l_ptr := i_th_environ (i)
 			end
 		ensure
+			instance_free: class
 			result_attached: Result /= Void
 		end
 
@@ -324,7 +345,41 @@ feature -- Access
 				l_ptr := i_th_environ (i)
 			end
 		ensure
+			instance_free: class
 			result_attached: Result /= Void
+		end
+
+	available_cpu_count: NATURAL_32
+			-- Number of available CPUs.
+		external
+			"C inline use <eif_system.h>"
+		alias
+			"[
+				#ifdef EIF_WINDOWS
+					SYSTEM_INFO SysInfo;
+					ZeroMemory (&SysInfo, sizeof (SYSTEM_INFO));
+					GetSystemInfo (&SysInfo);
+					return (EIF_NATURAL_32) SysInfo.dwNumberOfProcessors;
+				#elif defined(EIF_MACOSX)
+						/* MacOS X < 10.4 */
+					int nm [2];
+					size_t len = 4;
+					uint32_t count;
+					nm [0] = CTL_HW; nm [1] = HW_AVAILCPU;
+					sysctl (nm, 2, &count, &len, NULL, 0);
+					if(count < 1) {
+						nm[1] = HW_NCPU;
+						sysctl(nm, 2, &count, &len, NULL, 0);
+						if (count < 1) {count = 1;}
+					}
+					return (EIF_NATURAL_32) count;
+				#else
+						/* Linux, Solaris, AIX, Mac OS X >=10.4 (i.e. Tiger onwards), ... */
+					return (EIF_NATURAL_32) sysconf(_SC_NPROCESSORS_ONLN);
+				#endif
+			]"
+		ensure
+			instance_free: class
 		end
 
 feature -- Status
@@ -411,6 +466,8 @@ feature -- Status setting
 				create l_cstr.make (s)
 			end
 			asynchronous_system_call (l_cstr.item)
+		ensure
+			instance_free: class
 		end
 
 	sleep (nanoseconds: INTEGER_64)
@@ -420,6 +477,8 @@ feature -- Status setting
 			non_negative_nanoseconds: nanoseconds >= 0
 		do
 			eif_sleep (nanoseconds)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -458,6 +517,8 @@ feature {NONE} -- Implementation
 					return NULL;
 				}
 			]"
+		ensure
+			instance_free: class
 		end
 
 	separated_variables (a_var: STRING_32): detachable TUPLE [value: STRING_32; key: STRING_32]
@@ -485,6 +546,8 @@ feature {NONE} -- Implementation
 			if i > 1 and then i < j then
 				Result := [a_var.substring (i + 1, j), a_var.substring (1, i - 1)]
 			end
+		ensure
+			instance_free: class
 		end
 
 	file_info: FILE_INFO
@@ -493,6 +556,8 @@ feature {NONE} -- Implementation
 			"Remove when all obsolete routines using it will be removed.  [2017-05-31]"
 		once
 			create Result.make
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- External
@@ -577,10 +642,12 @@ feature {NONE} -- External
 			non_negative_nanoseconds: nanoseconds >= 0
 		external
 			"C blocking use %"eif_misc.h%""
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

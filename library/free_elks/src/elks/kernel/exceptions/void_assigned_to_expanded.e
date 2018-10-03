@@ -5,8 +5,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-12-26 18:57:50 -0800 (Wed, 26 Dec 2012) $"
-	revision: "$Revision: 92096 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	VOID_ASSIGNED_TO_EXPANDED

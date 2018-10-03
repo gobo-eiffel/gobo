@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "Implementation of TUPLE"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2016-03-02 13:15:09 -0800 (Wed, 02 Mar 2016) $"
-	revision: "$Revision: 98557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TUPLE

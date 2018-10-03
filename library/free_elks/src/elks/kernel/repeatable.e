@@ -3,8 +3,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-07-29 12:50:27 +0200 (Sun, 29 Jul 2012) $"
-	revision: "$Revision: 568 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class REPEATABLE
 

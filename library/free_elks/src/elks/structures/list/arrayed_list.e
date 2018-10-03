@@ -8,8 +8,8 @@ note
 	access: index, cursor, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
-	revision: "$Revision: 98619 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ARRAYED_LIST [G] inherit
 

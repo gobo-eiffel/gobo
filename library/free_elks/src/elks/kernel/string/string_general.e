@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2016-07-23 06:24:01 -0700 (Sat, 23 Jul 2016) $"
-	revision: "$Revision: 99053 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	STRING_GENERAL

@@ -5,8 +5,8 @@
 	legal: "See notice at end of class."
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
-	revision: "$Revision: 98619 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	LINKED_LIST_ITERATION_CURSOR [G]

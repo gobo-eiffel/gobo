@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2015-08-03 17:18:55 -0700 (Mon, 03 Aug 2015) $"
-	revision: "$Revision: 97763 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DIRECTORY
 

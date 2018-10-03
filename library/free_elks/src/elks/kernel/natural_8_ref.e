@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "References to objects containing an unsigned integer value coded on 8 bits."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2015-03-06 06:22:59 -0800 (Fri, 06 Mar 2015) $"
-	revision: "$Revision: 96790 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	NATURAL_8_REF
@@ -385,14 +385,13 @@ feature -- Conversion
 			i, val: INTEGER
 		do
 			from
-				i := 2
-				create Result.make (i)
-				Result.fill_blank
+				i := {PLATFORM}.natural_8_bits // 4
+				create Result.make_filled ('0', i)
 				val := item
 			until
 				i = 0
 			loop
-				Result.put ((val & 15).to_hex_character, i)
+				Result.put ((val & 0xF).to_hex_character, i)
 				val := val |>> 4
 				i := i - 1
 			end
@@ -405,8 +404,11 @@ feature -- Conversion
 			-- `item' converted into a hexadecimal character.
 		require
 			in_bounds: 0 <= item and item <= 15
+		local
+			i: INTEGER_32
 		do
-			Result := item.to_integer_32.to_hex_character
+			i := item.to_integer_32
+			Result := (if i <= 9 then '0' else 'A' - 10 end) + i
 		ensure
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end
@@ -563,7 +565,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

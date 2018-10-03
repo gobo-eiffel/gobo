@@ -7,8 +7,8 @@ note
 	representation: recursive, array;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date: 2015-12-17 05:34:17 -0800 (Thu, 17 Dec 2015) $"
-	revision: "$Revision: 98279 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ARRAYED_TREE [G] inherit
 

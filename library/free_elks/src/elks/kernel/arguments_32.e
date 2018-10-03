@@ -1,14 +1,13 @@
 note
 	description: "[
-		Access to command-line arguments. This class 
-		may be used as ancestor by classes needing its facilities.
+			Access to command-line arguments. This class 
+			may be used as ancestor by classes needing its facilities.
 		]"
-
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-25 20:58:54 +0100 (Fri, 25 Jan 2013) $"
-	revision: "$Revision: 713 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ARGUMENTS_32
@@ -27,6 +26,7 @@ feature -- Access
 		do
 			Result := internal_argument_array.item (i)
 		ensure
+			instance_free: class
 			argument_not_void: Result /= Void
 		end
 
@@ -36,6 +36,7 @@ feature -- Access
 		do
 			Result := internal_argument_array.twin
 		ensure
+			instance_free: class
 			argument_array_not_void: Result /= Void
 			argument_array_compare_objects: Result.object_comparison
 		end
@@ -62,6 +63,7 @@ feature -- Access
 			end
 			create Result.make_from_string (l_result)
 		ensure
+			instance_free: class
 			Result.count >= command_name.count
 		end
 
@@ -70,6 +72,7 @@ feature -- Access
 		once
 			Result := argument (0)
 		ensure
+			instance_free: class
 			definition: Result.same_string (argument (0))
 		end
 
@@ -79,6 +82,8 @@ feature -- Access: Cursor
 			-- <Precursor>
 		do
 			Result := internal_argument_array.new_cursor
+		ensure then
+			instance_free: class
 		end
 
 feature -- Status report
@@ -107,6 +112,8 @@ feature -- Status report
 			if i <= argument_count then
 				Result := i
 			end
+		ensure
+			instance_free: class
 		end
 
 	index_of_beginning_with_word_option (opt: READABLE_STRING_GENERAL): INTEGER
@@ -134,6 +141,8 @@ feature -- Status report
 			if i <= argument_count then
 				Result := i
 			end
+		ensure
+			instance_free: class
 		end
 
 	index_of_character_option (o: CHARACTER_32): INTEGER
@@ -158,6 +167,8 @@ feature -- Status report
 				i := i + 1
 			end
 			if i <= argument_count then Result := i end
+		ensure
+			instance_free: class
 		end
 
 	separate_character_option_value (o: CHARACTER_32): detachable IMMUTABLE_STRING_32
@@ -186,6 +197,8 @@ feature -- Status report
 					Result := internal_argument_array.item (p + 1)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	separate_word_option_value (opt: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_32
@@ -213,6 +226,8 @@ feature -- Status report
 					Result := internal_argument_array.item (p + 1)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	coalesced_character_option_value (o: CHARACTER_32): detachable IMMUTABLE_STRING_32
@@ -237,6 +252,8 @@ feature -- Status report
 					Result := Result.shared_substring (Result.index_of (o, 1) + 2, Result.count)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	coalesced_word_option_value (opt: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_32
@@ -261,6 +278,8 @@ feature -- Status report
 					Result := Result.shared_substring (opt.count + 2, Result.count)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	option_sign: CELL [CHARACTER_32]
@@ -270,6 +289,8 @@ feature -- Status report
 			-- Default is '-'
 		once
 			create Result.put ('-')
+		ensure
+			instance_free: class
 		end
 
 feature -- Status setting
@@ -280,6 +301,8 @@ feature -- Status setting
 			-- be an option.
 		do
 			option_sign.put (c)
+		ensure
+			instance_free: class
 		end
 
 feature -- Measurement
@@ -288,8 +311,9 @@ feature -- Measurement
 			-- Number of arguments given to command that started
 			-- system execution (command name does not count).
 		external
-			"built_in"
+			"built_in static"
 		ensure
+			instance_free: class
 			argument_count_positive: Result >= 0
 		end
 
@@ -306,6 +330,8 @@ feature {NONE} -- Implementation
 			elseif not arg.is_empty and then arg.item (1) = option_sign.item then
 				Result := arg.substring (2, arg.count).same_string (w)
 			end
+		ensure
+			instance_free: class
 		end
 
 	option_word_begins_with (arg, w: READABLE_STRING_GENERAL): BOOLEAN
@@ -319,6 +345,8 @@ feature {NONE} -- Implementation
 			elseif arg.item (1) = option_sign.item and then arg.count > w.count then
 				Result := arg.substring (2, w.count + 1).same_string (w)
 			end
+		ensure
+			instance_free: class
 		end
 
 	option_character_equal (arg: READABLE_STRING_GENERAL; c: CHARACTER_32): BOOLEAN
@@ -331,6 +359,8 @@ feature {NONE} -- Implementation
 			elseif arg.item (1) = option_sign.item then
 				Result := arg.substring (2, arg.count).has (c)
 			end
+		ensure
+			instance_free: class
 		end
 
 	internal_argument_array: ARRAY [IMMUTABLE_STRING_32]
@@ -348,6 +378,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			internal_argument_array_not_void: Result /= Void
 			internal_argument_array_compare_objects: Result.object_comparison
 		end
@@ -358,7 +389,9 @@ feature {NONE} -- Implementation
 			index_large_enough: i >= 0
 			index_small_enough: i <= argument_count
 		external
-			"built_in"
+			"built_in static"
+		ensure
+			instance_free: class
 		end
 
 	i_th_argument_pointer (i: INTEGER): POINTER
@@ -369,11 +402,13 @@ feature {NONE} -- Implementation
 			index_large_enough: i >= 0
 			index_small_enough: i <= argument_count
 		external
-			"built_in"
+			"built_in static"
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

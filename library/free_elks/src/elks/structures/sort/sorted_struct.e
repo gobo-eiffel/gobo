@@ -6,8 +6,8 @@ note
 	names: sorted_struct, comparable_struct;
 	access: index, membership, min, max;
 	contents: generic;
-	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
-	revision: "$Revision: 567 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
 

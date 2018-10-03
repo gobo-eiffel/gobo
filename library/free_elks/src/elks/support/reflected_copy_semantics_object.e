@@ -6,8 +6,8 @@ note
 	implementation_details: "[
 		The GC might be moving objects, some of the routines are actually builtin.
 		]"
-	date: "$Date: 2013-05-20 16:15:17 -0700 (Mon, 20 May 2013) $"
-	revision: "$Revision: 92557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	REFLECTED_COPY_SEMANTICS_OBJECT

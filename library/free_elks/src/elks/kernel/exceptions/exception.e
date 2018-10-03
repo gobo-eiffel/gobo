@@ -5,8 +5,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-12-28 06:07:03 -0800 (Fri, 28 Dec 2012) $"
-	revision: "$Revision: 92098 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EXCEPTION
@@ -188,7 +188,7 @@ feature -- Status settings
 				c_description := Void
 			end
 		ensure
-			description_set: (attached a_description as a_des and then attached description as l_des and then l_des.same_string (l_des)) or else
+			description_set: (attached a_description as a_des and then attached description as l_des and then a_des.same_string (l_des)) or else
 							(a_description = Void and then description = Void)
 		end
 

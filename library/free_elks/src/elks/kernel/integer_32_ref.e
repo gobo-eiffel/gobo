@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2014-05-19 14:26:14 -0700 (Mon, 19 May 2014) $"
-	revision: "$Revision: 95117 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	INTEGER_32_REF
@@ -411,9 +411,8 @@ feature -- Conversion
 			i, val: INTEGER
 		do
 			from
-				i := {PLATFORM}.Integer_32_bits // 4
-				create Result.make (i)
-				Result.fill_blank
+				i := {PLATFORM}.integer_32_bits // 4
+				create Result.make_filled ('0', i)
 				val := item
 			until
 				i = 0
@@ -432,14 +431,10 @@ feature -- Conversion
 		require
 			in_bounds: 0 <= item and item <= 15
 		local
-			tmp: INTEGER
+			i: INTEGER_32
 		do
-			tmp := item
-			if tmp <= 9 then
-				Result := (tmp + ('0').code).to_character_8
-			else
-				Result := (('A').code + (tmp - 10)).to_character_8
-			end
+			i := item
+			Result := (if i <= 9 then '0' else 'A' - 10 end) + i
 		ensure
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end
@@ -615,7 +610,7 @@ invariant
 	sign_times_abs: sign * abs = item
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

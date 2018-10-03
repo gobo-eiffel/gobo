@@ -12,8 +12,8 @@ note
 		cursor_tree_iteration, tree_iterators, tree_iteration;
 	exploration: depth_first, breadth_first;
 	traversal: preorder, postorder, inorder;
-	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
-	revision: "$Revision: 567 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class CURSOR_TREE_ITERATOR [G] inherit
 

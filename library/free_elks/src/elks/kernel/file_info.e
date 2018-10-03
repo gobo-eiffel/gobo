@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-03 01:22:47 +0100 (Thu, 03 Jan 2013) $"
-	revision: "$Revision: 679 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class FILE_INFO inherit
 

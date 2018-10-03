@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects that may be stored and retrieved along with all their dependents.
 		This class may be used as ancestor by classes needing its facilities.
@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2014-11-25 12:51:29 -0800 (Tue, 25 Nov 2014) $"
-	revision: "$Revision: 96156 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	STORABLE
@@ -31,9 +31,11 @@ feature -- Access
 			medium_supports_storable: medium.support_storable
 		do
 			Result := medium.retrieved
+		ensure
+			instance_free: class
 		end
 
-	retrieve_by_name (file_name: STRING): detachable ANY
+	retrieve_by_name (file_name: READABLE_STRING_GENERAL): detachable ANY
 			-- Retrieve object structure, from external
 			-- representation previously stored in a file
 			-- called `file_name'.
@@ -55,6 +57,8 @@ feature -- Access
 				Result := file.retrieved
 				file.close
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Setting
@@ -132,7 +136,7 @@ feature -- Element change
 			medium.independent_store (Current)
 		end
 
-	store_by_name (file_name: STRING)
+	store_by_name (file_name: READABLE_STRING_GENERAL)
 			-- Produce on file called `file_name' an external
 			-- representation of the entire object structure
 			-- reachable from current object.
@@ -160,7 +164,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
