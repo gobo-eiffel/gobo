@@ -7,6 +7,16 @@
 * Renamed command-line option `--new_instance_types` as `--new-instance-types`
   to comply with the argument library validity constraints.
 
+### gedoc
+
+* Changed the default value for command-line option `--thread` to be
+  the number of CPUs available on the machine.
+
+### gelint
+
+* Changed the default value for command-line option `--thread` to be
+  the number of CPUs available on the machine.
+
 ### gexace
 
 * Added documentation about `Xace` and `gexace`.

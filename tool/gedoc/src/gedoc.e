@@ -178,7 +178,7 @@ feature -- Argument parsing
 			l_parser.options.force_last (define_option)
 				-- thread.
 			create thread_option.make_with_long_form ("thread")
-			thread_option.set_description ("Number of threads to be used. (default: 1)")
+			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: number of CPUs)")
 			thread_option.set_parameter_description ("thread_count")
 			if {PLATFORM}.is_thread_capable then
 				l_parser.options.force_last (thread_option)
@@ -374,9 +374,18 @@ feature -- Argument parsing
 			-- specified in `a_thread_option'
 		require
 			a_thread_option_not_void: a_thread_option /= Void
+		local
+			l_thread_count: INTEGER
 		do
-			if thread_option.was_found and then thread_option.parameter > 1 then
-				create {ET_SYSTEM_MULTIPROCESSOR} Result.make (thread_option.parameter)
+			l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
+			if thread_option.was_found then
+				l_thread_count := thread_option.parameter
+				if l_thread_count <= 0 then
+					l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + l_thread_count
+				end
+			end
+			if l_thread_count > 1 and {PLATFORM}.is_thread_capable then
+				create {ET_SYSTEM_MULTIPROCESSOR} Result.make (l_thread_count)
 			else
 				create Result.make
 			end

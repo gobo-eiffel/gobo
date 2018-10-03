@@ -55,7 +55,7 @@ feature -- Execution
 			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
 			is_flat_dbc := True
-			thread_count := 1
+			thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
 				arg := Arguments.argument (i)
@@ -77,6 +77,9 @@ feature -- Execution
 					l_string := arg.substring (10, arg.count)
 					if l_string.is_integer then
 						thread_count := l_string.to_integer
+						if thread_count <= 0 then
+							thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + thread_count
+						end
 					else
 						report_usage_message
 						Exceptions.die (1)

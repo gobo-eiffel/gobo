@@ -6,7 +6,7 @@
 		"Using gelint"
 
 	tool: "Gobo Eiffel Lint"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/usage">
 <chapterinfo>
 	<copyright>
-		<year>2006-2017</year>
+		<year>2006-2018</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 June 2017</date>
+	<date>3 October 2018</date>
 </chapterinfo>
 
 <title>Using gelint</title>
@@ -112,7 +112,9 @@ Eiffel library. Here is the list of options that can be used with
 			<filename>--thread=&lt;thread_count&gt;</filename>
 		</term>
 		<listitem><para>
-			Number of threads to be used to run <projectname>gelint</projectname>. (default: 1)
+			Number of threads to be used to run <projectname>gelint</projectname>.
+			Negative numbers -N mean &quot;number of CPUs - N&quot;.
+			(default: number of CPUs)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
