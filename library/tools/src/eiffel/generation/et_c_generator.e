@@ -33562,6 +33562,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_sig.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_store.h%"") then
 					include_runtime_header_file ("eif_store.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_system.h%"") then
+					include_runtime_header_file ("eif_system.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_threads.h%"") then
 					include_runtime_header_file ("eif_threads.h", False, a_file)
 				elseif a_filename.same_string ("<eif_threads.h>") then
