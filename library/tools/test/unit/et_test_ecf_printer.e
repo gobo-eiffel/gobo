@@ -5,7 +5,7 @@ note
 		"Test features of class ET_ECF_PRINTER"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,10 +34,11 @@ feature -- Test
 	test_printer
 			-- Test ECF printer.
 		local
-			l_ecf_parser: ET_ECF_SYSTEM_PARSER
+			l_ecf_parser: ET_ECF_SYSTEM_CONFIG_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
 			l_printer: ET_ECF_PRINTER
-			l_ecf_system: ET_ECF_SYSTEM_CONFIG
+			l_ecf_system: ET_ECF_SYSTEM
+			l_ecf_system_config: ET_ECF_SYSTEM_CONFIG
 			l_input_file: KL_TEXT_INPUT_FILE
 			l_output_file: KL_TEXT_OUTPUT_FILE
 		do
@@ -46,18 +47,19 @@ feature -- Test
 			create l_input_file.make (input_filename)
 			l_input_file.open_read
 			assert ("is_open_read", l_input_file.is_open_read)
-			l_ecf_parser.parse_file (l_input_file)
+			create l_ecf_system.make ("*unknown*", input_filename)
+			l_ecf_parser.parse_file (l_input_file, l_ecf_system)
 			l_input_file.close
-			l_ecf_system := l_ecf_parser.last_system
+			l_ecf_system_config := l_ecf_parser.last_system_config
 			assert ("no_ecf_error", not l_ecf_error_handler.has_error)
 			create l_output_file.make ("gobo.txt")
 			l_output_file.open_write
 			assert ("is_open_write", l_output_file.is_open_write)
 			create l_printer.make (l_output_file)
-			if attached l_ecf_system.ecf_version as l_ecf_version then
+			if attached l_ecf_system_config.ecf_version as l_ecf_version then
 				l_printer.set_ecf_version (l_ecf_version)
 			end
-			l_printer.print_system (l_ecf_system)
+			l_printer.print_system (l_ecf_system_config)
 			l_printer.set_null_file
 			l_output_file.close
 			assert_files_equal ("ecf_diff", input_filename, "gobo.txt")
