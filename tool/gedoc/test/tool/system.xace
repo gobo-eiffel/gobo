@@ -28,7 +28,7 @@
 
 	<cluster name="gedoc_tester" location="${GOBO}/tool/gedoc/test/tool" prefix="tool_"/>
 	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
-	<cluster name="src_gec_testgen" location="TESTGEN"/>
+	<cluster name="src_gedoc_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/structure/library.xace"/>

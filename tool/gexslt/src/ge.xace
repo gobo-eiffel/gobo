@@ -2,10 +2,10 @@
 
 <system name="gexslt">
 	<root class="GEXSLT" creation="execute"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="inlining" value="all"/>
 	<option name="profile" value="false"/>
+	<option name="assertion" value="none"/>
+	<option name="inlining" value="all"/>
 	<cluster name="gexslt" location="${GOBO}/tool/gexslt/src"/>
 	<cluster name="xml" location="${GOBO}/library/xml/src" prefix="xm_">
 		<option name="abstract" value="true"/>

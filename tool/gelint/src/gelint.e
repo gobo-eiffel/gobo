@@ -69,8 +69,10 @@ feature -- Execution
 					defined_variables := arg.substring (10, arg.count)
 				elseif arg.is_equal ("--verbose") then
 					is_verbose := True
-				elseif arg.is_equal ("--benchmark") then
-					benchmark_flag := True
+				elseif arg.is_equal ("--no-benchmark") then
+					no_benchmark_flag := True
+				elseif arg.is_equal ("--nested-benchmark") then
+					nested_benchmark_flag := True
 				elseif arg.is_equal ("--metrics") then
 					metrics_flag := True
 				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--thread=") and then {PLATFORM}.is_thread_capable then
@@ -91,6 +93,7 @@ feature -- Execution
 				elseif arg.is_equal ("--catcall") then
 					is_catcall := True
 				elseif arg.is_equal ("--silent") then
+					create {ET_NULL_ERROR_HANDLER} error_handler.make_null
 					is_silent := True
 				elseif arg.is_equal ("--ecma") then
 					ecma_version := ecma_367_latest
@@ -170,7 +173,8 @@ feature -- Status report
 
 	defined_variables: detachable STRING
 	is_verbose: BOOLEAN
-	benchmark_flag: BOOLEAN
+	no_benchmark_flag: BOOLEAN
+	nested_benchmark_flag: BOOLEAN
 	metrics_flag: BOOLEAN
 	is_flat: BOOLEAN
 	is_flat_dbc: BOOLEAN
@@ -306,7 +310,6 @@ feature {NONE} -- Processing
 			l_system_processor: ET_SYSTEM_PROCESSOR
 			dt1: detachable DT_DATE_TIME
 		do
---			error_handler.set_compilers
 			error_handler.set_ise
 			error_handler.set_verbose (is_verbose)
 			if ise_version = Void then
@@ -318,9 +321,9 @@ feature {NONE} -- Processing
 				create l_system_processor.make
 			end
 			l_system_processor.set_error_handler (error_handler)
-			l_system_processor.set_benchmark_shown (benchmark_flag or not is_silent)
-			l_system_processor.set_nested_benchmark_shown (benchmark_flag)
-			l_system_processor.set_metrics_shown (metrics_flag)
+			l_system_processor.set_benchmark_shown (not no_benchmark_flag and not is_silent)
+			l_system_processor.set_nested_benchmark_shown (nested_benchmark_flag and not no_benchmark_flag and not is_silent)
+			l_system_processor.set_metrics_shown (metrics_flag and not is_silent)
 			l_system_processor.set_ise_version (ise_version)
 			l_system_processor.set_ecma_version (ecma_version)
 			l_system_processor.set_flat_mode (is_flat)
@@ -382,7 +385,7 @@ feature -- Error handling
 				l_thread_option := ""
 			end
 			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
-				%%T" + l_thread_option + "[--flat][--noflatdbc][--catcall][--silent][--verbose][--benchmark][--metrics] xace_or_ecf_filename")
+				%%T" + l_thread_option + "[--flat][--noflatdbc][--catcall][--silent][--verbose][--no-benchmark][--nested-benchmark][--metrics] xace_or_ecf_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

@@ -2,10 +2,10 @@
 
 <system name="gexace">
 	<root class="GEXACE" creation="make"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="gexace" location="${GOBO}/tool/gexace/src"/>
 	<cluster name="ge" location="${GOBO}/library"/>
 	<cluster name="argument" location="${GOBO}/library/argument/src" prefix="ap_"/>

@@ -89,8 +89,11 @@ feature -- Argument parsing
 	verbose_flag: AP_FLAG
 			-- Flag for '--verbose'
 
-	benchmark_flag: AP_FLAG
-			-- Flag for '--benchmark'
+	nested_benchmark_flag: AP_FLAG
+			-- Flag for '--nested-benchmark'
+
+	no_benchmark_flag: AP_FLAG
+			-- Flag for '--no-benchmark'
 
 	metrics_flag: AP_FLAG
 			-- Flag for '--metrics'
@@ -153,10 +156,14 @@ feature -- Argument parsing
 			create verbose_flag.make_with_long_form ("verbose")
 			verbose_flag.set_description ("Should detailed informative messages be displayed?")
 			l_parser.options.force_last (verbose_flag)
-				-- benchmark.
-			create benchmark_flag.make_with_long_form ("benchmark")
-			benchmark_flag.set_description ("Should benchmark information be displayed?")
-			l_parser.options.force_last (benchmark_flag)
+				-- no-benchmark.
+			create no_benchmark_flag.make_with_long_form ("no-benchmark")
+			no_benchmark_flag.set_description ("Should no benchmark information be displayed? (default: display non-nested benchmark information)")
+			l_parser.options.force_last (no_benchmark_flag)
+				-- nested-benchmark.
+			create nested_benchmark_flag.make_with_long_form ("nested-benchmark")
+			nested_benchmark_flag.set_description ("Should nested benchmark information be displayed?")
+			l_parser.options.force_last (nested_benchmark_flag)
 				-- metrics.
 			create metrics_flag.make_with_long_form ("metrics")
 			metrics_flag.set_description ("Should metrics information be displayed?")
@@ -190,6 +197,9 @@ feature -- Argument parsing
 			l_parser.alternative_options_lists.force_first (l_list)
 				-- Parsing.
 			l_parser.parse_arguments
+			if silent_flag.was_found then
+				create {ET_NULL_ERROR_HANDLER} error_handler.make_null
+			end
 			if version_flag.was_found then
 				report_version_number
 				Exceptions.die (0)
@@ -210,7 +220,8 @@ feature -- Argument parsing
 				l_format.set_interactive_flag (interactive_flag.was_found)
 				l_format.set_library_prefix_flag (library_prefix_flag.was_found)
 				l_format.set_verbose_flag (verbose_flag.was_found)
-				l_format.set_benchmark_flag (benchmark_flag.was_found)
+				l_format.set_benchmark_flag (not no_benchmark_flag.was_found)
+				l_format.set_nested_benchmark_flag (nested_benchmark_flag.was_found)
 				l_format.set_metrics_flag (metrics_flag.was_found)
 				l_format.set_silent_flag (silent_flag.was_found)
 				format := l_format
@@ -223,7 +234,8 @@ feature -- Argument parsing
 			force_flag_not_void: force_flag /= Void
 			interactive_flag_not_void: interactive_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
-			benchmark_flag_not_void: benchmark_flag /= Void
+			no_benchmark_flag_not_void: no_benchmark_flag /= Void
+			nested_benchmark_flag_not_void: nested_benchmark_flag /= Void
 			metrics_flag_not_void: metrics_flag /= Void
 			silent_flag_not_void: silent_flag /= Void
 			ise_option_not_void: ise_option /= Void
@@ -462,7 +474,8 @@ invariant
 	force_flag_not_void: force_flag /= Void
 	interactive_flag_not_void: interactive_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
-	benchmark_flag_not_void: benchmark_flag /= Void
+	no_benchmark_flag_not_void: no_benchmark_flag /= Void
+	nested_benchmark_flag_not_void: nested_benchmark_flag /= Void
 	metrics_flag_not_void: metrics_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	ise_option_not_void: ise_option /= Void

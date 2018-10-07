@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<system name="gecc">
+	<description>
+		system: "Gobo Eiffel C Compilation"
+		copyright: "Copyright (c) 2018, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<root class="GECC" creation="execute"/>
+	<option name="console_application" value="true"/>
+	<option name="multithreaded" value="true"/>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="finalize" value="true"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="finalize" value="false"/>
+	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
+
+	<cluster name="gecc" location="${GOBO}/tool/gecc/src"/>
+
+	<mount location="${GOBO}/library/argument/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/thread/library.xace"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
+</system>

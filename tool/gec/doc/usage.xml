@@ -6,7 +6,7 @@
 		"Using gec"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/usage">
 <chapterinfo>
 	<copyright>
-		<year>2006-2016</year>
+		<year>2006-2018</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>27 December 2016</date>
+	<date>7 October 2018</date>
 </chapterinfo>
 
 <title>Using gec</title>
@@ -31,10 +31,10 @@
 <para>
 The usual way to invoke <projectname>gec</projectname> is as follows:
 <blockquote>
-	<filename>gec ace_filename</filename>
+	<filename>gec ecf_filename</filename>
 </blockquote>
-This will read the description of your program in the Ace file
-<filename>ace_filename</filename>, compile it and invoke the
+This will read the description of your program in the ECF file
+<filename>ecf_filename</filename>, compile it and invoke the
 back-end C compiler on the generated C code as explained
 below. Here is the list of options that can be
 used with <projectname>gec</projectname>:
@@ -60,10 +60,19 @@ used with <projectname>gec</projectname>:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--cat</filename>
+			<filename>--gelint</filename>
 		</term>
 		<listitem><para>
-			CAT-call errors should be considered as fatal errors.
+			Run gelint on the full content of each class being compiled.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--catcall=&lt;no|error|warning&gt;</filename>
+		</term>
+		<listitem><para>
+			Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? 
+			(default: warning)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -71,7 +80,8 @@ used with <projectname>gec</projectname>:
 			<filename>--split=&lt;no|yes&gt;</filename>
 		</term>
 		<listitem><para>
-			Should generated C code be split over several C files instead of being held in a single possibly large C file? (default: yes)
+			Should generated C code be split over several C files instead of being held in a single possibly large C file? 
+			(default: yes)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -84,10 +94,20 @@ used with <projectname>gec</projectname>:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--cc=&lt;no|yes&gt;</filename>
+			<filename>--cc=&lt;no|script|make|gecc&gt;</filename>
 		</term>
 		<listitem><para>
-			Should the back-end C compiler be invoked on the generated C code? (default: yes)
+			Should the back-end C compiler be invoked on the generated C code, and if yes with what method?
+			(default: gecc)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--new-instance-types=&lt;filename&gt;</filename>
+		</term>
+		<listitem><para>
+			File containing the list of types which can have instances created 
+			by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -96,6 +116,16 @@ used with <projectname>gec</projectname>:
 		</term>
 		<listitem><para>
 			Which garbage collector should the application be compiled with? (default: no)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--thread=&lt;thread_count&gt;</filename>
+		</term>
+		<listitem><para>
+			Number of threads to be used to run <projectname>gec</projectname>.
+			Negative numbers -N mean &quot;number of CPUs - N&quot;.
+			(default: number of CPUs)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -112,6 +142,31 @@ used with <projectname>gec</projectname>:
 		</term>
 		<listitem><para>
 			Run <projectname>gec</projectname> in verbose mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--no-benchmark</filename>
+		</term>
+		<listitem><para>
+			Should no benchmark information be displayed?
+			(default: display non-nested benchmark information)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--nested-benchmark</filename>
+		</term>
+		<listitem><para>
+			Should nested benchmark information be displayed?
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--metrics</filename>
+		</term>
+		<listitem><para>
+			Should metrics information be displayed?
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

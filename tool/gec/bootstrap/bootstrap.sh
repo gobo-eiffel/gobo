@@ -180,27 +180,41 @@ fi
 
 if [ "$EIF" = "ge" ]; then
 	cd $BIN_DIR
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gecc (bootstrap 1)..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gecc/src/ge.xace
+	$BIN_DIR/gecc.sh
 	# Compile gec twice to get a bootstrap effect.
-	$MV gec$EXE gec1$EXE
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gec (bootstrap 1)..."
 	fi
-	$BIN_DIR/gec1$EXE --finalize $GOBO/tool/gec/src/ge.xace
-	$MV gec$EXE gec1$EXE
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gec/src/ge.xace
+	$BIN_DIR/gecc$EXE gec.sh
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gec (bootstrap 2)..."
 	fi
-	$BIN_DIR/gec1$EXE --finalize $GOBO/tool/gec/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gec/src/ge.xace
+	$BIN_DIR/gecc$EXE gec.sh
 	$STRIP gec$EXE
-	$RM gec1$EXE
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gecc (bootstrap 2)..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gecc/src/ge.xace
+	$BIN_DIR/gecc.sh
+	$STRIP gecc$EXE
 	$RM gec*.h
 	$RM gec*.c
 	$RM gec*$OBJ
 	# Make sure 'gec.bat' exists to avoid getting some warning when removing it.
 	echo "" > gec.bat
+	# Make sure 'gecc.bat' exists to avoid getting some warning when removing it.
+	echo "" > gecc.bat
 	$RM gec*.bat
 	# Make sure 'gec.sh' exists to avoid getting some warning when removing it.
 	echo "" > gec.sh
+	# Make sure 'gecc.sh' exists to avoid getting some warning when removing it.
+	echo "" > gecc.sh
 	$RM gec*.sh
 else
 	echo "Unknown Eiffel compiler: $EIF"

@@ -2,10 +2,10 @@
 
 <system name="gepp">
 	<root class="GEPP" creation="execute"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="gepp" location="${GOBO}/tool/gepp/src"/>
 	<cluster name="lexical" location="${GOBO}/library/lexical/src" prefix="lx_">
 		<option name="abstract" value="true"/>

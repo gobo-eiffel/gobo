@@ -60,21 +60,22 @@ goto no_verbose
 
 :ge
 	cd %BIN_DIR%
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\geant\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gexace\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gelex\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\geyacc\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gepp\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\getest\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gelint\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gedoc\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gexslt\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geant\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexace\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelex\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geyacc\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gepp\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\getest\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelint\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gedoc\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexslt\src\ge.xace
 	goto clean
 
 :clean
 	set PATH=%BIN_DIR%;%PATH%
 	cd %BIN_DIR%
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gec\src\build.eant clean
+	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gecc\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\geant\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gexace\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gelex\src\build.eant clean

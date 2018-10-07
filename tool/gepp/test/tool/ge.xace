@@ -2,10 +2,10 @@
 
 <system name="xgepp_tool">
 	<root class="XGEPP_TOOL" creation="make"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="gepp_tester" location="${GOBO}/tool/gepp/test/tool" prefix="tool_"/>
 	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 	<cluster name="src_gepp_testgen" location="TESTGEN"/>

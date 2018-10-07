@@ -2,10 +2,10 @@
 
 <system name="xgexace_tool">
 	<root class="XGEXACE_TOOL" creation="make"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="gexace_tester" location="${GOBO}/tool/gexace/test/tool" prefix="tool_"/>
 	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 	<cluster name="src_gexace_testgen" location="TESTGEN"/>

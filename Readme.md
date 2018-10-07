@@ -35,10 +35,11 @@ while the official site (for stable releases) is located at
 * Gobo Eiffel XPath Library
 * Gobo Eiffel XSLT Library
 
-and ten utilities:
+and eleven utilities:
 
 * Gobo Eiffel Ant (geant)
 * Gobo Eiffel Compiler (gec)
+* Gobo Eiffel C Compilation (gecc)
 * Gobo Eiffel Doc (gedoc)
 * Gobo Eiffel Lex (gelex)
 * Gobo Eiffel Lint (gelint)
@@ -56,7 +57,7 @@ library classes provided in this package.
 The supported Eiffel compilers, in alphabetical order, are:
 
 * Gobo Eiffel Compiler (gec) 4.2
-* ISE Eiffel 17.05.10.0416 (Classic and .NET)
+* ISE Eiffel 18.07.10.1981 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file
 [Release_notes.md](Release_notes.md). 
@@ -149,4 +150,4 @@ are available to help you make the first steps.
 
 ## Authors
 
-Copyright (c) 1997-2017, Eric Bezault and others
+Copyright (c) 1997-2018, Eric Bezault and others

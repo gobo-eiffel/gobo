@@ -2,13 +2,13 @@
 
 <system name="xgedoc_tool">
 	<root class="XGEDOC_TOOL" creation="make"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="gedoc_tester" location="${GOBO}/tool/gedoc/test/tool" prefix="tool_"/>
 	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
-	<cluster name="src_gec_testgen" location="TESTGEN"/>
+	<cluster name="src_gedoc_testgen" location="TESTGEN"/>
 	<cluster name="test" location="${GOBO}/library/test/src" prefix="ts_">
 		<option name="abstract" value="true"/>
 		<cluster name="generation"/>

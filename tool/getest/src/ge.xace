@@ -2,10 +2,10 @@
 
 <system name="getest">
 	<root class="GETEST" creation="execute"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="getest" location="${GOBO}/tool/getest/src"/>
 	<cluster name="test" location="${GOBO}/library/test/src" prefix="ts_">
 		<option name="abstract" value="true"/>

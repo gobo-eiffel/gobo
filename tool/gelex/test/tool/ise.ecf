@@ -2,10 +2,13 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="xgelex_tool">
 	<target name="xgelex_tool">
 		<root class="XGELEX_TOOL" feature="make"/>
-		<option trace="false" profile="false" debug="false" warning="true" void_safety="none">
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+		<option is_attached_by_default="false" full_class_checking="false" void_safety="none" warning="true">
+			<assertions/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="msil_classes_per_module" value="5"/>
+		<setting name="concurrency" value="none"/>
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
 		<cluster name="tool_gelex_tester" location="${GOBO}/tool/gelex/test/tool">

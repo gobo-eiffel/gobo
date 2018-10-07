@@ -191,19 +191,27 @@ goto exit
 
 :ge
 	cd %BIN_DIR%
+	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gecc\src\ge.xace
+	call .\gecc.bat
 	rem Compile gec twice to get a bootstrap effect.
-	%BIN_DIR%\gec%EXE% --finalize --cc=no %GOBO%\tool\gec\src\ge.xace
-	call .\gec.bat
-	%BIN_DIR%\gec%EXE% --finalize --cc=no %GOBO%\tool\gec\src\ge.xace
-	call .\gec.bat
+	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gec\src\ge.xace
+	%BIN_DIR%\gecc%EXE% gec.bat
+	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gec\src\ge.xace
+	%BIN_DIR%\gecc%EXE% gec.bat
+	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gecc\src\ge.xace
+	call .\gecc.bat
 	%RM% gec*.h
 	%RM% gec*.c
 	%RM% gec*%OBJ%
 	rem Make sure 'gec.bat' exists to avoid getting some warning when removing it.
 	echo "" > gec.bat
+	rem Make sure 'gecc.bat' exists to avoid getting some warning when removing it.
+	echo "" > gecc.bat
 	%RM% gec*.bat
 	rem Make sure 'gec.sh' exists to avoid getting some warning when removing it.
 	echo "" > gec.sh
+	rem Make sure 'gecc.sh' exists to avoid getting some warning when removing it.
+	echo "" > gecc.sh
 	%RM% gec*.sh
 	if .%CC%. == .bcc32. %RM% gec.tds
 	goto exit

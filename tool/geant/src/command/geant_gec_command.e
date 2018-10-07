@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create a new 'gec' command.
 		do
 			precursor (a_project)
-			c_compile := True
+			c_compile := "gecc"
 			split_mode := True
 		end
 
@@ -69,8 +69,9 @@ feature -- Access
 	ace_filename: detachable STRING
 			-- Ace filename
 
-	c_compile: BOOLEAN
-			-- Should C compilation be launched?
+	c_compile: detachable STRING
+			-- Should the back-end C compiler be invoked on the generated C code, and if yes with what method?
+			-- (default: gecc)
 
 	finalize: BOOLEAN
 			-- Should system be compiled in finalized mode?
@@ -109,12 +110,12 @@ feature -- Setting
 			ace_filename_set: ace_filename = a_filename
 		end
 
-	set_c_compile (b: BOOLEAN)
-			-- Set `c_compile' to `b'.
+	set_c_compile (a_c_compile: like c_compile)
+			-- Set `c_compile' to `a_c_compile'.
 		do
-			c_compile := b
+			c_compile := a_c_compile
 		ensure
-			c_compile_set: c_compile = b
+			c_compile_set: c_compile = a_c_compile
 		end
 
 	set_finalize (b: BOOLEAN)
@@ -345,8 +346,10 @@ feature -- Command-line
 			if gelint then
 				Result.append_string ("--gelint ")
 			end
-			if not c_compile then
-				Result.append_string ("--cc=no ")
+			if attached c_compile as l_c_compile and then not l_c_compile.is_empty then
+				Result.append_string ("--cc=")
+				Result.append_string (l_c_compile)
+				Result.append_character (' ')
 			end
 			if attached catcall_mode as l_catcall_mode and then not l_catcall_mode.is_empty then
 				Result.append_string ("--catcall=")

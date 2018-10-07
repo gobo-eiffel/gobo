@@ -55,11 +55,11 @@
     </dd>
     
     			
-    <dt>cat</dt>
-    <dd><i>Description: </i>Should CAT-call errors be considered as fatal errors?
-     <p><i>Domain: </i>Boolean (true|false)
+    <dt>catcall</dt>
+    <dd><i>Description: </i>Should CAT-call errors be considered as fatal errors, as warnings, or just ignored?
+     <p><i>Domain: </i>(no|error|warning)
      </p>
-     <p><i>Default: </i>false
+     <p><i>Default: </i>warning
      </p>
     </dd>
     
@@ -83,10 +83,10 @@
     
     			
     <dt>c_compile</dt>
-    <dd><i>Description: </i>Launch C compilation
-     <p><i>Domain: </i>Boolean (true|false)
+    <dd><i>Description: </i>Should the back-end C compiler be invoked on the generated C code, and if yes with what method?
+     <p><i>Domain: </i>(no|script|make|gecc)
      </p>
-     <p><i>Default: </i>true
+     <p><i>Default: </i>gecc
      </p>
     </dd>
     
@@ -140,7 +140,7 @@
             &lt;attribute name="gelint"/&gt;
           &lt;/optional&gt;
           &lt;optional&gt;
-            &lt;attribute name="cat"/&gt;
+            &lt;attribute name="catcall"/&gt;
           &lt;/optional&gt;
           &lt;optional&gt;
             &lt;attribute name="split"/&gt;
@@ -182,7 +182,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2006-2009, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>11 March 2006</font></address>
+     <address><font size="2"><b>Copyright © 2006-2018, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 October 2018</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="geant_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="gelex_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

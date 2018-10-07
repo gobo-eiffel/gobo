@@ -54,7 +54,7 @@ feature -- Execution
 			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
 			parse_arguments
-			a_filename := ace_filename
+			a_filename := ecf_filename
 			create a_file.make (a_filename)
 			a_file.open_read
 			if a_file.is_open_read then
@@ -214,68 +214,55 @@ feature {NONE} -- Processing
 			l_generator: ET_C_GENERATOR
 			l_command: KL_SHELL_COMMAND
 			l_system_name: STRING
-			l_file: KL_TEXT_INPUT_FILE
-			l_type_names: DS_HASH_SET [STRING]
-			s: STRING
 			l_script_filename: STRING
+			l_thread_count: INTEGER
+			dt_total: detachable DT_DATE_TIME
+			dt2: detachable DT_DATE_TIME
 		do
-			if is_silent then
--- TODO.
-			end
-			if is_verbose then
--- TODO.
-			end
 			error_handler.set_ise
-			create l_system_processor.make
+			error_handler.set_verbose (is_verbose)
+			l_thread_count := thread_count
+			if l_thread_count > 1 then
+				create {ET_SYSTEM_MULTIPROCESSOR} l_system_processor.make (l_thread_count)
+			else
+				create l_system_processor.make
+			end
 			l_system_processor.set_error_handler (error_handler)
 			l_system_processor.set_ise_version (ise_latest)
-			if is_gelint then
-				l_system_processor.set_flat_mode (True)
-				l_system_processor.set_flat_dbc_mode (True)
+			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
+			l_system_processor.set_nested_benchmark_shown (is_nested_benchmark and not is_no_benchmark and not is_silent)
+			l_system_processor.set_metrics_shown (is_metrics and not is_silent)
+			dt_total := l_system_processor.benchmark_start_time
+			if l_thread_count > 1 then
+				l_system_processor.compile (a_system)
 			end
 			create l_system.make (a_system, l_system_processor)
 			if is_gelint then
+				l_system_processor.set_flat_mode (True)
+				l_system_processor.set_flat_dbc_mode (True)
 				l_system.set_full_class_checking (True)
 			end
 			l_system.set_catcall_error_mode (catcall_error_mode)
 			l_system.set_catcall_warning_mode (catcall_warning_mode)
-			if new_instance_types_option.was_found and then attached new_instance_types_option.parameter as l_filename then
-				create l_file.make (l_filename)
-				l_file.open_read
-				if l_file.is_open_read then
-					create l_type_names.make_equal (100)
-					from
-						l_file.read_line
-					until
-						l_file.end_of_file
-					loop
-						s := l_file.last_string.twin
-						s.left_adjust
-						s.right_adjust
-						if not s.is_empty and not s.starts_with ("--") then
-							l_type_names.force (s)
-						end
-						l_file.read_line
-					end
-					l_file.close
-					l_system.set_new_instance_types (l_type_names)
-				else
-					report_cannot_read_error (l_filename)
-					Exceptions.die (1)
-				end
-			end
+			l_system.set_new_instance_types (new_instance_types)
+			dt2 := l_system_processor.benchmark_start_time
+			l_system_processor.set_benchmark_shown (False)
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system, l_system_processor)
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile (l_system_processor)
+			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
+			l_system_processor.record_end_time (dt2, "Degree 2")
 			l_root_type := a_system.root_type
 			if l_root_type = Void then
 				-- Do nothing.
 			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
 				-- Do nothing.
 			elseif l_system.has_fatal_error then
+				l_system_processor.record_end_time (dt_total, "Total Time")
 				Exceptions.die (1)
 			else
 					-- C code generation.
+				dt2 := l_system_processor.benchmark_start_time
 				l_system_name := a_system.system_name
 				if l_system_name = Void then
 					l_system_name := l_root_type.base_class.lower_name
@@ -292,7 +279,7 @@ feature {NONE} -- Processing
 					l_generator.set_split_threshold (split_size)
 				end
 				l_generator.generate (l_system_name)
-				if is_verbose then
+				if is_metrics and not is_silent then
 					error_handler.info_file.put_string ("Never void targets: ")
 					error_handler.info_file.put_integer (l_generator.never_void_target_count)
 					error_handler.info_file.put_new_line
@@ -300,21 +287,33 @@ feature {NONE} -- Processing
 					error_handler.info_file.put_integer (l_generator.can_be_void_target_count)
 					error_handler.info_file.put_new_line
 				end
+				l_system_processor.record_end_time (dt2, "Degree -3")
 				if l_generator.has_fatal_error then
+					l_system_processor.record_end_time (dt_total, "Total Time")
 					Exceptions.die (1)
 				elseif not no_c_compile then
+					dt2 := l_system_processor.benchmark_start_time
 					if operating_system.is_windows then
 						l_script_filename := l_system_name + ".bat"
 					else
 						l_script_filename := l_system_name + ".sh"
 					end
-					create l_command.make (file_system.absolute_pathname (l_script_filename))
+					if c_compile_using_script then
+						create l_command.make (file_system.absolute_pathname (l_script_filename))
+					elseif c_compile_using_make then
+						create l_command.make ("make -f " + l_system_name + ".make")
+					else
+						create l_command.make ("gecc --thread=" + l_thread_count.out + " " + l_script_filename)
+					end
 					l_command.execute
+					l_system_processor.record_end_time (dt2, "Degree -4")
 					if l_command.exit_code /= 0 then
+						l_system_processor.record_end_time (dt_total, "Total Time")
 						Exceptions.die (1)
 					end
 				end
 			end
+			l_system_processor.record_end_time (dt_total, "Total Time")
 		end
 
 feature -- Error handling
@@ -366,10 +365,28 @@ feature -- Status report
 			Result := not catcall_option.was_found or else attached catcall_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "warning")
 		end
 
+	new_instance_types: detachable DS_HASH_SET [STRING]
+			-- Name of the types which can have instances created by 'TYPE.new_instance'
+			-- or 'TYPE.new_special_any_instance'
+			--
+			-- Use all non-deferred, non-NONE, alive types if no types have been specified.
+
 	no_c_compile: BOOLEAN
 			-- Should the back-end C compiler not be invoked on the generated C code?
 		do
-			Result := c_compile_option.was_found and then not c_compile_option.parameter
+			Result := c_compile_option.was_found and then attached c_compile_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "no")
+		end
+
+	c_compile_using_script: BOOLEAN
+			-- Should the back-end C compiler be invoked on the generated C code using a script?
+		do
+			Result := c_compile_option.was_found and then attached c_compile_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "script")
+		end
+
+	c_compile_using_make: BOOLEAN
+			-- Should the back-end C compiler be invoked on the generated C code using a makefile?
+		do
+			Result := c_compile_option.was_found and then attached c_compile_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "make")
 		end
 
 	no_split: BOOLEAN
@@ -387,10 +404,46 @@ feature -- Status report
 			Result := gc_option.was_found and then attached gc_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "boehm")
 		end
 
+	thread_count: INTEGER
+			-- Number of threads to be used
+		do
+			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
+			if thread_option.was_found then
+				Result := thread_option.parameter
+				if Result <= 0 then
+					Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + Result
+				end
+			end
+			if Result < 1 or not {PLATFORM}.is_thread_capable then
+				Result := 1
+			end
+		ensure
+			thread_count_not_negative: Result >= 1
+		end
+
 	is_silent: BOOLEAN
 			-- Should gec run in silent mode?
 		do
 			Result := silent_flag.was_found
+		end
+
+	is_no_benchmark: BOOLEAN
+			-- Should no benchmark information be displayed?
+			-- (default: display non-nested benchmark information)
+		do
+			Result := no_benchmark_flag.was_found
+		end
+
+	is_nested_benchmark: BOOLEAN
+			-- Should nested benchmark information be displayed?
+		do
+			Result := nested_benchmark_flag.was_found
+		end
+
+	is_metrics: BOOLEAN
+			-- Should metrics information be displayed?
+		do
+			Result := metrics_flag.was_found
 		end
 
 	is_verbose: BOOLEAN
@@ -401,8 +454,8 @@ feature -- Status report
 
 feature -- Argument parsing
 
-	ace_filename: STRING
-			-- Name of the ace file
+	ecf_filename: STRING
+			-- Name of the ECF file
 
 	catcall_option: AP_ENUMERATION_OPTION
 			-- Option for '--catcall=<no|error|warning>'
@@ -413,8 +466,8 @@ feature -- Argument parsing
 	gelint_flag: AP_FLAG
 			-- Flag for '--gelint'
 
-	c_compile_option: AP_BOOLEAN_OPTION
-			-- Option for '--cc=<no|yes>'
+	c_compile_option: AP_ENUMERATION_OPTION
+			-- Option for '--cc=<no|script|make|gecc>'
 
 	split_option: AP_BOOLEAN_OPTION
 			-- Option for '--split=<no|yes>'
@@ -427,6 +480,18 @@ feature -- Argument parsing
 
 	new_instance_types_option: AP_STRING_OPTION
 			-- Option for '--new-instance-types=<filename>'
+
+	thread_option: AP_INTEGER_OPTION
+			-- Option for '--thread=<thread_count>'
+
+	nested_benchmark_flag: AP_FLAG
+			-- Flag for '--nested-benchmark'
+
+	no_benchmark_flag: AP_FLAG
+			-- Flag for '--no-benchmark'
+
+	metrics_flag: AP_FLAG
+			-- Flag for '--metrics'
 
 	silent_flag: AP_FLAG
 			-- Flag for '--silent'
@@ -443,10 +508,13 @@ feature -- Argument parsing
 			a_parser: AP_PARSER
 			a_list: AP_ALTERNATIVE_OPTIONS_LIST
 			an_error: AP_ERROR
+			l_new_instance_types: DS_HASH_SET [STRING]
+			l_file: KL_TEXT_INPUT_FILE
+			s: STRING
 		do
 			create a_parser.make
 			a_parser.set_application_description ("Gobo Eiffel Compiler, translate Eiffel programs into C code.")
-			a_parser.set_parameters_description ("ace_filename")
+			a_parser.set_parameters_description ("ecf_filename")
 				-- Options.
 			create finalize_flag.make_with_long_form ("finalize")
 			finalize_flag.set_description ("Compile with optimizations turned on.")
@@ -465,8 +533,12 @@ feature -- Argument parsing
 			a_parser.options.force_last (catcall_option)
 				-- cc
 			create c_compile_option.make_with_long_form ("cc")
-			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code? (default: yes)")
-			c_compile_option.set_parameter_description ("no|yes")
+			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code, and if yes with what method? (default: gecc)")
+			c_compile_option.extend ("no")
+			c_compile_option.extend ("script")
+			c_compile_option.extend ("make")
+			c_compile_option.extend ("gecc")
+			c_compile_option.set_parameter_description ("no|script|make|gecc")
 			a_parser.options.force_last (c_compile_option)
 				-- split
 			create split_option.make_with_long_form ("split")
@@ -478,7 +550,7 @@ feature -- Argument parsing
 			split_size_option.set_description ("Size of generated C files in bytes when in split mode.")
 			split_size_option.set_parameter_description ("size")
 			a_parser.options.force_last (split_size_option)
-				-- new_instance_types
+				-- new-instance-types
 			create new_instance_types_option.make_with_long_form ("new-instance-types")
 			new_instance_types_option.set_description ("File containing the list of types which can have instances created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'.")
 			new_instance_types_option.set_parameter_description ("filename")
@@ -490,10 +562,29 @@ feature -- Argument parsing
 			gc_option.extend ("boehm")
 			gc_option.set_parameter_description ("no|boehm")
 			a_parser.options.force_last (gc_option)
+				-- thread
+			create thread_option.make_with_long_form ("thread")
+			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: number of CPUs)")
+			thread_option.set_parameter_description ("thread_count")
+			if {PLATFORM}.is_thread_capable then
+				a_parser.options.force_last (thread_option)
+			end
 				-- silent
 			create silent_flag.make_with_long_form ("silent")
 			silent_flag.set_description ("Run gec in silent mode.")
 			a_parser.options.force_last (silent_flag)
+				-- no-benchmark.
+			create no_benchmark_flag.make_with_long_form ("no-benchmark")
+			no_benchmark_flag.set_description ("Should no benchmark information be displayed? (default: display non-nested benchmark information)")
+			a_parser.options.force_last (no_benchmark_flag)
+				-- nested-benchmark.
+			create nested_benchmark_flag.make_with_long_form ("nested-benchmark")
+			nested_benchmark_flag.set_description ("Should nested benchmark information be displayed?")
+			a_parser.options.force_last (nested_benchmark_flag)
+				-- metrics.
+			create metrics_flag.make_with_long_form ("metrics")
+			metrics_flag.set_description ("Should metrics information be displayed?")
+			a_parser.options.force_last (metrics_flag)
 				-- verbose
 			create verbose_flag.make_with_long_form ("verbose")
 			verbose_flag.set_description ("Run gec in verbose mode.")
@@ -505,16 +596,19 @@ feature -- Argument parsing
 			a_parser.alternative_options_lists.force_last (a_list)
 				-- Parsing.
 			a_parser.parse_arguments
+			if silent_flag.was_found then
+				create {ET_NULL_ERROR_HANDLER} error_handler.make_null
+			end
 			if version_flag.was_found then
 				report_version_number
-				ace_filename := ""
+				ecf_filename := ""
 				Exceptions.die (0)
 			elseif a_parser.parameters.count /= 1 then
 				error_handler.report_info_message (a_parser.help_option.full_usage_instruction (a_parser))
-				ace_filename := ""
+				ecf_filename := ""
 				Exceptions.die (1)
 			else
-				ace_filename := a_parser.parameters.first
+				ecf_filename := a_parser.parameters.first
 			end
 			if split_size_option.was_found then
 				if split_size_option.parameter > 0 then
@@ -525,31 +619,66 @@ feature -- Argument parsing
 					Exceptions.die (1)
 				end
 			end
+			if new_instance_types_option.was_found and then attached new_instance_types_option.parameter as l_filename then
+				create l_file.make (l_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_new_instance_types.make_equal (100)
+					new_instance_types := l_new_instance_types
+					from
+						l_file.read_line
+					until
+						l_file.end_of_file
+					loop
+						s := l_file.last_string.twin
+						s.adjust
+						if not s.is_empty and not s.starts_with ("--") then
+							l_new_instance_types.force (s)
+						end
+						l_file.read_line
+					end
+					l_file.close
+				else
+					report_cannot_read_error (l_filename)
+					Exceptions.die (1)
+				end
+			end
 		ensure
-			ace_filename_not_void: ace_filename /= Void
+			ecf_filename_not_void: ecf_filename /= Void
 			catcall_option_not_void: catcall_option /= Void
 			finalize_flag_not_void: finalize_flag /= Void
 			silent_flag_not_void: silent_flag /= Void
+			no_benchmark_flag_not_void: no_benchmark_flag /= Void
+			nested_benchmark_flag_not_void: nested_benchmark_flag /= Void
+			metrics_flag_not_void: metrics_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
+			version_flag_not_void: version_flag /= Void
 			c_compile_option_not_void: c_compile_option /= Void
 			split_option_not_void: split_option /= Void
 			split_size_option_not_void: split_size_option /= Void
 			gc_option_not_void: gc_option /= Void
+			thread_option_not_void: thread_option /= Void
+			new_instance_types_option_not_void: new_instance_types_option /= Void
 		end
 
 invariant
 
 	error_handler_not_void: error_handler /= Void
-	ace_filename_not_void: ace_filename /= Void
+	ecf_filename_not_void: ecf_filename /= Void
 	catcall_option_not_void: catcall_option /= Void
 	gelint_flag_not_void: gelint_flag /= Void
 	finalize_flag_not_void: finalize_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
+	no_benchmark_flag_not_void: no_benchmark_flag /= Void
+	nested_benchmark_flag_not_void: nested_benchmark_flag /= Void
+	metrics_flag_not_void: metrics_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
+	version_flag_not_void: version_flag /= Void
 	c_compile_option_not_void: c_compile_option /= Void
 	split_option_not_void: split_option /= Void
 	split_size_option_not_void: split_size_option /= Void
 	new_instance_types_option_not_void: new_instance_types_option /= Void
 	gc_option_not_void: gc_option /= Void
+	thread_option_not_void: thread_option /= Void
 
 end

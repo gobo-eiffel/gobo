@@ -6,7 +6,7 @@
 		"Gec Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec_task">
 <chapterinfo>
 	<copyright>
-		<year>2006-2009</year>
+		<year>2006-2018</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
@@ -23,7 +23,7 @@
 		<surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>11 March 2006</date>
+	<date>7 October 2018</date>
 </chapterinfo>
 
 	<title>gec</title>
@@ -79,15 +79,15 @@
 			</varlistentry>
 
 			<varlistentry>
-				<term>cat</term>
+				<term>catcall</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Should CAT-call errors be considered as fatal errors?</para>
+					<para><emphasis>Description: </emphasis>Should CAT-call errors be considered as fatal errors, as warnings, or just ignored?</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+					<para><emphasis>Domain: </emphasis>(no|error|warning)</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>false</para>
+					<para><emphasis>Default: </emphasis>warning</para>
 				</listitem>
 			</varlistentry>
 
@@ -120,13 +120,13 @@
 			<varlistentry>
 				<term>c_compile</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Launch C compilation</para>
+					<para><emphasis>Description: </emphasis>Should the back-end C compiler be invoked on the generated C code, and if yes with what method?</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+					<para><emphasis>Domain: </emphasis>(no|script|make|gecc)</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>true</para>
+					<para><emphasis>Default: </emphasis>gecc</para>
 				</listitem>
 			</varlistentry>
 
@@ -190,7 +190,7 @@
             <attribute name="gelint"/>
           </optional>
           <optional>
-            <attribute name="cat"/>
+            <attribute name="catcall"/>
           </optional>
           <optional>
             <attribute name="split"/>

@@ -50,7 +50,10 @@ feature {NONE} -- Initialization
 			end
 				-- c_compile.
 			if has_attribute (C_compile_attribute_name) then
-				command.set_c_compile (boolean_value (C_compile_attribute_name))
+				a_value := attribute_value (C_compile_attribute_name)
+				if a_value /= Void and then not a_value.is_empty then
+					command.set_c_compile (a_value)
+				end
 			end
 				-- finalize.
 			if has_attribute (Finalize_attribute_name) then

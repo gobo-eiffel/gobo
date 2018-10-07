@@ -11,6 +11,7 @@
 
 	<root class="GEC" creation="execute"/>
 	<option name="console_application" value="true"/>
+	<option name="multithreaded" value="true"/>
 	<option if="${GOBO_EIFFEL}=ge">
 		<option if="${BOEHM_GC}">
 			<option name="garbage_collector" value="boehm"/>

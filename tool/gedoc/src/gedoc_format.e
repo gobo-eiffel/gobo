@@ -74,6 +74,7 @@ feature {NONE} -- Initialization
 			set_interactive_flag (a_format.interactive_flag)
 			set_verbose_flag (a_format.verbose_flag)
 			set_benchmark_flag (a_format.benchmark_flag)
+			set_nested_benchmark_flag (a_format.nested_benchmark_flag)
 			set_metrics_flag (a_format.metrics_flag)
 			set_silent_flag (a_format.silent_flag)
 			last_system := a_format.last_system
@@ -103,7 +104,7 @@ feature -- Execution
 		local
 			dt1: detachable DT_DATE_TIME
 		do
-			system_processor.set_benchmark_shown (benchmark_flag or not silent_flag)
+			system_processor.set_benchmark_shown (benchmark_flag and not silent_flag)
 			dt1 := system_processor.benchmark_start_time
 			parse_input_file (input_filename)
 			if not has_error and attached last_system as l_last_system then
@@ -156,6 +157,9 @@ feature -- Access
 
 	benchmark_flag: BOOLEAN
 			-- Should benchmark information be displayed?
+
+	nested_benchmark_flag: BOOLEAN
+			-- Should nested benchmark information be displayed?
 
 	metrics_flag: BOOLEAN
 			-- Should metrics information be displayed?
@@ -242,6 +246,14 @@ feature -- Setting
 			benchmark_flag := b
 		ensure
 			benchmark_flag_set: benchmark_flag = b
+		end
+
+	set_nested_benchmark_flag (b: BOOLEAN)
+			-- Set `nested_benchmark_flag' to `b'.
+		do
+			nested_benchmark_flag := b
+		ensure
+			nested_benchmark_flag_set: nested_benchmark_flag = b
 		end
 
 	set_metrics_flag (b: BOOLEAN)
@@ -423,9 +435,9 @@ feature {NONE} -- Processing
 		do
 			system_processor.error_handler.set_ise
 			system_processor.error_handler.set_verbose (verbose_flag)
-			system_processor.set_benchmark_shown (benchmark_flag or not silent_flag)
-			system_processor.set_nested_benchmark_shown (benchmark_flag)
-			system_processor.set_metrics_shown (metrics_flag)
+			system_processor.set_benchmark_shown (benchmark_flag and not silent_flag)
+			system_processor.set_nested_benchmark_shown (nested_benchmark_flag and benchmark_flag and not silent_flag)
+			system_processor.set_metrics_shown (metrics_flag and not silent_flag)
 			system_processor.set_ise_version (ise_version)
 			system_processor.set_unknown_builtin_reported (False)
 			a_system.set_unique_universe_names

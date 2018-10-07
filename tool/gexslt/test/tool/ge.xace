@@ -2,10 +2,10 @@
 
 <system name="xgexslt_tool">
 	<root class="XGEXSLT_TOOL" creation="make"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="gexslt_tester" location="${GOBO}/tool/gexslt/test/tool" prefix="tool_"/>
 	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 	<cluster name="src_gec_testgen" location="TESTGEN"/>

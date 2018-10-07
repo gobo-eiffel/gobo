@@ -2,10 +2,10 @@
 
 <system name="geant">
 	<root class="GEANT" creation="make"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="internal"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="geant" location="${GOBO}/tool/geant/src">
 		<cluster name="command"/>
 		<cluster name="task"/>

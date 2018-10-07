@@ -30,7 +30,7 @@ if [ "$1" = "-v" ]; then
 elif [ "$1" = "-t" ]; then
 	TEST_ONLY=-t
 	if [ "$2" = "-v" ]; then
-		VERBOSE=-t
+		VERBOSE=-v
 		CC=$3
 	else
 		CC=$2
@@ -89,48 +89,48 @@ if [ "$EIF" = "ge" ]; then
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling geant..."
 	fi
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/geant/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/geant/src/ge.xace
 	$STRIP geant${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gexace..."
 	fi
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gexace/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gexace/src/ge.xace
 	$STRIP gexace${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling getest..."
 	fi
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/getest/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/getest/src/ge.xace
 	$STRIP getest${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gelint..."
 	fi
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelint/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gelint/src/ge.xace
 	$STRIP gelint${EXE}
 	if [ "$TEST_ONLY" = "" ]; then
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gelex..."
 		fi
-		$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelex/src/ge.xace
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gelex/src/ge.xace
 		$STRIP gelex${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling geyacc..."
 		fi
-		$BIN_DIR/gec$EXE --finalize $GOBO/tool/geyacc/src/ge.xace
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/geyacc/src/ge.xace
 		$STRIP geyacc${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gepp..."
 		fi
-		$BIN_DIR/gec$EXE --finalize $GOBO/tool/gepp/src/ge.xace
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gepp/src/ge.xace
 		$STRIP gepp${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gedoc..."
 		fi
-		$BIN_DIR/gec$EXE --finalize $GOBO/tool/gedoc/src/ge.xace
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gedoc/src/ge.xace
 		$STRIP gedoc${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gexlt..."
 		fi
-		$BIN_DIR/gec$EXE --finalize $GOBO/tool/gexslt/src/ge.xace
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gexslt/src/ge.xace
 		$STRIP gexslt${EXE}
 	fi
 else
@@ -140,6 +140,7 @@ fi
 
 cd $BIN_DIR
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gec/src/build.eant clean
+geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gecc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geant/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gexace/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/getest/src/build.eant clean

@@ -2,10 +2,10 @@
 
 <system name="gelex">
 	<root class="GELEX" creation="execute"/>
-	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
+	<option name="finalize" value="true"/>
+	<option name="assertion" value="none"/>
 	<cluster name="gelex" location="${GOBO}/tool/gelex/src"/>
 	<cluster name="argument" location="${GOBO}/library/argument/src" prefix="ap_"/>
 	<cluster name="string" location="${GOBO}/library/string/src" prefix="st_">

@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/usage">
 <chapterinfo>
 	<copyright>
-		<year>2017-018</year>
+		<year>2017-2018</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>3 October 2018</date>
+	<date>7 October 2018</date>
 </chapterinfo>
 
 <title>Using gedoc</title>
@@ -169,10 +169,19 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--benchmark</filename>
+			<filename>--no-benchmark</filename>
 		</term>
 		<listitem><para>
-			Should benchmark information be displayed?
+			Should no benchmark information be displayed?
+			(default: display non-nested benchmark information)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--nested-benchmark</filename>
+		</term>
+		<listitem><para>
+			Should nested benchmark information be displayed?
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
