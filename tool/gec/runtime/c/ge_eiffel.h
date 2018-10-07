@@ -240,6 +240,11 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #define GE_IS_64_BITS EIF_TEST(sizeof(void*)==64)
 #endif
 
+/* Posix threads */
+#if !defined(EIF_WINDOWS)
+#define GE_USE_POSIX_THREADS
+#endif
+
 #ifdef _MSC_VER /* MSVC */
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
 #define snprintf(a,b,c,d) sprintf(a,c,d)

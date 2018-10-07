@@ -4,58 +4,6 @@
 extern "C" {
 #endif
 
-/* SPECIAL [detachable ET_ASSIGNER].make_empty */
-T0* T799c5(GE_context* ac, T6 a1)
-{
-	T0* C;
-	C = GE_new799(a1, EIF_TRUE);
-	{
-	}
-	return C;
-}
-
-/* KL_SPECIAL_ROUTINES [detachable ET_ASSIGNER].default_create */
-T0* T797c3(GE_context* ac)
-{
-	T0* C;
-	C = GE_new797(EIF_TRUE);
-	return C;
-}
-
-/* KL_SPECIAL_ROUTINES [detachable ET_AGENT_TARGET].make */
-T0* T792f1(GE_context* ac, T0* C, T6 a1)
-{
-	T0* R = 0;
-	R = T793c5(ac, a1);
-	return R;
-}
-
-/* SPECIAL [detachable ET_AGENT_TARGET].make_empty */
-T0* T793c5(GE_context* ac, T6 a1)
-{
-	T0* C;
-	C = GE_new793(a1, EIF_TRUE);
-	{
-	}
-	return C;
-}
-
-/* KL_SPECIAL_ROUTINES [detachable ET_AGENT_TARGET].default_create */
-T0* T792c3(GE_context* ac)
-{
-	T0* C;
-	C = GE_new792(EIF_TRUE);
-	return C;
-}
-
-/* KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND_LIST].make */
-T0* T789f1(GE_context* ac, T0* C, T6 a1)
-{
-	T0* R = 0;
-	R = T791c5(ac, a1);
-	return R;
-}
-
 /* SPECIAL [detachable ET_AGENT_ARGUMENT_OPERAND_LIST].make_empty */
 T0* T791c5(GE_context* ac, T6 a1)
 {

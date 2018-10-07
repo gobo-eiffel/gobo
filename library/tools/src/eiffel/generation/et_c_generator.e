@@ -1022,12 +1022,6 @@ feature {NONE} -- C code Generation
 					header_file.put_character (' ')
 					header_file.put_line (c_ge_use_threads)
 					header_file.put_new_line
-					if not operating_system.is_windows then
-						header_file.put_string (c_define)
-						header_file.put_character (' ')
-						header_file.put_line (c_ge_use_posix_threads)
-						header_file.put_new_line
-					end
 				end
 				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
