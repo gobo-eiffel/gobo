@@ -121,7 +121,7 @@ goto exit
 	set CFLAGS=-O2
 	set LFLAGS=
 	set LFLAG_OUT=-o 
-	set LLIBS=-lm
+	set LLIBS=-lm -lpthread
 	set OBJ=.o
 	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation

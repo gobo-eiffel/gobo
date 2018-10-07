@@ -130,7 +130,7 @@ elif [ "$CC" = "gcc" ]; then
 	CFLAGS=''
 	LFLAGS=''
 	LFLAG_OUT='-o '
-	LLIBS='-lm'
+	LLIBS='-lm -lpthread'
 	echo gcc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "mingw" ]; then
