@@ -5,7 +5,7 @@ note
 		"Values dealing with hour, minute, second and millisecond"
 
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -106,14 +106,23 @@ feature -- Output
 			-- (The millisecond part appears only when not zero.)
 		require
 			a_string_not_void: a_string /= Void
+		local
+			l_millisecond: INTEGER
 		do
 			INTEGER_.append_decimal_integer (hour, a_string)
 			a_string.append_character (':')
 			INTEGER_.append_decimal_integer (minute, a_string)
 			a_string.append_character (':')
 			INTEGER_.append_decimal_integer (second, a_string)
-			if millisecond /= 0 then
+			l_millisecond := millisecond
+			if l_millisecond /= 0 then
 				a_string.append_character ('.')
+				if l_millisecond < 10 then
+					a_string.append_character ('0')
+					a_string.append_character ('0')
+				elseif l_millisecond < 100 then
+					a_string.append_character ('0')
+				end
 				INTEGER_.append_decimal_integer (millisecond, a_string)
 			end
 		end
@@ -136,6 +145,8 @@ feature -- Output
 			append_time_to_string (a_string)
 			if millisecond = 0 then
 				a_string.append_character ('.')
+				a_string.append_character ('0')
+				a_string.append_character ('0')
 				a_string.append_character ('0')
 			end
 		end
