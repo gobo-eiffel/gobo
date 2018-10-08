@@ -89,7 +89,7 @@ if [ "$EIF" = "ge" ]; then
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling geant..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --metrics $GOBO/tool/geant/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/geant/src/ge.xace
 	$STRIP geant${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gexace..."
