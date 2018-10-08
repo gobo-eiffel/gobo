@@ -218,9 +218,9 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #else
 #define GE_min_int32 GE_int32(-2147483648)
 #endif
-#if defined(__LCC__) || defined(__MINGW32__)
+#if defined(__LCC__) || defined(__GNUC__) || defined(__MINGW32__)
 /* lcc-win32 reports a constant overflow for -9223372036854775808. */
-/* mingw-win64 warns that integer constant is so large that it is unsigned. */
+/* gcc and mingw-win64 warn that integer constant is so large that it is unsigned. */
 #define GE_min_int64 (-GE_int64(9223372036854775807)-GE_int64(1))
 #else
 #define GE_min_int64 GE_int64(-9223372036854775808)
