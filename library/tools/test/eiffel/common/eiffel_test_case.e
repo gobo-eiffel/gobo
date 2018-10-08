@@ -4,7 +4,7 @@ note
 
 		"Eiffel standard test cases"
 
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -117,8 +117,8 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2: STRING
-			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3: STRING
+			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 		do
 				-- Compile regexps.
@@ -132,6 +132,11 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
+			a_pattern3 := "(Degree -?[0-9]+|Total Time): [ 0-9:./]*"
+			create a_regexp3.make
+			a_regexp3.compile (a_pattern3)
+			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
+			a_regexp3.optimize		
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -153,6 +158,9 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						elseif a_regexp2.recognizes (a_line) then
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
+						elseif a_regexp3.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
 						else
 							if l_empty_line then
 								out_file.put_new_line
@@ -162,6 +170,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						end
 						a_regexp1.wipe_out
 						a_regexp2.wipe_out
+						a_regexp3.wipe_out
 						in_file.read_line
 					end
 					in_file.close
@@ -196,7 +205,7 @@ feature {NONE} -- Test gelint
 				a_debug := ""
 			end
 			an_xace_filename := xace_filename (a_test_name)
-			execute_shell ("gelint --define=GOBO_EIFFEL=ge --flat --silent " + an_xace_filename + output1_log)
+			execute_shell ("gelint --define=GOBO_EIFFEL=ge --flat --no-benchmark " + an_xace_filename + output1_log)
 			concat_output1 (agent filter_output_gelint)
 				-- Test.
 			create l_directory.make (program_dirname (a_test_name))
@@ -218,8 +227,8 @@ feature {NONE} -- Test gelint
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1: STRING
-			a_regexp1: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2: STRING
+			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 		do
 				-- Compile regexps.
@@ -228,6 +237,11 @@ feature {NONE} -- Test gelint
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
+			a_pattern2 := "(Degree -?[0-9]+|Total Time): [ 0-9:./]*"
+			create a_regexp2.make
+			a_regexp2.compile (a_pattern2)
+			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
+			a_regexp2.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -246,6 +260,9 @@ feature {NONE} -- Test gelint
 						elseif a_regexp1.recognizes (a_line) then
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
+						elseif a_regexp2.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
 						else
 							if l_empty_line then
 								out_file.put_new_line
@@ -254,6 +271,7 @@ feature {NONE} -- Test gelint
 							out_file.put_line (a_line)
 						end
 						a_regexp1.wipe_out
+						a_regexp2.wipe_out
 						in_file.read_line
 					end
 					in_file.close
