@@ -4,9 +4,8 @@ note
 
 		"Test features of class DT_DATE_VALUE"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,7 +79,7 @@ feature -- Test
 			create {DT_DATE_TIME} dv.make_precise (-156, 8, 16, 23, 12, 3, 2)
 			assert_strings_equal ("out6", "-156/08/16 23:12:03.002", dv.out)
 			create {DT_DATE_TIME_DURATION} dv.make_precise (3, -12, 123, 23, -3, 12, -45)
-			assert_strings_equal ("out7", "3/-12/123 23:-3:12.-45", dv.out)
+			assert_strings_equal ("out7", "3/-12/123 23:-3:12.-045", dv.out)
 			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_strings_equal ("out8", "0/3/2 0:4:3.456", dv.out)
 		end
@@ -154,7 +153,7 @@ feature -- Test
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dv.append_to_string (a_string)
-			assert_strings_equal ("append_to_string7", "G#3/-12/123 23:-3:12.-45", a_string)
+			assert_strings_equal ("append_to_string7", "G#3/-12/123 23:-3:12.-045", a_string)
 
 			create {DT_DATE_TIME_DURATION} dv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			create a_string.make (50)

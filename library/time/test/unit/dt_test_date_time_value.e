@@ -4,9 +4,8 @@ note
 
 		"Test features of class DT_DATE_TIME_VALUE"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -115,8 +114,8 @@ feature -- Test
 			assert_equal ("out2", "-156/08/16 23:12:03.002", dtv.out)
 			assert_equal ("precise_out2", "-156/08/16 23:12:03.002", dtv.precise_out)
 			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
-			assert_equal ("out3", "3/-12/123 23:-3:12.-45", dtv.out)
-			assert_equal ("precise_out3", "3/-12/123 23:-3:12.-45", dtv.precise_out)
+			assert_equal ("out3", "3/-12/123 23:-3:12.-045", dtv.out)
+			assert_equal ("precise_out3", "3/-12/123 23:-3:12.-045", dtv.precise_out)
 			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_equal ("out4", "0/3/2 0:4:3.456", dtv.out)
 			assert_equal ("precise_out4", "0/3/2 0:4:3.456", dtv.precise_out)
@@ -149,8 +148,8 @@ feature -- Test
 			assert_strings_equal ("time_out2", "23:12:03.002", dtv.time_out)
 			assert_strings_equal ("precise_time_out2", "23:12:03.002", dtv.precise_time_out)
 			create {DT_DATE_TIME_DURATION} dtv.make_precise (3, -12, 123, 23, -3, 12, -45)
-			assert_strings_equal ("time_out3", "23:-3:12.-45", dtv.time_out)
-			assert_strings_equal ("precise_time_out3", "23:-3:12.-45", dtv.precise_time_out)
+			assert_strings_equal ("time_out3", "23:-3:12.-045", dtv.time_out)
+			assert_strings_equal ("precise_time_out3", "23:-3:12.-045", dtv.precise_time_out)
 			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			assert_strings_equal ("time_out4", "0:4:3.456", dtv.time_out)
 			assert_strings_equal ("precise_time_out4", "0:4:3.456", dtv.precise_time_out)
@@ -187,11 +186,11 @@ feature -- Test
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dtv.append_to_string (a_string)
-			assert_strings_equal ("append_to_string3", "G#3/-12/123 23:-3:12.-45", a_string)
+			assert_strings_equal ("append_to_string3", "G#3/-12/123 23:-3:12.-045", a_string)
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dtv.append_precise_to_string (a_string)
-			assert_equal ("append_precise_to_string3", "G#3/-12/123 23:-3:12.-45", a_string)
+			assert_equal ("append_precise_to_string3", "G#3/-12/123 23:-3:12.-045", a_string)
 
 			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			create a_string.make (50)
@@ -266,11 +265,11 @@ feature -- Test
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dtv.append_time_to_string (a_string)
-			assert_strings_equal ("append_time_to_string3", "G#23:-3:12.-45", a_string)
+			assert_strings_equal ("append_time_to_string3", "G#23:-3:12.-045", a_string)
 			create a_string.make (50)
 			a_string.append_string ("G#")
 			dtv.append_precise_time_to_string (a_string)
-			assert_strings_equal ("append_precise_time_to_string3", "G#23:-3:12.-45", a_string)
+			assert_strings_equal ("append_precise_time_to_string3", "G#23:-3:12.-045", a_string)
 
 			create {DT_DATE_TIME_DURATION} dtv.make_precise (0, 3, 2, 0, 4, 3, 456)
 			create a_string.make (50)

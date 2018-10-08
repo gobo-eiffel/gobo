@@ -117,13 +117,17 @@ feature -- Output
 			l_millisecond := millisecond
 			if l_millisecond /= 0 then
 				a_string.append_character ('.')
+				if l_millisecond < 0 then
+					a_string.append_character ('-')
+					l_millisecond := - l_millisecond
+				end
 				if l_millisecond < 10 then
 					a_string.append_character ('0')
 					a_string.append_character ('0')
 				elseif l_millisecond < 100 then
 					a_string.append_character ('0')
 				end
-				INTEGER_.append_decimal_integer (millisecond, a_string)
+				INTEGER_.append_decimal_integer (l_millisecond, a_string)
 			end
 		end
 

@@ -4,9 +4,8 @@ note
 
 		"Test features of class DT_TIME_DURATION"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -153,7 +152,7 @@ feature -- Test
 			create d2.make_precise (187, 37, 32, 89)
 			assert_equal ("to_canonical1", d2, d1.to_canonical)
 			create d1.make_precise_canonical (675452089)
-			assert_equal ("out", "187:37:32.89", d1.out)
+			assert_equal ("out", "187:37:32.089", d1.out)
 			assert ("is_canonical", d1.is_canonical)
 			assert_equal ("to_canonical2", d2, d1.to_canonical)
 			assert_integers_equal ("second_count", 675452, d1.second_count)
