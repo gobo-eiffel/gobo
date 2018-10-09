@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system 
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
+	name="kernel"
+	uuid="E1FFE100-60B0-0002-0002-000020181008"
+	library_target="kernel">
+
+	<description>
+		description: "ECF file for the Gobo Eiffel Kernel Library"
+		library: "Gobo Eiffel Kernel Library"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<target name="kernel">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+		</file_rule>
+		<option warning="true"/>
+
+		<library name="free_elks" location="$GOBO/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY/library/time/time.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+			</condition>
+		</library>
+
+		<cluster name="kernel" location="./" recursive="true"/>
+	</target>
+</system>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system 
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
+	name="test"
+	uuid="E1FFE100-60B0-0016-0002-000020181009"
+	library_target="test">
+
+	<description>
+		description: "ECF file for the Gobo Eiffel Test Library"
+		library: "Gobo Eiffel Test Library"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<target name="test">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+		</file_rule>
+		<option warning="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
+
+		<library name="free_elks" location="$GOBO/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
+		<library name="lexical" location="$GOBO/library/lexical/library.ecf" readonly="true"/>
+		<library name="lexical_skl" location="$GOBO/library/lexical/library_skl.ecf" readonly="true"/>
+		<library name="parse_skl" location="$GOBO/library/parse/library_skl.ecf" readonly="true"/>
+		<library name="structure" location="$GOBO/library/structure/library.ecf" readonly="true"/>
+		<library name="test_skl" location="$GOBO/library/test/library_skl.ecf" readonly="true"/>
+		<library name="thread" location="$GOBO/library/thread/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="tools" location="$GOBO/library/tools/library.ecf" readonly="true"/>
+		<library name="utility" location="$GOBO/library/utility/library.ecf" readonly="true"/>
+
+		<cluster name="test" location="./" recursive="true">
+			<file_rule>
+				<exclude>/harness$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

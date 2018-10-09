@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system 
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
+	name="free_elks"
+	uuid="E1FFE100-60B0-0001-0002-000020181008"
+	library_target="free_elks">
+
+	<description>
+		description: "ECF file for the FreeELKS Library"
+		library: "Gobo Eiffel Kernel Library"
+		copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<target name="free_elks">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+		</file_rule>
+		<option warning="true"/>
+		<mapping old_name="REAL" new_name="REAL_32"/>
+		<mapping old_name="STRING" new_name="STRING_8"/>
+		<mapping old_name="REAL_REF" new_name="REAL_32_REF"/>
+		<mapping old_name="INTEGER_REF" new_name="INTEGER_32_REF"/>
+		<mapping old_name="INTEGER" new_name="INTEGER_32"/>
+		<mapping old_name="WIDE_CHARACTER" new_name="CHARACTER_32"/>
+		<mapping old_name="WIDE_CHARACTER_REF" new_name="CHARACTER_32_REF"/>
+		<mapping old_name="NATURAL" new_name="NATURAL_32"/>
+		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF"/>
+		<mapping old_name="CHARACTER" new_name="CHARACTER_8"/>
+		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
+		<mapping old_name="DOUBLE" new_name="REAL_64"/>
+
+		<cluster name="free_elks" location="./" recursive="true"/>
+	</target>
+</system>

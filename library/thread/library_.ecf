@@ -3,5 +3,5 @@
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
-	location="src/library_skl.ecf">
+	location="library_ise.ecf">
 </redirection>

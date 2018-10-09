@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system 
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
+	name="utility"
+	uuid="E1FFE100-60B0-0009-0002-000020181009"
+	library_target="utility">
+
+	<description>
+		description: "ECF file for the Gobo Eiffel Utility Library"
+		library: "Gobo Eiffel Utility Library"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<target name="utility">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+		</file_rule>
+		<option warning="true"/>
+
+		<library name="free_elks" location="$GOBO/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
+		<library name="structure" location="$GOBO/library/structure/library.ecf" readonly="true"/>
+		<library name="lexical_skl" location="$GOBO/library/lexical/library_skl.ecf" readonly="true"/>
+		<library name="parse_skl" location="$GOBO/library/parse/library_skl.ecf" readonly="true"/>
+
+		<cluster name="utility" location="./" recursive="true"/>
+	</target>
+</system>
