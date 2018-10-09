@@ -62,10 +62,6 @@ feature -- Tests
 			create uri.make ("//www.invalid/abc")
 			check_uri (uri, Void, "www.invalid", "/abc", Void, Void)
 
-			create uri.make ("")
-			assert ("Empty string does not have an absolute path", not uri.has_absolute_path)
-			check_uri (uri, Void, Void, "", Void, Void)
-
 			create uri.make ("/")
 			assert ("/", uri.has_absolute_path)
 			check_uri (uri, Void, Void, "/", Void, Void)
