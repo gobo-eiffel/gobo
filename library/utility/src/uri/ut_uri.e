@@ -1026,23 +1026,24 @@ feature {NONE} -- URI parsing
 			-- Track beginning
 
 	stop_query_name (stop: INTEGER)
+			-- Store current query item name in `query_item_name'.
 			-- Stop is exclusive.
 		require
 			valid_start: full_reference.valid_index (start_query_part)
-			valid_query: full_reference.item (start_query_part) = '?'
+			valid_query_name_start: full_reference.item (start_query_part) = '?'
 			valid_stop: full_reference.valid_index (stop - 1)
-			full_reference_contains_query: start_query_part + 1 <= stop
+			full_reference_contains_query_item_name: start_query_part + 1 <= stop - 1
 		do
 			query_item_name := full_reference.substring (start_query_part + 1, stop - 1)
 		ensure
-			scan_value: start_query_part = stop + 1
+			query_item_name_set: attached query_item_name as l_query_item_name and then not l_query_item_name.is_empty
 		end
 
 	stop_query_value (stop: INTEGER)
 			-- `stop' is exclusive.
 		require
 			valid_start: full_reference.valid_index (start_query_part)
-			valid_query: full_reference.item (start_query_part) = '?'
+			valid_query_value_start: full_reference.item (start_query_part) = '='
 			valid_stop: full_reference.valid_index (stop - 1)
 			full_reference_contains_query: start_query_part + 1 <= stop
 			query_items_not_void: attached query_items
@@ -1056,7 +1057,6 @@ feature {NONE} -- URI parsing
 			end
 		ensure
 			query_item_name_void: not attached query_item_name
-			stop_query_part_scan: start_query_part = 0
 		end
 
 	stop_query (start, stop: INTEGER)
@@ -1067,10 +1067,19 @@ feature {NONE} -- URI parsing
 			valid_stop: full_reference.valid_index (stop - 1)
 			full_reference_contains_query: start + 1 <= stop
 		do
-			stop_query_value (stop)
+			if attached query_item_name as l_name then
+				stop_query_value (stop)
+			elseif start_query_part + 1 <= stop - 1 then
+				stop_query_name (stop)
+				if attached query_item_name as l_name and then attached query_items as l_query_items then
+					l_query_items.force_last ("", l_name)
+					query_item_name := Void
+				end
+			end
 			create query_item.make_encoded (full_reference.substring (start + 1, stop - 1))
 		ensure
 			query_set: has_query
+			query_itemn_name_void: not attached query_item_name
 		end
 
 	stop_fragment (start, stop: INTEGER)

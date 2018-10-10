@@ -36,10 +36,11 @@ feature -- Tests
 
 			create uri.make ("http://www.ics.uci.edu/cgi-bin/test?id=1")
 			check_uri (uri, "http", "www.ics.uci.edu", "/cgi-bin/test", "id=1", Void)
-			assert_equal ("One query item", 1, uri.query_items.count)
+			check_query_items (uri, <<"id">>, <<"1">>)
 
 			create uri.make ("http:/cgi-bin/test?id=1")
 			check_uri (uri, "http", Void, "/cgi-bin/test", "id=1", Void)
+			check_query_items (uri, <<"id">>, <<"1">>)
 
 			create uri.make ("http:/cgi-bin/test")
 			check_uri (uri, "http", Void, "/cgi-bin/test", Void, Void)
@@ -75,6 +76,7 @@ feature -- Tests
 		do
 			create uri.make ("/path?query")
 			check_uri (uri, Void, Void, "/path", "query", Void)
+			check_query_items (uri, <<"query">>, <<"">>)
 
 			create uri.make ("/?query")
 			check_uri (uri, Void, Void, "/", "query", Void)
@@ -191,4 +193,38 @@ feature {NONE} -- Implementation
 			assert ("invalid_scheme", not a_uri.has_valid_scheme)
 		end
 
+	check_query_items (a_uri: UT_URI; a_names, a_values: ARRAY [STRING])
+			-- Check parsed query items.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_names_not_void: a_names /= Void
+			a_values_not_void: a_values /= Void
+			same_number_of_names_as_values: a_names.count = a_values.count
+		local
+			i: INTEGER
+		do
+			assert_equal ("Query items detected", a_names.count, a_uri.query_items.count)
+			if attached a_uri.query_items as l_query_items then
+				if attached l_query_items.keys.to_array as l_array then
+					i := l_array.lower
+					across a_names as a_name
+					loop
+						assert_equal ("Query name found", a_name.item, l_array.item (i))
+						i := i + 1
+				  variant
+					 a_names.count - i + 1
+					end
+				end
+				if attached l_query_items.to_array as l_array then
+					i := l_array.lower
+					across a_values as a_value
+					loop
+						assert_equal ("Query value found", a_value.item, l_array.item (i))
+						i := i + 1
+				  variant
+					 a_values.count - i + 1
+					end
+				end
+			end
+		end
 end
