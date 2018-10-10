@@ -42,4 +42,4 @@ env:
 script: 
   # Test
   - cd $GOBO/$TRAVIS_GOBO_TEST_DIR
-  - geant test_debug_$TRAVIS_GOBO_EIFFEL
+  - travis_wait 60 geant test_debug_$TRAVIS_GOBO_EIFFEL
