@@ -144,6 +144,7 @@ feature {NONE} -- Implementation
 							-- Keep query.
 						else
 							query_item := a_base.query_item
+							build_query_items_from_query_item
 						end
 					else
 						if has_absolute_path then
@@ -161,6 +162,60 @@ feature {NONE} -- Implementation
 			full_reference := new_full_reference
 		ensure
 			is_absolute: is_absolute
+		end
+
+	build_query_items_from_query_item
+			-- Turn query items in `query_item' into individual elements.
+		require
+			has_query: has_query
+			does_not_start_with_equals: attached query_item as q1 and then q1.encoded.item (1) /= '='
+			does_not_start_with_ampersand: attached query_item as q2 and then q2.encoded.item (1) /= '&'
+		local
+			l_name_start,
+			l_value_start: INTEGER
+			l_name,
+			l_value: STRING
+			i: INTEGER
+		do
+			if attached query_item as q and then attached q.encoded as s then
+				create query_items.make (1)
+				from
+					i := 2
+					l_name_start := 1
+					l_value_start := 0
+				invariant
+					i <= s.count + 1 and then l_name_start < i and l_value_start < i
+				until
+					i > s.count
+				loop
+					inspect s.item(i)
+					when '=' then
+						l_name := s.substring (l_name_start, i - 1)
+						l_value_start := i + 1
+					when '&' then
+						if l_value_start = 0 then
+							query_items.force_last ("", l_name)
+						else
+							l_value := s.substring (l_value_start, i - 1)
+							query_items.force_last (l_value, l_name)
+						end
+						l_name_start := i + 1
+						l_value_start := 0
+					end
+					i := i + 1
+				variant
+					s.count - i + 1
+				end
+				if l_value_start = 0 then
+					l_name := s.substring (l_name_start, i - 1)
+					query_items.force_last ("", l_name)
+				else
+					l_value := s.substring (l_value_start, i - 1)
+					query_items.force_last (l_value, l_name)
+				end
+			end
+		ensure
+			query_items_set: attached query_items
 		end
 
 feature -- Status report
@@ -1026,23 +1081,24 @@ feature {NONE} -- URI parsing
 			-- Track beginning
 
 	stop_query_name (stop: INTEGER)
+			-- Store current query item name in `query_item_name'.
 			-- Stop is exclusive.
 		require
 			valid_start: full_reference.valid_index (start_query_part)
-			valid_query: full_reference.item (start_query_part) = '?'
+			valid_query_name_start: full_reference.item (start_query_part) = '?'
 			valid_stop: full_reference.valid_index (stop - 1)
-			full_reference_contains_query: start_query_part + 1 <= stop
+			full_reference_contains_query_item_name: start_query_part + 1 <= stop - 1
 		do
 			query_item_name := full_reference.substring (start_query_part + 1, stop - 1)
 		ensure
-			scan_value: start_query_part = stop + 1
+			query_item_name_set: attached query_item_name as l_query_item_name and then not l_query_item_name.is_empty
 		end
 
 	stop_query_value (stop: INTEGER)
 			-- `stop' is exclusive.
 		require
 			valid_start: full_reference.valid_index (start_query_part)
-			valid_query: full_reference.item (start_query_part) = '?'
+			valid_query_value_start: full_reference.item (start_query_part) = '='
 			valid_stop: full_reference.valid_index (stop - 1)
 			full_reference_contains_query: start_query_part + 1 <= stop
 			query_items_not_void: attached query_items
@@ -1056,7 +1112,6 @@ feature {NONE} -- URI parsing
 			end
 		ensure
 			query_item_name_void: not attached query_item_name
-			stop_query_part_scan: start_query_part = 0
 		end
 
 	stop_query (start, stop: INTEGER)
@@ -1067,10 +1122,19 @@ feature {NONE} -- URI parsing
 			valid_stop: full_reference.valid_index (stop - 1)
 			full_reference_contains_query: start + 1 <= stop
 		do
-			stop_query_value (stop)
+			if attached query_item_name as l_name then
+				stop_query_value (stop)
+			elseif start_query_part + 1 <= stop - 1 then
+				stop_query_name (stop)
+				if attached query_item_name as l_name and then attached query_items as l_query_items then
+					l_query_items.force_last ("", l_name)
+					query_item_name := Void
+				end
+			end
 			create query_item.make_encoded (full_reference.substring (start + 1, stop - 1))
 		ensure
 			query_set: has_query
+			query_itemn_name_void: not attached query_item_name
 		end
 
 	stop_fragment (start, stop: INTEGER)

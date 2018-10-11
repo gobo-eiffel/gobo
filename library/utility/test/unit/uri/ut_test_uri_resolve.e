@@ -57,6 +57,7 @@ feature -- Tests
 
 			create uri.make_resolve (base, "#s")
 			check_uri (uri, "http", "a", "/b/c/d;p", "q", "s", "http://a/b/c/d;p?q#s")
+			check_query_items (uri, <<"q">>, <<"">>)
 
 			create uri.make_resolve (base, "g#s")
 			check_uri (uri, "http", "a", "/b/c/g", Void, "s", "http://a/b/c/g#s")
@@ -212,6 +213,41 @@ feature {NONE} -- Implementation
 			assert ("has_fragment", uri.has_fragment = (fragment /= Void))
 			if uri.has_fragment then
 				assert_equal ("fragment", uri.fragment, fragment)
+			end
+		end
+
+	check_query_items (a_uri: UT_URI; a_names, a_values: ARRAY [STRING])
+			-- Check parsed query items.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_names_not_void: a_names /= Void
+			a_values_not_void: a_values /= Void
+			same_number_of_names_as_values: a_names.count = a_values.count
+		local
+			i: INTEGER
+		do
+			assert_equal ("Query items detected", a_names.count, a_uri.query_items.count)
+			if attached a_uri.query_items as l_query_items then
+				if attached l_query_items.keys.to_array as l_array then
+					i := l_array.lower
+					across a_names as a_name
+					loop
+						assert_equal ("Query name found", a_name.item, l_array.item (i))
+						i := i + 1
+				  variant
+					 a_names.count - i + 1
+					end
+				end
+				if attached l_query_items.to_array as l_array then
+					i := l_array.lower
+					across a_values as a_value
+					loop
+						assert_equal ("Query value found", a_value.item, l_array.item (i))
+						i := i + 1
+				  variant
+					 a_values.count - i + 1
+					end
+				end
 			end
 		end
 
