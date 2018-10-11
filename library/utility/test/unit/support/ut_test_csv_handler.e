@@ -51,7 +51,6 @@ feature -- Tests
 			l_csv_handler: UT_CSV_HANDLER
 			l_string: STRING
 			l_file: KL_STRING_INPUT_STREAM
-			i, nb: INTEGER
 		do
 			create l_csv_handler.make
 			create l_string.make_filled ('a', 1031)
