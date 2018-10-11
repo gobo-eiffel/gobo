@@ -6,7 +6,7 @@ note
 
 	standards: "RFC 3986 (obsoleting RFC 2396)"
 	library: "Gobo Eiffel XML Library"
-	author: "Copyright (c) 2004-2013, Berend de Boer and others"
+	author: "Copyright (c) 2004-2018, Berend de Boer and others"
 	revision: "$Revision$"
 	date: "$Date$"
 

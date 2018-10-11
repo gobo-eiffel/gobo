@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Utility Library"
-	copyright:"Copyright (c) 2004, Berend de Boer and others"
+	copyright:"Copyright (c) 2004-2018, Berend de Boer and others"
 	license: "MIT License"
 	revision: "$Revision$"
 	date: "$Date$"
@@ -207,22 +207,24 @@ feature {NONE} -- Implementation
 			if attached a_uri.query_items as l_query_items then
 				if attached l_query_items.keys.to_array as l_array then
 					i := l_array.lower
-					across a_names as a_name
+					across
+						a_names as a_name
 					loop
 						assert_equal ("Query name found", a_name.item, l_array.item (i))
 						i := i + 1
-				  variant
-					 a_names.count - i + 1
+					variant
+						a_names.count - i + 1
 					end
 				end
 				if attached l_query_items.to_array as l_array then
 					i := l_array.lower
-					across a_values as a_value
+					across
+						a_values as a_value
 					loop
 						assert_equal ("Query value found", a_value.item, l_array.item (i))
 						i := i + 1
-				  variant
-					 a_values.count - i + 1
+					variant
+						a_values.count - i + 1
 					end
 				end
 			end
