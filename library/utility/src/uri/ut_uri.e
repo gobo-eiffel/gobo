@@ -171,7 +171,6 @@ feature {NONE} -- Implementation
 			does_not_start_with_equals: attached query_item as q1 and then q1.encoded.item (1) /= '='
 			does_not_start_with_ampersand: attached query_item as q2 and then q2.encoded.item (1) /= '&'
 		local
-			l_state: INTEGER
 			l_name_start,
 			l_value_start: INTEGER
 			l_name,
@@ -180,7 +179,6 @@ feature {NONE} -- Implementation
 		do
 			if attached query_item as q and then attached q.encoded as s then
 				create query_items.make (1)
-				l_state := 0
 				from
 					i := 2
 					l_name_start := 1
@@ -209,6 +207,7 @@ feature {NONE} -- Implementation
 					s.count - i + 1
 				end
 				if l_value_start = 0 then
+					l_name := s.substring (l_name_start, i - 1)
 					query_items.force_last ("", l_name)
 				else
 					l_value := s.substring (l_value_start, i - 1)
