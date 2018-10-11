@@ -71,4 +71,4 @@ script:
   # Test
   - cd $GOBO/$TRAVIS_GOBO_TEST_DIR
   # Tests do not work for with ISE on MacOS because of incompatibilities in versions of libiconv.2.dylib.
-  - travis_wait 60 if [[ "$TRAVIS_OS_NAME" == "linux" || "$TRAVIS_GOBO_EIFFEL" == "ge"]]\; then geant test_debug_$TRAVIS_GOBO_EIFFEL\; fi
+  - travis_wait 60 if [[ "$TRAVIS_OS_NAME" == "linux" \|\| "$TRAVIS_GOBO_EIFFEL" == "ge"]]\; then geant test_debug_$TRAVIS_GOBO_EIFFEL\; fi
