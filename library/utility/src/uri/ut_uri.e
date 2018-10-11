@@ -144,6 +144,7 @@ feature {NONE} -- Implementation
 							-- Keep query.
 						else
 							query_item := a_base.query_item
+							build_query_items_from_query_item
 						end
 					else
 						if has_absolute_path then
@@ -161,6 +162,61 @@ feature {NONE} -- Implementation
 			full_reference := new_full_reference
 		ensure
 			is_absolute: is_absolute
+		end
+
+	build_query_items_from_query_item
+			-- Turn query items in `query_item' into individual elements.
+		require
+			has_query: has_query
+			does_not_start_with_equals: attached query_item as q1 and then q1.encoded.item (1) /= '='
+			does_not_start_with_ampersand: attached query_item as q2 and then q2.encoded.item (1) /= '&'
+		local
+			l_state: INTEGER
+			l_name_start,
+			l_value_start: INTEGER
+			l_name,
+			l_value: STRING
+			i: INTEGER
+		do
+			if attached query_item as q and then attached q.encoded as s then
+				create query_items.make (1)
+				l_state := 0
+				from
+					i := 2
+					l_name_start := 1
+					l_value_start := 0
+				invariant
+					i <= s.count + 1 and then l_name_start < i and l_value_start < i
+				until
+					i > s.count
+				loop
+					inspect s.item(i)
+					when '=' then
+						l_name := s.substring (l_name_start, i - 1)
+						l_value_start := i + 1
+					when '&' then
+						if l_value_start = 0 then
+							query_items.force_last ("", l_name)
+						else
+							l_value := s.substring (l_value_start, i - 1)
+							query_items.force_last (l_value, l_name)
+						end
+						l_name_start := i + 1
+						l_value_start := 0
+					end
+					i := i + 1
+				variant
+					s.count - i + 1
+				end
+				if l_value_start = 0 then
+					query_items.force_last ("", l_name)
+				else
+					l_value := s.substring (l_value_start, i - 1)
+					query_items.force_last (l_value, l_name)
+				end
+			end
+		ensure
+			query_items_set: attached query_items
 		end
 
 feature -- Status report
