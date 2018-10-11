@@ -5,7 +5,7 @@ note
 		"Shared dynamic type comparators by id"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			create Result.make
 		ensure
+			instance_free: class
 			dynamic_type_comparator_not_void: Result /= Void
 		end
 

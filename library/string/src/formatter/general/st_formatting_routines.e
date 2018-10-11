@@ -5,7 +5,7 @@ note
 		"String formatting routines"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004, Berend de Boer and others"
+	copyright: "Copyright (c) 2004-2018, Berend de Boer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,8 @@ feature -- Status report
 			a_format_not_void: a_format /= Void
 		do
 			Result := formatter.valid_format_and_parameters (a_format, a_parameters)
+		ensure
+			instance_free: class
 		end
 
 feature -- Access
@@ -52,6 +54,7 @@ feature -- Access
 		do
 			Result := formatter.format (a_format, a_parameters)
 		ensure
+			instance_free: class
 			formatted_string_not_void: Result /= Void
 			same_type: ANY_.same_types (a_format, Result)
 		end
@@ -69,6 +72,7 @@ feature -- Access
 		do
 			Result := formatter.format_single (a_format, a_parameter)
 		ensure
+			instance_free: class
 			formatted_string_not_void: Result /= Void
 			same_type: ANY_.same_types (a_format, Result)
 		end
@@ -82,6 +86,7 @@ feature -- Convenience
 		do
 			create Result.make (an_integer)
 		ensure
+			instance_free: class
 			cell_not_void: Result /= Void
 			item_set: Result.item = an_integer
 		end
@@ -93,6 +98,7 @@ feature -- Convenience
 		do
 			create Result.make (a_double)
 		ensure
+			instance_free: class
 			cell_not_void: Result /= Void
 			item_set: Result.item = a_double
 		end
@@ -104,6 +110,7 @@ feature -- Convenience
 		do
 			create Result.make (a_char)
 		ensure
+			instance_free: class
 			cell_not_void: Result /= Void
 			item_set: Result.item = a_char
 		end
@@ -115,6 +122,7 @@ feature -- Convenience
 		do
 			create Result.make (a_boolean)
 		ensure
+			instance_free: class
 			cell_not_void: Result /= Void
 			item_set: Result.item = a_boolean
 		end

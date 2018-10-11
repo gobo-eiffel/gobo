@@ -6,7 +6,7 @@ note
 		%(8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-20168, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -286,6 +286,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (0)
 		ensure
+			instance_free: class
 			dummy_not_void: Result /= Void
 		end
 

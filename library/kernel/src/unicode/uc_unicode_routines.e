@@ -5,7 +5,7 @@ note
 		"Unicode routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,12 +33,16 @@ feature -- Status report
 		do
 			Result := (a_code >= minimum_unicode_character_code and a_code < minimum_unicode_surrogate_code)
 				or (a_code > maximum_unicode_surrogate_code and a_code <= maximum_unicode_character_code)
+		ensure
+			instance_free: class
 		end
 
 	is_bmp_code (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' lie within the BMP?
 		do
 			Result := a_code >= minimum_unicode_character_code and a_code <= maximum_bmp_character_code
+		ensure
+			instance_free: class
 		end
 
 	valid_ascii_code (a_code: INTEGER): BOOLEAN
@@ -46,6 +50,7 @@ feature -- Status report
 		do
 			Result := (a_code >= minimum_ascii_character_code and a_code <= maximum_ascii_character_code)
 		ensure
+			instance_free: class
 			definition: Result = (a_code >= minimum_ascii_character_code and a_code <= maximum_ascii_character_code)
 		end
 
@@ -75,6 +80,8 @@ feature -- Status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	code_to_string (a_code: INTEGER): STRING
@@ -96,6 +103,7 @@ feature -- Status report
 				Result := a_unicode
 			end
 		ensure
+			instance_free: class
 			string_not_void: Result /= Void
 			count_set: Result.count = 1
 			code_set: Result.item_code (1) = a_code

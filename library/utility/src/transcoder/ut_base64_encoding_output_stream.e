@@ -13,8 +13,8 @@ note
 		%both BOOLEAN options in the creation procedure. %
 		%Set both options to True for 100%% conformance to RFC 2045."
 
-	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
+	library: "Gobo Eiffel Utility Library"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -285,6 +285,8 @@ feature -- Constants
 			Result.put ('+', 62)
 			Result.put ('/', 63)
 			Result.put ('=', 64)
+		ensure
+			instance_free: class
 		end
 
 invariant

@@ -5,7 +5,7 @@ note
 		"Character formatters"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,6 +32,7 @@ feature -- Access
 			create Result.make (1)
 			append_eiffel_character (Result, c)
 		ensure
+			instance_free: class
 			eiffel_character_out_not_void: Result /= Void
 		end
 
@@ -46,6 +47,7 @@ feature -- Access
 			create Result.make (3)
 			append_quoted_eiffel_character (Result, c)
 		ensure
+			instance_free: class
 			quoted_eiffel_character_out_not_void: Result /= Void
 		end
 
@@ -94,6 +96,8 @@ feature -- String handling
 				INTEGER_.append_decimal_integer (c.code, a_string)
 				a_string.append_character ('/')
 			end
+		ensure
+			instance_free: class
 		end
 
 	append_quoted_eiffel_character (a_string: STRING; c: CHARACTER)
@@ -107,6 +111,8 @@ feature -- String handling
 			a_string.append_character ('%'')
 			append_eiffel_character (a_string, c)
 			a_string.append_character ('%'')
+		ensure
+			instance_free: class
 		end
 
 feature -- File handling
@@ -145,6 +151,8 @@ feature -- File handling
 				INTEGER_FORMATTER_.put_decimal_integer (a_file, c.code)
 				a_file.put_character ('/')
 			end
+		ensure
+			instance_free: class
 		end
 
 	put_quoted_eiffel_character (a_file: KI_CHARACTER_OUTPUT_STREAM; c: CHARACTER)
@@ -159,6 +167,8 @@ feature -- File handling
 			a_file.put_character ('%'')
 			put_eiffel_character (a_file, c)
 			a_file.put_character ('%'')
+		ensure
+			instance_free: class
 		end
 
 end

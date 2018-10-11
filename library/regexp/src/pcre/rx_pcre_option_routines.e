@@ -5,7 +5,7 @@ note
 		"PCRE option routines"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,6 +25,8 @@ feature -- Status report
 			valid_option: an_option >= null_option
 		do
 			Result := (((an_option // caseless_mask) \\ 2) = 1)
+		ensure
+			instance_free: class
 		end
 
 	is_option_multiline (an_option: INTEGER): BOOLEAN
@@ -33,6 +35,8 @@ feature -- Status report
 			valid_option: an_option >= null_option
 		do
 			Result := (((an_option // multiline_mask) \\ 2) = 1)
+		ensure
+			instance_free: class
 		end
 
 	is_option_dotall (an_option: INTEGER): BOOLEAN
@@ -41,6 +45,8 @@ feature -- Status report
 			valid_option: an_option >= null_option
 		do
 			Result := (((an_option // dotall_mask) \\ 2) = 1)
+		ensure
+			instance_free: class
 		end
 
 	is_option_greedy (an_option: INTEGER): BOOLEAN
@@ -49,6 +55,8 @@ feature -- Status report
 			valid_option: an_option >= null_option
 		do
 			Result := (((an_option // greedy_mask) \\ 2) = 1)
+		ensure
+			instance_free: class
 		end
 
 	is_option_extended (an_option: INTEGER): BOOLEAN
@@ -57,6 +65,8 @@ feature -- Status report
 			valid_option: an_option >= null_option
 		do
 			Result := (((an_option // extended_mask) \\ 2) = 1)
+		ensure
+			instance_free: class
 		end
 
 	is_option_undef (an_option: INTEGER): BOOLEAN
@@ -65,6 +75,8 @@ feature -- Status report
 			valid_option: an_option >= null_option
 		do
 			Result := (((an_option // undef_mask) \\ 2) = 1)
+		ensure
+			instance_free: class
 		end
 
 	is_option_ims (an_option: INTEGER): BOOLEAN
@@ -77,6 +89,7 @@ feature -- Status report
 				(((an_option // extended_mask) \\ 2) = 0) and
 				(((an_option // undef_mask) \\ 2) = 0)
 		ensure
+			instance_free: class
 			not_greedy: Result implies not is_option_greedy (an_option)
 			not_extended: Result implies not is_option_extended (an_option)
 			not_undef: Result implies not is_option_undef (an_option)
@@ -95,6 +108,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			caseless_set: is_option_caseless (Result)
 		end
@@ -110,6 +124,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			caseless_unset: not is_option_caseless (Result)
 		end
@@ -125,6 +140,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			multiline_set: is_option_multiline (Result)
 		end
@@ -140,6 +156,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			multiline_unset: not is_option_multiline (Result)
 		end
@@ -155,6 +172,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			dotall_set: is_option_dotall (Result)
 		end
@@ -170,6 +188,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			dotall_unset: not is_option_dotall (Result)
 		end
@@ -185,6 +204,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			greedy_set: is_option_greedy (Result)
 		end
@@ -200,6 +220,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			greedy_unset: not is_option_greedy (Result)
 		end
@@ -215,6 +236,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			extended_set: is_option_extended (Result)
 		end
@@ -230,6 +252,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			extended_unset: not is_option_extended (Result)
 		end
@@ -245,6 +268,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			undef_set: is_option_undef (Result)
 		end
@@ -260,6 +284,7 @@ feature -- Status setting
 				Result := an_option
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			undef_unset: not is_option_undef (Result)
 		end
@@ -282,6 +307,7 @@ feature -- Conversion
 				Result := Result + dotall_mask
 			end
 		ensure
+			instance_free: class
 			valid_option: Result >= null_option
 			ims: is_option_ims (Result)
 		end

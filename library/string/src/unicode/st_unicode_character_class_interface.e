@@ -5,7 +5,7 @@ note
 		"Routines for determining class of Unicode characters"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,6 +30,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := upper_case_property (a_code)
+		ensure
+			instance_free: class
 		end
 
 	is_lower_case (a_code: INTEGER): BOOLEAN
@@ -38,6 +40,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := lower_case_property (a_code)
+		ensure
+			instance_free: class
 		end
 
 	is_title_case (a_code: INTEGER): BOOLEAN
@@ -46,6 +50,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Titlecase_letter_category
+		ensure
+			instance_free: class
 		end
 
 	is_modifier_letter (a_code: INTEGER): BOOLEAN
@@ -54,6 +60,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Modifier_letter_category
+		ensure
+			instance_free: class
 		end
 
 	is_other_letter (a_code: INTEGER): BOOLEAN
@@ -62,6 +70,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Other_letter_category
+		ensure
+			instance_free: class
 		end
 
 	is_letter (a_code: INTEGER): BOOLEAN
@@ -78,6 +88,8 @@ feature -- Access
 			else
 				Result := False
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_alphabetic (a_code: INTEGER): BOOLEAN
@@ -86,6 +98,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := alphabetic_property (a_code)
+		ensure
+			instance_free: class
 		end
 
 	is_nonspacing_mark (a_code: INTEGER): BOOLEAN
@@ -94,6 +108,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Non_spacing_mark_category
+		ensure
+			instance_free: class
 		end
 
 	is_combining_spacing_mark (a_code: INTEGER): BOOLEAN
@@ -102,6 +118,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Spacing_combining_mark_category
+		ensure
+			instance_free: class
 		end
 
 	is_enclosing_mark (a_code: INTEGER): BOOLEAN
@@ -110,6 +128,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Enclosing_mark_category
+		ensure
+			instance_free: class
 		end
 
 	is_mark (a_code: INTEGER): BOOLEAN
@@ -123,6 +143,8 @@ feature -- Access
 			else
 				Result := False
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_decimal_digit (a_code: INTEGER): BOOLEAN
@@ -131,6 +153,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Decimal_digit_number_category
+		ensure
+			instance_free: class
 		end
 
 	is_letter_number (a_code: INTEGER): BOOLEAN
@@ -139,6 +163,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Letter_number_category
+		ensure
+			instance_free: class
 		end
 
 	is_other_number (a_code: INTEGER): BOOLEAN
@@ -147,6 +173,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Other_number_category
+		ensure
+			instance_free: class
 		end
 
 	is_number (a_code: INTEGER): BOOLEAN
@@ -160,6 +188,8 @@ feature -- Access
 			else
 				Result := False
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_connector_punctuation (a_code: INTEGER): BOOLEAN
@@ -168,6 +198,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Connector_punctuation_category
+		ensure
+			instance_free: class
 		end
 
 	is_dash_punctuation (a_code: INTEGER): BOOLEAN
@@ -176,6 +208,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Dash_punctuation_category
+		ensure
+			instance_free: class
 		end
 
 	is_open_punctuation (a_code: INTEGER): BOOLEAN
@@ -184,6 +218,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Open_punctuation_category
+		ensure
+			instance_free: class
 		end
 
 	is_close_punctuation (a_code: INTEGER): BOOLEAN
@@ -192,6 +228,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Close_punctuation_category
+		ensure
+			instance_free: class
 		end
 
 	is_initial_quote_punctuation (a_code: INTEGER): BOOLEAN
@@ -200,6 +238,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Initial_quote_punctuation_category
+		ensure
+			instance_free: class
 		end
 
 	is_final_quote_punctuation (a_code: INTEGER): BOOLEAN
@@ -208,6 +248,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Final_quote_punctuation_category
+		ensure
+			instance_free: class
 		end
 
 	is_other_punctuation (a_code: INTEGER): BOOLEAN
@@ -216,6 +258,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Other_punctuation_category
+		ensure
+			instance_free: class
 		end
 
 	is_punctuation (a_code: INTEGER): BOOLEAN
@@ -234,6 +278,8 @@ feature -- Access
 			else
 				Result := False
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_math_symbol (a_code: INTEGER): BOOLEAN
@@ -242,6 +288,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := math_property (a_code)
+		ensure
+			instance_free: class
 		end
 
 	is_currency_symbol (a_code: INTEGER): BOOLEAN
@@ -250,6 +298,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Currency_symbol_category
+		ensure
+			instance_free: class
 		end
 
 	is_modifier_symbol (a_code: INTEGER): BOOLEAN
@@ -258,6 +308,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Modifier_symbol_category
+		ensure
+			instance_free: class
 		end
 
 	is_other_symbol (a_code: INTEGER): BOOLEAN
@@ -266,6 +318,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Other_symbol_category
+		ensure
+			instance_free: class
 		end
 
 	is_symbol (a_code: INTEGER): BOOLEAN
@@ -279,6 +333,8 @@ feature -- Access
 			else
 				Result := is_math_symbol (a_code)
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_space_separator (a_code: INTEGER): BOOLEAN
@@ -287,6 +343,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Space_separator_category
+		ensure
+			instance_free: class
 		end
 
 	is_line_separator (a_code: INTEGER): BOOLEAN
@@ -295,6 +353,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Line_separator_category
+		ensure
+			instance_free: class
 		end
 
 	is_paragraph_separator (a_code: INTEGER): BOOLEAN
@@ -303,6 +363,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Paragraph_separator_category
+		ensure
+			instance_free: class
 		end
 
 	is_separator (a_code: INTEGER): BOOLEAN
@@ -316,6 +378,8 @@ feature -- Access
 			else
 				Result := False
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_control (a_code: INTEGER): BOOLEAN
@@ -324,6 +388,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Control_other_category
+		ensure
+			instance_free: class
 		end
 
 	is_format (a_code: INTEGER): BOOLEAN
@@ -332,6 +398,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Format_other_category
+		ensure
+			instance_free: class
 		end
 
 	is_surrogate (a_code: INTEGER): BOOLEAN
@@ -340,6 +408,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Surrogate_other_category
+		ensure
+			instance_free: class
 		end
 
 	is_private_use (a_code: INTEGER): BOOLEAN
@@ -348,6 +418,8 @@ feature -- Access
 			valid_code: unicode.valid_code (a_code)
 		do
 			Result := character_class (a_code) = Private_other_category
+		ensure
+			instance_free: class
 		end
 
 	is_non_character (a_code: INTEGER): BOOLEAN
@@ -373,6 +445,8 @@ feature -- Access
 				a_code = 983038 or a_code = 983039 or
 				a_code = 1048574 or a_code = 1048575 or
 				a_code = 1114110 or a_code = 1114111
+		ensure
+			instance_free: class
 		end
 
 	decimal_digit_value (a_code: INTEGER): INTEGER_8
@@ -389,6 +463,7 @@ feature -- Access
 			k := a_rem \\ 256
 			Result := decimal_values.item (i).item (j).item (k)
 		ensure
+			instance_free: class
 			positive_value: Result >= 0
 			decimal_value_small_enough: Result <= 9
 		end
@@ -406,6 +481,7 @@ feature -- Access
 			k := a_rem \\ 256
 			Result := character_classes.item (i).item (j).item (k)
 		ensure
+			instance_free: class
 			character_class_large_enough: Result >= Unassigned_other_category
 			character_class_small_enough: Result <= Private_other_category
 		end
@@ -424,6 +500,8 @@ feature {NONE} -- Implementation
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := upper_case_properties.item (i).item (j).item (k + 1)
+		ensure
+			instance_free: class
 		end
 
 	lower_case_property (a_code: INTEGER): BOOLEAN
@@ -438,6 +516,8 @@ feature {NONE} -- Implementation
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := lower_case_properties.item (i).item (j).item (k + 1)
+		ensure
+			instance_free: class
 		end
 
 	alphabetic_property (a_code: INTEGER): BOOLEAN
@@ -452,6 +532,8 @@ feature {NONE} -- Implementation
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := alphabetic_properties.item (i).item (j).item (k + 1)
+		ensure
+			instance_free: class
 		end
 
 	math_property (a_code: INTEGER): BOOLEAN
@@ -466,6 +548,8 @@ feature {NONE} -- Implementation
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := math_properties.item (i).item (j).item (k + 1)
+		ensure
+			instance_free: class
 		end
 
 	string_to_array8 (a_string: STRING): ARRAY [INTEGER_8]
@@ -486,6 +570,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			array_not_void: Result /= Void
 			zero_indexed: Result.lower = 0
 			correct_count: Result.upper = 255
@@ -495,6 +580,7 @@ feature {NONE} -- Implementation
 			-- Character classes for each code point
 		deferred
 		ensure
+			instance_free: class
 			character_classes_not_void: Result /= Void
 --			no_void_character_class: not Result.has (Void)
 		end
@@ -503,6 +589,7 @@ feature {NONE} -- Implementation
 			-- Decimal value for each code point
 		deferred
 		ensure
+			instance_free: class
 			decimal_values_not_void: Result /= Void
 --			no_void_decimal_value: not Result.has (Void)
 		end
@@ -511,6 +598,7 @@ feature {NONE} -- Implementation
 			-- Upper case property for each code point
 		deferred
 		ensure
+			instance_free: class
 			upper_case_properties_not_void: Result /= Void
 --			no_void_upper_case_property: not Result.has (Void)
 		end
@@ -519,6 +607,7 @@ feature {NONE} -- Implementation
 			-- Lower case property for each code point
 		deferred
 		ensure
+			instance_free: class
 			lower_case_properties_not_void: Result /= Void
 --			no_void_lower_case_property: not Result.has (Void)
 		end
@@ -527,6 +616,7 @@ feature {NONE} -- Implementation
 			-- Alphabetic property for each code point
 		deferred
 		ensure
+			instance_free: class
 			alphabetic_properties_not_void: Result /= Void
 --			no_void_alphabetic_property: not Result.has (Void)
 		end
@@ -535,6 +625,7 @@ feature {NONE} -- Implementation
 			-- Math property for each code point
 		deferred
 		ensure
+			instance_free: class
 			math_properties_not_void: Result /= Void
 --			no_void_math_property: not Result.has (Void)
 		end

@@ -5,7 +5,7 @@ note
 		"Eiffel standard once keys"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date:  $"
 	revision: "$Revision: $"
@@ -27,6 +27,8 @@ feature -- Status report
 			a_keys_not_void: a_keys /= Void
 		do
 			Result := has_expected_key (a_keys, object_once_key)
+		ensure
+			instance_free: class
 		end
 
 	is_object_key (a_key: ET_MANIFEST_STRING): BOOLEAN
@@ -35,6 +37,8 @@ feature -- Status report
 			a_key_not_void: a_key /= Void
 		do
 			Result := is_expected_key (a_key, object_once_key)
+		ensure
+			instance_free: class
 		end
 
 	has_thread_key (a_keys: ET_MANIFEST_STRING_LIST): BOOLEAN
@@ -43,6 +47,8 @@ feature -- Status report
 			a_keys_not_void: a_keys /= Void
 		do
 			Result := has_expected_key (a_keys, thread_once_key)
+		ensure
+			instance_free: class
 		end
 
 	is_thread_key (a_key: ET_MANIFEST_STRING): BOOLEAN
@@ -51,6 +57,8 @@ feature -- Status report
 			a_key_not_void: a_key /= Void
 		do
 			Result := is_expected_key (a_key, thread_once_key)
+		ensure
+			instance_free: class
 		end
 
 	has_process_key (a_keys: ET_MANIFEST_STRING_LIST): BOOLEAN
@@ -59,6 +67,8 @@ feature -- Status report
 			a_keys_not_void: a_keys /= Void
 		do
 			Result := has_expected_key (a_keys, process_once_key)
+		ensure
+			instance_free: class
 		end
 
 	is_process_key (a_key: ET_MANIFEST_STRING): BOOLEAN
@@ -67,6 +77,8 @@ feature -- Status report
 			a_key_not_void: a_key /= Void
 		do
 			Result := is_expected_key (a_key, process_once_key)
+		ensure
+			instance_free: class
 		end
 
 	has_expected_key (a_keys: ET_MANIFEST_STRING_LIST; a_expected_key: STRING): BOOLEAN
@@ -86,6 +98,8 @@ feature -- Status report
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_expected_key (a_key: ET_MANIFEST_STRING; a_expected_key: STRING): BOOLEAN
@@ -95,6 +109,8 @@ feature -- Status report
 			a_expected_key_not_void: a_expected_key /= Void
 		do
 			Result := STRING_.same_case_insensitive (a_key.value, a_expected_key)
+		ensure
+			instance_free: class
 		end
 
 feature -- Standard once keys

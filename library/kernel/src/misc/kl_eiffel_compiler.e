@@ -5,7 +5,7 @@ note
 		"Eiffel compiler used to compile this program"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,13 +22,14 @@ feature -- Access
 			-- Vendor of Eiffel compiler used to compiled this program
 		once
 			if {ISE_RUNTIME}.compiler_version > 608000000 then
-					-- The Gobo compiler version starts with 
+					-- The Gobo compiler version starts with
 					-- 6080 (looks like GOBO) followed by 5 digits.
 				Result := ge_vendor
 			else
 				Result := ise_vendor
 			end
 		ensure
+			instance_free: class
 			vendor_not_void: Result /= Void
 		end
 
@@ -48,6 +49,7 @@ feature -- Access
 		once
 			Result := "se"
 		ensure
+			instance_free: class
 			vendor_not_void: Result /= Void
 		end
 
@@ -58,6 +60,7 @@ feature -- Access
 		once
 			Result := "ve"
 		ensure
+			instance_free: class
 			vendor_not_void: Result /= Void
 		end
 
@@ -68,6 +71,7 @@ feature -- Status report
 		once
 			Result := (vendor = ge_vendor)
 		ensure
+			instance_free: class
 			definition: Result = (vendor = ge_vendor)
 		end
 
@@ -76,6 +80,7 @@ feature -- Status report
 		once
 			Result := (vendor = ise_vendor)
 		ensure
+			instance_free: class
 			definition: Result = (vendor = ise_vendor)
 		end
 
@@ -86,6 +91,7 @@ feature -- Status report
 		once
 			Result := False
 		ensure
+			instance_free: class
 			definition: not Result
 		end
 
@@ -96,6 +102,7 @@ feature -- Status report
 		once
 			Result := False
 		ensure
+			instance_free: class
 			definition: not Result
 		end
 

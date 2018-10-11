@@ -5,7 +5,7 @@ note
 		"UTF-16 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,6 +56,7 @@ feature -- Status report
 				end
 			end
 		ensure
+			instance_free: class
 			empty_is_true: a_string.count = 0 implies Result
 			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
 		end
@@ -88,6 +89,7 @@ feature -- Status report
 				end
 			end
 		ensure
+			instance_free: class
 			empty_is_true: a_string.count = 0 implies Result
 			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
 		end
@@ -119,6 +121,7 @@ feature -- Status report
 				end
 			end
 		ensure
+			instance_free: class
 			empty_is_true: a_string.count = 0 implies Result
 			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
 		end
@@ -130,6 +133,7 @@ feature -- Endian-ness detection
 		once
 			Result := "%/254/%/255/"
 		ensure
+			instance_free: class
 			bom_be_not_void: Result /= Void
 			two_bytes: Result.count = 2
 			first_byte: Result.item_code (1) = Hex_fe
@@ -141,6 +145,7 @@ feature -- Endian-ness detection
 		once
 			Result := "%/255/%/254/"
 		ensure
+			instance_free: class
 			bom_le_not_void: Result /= Void
 			two_bytes: Result.count = 2
 			first_byte: Result.item_code (1) = Hex_ff
@@ -157,6 +162,7 @@ feature -- Endian-ness detection
 		do
 			Result := first = Hex_fe and second = Hex_ff
 		ensure
+			instance_free: class
 			definition: Result = (is_endian_detection_character (first, second) and (first = Hex_fe))
 		end
 
@@ -170,6 +176,7 @@ feature -- Endian-ness detection
 		do
 			Result := first = Hex_ff and second = Hex_fe
 		ensure
+			instance_free: class
 			definition: Result = (is_endian_detection_character (first, second) and (first = Hex_ff))
 		end
 
@@ -182,6 +189,7 @@ feature -- Endian-ness detection
 		do
 			Result := (a_byte = Hex_fe and other_byte = Hex_ff) or (a_byte = Hex_ff and other_byte = Hex_fe)
 		ensure
+			instance_free: class
 			definition: Result = (a_byte.min (other_byte) = Hex_fe and a_byte.max (other_byte) = Hex_ff)
 		end
 
@@ -193,6 +201,8 @@ feature -- Surrogate
 			byte: is_byte (a_most)
 		do
 			Result := a_most >= Hex_d8 and a_most < Hex_e0
+		ensure
+			instance_free: class
 		end
 
 	is_high_surrogate (a_most: INTEGER): BOOLEAN
@@ -201,6 +211,8 @@ feature -- Surrogate
 			byte: is_byte (a_most)
 		do
 			Result := a_most >= Hex_d8 and a_most < Hex_dc
+		ensure
+			instance_free: class
 		end
 
 	is_low_surrogate (a_most: INTEGER): BOOLEAN
@@ -209,6 +221,8 @@ feature -- Surrogate
 			byte: is_byte (a_most)
 		do
 			Result := a_most >= Hex_dc and a_most < Hex_e0
+		ensure
+			instance_free: class
 		end
 
 	least_10_bits (msb, lsb: INTEGER): INTEGER
@@ -220,6 +234,7 @@ feature -- Surrogate
 		do
 			Result := ((msb \\ 4) * Hex_100) + lsb
 		ensure
+			instance_free: class
 			ten_bits: Result >= 0 and Result < Hex_400
 		end
 
@@ -231,6 +246,7 @@ feature -- Surrogate
 		do
 			Result := Hex_10000 + ((a_high_10 * Hex_400) + a_low_10)
 		ensure
+			instance_free: class
 			more_than_16bits: Result >= Hex_10000
 		end
 
@@ -244,6 +260,7 @@ feature -- Surrogate
 		do
 			Result := surrogate (least_10_bits (a_high_most, a_high_least), least_10_bits (a_low_most, a_low_least))
 		ensure
+			instance_free: class
 			more_than_16bits: Result >= Hex_10000
 		end
 
@@ -252,6 +269,7 @@ feature -- Surrogate
 		do
 			Result := a >= 0 and a < Hex_100
 		ensure
+			instance_free: class
 			definition: Result = (a >= 0 and a < Hex_100)
 		end
 
@@ -263,6 +281,7 @@ feature -- Surrogate
 		do
 			Result := INTEGER_.bit_shift_right (a_code, 10) + Hex_d7c0
 		ensure
+			instance_free: class
 			high_surrogate: Result >= 256 * Hex_d8
 			not_too_big: Result < 256 * Hex_dc
 		end
@@ -275,6 +294,7 @@ feature -- Surrogate
 		do
 			Result := INTEGER_.bit_or (INTEGER_.bit_and (a_code, Hex_3ff), Hex_dc00)
 		ensure
+			instance_free: class
 			low_surrogate: Result >= 256 * Hex_dc
 			not_too_big: Result < 256 * Hex_e0
 		end

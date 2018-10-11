@@ -46,6 +46,7 @@ feature -- Access
 				Result := default_options_1_0_0
 			end
 		ensure
+			instance_free: class
 			default_options_not_void: Result /= Void
 		end
 
@@ -55,6 +56,7 @@ feature -- Access
 			create Result.make
 			set_default_options_1_18_0 (Result)
 		ensure
+			instance_free: class
 			default_options_1_18_0_not_void: Result /= Void
 		end
 
@@ -64,6 +66,7 @@ feature -- Access
 			create Result.make
 			set_default_options_1_15_0 (Result)
 		ensure
+			instance_free: class
 			default_options_1_15_0_not_void: Result /= Void
 		end
 
@@ -73,6 +76,7 @@ feature -- Access
 			create Result.make
 			set_default_options_1_11_0 (Result)
 		ensure
+			instance_free: class
 			default_options_1_11_0_not_void: Result /= Void
 		end
 
@@ -82,6 +86,7 @@ feature -- Access
 			create Result.make
 			set_default_options_1_9_0 (Result)
 		ensure
+			instance_free: class
 			default_options_1_9_0_not_void: Result /= Void
 		end
 
@@ -91,6 +96,7 @@ feature -- Access
 			create Result.make
 			set_default_options_1_5_0 (Result)
 		ensure
+			instance_free: class
 			default_options_1_5_0_not_void: Result /= Void
 		end
 
@@ -100,6 +106,7 @@ feature -- Access
 			create Result.make
 			set_default_options_1_0_0 (Result)
 		ensure
+			instance_free: class
 			default_options_1_0_0_not_void: Result /= Void
 		end
 
@@ -116,6 +123,7 @@ feature -- Access
 				Result := valid_assertions_1_0_0
 			end
 		ensure
+			instance_free: class
 			valid_assertions_not_void: Result /= Void
 			no_void_assertion_name: not Result.has_void
 		end
@@ -138,6 +146,7 @@ feature -- Access
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.assertions_precondition_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.assertions_supplier_precondition_option_name)
 		ensure
+			instance_free: class
 			valid_assertions_latest_not_void: Result /= Void
 			no_void_assertion_name: not Result.has_void
 		end
@@ -149,6 +158,7 @@ feature -- Access
 		once
 			Result := valid_assertions_latest
 		ensure
+			instance_free: class
 			valid_assertions_1_2_0_not_void: Result /= Void
 			no_void_assertion_name: not Result.has_void
 		end
@@ -161,6 +171,7 @@ feature -- Access
 			Result := valid_assertions_1_2_0.twin
 			Result.remove ({ET_ECF_OPTION_NAMES}.assertions_supplier_precondition_option_name)
 		ensure
+			instance_free: class
 			valid_assertions_1_0_0_not_void: Result /= Void
 			no_void_assertion_name: not Result.has_void
 		end
@@ -198,6 +209,7 @@ feature -- Access
 				Result := valid_options_1_0_0
 			end
 		ensure
+			instance_free: class
 			valid_options_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -226,6 +238,7 @@ feature -- Access
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.trace_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_option_name)
 		ensure
+			instance_free: class
 			valid_options_latest_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -237,6 +250,7 @@ feature -- Access
 		once
 			Result := valid_options_latest
 		ensure
+			instance_free: class
 			valid_options_1_18_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -249,6 +263,7 @@ feature -- Access
 			Result := valid_options_1_18_0
 			Result.remove ({ET_ECF_OPTION_NAMES}.manifest_array_type_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_16_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -262,6 +277,7 @@ feature -- Access
 			Result.force_last (cat_call_detection_option_value_regexp, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
 			Result.force_last (void_safety_option_value_regexp, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_15_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -274,6 +290,7 @@ feature -- Access
 			Result := valid_options_1_15_0.twin
 			Result.remove ({ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_14_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -286,6 +303,7 @@ feature -- Access
 			Result := valid_options_1_14_0.twin
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_11_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -299,6 +317,7 @@ feature -- Access
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
 			Result.force_last (void_safety_old_option_value_regexp, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_10_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -311,6 +330,7 @@ feature -- Access
 			Result := valid_options_1_10_0.twin
 			Result.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_9_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -323,6 +343,7 @@ feature -- Access
 			Result := valid_options_1_9_0.twin
 			Result.remove ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_5_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -338,6 +359,7 @@ feature -- Access
 			Result.force_last (syntax_level_option_value_regexp, {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
 			Result.remove ({ET_ECF_OPTION_NAMES}.void_safety_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_4_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -350,6 +372,7 @@ feature -- Access
 			Result := valid_options_1_4_0.twin
 			Result.remove ({ET_ECF_OPTION_NAMES}.syntax_level_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_4_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -363,6 +386,7 @@ feature -- Access
 			Result.remove ({ET_ECF_OPTION_NAMES}.is_attached_by_default_option_name)
 			Result.remove ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_2_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -375,6 +399,7 @@ feature -- Access
 			Result := valid_options_1_2_0.twin
 			Result.remove ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name)
 		ensure
+			instance_free: class
 			valid_options_1_0_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
@@ -396,6 +421,7 @@ feature -- Access
 				Result := valid_warnings_1_0_0
 			end
 		ensure
+			instance_free: class
 			valid_warnings_not_void: Result /= Void
 			no_void_warning_name: not Result.has_void
 		end
@@ -425,6 +451,7 @@ feature -- Access
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_vwab_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_vweq_option_name)
 		ensure
+			instance_free: class
 			valid_warnings_latest_not_void: Result /= Void
 			no_void_warning_name: not Result.has_void
 		end
@@ -436,6 +463,7 @@ feature -- Access
 		once
 			Result := valid_warnings_latest
 		ensure
+			instance_free: class
 			valid_warnings_18_0_not_void: Result /= Void
 			no_void_warning_name: not Result.has_void
 		end
@@ -448,6 +476,7 @@ feature -- Access
 			Result := valid_warnings_1_18_0
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_manifest_array_type_name)
 		ensure
+			instance_free: class
 			valid_warnings_17_0_not_void: Result /= Void
 			no_void_warning_name: not Result.has_void
 		end
@@ -460,6 +489,7 @@ feature -- Access
 			Result := valid_warnings_1_17_0.twin
 			Result.remove ({ET_ECF_OPTION_NAMES}.warning_manifest_array_type_name)
 		ensure
+			instance_free: class
 			valid_warnings_1_10_0_not_void: Result /= Void
 			no_void_warning_name: not Result.has_void
 		end
@@ -472,6 +502,7 @@ feature -- Access
 			Result := valid_warnings_1_10_0.twin
 			Result.remove ({ET_ECF_OPTION_NAMES}.warning_vwab_option_name)
 		ensure
+			instance_free: class
 			valid_warnings_1_0_0_not_void: Result /= Void
 			no_void_warning_name: not Result.has_void
 		end
@@ -514,6 +545,8 @@ feature -- Setting
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_vjrv_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_vwab_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_vweq_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+		ensure
+			instance_free: class
 		end
 
 	set_default_options_1_18_0 (a_options: ET_ECF_OPTIONS)
@@ -522,6 +555,8 @@ feature -- Setting
 			a_options_not_void: a_options /= Void
 		do
 			set_default_options_latest (a_options)
+		ensure
+			instance_free: class
 		end
 
 	set_default_options_1_15_0 (a_options: ET_ECF_OPTIONS)
@@ -532,6 +567,8 @@ feature -- Setting
 			set_default_options_1_18_0 (a_options)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.manifest_array_type_option_name, {ET_ECF_OPTION_NAMES}.mismatch_warning_option_value)
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_manifest_array_type_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+		ensure
+			instance_free: class
 		end
 
 	set_default_options_1_11_0 (a_options: ET_ECF_OPTIONS)
@@ -541,6 +578,8 @@ feature -- Setting
 		do
 			set_default_options_1_15_0 (a_options)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+		ensure
+			instance_free: class
 		end
 
 	set_default_options_1_9_0 (a_options: ET_ECF_OPTIONS)
@@ -550,6 +589,8 @@ feature -- Setting
 		do
 			set_default_options_1_11_0 (a_options)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+		ensure
+			instance_free: class
 		end
 
 	set_default_options_1_5_0 (a_options: ET_ECF_OPTIONS)
@@ -560,6 +601,8 @@ feature -- Setting
 			set_default_options_1_9_0 (a_options)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.is_attached_by_default_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.transitional_option_value)
+		ensure
+			instance_free: class
 		end
 
 	set_default_options_1_0_0 (a_options: ET_ECF_OPTIONS)
@@ -569,6 +612,8 @@ feature -- Setting
 		do
 			set_default_options_1_5_0 (a_options)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.obsolete_option_value)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -579,6 +624,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_OPTION_NAMES}.true_option_value + "|" + {ET_ECF_OPTION_NAMES}.true_option_value + ")")
 		ensure
+			instance_free: class
 			boolean_option_value_regexp_not_void: Result /= Void
 			boolean_option_value_regexp_compiled: Result.is_compiled
 		end
@@ -589,6 +635,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_OPTION_NAMES}.none_option_value + "|" + {ET_ECF_OPTION_NAMES}.conformance_option_value + "|" + {ET_ECF_OPTION_NAMES}.all_option_value + ")")
 		ensure
+			instance_free: class
 			cat_call_detection_option_value_regexp_not_void: Result /= Void
 			cat_call_detection_option_value_regexp_compiled: Result.is_compiled
 		end
@@ -599,6 +646,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_OPTION_NAMES}.mismatch_error_option_value + "|" + {ET_ECF_OPTION_NAMES}.mismatch_warning_option_value + "|" + {ET_ECF_OPTION_NAMES}.standard_option_value + ")")
 		ensure
+			instance_free: class
 			manifest_array_type_option_value_regexp_not_void: Result /= Void
 			manifest_array_type_option_value_regexp_compiled: Result.is_compiled
 		end
@@ -609,6 +657,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_OPTION_NAMES}.obsolete_option_value + "|" + {ET_ECF_OPTION_NAMES}.transitional_option_value + "|" + {ET_ECF_OPTION_NAMES}.standard_option_value + "|" + {ET_ECF_OPTION_NAMES}.provisional_option_value + ")")
 		ensure
+			instance_free: class
 			syntax_option_value_regexp_not_void: Result /= Void
 			syntax_option_value_regexp_compiled: Result.is_compiled
 		end
@@ -619,6 +668,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("[012]")
 		ensure
+			instance_free: class
 			syntax_level_option_value_regexp_not_void: Result /= Void
 			syntax_level_option_value_regexp_compiled: Result.is_compiled
 		end
@@ -629,6 +679,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_OPTION_NAMES}.none_option_value + "|" + {ET_ECF_OPTION_NAMES}.conformance_option_value + "|" + {ET_ECF_OPTION_NAMES}.initialization_option_value + "|" + {ET_ECF_OPTION_NAMES}.transitional_option_value + "|" + {ET_ECF_OPTION_NAMES}.all_option_value + ")")
 		ensure
+			instance_free: class
 			void_safety_option_value_regexp_not_void: Result /= Void
 			void_safety_option_value_regexp_compiled: Result.is_compiled
 		end
@@ -639,6 +690,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_OPTION_NAMES}.none_option_value + "|" + {ET_ECF_OPTION_NAMES}.initialization_option_value + "|" + {ET_ECF_OPTION_NAMES}.all_option_value + ")")
 		ensure
+			instance_free: class
 			void_safety_old_option_value_regexp_not_void: Result /= Void
 			void_safety_old_option_value_regexp_compiled: Result.is_compiled
 		end

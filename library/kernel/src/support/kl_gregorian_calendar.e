@@ -5,7 +5,7 @@ note
 		"Gregorian calendar properties"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,6 +25,8 @@ feature -- Year
 			-- Is `y' a leap year?
 		do
 			Result := (y \\ 4 = 0) and ((y \\ 100 /= 0) or (y \\ 400 = 0))
+		ensure
+			instance_free: class
 		end
 
 	Months_in_year: INTEGER = 12
@@ -116,6 +118,7 @@ feature -- Month
 				end
 			end
 		ensure
+			instance_free: class
 			at_least_one: Result >= 1
 			max_days_in_month: Result <= Max_days_in_month
 		end
@@ -160,6 +163,7 @@ feature -- Month
 				Result := Result + 1
 			end
 		ensure
+			instance_free: class
 			days_positive: Result >= 0
 		end
 
@@ -210,6 +214,8 @@ feature -- Epoch
 				(INTEGER_.div (y - 1, 400))) - Epoch_leap_years) +
 				(days_at_month (m, y) - Epoch_days_at_month) +
 				(d - Epoch_day)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Epoch
@@ -219,6 +225,8 @@ feature {NONE} -- Epoch
 			-- and year 'Epoch_year - 1'
 		once
 			Result := ((Epoch_year - 1) // 4) - ((Epoch_year - 1) // 100) + ((Epoch_year - 1) // 400)
+		ensure
+			instance_free: class
 		end
 
 	Epoch_days_at_month: INTEGER
@@ -227,6 +235,7 @@ feature {NONE} -- Epoch
 		once
 			Result := days_at_month (Epoch_month, Epoch_year)
 		ensure
+			instance_free: class
 			days_positive: Result >= 0
 		end
 
@@ -235,6 +244,8 @@ feature {NONE} -- Epoch
 			-- and Y2K (1 Jan 2000)
 		once
 			Result := epoch_days (2000, 1, 1)
+		ensure
+			instance_free: class
 		end
 
 end

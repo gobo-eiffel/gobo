@@ -5,7 +5,7 @@ note
 		"Shared Eiffel standard once keys"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			standard_once_keys_not_void: Result /= Void
 		end
 

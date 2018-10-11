@@ -10,7 +10,7 @@ note
 		whenever a STRING is expected.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,6 +77,7 @@ feature -- Initialization
 				end
 			end
 		ensure
+			instance_free: class
 			string_not_void: Result /= Void
 			new_string: Result /= s
 			string_type: ANY_.same_types (Result, "")
@@ -91,6 +92,7 @@ feature -- Initialization
 		do
 			create Result.make_filled ('%U', n)
 		ensure
+			instance_free: class
 			string_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			count_set: Result.count = n
@@ -119,6 +121,7 @@ feature -- Status report
 				Result := substring_index (a_string, other, 1) /= 0
 			end
 		ensure
+			instance_free: class
 			false_if_too_small: a_string.count < other.count implies not Result
 			true_if_initial: (a_string.count >= other.count and then
 				elks_same_string (other, a_string.substring (1, other.count))) implies Result
@@ -156,6 +159,8 @@ feature -- Status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_integer_64 (a_string: STRING): BOOLEAN
@@ -228,6 +233,8 @@ feature -- Status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_hexadecimal (a_string: STRING): BOOLEAN
@@ -259,6 +266,8 @@ feature -- Status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_base64 (a_string: STRING): BOOLEAN
@@ -294,6 +303,8 @@ feature -- Status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Access
@@ -317,6 +328,7 @@ feature -- Access
 				end
 			end
 		ensure
+			instance_free: class
 			new_string_not_void: Result /= Void
 			same_type: ANY_.same_types (Result, a_string)
 			new_string_empty: Result.count = 0
@@ -362,6 +374,7 @@ feature -- Access
 				end
 			end
 		ensure
+			instance_free: class
 			to_utf16_be_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			valid_utf16: utf16.valid_utf16 (Result)
@@ -407,6 +420,7 @@ feature -- Access
 				end
 			end
 		ensure
+			instance_free: class
 			to_utf16_le_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			valid_utf16: utf16.valid_utf16 (utf16.bom_le + Result)
@@ -445,6 +459,7 @@ feature -- Access
 				end
 			end
 		ensure
+			instance_free: class
 			to_utf32_be_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			valid_utf32: utf32.valid_utf32 (Result)
@@ -483,6 +498,7 @@ feature -- Access
 				end
 			end
 		ensure
+			instance_free: class
 			to_utf32_le_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			valid_utf32: utf32.valid_utf32 (utf32.bom_le + Result)
@@ -600,6 +616,7 @@ feature -- Access
 				end
 			end
 		ensure
+			instance_free: class
 			valid_result: Result = 0 or else (start_index <= Result and Result <= a_string.count - other.count + 1)
 			zero_if_absent: (Result = 0) = not has_substring (a_string.substring (start_index, a_string.count), other)
 			at_this_index: Result >= start_index implies elks_same_string (other, a_string.substring (Result, Result + other.count - 1))
@@ -630,6 +647,7 @@ feature -- Access
 				Result := -(Result + 1)
 			end
 		ensure
+			instance_free: class
 			hash_code_not_negative: Result >= 0
 		end
 
@@ -659,6 +677,7 @@ feature -- Access
 				Result := a_string + other
 			end
 		ensure
+			instance_free: class
 			concat_not_void: Result /= Void
 			concat_count: Result.count = a_string.count + other.count
 			initial: same_string (Result.substring (1, a_string.count), a_string)
@@ -692,6 +711,7 @@ feature -- Comparison
 				end
 			end
 		ensure
+			instance_free: class
 			definition: Result = a_string.string.is_equal (other.string)
 		end
 
@@ -736,6 +756,7 @@ feature -- Comparison
 				end
 			end
 		ensure
+			instance_free: class
 			definition: Result = (a_string.count = other.count and then
 				(a_string.count > 0 implies (a_string.item_code (1) = other.item_code (1) and
 				(a_string.count >= 2 implies same_string (a_string.substring (2, a_string.count), other.substring (2, a_string.count))))))
@@ -797,6 +818,8 @@ feature -- Comparison
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_less (a_string, other: STRING): BOOLEAN
@@ -806,6 +829,8 @@ feature -- Comparison
 			other_not_void: other /= Void
 		do
 			Result := three_way_comparison (a_string, other) = - 1
+		ensure
+			instance_free: class
 		end
 
 	three_way_comparison (a_string, other: STRING): INTEGER
@@ -915,6 +940,7 @@ feature -- Comparison
 				end
 			end
 		ensure
+			instance_free: class
 			equal_zero: (Result = 0) = same_string (a_string, other)
 --			smaller_negative: (Result = -1) = (a_string is less than other)
 --			greater_positive: (Result = 1) = (a_string is greater than other)
@@ -929,6 +955,8 @@ feature -- Comparison
 			other_not_void: other /= Void
 		do
 			Result := three_way_lower_case_comparison (a_string, other)
+		ensure
+			instance_free: class
 		end
 
 	three_way_lower_case_comparison (a_string, other: STRING): INTEGER
@@ -1031,6 +1059,8 @@ feature -- Comparison
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	three_way_upper_case_comparison (a_string, other: STRING): INTEGER
@@ -1133,6 +1163,8 @@ feature -- Comparison
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Duplication
@@ -1144,6 +1176,7 @@ feature -- Duplication
 		do
 			Result := a_string.twin
 		ensure
+			instance_free: class
 			cloned_not_void: Result /= Void
 			same_type: ANY_.same_types (Result, a_string)
 			is_equal: Result.is_equal (a_string)
@@ -1178,6 +1211,7 @@ feature -- Element change
 				Result := a_string
 			end
 		ensure
+			instance_free: class
 			append_not_void: Result /= Void
 			type_if_not_aliased: Result /= a_string implies ANY_.same_types (Result, other)
 			new_count: Result.count = old a_string.count + old other.count
@@ -1230,6 +1264,7 @@ feature -- Element change
 				Result := a_string
 			end
 		ensure
+			instance_free: class
 			append_not_void: Result /= Void
 			type_if_not_aliased: Result /= a_string implies ANY_.same_types (Result, other)
 			new_count: Result.count = old a_string.count + e - s + 1
@@ -1271,6 +1306,7 @@ feature -- Element change
 				end
 			end
 		ensure
+			instance_free: class
 			replaced_substring_not_void: Result /= Void
 			replaced: same_string (Result, old (appended_string (appended_string (a_string.substring (1, start_index - 1), other), a_string.substring (end_index + 1, a_string.count))))
 		end
@@ -1301,6 +1337,7 @@ feature -- Element change
 				end
 			end
 		ensure
+			instance_free: class
 			appended: a_string.is_equal (old cloned_string (a_string) + old other.substring (s, e))
 		end
 
@@ -1345,6 +1382,7 @@ feature -- Element change
 				Result := a_text
 			end
 		ensure
+			instance_free: class
 			replaced_all_substrings_not_void: Result /= Void
 		end
 
@@ -1375,6 +1413,7 @@ feature -- Element change
 				Result := a_text
 			end
 		ensure
+			instance_free: class
 			replaced_first_substring_not_void: Result /= Void
 		end
 
@@ -1398,6 +1437,7 @@ feature -- Conversion
 				end
 			end
 		ensure
+			instance_free: class
 			as_string_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			aliasing: ANY_.same_types (a_string, "") implies Result = a_string
@@ -1459,6 +1499,8 @@ feature -- Conversion
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Removal
@@ -1489,6 +1531,7 @@ feature -- Removal
 			end
 			a_string.remove_head (i - 1)
 		ensure
+			instance_free: class
 			left_adjusted: (a_string.count /= 0) implies
 				((a_string.item_code (1) /= (' ').code) and
 				(a_string.item_code (1) /= ('%T').code) and
@@ -1522,6 +1565,7 @@ feature -- Removal
 			end
 			a_string.keep_head (nb)
 		ensure
+			instance_free: class
 			right_adjusted: (a_string.count /= 0) implies
 				((a_string.item_code (a_string.count) /= (' ').code) and
 				(a_string.item_code (a_string.count) /= ('%T').code) and
@@ -1540,6 +1584,7 @@ feature -- Removal
 		do
 			a_string.keep_head (0)
 		ensure
+			instance_free: class
 			wiped_out: a_string.count = 0
 		end
 
@@ -1550,6 +1595,7 @@ feature -- Removal
 		do
 			a_string.prune_all_trailing (c)
 		ensure
+			instance_free: class
 			no_more_trailing: a_string.is_empty or else a_string.item (a_string.count) /= c
 		end
 
@@ -1575,6 +1621,7 @@ feature -- Resizing
 				i := i - 1
 			end
 		ensure
+			instance_free: class
 			count_set: a_string.count = n
 		end
 
@@ -1587,6 +1634,8 @@ feature -- Conversion
 			integer_64_string: is_integer_64 (a_string)
 		do
 			Result := a_string.to_integer_64
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -1599,6 +1648,7 @@ feature {NONE} -- Implementation
 		once
 			Result := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 7>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			ninteen_digits: Result.count = 19
 		end
@@ -1608,6 +1658,7 @@ feature {NONE} -- Implementation
 		once
 			Result := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 8>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			ninteen_digits: Result.count = 19
 		end
@@ -1616,6 +1667,8 @@ feature {NONE} -- Implementation
 			-- code for '0'
 		once
 			Result := ('0').code
+		ensure
+			instance_free: class
 		end
 
 end

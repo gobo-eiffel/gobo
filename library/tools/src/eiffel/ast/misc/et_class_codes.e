@@ -5,7 +5,7 @@ note
 		"Eiffel class codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date:  $"
 	revision: "$Revision: $"
@@ -33,6 +33,8 @@ feature -- Status report
 			-- "NATURAL_64", "POINTER", "REAL_32", "REAL_64".
 		do
 			Result := boolean_class_code <= a_code and a_code <= pointer_class_code
+		ensure
+			instance_free: class
 		end
 
 	is_numeric (a_code: NATURAL_8): BOOLEAN
@@ -43,6 +45,8 @@ feature -- Status report
 			-- "NATURAL_32", "NATURAL_64", "REAL_32", "REAL_64".
 		do
 			Result := integer_8_class_code <= a_code and a_code <= real_64_class_code
+		ensure
+			instance_free: class
 		end
 
 feature -- Access
@@ -61,6 +65,8 @@ feature -- Access
 			else
 				Result := no_class_code
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Codes
@@ -186,6 +192,7 @@ feature -- Codes
 			Result.force_last (iterable_class_code, tokens.iterable_class_name)
 			Result.force_last (iteration_cursor_class_code, tokens.iteration_cursor_class_name)
 		ensure
+			instance_free: class
 			codes_by_name_not_void: Result /= Void
 		end
 

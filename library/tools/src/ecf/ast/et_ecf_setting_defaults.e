@@ -34,6 +34,7 @@ feature -- Access
 		do
 			Result := default_settings_1_0_0
 		ensure
+			instance_free: class
 			default_settings_not_void: Result /= Void
 		end
 
@@ -43,6 +44,7 @@ feature -- Access
 			create Result.make
 			set_default_settings_1_0_0 (Result)
 		ensure
+			instance_free: class
 			default_settings_1_0_0_not_void: Result /= Void
 		end
 
@@ -73,6 +75,7 @@ feature -- Access
 				Result := valid_settings_1_0_0
 			end
 		ensure
+			instance_free: class
 			valid_settings_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -128,6 +131,7 @@ feature -- Access
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.use_all_cluster_name_as_namespace_setting_name)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.use_cluster_name_as_namespace_setting_name)
 		ensure
+			instance_free: class
 			valid_settings_latest_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -139,6 +143,7 @@ feature -- Access
 		once
 			Result := valid_settings_latest
 		ensure
+			instance_free: class
 			valid_settings_1_18_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -152,6 +157,7 @@ feature -- Access
 			Result.remove ({ET_ECF_SETTING_NAMES}.manifest_array_type_setting_name)
 			Result.force_last (Void, {ET_ECF_SETTING_NAMES}.msil_assembly_compatibility_setting_name)
 		ensure
+			instance_free: class
 			valid_settings_1_17_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -164,6 +170,7 @@ feature -- Access
 			Result := valid_settings_1_17_0.twin
 			Result.remove ({ET_ECF_SETTING_NAMES}.absent_explicit_assertion_setting_name)
 		ensure
+			instance_free: class
 			valid_settings_1_16_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -176,6 +183,7 @@ feature -- Access
 			Result := valid_settings_1_16_0.twin
 			Result.force_last (concurrency_setting_value_regexp, {ET_ECF_SETTING_NAMES}.concurrency_setting_name)
 		ensure
+			instance_free: class
 			valid_settings_1_11_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -188,6 +196,7 @@ feature -- Access
 			Result := valid_settings_1_11_0.twin
 			Result.remove ({ET_ECF_SETTING_NAMES}.check_for_void_target_setting_name)
 		ensure
+			instance_free: class
 			valid_settings_1_7_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -201,6 +210,7 @@ feature -- Access
 			Result.remove ({ET_ECF_SETTING_NAMES}.concurrency_setting_name)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.multithreaded_setting_name)
 		ensure
+			instance_free: class
 			valid_settings_1_16_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -213,6 +223,7 @@ feature -- Access
 			Result := valid_settings_1_6_0.twin
 			Result.remove ({ET_ECF_SETTING_NAMES}.total_order_on_reals_setting_name)
 		ensure
+			instance_free: class
 			valid_settings_1_4_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -225,6 +236,7 @@ feature -- Access
 			Result := valid_settings_1_4_0.twin
 			Result.remove ({ET_ECF_SETTING_NAMES}.old_feature_replication_setting_name)
 		ensure
+			instance_free: class
 			valid_settings_1_2_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -237,6 +249,7 @@ feature -- Access
 			Result := valid_settings_1_2_0.twin
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
 		ensure
+			instance_free: class
 			valid_settings_1_0_0_not_void: Result /= Void
 			no_void_setting_name: not Result.has_void
 		end
@@ -277,6 +290,8 @@ feature -- Setting
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.total_order_on_reals_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.use_all_cluster_name_as_namespace_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.use_cluster_name_as_namespace_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
+		ensure
+			instance_free: class
 		end
 
 	set_default_settings_1_0_0 (a_settings: ET_ECF_SETTINGS)
@@ -285,6 +300,8 @@ feature -- Setting
 			a_settings_not_void: a_settings /= Void
 		do
 			set_default_settings_latest (a_settings)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -295,6 +312,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_SETTING_NAMES}.true_setting_value + "|" + {ET_ECF_SETTING_NAMES}.true_setting_value + ")")
 		ensure
+			instance_free: class
 			boolean_setting_value_regexp_not_void: Result /= Void
 			boolean_setting_value_regexp_compiled: Result.is_compiled
 		end
@@ -305,6 +323,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_SETTING_NAMES}.none_setting_value + "|" + {ET_ECF_SETTING_NAMES}.thread_setting_value + "|" + {ET_ECF_SETTING_NAMES}.scoop_setting_value + ")")
 		ensure
+			instance_free: class
 			concurrency_setting_value_regexp_not_void: Result /= Void
 			concurrency_setting_value_regexp_compiled: Result.is_compiled
 		end
@@ -315,6 +334,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("[0-9]|[1-9][0-9]|100")
 		ensure
+			instance_free: class
 			inline_size_setting_value_regexp_not_void: Result /= Void
 			inline_size_setting_value_regexp_compiled: Result.is_compiled
 		end
@@ -325,6 +345,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_SETTING_NAMES}.default_setting_value + "|" + {ET_ECF_SETTING_NAMES}.standard_setting_value + "|" + {ET_ECF_SETTING_NAMES}.mismatch_warning_setting_value + "|" + {ET_ECF_SETTING_NAMES}.mismatch_error_setting_value + ")")
 		ensure
+			instance_free: class
 			manifest_array_type_setting_value_regexp_not_void: Result /= Void
 			manifest_array_type_setting_value_regexp_compiled: Result.is_compiled
 		end
@@ -335,6 +356,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("[1-9][0-9]*")
 		ensure
+			instance_free: class
 			msil_classes_per_module_setting_value_regexp_not_void: Result /= Void
 			msil_classes_per_module_setting_value_regexp_compiled: Result.is_compiled
 		end
@@ -345,6 +367,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_SETTING_NAMES}.exe_setting_value + "|" + {ET_ECF_SETTING_NAMES}.dll_setting_value + ")")
 		ensure
+			instance_free: class
 			msil_generation_type_setting_value_regexp_not_void: Result /= Void
 			msil_generation_type_setting_value_regexp_compiled: Result.is_compiled
 		end
@@ -355,6 +378,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_SETTING_NAMES}.windows_setting_value + "|" + {ET_ECF_SETTING_NAMES}.unix_setting_value + "|" + {ET_ECF_SETTING_NAMES}.macintosh_setting_value + "|" + {ET_ECF_SETTING_NAMES}.vxworks_setting_value + ")")
 		ensure
+			instance_free: class
 			platform_setting_value_regexp_not_void: Result /= Void
 			platform_setting_value_regexp_compiled: Result.is_compiled
 		end

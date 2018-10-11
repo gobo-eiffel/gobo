@@ -82,6 +82,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (254),222)
 			Result.put (new_singleton (223),223)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -223,6 +224,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (509),252)
 			Result.put (new_singleton (511),254)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -270,6 +272,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (589),76)
 			Result.put (new_singleton (591),78)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -339,6 +342,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (892),254)
 			Result.put (new_singleton (893),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -471,6 +475,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1277),252)
 			Result.put (new_singleton (1279),254)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -539,6 +544,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1415),135)
 			Result.put (new_singleton (1415),136)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -547,6 +553,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_filled (Void, 0, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -603,6 +610,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (11557),206)
 			Result.put (new_singleton (11557),207)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -740,6 +748,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (7933),252)
 			Result.put (new_singleton (7935),254)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -909,6 +918,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (8061),251)
 			Result.put (new_singleton (8179),252)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -938,6 +948,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (8575),111)
 			Result.put (new_singleton (8580),131)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -972,6 +983,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (9448),206)
 			Result.put (new_singleton (9449),207)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -1091,6 +1103,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (11489),224)
 			Result.put (new_singleton (11491),226)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -1133,6 +1146,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (42645),148)
 			Result.put (new_singleton (42647),150)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -1188,6 +1202,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (42887),134)
 			Result.put (new_singleton (42892),139)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -1225,6 +1240,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (64279),27)
 			Result.put (new_singleton (64279),28)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -1259,6 +1275,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (65369),57)
 			Result.put (new_singleton (65370),58)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -1522,6 +1539,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_lower_case_mapping_segment, 254)
 			Result.put (lower_case_mapping_plane_0_segment_255, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -1571,6 +1589,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (66638),38)
 			Result.put (new_singleton (66639),39)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -1834,6 +1853,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_lower_case_mapping_segment, 254)
 			Result.put (all_empty_lower_case_mapping_segment, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -1843,6 +1863,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_filled (all_empty_lower_case_mapping_segment, 256)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -1933,6 +1954,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (222),254)
 			Result.put (new_singleton (376),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2063,6 +2085,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (508),253)
 			Result.put (new_singleton (510),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2129,6 +2152,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (581),140)
 			Result.put (new_singleton (439),146)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2205,6 +2229,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1015),248)
 			Result.put (new_singleton (1018),251)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2337,6 +2362,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1276),253)
 			Result.put (new_singleton (1278),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2416,6 +2442,7 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1333,1410),135)
 			Result.put (new_pair (1333,1410),136)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2424,6 +2451,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_filled (Void, 0, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2434,6 +2462,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (42877),121)
 			Result.put (new_singleton (11363),125)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2571,6 +2600,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (7932),253)
 			Result.put (new_singleton (7934),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2740,6 +2770,7 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (937,834,837),247)
 			Result.put (new_singleton (8188),252)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2766,6 +2797,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (8559),127)
 			Result.put (new_singleton (8579),132)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2800,6 +2832,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (9422),232)
 			Result.put (new_singleton (9423),233)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2914,6 +2947,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (11488),225)
 			Result.put (new_singleton (11490),227)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -2970,6 +3004,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (4293),46)
 			Result.put (new_singleton (4293),47)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -3118,6 +3153,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (42646),254)
 			Result.put (new_singleton (42646),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -3282,6 +3318,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (42891),249)
 			Result.put (new_singleton (42891),250)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -3319,6 +3356,7 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1348,1389),27)
 			Result.put (new_pair (1348,1389),28)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -3353,6 +3391,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (65337),89)
 			Result.put (new_singleton (65338),90)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -3616,6 +3655,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_title_case_mapping_segment, 254)
 			Result.put (title_case_mapping_plane_0_segment_255, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -3665,6 +3705,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (66598),78)
 			Result.put (new_singleton (66599),79)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -3928,6 +3969,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_title_case_mapping_segment, 254)
 			Result.put (all_empty_title_case_mapping_segment, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -3937,6 +3979,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_filled (all_empty_title_case_mapping_segment, 256)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -4027,6 +4070,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (222),254)
 			Result.put (new_singleton (376),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4153,6 +4197,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (508),253)
 			Result.put (new_singleton (510),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4219,6 +4264,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (581),140)
 			Result.put (new_singleton (439),146)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4295,6 +4341,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1015),248)
 			Result.put (new_singleton (1018),251)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4427,6 +4474,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (1276),253)
 			Result.put (new_singleton (1278),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4506,6 +4554,7 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1333,1362),135)
 			Result.put (new_pair (1333,1362),136)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4514,6 +4563,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_filled (Void, 0, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4524,6 +4574,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (42877),121)
 			Result.put (new_singleton (11363),125)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4661,6 +4712,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (7932),253)
 			Result.put (new_singleton (7934),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4830,6 +4882,7 @@ feature {NONE} -- Implementation
 			Result.put (new_triple (937,834,921),247)
 			Result.put (new_pair (937,921),252)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4856,6 +4909,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (8559),127)
 			Result.put (new_singleton (8579),132)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -4890,6 +4944,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (9422),232)
 			Result.put (new_singleton (9423),233)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -5004,6 +5059,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (11488),225)
 			Result.put (new_singleton (11490),227)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -5060,6 +5116,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (4293),46)
 			Result.put (new_singleton (4293),47)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -5208,6 +5265,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (42646),254)
 			Result.put (new_singleton (42646),255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -5372,6 +5430,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (42891),249)
 			Result.put (new_singleton (42891),250)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -5409,6 +5468,7 @@ feature {NONE} -- Implementation
 			Result.put (new_pair (1348,1341),27)
 			Result.put (new_pair (1348,1341),28)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -5443,6 +5503,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (65337),89)
 			Result.put (new_singleton (65338),90)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -5706,6 +5767,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_upper_case_mapping_segment, 254)
 			Result.put (upper_case_mapping_plane_0_segment_255, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -5755,6 +5817,7 @@ feature {NONE} -- Implementation
 			Result.put (new_singleton (66598),78)
 			Result.put (new_singleton (66599),79)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -6018,6 +6081,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_upper_case_mapping_segment, 254)
 			Result.put (all_empty_upper_case_mapping_segment, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -6027,6 +6091,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_filled (all_empty_upper_case_mapping_segment, 256)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end

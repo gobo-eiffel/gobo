@@ -11,7 +11,7 @@ note
 		'op_*upto', op_*exact' should be in that order.
 	]"
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2018, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -523,6 +523,7 @@ feature -- Access
 				end
 			end
 		ensure
+			instance_free: class
 			op_name_not_void: Result /= Void
 		end
 

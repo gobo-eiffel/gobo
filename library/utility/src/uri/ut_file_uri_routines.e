@@ -5,7 +5,7 @@ note
 		"Convert file: URI to and from local filesystem names. Percent-encodings in URIs are assumed to be UTF-8"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,6 +63,8 @@ feature -- Filename
 				end
 				std.output.put_new_line
 			end
+		ensure
+			instance_free: class
 		end
 
 	filename_to_uri (a_string: STRING): UT_URI
@@ -81,6 +83,7 @@ feature -- Filename
 				std.output.put_new_line
 			end
 		ensure
+			instance_free: class
 			uri_not_void: Result /= Void
 		end
 
@@ -150,6 +153,8 @@ feature -- Pathname
 					std.output.put_new_line
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	pathname_to_uri (a_pathname: KI_PATHNAME): UT_URI
@@ -206,6 +211,7 @@ feature -- Pathname
 				std.output.put_new_line
 			end
 		ensure
+			instance_free: class
 			uri_not_void: Result /= Void
 		end
 
@@ -219,6 +225,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_decoded_utf8 (a_string)
 		ensure
+			instance_free: class
 			uri_component_not_void: Result /= Void
 		end
 
@@ -228,6 +235,8 @@ feature {NONE} -- Implementation
 			a_uri_string_not_void: a_uri_string /= Void
 		do
 			Result := a_uri_string.decoded_utf8
+		ensure
+			instance_free: class
 		end
 
 	is_drive (a_drive: STRING): BOOLEAN
@@ -236,6 +245,8 @@ feature {NONE} -- Implementation
 			a_drive_not_void: a_drive /= Void
 		do
 			Result := file_system.string_to_pathname (a_drive).drive /= Void
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Constants

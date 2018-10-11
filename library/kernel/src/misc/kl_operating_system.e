@@ -5,7 +5,7 @@ note
 		"Underlying operating systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,6 +40,8 @@ feature -- Status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_unix: BOOLEAN
@@ -59,6 +61,8 @@ feature -- Status report
 					Result := cwd.item (1) = '/'
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_dotnet: BOOLEAN
@@ -68,6 +72,8 @@ feature -- Status report
 		once
 			create p
 			Result := p.is_dotnet
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -80,6 +86,7 @@ feature {NONE} -- Implementation
 		do
 			Result := execution_environment.current_working_path.utf_8_name
 		ensure
+			instance_free: class
 			current_working_directory_not_void: Result /= Void
 		end
 
@@ -92,6 +99,8 @@ feature {NONE} -- Implementation
 			if attached execution_environment.item (a_variable) as l_item then
 				Result := l_item.as_string_8
 			end
+		ensure
+			instance_free: class
 		end
 
 	execution_environment: EXECUTION_ENVIRONMENT
@@ -99,6 +108,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		ensure
+			instance_free: class
 			execution_environment_not_void: Result /= Void
 		end
 

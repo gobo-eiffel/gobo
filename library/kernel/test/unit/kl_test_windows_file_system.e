@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1392,7 +1392,7 @@ feature -- Pathname handling
 			assert ("not_absolute4", not a_file_system.is_absolute_pathname ("/foo"))
 			assert ("not_absolute6", not a_file_system.is_absolute_pathname (""))
 			assert ("not_absolute7", not a_file_system.is_absolute_pathname ("\"))
-			create a_file_system.make_backslash_only
+			create {KL_WINDOWS_FILE_SYSTEM_BACKSLASH_ONLY} a_file_system.make
 			assert ("not_absolute5", not a_file_system.is_absolute_pathname ("c:/foo"))
 		end
 
@@ -1413,7 +1413,7 @@ feature -- Pathname handling
 			assert ("not_relative4", not a_file_system.is_relative_pathname ("\\foo\bar"))
 			assert ("not_relative5", not a_file_system.is_relative_pathname ("/foo"))
 			assert ("not_relative6", not a_file_system.is_relative_pathname ("c:/foo"))
-			create a_file_system.make_backslash_only
+			create {KL_WINDOWS_FILE_SYSTEM_BACKSLASH_ONLY} a_file_system.make
 			assert ("relative5", a_file_system.is_relative_pathname ("/foo"))
 			assert ("relative6", a_file_system.is_relative_pathname ("c:/foo"))
 		end
@@ -1436,7 +1436,7 @@ feature -- Pathname handling
 			assert ("not_root4", not a_file_system.is_root_directory ("c:\foo"))
 			assert ("not_root6", not a_file_system.is_root_directory ("\\foo\bar/gobo"))
 			assert ("not_root7", not a_file_system.is_root_directory ("\\foo\bar\gobo"))
-			create a_file_system.make_backslash_only
+			create {KL_WINDOWS_FILE_SYSTEM_BACKSLASH_ONLY} a_file_system.make
 			assert ("not_root3", not a_file_system.is_root_directory ("/"))
 			assert ("not_root5", not a_file_system.is_root_directory ("c:/"))
 			assert ("root8", a_file_system.is_root_directory ("\\foo\bar/gobo"))
@@ -1463,7 +1463,7 @@ feature -- Pathname handling
 			assert_equal ("basename13", "\", a_file_system.basename ("\\foo\bar\"))
 			assert_equal ("basename14", "toto", a_file_system.basename ("\\foo\bar\toto"))
 			assert_equal ("basename15", "foo", a_file_system.basename ("c:\foo"))
-			create a_file_system.make_backslash_only
+			create {KL_WINDOWS_FILE_SYSTEM_BACKSLASH_ONLY} a_file_system.make
 			assert_equal ("basename16", "foo/bar", a_file_system.basename ("foo/bar"))
 		end
 
@@ -1490,7 +1490,7 @@ feature -- Pathname handling
 			assert_equal ("dirname15", "\\foo\bar\\", a_file_system.dirname ("\\foo\bar\\"))
 			assert_equal ("dirname15", "\\foo\bar", a_file_system.dirname ("\\foo\bar\toto"))
 			assert_equal ("dirname18", "\\foo\bar", a_file_system.dirname ("\\foo\bar/gobo"))
-			create a_file_system.make_backslash_only
+			create {KL_WINDOWS_FILE_SYSTEM_BACKSLASH_ONLY} a_file_system.make
 			assert_equal ("dirname16", ".", a_file_system.dirname ("foo/bar"))
 			assert_equal ("dirname17", "\\foo\bar/gobo", a_file_system.dirname ("\\foo\bar/gobo"))
 		end

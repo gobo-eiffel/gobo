@@ -5,7 +5,7 @@ note
 		"Shared formatters"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004, Berend de Boer and others"
+	copyright: "Copyright (c) 2004-2018, Berend de Boer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			Result := scientific_formatter
 		ensure
+			instance_free: class
 			formatter_not_void: Result /= Void
 		end
 
@@ -27,6 +28,7 @@ feature -- Access
 		once
 			create Result.make
 		ensure
+			instance_free: class
 			scientific_formatter_not_void: Result /= Void
 		end
 

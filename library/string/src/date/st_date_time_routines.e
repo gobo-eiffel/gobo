@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2008-2013, Colin Adams and others"
+	copyright: "Copyright (c) 2008-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,6 +65,7 @@ feature -- Access
 				Result := l_result
 			end
 		ensure
+			instance_free: class
 			xslt_formatted_date_not_void: Result /= Void
 		end
 
@@ -116,6 +117,7 @@ feature -- Access
 				Result := l_result
 			end
 		ensure
+			instance_free: class
 			xslt_formatted_time_not_void: Result /= Void
 		end
 
@@ -168,6 +170,7 @@ feature -- Access
 				Result := l_result
 			end
 		ensure
+			instance_free: class
 			xslt_formatted_date_time_not_void: Result /= Void
 		end
 

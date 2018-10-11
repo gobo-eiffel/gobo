@@ -5,7 +5,7 @@ note
 		"Access to the shared decimal context; used to be a singleton"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
-	copyright: "Copyright (c) 2004-2005, Paul G. Crismer and others"
+	copyright: "Copyright (c) 2004-2018, Paul G. Crismer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,7 @@ feature -- Access
 		do
 			Result := cell.item
 		ensure
+			instance_free: class
 			shared_decimal_context_not_void: Result /= Void
 		end
 
@@ -32,6 +33,7 @@ feature -- Access
 		once
 			create Result.make_default
 		ensure
+			instance_free: class
 			default_context_not_void: Result /= Void
 		end
 
@@ -47,6 +49,7 @@ feature -- Setting
 		do
 			cell.put (new_context)
 		ensure
+			instance_free: class
 			context_set: shared_decimal_context = new_context
 		end
 
@@ -57,6 +60,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (default_context)
 		ensure
+			instance_free: class
 			cell_not_void: Result /= Void
 			context_not_void: cell.item /= Void
 		end

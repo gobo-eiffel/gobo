@@ -5,7 +5,7 @@ note
 		"Environment variables defined and used in ISE's tools."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,6 +28,8 @@ feature -- Access
 			-- Value of environment variable "$ISE_EIFFEL"
 		do
 			Result := Execution_environment.variable_value (ise_eiffel_variable)
+		ensure
+			instance_free: class
 		end
 
 	ise_library_variable: STRING = "ISE_LIBRARY"
@@ -37,6 +39,8 @@ feature -- Access
 			-- Value of environment variable "$ISE_LIBRARY"
 		do
 			Result := Execution_environment.variable_value (ise_library_variable)
+		ensure
+			instance_free: class
 		end
 
 feature -- Setting
@@ -54,6 +58,8 @@ feature -- Setting
 					Execution_environment.set_variable_value (ise_library_variable, l_ise_eiffel)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 end

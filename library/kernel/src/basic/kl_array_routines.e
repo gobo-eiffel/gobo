@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class ARRAY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,10 +26,11 @@ feature -- Initialization
 		do
 			Result := subarray (an_array, an_array.lower, an_array.upper, min_index)
 		ensure
+			instance_free: class
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
 			count_set: Result.count = an_array.count
---			same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + an_array.lower - min_index)
+			same_items: across Result.lower |..| Result.upper as i all Result.item (i.item) = an_array.item (i.item + an_array.lower - min_index) end
 		end
 
 	make_empty_with_lower (min_index: INTEGER): ARRAY [G]
@@ -45,6 +46,7 @@ feature -- Initialization
 				create Result.make_from_array (l_array)
 			end
 		ensure
+			instance_free: class
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
 			is_empty: Result.is_empty
@@ -76,6 +78,8 @@ feature -- Status report
 					i := i + 1
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	has_void (a_array: ARRAY [G]): BOOLEAN
@@ -104,6 +108,8 @@ feature -- Status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Access
@@ -131,10 +137,11 @@ feature -- Access
 				subcopy (Result, an_array, start_pos, end_pos, min_index)
 			end
 		ensure
+			instance_free: class
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
 			count_set: Result.count = end_pos - start_pos + 1
---			same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + start_pos - min_index)
+			same_items: across Result.lower |..| Result.upper as i all Result.item (i.item) = an_array.item (i.item + start_pos - min_index) end
 		end
 
 feature -- Duplication
@@ -146,6 +153,7 @@ feature -- Duplication
 		do
 			Result := an_array.twin
 		ensure
+			instance_free: class
 			cloned_not_void: Result /= Void
 			same_type: ANY_.same_types (Result, an_array)
 			is_equal: Result.is_equal (an_array)
@@ -172,7 +180,8 @@ feature -- Element change
 				an_array.subcopy (other, start_pos, end_pos, index_pos)
 			end
 		ensure
---			copied: forall i in 0 .. (end_pos - start_pos), an_array.item (index_pos + i) = other.item (start_pos + i)
+			instance_free: class
+			copied: across 0 |..| (end_pos - start_pos) as i all an_array.item (index_pos + i.item) = other.item (start_pos + i.item) end
 		end
 
 feature -- Resizing
@@ -189,6 +198,7 @@ feature -- Resizing
 		do
 			resize_with_default (an_array, ({G}).default, min_index, max_index)
 		ensure
+			instance_free: class
 			lower_set: an_array.lower = min_index
 			upper_set: an_array.upper = max_index
 		end
@@ -208,6 +218,7 @@ feature -- Resizing
 				an_array.conservative_resize_with_default (a_default_value, min_index, max_index)
 			end
 		ensure
+			instance_free: class
 			lower_set: an_array.lower = min_index
 			upper_set: an_array.upper = max_index
 		end

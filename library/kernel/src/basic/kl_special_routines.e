@@ -7,7 +7,7 @@ note
 		%equipped with features `put', `item' and `count'."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,7 @@ feature -- Initialization
 		do
 			create Result.make_empty (n)
 		ensure
+			instance_free: class
 			special_not_void: Result /= Void
 			capacity_set: Result.capacity = n
 		end
@@ -34,6 +35,7 @@ feature -- Initialization
 		do
 			create Result.make_filled (v, n)
 		ensure
+			instance_free: class
 			special_not_void: Result /= Void
 			capacity_set: Result.capacity = n
 			count_set: Result.count = n
@@ -50,9 +52,10 @@ feature -- Initialization
 			create array_routines
 			Result := array_routines.make_from_array (an_array, 0).area
 		ensure
+			instance_free: class
 			special_not_void: Result /= Void
 			count_set: Result.count = an_array.count
---			same_items: forall i in 0 .. (Result.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
+			same_items: across 0 |..| (Result.count - 1) as i all Result.item (i.item) = an_array.item (an_array.lower + i.item) end
 		end
 
 feature -- Conversion
@@ -67,9 +70,10 @@ feature -- Conversion
 		do
 			Result := an_array.area
 		ensure
+			instance_free: class
 			special_not_void: Result /= Void
 			count_set: Result.count >= an_array.count
---			same_items: forall i in 0.. (an_array.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
+			same_items: across 0 |..| (an_array.count - 1) as i all Result.item (i.item) = an_array.item (an_array.lower + i.item) end
 		end
 
 feature -- Status report
@@ -89,6 +93,8 @@ feature -- Status report
 				Result := an_array.item (i) = v
 				i := i - 1
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Element change
@@ -108,6 +114,8 @@ feature -- Element change
 			else
 				a_array.fill_with (v, a_array.count, i)
 			end
+		ensure
+			instance_free: class
 		end
 
 	keep_head (an_array: SPECIAL [G]; n: INTEGER; a_old_count: INTEGER)
@@ -119,6 +127,7 @@ feature -- Element change
 		do
 			an_array.keep_head (n)
 		ensure
+			instance_free: class
 			kept: an_array.same_items (old an_array.twin, 0, 0, n)
 		end
 
@@ -138,6 +147,7 @@ feature -- Resizing
 		do
 			Result := aliased_resized_area (an_array, n)
 		ensure
+			instance_free: class
 			special_not_void: Result /= Void
 			count_set: Result.capacity = n
 			preserved: Result.same_items (old an_array.twin, 0, 0, n.min (old an_array.count))
@@ -159,6 +169,7 @@ feature -- Resizing
 				Result := an_array
 			end
 		ensure
+			instance_free: class
 			special_not_void: Result /= Void
 			count_set: Result.capacity = n
 			preserved: Result.same_items (old an_array.twin, 0, 0, n.min (old an_array.count))
@@ -177,6 +188,7 @@ feature -- Resizing
 				Result := an_array
 			end
 		ensure
+			instance_free: class
 			special_not_void: Result /= Void
 			new_count: Result.count = n
 			new_capacity: Result.capacity = n

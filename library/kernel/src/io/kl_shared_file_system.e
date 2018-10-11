@@ -6,7 +6,7 @@ note
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,6 +35,7 @@ feature -- File systems
 				Result := unix_file_system
 			end
 		ensure
+			instance_free: class
 			file_system_not_void: Result /= Void
 			current_file_system: Result.is_current_file_system
 		end
@@ -45,6 +46,7 @@ feature -- File systems
 		once
 			create Result.make
 		ensure
+			instance_free: class
 			file_system_not_void: Result /= Void
 		end
 
@@ -52,8 +54,9 @@ feature -- File systems
 			-- Windows-like file system which accepts only \ as
 			-- directory separator
 		once
-			create Result.make_backslash_only
+			create {KL_WINDOWS_FILE_SYSTEM_BACKSLASH_ONLY} Result.make
 		ensure
+			instance_free: class
 			file_system_not_void: Result /= Void
 		end
 
@@ -62,6 +65,7 @@ feature -- File systems
 		once
 			create Result.make
 		ensure
+			instance_free: class
 			file_system_not_void: Result /= Void
 		end
 

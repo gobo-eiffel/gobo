@@ -5,7 +5,7 @@ note
 		"Shared input and output streams"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			create {KL_STRING_INPUT_STREAM} Result.make ("")
 		ensure
+			instance_free: class
 			null_input_stream_not_void: Result /= Void
 		end
 
@@ -27,6 +28,7 @@ feature -- Access
 		once
 			create Result.make ("null")
 		ensure
+			instance_free: class
 			null_output_stream_not_void: Result /= Void
 		end
 

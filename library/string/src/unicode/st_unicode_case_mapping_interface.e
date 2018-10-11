@@ -4,7 +4,7 @@ note
 
 		"Full Unicode case mappings"
 
-	copyright: "Copyright (c) 2007-2013, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,6 +49,7 @@ feature -- Access
 				increasing_index: l_count - i + 1
 			end
 		ensure
+			instance_free: class
 			lower_unicode_string_not_void: Result /= Void
 			new_string: not ANY_.same_objects (Result, a_string)
 			length_may_change: True
@@ -83,6 +84,7 @@ feature -- Access
 				increasing_index: l_count - i + 1
 			end
 		ensure
+			instance_free: class
 			upper_unicode_string_not_void: Result /= Void
 			new_string: not ANY_.same_objects (Result, a_string)
 			length_may_change: True
@@ -106,6 +108,7 @@ feature {NONE} -- Implementation
 			k := l_rem \\ 256
 			Result := lower_case_mappings.item (i).item (j).item (k)
 		ensure
+			instance_free: class
 			non_empty: Result /= Void implies not Result.is_empty
 		end
 
@@ -123,6 +126,7 @@ feature {NONE} -- Implementation
 			k := l_rem \\ 256
 			Result := upper_case_mappings.item (i).item (j).item (k)
 		ensure
+			instance_free: class
 			non_empty: Result /= Void implies not Result.is_empty
 		end
 
@@ -140,6 +144,7 @@ feature {NONE} -- Implementation
 			k := l_rem \\ 256
 			Result := title_case_mappings.item (i).item (j).item (k)
 		ensure
+			instance_free: class
 			non_empty: Result /= Void implies not Result.is_empty
 		end
 
@@ -147,6 +152,7 @@ feature {NONE} -- Implementation
 			-- Full lower case mappings for each code point
 		deferred
 		ensure
+			instance_free: class
 			lower_case_mappings_not_void: Result /= Void
 		end
 
@@ -154,6 +160,7 @@ feature {NONE} -- Implementation
 			-- Full title case mappings for each code point
 		deferred
 		ensure
+			instance_free: class
 			title_case_mappings_not_void: Result /= Void
 		end
 
@@ -161,6 +168,7 @@ feature {NONE} -- Implementation
 			-- Full upper case mappings for each code point
 		deferred
 		ensure
+			instance_free: class
 			upper_case_mappings_not_void: Result /= Void
 		end
 
@@ -170,6 +178,7 @@ feature {NONE} -- Implementation
 			create Result.make (1)
 			Result.put_last (i)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			one_integer: Result.count = 1
 		end
@@ -181,6 +190,7 @@ feature {NONE} -- Implementation
 			Result.put_last (i)
 			Result.put_last (j)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			two_integers: Result.count = 2
 		end
@@ -193,6 +203,7 @@ feature {NONE} -- Implementation
 			Result.put_last (j)
 			Result.put_last (k)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			three_integers: Result.count = 3
 		end

@@ -5,7 +5,7 @@ note
 		"Shared days of the week which start on Monday"
 
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,7 @@ feature -- Access
 		once
 			create Result.make_monday
 		ensure
+			instance_free: class
 			monday_not_void: Result /= Void
 			is_monday: Result.is_monday
 		end
@@ -32,6 +33,7 @@ feature -- Access
 		once
 			create Result.make_tuesday
 		ensure
+			instance_free: class
 			tuesday_not_void: Result /= Void
 			is_tuesday: Result.is_tuesday
 		end
@@ -41,6 +43,7 @@ feature -- Access
 		once
 			create Result.make_wednesday
 		ensure
+			instance_free: class
 			wednesday_not_void: Result /= Void
 			is_wednesday: Result.is_wednesday
 		end
@@ -50,6 +53,7 @@ feature -- Access
 		once
 			create Result.make_thursday
 		ensure
+			instance_free: class
 			thursday_not_void: Result /= Void
 			is_thursday: Result.is_thursday
 		end
@@ -59,6 +63,7 @@ feature -- Access
 		once
 			create Result.make_friday
 		ensure
+			instance_free: class
 			friday_not_void: Result /= Void
 			is_friday: Result.is_friday
 		end
@@ -68,6 +73,7 @@ feature -- Access
 		once
 			create Result.make_saturday
 		ensure
+			instance_free: class
 			saturday_not_void: Result /= Void
 			is_saturday: Result.is_saturday
 		end
@@ -77,6 +83,7 @@ feature -- Access
 		once
 			create Result.make_sunday
 		ensure
+			instance_free: class
 			sunday_not_void: Result /= Void
 			is_sunday: Result.is_sunday
 		end
@@ -103,6 +110,7 @@ feature -- Access
 				Result := sunday
 			end
 		ensure
+			instance_free: class
 			monday: a_code = monday_code implies Result = monday
 			tuesday: a_code = tuesday_code implies Result = tuesday
 			wednesday: a_code = wednesday_code implies Result = wednesday
@@ -119,6 +127,7 @@ feature -- Access
 		do
 			Result := week_day_from_year_month_day (a_date.year, a_date.month, a_date.day)
 		ensure
+			instance_free: class
 			week_day_not_void: Result /= Void
 		end
 
@@ -142,6 +151,7 @@ feature -- Access
 			end
 			Result := week_day_from_code (a_code)
 		ensure
+			instance_free: class
 			week_day_not_void: Result /= Void
 		end
 

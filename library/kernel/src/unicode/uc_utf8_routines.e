@@ -5,7 +5,7 @@ note
 		"UTF-8 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -105,6 +105,8 @@ feature -- Status report
 					i := nb + 1
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_encoded_first_byte (a_byte: CHARACTER): BOOLEAN
@@ -112,6 +114,8 @@ feature -- Status report
 		do
 				-- All but 10xxxxxx and 1111111x
 			Result := (a_byte <= byte_127 or (byte_194 <= a_byte and a_byte <= byte_244))
+		ensure
+			instance_free: class
 		end
 
 	is_encoded_next_byte (a_byte: CHARACTER): BOOLEAN
@@ -119,6 +123,8 @@ feature -- Status report
 		do
 				-- 10xxxxxx
 			Result := (byte_127 < a_byte and a_byte <= byte_191)
+		ensure
+			instance_free: class
 		end
 
 	is_encoded_second_byte (a_byte, a_first_byte: CHARACTER): BOOLEAN
@@ -138,6 +144,8 @@ feature -- Status report
 			else
 				Result := (byte_127 < a_byte and a_byte <= byte_191)
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_endian_detection_character (a_first, a_second, a_third: CHARACTER): BOOLEAN
@@ -145,6 +153,7 @@ feature -- Status report
 		do
 			Result := is_endian_detection_character_start (a_first, a_second) and a_third = byte_bf
 		ensure
+			instance_free: class
 			result_start: Result implies is_endian_detection_character_start (a_first, a_second)
 		end
 
@@ -152,6 +161,8 @@ feature -- Status report
 			-- Are these characters the start of a UTF-8 encoded Byte Order Marker (BOM)?
 		do
 			Result := a_first = byte_ef and a_second = byte_bb
+		ensure
+			instance_free: class
 		end
 
 feature -- Access
@@ -175,6 +186,7 @@ feature -- Access
 				Result := Result \\ 8
 			end
 		ensure
+			instance_free: class
 			value_positive: Result >= 0
 			value_small_enough: Result < 128
 		end
@@ -187,6 +199,7 @@ feature -- Access
 				-- 10xxxxxx
 			Result := a_byte.code \\ 64
 		ensure
+			instance_free: class
 			value_positive: Result >= 0
 			value_small_enough: Result < 64
 		end
@@ -213,6 +226,7 @@ feature -- Measurement
 				Result := 4
 			end
 		ensure
+			instance_free: class
 			encoded_byte_code_large_enough: Result >= 1
 			encoded_byte_code_small_enough: Result <= 4
 		end
@@ -308,6 +322,7 @@ feature -- Measurement
 				end
 			end
 		ensure
+			instance_free: class
 			substring_byte_count_positive: Result >= 0
 		end
 
@@ -333,6 +348,7 @@ feature -- Measurement
 				Result := 4
 			end
 		ensure
+			instance_free: class
 			code_byte_count_large_enough: Result >= 1
 			code_byte_count_small_enough: Result <= 4
 		end
@@ -365,6 +381,7 @@ feature -- Measurement
 				end
 			end
 		ensure
+			instance_free: class
 			character_byte_count_large_enough: Result >= 1
 			character_byte_count_small_enough: Result <= 4
 		end
@@ -394,6 +411,7 @@ feature -- Conversion
 				end
 			end
 		ensure
+			instance_free: class
 			to_utf8_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			valid_utf8: valid_utf8 (Result)
@@ -449,6 +467,7 @@ feature -- Element change
 				a_utf8.append_character (b4)
 			end
 		ensure
+			instance_free: class
 			a_utf8_valid: valid_utf8 (a_utf8)
 		end
 
@@ -543,6 +562,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_empty
 		ensure
+			instance_free: class
 			dummy_uc_string_not_void: Result /= Void
 		end
 

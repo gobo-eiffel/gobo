@@ -20,6 +20,7 @@ feature -- Access
 		once
 			create Result.make (1, 0, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_0_0_not_void: Result /= Void
 		end
 
@@ -29,6 +30,7 @@ feature -- Access
 		once
 			create Result.make (1, 2, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_2_0_not_void: Result /= Void
 		end
 
@@ -38,6 +40,7 @@ feature -- Access
 		once
 			create Result.make (1, 3, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_3_0_not_void: Result /= Void
 		end
 
@@ -47,6 +50,7 @@ feature -- Access
 		once
 			create Result.make (1, 4, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_4_0_not_void: Result /= Void
 		end
 
@@ -56,6 +60,7 @@ feature -- Access
 		once
 			create Result.make (1, 5, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_5_0_not_void: Result /= Void
 		end
 
@@ -65,6 +70,7 @@ feature -- Access
 		once
 			create Result.make (1, 6, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_6_0_not_void: Result /= Void
 		end
 
@@ -74,6 +80,7 @@ feature -- Access
 		once
 			create Result.make (1, 7, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_7_0_not_void: Result /= Void
 		end
 
@@ -83,6 +90,7 @@ feature -- Access
 		once
 			create Result.make (1, 8, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_8_0_not_void: Result /= Void
 		end
 
@@ -92,6 +100,7 @@ feature -- Access
 		once
 			create Result.make (1, 9, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_9_0_not_void: Result /= Void
 		end
 
@@ -101,6 +110,7 @@ feature -- Access
 		once
 			create Result.make (1, 10, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_10_0_not_void: Result /= Void
 		end
 
@@ -110,6 +120,7 @@ feature -- Access
 		once
 			create Result.make (1, 11, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_11_0_not_void: Result /= Void
 		end
 
@@ -119,6 +130,7 @@ feature -- Access
 		once
 			create Result.make (1, 12, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_12_0_not_void: Result /= Void
 		end
 
@@ -128,6 +140,7 @@ feature -- Access
 		once
 			create Result.make (1, 13, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_13_0_not_void: Result /= Void
 		end
 
@@ -137,6 +150,7 @@ feature -- Access
 		once
 			create Result.make (1, 14, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_14_0_not_void: Result /= Void
 		end
 
@@ -146,6 +160,7 @@ feature -- Access
 		once
 			create Result.make (1, 15, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_15_0_not_void: Result /= Void
 		end
 
@@ -155,6 +170,7 @@ feature -- Access
 		once
 			create Result.make (1, 16, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_16_0_not_void: Result /= Void
 		end
 
@@ -164,6 +180,7 @@ feature -- Access
 		once
 			create Result.make (1, 17, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_17_0_not_void: Result /= Void
 		end
 
@@ -173,14 +190,16 @@ feature -- Access
 		once
 			create Result.make (1, 18, 0, 0)
 		ensure
+			instance_free: class
 			ecf_1_18_0_not_void: Result /= Void
 		end
 
 	ecf_last_known: UT_VERSION
 			-- Last known ECF version
 		once
-			Result := ecf_1_17_0
+			Result := ecf_1_18_0
 		ensure
+			instance_free: class
 			ecf_last_known_not_void: Result /= Void
 		end
 
@@ -189,6 +208,7 @@ feature -- Access
 		once
 			create Result.make_latest
 		ensure
+			instance_free: class
 			ecf_latest_not_void: Result /= Void
 		end
 

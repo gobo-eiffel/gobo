@@ -5,7 +5,7 @@ note
 		"Boolean formatters"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,6 +26,7 @@ feature -- Access
 			create Result.make (5)
 			append_eiffel_boolean (Result, b)
 		ensure
+			instance_free: class
 			eiffel_boolean_out_not_void: Result /= Void
 		end
 
@@ -41,6 +42,8 @@ feature -- String handling
 			else
 				a_string.append_string (False_string)
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- File handling
@@ -56,6 +59,8 @@ feature -- File handling
 			else
 				a_file.put_string (False_string)
 			end
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Constants

@@ -5,7 +5,7 @@ note
 		"Routines on strings and characters."
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,6 +41,8 @@ feature -- Status report
 			variant
 				chars.count + 1 - counter
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_alphanumeric (a_character_code: INTEGER): BOOLEAN
@@ -51,12 +53,16 @@ feature -- Status report
 			Result := unicode_character_class.unicode.valid_code (a_character_code)
 				and then (unicode_character_class.is_letter (a_character_code)
 							 or else unicode_character_class.is_number (a_character_code))
+		ensure
+			instance_free: class
 		end
 
 	is_xml_space (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' represent an XML space?
 		do
 			Result := a_code = 32 or a_code = 9 or a_code = 10 or a_code = 13
+		ensure
+			instance_free: class
 		end
 
 end

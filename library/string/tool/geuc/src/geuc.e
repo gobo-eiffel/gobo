@@ -2121,6 +2121,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2147,6 +2148,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (a_segment_name)
 			a_output_file.put_string (", 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2229,6 +2231,8 @@ feature {NONE} -- Implementation
 				a_output_file.put_string (")%N")
 				i := i + 1
 			end
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2310,6 +2314,8 @@ feature {NONE} -- Implementation
 				a_output_file.put_string (")%N")
 				i := i + 1
 			end
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2391,6 +2397,8 @@ feature {NONE} -- Implementation
 				a_output_file.put_string (")%N")
 				i := i + 1
 			end
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2424,6 +2432,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2450,6 +2459,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (a_segment_name)
 			a_output_file.put_string (", 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2480,6 +2490,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%")%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
@@ -2514,6 +2525,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2540,6 +2552,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (a_segment_name)
 			a_output_file.put_string (", 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2580,6 +2593,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 
@@ -2606,6 +2620,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (a_segment_name)
 			a_output_file.put_string (", 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2641,6 +2656,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2823,6 +2839,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
@@ -2857,6 +2874,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2881,6 +2899,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%T%Tonce%N")
 			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2918,6 +2937,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
@@ -2963,6 +2983,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure

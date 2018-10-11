@@ -12,7 +12,7 @@ note
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,6 +38,8 @@ feature -- Access
 			if attached environment_impl.item (STRING_.as_string (a_variable)) as l_item then
 				Result := l_item.as_string_8
 			end
+		ensure then
+			instance_free: class
 		end
 
 feature -- Setting
@@ -55,6 +57,7 @@ feature -- Setting
 		do
 			environment_impl.put (STRING_.as_string (a_value), STRING_.as_string (a_variable))
 		ensure
+			instance_free: class
 			-- This setting may fail on certain platforms, hence the
 			-- following commented postcondition:
 			-- variable_set: equal (variable_value (a_variable), STRING_.as_string (a_value))
@@ -69,6 +72,8 @@ feature -- Basic operations
 			a_nanoseconds_not_negative: a_nanoseconds >= 0
 		do
 			environment_impl.sleep (a_nanoseconds)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -78,6 +83,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		ensure
+			instance_free: class
 			environment_impl_not_void: Result /= Void
 		end
 

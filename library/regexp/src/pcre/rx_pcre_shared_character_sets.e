@@ -11,7 +11,7 @@ note
 		changes will be shared by all regexp compilers.
 		]"
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2018, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,6 +25,7 @@ feature -- Defaults
 		once
 			create Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
 		ensure
+			instance_free: class
 			default_character_case_mapping_not_void: Result /= Void
 		end
 
@@ -33,6 +34,7 @@ feature -- Defaults
 		once
 			create Result.make ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 		ensure
+			instance_free: class
 			default_word_set_not_void: Result /= Void
 			default_word_set_not_empty: not Result.is_empty
 		end
@@ -44,6 +46,7 @@ feature -- Character sets
 		once
 			create Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 		ensure
+			instance_free: class
 			upper_set_not_void: Result /= Void
 			upper_set_not_empty: not Result.is_empty
 		end
@@ -53,6 +56,7 @@ feature -- Character sets
 		once
 			create Result.make ("abcdefghijklmnopqrstuvwxyz")
 		ensure
+			instance_free: class
 			lower_set_not_void: Result /= Void
 			lower_set_not_empty: not Result.is_empty
 		end
@@ -64,6 +68,7 @@ feature -- Character sets
 			Result.add_set (lower_set)
 			Result.add_set (upper_set)
 		ensure
+			instance_free: class
 			alpha_set_not_void: Result /= Void
 			alpha_set_not_empty: not Result.is_empty
 		end
@@ -73,6 +78,7 @@ feature -- Character sets
 		once
 			create Result.make ("0123456789")
 		ensure
+			instance_free: class
 			digit_set_not_void: Result /= Void
 			digit_set_not_empty: not Result.is_empty
 		end
@@ -84,6 +90,7 @@ feature -- Character sets
 			Result.add_set (alpha_set)
 			Result.add_set (digit_set)
 		ensure
+			instance_free: class
 			alnum_set_not_void: Result /= Void
 			alnum_set_not_empty: not Result.is_empty
 		end
@@ -93,6 +100,7 @@ feature -- Character sets
 		once
 			create Result.make ("0123456789abcdefABCDEF")
 		ensure
+			instance_free: class
 			xdigit_set_not_void: Result /= Void
 			xdigit_set_not_empty: not Result.is_empty
 		end
@@ -113,6 +121,7 @@ feature -- Character sets
 			end
 			Result.add_character (127)
 		ensure
+			instance_free: class
 			cntrl_set_not_void: Result /= Void
 			cntrl_set_not_empty: not Result.is_empty
 		end
@@ -122,6 +131,7 @@ feature -- Character sets
 		once
 			create Result.make ("!%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 		ensure
+			instance_free: class
 			graph_set_not_void: Result /= Void
 			graph_set_not_empty: not Result.is_empty
 		end
@@ -131,6 +141,7 @@ feature -- Character sets
 		once
 			create Result.make (" !%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 		ensure
+			instance_free: class
 			print_set_not_void: Result /= Void
 			print_set_not_empty: not Result.is_empty
 		end
@@ -140,6 +151,7 @@ feature -- Character sets
 		once
 			create Result.make ("!%"#$%%&%'()*+,-./:;<=>?@[\]^_`{|}~")
 		ensure
+			instance_free: class
 			punct_set_not_void: Result /= Void
 			punct_set_not_empty: not Result.is_empty
 		end
@@ -159,6 +171,7 @@ feature -- Character sets
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			ascii_set_not_void: Result /= Void
 			ascii_set_not_empty: not Result.is_empty
 		end
@@ -168,6 +181,7 @@ feature -- Character sets
 		once
 			create Result.make ("%T%N%F%R%/11/ ")
 		ensure
+			instance_free: class
 			space_set_not_void: Result /= Void
 			space_set_not_empty: not Result.is_empty
 		end
@@ -177,6 +191,7 @@ feature -- Character sets
 		once
 			create Result.make ("*+?{^.$|()[")
 		ensure
+			instance_free: class
 			meta_set_not_void: Result /= Void
 			meta_set_not_empty: not Result.is_empty
 		end
@@ -190,6 +205,9 @@ feature {NONE} -- Implementation
 			Result := <<"alpha", "lower", "upper",
 				"alnum", "ascii", "cntrl", "digit", "graph",
 				"print", "punct", "space", "word", "xdigit">>
+		ensure
+			instance_free: class
+			class_names_not_void: Result /= Void
 		end
 
 	class_sets: ARRAY [RX_CHARACTER_SET]
@@ -198,6 +216,9 @@ feature {NONE} -- Implementation
 			Result := <<alpha_set, lower_set, upper_set, alnum_set, ascii_set, cntrl_set,
 --				digit_set, graph_set, print_set, punct_set, space_set, word_set, xdigit_set>>
 				digit_set, graph_set, print_set, punct_set, space_set, default_word_set, xdigit_set>>
+		ensure
+			instance_free: class
+			class_sets_not_void: Result /= Void
 		end
 
 end

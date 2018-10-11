@@ -5,7 +5,7 @@ note
 		"Imported UTF-32 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			utf32_not_void: Result /= Void
 		end
 

@@ -5,7 +5,7 @@ note
 		"Shared decimal math constants"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
-	copyright: "Copyright (c) 2005, Paul G. Crismer and others"
+	copyright: "Copyright (c) 2005-2018, Paul G. Crismer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			decimal_not_void: Result /= Void
 		end
 

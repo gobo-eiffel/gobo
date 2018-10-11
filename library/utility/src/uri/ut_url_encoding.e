@@ -5,7 +5,7 @@ note
 		"Routines to encode and decode url encoded (%HH in hex) strings"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004, Berend de Boer and others"
+	author: "Copyright (c) 2004-2018, Berend de Boer and others"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -57,6 +57,7 @@ feature -- Escape/unescape data characters
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			unescaped_string_not_void: Result /= Void
 			unescaped_string_cannot_be_larger: Result.count <= a_string.count
 		end
@@ -91,6 +92,7 @@ feature -- Escape/unescape data characters
 				end
 			end
 		ensure
+			instance_free: class
 			unescape_utf8_may_be_void: True
 			unescape_utf8_cannot_be_larger: Result /= Void implies Result.count <= a_string.count
 		end
@@ -110,6 +112,7 @@ feature -- Escape/unescape data characters
 			l_default_unescaped := Default_unescaped
 			Result := escape_custom (a_string, l_default_unescaped, True)
 		ensure
+			instance_free: class
 			escape_string_not_void: Result /= Void
 			no_spaces: not Result.has (' ')
 			escape_string_cannot_be_smaller: Result.count >= a_string.count
@@ -131,6 +134,7 @@ feature -- Escape/unescape data characters
 			l_default_unescaped := Default_unescaped
 			Result := escape_custom (utf8.to_utf8 (a_string), l_default_unescaped, True)
 		ensure
+			instance_free: class
 			escape_utf8_not_void: Result /= Void
 			no_spaces: not Result.has (' ')
 			escape_utf8_cannot_be_smaller: Result.count >= a_string.count
@@ -166,6 +170,7 @@ feature -- Escape/unescape data characters
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			escape_custom_not_void: Result /= Void
 			space_as_plus: escape_space_as_plus implies (not Result.has (' ') and (a_string.has (' ') implies Result.has ('+')))
 			escape_custom_cannot_be_smaller: Result.count >= a_string.count
@@ -190,6 +195,7 @@ feature -- Character sets
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			positive_result: Result >= 0
 			empty_zero: a_string.is_empty implies Result = 0
 		end
@@ -209,6 +215,7 @@ feature -- Character sets
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			set_not_void: Result /= Void
 			count_set: Result.count = some_characters.count
 		end
@@ -224,6 +231,8 @@ feature -- Character sets
 				STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters),
 				STRING_.concat (Rfc_digit_characters, Rfc_mark_characters)))
 			Result := l_default_unescaped
+		ensure
+			instance_free: class
 		end
 
 	Rfc_lowalpha_characters: STRING = "abcdefghijklmnopqrstuvwxyz"
@@ -282,6 +291,8 @@ feature -- Valid characters
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	has_excluded_iri_codes (s: STRING): BOOLEAN
@@ -340,6 +351,8 @@ feature -- Valid characters
 					-- OK.
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_valid_scheme (a_scheme: detachable STRING): BOOLEAN
@@ -370,6 +383,8 @@ feature -- Valid characters
 					i := i + 1
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 end

@@ -5,7 +5,7 @@ note
 		"Formatting routines"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			integer_formatter_not_void: Result /= Void
 		end
 
@@ -29,6 +30,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			character_formatter_not_void: Result /= Void
 		end
 
@@ -38,6 +40,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			boolean_formatter_not_void: Result /= Void
 		end
 
@@ -47,6 +50,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			string_formatter_not_void: Result /= Void
 		end
 
@@ -56,6 +60,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			array_formatter_not_void: Result /= Void
 		end
 

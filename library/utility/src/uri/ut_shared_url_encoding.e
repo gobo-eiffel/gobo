@@ -5,7 +5,7 @@ note
 		"Shared instance of UT_URL_ENCODING"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004, Eric Bezault and others"
+	author: "Copyright (c) 2004-2018, Eric Bezault and others"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,6 +18,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			url_encoding_not_void: Result /= Void
 		end
 

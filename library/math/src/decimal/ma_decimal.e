@@ -5,7 +5,7 @@ note
 		"DECIMAL numbers. Following the 'General Decimal Arithmetic Specification'."
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
+	copyright: "Copyright (c) 2004-2018, Paul G. Crismer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -406,6 +406,7 @@ feature -- Constants
 		do
 			Result := once_one
 		ensure then
+			instance_free: class
 			one_is_one: Result.is_one
 			one_is_positive: not Result.is_negative
 		end
@@ -416,6 +417,7 @@ feature -- Constants
 			create Result.make_copy (one)
 			Result.set_negative
 		ensure
+			instance_free: class
 			minus_one_not_void: Result /= Void
 			is_minus_one: Result.is_one and then Result.is_negative
 		end
@@ -425,6 +427,7 @@ feature -- Constants
 		do
 			Result := once_zero
 		ensure then
+			instance_free: class
 			is_zero: Result.is_zero
 		end
 
@@ -434,6 +437,7 @@ feature -- Constants
 			create Result.make_zero
 			Result.set_negative
 		ensure
+			instance_free: class
 			negative_zero_not_void: Result /= Void
 			is_zero: Result.is_zero
 			is_negative: Result.is_negative
@@ -444,6 +448,7 @@ feature -- Constants
 		once
 			create Result.make_nan
 		ensure
+			instance_free: class
 			nan_not_void: Result /= Void
 			is_nan: Result.is_nan
 		end
@@ -453,6 +458,7 @@ feature -- Constants
 		once
 			create Result.make_snan
 		ensure
+			instance_free: class
 			snan_not_void: Result /= Void
 			is_snan: Result.is_signaling_nan
 		end
@@ -462,6 +468,7 @@ feature -- Constants
 		once
 			create Result.make_infinity (1)
 		ensure
+			instance_free: class
 			infinity_not_void: Result /= Void
 			is_infinity: Result.is_infinity
 			is_positive: Result.is_positive
@@ -472,6 +479,7 @@ feature -- Constants
 		once
 			create Result.make_infinity (-1)
 		ensure
+			instance_free: class
 			negative_infinity_not_void: Result /= Void
 			is_infinity: Result.is_infinity
 			is_negative: Result.is_negative
@@ -2695,6 +2703,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_zero
 		ensure
+			instance_free: class
 			zero_not_void: Result /= Void
 			is_zero: Result.is_zero
 		end
@@ -2704,6 +2713,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_one
 		ensure
+			instance_free: class
 			one_not_void: Result /= Void
 			is_one: Result.is_one
 		end
@@ -2713,6 +2723,7 @@ feature {NONE} -- Implementation
 			create {MA_DECIMAL_COEFFICIENT_IMP} Result.make (1)
 			Result.put (0, 0)
 		ensure
+			instance_free: class
 			special_coefficient_not_void: Result /= Void
 			zero: Result.is_zero
 		end

@@ -5,7 +5,7 @@ note
 		"Shared standard files"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			std_not_void: Result /= Void
 		end
 

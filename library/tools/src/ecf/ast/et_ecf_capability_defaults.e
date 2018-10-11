@@ -42,6 +42,7 @@ feature -- Access
 				Result := default_capabilities_1_0_0
 			end
 		ensure
+			instance_free: class
 			default_capabilities_not_void: Result /= Void
 		end
 
@@ -51,6 +52,7 @@ feature -- Access
 			create Result.make
 			set_default_capabilities_1_16_0 (Result)
 		ensure
+			instance_free: class
 			default_capabilities_1_16_0_not_void: Result /= Void
 		end
 
@@ -60,6 +62,7 @@ feature -- Access
 			create Result.make
 			set_default_capabilities_1_13_0 (Result)
 		ensure
+			instance_free: class
 			default_capabilities_1_13_0_not_void: Result /= Void
 		end
 
@@ -69,6 +72,7 @@ feature -- Access
 			create Result.make
 			set_default_capabilities_1_11_0 (Result)
 		ensure
+			instance_free: class
 			default_capabilities_1_11_0_not_void: Result /= Void
 		end
 
@@ -78,6 +82,7 @@ feature -- Access
 			create Result.make
 			set_default_capabilities_1_0_0 (Result)
 		ensure
+			instance_free: class
 			default_capabilities_1_0_0_not_void: Result /= Void
 		end
 
@@ -94,6 +99,7 @@ feature -- Access
 				Result := valid_capabilities_1_0_0
 			end
 		ensure
+			instance_free: class
 			valid_capabilities_not_void: Result /= Void
 			no_void_capability_name: not Result.has_void
 		end
@@ -113,6 +119,7 @@ feature -- Access
 			Result.force_last (concurrency_capability_value_regexp, {ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
 			Result.force_last (void_safety_detection_capability_value_regexp, {ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
 		ensure
+			instance_free: class
 			valid_capabilities_latest_not_void: Result /= Void
 			no_void_capability_name: not Result.has_void
 		end
@@ -124,6 +131,7 @@ feature -- Access
 		once
 			Result := valid_capabilities_latest
 		ensure
+			instance_free: class
 			valid_capabilities_1_16_0_not_void: Result /= Void
 			no_void_capability_name: not Result.has_void
 		end
@@ -138,6 +146,7 @@ feature -- Access
 			Result.remove ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
 			Result.remove ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
 		ensure
+			instance_free: class
 			valid_capabilities_1_0_0_not_void: Result /= Void
 			no_void_capability_name: not Result.has_void
 		end
@@ -155,6 +164,7 @@ feature -- Access
 			Result.put_last ({ET_ECF_CAPABILITY_NAMES}.none_capability_value)
 			Result.put_last ({ET_ECF_CAPABILITY_NAMES}.scoop_capability_value)
 		ensure
+			instance_free: class
 			supported_concurrency_capability_values_not_void: Result /= Void
 			no_void_supported_concurrency_capability_value: not Result.has_void
 		end
@@ -169,6 +179,8 @@ feature -- Setting
 			a_capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name, {ET_ECF_CAPABILITY_NAMES}.none_capability_value)
 			a_capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, {ET_ECF_CAPABILITY_NAMES}.scoop_capability_value)
 			a_capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, {ET_ECF_CAPABILITY_NAMES}.all_capability_value)
+		ensure
+			instance_free: class
 		end
 
 	set_default_capabilities_1_16_0 (a_capabilities: ET_ECF_CAPABILITIES)
@@ -177,6 +189,8 @@ feature -- Setting
 			a_capabilities_not_void: a_capabilities /= Void
 		do
 			set_default_capabilities_latest (a_capabilities)
+		ensure
+			instance_free: class
 		end
 
 	set_default_capabilities_1_13_0 (a_capabilities: ET_ECF_CAPABILITIES)
@@ -186,6 +200,8 @@ feature -- Setting
 		do
 			set_default_capabilities_1_16_0 (a_capabilities)
 			a_capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name, {ET_ECF_CAPABILITY_NAMES}.none_capability_value)
+		ensure
+			instance_free: class
 		end
 
 	set_default_capabilities_1_11_0 (a_capabilities: ET_ECF_CAPABILITIES)
@@ -195,6 +211,8 @@ feature -- Setting
 		do
 			set_default_capabilities_1_13_0 (a_capabilities)
 			a_capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value)
+		ensure
+			instance_free: class
 		end
 
 	set_default_capabilities_1_0_0 (a_capabilities: ET_ECF_CAPABILITIES)
@@ -204,6 +222,8 @@ feature -- Setting
 		do
 			set_default_capabilities_1_11_0 (a_capabilities)
 			a_capabilities.set_primary_support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name, {ET_ECF_CAPABILITY_NAMES}.none_capability_value)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -214,6 +234,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_CAPABILITY_NAMES}.none_capability_value + "|" + {ET_ECF_CAPABILITY_NAMES}.conformance_capability_value + "|" + {ET_ECF_CAPABILITY_NAMES}.all_capability_value + ")")
 		ensure
+			instance_free: class
 			catcall_detection_capability_value_regexp_not_void: Result /= Void
 			catcall_detection_capability_value_regexp_compiled: Result.is_compiled
 		end
@@ -224,6 +245,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_CAPABILITY_NAMES}.thread_capability_value + "|" + {ET_ECF_CAPABILITY_NAMES}.none_capability_value + "|" + {ET_ECF_CAPABILITY_NAMES}.scoop_capability_value + ")")
 		ensure
+			instance_free: class
 			concurrency_capability_value_regexp_not_void: Result /= Void
 			concurrency_capability_value_regexp_compiled: Result.is_compiled
 		end
@@ -234,6 +256,7 @@ feature {NONE} -- Implementation
 			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
 			Result.compile ("(?i)(" + {ET_ECF_CAPABILITY_NAMES}.none_capability_value + "|" + {ET_ECF_CAPABILITY_NAMES}.conformance_capability_value + "|" + {ET_ECF_CAPABILITY_NAMES}.initialization_capability_value + "|" + {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value + "|" + {ET_ECF_CAPABILITY_NAMES}.all_capability_value + ")")
 		ensure
+			instance_free: class
 			void_safety_capability_value_regexp_not_void: Result /= Void
 			void_safety_capability_value_regexp_compiled: Result.is_compiled
 		end

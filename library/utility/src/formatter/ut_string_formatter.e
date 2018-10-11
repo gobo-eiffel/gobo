@@ -5,7 +5,7 @@ note
 		"String formatters"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,6 +36,7 @@ feature -- Access
 			create Result.make (a_string.count)
 			append_eiffel_string (Result, a_string)
 		ensure
+			instance_free: class
 			eiffel_string_out_not_void: Result /= Void
 		end
 
@@ -53,6 +54,7 @@ feature -- Access
 			create Result.make (a_string.count + 2)
 			append_quoted_eiffel_string (Result, a_string)
 		ensure
+			instance_free: class
 			quoted_eiffel_string_out_not_void: Result /= Void
 		end
 
@@ -74,6 +76,7 @@ feature -- Access
 			Result := STRING_.new_empty_string (a_string, nb)
 			append_left_padded_string (Result, a_string, a_length, c)
 		ensure
+			instance_free: class
 			left_padded_string_out_not_void: Result /= Void
 		end
 
@@ -132,6 +135,8 @@ feature -- String handling
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	append_quoted_eiffel_string (a_target: STRING; a_string: STRING)
@@ -146,6 +151,8 @@ feature -- String handling
 			a_target.append_character ('%"')
 			append_eiffel_string (a_target, a_string)
 			a_target.append_character ('%"')
+		ensure
+			instance_free: class
 		end
 
 	append_left_padded_string (a_target: STRING; a_string: STRING; a_length: INTEGER; c: CHARACTER)
@@ -166,6 +173,8 @@ feature -- String handling
 				i := i + 1
 			end
 			a_target.append_string (a_string)
+		ensure
+			instance_free: class
 		end
 
 feature -- File handling
@@ -214,6 +223,8 @@ feature -- File handling
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	put_quoted_eiffel_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING)
@@ -229,6 +240,8 @@ feature -- File handling
 			a_file.put_character ('%"')
 			put_eiffel_string (a_file, a_string)
 			a_file.put_character ('%"')
+		ensure
+			instance_free: class
 		end
 
 	put_left_padded_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING; a_length: INTEGER; c: CHARACTER)
@@ -253,6 +266,8 @@ feature -- File handling
 				i := i + 1
 			end
 			a_file.put_string (a_string_string)
+		ensure
+			instance_free: class
 		end
 
 end

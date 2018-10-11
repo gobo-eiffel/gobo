@@ -5,7 +5,7 @@ note
 		"Interface for file systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,6 +44,8 @@ feature -- File handling
 		require
 			a_filename_not_void: a_filename /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	file_exists (a_filename: STRING): BOOLEAN
@@ -54,6 +56,8 @@ feature -- File handling
 		require
 			a_filename_not_void: a_filename /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	file_count (a_filename: STRING): INTEGER
@@ -67,6 +71,7 @@ feature -- File handling
 			a_filename_not_void: a_filename /= Void
 		deferred
 		ensure
+			instance_free: class
 			valid_values: Result = -1 or Result >= 0
 		end
 
@@ -84,6 +89,7 @@ feature -- File handling
 			a_filename_not_void: a_filename /= Void
 		deferred
 		ensure
+			instance_free: class
 			valid_values: Result = -1 or Result >= 0
 		end
 
@@ -101,6 +107,8 @@ feature -- File handling
 			a_filename1_not_void: a_filename1 /= Void
 			a_filename2_not_void: a_filename2 /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	same_text_files (a_filename1, a_filename2: STRING): BOOLEAN
@@ -116,6 +124,8 @@ feature -- File handling
 			a_filename1_not_void: a_filename1 /= Void
 			a_filename2_not_void: a_filename2 /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	same_binary_files (a_filename1, a_filename2: STRING): BOOLEAN
@@ -131,6 +141,8 @@ feature -- File handling
 			a_filename1_not_void: a_filename1 /= Void
 			a_filename2_not_void: a_filename2 /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	rename_file (old_name, new_name: STRING)
@@ -146,6 +158,8 @@ feature -- File handling
 			old_name_not_void: old_name /= Void
 			new_name_not_void: new_name /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	copy_file (old_name, new_name: STRING)
@@ -161,6 +175,8 @@ feature -- File handling
 			old_name_not_void: old_name /= Void
 			new_name_not_void: new_name /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	concat_files (a_target_filename, a_source_filename: STRING)
@@ -179,6 +195,8 @@ feature -- File handling
 			a_target_filename_not_void: a_target_filename /= Void
 			a_source_filename_not_void: a_source_filename /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	delete_file (a_filename: STRING)
@@ -191,6 +209,8 @@ feature -- File handling
 		require
 			a_filename_not_void: a_filename /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	new_input_file (a_name: STRING): KI_TEXT_INPUT_FILE
@@ -202,6 +222,7 @@ feature -- File handling
 			a_name_not_void: a_name /= Void
 		deferred
 		ensure
+			instance_free: class
 			input_file_not_void: Result /= Void
 			name_set: Result.name = a_name
 			is_closed: Result.is_closed
@@ -216,6 +237,7 @@ feature -- File handling
 			a_name_not_void: a_name /= Void
 		deferred
 		ensure
+			instance_free: class
 			output_file_not_void: Result /= Void
 			name_set: Result.name = a_name
 			is_closed: Result.is_closed
@@ -225,6 +247,7 @@ feature -- File handling
 			-- Line separator in current file system
 		deferred
 		ensure
+			instance_free: class
 			eol_not_void: Result /= Void
 			eol_not_empty: Result.count > 0
 		end
@@ -239,6 +262,8 @@ feature -- Directory handling
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	directory_exists (a_dirname: STRING): BOOLEAN
@@ -249,6 +274,8 @@ feature -- Directory handling
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	is_directory_empty (a_dirname: STRING): BOOLEAN
@@ -261,6 +288,8 @@ feature -- Directory handling
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	create_directory (a_dirname: STRING)
@@ -275,6 +304,8 @@ feature -- Directory handling
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	recursive_create_directory (a_dirname: STRING)
@@ -290,6 +321,8 @@ feature -- Directory handling
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	delete_directory (a_dirname: STRING)
@@ -302,6 +335,8 @@ feature -- Directory handling
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	recursive_delete_directory (a_dirname: STRING)
@@ -314,6 +349,8 @@ feature -- Directory handling
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	recursive_copy_directory (old_name, new_name: STRING)
@@ -327,6 +364,8 @@ feature -- Directory handling
 			old_name_not_void: old_name /= Void
 			new_name_not_void: new_name /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 feature -- Working directory
@@ -369,6 +408,7 @@ feature -- Pathname handling
 			a_pathname_not_void: a_pathname /= Void
 		deferred
 		ensure
+			instance_free: class
 			not_relative: Result implies not is_relative_pathname (a_pathname)
 		end
 
@@ -383,6 +423,7 @@ feature -- Pathname handling
 			a_pathname_not_void: a_pathname /= Void
 		deferred
 		ensure
+			instance_free: class
 			not_absolute: Result implies not is_absolute_pathname (a_pathname)
 		end
 
@@ -395,6 +436,8 @@ feature -- Pathname handling
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	same_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN
@@ -412,6 +455,8 @@ feature -- Pathname handling
 			a_pathname1_not_void: a_pathname1 /= Void
 			a_pathname2_not_void: a_pathname2 /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	same_canonical_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN
@@ -431,6 +476,7 @@ feature -- Pathname handling
 		do
 			Result := same_pathnames (canonical_pathname (a_pathname1), canonical_pathname (a_pathname2))
 		ensure
+			instance_free: class
 			definition: Result = same_pathnames (canonical_pathname (a_pathname1), canonical_pathname (a_pathname2))
 		end
 
@@ -448,6 +494,7 @@ feature -- Pathname handling
 		require
 			a_pathname1_not_void: a_pathname1 /= Void
 			a_pathname2_not_void: a_pathname2 /= Void
+			is_current_file_system: is_current_file_system
 		do
 			Result := same_canonical_pathnames (absolute_pathname (a_pathname1), absolute_pathname (a_pathname2))
 		ensure
@@ -469,6 +516,8 @@ feature -- Pathname handling
 			a_pathname1_not_void: a_pathname1 /= Void
 			a_pathname2_not_void: a_pathname2 /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	is_canonical_subpathname (a_pathname1, a_pathname2: STRING): BOOLEAN
@@ -489,6 +538,7 @@ feature -- Pathname handling
 		do
 			Result := is_subpathname (canonical_pathname (a_pathname1), canonical_pathname (a_pathname2))
 		ensure
+			instance_free: class
 			definition: Result = is_subpathname (canonical_pathname (a_pathname1), canonical_pathname (a_pathname2))
 		end
 
@@ -507,6 +557,7 @@ feature -- Pathname handling
 		require
 			a_pathname1_not_void: a_pathname1 /= Void
 			a_pathname2_not_void: a_pathname2 /= Void
+			is_current_file_system: is_current_file_system
 		do
 			Result := is_canonical_subpathname (absolute_pathname (a_pathname1), absolute_pathname (a_pathname2))
 		ensure
@@ -524,6 +575,7 @@ feature -- Pathname handling
 			a_pathname_not_void: a_pathname /= Void
 		deferred
 		ensure
+			instance_free: class
 			basename_not_void: Result /= Void
 			is_relative: not is_root_directory (a_pathname) implies is_relative_pathname (Result)
 		end
@@ -543,6 +595,7 @@ feature -- Pathname handling
 			a_pathname_not_void: a_pathname /= Void
 		deferred
 		ensure
+			instance_free: class
 			dirname_not_void: Result /= Void
 			same_relative: is_relative_pathname (Result) = is_relative_pathname (a_pathname)
 			same_absolute: is_absolute_pathname (Result) = is_absolute_pathname (a_pathname)
@@ -562,6 +615,7 @@ feature -- Pathname handling
 			a_pathname_relative: is_relative_pathname (a_pathname)
 		deferred
 		ensure
+			instance_free: class
 			pathname_not_void: Result /= Void
 			same_relative: is_relative_pathname (Result) = is_relative_pathname (a_dirname)
 			same_absolute: is_absolute_pathname (Result) = is_absolute_pathname (a_dirname)
@@ -584,6 +638,7 @@ feature -- Pathname handling
 			a_pathname_same_type: a_pathname.same_type (a_string)
 		deferred
 		ensure
+			instance_free: class
 			definition: a_string ~ old a_string + pathname (a_dirname, a_pathname)
 		end
 
@@ -600,9 +655,10 @@ feature -- Pathname handling
 			a_pathnames_not_void: a_pathnames /= Void
 			a_pathnames_not_empty: a_pathnames.count > 0
 			no_void_pathname: not STRING_ARRAY_.has_void (a_pathnames)
---			a_pathnames_relative: forall p in `a_pathnames', is_relative_pathname (p)
+			a_pathnames_relative: across a_pathnames as l_pathnames all is_relative_pathname (l_pathnames.item) end
 		deferred
 		ensure
+			instance_free: class
 			pathname_not_void: Result /= Void
 			same_relative: is_relative_pathname (Result) = is_relative_pathname (a_dirname)
 			same_absolute: is_absolute_pathname (Result) = is_absolute_pathname (a_dirname)
@@ -624,6 +680,7 @@ feature -- Pathname handling
 			p.set_canonical
 			Result := pathname_to_string (p)
 		ensure
+			instance_free: class
 			canonical_pathname_not_void: Result /= Void
 		end
 
@@ -635,6 +692,7 @@ feature -- Pathname handling
 			-- pathname conversion use `pathname_from_file_system'.)
 		deferred
 		ensure
+			instance_free: class
 			relative_current_directory_not_void: Result /= Void
 			is_relative: is_relative_pathname (Result)
 		end
@@ -647,6 +705,7 @@ feature -- Pathname handling
 			-- pathname conversion use `pathname_from_file_system'.)
 		deferred
 		ensure
+			instance_free: class
 			relative_parent_directory_not_void: Result /= Void
 			is_relative: is_relative_pathname (Result)
 		end
@@ -659,6 +718,7 @@ feature -- Pathname handling
 			-- pathname conversion use `pathname_from_file_system'.)
 		deferred
 		ensure
+			instance_free: class
 			root_directory_not_void: Result /= Void
 			is_root: is_root_directory (Result)
 			not_relative: not is_relative_pathname (Result)
@@ -723,6 +783,7 @@ feature -- Pathname handling
 			a_pathname_not_void: a_pathname /= Void
 		deferred
 		ensure
+			instance_free: class
 			string_to_pathname_not_void: Result /= Void
 		end
 
@@ -736,6 +797,7 @@ feature -- Pathname handling
 			a_pathname_not_void: a_pathname /= Void
 		deferred
 		ensure
+			instance_free: class
 			pathname_to_string_not_void: Result /= Void
 		end
 
@@ -767,6 +829,8 @@ feature -- Pathname handling
 			a_filename_not_void: a_filename /= Void
 			an_extension_not_void: an_extension /= Void
 		deferred
+		ensure
+			instance_free: class
 		end
 
 	extension (a_filename: STRING): STRING
@@ -779,6 +843,7 @@ feature -- Pathname handling
 			a_filename_not_void: a_filename /= Void
 		deferred
 		ensure
+			instance_free: class
 			extension_not_void: Result /= Void
 		end
 
@@ -787,6 +852,7 @@ feature -- Pathname handling
 			-- if this extension is not empty)
 		deferred
 		ensure
+			instance_free: class
 			exe_extension_not_void: Result /= Void
 		end
 

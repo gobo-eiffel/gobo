@@ -5,7 +5,7 @@ note
 		"Array formatters"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,6 +64,8 @@ feature -- File handling
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Constants

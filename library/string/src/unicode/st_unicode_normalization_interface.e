@@ -9,7 +9,7 @@ note
 		need a few modifications to account of surrogates.
 	]"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,6 +57,8 @@ feature -- Access
 			if a_state.is_true then
 				Result := True
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_nfkd (a_source: STRING): BOOLEAN
@@ -75,6 +77,8 @@ feature -- Access
 			if a_state.is_true then
 				Result := True
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_nfc (a_source: STRING): BOOLEAN
@@ -251,6 +255,8 @@ feature -- Status report
 			-- Is `a_code' a valid Unicode code point?
 		do
 			Result := unicode.valid_code (a_code)
+		ensure
+			instance_free: class
 		end
 
 	frozen less_than, attached_less_than (u, v: INTEGER): BOOLEAN
@@ -265,6 +271,8 @@ feature -- Status report
 			if valid_code (u) and valid_code (v) then
 				Result := canonical_combining_class_property (u) < canonical_combining_class_property (v)
 			end
+		ensure then
+			instance_free: class
 		end
 
 feature -- Property
@@ -282,6 +290,7 @@ feature -- Property
 			k := a_rem \\ 256
 			Result := injected_canonical_combining_class (canonical_combining_class_properties.item (i).item (j).item (k))
 		ensure
+			instance_free: class
 			property_large_enough: Result >= 0
 			property_small_enough: Result <= 255
 		end
@@ -299,6 +308,7 @@ feature -- Property
 			k := a_rem \\ 256
 			Result := decomposition_type_properties.item (i).item (j).item (k)
 		ensure
+			instance_free: class
 			property_large_enough: Result >= Canonical_decomposition_mapping
 			property_small_enough: Result <= Compatibility_decomposition_mapping
 		end
@@ -316,6 +326,7 @@ feature -- Property
 			k := a_rem \\ 256
 			Result := decomposition_mapping_properties.item (i).item (j).item (k)
 		ensure
+			instance_free: class
 			compatibility_mapping_not_empty: decomposition_type_property (a_code) /= Canonical_decomposition_mapping implies
 				Result /= Void and then not Result.is_empty
 		end
@@ -369,6 +380,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			quick_check_not_void: Result /= Void
 			boolean_result_for_decompositions: (a_form = Nfd or a_form = Nfkd) implies not Result.is_undefined
 		end
@@ -386,6 +398,7 @@ feature {NONE} -- Implementation
 			k := a_rem \\ 256
 			Result := nfd_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
+			instance_free: class
 			nfd_quick_check_in_range: Result = False_value or Result = True_value
 		end
 
@@ -402,6 +415,7 @@ feature {NONE} -- Implementation
 			k := a_rem \\ 256
 			Result := nfkd_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
+			instance_free: class
 			nfkd_quick_check_in_range: Result = False_value or Result = True_value
 		end
 
@@ -418,6 +432,7 @@ feature {NONE} -- Implementation
 			k := a_rem \\ 256
 			Result := nfc_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
+			instance_free: class
 			nfc_quick_check_in_range: Result = False_value or Result = True_value or Result = Uncertain_value
 		end
 
@@ -434,6 +449,7 @@ feature {NONE} -- Implementation
 			k := a_rem \\ 256
 			Result := nfkc_quick_check_array.item (i).item (j).item (k + 1)
 		ensure
+			instance_free: class
 			nfkc_quick_check_in_range: Result = False_value or Result = True_value or Result = Uncertain_value
 		end
 
@@ -490,6 +506,8 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	recursively_decompose (a_code: INTEGER; is_canonical: BOOLEAN; a_decomposition: DS_ARRAYED_LIST [INTEGER]; changed: DS_CELL [BOOLEAN])
@@ -522,6 +540,8 @@ feature {NONE} -- Implementation
 					-- Not suitable decomposition.
 				a_decomposition.force_last (a_code)
 			end
+		ensure
+			instance_free: class
 		end
 
 	string_from_codes (a_decomposition: DS_ARRAYED_LIST [INTEGER]): UC_UTF8_STRING
@@ -542,6 +562,7 @@ feature {NONE} -- Implementation
 				a_cursor.forth
 			end
 		ensure
+			instance_free: class
 			string_not_void: Result /= Void
 			same_count: Result.count = a_decomposition.count
 		end
@@ -624,6 +645,7 @@ feature {NONE} -- Implementation
 				a_decomposition.keep_first (a_comp_pos - 1)
 			end
 		ensure
+			instance_free: class
 			decomposition_not_void: a_decomposition /= Void
 			decomposition_not_empty: not a_decomposition.is_empty
 		end
@@ -632,6 +654,7 @@ feature {NONE} -- Implementation
 			-- NFD_Quick_Check values for each code point
 		deferred
 		ensure
+			instance_free: class
 			nfd_quick_check_array_not_void: Result /= Void
 --			no_void_nfd_quick_check_array: not Result.has (Void)
 		end
@@ -640,6 +663,7 @@ feature {NONE} -- Implementation
 			-- NFC_Quick_Check values for each code point
 		deferred
 		ensure
+			instance_free: class
 			nfc_quick_check_array_not_void: Result /= Void
 --			no_void_nfc_quick_check_array: not Result.has (Void)
 		end
@@ -648,6 +672,7 @@ feature {NONE} -- Implementation
 			-- NFKD_Quick_Check values for each code point
 		deferred
 		ensure
+			instance_free: class
 			nfkd_quick_check_array_not_void: Result /= Void
 --			no_void_nfkd_quick_check_array: not Result.has (Void)
 		end
@@ -656,6 +681,7 @@ feature {NONE} -- Implementation
 			-- NFKC_Quick_Check values for each code point
 		deferred
 		ensure
+			instance_free: class
 			nfkc_quick_check_array_not_void: Result /= Void
 --			no_void_nfkc_quick_check_array: not Result.has (Void)
 		end
@@ -664,6 +690,7 @@ feature {NONE} -- Implementation
 			-- Values of Canonical_Combining_Class for each code-point
 		deferred
 		ensure
+			instance_free: class
 			canonical_combining_class_properties_not_void: Result /= Void
 --			no_void_canonical_combining_class_property: not Result.has (Void)
 		end
@@ -672,6 +699,7 @@ feature {NONE} -- Implementation
 			-- Decomposition type property for each code point
 		deferred
 		ensure
+			instance_free: class
 			decomposition_type_properties_not_void: Result /= Void
 --			no_void_decomposition_type_property: not Result.has (Void)
 		end
@@ -680,6 +708,7 @@ feature {NONE} -- Implementation
 			-- Decomposition mapping property for each code point
 		deferred
 		ensure
+			instance_free: class
 			decomposition_mapping_properties_not_void: Result /= Void
 		end
 
@@ -687,6 +716,7 @@ feature {NONE} -- Implementation
 			-- Map of compositions indexed by hashed character pairs
 		deferred
 		ensure
+			instance_free: class
 			composition_map_not_void: composition_map /= Void
 		end
 
@@ -711,6 +741,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			array_not_void: Result /= Void
 			zero_indexed: Result.lower = 0
 			correct_count: Result.upper = 255
@@ -722,6 +753,7 @@ feature {NONE} -- Implementation
 			create Result.make (1)
 			Result.put_last (i)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			one_integer: Result.count = 1
 		end
@@ -733,6 +765,7 @@ feature {NONE} -- Implementation
 			Result.put_last (i)
 			Result.put_last (j)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			two_integers: Result.count = 2
 		end
@@ -745,6 +778,7 @@ feature {NONE} -- Implementation
 			Result.put_last (j)
 			Result.put_last (k)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			three_integers: Result.count = 3
 		end
@@ -758,6 +792,7 @@ feature {NONE} -- Implementation
 			Result.put_last (k)
 			Result.put_last (l)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			four_integers: Result.count = 4
 		end
@@ -772,6 +807,7 @@ feature {NONE} -- Implementation
 			Result.put_last (l)
 			Result.put_last (m)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			five_integers: Result.count = 5
 		end
@@ -787,6 +823,7 @@ feature {NONE} -- Implementation
 			Result.put_last (m)
 			Result.put_last (n)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			six_integers: Result.count = 6
 		end
@@ -803,6 +840,7 @@ feature {NONE} -- Implementation
 			Result.put_last (n)
 			Result.put_last (o)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			seven_integers: Result.count = 7
 		end
@@ -820,6 +858,7 @@ feature {NONE} -- Implementation
 			Result.put_last (o)
 			Result.put_last (p)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			eight_integers: Result.count = 8
 		end
@@ -847,6 +886,7 @@ feature {NONE} -- Implementation
 			Result.put_last (n17)
 			Result.put_last (n18)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			eighteen_integers: Result.count = 18
 		end
@@ -931,6 +971,7 @@ feature {NONE} -- Implementation
 				Result := 240
 			end
 		ensure
+			instance_free: class
 			number_in_range: Result >= 0 and Result <= 240
 		end
 

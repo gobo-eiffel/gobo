@@ -16,7 +16,7 @@ note
 		Use UC_UTF*_STRING to specify the encoding explicitly.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -3564,6 +3564,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_empty
 		ensure
+			instance_free: class
 			dummy_uc_string_not_void: Result /= Void
 		end
 

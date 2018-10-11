@@ -5,7 +5,7 @@ note
 		"Access to decimal math constants and shared context"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
+	copyright: "Copyright (c) 2004-2018, Paul G. Crismer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,7 @@ feature -- Access
 			create Result.make (1)
 			Result := Result.zero
 		ensure
+			instance_free: class
 			zero_not_void: Result /= Void
 		end
 
@@ -35,6 +36,7 @@ feature -- Access
 		once
 			Result := zero.negative_zero
 		ensure
+			instance_free: class
 			negative_zero_not_void: Result /= Void
 		end
 
@@ -43,6 +45,7 @@ feature -- Access
 		once
 			Result := zero.one
 		ensure
+			instance_free: class
 			one_not_void: Result /= Void
 		end
 
@@ -51,6 +54,7 @@ feature -- Access
 		once
 			Result := zero.minus_one
 		ensure
+			instance_free: class
 			minus_not_void: Result /= Void
 		end
 
@@ -59,6 +63,7 @@ feature -- Access
 		once
 			Result := zero.infinity
 		ensure
+			instance_free: class
 			infinity_not_void: Result /= Void
 		end
 
@@ -67,6 +72,7 @@ feature -- Access
 		once
 			Result := zero.negative_infinity
 		ensure
+			instance_free: class
 			negative_infinity_not_void: Result /= Void
 		end
 
@@ -75,6 +81,7 @@ feature -- Access
 		once
 			Result := zero.nan
 		ensure
+			instance_free: class
 			not_a_number: Result /= Void
 		end
 
@@ -83,6 +90,7 @@ feature -- Access
 		once
 			Result := zero.snan
 		ensure
+			instance_free: class
 			signaling_not_a_number: Result /= Void
 		end
 
@@ -94,6 +102,7 @@ feature -- Access
 			create ctx.make_double_extended
 			create Result.make_from_string_ctx (Platform.Minimum_integer.out, ctx)
 		ensure
+			instance_free: class
 			minimum_integer_not_void: Result /= Void
 		end
 
@@ -105,6 +114,7 @@ feature -- Access
 			create ctx.make_double_extended
 			create Result.make_from_string_ctx (Platform.Maximum_integer.out, ctx)
 		ensure
+			instance_free: class
 			maximum_integer_not_void: Result /= Void
 		end
 

@@ -38,6 +38,23 @@
 ### Gobo Eiffel Kernel Library
 
 * Removed support for ISE Eiffel 16.05.
+* Marked some routines as instance-free.
+
+### Gobo Eiffel Math Library
+
+* Marked some routines as instance-free.
+
+### Gobo Eiffel Regexp Library
+
+* Marked some routines as instance-free.
+
+### Gobo Eiffel String Library
+
+* Marked some routines as instance-free.
+
+### Gobo Eiffel Time Library
+
+* Marked some routines as instance-free.
 
 ### Gobo Eiffel Tools Library
 
@@ -65,11 +82,13 @@
 * Fixed data race in `ET_CLASS.formal_parameter_type` when executed in
   multi-threaded mode.
 * Added support for ECF 1.18.0.
+* * Marked some routines as instance-free.
 
 ### Gobo Eiffel Utility Library
 
 * Made sure that `UT_CSV_HANDLER.read_file` can handle newlines embedded
   in a cell surrounded by double-quotes.
+* Marked some routines as instance-free.
 
 ### Miscellaneous
 

@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class INTEGER"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,6 +30,7 @@ feature -- Conversion
 		do
 			Result := an_int.to_character_8
 		ensure
+			instance_free: class
 			valid_character_code: Result.code = an_int
 		end
 
@@ -43,6 +44,7 @@ feature -- Conversion
 			create Result.make (8)
 			append_hexadecimal_integer (an_int, Result, uppercase)
 		ensure
+			instance_free: class
 			hexadecimal_not_void: Result /= Void
 			is_string: ANY_.same_types (Result, "")
 --			regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (Result)
@@ -56,6 +58,7 @@ feature -- Conversion
 			create Result.make (10)
 			append_decimal_integer (an_int, Result)
 		ensure
+			instance_free: class
 			decimal_not_void: Result /= Void
 			is_string: ANY_.same_types (Result, "")
 --			regexp: (0|(-?[1-9][0-9]*)).recognizes (Result)
@@ -70,6 +73,7 @@ feature -- Conversion
 			create Result.make (10)
 			append_octal_integer (an_int, Result)
 		ensure
+			instance_free: class
 			octal_not_void: Result /= Void
 			is_string: ANY_.same_types (Result, "")
 --			regexp: (0|[1-7][0-7]*).recognizes (Result)
@@ -84,6 +88,7 @@ feature -- Conversion
 		do
 			Result := an_int
 		ensure
+			instance_free: class
 			definition: Result = an_int
 		end
 
@@ -94,6 +99,8 @@ feature -- Conversion
 			an_int_small_enouh: an_int <= 127
 		do
 			Result := an_int.to_integer_8
+		ensure
+			instance_free: class
 		end
 
 feature -- Output
@@ -193,6 +200,7 @@ feature -- Output
 				end
 			end
 		ensure
+			instance_free: class
 --			regexp: (0|(-?[1-9][0-9]*)).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
@@ -232,6 +240,7 @@ feature -- Output
 				end
 			end
 		ensure
+			instance_free: class
 --			regexp: (0|[1-7][0-7]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
@@ -311,6 +320,7 @@ feature -- Output
 				end
 			end
 		ensure
+			instance_free: class
 --			regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 --			regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
@@ -326,6 +336,7 @@ feature -- Operation(s)
 		do
 			Result := x // n
 		ensure
+			instance_free: class
 			definition: Result * n + mod (x, n) = x
 		end
 
@@ -337,6 +348,7 @@ feature -- Operation(s)
 		do
 			Result := x \\ n
 		ensure
+			instance_free: class
 			definition1: n /= Platform.Minimum_integer implies Result.abs < n.abs
 			definition2: n = Platform.Minimum_integer implies Result.abs <= Platform.Maximum_integer
 			iso_c99: Result /= 0 implies Result.sign = x.sign
@@ -361,6 +373,7 @@ feature -- Operation(s)
 				end
 			end
 		ensure
+			instance_free: class
 			zero_power_n: x = 0 and n /= 0 implies Result = 0
 			x_power_0: n = 0 implies Result = 1
 			recursive_definition: n > 0 implies (Result = x * power (x, n - 1))
@@ -370,24 +383,32 @@ feature -- Operation(s)
 			-- Bitwise 'and' between `m' and `n'
 		do
 			Result := m.bit_and (n)
+		ensure
+			instance_free: class
 		end
 
 	bit_or (m, n: INTEGER): INTEGER
 			-- Bitwise 'or' between `m' and `n'
 		do
 			Result := m.bit_or (n)
+		ensure
+			instance_free: class
 		end
 
 	bit_xor (m, n: INTEGER): INTEGER
 			-- Bitwise 'xor' between `m' and `n'
 		do
 			Result := m.bit_xor (n)
+		ensure
+			instance_free: class
 		end
 
 	bit_not (n: INTEGER): INTEGER
 			-- Bitwise 'not' of `n'
 		do
 			Result := n.bit_not
+		ensure
+			instance_free: class
 		end
 
 	bit_shift_left (m, n: INTEGER): INTEGER
@@ -397,6 +418,8 @@ feature -- Operation(s)
 			thirty_two_bit_shift: 0 <= n and n < 32
 		do
 			Result := m.bit_shift_left (n)
+		ensure
+			instance_free: class
 		end
 
 	bit_shift_right (m, n: INTEGER): INTEGER
@@ -407,6 +430,8 @@ feature -- Operation(s)
 			thirty_two_bit_shift: 0 <= n and n < 32
 		do
 			Result := m.bit_shift_right (n)
+		ensure
+			instance_free: class
 		end
 
 feature -- Status report
@@ -416,6 +441,7 @@ feature -- Status report
 		do
 			Result := an_int \\ 2 = 0
 		ensure
+			instance_free: class
 			definition: Result = (an_int \\ 2 = 0)
 		end
 

@@ -76,6 +76,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -111,6 +112,7 @@ feature {NONE} -- Implementation
 			499,499,-1,501,-1,405,447,505,-1,507,
 			-1,509,-1,511,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -146,6 +148,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -181,6 +184,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,952,-1,-1,1016,-1,1010,1019,
 			-1,-1,891,892,893>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -216,6 +220,7 @@ feature {NONE} -- Implementation
 			-1,1267,-1,1269,-1,1271,-1,1273,-1,1275,
 			-1,1277,-1,1279,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -251,6 +256,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -286,6 +292,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -321,6 +328,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -356,6 +364,7 @@ feature {NONE} -- Implementation
 			-1,7923,-1,7925,-1,7927,-1,7929,-1,7931,
 			-1,7933,-1,7935,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -391,6 +400,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,8056,8057,8060,
 			8061,8179,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -426,6 +436,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -461,6 +472,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -496,6 +508,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -531,6 +544,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -566,6 +580,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -601,6 +616,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -864,6 +880,7 @@ feature {NONE} -- Implementation
 			Result.put (empty_lower_code_segment, 254)
 			Result.put (lower_code_plane_0_segment_255, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -900,6 +917,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -1163,6 +1181,7 @@ feature {NONE} -- Implementation
 			Result.put (empty_lower_code_segment, 254)
 			Result.put (empty_lower_code_segment, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -1172,6 +1191,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_filled (empty_lower_code_segment, 256)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -1196,6 +1216,8 @@ feature {NONE} -- Implementation
 			Result.put (empty_lower_code_plane, 14)
 			Result.put (empty_lower_code_plane, 15)
 			Result.put (empty_lower_code_plane, 16)
+		ensure
+			instance_free: class
 		end
 
 end

@@ -5,7 +5,7 @@ note
 		"Files"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -438,6 +438,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (dummy_name)
 		ensure
+			instance_free: class
 			file_not_void: Result /= Void
 			file_closed: Result.is_closed
 		end

@@ -5,7 +5,7 @@ note
 		"Gregorian calendar properties"
 
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2000-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,6 +38,8 @@ feature -- Status report
 					Result := not a_day.is_friday and not a_day.is_saturday and not a_day.is_sunday
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Access
@@ -78,6 +80,7 @@ feature -- Access
 				Result := (yd // Days_in_week) + 1
 			end
 		ensure
+			instance_free: class
 			week_number_large_enough: Result >= 1
 			week_number_small_enough: Result <= 53
 		end

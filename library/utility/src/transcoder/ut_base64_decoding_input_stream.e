@@ -4,8 +4,8 @@ note
 
 		"Input streams that decode a base64-encoded stream"
 
-	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
+	library: "Gobo Eiffel Utility Library"
+	copyright: "Copyright (c) 2005-20118, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -154,6 +154,8 @@ feature {NONE} -- Implementation
 			-- Is `c' is a valid base64 character?
 		do
 			Result := decoded_character (c) >= 0
+		ensure
+			instance_free: class
 		end
 
 	decoded_character (c: CHARACTER): INTEGER
@@ -232,6 +234,7 @@ feature {NONE} -- Implementation
 				Result := -2
 			end
 		ensure
+			instance_free: class
 			valid_decoded_character: Result >= -2 and Result < 64
 		end
 

@@ -5,7 +5,7 @@ note
 		"PCRE escape character constants"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2018, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -91,6 +91,8 @@ feature -- Access
 			else
 				Result := 0
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Constants

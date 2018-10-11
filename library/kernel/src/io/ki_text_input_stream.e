@@ -5,7 +5,7 @@ note
 		"Interface for character input streams with the notion of lines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,6 +53,7 @@ feature -- Access
 			-- Line separator
 		deferred
 		ensure
+			instance_free: class
 			eol_not_void: Result /= Void
 			eol_not_empty: Result.count > 0
 		end

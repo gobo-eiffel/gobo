@@ -76,6 +76,7 @@ feature {NONE} -- Implementation
 			209,210,211,212,213,214,-1,216,217,218,
 			219,220,221,222,376>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -111,6 +112,7 @@ feature {NONE} -- Implementation
 			498,498,498,-1,500,-1,-1,-1,504,-1,
 			506,-1,508,-1,510>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -146,6 +148,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -181,6 +184,7 @@ feature {NONE} -- Implementation
 			929,1017,-1,-1,917,-1,-1,1015,-1,-1,
 			1018,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -216,6 +220,7 @@ feature {NONE} -- Implementation
 			1264,-1,1266,-1,1268,-1,1270,-1,1272,-1,
 			1274,-1,1276,-1,1278>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -251,6 +256,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -286,6 +292,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -321,6 +328,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -356,6 +364,7 @@ feature {NONE} -- Implementation
 			7920,-1,7922,-1,7924,-1,7926,-1,7928,-1,
 			7930,-1,7932,-1,7934>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -391,6 +400,7 @@ feature {NONE} -- Implementation
 			-1,-1,8188,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -426,6 +436,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -461,6 +472,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -496,6 +508,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -531,6 +544,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -566,6 +580,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -601,6 +616,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -636,6 +652,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -899,6 +916,7 @@ feature {NONE} -- Implementation
 			Result.put (empty_title_code_segment, 254)
 			Result.put (title_code_plane_0_segment_255, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -935,6 +953,7 @@ feature {NONE} -- Implementation
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1>>
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -1198,6 +1217,7 @@ feature {NONE} -- Implementation
 			Result.put (empty_title_code_segment, 254)
 			Result.put (empty_title_code_segment, 255)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -1207,6 +1227,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_filled (empty_title_code_segment, 256)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 			sub_arrays_not_void: True --not Result.has (Void)
 		end
@@ -1231,6 +1252,8 @@ feature {NONE} -- Implementation
 			Result.put (empty_title_code_plane, 14)
 			Result.put (empty_title_code_plane, 15)
 			Result.put (empty_title_code_plane, 16)
+		ensure
+			instance_free: class
 		end
 
 end

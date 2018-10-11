@@ -5,7 +5,7 @@ note
 		"Shared class comparators by name"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			create Result.make
 		ensure
+			instance_free: class
 			class_comparator_by_name_not_void: Result /= Void
 		end
 

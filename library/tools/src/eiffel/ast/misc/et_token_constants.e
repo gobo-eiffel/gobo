@@ -23,6 +23,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_any_name)
 		ensure
+			instance_free: class
 			any_class_name_not_void: Result /= Void
 		end
 
@@ -31,6 +32,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_arguments_32_name)
 		ensure
+			instance_free: class
 			arguments_32_class_name_not_void: Result /= Void
 		end
 
@@ -39,6 +41,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_array_name)
 		ensure
+			instance_free: class
 			array_class_name_not_void: Result /= Void
 		end
 
@@ -47,6 +50,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_boolean_name)
 		ensure
+			instance_free: class
 			boolean_class_name_not_void: Result /= Void
 		end
 
@@ -55,6 +59,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_character_name)
 		ensure
+			instance_free: class
 			character_class_name_not_void: Result /= Void
 		end
 
@@ -63,6 +68,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_character_8_name)
 		ensure
+			instance_free: class
 			character_8_class_name_not_void: Result /= Void
 		end
 
@@ -71,6 +77,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_character_32_name)
 		ensure
+			instance_free: class
 			character_32_class_name_not_void: Result /= Void
 		end
 
@@ -79,6 +86,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_com_failure_name)
 		ensure
+			instance_free: class
 			com_failure_class_name_not_void: Result /= Void
 		end
 
@@ -87,6 +95,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_disposable_name)
 		ensure
+			instance_free: class
 			disposable_class_name_not_void: Result /= Void
 		end
 
@@ -95,6 +104,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_double_name)
 		ensure
+			instance_free: class
 			double_class_name_not_void: Result /= Void
 		end
 
@@ -103,6 +113,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_exception_name)
 		ensure
+			instance_free: class
 			exception_class_name_not_void: Result /= Void
 		end
 
@@ -111,6 +122,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_exception_manager_name)
 		ensure
+			instance_free: class
 			exception_manager_class_name_not_void: Result /= Void
 		end
 
@@ -119,6 +131,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_exception_manager_factory_name)
 		ensure
+			instance_free: class
 			exception_manager_factory_class_name_not_void: Result /= Void
 		end
 
@@ -127,6 +140,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_function_name)
 		ensure
+			instance_free: class
 			function_class_name_not_void: Result /= Void
 		end
 
@@ -135,6 +149,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_identified_routines_name)
 		ensure
+			instance_free: class
 			identified_routines_class_name_not_void: Result /= Void
 		end
 
@@ -143,6 +158,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_immutable_string_32_name)
 		ensure
+			instance_free: class
 			immutable_string_32_class_name_not_void: Result /= Void
 		end
 
@@ -151,6 +167,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_name)
 		ensure
+			instance_free: class
 			integer_class_name_not_void: Result /= Void
 		end
 
@@ -159,6 +176,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_8_name)
 		ensure
+			instance_free: class
 			integer_8_class_name_not_void: Result /= Void
 		end
 
@@ -167,6 +185,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_16_name)
 		ensure
+			instance_free: class
 			integer_16_class_name_not_void: Result /= Void
 		end
 
@@ -175,6 +194,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_32_name)
 		ensure
+			instance_free: class
 			integer_32_class_name_not_void: Result /= Void
 		end
 
@@ -183,6 +203,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_64_name)
 		ensure
+			instance_free: class
 			integer_64_class_name_not_void: Result /= Void
 		end
 
@@ -191,6 +212,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_internal_name)
 		ensure
+			instance_free: class
 			internal_class_name_not_void: Result /= Void
 		end
 
@@ -199,6 +221,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_ise_exception_manager_name)
 		ensure
+			instance_free: class
 			ise_exception_manager_class_name_not_void: Result /= Void
 		end
 
@@ -207,6 +230,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_ise_runtime_name)
 		ensure
+			instance_free: class
 			ise_runtime_class_name_not_void: Result /= Void
 		end
 
@@ -215,6 +239,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_iterable_name)
 		ensure
+			instance_free: class
 			iterable_class_name_not_void: Result /= Void
 		end
 
@@ -223,6 +248,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_iteration_cursor_name)
 		ensure
+			instance_free: class
 			iteration_cursor_class_name_not_void: Result /= Void
 		end
 
@@ -231,6 +257,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_memory_name)
 		ensure
+			instance_free: class
 			memory_class_name_not_void: Result /= Void
 		end
 
@@ -239,6 +266,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_native_array_name)
 		ensure
+			instance_free: class
 			native_array_class_name_not_void: Result /= Void
 		end
 
@@ -247,6 +275,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_name)
 		ensure
+			instance_free: class
 			natural_class_name_not_void: Result /= Void
 		end
 
@@ -255,6 +284,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_8_name)
 		ensure
+			instance_free: class
 			natural_8_class_name_not_void: Result /= Void
 		end
 
@@ -263,6 +293,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_16_name)
 		ensure
+			instance_free: class
 			natural_16_class_name_not_void: Result /= Void
 		end
 
@@ -271,6 +302,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_32_name)
 		ensure
+			instance_free: class
 			natural_32_class_name_not_void: Result /= Void
 		end
 
@@ -279,6 +311,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_64_name)
 		ensure
+			instance_free: class
 			natural_64_class_name_not_void: Result /= Void
 		end
 
@@ -287,6 +320,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_none_name)
 		ensure
+			instance_free: class
 			none_class_name_not_void: Result /= Void
 		end
 
@@ -295,6 +329,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_platform_name)
 		ensure
+			instance_free: class
 			platform_class_name_not_void: Result /= Void
 		end
 
@@ -303,6 +338,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_pointer_name)
 		ensure
+			instance_free: class
 			pointer_class_name_not_void: Result /= Void
 		end
 
@@ -311,6 +347,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_predicate_name)
 		ensure
+			instance_free: class
 			predicate_class_name_not_void: Result /= Void
 		end
 
@@ -319,6 +356,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_procedure_name)
 		ensure
+			instance_free: class
 			procedure_class_name_not_void: Result /= Void
 		end
 
@@ -327,6 +365,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_real_name)
 		ensure
+			instance_free: class
 			real_class_name_not_void: Result /= Void
 		end
 
@@ -335,6 +374,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_real_32_name)
 		ensure
+			instance_free: class
 			real_32_class_name_not_void: Result /= Void
 		end
 
@@ -343,6 +383,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_real_64_name)
 		ensure
+			instance_free: class
 			real_64_class_name_not_void: Result /= Void
 		end
 
@@ -351,6 +392,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_routine_name)
 		ensure
+			instance_free: class
 			routine_class_name_not_void: Result /= Void
 		end
 
@@ -359,6 +401,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_special_name)
 		ensure
+			instance_free: class
 			special_class_name_not_void: Result /= Void
 		end
 
@@ -367,6 +410,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_string_name)
 		ensure
+			instance_free: class
 			string_class_name_not_void: Result /= Void
 		end
 
@@ -375,6 +419,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_string_8_name)
 		ensure
+			instance_free: class
 			string_8_class_name_not_void: Result /= Void
 		end
 
@@ -383,6 +428,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_string_32_name)
 		ensure
+			instance_free: class
 			string_32_class_name_not_void: Result /= Void
 		end
 
@@ -391,6 +437,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_system_object_name)
 		ensure
+			instance_free: class
 			system_object_class_name_not_void: Result /= Void
 		end
 
@@ -399,6 +446,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_system_string_name)
 		ensure
+			instance_free: class
 			system_string_class_name_not_void: Result /= Void
 		end
 
@@ -407,6 +455,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_tuple_name)
 		ensure
+			instance_free: class
 			tuple_class_name_not_void: Result /= Void
 		end
 
@@ -415,6 +464,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_type_name)
 		ensure
+			instance_free: class
 			type_class_name_not_void: Result /= Void
 		end
 
@@ -423,6 +473,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_typed_pointer_name)
 		ensure
+			instance_free: class
 			typed_pointer_class_name_not_void: Result /= Void
 		end
 
@@ -431,6 +482,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_wide_character_name)
 		ensure
+			instance_free: class
 			wide_character_class_name_not_void: Result /= Void
 		end
 
@@ -439,6 +491,7 @@ feature -- Class names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_unknown_name)
 		ensure
+			instance_free: class
 			unknown_class_name_not_void: Result /= Void
 		end
 
@@ -449,6 +502,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_boolean_ref_name)
 		ensure
+			instance_free: class
 			boolean_ref_class_name_not_void: Result /= Void
 		end
 
@@ -457,6 +511,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_character_ref_name)
 		ensure
+			instance_free: class
 			character_ref_class_name_not_void: Result /= Void
 		end
 
@@ -465,6 +520,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_character_8_ref_name)
 		ensure
+			instance_free: class
 			character_8_ref_class_name_not_void: Result /= Void
 		end
 
@@ -473,6 +529,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_character_32_ref_name)
 		ensure
+			instance_free: class
 			character_32_ref_class_name_not_void: Result /= Void
 		end
 
@@ -481,6 +538,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_double_ref_name)
 		ensure
+			instance_free: class
 			double_ref_class_name_not_void: Result /= Void
 		end
 
@@ -489,6 +547,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_ref_name)
 		ensure
+			instance_free: class
 			integer_class_name_not_void: Result /= Void
 		end
 
@@ -497,6 +556,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_8_ref_name)
 		ensure
+			instance_free: class
 			integer_8_ref_class_name_not_void: Result /= Void
 		end
 
@@ -505,6 +565,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_16_ref_name)
 		ensure
+			instance_free: class
 			integer_16_ref_class_name_not_void: Result /= Void
 		end
 
@@ -513,6 +574,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_32_ref_name)
 		ensure
+			instance_free: class
 			integer_32_ref_class_name_not_void: Result /= Void
 		end
 
@@ -521,6 +583,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_64_ref_name)
 		ensure
+			instance_free: class
 			integer_64_ref_class_name_not_void: Result /= Void
 		end
 
@@ -529,6 +592,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_ref_name)
 		ensure
+			instance_free: class
 			natural_ref_class_name_not_void: Result /= Void
 		end
 
@@ -537,6 +601,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_8_ref_name)
 		ensure
+			instance_free: class
 			natural_8_ref_class_name_not_void: Result /= Void
 		end
 
@@ -545,6 +610,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_16_ref_name)
 		ensure
+			instance_free: class
 			natural_16_ref_class_name_not_void: Result /= Void
 		end
 
@@ -553,6 +619,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_32_ref_name)
 		ensure
+			instance_free: class
 			natural_32_ref_class_name_not_void: Result /= Void
 		end
 
@@ -561,6 +628,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_64_ref_name)
 		ensure
+			instance_free: class
 			natural_64_ref_class_name_not_void: Result /= Void
 		end
 
@@ -569,6 +637,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_pointer_ref_name)
 		ensure
+			instance_free: class
 			pointer_ref_class_name_not_void: Result /= Void
 		end
 
@@ -577,6 +646,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_real_ref_name)
 		ensure
+			instance_free: class
 			real_ref_class_name_not_void: Result /= Void
 		end
 
@@ -585,6 +655,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_real_32_ref_name)
 		ensure
+			instance_free: class
 			real_32_ref_class_name_not_void: Result /= Void
 		end
 
@@ -593,6 +664,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_real_64_ref_name)
 		ensure
+			instance_free: class
 			real_64_ref_class_name_not_void: Result /= Void
 		end
 
@@ -601,6 +673,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_wide_character_ref_name)
 		ensure
+			instance_free: class
 			wide_character_ref_class_name_not_void: Result /= Void
 		end
 
@@ -611,6 +684,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (after_name)
 		ensure
+			instance_free: class
 			after_feature_name_not_void: Result /= Void
 		end
 
@@ -619,6 +693,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (aliased_resized_area_name)
 		ensure
+			instance_free: class
 			aliased_resized_area_feature_name_not_void: Result /= Void
 		end
 
@@ -627,6 +702,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (area_name)
 		ensure
+			instance_free: class
 			area_feature_name_not_void: Result /= Void
 		end
 
@@ -635,6 +711,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (argument_count_name)
 		ensure
+			instance_free: class
 			argument_count_feature_name_not_void: Result /= Void
 		end
 
@@ -643,6 +720,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (as_integer_8_name)
 		ensure
+			instance_free: class
 			as_integer_8_feature_name_not_void: Result /= Void
 		end
 
@@ -651,6 +729,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (as_integer_16_name)
 		ensure
+			instance_free: class
 			as_integer_16_feature_name_not_void: Result /= Void
 		end
 
@@ -659,6 +738,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (as_integer_32_name)
 		ensure
+			instance_free: class
 			as_integer_32_feature_name_not_void: Result /= Void
 		end
 
@@ -667,6 +747,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (as_integer_64_name)
 		ensure
+			instance_free: class
 			as_integer_64_feature_name_not_void: Result /= Void
 		end
 
@@ -675,6 +756,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (as_natural_8_name)
 		ensure
+			instance_free: class
 			as_natural_8_feature_name_not_void: Result /= Void
 		end
 
@@ -683,6 +765,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (as_natural_16_name)
 		ensure
+			instance_free: class
 			as_natural_16_feature_name_not_void: Result /= Void
 		end
 
@@ -691,6 +774,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (as_natural_32_name)
 		ensure
+			instance_free: class
 			as_natural_32_feature_name_not_void: Result /= Void
 		end
 
@@ -699,6 +783,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (as_natural_64_name)
 		ensure
+			instance_free: class
 			as_natural_64_feature_name_not_void: Result /= Void
 		end
 
@@ -707,6 +792,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (attached_type_name)
 		ensure
+			instance_free: class
 			attached_type_feature_name_not_void: Result /= Void
 		end
 
@@ -715,6 +801,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (base_address_name)
 		ensure
+			instance_free: class
 			base_address_feature_name_not_void: Result /= Void
 		end
 
@@ -723,6 +810,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (base_class_name_name)
 		ensure
+			instance_free: class
 			base_class_name_feature_name_not_void: Result /= Void
 		end
 
@@ -731,6 +819,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (bit_and_name)
 		ensure
+			instance_free: class
 			bit_and_feature_name_not_void: Result /= Void
 		end
 
@@ -739,6 +828,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (bit_not_name)
 		ensure
+			instance_free: class
 			bit_not_feature_name_not_void: Result /= Void
 		end
 
@@ -747,6 +837,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (bit_or_name)
 		ensure
+			instance_free: class
 			bit_or_feature_name_not_void: Result /= Void
 		end
 
@@ -755,6 +846,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (bit_shift_left_name)
 		ensure
+			instance_free: class
 			bit_shift_left_feature_name_not_void: Result /= Void
 		end
 
@@ -763,6 +855,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (bit_shift_right_name)
 		ensure
+			instance_free: class
 			bit_shift_right_feature_name_not_void: Result /= Void
 		end
 
@@ -771,6 +864,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (bit_xor_name)
 		ensure
+			instance_free: class
 			bit_xor_feature_name_not_void: Result /= Void
 		end
 
@@ -779,6 +873,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (boolean_bytes_name)
 		ensure
+			instance_free: class
 			boolean_bytes_feature_name_not_void: Result /= Void
 		end
 
@@ -787,6 +882,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (boolean_item_name)
 		ensure
+			instance_free: class
 			boolean_item_feature_name_not_void: Result /= Void
 		end
 
@@ -795,6 +891,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (boolean_field_name)
 		ensure
+			instance_free: class
 			boolean_field_feature_name_not_void: Result /= Void
 		end
 
@@ -803,6 +900,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (boolean_field_at_name)
 		ensure
+			instance_free: class
 			boolean_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -811,6 +909,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (c_strlen_name)
 		ensure
+			instance_free: class
 			c_strlen_feature_name_not_void: Result /= Void
 		end
 
@@ -819,6 +918,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (call_name)
 		ensure
+			instance_free: class
 			call_feature_name_not_void: Result /= Void
 		end
 
@@ -827,6 +927,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capacity_name)
 		ensure
+			instance_free: class
 			capacity_feature_name_not_void: Result /= Void
 		end
 
@@ -835,6 +936,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (catch_name)
 		ensure
+			instance_free: class
 			catch_feature_name_not_void: Result /= Void
 		end
 
@@ -843,6 +945,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (ccom_hresult_name)
 		ensure
+			instance_free: class
 			ccom_hresult_feature_name_not_void: Result /= Void
 		end
 
@@ -851,6 +954,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (ccom_hresult_code_name)
 		ensure
+			instance_free: class
 			ccom_hresult_code_feature_name_not_void: Result /= Void
 		end
 
@@ -859,6 +963,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (ccom_hresult_facility_name)
 		ensure
+			instance_free: class
 			ccom_hresult_facility_feature_name_not_void: Result /= Void
 		end
 
@@ -867,6 +972,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (ceiling_real_32_name)
 		ensure
+			instance_free: class
 			ceiling_real_32_feature_name_not_void: Result /= Void
 		end
 
@@ -875,6 +981,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (ceiling_real_64_name)
 		ensure
+			instance_free: class
 			ceiling_real_64_feature_name_not_void: Result /= Void
 		end
 
@@ -883,6 +990,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (character_8_field_name)
 		ensure
+			instance_free: class
 			character_8_field_feature_name_not_void: Result /= Void
 		end
 
@@ -891,6 +999,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (character_8_field_at_name)
 		ensure
+			instance_free: class
 			character_8_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -899,6 +1008,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (character_8_item_name)
 		ensure
+			instance_free: class
 			character_8_item_feature_name_not_void: Result /= Void
 		end
 
@@ -907,6 +1017,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (character_32_field_name)
 		ensure
+			instance_free: class
 			character_32_field_feature_name_not_void: Result /= Void
 		end
 
@@ -915,6 +1026,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (character_32_field_at_name)
 		ensure
+			instance_free: class
 			character_32_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -923,6 +1035,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (character_32_item_name)
 		ensure
+			instance_free: class
 			character_32_item_feature_name_not_void: Result /= Void
 		end
 
@@ -931,6 +1044,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (character_bytes_name)
 		ensure
+			instance_free: class
 			character_bytes_feature_name_not_void: Result /= Void
 		end
 
@@ -939,6 +1053,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (character_size_name)
 		ensure
+			instance_free: class
 			character_size_feature_name_not_void: Result /= Void
 		end
 
@@ -947,6 +1062,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (check_assert_name)
 		ensure
+			instance_free: class
 			check_assert_feature_name_not_void: Result /= Void
 		end
 
@@ -955,6 +1071,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (closed_operands_name)
 		ensure
+			instance_free: class
 			closed_operands_feature_name_not_void: Result /= Void
 		end
 
@@ -963,6 +1080,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (code_name)
 		ensure
+			instance_free: class
 			code_feature_name_not_void: Result /= Void
 		end
 
@@ -971,6 +1089,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (compiler_version_name)
 		ensure
+			instance_free: class
 			compiler_version_feature_name_not_void: Result /= Void
 		end
 
@@ -979,6 +1098,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (conforms_to_name)
 		ensure
+			instance_free: class
 			conforms_to_feature_name_not_void: Result /= Void
 		end
 
@@ -987,6 +1107,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (conjuncted_name)
 		ensure
+			instance_free: class
 			conjuncted_feature_name_not_void: Result /= Void
 		end
 
@@ -995,6 +1116,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (conjuncted_semistrict_name)
 		ensure
+			instance_free: class
 			conjuncted_semistrict_feature_name_not_void: Result /= Void
 		end
 
@@ -1003,6 +1125,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (copy_name)
 		ensure
+			instance_free: class
 			copy_feature_name_not_void: Result /= Void
 		end
 
@@ -1011,6 +1134,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (count_name)
 		ensure
+			instance_free: class
 			count_feature_name_not_void: Result /= Void
 		end
 
@@ -1019,6 +1143,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (cwin_error_text_name)
 		ensure
+			instance_free: class
 			cwin_error_text_feature_name_not_void: Result /= Void
 		end
 
@@ -1027,6 +1152,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (cwin_local_free_name)
 		ensure
+			instance_free: class
 			cwin_local_free_feature_name_not_void: Result /= Void
 		end
 
@@ -1035,6 +1161,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (deep_twin_name)
 		ensure
+			instance_free: class
 			deep_twin_feature_name_not_void: Result /= Void
 		end
 
@@ -1043,6 +1170,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (default_name)
 		ensure
+			instance_free: class
 			default_feature_name_not_void: Result /= Void
 		end
 
@@ -1051,6 +1179,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (default_create_name)
 		ensure
+			instance_free: class
 			default_create_feature_name_not_void: Result /= Void
 		end
 
@@ -1059,6 +1188,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (detachable_type_name)
 		ensure
+			instance_free: class
 			detachable_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1067,6 +1197,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (developer_raise_name)
 		ensure
+			instance_free: class
 			developer_raise_feature_name_not_void: Result /= Void
 		end
 
@@ -1075,6 +1206,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (disjuncted_name)
 		ensure
+			instance_free: class
 			disjuncted_feature_name_not_void: Result /= Void
 		end
 
@@ -1083,6 +1215,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (disjuncted_exclusive_name)
 		ensure
+			instance_free: class
 			disjuncted_exclusive_feature_name_not_void: Result /= Void
 		end
 
@@ -1091,6 +1224,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (disjuncted_semistrict_name)
 		ensure
+			instance_free: class
 			disjuncted_semistrict_feature_name_not_void: Result /= Void
 		end
 
@@ -1099,6 +1233,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (dispose_name)
 		ensure
+			instance_free: class
 			dispose_feature_name_not_void: Result /= Void
 		end
 
@@ -1107,6 +1242,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (double_bytes_name)
 		ensure
+			instance_free: class
 			double_bytes_feature_name_not_void: Result /= Void
 		end
 
@@ -1115,6 +1251,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (dynamic_type_name)
 		ensure
+			instance_free: class
 			dynamic_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1123,6 +1260,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (dynamic_type_at_offset_name)
 		ensure
+			instance_free: class
 			dynamic_type_at_offset_feature_name_not_void: Result /= Void
 		end
 
@@ -1131,6 +1269,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (eif_gen_param_id_name)
 		ensure
+			instance_free: class
 			eif_gen_param_id_feature_name_not_void: Result /= Void
 		end
 
@@ -1139,6 +1278,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (eif_id_object_name)
 		ensure
+			instance_free: class
 			eif_id_object_feature_name_not_void: Result /= Void
 		end
 
@@ -1147,6 +1287,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (eif_object_id_name)
 		ensure
+			instance_free: class
 			eif_object_id_feature_name_not_void: Result /= Void
 		end
 
@@ -1155,6 +1296,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (eif_object_id_free_name)
 		ensure
+			instance_free: class
 			eif_object_id_free_feature_name_not_void: Result /= Void
 		end
 
@@ -1163,6 +1305,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (element_size_name)
 		ensure
+			instance_free: class
 			element_size_feature_name_not_void: Result /= Void
 		end
 
@@ -1171,6 +1314,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (exception_from_code_name)
 		ensure
+			instance_free: class
 			exception_from_code_feature_name_not_void: Result /= Void
 		end
 
@@ -1179,6 +1323,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (exception_manager_name)
 		ensure
+			instance_free: class
 			exception_manager_feature_name_not_void: Result /= Void
 		end
 
@@ -1187,6 +1332,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (extend_name)
 		ensure
+			instance_free: class
 			extend_feature_name_not_void: Result /= Void
 		end
 
@@ -1195,6 +1341,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (fast_call_name)
 		ensure
+			instance_free: class
 			fast_call_feature_name_not_void: Result /= Void
 		end
 
@@ -1203,6 +1350,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (fast_item_name)
 		ensure
+			instance_free: class
 			fast_item_feature_name_not_void: Result /= Void
 		end
 
@@ -1211,6 +1359,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_name)
 		ensure
+			instance_free: class
 			field_feature_name_not_void: Result /= Void
 		end
 
@@ -1219,6 +1368,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_count_name)
 		ensure
+			instance_free: class
 			field_count_feature_name_not_void: Result /= Void
 		end
 
@@ -1227,6 +1377,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_count_of_type_name)
 		ensure
+			instance_free: class
 			field_count_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1235,6 +1386,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_name_name)
 		ensure
+			instance_free: class
 			field_name_feature_name_not_void: Result /= Void
 		end
 
@@ -1243,6 +1395,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_name_of_type_name)
 		ensure
+			instance_free: class
 			field_name_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1251,6 +1404,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_offset_of_type_name)
 		ensure
+			instance_free: class
 			field_offset_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1259,6 +1413,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_static_type_name)
 		ensure
+			instance_free: class
 			field_static_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1267,6 +1422,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_static_type_of_type_name)
 		ensure
+			instance_free: class
 			field_static_type_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1275,6 +1431,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_type_name)
 		ensure
+			instance_free: class
 			field_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1283,6 +1440,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (field_type_of_type_name)
 		ensure
+			instance_free: class
 			field_type_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1291,6 +1449,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (find_referers_name)
 		ensure
+			instance_free: class
 			find_referers_feature_name_not_void: Result /= Void
 		end
 
@@ -1299,6 +1458,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (floor_real_32_name)
 		ensure
+			instance_free: class
 			floor_real_32_feature_name_not_void: Result /= Void
 		end
 
@@ -1307,6 +1467,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (floor_real_64_name)
 		ensure
+			instance_free: class
 			floor_real_64_feature_name_not_void: Result /= Void
 		end
 
@@ -1315,6 +1476,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (forth_name)
 		ensure
+			instance_free: class
 			forth_feature_name_not_void: Result /= Void
 		end
 
@@ -1323,6 +1485,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (free_name)
 		ensure
+			instance_free: class
 			free_feature_name_not_void: Result /= Void
 		end
 
@@ -1331,6 +1494,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (generating_type_name)
 		ensure
+			instance_free: class
 			generating_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1339,6 +1503,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (generating_type_of_type_name)
 		ensure
+			instance_free: class
 			generating_type_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1347,6 +1512,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (generator_name)
 		ensure
+			instance_free: class
 			generator_feature_name_not_void: Result /= Void
 		end
 
@@ -1355,6 +1521,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (generator_of_type_name)
 		ensure
+			instance_free: class
 			generator_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1363,6 +1530,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (generic_parameter_count_name)
 		ensure
+			instance_free: class
 			generic_parameter_count_feature_name_not_void: Result /= Void
 		end
 
@@ -1371,6 +1539,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (generic_parameter_type_name)
 		ensure
+			instance_free: class
 			generic_parameter_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1379,6 +1548,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (has_default_name)
 		ensure
+			instance_free: class
 			has_default_feature_name_not_void: Result /= Void
 		end
 
@@ -1387,6 +1557,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (hash_code_name)
 		ensure
+			instance_free: class
 			hash_code_feature_name_not_void: Result /= Void
 		end
 
@@ -1395,6 +1566,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (i_th_argument_pointer_name)
 		ensure
+			instance_free: class
 			i_th_argument_pointer_feature_name_not_void: Result /= Void
 		end
 
@@ -1403,6 +1575,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (i_th_argument_string_name)
 		ensure
+			instance_free: class
 			i_th_argument_string_feature_name_not_void: Result /= Void
 		end
 
@@ -1411,6 +1584,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (identity_name)
 		ensure
+			instance_free: class
 			identity_feature_name_not_void: Result /= Void
 		end
 
@@ -1419,6 +1593,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (ignore_name)
 		ensure
+			instance_free: class
 			ignore_feature_name_not_void: Result /= Void
 		end
 
@@ -1427,6 +1602,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (implication_name)
 		ensure
+			instance_free: class
 			implication_feature_name_not_void: Result /= Void
 		end
 
@@ -1435,6 +1611,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (in_assertion_name)
 		ensure
+			instance_free: class
 			in_assertion_feature_name_not_void: Result /= Void
 		end
 
@@ -1446,6 +1623,7 @@ feature -- Feature names
 			create l_string.make (and_keyword_name)
 			create {ET_INFIX_NAME} Result.make_and (l_string)
 		ensure
+			instance_free: class
 			infix_and_feature_name_not_void: Result /= Void
 		end
 
@@ -1457,6 +1635,7 @@ feature -- Feature names
 			create l_string.make (and_then_keywords_name)
 			create {ET_INFIX_NAME} Result.make_and_then (l_string)
 		ensure
+			instance_free: class
 			infix_and_then_feature_name_not_void: Result /= Void
 		end
 
@@ -1468,6 +1647,7 @@ feature -- Feature names
 			create l_string.make (at_symbol_name)
 			create {ET_INFIX_FREE_NAME} Result.make (l_string)
 		ensure
+			instance_free: class
 			infix_at_feature_name_not_void: Result /= Void
 		end
 
@@ -1479,6 +1659,7 @@ feature -- Feature names
 			create l_string.make (div_symbol_name)
 			create {ET_INFIX_NAME} Result.make_div (l_string)
 		ensure
+			instance_free: class
 			infix_div_feature_name_not_void: Result /= Void
 		end
 
@@ -1490,6 +1671,7 @@ feature -- Feature names
 			create l_string.make (divide_symbol_name)
 			create {ET_INFIX_NAME} Result.make_divide (l_string)
 		ensure
+			instance_free: class
 			infix_divide_feature_name_not_void: Result /= Void
 		end
 
@@ -1501,6 +1683,7 @@ feature -- Feature names
 			create l_string.make (le_symbol_name)
 			create {ET_INFIX_NAME} Result.make_ge (l_string)
 		ensure
+			instance_free: class
 			infix_ge_feature_name_not_void: Result /= Void
 		end
 
@@ -1512,6 +1695,7 @@ feature -- Feature names
 			create l_string.make (gt_symbol_name)
 			create {ET_INFIX_NAME} Result.make_gt (l_string)
 		ensure
+			instance_free: class
 			infix_gt_feature_name_not_void: Result /= Void
 		end
 
@@ -1523,6 +1707,7 @@ feature -- Feature names
 			create l_string.make (implies_keyword_name)
 			create {ET_INFIX_NAME} Result.make_implies (l_string)
 		ensure
+			instance_free: class
 			infix_implies_feature_name_not_void: Result /= Void
 		end
 
@@ -1534,6 +1719,7 @@ feature -- Feature names
 			create l_string.make (le_symbol_name)
 			create {ET_INFIX_NAME} Result.make_le (l_string)
 		ensure
+			instance_free: class
 			infix_le_feature_name_not_void: Result /= Void
 		end
 
@@ -1545,6 +1731,7 @@ feature -- Feature names
 			create l_string.make (lt_symbol_name)
 			create {ET_INFIX_NAME} Result.make_lt (l_string)
 		ensure
+			instance_free: class
 			infix_lt_feature_name_not_void: Result /= Void
 		end
 
@@ -1556,6 +1743,7 @@ feature -- Feature names
 			create l_string.make (minus_symbol_name)
 			create {ET_INFIX_NAME} Result.make_minus (l_string)
 		ensure
+			instance_free: class
 			infix_minus_feature_name_not_void: Result /= Void
 		end
 
@@ -1567,6 +1755,7 @@ feature -- Feature names
 			create l_string.make (mod_symbol_name)
 			create {ET_INFIX_NAME} Result.make_mod (l_string)
 		ensure
+			instance_free: class
 			infix_mod_feature_name_not_void: Result /= Void
 		end
 
@@ -1578,6 +1767,7 @@ feature -- Feature names
 			create l_string.make (or_keyword_name)
 			create {ET_INFIX_NAME} Result.make_or (l_string)
 		ensure
+			instance_free: class
 			infix_or_feature_name_not_void: Result /= Void
 		end
 
@@ -1589,6 +1779,7 @@ feature -- Feature names
 			create l_string.make (or_else_keywords_name)
 			create {ET_INFIX_NAME} Result.make_or_else (l_string)
 		ensure
+			instance_free: class
 			infix_or_else_feature_name_not_void: Result /= Void
 		end
 
@@ -1600,6 +1791,7 @@ feature -- Feature names
 			create l_string.make (plus_symbol_name)
 			create {ET_INFIX_NAME} Result.make_plus (l_string)
 		ensure
+			instance_free: class
 			infix_plus_feature_name_not_void: Result /= Void
 		end
 
@@ -1611,6 +1803,7 @@ feature -- Feature names
 			create l_string.make (power_symbol_name)
 			create {ET_INFIX_NAME} Result.make_power (l_string)
 		ensure
+			instance_free: class
 			infix_power_feature_name_not_void: Result /= Void
 		end
 
@@ -1622,6 +1815,7 @@ feature -- Feature names
 			create l_string.make (times_symbol_name)
 			create {ET_INFIX_NAME} Result.make_times (l_string)
 		ensure
+			instance_free: class
 			infix_times_feature_name_not_void: Result /= Void
 		end
 
@@ -1633,6 +1827,7 @@ feature -- Feature names
 			create l_string.make (xor_keyword_name)
 			create {ET_INFIX_NAME} Result.make_xor (l_string)
 		ensure
+			instance_free: class
 			infix_xor_feature_name_not_void: Result /= Void
 		end
 
@@ -1641,6 +1836,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (init_exception_manager_name)
 		ensure
+			instance_free: class
 			init_exception_manager_feature_name_not_void: Result /= Void
 		end
 
@@ -1649,6 +1845,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_8_field_name)
 		ensure
+			instance_free: class
 			integer_8_field_feature_name_not_void: Result /= Void
 		end
 
@@ -1657,6 +1854,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_8_field_at_name)
 		ensure
+			instance_free: class
 			integer_8_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -1665,6 +1863,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_8_item_name)
 		ensure
+			instance_free: class
 			integer_8_item_feature_name_not_void: Result /= Void
 		end
 
@@ -1673,6 +1872,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_16_field_name)
 		ensure
+			instance_free: class
 			integer_16_field_feature_name_not_void: Result /= Void
 		end
 
@@ -1681,6 +1881,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_16_field_at_name)
 		ensure
+			instance_free: class
 			integer_16_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -1689,6 +1890,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_16_item_name)
 		ensure
+			instance_free: class
 			integer_16_item_feature_name_not_void: Result /= Void
 		end
 
@@ -1697,6 +1899,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_32_field_name)
 		ensure
+			instance_free: class
 			integer_32_field_feature_name_not_void: Result /= Void
 		end
 
@@ -1705,6 +1908,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_32_field_at_name)
 		ensure
+			instance_free: class
 			integer_32_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -1713,6 +1917,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_32_item_name)
 		ensure
+			instance_free: class
 			integer_32_item_feature_name_not_void: Result /= Void
 		end
 
@@ -1721,6 +1926,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_64_field_name)
 		ensure
+			instance_free: class
 			integer_64_field_feature_name_not_void: Result /= Void
 		end
 
@@ -1729,6 +1935,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_64_field_at_name)
 		ensure
+			instance_free: class
 			integer_64_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -1737,6 +1944,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_64_item_name)
 		ensure
+			instance_free: class
 			integer_64_item_feature_name_not_void: Result /= Void
 		end
 
@@ -1745,6 +1953,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_bytes_name)
 		ensure
+			instance_free: class
 			integer_bytes_feature_name_not_void: Result /= Void
 		end
 
@@ -1753,6 +1962,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_quotient_name)
 		ensure
+			instance_free: class
 			integer_quotient_feature_name_not_void: Result /= Void
 		end
 
@@ -1761,6 +1971,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (integer_remainder_name)
 		ensure
+			instance_free: class
 			integer_remainder_feature_name_not_void: Result /= Void
 		end
 
@@ -1769,6 +1980,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (invariant_keyword_name)
 		ensure
+			instance_free: class
 			invariant_feature_name_not_void: Result /= Void
 		end
 
@@ -1777,6 +1989,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_64_bits_name)
 		ensure
+			instance_free: class
 			is_64_bits_feature_name_not_void: Result /= Void
 		end
 
@@ -1785,6 +1998,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_attached_name)
 		ensure
+			instance_free: class
 			is_attached_feature_name_not_void: Result /= Void
 		end
 
@@ -1793,6 +2007,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_attached_type_name)
 		ensure
+			instance_free: class
 			is_attached_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1801,6 +2016,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_caught_name)
 		ensure
+			instance_free: class
 			is_caught_feature_name_not_void: Result /= Void
 		end
 
@@ -1809,6 +2025,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_copy_semantics_field_name)
 		ensure
+			instance_free: class
 			is_copy_semantics_field_feature_name_not_void: Result /= Void
 		end
 
@@ -1817,6 +2034,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_deep_equal_name)
 		ensure
+			instance_free: class
 			is_deep_equal_feature_name_not_void: Result /= Void
 		end
 
@@ -1825,6 +2043,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_default_pointer_name)
 		ensure
+			instance_free: class
 			is_default_pointer_feature_name_not_void: Result /= Void
 		end
 
@@ -1833,6 +2052,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_deferred_name)
 		ensure
+			instance_free: class
 			is_deferred_feature_name_not_void: Result /= Void
 		end
 
@@ -1841,6 +2061,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_dotnet_name)
 		ensure
+			instance_free: class
 			is_dotnet_feature_name_not_void: Result /= Void
 		end
 
@@ -1849,6 +2070,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_equal_name)
 		ensure
+			instance_free: class
 			is_equal_feature_name_not_void: Result /= Void
 		end
 
@@ -1857,6 +2079,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_expanded_name)
 		ensure
+			instance_free: class
 			is_expanded_feature_name_not_void: Result /= Void
 		end
 
@@ -1865,6 +2088,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_field_expanded_of_type_name)
 		ensure
+			instance_free: class
 			is_field_expanded_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1873,6 +2097,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_field_transient_of_type_name)
 		ensure
+			instance_free: class
 			is_field_transient_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -1881,6 +2106,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_ignorable_name)
 		ensure
+			instance_free: class
 			is_ignorable_feature_name_not_void: Result /= Void
 		end
 
@@ -1889,6 +2115,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_ignored_name)
 		ensure
+			instance_free: class
 			is_ignored_feature_name_not_void: Result /= Void
 		end
 
@@ -1897,6 +2124,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_less_name)
 		ensure
+			instance_free: class
 			is_less_feature_name_not_void: Result /= Void
 		end
 
@@ -1905,6 +2133,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_mac_name)
 		ensure
+			instance_free: class
 			is_mac_feature_name_not_void: Result /= Void
 		end
 
@@ -1913,6 +2142,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_nan_name)
 		ensure
+			instance_free: class
 			is_nan_feature_name_not_void: Result /= Void
 		end
 
@@ -1921,6 +2151,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_negative_infinity_name)
 		ensure
+			instance_free: class
 			is_negative_infinity_feature_name_not_void: Result /= Void
 		end
 
@@ -1929,6 +2160,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_object_marked_name)
 		ensure
+			instance_free: class
 			is_object_marked_feature_name_not_void: Result /= Void
 		end
 
@@ -1937,6 +2169,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_positive_infinity_name)
 		ensure
+			instance_free: class
 			is_positive_infinity_feature_name_not_void: Result /= Void
 		end
 
@@ -1945,6 +2178,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_raisable_name)
 		ensure
+			instance_free: class
 			is_raisable_feature_name_not_void: Result /= Void
 		end
 
@@ -1953,6 +2187,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_scoop_capable_name)
 		ensure
+			instance_free: class
 			is_scoop_capable_feature_name_not_void: Result /= Void
 		end
 
@@ -1961,6 +2196,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_special_name)
 		ensure
+			instance_free: class
 			is_special_feature_name_not_void: Result /= Void
 		end
 
@@ -1969,6 +2205,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_special_copy_semantics_item_name)
 		ensure
+			instance_free: class
 			is_special_copy_semantics_item_feature_name_not_void: Result /= Void
 		end
 
@@ -1977,6 +2214,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_special_of_expanded_name)
 		ensure
+			instance_free: class
 			is_special_of_expanded_feature_name_not_void: Result /= Void
 		end
 
@@ -1985,6 +2223,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_special_of_reference_name)
 		ensure
+			instance_free: class
 			is_special_of_reference_feature_name_not_void: Result /= Void
 		end
 
@@ -1993,6 +2232,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_special_of_reference_or_basic_type_name)
 		ensure
+			instance_free: class
 			is_special_of_reference_or_basic_type_feature_name_not_void: Result /= Void
 		end
 
@@ -2001,6 +2241,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_special_of_reference_type_name)
 		ensure
+			instance_free: class
 			is_special_of_reference_type_feature_name_not_void: Result /= Void
 		end
 
@@ -2009,6 +2250,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_thread_capable_name)
 		ensure
+			instance_free: class
 			is_thread_capable_feature_name_not_void: Result /= Void
 		end
 
@@ -2017,6 +2259,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_tuple_name)
 		ensure
+			instance_free: class
 			is_tuple_feature_name_not_void: Result /= Void
 		end
 
@@ -2025,6 +2268,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_tuple_type_name)
 		ensure
+			instance_free: class
 			is_tuple_type_feature_name_not_void: Result /= Void
 		end
 
@@ -2033,6 +2277,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_unix_name)
 		ensure
+			instance_free: class
 			is_unix_feature_name_not_void: Result /= Void
 		end
 
@@ -2041,6 +2286,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_vms_name)
 		ensure
+			instance_free: class
 			is_vms_feature_name_not_void: Result /= Void
 		end
 
@@ -2049,6 +2295,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_vxworks_name)
 		ensure
+			instance_free: class
 			is_vxworks_feature_name_not_void: Result /= Void
 		end
 
@@ -2057,6 +2304,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (is_windows_name)
 		ensure
+			instance_free: class
 			is_windows_feature_name_not_void: Result /= Void
 		end
 
@@ -2065,6 +2313,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (item_name)
 		ensure
+			instance_free: class
 			item_feature_name_not_void: Result /= Void
 		end
 
@@ -2073,6 +2322,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (item_code_name)
 		ensure
+			instance_free: class
 			item_code_feature_name_not_void: Result /= Void
 		end
 
@@ -2081,6 +2331,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (last_exception_name)
 		ensure
+			instance_free: class
 			last_exception_feature_name_not_void: Result /= Void
 		end
 
@@ -2089,6 +2340,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (last_result_name)
 		ensure
+			instance_free: class
 			last_result_feature_name_not_void: Result /= Void
 		end
 
@@ -2097,6 +2349,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (lock_marking_name)
 		ensure
+			instance_free: class
 			lock_marking_feature_name_not_void: Result /= Void
 		end
 
@@ -2105,6 +2358,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (lower_name)
 		ensure
+			instance_free: class
 			lower_feature_name_not_void: Result /= Void
 		end
 
@@ -2113,6 +2367,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (make_name)
 		ensure
+			instance_free: class
 			make_feature_name_not_void: Result /= Void
 		end
 
@@ -2121,6 +2376,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (make_empty_name)
 		ensure
+			instance_free: class
 			make_empty_feature_name_not_void: Result /= Void
 		end
 
@@ -2129,6 +2385,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (mark_object_name)
 		ensure
+			instance_free: class
 			mark_object_feature_name_not_void: Result /= Void
 		end
 
@@ -2137,6 +2394,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (max_type_id_name)
 		ensure
+			instance_free: class
 			max_type_id_feature_name_not_void: Result /= Void
 		end
 
@@ -2145,6 +2403,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (minus_name)
 		ensure
+			instance_free: class
 			minus_feature_name_not_void: Result /= Void
 		end
 
@@ -2153,6 +2412,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (name_name)
 		ensure
+			instance_free: class
 			name_feature_name_not_void: Result /= Void
 		end
 
@@ -2161,6 +2421,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (nan_name)
 		ensure
+			instance_free: class
 			nan_feature_name_not_void: Result /= Void
 		end
 
@@ -2169,6 +2430,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_8_field_name)
 		ensure
+			instance_free: class
 			natural_8_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2177,6 +2439,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_8_field_at_name)
 		ensure
+			instance_free: class
 			natural_8_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2185,6 +2448,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_8_item_name)
 		ensure
+			instance_free: class
 			natural_8_item_feature_name_not_void: Result /= Void
 		end
 
@@ -2193,6 +2457,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_16_field_name)
 		ensure
+			instance_free: class
 			natural_16_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2201,6 +2466,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_16_field_at_name)
 		ensure
+			instance_free: class
 			natural_16_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2209,6 +2475,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_16_item_name)
 		ensure
+			instance_free: class
 			natural_16_item_feature_name_not_void: Result /= Void
 		end
 
@@ -2217,6 +2484,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_32_code_name)
 		ensure
+			instance_free: class
 			natural_32_code_feature_name_not_void: Result /= Void
 		end
 
@@ -2225,6 +2493,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_32_field_name)
 		ensure
+			instance_free: class
 			natural_32_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2233,6 +2502,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_32_field_at_name)
 		ensure
+			instance_free: class
 			natural_32_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2241,6 +2511,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_32_item_name)
 		ensure
+			instance_free: class
 			natural_32_item_feature_name_not_void: Result /= Void
 		end
 
@@ -2249,6 +2520,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_64_field_name)
 		ensure
+			instance_free: class
 			natural_64_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2257,6 +2529,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_64_field_at_name)
 		ensure
+			instance_free: class
 			natural_64_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2265,6 +2538,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (natural_64_item_name)
 		ensure
+			instance_free: class
 			natural_64_item_feature_name_not_void: Result /= Void
 		end
 
@@ -2273,6 +2547,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (negated_name)
 		ensure
+			instance_free: class
 			negated_feature_name_not_void: Result /= Void
 		end
 
@@ -2281,6 +2556,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (negative_infinity_name)
 		ensure
+			instance_free: class
 			negative_infinity_feature_name_not_void: Result /= Void
 		end
 
@@ -2289,6 +2565,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (new_cursor_name)
 		ensure
+			instance_free: class
 			new_cursor_feature_name_not_void: Result /= Void
 		end
 
@@ -2297,6 +2574,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (new_instance_name)
 		ensure
+			instance_free: class
 			new_instance_feature_name_not_void: Result /= Void
 		end
 
@@ -2305,6 +2583,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (new_instance_of_name)
 		ensure
+			instance_free: class
 			new_instance_of_feature_name_not_void: Result /= Void
 		end
 
@@ -2313,6 +2592,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (new_special_any_instance_name)
 		ensure
+			instance_free: class
 			new_special_any_instance_feature_name_not_void: Result /= Void
 		end
 
@@ -2321,6 +2601,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (new_special_of_reference_instance_of_name)
 		ensure
+			instance_free: class
 			new_special_of_reference_instance_of_feature_name_not_void: Result /= Void
 		end
 
@@ -2329,6 +2610,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (new_tuple_instance_of_name)
 		ensure
+			instance_free: class
 			new_tuple_instance_of_feature_name_not_void: Result /= Void
 		end
 
@@ -2337,6 +2619,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (new_type_instance_of_name)
 		ensure
+			instance_free: class
 			new_type_instance_of_feature_name_not_void: Result /= Void
 		end
 
@@ -2345,6 +2628,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (object_comparison_name)
 		ensure
+			instance_free: class
 			object_comparison_feature_name_not_void: Result /= Void
 		end
 
@@ -2353,6 +2637,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (object_size_name)
 		ensure
+			instance_free: class
 			object_size_feature_name_not_void: Result /= Void
 		end
 
@@ -2361,6 +2646,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (once_objects_name)
 		ensure
+			instance_free: class
 			once_objects_feature_name_not_void: Result /= Void
 		end
 
@@ -2369,6 +2655,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (once_raise_name)
 		ensure
+			instance_free: class
 			once_raise_feature_name_not_void: Result /= Void
 		end
 
@@ -2377,6 +2664,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (opposite_name)
 		ensure
+			instance_free: class
 			opposite_feature_name_not_void: Result /= Void
 		end
 
@@ -2385,6 +2673,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (out_name)
 		ensure
+			instance_free: class
 			out_feature_name_not_void: Result /= Void
 		end
 
@@ -2393,6 +2682,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (persistent_field_count_of_type_name)
 		ensure
+			instance_free: class
 			persistent_field_count_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -2401,6 +2691,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (plus_name)
 		ensure
+			instance_free: class
 			plus_feature_name_not_void: Result /= Void
 		end
 
@@ -2409,6 +2700,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (pointer_bytes_name)
 		ensure
+			instance_free: class
 			pointer_bytes_feature_name_not_void: Result /= Void
 		end
 
@@ -2417,6 +2709,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (pointer_field_name)
 		ensure
+			instance_free: class
 			pointer_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2425,6 +2718,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (pointer_field_at_name)
 		ensure
+			instance_free: class
 			pointer_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2433,6 +2727,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (pointer_item_name)
 		ensure
+			instance_free: class
 			pointer_item_feature_name_not_void: Result /= Void
 		end
 
@@ -2441,6 +2736,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (positive_infinity_name)
 		ensure
+			instance_free: class
 			positive_infinity_feature_name_not_void: Result /= Void
 		end
 
@@ -2449,6 +2745,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (power_name)
 		ensure
+			instance_free: class
 			power_feature_name_not_void: Result /= Void
 		end
 
@@ -2457,6 +2754,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (pre_ecma_mapping_status_name)
 		ensure
+			instance_free: class
 			pre_ecma_mapping_status_feature_name_not_void: Result /= Void
 		end
 
@@ -2468,6 +2766,7 @@ feature -- Feature names
 			create l_string.make (minus_symbol_name)
 			create {ET_PREFIX_NAME} Result.make_minus (l_string)
 		ensure
+			instance_free: class
 			prefix_minus_feature_name_not_void: Result /= Void
 		end
 
@@ -2479,6 +2778,7 @@ feature -- Feature names
 			create l_string.make (not_keyword_name)
 			create {ET_PREFIX_NAME} Result.make_not (l_string)
 		ensure
+			instance_free: class
 			prefix_not_feature_name_not_void: Result /= Void
 		end
 
@@ -2490,6 +2790,7 @@ feature -- Feature names
 			create l_string.make (plus_symbol_name)
 			create {ET_PREFIX_NAME} Result.make_plus (l_string)
 		ensure
+			instance_free: class
 			prefix_plus_feature_name_not_void: Result /= Void
 		end
 
@@ -2498,6 +2799,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (product_name)
 		ensure
+			instance_free: class
 			product_feature_name_not_void: Result /= Void
 		end
 
@@ -2506,6 +2808,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_name)
 		ensure
+			instance_free: class
 			put_feature_name_not_void: Result /= Void
 		end
 
@@ -2514,6 +2817,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_boolean_name)
 		ensure
+			instance_free: class
 			put_boolean_feature_name_not_void: Result /= Void
 		end
 
@@ -2522,6 +2826,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_character_8_name)
 		ensure
+			instance_free: class
 			put_character_8_feature_name_not_void: Result /= Void
 		end
 
@@ -2530,6 +2835,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_character_32_name)
 		ensure
+			instance_free: class
 			put_character_32_feature_name_not_void: Result /= Void
 		end
 
@@ -2538,6 +2844,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_integer_8_name)
 		ensure
+			instance_free: class
 			put_integer_8_feature_name_not_void: Result /= Void
 		end
 
@@ -2546,6 +2853,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_integer_16_name)
 		ensure
+			instance_free: class
 			put_integer_16_feature_name_not_void: Result /= Void
 		end
 
@@ -2554,6 +2862,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_integer_32_name)
 		ensure
+			instance_free: class
 			put_integer_32_feature_name_not_void: Result /= Void
 		end
 
@@ -2562,6 +2871,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_integer_64_name)
 		ensure
+			instance_free: class
 			put_integer_64_feature_name_not_void: Result /= Void
 		end
 
@@ -2570,6 +2880,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_natural_8_name)
 		ensure
+			instance_free: class
 			put_natural_8_feature_name_not_void: Result /= Void
 		end
 
@@ -2578,6 +2889,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_natural_16_name)
 		ensure
+			instance_free: class
 			put_natural_16_feature_name_not_void: Result /= Void
 		end
 
@@ -2586,6 +2898,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_natural_32_name)
 		ensure
+			instance_free: class
 			put_natural_32_feature_name_not_void: Result /= Void
 		end
 
@@ -2594,6 +2907,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_natural_64_name)
 		ensure
+			instance_free: class
 			put_natural_64_feature_name_not_void: Result /= Void
 		end
 
@@ -2602,6 +2916,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_pointer_name)
 		ensure
+			instance_free: class
 			put_pointer_feature_name_not_void: Result /= Void
 		end
 
@@ -2610,6 +2925,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_real_32_name)
 		ensure
+			instance_free: class
 			put_real_32_feature_name_not_void: Result /= Void
 		end
 
@@ -2618,6 +2934,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_real_64_name)
 		ensure
+			instance_free: class
 			put_real_64_feature_name_not_void: Result /= Void
 		end
 
@@ -2626,6 +2943,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (put_reference_name)
 		ensure
+			instance_free: class
 			put_reference_feature_name_not_void: Result /= Void
 		end
 
@@ -2634,6 +2952,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (quotient_name)
 		ensure
+			instance_free: class
 			quotient_feature_name_not_void: Result /= Void
 		end
 
@@ -2642,6 +2961,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (raise_name)
 		ensure
+			instance_free: class
 			raise_feature_name_not_void: Result /= Void
 		end
 
@@ -2650,6 +2970,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (raw_reference_field_at_name)
 		ensure
+			instance_free: class
 			raw_reference_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2658,6 +2979,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (raw_reference_field_at_offset_name)
 		ensure
+			instance_free: class
 			raw_reference_field_at_offset_feature_name_not_void: Result /= Void
 		end
 
@@ -2666,6 +2988,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (real_32_field_name)
 		ensure
+			instance_free: class
 			real_32_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2674,6 +2997,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (real_32_field_at_name)
 		ensure
+			instance_free: class
 			real_32_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2682,6 +3006,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (real_32_item_name)
 		ensure
+			instance_free: class
 			real_32_item_feature_name_not_void: Result /= Void
 		end
 
@@ -2690,6 +3015,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (real_64_field_name)
 		ensure
+			instance_free: class
 			real_64_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2698,6 +3024,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (real_64_field_at_name)
 		ensure
+			instance_free: class
 			real_64_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2706,6 +3033,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (real_64_item_name)
 		ensure
+			instance_free: class
 			real_64_item_feature_name_not_void: Result /= Void
 		end
 
@@ -2714,6 +3042,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (real_bytes_name)
 		ensure
+			instance_free: class
 			real_bytes_feature_name_not_void: Result /= Void
 		end
 
@@ -2722,6 +3051,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (reference_field_name)
 		ensure
+			instance_free: class
 			reference_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2730,6 +3060,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (reference_field_at_name)
 		ensure
+			instance_free: class
 			reference_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2738,6 +3069,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (reference_field_at_offset_name)
 		ensure
+			instance_free: class
 			reference_field_at_offset_feature_name_not_void: Result /= Void
 		end
 
@@ -2746,6 +3078,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (reference_item_name)
 		ensure
+			instance_free: class
 			reference_item_feature_name_not_void: Result /= Void
 		end
 
@@ -2754,6 +3087,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (rout_disp_name)
 		ensure
+			instance_free: class
 			rout_disp_feature_name_not_void: Result /= Void
 		end
 
@@ -2762,6 +3096,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (runtime_name_name)
 		ensure
+			instance_free: class
 			runtime_name_feature_name_not_void: Result /= Void
 		end
 
@@ -2770,6 +3105,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (same_type_name)
 		ensure
+			instance_free: class
 			same_type_feature_name_not_void: Result /= Void
 		end
 
@@ -2778,6 +3114,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_boolean_field_name)
 		ensure
+			instance_free: class
 			set_boolean_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2786,6 +3123,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_boolean_field_at_name)
 		ensure
+			instance_free: class
 			set_boolean_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2794,6 +3132,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_character_8_field_name)
 		ensure
+			instance_free: class
 			set_character_8_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2802,6 +3141,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_character_8_field_at_name)
 		ensure
+			instance_free: class
 			set_character_8_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2810,6 +3150,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_character_32_field_name)
 		ensure
+			instance_free: class
 			set_character_32_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2818,6 +3159,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_character_32_field_at_name)
 		ensure
+			instance_free: class
 			set_character_32_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2826,6 +3168,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_count_name)
 		ensure
+			instance_free: class
 			set_count_feature_name_not_void: Result /= Void
 		end
 
@@ -2834,6 +3177,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_exception_data_name)
 		ensure
+			instance_free: class
 			set_exception_data_feature_name_not_void: Result /= Void
 		end
 
@@ -2842,6 +3186,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_integer_8_field_name)
 		ensure
+			instance_free: class
 			set_integer_8_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2850,6 +3195,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_integer_8_field_at_name)
 		ensure
+			instance_free: class
 			set_integer_8_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2858,6 +3204,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_integer_16_field_name)
 		ensure
+			instance_free: class
 			set_integer_16_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2866,6 +3213,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_integer_16_field_at_name)
 		ensure
+			instance_free: class
 			set_integer_16_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2874,6 +3222,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_integer_32_field_name)
 		ensure
+			instance_free: class
 			set_integer_32_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2882,6 +3231,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_integer_32_field_at_name)
 		ensure
+			instance_free: class
 			set_integer_32_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2890,6 +3240,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_integer_64_field_name)
 		ensure
+			instance_free: class
 			set_integer_64_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2898,6 +3249,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_integer_64_field_at_name)
 		ensure
+			instance_free: class
 			set_integer_64_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2906,6 +3258,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_is_ignored_name)
 		ensure
+			instance_free: class
 			set_is_ignored_feature_name_not_void: Result /= Void
 		end
 
@@ -2914,6 +3267,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_item_name)
 		ensure
+			instance_free: class
 			set_item_feature_name_not_void: Result /= Void
 		end
 
@@ -2922,6 +3276,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_natural_8_field_name)
 		ensure
+			instance_free: class
 			set_natural_8_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2930,6 +3285,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_natural_8_field_at_name)
 		ensure
+			instance_free: class
 			set_natural_8_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2938,6 +3294,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_natural_16_field_name)
 		ensure
+			instance_free: class
 			set_natural_16_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2946,6 +3303,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_natural_16_field_at_name)
 		ensure
+			instance_free: class
 			set_natural_16_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2954,6 +3312,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_natural_32_field_name)
 		ensure
+			instance_free: class
 			set_natural_32_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2962,6 +3321,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_natural_32_field_at_name)
 		ensure
+			instance_free: class
 			set_natural_32_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2970,6 +3330,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_natural_64_field_name)
 		ensure
+			instance_free: class
 			set_natural_64_field_feature_name_not_void: Result /= Void
 		end
 
@@ -2978,6 +3339,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_natural_64_field_at_name)
 		ensure
+			instance_free: class
 			set_natural_64_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -2986,6 +3348,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_object_comparison_name)
 		ensure
+			instance_free: class
 			set_object_comparison_feature_name_not_void: Result /= Void
 		end
 
@@ -2994,6 +3357,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_operands_name)
 		ensure
+			instance_free: class
 			set_operands_feature_name_not_void: Result /= Void
 		end
 
@@ -3002,6 +3366,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_pointer_field_name)
 		ensure
+			instance_free: class
 			set_pointer_field_feature_name_not_void: Result /= Void
 		end
 
@@ -3010,6 +3375,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_pointer_field_at_name)
 		ensure
+			instance_free: class
 			set_pointer_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -3018,6 +3384,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_pre_ecma_mapping_name)
 		ensure
+			instance_free: class
 			set_pre_ecma_mapping_feature_name_not_void: Result /= Void
 		end
 
@@ -3026,6 +3393,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_real_32_field_name)
 		ensure
+			instance_free: class
 			set_real_32_field_feature_name_not_void: Result /= Void
 		end
 
@@ -3034,6 +3402,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_real_32_field_at_name)
 		ensure
+			instance_free: class
 			set_real_32_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -3042,6 +3411,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_real_64_field_name)
 		ensure
+			instance_free: class
 			set_real_64_field_feature_name_not_void: Result /= Void
 		end
 
@@ -3050,6 +3420,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_real_64_field_at_name)
 		ensure
+			instance_free: class
 			set_real_64_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -3058,6 +3429,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_reference_field_name)
 		ensure
+			instance_free: class
 			set_reference_field_feature_name_not_void: Result /= Void
 		end
 
@@ -3066,6 +3438,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_reference_field_at_name)
 		ensure
+			instance_free: class
 			set_reference_field_at_feature_name_not_void: Result /= Void
 		end
 
@@ -3074,6 +3447,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (set_rout_disp_final_name)
 		ensure
+			instance_free: class
 			set_rout_disp_final_feature_name_not_void: Result /= Void
 		end
 
@@ -3082,6 +3456,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (standard_copy_name)
 		ensure
+			instance_free: class
 			standard_copy_feature_name_not_void: Result /= Void
 		end
 
@@ -3090,6 +3465,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (standard_is_equal_name)
 		ensure
+			instance_free: class
 			standard_is_equal_feature_name_not_void: Result /= Void
 		end
 
@@ -3098,6 +3474,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (standard_twin_name)
 		ensure
+			instance_free: class
 			standard_twin_feature_name_not_void: Result /= Void
 		end
 
@@ -3106,6 +3483,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (storable_version_of_type_name)
 		ensure
+			instance_free: class
 			storable_version_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -3114,6 +3492,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (tagged_out_name)
 		ensure
+			instance_free: class
 			tagged_out_feature_name_not_void: Result /= Void
 		end
 
@@ -3122,6 +3501,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (to_character_name)
 		ensure
+			instance_free: class
 			to_character_feature_name_not_void: Result /= Void
 		end
 
@@ -3130,6 +3510,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (to_character_8_name)
 		ensure
+			instance_free: class
 			to_character_8_feature_name_not_void: Result /= Void
 		end
 
@@ -3138,6 +3519,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (to_character_32_name)
 		ensure
+			instance_free: class
 			to_character_32_feature_name_not_void: Result /= Void
 		end
 
@@ -3146,6 +3528,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (to_double_name)
 		ensure
+			instance_free: class
 			to_double_feature_name_not_void: Result /= Void
 		end
 
@@ -3154,6 +3537,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (to_integer_32_name)
 		ensure
+			instance_free: class
 			to_integer_32_feature_name_not_void: Result /= Void
 		end
 
@@ -3162,6 +3546,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (to_real_name)
 		ensure
+			instance_free: class
 			to_real_feature_name_not_void: Result /= Void
 		end
 
@@ -3170,6 +3555,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (to_pointer_name)
 		ensure
+			instance_free: class
 			to_pointer_feature_name_not_void: Result /= Void
 		end
 
@@ -3178,6 +3564,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (to_real_32_name)
 		ensure
+			instance_free: class
 			to_real_32_feature_name_not_void: Result /= Void
 		end
 
@@ -3186,6 +3573,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (to_real_64_name)
 		ensure
+			instance_free: class
 			to_real_64_feature_name_not_void: Result /= Void
 		end
 
@@ -3194,6 +3582,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (truncated_to_integer_name)
 		ensure
+			instance_free: class
 			truncated_to_integer_feature_name_not_void: Result /= Void
 		end
 
@@ -3202,6 +3591,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (truncated_to_integer_64_name)
 		ensure
+			instance_free: class
 			truncated_to_integer_64_feature_name_not_void: Result /= Void
 		end
 
@@ -3210,6 +3600,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (truncated_to_real_name)
 		ensure
+			instance_free: class
 			truncated_to_real_feature_name_not_void: Result /= Void
 		end
 
@@ -3218,6 +3609,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (twin_name)
 		ensure
+			instance_free: class
 			twin_feature_name_not_void: Result /= Void
 		end
 
@@ -3226,6 +3618,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (type_conforms_to_name)
 		ensure
+			instance_free: class
 			type_conforms_to_feature_name_not_void: Result /= Void
 		end
 
@@ -3234,6 +3627,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (type_id_name)
 		ensure
+			instance_free: class
 			type_id_feature_name_not_void: Result /= Void
 		end
 
@@ -3242,6 +3636,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (type_id_from_name_name)
 		ensure
+			instance_free: class
 			type_id_from_name_feature_name_not_void: Result /= Void
 		end
 
@@ -3250,6 +3645,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (type_of_code_name)
 		ensure
+			instance_free: class
 			type_of_code_feature_name_not_void: Result /= Void
 		end
 
@@ -3258,6 +3654,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (type_of_type_name)
 		ensure
+			instance_free: class
 			type_of_type_feature_name_not_void: Result /= Void
 		end
 
@@ -3266,6 +3663,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (unlock_marking_name)
 		ensure
+			instance_free: class
 			unlock_marking_feature_name_not_void: Result /= Void
 		end
 
@@ -3274,6 +3672,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (unmark_object_name)
 		ensure
+			instance_free: class
 			unmark_object_feature_name_not_void: Result /= Void
 		end
 
@@ -3282,6 +3681,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (upper_name)
 		ensure
+			instance_free: class
 			upper_feature_name_not_void: Result /= Void
 		end
 
@@ -3290,6 +3690,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (capitalized_void_keyword_name)
 		ensure
+			instance_free: class
 			void_feature_name_not_void: Result /= Void
 		end
 
@@ -3298,6 +3699,7 @@ feature -- Feature names
 		once ("PROCESS")
 			create {ET_IDENTIFIER} Result.make (wide_character_bytes_name)
 		ensure
+			instance_free: class
 			wide_character_bytes_feature_name_not_void: Result /= Void
 		end
 
@@ -3308,6 +3710,7 @@ feature -- Types
 		once ("PROCESS")
 			create Result.make (implicit_attached_type_mark)
 		ensure
+			instance_free: class
 			like_current_not_void: Result /= Void
 		end
 
@@ -3316,6 +3719,7 @@ feature -- Types
 		once ("PROCESS")
 			create Result.make (attached_keyword)
 		ensure
+			instance_free: class
 			attached_like_current_not_void: Result /= Void
 		end
 
@@ -3324,6 +3728,7 @@ feature -- Types
 		once ("PROCESS")
 			create Result.make (detachable_keyword)
 		ensure
+			instance_free: class
 			detachable_like_current_not_void: Result /= Void
 		end
 
@@ -3332,6 +3737,7 @@ feature -- Types
 		once ("PROCESS")
 			create Result.make (Void)
 		ensure
+			instance_free: class
 			identity_type_not_void: Result /= Void
 		end
 
@@ -3340,6 +3746,7 @@ feature -- Types
 		once ("PROCESS")
 			create Result.make_zero (Void)
 		ensure
+			instance_free: class
 			like_0_not_void: Result /= Void
 		end
 
@@ -3348,6 +3755,7 @@ feature -- Types
 		once ("PROCESS")
 			create Result.make (attached_keyword, separate_keyword)
 		ensure
+			instance_free: class
 			attached_separate_type_mark_not_void: Result /= Void
 		end
 
@@ -3356,6 +3764,7 @@ feature -- Types
 		once ("PROCESS")
 			create Result.make (detachable_keyword, separate_keyword)
 		ensure
+			instance_free: class
 			detachable_separate_type_mark_not_void: Result /= Void
 		end
 
@@ -3365,6 +3774,7 @@ feature -- Types
 			create Result.make
 			Result.set_attached_mark (True)
 		ensure
+			instance_free: class
 			implicit_attached_type_mark_not_void: Result /= Void
 		end
 
@@ -3375,6 +3785,7 @@ feature -- Types
 			Result.set_attached_mark (True)
 			Result.set_expanded_mark (True)
 		ensure
+			instance_free: class
 			implicit_attached_expanded_type_mark_not_void: Result /= Void
 		end
 
@@ -3385,6 +3796,7 @@ feature -- Types
 			Result.set_attached_mark (True)
 			Result.set_reference_mark (True)
 		ensure
+			instance_free: class
 			implicit_attached_reference_type_mark_not_void: Result /= Void
 		end
 
@@ -3395,6 +3807,7 @@ feature -- Types
 			Result.set_attached_mark (True)
 			Result.set_separate_mark (True)
 		ensure
+			instance_free: class
 			implicit_attached_separate_type_mark_not_void: Result /= Void
 		end
 
@@ -3406,6 +3819,7 @@ feature -- Types
 			Result.set_separate_mark (True)
 			Result.set_expanded_mark (True)
 		ensure
+			instance_free: class
 			implicit_attached_separate_expanded_type_mark_not_void: Result /= Void
 		end
 
@@ -3417,6 +3831,7 @@ feature -- Types
 			Result.set_separate_mark (True)
 			Result.set_reference_mark (True)
 		ensure
+			instance_free: class
 			implicit_attached_separate_reference_type_mark_not_void: Result /= Void
 		end
 
@@ -3426,6 +3841,7 @@ feature -- Types
 			create Result.make
 			Result.set_detachable_mark (True)
 		ensure
+			instance_free: class
 			implicit_detachable_type_mark_not_void: Result /= Void
 		end
 
@@ -3436,6 +3852,7 @@ feature -- Types
 			Result.set_detachable_mark (True)
 			Result.set_expanded_mark (True)
 		ensure
+			instance_free: class
 			implicit_detachable_expanded_type_mark_not_void: Result /= Void
 		end
 
@@ -3446,6 +3863,7 @@ feature -- Types
 			Result.set_detachable_mark (True)
 			Result.set_reference_mark (True)
 		ensure
+			instance_free: class
 			implicit_detachable_reference_type_mark_not_void: Result /= Void
 		end
 
@@ -3456,6 +3874,7 @@ feature -- Types
 			Result.set_detachable_mark (True)
 			Result.set_separate_mark (True)
 		ensure
+			instance_free: class
 			implicit_detachable_separate_type_mark_not_void: Result /= Void
 		end
 
@@ -3467,6 +3886,7 @@ feature -- Types
 			Result.set_separate_mark (True)
 			Result.set_expanded_mark (True)
 		ensure
+			instance_free: class
 			implicit_detachable_separate_expanded_type_mark_not_void: Result /= Void
 		end
 
@@ -3478,6 +3898,7 @@ feature -- Types
 			Result.set_separate_mark (True)
 			Result.set_reference_mark (True)
 		ensure
+			instance_free: class
 			implicit_detachable_separate_reference_type_mark_not_void: Result /= Void
 		end
 
@@ -3487,6 +3908,7 @@ feature -- Types
 			create Result.make
 			Result.set_expanded_mark (True)
 		ensure
+			instance_free: class
 			implicit_expanded_type_mark_not_void: Result /= Void
 		end
 
@@ -3496,6 +3918,7 @@ feature -- Types
 			create Result.make
 			Result.set_reference_mark (True)
 		ensure
+			instance_free: class
 			implicit_reference_type_mark_not_void: Result /= Void
 		end
 
@@ -3505,6 +3928,7 @@ feature -- Types
 			create Result.make
 			Result.set_separate_mark (True)
 		ensure
+			instance_free: class
 			implicit_separate_type_mark_not_void: Result /= Void
 		end
 
@@ -3515,6 +3939,7 @@ feature -- Types
 			Result.set_separate_mark (True)
 			Result.set_expanded_mark (True)
 		ensure
+			instance_free: class
 			implicit_separate_expanded_type_mark_not_void: Result /= Void
 		end
 
@@ -3525,6 +3950,7 @@ feature -- Types
 			Result.set_separate_mark (True)
 			Result.set_reference_mark (True)
 		ensure
+			instance_free: class
 			implicit_separate_reference_type_mark_not_void: Result /= Void
 		end
 
@@ -3533,6 +3959,7 @@ feature -- Types
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			implicit_no_type_mark_not_void: Result /= Void
 		end
 
@@ -3590,6 +4017,7 @@ feature -- Types
 				Result := implicit_no_type_mark
 			end
 		ensure
+			instance_free: class
 			implicit_type_mark_not_void: Result /= Void
 		end
 
@@ -3600,6 +4028,7 @@ feature -- Leaf nodes
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			leaf_not_void: Result /= Void
 			leaf_is_null: Result.is_null
 		end
@@ -3611,6 +4040,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_arrow
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3619,6 +4049,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_arrow
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3627,6 +4058,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_assign
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3635,6 +4067,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_assign_attempt
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3643,6 +4076,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_bang
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3651,6 +4085,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_colon
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3659,6 +4094,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_comma
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3667,6 +4103,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_dollar
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3675,6 +4112,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_dot
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3683,6 +4121,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_dotdot
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3691,6 +4130,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_equal
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3699,6 +4139,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_gt
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3707,6 +4148,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_left_array
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3715,6 +4157,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_left_brace
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3723,6 +4166,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3731,6 +4175,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_left_parenthesis
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3739,6 +4184,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_lt
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3747,6 +4193,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3755,6 +4202,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_right_array
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3763,6 +4211,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_right_brace
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3771,6 +4220,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_right_bracket
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3779,6 +4229,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_right_parenthesis
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3787,6 +4238,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3795,6 +4247,7 @@ feature -- Symbols
 		once ("PROCESS")
 			create Result.make_tilde
 		ensure
+			instance_free: class
 			symbol_not_void: Result /= Void
 		end
 
@@ -3805,6 +4258,7 @@ feature -- Keywords
 		once ("PROCESS")
 			Result := strip_keyword
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3813,6 +4267,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_across
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3821,6 +4276,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3829,6 +4285,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_and
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3837,6 +4294,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_alias
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3845,6 +4303,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_all
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3853,6 +4312,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_as
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3861,6 +4321,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_assign
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3869,6 +4330,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_attached
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3877,6 +4339,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_attribute
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3885,6 +4348,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_check
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3893,6 +4357,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_class
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3901,6 +4366,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_convert
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3909,6 +4375,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_create
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3917,6 +4384,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_creation
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3925,6 +4393,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3933,6 +4402,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_debug
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3941,6 +4411,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_deferred
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3949,6 +4420,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_detachable
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3957,6 +4429,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_do
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3965,6 +4438,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_else
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3973,6 +4447,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_elseif
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3981,6 +4456,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_end
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3989,6 +4465,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_ensure
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -3997,6 +4474,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_expanded
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4005,6 +4483,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_export
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4013,6 +4492,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_external
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4021,6 +4501,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4029,6 +4510,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_feature
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4037,6 +4519,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_from
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4045,6 +4528,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_frozen
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4053,6 +4537,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_if
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4061,6 +4546,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_indexing
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4069,6 +4555,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_infix
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4077,6 +4564,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_inherit
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4085,6 +4573,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_inspect
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4093,6 +4582,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_invariant
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4101,6 +4591,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_is
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4109,6 +4600,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_like
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4117,6 +4609,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_local
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4125,6 +4618,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_loop
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4133,6 +4627,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_note
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4141,6 +4636,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_obsolete
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4149,6 +4645,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_old
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4157,6 +4654,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_once
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4165,6 +4663,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_or
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4173,6 +4672,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4181,6 +4681,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_prefix
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4189,6 +4690,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_redefine
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4197,6 +4699,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_reference
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4205,6 +4708,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_rename
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4213,6 +4717,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_require
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4221,6 +4726,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_rescue
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4229,6 +4735,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4237,6 +4744,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4245,6 +4753,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_select
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4253,6 +4762,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_separate
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4261,6 +4771,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_some
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4269,6 +4780,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_strip
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4277,6 +4789,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_then
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4285,6 +4798,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4293,6 +4807,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make (capitalized_tuple_name)
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4301,6 +4816,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_undefine
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4309,6 +4825,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_unique
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4317,6 +4834,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_until
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4325,6 +4843,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_variant
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4333,6 +4852,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -4341,6 +4861,7 @@ feature -- Keywords
 		once ("PROCESS")
 			create Result.make_when
 		ensure
+			instance_free: class
 			keyword_not_void: Result /= Void
 		end
 
@@ -5548,6 +6069,7 @@ feature -- Built-in
 		once ("PROCESS")
 			create Result.make (unknown_class_type)
 		ensure
+			instance_free: class
 			unknown_convert_feature_not_void: Result /= Void
 		end
 
@@ -5578,6 +6100,7 @@ feature -- Position
 		once ("PROCESS")
 			create {ET_COMPRESSED_POSITION} Result.make_default
 		ensure
+			instance_free: class
 			position_not_void: Result /= Void
 			position_is_null: Result.is_null
 		end
@@ -5589,6 +6112,7 @@ feature -- Ancestors
 		once ("PROCESS")
 			create Result.make_with_capacity (0)
 		ensure
+			instance_free: class
 			ancestors_not_void: Result /= Void
 			ancestors_empty: Result.is_empty
 		end
@@ -5598,6 +6122,7 @@ feature -- Ancestors
 		once ("PROCESS")
 			create Result.make (unknown_class_type, Void, Void, Void, Void, Void)
 		ensure
+			instance_free: class
 			unknown_parent_not_void: Result /= Void
 		end
 
@@ -5607,6 +6132,7 @@ feature -- Ancestors
 			create Result.make_with_capacity (1)
 			Result.put_first (unknown_parent)
 		ensure
+			instance_free: class
 			unknown_parents_not_void: Result /= Void
 		end
 
@@ -5617,6 +6143,7 @@ feature -- Features
 		once ("PROCESS")
 			create Result.make_with_capacity (0)
 		ensure
+			instance_free: class
 			queries_not_void: Result /= Void
 			queries_empty: Result.is_empty
 		end
@@ -5626,6 +6153,7 @@ feature -- Features
 		once ("PROCESS")
 			create Result.make_with_capacity (0)
 		ensure
+			instance_free: class
 			procedures_not_void: Result /= Void
 			procedures_empty: Result.is_empty
 		end
@@ -5637,6 +6165,7 @@ feature -- Clients
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			clients_not_void: Result /= Void
 			clients_empty: Result.is_empty
 		end
@@ -5657,6 +6186,7 @@ feature -- System
 			Result.set_interface_error
 			Result.set_implementation_error
 		ensure
+			instance_free: class
 			unknown_class_not_void: Result /= Void
 		end
 
@@ -5665,6 +6195,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make (implicit_attached_type_mark, unknown_class.name, unknown_class)
 		ensure
+			instance_free: class
 			unknown_class_type_not_void: Result /= Void
 		end
 
@@ -5676,6 +6207,7 @@ feature -- System
 			create l_parameters.make
 			create Result.make_generic (implicit_attached_type_mark, unknown_class.name, l_parameters, unknown_class)
 		ensure
+			instance_free: class
 			unknown_generic_class_type_not_void: Result /= Void
 		end
 
@@ -5684,6 +6216,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make (implicit_attached_type_mark, Void, unknown_class)
 		ensure
+			instance_free: class
 			unknown_tuple_type_not_void: Result /= Void
 		end
 
@@ -5692,6 +6225,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			unknown_group_not_void: Result /= Void
 		end
 
@@ -5700,6 +6234,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make ("*unknown*")
 		ensure
+			instance_free: class
 			unknown_system_not_void: Result /= Void
 		end
 
@@ -5708,6 +6243,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make ("*unknown*", unknown_system)
 		ensure
+			instance_free: class
 			unknown_library_not_void: Result /= Void
 		end
 
@@ -5716,6 +6252,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make ("*unknown*", Void, unknown_system)
 		ensure
+			instance_free: class
 			unknown_dotnet_assembly_not_void: Result /= Void
 		end
 
@@ -5725,6 +6262,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make_standard
 		ensure
+			instance_free: class
 			standard_error_handler_not_void: Result /= Void
 		end
 
@@ -5734,6 +6272,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make_null
 		ensure
+			instance_free: class
 			null_error_handler_not_void: Result /= Void
 		end
 
@@ -5742,6 +6281,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			default_ast_factory_not_void: Result /= Void
 		end
 
@@ -5750,6 +6290,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make_with_capacity (0)
 		ensure
+			instance_free: class
 			empty_actual_parameters_not_void: Result /= Void
 			actual_parameters_is_empty: Result.is_empty
 		end
@@ -5759,6 +6300,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make
 		ensure
+			instance_free: class
 			null_ast_processor_not_void: Result /= Void
 		end
 
@@ -5767,6 +6309,7 @@ feature -- System
 		once ("PROCESS")
 			create Result.make_null
 		ensure
+			instance_free: class
 			null_system_processor_not_void: Result /= Void
 		end
 
@@ -5777,6 +6320,7 @@ feature -- Empty lists
 		once ("PROCESS")
 			create Result.make (0)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
 		end
@@ -5786,6 +6330,7 @@ feature -- Empty lists
 		once ("PROCESS")
 			create Result.make (0)
 		ensure
+			instance_free: class
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
 		end

@@ -5,7 +5,7 @@ note
 		"Context constants for the Decimal Arithmetic library"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
+	copyright: "Copyright (c) 2004-2018, Paul G. Crismer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -111,6 +111,7 @@ feature -- Constants: limits
 		once
 			Result := decimal.minimum_integer
 		ensure
+			instance_free: class
 			minimum_integer_not_void: Result /= Void
 		end
 
@@ -121,6 +122,7 @@ feature -- Constants: limits
 		once
 			Result := decimal.maximum_integer
 		ensure
+			instance_free: class
 			maximum_integer_not_void: Result /= Void
 		end
 
@@ -132,6 +134,7 @@ feature -- Constants: defaults
 		once
 			Result := <<Signal_division_by_zero, Signal_invalid_operation, Signal_overflow, Signal_underflow>>
 		ensure
+			instance_free: class
 			default_traps_not_void: Result /= Void
 			has_division_by_zero: INTEGER_ARRAY_.has (Result, Signal_division_by_zero)
 			has_invalid_operation: INTEGER_ARRAY_.has (Result, Signal_invalid_operation)
@@ -144,6 +147,7 @@ feature -- Constants: defaults
 		once
 			Result := Round_half_up
 		ensure
+			instance_free: class
 			definition: Result = Round_half_up
 		end
 
@@ -164,6 +168,7 @@ feature -- Constants: support
 		once
 			Result := <<Round_half_up, Round_unnecessary, Round_ceiling, Round_down, Round_floor, Round_half_down, Round_half_even, Round_up>>
 		ensure
+			instance_free: class
 			rounds_not_void: Result /= Void
 		end
 
@@ -173,6 +178,7 @@ feature -- Constants: support
 			Result := <<"Round_up", "Round_down", "Round_ceiling", "Round_floor", "Round_half_up",
 				"Round_half_down", "Round_half_even", "Round_unnecessary">>
 		ensure
+			instance_free: class
 			round_word_not_void: Result /= Void
 			no_void_round_words: not ANY_ARRAY_.has (Result, Void)
 		end
@@ -183,6 +189,7 @@ feature -- Constants: support
 			Result := << Signal_division_by_zero, Signal_inexact, Signal_invalid_operation,
 				Signal_lost_digits, Signal_overflow, Signal_rounded, Signal_underflow, Signal_subnormal>>
 		ensure
+			instance_free: class
 			signals_not_void: Result /= Void
 		end
 
@@ -192,6 +199,7 @@ feature -- Constants: support
 			Result := << "division_by_zero", "inexact", "invalid_operation",
 				"lost_digits", "overflow", "rounded", "underflow", "subnormal">>
 		ensure
+			instance_free: class
 			signal_words_not_void: Result /= Void
 			no_void_signal_words: not ANY_ARRAY_.has (Result, Void)
 		end

@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class ANY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,8 @@ feature -- Status report
 			obj2_not_void: obj2 /= Void
 		do
 			Result := obj1.same_type (obj2)
+		ensure
+			instance_free: class
 		end
 
 	same_objects (obj1, obj2: detachable ANY): BOOLEAN
@@ -33,6 +35,7 @@ feature -- Status report
 		do
 			Result := obj1 = obj2
 		ensure
+			instance_free: class
 			definition: Result = (obj1 = obj2)
 		end
 
@@ -45,6 +48,7 @@ feature -- Status report
 				Result := obj1 ~ obj2
 			end
 		ensure
+			instance_free: class
 			definition: Result = (obj1 ~ obj2)
 		end
 
@@ -59,6 +63,7 @@ feature -- Conversion
 		do
 			Result := an_any
 		ensure
+			instance_free: class
 			definition: Result = an_any
 		end
 

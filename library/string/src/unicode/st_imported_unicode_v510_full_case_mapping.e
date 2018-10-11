@@ -5,7 +5,7 @@ note
 		"Imported case mapping routine for Unicode version 5.1.0s"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2008, Colin Adams and others"
+	copyright: "Copyright (c) 2008-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			case_mapping_v510_not_void: Result /= Void
 		end
 

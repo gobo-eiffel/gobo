@@ -5,7 +5,7 @@ note
 		"Integer formatters"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -115,6 +115,8 @@ feature -- File handling
 					a_file.put_character ('9')
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	put_decimal_natural_32 (a_file: KI_CHARACTER_OUTPUT_STREAM; a_value: NATURAL_32)
@@ -157,6 +159,8 @@ feature -- File handling
 					a_file.put_character ('9')
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	put_octal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER)
@@ -195,6 +199,8 @@ feature -- File handling
 					a_file.put_character ('7')
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	put_hexadecimal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER; uppercase: BOOLEAN)
@@ -275,6 +281,8 @@ feature -- File handling
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 end

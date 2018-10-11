@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in agent classes."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2009-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #3 $"
@@ -24,6 +24,8 @@ feature -- Action
 			a_action_not_void: a_action /= Void
 		do
 			a_action.call ([])
+		ensure
+			instance_free: class
 		end
 
 feature -- Boolean operations
@@ -38,6 +40,8 @@ feature -- Boolean operations
 			a_boolean_not_void: a_boolean /= Void
 		do
 			Result := a_boolean.item ([])
+		ensure
+			instance_free: class
 		end
 
 	negated (v: G; a_boolean: FUNCTION [G, BOOLEAN]): BOOLEAN
@@ -46,6 +50,8 @@ feature -- Boolean operations
 			a_boolean_not_void: a_boolean /= Void
 		do
 			Result := not a_boolean.item ([v])
+		ensure
+			instance_free: class
 		end
 
 	conjuncted (v: G; a_left, a_right: FUNCTION [G, BOOLEAN]): BOOLEAN
@@ -55,6 +61,8 @@ feature -- Boolean operations
 			a_right_not_void: a_right /= Void
 		do
 			Result := a_left.item ([v]) and a_right.item ([v])
+		ensure
+			instance_free: class
 		end
 
 	conjuncted_semistrict (v: G; a_left, a_right: FUNCTION [G, BOOLEAN]): BOOLEAN
@@ -64,6 +72,8 @@ feature -- Boolean operations
 			a_right_not_void: a_right /= Void
 		do
 			Result := a_left.item ([v]) and then a_right.item ([v])
+		ensure
+			instance_free: class
 		end
 
 	disjuncted (v: G; a_left, a_right: FUNCTION [G, BOOLEAN]): BOOLEAN
@@ -73,6 +83,8 @@ feature -- Boolean operations
 			a_right_not_void: a_right /= Void
 		do
 			Result := a_left.item ([v]) or a_right.item ([v])
+		ensure
+			instance_free: class
 		end
 
 	disjuncted_semistrict (v: G; a_left, a_right: FUNCTION [G, BOOLEAN]): BOOLEAN
@@ -82,6 +94,8 @@ feature -- Boolean operations
 			a_right_not_void: a_right /= Void
 		do
 			Result := a_left.item ([v]) or else a_right.item ([v])
+		ensure
+			instance_free: class
 		end
 
 	disjuncted_exclusive (v: G; a_left, a_right: FUNCTION [G, BOOLEAN]): BOOLEAN
@@ -91,6 +105,8 @@ feature -- Boolean operations
 			a_right_not_void: a_right /= Void
 		do
 			Result := a_left.item ([v]) xor a_right.item ([v])
+		ensure
+			instance_free: class
 		end
 
 	implication (v: G; a_left, a_right: FUNCTION [G, BOOLEAN]): BOOLEAN
@@ -100,6 +116,8 @@ feature -- Boolean operations
 			a_right_not_void: a_right /= Void
 		do
 			Result := a_left.item ([v]) implies a_right.item ([v])
+		ensure
+			instance_free: class
 		end
 
 end

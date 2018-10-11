@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class HASHABLE"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,6 +25,7 @@ feature -- Access
 				Result := an_any.generating_type.hash_code
 			end
 		ensure
+			instance_free: class
 			hash_value_not_negative: Result >= 0
 		end
 

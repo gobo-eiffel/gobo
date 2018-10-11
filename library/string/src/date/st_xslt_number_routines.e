@@ -52,6 +52,8 @@ feature -- Access
 			if a_language.count > 1 and then STRING_.same_string (a_language.substring (1, 2), "en") then
 				create {ST_XSLT_NUMBERER_EN} Result
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_zeros_plus_one (a_picture: STRING): BOOLEAN
@@ -77,6 +79,8 @@ feature -- Access
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	decimal_digits_set (a_picture: STRING): STRING
@@ -99,6 +103,7 @@ feature -- Access
 				a_count := a_count + 1
 			end
 		ensure
+			instance_free: class
 			decimal_digits_set_not_void: Result /= Void
 			ten_digits: Result.count = 10
 		end
@@ -107,6 +112,8 @@ feature -- Access
 			-- Is `an_integer' a Unicode code-point of decimal value 1?
 		do
 			Result := unicode_character_class.is_decimal_digit (an_integer) and then unicode_character_class.decimal_digit_value (an_integer) = 1
+		ensure
+			instance_free: class
 		end
 
 end

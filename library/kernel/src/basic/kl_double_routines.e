@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class DOUBLE"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,8 @@ feature -- Logarithms
 			d_positive: d > 0.0
 		do
 			Result := old_log (d)
+		ensure
+			instance_free: class
 		end
 
 	log2 (d: DOUBLE): DOUBLE
@@ -41,6 +43,8 @@ feature -- Logarithms
 			d_positive: d > 0.0
 		do
 			Result := log_2 (d)
+		ensure
+			instance_free: class
 		end
 
 	log10 (d: DOUBLE): DOUBLE
@@ -49,6 +53,8 @@ feature -- Logarithms
 			d_positive: d > 0.0
 		do
 			Result := old_log10 (d)
+		ensure
+			instance_free: class
 		end
 
 feature -- Exponent
@@ -57,6 +63,8 @@ feature -- Exponent
 			-- Inverse of the natural logarithm
 		do
 			Result := old_exp (d)
+		ensure
+			instance_free: class
 		end
 
 	nth_root (d, n: DOUBLE): DOUBLE
@@ -65,6 +73,8 @@ feature -- Exponent
 			divisible: (1.0).divisible (n)
 		do
 			Result := d ^ (1.0 / n)
+		ensure
+			instance_free: class
 		end
 
 feature -- Conversion
@@ -77,6 +87,8 @@ feature -- Conversion
 			d_small_enough: d <= Platform.Maximum_integer
 		do
 			Result := d.truncated_to_integer
+		ensure
+			instance_free: class
 		end
 
 	rounded_to_integer (d: DOUBLE): INTEGER
@@ -87,6 +99,7 @@ feature -- Conversion
 		do
 			Result := d.rounded
 		ensure
+			instance_free: class
 			definition: Result = d.sign * floor_to_integer (d.abs + 0.5)
 		end
 
@@ -101,6 +114,7 @@ feature -- Conversion
 				Result := Result - 1
 			end
 		ensure
+			instance_free: class
 			definition: Result = d.floor
 		end
 
@@ -137,6 +151,8 @@ feature -- NaN
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Infinity
@@ -158,6 +174,8 @@ feature -- Infinity
 				p2.put_real_64 (plus_infinity, 0)
 				Result := p1.read_natural_64 (0) = p2.read_natural_64 (0)
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_minus_infinity (d: DOUBLE): BOOLEAN
@@ -177,6 +195,8 @@ feature -- Infinity
 				p2.put_real_64 (minus_infinity, 0)
 				Result := p1.read_natural_64 (0) = p2.read_natural_64 (0)
 			end
+		ensure
+			instance_free: class
 		end
 
 	plus_infinity: DOUBLE
@@ -197,6 +217,7 @@ feature -- Infinity
 			p.put_natural_8 (127, 7)
 			Result := p.read_real_64 (0)
 		ensure
+			instance_free: class
 			positive: Result > 0
 		end
 
@@ -218,6 +239,7 @@ feature -- Infinity
 			p.put_natural_8 (255, 7)
 			Result := p.read_real_64 (0)
 		ensure
+			instance_free: class
 			negative: Result < 0
 		end
 

@@ -5,7 +5,7 @@ note
 		"Routines for cased variants of Unicode 5.1.0 characters"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2008, Colin Adams and others"
+	copyright: "Copyright (c) 2008-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,6 +44,7 @@ feature -- Status report
 		do
 			Result := (a_code >= minimum_unicode_character_code and a_code <= maximum_unicode_character_code)
 		ensure
+			instance_free: class
 			definition: Result = (a_code >= minimum_unicode_character_code and a_code <= maximum_unicode_character_code)
 		end
 
@@ -65,6 +66,7 @@ feature -- Access
 				Result := a_code_point
 			end
 		ensure
+			instance_free: class
 			valid_lower_code: valid_code (Result)
 		end
 
@@ -84,6 +86,7 @@ feature -- Access
 				Result := a_code_point
 			end
 		ensure
+			instance_free: class
 			valid_upper_code: valid_code (Result)
 		end
 
@@ -103,6 +106,7 @@ feature -- Access
 				Result := a_code_point
 			end
 		ensure
+			instance_free: class
 			valid_title_code: valid_code (Result)
 		end
 

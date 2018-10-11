@@ -5,7 +5,7 @@ note
 		"Validation routines for UT_HOST_PORT"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004, Franck Arnaud and others"
+	author: "Copyright (c) 2004-2018, Franck Arnaud and others"
 	revision: "$Revision$"
 	date: "$Date$"
 
@@ -29,6 +29,8 @@ feature -- Status report
 					Result := a_string.count > 0
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_valid_port (a_port: INTEGER): BOOLEAN
@@ -36,6 +38,7 @@ feature -- Status report
 		do
 			Result := a_port >= 0 and a_port < Maximum_port
 		ensure
+			instance_free: class
 			definition: Result = (a_port >= 0 and a_port < Maximum_port)
 		end
 

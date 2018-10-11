@@ -5,7 +5,7 @@ note
 		"Imported routines that ought to be in class ARRAY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			any_array_routines_not_void: Result /= Void
 		end
 
@@ -27,6 +28,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			integer_array_routines_not_void: Result /= Void
 		end
 
@@ -35,6 +37,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			boolean_array_routines_not_void: Result /= Void
 		end
 
@@ -43,6 +46,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			string_array_routines_not_void: Result /= Void
 		end
 
@@ -51,6 +55,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			string_array_routines_not_void: Result /= Void
 		end
 
@@ -59,6 +64,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			detachable_string_array_routines_not_void: Result /= Void
 		end
 
@@ -67,6 +73,7 @@ feature -- Access
 		once
 			create Result
 		ensure
+			instance_free: class
 			special_integer_array_routines_not_void: Result /= Void
 		end
 
