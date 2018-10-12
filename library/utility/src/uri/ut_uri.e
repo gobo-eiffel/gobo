@@ -176,13 +176,16 @@ feature {NONE} -- Implementation
 			l_name,
 			l_value: STRING
 			i: INTEGER
+			l_query_items: like query_items
 		do
 			if attached query_item as q and then attached q.encoded as s then
-				create query_items.make (1)
+				create l_query_items.make (1)
+				query_items := l_query_items
 				from
 					i := 2
 					l_name_start := 1
 					l_value_start := 0
+					l_name := ""
 				invariant
 					i <= s.count + 1 and then l_name_start < i and l_value_start < i
 				until
@@ -194,10 +197,10 @@ feature {NONE} -- Implementation
 						l_value_start := i + 1
 					when '&' then
 						if l_value_start = 0 then
-							query_items.force_last ("", l_name)
+							l_query_items.force_last ("", l_name)
 						else
 							l_value := s.substring (l_value_start, i - 1)
-							query_items.force_last (l_value, l_name)
+							l_query_items.force_last (l_value, l_name)
 						end
 						l_name_start := i + 1
 						l_value_start := 0
@@ -208,10 +211,10 @@ feature {NONE} -- Implementation
 				end
 				if l_value_start = 0 then
 					l_name := s.substring (l_name_start, i - 1)
-					query_items.force_last ("", l_name)
+					l_query_items.force_last ("", l_name)
 				else
 					l_value := s.substring (l_value_start, i - 1)
-					query_items.force_last (l_value, l_name)
+					l_query_items.force_last (l_value, l_name)
 				end
 			end
 		ensure
