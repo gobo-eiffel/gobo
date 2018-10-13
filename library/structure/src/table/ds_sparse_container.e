@@ -6,7 +6,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #16 $"
@@ -600,7 +600,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 			i_small_enough: i <= last_position
 		deferred
 		ensure
-			inserted: item_storage_item (i) = v
+			inserted: {KL_TYPE [G]}.same_objects (item_storage_item (i), v)
 		end
 
 	key_storage_item (i: INTEGER): K

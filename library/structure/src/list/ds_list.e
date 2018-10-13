@@ -5,7 +5,7 @@ note
 		"List structures"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -169,7 +169,7 @@ feature -- Element change
 			internal_cursor.replace (v)
 		ensure
 			same_count: count = old count
-			replaced: item_for_iteration = v
+			replaced: {KL_TYPE [G]}.same_objects (item_for_iteration, v)
 		end
 
 	replace_at_cursor (v: G; a_cursor: like new_cursor)
@@ -184,7 +184,7 @@ feature -- Element change
 			a_cursor.replace (v)
 		ensure
 			same_count: count = old count
-			replaced: a_cursor.item = v
+			replaced: {KL_TYPE [G]}.same_objects (a_cursor.item, v)
 		end
 
 	extend_left (other: DS_LINEAR [G])
@@ -199,7 +199,7 @@ feature -- Element change
 			extend_left_cursor (other, internal_cursor)
 		ensure
 			new_count: count = old count + old other.count
-			same_order: (not other.is_empty) implies (item (old index) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (old index), other.first))
 		end
 
 	extend_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
@@ -216,7 +216,7 @@ feature -- Element change
 		deferred
 		ensure
 			new_count: count = old count + old other.count
-			same_order: (not other.is_empty) implies (item (old (a_cursor.index)) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (old (a_cursor.index)), other.first))
 		end
 
 	extend_right (other: DS_LINEAR [G])
@@ -231,7 +231,7 @@ feature -- Element change
 			extend_right_cursor (other, internal_cursor)
 		ensure
 			new_count: count = old count + old other.count
-			same_order: (not other.is_empty) implies (item (index + 1) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (index + 1), other.first))
 		end
 
 	extend_right_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
@@ -248,7 +248,7 @@ feature -- Element change
 		deferred
 		ensure
 			new_count: count = old count + old other.count
-			same_order: (not other.is_empty) implies (item (a_cursor.index + 1) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (a_cursor.index + 1), other.first))
 		end
 
 	append_left (other: DS_LINEAR [G])
@@ -262,7 +262,7 @@ feature -- Element change
 			append_left_cursor (other, internal_cursor)
 		ensure
 			new_count: count = old count + old other.count
-			same_order: (not other.is_empty) implies (item (old index) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (old index), other.first))
 		end
 
 	append_left_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
@@ -278,7 +278,7 @@ feature -- Element change
 		deferred
 		ensure
 			new_count: count = old count + old other.count
-			same_order: (not other.is_empty) implies (item (old (a_cursor.index)) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (old (a_cursor.index)), other.first))
 		end
 
 	append_right (other: DS_LINEAR [G])
@@ -292,7 +292,7 @@ feature -- Element change
 			append_right_cursor (other, internal_cursor)
 		ensure
 			new_count: count = old count + old other.count
-			same_order: (not other.is_empty) implies (item (index + 1) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (index + 1), other.first))
 		end
 
 	append_right_cursor (other: DS_LINEAR [G]; a_cursor: like new_cursor)
@@ -308,7 +308,7 @@ feature -- Element change
 		deferred
 		ensure
 			new_count: count = old count + old other.count
-			same_order: (not other.is_empty) implies (item (a_cursor.index + 1) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (a_cursor.index + 1), other.first))
 		end
 
 feature -- Removal

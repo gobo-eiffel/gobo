@@ -39,7 +39,7 @@ feature -- Initialization
 			special_not_void: Result /= Void
 			capacity_set: Result.capacity = n
 			count_set: Result.count = n
-			filled: -- For every `i' in `0' .. `n - 1', `item' (`i') = `v'
+			filled: across 0 |..| (n - 1) as i all {KL_TYPE [G]}.same_objects (Result.item (i.item), v) end
 		end
 
 	make_from_array (an_array: ARRAY [G]): SPECIAL [G]
@@ -55,7 +55,7 @@ feature -- Initialization
 			instance_free: class
 			special_not_void: Result /= Void
 			count_set: Result.count = an_array.count
-			same_items: across 0 |..| (Result.count - 1) as i all Result.item (i.item) = an_array.item (an_array.lower + i.item) end
+			same_items: across 0 |..| (Result.count - 1) as i all {KL_TYPE [G]}.same_objects (Result.item (i.item), an_array.item (an_array.lower + i.item)) end
 		end
 
 feature -- Conversion
@@ -73,7 +73,7 @@ feature -- Conversion
 			instance_free: class
 			special_not_void: Result /= Void
 			count_set: Result.count >= an_array.count
-			same_items: across 0 |..| (an_array.count - 1) as i all Result.item (i.item) = an_array.item (an_array.lower + i.item) end
+			same_items: across 0 |..| (an_array.count - 1) as i all {KL_TYPE [G]}.same_objects (Result.item (i.item), an_array.item (an_array.lower + i.item)) end
 		end
 
 feature -- Status report
@@ -128,7 +128,7 @@ feature -- Element change
 			an_array.keep_head (n)
 		ensure
 			instance_free: class
-			kept: an_array.same_items (old an_array.twin, 0, 0, n)
+			kept: across 0 |..| (n - 1) as i all {KL_TYPE [G]}.same_objects (an_array.item (i.item), (old an_array.twin).item (i.item)) end
 		end
 
 feature -- Resizing
@@ -150,7 +150,7 @@ feature -- Resizing
 			instance_free: class
 			special_not_void: Result /= Void
 			count_set: Result.capacity = n
-			preserved: Result.same_items (old an_array.twin, 0, 0, n.min (old an_array.count))
+			preserved: across 0 |..| (n.min (old an_array.count) - 1) as i all {KL_TYPE [G]}.same_objects (Result.item (i.item), (old an_array.twin).item (i.item)) end
 		end
 
 	aliased_resized_area (an_array: SPECIAL [G]; n: INTEGER): SPECIAL [G]
@@ -172,7 +172,7 @@ feature -- Resizing
 			instance_free: class
 			special_not_void: Result /= Void
 			count_set: Result.capacity = n
-			preserved: Result.same_items (old an_array.twin, 0, 0, n.min (old an_array.count))
+			preserved: across 0 |..| (n.min (old an_array.count) - 1) as i all {KL_TYPE [G]}.same_objects (Result.item (i.item), (old an_array.twin).item (i.item)) end
 		end
 
 	aliased_resized_area_with_default (an_array: SPECIAL [G]; a_default_value: G; n: INTEGER): SPECIAL [G]
@@ -192,7 +192,7 @@ feature -- Resizing
 			special_not_void: Result /= Void
 			new_count: Result.count = n
 			new_capacity: Result.capacity = n
-			preserved: Result.same_items (old an_array.twin, 0, 0, n.min (old an_array.count))
+			preserved: across 0 |..| (n.min (old an_array.count) - 1) as i all {KL_TYPE [G]}.same_objects (Result.item (i.item), (old an_array.twin).item (i.item)) end
 		end
 
 end

@@ -30,7 +30,7 @@ feature -- Initialization
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
 			count_set: Result.count = an_array.count
-			same_items: across Result.lower |..| Result.upper as i all Result.item (i.item) = an_array.item (i.item + an_array.lower - min_index) end
+			same_items: across Result.lower |..| Result.upper as i all {KL_TYPE [G]}.same_objects (Result.item (i.item), an_array.item (i.item + an_array.lower - min_index)) end
 		end
 
 	make_empty_with_lower (min_index: INTEGER): ARRAY [G]
@@ -141,7 +141,7 @@ feature -- Access
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
 			count_set: Result.count = end_pos - start_pos + 1
-			same_items: across Result.lower |..| Result.upper as i all Result.item (i.item) = an_array.item (i.item + start_pos - min_index) end
+			same_items: across Result.lower |..| Result.upper as i all {KL_TYPE [G]}.same_objects (Result.item (i.item), an_array.item (i.item + start_pos - min_index)) end
 		end
 
 feature -- Duplication
@@ -181,7 +181,7 @@ feature -- Element change
 			end
 		ensure
 			instance_free: class
-			copied: across 0 |..| (end_pos - start_pos) as i all an_array.item (index_pos + i.item) = other.item (start_pos + i.item) end
+			copied: across 0 |..| (end_pos - start_pos) as i all {KL_TYPE [G]}.same_objects (an_array.item (index_pos + i.item), other.item (start_pos + i.item)) end
 		end
 
 feature -- Resizing

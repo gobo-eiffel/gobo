@@ -41,8 +41,8 @@ feature -- Access
 				Result := item (k)
 			end
 		ensure then
-			item_if_has: has (k) implies Result = item (k)
-			default_if_not_has: not has (k) implies Result = ({G}).default_detachable_value
+			item_if_has: has (k) implies {KL_TYPE [G]}.same_detachable_objects (Result, item (k))
+			default_if_not_has: not has (k) implies {KL_TYPE [G]}.same_detachable_objects (Result, ({G}).default_detachable_value)
 		end
 
 feature -- Status report
@@ -89,7 +89,7 @@ feature -- Element change
 			has_k: has (k)
 		deferred
 		ensure
-			replaced: item (k) = v
+			replaced: {KL_TYPE [G]}.same_objects (item (k), v)
 			same_count: count = old count
 		end
 
@@ -99,7 +99,7 @@ feature -- Element change
 			valid_key: valid_key (k)
 		deferred
 		ensure
-			inserted: has (k) and then item (k) = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 			same_count: (old has (k)) implies (count = old count)
 			one_more: (not old has (k)) implies (count = old count + 1)
 		end
@@ -112,7 +112,7 @@ feature -- Element change
 		deferred
 		ensure
 			one_more: count = old count + 1
-			inserted: has (k) and then item (k) = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 		end
 
 	swap (k, l: K)
@@ -128,8 +128,8 @@ feature -- Element change
 			replace (v, l)
 		ensure
 			same_count: count = old count
-			new_k: item (k) = old item (l)
-			new_l: item (l) = old item (k)
+			new_k: {KL_TYPE [G]}.same_objects (item (k), old item (l))
+			new_l: {KL_TYPE [G]}.same_objects (item (l), old item (k))
 		end
 
 feature -- Removal

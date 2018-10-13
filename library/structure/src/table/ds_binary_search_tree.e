@@ -9,7 +9,7 @@ note
 		are DS_AVL_TREE and DS_RED_BLACK_TREE.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2016, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2018, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -128,7 +128,7 @@ feature -- Element change
 		do
 			internal_put (v, k)
 		ensure
-			inserted: has (k) and then item (k) = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 			same_count: (old has (k)) implies (count = old count)
 			one_more: (not old has (k)) implies (count = old count + 1)
 		end
@@ -142,7 +142,7 @@ feature -- Element change
 			internal_put_new (v, k)
 		ensure
 			one_more: count = old count + 1
-			inserted: has (k) and then item (k) = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 		end
 
 feature {NONE} -- Element change

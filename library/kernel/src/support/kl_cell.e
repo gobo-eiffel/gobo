@@ -5,7 +5,7 @@ note
 		"Cells containing an item"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ feature -- Element change
 		do
 			item := v
 		ensure
-			inserted: item = v
+			inserted: {KL_TYPE [G]}.same_objects (item, v)
 		end
 
 end

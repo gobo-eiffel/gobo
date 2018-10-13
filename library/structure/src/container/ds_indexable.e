@@ -6,7 +6,7 @@ note
 		%modified through integer access"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #11 $"
@@ -47,7 +47,7 @@ feature -- Access
 			not_empty: not is_empty
 		deferred
 		ensure
-			definition: Result = item (1)
+			definition: {KL_TYPE [G]}.same_objects (Result, item (1))
 		end
 
 	last: G
@@ -56,7 +56,7 @@ feature -- Access
 			not_empty: not is_empty
 		deferred
 		ensure
-			definition: Result = item (count)
+			definition: {KL_TYPE [G]}.same_objects (Result, item (count))
 		end
 
 feature -- Element change
@@ -68,7 +68,7 @@ feature -- Element change
 		deferred
 		ensure
 			one_more: count = old count + 1
-			inserted: first = v
+			inserted: {KL_TYPE [G]}.same_objects (first, v)
 		end
 
 	put_last (v: G)
@@ -76,7 +76,7 @@ feature -- Element change
 		deferred
 		ensure then
 			one_more: count = old count + 1
-			inserted: last = v
+			inserted: {KL_TYPE [G]}.same_objects (last, v)
 		end
 
 	put (v: G; i: INTEGER)
@@ -87,7 +87,7 @@ feature -- Element change
 		deferred
 		ensure
 			one_more: count = old count + 1
-			inserted: item (i) = v
+			inserted: {KL_TYPE [G]}.same_objects (item (i), v)
 		end
 
 	force_first (v: G)
@@ -95,7 +95,7 @@ feature -- Element change
 		deferred
 		ensure
 			one_more: count = old count + 1
-			inserted: first = v
+			inserted: {KL_TYPE [G]}.same_objects (first, v)
 		end
 
 	force_last (v: G)
@@ -103,7 +103,7 @@ feature -- Element change
 		deferred
 		ensure then
 			one_more: count = old count + 1
-			inserted: last = v
+			inserted: {KL_TYPE [G]}.same_objects (last, v)
 		end
 
 	force (v: G; i: INTEGER)
@@ -113,7 +113,7 @@ feature -- Element change
 		deferred
 		ensure
 			one_more: count = old count + 1
-			inserted: item (i) = v
+			inserted: {KL_TYPE [G]}.same_objects (item (i), v)
 		end
 
 	replace (v: G; i: INTEGER)
@@ -123,7 +123,7 @@ feature -- Element change
 		deferred
 		ensure
 			same_count: count = old count
-			replaced: item (i) = v
+			replaced: {KL_TYPE [G]}.same_objects (item (i), v)
 		end
 
 	swap (i, j: INTEGER)
@@ -139,8 +139,8 @@ feature -- Element change
 			replace (v, j)
 		ensure
 			same_count: count = old count
-			new_i: item (i) = old item (j)
-			new_j: item (j) = old item (i)
+			new_i: {KL_TYPE [G]}.same_objects (item (i), old item (j))
+			new_j: {KL_TYPE [G]}.same_objects (item (j), old item (i))
 		end
 
 	extend_first (other: DS_LINEAR [G])
@@ -152,7 +152,7 @@ feature -- Element change
 		deferred
 		ensure
 			new_count: count = old count + other.count
-			same_order: (not other.is_empty) implies (first = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (first, other.first))
 		end
 
 	extend_last (other: DS_LINEAR [G])
@@ -161,7 +161,7 @@ feature -- Element change
 		deferred
 		ensure then
 			new_count: count = old count + other.count
-			same_order: (not other.is_empty) implies (item (old count + 1) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (old count + 1), other.first))
 		end
 
 	extend (other: DS_LINEAR [G]; i: INTEGER)
@@ -174,7 +174,7 @@ feature -- Element change
 		deferred
 		ensure
 			new_count: count = old count + other.count
-			same_order: (not other.is_empty) implies (item (i) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (i), other.first))
 		end
 
 	append_first (other: DS_LINEAR [G])
@@ -185,7 +185,7 @@ feature -- Element change
 		deferred
 		ensure
 			new_count: count = old count + other.count
-			same_order: (not other.is_empty) implies (first = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (first, other.first))
 		end
 
 	append_last (other: DS_LINEAR [G])
@@ -194,7 +194,7 @@ feature -- Element change
 		deferred
 		ensure then
 			new_count: count = old count + other.count
-			same_order: (not other.is_empty) implies (item (old count + 1) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (old count + 1), other.first))
 		end
 
 	append (other: DS_LINEAR [G]; i: INTEGER)
@@ -206,7 +206,7 @@ feature -- Element change
 		deferred
 		ensure
 			new_count: count = old count + other.count
-			same_order: (not other.is_empty) implies (item (i) = other.first)
+			same_order: (not other.is_empty) implies ({KL_TYPE [G]}.same_objects (item (i), other.first))
 		end
 
 feature -- Removal

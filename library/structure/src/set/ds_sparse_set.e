@@ -7,7 +7,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -174,7 +174,7 @@ feature -- Search
 			found_position := position
 		ensure then
 			found_set: found = has (v)
-			found_item_set: found implies (found_item = item (v))
+			found_item_set: found implies {KL_TYPE [G]}.same_objects (found_item, item (v))
 		end
 
 feature -- Comparison
@@ -285,7 +285,7 @@ feature -- Element change
 				count := count + 1
 			end
 		ensure then
-			last: (not old has (v)) implies last = v
+			last: (not old has (v)) implies {KL_TYPE [G]}.same_objects (last, v)
 		end
 
 	force (v: G)
@@ -378,7 +378,7 @@ feature -- Element change
 				count := count + 1
 			end
 		ensure then
-			last: (not old has (v)) implies last = v
+			last: (not old has (v)) implies {KL_TYPE [G]}.same_objects (last, v)
 --			not_changed: old has (v) implies all items at the same position
 		end
 

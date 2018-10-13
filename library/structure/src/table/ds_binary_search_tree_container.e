@@ -1304,7 +1304,7 @@ feature {NONE} -- Element change
 				end
 			end
 		ensure
-			inserted: has_key (k) and then item (k) = v
+			inserted: has_key (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 			same_count: (old has_key (k)) implies (count = old count)
 			one_more: (not old has_key (k)) implies (count = old count + 1)
 		end
@@ -1352,7 +1352,7 @@ feature {NONE} -- Element change
 			on_node_added (l_newest_tree_node)
 		ensure
 			one_more: count = old count + 1
-			inserted: has_key (k) and then item (k) = v
+			inserted: has_key (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 		end
 
 feature {NONE} -- Element change

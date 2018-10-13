@@ -5,7 +5,7 @@ note
 		"Data structures that can be traversed forward and backward"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature -- Status report
 		ensure
 			not_empty: Result implies not is_empty
 			not_off: Result implies not off
-			definition: Result implies (item_for_iteration = last)
+			definition: Result implies ({KL_TYPE [G]}.same_objects (item_for_iteration, last))
 		end
 
 	before: BOOLEAN
@@ -105,7 +105,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 		ensure
 			not_empty: Result implies not is_empty
 			a_cursor_not_off: Result implies not cursor_off (a_cursor)
-			definition: Result implies (cursor_item (a_cursor) = last)
+			definition: Result implies ({KL_TYPE [G]}.same_objects (cursor_item (a_cursor), last))
 		end
 
 	cursor_before (a_cursor: like new_cursor): BOOLEAN

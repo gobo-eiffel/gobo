@@ -7,7 +7,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -265,7 +265,7 @@ feature -- Search
 			found_position := position
 		ensure then
 			found_set: found = has (k)
-			found_item_set: found implies (found_item = item (k))
+			found_item_set: found implies {KL_TYPE [G]}.same_objects (found_item, item (k))
 		end
 
 feature -- Comparison
@@ -336,7 +336,7 @@ feature -- Element change
 		do
 			item_storage_put (v, found_position)
 		ensure
-			replaced: found_item = v
+			replaced: {KL_TYPE [G]}.same_objects (found_item, v)
 			same_count: count = old count
 		end
 
@@ -370,7 +370,7 @@ feature -- Element change
 		ensure
 			same_count: (old has (k)) implies (count = old count)
 			one_more: (not old has (k)) implies (count = old count + 1)
-			inserted: has (k) and then item (k) = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 		end
 
 	put_new (v: G; k: K)
@@ -398,7 +398,7 @@ feature -- Element change
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
-			inserted: has (k) and then item (k) = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 		end
 
 	put_last (v: G; k: K)
@@ -432,8 +432,8 @@ feature -- Element change
 		ensure
 			same_count: (old has (k)) implies (count = old count)
 			one_more: (not old has (k)) implies (count = old count + 1)
-			inserted: has (k) and then item (k) = v
-			last: (not old has (k)) implies last = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
+			last: (not old has (k)) implies {KL_TYPE [G]}.same_objects (last, v)
 		end
 
 	put_last_new (v: G; k: K)
@@ -460,8 +460,8 @@ feature -- Element change
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
-			inserted: has (k) and then item (k) = v
-			last: last = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
+			last: {KL_TYPE [G]}.same_objects (last, v)
 		end
 
 	force (v: G; k: K)
@@ -554,8 +554,8 @@ feature -- Element change
 		ensure
 			same_count: (old has (k)) implies (count = old count)
 			one_more: (not old has (k)) implies (count = old count + 1)
-			inserted: has (k) and then item (k) = v
-			last: (not old has (k)) implies last = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
+			last: (not old has (k)) implies {KL_TYPE [G]}.same_objects (last, v)
 		end
 
 	force_last_new (v: G; k: K)
@@ -581,8 +581,8 @@ feature -- Element change
 			count := count + 1
 		ensure
 			one_more: count = old count + 1
-			inserted: has (k) and then item (k) = v
-			last: last = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
+			last: {KL_TYPE [G]}.same_objects (last, v)
 		end
 
 feature -- Duplication

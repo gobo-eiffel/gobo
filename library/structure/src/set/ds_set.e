@@ -5,7 +5,7 @@ note
 		"Data structures whose items appear only once"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -189,7 +189,7 @@ feature -- Element change
 			extendible: extendible (1) or else has (v)
 		deferred
 		ensure
-			inserted: has (v) and then item (v) = v
+			inserted: has (v) and then {KL_TYPE [G]}.same_objects (item (v), v)
 			same_count: (old has (v)) implies (count = old count)
 			one_more: (not old has (v)) implies (count = old count + 1)
 		end
@@ -204,7 +204,7 @@ feature -- Element change
 		deferred
 		ensure
 			one_more: count = old count + 1
-			inserted: has (v) and then item (v) = v
+			inserted: has (v) and then {KL_TYPE [G]}.same_objects (item (v), v)
 		end
 
 	put_last (v: G)
@@ -217,7 +217,7 @@ feature -- Element change
 			extendible_or_has: extendible (1) or else has (v)
 		deferred
 		ensure then
-			inserted: has (v) and then item (v) = v
+			inserted: has (v) and then {KL_TYPE [G]}.same_objects (item (v), v)
 			same_count: (old has (v)) implies (count = old count)
 			one_more: (not old has (v)) implies (count = old count + 1)
 		end
@@ -228,7 +228,7 @@ feature -- Element change
 			-- if not void, use `=' criterion otherwise.)
 		deferred
 		ensure
-			inserted: has (v) and then item (v) = v
+			inserted: has (v) and then {KL_TYPE [G]}.same_objects (item (v), v)
 			same_count: (old has (v)) implies (count = old count)
 			one_more: (not old has (v)) implies (count = old count + 1)
 		end
@@ -242,7 +242,7 @@ feature -- Element change
 		deferred
 		ensure
 			one_more: count = old count + 1
-			inserted: has (v) and then item (v) = v
+			inserted: has (v) and then {KL_TYPE [G]}.same_objects (item (v), v)
 		end
 
 	force_last (v: G)
@@ -253,7 +253,7 @@ feature -- Element change
 			-- if not void, use `=' criterion otherwise.)
 		deferred
 		ensure then
-			inserted: has (v) and then item (v) = v
+			inserted: has (v) and then {KL_TYPE [G]}.same_objects (item (v), v)
 			same_count: (old has (v)) implies (count = old count)
 			one_more: (not old has (v)) implies (count = old count + 1)
 		end

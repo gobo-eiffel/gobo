@@ -5,7 +5,7 @@ note
 		"Cells containing two items"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 			first := v
 			second := w
 		ensure
-			first_set: first = v
-			second_set: second = w
+			first_set: {KL_TYPE [G]}.same_objects (first, v)
+			second_set: {KL_TYPE [H]}.same_objects (second, w)
 		end
 
 feature -- Access
@@ -61,7 +61,7 @@ feature -- Element change
 		do
 			second := w
 		ensure
-			inserted: second = w
+			inserted: {KL_TYPE [H]}.same_objects (second, w)
 		end
 
 end

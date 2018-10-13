@@ -39,6 +39,8 @@
 
 * Removed support for ISE Eiffel 16.05.
 * Marked some routines as instance-free.
+* Made sure that postconditions of the form `item = v`
+  are not violated when dealing with NaNs.
 
 ### Gobo Eiffel Math Library
 
@@ -51,6 +53,11 @@
 ### Gobo Eiffel String Library
 
 * Marked some routines as instance-free.
+
+### Gobo Eiffel Structure Library
+
+* Made sure that postconditions of the form `item = v`
+  are not violated when dealing with NaNs.
 
 ### Gobo Eiffel Time Library
 

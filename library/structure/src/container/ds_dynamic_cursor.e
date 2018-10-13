@@ -5,7 +5,7 @@ note
 		"Cursors for dynamically modifiable data structure traversals"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ feature -- Element change
 			not_off: not off
 		deferred
 		ensure
-			replaced: item = v
+			replaced: {KL_TYPE [G]}.same_objects (item, v)
 		end
 
 	swap (other: DS_DYNAMIC_CURSOR [G])
@@ -43,8 +43,8 @@ feature -- Element change
 				other.replace (v)
 			end
 		ensure
-			new_item: item = old (other.item)
-			new_other: other.item = old item
+			new_item: {KL_TYPE [G]}.same_objects (item, old (other.item))
+			new_other: {KL_TYPE [G]}.same_objects (other.item, old item)
 		end
 
 end
