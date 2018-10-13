@@ -12,6 +12,13 @@ note
 
 class KL_TYPE [G]
 
+inherit
+
+	ANY
+
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 feature -- Status report
 
 	same_objects (u, v: G): BOOLEAN
@@ -31,10 +38,10 @@ feature -- Status report
 		do
 			if u = v then
 				Result := True
-			elseif attached {REAL_64} u as l_ud and then l_ud.is_nan then
-				Result := attached {REAL_64} v as l_vd and then l_vd.is_nan
-			elseif attached {REAL_32} u as l_ur and then l_ur.is_nan then
-				Result := attached {REAL_32} v as l_vr and then l_vr.is_nan
+			elseif attached {REAL_64} ANY_.to_any (u) as l_ud and then l_ud.is_nan then
+				Result := attached {REAL_64} ANY_.to_any (v) as l_vd and then l_vd.is_nan
+			elseif attached {REAL_32} ANY_.to_any (u) as l_ur and then l_ur.is_nan then
+				Result := attached {REAL_32} ANY_.to_any (v) as l_vr and then l_vr.is_nan
 			end
 		ensure
 			instance_free: class

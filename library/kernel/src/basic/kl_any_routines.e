@@ -64,7 +64,7 @@ feature -- Conversion
 			Result := an_any
 		ensure
 			instance_free: class
-			definition: Result = an_any
+			definition: {KL_TYPE [detachable ANY]}.same_objects (Result, an_any)
 		end
 
 end
