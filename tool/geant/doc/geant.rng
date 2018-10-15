@@ -3,7 +3,7 @@
 <!--
 	description: "Eiffel Ant RelaxNG specification"
 	system: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2009, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -297,7 +297,7 @@
 						<attribute name="gelint"/>
 					</optional>
 					<optional>
-						<attribute name="cat"/>
+						<attribute name="catcall"/>
 					</optional>
 					<optional>
 						<attribute name="split"/>
@@ -485,7 +485,10 @@
 				<group>
 					<attribute name="system"/>
 					<optional>
-						<attribute name="ace"/>
+						<attribute name="ecf"/>
+					</optional>
+					<optional>
+						<attribute name="target"/>
 					</optional>
 					<optional>
 						<attribute name="finalize"/>

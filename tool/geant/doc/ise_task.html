@@ -28,14 +28,23 @@
    		
    <dl>
     			
-    <dt>ace</dt>
-    <dd><i>Description: </i>Name of ace file
+    <dt>ecf</dt>
+    <dd><i>Description: </i>Name of ECF file
      <p><i>Domain: </i>Valid filename pointing to existing file
      </p>
      <p><i>Default: </i>empty string
      </p>
     </dd>
     
+    			
+    <dt>target</dt>
+    <dd><i>Description: </i>Name of ECF target
+     <p><i>Domain: </i>Existing target in ECF file
+     </p>
+     <p><i>Default: </i>empty string
+     </p>
+    </dd>
+    			
     			
     <dt>system</dt>
     <dd><i>Description: </i>System
@@ -98,7 +107,10 @@
         &lt;group&gt;
           &lt;attribute name="system"/&gt;
           &lt;optional&gt;
-            &lt;attribute name="ace"/&gt;
+            &lt;attribute name="ecf"/&gt;
+          &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;attribute name="target"/&gt;
           &lt;/optional&gt;
           &lt;optional&gt;
             &lt;attribute name="finalize"/&gt;
@@ -119,7 +131,7 @@
    <h2>Examples</h2>
    
    		<pre>
-  &lt;ise ace="compile_ise.ace" system="${system}" finalize="true" finish_freezing="true"/&gt;
+  &lt;ise ecf="compile_ise.ace" system="${system}" finalize="true" finish_freezing="true"/&gt;
 
   &lt;ise clean="${system}"/&gt;
 
@@ -129,7 +141,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+     <address><font size="2"><b>Copyright © 2002-2018, Sven Ehrke and others</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>14 October 2018</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="input_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="mkdir_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

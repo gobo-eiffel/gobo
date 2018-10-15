@@ -6,7 +6,7 @@
 		"ISE Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="ise_task">
 <chapterinfo>
 	<copyright>
-		<year>2002-2005</year>
-		<holder>Sven Ehrke</holder>
+		<year>2002-2018</year>
+		<holder>Sven Ehrke and others</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>14 October 2018</date>
 </chapterinfo>
 
 	<title>ise</title>
@@ -39,9 +39,9 @@
 
 		<variablelist>
 			<varlistentry>
-				<term>ace</term>
+				<term>ecf</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Name of ace file</para>
+					<para><emphasis>Description: </emphasis>Name of ECF file</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
@@ -51,6 +51,19 @@
 				</listitem>
 			</varlistentry>
 
+			<varlistentry>
+				<term>target</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of ECF target</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Existing target in ECF file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+			
 			<varlistentry>
 				<term>system</term>
 				<listitem>
@@ -131,7 +144,10 @@
         <group>
           <attribute name="system"/>
           <optional>
-            <attribute name="ace"/>
+            <attribute name="ecf"/>
+          </optional>
+          <optional>
+            <attribute name="target"/>
           </optional>
           <optional>
             <attribute name="finalize"/>
@@ -152,7 +168,7 @@
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
-  <ise ace="compile_ise.ace" system="${system}" finalize="true" finish_freezing="true"/>
+  <ise ecf="compile_ise.ace" system="${system}" finalize="true" finish_freezing="true"/>
 
   <ise clean="${system}"/>
 ]]>

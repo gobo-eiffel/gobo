@@ -50,8 +50,11 @@ feature -- Status report
 
 feature -- Access
 
-	ace_filename: detachable STRING
-			-- Ace filename
+	ecf_filename: detachable STRING
+			-- ECF filename
+
+	target: detachable STRING
+			-- ECF target
 
 	system_name: detachable STRING
 			-- System name
@@ -89,12 +92,20 @@ feature -- Access
 
 feature -- Setting
 
-	set_ace_filename (a_filename: like ace_filename)
-			-- Set `ace_filename' to `a_filename'.
+	set_ecf_filename (a_filename: like ecf_filename)
+			-- Set `ecf_filename' to `a_filename'.
 		do
-			ace_filename := a_filename
+			ecf_filename := a_filename
 		ensure
-			ace_filename_set: ace_filename = a_filename
+			ecf_filename_set: ecf_filename = a_filename
+		end
+
+	set_target (a_target: like target)
+			-- Set `target' to `a_target'.
+		do
+			target := a_target
+		ensure
+			target_set: target = a_target
 		end
 
 	set_system_name (a_name: like system_name)
@@ -186,10 +197,14 @@ feature -- Execution
 			check is_compilable: attached system_name as l_system_name then
 				create cmd.make (128)
 				cmd.append_string ("ec -batch")
-				if attached ace_filename as l_ace_filename and then l_ace_filename.count > 0 then
+				if attached ecf_filename as l_ecf_filename and then l_ecf_filename.count > 0 then
 					cmd.append_string (" -config ")
-					a_filename := file_system.pathname_from_file_system (l_ace_filename, unix_file_system)
+					a_filename := file_system.pathname_from_file_system (l_ecf_filename, unix_file_system)
 					cmd := STRING_.appended_string (cmd, a_filename)
+				end
+				if attached target as l_target and then l_target.count > 0 then
+					cmd.append_string (" -target ")
+					cmd := STRING_.appended_string (cmd, l_target)
 				end
 				if compatible_mode then
 					cmd.append_string (" -compat")

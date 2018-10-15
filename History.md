@@ -2,6 +2,11 @@
 
 ## Version 4.3 - ??
 
+### geant
+
+* Added option `target` for the task `<ise>` and renamed the option
+  `ace` as `ecf`.
+
 ### gec
 
 * Renamed command-line option `--new_instance_types` as `--new-instance-types`
