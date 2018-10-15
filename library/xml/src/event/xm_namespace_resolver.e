@@ -5,7 +5,7 @@ note
 		"Callbacks filter that resolves namespaces"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -239,7 +239,7 @@ feature {NONE} -- Attributes
 	attributes_make
 			-- Intialize queue.
 		do
-			attributes_prefix := new_string_queue
+			attributes_prefix := new_detachable_string_queue
 			attributes_local_part := new_string_queue
 			attributes_value := new_string_queue
 		end

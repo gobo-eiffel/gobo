@@ -5,7 +5,7 @@ note
 		"Factories for structures allowing string polymorphism"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,6 +70,14 @@ feature -- General structures
 
 	new_string_queue: DS_LINKED_QUEUE [STRING]
 			-- New string queue
+		do
+			create Result.make
+		ensure
+			queue_not_void: Result /= Void
+		end
+
+	new_detachable_string_queue: DS_LINKED_QUEUE [detachable STRING]
+			-- New queue of detachable strings
 		do
 			create Result.make
 		ensure
