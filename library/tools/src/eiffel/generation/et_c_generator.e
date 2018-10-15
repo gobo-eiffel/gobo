@@ -7218,6 +7218,9 @@ feature {NONE} -- Instruction generation
 				l_dynamic_type_set := dynamic_type_set (l_target)
 				l_dynamic_type := l_dynamic_type_set.static_type
 			end
+			if current_dynamic_system.current_system.attachment_type_conformance_mode then
+				l_dynamic_type := current_dynamic_system.dynamic_type (tokens.attached_like_current, l_dynamic_type.base_type)
+			end
 			if attached an_instruction.creation_call as l_creation_call then
 				l_seed := l_creation_call.name.seed
 				l_actuals := l_creation_call.arguments
@@ -18440,8 +18443,10 @@ feature {NONE} -- Built-in feature generation
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_meta_type: detachable ET_DYNAMIC_TYPE
+			l_detachable_target_type: ET_DYNAMIC_TYPE
 		do
-			l_meta_type := a_target_type.meta_type
+			l_detachable_target_type := current_dynamic_system.dynamic_type (tokens.detachable_like_current, a_target_type.base_type)
+			l_meta_type := l_detachable_target_type.meta_type
 			if l_meta_type = Void then
 					-- Internal error: the meta type of the target type should
 					-- have been computed when analyzing the dynamic type sets of
@@ -18456,7 +18461,7 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character ('(')
 				current_file.put_string (c_ge_types)
 				current_file.put_character ('[')
-				current_file.put_integer (a_target_type.id)
+				current_file.put_integer (l_detachable_target_type.id)
 				current_file.put_character (']')
 				current_file.put_character (')')
 			end

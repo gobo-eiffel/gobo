@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -267,6 +267,7 @@ feature -- Types
 			l_result: detachable ET_DYNAMIC_TYPE
 			l_is_reentrant: BOOLEAN
 			l_old_dynamic_types_count: INTEGER
+			l_implicit_type_mark: detachable ET_TYPE_MARK
 		do
 			if in_dynamic_type then
 				l_is_reentrant := True
@@ -280,7 +281,7 @@ feature -- Types
 				l_type := dynamic_types.item (i)
 				if l_type.base_class /= l_base_class then
 					-- Wrong index.
-				elseif not l_base_class.is_generic and not l_base_class.is_tuple_class then
+				elseif not current_system.attachment_type_conformance_mode and not l_base_class.is_generic and not l_base_class.is_tuple_class then
 					if a_type.is_type_expanded (a_context) = l_type.is_expanded then
 						l_result := l_type
 					elseif not attached l_type.next_type as l_next_type then
@@ -295,10 +296,15 @@ feature -- Types
 						-- Traverse all dynamic types with the same base class.
 						-- If not found then add this new dynamic type.
 					l_any := current_system.any_type
+					if current_system.attachment_type_conformance_mode then
+						l_implicit_type_mark := tokens.implicit_separate_type_mark
+					else
+						l_implicit_type_mark := tokens.implicit_attached_separate_type_mark
+					end
 					from until
 						l_result /= Void
 					loop
-						if l_type.base_type.same_base_type_with_type_marks (a_type, tokens.implicit_attached_separate_type_mark, a_context, tokens.implicit_attached_separate_type_mark, l_any) then
+						if l_type.base_type.same_base_type_with_type_marks (a_type, l_implicit_type_mark, a_context, l_implicit_type_mark, l_any) then
 							l_result := l_type
 						elseif not attached l_type.next_type as l_next_type then
 							l_result := new_dynamic_type (a_type, a_context)

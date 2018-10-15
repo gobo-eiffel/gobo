@@ -3535,6 +3535,19 @@ feature {NONE} -- Instruction validity
 								end
 							end
 						end
+						if current_system.attachment_type_conformance_mode then
+								-- When we have:
+								--   local
+								--      v: detachable FOO
+								--   ...
+								--   create v.make
+								--
+								-- even if 'detachable FOO' is detachable, the type of
+								-- the object created is attached.
+							l_creation_type_context := new_context (current_type)
+							l_creation_named_type := l_creation_type.shallow_named_type_with_type_mark (tokens.implicit_attached_type_mark, l_creation_type_context)
+							free_context (l_creation_type_context)
+						end
 						report_creation_instruction (an_instruction, l_creation_named_type, l_procedure)
 					end
 				end
@@ -5973,6 +5986,17 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 						end
 						if not has_fatal_error then
+							if current_system.attachment_type_conformance_mode then
+									-- When we have:
+									--
+									--   create {detachable FOO}.make
+									--
+									-- even if 'detachable FOO' is detachable, the type of
+									-- the creation expression is attached.
+								l_creation_type_context := new_context (current_type)
+								l_named_creation_type := l_creation_type.shallow_named_type_with_type_mark (tokens.implicit_attached_type_mark, l_creation_type_context)
+								free_context (l_creation_type_context)
+							end
 							report_creation_expression (an_expression, l_named_creation_type, l_procedure)
 						end
 					end
@@ -11856,19 +11880,19 @@ feature {NONE} -- Agent validity
 				l_type := a_target_class.formal_parameter_type (l_index)
 				l_target_type := tokens.identity_type
 				if l_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
-					a_context.force_last (current_universe_impl.detachable_tuple_type)
+					a_context.force_last (current_universe_impl.tuple_type)
 					l_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					l_agent_class := current_universe_impl.function_type.named_base_class
 					if current_universe_impl.function_type.actual_parameter_count = 3 then
 						create l_parameters.make_with_capacity (3)
 						l_parameters.put_first (l_type)
-						l_parameters.put_first (current_universe_impl.detachable_tuple_type)
+						l_parameters.put_first (current_universe_impl.tuple_type)
 						l_parameters.put_first (l_target_type)
 					else
 						create l_parameters.make_with_capacity (2)
 						l_parameters.put_first (l_type)
-						l_parameters.put_first (current_universe_impl.detachable_tuple_type)
+						l_parameters.put_first (current_universe_impl.tuple_type)
 					end
 					create l_agent_type.make_generic (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
 				end

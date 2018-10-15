@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/10/25 $"
 	revision: "$Revision: #6 $"
@@ -614,6 +614,17 @@ feature {NONE} -- Expression processing
 			reset_fatal_error (False)
 			l_creation_type := an_expression.type
 			a_context.force_last (l_creation_type)
+			if current_system.attachment_type_conformance_mode then
+					-- When we have:
+					--
+					--   create {detachable FOO}.make
+					--
+					-- even if 'detachable FOO' is detachable, the type of
+					-- the creation expression is attached.
+				if not a_context.is_type_attached then
+					a_context.force_last (tokens.attached_like_current)
+				end
+			end
 		end
 
 	find_current_type (an_expression: ET_CURRENT; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -2685,19 +2696,19 @@ feature {NONE} -- Agent validity
 			l_type := a_context.base_class.formal_parameter_type (l_index)
 			l_target_type := tokens.identity_type
 			if l_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
-				a_context.force_last (current_universe_impl.detachable_tuple_type)
+				a_context.force_last (current_universe_impl.tuple_type)
 				l_agent_type := current_universe_impl.predicate_like_current_type
 			else
 				l_agent_class := current_universe_impl.function_type.named_base_class
 				if current_universe_impl.function_type.actual_parameter_count = 3 then
 					create l_parameters.make_with_capacity (3)
 					l_parameters.put_first (l_type)
-					l_parameters.put_first (current_universe_impl.detachable_tuple_type)
+					l_parameters.put_first (current_universe_impl.tuple_type)
 					l_parameters.put_first (l_target_type)
 				else
 					create l_parameters.make_with_capacity (2)
 					l_parameters.put_first (l_type)
-					l_parameters.put_first (current_universe_impl.detachable_tuple_type)
+					l_parameters.put_first (current_universe_impl.tuple_type)
 				end
 				create l_agent_type.make_generic (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
 			end

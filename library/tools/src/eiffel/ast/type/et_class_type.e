@@ -5,7 +5,7 @@ note
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -435,7 +435,7 @@ feature -- Comparison
 
 	same_as_base_class: BOOLEAN
 			-- Is current type a non-generic class type with the same
-			-- expandedness and separateness status as its base class,
+			-- expandedness, attachment and separateness status as its base class,
 			-- or is it its own base class?
 		do
 			if base_class.is_unknown then
@@ -446,7 +446,8 @@ feature -- Comparison
 			else
 				Result := not is_generic and then
 					(is_expanded = base_class.is_expanded and
-					is_separate = base_class.is_separate)
+					is_separate = base_class.is_separate) and
+					(base_class.current_system.attachment_type_conformance_mode implies is_attached = base_class.is_attached)
 			end
 		end
 
