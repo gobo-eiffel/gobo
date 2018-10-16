@@ -3,9 +3,6 @@ language: c
 # Use full virtual machine.
 dist: xenial
 sudo: required
-
-git:
-  depth: 1
   
 branches:
   # Build all branches:
@@ -28,8 +25,9 @@ before_script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export ISE_PLATFORM=linux-x86-64; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export ISE_PLATFORM=macosx-x86-64; fi
   - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s 18.07.101981 > eiffel.rc
-  - cat ./eiffel.rc
   - source ./eiffel.rc
+  # Make sure that we are using our version of the Gobo tools.
+  - rm -rf $ISE_EIFFEL/library/gobo/spec
   - echo `ec -version`
   - cd $GOBO
 
