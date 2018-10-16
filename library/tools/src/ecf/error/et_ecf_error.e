@@ -28,7 +28,6 @@ create
 	make_eabv,
 	make_eabw,
 	make_eabx,
-	make_eaby,
 	make_eadf,
 	make_eadg,
 	make_eadh,
@@ -51,7 +50,9 @@ create
 	make_epfe,
 	make_epud,
 	make_epul,
-	make_epur
+	make_epur,
+	make_etam,
+	make_etnu
 
 feature {NONE} -- Initialization
 
@@ -322,30 +323,6 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = root element name
-		end
-
-	make_eaby (a_system_element_name: ET_IDENTIFIER; a_system_config: ET_ECF_SYSTEM_CONFIG)
-			-- Create a new EABY error: no target found in ECF file.
-		require
-			a_system_element_name_not_void: a_system_element_name /= Void
-			a_system_config_not_void: a_system_config /= Void
-		do
-			system_config := a_system_config
-			position := a_system_element_name.position
-			code := eaby_code
-			default_template := default_message_template (eaby_default_template)
-			create parameters.make_filled (empty_string, 1, 4)
-			parameters.put (code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-		ensure
-			system_config_set: system_config = a_system_config
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
 		end
 
 	make_eadf (a_location_value: ET_IDENTIFIER; a_filename: STRING; a_system_config: ET_ECF_SYSTEM_CONFIG)
@@ -1112,6 +1089,61 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = parent ECF filename
 		end
 
+	make_etam (a_system_element_name: ET_IDENTIFIER; a_system_config: ET_ECF_SYSTEM_CONFIG)
+			-- Create a new ETAM error: no target found in ECF file.
+			--
+			-- ETAM: Ecf TArgets Missing
+		require
+			a_system_element_name_not_void: a_system_element_name /= Void
+			a_system_config_not_void: a_system_config /= Void
+		do
+			system_config := a_system_config
+			position := a_system_element_name.position
+			code := etam_code
+			default_template := default_message_template (etam_default_template)
+			create parameters.make_filled (empty_string, 1, 4)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+		ensure
+			system_config_set: system_config = a_system_config
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+		end
+
+	make_etnu (a_target_name: STRING; a_system_element_name: ET_IDENTIFIER; a_system_config: ET_ECF_SYSTEM_CONFIG)
+			-- Create a new ETNU error: no target `a_target_name' found in ECF file.
+			--
+			-- ETNU: Ecf Target Name Unknown
+		require
+			a_target_name_not_void: a_target_name /= Void
+			a_system_element_name_not_void: a_system_element_name /= Void
+			a_system_config_not_void: a_system_config /= Void
+		do
+			system_config := a_system_config
+			position := a_system_element_name.position
+			code := etam_code
+			default_template := default_message_template (etam_default_template)
+			create parameters.make_filled (empty_string, 1, 5)
+			parameters.put (code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (a_target_name, 5)
+		ensure
+			system_config_set: system_config = a_system_config
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = target name
+		end
+
 feature -- Access
 
 	default_template: STRING
@@ -1263,7 +1295,6 @@ feature {NONE} -- Implementation
 	eabv_default_template: STRING = "cannot open library ECF file %"$5%"."
 	eabw_default_template: STRING = "no library target specified in library ECF file %"$5%"."
 	eabx_default_template: STRING = "root element of ECF file should be 'system' and not '$5'."
-	eaby_default_template: STRING = "no 'target' element found in element 'system'."
 	eadf_default_template: STRING = "cannot open redirected ECF file %"$5%"."
 	eadg_default_template: STRING = "'location' attribute is missing in element 'redirection'."
 	eadh_default_template: STRING = "'location' attribute in element 'redirection' is empty."
@@ -1287,6 +1318,8 @@ feature {NONE} -- Implementation
 	epud_default_template: STRING = "no library target specified in parent ECF file %"$5%"."
 	epul_default_template: STRING = "unknown target parent '$5'."
 	epur_default_template: STRING = "no target '$5' found in parent ECF file %"$6%"."
+	etam_default_template: STRING = "no 'target' element found in element 'system'."
+	etnu_default_template: STRING = "no 'target' element named '$5' found in element 'system'."
 			-- Default templates
 
 	syntax_code: STRING = "ESYN"
@@ -1299,7 +1332,6 @@ feature {NONE} -- Implementation
 	eabv_code: STRING = "EABV"
 	eabw_code: STRING = "EABW"
 	eabx_code: STRING = "EABX"
-	eaby_code: STRING = "EABY"
 	eadf_code: STRING = "EADF"
 	eadg_code: STRING = "EADG"
 	eadh_code: STRING = "EADH"
@@ -1323,6 +1355,8 @@ feature {NONE} -- Implementation
 	epud_code: STRING = "EPUD"
 	epul_code: STRING = "EPUL"
 	epur_code: STRING = "EPUR"
+	etam_code: STRING = "ETAM"
+	etnu_code: STRING = "ETNU"
 			-- Error codes
 
 invariant

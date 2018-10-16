@@ -103,7 +103,7 @@ feature -- Test
 			if ise_version /= Void then
 				l_ecf_parser.set_ise_version (ise_version)
 			end
-			l_ecf_parser.parse_file (l_ecf_file)
+			l_ecf_parser.parse_file (l_ecf_file, Void)
 			assert ("ecf_parsed", not l_ecf_error_handler.has_error)
 			l_system := l_ecf_parser.last_system
 			l_ecf_file.close

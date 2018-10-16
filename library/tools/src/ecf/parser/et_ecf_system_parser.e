@@ -46,8 +46,9 @@ feature -- Access
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_target_name: detachable STRING)
 			-- Parse ECF file `a_file'.
+			-- select `a_target_name' if specified, the last target parsed otherwise.
 			--
 			-- Note that when the ECF version of the file is old, the parsed
 			-- ECF system will contain old options/settings/capabilities
@@ -60,7 +61,7 @@ feature -- Parsing
 		do
 			last_system := Void
 			create l_result.make (Void)
-			parse_file_with_action (a_file, agent build_system (?, ?, ?, finalize_mode, l_result))
+			parse_file_with_action (a_file, agent build_system (?, ?, ?, a_target_name, finalize_mode, l_result))
 			last_system := l_result.item
 		end
 

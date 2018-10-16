@@ -289,7 +289,10 @@
 			</optional>
 			<choice>
 				<group>
-					<attribute name="ace"/>
+					<attribute name="ecf"/>
+					<optional>
+						<attribute name="target"/>
+					</optional>
 					<optional>
 						<attribute name="finalize"/>
 					</optional>
@@ -310,6 +313,27 @@
 					</optional>
 					<optional>
 						<attribute name="gc"/>
+					</optional>
+					<optional>
+						<attribute name="thread"/>
+					</optional>
+					<optional>
+						<attribute name="new_instance_types"/>
+					</optional>
+					<optional>
+						<attribute name="silent"/>
+					</optional>
+					<optional>
+						<attribute name="verbose"/>
+					</optional>
+					<optional>
+						<attribute name="no_benchmark"/>
+					</optional>
+					<optional>
+						<attribute name="nested_benchmark"/>
+					</optional>
+					<optional>
+						<attribute name="metrics"/>
 					</optional>
 				</group>
 				<attribute name="clean"/>

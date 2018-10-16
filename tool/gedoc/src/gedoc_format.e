@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Documentation Format"
 
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -128,6 +128,10 @@ feature -- Access
 			-- Name of the input file.
 			-- It can be an Xace file, an ECF file or an Eiffel class file.
 
+	target_name: detachable STRING
+			-- Name of target to be used in ECF file.
+			-- Use last target in ECF file if not specified.
+
 	defined_variables: detachable DS_HASH_TABLE [STRING, STRING]
 			-- Variables defined on the command-line
 
@@ -171,6 +175,14 @@ feature -- Access
 			-- System processor currently used
 
 feature -- Setting
+
+	set_target_name (a_target_name: like target_name)
+			-- Set `target_name' to `a_target_name'.
+		do
+			target_name := a_target_name
+		ensure
+			target_name_set: target_name = a_target_name
+		end
 
 	set_defined_variables (a_variables: like defined_variables)
 			-- Set `defined_variables' to `a_variables'.
@@ -370,7 +382,7 @@ feature {NONE} -- Eiffel config file parsing
 			create l_ecf_error_handler.make_standard
 			create l_ecf_parser.make (l_ecf_error_handler)
 			l_ecf_parser.set_ise_version (ise_version)
-			l_ecf_parser.parse_file (a_file)
+			l_ecf_parser.parse_file (a_file, target_name)
 			if l_ecf_error_handler.has_error then
 				has_error := True
 			elseif not attached l_ecf_parser.last_system as l_last_system then

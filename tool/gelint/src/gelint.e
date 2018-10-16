@@ -65,6 +65,8 @@ feature -- Execution
 				elseif arg.is_equal ("-h") or arg.is_equal ("-?") or arg.is_equal ("--help") then
 					report_usage_message
 					Exceptions.die (0)
+				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--target=") then
+					target_name := arg.substring (10, arg.count)
 				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--define=") then
 					defined_variables := arg.substring (10, arg.count)
 				elseif arg.is_equal ("--verbose") then
@@ -170,6 +172,10 @@ feature -- Execution
 		end
 
 feature -- Status report
+
+	target_name: detachable STRING
+			-- Name of target to be used in ECF file.
+			-- Use last target in ECF file if not specified.
 
 	defined_variables: detachable STRING
 	is_verbose: BOOLEAN
@@ -292,7 +298,7 @@ feature {NONE} -- Eiffel config file parsing
 			if attached ise_version as l_ise_version then
 				l_ecf_parser.set_ise_version (l_ise_version)
 			end
-			l_ecf_parser.parse_file (a_file)
+			l_ecf_parser.parse_file (a_file, target_name)
 			if not l_ecf_error_handler.has_error then
 				last_system := l_ecf_parser.last_system
 			end
@@ -384,7 +390,7 @@ feature -- Error handling
 			else
 				l_thread_option := ""
 			end
-			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
+			create Result.make ("[--target=target_name][--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
 				%%T" + l_thread_option + "[--flat][--noflatdbc][--catcall][--silent][--verbose][--no-benchmark][--nested-benchmark][--metrics] xace_or_ecf_filename")
 		ensure
 			usage_message_not_void: Result /= Void

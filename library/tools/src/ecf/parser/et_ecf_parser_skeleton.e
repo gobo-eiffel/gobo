@@ -2163,7 +2163,7 @@ feature {NONE} -- Element change
 			end
 			if l_targets = Void or else l_targets.is_empty then
 					-- No target found in the ECF file.
-				error_handler.report_eaby_error (element_name (a_element, a_position_table), a_system_config)
+				error_handler.report_etam_error (element_name (a_element, a_position_table), a_system_config)
 			end
 			if l_library_target /= Void then
 				if l_library_target.value.is_empty then

@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 October 2018</date>
+	<date>16 October 2018</date>
 </chapterinfo>
 
 <title>Using gec</title>
@@ -48,6 +48,15 @@ used with <projectname>gec</projectname>:
 		</term>
 		<listitem><para>
 			Print a summary of the command-line options of <projectname>gec</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--target=&lt;target_name&gt;</filename>
+		</term>
+		<listitem><para>
+			Name of target to be used in ECF file.
+			(default: last target in ECF file)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -89,7 +98,8 @@ used with <projectname>gec</projectname>:
 			<filename>--split-size=&lt;size&gt;</filename>
 		</term>
 		<listitem><para>
-			Size (in bytes) of generated C files in bytes when in split mode
+			Size (in bytes) of generated C files in bytes when in split mode.
+			(default: 2,500,000)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -108,6 +118,7 @@ used with <projectname>gec</projectname>:
 		<listitem><para>
 			File containing the list of types which can have instances created 
 			by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'.
+			(default: use all non-deferred, non-NONE, alive types)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

@@ -181,7 +181,7 @@ feature {NONE} -- Eiffel config file parsing
 			create l_ecf_error_handler.make_standard
 			create l_ecf_parser.make (l_ecf_error_handler)
 			l_ecf_parser.set_finalize_mode (is_finalize)
-			l_ecf_parser.parse_file (a_file)
+			l_ecf_parser.parse_file (a_file, target_name)
 			if not l_ecf_error_handler.has_error then
 				l_ecf_system := l_ecf_parser.last_system
 				if l_ecf_system /= Void then
@@ -341,6 +341,15 @@ feature -- Error handling
 
 feature -- Status report
 
+	target_name: detachable STRING
+			-- Name of target to be used in ECF file.
+			-- Use last target in ECF file if not specified.
+		do
+			if target_option.was_found then
+				Result := target_option.parameter
+			end
+		end
+
 	is_finalize: BOOLEAN
 			-- Compilation with optimizations turned on?
 		do
@@ -457,6 +466,9 @@ feature -- Argument parsing
 	ecf_filename: STRING
 			-- Name of the ECF file
 
+	target_option: AP_STRING_OPTION
+			-- Option for '--target=<target_name>'
+
 	catcall_option: AP_ENUMERATION_OPTION
 			-- Option for '--catcall=<no|error|warning>'
 
@@ -516,6 +528,12 @@ feature -- Argument parsing
 			a_parser.set_application_description ("Gobo Eiffel Compiler, translate Eiffel programs into C code.")
 			a_parser.set_parameters_description ("ecf_filename")
 				-- Options.
+				-- target.
+			create target_option.make_with_long_form ("target")
+			target_option.set_description ("Name of target to be used in ECF file. (default: last target in ECF file)")
+			target_option.set_parameter_description ("target_name")
+			a_parser.options.force_last (target_option)
+				-- finalize.
 			create finalize_flag.make_with_long_form ("finalize")
 			finalize_flag.set_description ("Compile with optimizations turned on.")
 			a_parser.options.force_last (finalize_flag)
@@ -547,12 +565,12 @@ feature -- Argument parsing
 			a_parser.options.force_last (split_option)
 				-- split-size
 			create split_size_option.make_with_long_form ("split-size")
-			split_size_option.set_description ("Size of generated C files in bytes when in split mode.")
+			split_size_option.set_description ("Size of generated C files in bytes when in split mode. (default: 2,500,000)")
 			split_size_option.set_parameter_description ("size")
 			a_parser.options.force_last (split_size_option)
 				-- new-instance-types
 			create new_instance_types_option.make_with_long_form ("new-instance-types")
-			new_instance_types_option.set_description ("File containing the list of types which can have instances created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'.")
+			new_instance_types_option.set_description ("File containing the list of types which can have instances created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'. (default: use all non-deferred, non-NONE, alive types)")
 			new_instance_types_option.set_parameter_description ("filename")
 			a_parser.options.force_last (new_instance_types_option)
 				-- gc
@@ -665,6 +683,7 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	ecf_filename_not_void: ecf_filename /= Void
+	target_option_not_void: target_option /= Void
 	catcall_option_not_void: catcall_option /= Void
 	gelint_flag_not_void: gelint_flag /= Void
 	finalize_flag_not_void: finalize_flag /= Void

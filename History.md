@@ -6,6 +6,9 @@
 
 * Added option `target` for the task `<ise>` and renamed the option
   `ace` as `ecf`.
+* Added options `target`, `thread`, `new_instance_types`, `silent`, `verbose`,
+  `no_benchmark`, `nested_benchmark`, `metrics` for the task `<gec>` and 
+  renamed the option `ace` as `ecf`.
 
 ### gec
 
@@ -16,6 +19,8 @@
   specified and taken into account.
 * Change the command-line option `--cc` to accept the following values: `no|script|make|gecc`.
 * Made `gec` multi-threaded, with the command-line option `--thread`.
+* Added command-line option `--target` to select the name of the target
+  in the ECF file.
 
 ### gecc
 
@@ -27,6 +32,8 @@
   the number of CPUs available on the machine.
 * Improved the way benchmarks, metrics, silent and verbose modes are
   specified and taken into account.
+* Added command-line option `--target` to select the name of the target
+  in the ECF file.
 
 ### gelint
 
@@ -34,6 +41,8 @@
   the number of CPUs available on the machine.
 * Improved the way benchmarks, metrics, silent and verbose modes are
   specified and taken into account.
+* Added command-line option `--target` to select the name of the target
+  in the ECF file.
 
 ### gexace
 

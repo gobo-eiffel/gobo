@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			if has_attribute (Target_attribute_name) then
 				a_value := attribute_value_or_default (Target_attribute_name, "")
 				if a_value.count > 0 then
-					command.set_target (a_value)
+					command.set_target_name (a_value)
 				end
 			end
 				-- system:

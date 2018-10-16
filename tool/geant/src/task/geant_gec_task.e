@@ -5,7 +5,7 @@ note
 		"Gec tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,16 +36,31 @@ feature {NONE} -- Initialization
 			Precursor {GEANT_TASK} (a_project, an_xml_element)
 
 			if has_attribute (Ace_attribute_name) then
-					-- ace_filename (optional)
+					-- ecf_filename (optional)
 				a_value := attribute_value_or_default (Ace_attribute_name, "")
 				if a_value.count > 0 then
-					command.set_ace_filename (a_value)
+					command.set_ecf_filename (a_value)
 				end
-			elseif has_attribute (Clean_attribute_name) then
+			end
+			if has_attribute (Ecf_attribute_name) then
+					-- ecf_filename (optional)
+				a_value := attribute_value_or_default (Ecf_attribute_name, "")
+				if a_value.count > 0 then
+					command.set_ecf_filename (a_value)
+				end
+			end
+			if has_attribute (Clean_attribute_name) then
 					-- clean:
 				a_value := attribute_value_or_default (Clean_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_clean (a_value)
+				end
+			end
+				-- target:
+			if has_attribute (Target_attribute_name) then
+				a_value := attribute_value_or_default (Target_attribute_name, "")
+				if a_value.count > 0 then
+					command.set_target_name (a_value)
 				end
 			end
 				-- c_compile.
@@ -63,7 +78,7 @@ feature {NONE} -- Initialization
 			if has_attribute (Gelint_attribute_name) then
 				command.set_gelint (boolean_value (Gelint_attribute_name))
 			end
-				-- cat.
+				-- catcall.
 			if has_attribute (Catcall_attribute_name) then
 				a_value := attribute_value (Catcall_attribute_name)
 				if a_value /= Void and then not a_value.is_empty then
@@ -84,11 +99,47 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
+				-- gc.
 			if has_attribute (Gc_attribute_name) then
 				a_value := attribute_value (Gc_attribute_name)
 				if a_value /= Void and then not a_value.is_empty then
 					command.set_garbage_collector (a_value)
 				end
+			end
+				-- thread.
+			if has_attribute (Thread_attribute_name) then
+				a_value := attribute_value (Thread_attribute_name)
+				if a_value.is_integer then
+					a_integer_value := a_value.to_integer
+					command.set_thread_count (a_value.to_integer)
+				end
+			end
+				-- new_instance_types.
+			if has_attribute (New_instance_types_attribute_name) then
+				a_value := attribute_value (New_instance_types_attribute_name)
+				if a_value /= Void and then not a_value.is_empty then
+					command.set_new_instance_types_filename (a_value)
+				end
+			end
+				-- silent.
+			if has_attribute (Silent_attribute_name) then
+				command.set_silent_mode (boolean_value (Silent_attribute_name))
+			end
+				-- verbose.
+			if has_attribute (Verbose_attribute_name) then
+				command.set_verbose_mode (boolean_value (Verbose_attribute_name))
+			end
+				-- no_benchmark.
+			if has_attribute (No_benchmark_attribute_name) then
+				command.set_no_benchmark_mode (boolean_value (No_benchmark_attribute_name))
+			end
+				-- nested_benchmark.
+			if has_attribute (Nested_benchmark_attribute_name) then
+				command.set_nested_benchmark_mode (boolean_value (Nested_benchmark_attribute_name))
+			end
+				-- metrics.
+			if has_attribute (Metrics_attribute_name) then
+				command.set_metrics_mode (boolean_value (Metrics_attribute_name))
 			end
 			if has_attribute (Exit_code_variable_attribute_name) then
 				a_value := attribute_value (Exit_code_variable_attribute_name)
@@ -115,6 +166,24 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "ace"
 		once
 			Result := "ace"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Ecf_attribute_name: STRING
+			-- Name of xml attribute for "ecf"
+		once
+			Result := "ecf"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Target_attribute_name: STRING
+			-- Name of xml attribute for "target"
+		once
+			Result := "target"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
@@ -196,6 +265,69 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "split_size"
 		once
 			Result := "split_size"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Thread_attribute_name: STRING
+			-- Name of xml attribute for "thread"
+		once
+			Result := "thread"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	New_instance_types_attribute_name: STRING
+			-- Name of xml attribute for "new_instance_types"
+		once
+			Result := "new_instance_types"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Silent_attribute_name: STRING
+			-- Name of xml attribute for "silent"
+		once
+			Result := "silent"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Verbose_attribute_name: STRING
+			-- Name of xml attribute for "verbose"
+		once
+			Result := "verbose"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	No_benchmark_attribute_name: STRING
+			-- Name of xml attribute for "no_benchmark"
+		once
+			Result := "no_benchmark"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Nested_benchmark_attribute_name: STRING
+			-- Name of xml attribute for "nested_benchmark"
+		once
+			Result := "nested_benchmark"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Metrics_attribute_name: STRING
+			-- Name of xml attribute for "metrics"
+		once
+			Result := "metrics"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

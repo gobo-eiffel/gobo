@@ -68,6 +68,9 @@ feature -- Access
 
 feature -- Argument parsing
 
+	target_option: AP_STRING_OPTION
+			-- Option for '--target=<target_name>'
+
 	format_option: AP_ENUMERATION_OPTION
 			-- Option for '--format=<pretty_print|html_ise_stylesheet>'
 
@@ -123,6 +126,11 @@ feature -- Argument parsing
 			create l_parser.make
 			l_parser.set_application_description ("Gobo Eiffel Doc, generate Eiffel documentation.")
 			l_parser.set_parameters_description ("filename")
+				-- target.
+			create target_option.make_with_long_form ("target")
+			target_option.set_description ("Name of target to be used in ECF file. (default: last target in ECF file)")
+			target_option.set_parameter_description ("target_name")
+			l_parser.options.force_last (target_option)
 				-- format.
 			create format_option.make_with_long_form ("format")
 			format_option.set_description ("Format for the output. (default: pretty_print)")
@@ -212,6 +220,7 @@ feature -- Argument parsing
 				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			end
 			if l_format /= Void then
+				set_target_name (target_option, l_parser, l_format)
 				set_ise_version (ise_option, l_parser, l_format)
 				set_defined_variables (define_option, l_parser, l_format)
 				set_class_filters (class_option, l_parser, l_format)
@@ -242,6 +251,20 @@ feature -- Argument parsing
 			define_option_not_void: define_option /= Void
 			thread_option_not_void: thread_option /= Void
 			version_flag_not_void: version_flag /= Void
+		end
+
+	set_target_name (a_option: like target_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'target_name' of `a_format' with information passed in `a_option'.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+			a_format_not_void: a_format /= Void
+		do
+			if a_option.was_found then
+				a_format.set_target_name (a_option.parameter)
+			else
+				a_format.set_target_name (Void)
+			end
 		end
 
 	set_ise_version (a_option: like ise_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
@@ -467,6 +490,7 @@ feature -- Error handling
 invariant
 
 	error_handler_not_void: error_handler /= Void
+	target_option_not_void: target_option /= Void
 	format_option_not_void: format_option /= Void
 	class_option_not_void: class_option /= Void
 	output_option_not_void: output_option /= Void

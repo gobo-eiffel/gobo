@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 October 2018</date>
+	<date>15 October 2018</date>
 </chapterinfo>
 
 <title>Using gelint</title>
@@ -53,6 +53,15 @@ Eiffel library. Here is the list of options that can be used with
 		</term>
 		<listitem><para>
 			Print a summary of the command-line options of <projectname>gelint</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--target=&lt;target_name&gt;</filename>
+		</term>
+		<listitem><para>
+			Name of target to be used in ECF file.
+			(default: last target in ECF file)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

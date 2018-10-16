@@ -23,7 +23,7 @@
 		<surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 October 2018</date>
+	<date>16 October 2018</date>
 </chapterinfo>
 
 	<title>gec</title>
@@ -40,9 +40,9 @@
 
 		<variablelist>
 			<varlistentry>
-				<term>ace</term>
+				<term>ecf</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Name of Ace file</para>
+					<para><emphasis>Description: </emphasis>Name of ECF file</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
@@ -52,6 +52,19 @@
 				</listitem>
 			</varlistentry>
 
+			<varlistentry>
+				<term>target</term>
+				<listitem>
+					<para><emphasis>Name of target to be used in ECF file</emphasis></para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid target name</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>Last target in ECF file</para>
+				</listitem>
+			</varlistentry>
+			
 			<varlistentry>
 				<term>finalize</term>
 				<listitem>
@@ -113,7 +126,7 @@
 					<para><emphasis>Domain: </emphasis>Positive integer</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>1,000,000 bytes</para>
+					<para><emphasis>Default: </emphasis>2,500,000 bytes</para>
 				</listitem>
 			</varlistentry>
 
@@ -143,6 +156,99 @@
 				</listitem>
 			</varlistentry>
 
+			<varlistentry>
+				<term>new_instance_types</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>File containing
+					the list of types which can have instances created by 
+					'TYPE.new_instance' or 'TYPE.new_special_any_instance'</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>Use all non-deferred, non-NONE, alive types</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>thread</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Number of threads to be used to run gec. Negative numbers -N mean &quot;number of CPUs - N&quot;</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Integer</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>Number of CPUs</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>silent</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Run gec in silent mode</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>verbose</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Run gec in verbose mode</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>no_benchmark</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Should no benchmark information be displayed? (default: display non-nested benchmark information)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>nested_benchmark</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Should nested benchmark information be displayed?</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>metrics</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Should metrics information be displayed?</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+			
 			<varlistentry>
 				<term>clean</term>
 				<listitem>
@@ -182,7 +288,10 @@
       <ref name="dir_if_unless"/>
       <choice>
         <group>
-          <attribute name="ace"/>
+          <attribute name="ecf"/>
+          <optional>
+            <attribute name="target"/>
+          </optional>
           <optional>
             <attribute name="finalize"/>
           </optional>
@@ -204,6 +313,27 @@
           <optional>
             <attribute name="gc"/>
           </optional>
+          <optional>
+            <attribute name="new_instance_types"/>
+          </optional>
+          <optional>
+            <attribute name="thread"/>
+          </optional>
+          <optional>
+            <attribute name="silent"/>
+          </optional>
+          <optional>
+            <attribute name="verbose"/>
+          </optional>
+          <optional>
+            <attribute name="no_benchmark"/>
+          </optional>
+          <optional>
+            <attribute name="nested_benchmark"/>
+          </optional>
+          <optional>
+            <attribute name="metrics"/>
+          </optional>
         </group>
         <attribute name="clean"/>
         <optional>
@@ -220,9 +350,9 @@
 	<section id="gec_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
-  <gec ace="ge.ace"/>
+  <gec ecf="system.ecf"/>
 
-  <gec ace="ge.ace" finalize="true"/>
+  <gec ecf="system.ecf" finalize="true"/>
 
   <gec clean="${system}"/>
 ]]>

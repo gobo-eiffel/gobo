@@ -53,8 +53,8 @@ feature -- Access
 	ecf_filename: detachable STRING
 			-- ECF filename
 
-	target: detachable STRING
-			-- ECF target
+	target_name: detachable STRING
+			-- Name of target in ECF file
 
 	system_name: detachable STRING
 			-- System name
@@ -100,12 +100,12 @@ feature -- Setting
 			ecf_filename_set: ecf_filename = a_filename
 		end
 
-	set_target (a_target: like target)
-			-- Set `target' to `a_target'.
+	set_target_name (a_target_name: like target_name)
+			-- Set `target_name' to `a_target_name'.
 		do
-			target := a_target
+			target_name := a_target_name
 		ensure
-			target_set: target = a_target
+			target_name_set: target_name = a_target_name
 		end
 
 	set_system_name (a_name: like system_name)
@@ -202,9 +202,9 @@ feature -- Execution
 					a_filename := file_system.pathname_from_file_system (l_ecf_filename, unix_file_system)
 					cmd := STRING_.appended_string (cmd, a_filename)
 				end
-				if attached target as l_target and then l_target.count > 0 then
+				if attached target_name as l_target_name and then l_target_name.count > 0 then
 					cmd.append_string (" -target ")
-					cmd := STRING_.appended_string (cmd, l_target)
+					cmd := STRING_.appended_string (cmd, l_target_name)
 				end
 				if compatible_mode then
 					cmd.append_string (" -compat")

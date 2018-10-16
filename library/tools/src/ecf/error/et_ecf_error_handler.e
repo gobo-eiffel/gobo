@@ -173,18 +173,6 @@ feature -- Reporting errors
 			report_error (l_error)
 		end
 
-	report_eaby_error (a_system_element_name: ET_IDENTIFIER; a_system_config: ET_ECF_SYSTEM_CONFIG)
-			-- Report EABY error: no target found in ECF file.
-		require
-			a_system_element_name_not_void: a_system_element_name /= Void
-			a_system_config_not_void: a_system_config /= Void
-		local
-			l_error: ET_ECF_ERROR
-		do
-			create l_error.make_eaby (a_system_element_name, a_system_config)
-			report_error (l_error)
-		end
-
 	report_eadf_error (a_location_value: ET_IDENTIFIER; a_filename: STRING; a_system_config: ET_ECF_SYSTEM_CONFIG)
 			-- Report EADF error: cannot open redirected ECF file `a_filename'.
 		require
@@ -545,6 +533,35 @@ feature -- Reporting errors
 			l_error: ET_ECF_ERROR
 		do
 			create l_error.make_epur (a_extends_value, a_filename, a_system_config)
+			report_error (l_error)
+		end
+
+	report_etam_error (a_system_element_name: ET_IDENTIFIER; a_system_config: ET_ECF_SYSTEM_CONFIG)
+			-- Report ETAM error: no target found in ECF file.
+			--
+			-- ETAM: Ecf TArgets Missing
+		require
+			a_system_element_name_not_void: a_system_element_name /= Void
+			a_system_config_not_void: a_system_config /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_etam (a_system_element_name, a_system_config)
+			report_error (l_error)
+		end
+
+	report_etnu_error (a_target_name: STRING; a_system_element_name: ET_IDENTIFIER; a_system_config: ET_ECF_SYSTEM_CONFIG)
+			-- Report ETNU error: no target `a_target_name' found in ECF file.
+			--
+			-- ETNU: Ecf Target Name Unknown
+		require
+			a_target_name_not_void: a_target_name /= Void
+			a_system_element_name_not_void: a_system_element_name /= Void
+			a_system_config_not_void: a_system_config /= Void
+		local
+			l_error: ET_ECF_ERROR
+		do
+			create l_error.make_etnu (a_target_name, a_system_element_name, a_system_config)
 			report_error (l_error)
 		end
 

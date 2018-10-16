@@ -28,14 +28,22 @@
    		
    <dl>
     			
-    <dt>ace</dt>
-    <dd><i>Description: </i>Name of Ace file
+    <dt>ecf</dt>
+    <dd><i>Description: </i>Name of ECF file
      <p><i>Domain: </i>Valid filename pointing to existing file
      </p>
      <p><i>Default: </i>-
      </p>
     </dd>
     
+    			
+    <dt>target</dt>
+    <dd><i>Name of target to be used in ECF file</i><p><i>Domain: </i>valid target name
+     </p>
+     <p><i>Default: </i>Last target in ECF file
+     </p>
+    </dd>
+    			
     			
     <dt>finalize</dt>
     <dd><i>Description: </i>Should system be compiled in finalized mode?
@@ -77,7 +85,7 @@
     <dd><i>Description: </i>Size (in bytes) of generated C files in bytes when in split mode
      <p><i>Domain: </i>Positive integer
      </p>
-     <p><i>Default: </i>1,000,000 bytes
+     <p><i>Default: </i>2,500,000 bytes
      </p>
     </dd>
     
@@ -99,6 +107,71 @@
      </p>
     </dd>
     
+    			
+    <dt>new_instance_types</dt>
+    <dd><i>Description: </i>File containing
+     					the list of types which can have instances created by 
+     					'TYPE.new_instance' or 'TYPE.new_special_any_instance'
+     <p><i>Domain: </i>Valid filename pointing to existing file
+     </p>
+     <p><i>Default: </i>Use all non-deferred, non-NONE, alive types
+     </p>
+    </dd>
+    
+    			
+    <dt>thread</dt>
+    <dd><i>Description: </i>Number of threads to be used to run gec. Negative numbers -N mean "number of CPUs - N"
+     <p><i>Domain: </i>Integer
+     </p>
+     <p><i>Default: </i>Number of CPUs
+     </p>
+    </dd>
+    
+    			
+    <dt>silent</dt>
+    <dd><i>Description: </i>Run gec in silent mode
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    
+    			
+    <dt>verbose</dt>
+    <dd><i>Description: </i>Run gec in verbose mode
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    
+    			
+    <dt>no_benchmark</dt>
+    <dd><i>Description: </i>Should no benchmark information be displayed? (default: display non-nested benchmark information)
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    
+    			
+    <dt>nested_benchmark</dt>
+    <dd><i>Description: </i>Should nested benchmark information be displayed?
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    
+    			
+    <dt>metrics</dt>
+    <dd><i>Description: </i>Should metrics information be displayed?
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    			
     			
     <dt>clean</dt>
     <dd><i>Description: </i>clean
@@ -132,7 +205,10 @@
       &lt;ref name="dir_if_unless"/&gt;
       &lt;choice&gt;
         &lt;group&gt;
-          &lt;attribute name="ace"/&gt;
+          &lt;attribute name="ecf"/&gt;
+          &lt;optional&gt;
+            &lt;attribute name="target"/&gt;
+          &lt;/optional&gt;
           &lt;optional&gt;
             &lt;attribute name="finalize"/&gt;
           &lt;/optional&gt;
@@ -154,6 +230,27 @@
           &lt;optional&gt;
             &lt;attribute name="gc"/&gt;
           &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;attribute name="new_instance_types"/&gt;
+          &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;attribute name="thread"/&gt;
+          &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;attribute name="silent"/&gt;
+          &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;attribute name="verbose"/&gt;
+          &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;attribute name="no_benchmark"/&gt;
+          &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;attribute name="nested_benchmark"/&gt;
+          &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;attribute name="metrics"/&gt;
+          &lt;/optional&gt;
         &lt;/group&gt;
         &lt;attribute name="clean"/&gt;
         &lt;optional&gt;
@@ -170,9 +267,9 @@
    		
    <h2>Examples</h2>
    	<pre>
-  &lt;gec ace="ge.ace"/&gt;
+  &lt;gec ecf="system.ecf"/&gt;
 
-  &lt;gec ace="ge.ace" finalize="true"/&gt;
+  &lt;gec ecf="system.ecf" finalize="true"/&gt;
 
   &lt;gec clean="${system}"/&gt;
 
@@ -182,7 +279,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2006-2018, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 October 2018</font></address>
+     <address><font size="2"><b>Copyright © 2006-2018, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>16 October 2018</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="geant_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="gelex_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

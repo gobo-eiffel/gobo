@@ -41,19 +41,19 @@ feature -- Status report
 	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
-			Result := is_ace_configuration or is_cleanable
+			Result := is_ecf_configuration or is_cleanable
 			Result := Result and then (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		ensure then
-			definition: Result implies (is_ace_configuration or is_cleanable)
+			definition: Result implies (is_ecf_configuration or is_cleanable)
 			exit_code_variable_name_void_or_not_empty: Result implies (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		end
 
-	is_ace_configuration: BOOLEAN
+	is_ecf_configuration: BOOLEAN
 			-- Does ace file configuration apply?
 		do
-			Result := (attached ace_filename as l_ace_filename and then l_ace_filename.count > 0)
+			Result := (attached ecf_filename as l_ecf_filename and then l_ecf_filename.count > 0)
 		ensure
-			ace_filename_not_void_and_not_empty: Result implies attached ace_filename as l_ace_filename and then l_ace_filename.count > 0
+			ecf_filename_not_void_and_not_empty: Result implies attached ecf_filename as l_ecf_filename and then l_ecf_filename.count > 0
 		end
 
 	is_cleanable: BOOLEAN
@@ -66,8 +66,12 @@ feature -- Status report
 
 feature -- Access
 
-	ace_filename: detachable STRING
-			-- Ace filename
+	ecf_filename: detachable STRING
+			-- ECF filename
+
+	target_name: detachable STRING
+			-- Name of target to be used in ECF file.
+			-- Use last target in ECF file if not specified.
 
 	c_compile: detachable STRING
 			-- Should the back-end C compiler be invoked on the generated C code, and if yes with what method?
@@ -91,6 +95,31 @@ feature -- Access
 	garbage_collector: detachable STRING
 			-- Name of GC being used
 
+	thread_count: INTEGER
+			-- Number of threads to be used to run gec.
+			-- Negative numbers -N mean "number of CPUs - N".
+			-- (default: number of CPUs)
+
+	new_instance_types_filename: detachable STRING
+			-- Filename containing the list of types which can have instances
+			-- created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'.
+
+	silent_mode: BOOLEAN
+			-- Should gec be run in silent mode?
+
+	verbose_mode: BOOLEAN
+			-- Should gec be run in verbose mode?
+
+	no_benchmark_mode: BOOLEAN
+			-- Should no benchmark information be displayed?
+			-- (default: display non-nested benchmark information)
+
+	nested_benchmark_mode: BOOLEAN
+			-- Should nested benchmark information be displayed?
+
+	metrics_mode: BOOLEAN
+			-- Should metrics information be displayed?
+
 	clean: detachable STRING
 			-- Name of system to be cleaned
 
@@ -99,15 +128,23 @@ feature -- Access
 
 feature -- Setting
 
-	set_ace_filename (a_filename: like ace_filename)
-			-- Set `ace_filename' to `a_filename'.
+	set_ecf_filename (a_filename: like ecf_filename)
+			-- Set `ecf_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: a_filename.count > 0
 		do
-			ace_filename := a_filename
+			ecf_filename := a_filename
 		ensure
-			ace_filename_set: ace_filename = a_filename
+			ecf_filename_set: ecf_filename = a_filename
+		end
+
+	set_target_name (a_target_name: like target_name)
+			-- Set `target_name' to `a_target_name'.
+		do
+			target_name := a_target_name
+		ensure
+			target_name_set: target_name = a_target_name
 		end
 
 	set_c_compile (a_c_compile: like c_compile)
@@ -169,6 +206,62 @@ feature -- Setting
 			garbage_collector := s
 		ensure
 			garbage_collector_set: garbage_collector = s
+		end
+
+	set_thread_count (a_thread_count: like thread_count)
+			-- Set `thread_count' to `a_thread_count'.
+		do
+			thread_count := a_thread_count
+		ensure
+			thread_count_set: thread_count = a_thread_count
+		end
+
+	set_new_instance_types_filename (a_filename: like new_instance_types_filename)
+			-- Set `new_instance_types_filename' to `a_filename'.
+		do
+			new_instance_types_filename := a_filename
+		ensure
+			new_instance_types_filename_set: new_instance_types_filename = a_filename
+		end
+
+	set_silent_mode (b: BOOLEAN)
+			-- Set `silent_mode' to `b'.
+		do
+			silent_mode := b
+		ensure
+			silent_mode_set: silent_mode = b
+		end
+
+	set_verbose_mode (b: BOOLEAN)
+			-- Set `verbose_mode' to `b'.
+		do
+			verbose_mode := b
+		ensure
+			verbose_mode_set: verbose_mode = b
+		end
+
+	set_no_benchmark_mode (b: BOOLEAN)
+			-- Set `no_benchmark_mode' to `b'.
+		do
+			no_benchmark_mode := b
+		ensure
+			no_benchmark_mode_set: no_benchmark_mode = b
+		end
+
+	set_nested_benchmark_mode (b: BOOLEAN)
+			-- Set `nested_benchmark_mode' to `b'.
+		do
+			nested_benchmark_mode := b
+		ensure
+			nested_benchmark_mode_set: nested_benchmark_mode = b
+		end
+
+	set_metrics_mode (b: BOOLEAN)
+			-- Set `metrics_mode' to `b'.
+		do
+			metrics_mode := b
+		ensure
+			metrics_mode_set: metrics_mode = b
 		end
 
 	set_clean (a_clean: like clean)
@@ -311,8 +404,8 @@ feature -- Execution
 						file_system.delete_file (a_name)
 					end
 				end
-			elseif is_ace_configuration then
-				cmd := new_ace_cmdline
+			elseif is_ecf_configuration then
+				cmd := new_ecf_cmdline
 				project.trace (<<"  [gec] ", cmd>>)
 				execute_shell (cmd)
 				if attached exit_code_variable_name as l_exit_code_variable_name then
@@ -331,15 +424,20 @@ feature -- Execution
 
 feature -- Command-line
 
-	new_ace_cmdline: STRING
-			-- Execution commandline for Ace configuration
+	new_ecf_cmdline: STRING
+			-- Execution commandline for ECF configuration
 		require
-			is_ace_configuration: is_ace_configuration
+			is_ecf_configuration: is_ecf_configuration
 		local
 			a_filename: STRING
 		do
 			create Result.make (50)
 			Result.append_string ("gec ")
+			if attached target_name as l_target_name and then not l_target_name.is_empty then
+				Result.append_string ("--target=")
+				Result.append_string (l_target_name)
+				Result.append_character (' ')
+			end
 			if finalize then
 				Result.append_string ("--finalize ")
 			end
@@ -369,8 +467,33 @@ feature -- Command-line
 				Result.append_string (garbage_collector)
 				Result.append_character (' ')
 			end
-			check is_ace_configuration: attached ace_filename as l_ace_filename then
-				a_filename := file_system.pathname_from_file_system (l_ace_filename, unix_file_system)
+			if attached new_instance_types_filename as l_new_instance_types_filename and then not l_new_instance_types_filename.is_empty then
+				Result.append_string ("--new-instance-types=")
+				Result.append_string (l_new_instance_types_filename)
+				Result.append_character (' ')
+			end
+			if thread_count /= 0 then
+				Result.append_string ("--thread=")
+				INTEGER_.append_decimal_integer (thread_count, Result)
+				Result.append_character (' ')
+			end
+			if silent_mode then
+				Result.append_string ("--silent ")
+			end
+			if verbose_mode then
+				Result.append_string ("--verbose ")
+			end
+			if no_benchmark_mode then
+				Result.append_string ("--no-benchmark ")
+			end
+			if nested_benchmark_mode then
+				Result.append_string ("--nested-benchmark ")
+			end
+			if metrics_mode then
+				Result.append_string ("--metrics ")
+			end
+			check is_ecf_configuration: attached ecf_filename as l_ecf_filename then
+				a_filename := file_system.pathname_from_file_system (l_ecf_filename, unix_file_system)
 				Result := STRING_.appended_string (Result, a_filename)
 			end
 		ensure

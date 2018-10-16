@@ -56,7 +56,7 @@ feature {NONE} -- Element change
 			a_result.put (new_system_config (a_element, a_position_table, a_filename, a_universe))
 		end
 
-	build_system (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING; a_finalize_mode: BOOLEAN; a_result: DS_CELL [detachable ET_ECF_SYSTEM])
+	build_system (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING; a_target_name: detachable STRING; a_finalize_mode: BOOLEAN; a_result: DS_CELL [detachable ET_ECF_SYSTEM])
 			-- Build system from `a_element'.
 		require
 			a_element_not_void: a_element /= Void
@@ -74,10 +74,16 @@ feature {NONE} -- Element change
 					-- Error already reported in `new_system'.
 			else
 				l_targets := l_system.targets
--- TODO: we need to be able to select the target.
 				if l_targets /= Void and then not l_targets.is_empty then
-						-- Use last target as default target.
-					l_target := l_targets.target (l_targets.count)
+					if a_target_name /= Void then
+						l_target := l_targets.target_by_name (a_target_name)
+						if l_target = Void then
+							error_handler.report_etnu_error (a_target_name, element_name (a_element, a_position_table), l_system)
+						end
+					else
+							-- Use last target as default target.
+						l_target := l_targets.target (l_targets.count)
+					end
 				else
 						-- No target found in the ECF file.
 						-- Error already reported in `fill_system_config'.
