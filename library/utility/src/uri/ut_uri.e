@@ -143,7 +143,9 @@ feature {NONE} -- Implementation
 						if has_query then
 							-- Keep query.
 						else
-							query_item := a_base.query_item
+							if has_query then
+								query_item := a_base.query_item
+							end
 						end
 					else
 						if has_absolute_path then
