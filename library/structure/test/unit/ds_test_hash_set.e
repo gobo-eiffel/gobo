@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -225,6 +225,23 @@ feature -- Test
 			assert ("not_has_void", not a_set1.has_void)
 		end
 
+	test_force_new
+			-- Test feature 'force_new'.
+		local
+			l_set1: DS_HASH_SET [INTEGER]
+			l_array1: ARRAY [BOOLEAN]
+		do
+				-- Try to see what happens if we insert
+				-- more items than the initial capacity.
+			create l_set1.make (2)
+			l_set1.force_new (1)
+			l_set1.force_new (2)
+			l_set1.force_new (3)
+			create l_array1.make_filled (False, 1, 3)
+			l_set1.do_all (agent l_array1.put (True, ?))
+			assert_barrays_same ("items1", <<True, True, True>>, l_array1)
+		end
+		
 feature {NONE} -- Implementation
 
 	same_integers (i, j: INTEGER): BOOLEAN

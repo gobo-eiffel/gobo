@@ -1127,6 +1127,76 @@ feature {TS_TEST_HANDLER} -- Containers
 			assertions.set_exception_on_error (l_fatal)
 		end
 
+	assert_barrays_same (a_tag: STRING; expected, actual: ARRAY [BOOLEAN])
+			-- Assert that `expected' and `actual' have the same items
+			-- in the same order (use '=' for item comparison).
+		require
+			a_tag_not_void: a_tag /= Void
+			expected_not_void: expected /= Void
+			actual_not_void: actual /= Void
+		local
+			i, nb: INTEGER
+			i1, i2: INTEGER
+			new_tag: STRING
+			a_message: detachable STRING
+			expected_item, actual_item: BOOLEAN
+		do
+			assertions.add_assertion
+			if expected.count /= actual.count then
+				create new_tag.make (15)
+				new_tag.append_string (a_tag)
+				new_tag.append_string ("-count")
+				a_message := assert_strings_equal_message (new_tag, expected.count.out, actual.count.out)
+			else
+				i1 := expected.lower
+				i2 := actual.lower
+				nb := expected.count
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					expected_item := expected.item (i1)
+					actual_item := actual.item (i2)
+					if expected_item /= actual_item then
+						create new_tag.make (15)
+						new_tag.append_string (a_tag)
+						new_tag.append_string ("-item #")
+						INTEGER_.append_decimal_integer (i, new_tag)
+						a_message := assert_strings_equal_message (new_tag, expected_item.out, actual_item.out)
+						i := nb + 1
+					else
+						i1 := i1 + 1
+						i2 := i2 + 1
+						i := i + 1
+					end
+				end
+			end
+			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
+				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_barrays_same (a_tag: STRING; expected, actual: ARRAY [BOOLEAN])
+			-- Check that `expected' and `actual' have the same items
+			-- in the same order (use '=' for item comparison).
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			expected_not_void: expected /= Void
+			actual_not_void: actual /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_barrays_same (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 feature {TS_TEST_HANDLER} -- Exception
 
 	assert_exception (a_tag: STRING; a_routine: ROUTINE)
@@ -1460,5 +1530,5 @@ feature {NONE} -- Implementation
 
 	bom: STRING = "%/239/%/187/%/191/"
 			-- Byte Order Mark
-			
+
 end
