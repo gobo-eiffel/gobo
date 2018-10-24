@@ -333,7 +333,7 @@ feature -- Output
 			across l_capability_names as i_capability_names loop
 				l_inner_printed := False
 				l_capability_name := i_capability_names.key
-				if attached a_capabilities.primary_use_value (l_capability_name) as l_use then
+				if attached a_capabilities.primary_support_value (l_capability_name) as l_support then
 					if not l_outer_printed then
 						print_indentation
 						file.put_character ('<')
@@ -348,11 +348,11 @@ feature -- Output
 					file.put_string (l_capability_name)
 					l_inner_printed := True
 					file.put_character (' ')
-					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_use)
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_support)
 					file.put_character ('=')
-					print_quoted_string (l_use)
+					print_quoted_string (l_support)
 				end
-				if attached a_capabilities.primary_support_value (l_capability_name) as l_support then
+				if attached a_capabilities.primary_use_value (l_capability_name) as l_use then
 					if not l_outer_printed then
 						print_indentation
 						file.put_character ('<')
@@ -369,9 +369,9 @@ feature -- Output
 						l_inner_printed := True
 					end
 					file.put_character (' ')
-					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_support)
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_use)
 					file.put_character ('=')
-					print_quoted_string (l_support)
+					print_quoted_string (l_use)
 					l_inner_printed := True
 				end
 				if l_inner_printed then

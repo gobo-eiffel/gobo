@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>ECF Available Targets</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>ECF Available Targets</strong></font></td>
+    <td align="right"><a href="ecf_pretty_printer.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   <i>gedoc</i> can be used to figure out the list of available
+   targets in an ECF file.
+   
+  </p>
+  <div>
+   <h2>List of available targets</h2>
+   
+   <p>
+    Here is how to get the list of available targets in the ECF file <font color="#800000"><i><tt>project.ecf</tt></i></font>:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=available_targets project.ecf</tt></i></font>
+</pre>
+    This will display to the standard output (console window) the list of targets
+    in the order found in the ECF file <font color="#800000"><i><tt>project.ecf</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Checking that a target is available</h2>
+   
+   <p>
+    It is also possible to check whether a given target exists in an ECF file:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gedoc --format=available_targets --target=foo project.ecf</tt></i></font>
+     
+    </blockquote>
+    In addition to displaying the list of targets found in the ECF file 
+    <font color="#800000"><i><tt>project.ecf</tt></i></font>, the command will exit with a non-zero
+    exit code if the target <font color="#800000"><i><tt>foo</tt></i></font> does not exist. This
+    can be used in combination with the option <font color="#800000"><i><tt>--silent</tt></i></font>
+    in a script in order to determine what ECF target to use before
+    invoking the Eiffel compiler.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2018, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>24 October 2018</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="ecf_pretty_printer.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

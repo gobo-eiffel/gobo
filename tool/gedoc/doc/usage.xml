@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>15 October 2018</date>
+	<date>24 October 2018</date>
 </chapterinfo>
 
 <title>Using gedoc</title>
@@ -139,6 +139,14 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 		</term>
 		<listitem><para>
 			Version of Eiffel whose semantics should be used during code analysis. (default: latest version)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--ecf=&lt;latest|major.minor.revision&gt;</filename>
+		</term>
+		<listitem><para>
+			Version of ECF to be used when converting ECF files. (default: version of the ECF input file)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

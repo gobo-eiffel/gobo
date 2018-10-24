@@ -109,7 +109,11 @@ feature {NONE} -- Eiffel config file parsing
 			l_lace_error_handler: ET_LACE_ERROR_HANDLER
 		do
 			last_system := Void
-			create l_lace_error_handler.make_standard
+			if is_silent then
+				create l_lace_error_handler.make_null
+			else
+				create l_lace_error_handler.make_standard
+			end
 			create l_lace_parser.make (l_lace_error_handler)
 			l_lace_parser.parse_file (a_file)
 			if not l_lace_parser.syntax_error then
@@ -134,7 +138,11 @@ feature {NONE} -- Eiffel config file parsing
 			defined_variables: STRING
 		do
 			last_system := Void
-			create l_xace_error_handler.make_standard
+			if is_silent then
+				create l_xace_error_handler.make_null
+			else
+				create l_xace_error_handler.make_standard
+			end
 			create l_xace_variables.make_map (100)
 			l_xace_variables.set_key_equality_tester (string_equality_tester)
 			l_xace_variables.force_last ("ge", "GOBO_EIFFEL")
@@ -178,7 +186,11 @@ feature {NONE} -- Eiffel config file parsing
 		do
 			last_system := Void
 			Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
-			create l_ecf_error_handler.make_standard
+			if is_silent then
+				create l_ecf_error_handler.make_null
+			else
+				create l_ecf_error_handler.make_standard
+			end
 			create l_ecf_parser.make (l_ecf_error_handler)
 			l_ecf_parser.set_finalize_mode (is_finalize)
 			l_ecf_parser.parse_file (a_file, target_name)

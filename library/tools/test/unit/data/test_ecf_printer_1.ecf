@@ -22,8 +22,8 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true"/>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency use="thread" support="thread"/>
-			<void_safety use="all" support="all"/>
+			<concurrency support="thread" use="thread"/>
+			<void_safety support="all" use="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
 			<condition>

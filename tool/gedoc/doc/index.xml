@@ -6,7 +6,7 @@
 		"Gobo Eiffel Doc"
 
 	tool: "Gobo Eiffel Doc"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/index">
 <chapterinfo>
 	<copyright>
-		<year>2017</year>
+		<year>2017-2018</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>25 March 2017</date>
+	<date>24 October 2018</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Doc</title>
@@ -31,7 +31,7 @@
 <projectname>Gobo Eiffel Doc</projectname>, or <projectname>gedoc</projectname>
 for short, is an open source command-line Eiffel documentation generator. Among other
 things, it is able to produce HTML documentation from Eiffel classes or Eiffel libraries.
-It can also be used as an Eiffel pretty-printer.
+It can also be used as an Eiffel pretty-printer or as an ECF converter.
 </para>
 <para>
 This documentation of <projectname>gedoc</projectname> is structured as follows:
@@ -60,6 +60,22 @@ This documentation of <projectname>gedoc</projectname> is structured as follows:
 		</term>
 		<listitem><para>
 			Generating HTML files using ISE's stylesheet.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="ecf_pretty_printer">ECF Pretty-Printer</link>
+		</term>
+		<listitem><para>
+			Using <projectname>gedoc</projectname> as an ECF pretty-printer and converter.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="available_targets">ECF Available Targets</link>
+		</term>
+		<listitem><para>
+			Getting the list of available ECF targets.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

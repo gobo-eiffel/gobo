@@ -72,7 +72,7 @@ feature -- Argument parsing
 			-- Option for '--target=<target_name>'
 
 	format_option: AP_ENUMERATION_OPTION
-			-- Option for '--format=<pretty_print|html_ise_stylesheet>'
+			-- Option for '--format=<pretty_print|html_ise_stylesheet|ecf_pretty_print|available_targets>'
 
 	class_option: AP_STRING_OPTION
 			-- Option for '--class=<class_name>'
@@ -107,6 +107,9 @@ feature -- Argument parsing
 	ise_option: AP_STRING_OPTION
 			-- Option for '--ise[=major[.minor[.revision[.build]]]]'
 
+	ecf_option: AP_STRING_OPTION
+			-- Option for '--ecf=<latest|major.minor.revision>'
+
 	define_option: AP_STRING_OPTION
 			-- Option for '--define=FOO=BAR'
 
@@ -136,7 +139,9 @@ feature -- Argument parsing
 			format_option.set_description ("Format for the output. (default: pretty_print)")
 			format_option.extend ("pretty_print")
 			format_option.extend ("html_ise_stylesheet")
-			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet")
+			format_option.extend ("ecf_pretty_print")
+			format_option.extend ("available_targets")
+			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet|ecf_pretty_print|available_targets")
 			l_parser.options.force_last (format_option)
 				-- class.
 			create class_option.make ('c', "class")
@@ -186,6 +191,11 @@ feature -- Argument parsing
 			ise_option.set_parameter_description ("major[.minor[.revision[.build]]]")
 			ise_option.set_default_parameter (ise_latest.out)
 			l_parser.options.force_last (ise_option)
+				-- ecf.
+			create ecf_option.make_with_long_form ("ecf")
+			ecf_option.set_description ("Version of ECF to be used when converting ECF files. (default: version of the ECF input file)")
+			ecf_option.set_parameter_description ("latest|major.minor.revision")
+			l_parser.options.force_last (ecf_option)
 				-- define.
 			create define_option.make_with_long_form ("define")
 			define_option.set_description ("Define variables to be used when reading Xace files.")
@@ -218,10 +228,15 @@ feature -- Argument parsing
 				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "html_ise_stylesheet" then
 				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
+			elseif format_option.parameter ~ "ecf_pretty_print" then
+				create {GEDOC_ECF_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
+			elseif format_option.parameter ~ "available_targets" then
+				create {GEDOC_AVAILABLE_TARGETS_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			end
 			if l_format /= Void then
 				set_target_name (target_option, l_parser, l_format)
 				set_ise_version (ise_option, l_parser, l_format)
+				set_ecf_version (ecf_option, l_parser, l_format)
 				set_defined_variables (define_option, l_parser, l_format)
 				set_class_filters (class_option, l_parser, l_format)
 				set_output_directory (output_option, l_parser, l_format)
@@ -248,6 +263,7 @@ feature -- Argument parsing
 			metrics_flag_not_void: metrics_flag /= Void
 			silent_flag_not_void: silent_flag /= Void
 			ise_option_not_void: ise_option /= Void
+			ecf_option_not_void: ecf_option /= Void
 			define_option_not_void: define_option /= Void
 			thread_option_not_void: thread_option /= Void
 			version_flag_not_void: version_flag /= Void
@@ -309,6 +325,45 @@ feature -- Argument parsing
 			end
 			if l_ise_version /= Void then
 				a_format.set_ise_version (l_ise_version)
+			end
+		end
+
+	set_ecf_version (a_option: like ecf_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'ecf_version' of `a_format' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+			a_format_not_void: a_format /= Void
+		local
+			l_ecf_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ecf_version: detachable UT_VERSION
+		do
+			if not a_option.was_found then
+				l_ecf_version := Void
+			elseif not attached a_option.parameter as l_parameter then
+				report_usage_message (a_parser)
+				Exceptions.die (1)
+			elseif STRING_.same_string (l_parameter, "latest") then
+				l_ecf_version := {UT_SHARED_ECF_VERSIONS}.ecf_last_known
+			else
+				create l_ecf_regexp.make
+				l_ecf_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?")
+				if l_ecf_regexp.recognizes (l_parameter) then
+					inspect l_ecf_regexp.match_count
+					when 6 then
+						create l_ecf_version.make (l_ecf_regexp.captured_substring (1).to_integer, l_ecf_regexp.captured_substring (3).to_integer, l_ecf_regexp.captured_substring (5).to_integer, 0)
+					else
+						report_usage_message (a_parser)
+						Exceptions.die (1)
+					end
+				else
+					report_usage_message (a_parser)
+					Exceptions.die (1)
+				end
+			end
+			if l_ecf_version /= Void then
+				a_format.set_ecf_version (l_ecf_version)
 			end
 		end
 
@@ -503,6 +558,7 @@ invariant
 	metrics_flag_not_void: metrics_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	ise_option_not_void: ise_option /= Void
+	ecf_option_not_void: ecf_option /= Void
 	define_option_not_void: define_option /= Void
 	thread_option_not_void: thread_option /= Void
 	version_flag_not_void: version_flag /= Void

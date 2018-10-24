@@ -34,6 +34,9 @@
   specified and taken into account.
 * Added command-line option `--target` to select the name of the target
   in the ECF file.
+* Added formats `ecf_pretty_printer` to pretty-print or convert ECF files,
+  and `available_targets` to get the list of targets in an ECF file and
+  to figure out whether a given target exists or not.
 
 ### gelint
 
@@ -103,7 +106,7 @@
 * Fixed data race in `ET_CLASS.formal_parameter_type` when executed in
   multi-threaded mode.
 * Added support for ECF 1.18.0.
-* * Marked some routines as instance-free.
+* Marked some routines as instance-free.
 
 ### Gobo Eiffel Utility Library
 

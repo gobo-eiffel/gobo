@@ -139,6 +139,9 @@ feature -- Access
 			-- ISE version, whose semantics should be
 			-- used by the Eiffel code analysis process
 
+	ecf_version: detachable UT_VERSION
+			-- ECF version to be used when converting ECF files
+
 	class_filters: detachable DS_ARRAYED_LIST [LX_DFA_WILDCARD]
 			-- Name of classes to be processed
 
@@ -200,6 +203,16 @@ feature -- Setting
 			ise_version := a_version
 		ensure
 			ise_version_set: ise_version = a_version
+		end
+
+	set_ecf_version (a_version: like ecf_version)
+			-- Set `ecf_version' to `a_version'.
+		require
+			a_version_not_void: a_version /= Void
+		do
+			ecf_version := a_version
+		ensure
+			ecf_version_set: ecf_version = a_version
 		end
 
 	set_class_filters (a_class_filters: like class_filters)
@@ -337,7 +350,11 @@ feature {NONE} -- Eiffel config file parsing
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			last_system := Void
-			create l_xace_error_handler.make_standard
+			if silent_flag then
+				create l_xace_error_handler.make_null
+			else
+				create l_xace_error_handler.make_standard
+			end
 			create l_xace_variables.make_map (100)
 			l_xace_variables.set_key_equality_tester (string_equality_tester)
 			if attached defined_variables as l_defined_variables then
@@ -379,7 +396,11 @@ feature {NONE} -- Eiffel config file parsing
 					l_cursor.forth
 				end
 			end
-			create l_ecf_error_handler.make_standard
+			if silent_flag then
+				create l_ecf_error_handler.make_null
+			else
+				create l_ecf_error_handler.make_standard
+			end
 			create l_ecf_parser.make (l_ecf_error_handler)
 			l_ecf_parser.set_ise_version (ise_version)
 			l_ecf_parser.parse_file (a_file, target_name)
@@ -725,7 +746,7 @@ feature -- Error handling
 
 	report_cannot_write_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
-			-- opened in wrtie mode.
+			-- opened in write mode.
 		require
 			a_filename_not_void: a_filename /= Void
 		local

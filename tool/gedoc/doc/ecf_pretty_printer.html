@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>ECF Pretty-Printer</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>ECF Pretty-Printer</strong></font></td>
+    <td align="right"><a href="html_ise_stylesheet.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="available_targets.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   <i>gedoc</i> can be used as an ECF pretty-printer. The resulting
+   ECF file will be formatted using the same guidelines as used throughout the 
+   <i>Gobo Eiffel Project</i>. It can also be used to convert
+   an ECF file to newer versions of ECF.
+   
+  </p>
+  <div>
+   <h2>Pretty-printing an ECF file</h2>
+   
+   <p>
+    Here is how to pretty-print the ECF file <font color="#800000"><i><tt>project.ecf</tt></i></font>:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --force --format=ecf_pretty_print project.ecf</tt></i></font>
+</pre>
+    </p>
+   
+   <p>
+    The command-line option <font color="#800000"><i><tt>--force</tt></i></font> tells <i>gedoc</i>
+    to overwrite the ECF file being pretty-printed. Without this option, files will not be 
+    overwritten and <i>gedoc</i> will emit an error message. Alternatively,
+    the command-line option <font color="#800000"><i><tt>--interactive</tt></i></font> can be used. It will ask confirmation
+    to the user before overwriting files. If you want to generate the pretty-printed file in a
+    directory different from the one containing the original ECF file, you should use the
+    command-line option <font color="#800000"><i><tt>--output</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Converting an ECF file</h2>
+   
+   <p>
+    Converting an ECF file to a given version of ECF is similar to pretty-printing
+    this ECF file, except that you have to provide the version of ECF you want
+    your ECF file to be converted to:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gedoc --force --format=ecf_pretty_print --ecf=1.18.0 project.ecf</tt></i></font>
+     
+    </blockquote>
+    This will convert the ECF file <font color="#800000"><i><tt>project.ecf</tt></i></font> to version 1.18.0.
+    Alternatively, you can convert your ECF file to the last version of ECF known
+    by <i>gedoc</i>:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gedoc --force --format=ecf_pretty_print --ecf=latest project.ecf</tt></i></font>
+     
+    </blockquote>
+    Note that trying to convert an ECF file to a version older than the
+    one initially used to write this file might end up in a loss of information.
+    For example some options, settings or capabilities used in your ECF file
+    may not be supported in older versions.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2018, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>23 October 2018</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="html_ise_stylesheet.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="available_targets.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,75 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"ECF Pretty-Printer"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/ecf_pretty_printer">
+<chapterinfo>
+	<copyright>
+		<year>2018</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>23 October 2018</date>
+</chapterinfo>
+
+<title>ECF Pretty-Printer</title>
+
+<para>
+<projectname>gedoc</projectname> can be used as an ECF pretty-printer. The resulting
+ECF file will be formatted using the same guidelines as used throughout the 
+<projectname>Gobo Eiffel Project</projectname>. It can also be used to convert
+an ECF file to newer versions of ECF.
+</para>
+
+<section><title>Pretty-printing an ECF file</title>
+<para>
+Here is how to pretty-print the ECF file <filename>project.ecf</filename>:
+<programlisting>
+	<filename>gedoc --force --format=ecf_pretty_print project.ecf</filename>
+</programlisting>
+</para>
+<para>
+The command-line option <filename>--force</filename> tells <projectname>gedoc</projectname>
+to overwrite the ECF file being pretty-printed. Without this option, files will not be 
+overwritten and <projectname>gedoc</projectname> will emit an error message. Alternatively,
+the command-line option <filename>--interactive</filename> can be used. It will ask confirmation
+to the user before overwriting files. If you want to generate the pretty-printed file in a
+directory different from the one containing the original ECF file, you should use the
+command-line option <filename>--output</filename>.
+</para>
+</section>
+
+<section><title>Converting an ECF file</title>
+<para>
+Converting an ECF file to a given version of ECF is similar to pretty-printing
+this ECF file, except that you have to provide the version of ECF you want
+your ECF file to be converted to:
+<blockquote>
+	<filename>gedoc --force --format=ecf_pretty_print --ecf=1.18.0 project.ecf</filename>
+</blockquote>
+This will convert the ECF file <filename>project.ecf</filename> to version 1.18.0.
+Alternatively, you can convert your ECF file to the last version of ECF known
+by <projectname>gedoc</projectname>:
+<blockquote>
+	<filename>gedoc --force --format=ecf_pretty_print --ecf=latest project.ecf</filename>
+</blockquote>
+Note that trying to convert an ECF file to a version older than the
+one initially used to write this file might end up in a loss of information.
+For example some options, settings or capabilities used in your ECF file
+may not be supported in older versions.
+</para>
+</section>
+</chapter>

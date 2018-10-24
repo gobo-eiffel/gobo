@@ -1,0 +1,60 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Available Targets"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/available_targets">
+<chapterinfo>
+	<copyright>
+		<year>2018</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>24 October 2018</date>
+</chapterinfo>
+
+<title>ECF Available Targets</title>
+
+<para>
+<projectname>gedoc</projectname> can be used to figure out the list of available
+targets in an ECF file.
+</para>
+
+<section><title>List of available targets</title>
+<para>
+Here is how to get the list of available targets in the ECF file <filename>project.ecf</filename>:
+<programlisting>
+	<filename>gedoc --format=available_targets project.ecf</filename>
+</programlisting>
+This will display to the standard output (console window) the list of targets
+in the order found in the ECF file <filename>project.ecf</filename>.
+</para>
+</section>
+
+<section><title>Checking that a target is available</title>
+<para>
+It is also possible to check whether a given target exists in an ECF file:
+<blockquote>
+	<filename>gedoc --format=available_targets --target=foo project.ecf</filename>
+</blockquote>
+In addition to displaying the list of targets found in the ECF file 
+<filename>project.ecf</filename>, the command will exit with a non-zero
+exit code if the target <filename>foo</filename> does not exist. This
+can be used in combination with the option <filename>--silent</filename>
+in a script in order to determine what ECF target to use before
+invoking the Eiffel compiler.
+</para>
+</section>
+</chapter>
