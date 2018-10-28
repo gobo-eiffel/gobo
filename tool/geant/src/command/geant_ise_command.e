@@ -213,7 +213,11 @@ feature -- Execution
 					cmd.append_string (" -finalize")
 				end
 				a_filename := l_system_name + ".epr"
-				eifgen := file_system.pathname (eifgen_directory, l_system_name)
+				if attached target_name as l_target_name and then l_target_name.count > 0 then
+					eifgen := file_system.pathname (eifgen_directory, l_target_name)
+				else
+					eifgen := file_system.pathname (eifgen_directory, l_system_name)
+				end
 				if
 					file_system.file_exists (a_filename) and
 					file_system.directory_exists (eifgen)
@@ -332,9 +336,12 @@ feature -- Execution
 					project.trace (<<"  [ise] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.recursive_delete_directory (a_name)
-						if file_system.is_directory_empty (eifgen_directory) then
-							file_system.delete_directory (eifgen_directory)
-						end
+					end
+				end
+				if file_system.is_directory_empty (eifgen_directory) then
+					project.trace (<<"  [ise] delete ", eifgen_directory>>)
+					if not project.options.no_exec then
+						file_system.delete_directory (eifgen_directory)
 					end
 				end
 				if file_system.directory_exists ("EIFGEN") then

@@ -617,6 +617,116 @@ feature -- Basic operations
 			end
 		end
 
+	override_settings (a_settings: ET_ECF_SETTINGS)
+			-- Override settings of current target with `a_settings'.
+		require
+			a_settings_not_void: a_settings /= Void
+		do
+			across a_settings.primary_settings as l_primary_settings loop
+				if STRING_.same_case_insensitive (l_primary_settings.key, "all_assertions") then
+					override_all_assertions (l_primary_settings.item)
+				else
+					settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
+				end
+			end
+		end
+
+	override_capabilities (a_capabilities: ET_ECF_CAPABILITIES)
+			-- Override capabilities of current target with `a_capabilities'.
+		require
+			a_capabilities_not_void: a_capabilities /= Void
+		do
+			across a_capabilities.primary_support_capabilities as l_primary_support_capabilities loop
+				capabilities.set_primary_support_value (l_primary_support_capabilities.key, l_primary_support_capabilities.item)
+			end
+			across a_capabilities.primary_use_capabilities as l_primary_use_capabilities loop
+				capabilities.set_primary_use_value_id (l_primary_use_capabilities.key, l_primary_use_capabilities.item)
+			end
+		end
+
+	override_variables (a_variables: ET_ECF_VARIABLES)
+			-- Override variables of current target with `a_variables'.
+		require
+			a_variables_not_void: a_variables /= Void
+		do
+			across a_variables.primary_variables as l_primary_variables loop
+				variables.set_primary_value (l_primary_variables.key, l_primary_variables.item)
+			end
+		end
+
+	override_all_assertions (a_value: STRING)
+			-- Override all assertions in current target, its clusters,
+			-- and the libraries and assemblies it uses with value `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			override_all_assertions_in_option (options, a_value)
+			if attached clusters as l_clusters then
+				l_clusters.do_explicit (agent override_all_assertions_in_cluster (?, a_value))
+			end
+			if attached libraries as l_libraries then
+				l_libraries.do_adapted (agent override_all_assertions_in_adapted_group ({ET_ECF_ADAPTED_LIBRARY}?, a_value))
+			end
+			if attached dotnet_assemblies as l_dotnet_assemblies then
+				l_dotnet_assemblies.do_adapted (agent override_all_assertions_in_adapted_group ({ET_ECF_ADAPTED_DOTNET_ASSEMBLY}?, a_value))
+			end
+			if attached precompiled_library as l_precompiled_library then
+				override_all_assertions_in_adapted_group (l_precompiled_library, a_value)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	override_all_assertions_in_cluster (a_cluster: ET_ECF_CLUSTER; a_value: STRING)
+			-- Override all assertions in `a_cluster' with value `a_value'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_value_not_void: a_value /= Void
+		do
+			if attached a_cluster.options as l_cluster_options then
+				override_all_assertions_in_option (l_cluster_options, a_value)
+			end
+			if attached a_cluster.class_options as l_class_options then
+				l_class_options.do_all (agent override_all_assertions_in_option (?, a_value))
+			end
+		end
+
+	override_all_assertions_in_adapted_group (a_group: ET_ECF_GROUP; a_value: STRING)
+			-- Override all assertions in adapted group `a_group' with value `a_value'.
+		require
+			a_group_not_void: a_group /= Void
+			a_value_not_void: a_value /= Void
+		local
+			l_options: ET_ECF_OPTIONS
+		do
+			if attached a_group.options as l_group_options then
+				override_all_assertions_in_option (l_group_options, a_value)
+			else
+				create l_options.make
+				a_group.set_options (l_options)
+				override_all_assertions_in_option (l_options, a_value)
+			end
+			if attached a_group.class_options as l_class_options then
+				l_class_options.do_all (agent override_all_assertions_in_option (?, a_value))
+			end
+		end
+
+	override_all_assertions_in_option (a_options: ET_ECF_OPTIONS; a_value: STRING)
+			-- Override all assertions in `a_options' with value `a_value'.
+		require
+			a_options_not_void: a_options /= Void
+			a_value_not_void: a_value /= Void
+		local
+			l_valid_assertions: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+		do
+			if attached system_config.ecf_version as l_ecf_version then
+				l_valid_assertions := {ET_ECF_OPTION_DEFAULTS}.valid_assertions (l_ecf_version)
+			else
+				l_valid_assertions := {ET_ECF_OPTION_DEFAULTS}.valid_assertions_latest
+			end
+			l_valid_assertions.keys.do_all (agent a_options.set_primary_assertion_value (?, a_value))
+		end
+
 invariant
 
 	name_not_void: name /= Void

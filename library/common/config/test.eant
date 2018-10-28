@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Kernel Library Tester"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -55,7 +55,9 @@
 		<set name="abort_option" value="true" if="${abort}=true"/>
 		<set name="verbose_option" value="false"/>
 		<set name="verbose_option" value="true" if="${verbose}"/>
-		<getest verbose="${verbose_option}" abort="${abort_option}" config="${system_dir}/getest.cfg" compile="geant ${gobo_os} -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} ${compilation_log}">
+		<set name="compile_verbose_option" value=""/>
+		<set name="compile_verbose_option" value="-v" if="${verbose}"/>
+		<getest verbose="${verbose_option}" abort="${abort_option}" config="&quot;${system_dir}/getest.cfg&quot;" compile="geant ${compile_verbose_option} ${gobo_os} \&quot;-DGOBO_TESTGEN=${cwd}/TESTGEN\&quot; -b \&quot;${system_dir}/build.eant\&quot; compile${debug_suffix}_${eiffel} ${compilation_log}">
 			<attribute name="class" value="${class}" if="${class}"/>
 			<attribute name="feature" value="${feature}" if="${feature}"/>
 			<attribute name="default_test" value="true" if="${default_test}=true"/>
@@ -126,6 +128,7 @@
 		<ise clean="${system}"/>
 		<delete file="compile_ge.ace"/>
 		<delete file="compile_ge.xace"/>
+		<delete file="compile_ge.ecf"/>
 		<delete file="compile_ise.ace"/>
 		<delete file="compile_ise.ecf"/>
 		<delete>

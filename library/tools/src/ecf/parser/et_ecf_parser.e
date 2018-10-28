@@ -56,7 +56,7 @@ feature {NONE} -- Element change
 			a_result.put (new_system_config (a_element, a_position_table, a_filename, a_universe))
 		end
 
-	build_system (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING; a_target_name: detachable STRING; a_finalize_mode: BOOLEAN; a_result: DS_CELL [detachable ET_ECF_SYSTEM])
+	build_system (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING; a_target_name: detachable STRING; a_override_target: detachable PROCEDURE [ET_ECF_TARGET]; a_result: DS_CELL [detachable ET_ECF_SYSTEM])
 			-- Build system from `a_element'.
 		require
 			a_element_not_void: a_element /= Void
@@ -66,31 +66,21 @@ feature {NONE} -- Element change
 		local
 			l_system: detachable ET_ECF_SYSTEM
 			l_state: ET_ECF_STATE
-			l_targets: detachable ET_ECF_TARGETS
-			l_target: detachable ET_ECF_TARGET
 		do
 			l_system := new_system (a_element, a_position_table, a_filename)
 			if l_system = Void then
 					-- Error already reported in `new_system'.
 			else
-				l_targets := l_system.targets
-				if l_targets /= Void and then not l_targets.is_empty then
+				if not attached l_system.target_with_name (a_target_name) as l_target then
 					if a_target_name /= Void then
-						l_target := l_targets.target_by_name (a_target_name)
-						if l_target = Void then
-							error_handler.report_etnu_error (a_target_name, element_name (a_element, a_position_table), l_system)
-						end
-					else
-							-- Use last target as default target.
-						l_target := l_targets.target (l_targets.count)
+						error_handler.report_etnu_error (a_target_name, element_name (a_element, a_position_table), l_system)
 					end
 				else
-						-- No target found in the ECF file.
-						-- Error already reported in `fill_system_config'.
-				end
-				if l_target /= Void then
+					if a_override_target /= Void then
+						a_override_target.call ([l_target])
+					end
 					create l_state.make (l_target, ise_version)
-					l_state.set_finalize_mode (a_finalize_mode)
+					l_state.set_finalize_mode (attached l_target.settings.value ({ET_ECF_SETTING_NAMES}.finalize_setting_name) as l_finalize and then STRING_.same_case_insensitive (l_finalize, {ET_ECF_SETTING_NAMES}.true_setting_value))
 					l_target.update_state (l_state)
 					select_target (l_target, l_system, l_state)
 					parse_libraries (l_system, l_state)
@@ -161,6 +151,7 @@ feature {NONE} -- Element change
 			if l_parent /= Void and then l_parent.target = Void then
 				from
 					l_system_config := a_universe
+					l_current_target := a_target
 					l_system_config_id := l_system_config.filename
 					if operating_system.is_windows then
 						l_system_config_id := l_system_config_id.as_lower
@@ -177,7 +168,7 @@ feature {NONE} -- Element change
 					l_parent_system_config := l_system_config
 					if attached l_parent.location_id as l_parent_location then
 							-- Switch to other ECF file.
-						l_filename := full_filename (l_parent_location.name, l_system_config)
+						l_filename := full_filename (l_parent_location.name, l_current_target)
 						l_system_config_id := l_filename
 						if operating_system.is_windows then
 							l_system_config_id := l_system_config_id.as_lower
@@ -290,7 +281,8 @@ feature {NONE} -- Element change
 						else
 							l_parent.set_target (l_parent_target)
 							l_targets_by_id.force_last (l_parent_target, l_parent_id)
-							l_parent := l_parent_target.parent
+							l_current_target := l_parent_target
+							l_parent := l_current_target.parent
 							l_system_config := l_parent_system_config
 						end
 					end
@@ -383,7 +375,7 @@ feature {NONE} -- Element change
 			nb := l_libraries.count
 			from i := 1 until i > nb loop
 				if attached {ET_ECF_ADAPTED_LIBRARY} l_libraries.library (i) as l_adapted_library then
-					l_filename := full_filename (l_adapted_library.pathname, l_adapted_library.target.system_config)
+					l_filename := full_filename (l_adapted_library.pathname, l_adapted_library.target)
 					create l_file.make (l_filename)
 					l_file.open_read
 					if not l_file.is_open_read then
@@ -448,7 +440,7 @@ feature {NONE} -- Element change
 			nb := l_dotnet_assemblies.count
 			from i := 1 until i > nb loop
 				if attached {ET_ECF_ADAPTED_DOTNET_ASSEMBLY} l_dotnet_assemblies.dotnet_assembly (i) as l_adapted_dotnet_assembly then
-					l_filename := full_filename (l_adapted_dotnet_assembly.pathname, l_adapted_dotnet_assembly.target.system_config)
+					l_filename := full_filename (l_adapted_dotnet_assembly.pathname, l_adapted_dotnet_assembly.target)
 					if operating_system.is_windows then
 						l_filename := l_filename.as_lower
 					end
@@ -595,19 +587,31 @@ feature {NONE} -- Implementation
 	parsed_dotnet_assemblies: DS_HASH_TABLE [ET_ECF_DOTNET_ASSEMBLY, STRING]
 			-- Already parsed .NET assemblies, indexed by filenames
 
-	full_filename (a_filename: STRING; a_system_config: ET_ECF_SYSTEM_CONFIG): STRING
-			-- Canonical absolute filename of `a_filename' appearing in `a_system_config'.
+	full_filename (a_filename: STRING; a_target: ET_ECF_TARGET): STRING
+			-- Canonical absolute filename of `a_filename' appearing in `a_target'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_target_not_void: a_target /= Void
+		local
+			l_root_dir: STRING
 		do
-			Result := Execution_environment.interpreted_string (a_filename)
+			Result := a_target.variables.interpreted_string (a_filename)
 				-- Make sure that the directory separator symbol is the
 				-- one of the current file system. We take advantage of
 				-- the fact that `windows_file_system' accepts both '\'
 				-- and '/' as directory separator.
 			Result := file_system.pathname_from_file_system (Result, windows_file_system)
 			if file_system.is_relative_pathname (Result) then
-				Result := file_system.pathname (file_system.dirname (a_system_config.filename), Result)
+				if attached a_target.settings.value ({ET_ECF_SETTING_NAMES}.library_root_setting_name) as l_library_root then
+					l_root_dir := l_library_root
+				else
+					l_root_dir := file_system.dirname (a_target.system_config.filename)
+				end
+				Result := file_system.pathname (l_root_dir, Result)
 			end
 			Result := file_system.canonical_pathname (Result)
+		ensure
+			full_filename_not_void: Result /= Void
 		end
 
 invariant

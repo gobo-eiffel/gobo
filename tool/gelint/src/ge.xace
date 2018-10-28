@@ -8,6 +8,7 @@
 	<option name="finalize" value="true"/>
 	<option name="assertion" value="none"/>
 	<cluster name="gelint" location="${GOBO}/tool/gelint/src"/>
+	<cluster name="argument" location="${GOBO}/library/argument/src" prefix="ap_"/>
 	<cluster name="lexical" location="${GOBO}/library/lexical/src" prefix="lx_">
 		<option name="abstract" value="true"/>
 		<cluster name="automaton"/>
@@ -162,13 +163,6 @@
 		<cluster name="time_zone"/>
 	</cluster>
 	<cluster name="ge" location="${GOBO}/library"/>
-	<cluster name="skeleton" location="${GOBO}/library/lexical/src/skeleton" prefix="lx_"/>
-	<cluster name="regexp" location="${GOBO}/library/regexp/src" prefix="rx_">
-		<option name="abstract" value="true"/>
-		<cluster name="interface"/>
-		<cluster name="pcre"/>
-		<cluster name="support"/>
-	</cluster>
 	<cluster name="free_elks" location="${GOBO}/library/free_elks/src" prefix="fe_">
 		<option name="abstract" value="true"/>
 		<cluster name="fake"/>
@@ -205,5 +199,12 @@
 			</cluster>
 		</cluster>
 	</cluster>
+	<cluster name="skeleton" location="${GOBO}/library/lexical/src/skeleton" prefix="lx_"/>
 	<cluster name="skeleton" location="${GOBO}/library/parse/src/skeleton" prefix="pr_"/>
+	<cluster name="regexp" location="${GOBO}/library/regexp/src" prefix="rx_">
+		<option name="abstract" value="true"/>
+		<cluster name="interface"/>
+		<cluster name="pcre"/>
+		<cluster name="support"/>
+	</cluster>
 </system>

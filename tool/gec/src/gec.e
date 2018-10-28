@@ -90,9 +90,6 @@ feature -- Execution
 
 feature -- Access
 
-	error_handler: ET_ERROR_HANDLER
-			-- Error handler
-
 	last_system: detachable ET_SYSTEM
 			-- Last Eiffel system parsed, if any
 
@@ -131,11 +128,6 @@ feature {NONE} -- Eiffel config file parsing
 			l_xace_parser: ET_XACE_SYSTEM_PARSER
 			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
 			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
-			l_splitter: ST_SPLITTER
-			l_cursor: DS_LIST_CURSOR [STRING]
-			l_definition: STRING
-			l_index: INTEGER
-			defined_variables: STRING
 		do
 			last_system := Void
 			if is_silent then
@@ -145,23 +137,9 @@ feature {NONE} -- Eiffel config file parsing
 			end
 			create l_xace_variables.make_map (100)
 			l_xace_variables.set_key_equality_tester (string_equality_tester)
-			l_xace_variables.force_last ("ge", "GOBO_EIFFEL")
-			if defined_variables /= Void then
-				create l_splitter.make
-				l_cursor := l_splitter.split (defined_variables).new_cursor
-				from l_cursor.start until l_cursor.after loop
-					l_definition := l_cursor.item
-					if l_definition.count > 0 then
-						l_index := l_definition.index_of ('=', 1)
-						if l_index = 0 then
-							l_xace_variables.force_last ("", l_definition)
-						elseif l_index = l_definition.count then
-							l_xace_variables.force_last ("", l_definition.substring (1, l_index - 1))
-						elseif l_index /= 1 then
-							l_xace_variables.force_last (l_definition.substring (l_index + 1, l_definition.count), l_definition.substring (1, l_index - 1))
-						end
-					end
-					l_cursor.forth
+			if attached override_variables as l_override_variables then
+				across l_override_variables.primary_variables as l_primary_variables loop
+					l_xace_variables.force_last (l_primary_variables.item, l_primary_variables.key)
 				end
 			end
 			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
@@ -180,19 +158,29 @@ feature {NONE} -- Eiffel config file parsing
 		local
 			l_ecf_parser: ET_ECF_SYSTEM_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
+			l_override_settings: detachable ET_ECF_SETTINGS
 			l_ecf_system: ET_ECF_SYSTEM
 			l_target: ET_ECF_TARGET
 			l_value: STRING
 		do
 			last_system := Void
-			Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
 			if is_silent then
 				create l_ecf_error_handler.make_null
 			else
 				create l_ecf_error_handler.make_standard
 			end
 			create l_ecf_parser.make (l_ecf_error_handler)
-			l_ecf_parser.set_finalize_mode (is_finalize)
+			if is_finalize then
+				l_override_settings := override_settings
+				if l_override_settings = Void then
+					create l_override_settings.make
+					override_settings := l_override_settings
+				end
+				l_override_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.finalize_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
+			end
+			l_ecf_parser.set_override_settings (override_settings)
+			l_ecf_parser.set_override_capabilities (override_capabilities)
+			l_ecf_parser.set_override_variables (override_variables)
 			l_ecf_parser.parse_file (a_file, target_name)
 			if not l_ecf_error_handler.has_error then
 				l_ecf_system := l_ecf_parser.last_system
@@ -234,7 +222,7 @@ feature {NONE} -- Processing
 			error_handler.set_ise
 			error_handler.set_verbose (is_verbose)
 			l_thread_count := thread_count
-			if l_thread_count > 1 then
+			if l_thread_count > 1 and {PLATFORM}.is_thread_capable then
 				create {ET_SYSTEM_MULTIPROCESSOR} l_system_processor.make (l_thread_count)
 			else
 				create l_system_processor.make
@@ -328,30 +316,10 @@ feature {NONE} -- Processing
 			l_system_processor.record_end_time (dt_total, "Total Time")
 		end
 
-feature -- Error handling
+feature -- Arguments
 
-	report_cannot_read_error (a_filename: STRING)
-			-- Report that `a_filename' cannot be
-			-- opened in read mode.
-		require
-			a_filename_not_void: a_filename /= Void
-		local
-			an_error: UT_CANNOT_READ_FILE_ERROR
-		do
-			create an_error.make (a_filename)
-			error_handler.report_error (an_error)
-		end
-
-	report_version_number
-			-- Report version number.
-		local
-			a_message: UT_VERSION_NUMBER
-		do
-			create a_message.make (Version_number)
-			error_handler.report_info (a_message)
-		end
-
-feature -- Status report
+	ecf_filename: STRING
+			-- Name of the ECF file
 
 	target_name: detachable STRING
 			-- Name of target to be used in ECF file.
@@ -361,6 +329,15 @@ feature -- Status report
 				Result := target_option.parameter
 			end
 		end
+
+	override_settings: detachable ET_ECF_SETTINGS
+			-- Settings overriding those specified for the selected ECF target
+
+	override_capabilities: detachable ET_ECF_CAPABILITIES
+			-- Capabilities overriding those specified for the selected ECF target
+
+	override_variables: detachable ET_ECF_VARIABLES
+			-- Variables overriding those specified for the selected ECF target
 
 	is_finalize: BOOLEAN
 			-- Compilation with optimizations turned on?
@@ -475,11 +452,17 @@ feature -- Status report
 
 feature -- Argument parsing
 
-	ecf_filename: STRING
-			-- Name of the ECF file
-
 	target_option: AP_STRING_OPTION
 			-- Option for '--target=<target_name>'
+
+	setting_option: AP_STRING_OPTION
+			-- Option for '--setting=name=value'
+
+	capability_option: AP_STRING_OPTION
+			-- Option for '--capability=name=value'
+
+	variable_option: AP_STRING_OPTION
+			-- Option for '--variable=FOO=BAR'
 
 	catcall_option: AP_ENUMERATION_OPTION
 			-- Option for '--catcall=<no|error|warning>'
@@ -531,20 +514,30 @@ feature -- Argument parsing
 		local
 			a_parser: AP_PARSER
 			a_list: AP_ALTERNATIVE_OPTIONS_LIST
-			an_error: AP_ERROR
-			l_new_instance_types: DS_HASH_SET [STRING]
-			l_file: KL_TEXT_INPUT_FILE
-			s: STRING
 		do
 			create a_parser.make
 			a_parser.set_application_description ("Gobo Eiffel Compiler, translate Eiffel programs into C code.")
 			a_parser.set_parameters_description ("ecf_filename")
-				-- Options.
 				-- target.
 			create target_option.make_with_long_form ("target")
 			target_option.set_description ("Name of target to be used in ECF file. (default: last target in ECF file)")
 			target_option.set_parameter_description ("target_name")
 			a_parser.options.force_last (target_option)
+				-- setting.
+			create setting_option.make_with_long_form ("setting")
+			setting_option.set_description ("Override settings defined in ECF file.")
+			setting_option.set_parameter_description ("name=value")
+			a_parser.options.force_last (setting_option)
+				-- capability.
+			create capability_option.make_with_long_form ("capability")
+			capability_option.set_description ("Override capability usage defined in ECF file.")
+			capability_option.set_parameter_description ("name=value")
+			a_parser.options.force_last (capability_option)
+				-- variable.
+			create variable_option.make_with_long_form ("variable")
+			variable_option.set_description ("Override variables defined in ECF file.")
+			variable_option.set_parameter_description ("NAME=VALUE")
+			a_parser.options.force_last (variable_option)
 				-- finalize.
 			create finalize_flag.make_with_long_form ("finalize")
 			finalize_flag.set_description ("Compile with optimizations turned on.")
@@ -634,22 +627,169 @@ feature -- Argument parsing
 				ecf_filename := ""
 				Exceptions.die (0)
 			elseif a_parser.parameters.count /= 1 then
-				error_handler.report_info_message (a_parser.help_option.full_usage_instruction (a_parser))
+				report_usage_message (a_parser)
 				ecf_filename := ""
 				Exceptions.die (1)
 			else
 				ecf_filename := a_parser.parameters.first
 			end
-			if split_size_option.was_found then
-				if split_size_option.parameter > 0 then
-					split_size := split_size_option.parameter
+			set_override_settings (setting_option, a_parser)
+			set_override_capabilities (capability_option, a_parser)
+			set_override_variables (variable_option, a_parser)
+			set_split_size (split_size_option, a_parser)
+			set_new_instance_types (new_instance_types_option, a_parser)
+		ensure
+			ecf_filename_not_void: ecf_filename /= Void
+			target_option_not_void: target_option /= Void
+			setting_option_not_void: setting_option /= Void
+			capability_option_not_void: capability_option /= Void
+			variable_option_not_void: variable_option /= Void
+			catcall_option_not_void: catcall_option /= Void
+			finalize_flag_not_void: finalize_flag /= Void
+			silent_flag_not_void: silent_flag /= Void
+			no_benchmark_flag_not_void: no_benchmark_flag /= Void
+			nested_benchmark_flag_not_void: nested_benchmark_flag /= Void
+			metrics_flag_not_void: metrics_flag /= Void
+			verbose_flag_not_void: verbose_flag /= Void
+			version_flag_not_void: version_flag /= Void
+			c_compile_option_not_void: c_compile_option /= Void
+			split_option_not_void: split_option /= Void
+			split_size_option_not_void: split_size_option /= Void
+			gc_option_not_void: gc_option /= Void
+			thread_option_not_void: thread_option /= Void
+			new_instance_types_option_not_void: new_instance_types_option /= Void
+		end
+
+	set_override_settings (a_option: like setting_option; a_parser: AP_PARSER)
+			-- Set `override_settings' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+		local
+			l_override_settings: detachable ET_ECF_SETTINGS
+			l_definition: STRING
+			l_index: INTEGER
+		do
+			if not a_option.parameters.is_empty then
+				create l_override_settings.make
+				across a_option.parameters as l_settings loop
+					if attached l_settings.item as l_setting then
+						l_definition := l_setting
+						if l_definition.count > 0 then
+							l_index := l_definition.index_of ('=', 1)
+							if l_index = 0 then
+								l_override_settings.set_primary_value (l_definition, "")
+							elseif l_index = l_definition.count then
+								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), "")
+							elseif l_index /= 1 then
+								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
+							end
+						end
+					end
+				end
+			end
+			override_settings := l_override_settings
+		end
+
+	set_override_capabilities (a_option: like capability_option; a_parser: AP_PARSER)
+			-- Set `override_capabilities' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+		local
+			l_override_capabilities: detachable ET_ECF_CAPABILITIES
+			l_definition: STRING
+			l_index: INTEGER
+		do
+			if not a_option.parameters.is_empty then
+				create l_override_capabilities.make
+				across a_option.parameters as l_capabilities loop
+					if attached l_capabilities.item as l_capability then
+						l_definition := l_capability
+						if l_definition.count > 0 then
+							l_index := l_definition.index_of ('=', 1)
+							if l_index = 0 then
+								l_override_capabilities.set_primary_use_value (l_definition, "")
+							elseif l_index = l_definition.count then
+								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), "")
+							elseif l_index /= 1 then
+								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
+							end
+						end
+					end
+				end
+			end
+			override_capabilities := l_override_capabilities
+		end
+
+	set_override_variables (a_option: like variable_option; a_parser: AP_PARSER)
+			-- Set `override_variables' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+		local
+			l_override_variables: ET_ECF_VARIABLES
+			l_definition: STRING
+			l_index: INTEGER
+		do
+			create l_override_variables.make
+			l_override_variables.set_primary_value ("GOBO_EIFFEL", "ge")
+			Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
+			if not a_option.parameters.is_empty then
+				across a_option.parameters as l_variables loop
+					if attached l_variables.item as l_variable then
+						l_definition := l_variable
+						if l_definition.count > 0 then
+							l_index := l_definition.index_of ('=', 1)
+							if l_index = 0 then
+								l_override_variables.set_primary_value (l_definition, "")
+							elseif l_index = l_definition.count then
+								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), "")
+							elseif l_index /= 1 then
+								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
+							end
+						end
+					end
+				end
+			end
+			override_variables := l_override_variables
+		end
+
+	set_split_size (a_option: like split_size_option; a_parser: AP_PARSER)
+			-- Set `split_size' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+		local
+			l_error: AP_ERROR
+		do
+			if a_option.was_found then
+				if a_option.parameter > 0 then
+					split_size := a_option.parameter
 				else
-					create an_error.make_invalid_parameter_error (split_size_option, split_size_option.parameter.out)
-					error_handler.report_error (an_error)
+					create l_error.make_invalid_parameter_error (a_option, a_option.parameter.out)
+					error_handler.report_error (l_error)
 					Exceptions.die (1)
 				end
 			end
-			if new_instance_types_option.was_found and then attached new_instance_types_option.parameter as l_filename then
+		end
+
+	set_new_instance_types (a_option: like new_instance_types_option; a_parser: AP_PARSER)
+			-- Set `new_instance_types' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+		local
+			l_new_instance_types: DS_HASH_SET [STRING]
+			l_file: KL_TEXT_INPUT_FILE
+			s: STRING
+		do
+			if a_option.was_found and then attached a_option.parameter as l_filename then
 				create l_file.make (l_filename)
 				l_file.open_read
 				if l_file.is_open_read then
@@ -673,22 +813,43 @@ feature -- Argument parsing
 					Exceptions.die (1)
 				end
 			end
-		ensure
-			ecf_filename_not_void: ecf_filename /= Void
-			catcall_option_not_void: catcall_option /= Void
-			finalize_flag_not_void: finalize_flag /= Void
-			silent_flag_not_void: silent_flag /= Void
-			no_benchmark_flag_not_void: no_benchmark_flag /= Void
-			nested_benchmark_flag_not_void: nested_benchmark_flag /= Void
-			metrics_flag_not_void: metrics_flag /= Void
-			verbose_flag_not_void: verbose_flag /= Void
-			version_flag_not_void: version_flag /= Void
-			c_compile_option_not_void: c_compile_option /= Void
-			split_option_not_void: split_option /= Void
-			split_size_option_not_void: split_size_option /= Void
-			gc_option_not_void: gc_option /= Void
-			thread_option_not_void: thread_option /= Void
-			new_instance_types_option_not_void: new_instance_types_option /= Void
+		end
+
+feature -- Error handling
+
+	error_handler: ET_ERROR_HANDLER
+			-- Error handler
+
+	report_cannot_read_error (a_filename: STRING)
+			-- Report that `a_filename' cannot be
+			-- opened in read mode.
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			an_error: UT_CANNOT_READ_FILE_ERROR
+		do
+			create an_error.make (a_filename)
+			error_handler.report_error (an_error)
+		end
+
+	report_version_number
+			-- Report version number.
+		local
+			a_message: UT_VERSION_NUMBER
+		do
+			create a_message.make (Version_number)
+			error_handler.report_info (a_message)
+		end
+
+	report_usage_message (a_parser: AP_PARSER)
+			-- Report usage message.
+		require
+			a_parser_not_void: a_parser /= Void
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make (a_parser.full_usage_instruction)
+			error_handler.report_error (l_error)
 		end
 
 invariant
@@ -696,6 +857,9 @@ invariant
 	error_handler_not_void: error_handler /= Void
 	ecf_filename_not_void: ecf_filename /= Void
 	target_option_not_void: target_option /= Void
+	setting_option_not_void: setting_option /= Void
+	capability_option_not_void: capability_option /= Void
+	variable_option_not_void: variable_option /= Void
 	catcall_option_not_void: catcall_option /= Void
 	gelint_flag_not_void: gelint_flag /= Void
 	finalize_flag_not_void: finalize_flag /= Void

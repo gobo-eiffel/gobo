@@ -97,6 +97,11 @@ if [ "$EIF" = "ge" ]; then
 	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gexace/src/ge.xace
 	$STRIP gexace${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gedoc..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gedoc/src/ge.xace
+	$STRIP gedoc${EXE}
+	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling getest..."
 	fi
 	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/getest/src/ge.xace
@@ -122,11 +127,6 @@ if [ "$EIF" = "ge" ]; then
 		fi
 		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gepp/src/ge.xace
 		$STRIP gepp${EXE}
-		if [ "$VERBOSE" = "-v" ]; then
-			echo "Compiling gedoc..."
-		fi
-		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gedoc/src/ge.xace
-		$STRIP gedoc${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gexlt..."
 		fi

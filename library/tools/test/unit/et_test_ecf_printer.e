@@ -37,7 +37,6 @@ feature -- Test
 			l_ecf_parser: ET_ECF_SYSTEM_CONFIG_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
 			l_printer: ET_ECF_PRINTER
-			l_ecf_system: ET_ECF_SYSTEM
 			l_ecf_system_config: ET_ECF_SYSTEM_CONFIG
 			l_input_file: KL_TEXT_INPUT_FILE
 			l_output_file: KL_TEXT_OUTPUT_FILE
@@ -47,8 +46,7 @@ feature -- Test
 			create l_input_file.make (input_filename)
 			l_input_file.open_read
 			assert ("is_open_read", l_input_file.is_open_read)
-			create l_ecf_system.make ("*unknown*", input_filename)
-			l_ecf_parser.parse_file (l_input_file, l_ecf_system)
+			l_ecf_parser.parse_file (l_input_file)
 			l_input_file.close
 			l_ecf_system_config := l_ecf_parser.last_system_config
 			assert ("no_ecf_error", not l_ecf_error_handler.has_error)

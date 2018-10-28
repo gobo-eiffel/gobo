@@ -21,6 +21,8 @@
 * Made `gec` multi-threaded, with the command-line option `--thread`.
 * Added command-line option `--target` to select the name of the target
   in the ECF file.
+* Added command-line options `--setting`, `--capability` and `--variable`
+  to override the corresponding values in the ECF file.
 
 ### gecc
 
@@ -37,6 +39,9 @@
 * Added formats `ecf_pretty_printer` to pretty-print or convert ECF files,
   and `available_targets` to get the list of targets in an ECF file and
   to figure out whether a given target exists or not.
+* Added command-line options `--setting`, `--capability` and `--variable`
+  to override the corresponding values in the ECF file.
+* Removed command-line option `--define`, superseded by `--variable`.
 
 ### gelint
 
@@ -46,6 +51,9 @@
   specified and taken into account.
 * Added command-line option `--target` to select the name of the target
   in the ECF file.
+* Added command-line options `--setting`, `--capability` and `--variable`
+  to override the corresponding values in the ECF file.
+* Removed command-line option `--define`, superseded by `--variable`.
 
 ### gexace
 
@@ -107,6 +115,9 @@
   multi-threaded mode.
 * Added support for ECF 1.18.0.
 * Marked some routines as instance-free.
+* Added support for ECF setting `library_root`.
+* Made sure that variables defined in the ECF file are taken into account
+  when processing location attributes of clusters or libraries.
 
 ### Gobo Eiffel Utility Library
 

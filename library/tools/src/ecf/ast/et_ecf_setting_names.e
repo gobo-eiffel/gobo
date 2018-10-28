@@ -102,6 +102,15 @@ feature -- Names
 	external_runtime_setting_name: STRING = "external_runtime"
 			-- Name of setting "external_runtime"
 
+	finalize_setting_name: STRING = "finalize"
+			-- Name of setting "finalize"
+			--
+			-- Values: true|false
+			--
+			-- Note: this is not an official ECF setting, but rather
+			-- a place holder to indicate that the compilation will
+			-- be performed in finalize mode.
+
 	force_32bits_setting_name: STRING = "force_32bits"
 			-- Name of setting "force_32bits"
 			--

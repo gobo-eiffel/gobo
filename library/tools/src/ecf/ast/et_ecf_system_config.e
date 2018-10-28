@@ -72,6 +72,21 @@ feature -- Access
 	library_target: detachable ET_ECF_TARGET
 			-- Library target, if any
 
+	target_with_name (a_target_name: detachable STRING): detachable ET_ECF_TARGET
+			-- Target with name `a_target_name'.
+			-- Use last target found in `targets' if `a_target_name' is Void.
+			-- Void if not such target is found.
+		do
+			if attached targets as l_targets and then not l_targets.is_empty then
+				if a_target_name /= Void then
+					Result := l_targets.target_by_name (a_target_name)
+				else
+						-- Use last target as default target.
+					Result := l_targets.target (l_targets.count)
+				end
+			end
+		end
+
 	description: detachable STRING
 			-- Description
 

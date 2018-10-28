@@ -110,8 +110,14 @@ feature -- Argument parsing
 	ecf_option: AP_STRING_OPTION
 			-- Option for '--ecf=<latest|major.minor.revision>'
 
-	define_option: AP_STRING_OPTION
-			-- Option for '--define=FOO=BAR'
+	setting_option: AP_STRING_OPTION
+			-- Option for '--setting=name=value'
+
+	capability_option: AP_STRING_OPTION
+			-- Option for '--capability=name=value'
+
+	variable_option: AP_STRING_OPTION
+			-- Option for '--variable=FOO=BAR'
 
 	thread_option: AP_INTEGER_OPTION
 			-- Option for '--thread=<thread_count>'
@@ -148,7 +154,7 @@ feature -- Argument parsing
 			class_option.set_description ("Name (with wildcards) of classes to be processed.")
 			class_option.set_parameter_description ("class_name")
 			l_parser.options.force_last (class_option)
-				-- output_directory.
+				-- output directory.
 			create output_option.make ('o', "output")
 			output_option.set_description ("Directory for generated files. (default: next to each class file)")
 			output_option.set_parameter_description ("directory_name")
@@ -196,11 +202,21 @@ feature -- Argument parsing
 			ecf_option.set_description ("Version of ECF to be used when converting ECF files. (default: version of the ECF input file)")
 			ecf_option.set_parameter_description ("latest|major.minor.revision")
 			l_parser.options.force_last (ecf_option)
-				-- define.
-			create define_option.make_with_long_form ("define")
-			define_option.set_description ("Define variables to be used when reading Xace files.")
-			define_option.set_parameter_description ("NAME=VALUE")
-			l_parser.options.force_last (define_option)
+				-- setting.
+			create setting_option.make_with_long_form ("setting")
+			setting_option.set_description ("Override settings defined in ECF file.")
+			setting_option.set_parameter_description ("name=value")
+			l_parser.options.force_last (setting_option)
+				-- capability.
+			create capability_option.make_with_long_form ("capability")
+			capability_option.set_description ("Override capability usage defined in ECF file.")
+			capability_option.set_parameter_description ("name=value")
+			l_parser.options.force_last (capability_option)
+				-- variable.
+			create variable_option.make_with_long_form ("variable")
+			variable_option.set_description ("Override variables defined in ECF file.")
+			variable_option.set_parameter_description ("NAME=VALUE")
+			l_parser.options.force_last (variable_option)
 				-- thread.
 			create thread_option.make_with_long_form ("thread")
 			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: number of CPUs)")
@@ -237,7 +253,9 @@ feature -- Argument parsing
 				set_target_name (target_option, l_parser, l_format)
 				set_ise_version (ise_option, l_parser, l_format)
 				set_ecf_version (ecf_option, l_parser, l_format)
-				set_defined_variables (define_option, l_parser, l_format)
+				set_override_settings (setting_option, l_parser, l_format)
+				set_override_capabilities (capability_option, l_parser, l_format)
+				set_override_variables (variable_option, l_parser, l_format)
 				set_class_filters (class_option, l_parser, l_format)
 				set_output_directory (output_option, l_parser, l_format)
 				l_format.set_force_flag (force_flag.was_found)
@@ -264,7 +282,9 @@ feature -- Argument parsing
 			silent_flag_not_void: silent_flag /= Void
 			ise_option_not_void: ise_option /= Void
 			ecf_option_not_void: ecf_option /= Void
-			define_option_not_void: define_option /= Void
+			setting_option_not_void: setting_option /= Void
+			capability_option_not_void: capability_option /= Void
+			variable_option_not_void: variable_option /= Void
 			thread_option_not_void: thread_option /= Void
 			version_flag_not_void: version_flag /= Void
 		end
@@ -367,50 +387,113 @@ feature -- Argument parsing
 			end
 		end
 
-	set_defined_variables (a_option: like define_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
-			-- Set 'defined_variables' of `a_format' with information passed in `a_option'.
+	set_override_settings (a_option: like setting_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'override_settings' of `a_format' with information passed in `a_option'.
 			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
 			a_format_not_void: a_format /= Void
 		local
-			l_defined_variables: DS_HASH_TABLE [STRING, STRING]
-			l_splitter: ST_SPLITTER
+			l_override_settings: detachable ET_ECF_SETTINGS
 			l_definition: STRING
 			l_index: INTEGER
-			l_gobo_eiffel: detachable STRING
 		do
-			create l_defined_variables.make_default
-			l_gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
-			if l_gobo_eiffel /= Void and then not l_gobo_eiffel.is_empty then
-				l_defined_variables.force_last (l_gobo_eiffel, "GOBO_EIFFEL")
-			elseif ise_option.was_found then
-				l_defined_variables.force_last ("ise", "GOBO_EIFFEL")
-			else
-				l_defined_variables.force_last ("ge", "GOBO_EIFFEL")
-			end
 			if not a_option.parameters.is_empty then
-				create l_splitter.make
-				across a_option.parameters as l_variables loop
-					if attached l_variables.item as l_variables_item then
-						across l_splitter.split (l_variables_item) as l_variable loop
-							l_definition := l_variable.item
-							if l_definition.count > 0 then
-								l_index := l_definition.index_of ('=', 1)
-								if l_index = 0 then
-									l_defined_variables.force_last ("", l_definition)
-								elseif l_index = l_definition.count then
-									l_defined_variables.force_last ("", l_definition.substring (1, l_index - 1))
-								elseif l_index /= 1 then
-									l_defined_variables.force_last (l_definition.substring (l_index + 1, l_definition.count), l_definition.substring (1, l_index - 1))
-								end
+				create l_override_settings.make
+				across a_option.parameters as l_settings loop
+					if attached l_settings.item as l_setting then
+						l_definition := l_setting
+						if l_definition.count > 0 then
+							l_index := l_definition.index_of ('=', 1)
+							if l_index = 0 then
+								l_override_settings.set_primary_value (l_definition, "")
+							elseif l_index = l_definition.count then
+								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), "")
+							elseif l_index /= 1 then
+								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
 							end
 						end
 					end
 				end
 			end
-			a_format.set_defined_variables (l_defined_variables)
+			a_format.set_override_settings (l_override_settings)
+		end
+
+	set_override_capabilities (a_option: like capability_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'override_capabilities' of `a_format' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+			a_format_not_void: a_format /= Void
+		local
+			l_override_capabilities: detachable ET_ECF_CAPABILITIES
+			l_definition: STRING
+			l_index: INTEGER
+		do
+			if not a_option.parameters.is_empty then
+				create l_override_capabilities.make
+				across a_option.parameters as l_capabilities loop
+					if attached l_capabilities.item as l_capability then
+						l_definition := l_capability
+						if l_definition.count > 0 then
+							l_index := l_definition.index_of ('=', 1)
+							if l_index = 0 then
+								l_override_capabilities.set_primary_use_value (l_definition, "")
+							elseif l_index = l_definition.count then
+								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), "")
+							elseif l_index /= 1 then
+								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
+							end
+						end
+					end
+				end
+			end
+			a_format.set_override_capabilities (l_override_capabilities)
+		end
+
+	set_override_variables (a_option: like variable_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'override_variables' of `a_format' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+			a_format_not_void: a_format /= Void
+		local
+			l_override_variables: ET_ECF_VARIABLES
+			l_definition: STRING
+			l_index: INTEGER
+			l_gobo_eiffel: detachable STRING
+		do
+			l_gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
+			if l_gobo_eiffel = Void or else l_gobo_eiffel.is_empty then
+				if ise_option.was_found then
+					l_gobo_eiffel := "ise"
+				else
+					l_gobo_eiffel := "ge"
+				end
+				Execution_environment.set_variable_value ("GOBO_EIFFEL", l_gobo_eiffel)
+			end
+			if not a_option.parameters.is_empty then
+				create l_override_variables.make
+				across a_option.parameters as l_variables loop
+					if attached l_variables.item as l_variable then
+						l_definition := l_variable
+						if l_definition.count > 0 then
+							l_index := l_definition.index_of ('=', 1)
+							if l_index = 0 then
+								l_override_variables.set_primary_value (l_definition, "")
+							elseif l_index = l_definition.count then
+								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), "")
+							elseif l_index /= 1 then
+								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
+							end
+						end
+					end
+				end
+			end
+			a_format.set_override_variables (l_override_variables)
 		end
 
 	set_class_filters (a_option: like class_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
@@ -559,7 +642,9 @@ invariant
 	silent_flag_not_void: silent_flag /= Void
 	ise_option_not_void: ise_option /= Void
 	ecf_option_not_void: ecf_option /= Void
-	define_option_not_void: define_option /= Void
+	setting_option_not_void: setting_option /= Void
+	capability_option_not_void: capability_option /= Void
+	variable_option_not_void: variable_option /= Void
 	thread_option_not_void: thread_option /= Void
 	version_flag_not_void: version_flag /= Void
 

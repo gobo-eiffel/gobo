@@ -34,7 +34,23 @@ feature -- Access
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
+			-- Parse ECF file `a_file'.
+			--
+			-- Note that when the ECF version of the file is old, the parsed
+			-- ECF system config will contain old options/settings/capabilities
+			-- as well as their equivalents in the most recent version of ECF.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		local
+			l_dummy_universe: ET_ECF_SYSTEM
+		do
+			create l_dummy_universe.make ("*dummy*", a_file.name)
+			parse_file_with_universe (a_file, l_dummy_universe)
+		end
+
+	parse_file_with_universe (a_file: KI_CHARACTER_INPUT_STREAM; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Parse ECF file `a_file'.
 			--
 			-- Note that when the ECF version of the file is old, the parsed

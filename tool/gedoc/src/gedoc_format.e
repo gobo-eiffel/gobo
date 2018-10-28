@@ -65,8 +65,12 @@ feature {NONE} -- Initialization
 			a_system_processor_not_void: a_system_processor /= Void
 		do
 			make (a_format.input_filename, a_system_processor)
-			set_defined_variables (a_format.defined_variables)
+			set_target_name (a_format.target_name)
+			set_override_settings (a_format.override_settings)
+			set_override_capabilities (a_format.override_capabilities)
+			set_override_variables (a_format.override_variables)
 			set_ise_version (a_format.ise_version)
+			set_ecf_version (a_format.ecf_version)
 			set_class_filters (a_format.class_filters)
 			set_output_directory (a_format.output_directory)
 			set_library_prefix_flag (a_format.library_prefix_flag)
@@ -82,8 +86,12 @@ feature {NONE} -- Initialization
 		ensure
 			input_filename_set: input_filename = a_format.input_filename
 			system_processor_set: system_processor = a_system_processor
-			defined_variables_set: defined_variables = a_format.defined_variables
+			target_name_set: target_name = a_format.target_name
+			override_settings_set: override_settings = a_format.override_settings
+			override_capabilities_set: override_capabilities = a_format.override_capabilities
+			override_variables_set: override_variables = a_format.override_variables
 			ise_version_set: ise_version = a_format.ise_version
+			ecf_version_set: ecf_version = a_format.ecf_version
 			class_fiters_set: class_filters = a_format.class_filters
 			output_directory_set: output_directory = a_format.output_directory
 			library_prefix_flag_set: library_prefix_flag = a_format.library_prefix_flag
@@ -132,8 +140,14 @@ feature -- Access
 			-- Name of target to be used in ECF file.
 			-- Use last target in ECF file if not specified.
 
-	defined_variables: detachable DS_HASH_TABLE [STRING, STRING]
-			-- Variables defined on the command-line
+	override_settings: detachable ET_ECF_SETTINGS
+			-- Settings overriding those specified for the selected ECF target
+
+	override_capabilities: detachable ET_ECF_CAPABILITIES
+			-- Capabilities overriding those specified for the selected ECF target
+
+	override_variables: detachable ET_ECF_VARIABLES
+			-- Variables overriding those specified for the selected ECF target
 
 	ise_version: UT_VERSION
 			-- ISE version, whose semantics should be
@@ -187,12 +201,28 @@ feature -- Setting
 			target_name_set: target_name = a_target_name
 		end
 
-	set_defined_variables (a_variables: like defined_variables)
-			-- Set `defined_variables' to `a_variables'.
+	set_override_settings (a_settings: like override_settings)
+			-- Set `override_settings' to `a_settings'.
 		do
-			defined_variables := a_variables
+			override_settings := a_settings
 		ensure
-			defined_variables_set: defined_variables = a_variables
+			override_settings_set: override_settings = a_settings
+		end
+
+	set_override_capabilities (a_capabilities: like override_capabilities)
+			-- Set `override_capabilities' to `a_capabilities'.
+		do
+			override_capabilities := a_capabilities
+		ensure
+			override_capabilities_set: override_capabilities = a_capabilities
+		end
+
+	set_override_variables (a_variables: like override_variables)
+			-- Set `override_variables' to `a_variables'.
+		do
+			override_variables := a_variables
+		ensure
+			override_variables_set: override_variables = a_variables
 		end
 
 	set_ise_version (a_version: like ise_version)
@@ -347,7 +377,6 @@ feature {NONE} -- Eiffel config file parsing
 			l_xace_parser: ET_XACE_SYSTEM_PARSER
 			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
 			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
-			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			last_system := Void
 			if silent_flag then
@@ -357,11 +386,9 @@ feature {NONE} -- Eiffel config file parsing
 			end
 			create l_xace_variables.make_map (100)
 			l_xace_variables.set_key_equality_tester (string_equality_tester)
-			if attached defined_variables as l_defined_variables then
-				l_cursor := l_defined_variables.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					l_xace_variables.force_last (l_cursor.item, l_cursor.key)
-					l_cursor.forth
+			if attached override_variables as l_override_variables then
+				across l_override_variables.primary_variables as l_primary_variables loop
+					l_xace_variables.force_last (l_primary_variables.item, l_primary_variables.key)
 				end
 			end
 			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
@@ -386,16 +413,8 @@ feature {NONE} -- Eiffel config file parsing
 		local
 			l_ecf_parser: ET_ECF_SYSTEM_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
-			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			last_system := Void
-			if attached defined_variables as l_defined_variables then
-				l_cursor := l_defined_variables.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					Execution_environment.set_variable_value (l_cursor.key, l_cursor.item)
-					l_cursor.forth
-				end
-			end
 			if silent_flag then
 				create l_ecf_error_handler.make_null
 			else
@@ -403,6 +422,9 @@ feature {NONE} -- Eiffel config file parsing
 			end
 			create l_ecf_parser.make (l_ecf_error_handler)
 			l_ecf_parser.set_ise_version (ise_version)
+			l_ecf_parser.set_override_settings (override_settings)
+			l_ecf_parser.set_override_capabilities (override_capabilities)
+			l_ecf_parser.set_override_variables (override_variables)
 			l_ecf_parser.parse_file (a_file, target_name)
 			if l_ecf_error_handler.has_error then
 				has_error := True

@@ -13,6 +13,8 @@
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
 		<cluster name="gelint" location="${GOBO}/tool/gelint/src">
 		</cluster>
+		<cluster name="ap_argument" location="${GOBO}/library/argument/src">
+		</cluster>
 		<cluster name="lx_lexical" location="${GOBO}/library/lexical/src">
 			<cluster name="lx_automaton" location="$|automaton">
 			</cluster>
@@ -239,6 +241,8 @@
 		</cluster>
 		<cluster name="lx_skeleton" location="${GOBO}/library/lexical/src/skeleton">
 		</cluster>
+		<cluster name="pr_skeleton" location="${GOBO}/library/parse/src/skeleton">
+		</cluster>
 		<cluster name="rx_regexp" location="${GOBO}/library/regexp/src">
 			<cluster name="rx_interface" location="$|interface">
 			</cluster>
@@ -246,8 +250,6 @@
 			</cluster>
 			<cluster name="rx_support" location="$|support">
 			</cluster>
-		</cluster>
-		<cluster name="pr_skeleton" location="${GOBO}/library/parse/src/skeleton">
 		</cluster>
 	</target>
 </system>

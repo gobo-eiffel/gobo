@@ -105,7 +105,7 @@ feature -- Access
 			a_pathname: STRING
 			parent_pathname: STRING
 			a_basename: STRING
-			l_ecf_filename: STRING
+			l_root_dir: STRING
 			i, nb: INTEGER
 		do
 			a_pathname := pathname
@@ -132,7 +132,7 @@ feature -- Access
 				end
 			end
 				-- Expanded variables of the form $NAME or ${NAME}.
-			a_pathname := Execution_environment.interpreted_string (a_pathname)
+			a_pathname := target.variables.interpreted_string (a_pathname)
 				-- Make sure that the directory separator symbol is the
 				-- one of the current file system. We take advantage of
 				-- the fact that `windows_file_system' accepts both '\'
@@ -153,8 +153,12 @@ feature -- Access
 					Result := name
 				end
 				if file_system.is_relative_pathname (Result) then
-					l_ecf_filename := universe.filename
-					Result := file_system.pathname (file_system.dirname (l_ecf_filename), Result)
+					if attached target.settings.value ({ET_ECF_SETTING_NAMES}.library_root_setting_name) as l_library_root then
+						l_root_dir := l_library_root
+					else
+						l_root_dir := file_system.dirname (target.system_config.filename)
+					end
+					Result := file_system.pathname (l_root_dir, Result)
 				end
 			end
 		end

@@ -41,6 +41,11 @@
 			<argument name="a_compiler" value="ise"/>
 			<argument name="a_output" value=""/>
 		</geant>
+		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
+		<geant target="ecf" if="${ecf_available}=true">
+			<argument name="a_ecf_filename" value="${system_dir}/system.ecf"/>
+			<argument name="a_library_root" value=""/>
+		</geant>
 		<geant target="other_install"/>
 	</target>
 
@@ -62,12 +67,18 @@
 		</description>
 
 		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
-		<set name="ace_filename" value="compile_ge.xace"/>
-		<set name="ace_filename" value="${system_dir}/system.ecf" if="${ecf_available}=true"/>
+		<set name="ecf_filename" value="compile_ge.xace"/>
+		<set name="ecf_filename" value="compile_ge.ecf" if="${ecf_available}=true"/>
+		<delete file="${ecf_filename}"/>
 		<set name="eiffel" value="ge"/>
 		<geant target="xace" unless="${ecf_available}=true">
-			<argument name="a_compiler" value="ge"/>
-			<argument name="a_output" value="compile_ge.xace"/>
+			<argument name="a_compiler" value="${eiffel}"/>
+			<argument name="a_output" value="${ecf_filename}"/>
+		</geant>
+		<copy file="${system_dir}/system.ecf" to_file="${ecf_filename}" if="${ecf_available}=true"/>
+		<geant target="ecf" if="${ecf_available}=true">
+			<argument name="a_ecf_filename" value="${ecf_filename}"/>
+			<argument name="a_library_root" value="${system_dir}"/>
 		</geant>
 		<delete file="${system}${exe}"/>
 		<set name="finalize" value="true"/>
@@ -77,7 +88,9 @@
 		<set name="split_size_option" value="2500000" unless="${split_size}"/>
 		<set name="split_size_option" value="${split_size}" if="${split_size}"/>
 		<set name="gelint_option" value="false" unless="${gelint_option}"/>
-		<gec ace="${ace_filename}" finalize="${finalize}" gelint="${gelint_option}" c_compile="no" catcall="error" split="${split}" split_size="${split_size_option}"/>
+		<set name="gc_option" value="no"/>
+		<set name="gc_option" value="boehm" if="${BOEHM_GC}"/>
+		<gec ecf="${ecf_filename}" finalize="${finalize}" gelint="${gelint_option}" gc="${gc_option}" c_compile="no" catcall="error" split="${split}" split_size="${split_size_option}"/>
 		<exec executable="gecc ${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="gecc ${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>
@@ -89,12 +102,18 @@
 		</description>
 
 		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
-		<set name="ace_filename" value="compile_ise.ecf"/>
-		<set name="ace_filename" value="${system_dir}/system.ecf" if="${ecf_available}=true"/>
+		<set name="ecf_filename" value="compile_ise.ecf"/>
+		<delete file="${ecf_filename}"/>
 		<set name="eiffel" value="ise"/>
+		<setenv name="GOBO_EIFFEL" value="ise"/>
 		<geant target="xace" unless="${ecf_available}=true">
-			<argument name="a_compiler" value="ise"/>
-			<argument name="a_output" value="compile_ise.ecf"/>
+			<argument name="a_compiler" value="${eiffel}"/>
+			<argument name="a_output" value="${ecf_filename}"/>
+		</geant>
+		<copy file="${system_dir}/system.ecf" to_file="${ecf_filename}" if="${ecf_available}=true"/>
+		<geant target="ecf" if="${ecf_available}=true">
+			<argument name="a_ecf_filename" value="${ecf_filename}"/>
+			<argument name="a_library_root" value="${system_dir}"/>
 		</geant>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
@@ -108,7 +127,7 @@
 		<set name="compatible" value="true" if="${GOBO_COMPATIBLE}"/>
 		<set name="project_path" value="${GOBO_BUILD_PREFIX}" if="${GOBO_BUILD_PREFIX}"/>
 		<set name="project_path" value="" unless="${GOBO_BUILD_PREFIX}"/>
-		<ise ace="${ace_filename}" system="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true" project_path="${project_path}"/>
+		<ise ecf="${ecf_filename}" system="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true" project_path="${project_path}"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<set name="compilation_directory" value="EIFGENs" unless="${GOBO_BUILD_PREFIX}"/>
@@ -178,6 +197,7 @@
 		<ise clean="${system}" project_path="${project_path}"/>
 		<delete file="compile_ge.ace"/>
 		<delete file="compile_ge.xace"/>
+		<delete file="compile_ge.ecf"/>
 		<delete file="compile_ise.ace"/>
 		<delete file="compile_ise.ecf"/>
 		<delete>
@@ -211,6 +231,44 @@
 
 <!-- Implementation -->
 
+	<target name="ecf" depend="init" export="NONE">
+		<argument name="a_ecf_filename"/>
+		<argument name="a_library_root"/>
+		<description>
+			Regenerate ECF file ${a_ecf_filename}.
+			Override $DEBUG option if ${debug} is defined.
+			Override $GOBO_EIFFEL value.
+			Override $GOBO_OS value.
+			Override $GOBO_CC value if defined.
+			Override $GOBO_XML_EXPAT option if defined.
+			Override $GOBO_DOTNET option if defined.
+			Override $GOBO_COMPATIBLE option if defined.
+			Override $GOBO_VOID_UNSAFE option if defined.
+			Override $BOEHM_GC option if defined.
+			To be redefined in descendant if additional options are
+			necessary.
+		</description>
+
+		<set name="l_setting_options" value=""/>
+		<set name="l_capability_options" value=""/>
+		<set name="l_variable_options" value=""/>
+		<set name="l_setting_options" value="${l_setting_options} &quot;--setting=library_root=${a_library_root}&quot;" unless="${a_library_root}="/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=DEBUG=${debug}" if="${debug}"/>
+		<set name="l_setting_options" value="${l_setting_options} --setting=all_assertions=true --setting=exception_trace=true" if="${debug}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_EIFFEL=${eiffel}" unless="${a_library_root}="/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_OS=${GOBO_OS}" unless="${a_library_root}="/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_CC=${GOBO_CC}" if="${GOBO_CC}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_XML_EXPAT=true" if="${GOBO_XML_EXPAT}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_DOTNET=true" if="${GOBO_DOTNET}"/>
+		<set name="l_setting_options" value="${l_setting_options} --setting=msil_generation=true --setting=line_generation=true" if="${GOBO_DOTNET}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_COMPATIBLE=true" if="${GOBO_COMPATIBLE}"/>
+		<set name="l_variable_options" value="${l_variable_options} &quot;--variable=BOEHM_GC=${BOEHM_GC}&quot;" if="${BOEHM_GC}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_VOID_UNSAFE=true" if="${GOBO_VOID_UNSAFE}"/>
+		<set name="l_capability_options" value="${l_capability_options} --capability=void_safety=none" if="${GOBO_VOID_UNSAFE}"/>
+		<set name="l_variable_options" value="${l_variable_options} &quot;--variable=GOBO_TESTGEN=${GOBO_TESTGEN}&quot;" if="${GOBO_TESTGEN}"/>
+		<exec executable="gedoc --silent --force --format=ecf_pretty_print ${l_setting_options} ${l_capability_options} ${l_variable_options} ${a_ecf_filename}"/>
+	</target>
+	
 	<target name="xace" depend="init" export="NONE">
 		<argument name="a_compiler"/>
 		<argument name="a_output"/>

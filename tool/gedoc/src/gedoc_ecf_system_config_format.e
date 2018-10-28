@@ -64,17 +64,8 @@ feature {NONE} -- Eiffel config file parsing
 		local
 			l_ecf_parser: ET_ECF_SYSTEM_CONFIG_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
-			l_dummy_universe: ET_ECF_SYSTEM
-			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			last_system_config := Void
-			if attached defined_variables as l_defined_variables then
-				l_cursor := l_defined_variables.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					Execution_environment.set_variable_value (l_cursor.key, l_cursor.item)
-					l_cursor.forth
-				end
-			end
 			if silent_flag then
 				create l_ecf_error_handler.make_null
 			else
@@ -82,9 +73,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 			create l_ecf_parser.make (l_ecf_error_handler)
 			l_ecf_parser.set_ise_version (ise_version)
-			create l_dummy_universe.make ("*unknown*", input_filename)
-			last_system_config := l_dummy_universe
-			l_ecf_parser.parse_file (a_file, l_dummy_universe)
+			l_ecf_parser.parse_file (a_file)
 			if l_ecf_error_handler.has_error then
 				has_error := True
 			elseif not attached l_ecf_parser.last_system_config as l_last_system_config then

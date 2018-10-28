@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>15 October 2018</date>
+	<date>28 October 2018</date>
 </chapterinfo>
 
 <title>Using gelint</title>
@@ -42,9 +42,6 @@ Eiffel library. Here is the list of options that can be used with
 <projectname>gelint</projectname>:
 <variablelist>
 	<varlistentry>
-		<term>
-			<filename>-?</filename>
-		</term>
 		<term>
 			<filename>-h</filename>
 		</term>
@@ -110,12 +107,31 @@ Eiffel library. Here is the list of options that can be used with
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--define=NAME[=VALUE][ NAME[=VALUE]]*</filename>
+			<filename>--setting=name=value</filename>
 		</term>
 		<listitem><para>
-			Define variables to be used when reading Xace files.
+			Override settings defined in ECF file. This option can be used several
+			times to override several settings.
 		</para></listitem>
 	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--capability=name=value</filename>
+		</term>
+		<listitem><para>
+			Override capability usage defined in ECF file. This option can be used several
+			times to override several capabilities.
+		</para></listitem>
+	</varlistentry>	
+	<varlistentry>
+		<term>
+			<filename>--variable=NAME=VALUE</filename>
+		</term>
+		<listitem><para>
+			Override variables defined in ECF file. This option can be used several
+			times to override several variables.
+		</para></listitem>
+	</varlistentry>	
 	<varlistentry>
 		<term>
 			<filename>--thread=&lt;thread_count&gt;</filename>
