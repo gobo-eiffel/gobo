@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="free_elks"
-	uuid="E1FFE100-60B0-0001-0002-000020181008"
+	uuid="E1FFE100-60B0-0001-0001-001000000001"
 	library_target="free_elks">
 
 	<description>
@@ -19,6 +19,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true"/>
 		<mapping old_name="REAL" new_name="REAL_32"/>
