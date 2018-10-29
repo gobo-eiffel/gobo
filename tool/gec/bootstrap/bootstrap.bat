@@ -171,6 +171,7 @@ goto exit
 	goto c_compilation
 
 :c_compilation
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec9.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c
@@ -191,28 +192,27 @@ goto exit
 
 :ge
 	cd %BIN_DIR%
-	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gecc\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gecc\src\system.ecf
 	call .\gecc.bat
 	rem Compile gec twice to get a bootstrap effect.
-	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gec\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gec\src\system.ecf
 	%BIN_DIR%\gecc%EXE% gec.bat
-	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gec\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gec\src\system.ecf
 	%BIN_DIR%\gecc%EXE% gec.bat
-	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gecc\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gecc\src\system.ecf
 	call .\gecc.bat
 	%RM% gec*.h
 	%RM% gec*.c
 	%RM% gec*%OBJ%
 	rem Make sure 'gec.bat' exists to avoid getting some warning when removing it.
 	echo "" > gec.bat
-	rem Make sure 'gecc.bat' exists to avoid getting some warning when removing it.
-	echo "" > gecc.bat
 	%RM% gec*.bat
 	rem Make sure 'gec.sh' exists to avoid getting some warning when removing it.
 	echo "" > gec.sh
-	rem Make sure 'gecc.sh' exists to avoid getting some warning when removing it.
-	echo "" > gecc.sh
 	%RM% gec*.sh
+	rem Make sure 'gec.make' exists to avoid getting some warning when removing it.
+	echo "" > gec.make
+	%RM% gec*.make
 	if .%CC%. == .bcc32. %RM% gec.tds
 	goto exit
 

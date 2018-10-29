@@ -45,6 +45,7 @@ c_compilation() {
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gec (bootstrap 0)..."
 	fi
+	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec9.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec8.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec7.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec6.c
@@ -183,24 +184,24 @@ if [ "$EIF" = "ge" ]; then
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gecc (bootstrap 1)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gecc/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gecc/src/system.ecf
 	$BIN_DIR/gecc.sh
 	# Compile gec twice to get a bootstrap effect.
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gec (bootstrap 1)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gec/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gec/src/system.ecf
 	$BIN_DIR/gecc$EXE gec.sh
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gec (bootstrap 2)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gec/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gec/src/system.ecf
 	$BIN_DIR/gecc$EXE gec.sh
 	$STRIP gec$EXE
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gecc (bootstrap 2)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gecc/src/ge.xace
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gecc/src/system.ecf
 	$BIN_DIR/gecc.sh
 	$STRIP gecc$EXE
 	$RM gec*.h
@@ -208,14 +209,13 @@ if [ "$EIF" = "ge" ]; then
 	$RM gec*$OBJ
 	# Make sure 'gec.bat' exists to avoid getting some warning when removing it.
 	echo "" > gec.bat
-	# Make sure 'gecc.bat' exists to avoid getting some warning when removing it.
-	echo "" > gecc.bat
 	$RM gec*.bat
 	# Make sure 'gec.sh' exists to avoid getting some warning when removing it.
 	echo "" > gec.sh
-	# Make sure 'gecc.sh' exists to avoid getting some warning when removing it.
-	echo "" > gecc.sh
 	$RM gec*.sh
+	# Make sure 'gec.make' exists to avoid getting some warning when removing it.
+	echo "" > gec.make
+	$RM gec*.make
 else
 	echo "Unknown Eiffel compiler: $EIF"
 	exit 1

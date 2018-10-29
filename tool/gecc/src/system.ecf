@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
+	name="gecc"
+	uuid="E1FFE100-60B0-0001-1002-001000000001"
+>
+	<description>
+		system: "Gobo Eiffel C Compilation"
+		copyright: "Copyright (c) 2018, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+	<target name="gecc">
+		<root class="GECC" feature="execute"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true"/>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency support="none" use="thread"/>
+			<void_safety support="all" use="all"/>
+		</capability>
+		<variable name="GOBO_LIBRARY" value="../../.."/>
+		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="argument" location="${GOBO_LIBRARY}/library/argument/library.ecf" readonly="true"/>
+		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
+		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
+		<library name="thread" location="${GOBO_LIBRARY}/library/thread/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
+		<cluster name="gecc" location="./"/>
+	</target>
+</system>
