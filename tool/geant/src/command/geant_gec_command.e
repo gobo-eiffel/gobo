@@ -404,6 +404,13 @@ feature -- Execution
 						file_system.delete_file (a_name)
 					end
 				end
+				a_name := l_clean + ".make"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [gec] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
 			elseif is_ecf_configuration then
 				cmd := new_ecf_cmdline
 				project.trace (<<"  [gec] ", cmd>>)
