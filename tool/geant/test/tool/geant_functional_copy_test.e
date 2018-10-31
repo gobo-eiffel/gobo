@@ -5,7 +5,7 @@ note
 		"Test task 'copy'"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2010-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2010-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -129,13 +129,15 @@ feature -- Test
 
 	test_copy_fs1
 			-- Test task 'copy': to_directory/fileset
+		local
+			l_tasks: like tasks
 		do
-			tasks := "{
+			l_tasks := "{
 				<copy to_directory="TESTDIR/__copy" dir="${GOBO}/tool/geant/src">
 					<fileset include="@(**/geant_e*command.e)"/>
 				</copy>
 				}"
- 			tasks := STRING_.replaced_first_substring (tasks, "TESTDIR", test_dir)
+ 			tasks := STRING_.replaced_first_substring (l_tasks, "TESTDIR", test_dir)
  			basic_test ("test_copy_fs1a")
 
  			assert_files_equal ("test_copy_fs1b", path ("${GOBO}/tool/geant/src/command/geant_echo_command.e"),

@@ -5,7 +5,7 @@ note
 		"Test features of class GEANT_DIRECTORYSET."
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +15,6 @@ class GEANT_TEST_DIRECTORYSET
 inherit
 
 	TS_TEST_CASE
-		redefine
-			tear_down, set_up
-		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
@@ -33,7 +30,10 @@ feature -- Test
 
 	test_initialization
 			-- Test feature `glob_prefix'.
+		local
+			ds: GEANT_DIRECTORYSET
 		do
+			create ds.make (new_project)
 			assert ("not_executable_1", not ds.is_executable)
 			ds.set_directory_name (Execution_environment.interpreted_string ("${GOBO}"))
 			assert ("executable_1", ds.is_executable)
@@ -44,8 +44,10 @@ feature -- Test
 	test_execute1
 			-- Test feature `execute' with `set_include_wc_string' applied.
 		local
+			ds: GEANT_DIRECTORYSET
 			a_entries: DS_ARRAYED_LIST [STRING]
 		do
+			create ds.make (new_project)
 			ds.set_directory_name (Execution_environment.interpreted_string ("${GOBO}"))
 			ds.set_include_wc_string ("**/library/**/*")
 			ds.execute
@@ -66,8 +68,10 @@ feature -- Test
 	test_execute2
 			-- Test feature `execute' with `set_include_wc_string' and `set_exclude_wc_string' applied.
 		local
+			ds: GEANT_DIRECTORYSET
 			a_entries: DS_ARRAYED_LIST [STRING]
 		do
+			create ds.make (new_project)
 			ds.set_directory_name (Execution_environment.interpreted_string ("${GOBO}"))
 			ds.set_include_wc_string ("**/library/**/*")
 			ds.set_exclude_wc_string ("@(**/spec/**/*|**/kernel/**/*|**/.svn)")
@@ -91,10 +95,10 @@ feature -- Test
 			assert ("not_has_library", not a_entries.has ("library"))
 		end
 
-feature -- Execution
+feature {NONE} -- Implementation
 
-	set_up
-			-- Setup for a test.
+	new_project: GEANT_PROJECT
+			-- Dummy project for test
 		local
 			a_variables: GEANT_PROJECT_VARIABLES
 			an_options: GEANT_PROJECT_OPTIONS
@@ -102,23 +106,10 @@ feature -- Execution
 			create a_variables.make
 			create an_options.make
 --			an_options.set_debug_mode (True)
-			create project.make (a_variables, an_options, "test_project")
-			project.set_output_file (null_output_stream)
-			create ds.make (project)
+			create Result.make (a_variables, an_options, "test_project")
+			Result.set_output_file (null_output_stream)
+		ensure
+			new_project_not_void: Result /= Void
 		end
-
-	tear_down
-			-- Tear down after a test.
-		do
-			ds := Void
-		end
-
-feature {NONE} -- Implementation
-
-	project: GEANT_PROJECT
-			-- Dummy project for test
-
-	ds: GEANT_DIRECTORYSET
-			-- Object under test
 
 end

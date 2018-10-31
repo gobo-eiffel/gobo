@@ -5,7 +5,7 @@ note
 		"Base class for functional geant tests"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2008-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2008-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -16,6 +16,7 @@ inherit
 
 	TS_TEST_CASE
 		redefine
+			make_default,
 			tear_down, set_up
 		end
 
@@ -34,13 +35,23 @@ inherit
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
 
+feature {NONE} -- Initialization
+
+	make_default
+			-- <Precursor>
+		do
+			precursor
+			test_dir := ""
+		end
+
 feature -- Execution
 
 	set_up
 			-- Setup for a test.
+		local
+			new_cwd: STRING
 		do
- 			test_dir := Execution_environment.variable_value ("GOBO")
-			test_dir := file_system.nested_pathname (test_dir, <<"tool", "geant", "test", "tool", "tmp", "test_geant">>)
+			test_dir := Execution_environment.interpreted_string (file_system.nested_pathname ("${GOBO}", <<"tool", "geant", "test", "tool", "tmp", "test_geant">>))
 
 			old_cwd := file_system.current_working_directory
 			new_cwd := test_dir
@@ -76,7 +87,9 @@ feature -- Execution
 	tear_down
 			-- Tear down after a test.
 		do
-			file_system.set_current_working_directory (old_cwd)
+			if attached old_cwd as l_old_cwd then
+				file_system.set_current_working_directory (l_old_cwd)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -98,8 +111,8 @@ feature {NONE} -- Implementation
 			a_file.open_write
 			if a_file.is_open_write then
 				s := STRING_.replaced_first_substring (project, "TEST_TAG", a_tag)
-				if  tasks /= Void then
-					s := STRING_.replaced_first_substring (s, "TASKS", tasks)
+				if attached tasks as l_task then
+					s := STRING_.replaced_first_substring (s, "TASKS", l_task)
 				end
 				a_file.put_line (s)
 			else
@@ -108,11 +121,8 @@ feature {NONE} -- Implementation
 			a_file.close
 		end
 
-	old_cwd: STRING
+	old_cwd: detachable STRING
 			-- Old current working directory
-
-	new_cwd: STRING
-			-- New current working directory
 
 	test_dir: STRING
 			-- Test directory used as current working directory during test run
@@ -153,23 +163,23 @@ feature {NONE} -- Implementation
 			assert_exit_code_execute (a_cmd, expected_exit_code)
 
 				-- Check stdout:
-			if expected_stdout_txt /= Void then
-				a_expected := expected_stdout_txt + "" -- clone `expected_stdout_txt'
-				if expected_task_output /= Void then
-					s := removed_indentation (expected_task_output)
+			if attached expected_stdout_txt as l_expected_stdout_txt then
+				a_expected := l_expected_stdout_txt + "" -- clone `expected_stdout_txt'
+				if attached expected_task_output as l_expected_task_output then
+					s := removed_indentation (l_expected_task_output)
 					a_expected := STRING_.replaced_first_substring (a_expected, "TASK_OUTPUT", s)
 				end
 				assert_filecontent_equal_to_string (a_tag, a_stdout, a_expected)
 			end
 
 				-- Check stderr:
-			if expected_stderr_txt /= Void then
-				a_expected := removed_indentation (expected_stderr_txt)
+			if attached expected_stderr_txt as l_expected_stderr_txt then
+				a_expected := removed_indentation (l_expected_stderr_txt)
 				assert_filecontent_equal_to_string (a_tag, a_stderr, a_expected)
 			end
 
-			if expected_out_txt /= Void then
-				s := removed_indentation (expected_out_txt)
+			if attached expected_out_txt as l_expected_out_txt then
+				s := removed_indentation (l_expected_out_txt)
 				assert_filecontent_equal_to_string (a_tag, test_dir + "/out.txt", s)
 			end
 		end
@@ -177,19 +187,19 @@ feature {NONE} -- Implementation
 	verbose: BOOLEAN
 			-- Should 'geant' be called with the verbose flag?
 
-	tasks: STRING
+	tasks: detachable STRING
 			-- Tasks text to replace placeholder 'TASKS' in `project'
 
-	expected_stdout_txt: STRING
+	expected_stdout_txt: detachable STRING
 			-- Text which geant is expected to write to stdout, unless Void
 
-	expected_stderr_txt: STRING
+	expected_stderr_txt: detachable STRING
 			-- Text which geant is expected to write to stderr, unless Void
 
-	expected_out_txt: STRING
+	expected_out_txt: detachable STRING
 			-- Text which geant is expected to write to file 'out.txt', unless Void
 
-	expected_task_output: STRING
+	expected_task_output: detachable STRING
 			-- Text to replace placeholder 'TASK_OUTPUT' in `expected_stdout_txt'
 			--  (which is usually set to `default_expected_stdout_txt')
 			-- so that only the changing output has to be defined in tests and not
@@ -310,5 +320,9 @@ feature {NONE} -- Assertion routines
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+invariant
+
+	test_dir_not_void: test_dir /= Void
 
 end

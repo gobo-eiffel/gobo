@@ -5,7 +5,7 @@ note
 		"Test features of class GEANT_SHARED_PROPERTIES"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +15,6 @@ class GEANT_TEST_SHARED_PROPERTIES
 inherit
 
 	TS_TEST_CASE
-		redefine
-			tear_down, set_up
-		end
 
 create
 
@@ -27,7 +24,10 @@ feature -- Test
 
 	test_glob_prefix
 			-- Test feature `glob_prefix'.
+		local
+			sp: GEANT_SHARED_PROPERTIES
 		do
+			create sp
 			assert_equal ("glob_prefix1", "ab", sp.glob_prefix ("ab*.e"))
 
 			assert_equal ("glob_prefix2", "", sp.glob_prefix ("*.e"))
@@ -36,7 +36,10 @@ feature -- Test
 
 	test_glob_postfix
 			-- Test feature `glob_postfix'.
+		local
+			sp: GEANT_SHARED_PROPERTIES
 		do
+			create sp
 			assert_equal ("glob_postfix1", ".e", sp.glob_postfix ("ab*.e"))
 			assert_equal ("glob_postfix2", "ab", sp.glob_postfix ("ttt/*ab"))
 
@@ -51,7 +54,9 @@ feature -- Test
 	test_remove_indentation
 		local
 			s,s2: STRING
+			sp: GEANT_SHARED_PROPERTIES
 		do
+			create sp
 			s := "abc"
 			s2 := sp.removed_indentation (s)
 			assert_equal ("remove_indentation1", "abc", s2)
@@ -135,24 +140,5 @@ bla
 			assert_equal ("remove_indentation9", "abc%Nxyz", s2)
 
 		end
-
-feature -- Execution
-
-	set_up
-			-- Setup for a test.
-		do
-			create sp
-		end
-
-	tear_down
-			-- Tear down after a test.
-		do
-			sp := Void
-		end
-
-feature {NONE} -- Implementation
-
-	sp: GEANT_SHARED_PROPERTIES
-			-- Object under test
 
 end

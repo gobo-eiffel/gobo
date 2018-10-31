@@ -5,7 +5,7 @@ note
 		"Test features of class GEANT_MAP"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +15,6 @@ class GEANT_TEST_MAP
 inherit
 
 	TS_TEST_CASE
-		redefine
-			tear_down, set_up
-		end
 
 	KL_SHARED_STREAMS
 		export {NONE} all end
@@ -30,8 +27,10 @@ feature -- Test
 
 	test_set_type
 			-- Test feature `set_type'.
+		local
+			map: GEANT_MAP
 		do
-			create map.make (project)
+			create map.make (new_project)
 			map.set_type (map.Type_attribute_value_identity)
 			assert_equal ("set_type1", "identity", map.type)
 
@@ -41,8 +40,10 @@ feature -- Test
 
 	test_set_source_pattern
 			-- Test feature `set_source_pattern'.
+		local
+			map: GEANT_MAP
 		do
-			create map.make (project)
+			create map.make (new_project)
 			map.set_source_pattern ("*.ge")
 			assert_equal ("set_source_pattern1", "*.ge", map.source_pattern)
 
@@ -52,8 +53,10 @@ feature -- Test
 
 	test_set_target_pattern
 			-- Test feature `set_target_pattern'.
+		local
+			map: GEANT_MAP
 		do
-			create map.make (project)
+			create map.make (new_project)
 			map.set_target_pattern ("*.e")
 			assert_equal ("set_target_pattern1", "*.e", map.target_pattern)
 
@@ -63,8 +66,10 @@ feature -- Test
 
 	test_is_executable_identity
 			-- Test feature `is_executable' in mode 'identity'.
+		local
+			map: GEANT_MAP
 		do
-			create map.make (project)
+			create map.make (new_project)
 			assert ("is_executable_identity_1", map.is_executable)	-- default type is identity
 
 			map.set_source_pattern ("*.e")
@@ -77,8 +82,10 @@ feature -- Test
 
 	test_is_executable_glob
 			-- Test feature `is_executable' in mode 'glob'.
+		local
+			map: GEANT_MAP
 		do
-			create map.make (project)
+			create map.make (new_project)
 			map.set_type (map.Type_attribute_value_glob)
 
 			assert ("is_executable_glob1", not map.is_executable)
@@ -88,7 +95,7 @@ feature -- Test
 			map.set_target_pattern ("*.e")
 			assert ("is_executable_glob3", map.is_executable)
 
-			create map.make (project)
+			create map.make (new_project)
 			map.set_type (map.Type_attribute_value_glob)
 			map.set_source_pattern ("")
 			map.set_target_pattern ("*.e")
@@ -108,9 +115,10 @@ feature -- Test
 	test_mapped_filename
 			-- Test feature `mapped_filename'.
 		local
+			map: GEANT_MAP
 			a_string: STRING
 		do
-			create map.make (project)
+			create map.make (new_project)
 --			map.project.set_debug_mode (True)
 			map.set_type ("glob")
 			map.set_source_pattern ("*.ge")
@@ -132,33 +140,20 @@ feature -- Test
 			assert_equal ("mapped_filename9", "bla/foobar.e", map.mapped_filename ("bla/foobar.ge"))
 		end
 
-feature -- Execution
+feature {NONE} -- Implementation
 
-	set_up
-			-- Setup for a test.
+	new_project: GEANT_PROJECT
+			-- Dummy project for test
 		local
 			a_variables: GEANT_PROJECT_VARIABLES
 			an_options: GEANT_PROJECT_OPTIONS
 		do
 			create a_variables.make
 			create an_options.make
-			create project.make (a_variables, an_options, "test_project")
-			project.set_output_file (null_output_stream)
+			create Result.make (a_variables, an_options, "test_project")
+			Result.set_output_file (null_output_stream)
+		ensure
+			new_project_not_void: Result /= Void
 		end
-
-	tear_down
-			-- Tear down after a test.
-		do
-			map := Void
-			project := Void
-		end
-
-feature {NONE} -- Implementation
-
-	project: GEANT_PROJECT
-			-- Dummy project for test
-
-	map: GEANT_MAP
-			-- Map under test
 
 end
