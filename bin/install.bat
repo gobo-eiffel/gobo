@@ -60,15 +60,15 @@ goto no_verbose
 
 :ge
 	cd %BIN_DIR%
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geant\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexace\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelex\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geyacc\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gepp\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\getest\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelint\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gedoc\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexslt\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geant\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexace\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelex\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geyacc\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gepp\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\getest\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelint\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gedoc\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexslt\src\system.ecf
 	goto clean
 
 :clean
