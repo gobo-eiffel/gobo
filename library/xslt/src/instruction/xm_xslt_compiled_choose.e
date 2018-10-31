@@ -413,7 +413,7 @@ feature -- Optimization
 							-- Bug: `l_cursor' has not been initialized.
 							False
 						then
-							l_cursor.replace (l_replacement_item)
+							-- l_cursor.replace (l_replacement_item)
 						end
 						reset_static_properties
 					end
