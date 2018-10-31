@@ -24,7 +24,6 @@
 		<capability>
 			<concurrency support="none"/>
 		</capability>
-
 		<library name="free_elks" location="$GOBO/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
 		<library name="lexical" location="$GOBO/library/lexical/library.ecf" readonly="true"/>

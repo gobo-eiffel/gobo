@@ -21,7 +21,7 @@
 		<option warning="true"/>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency use="none"/>
+			<concurrency support="none" use="none"/>
 			<void_safety use="none"/>
 		</capability>
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
