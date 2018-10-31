@@ -4212,6 +4212,9 @@ feature {NONE} -- Instruction validity
 				free_attachment_scope (current_initialization_scope)
 				current_attachment_scope := l_old_attachment_scope
 				current_initialization_scope := l_old_initialization_scope
+				if l_until_expression /= Void then
+					attachment_scope_builder.build_scope (l_until_expression, current_attachment_scope)
+				end
 			end
 		end
 
@@ -10760,6 +10763,7 @@ feature {NONE} -- Expression validity
 				end
 				nb := l_actuals.count
 				from i := 1 until i > nb loop
+					l_actual_entity_attached := False
 					l_actual := l_actuals.actual_argument (i)
 					l_formal := l_formals.formal_argument (i)
 					l_formal_context.force_last (l_formal.type)
