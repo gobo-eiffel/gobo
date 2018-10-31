@@ -24,7 +24,8 @@ before_script:
   - cd $GOBO/..
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export ISE_PLATFORM=linux-x86-64; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export ISE_PLATFORM=macosx-x86-64; fi
-  - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s 18.07.101981 > eiffel.rc
+  - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s 18.07.101981 --foo
+  #> eiffel.rc
   - source ./eiffel.rc
   # Make sure that we are using our version of the Gobo tools.
   - rm -rf $ISE_EIFFEL/library/gobo/spec
