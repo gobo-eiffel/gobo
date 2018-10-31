@@ -4,7 +4,7 @@ note
 
 		"Program test cases"
 
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,14 +77,14 @@ feature -- Execution
 	tear_down
 			-- Tear down after a test.
 		do
-			if old_cwd /= Void then
-				file_system.cd (old_cwd)
+			if attached old_cwd as l_old_cwd then
+				file_system.cd (l_old_cwd)
 				-- file_system.recursive_delete_directory (testdir)
 				old_cwd := Void
 			end
 		end
 
-	old_cwd: STRING
+	old_cwd: detachable STRING
 			-- Initial current working directory
 
 feature {NONE} -- Implementation
