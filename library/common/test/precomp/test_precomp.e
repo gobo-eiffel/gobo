@@ -5,7 +5,7 @@ note
 		"Test precompilation of Gobo Library classes"
 
 	library: "Gobo Eiffel Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +15,6 @@ class TEST_PRECOMP
 inherit
 
 	TS_TEST_CASE
-		redefine
-			tear_down
-		end
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
@@ -53,33 +50,22 @@ feature -- Test
 			end
 		end
 
-feature -- Execution
-
-	tear_down
-			-- Tear down after a test.
-		do
-			if old_cwd /= Void then
-				file_system.cd (old_cwd)
-				old_cwd := Void
-			end
-		end
-
-	old_cwd: STRING
-			-- Initial current working directory
-
 feature {NONE} -- Precompilation
 
 	precomp_ge
 			-- Test precompilation with Gobo Eiffel.
+		local
+			old_cwd: STRING
 		do
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
-				-- Generate Ace file.
-			assert_execute ("gexace --system=ge " + xace_filename + output_log)
 				-- Gobo Eiffel Lint.
-			assert_execute ("gelint --flat ge.xace" + output_log)
+			assert_execute ("gelint --flat " + ecf_filename + output_log)
+				-- Done.
+			file_system.cd (old_cwd)
+			file_system.recursive_delete_directory (testdir)
 		end
 
 	precomp_ise
@@ -89,6 +75,8 @@ feature {NONE} -- Precompilation
 			dotnet: STRING
 			l_compatible: STRING
 			l_compat_option: STRING
+			l_config_option: STRING
+			old_cwd: STRING
 		do
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
@@ -98,32 +86,19 @@ feature {NONE} -- Precompilation
 				-- previous precompilation.
 			assert ("EIFGEN_not_exists", not file_system.directory_exists ("EIFGEN"))
 			assert ("EIFGENs_not_exists", not file_system.directory_exists ("EIFGENs"))
-				-- Generate Ace file.
-			create define_option.make (50)
+				-- Compilation options.
+			create l_config_option.make (50)
 			dotnet := Execution_environment.variable_value ("GOBO_DOTNET")
 			if dotnet /= Void and then dotnet.count > 0 then
-				if define_option.count = 0 then
-					define_option.append_string ("--define=%"GOBO_DOTNET")
-				else
-					define_option.append_string (" GOBO_DOTNET")
-				end
+				l_config_option.append_string (" -config_option msil_generation:true")
 			end
 			l_compat_option := ""
 			l_compatible := Execution_environment.variable_value ("GOBO_COMPATIBLE")
 			if l_compatible /= Void and then l_compatible.count > 0 then
 				l_compat_option := " -compat"
-				if define_option.count = 0 then
-					define_option.append_string ("--define=%"GOBO_COMPATIBLE")
-				else
-					define_option.append_string (" GOBO_COMPATIBLE")
-				end
 			end
-			if define_option.count > 0 then
-				define_option.append_string ("%" ")
-			end
-			assert_execute ("gexace " + define_option + "--system=ise " + xace_filename + output_log)
 				-- Eiffel precompilation.
-			assert_execute ("ecb " + l_compat_option + "-precompile -batch -config ise.ecf" + output_log)
+			assert_execute ("ecb" + l_compat_option + l_config_option + " -batch -config " + ecf_filename  + output_log)
 				-- Done.
 			file_system.cd (old_cwd)
 			file_system.recursive_delete_directory (testdir)
@@ -131,14 +106,14 @@ feature {NONE} -- Precompilation
 
 feature {NONE} -- Implementation
 
-	xace_filename: STRING
-			-- Name of Xace file used for precompilation
+	ecf_filename: STRING
+			-- Name of ECF file used for precompilation
 		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"library", "common", "test", "precomp", "precomp.xace">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"library", "common", "test", "precomp", "precomp.ecf">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
-			xace_filename_not_void: Result /= Void
-			xace_filename_not_empty: Result.count > 0
+			ecf_filename_not_void: Result /= Void
+			ecf_filename_not_empty: Result.count > 0
 		end
 
 	testdir: STRING = "Tprecomp"

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system 
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
+	name="precomp"
+	uuid="E1FFE100-60B0-0001-0003-004000000003"
+>
+
+	<description>
+		system: "Gobo Eiffel Libraries precompilation"
+		copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<target name="precomp">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true"/>
+		<capability>
+			<concurrency support="none" use="none"/>
+			<void_safety support="all" use="all"/>
+		</capability>
+		<library name="free_elks" location="$GOBO/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="argument" location="$GOBO/library/argument/library.ecf" readonly="true"/>
+		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
+		<library name="lexical" location="$GOBO/library/lexical/library.ecf" readonly="true"/>
+		<library name="lexical_skl" location="$GOBO/library/lexical/library_skl.ecf" readonly="true"/>
+		<library name="math" location="$GOBO/library/math/library.ecf" readonly="true"/>
+		<library name="parse" location="$GOBO/library/parse/library.ecf" readonly="true"/>
+		<library name="parse_skl" location="$GOBO/library/parse/library_skl.ecf" readonly="true"/>
+		<library name="pattern" location="$GOBO/library/pattern/library.ecf" readonly="true"/>
+		<library name="regexp" location="$GOBO/library/regexp/library.ecf" readonly="true"/>
+		<library name="string" location="$GOBO/library/string/library.ecf" readonly="true"/>
+		<library name="structure" location="$GOBO/library/structure/library.ecf" readonly="true"/>
+		<library name="test" location="$GOBO/library/test/library.ecf" readonly="true"/>
+		<library name="test_skl" location="$GOBO/library/test/library_skl.ecf" readonly="true"/>
+		<library name="thread" location="$GOBO/library/thread/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="time" location="$GOBO/library/time/library.ecf" readonly="true"/>
+		<library name="tools" location="$GOBO/library/tools/library.ecf" readonly="true"/>		
+		<library name="utility" location="$GOBO/library/utility/library.ecf" readonly="true"/>
+		<library name="xml" location="$GOBO/library/xml/library.ecf" readonly="true"/>
+		<library name="xpath" location="$GOBO/library/xpath/library.ecf" readonly="true"/>
+		<library name="xslt" location="$GOBO/library/xslt/library.ecf" readonly="true"/>
+	</target>
+</system>
