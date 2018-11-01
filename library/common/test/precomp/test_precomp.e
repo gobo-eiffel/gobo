@@ -71,7 +71,6 @@ feature {NONE} -- Precompilation
 	precomp_ise
 			-- Test precompilation with ISE Eiffel.
 		local
-			define_option: STRING
 			dotnet: STRING
 			l_compatible: STRING
 			l_compat_option: STRING
