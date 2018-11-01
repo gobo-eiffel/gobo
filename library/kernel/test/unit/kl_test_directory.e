@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -531,7 +531,7 @@ feature -- Test
 		local
 			a_directory: KL_DIRECTORY
 			a_name: STRING
-			filenames: ARRAY [STRING]
+			filenames: detachable ARRAY [STRING]
 			filenames_list: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
 			expected_entries: ARRAY [STRING]
@@ -544,17 +544,21 @@ feature -- Test
 			a_name := Execution_environment.interpreted_string (a_name)
 			create a_directory.make (a_name)
 			filenames := a_directory.filenames
-			create filenames_list.make (filenames.count)
-			vss_extension := ".scc"
-			gitignore_filename := ".gitignore"
-			i := filenames.lower
-			nb := filenames.upper
-			from until i > nb loop
-				l_filename := filenames.item (i)
-				if not file_system.has_extension (l_filename, vss_extension) and not STRING_.same_string (l_filename, gitignore_filename) then
-					filenames_list.put_last (l_filename)
+			if filenames /= Void then
+				create filenames_list.make (filenames.count)
+				vss_extension := ".scc"
+				gitignore_filename := ".gitignore"
+				i := filenames.lower
+				nb := filenames.upper
+				from until i > nb loop
+					l_filename := filenames.item (i)
+					if not file_system.has_extension (l_filename, vss_extension) and not STRING_.same_string (l_filename, gitignore_filename) then
+						filenames_list.put_last (l_filename)
+					end
+					i := i + 1
 				end
-				i := i + 1
+			else
+				create filenames_list.make (0)
 			end
 			create name_sorter.make (string_comparator)
 			filenames_list.sort (name_sorter)
@@ -569,7 +573,7 @@ feature -- Test
 			a_directory, a_parent_directory: KL_DIRECTORY
 			a_name, a_parent, a_child: STRING
 			a_filename: STRING
-			directory_names: ARRAY [STRING]
+			directory_names: detachable ARRAY [STRING]
 			directory_names_list: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
 			expected_entries: ARRAY [STRING]
@@ -596,12 +600,16 @@ feature -- Test
 				--          a_child/
 				--          a_filename
 			directory_names := a_parent_directory.directory_names
-			create directory_names_list.make (directory_names.count)
-			i := directory_names.lower
-			nb := directory_names.upper
-			from until i > nb loop
-				directory_names_list.put_last (directory_names.item (i))
-				i := i + 1
+			if directory_names /= Void then
+				create directory_names_list.make (directory_names.count)
+				i := directory_names.lower
+				nb := directory_names.upper
+				from until i > nb loop
+					directory_names_list.put_last (directory_names.item (i))
+					i := i + 1
+				end
+			else
+				create directory_names_list.make (0)
 			end
 			create name_sorter.make (string_comparator)
 			directory_names_list.sort (name_sorter)
