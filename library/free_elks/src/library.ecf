@@ -35,6 +35,15 @@
 		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
 		<mapping old_name="DOUBLE" new_name="REAL_64"/>
 
-		<cluster name="free_elks" location="./" recursive="true"/>
+		<cluster name="free_elks" location="./" recursive="true">
+			<file_rule>
+				<exclude>/structures/cursor_tree/compact_cursor_tree.e$</exclude>
+				<exclude>/structures/cursor_tree/linked_cursor_tree.e$</exclude>
+				<exclude>/structures/cursor_tree/two_way_cursor_tree.e$</exclude>
+				<exclude>/structures/cursors/compact_tree_cursor.e$</exclude>
+				<exclude>/structures/cursors/linked_cursor_tree_cursor.e$</exclude>
+				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>
