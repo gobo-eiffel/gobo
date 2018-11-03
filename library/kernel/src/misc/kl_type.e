@@ -35,13 +35,16 @@ feature -- Status report
 			-- Are `u' and `v' the same objects?
 			-- Use '=', except in case of {REAL_32}.Nan and {REAL_64}.Nan
 			-- where NaNs are considered the same.
-		local
-			l_any_u, l_any_v: detachable ANY
 		do
 			if u = v then
 				Result := True
-			elseif u /= u then
-				Result := v /= v
+			elseif u = u or v = v then
+				Result := False
+			elseif attached {REAL_64_REF} u as l_ud and then l_ud.is_nan then
+				Result := attached {REAL_64_REF} v as l_vd and then l_vd.is_nan
+			elseif attached {REAL_32_REF} u as l_ur and then l_ur.is_nan then
+				Result := attached {REAL_32_REF} v as l_vr and then l_vr.is_nan
+
 			end
 		ensure
 			instance_free: class
