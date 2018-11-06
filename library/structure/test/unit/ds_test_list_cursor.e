@@ -4,9 +4,8 @@ note
 
 		"Test features of class DS_LIST_CURSOR"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,59 +15,10 @@ class DS_TEST_LIST_CURSOR
 inherit
 
 	TS_TEST_CASE
-		redefine
-			set_up, tear_down
-		end
 
 create
 
 	make_default
-
-feature -- Fixture
-
-	empty_alist: DS_ARRAYED_LIST [INTEGER]
-	empty_llist: DS_LINKED_LIST [INTEGER]
-	empty_blist: DS_BILINKED_LIST [INTEGER]
-	singleton_alist: DS_ARRAYED_LIST [INTEGER]
-	singleton_llist: DS_LINKED_LIST [INTEGER]
-	singleton_blist: DS_BILINKED_LIST [INTEGER]
-	doubleton_alist: DS_ARRAYED_LIST [INTEGER]
-	doubleton_llist: DS_LINKED_LIST [INTEGER]
-	doubleton_blist: DS_BILINKED_LIST [INTEGER]
-	triplet_alist: DS_ARRAYED_LIST [INTEGER]
-	triplet_llist: DS_LINKED_LIST [INTEGER]
-	triplet_blist: DS_BILINKED_LIST [INTEGER]
-
-	set_up
-			-- Create fixture objects.
-		do
-			create empty_alist.make (10)
-			create empty_llist.make
-			create empty_blist.make
-			create singleton_alist.make_from_array (<<INTEGER_.to_integer (1)>>)
-			create singleton_llist.make_from_array (<<INTEGER_.to_integer (1)>>)
-			create singleton_blist.make_from_array (<<INTEGER_.to_integer (1)>>)
-			create doubleton_alist.make_from_array (<<INTEGER_.to_integer (1), 2>>)
-			create doubleton_llist.make_from_array (<<INTEGER_.to_integer (1), 2>>)
-			create doubleton_blist.make_from_array (<<INTEGER_.to_integer (1), 2>>)
-			create triplet_alist.make_from_array (<<INTEGER_.to_integer (1), 2, 3>>)
-			create triplet_llist.make_from_array (<<INTEGER_.to_integer (1), 2, 3>>)
-			create triplet_blist.make_from_array (<<INTEGER_.to_integer (1), 2, 3>>)
-		end
-
-	tear_down
-			-- Release fixture objects for GC.
-		do
-			singleton_alist := Void
-			singleton_llist := Void
-			singleton_blist := Void
-			doubleton_alist := Void
-			doubleton_llist := Void
-			doubleton_blist := Void
-			triplet_alist := Void
-			triplet_llist := Void
-			triplet_blist := Void
-		end
 
 feature -- Test
 
@@ -153,6 +103,113 @@ feature -- Test
 			check_back_on_list (triplet_blist)
 		end
 
+feature {NONE} -- Fixture
+
+	empty_alist: DS_ARRAYED_LIST [INTEGER]
+			-- Empty arrayed list
+		do
+			create Result.make (10)
+		ensure
+			empty_alist_not_void: Result /= Void
+		end
+		
+	empty_llist: DS_LINKED_LIST [INTEGER]
+			-- Empty linked list
+		do
+			create Result.make
+		ensure
+			empty_llist_not_void: Result /= Void
+		end
+		
+	empty_blist: DS_BILINKED_LIST [INTEGER]
+			-- Empty bi-linked list
+		do
+			create Result.make
+		ensure
+			empty_blist_not_void: Result /= Void
+		end
+		
+	singleton_alist: DS_ARRAYED_LIST [INTEGER]
+			-- Arrayed list with one item
+		do
+			create Result.make_from_array (<<INTEGER_.to_integer (1)>>)
+		ensure
+			singleton_alist_not_void: Result /= Void
+			one_item: Result.count = 1
+		end
+		
+	singleton_llist: DS_LINKED_LIST [INTEGER]
+			-- Linked list with one item
+		do
+			create Result.make_from_array (<<INTEGER_.to_integer (1)>>)
+		ensure
+			singleton_llist_not_void: Result /= Void
+			one_item: Result.count = 1
+		end
+		
+	singleton_blist: DS_BILINKED_LIST [INTEGER]
+			-- Bi-linked list with one item
+		do
+			create Result.make_from_array (<<INTEGER_.to_integer (1)>>)
+		ensure
+			singleton_blist_not_void: Result /= Void
+			one_item: Result.count = 1
+		end
+		
+	doubleton_alist: DS_ARRAYED_LIST [INTEGER]
+			-- Arrayed list with two items
+		do
+			create Result.make_from_array (<<INTEGER_.to_integer (1), 2>>)
+		ensure
+			doubleton_alist_not_void: Result /= Void
+			two_items: Result.count = 2
+		end
+		
+	doubleton_llist: DS_LINKED_LIST [INTEGER]
+			-- Linked list with two items
+		do
+			create Result.make_from_array (<<INTEGER_.to_integer (1), 2>>)
+		ensure
+			doubleton_llist_not_void: Result /= Void
+			two_items: Result.count = 2
+		end
+		
+	doubleton_blist: DS_BILINKED_LIST [INTEGER]
+			-- Bi-linked list with two items
+		do
+			create Result.make_from_array (<<INTEGER_.to_integer (1), 2>>)
+		ensure
+			doubleton_blist_not_void: Result /= Void
+			two_items: Result.count = 2
+		end
+		
+	triplet_alist: DS_ARRAYED_LIST [INTEGER]
+			-- Arrayed list with three items
+		do
+			create Result.make_from_array (<<INTEGER_.to_integer (1), 2, 3>>)
+		ensure
+			triplet_alist_not_void: Result /= Void
+			three_items: Result.count = 3
+		end
+		
+	triplet_llist: DS_LINKED_LIST [INTEGER]
+			-- Linked list with three items
+		do
+			create Result.make_from_array (<<INTEGER_.to_integer (1), 2, 3>>)
+		ensure
+			triplet_llist_not_void: Result /= Void
+			three_items: Result.count = 3
+		end
+		
+	triplet_blist: DS_BILINKED_LIST [INTEGER]
+			-- Bi-linked list with three items
+		do
+			create Result.make_from_array (<<INTEGER_.to_integer (1), 2, 3>>)
+		ensure
+			triplet_blist_not_void: Result /= Void
+			three_items: Result.count = 3
+		end
+		
 feature {NONE} -- Implementation
 
 	check_is_first_on_list (a_list: DS_LIST [INTEGER])

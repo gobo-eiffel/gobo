@@ -404,6 +404,8 @@ feature {NONE} -- Implementation
 						a := new_operand (l_operand_a, l_ctx)
 						if not l_operand_b.is_empty then
 							b := new_operand (l_operand_b, l_ctx)
+						else
+							b := {MA_DECIMAL}.nan
 						end
 						l_ctx.reset_flags
 						a.set_shared_decimal_context (l_ctx)

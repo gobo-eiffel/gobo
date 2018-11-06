@@ -4,9 +4,8 @@ note
 
 		"Test features of class DS_RED_BLACK_TREE"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2011, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2018, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -115,8 +114,8 @@ feature -- Test
 	test_void
 			-- Test with Void keys.
 		local
-			l_tree: DS_RED_BLACK_TREE [INTEGER, STRING]
-			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree: DS_RED_BLACK_TREE [INTEGER, detachable STRING]
+			l_comparator: KL_COMPARABLE_COMPARATOR [detachable STRING]
 		do
 			create l_comparator.make
 			create l_tree.make (l_comparator)
