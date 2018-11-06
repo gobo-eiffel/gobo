@@ -29,7 +29,7 @@
 	</target>
 
 	<target name="init_system" export="NONE">
-		<set name="system" value="xmath"/>
+		<set name="system" value="xmath_example"/>
 		<set name="library" value="math"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/example"/>
 	</target>

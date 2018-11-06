@@ -7,6 +7,9 @@ L: Library Id
    0001 - free_elks
    0002 - kernel
    0003 - common
+   0004 - structure
+   0005 - math
+   0006 - pattern
    1001 - gec
    1002 - gecc
    1003 - gelint
