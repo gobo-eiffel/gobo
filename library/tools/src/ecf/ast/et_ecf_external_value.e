@@ -5,7 +5,7 @@ note
 		"ECF values to be passed for external compilations"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,15 +48,16 @@ feature -- Setting
 
 feature -- Element change
 
-	fill_external_values (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
-			-- Add to `a_universe.current_system' the current external value
-			-- of conditions satisfy `a_state'.
+	fill_external_values (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE)
+			-- Add to `a_target.system_config.universe.current_system' the current external value
+			-- if its conditions satisfy `a_state'.
+			-- `a_target' is the target where this external value has been declared.
 		require
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 			a_state_not_void: a_state /= Void
 		do
 			if is_enabled (a_state) then
-				add_external_value (value, a_universe)
+				add_external_value (value, a_target.system_config.universe)
 			end
 		end
 

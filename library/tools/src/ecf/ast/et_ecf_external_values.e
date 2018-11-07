@@ -5,7 +5,7 @@ note
 		"ECF lists of values to be passed for external compilations"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,14 +88,15 @@ feature -- Element change
 			external_value_added: external_values.last = a_external_value
 		end
 
-	fill_external_values (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
-			-- Add to `a_universe.current_system' the current external values
+	fill_external_values (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE)
+			-- Add to `a_target.system_config.universe.current_system' the current external values
 			-- whose conditions satisfy `a_state'.
+			-- `a_target' is the target where this external value has been declared.
 		require
-			a_universe_not_void: a_universe /= Void
+			a_target_not_void: a_target /= Void
 			a_state_not_void: a_state /= Void
 		do
-			external_values.do_all (agent {like external_value}.fill_external_values (a_universe, a_state))
+			external_values.do_all (agent {like external_value}.fill_external_values (a_target, a_state))
 		end
 
 feature {NONE} -- Constants

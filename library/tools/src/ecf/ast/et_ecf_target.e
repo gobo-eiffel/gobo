@@ -474,25 +474,25 @@ feature -- Basic operations
 				end
 			end
 			if attached external_includes as l_external_includes then
-				l_external_includes.fill_external_includes (a_universe, a_state)
+				l_external_includes.fill_external_includes (Current, a_state)
 			end
 			if attached external_objects as l_external_objects then
-				l_external_objects.fill_external_objects (a_universe, a_state)
+				l_external_objects.fill_external_objects (Current, a_state)
 			end
 			if attached external_libraries as l_external_libraries then
-				l_external_libraries.fill_external_libraries (a_universe, a_state)
+				l_external_libraries.fill_external_libraries (Current, a_state)
 			end
 			if attached external_resources as l_external_resources then
-				l_external_resources.fill_external_resources (a_universe, a_state)
+				l_external_resources.fill_external_resources (Current, a_state)
 			end
 			if attached external_makes as l_external_makes then
-				l_external_makes.fill_external_makes (a_universe, a_state)
+				l_external_makes.fill_external_makes (Current, a_state)
 			end
 			if attached external_cflags as l_external_cflags then
-				l_external_cflags.fill_external_cflags (a_universe, a_state)
+				l_external_cflags.fill_external_cflags (Current, a_state)
 			end
 			if attached external_linker_flags as l_external_linker_flags then
-				l_external_linker_flags.fill_external_linker_flags (a_universe, a_state)
+				l_external_linker_flags.fill_external_linker_flags (Current, a_state)
 			end
 		end
 
