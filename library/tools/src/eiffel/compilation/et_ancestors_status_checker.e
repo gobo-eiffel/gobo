@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -114,7 +114,7 @@ feature {NONE} -- Processing
 		do
 			old_class := current_class
 			current_class := a_class
-			if current_class.ancestors_built and then current_class.has_ancestors_error then
+			if current_class.has_ancestors_error then
 					-- The class has been marked with an ancestors error to indicate that we
 					-- need to check whether its ancestor tables need to be rebuilt or not.
 					-- It might happen if other classes on which it depends have been

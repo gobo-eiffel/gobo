@@ -10541,12 +10541,18 @@ feature {NONE} -- Expression validity
 					l_client_class := l_client.base_class
 					if l_client_class.is_none then
 						-- "NONE" is a descendant of all classes.
+					elseif l_client_class.is_unknown then
+						-- ISE considers client classes which are not known in the
+						-- current universe as if they were "NONE".
 					elseif a_feature.is_exported_to (l_client_class, system_processor) then
 						-- The feature is exported to `l_client'.
-					elseif l_feature_clients.has_class (current_universe.any_type.base_class) then
-						-- The feature is not exported to `l_client'.
-						-- But if `l_client' is not preparsed, we can still check
-						-- whether `a_feature' be exported to "ANY".
+					elseif not l_client_class.is_parsed and then not l_feature_clients.is_none_or_unknown then
+						-- ISE considers that if the client class is known in the current universe
+						-- but is not compiled in the system (i.e. we don't know its ancestors),
+						-- then we consider any other class known in the current universe
+						-- as being one of its ancestors.
+					elseif l_client_class.has_ancestors_error then
+						-- Another error has already reported.
 					else
 						set_fatal_error
 						error_handler.report_vape0b_error (current_class, current_class_impl, a_name, a_feature, a_class, current_feature.as_feature, l_client)
@@ -10584,12 +10590,18 @@ feature {NONE} -- Expression validity
 					l_client_class := l_client.base_class
 					if l_client_class.is_none then
 						-- "NONE" is a descendant of all classes.
+					elseif l_client_class.is_unknown then
+						-- ISE considers client classes which are not known in the
+						-- current universe as if they were "NONE".
 					elseif a_feature.is_exported_to (l_client_class, system_processor) then
 						-- The feature is exported to `l_client'.
-					elseif l_feature_clients.has_class (current_universe.any_type.base_class) then
-						-- The feature is not exported to `l_client'.
-						-- But if `l_client' is not preparsed, we can still check
-						-- whether `a_feature' be exported to "ANY".
+					elseif not l_client_class.is_parsed and then not l_feature_clients.is_none_or_unknown then
+						-- ISE considers that if the client class is known in the current universe
+						-- but is not compiled in the system (i.e. we don't know its ancestors),
+						-- then we consider any other class known in the current universe
+						-- as being one of its ancestors.
+					elseif l_client_class.has_ancestors_error then
+						-- Another error has already reported.
 					else
 						set_fatal_error
 						error_handler.report_vape0a_error (current_class, current_class_impl, a_name, a_feature, current_feature.as_feature, l_client)
