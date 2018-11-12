@@ -4,9 +4,8 @@ note
 
 		"Test features of class ST_UNICODE_NORMALIZATION_ROUTINES"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -32,17 +31,26 @@ feature -- Test
 		local
 			a_string: STRING
 			changed: DS_CELL [BOOLEAN]
+			l_decomposition_mapping_property_836: like decomposition_mapping_property
+			l_decomposition_mapping_property_890: like decomposition_mapping_property
+			l_decomposition_mapping_property_8450: like decomposition_mapping_property
 		do
 			assert ("LATIN CAPITAL A has no decomposition", decomposition_type_property (65) = Canonical_decomposition_mapping and decomposition_mapping_property (65) = Void)
-			assert ("COMBINING GREEK DIALYTIKA TONOS has a canonical decomposition", decomposition_type_property (836) = Canonical_decomposition_mapping and decomposition_mapping_property (836) /= Void)
+			l_decomposition_mapping_property_836 := decomposition_mapping_property (836)
+			assert ("COMBINING GREEK DIALYTIKA TONOS has a canonical decomposition", decomposition_type_property (836) = Canonical_decomposition_mapping and l_decomposition_mapping_property_836 /= Void)
+			check asserted_above: l_decomposition_mapping_property_836 /= Void then end
 			assert ("COMBINING GREEK DIALYTIKA TONOS decomposes to COMBINING DIAERESIS + COMBINING ACUTE ACCENT",
-				decomposition_mapping_property (836).count = 2 and then (decomposition_mapping_property (836).item (1) = 776 and decomposition_mapping_property (836).item (2) = 769))
-			assert ("GREEK YPOGEGRAMMENI has a compatibility decomposition", decomposition_type_property (890) = Compatibility_decomposition_mapping and decomposition_mapping_property (890) /= Void)
+				l_decomposition_mapping_property_836.count = 2 and then (l_decomposition_mapping_property_836.item (1) = 776 and l_decomposition_mapping_property_836.item (2) = 769))
+			l_decomposition_mapping_property_890 := decomposition_mapping_property (890)
+			assert ("GREEK YPOGEGRAMMENI has a compatibility decomposition", decomposition_type_property (890) = Compatibility_decomposition_mapping and l_decomposition_mapping_property_890 /= Void)
+			check asserted_above: l_decomposition_mapping_property_890 /= Void then end
 			assert ("GREEK YPOGEGRAMMENI decomposes to SPACE + COMBINING GREEK YPOGEGRAMMENI",
-				decomposition_mapping_property (890).count = 2 and then (decomposition_mapping_property (890).item (1) = 32 and decomposition_mapping_property (890).item (2) = 837))
-			assert ("DOUBLE-STRUCK CAPITAL C has a font variant decomposition", decomposition_type_property (8450) = Font_decomposition_mapping and decomposition_mapping_property (8450) /= Void)
+				l_decomposition_mapping_property_890.count = 2 and then (l_decomposition_mapping_property_890.item (1) = 32 and l_decomposition_mapping_property_890.item (2) = 837))
+			l_decomposition_mapping_property_8450 := decomposition_mapping_property (8450)
+			assert ("DOUBLE-STRUCK CAPITAL C has a font variant decomposition", decomposition_type_property (8450) = Font_decomposition_mapping and l_decomposition_mapping_property_8450 /= Void)
+			check asserted_above: l_decomposition_mapping_property_8450 /= Void then end
 			assert ("DOUBLE-STRUCK CAPITAL C decomposes to LATIN CAPITAL CC",
-				decomposition_mapping_property (8450).count = 1 and then decomposition_mapping_property (8450).item (1) = 67)
+				l_decomposition_mapping_property_8450.count = 1 and then l_decomposition_mapping_property_8450.item (1) = 67)
 			create changed.make (False)
 			a_string := string_from_codes (decomposition (a_acute_c_acute_cedilla, True, changed))
 			assert ("a_acute_c_acute_cedilla decomposes canonically to a_acute_c_cedilla_accute 1", a_string /= Void and then a_string.count = 5)

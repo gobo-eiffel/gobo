@@ -4,9 +4,8 @@ note
 
 		"Test invalid formats in class ST_SCIENTIFIC_FORMATTER"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004, Berend de Boer and others"
+	copyright: "Copyright (c) 2004-2018, Berend de Boer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,13 +28,13 @@ feature -- Test
 	test_bad_type_char
 			-- Test wrong type character.
 		do
-			assert ("test1", not valid_format_and_parameters ("$Q", <<>>))
+			assert ("test1", not valid_format_and_parameters ("$Q", {ARRAY [ANY]} <<>>))
 		end
 
 	test_number_of_parameters
 			-- Test if exactly required number of parameters is detected.
 		do
-			assert ("test1", not valid_format_and_parameters ("$s", <<>>))
+			assert ("test1", not valid_format_and_parameters ("$s", {ARRAY [ANY]} <<>>))
 			assert ("test2", not valid_format_and_parameters ("$s", <<"1", "2">>))
 		end
 

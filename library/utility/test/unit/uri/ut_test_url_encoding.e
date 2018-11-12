@@ -4,7 +4,6 @@ note
 
 		"Test URL encoding routines"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"
@@ -53,7 +52,7 @@ feature -- Tests
 			assert_strings_equal ("percent", "%%25", encoder.escape_string ("%%"))
 			assert_strings_equal ("sequence", "%%2B+ab", encoder.escape_string ("+ ab"))
 			assert_strings_equal ("custom_space", "%%20", encoder.escape_custom (" ", encoder.new_character_set (""), False))
-			assert_equal ("custom_space_plus", "+", encoder.escape_custom (" ", encoder.new_character_set (""), True))
+			assert_strings_equal ("custom_space_plus", "+", encoder.escape_custom (" ", encoder.new_character_set (""), True))
 		end
 
 	test_utf8
@@ -69,12 +68,14 @@ feature -- Tests
 			assert_strings_equal ("utf_encoding", l_escaped_string, l_encoder.escape_utf8 (new_unicode_string_from_utf8 (l_string)))
 			assert_strings_equal ("utf_raw_decoding", l_string, l_encoder.unescape_string (l_escaped_string))
 			l_decoded_string := l_encoder.unescape_utf8 (l_escaped_string)
+			assert_true ("decoded_string_not_void", l_decoded_string /= Void)
 			check
 				l_decoded_string_not_void: l_decoded_string /= Void
 				-- by construction of the test
+			then
+				assert_integers_equal ("utf_decoding_count", 1, l_decoded_string.count)
+				assert_integers_equal ("utf_decoding", 8800, l_decoded_string.item_code (1))
 			end
-			assert_integers_equal ("utf_decoding_count", 1, l_decoded_string.count)
-			assert_integers_equal ("utf_decoding", 8800, l_decoded_string.item_code (1))
 		end
 
 end

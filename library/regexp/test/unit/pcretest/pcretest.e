@@ -5,7 +5,7 @@ note
 		"Tester for features of PCRE regexps"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002-2016, Harald Erdbrügger and others"
+	copyright: "Copyright (c) 2002-2018, Harald Erdbrügger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute_test (an_input_filename, an_output_filename: STRING; a_show_info: BOOLEAN)
+	execute_test (an_input_filename, an_output_filename: detachable STRING; a_show_info: BOOLEAN)
 			-- Process `an_input_filename', execute the corresponding test
 			-- and put the result in `an_output_filename'. Use standard input
 			-- file if `an_input_filename ' is Void and standard output file

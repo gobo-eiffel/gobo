@@ -4,7 +4,6 @@ note
 
 		"Test URI parsing."
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Utility Library"
 	copyright:"Copyright (c) 2004-2018, Berend de Boer and others"
 	license: "MIT License"
@@ -158,7 +157,7 @@ feature -- Tests
 
 feature {NONE} -- Implementation
 
-	check_uri (uri: UT_URI; scheme, authority, path, query, fragment: STRING)
+	check_uri (uri: UT_URI; scheme, authority: detachable STRING; path: STRING; query, fragment: detachable STRING)
 			-- Check a parsed URI.
 		require
 			uri_not_void: uri /= Void
@@ -203,8 +202,8 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			assert_equal ("Query items detected", a_names.count, a_uri.query_items.count)
 			if attached a_uri.query_items as l_query_items then
+				assert_integers_equal ("Query items detected", a_names.count, l_query_items.count)
 				if attached l_query_items.keys.to_array as l_array then
 					i := l_array.lower
 					across
@@ -227,6 +226,8 @@ feature {NONE} -- Implementation
 						a_values.count - i + 1
 					end
 				end
+			else
+				assert_integers_equal ("Query items detected", a_names.count, 0)
 			end
 		end
 

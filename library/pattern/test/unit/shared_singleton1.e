@@ -5,7 +5,7 @@ note
 		"Shared singleton1"
 
 	library: "Gobo Eiffel Pattern Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,9 +17,11 @@ feature -- Access
 	singleton1: SINGLETON1
 			-- Singleton object
 		do
-			Result := singleton1_cell.item
-			if Result = Void then
+			if attached singleton1_cell.item as l_singleton1 then
+				Result := l_singleton1
+			else
 				create Result.make
+				singleton1_cell.put (Result)
 			end
 		ensure
 			singleton1_created: singleton1_created
@@ -36,7 +38,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	singleton1_cell: DS_CELL [SINGLETON1]
+	singleton1_cell: DS_CELL [detachable SINGLETON1]
 			-- Cell containing the singleton if already created
 		once
 			create Result.make (Void)

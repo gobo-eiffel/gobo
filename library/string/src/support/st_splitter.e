@@ -140,7 +140,7 @@ feature -- Status report
 			definition_for_first: a_linear.count > 0 implies (a_linear.first.is_empty implies Result)
 		end
 
-feature -- Operation(s)
+feature -- Operations
 
 	split (a_string: STRING): DS_LIST [STRING]
 			-- Split a string according to separator
