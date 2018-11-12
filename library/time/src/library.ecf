@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="time"
-	uuid="E1FFE100-60B0-0012-0001-000020181009"
+	uuid="E1FFE100-60B0-0001-0008-001000000001"
 	library_target="time">
 
 	<description>
@@ -19,13 +19,15 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true"/>
 		<capability>
 			<concurrency support="none"/>
 		</capability>
-		<library name="free_elks" location="$GOBO/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
-		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
+		<variable name="GOBO_LIBRARY" value="../../.."/>
+		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 
 		<cluster name="time" location="./" recursive="true"/>
 	</target>

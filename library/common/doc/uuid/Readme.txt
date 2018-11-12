@@ -3,13 +3,21 @@ E1FFE100-60B0-0001-0002-003000000004
 Eiffel  -Gobo-   V-   L-  T        N
 
 V: Version
-L: Library Id
+L: Library/Tool Id
    0001 - free_elks
    0002 - kernel
    0003 - common
    0004 - structure
    0005 - math
    0006 - pattern
+   0007 - thread
+   0008 - time
+   0009 - utility
+   0010 - regexp
+   0011 - string
+   0012 - argument
+   0013 - lexical
+   0014 - parse
    1001 - gec
    1002 - gecc
    1003 - gelint

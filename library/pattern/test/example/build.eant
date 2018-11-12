@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Pattern Example Tester"
-		copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -28,7 +28,7 @@
 	</target>
 
 	<target name="init_system" export="NONE">
-		<set name="system" value="xpattern"/>
+		<set name="system" value="xpattern_example"/>
 		<set name="library" value="pattern"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/example"/>
 	</target>
