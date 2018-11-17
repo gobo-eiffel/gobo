@@ -101,20 +101,28 @@ feature {NONE} -- Initialization
 				std.output.put_line ("The example flag was found" + example_flag.occurrences.out + " time(s).")
 			end
 			if example_string_option.was_found then
-				std.output.put_line ("The example string option was passed the parameter %"" + example_string_option.parameter + "%"")
+				if attached example_string_option.parameter as l_parameter then
+					std.output.put_line ("The example string option was passed the parameter %"" + l_parameter + "%"")
+				else
+					std.output.put_line ("The example string option was passed the parameter %"Void%"")
+				end
 			end
 			if example_ostring_option.was_found then
-				if example_ostring_option.parameter = Void then
-					std.output.put_line ("The example ostring option was passed, but without parameter.")
+				if attached example_ostring_option.parameter as l_parameter then
+					std.output.put_line ("The example string option was passed the parameter %"" + l_parameter + "%"")
 				else
-					std.output.put_line ("The example string option was passed the parameter %"" + example_ostring_option.parameter + "%"")
+					std.output.put_line ("The example ostring option was passed, but without parameter.")
 				end
 			end
 			if example_integer_option.was_found then
 				std.output.put_line ("The example integer option was passed the parameter " + example_integer_option.parameter.out)
 			end
 			if example_enumeration_option.was_found then
-				std.output.put_line ("The example enumeration option was passed the parameter " + example_enumeration_option.parameter)
+				if attached example_enumeration_option.parameter as l_parameter then
+					std.output.put_line ("The example enumeration option was passed the parameter %"" + l_parameter + "%"")
+				else
+					std.output.put_line ("The example enumeration option was passed the parameter %"Void%"")
+				end
 			end
 			if example_boolean_option.was_found then
 				if example_boolean_option.is_true then
@@ -124,7 +132,11 @@ feature {NONE} -- Initialization
 				end
 			end
 			if alt_string_option.was_found then
-				std.output.put_line ("The alternative string option was passed the parameter %"" + alt_string_option.parameter + "%"")
+				if attached alt_string_option.parameter as l_parameter then
+					std.output.put_line ("The alternative string option was passed the parameter %"" + l_parameter + "%"")
+				else
+					std.output.put_line ("The alternative string option was passed the parameter %"Void%"")
+				end
 			end
 		end
 
