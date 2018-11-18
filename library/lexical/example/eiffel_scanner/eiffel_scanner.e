@@ -4,7 +4,7 @@ note
 
 		"Scanners for Eiffel parsers"
 
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2066,6 +2066,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_buffer (Empty_buffer)
 			create eif_buffer.make (Init_buffer_size)
+			str_ := ""
 			eif_lineno := 1
 			create_keyword := True
 		end
@@ -2148,7 +2149,7 @@ feature -- Initialization
 
 feature -- Access
 
-	last_string_value: STRING
+	last_string_value: detachable STRING
 	last_character_value: CHARACTER
 	last_double_value: DOUBLE
 	last_integer_value: INTEGER

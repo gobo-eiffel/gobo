@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Grep"
 
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,6 +38,7 @@ feature -- Execution
 				std.error.put_string (Usage_message)
 				std.error.put_character ('%N')
 				Exceptions.die (1)
+				create regexp.compile (".*", False)
 			else
 				if Arguments.argument (1).is_equal ("-i") then
 					case_insensitive := True
@@ -98,7 +99,7 @@ feature -- Execution
 
 feature -- Parsing
 
-	parse_file (a_file: KI_TEXT_INPUT_STREAM; a_filename: STRING)
+	parse_file (a_file: KI_TEXT_INPUT_STREAM; a_filename: detachable STRING)
 			-- Parse `a_file'.
 		require
 			a_file_not_void: a_file /= Void

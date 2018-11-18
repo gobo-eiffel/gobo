@@ -4,7 +4,7 @@ note
 
 		"Ficticious application to demonstrate the use of the command line parsing library"
 
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
