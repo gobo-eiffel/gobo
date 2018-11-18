@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
+<system
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
-	name="parse_skl"
-	uuid="E1FFE100-60B0-0001-0014-001000000002"
-	library_target="parse_skl">
-
+	name="calc"
+	uuid="E1FFE100-60B0-0001-0014-003000000001"
+>
 	<description>
-		description: "ECF file for the Gobo Eiffel parser skeletons"
-		library: "Gobo Eiffel Parse Library"
-		copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+		system: "Infix Notation Calculator"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-
-	<target name="parse_skl">
-		<root all_classes="true"/>
+	<target name="calc">
+		<root class="CALC" feature="execute"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true"/>
+		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency support="none"/>
+			<concurrency support="none" use="none"/>
+			<void_safety support="all" use="all"/>
 		</capability>
-		<variable name="GOBO_LIBRARY" value="../../.."/>
+		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
-
-		<cluster name="skeleton" location="./skeleton/" recursive="true"/>
+		<library name="parse_skl" location="${GOBO_LIBRARY}/library/parse/library_skl.ecf" readonly="true"/>
+		<cluster name="calc" location="./"/>
 	</target>
 </system>
