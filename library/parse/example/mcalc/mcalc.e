@@ -4,7 +4,7 @@ note
 
 		"Calculator with memory"
 
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ feature -- Last values
 
 	last_detachable_any_value: detachable ANY
 	last_double_value: DOUBLE
-	last_string_value: STRING
+	last_detachable_string_value: detachable STRING
 
 feature -- Access
 
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 					yyvsc3 := yyvsc3 + yyInitial_yyvs_size
 					yyvs3 := yyspecial_routines3.aliased_resized_area (yyvs3, yyvsc3)
 				end
-				yyspecial_routines3.force (yyvs3, last_string_value, yyvsp3)
+				yyspecial_routines3.force (yyvs3, last_detachable_string_value, yyvsp3)
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: not a token type: ")
@@ -292,7 +292,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'mcalc.y' at line 53")
 end
 
-yyval2 := memory_value (yyvs3.item (yyvsp3)) 
+if attached yyvs3.item (yyvsp3) as l_name then yyval2 := memory_value (l_name) end 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp2 := yyvsp2 + 1
@@ -312,7 +312,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'mcalc.y' at line 54")
 end
 
-yyval2 := yyvs2.item (yyvsp2); set_memory_value (yyval2, yyvs3.item (yyvsp3)) 
+yyval2 := yyvs2.item (yyvsp2); if attached yyvs3.item (yyvsp3) as l_name then set_memory_value (yyval2, l_name) end 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -578,8 +578,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines2: KL_SPECIAL_ROUTINES [DOUBLE]
 			-- Routines that ought to be in SPECIAL [DOUBLE]
 
-	yyvs3: SPECIAL [STRING]
-			-- Stack for semantic values of type STRING
+	yyvs3: SPECIAL [detachable STRING]
+			-- Stack for semantic values of type detachable STRING
 
 	yyvsc3: INTEGER
 			-- Capacity of semantic value stack `yyvs3'
@@ -587,8 +587,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp3: INTEGER
 			-- Top of semantic value stack `yyvs3'
 
-	yyspecial_routines3: KL_SPECIAL_ROUTINES [STRING]
-			-- Routines that ought to be in SPECIAL [STRING]
+	yyspecial_routines3: KL_SPECIAL_ROUTINES [detachable STRING]
+			-- Routines that ought to be in SPECIAL [detachable STRING]
 
 feature {NONE} -- Constants
 
@@ -747,7 +747,7 @@ feature {NONE} -- Scanner
 						pending_character := c
 						has_pending_character := True
 					end
-					last_string_value := buffer
+					last_detachable_string_value := buffer
 				when ':' then
 					std.input.read_character
 					c := std.input.last_character

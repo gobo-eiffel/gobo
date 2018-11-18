@@ -4,7 +4,7 @@ note
 
 		"Eiffel parsers"
 
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 					yyvsc5 := yyvsc5 + yyInitial_yyvs_size
 					yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
 				end
-				yyspecial_routines5.force (yyvs5, last_string_value, yyvsp5)
+				yyspecial_routines5.force (yyvs5, last_detachable_string_value, yyvsp5)
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: not a token type: ")
@@ -5955,8 +5955,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines4: KL_SPECIAL_ROUTINES [DOUBLE]
 			-- Routines that ought to be in SPECIAL [DOUBLE]
 
-	yyvs5: SPECIAL [STRING]
-			-- Stack for semantic values of type STRING
+	yyvs5: SPECIAL [detachable STRING]
+			-- Stack for semantic values of type detachable STRING
 
 	yyvsc5: INTEGER
 			-- Capacity of semantic value stack `yyvs5'
@@ -5964,8 +5964,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp5: INTEGER
 			-- Top of semantic value stack `yyvs5'
 
-	yyspecial_routines5: KL_SPECIAL_ROUTINES [STRING]
-			-- Routines that ought to be in SPECIAL [STRING]
+	yyspecial_routines5: KL_SPECIAL_ROUTINES [detachable STRING]
+			-- Routines that ought to be in SPECIAL [detachable STRING]
 
 feature {NONE} -- Constants
 

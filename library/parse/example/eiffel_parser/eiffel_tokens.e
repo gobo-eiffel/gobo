@@ -15,7 +15,7 @@ feature -- Last values
 	last_character_value: CHARACTER
 	last_integer_value: INTEGER
 	last_double_value: DOUBLE
-	last_string_value: STRING
+	last_detachable_string_value: detachable STRING
 
 feature -- Access
 

@@ -5,7 +5,7 @@ note
 
 		"Eiffel parsers"
 
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,7 @@ create
 %token <CHARACTER> E_CHARACTER
 %token <INTEGER> E_INTEGER
 %token <DOUBLE> E_REAL
-%token <STRING> E_IDENTIFIER E_STRING E_BIT E_FREEOP
+%token <detachable STRING> E_IDENTIFIER E_STRING E_BIT E_FREEOP
 %token E_BITTYPE
 %token E_BANGBANG E_ARROW E_DOTDOT E_LARRAY E_RARRAY E_ASSIGN E_REVERSE
 %token E_ALIAS E_ALL E_AS E_CHECK E_CLASS E_CREATION E_DEBUG E_DEFERRED

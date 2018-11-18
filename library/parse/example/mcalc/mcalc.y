@@ -5,7 +5,7 @@ note
 
 		"Calculator with memory"
 
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ create
 
 	-- geyacc declarations.
 %token <DOUBLE> NUM  -- Double precision number
-%token <STRING> VAR  -- Memory name
+%token <detachable STRING> VAR  -- Memory name
 %type <DOUBLE> exp
 
 %right ASSIGNMENT    -- Assignment sign `:='
@@ -50,8 +50,8 @@ line: '\n'
 	;
 
 exp: NUM					{ $$ := $1 }
-	| VAR					{ $$ := memory_value ($1) }
-	| VAR ASSIGNMENT exp	{ $$ := $3; set_memory_value ($$, $1) }
+	| VAR					{ if attached $1 as l_name then $$ := memory_value (l_name) end }
+	| VAR ASSIGNMENT exp	{ $$ := $3; if attached $1 as l_name then set_memory_value ($$, l_name) end }
 	| exp '+' exp			{ $$ := $1 + $3 }
 	| exp '-' exp			{ $$ := $1 - $3 }
 	| exp '*' exp			{ $$ := $1 * $3 }
@@ -193,7 +193,7 @@ feature {NONE} -- Scanner
 						pending_character := c
 						has_pending_character := True
 					end
-					last_string_value := buffer
+					last_detachable_string_value := buffer
 				when ':' then
 					std.input.read_character
 					c := std.input.last_character

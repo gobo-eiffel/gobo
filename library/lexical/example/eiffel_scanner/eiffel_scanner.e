@@ -339,7 +339,7 @@ end
 											last_token := E_CREATE
 										else
 											last_token := E_IDENTIFIER
-											last_string_value := text
+											last_detachable_string_value := text
 										end
 									
 when 46 then
@@ -667,7 +667,7 @@ debug ("GELEX")
 end
 
 				last_token := E_IDENTIFIER
-				last_string_value := text
+				last_detachable_string_value := text
 			
 when 99 then
 --|#line 185 "eiffel_scanner.l"
@@ -676,7 +676,7 @@ debug ("GELEX")
 end
 
 				last_token := E_FREEOP
-				last_string_value := text
+				last_detachable_string_value := text
 			
 when 100 then
 --|#line 196 "eiffel_scanner.l"
@@ -962,7 +962,7 @@ end
 			else
 				last_token := E_STRING
 			end
-			last_string_value := text_substring (2, text_count - 1)
+			last_detachable_string_value := text_substring (2, text_count - 1)
 		
 when 146 then
 --|#line 267 "eiffel_scanner.l"
@@ -971,7 +971,7 @@ debug ("GELEX")
 end
 
 				last_token := E_STRING
-				last_string_value := text_substring (2, text_count - 1)
+				last_detachable_string_value := text_substring (2, text_count - 1)
 			
 when 147 then
 --|#line 271 "eiffel_scanner.l"
@@ -1149,7 +1149,7 @@ end
 			create str_.make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
-			last_string_value := str_
+			last_detachable_string_value := str_
 			set_start_condition (INITIAL)
 		
 when 173 then
@@ -1172,7 +1172,7 @@ when 177 then
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line 339")
 end
-last_token := E_BIT; last_string_value := text
+last_token := E_BIT; last_detachable_string_value := text
 when 178 then
 --|#line 344 "eiffel_scanner.l"
 debug ("GELEX")
@@ -2149,7 +2149,7 @@ feature -- Initialization
 
 feature -- Access
 
-	last_string_value: detachable STRING
+	last_detachable_string_value: detachable STRING
 	last_character_value: CHARACTER
 	last_double_value: DOUBLE
 	last_integer_value: INTEGER
@@ -2183,7 +2183,7 @@ feature {NONE} -- Processing
 				Result := op
 			else
 				Result := E_STRING
-				last_string_value := text_substring (2, text_count - 1)
+				last_detachable_string_value := text_substring (2, text_count - 1)
 			end
 		end
 

@@ -4,7 +4,7 @@ note
 
 		"Scanners for Eiffel parsers"
 
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -333,7 +333,7 @@ end
 											last_token := E_CREATE
 										else
 											last_token := E_IDENTIFIER
-											last_string_value := text
+											last_detachable_string_value := text
 										end
 									
 when 46 then
@@ -661,7 +661,7 @@ debug ("GELEX")
 end
 
 				last_token := E_IDENTIFIER
-				last_string_value := text
+				last_detachable_string_value := text
 			
 when 99 then
 --|#line 179 "eiffel_scanner.l"
@@ -670,7 +670,7 @@ debug ("GELEX")
 end
 
 				last_token := E_FREEOP
-				last_string_value := text
+				last_detachable_string_value := text
 			
 when 100 then
 --|#line 190 "eiffel_scanner.l"
@@ -956,7 +956,7 @@ end
 			else
 				last_token := E_STRING
 			end
-			last_string_value := text_substring (2, text_count - 1)
+			last_detachable_string_value := text_substring (2, text_count - 1)
 		
 when 146 then
 --|#line 261 "eiffel_scanner.l"
@@ -965,7 +965,7 @@ debug ("GELEX")
 end
 
 				last_token := E_STRING
-				last_string_value := text_substring (2, text_count - 1)
+				last_detachable_string_value := text_substring (2, text_count - 1)
 			
 when 147 then
 --|#line 265 "eiffel_scanner.l"
@@ -1143,7 +1143,7 @@ end
 			create str_.make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
-			last_string_value := str_
+			last_detachable_string_value := str_
 			set_start_condition (INITIAL)
 		
 when 173 then
@@ -1166,7 +1166,7 @@ when 177 then
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line 333")
 end
-last_token := E_BIT; last_string_value := text
+last_token := E_BIT; last_detachable_string_value := text
 when 178 then
 --|#line 338 "eiffel_scanner.l"
 debug ("GELEX")
@@ -2060,6 +2060,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_buffer (Empty_buffer)
 			create eif_buffer.make (Init_buffer_size)
+			str_ := ""
 			eif_lineno := 1
 			create_keyword := True
 		end
@@ -2104,7 +2105,7 @@ feature {NONE} -- Processing
 				Result := op
 			else
 				Result := E_STRING
-				last_string_value := text_substring (2, text_count - 1)
+				last_detachable_string_value := text_substring (2, text_count - 1)
 			end
 		end
 

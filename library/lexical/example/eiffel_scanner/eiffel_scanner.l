@@ -109,7 +109,7 @@ create
 											last_token := E_CREATE
 										else
 											last_token := E_IDENTIFIER
-											last_string_value := text
+											last_detachable_string_value := text
 										end
 									}
 [cC][rR][eE][aA][tT][iI][oO][nN]		last_token := E_CREATION
@@ -176,7 +176,7 @@ create
 
 [a-zA-Z][a-zA-Z0-9_]*	{
 				last_token := E_IDENTIFIER
-				last_string_value := text
+				last_detachable_string_value := text
 			}
 
 
@@ -184,7 +184,7 @@ create
 
 [@#|&][^%" \t\r\n]*	{
 				last_token := E_FREEOP
-				last_string_value := text
+				last_detachable_string_value := text
 			}
 
 		-- Note: Accepts non-printable characters as well,
@@ -262,11 +262,11 @@ create
 			else
 				last_token := E_STRING
 			end
-			last_string_value := text_substring (2, text_count - 1)
+			last_detachable_string_value := text_substring (2, text_count - 1)
 		}
 \"[^%\n"]*\" {
 				last_token := E_STRING
-				last_string_value := text_substring (2, text_count - 1)
+				last_detachable_string_value := text_substring (2, text_count - 1)
 			}
 \"[^%\n"]*	{
 				if text_count > 1 then
@@ -318,7 +318,7 @@ create
 			create str_.make (eif_buffer.count)
 			str_.append_string (eif_buffer)
 			eif_buffer.wipe_out
-			last_string_value := str_
+			last_detachable_string_value := str_
 			set_start_condition (INITIAL)
 		}
 	-- The following line is not correct Eiffel
@@ -336,7 +336,7 @@ create
 
 ----------/** Eiffel bits **/---------------------------------------------------
 
-[0-1]+[bB]			last_token := E_BIT; last_string_value := text
+[0-1]+[bB]			last_token := E_BIT; last_detachable_string_value := text
 
 
 ----------/** Eiffel integers **/-----------------------------------------------
@@ -496,7 +496,7 @@ feature -- Initialization
 
 feature -- Access
 
-	last_string_value: detachable STRING
+	last_detachable_string_value: detachable STRING
 	last_character_value: CHARACTER
 	last_double_value: DOUBLE
 	last_integer_value: INTEGER
@@ -530,7 +530,7 @@ feature {NONE} -- Processing
 				Result := op
 			else
 				Result := E_STRING
-				last_string_value := text_substring (2, text_count - 1)
+				last_detachable_string_value := text_substring (2, text_count - 1)
 			end
 		end
 
