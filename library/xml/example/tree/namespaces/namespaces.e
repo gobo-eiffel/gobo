@@ -5,7 +5,7 @@ note
 		"Reports information about Namespace declarations in XML files"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,28 +38,42 @@ feature -- Processing
 
 	process_data_file
 			-- Parse file.
+		require
+			filename_not_void: filename /= Void
+			event_parser_not_void: event_parser /= Void
+			tree_pipe_not_void: tree_pipe /= Void
 		local
 			formatter: NS_FORMATTER
 			in: KL_TEXT_INPUT_FILE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
+			l_filename: like filename
+			l_event_parser: like event_parser
+			l_tree_pipe: like tree_pipe
 		do
+			l_filename := filename
+			l_event_parser := event_parser
+			l_tree_pipe := tree_pipe
+			check precondition_filename: l_filename /= Void then end
+			check precondition_event_parser: l_event_parser /= Void then end
+			check precondition_tree_pipe: l_tree_pipe /= Void then end
+
 			error_handler.report_info_message ("parsing data...")
-			create in.make (filename)
+			create in.make (l_filename)
 			in.open_read
 			if not in.is_open_read then
-				create cannot_read.make (filename)
+				create cannot_read.make (l_filename)
 				error_handler.report_error (cannot_read)
 				has_error := True
 			else
-				event_parser.parse_from_stream (in)
+				l_event_parser.parse_from_stream (in)
 				in.close
-				if tree_pipe.error.has_error then
-					error_handler.report_error_message (tree_pipe.last_error)
+				if l_tree_pipe.error.has_error then
+					error_handler.report_error_message (l_tree_pipe.last_error)
 					has_error := True
 				else
 					error_handler.report_info_message ("printing document...")
 					create formatter.make
-					formatter.process_document (tree_pipe.document)
+					formatter.process_document (l_tree_pipe.document)
 					std.output.put_string (formatter.last_string)
 					std.output.put_new_line
 				end
@@ -71,6 +85,8 @@ feature -- Processing
 			-- Read command line arguments.
 		local
 			parser_switch: STRING
+			l_event_parser: like event_parser
+			l_tree_pipe: like tree_pipe
 		do
 			if Arguments.argument_count /= 2 then
 				error_handler.report_error (Usage_message)
@@ -82,19 +98,25 @@ feature -- Processing
 						error_handler.report_error_message ("expat is not availabe, please choose other parser backend")
 						has_error := True
 					else
-						event_parser := fact.new_expat_parser
+						l_event_parser := fact.new_expat_parser
+						event_parser := l_event_parser
 					end
 				else
-					create {XM_EIFFEL_PARSER} event_parser.make
+					create {XM_EIFFEL_PARSER} l_event_parser.make
+					event_parser := l_event_parser
 				end
-					-- Create and bind tree pipe.
-				create tree_pipe.make
-				event_parser.set_callbacks (tree_pipe.start)
+				if l_event_parser /= Void then
+						-- Create and bind tree pipe.
+					create l_tree_pipe.make
+					tree_pipe := l_tree_pipe
+					l_event_parser.set_callbacks (l_tree_pipe.start)
+				end
 				filename := Arguments.argument (2)
 			end
 		ensure
 			filename_not_void: not has_error implies filename /= Void
 			parser_not_void: not has_error implies event_parser /= Void
+			tree_pipe_not_void: not has_error implies tree_pipe /= Void
 		end
 
 feature -- Parser
@@ -107,15 +129,15 @@ feature -- Parser
 			factory_not_void: Result /= Void
 		end
 
-	event_parser: XM_PARSER
+	event_parser: detachable XM_PARSER
 			-- XML parser
 
-	tree_pipe: XM_TREE_CALLBACKS_PIPE
+	tree_pipe: detachable XM_TREE_CALLBACKS_PIPE
 			-- Tree generating callbacks
 
 feature -- Access
 
-	filename: STRING
+	filename: detachable STRING
 			-- File name
 
 	has_error: BOOLEAN

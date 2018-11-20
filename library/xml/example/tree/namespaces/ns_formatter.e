@@ -5,7 +5,7 @@ note
 		"Namespace formatters"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103,9 +103,11 @@ feature -- Standard processing
 				if not cs.item.has_prefix then
 					append ("%Tprefix: [default]%N")
 				else
-					append ("%Tprefix: ")
-					append (cs.item.ns_prefix)
-					append ("%N")
+					check has_prefix: attached cs.item.ns_prefix as l_ns_prefix then
+						append ("%Tprefix: ")
+						append (l_ns_prefix)
+						append ("%N")
+					end
 				end
 				append ("%Turi: ")
 				append (cs.item.uri)
@@ -165,9 +167,13 @@ feature -- Non-standard processing
 			position_included: is_position_included
 		local
 			pos: XM_POSITION
+			l_position_table: like position_table
 		do
-			if position_table.has (node) then
-				pos := position_table.item (node)
+			l_position_table := position_table
+			check precondition_position_included: l_position_table /= Void then end
+
+			if l_position_table.has (node) then
+				pos := l_position_table.item (node)
 			end
 			append ("<!--")
 			if pos /= Void then
@@ -186,8 +192,10 @@ feature -- Non-standard processing
 			append ("name=")
 			append (n.name)
 			append (" prefix=")
-			if n.has_prefix then
-				append (n.namespace.ns_prefix)
+			if n.namespace.has_prefix then
+				check has_prefix: attached n.namespace.ns_prefix as l_ns_prefix then
+					append (l_ns_prefix)
+				end
 			else
 				append ("[no prefix]")
 			end
@@ -210,7 +218,7 @@ feature {NONE} -- Implementation
 			last_string := STRING_.appended_string (last_string, str)
 		end
 
-	position_table: XM_POSITION_TABLE
+	position_table: detachable XM_POSITION_TABLE
 			-- Position table
 
 invariant

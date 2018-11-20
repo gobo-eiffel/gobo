@@ -5,7 +5,7 @@ note
 		"Test xml:id processing"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,10 +15,22 @@ class XM_TEST_XMLID
 inherit
 
 	TS_TEST_CASE
+		redefine
+			make_default
+		end
 
 create
 
 	make_default
+
+feature {NONE} -- Initialization
+
+	make_default
+			-- <Precursor>
+		do
+			precursor
+			make_parser
+		end
 
 feature -- Test
 
@@ -113,7 +125,9 @@ feature -- Test
 			assert ("ok", not error.has_error)
 			-- could test IDREF validation when present
 
-			pretty_print.last_output.wipe_out
+			check set_output_to_string_in_make_parser: attached pretty_print.last_output as l_last_output then
+				l_last_output.wipe_out
+			end
 			parser.parse_from_string (xml_011_oknormalize)
 			assert ("parsed", parser.is_correct)
 			assert ("ok", not error.has_error)

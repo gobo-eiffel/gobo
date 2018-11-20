@@ -5,7 +5,7 @@ note
 		"Test Expat callbacks through well-known XML file"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Berend de Boer and others"
+	copyright: "Copyright (c) 2002-2018, Berend de Boer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,9 +16,11 @@ inherit
 
 	TS_TEST_CASE
 		rename
-			name as test_name
+			name as name_test,
+			initialize as initialize_test,
+			memory as memory_test
 		redefine
-			make_test, set_up
+			make_default, set_up
 		end
 
 	XM_EXPAT_PARSER
@@ -53,10 +55,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make_test (an_id: INTEGER; a_variables: like variables)
-			-- Create a new test case with id `an_id'.
+	make_default
+			-- <Precursor>
 		do
-			precursor (an_id, a_variables)
+			precursor
 			make_expat
 		end
 
@@ -231,17 +233,22 @@ feature -- State
 feature -- Handlers
 
 	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT)
+		local
+			l_items: detachable DS_LIST [XM_DTD_ELEMENT_CONTENT]
 		do
 			on_element_declaration_called := True
 			if on_element_declaration_matches then
 				-- declaration for other
 				assert ("expected other", STRING_.same_string (a_name, "other"))
 				assert ("expected sequence", a_model.is_sequence)
-				assert ("expected 4 children", a_model.items.count = 4)
-				assert ("repeat <a> just once", a_model.items.item (1).is_one)
-				assert ("repeat <b> zero or one", a_model.items.item (2).is_zero_or_one)
-				assert ("repeat <c> zero or more", a_model.items.item (3).is_zero_or_more)
-				assert ("repeat <d> one or more", a_model.items.item (4).is_one_or_more)
+				l_items := a_model.items
+				assert ("items_not_void", l_items /= Void)
+				check asserted_above: l_items /= Void then end
+				assert ("expected 4 children", l_items.count = 4)
+				assert ("repeat <a> just once", l_items.item (1).is_one)
+				assert ("repeat <b> zero or one", l_items.item (2).is_zero_or_one)
+				assert ("repeat <c> zero or more", l_items.item (3).is_zero_or_more)
+				assert ("repeat <d> one or more", l_items.item (4).is_one_or_more)
 			else
 				on_element_declaration_matches :=
 					STRING_.same_string (a_name, Root) and
@@ -256,37 +263,37 @@ feature -- Handlers
 				STRING_.same_string (an_element_name, Root)
 		end
 
-	on_xml_declaration (xml_version, encoding: STRING; is_standalone: BOOLEAN)
+	on_xml_declaration (xml_version: STRING; encoding: detachable STRING; is_standalone: BOOLEAN)
 		do
 			-- we need everything for this debug class
 			register_all_callbacks
 			on_xml_declaration_called := True
 			on_xml_declaration_matches :=
 				STRING_.same_string (xml_version, Version10) and
-				STRING_.same_string (encoding, ISO_8859_1) and
+				encoding /= Void and then STRING_.same_string (encoding, ISO_8859_1) and
 				not is_standalone
 		end
 
 	on_entity_declaration (
 			entity_name: STRING;
 			is_parameter_entity: BOOLEAN;
-			value: STRING;
-			an_id: XM_DTD_EXTERNAL_ID;
-			notation_name: STRING)
+			value: detachable STRING;
+			an_id: detachable XM_DTD_EXTERNAL_ID;
+			notation_name: detachable STRING)
 		do
 			on_entity_declaration_called := True
 			on_entity_declaration_matches :=
 				STRING_.same_string (entity_name, EntityName) and
-				STRING_.same_string (notation_name, Entity_notation)
+				notation_name /= Void and then STRING_.same_string (notation_name, Entity_notation)
 		end
 
-	on_start_tag (a_namespace, a_prefix, a_local_part: STRING)
+	on_start_tag (a_namespace, a_prefix: detachable STRING; a_local_part: STRING)
 		do
 			on_start_tag_called := True
 			on_start_tag_matches := STRING_.same_string (a_local_part, Root)
 		end
 
-	on_end_tag (a_namespace, a_prefix, a_local_part: STRING)
+	on_end_tag (a_namespace, a_prefix: detachable STRING; a_local_part: STRING)
 			-- called whenever the parser findes an end element
 		do
 			on_end_tag_called := True
@@ -313,13 +320,13 @@ feature -- Handlers
 			on_comment_matches := STRING_.same_string (com, Comment)
 		end
 
-	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
+	on_doctype (name: STRING; an_id: detachable XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 		do
 			Precursor (name, an_id, has_internal_subset)
 			on_doctype_called := True
 			on_doctype_matches :=
 				STRING_.same_string (name, Root) and
-				an_id.system_id = Void and an_id.public_id = Void and
+				(an_id = Void or else (an_id.system_id = Void and an_id.public_id = Void)) and
 				has_internal_subset
 		end
 
@@ -333,7 +340,7 @@ feature -- Handlers
 			on_notation_declaration_called := True
 			on_notation_declaration_matches :=
 				STRING_.same_string (notation_name, Entity_notation) and
-				STRING_.same_string (an_id.system_id, Gimp)
+				attached an_id.system_id as l_system_id and then STRING_.same_string (l_system_id, Gimp)
 		end
 
 	on_not_standalone: BOOLEAN

@@ -88,6 +88,7 @@ feature {NONE} -- Implementation
 		local
 			a_parser: XM_EIFFEL_PARSER
 			a_sink: XM_CANONICAL_PRETTY_PRINT_FILTER
+			l_last_output: detachable STRING
 		do
 			create a_sink.make_null
 			a_sink.set_output_to_string
@@ -99,7 +100,11 @@ feature {NONE} -- Implementation
 			a_parser.parse_from_stream (literal_stream (a_in))
 
 			assert ("parsed_ok", a_parser.is_correct)
-			assert_equal ("output", a_out_utf8, STRING_.as_string (a_sink.last_output))
+			l_last_output := a_sink.last_output
+				-- Postcondition of 'set_output_to_string':
+			assert ("last_output_not_void", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert_equal ("output", a_out_utf8, STRING_.as_string (l_last_output))
 		end
 
 	literal_stream (a_in: STRING): KL_STRING_INPUT_STREAM

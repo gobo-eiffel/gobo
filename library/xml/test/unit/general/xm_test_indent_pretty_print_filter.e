@@ -5,7 +5,7 @@ note
 		"Test XM_INDENT_PRETTY_PRINT_FILTER and XM_WHITESPACE_NORMALIZER"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2004-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class XM_TEST_INDENT_PRETTY_PRINT_FILTER
 inherit
 
 	TS_TEST_CASE
+		redefine
+			make_default
+		end
 
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
@@ -22,6 +25,15 @@ inherit
 create
 
 	make_default
+
+feature {NONE} -- Initialization
+
+	make_default
+			-- <Precursor>
+		do
+			precursor
+			make_parser
+		end
 
 feature -- Tests
 

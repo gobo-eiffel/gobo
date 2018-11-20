@@ -5,7 +5,7 @@ note
 		"Test xmlns generation filter and pretty printing"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,10 +15,22 @@ class XM_TEST_XMLNS_GENERATOR
 inherit
 
 	TS_TEST_CASE
+		redefine
+			make_default
+		end
 
 create
 
 	make_default
+
+feature {NONE} -- Initialization
+
+	make_default
+			-- <Precursor>
+		do
+			precursor
+			make_parser
+		end
 
 feature -- Tests
 
@@ -160,11 +172,16 @@ feature {NONE} -- Implementation
 			a_tag_not_void: a_tag /= Void
 			a_doc_not_void: a_doc /= Void
 			a_out_not_void: a_out /= Void
+		local
+			l_last_output: detachable STRING
 		do
 			make_parser
 			a_doc.process_to_events (xmlns_generator)
 
-			assert_equal (a_tag, a_out, pretty_print.last_output.string)
+			l_last_output := pretty_print.last_output
+			assert ("set_output_to_string_in_make_parser", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert_equal (a_tag, a_out, l_last_output.string)
 		end
 
 feature {NONE} -- Implementation
@@ -175,6 +192,8 @@ feature {NONE} -- Implementation
 			a_tag_not_void: a_tag /= Void
 			a_in_not_void: a_in /= Void
 			a_out_not_void: a_out /= Void
+		local
+			l_last_output: detachable STRING
 		do
 			make_parser
 				-- Check formatted output is as expected.
@@ -187,7 +206,11 @@ feature {NONE} -- Implementation
 
 			parser.parse_from_string (a_out)
 			assert ("output_parsed_" + a_tag, not stop_on_error.has_error)
-			assert_equal ("output_idempotent_" + a_tag, a_out, pretty_print.last_output.string)
+
+			l_last_output := pretty_print.last_output
+			assert ("set_output_to_string_in_make_parser", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert_equal ("output_idempotent_" + a_tag, a_out, l_last_output.string)
 		end
 
 feature {NONE} -- Implementation

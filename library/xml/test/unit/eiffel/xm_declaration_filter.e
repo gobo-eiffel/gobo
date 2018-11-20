@@ -5,7 +5,7 @@ note
 		"XML declaration event filter"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ feature -- Document
 
 feature -- Declaration info
 
-	version: STRING
+	version: detachable STRING
 			-- Version
 
 	encoding: detachable STRING
@@ -48,7 +48,6 @@ feature -- Declaration info
 
 invariant
 
---	version_not_void: version /= Void
---	version_not_empty: version.count > 0
+	version_not_empty: attached version as l_version implies l_version.count > 0
 
 end

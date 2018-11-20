@@ -5,7 +5,7 @@ note
 		"Base class for XML parser test cases"
 
 	library: "Gobo Eiffel XML Library test"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ deferred class XM_TEST_CASE
 inherit
 
 	TS_TEST_CASE
+		redefine
+			make_default
+		end
 
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
@@ -24,6 +27,16 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
+
+feature {NONE} -- Initialization
+
+	make_default
+			-- <Precursor>
+		do
+			precursor
+			parser := new_parser
+			reset_parser
+		end
 
 feature -- XML asserts
 
@@ -60,6 +73,8 @@ feature -- XML asserts
 			name_not_void: a_name /= Void
 			in_not_void: in /= Void
 			out_not_void: out /= Void
+		local
+			l_last_output: detachable STRING
 		do
 			reset_parser
 			parser.parse_from_string (new_unicode_string_from_utf8 (in))
@@ -68,7 +83,10 @@ feature -- XML asserts
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
 
 				-- Constants are in UTF8, so convert if UC_STRING.
-			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), printer.last_output))
+			l_last_output := printer.last_output
+			assert ("set_output_to_string_in_reset_parser", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), l_last_output))
 		end
 
 	assert_output_utf16 (a_name: STRING; in_utf16: STRING; an_out: STRING)
@@ -77,13 +95,18 @@ feature -- XML asserts
 			name_not_void: a_name /= Void
 			in_not_void: in_utf16 /= Void
 			out_not_void: out /= Void
+		local
+			l_last_output: detachable STRING
 		do
 			reset_parser
 			parser.parse_from_string (new_unicode_string_from_utf16 (in_utf16))
 			debug ("xml_parser") print_parser_error end
 
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
-			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), printer.last_output))
+			l_last_output := printer.last_output
+			assert ("set_output_to_string_in_reset_parser", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), l_last_output))
 		end
 
 	assert_valid_external (a_name: STRING; in: STRING; a_resolver: XM_TEST_STRING_EXTERNAL_RESOLVER)
@@ -123,6 +146,8 @@ feature -- XML asserts
 		require
 			name: a_name /= Void
 			in_not_void: in /= Void
+		local
+			l_last_output: detachable STRING
 		do
 			reset_parser
 			parser.set_dtd_resolver (a_resolver)
@@ -131,7 +156,10 @@ feature -- XML asserts
 			debug ("xml_parser") print_parser_error end
 
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
-			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), printer.last_output))
+			l_last_output := printer.last_output
+			assert ("set_output_to_string_in_reset_parser", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), l_last_output))
 		end
 
 feature {NONE} -- Debug

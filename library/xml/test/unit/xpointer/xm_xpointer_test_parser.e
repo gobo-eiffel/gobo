@@ -5,7 +5,7 @@ note
 		"Test xpointer parser"
 
 	library: "Gobo Eiffel XPointer Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,7 +72,7 @@ feature -- Test
 			a_parser.parse ("fred")
 			assert ("Parse successful", not a_parser.is_error)
 			assert ("Shorthand", a_parser.is_shorthand)
-			assert ("Shorthand is fred", a_parser.shorthand.is_equal ("fred"))
+			assert_strings_equal ("Shorthand is fred", "fred", a_parser.shorthand)
 		end
 
 	test_invalid_shorthand

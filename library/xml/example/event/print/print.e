@@ -5,7 +5,7 @@ note
 		"Print sample"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,19 +49,24 @@ feature -- Processing
 		local
 			a_dtd_printer: XM_DTD_PRETTY_PRINT_FILTER
 			a_parser: XM_PARSER
+			l_filename: like filename
+			l_event_parser: like event_parser
 		do
+			l_filename := filename
+			l_event_parser := event_parser
+			check precondition_filename: l_filename /= Void then end
+			check precondition_event_parser: l_event_parser /= Void then end
 			error_handler.report_info_message ("parsing data...")
-			a_parser := event_parser
 
-			a_parser.set_dtd_resolver (new_file_resolver_current_directory)
-			a_parser.set_entity_resolver (new_file_resolver_current_directory)
+			l_event_parser.set_dtd_resolver (new_file_resolver_current_directory)
+			l_event_parser.set_entity_resolver (new_file_resolver_current_directory)
 
 			create a_dtd_printer.make_null
-			a_parser.set_dtd_callbacks (a_dtd_printer)
-			a_parser.set_callbacks (standard_callbacks_pipe (<<new_pretty_print>>))
-			a_parser.parse_from_system (filename)
-			if not a_parser.is_correct then
-				error_handler.report_error_message (a_parser.last_error_extended_description)
+			l_event_parser.set_dtd_callbacks (a_dtd_printer)
+			l_event_parser.set_callbacks (standard_callbacks_pipe (<<new_pretty_print>>))
+			l_event_parser.parse_from_system (l_filename)
+			if not l_event_parser.is_correct then
+				error_handler.report_error_message (l_event_parser.last_error_extended_description)
 				has_error := True
 			else
 				error_handler.report_info_message ("parsing ok.")
@@ -115,7 +120,7 @@ feature -- Parser
 			factory_not_void: Result /= Void
 		end
 
-	event_parser: XM_PARSER
+	event_parser: detachable XM_PARSER
 			-- XML parser
 
 feature -- Access
@@ -123,7 +128,7 @@ feature -- Access
 	has_error: BOOLEAN
 			-- Has an error occurred?
 
-	filename: STRING
+	filename: detachable STRING
 			-- Name of file to read
 
 	error_handler: UT_ERROR_HANDLER

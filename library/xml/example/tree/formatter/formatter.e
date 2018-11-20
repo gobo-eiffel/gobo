@@ -5,7 +5,7 @@ note
 		"Simple application that reads an XML file and outputs it again"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	in_filename: STRING
+	in_filename: detachable STRING
 			-- Name of the input file
 
-	out_filename: STRING
+	out_filename: detachable STRING
 			-- Name of the output file (see use_std_out)
 
 	use_stdout: BOOLEAN
@@ -62,10 +62,10 @@ feature -- Parser
 			factory_not_void: Result /= Void
 		end
 
-	event_parser: XM_PARSER
+	event_parser: detachable XM_PARSER
 			-- XML parser
 
-	tree_pipe: XM_TREE_CALLBACKS_PIPE
+	tree_pipe: detachable XM_TREE_CALLBACKS_PIPE
 			-- Tree generating callbacks
 
 feature -- Basic operations
@@ -83,19 +83,31 @@ feature -- Basic operations
 			os: KL_TEXT_OUTPUT_FILE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
+			l_in_filename: like in_filename
+			l_out_filename: like out_filename
+			l_event_parser: like event_parser
+			l_tree_pipe: like tree_pipe
 		do
+			l_in_filename := in_filename
+			l_out_filename := out_filename
+			l_event_parser := event_parser
+			l_tree_pipe := tree_pipe
+			check precondition_in_filename: l_in_filename /= Void then end
+			check precondition_event_parser: l_event_parser /= Void then end
+			check precondition_tree_pipe: l_tree_pipe /= Void then end
+
 			error_handler.report_info_message ("- parsing data...")
-			create in.make (in_filename)
+			create in.make (l_in_filename)
 			in.open_read
 			if not in.is_open_read then
-				create cannot_read.make (in_filename)
+				create cannot_read.make (l_in_filename)
 				error_handler.report_error (cannot_read)
 				has_error := True
 			else
-				event_parser.parse_from_stream (in)
+				l_event_parser.parse_from_stream (in)
 				in.close
-				if tree_pipe.error.has_error then
-					error_handler.report_error_message (tree_pipe.last_error)
+				if l_tree_pipe.error.has_error then
+					error_handler.report_error_message (l_tree_pipe.last_error)
 					has_error := True
 				else
 					error_handler.report_info_message ("- printing document...")
@@ -103,17 +115,18 @@ feature -- Basic operations
 
 					if use_stdout then
 						formatter.set_output (std.output)
-						formatter.process_document (tree_pipe.document)
+						formatter.process_document (l_tree_pipe.document)
 					else
-						create os.make (out_filename)
+						check precondition_out_filename: l_out_filename /= Void then end
+						create os.make (l_out_filename)
 						os.open_write
 						if not os.is_open_write then
-							create cannot_write.make (out_filename)
+							create cannot_write.make (l_out_filename)
 							error_handler.report_error (cannot_write)
 							has_error := True
 						else
 							formatter.set_output (os)
-							formatter.process_document (tree_pipe.document)
+							formatter.process_document (l_tree_pipe.document)
 							os.close
 						end
 					end
@@ -126,6 +139,8 @@ feature -- Basic operations
 			-- Read command line arguments.
 		local
 			parser_switch: STRING
+			l_tree_pipe: like tree_pipe
+			l_event_parser: like event_parser
 		do
 			if Arguments.argument_count < 2 then
 				error_handler.report_error (Usage_message)
@@ -134,21 +149,24 @@ feature -- Basic operations
 				parser_switch := Arguments.argument (1)
 				if parser_switch.is_equal ("--expat") then
 					if fact.is_expat_parser_available then
-						event_parser := fact.new_expat_parser
+						l_event_parser := fact.new_expat_parser
+						event_parser := l_event_parser
 					else
 						error_handler.report_error_message ("expat is not availabe, please choose other parser backend")
 						has_error := True
 					end
 				elseif parser_switch.is_equal ("--eiffel") then
-					create {XM_EIFFEL_PARSER} event_parser.make
+					create {XM_EIFFEL_PARSER} l_event_parser.make
+					event_parser := l_event_parser
 				else
 					error_handler.report_error (Usage_message)
 					has_error := True
 				end
 					-- Create standard pipe holder and bind it to event parser.
-				if not has_error then
-					create tree_pipe.make
-					event_parser.set_callbacks (tree_pipe.start)
+				if l_event_parser /= Void then
+					create l_tree_pipe.make
+					tree_pipe := l_tree_pipe
+					l_event_parser.set_callbacks (l_tree_pipe.start)
 				end
 				in_filename := Arguments.argument (2)
 				if Arguments.argument_count > 2 then

@@ -5,7 +5,7 @@ note
 		"Test XML byte order marker (BOM)"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,18 +29,16 @@ feature -- Test(s)
 			-- Test BOM used as UTF-8 file marker.
 		local
 			l_uri: UT_URI
+			l_parser: XM_EIFFEL_PARSER
 		do
-			create parser.make
+			create l_parser.make
 			l_uri := File_uri.filename_to_uri (file_system.pathname (data_dirname, "dummy.xml"))
-			parser.set_resolver (new_file_resolver_with_uri (l_uri))
-			parser.parse_from_system ("data/utf8bom.xml")
-			assert ("utf8_bom", parser.is_correct)
+			l_parser.set_resolver (new_file_resolver_with_uri (l_uri))
+			l_parser.parse_from_system ("data/utf8bom.xml")
+			assert ("utf8_bom", l_parser.is_correct)
 		end
 
 feature {NONE} -- Implementation
-
-	parser: XM_EIFFEL_PARSER
-			-- XML parser
 
 	data_dirname: STRING
 			-- Name of directory containing data files

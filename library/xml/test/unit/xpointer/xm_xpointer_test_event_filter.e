@@ -5,7 +5,7 @@ note
 		"Test xpointer evaluation for the event implementation"
 
 	library: "Gobo Eiffel XPointer Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #7 $"
@@ -43,6 +43,8 @@ feature -- Test
 			a_dtd_filter: XM_DTD_CALLBACKS_NULL
 			a_sink: XM_PRETTY_PRINT_FILTER
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
+			default_media_type: UT_MEDIA_TYPE
+			l_last_output: detachable STRING
 		do
 			system_id := xml_test_event_uri.full_reference
 			a_parser := new_eiffel_parser
@@ -57,7 +59,10 @@ feature -- Test
 			a_parser.set_callbacks (a_filter)
 			a_parser.set_dtd_callbacks (a_filter)
 			a_parser.parse_from_system (system_id)
-			assert ("Correct output", a_sink.last_output.count = 338)
+			l_last_output := a_sink.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert ("Correct output", l_last_output.count = 338)
 		end
 
 	test_shorthand_with_dtd_declared_id
@@ -69,6 +74,8 @@ feature -- Test
 			a_dtd_filter: XM_DTD_CALLBACKS_NULL
 			a_sink: XM_PRETTY_PRINT_FILTER
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
+			default_media_type: UT_MEDIA_TYPE
+			l_last_output: detachable STRING
 		do
 			system_id := xml_test_event_uri.full_reference
 			a_parser := new_eiffel_parser
@@ -85,7 +92,10 @@ feature -- Test
 			a_parser.set_callbacks (a_filter)
 			a_parser.set_dtd_callbacks (a_filter)
 			a_parser.parse_from_system (system_id)
-			assert ("Correct output", a_sink.last_output.count = 134)
+			l_last_output := a_sink.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert ("Correct output", l_last_output.count = 134)
 		end
 
 	test_pass_through
@@ -97,6 +107,8 @@ feature -- Test
 			a_dtd_filter: XM_DTD_CALLBACKS_NULL
 			a_sink: XM_PRETTY_PRINT_FILTER
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
+			default_media_type: UT_MEDIA_TYPE
+			l_last_output: detachable STRING
 		do
 			system_id := xml_test_event_uri.full_reference
 			a_parser := new_eiffel_parser
@@ -111,12 +123,11 @@ feature -- Test
 			a_parser.set_callbacks (a_filter)
 			a_parser.set_dtd_callbacks (a_filter)
 			a_parser.parse_from_system (system_id)
-			assert ("Correct output", a_sink.last_output.count = 2453)
+			l_last_output := a_sink.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert ("Correct output", l_last_output.count = 2453)
 		end
-
-
-	default_media_type: UT_MEDIA_TYPE
-			-- Default media type
 
 feature {NONE} -- Implementation
 

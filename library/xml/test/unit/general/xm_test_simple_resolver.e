@@ -5,7 +5,7 @@ note
 		"Test XML simple resolver(s)"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,7 @@ feature -- Test
 			-- Test resolve/resolve_finish calls are balanced.
 		local
 			string_resolver: TEST_STRING_EXTERNAL_RESOLVER
+			parser: XM_EIFFEL_PARSER
 		do
 			create parser.make
 
@@ -49,6 +50,8 @@ feature -- Test
 
 	test_file
 			-- Test file URI resolver.
+		local
+			parser: XM_EIFFEL_PARSER
 		do
 			create parser.make
 			parser.set_resolver (new_file_resolver_with_uri (data_uri))
@@ -63,6 +66,8 @@ feature -- Test
 
 	test_non_existing
 			-- Test non existing.
+		local
+			parser: XM_EIFFEL_PARSER
 		do
 			create parser.make
 			parser.set_resolver (new_file_resolver_with_uri (data_uri))
@@ -77,6 +82,8 @@ feature -- Test
 
 	test_file_error
 			-- Test file error resolver.
+		local
+			parser: XM_EIFFEL_PARSER
 		do
 			create parser.make
 			parser.set_resolver (new_file_resolver_with_uri (data_uri))
@@ -98,6 +105,7 @@ feature -- Test
 			-- Test parse_from_stream and resolver interaction.
 		local
 			a_stream: KL_STRING_INPUT_STREAM
+			parser: XM_EIFFEL_PARSER
 		do
 			create parser.make
 			parser.set_resolver (new_file_resolver_with_uri (data_uri))
@@ -123,9 +131,6 @@ feature {NONE} -- Implementation
 			assert_integers_equal (a_prefix + " row", a_row, a_position.row)
 			assert_integers_equal (a_prefix + " column", a_column, a_position.column)
 		end
-
-	parser: XM_EIFFEL_PARSER
-			-- XML parser
 
 	Relative_xml: STRING = "<!DOCTYPE doc [ <!ELEMENT doc (child*)> <!ELEMENT child EMPTY> <!ENTITY e SYSTEM 'data/relative2.xml'> ]><doc>&e;</doc>"
 			-- Top level doc for stream test.

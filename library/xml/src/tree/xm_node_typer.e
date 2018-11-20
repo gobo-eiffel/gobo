@@ -5,7 +5,7 @@ note
 		"Get static type of an XML node object without a reverse assignment"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ inherit
 			process_attribute
 		end
 
-feature
+feature -- Processing
 
 	process_element (a: XM_ELEMENT)
 			-- Element.

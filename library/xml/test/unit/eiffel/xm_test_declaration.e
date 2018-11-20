@@ -5,7 +5,7 @@ note
 		"Test XML declaration events"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -91,8 +91,8 @@ feature {NONE} -- Assert
 			a_parser.parse_from_string (a_in)
 
 			assert ("parsing ok", a_parser.is_correct)
-			assert ("version", STRING_.same_string ("1.0", a_filter.version))
-			assert ("encoding", STRING_.same_string (expected_encoding, a_filter.encoding))
+			assert ("version", attached a_filter.version as l_version and then STRING_.same_string ("1.0", l_version))
+			assert ("encoding", attached a_filter.encoding as l_encoding and then STRING_.same_string (expected_encoding, l_encoding))
 			assert ("standalone", expected_standalone = a_filter.standalone)
 		end
 
