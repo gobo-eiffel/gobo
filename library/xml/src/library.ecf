@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="xml"
-	uuid="E1FFE100-60B0-0017-0002-000020181009"
+	uuid="E1FFE100-60B0-0001-0015-001000000001"
 	library_target="xml">
 
 	<description>
@@ -19,18 +19,20 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true"/>
 		<capability>
 			<concurrency support="none"/>
 		</capability>
-		<library name="free_elks" location="$GOBO/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
-		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
-		<library name="lexical_skl" location="$GOBO/library/lexical/library_skl.ecf" readonly="true"/>
-		<library name="parse_skl" location="$GOBO/library/parse/library_skl.ecf" readonly="true"/>
-		<library name="structure" location="$GOBO/library/structure/library.ecf" readonly="true"/>
-		<library name="string" location="$GOBO/library/string/library.ecf" readonly="true"/>
-		<library name="utility" location="$GOBO/library/utility/library.ecf" readonly="true"/>
+		<variable name="GOBO_LIBRARY" value="../../.."/>
+		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
+		<library name="lexical_skl" location="${GOBO_LIBRARY}/library/lexical/library_skl.ecf" readonly="true"/>
+		<library name="parse_skl" location="${GOBO_LIBRARY}/library/parse/library_skl.ecf" readonly="true"/>
+		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
+		<library name="string" location="${GOBO_LIBRARY}/library/string/library.ecf" readonly="true"/>
+		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
 
 		<cluster name="xml" location="./" recursive="true">
 			<file_rule>
@@ -46,5 +48,37 @@
 				</condition>
 			</file_rule>
 		</cluster>
+		<external_include location="${EXPAT}/Source/lib">
+			<condition>
+				<custom name="GOBO_XML_EXPAT" value="true"/>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="${EXPAT}/include">
+			<condition>
+				<custom name="GOBO_XML_EXPAT" value="true"/>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_library location="${EXPAT}/Bin/libexpat.lib">
+			<condition>
+				<custom name="GOBO_XML_EXPAT" value="true"/>
+				<platform value="windows"/>
+				<concurrency value="none"/>
+			</condition>
+		</external_library>
+		<external_library location="${EXPAT}/Bin/libexpatMT.lib">
+			<condition>
+				<custom name="GOBO_XML_EXPAT" value="true"/>
+				<platform value="windows"/>
+				<concurrency excluded_value="none"/>
+			</condition>
+		</external_library>
+		<external_linker_flag value="-lexpat">
+			<condition>
+				<custom name="GOBO_XML_EXPAT" value="true"/>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_linker_flag>
 	</target>
 </system>

@@ -18,6 +18,11 @@ L: Library/Tool Id
    0012 - argument
    0013 - lexical
    0014 - parse
+   0015 - xml
+   0016 - xpath
+   0017 - xslt
+   0018 - tools
+   0019 - test
    1001 - gec
    1002 - gecc
    1003 - gelint
