@@ -5,7 +5,7 @@ note
 		"Element nodes in an XSLT stylesheet"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #11 $"
@@ -55,7 +55,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE;
-	an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+	an_attribute_collection: detachable XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list: detachable DS_ARRAYED_LIST [INTEGER];
 	a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		require
@@ -2673,7 +2673,7 @@ feature {NONE} -- Implementation
 		ensure
 			new_dummy_context_not_void: Result /= Void
 		end
-		
+
 invariant
 
 	validation_reporting: Report_always <= reporting_circumstances and then reporting_circumstances <= Report_if_instantiated

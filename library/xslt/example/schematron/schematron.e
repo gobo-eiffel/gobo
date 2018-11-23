@@ -23,8 +23,8 @@ note
 		%zero length, set code 0, else set code 1 (and the STRING would %
 		%contain the validation report)."
 
-	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Colim Adams and others"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2005-2018, Colim Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,7 +110,7 @@ feature -- Processing
 			if Arguments.argument_count = 3 then
 				an_argument := Arguments.argument (1)
 				data_filename := Arguments.argument (2)
-				schema_filename  := Arguments.argument (3)
+				schema_filename := Arguments.argument (3)
 				if an_argument.count > 9 and then
 					an_argument.substring (1, 9).is_equal ("--output=") then
 					output_filename := an_argument.substring (10, an_argument.count)
@@ -120,10 +120,12 @@ feature -- Processing
 				end
 			elseif Arguments.argument_count = 2 then
 				data_filename := Arguments.argument (1)
-				schema_filename  := Arguments.argument (2)
+				schema_filename := Arguments.argument (2)
 			else
 				error_handler.report_error (usage_message)
 				Exceptions.die (2)
+				data_filename := ""
+				schema_filename := ""
 			end
 		ensure
 			filenames_set: data_filename /= Void and schema_filename /= Void
@@ -135,7 +137,7 @@ feature -- Processing
 			a_source: XM_XSLT_URI_SOURCE
 			a_stylesheet_source: XM_XSLT_SOURCE
 			an_output: XM_OUTPUT
-			a_transformer: XM_XSLT_TRANSFORMER
+			a_transformer: detachable XM_XSLT_TRANSFORMER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
@@ -148,10 +150,13 @@ feature -- Processing
 			create {XM_XSLT_URI_SOURCE} a_stylesheet_source.make (schematron_basic_uri.full_reference)
 			transformer_factory.create_new_transformer (a_stylesheet_source, dummy_uri)
 			if transformer_factory.was_error then
-				report_processing_error ("Could not compile schematron-basic.xsl", transformer_factory.last_error_message)
+				check was_error: attached transformer_factory.last_error_message as l_last_error_message then
+					report_processing_error ("Could not compile schematron-basic.xsl", l_last_error_message)
+				end
 				Exceptions.die (3)
 			else
 				a_transformer := transformer_factory.created_transformer
+				check not_transformer_factory_was_error: a_transformer /= Void then end
 				create an_output
 				an_output.set_output_to_string
 				create a_result.make (an_output, Validator_uri)
@@ -166,7 +171,9 @@ feature -- Processing
 				-- This works because "create configuration.make_with_defaults" will
 				--  have set the entity resolver to a catalog resolver.
 
-				shared_catalog_manager.bootstrap_resolver.well_known_system_ids.force (an_output.last_output, Validator_uri)
+				check an_output_set_output_to_string: attached an_output.last_output as l_last_output then
+					shared_catalog_manager.bootstrap_resolver.well_known_system_ids.force (l_last_output, Validator_uri)
+				end
 			end
 		ensure
 			transformer_factory_created: transformer_factory /= Void
@@ -180,7 +187,7 @@ feature -- Processing
 			a_source: XM_XSLT_URI_SOURCE
 			a_stylesheet_source: XM_XSLT_SOURCE
 			an_output: XM_OUTPUT
-			a_transformer: XM_XSLT_TRANSFORMER
+			a_transformer: detachable XM_XSLT_TRANSFORMER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_stream: KL_TEXT_OUTPUT_FILE
 			a_uri: UT_URI
@@ -194,15 +201,18 @@ feature -- Processing
 			create {XM_XSLT_URI_SOURCE} a_stylesheet_source.make (Validator_uri)
 			transformer_factory.create_new_transformer (a_stylesheet_source, dummy_uri)
 			if transformer_factory.was_error then
-				report_processing_error ("Could not compile validating-stylesheet", transformer_factory.last_error_message)
+				check was_error: attached transformer_factory.last_error_message as l_last_error_message then
+					report_processing_error ("Could not compile validating-stylesheet", l_last_error_message)
+				end
 				Exceptions.die (2)
 			else
 				a_transformer := transformer_factory.created_transformer
+				check not_was_error: a_transformer /= Void then end
 				create an_output -- to stdout
-				if output_filename = Void then
+				if not attached output_filename as l_output_filename then
 					create a_result.make (an_output, "stdout:")
 				else
-					create a_stream.make (output_filename)
+					create a_stream.make (l_output_filename)
 					a_stream.open_write
 					an_output.set_output_stream (a_stream)
 					a_cwd := file_system.current_working_directory
@@ -217,7 +227,7 @@ feature -- Processing
 					end
 					a_string := STRING_.concat ("file://", a_cwd)
 					create a_uri.make (STRING_.concat (a_string, "/"))
-					create a_uri.make_resolve (a_uri, output_filename)
+					create a_uri.make_resolve (a_uri, l_output_filename)
 					create a_result.make (an_output, a_uri.full_reference)
 				end
 				create {XM_XSLT_URI_SOURCE} a_source.make (uris.item (2))
@@ -248,7 +258,8 @@ feature {NONE} -- Implementation
 	error_handler: UT_ERROR_HANDLER
 		-- Error handler
 
-	data_filename, schema_filename, output_filename: STRING
+	data_filename, schema_filename: STRING
+	output_filename: detachable STRING
 			-- File names from command line
 
 	Validator_uri: STRING = "string:/schematron-rules"

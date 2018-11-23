@@ -5,7 +5,7 @@ note
 	"Objects that receive notification of errors and store them in a string"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Events
 
-	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
+	warning (a_message: STRING; a_locator: detachable XM_XPATH_LOCATOR)
 			-- Receive notification of a warning.
 		do
 			if warnings_are_recoverable_errors then
@@ -103,7 +103,7 @@ feature -- Events
 feature {NONE} -- Implementation
 
 
-	set_error_text (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
+	set_error_text (a_message: STRING; a_locator: detachable XM_XPATH_LOCATOR)
 			-- Set_error_text.
 		require
 			message_not_void: a_message /= Void

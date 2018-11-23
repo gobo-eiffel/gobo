@@ -4,8 +4,8 @@ note
 
 		"XML serialization using XSLT serialzer options (see http://www.w3.org/TR/xslt20/#element-output)"
 
-	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2007-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -119,47 +119,47 @@ feature {NONE} -- Argument processing
 		require
 			arguments_parser_not_void: arguments_parser /= Void
 		do
-			if method_option.was_found then
-				output_properties.set_method (method_option.parameter, 0)
+			if method_option.was_found and then attached method_option.parameter as l_method_option_parameter then
+				output_properties.set_method (l_method_option_parameter, 0)
 			end
-			if bom_option.was_found then
-				output_properties.set_byte_order_mark_required (STRING_.same_string (bom_option.parameter, Yes_value), 0)
+			if bom_option.was_found and then attached bom_option.parameter as l_bom_option_parameter then
+				output_properties.set_byte_order_mark_required (STRING_.same_string (l_bom_option_parameter, Yes_value), 0)
 			end
-			if doctype_public_option.was_found then
-				output_properties.set_doctype_public (doctype_public_option.parameter, 0)
+			if doctype_public_option.was_found and then attached doctype_public_option.parameter as l_doctype_public_option_parameter then
+				output_properties.set_doctype_public (l_doctype_public_option_parameter, 0)
 			end
-			if doctype_system_option.was_found then
-				output_properties.set_doctype_system (doctype_system_option.parameter, 0)
+			if doctype_system_option.was_found and then attached doctype_system_option.parameter as l_doctype_system_option_parameter then
+				output_properties.set_doctype_system (l_doctype_system_option_parameter, 0)
 			end
-			if encoding_option.was_found then
-				output_properties.set_encoding (encoding_option.parameter, 0)
+			if encoding_option.was_found and then attached encoding_option.parameter as l_encoding_option_parameter then
+				output_properties.set_encoding (l_encoding_option_parameter, 0)
 			end
-			if escape_uri_attributes_option.was_found then
-				output_properties.set_escape_uri_attributes (STRING_.same_string (escape_uri_attributes_option.parameter, Yes_value), 0)
+			if escape_uri_attributes_option.was_found and then attached escape_uri_attributes_option.parameter as l_escape_uri_attributes_option_parameter then
+				output_properties.set_escape_uri_attributes (STRING_.same_string (l_escape_uri_attributes_option_parameter, Yes_value), 0)
 			end
-			if include_content_type_option.was_found then
-				output_properties.set_include_content_type (STRING_.same_string (include_content_type_option.parameter, Yes_value), 0)
+			if include_content_type_option.was_found and then attached include_content_type_option.parameter as l_include_content_type_option_parameter then
+				output_properties.set_include_content_type (STRING_.same_string (l_include_content_type_option_parameter, Yes_value), 0)
 			end
-			if indent_option.was_found then
-				output_properties.set_indent (STRING_.same_string (indent_option.parameter, Yes_value), 0)
+			if indent_option.was_found and then attached indent_option.parameter as l_indent_option_parameter then
+				output_properties.set_indent (STRING_.same_string (l_indent_option_parameter, Yes_value), 0)
 			end
-			if media_type_option.was_found then
-				output_properties.set_media_type (media_type_option.parameter, 0)
+			if media_type_option.was_found and then attached media_type_option.parameter as l_media_type_option_parameter then
+				output_properties.set_media_type (l_media_type_option_parameter, 0)
 			end
-			if normalization_form_option.was_found then
-				output_properties.set_normalization_form (normalization_form_option.parameter, 0)
+			if normalization_form_option.was_found and then attached normalization_form_option.parameter as l_normalization_form_option_parameter then
+				output_properties.set_normalization_form (l_normalization_form_option_parameter, 0)
 			end
-			if omit_xml_declaration_option.was_found then
-				output_properties.set_omit_xml_declaration (STRING_.same_string (omit_xml_declaration_option.parameter, Yes_value), 0)
+			if omit_xml_declaration_option.was_found and then attached omit_xml_declaration_option.parameter as l_omit_xml_declaration_option_parameter then
+				output_properties.set_omit_xml_declaration (STRING_.same_string (l_omit_xml_declaration_option_parameter, Yes_value), 0)
 			end
-			if standalone_option.was_found then
-				output_properties.set_standalone (standalone_option.parameter, 0)
+			if standalone_option.was_found and then attached standalone_option.parameter as l_standalone_option_parameter then
+				output_properties.set_standalone (l_standalone_option_parameter, 0)
 			end
-			if undeclare_prefixes_option.was_found then
-				output_properties.set_undeclare_prefixes (STRING_.same_string (undeclare_prefixes_option.parameter,Yes_value), 0)
+			if undeclare_prefixes_option.was_found and then attached undeclare_prefixes_option.parameter as l_undeclare_prefixes_option_parameter then
+				output_properties.set_undeclare_prefixes (STRING_.same_string (l_undeclare_prefixes_option_parameter, Yes_value), 0)
 			end
-			if version_option.was_found then
-				output_properties.set_version (version_option.parameter, 0)
+			if version_option.was_found and then attached version_option.parameter as l_version_option_parameter then
+				output_properties.set_version (l_version_option_parameter, 0)
 			end
 		end
 

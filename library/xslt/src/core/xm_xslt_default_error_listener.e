@@ -6,7 +6,7 @@ note
 	%if the user does not supply an error listener"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Events
 
-	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
+	warning (a_message: STRING; a_locator: detachable XM_XPATH_LOCATOR)
 			-- Receive notification of a warning.
 		local
 			l_error: XM_XPATH_ERROR_VALUE

@@ -5,7 +5,7 @@ note
 		"XSLT node factory"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #6 $"
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Creation
 
-	new_element_node (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+	new_element_node (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: detachable XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list: detachable DS_ARRAYED_LIST [INTEGER];
 							a_name_code: INTEGER; a_sequence_number: INTEGER): detachable XM_XPATH_TREE_ELEMENT
 			-- New element node.
 		local
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 	configuration: XM_XSLT_CONFIGURATION
 			-- System configuration
 
-	new_xslt_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+	new_xslt_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: detachable XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list: detachable DS_ARRAYED_LIST [INTEGER];
 							a_name_code: INTEGER; a_sequence_number: INTEGER): detachable XM_XSLT_STYLE_ELEMENT
 			-- New XSLT element.
 		require
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	possible_literal_result_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+	possible_literal_result_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: detachable XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list: detachable DS_ARRAYED_LIST [INTEGER];
 							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT
 			-- New literal result element, or extension element.
 			-- TODO - add a locator
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			Result.process_default_collation_attribute (Xslt_default_collation_attribute)
 		end
 
-	new_gexslt_user_defined_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+	new_gexslt_user_defined_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: detachable XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list: detachable DS_ARRAYED_LIST [INTEGER];
 							a_name_code: INTEGER; a_sequence_number: INTEGER): detachable XM_XSLT_STYLE_ELEMENT
 			-- New gexslt instruction or User-defined Element (or child of latter).
 		require
