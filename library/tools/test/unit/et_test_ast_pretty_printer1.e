@@ -5,7 +5,7 @@ note
 		"Test features of class ET_AST_PRETTY_PRINTER"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,8 +77,12 @@ feature {NONE} -- Test
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_prefixed_name: STRING
 			l_full_test: BOOLEAN
+			l_filename: detachable STRING
 		do
 			if a_class.is_in_cluster then
+				l_filename := a_class.filename
+				assert (a_class.lower_name + "_is_in_cluster", l_filename /= Void)
+				check asserted_above: l_filename /= Void then end
 				l_full_test := variables.has ("full_test")
 				l_prefixed_name := a_class.group.prefixed_name
 				if l_full_test or else (l_prefixed_name.count > 2 and then (l_prefixed_name.item (1) = 'd' and l_prefixed_name.item (2) = 't')) then
@@ -93,7 +97,7 @@ feature {NONE} -- Test
 					a_class.process (l_printer)
 					l_printer.set_null_file
 					l_file.close
-					assert_files_equal (a_class.lower_name + "_diff", a_class.filename, "gobo1.txt")
+					assert_files_equal (a_class.lower_name + "_diff", l_filename, "gobo1.txt")
 				end
 			end
 		end
@@ -116,14 +120,14 @@ feature -- Execution
 	tear_down
 			-- Tear down after a test.
 		do
-			if old_cwd /= Void then
-				file_system.cd (old_cwd)
+			if attached old_cwd as l_old_cwd then
+				file_system.cd (l_old_cwd)
 				-- file_system.recursive_delete_directory (testdir)
 				old_cwd := Void
 			end
 		end
 
-	old_cwd: STRING
+	old_cwd: detachable STRING
 			-- Initial current working directory
 
 feature {NONE} -- Implementation

@@ -50,6 +50,8 @@ feature -- Test
 			l_input_file.close
 			l_ecf_system_config := l_ecf_parser.last_system_config
 			assert ("no_ecf_error", not l_ecf_error_handler.has_error)
+			assert ("ecf_system_config_not_void", l_ecf_system_config /= Void)
+			check asserted_above: l_ecf_system_config /= Void then end
 			create l_output_file.make ("gobo.txt")
 			l_output_file.open_write
 			assert ("is_open_write", l_output_file.is_open_write)
@@ -81,14 +83,14 @@ feature -- Execution
 	tear_down
 			-- Tear down after a test.
 		do
-			if old_cwd /= Void then
-				file_system.cd (old_cwd)
+			if attached old_cwd as l_old_cwd then
+				file_system.cd (l_old_cwd)
 				-- file_system.recursive_delete_directory (testdir)
 				old_cwd := Void
 			end
 		end
 
-	old_cwd: STRING
+	old_cwd: detachable STRING
 			-- Initial current working directory
 
 feature {NONE} -- Implementation

@@ -108,6 +108,7 @@ feature -- Test
 			l_system := l_ecf_parser.last_system
 			l_ecf_file.close
 			assert ("system_not_void", l_system /= Void)
+			check asserted_above: l_system /= Void then end
 			create l_system_processor.make
 			l_system_processor.set_ise_version (ise_version)
 				-- We restrict this test to files that contain only one class.

@@ -108,6 +108,7 @@ feature -- Test
 			l_system := l_ecf_parser.last_system
 			l_ecf_file.close
 			assert ("system_not_void", l_system /= Void)
+			check asserted_above: l_system /= Void then end
 			create l_system_processor.make
 			l_system_processor.set_ise_version (ise_version)
 				-- We restrict this test to files that contain only one class.
@@ -130,8 +131,12 @@ feature {NONE} -- Test
 		local
 			l_printer: ET_AST_PRINTER
 			l_output: KL_STRING_OUTPUT_STREAM
+			l_filename: detachable STRING
 		do
 			if a_class.is_in_cluster then
+				l_filename := a_class.filename
+				assert (a_class.lower_name + "_is_in_cluster", l_filename /= Void)
+				check asserted_above: l_filename /= Void then end
 				a_class.process (a_system_processor.eiffel_parser)
 				assert (a_class.lower_name + "_parsed", a_class.is_parsed)
 				assert (a_class.lower_name + "_no_syntax_error", not a_class.has_syntax_error)
@@ -140,7 +145,7 @@ feature {NONE} -- Test
 				l_printer.set_file (l_output)
 				a_class.process (l_printer)
 				l_printer.set_null_file
-				assert_file_equal_to_string (a_class.lower_name + "_diff", a_class.filename, l_output.string)
+				assert_file_equal_to_string (a_class.lower_name + "_diff", l_filename, l_output.string)
 			end
 		end
 
