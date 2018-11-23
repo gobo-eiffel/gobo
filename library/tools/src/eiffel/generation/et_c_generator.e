@@ -446,7 +446,13 @@ feature {NONE} -- Compilation script generation
 					l_includes.append_character (' ')
 				end
 				l_includes.append_string ("-I")
-				l_includes.append_string (l_pathname)
+				if l_pathname.starts_with ("%"") then
+					l_includes.append_string (l_pathname)
+				else
+					l_includes.append_character ('%"')
+					l_includes.append_string (l_pathname)
+					l_includes.append_character ('%"')
+				end
 				i := i + 1
 			end
 			l_variables.force (l_includes, "includes")
@@ -514,7 +520,13 @@ feature {NONE} -- Compilation script generation
 					if i /= 1 then
 						l_libs.append_character (' ')
 					end
-					l_libs.append_string (l_pathname)
+					if l_pathname.starts_with ("%"") then
+						l_libs.append_string (l_pathname)
+					else
+						l_libs.append_character ('%"')
+						l_libs.append_string (l_pathname)
+						l_libs.append_character ('%"')
+					end
 				end
 				i := i + 1
 			end
@@ -552,7 +564,13 @@ feature {NONE} -- Compilation script generation
 					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "clib_runtime", l_external_c_filenames)
 				else
 					l_obj_filenames.append_character (' ')
-					l_obj_filenames.append_string (l_pathname)
+					if l_pathname.starts_with ("%"") then
+						l_obj_filenames.append_string (l_pathname)
+					else
+						l_obj_filenames.append_character ('%"')
+						l_obj_filenames.append_string (l_pathname)
+						l_obj_filenames.append_character ('%"')
+					end
 				end
 				i := i + 1
 			end
@@ -634,6 +652,9 @@ feature {NONE} -- Compilation script generation
 						l_replacement := STRING_.new_empty_string (l_pathname, 6)
 						l_replacement.append_string ("${\1\}")
 						l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+						if not l_pathname.starts_with ("%"") then
+							l_pathname := "%"" + l_pathname + "%""
+						end
 						l_variables.force (l_pathname, "makefile")
 						l_command_name := template_expander.expand_from_values (l_make_template, l_variables)
 						l_file.put_line (l_command_name)
@@ -689,7 +710,13 @@ feature {NONE} -- Compilation script generation
 							l_file.put_line (l_command_name)
 						end
 						l_obj_filenames.append_character (' ')
-						l_obj_filenames.append_string (l_res_filename)
+						if l_res_filename.starts_with ("%"") then
+							l_obj_filenames.append_string (l_res_filename)
+						else
+							l_obj_filenames.append_character ('%"')
+							l_obj_filenames.append_string (l_res_filename)
+							l_obj_filenames.append_character ('%"')
+						end
 						i := i + 1
 					end
 					l_rc_filename :=  l_base_name + rc_file_extension
