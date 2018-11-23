@@ -5,7 +5,7 @@ note
 		"Expat API"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ feature -- Creating and destroying parsers
 			-- specified by the external protocol or null if there
 			-- is none specified.
 		external
-			"C (XML_Char *): EIF_POINTER | <expat.h>"
+			"C signature (XML_Char *): EIF_POINTER use <expat.h>"
 		alias
 			"XML_ParserCreate"
 		end
@@ -57,7 +57,7 @@ feature -- Creating and destroying parsers
 			-- When a namespace is not declared, the name and prefix will
 			-- be passed through without expansion.
 		external
-			"C (XML_Char *, XML_Char): EIF_POINTER | <expat.h>"
+			"C signature (XML_Char *, XML_Char): EIF_POINTER use <expat.h>"
 		alias
 			"XML_ParserCreateNS"
 		end
@@ -72,7 +72,7 @@ feature -- Creating and destroying parsers
 			-- All further memory operations used for the created parser
 			-- will come from the given suite.
 		external
-			"C (XML_Char *, XML_Memory_Handling_Suite *, XML_Char *): EIF_POINTER | <expat.h>"
+			"C signature (XML_Char *, XML_Memory_Handling_Suite *, XML_Char *): EIF_POINTER use <expat.h>"
 		alias
 			"XML_ParserCreate_MM"
 		end
@@ -100,7 +100,7 @@ feature -- Creating and destroying parsers
 			-- Returns 0 if out of memory.  Otherwise returns a new XM_Parser
 			-- object.
 		external
-			"C (XML_Parser, XML_Char *, XML_Char *): EIF_POINTER | <expat.h>"
+			"C signature (XML_Parser, XML_Char *, XML_Char *): EIF_POINTER use <expat.h>"
 		alias
 			"XML_ExternalEntityParserCreate"
 		end
@@ -111,7 +111,7 @@ feature -- Creating and destroying parsers
 			-- have called `exml_XM_SetUserData' with a Void argument,
 			-- else your callback is never available for the gc again.
 		external
-			"C (XML_Parser) | <expat.h>"
+			"C signature (XML_Parser) use <expat.h>"
 		alias
 			"XML_ParserFree"
 		end
@@ -127,7 +127,7 @@ feature -- Parsing
 			a_parser_not_null: a_parser /= default_pointer
 			len_not_negative: len >= 0
 		external
-			"C (XML_Parser, int): EIF_POINTER | <expat.h>"
+			"C signature (XML_Parser, int): EIF_POINTER use <expat.h>"
 		alias
 			"XML_GetBuffer"
 		ensure
@@ -170,7 +170,7 @@ feature -- Parsing
 			s_not_null: s /= default_pointer
 			len_not_negative: len >= 0
 		external
-			"C (XML_Parser, char *, int, int): EIF_INTEGER | <expat.h>"
+			"C signature (XML_Parser, char *, int, int): EIF_INTEGER use <expat.h>"
 		alias
 			"XML_Parse"
 		end
@@ -187,7 +187,7 @@ feature -- Parsing
 			a_parser_not_null: a_parser /= default_pointer
 			len_not_negative: len >= 0
 		external
-			"C (XML_Parser, int, int): EIF_INTEGER | <expat.h>"
+			"C signature (XML_Parser, int, int): EIF_INTEGER use <expat.h>"
 		alias
 			"XML_ParseBuffer"
 		end
@@ -200,7 +200,7 @@ feature -- Error reporting
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser): EIF_INTEGER | <expat.h>"
+			"C signature (XML_Parser): EIF_INTEGER use <expat.h>"
 		alias
 			"XML_GetErrorCode"
 		end
@@ -208,7 +208,7 @@ feature -- Error reporting
 	exml_XML_ErrorString (code: INTEGER): POINTER
 			-- Return a string describing the error.
 		external
-			"C (int): EIF_POINTER | <expat.h>"
+			"C signature (int): EIF_POINTER use <expat.h>"
 		alias
 			"XML_ErrorString"
 		end
@@ -228,7 +228,7 @@ feature -- Parse state
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser): EIF_INTEGER | <expat.h>"
+			"C signature (XML_Parser): EIF_INTEGER use <expat.h>"
 		alias
 			"XML_GetCurrentLineNumber"
 		end
@@ -237,7 +237,7 @@ feature -- Parse state
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser): EIF_INTEGER | <expat.h>"
+			"C signature (XML_Parser): EIF_INTEGER use <expat.h>"
 		alias
 			"XML_GetCurrentColumnNumber"
 		end
@@ -246,7 +246,7 @@ feature -- Parse state
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser): EIF_INTEGER | <expat.h>"
+			"C signature (XML_Parser): EIF_INTEGER use <expat.h>"
 		alias
 			"XML_GetCurrentByteIndex"
 		end
@@ -310,7 +310,7 @@ feature -- Miscellaneous
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, void *) | <expat.h>"
+			"C signature (XML_Parser, void *) use <expat.h>"
 		alias
 			"XML_SetUserData"
 		end
@@ -347,7 +347,7 @@ feature -- Miscellaneous
 			a_parser_not_null: a_parser /= default_pointer
 			a_base_not_null: a_base /= default_pointer
 		external
-			"C (XML_Parser, const XML_Char *): EIF_BOOLEAN | <expat.h>"
+			"C signature (XML_Parser, const XML_Char *): EIF_BOOLEAN use <expat.h>"
 		alias
 			"XML_SetBase"
 		end
@@ -356,7 +356,7 @@ feature -- Miscellaneous
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser): EIF_POINTER | <expat.h>"
+			"C signature (XML_Parser): EIF_POINTER use <expat.h>"
 		alias
 			"XML_GetBase"
 		end
@@ -387,15 +387,15 @@ feature -- Miscellaneous
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, enum XML_ParamEntityParsing): unsigned char | <expat.h>"
+			"C inline use <expat.h>"
 		alias
-			"XML_SetParamEntityParsing"
+			"return EIF_TEST(XML_SetParamEntityParsing((XML_Parser)$a_parser, (enum XML_ParamEntityParsing)$parsing));"
 		end
 
 	exml_XML_ExpatVersion: POINTER
 			-- Return a string containing the version number of this expat
 		external
-			"C (): EIF_POINTER | <expat.h>"
+			"C signature (): EIF_POINTER use <expat.h>"
 		alias
 			"XML_ExpatVersion"
 		end
@@ -406,7 +406,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_ElementDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_ElementDeclHandler) use <expat.h>"
 		alias
 			"XML_SetElementDeclHandler"
 		end
@@ -415,7 +415,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_AttlistDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_AttlistDeclHandler) use <expat.h>"
 		alias
 			"XML_SetAttlistDeclHandler"
 		end
@@ -424,7 +424,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_XmlDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_XmlDeclHandler) use <expat.h>"
 		alias
 			"XML_SetXmlDeclHandler"
 		end
@@ -433,7 +433,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_EntityDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_EntityDeclHandler) use <expat.h>"
 		alias
 			"XML_SetEntityDeclHandler"
 		end
@@ -442,7 +442,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_StartElementHandler, XML_EndElementHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_StartElementHandler, XML_EndElementHandler) use <expat.h>"
 		alias
 			"XML_SetElementHandler"
 		end
@@ -451,7 +451,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_StartElementHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_StartElementHandler) use <expat.h>"
 		alias
 			"XML_SetStartElementHandler"
 		end
@@ -460,7 +460,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_EndElementHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_EndElementHandler) use <expat.h>"
 		alias
 			"XML_SetEndElementHandler"
 		end
@@ -469,7 +469,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_CharacterDataHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_CharacterDataHandler) use <expat.h>"
 		alias
 			"XML_SetCharacterDataHandler"
 		end
@@ -478,7 +478,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_ProcessingInstructionHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_ProcessingInstructionHandler) use <expat.h>"
 		alias
 			"XML_SetProcessingInstructionHandler"
 		end
@@ -487,7 +487,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_CommentHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_CommentHandler) use <expat.h>"
 		alias
 			"XML_SetCommentHandler"
 		end
@@ -496,7 +496,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_StartCdataSectionHandler, XML_EndCdataSectionHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_StartCdataSectionHandler, XML_EndCdataSectionHandler) use <expat.h>"
 		alias
 			"XML_SetCdataSectionHandler"
 		end
@@ -505,7 +505,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_StartCdataSectionHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_StartCdataSectionHandler) use <expat.h>"
 		alias
 			"XML_SetStartCdataSectionHandler"
 		end
@@ -514,7 +514,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_EndCdataSectionHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_EndCdataSectionHandler) use <expat.h>"
 		alias
 			"XML_SetEndCdataSectionHandler"
 		end
@@ -526,7 +526,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_DefaultHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_DefaultHandler) use <expat.h>"
 		alias
 			"XML_SetDefaultHandler"
 		end
@@ -538,7 +538,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_DefaultHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_DefaultHandler) use <expat.h>"
 		alias
 			"XML_SetDefaultHandlerExpand"
 		end
@@ -547,7 +547,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_StartDoctypeDeclHandler, XML_EndDoctypeDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_StartDoctypeDeclHandler, XML_EndDoctypeDeclHandler) use <expat.h>"
 		alias
 			"XML_SetDoctypeDeclHandler"
 		end
@@ -556,7 +556,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_StartDoctypeDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_StartDoctypeDeclHandler) use <expat.h>"
 		alias
 			"XML_SetStartDoctypeDeclHandler"
 		end
@@ -565,7 +565,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_EndDoctypeDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_EndDoctypeDeclHandler) use <expat.h>"
 		alias
 			"XML_SetEndDoctypeDeclHandler"
 		end
@@ -574,7 +574,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_NotationDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_NotationDeclHandler) use <expat.h>"
 		alias
 			"XML_SetNotationDeclHandler"
 		end
@@ -583,7 +583,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_StartNamespaceDeclHandler, XML_EndNamespaceDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_StartNamespaceDeclHandler, XML_EndNamespaceDeclHandler) use <expat.h>"
 		alias
 			"XML_SetNamespaceDeclHandler"
 		end
@@ -592,7 +592,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_StartNamespaceDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_StartNamespaceDeclHandler) use <expat.h>"
 		alias
 			"XML_SetStartNamespaceDeclHandler"
 		end
@@ -601,7 +601,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_EndNamespaceDeclHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_EndNamespaceDeclHandler) use <expat.h>"
 		alias
 			"XML_SetEndNamespaceDeclHandler"
 		end
@@ -610,7 +610,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_NotStandaloneHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_NotStandaloneHandler) use <expat.h>"
 		alias
 			"XML_SetNotStandaloneHandler"
 		end
@@ -619,7 +619,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser,  XML_ExternalEntityRefHandler) | <expat.h>"
+			"C signature (XML_Parser, XML_ExternalEntityRefHandler) use <expat.h>"
 		alias
 			"XML_SetExternalEntityRefHandler"
 		end
@@ -628,7 +628,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, void *) | <expat.h>"
+			"C signature (XML_Parser, void *) use <expat.h>"
 		alias
 			"XML_SetExternalEntityRefHandlerArg"
 		end
@@ -637,7 +637,7 @@ feature -- Handlers
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C (XML_Parser, XML_UnknownEncodingHandler, void *) | <expat.h>"
+			"C signature (XML_Parser, XML_UnknownEncodingHandler, void *) use <expat.h>"
 		alias
 			"XML_SetUnknownEncodingHandler"
 		end
@@ -646,21 +646,21 @@ feature -- XML_ParamEntityParsing enum
 
 	XML_PARAM_ENTITY_PARSING_NEVER: INTEGER
 		external
-			"C [macro <expat.h>]"
+			"C macro use <expat.h>"
 		alias
 			"XML_PARAM_ENTITY_PARSING_NEVER"
 		end
 
 	XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE: INTEGER
 		external
-			"C [macro <expat.h>]"
+			"C macro use <expat.h>"
 		alias
 			"XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE"
 		end
 
 	XML_PARAM_ENTITY_PARSING_ALWAYS: INTEGER
 		external
-			"C [macro <expat.h>]"
+			"C macro use <expat.h>"
 		alias
 			"XML_PARAM_ENTITY_PARSING_ALWAYS"
 		end
@@ -669,42 +669,42 @@ feature -- XML_Content_Type enum
 
 	XML_CTYPE_EMPTY: INTEGER
 		external
-			"C [macro <expat.h>]"
+			"C macro use <expat.h>"
 		alias
 			"XML_CTYPE_EMPTY"
 		end
 
 	XML_CTYPE_ANY: INTEGER
 		external
-			"C [macro <expat.h>]"
+			"C macro use <expat.h>"
 		alias
 			"XML_CTYPE_ANY"
 		end
 
 	XML_CTYPE_MIXED: INTEGER
 		external
-			"C [macro <expat.h>]"
+			"C macro use <expat.h>"
 		alias
 			"XML_CTYPE_MIXED"
 		end
 
 	XML_CTYPE_NAME: INTEGER
 		external
-			"C [macro <expat.h>]"
+			"C macro use <expat.h>"
 		alias
 			"XML_CTYPE_NAME"
 		end
 
 	XML_CTYPE_CHOICE: INTEGER
 		external
-			"C [macro <expat.h>]"
+			"C macro use <expat.h>"
 		alias
 			"XML_CTYPE_CHOICE"
 		end
 
 	XML_CTYPE_SEQ: INTEGER
 		external
-			"C [macro <expat.h>]"
+			"C macro use <expat.h>"
 		alias
 			"XML_CTYPE_SEQ"
 		end
@@ -913,52 +913,44 @@ feature -- XML_cp members
 
 	exml_XML_cp_size: INTEGER
 		external
-			"C [macro <expat.h>]: EIF_INTEGER"
+			"C macro use <expat.h>"
 		alias
-			"sizeof(XML_Content)"
+			"(EIF_INTEGER)sizeof(XML_Content)"
 		end
 
 	exml_XML_cp_type (cp: POINTER): INTEGER
 		require
 			have_struct_pointer: cp /= default_pointer
 		external
-			"C [struct <expat.h>] (struct XML_cp): EIF_INTEGER"
+			"C inline use <expat.h>"
 		alias
-			"type"
+			"return ((struct XML_cp *)$cp)->type;"
 		end
 
 	exml_XML_cp_quant (cp: POINTER): INTEGER
 		require
 			have_struct_pointer: cp /= default_pointer
 		external
-			"C [struct <expat.h>] (struct XML_cp): EIF_INTEGER"
-		alias
-			"quant"
+			"C struct struct XML_cp access quant use <expat.h>"
 		end
 
 	exml_XML_cp_name (cp: POINTER): POINTER
 		require
 			have_struct_pointer: cp /= default_pointer
 		external
-			"C [struct <expat.h>] (struct XML_cp): EIF_POINTER"
-		alias
-			"name"
+			"C struct struct XML_cp access name use <expat.h>"
 		end
 
 	exml_XML_cp_numchildren (cp: POINTER): INTEGER
 		require
 			have_struct_pointer: cp /= default_pointer
 		external
-			"C [struct <expat.h>] (struct XML_cp): EIF_INTEGER"
-		alias
-			"numchildren"
+			"C struct struct XML_cp access numchildren use <expat.h>"
 		end
 
 	exml_XML_cp_children_0 (cp: POINTER): POINTER
 		external
-			"C [struct <expat.h>] (struct XML_cp): EIF_INTEGER"
-		alias
-			"children"
+			"C struct struct XML_cp access children use <expat.h>"
 		end
 
 	exml_XML_cp_children (cp: POINTER; index: INTEGER): POINTER
@@ -983,7 +975,7 @@ feature -- XML_Content freeing
 			a_parser_not_null: a_parser /= default_pointer
 			a_model_not_null: a_model /= default_pointer
 		external
-			"C (XML_Parser, XML_Content *) | <expat.h>"
+			"C signature (XML_Parser, XML_Content *) use <expat.h>"
 		alias
 			"XML_FreeContentModel"
 		end
@@ -1129,9 +1121,9 @@ feature {NONE} -- Implementation
 	c_rtid (p: POINTER): POINTER
 			-- Return `p'
 		external
-			"C [macro <eif_macros.h>]"
+			"C inline"
 		alias
-			"/**/"
+			"return $p;"
 		end
 
 	eif_freeze (obj: ANY): POINTER
@@ -1140,7 +1132,7 @@ feature {NONE} -- Implementation
 			gc_on: memory.collecting
 			obj_not_void: obj /= Void
 		external
-			"C [macro <eif_eiffel.h>] (EIF_OBJECT): EIF_REFERENCE"
+			"C signature (EIF_OBJECT): EIF_REFERENCE use <eif_eiffel.h>"
 		alias
 			"eif_freeze"
 		end
@@ -1152,7 +1144,7 @@ feature {NONE} -- Implementation
 			gc_on: memory.collecting
 			ptr_not_null: ptr /= default_pointer
 		external
-			"C [macro <eif_eiffel.h>] (EIF_REFERENCE)"
+			"C signature (EIF_REFERENCE) use <eif_eiffel.h>"
 		alias
 			"eif_unfreeze"
 		end
@@ -1162,7 +1154,7 @@ feature {NONE} -- Implementation
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-			"C [macro <expat.h>]"
+			"C signature (XML_Parser): EIF_POINTER use <expat.h>"
 		alias
 			"XML_GetUserData"
 		end
