@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
+	name="xpath"
+	uuid="E1FFE100-60B0-0001-0016-004000000001"
+>
+	<description>
+		system: "Gobo Eiffel XPath Library Unit Tester: Eiffel XPath test suite"
+		copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+	<target name="xpath">
+		<root class="XPATH" feature="make"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+			<debug name="XPath expressions" enabled="false"/>
+			<debug name="XPath Axis Expression" enabled="false"/>
+			<debug name="XPath expression factory" enabled="false"/>
+			<debug name="XPath Expression Parser" enabled="false"/>
+			<debug name="XPath Expression Parser - tokens" enabled="false"/>
+			<debug name="XPath tokens" enabled="false"/>
+			<debug name="XPath bindings" enabled="false"/>
+			<debug name="XPath evaluator" enabled="false"/>
+			<debug name="XPath expression replacement" enabled="false"/>
+			<debug name="XPath path iterator" enabled="false"/>
+			<debug name="XPath stand-alone context" enabled="false"/>
+			<debug name="XPath content emitter" enabled="false"/>
+			<debug name="XPath descendants enumeration" enabled="false"/>
+			<debug name="XPath preceding enumeration" enabled="false"/>
+			<debug name="XPath tiny builder" enabled="false"/>
+			<debug name="XPath tiny node" enabled="false"/>
+			<debug name="XPath tiny sibling enumeration" enabled="false"/>
+			<debug name="XPath tiny document" enabled="false"/>
+			<debug name="XPath abstract node" enabled="false"/>
+			<debug name="XPath name pool" enabled="false"/>
+			<debug name="XPath name pool allocation" enabled="false"/>
+			<debug name="XPath mapping iterator" enabled="false"/>
+			<debug name="Xpath sequence extent" enabled="false"/>
+			<debug name="XPath Integer values" enabled="false"/>
+			<debug name="XPath Double values" enabled="false"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency support="none" use="none"/>
+			<void_safety support="none" use="none"/>
+		</capability>
+		<variable name="GOBO_LIBRARY" value="../../../.."/>
+		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
+		<library name="math" location="${GOBO_LIBRARY}/library/math/library.ecf" readonly="true"/>
+		<library name="pattern" location="${GOBO_LIBRARY}/library/pattern/library.ecf" readonly="true"/>
+		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
+		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
+		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
+		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
+		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="true"/>
+		<library name="xml" location="${GOBO_LIBRARY}/library/xml/library.ecf" readonly="true"/>
+		<library name="xpath" location="${GOBO_LIBRARY}/library/xpath/library.ecf" readonly="true"/>
+		<cluster name="xpath_tester" location="./"/>
+		<cluster name="xpath_testgen" location="${GOBO_TESTGEN}"/>
+	</target>
+</system>
