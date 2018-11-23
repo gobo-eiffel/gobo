@@ -128,6 +128,10 @@
 ### Miscellaneous
 
 * All Gobo tools now compile in void-safe mode.
+* Nearly all examples and tests now compile in void-safe mode.
+  Only the unit tests for `xpath` and `xslt` have not been converted yet.
+* Replaced the usage of Xace files by ECF files throughout the entire
+  Gobo package.
 
 ## Version 4.2 - 14 July 2017
 
