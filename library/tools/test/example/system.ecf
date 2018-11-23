@@ -3,47 +3,37 @@
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
-	name="xslt"
-	uuid="E1FFE100-60B0-0001-0017-004000000001"
+	name="xtools_example"
+	uuid="E1FFE100-60B0-0001-0018-004000000002"
 >
 	<description>
-		system: "Gobo Eiffel XSLT Library Tester: Eiffel XSLT test suite"
-		copyright: "Copyright (c) 2004-2018, Colin Adams and others"
+		system: "Gobo Eiffel Tools Example Tester"
+		copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-	<target name="xslt">
-		<root class="XSLT" feature="make"/>
+	<target name="xtools_example">
+		<root class="XTOOLS_EXAMPLE" feature="make"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true">
-			<debug name="xml_parser" enabled="false"/>
-			<debug name="XSLT content output" enabled="false"/>
-			<debug name="XSLT stripper" enabled="false"/>
-			<debug name="XPath Expression Parser" enabled="false"/>
-			<debug name="XPath content emitter" enabled="false"/>
-		</option>
+		<option warning="true"/>
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="none" use="none"/>
-			<void_safety support="none" use="none"/>
+			<void_safety support="all" use="all"/>
 		</capability>
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
-		<library name="math" location="${GOBO_LIBRARY}/library/math/library.ecf" readonly="true"/>
 		<library name="pattern" location="${GOBO_LIBRARY}/library/pattern/library.ecf" readonly="true"/>
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
-		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
-		<library name="xml" location="${GOBO_LIBRARY}/library/xml/library.ecf" readonly="true"/>
-		<library name="xpath" location="${GOBO_LIBRARY}/library/xpath/library.ecf" readonly="true"/>
-		<library name="xslt" location="${GOBO_LIBRARY}/library/xslt/library.ecf" readonly="true"/>
-		<cluster name="xslt_tester" location="./"/>
-		<cluster name="xslt_testgen" location="${GOBO_TESTGEN}"/>
+		<library name="test_common" location="${GOBO_LIBRARY}/library/common/test/common/library.ecf" readonly="true"/>
+		<cluster name="tools_example_tester" location="./"/>
+		<cluster name="tools_example_testgen" location="${GOBO_TESTGEN}"/>
 	</target>
 </system>
