@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Test Example Tester"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -30,7 +30,7 @@
 	</target>
 
 	<target name="init_system" export="NONE">
-		<set name="system" value="xtest"/>
+		<set name="system" value="xtest_example"/>
 		<set name="library" value="test"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/example"/>
 	</target>

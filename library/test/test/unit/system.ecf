@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
+<system
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
-	name="test_skl"
-	uuid="E1FFE100-60B0-0001-0019-001000000002"
-	library_target="test_skl">
-
+	name="xtest"
+	uuid="E1FFE100-60B0-0001-0019-004000000001"
+>
 	<description>
-		description: "ECF file for the Gobo Eiffel test harness"
-		library: "Gobo Eiffel Test Library"
-		copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+		system: "Gobo Eiffel Test Library Tester"
+		copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-
-	<target name="test_skl">
-		<root all_classes="true"/>
+	<target name="xtest">
+		<root class="XTEST" feature="make"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true"/>
+		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency support="none"/>
+			<concurrency support="none" use="none"/>
+			<void_safety support="all" use="all"/>
 		</capability>
-		<variable name="GOBO_LIBRARY" value="../../.."/>
+		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 		<library name="pattern" location="${GOBO_LIBRARY}/library/pattern/library.ecf" readonly="true"/>
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
+		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
-		
-		<cluster name="harness" location="./harness/" recursive="true"/>
+		<cluster name="ts_tester" location="./"/>
+		<cluster name="ts_testgen" location="${GOBO_TESTGEN}"/>
 	</target>
 </system>
