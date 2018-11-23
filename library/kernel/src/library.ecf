@@ -34,6 +34,13 @@
 			</condition>
 		</library>
 
-		<cluster name="kernel" location="./" recursive="true"/>
+		<cluster name="kernel" location="./" recursive="true">
+			<file_rule>
+				<exclude>/time$</exclude>
+				<condition>
+					<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+				</condition>
+			</file_rule>
+		</cluster>
 	</target>
 </system>
