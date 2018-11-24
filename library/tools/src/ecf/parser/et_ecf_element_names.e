@@ -281,6 +281,9 @@ feature -- Constants
 	xml_visible: STRING = "visible"
 			-- "visible" element name
 
+	xml_void_safety: STRING = "void_safety"
+			-- "void_safety" element name
+
 	xml_warning: STRING = "warning"
 			-- "warning" element name
 

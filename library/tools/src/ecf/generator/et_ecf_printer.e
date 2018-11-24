@@ -607,6 +607,8 @@ feature -- Output
 				print_compiler_version_condition (l_compiler_version_condition)
 			elseif attached {ET_ECF_CONCURRENCY_CONDITION} a_condition as l_concurrency_condition then
 				print_concurrency_condition (l_concurrency_condition)
+			elseif attached {ET_ECF_VOID_SAFETY_CONDITION} a_condition as l_void_safety_condition then
+				print_void_safety_condition (l_void_safety_condition)
 			elseif attached {ET_ECF_CUSTOM_CONDITION} a_condition as l_custom_condition then
 				print_custom_condition (l_custom_condition)
 			elseif attached {ET_ECF_DOTNET_CONDITION} a_condition as l_dotnet_condition then
@@ -1818,6 +1820,30 @@ feature -- Output
 					file.put_character ('=')
 					print_quoted_string (l_feature_rename)
 				end
+				file.put_character ('/')
+				file.put_character ('>')
+				file.put_new_line
+			end
+		end
+
+	print_void_safety_condition (a_condition: ET_ECF_VOID_SAFETY_CONDITION)
+			-- Print `a_condition' to `file'.
+		require
+			a_condition_not_void: a_condition /= Void
+		do
+			if ecf_version >= ecf_1_19_0 then
+					-- The <void_sfety> condition was introduced in ECF 1.19.0.
+				print_indentation
+				file.put_character ('<')
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_void_safety)
+				file.put_character (' ')
+				if a_condition.is_excluded then
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_excluded_value)
+				else
+					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_value)
+				end
+				file.put_character ('=')
+				print_quoted_string (a_condition.value)
 				file.put_character ('/')
 				file.put_character ('>')
 				file.put_new_line

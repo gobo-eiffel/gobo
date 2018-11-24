@@ -194,6 +194,16 @@ feature -- Access
 			ecf_1_18_0_not_void: Result /= Void
 		end
 
+	ecf_1_19_0: UT_VERSION
+			-- ECF 1.19.0
+			-- Introduced in ISE 18.11.
+		once
+			create Result.make (1, 19, 0, 0)
+		ensure
+			instance_free: class
+			ecf_1_19_0_not_void: Result /= Void
+		end
+
 	ecf_last_known: UT_VERSION
 			-- Last known ECF version
 		once

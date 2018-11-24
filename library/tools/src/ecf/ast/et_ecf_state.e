@@ -5,7 +5,7 @@ note
 		"ECF states fulfilling or not conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,11 +36,11 @@ feature -- Status
 	is_dotnet: BOOLEAN
 			-- Is system to be compiled to .NET?
 
-	is_multithreaded: BOOLEAN
-			-- Is system to be compiled multithreaded?
+	concurrency_mode: detachable STRING
+			-- Concurrency mode
 
-	is_scoop: BOOLEAN
-			-- Is system to be compiled in scoop mode?
+	void_safety_mode: detachable STRING
+			-- Void-safety mode
 
 	finalize_mode: BOOLEAN
 			-- Is system to be compiled in finalize mode?
@@ -63,26 +63,20 @@ feature -- Status setting
 			dotnet_set: is_dotnet = b
 		end
 
-	set_multithreaded (b: BOOLEAN)
-			-- Set `is_multithreaded' to `b'.
+	set_concurrency_mode (a_concurrency_mode: like concurrency_mode)
+			-- Set `concurrency_mode' to `a_concurrency_mode'.
 		do
-			is_multithreaded := b
-			if b then
-				is_scoop := False
-			end
+			concurrency_mode := a_concurrency_mode
 		ensure
-			multithreaded_set: is_multithreaded = b
+			concurrency_mode_set: concurrency_mode = a_concurrency_mode
 		end
 
-	set_scoop (b: BOOLEAN)
-			-- Set `is_scoop' to `b'.
+	set_void_safety_mode (a_void_safety_mode: like void_safety_mode)
+			-- Set `void_safety_mode' to `a_void_safety_mode'.
 		do
-			is_scoop := b
-			if b then
-				is_multithreaded := False
-			end
+			void_safety_mode := a_void_safety_mode
 		ensure
-			scoop_set: is_scoop = b
+			void_safety_mode_set: void_safety_mode = a_void_safety_mode
 		end
 
 	set_finalize_mode (b: BOOLEAN)

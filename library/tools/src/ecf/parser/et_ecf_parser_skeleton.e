@@ -715,6 +715,11 @@ feature {NONE} -- AST factory
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
+					elseif STRING_.same_case_insensitive (l_child.name, xml_void_safety) then
+						l_condition := new_void_safety_condition (l_child, a_position_table, a_target)
+						if l_condition /= Void then
+							Result.put_last (l_condition)
+						end
 					elseif STRING_.same_case_insensitive (l_child.name, xml_custom) then
 						l_condition := new_custom_condition (l_child, a_position_table, a_target)
 						if l_condition /= Void then
@@ -2096,6 +2101,30 @@ feature {NONE} -- AST factory
 					Result := ast_factory.new_visible_classes
 				end
 				Result.force_last (l_visible_class)
+			end
+		end
+
+	new_void_safety_condition (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_VOID_SAFETY_CONDITION
+			-- New void-safety condition built from `a_element'
+		require
+			a_element_not_void: a_element /= Void
+			is_concurrency: STRING_.same_case_insensitive (a_element.name, xml_void_safety)
+			a_target_not_void: a_target /= Void
+		do
+			if attached a_element.attribute_by_name (xml_value) as l_value then
+				if attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
+					error_handler.report_eatx_error (attribute_name (l_value, a_position_table), attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+				elseif l_value.value.is_empty then
+					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+				else
+					Result := ast_factory.new_void_safety_condition (l_value.value, False)
+				end
+			elseif not attached a_element.attribute_by_name (xml_excluded_value) as l_excluded_value then
+				error_handler.report_eatn_error (xml_value, xml_excluded_value, element_name (a_element, a_position_table), a_target.system_config)
+			elseif l_excluded_value.value.is_empty then
+				error_handler.report_eate_error (attribute_name (l_excluded_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+			else
+				Result := ast_factory.new_void_safety_condition (l_excluded_value.value, True)
 			end
 		end
 

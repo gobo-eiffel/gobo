@@ -546,4 +546,16 @@ feature -- AST factory
 			visible_classes_not_void: Result /= Void
 		end
 
+	new_void_safety_condition (a_value: STRING; a_excluded: BOOLEAN): ET_ECF_VOID_SAFETY_CONDITION
+			-- New void-safety condition
+		do
+			if a_excluded then
+				create Result.make_excluded (a_value)
+			else
+				create Result.make (a_value)
+			end
+		ensure
+			condition_not_void: Result /= Void
+		end
+
 end

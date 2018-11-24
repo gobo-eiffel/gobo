@@ -2,16 +2,15 @@ note
 
 	description:
 
-		"ECF concurrency conditions"
+		"ECF void-safety conditions"
 
-	remark: "Supersedes condition 'multithreaded' in ECF 1.8.0."
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_ECF_CONCURRENCY_CONDITION
+class ET_ECF_VOID_SAFETY_CONDITION
 
 inherit
 
@@ -35,7 +34,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_value: STRING)
-			-- Create a new condition where the concurrency mode should be equal to `a_value'.
+			-- Create a new condition where the void-safety mode should be equal to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
 			a_value_not_empty: not a_value.is_empty
@@ -48,7 +47,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_excluded (a_value: STRING)
-			-- Create a new condition where the concurrency mode should not be equal to `a_value'.
+			-- Create a new condition where the void-safety mode should not be equal to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
 			a_value_not_empty: not a_value.is_empty
@@ -63,7 +62,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	value: STRING
-			-- Concurrency mode value
+			-- Void-safety mode value
 
 feature -- Status report
 
@@ -74,13 +73,13 @@ feature -- Status report
 			l_ecf_version: detachable UT_VERSION
 			l_splitter: ST_SPLITTER
 		do
-			l_expected_value := a_state.concurrency_mode
+			l_expected_value := a_state.void_safety_mode
 			if l_expected_value = Void then
 				l_ecf_version := a_state.target.system_config.ecf_version
 				if l_ecf_version = Void then
 					l_ecf_version := {UT_SHARED_ECF_VERSIONS}.ecf_last_known
 				end
-				l_expected_value := default_capabilities (l_ecf_version).use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
+				l_expected_value := default_capabilities (l_ecf_version).use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
 			end
 			if l_expected_value /= Void then
 				if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
@@ -94,12 +93,12 @@ feature -- Status report
 		end
 
 	is_excluded: BOOLEAN
-			-- Should the concurrency mode not be equal to `value'?
+			-- Should the void-safety mode not be equal to `value'?
 
 	is_capability_aware (a_capability_name: STRING): BOOLEAN
 			-- Can this individual condition have an influence on capability `a_capability_name'?
 		do
-			Result := STRING_.same_case_insensitive (a_capability_name, {ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
+			Result := STRING_.same_case_insensitive (a_capability_name, {ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
 		end
 
 	is_capability_supported (a_capability_name: STRING; a_target_capabilities, a_other_capabilities: ET_ECF_CAPABILITIES): BOOLEAN
@@ -119,14 +118,14 @@ feature -- Status report
 			if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
 				create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
 				if is_excluded then
-					l_values.append_last (supported_concurrency_capability_values)
+					l_values.append_last (supported_void_safety_capability_values)
 					l_splitter.split (value).do_all (agent l_values.remove)
 				else
 					l_values.append_last (l_splitter.split (value))
 				end
 			else
 				if is_excluded then
-					l_values.append_last (supported_concurrency_capability_values)
+					l_values.append_last (supported_void_safety_capability_values)
 					l_values.remove (value)
 				else
 					l_values.put_last (value)

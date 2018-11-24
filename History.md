@@ -118,6 +118,7 @@
 * Added support for ECF setting `library_root`.
 * Made sure that variables defined in the ECF file are taken into account
   when processing location attributes of clusters or libraries.
+* Added support for ECF 1.19.0.
 
 ### Gobo Eiffel Utility Library
 

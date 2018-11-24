@@ -394,19 +394,8 @@ feature -- Basic operations
 			if attached parent as l_parent and then attached l_parent.target as l_parent_target then
 				l_parent_target.update_state (a_state)
 			end
-			l_value := capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
-			if l_value /= Void then
-				if STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.thread_capability_value) then
-					a_state.set_multithreaded (True)
-					a_state.set_scoop (False)
-				elseif STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.scoop_capability_value) then
-					a_state.set_scoop (True)
-					a_state.set_multithreaded (False)
-				else
-					a_state.set_multithreaded (False)
-					a_state.set_scoop (False)
-				end
-			end
+			a_state.set_concurrency_mode (capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name))
+			a_state.set_void_safety_mode (capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name))
 			l_value := settings.value ({ET_ECF_SETTING_NAMES}.msil_generation_setting_name)
 			if l_value /= Void and then l_value.is_boolean then
 				a_state.set_dotnet (l_value.to_boolean)
