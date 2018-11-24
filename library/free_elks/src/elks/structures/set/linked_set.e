@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Sets implemented by linked lists"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: linked_set, set, linked_list;
-	representation: linked;
-	access: membership;
-	contents: generic;
+	names: linked_set, set, linked_list
+	representation: linked
+	access: membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,11 +28,27 @@ class LINKED_SET [G] inherit
 			{NONE} ll_extend, ll_put, ll_prune
 		undefine
 			changeable_comparison_criterion, is_inserted
+		redefine
+			make_from_iterable
 		end
 
 create
 
-	make
+	make,
+	make_from_iterable
+
+feature {NONE} -- Creation
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a set with all items obtained from `other`.
+		do
+			make
+			across
+				other as o
+			loop
+				extend (o.item)
+			end
+		end
 
 feature -- Element change
 
@@ -54,7 +70,7 @@ feature -- Removal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

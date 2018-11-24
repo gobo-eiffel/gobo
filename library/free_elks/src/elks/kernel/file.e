@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Sequential files, viewed as persistent sequences of characters"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -962,6 +962,14 @@ feature -- Cursor movement
 			file_tnil (file_pointer)
 		end
 
+feature -- Iteration
+
+	new_cursor: FILE_ITERATION_CURSOR
+			-- <Precursor>
+		do
+			create Result.make_open_read (internal_name_pointer)
+		end
+
 feature -- Element change
 
 	extend (v: CHARACTER)
@@ -1607,6 +1615,24 @@ feature -- Convenience
 			last_string := l_old_last_string
 		end
 
+feature {FILE_ITERATION_CURSOR} -- Iteration
+
+	file_open (fname: POINTER; how: INTEGER): POINTER
+			-- File pointer for file `fname', in mode `how'.
+		external
+			"C signature (EIF_FILENAME, int): EIF_POINTER use %"eif_file.h%""
+		alias
+			"eif_file_open"
+		end
+
+	file_close (file: POINTER)
+			-- Close `file'.
+		external
+			"C signature (FILE *) use %"eif_file.h%""
+		alias
+			"eif_file_close"
+		end
+
 feature {NONE} -- Implementation
 
 	internal_name: READABLE_STRING_GENERAL
@@ -1723,14 +1749,6 @@ feature {NONE} -- Implementation
 			"eif_file_unlink"
 		end
 
-	file_open (fname: POINTER; how: INTEGER): POINTER
-			-- File pointer for file `fname', in mode `how'.
-		external
-			"C signature (EIF_FILENAME, int): EIF_POINTER use %"eif_file.h%""
-		alias
-			"eif_file_open"
-		end
-
 	file_dopen (fd, how: INTEGER): POINTER
 			-- File pointer for file of descriptor `fd' in mode `how'
 			-- (which must fit the way `fd' was obtained).
@@ -1747,14 +1765,6 @@ feature {NONE} -- Implementation
 			"C signature (EIF_FILENAME, int, FILE *): EIF_POINTER use %"eif_file.h%""
 		alias
 			"eif_file_reopen"
-		end
-
-	file_close (file: POINTER)
-			-- Close `file'.
-		external
-			"C signature (FILE *) use %"eif_file.h%""
-		alias
-			"eif_file_close"
 		end
 
 	file_flush (file: POINTER)
@@ -2138,7 +2148,7 @@ invariant
 	name_not_empty: not internal_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

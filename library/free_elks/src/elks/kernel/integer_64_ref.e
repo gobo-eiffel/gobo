@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "References to objects containing an integer value coded on 64 bits"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -433,7 +433,7 @@ feature -- Conversion
 			i: INTEGER_32
 		do
 			i := item.to_integer_32
-			Result := (if i <= 9 then '0' else 'A' - 10 end) + i
+			Result := if i <= 9 then '0' else 'A' - 10 end + i
 		ensure
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end

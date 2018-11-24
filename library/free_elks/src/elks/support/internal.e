@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Access to internal object properties.
 			This class may be used as ancestor by classes needing its facilities.
@@ -41,7 +41,7 @@ feature -- Creation
 			if object /= Void then
 				Result := object.generating_type
 			else
-				Result := {NONE}
+				Result := {detachable NONE}
 			end
 		ensure
 			instance_free: class

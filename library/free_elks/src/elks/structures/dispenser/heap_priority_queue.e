@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Priority queues implemented as heaps"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: sorted_priority_queue, dispenser, heap;
-	representation: heap;
-	access: fixed, membership;
-	contents: generic;
+	names: sorted_priority_queue, dispenser, heap
+	representation: heap
+	access: fixed, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,14 +25,26 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_from_iterable
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER)
 			-- Allocate heap space.
 		do
 			create area.make_empty (n)
+		end
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a priority queue with all items obtained from `other`.
+		do
+			make (estimated_count_of (other))
+			across
+				other as o
+			loop
+				extend (o.item)
+			end
 		end
 
 feature -- Access
@@ -68,6 +80,14 @@ feature -- Access
 					i := i + 1
 				end
 			end
+		end
+
+feature -- Iteration
+
+	new_cursor: HEAP_PRIORITY_QUEUE_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature -- Measurement
@@ -152,8 +172,8 @@ feature -- Comparison
 				object_comparison = other.object_comparison and then
 				count = other.count
 			then
-				l_current := duplicate (count)
-				l_other := other.duplicate (count)
+				l_current := twin
+				l_other := other.twin
 				from
 					Result := True
 				until
@@ -216,6 +236,12 @@ feature -- Duplication
 
 	duplicate (n: INTEGER): like Current
 			-- New priority queue containing `n' greatest items of Current.
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		require
 			n_positive: n >= 0
 			n_in_bounds: n <= count
@@ -238,14 +264,12 @@ feature -- Duplication
 			end
 
 				--| Insert `n' greatest items into new queue.
+			across
+				l_tmp as x
 			from
 				create Result.make (n)
-				l_tmp.start
-			until
-				l_tmp.after
 			loop
-				Result.put (l_tmp.item)
-				l_tmp.forth
+				Result.put (x.item)
 			end
 		end
 
@@ -328,14 +352,12 @@ feature -- Removal
 
 			if l_tmp.count = count - 1 then
 					--| Item was found, we can update `Current'.
+				across
+					l_tmp as x
 				from
-					l_tmp.start
 					wipe_out
-				until
-					l_tmp.after
 				loop
-					put (l_tmp.item)
-					l_tmp.forth
+					put (x.item)
 				end
 			end
 		end
@@ -388,13 +410,15 @@ feature -- Conversion
 			end
 		end
 
-feature {HEAP_PRIORITY_QUEUE} -- Implementation
+feature {HEAP_PRIORITY_QUEUE, HEAP_PRIORITY_QUEUE_ITERATION_CURSOR} -- Access
 
 	lower: INTEGER = 1
-			-- Lower bound for internal access to `area'.
+			-- Lower bound for internal access to `area`.
 
 	area: SPECIAL [G]
-			-- Storage for queue
+			-- Storage for queue.
+
+feature {HEAP_PRIORITY_QUEUE} -- Implementation
 
 	i_th (i: INTEGER): G
 		require
@@ -443,7 +467,7 @@ feature {NONE} -- Comparison
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

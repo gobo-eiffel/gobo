@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Structures that may be traversed forward and backward"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
@@ -12,20 +12,8 @@ note
 deferred class BILINEAR [G] inherit
 
 	LINEAR [G]
-		rename
-			search as sequential_search
-		export
-			{NONE}
-				sequential_search
-		redefine
-			off
-		end
-
-	LINEAR [G]
 		redefine
 			search, off
-		select
-			search
 		end
 
 feature -- Access
@@ -63,7 +51,7 @@ feature -- Cursor movement
 			if before and not is_empty then
 				forth
 			end
-			sequential_search (v)
+			Precursor (v)
 		end
 
 invariant
@@ -72,7 +60,7 @@ invariant
 	before_constraint: before implies off
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

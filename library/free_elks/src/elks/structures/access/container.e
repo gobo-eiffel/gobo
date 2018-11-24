@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Data structures of the most general kind,
 		used to hold zero or more items.
@@ -14,6 +14,9 @@ note
 
 deferred class
 	CONTAINER [G]
+
+inherit
+	ITERABLE [G]
 
 feature -- Access
 
@@ -83,8 +86,23 @@ feature -- Conversion
 		deferred
 		end
 
+feature {NONE} -- Measurement
+
+	estimated_count_of (other: ITERABLE [G]): INTEGER
+			-- Estimated number of elements in `other`.
+		do
+			if attached {FINITE [G]} other as f then
+				Result := f.count
+			elseif attached {READABLE_INDEXABLE [G]} other as r then
+				Result := r.upper - r.lower + 1
+			end
+		ensure
+			instance_free: class
+			non_negative_result: Result >= 0
+		end
+
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

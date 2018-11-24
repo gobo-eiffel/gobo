@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Trees with a dynamically modifiable structure"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: dynamic_tree, tree;
-	representation: recursive;
-	access: cursor, membership;
-	contents: generic;
+	names: dynamic_tree, tree
+	representation: recursive
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -179,6 +179,7 @@ feature -- Duplication
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			pos: CURSOR
 			counter: INTEGER
@@ -206,6 +207,7 @@ feature {DYNAMIC_TREE} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		deferred
 		ensure
 			result_exists: Result /= Void
@@ -214,6 +216,7 @@ feature {DYNAMIC_TREE} -- Implementation
 
 	duplicate_all: like Current
 			-- Copy of sub-tree including all children
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			pos: CURSOR
 			c: like child
@@ -237,6 +240,7 @@ feature {DYNAMIC_TREE} -- Implementation
 
 	fill_subtree (other: TREE [G])
 			-- Fill children with children of `other'.
+		obsolete "Fill subtree explicitly. [2018-11-30]"
 		local
 			c: like child
 			o: detachable TREE [G]
@@ -271,7 +275,7 @@ invariant
 	child_after_definition: child_after = (child_index = arity + 1)
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

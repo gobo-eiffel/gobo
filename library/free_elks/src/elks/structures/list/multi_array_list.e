@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Lists implemented as sequences of arrays, the last of which may
 		be non-full. No limit on size (a new array is allocated if list
@@ -7,10 +7,10 @@ note
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: list, sequence;
-	representation: array, linked;
-	access: index, cursor, membership;
-	contents: generic;
+	names: list, sequence
+	representation: array, linked
+	access: index, cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,7 +26,7 @@ class MULTI_ARRAY_LIST [G] inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (b: INTEGER)
 			-- Create an empty list, setting block_size to b
@@ -366,8 +366,10 @@ feature -- Element change
 		local
 			cell: like first_element
 			current_array: ARRAYED_LIST [G]
+			new_array: ARRAYED_LIST [G]
 			pos, cut: INTEGER
 			l: detachable like first_element
+			i, n: like {ARRAYED_LIST [G]}.count
 		do
 			current_array := active_array
 			check is_empty implies after end
@@ -385,7 +387,18 @@ feature -- Element change
 					pos := current_array.index
 					current_array.go_i_th (block_size // 2 + 1)
 					cut := index
-					cell := new_cell (current_array.duplicate (count))
+					from
+						i := current_array.index
+						n := if current_array.after then 0 else count.min (current_array.count - i + 1) end
+						create new_array.make (n)
+					until
+						n <= 0
+					loop
+						new_array.extend (current_array [i])
+						i := i + 1
+						n := n - 1
+					end
+					cell := new_cell (new_array)
 					cell.put_right (active.right)
 					cell.put_left (active)
 					if last_element = active then
@@ -561,6 +574,12 @@ feature -- Duplication
 	duplicate (n: INTEGER): like Current
 			-- Copy of sub-list beginning at cursor position
 			-- and having min (`n', `count' - `index' + 1) items
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		local
 			pos: CURSOR
 			counter: INTEGER
@@ -584,6 +603,7 @@ feature {MULTI_ARRAY_LIST} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make (block_size)
 		end
@@ -614,7 +634,7 @@ invariant
 	extendible_definition: extendible
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

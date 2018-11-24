@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Translations of class names between a storing and a retrieving
 		system. Values in this table are names of classes in the retrieving
@@ -41,14 +41,13 @@ feature -- Initialization
 			-- Make table with current translations
 		local
 			i, cnt: INTEGER
-			o, n: STRING
 		do
 			cnt := class_translation_count
 			make (cnt)
 			from i := 0 until i = cnt loop
-				create o.make_from_c (class_translation_old (i))
-				create n.make_from_c (class_translation_new (i))
-				put (n, o)
+				put
+					(create {STRING}.make_from_c (class_translation_new (i)),
+					create {STRING}.make_from_c (class_translation_old (i)))
 				i := i + 1
 			end
 		end
@@ -186,7 +185,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

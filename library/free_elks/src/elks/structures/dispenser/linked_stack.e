@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Unbounded stacks implemented as linked lists"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: linked_stack, dispenser, linked_list;
-	representation: linked;
-	access: fixed, lifo, membership;
-	contents: generic;
+	names: linked_stack, dispenser, linked_list
+	representation: linked
+	access: fixed, lifo, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -37,12 +37,29 @@ class LINKED_STACK [G] inherit
 			append, linear_representation,
 			prune_all, is_inserted
 		redefine
-			extend, force, duplicate
+			duplicate,
+			extend,
+			force,
+			make_from_iterable
 		end
 
 create
 
-	make
+	make,
+	make_from_iterable
+
+feature {NONE} -- Creation
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a stack with all items obtained from `other`.
+		do
+			make
+			across
+				other as o
+			loop
+				extend (o.item)
+			end
+		end
 
 feature -- Access
 
@@ -112,6 +129,12 @@ feature -- Duplication
 			-- New stack containing the `n' latest items inserted
 			-- in current stack.
 			-- If `n' is greater than `count', identical to current stack.
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		require else
 			positive_argument: n > 0
 		local
@@ -138,7 +161,7 @@ feature -- Duplication
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -147,6 +170,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Unbounded queues implemented as linked lists"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: linked_queue, dispenser, linked_list;
-	representation: linked;
-	access: fixed, fifo, membership;
-	contents: generic;
+	names: linked_queue, dispenser, linked_list
+	representation: linked
+	access: fixed, fifo, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,13 +42,17 @@ class LINKED_QUEUE [G] inherit
 			readable, writable, prune_all,
 			force, is_inserted
 		redefine
-			duplicate, linear_representation, copy
+			copy,
+			duplicate,
+			linear_representation,
+			make_from_iterable
 		select
 			remove
 		end
 
 create
-	make
+	make,
+	make_from_iterable
 
 create {LINKED_QUEUE}
 	ll_make
@@ -59,6 +63,19 @@ feature -- Initialization
 			-- Create linked queue.
 		do
 			after := True
+		end
+
+feature {NONE} -- Creation
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a queue with all items obtained from `other`.
+		do
+			make
+			across
+				other as o
+			loop
+				extend (o.item)
+			end
 		end
 
 feature -- Access
@@ -120,6 +137,12 @@ feature -- Duplication
 	duplicate (n: INTEGER): like Current
 			-- New queue containing the `n' oldest items in current queue.
 			-- If `n' is greater than `count', identical to current queue.
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		local
 			l_cur: like cursor
 		do
@@ -140,15 +163,13 @@ feature -- Duplication
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
-			cur: detachable like cursor
+			cur: LINKED_LIST_CURSOR [G]
 		do
 			if other /= Current then
 				standard_copy (other)
 				if not other.is_empty then
 					internal_wipe_out
-					if attached {like cursor} other.cursor as l_cur then
-						cur := l_cur
-					end
+					cur := other.cursor
 					from
 						other.start
 					until
@@ -191,7 +212,7 @@ invariant
 	is_always_after: not is_empty implies after
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

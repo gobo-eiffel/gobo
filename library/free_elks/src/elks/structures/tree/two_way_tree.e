@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Trees implemented using a two way linked list representation"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: two_way_tree, tree, two_way_list;
-	representation: recursive, linked;
-	access: cursor, membership;
-	contents: generic;
+	names: two_way_tree, tree, two_way_list
+	representation: recursive, linked
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +19,8 @@ class TWO_WAY_TREE [G] inherit
 		redefine
 			parent, clone_node
 		select
-			has
+			has,
+			new_cursor
 		end
 
 	BI_LINKABLE [G]
@@ -105,7 +106,7 @@ class TWO_WAY_TREE [G] inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (v: like item)
 			-- Create single node with item `v'.
@@ -322,12 +323,14 @@ feature {TWO_WAY_TREE} -- Implementation
 			-- the same node value.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		do
 			create Result.make (item)
 		end
 
 	new_chain: like Current
 			-- <Precursor>
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			Result := new_tree
 		end
@@ -383,7 +386,7 @@ invariant
 	off_constraint: (child = Void) implies child_off
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

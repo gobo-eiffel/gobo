@@ -46,14 +46,29 @@ class ARRAYED_STACK [G] inherit
 			readable, writable,
 			append, fill
 		redefine
-			linear_representation
+			linear_representation,
+			make_from_iterable
 		end
 
 create
-	make
+	make,
+	make_from_iterable
 
 create {ARRAYED_STACK}
 	make_filled
+
+feature {NONE} -- Creation
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a stack with all items obtained from `other`.
+		do
+			make (estimated_count_of (other))
+			across
+				other as o
+			loop
+				extend (o.item)
+			end
+		end
 
 feature -- Element change
 
@@ -95,7 +110,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

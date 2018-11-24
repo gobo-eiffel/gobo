@@ -1,13 +1,13 @@
-note
+﻿note
 	description: "Lists implemented by resizable arrays"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: sequence;
-	representation: array;
-	access: index, cursor, membership;
-	size: fixed;
-	contents: generic;
+	names: sequence
+	representation: array
+	access: index, cursor, membership
+	size: fixed
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -49,7 +49,10 @@ class ARRAYED_LIST [G] inherit
 		end
 
 create
-	make, make_filled, make_from_array
+	make,
+	make_filled,
+	make_from_array,
+	make_from_iterable
 
 feature -- Initialization
 
@@ -81,6 +84,8 @@ feature -- Initialization
 			filled: full
 		end
 
+feature {NONE} -- Initialization
+
 	make_from_array (a: ARRAY [G])
 			-- Create list from array `a'.
 		require
@@ -92,6 +97,20 @@ feature -- Initialization
 			shared: area = a.area
 			correct_position: before
 			filled: count = a.count
+		end
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a circular chain with all items obtained from `other`.
+		local
+			a: like area_v2
+		do
+			make (estimated_count_of (other))
+			a := area_v2
+			across
+				other as o
+			loop
+				a.extend (o.item)
+			end
 		end
 
 feature -- Access
@@ -148,11 +167,11 @@ feature -- Access
 			i, nb: INTEGER
 		do
 			l_area := area_v2
-			nb := count - 1
+			nb := count
 			if object_comparison and v /= Void then
 				from
 				until
-					i > nb or Result
+					i >= nb or Result
 				loop
 					Result := v ~ l_area.item (i)
 					i := i + 1
@@ -160,7 +179,7 @@ feature -- Access
 			else
 				from
 				until
-					i > nb or Result
+					i >= nb or Result
 				loop
 					Result := v = l_area.item (i)
 					i := i + 1
@@ -625,15 +644,21 @@ feature -- Duplication
 	duplicate (n: INTEGER): like Current
 			-- Copy of sub-list beginning at current position
 			-- and having min (`n', `count' - `index' + 1) items.
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		local
-			end_pos: INTEGER
+			m: INTEGER
 		do
 			if after then
 				Result := new_filled_list (0)
 			else
-				end_pos := count.min (index + n - 1)
-				Result := new_filled_list (end_pos - index + 1)
-				Result.area_v2.copy_data (area_v2, index - 1, 0, end_pos - index + 1)
+				m := (count  - index + 1).min (n)
+				Result := new_filled_list (m)
+				Result.area_v2.copy_data (area_v2, index - 1, 0, m)
 			end
 		end
 
@@ -794,6 +819,7 @@ feature {NONE} -- Inapplicable
 
 	new_chain: like Current
 			-- Unused
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			Result := Current
 		end
@@ -828,6 +854,7 @@ feature {NONE} -- Implementation
 
 	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		require
 			n_non_negative: n >=0
 		do
@@ -843,7 +870,8 @@ invariant
 	starts_from_one: lower = 1
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	ca_ignore: "CA033", "CA033: very large class"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

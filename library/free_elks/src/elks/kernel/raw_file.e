@@ -228,6 +228,17 @@ feature -- Input
 			a_string.reset_hash_codes
 		end
 
+feature {FILE_ITERATION_CURSOR} -- Iteration
+
+	file_fread (dest: POINTER; elem_size, nb_elems: INTEGER; file: POINTER): INTEGER
+			-- Read `nb_elems' of size `elem_size' in file `file' and store them
+			-- in location `dest'.
+		external
+			"C signature (void *, size_t, size_t, FILE *): EIF_INTEGER use <stdio.h>"
+		alias
+			"fread"
+		end
+
 feature {NONE} -- Implementation
 
 	integer_buffer: MANAGED_POINTER
@@ -317,21 +328,12 @@ feature {NONE} -- Implementation
 			"eif_file_pdb"
 		end
 
-	file_fread (dest: POINTER; elem_size, nb_elems: INTEGER; file: POINTER): INTEGER
-			-- Read `nb_elems' of size `elem_size' in file `file' and store them
-			-- in location `dest'.
-		external
-			"C signature (void *, size_t, size_t, FILE *): EIF_INTEGER use <stdio.h>"
-		alias
-			"fread"
-		end
-
 invariant
 
 	not_plain_text: not is_plain_text
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

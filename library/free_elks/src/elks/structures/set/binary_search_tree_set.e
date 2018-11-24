@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Sorted sets implemented as binary search trees"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: binary_search_tree_set, set, binary_search_tree;
-	representation: recursive, array;
-	access: membership, min, max;
-	contents: generic;
+	names: binary_search_tree_set, set, binary_search_tree
+	representation: recursive, array
+	access: membership, min, max
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,14 +21,26 @@ class BINARY_SEARCH_TREE_SET [G -> COMPARABLE] inherit
 
 create
 
-	make
+	make,
+	make_from_iterable
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create set.
 		do
 			before := True
+		end
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a set with all items obtained from `other`.
+		do
+			make
+			across
+				other as o
+			loop
+				extend (o.item)
+			end
 		end
 
 feature -- Measurement
@@ -107,6 +119,18 @@ feature -- Status report
 			-- it is `before' or `after'.
 		do
 			Result := is_empty or Precursor {COMPARABLE_SET}
+		end
+
+feature -- Iteration
+
+	new_cursor: ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			if attached tree as t then
+				Result := t.new_cursor
+			else
+				create {EMPTY_ITERATION_CURSOR [G]} Result
+			end
 		end
 
 feature -- Cursor movement
@@ -289,6 +313,12 @@ feature -- Duplication
 	duplicate (n: INTEGER): BINARY_SEARCH_TREE_SET [G]
 			-- New structure containing min (`n', `count')
 			-- items from current structure
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		local
 			t: like tree
 		do
@@ -343,7 +373,7 @@ invariant
 				object_comparison = t.object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

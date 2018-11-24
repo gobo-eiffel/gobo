@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects that may be compared according to a total order relation
 
@@ -114,7 +114,10 @@ invariant
 	irreflexive_comparison: not (Current < Current)
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	ca_ignore:
+		"CA057", "CA057: simplifiable boolean expression",
+		"CA071", "CA071: self-comparison"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

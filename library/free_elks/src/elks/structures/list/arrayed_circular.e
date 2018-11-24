@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Circular chains implemented by resizable arrays"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: arrayed_circular, ring, sequence;
-	representation: array;
-	access: index, cursor, membership;
-	contents: generic;
+	names: arrayed_circular, ring, sequence
+	representation: array
+	access: index, cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,9 +43,10 @@ class ARRAYED_CIRCULAR [G] inherit
 
 create
 
-	make
+	make,
+	make_from_iterable
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER)
 			-- Create a circular chain with `n' items.
@@ -53,6 +54,20 @@ feature -- Initialization
 			at_least_one: n >= 1
 		do
 			create list.make (n)
+		end
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a circular chain with all items obtained from `other`.
+		local
+			l: like list
+		do
+			create l.make (estimated_count_of (other))
+			list := l
+			across
+				other as o
+			loop
+				l.extend (o.item)
+			end
 		end
 
 feature -- Access
@@ -274,6 +289,7 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make (count)
 		end
@@ -371,7 +387,7 @@ invariant
 	valid_starter: starter >= 0 and starter <= count
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Finite sequences: structures where existing items are arranged
 		and accessed sequentially, and new ones can be added at the end.
@@ -30,7 +30,6 @@ feature -- Status report
 		do
 			Result := not off
 		end
-
 
 	writable: BOOLEAN
 			-- Is there a current item that may be modified?
@@ -111,7 +110,7 @@ feature -- Removal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

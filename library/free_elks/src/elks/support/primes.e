@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Prime number properties"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	names: primes;
+	names: primes
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,6 +15,8 @@ class PRIMES inherit
 		redefine
 			is_prime
 		end
+
+	ITERATION_CURSOR [INTEGER]
 
 feature -- Access
 
@@ -178,6 +180,17 @@ feature -- Access
 			instance_free: class
 		end
 
+feature -- Iteration
+
+	new_cursor: PRIMES
+			-- <Precursor>
+		do
+			create Result
+			Result.start
+		ensure then
+			instance_free: class
+		end
+
 feature {NONE} -- Implementation
 
 	precomputed_primes_count: INTEGER = 200
@@ -221,7 +234,7 @@ feature {NONE} -- Implementation
 			if n >= 13 then
 					-- Using math formula from J. Massias and G. Robin,
 					-- "Bornes effectives pour certaines fonctions concernant les nombres premiers,"
-					-- J. Théorie Nombres Bordeaux, 8 (1996) 215-242.  MR 97g:11099:
+					-- J. ThÃ©orie Nombres Bordeaux, 8 (1996) 215-242.  MR 97g:11099:
 					-- n (ln n + ln (ln n) - 1 + 1.8 ln (ln n) / ln n)
 				create l_double_math
 				ln_n := l_double_math.log (n)

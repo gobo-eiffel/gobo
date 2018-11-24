@@ -31,6 +31,12 @@ feature -- Duplication
 	duplicate (n: INTEGER): like Current
 			-- Copy of sub-chain beginning at current position
 			-- and having min (`n', `count') items.
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		local
 			pos: CURSOR
 			to_be_removed, counter: INTEGER
@@ -50,7 +56,7 @@ feature -- Duplication
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

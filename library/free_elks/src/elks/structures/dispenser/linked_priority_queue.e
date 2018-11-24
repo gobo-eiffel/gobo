@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "Priority queues implemented as sorted lists"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: priority_queue, queue;
-	contents: generic;
+	names: priority_queue, queue
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,7 +39,8 @@ class LINKED_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 		end
 
 create
-	make
+	make,
+	make_from_iterable
 
 create {LINKED_PRIORITY_QUEUE}
 	make_sublist
@@ -70,9 +71,8 @@ feature -- Element change
 			extend (v)
 		end
 
-
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

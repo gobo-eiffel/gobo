@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Sequential, two-way linked lists"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: two_way_list, sequence;
-	representation: linked;
-	access: index, cursor, membership;
-	contents: generic;
+	names: two_way_list, sequence
+	representation: linked
+	access: index, cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,7 +46,8 @@ class TWO_WAY_LIST [G] inherit
 		end
 
 create
-	make
+	make,
+	make_from_iterable
 
 create {TWO_WAY_LIST}
 	make_sublist
@@ -461,6 +462,7 @@ feature {TWO_WAY_LIST} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make
 		end
@@ -496,7 +498,7 @@ invariant
 				l.right = Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

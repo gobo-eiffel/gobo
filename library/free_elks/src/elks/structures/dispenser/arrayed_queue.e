@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Unbounded queues, implemented by resizable arrays"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER)
 			-- Create queue for at most `n' items.
@@ -92,6 +92,14 @@ feature -- Access
 				end
 			end
 			Result := j > 0
+		end
+
+feature -- Iteration
+
+	new_cursor: ARRAYED_QUEUE_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature -- Comparison
@@ -382,13 +390,15 @@ feature {NONE} -- Retrieval
 			end
 		end
 
-feature {ARRAYED_QUEUE} -- Implementation
+feature {ARRAYED_QUEUE, ARRAYED_QUEUE_ITERATION_CURSOR} -- Access
 
 	area: SPECIAL [G]
-			-- Storage for queue
+			-- Storage for queue.
 
 	out_index: INTEGER
-			-- Position of oldest item
+			-- Position of oldest item.
+
+feature {ARRAYED_QUEUE} -- Implementation
 
 	in_index: INTEGER
 			-- Position for next insertion
@@ -423,10 +433,12 @@ feature {ARRAYED_QUEUE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {ARRAYED_QUEUE_ITERATION_CURSOR} -- Access
 
 	lower: INTEGER = 1
 			-- Lower bound for accessing list items via indexes
+
+feature {NONE} -- Implementation
 
 	upper: INTEGER
 			-- Upper bound for accessing list items via indexes
@@ -450,7 +462,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
