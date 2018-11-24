@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Kernel Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -17,6 +17,7 @@
 		<cluster name="misc"/>
 		<cluster name="unicode"/>
 		<cluster name="support"/>
+		<cluster name="time" if="${GOBO_EIFFEL}=ge"/>
 	</cluster>
 
 	<mount location="${GOBO}/library/kernel.xace"/>
