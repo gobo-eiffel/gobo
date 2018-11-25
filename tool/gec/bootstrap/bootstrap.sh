@@ -7,24 +7,35 @@
 # revision: "$Revision$"
 
 
-# usage: bootstrap.sh [-v] <c_compiler>
+# usage: bootstrap.sh [-v][--thread=N] <c_compiler>
 
 echo "Executing bootstrap.sh..."
 
 gobo_usage() {
-	echo "usage: bootstrap.sh [-v] <c_compiler>"
+	echo "usage: bootstrap.sh [-v][--thread=N] <c_compiler>"
 	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | cc | icc | tcc | no_c"
 }
 
-if [ "$1" = "-v" ]; then
-	VERBOSE=-v
-	CC=$2
-	EIF=ge
-else
-	VERBOSE=
-	CC=$1
-	EIF=ge
-fi
+VERBOSE=
+THREAD_OPTION=
+while [[ $# -gt 1 ]]
+do
+	case $1 in
+		-v)
+			VERBOSE=-v
+			shift
+			;;
+		--thread=*)
+			THREAD_OPTION=$1
+			shift
+			;;
+		*)
+			shift
+			;;
+	esac
+done
+CC=$1
+EIF=ge
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
@@ -184,24 +195,24 @@ if [ "$EIF" = "ge" ]; then
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gecc (bootstrap 1)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gecc/src/system.ecf
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gecc/src/system.ecf
 	$BIN_DIR/gecc.sh
 	# Compile gec twice to get a bootstrap effect.
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gec (bootstrap 1)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gec/src/system.ecf
-	$BIN_DIR/gecc$EXE gec.sh
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
+	$BIN_DIR/gecc$EXE $THREAD_OPTION gec.sh
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gec (bootstrap 2)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gec/src/system.ecf
-	$BIN_DIR/gecc$EXE gec.sh
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
+	$BIN_DIR/gecc$EXE $THREAD_OPTION gec.sh
 	$STRIP gec$EXE
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gecc (bootstrap 2)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $GOBO/tool/gecc/src/system.ecf
+	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gecc/src/system.ecf
 	$BIN_DIR/gecc.sh
 	$STRIP gecc$EXE
 	$RM gec*.h

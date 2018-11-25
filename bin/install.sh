@@ -7,38 +7,40 @@
 # revision: "$Revision$"
 
 
-# usage: install.sh [-v] <c_compiler>
+# usage: install.sh [-v][-t][--thread=N] <c_compiler>
 
 echo "Executing install.sh..."
 
 gobo_usage() {
-	echo "usage: install.sh [-v][-t] <c_compiler>"
+	echo "usage: install.sh [-v][-t][--thread=N] <c_compiler>"
 	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | cc | icc | tcc | no_c"
 }
 
 VERBOSE=
 TEST_ONLY=
+THREAD_OPTION=
+while [[ $# -gt 1 ]]
+do
+	case $1 in
+		-v)
+			VERBOSE=-v
+			shift
+			;;
+		-t)
+			TEST_ONLY=-t
+			shift
+			;;
+		--thread=*)
+			THREAD_OPTION=$1
+			shift
+			;;
+		*)
+			shift
+			;;
+	esac
+done
+CC=$1
 EIF=ge
-if [ "$1" = "-v" ]; then
-	VERBOSE=-v
-	if [ "$2" = "-t" ]; then
-		TEST_ONLY=-t
-		CC=$3
-	else
-		CC=$2
-	fi
-elif [ "$1" = "-t" ]; then
-	TEST_ONLY=-t
-	if [ "$2" = "-v" ]; then
-		VERBOSE=-v
-		CC=$3
-	else
-		CC=$2
-	fi
-		
-else
-	CC=$1
-fi
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
@@ -82,55 +84,55 @@ cd $BIN_DIR
 if [ "$VERBOSE" = "-v" ]; then
 	echo "Bootstraping gec..."
 fi
-$BOOTSTRAP_DIR/bootstrap.sh $VERBOSE $CC
+$BOOTSTRAP_DIR/bootstrap.sh $VERBOSE $THREAD_OPTION $CC
 
 if [ "$EIF" = "ge" ]; then
 	cd $BIN_DIR
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling geant..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/geant/src/system.ecf
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/geant/src/system.ecf
 	$STRIP geant${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gexace..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gexace/src/system.ecf
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gexace/src/system.ecf
 	$STRIP gexace${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gedoc..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gedoc/src/system.ecf
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gedoc/src/system.ecf
 	$STRIP gedoc${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling getest..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/getest/src/system.ecf
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/getest/src/system.ecf
 	$STRIP getest${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gelint..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gelint/src/system.ecf
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gelint/src/system.ecf
 	$STRIP gelint${EXE}
 	if [ "$TEST_ONLY" = "" ]; then
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gelex..."
 		fi
-		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gelex/src/system.ecf
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gelex/src/system.ecf
 		$STRIP gelex${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling geyacc..."
 		fi
-		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/geyacc/src/system.ecf
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/geyacc/src/system.ecf
 		$STRIP geyacc${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gepp..."
 		fi
-		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gepp/src/system.ecf
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gepp/src/system.ecf
 		$STRIP gepp${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gexlt..."
 		fi
-		$BIN_DIR/gec$EXE --finalize --no-benchmark $GOBO/tool/gexslt/src/system.ecf
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gexslt/src/system.ecf
 		$STRIP gexslt${EXE}
 	fi
 else
