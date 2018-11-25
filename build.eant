@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -38,9 +38,7 @@
 		<delete>
 			<fileset directory="." include="@(**/.git*)"/>
 		</delete>
-		<delete>
-			<fileset directory="." include="@(**/.editorconfig)"/>
-		</delete>
+		<delete directory=".sourceforge"/>
 		<delete directory="library/structure/doc/visio"/>
 		<delete directory="library/time/doc/visio"/>
 	</target>
