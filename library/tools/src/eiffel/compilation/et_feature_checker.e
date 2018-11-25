@@ -3147,6 +3147,8 @@ feature {NONE} -- Instruction validity
 			l_named_type: ET_NAMED_TYPE
 			had_error: BOOLEAN
 			l_old_object_test_scope: INTEGER
+			l_old_attachment_scope: like current_attachment_scope
+			l_old_initialization_scope: like current_initialization_scope
 			l_has_false: BOOLEAN
 		do
 			has_fatal_error := False
@@ -3154,6 +3156,14 @@ feature {NONE} -- Instruction validity
 			l_assertion_context := new_context (current_type)
 			in_check_instruction := True
 			l_old_object_test_scope := current_object_test_scope.count
+			l_old_initialization_scope := current_initialization_scope
+			l_old_attachment_scope := current_attachment_scope
+			if current_system.attachment_type_conformance_mode and an_instruction.then_compound = Void then
+				current_initialization_scope := new_attachment_scope
+				current_initialization_scope.copy_scope (l_old_initialization_scope)
+				current_attachment_scope := new_attachment_scope
+				current_attachment_scope.copy_scope (l_old_attachment_scope)
+			end
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				if attached an_instruction.assertion (i).expression as l_expression then
@@ -3192,18 +3202,38 @@ feature {NONE} -- Instruction validity
 				if has_fatal_error then
 					had_error := True
 				end
+					-- Note that this code:
+					--
+					--   local
+					--      a: detachable A
+					--   do
+					--      check a /= Void then end
+					--      a.f
+					--
+					-- is accetped as a CAP because if 'a' is Void
+					-- then an exception is raise by the 'check'
+					-- even when check-monitoring is turned off.
+					-- So we don't reset `current_attachment_scope' here.
+			else
+					-- Note that this code:
+					--
+					--   local
+					--      a: detachable A
+					--   do
+					--      check a /= Void end
+					--      a.f
+					--
+					-- is not accepted because no exception will be raised by the 'check'
+					-- when check-monitoring is turned off.
+					-- With ISE 6.8.8.6542 used to accept it, but we ended up with
+					-- call-on-void-target at run-time.
+				if current_system.attachment_type_conformance_mode then
+					free_attachment_scope (current_attachment_scope)
+					free_attachment_scope (current_initialization_scope)
+					current_attachment_scope := l_old_attachment_scope
+					current_initialization_scope := l_old_initialization_scope
+				end
 			end
-				-- Note that this code:
-				--
-				--   local
-				--      a: detachable A
-				--   do
-				--      check a /= Void end
-				--      a.f
-				--
-				-- is accepted even when check-monitoring is turned off.
-				-- With ISE 6.8.8.6542, we end up with call-on-void-target
-				-- at run-time. So we don't reset `current_attachment_scope' here.
 			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 			if had_error then
 				set_fatal_error
