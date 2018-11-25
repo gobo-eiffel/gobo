@@ -7,7 +7,7 @@
 
 # usage: build_gobo_delivery.sh <gobo_version>
 
-git_clone_gobo.sh gobo						# get code from repository
+./git_clone_gobo.sh gobo					# get code from repository
 cd gobo; export GOBO=`pwd`					# set environment variable
 bin/install.sh -v --thread=1 gcc				# compile bin
 PATH=$PATH:$GOBO/bin						# set path

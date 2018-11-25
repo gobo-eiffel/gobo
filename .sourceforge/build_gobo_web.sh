@@ -9,7 +9,7 @@
 
 VERSION=$1							# get Gobo version
 cd /home/project-web/gobo-eiffel/htdocs				# go to project web
-git_clone_gobo.sh gobo-${VERSION}				# get code from repository
+./git_clone_gobo.sh gobo-${VERSION}				# get code from repository
 rm gobo; ln -s gobo-${VERSION} gobo				# reset gobo
 
 
