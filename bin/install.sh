@@ -19,7 +19,7 @@ gobo_usage() {
 VERBOSE=
 TEST_ONLY=
 THREAD_OPTION=
-while [[ $# -gt 1 ]]
+while [ $# -gt 1 ]
 do
 	case $1 in
 		-v)
