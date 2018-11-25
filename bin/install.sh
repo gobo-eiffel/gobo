@@ -132,7 +132,8 @@ if [ "$EIF" = "ge" ]; then
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gexlt..."
 		fi
-		$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gexslt/src/system.ecf
+		$BIN_DIR/gec$EXE --finalize --no-benchmark --cc=no $THREAD_OPTION $GOBO/tool/gexslt/src/system.ecf
+		$BIN_DIR/gecc$EXE $THREAD_OPTION gexslt.sh
 		$STRIP gexslt${EXE}
 	fi
 else
