@@ -1,6 +1,6 @@
 # Release History
 
-## Version 4.3 - ??
+## Version 4.3 - 28 November 2018
 
 ### geant
 
@@ -13,7 +13,7 @@
 ### gec
 
 * Renamed command-line option `--new_instance_types` as `--new-instance-types`
-  to comply with the argument library validity constraints.
+  to comply with the `argument` library validity constraints.
 * Added command-line options `--no-benchmark`, `--nested-benchmark` and --`metrics`.
 * Improved the way benchmarks, metrics, silent and verbose modes are
   specified and taken into account.
@@ -119,6 +119,8 @@
 * Made sure that variables defined in the ECF file are taken into account
   when processing location attributes of clusters or libraries.
 * Added support for ECF 1.19.0.
+* Fixed bug in void-safety CAP after a `check` instruction with no `then`
+  clause.
 
 ### Gobo Eiffel Utility Library
 
