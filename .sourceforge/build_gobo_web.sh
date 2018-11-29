@@ -7,10 +7,10 @@
 
 # usage: build_gobo_web.sh <gobo_version>
 
-VERSION=$1							# get Gobo version
-cd /home/project-web/gobo-eiffel/htdocs				# go to project web
-./git_clone_gobo.sh gobo-${VERSION}				# get code from repository
-rm gobo; ln -s gobo-${VERSION} gobo				# reset gobo
+VERSION=$1									# get Gobo version
+./git_clone_gobo.sh /home/project-web/gobo-eiffel/htdocs/gobo-${VERSION}	# get code from repository
+cd /home/project-web/gobo-eiffel/htdocs						# go to project web
+rm gobo; ln -s gobo-${VERSION} gobo						# reset gobo
 
 
 
