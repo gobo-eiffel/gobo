@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+
+Error code: VIFI(1)
+
+Error: class inherits a frozen class, i.e. a class that cannot be inherited.
+What to do: remove class from inheritance clause.
+
+Class: AA
+
+Inherited frozen class: BB
+
+-------------------------------------------------------------------------------

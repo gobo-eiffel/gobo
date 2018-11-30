@@ -1,5 +1,12 @@
 # Release History
 
+## Version ?? - ??
+
+### Gobo Eiffel Tools Library
+
+* Made sure that validity error `VHPR-2` (conforming inheritance from
+  a frozen class) is reported correctly.
+
 ## Version 4.3 - 28 November 2018
 
 ### geant

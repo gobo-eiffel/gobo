@@ -84,6 +84,7 @@ inherit
 			reportable_vgcp3_error,
 			reportable_vhay_error,
 			reportable_vhpr1_error,
+			reportable_vhpr2_error,
 			reportable_vhpr3_error,
 			reportable_vhrc1_error,
 			reportable_vhrc2_error,
@@ -678,6 +679,13 @@ feature -- Validity error status
 
 	reportable_vhpr1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHPR-1 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vhpr2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VHPR-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

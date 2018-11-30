@@ -150,6 +150,7 @@ create
 	make_vhay0a,
 	make_vhpr1a,
 	make_vhpr1b,
+	make_vhpr2a,
 	make_vhpr3a,
 	make_vhrc1a,
 	make_vhrc2a,
@@ -6123,6 +6124,46 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = class NONE
+		end
+
+	make_vhpr2a (a_class: ET_CLASS; a_parent: ET_BASE_TYPE)
+			-- Create a new VHPR-2 error: `a_class' inherits from frozen
+			-- class `a_parent' through conforming inheritance.
+			--
+			-- ECMA 367-2: p.47
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_parent.position
+			code := template_code (vhpr2a_template_code)
+			etl_code := vhpr2_etl_code
+			default_template := default_message_template (vhpr2a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_parent.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = parent class
 		end
 
 	make_vhpr3a (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
@@ -14660,6 +14701,7 @@ feature {NONE} -- Implementation
 	vhay0a_default_template: STRING = "implicitly inherits from unknown class ANY."
 	vhpr1a_default_template: STRING = "inheritance cycle $7."
 	vhpr1b_default_template: STRING = "inheritance cycle when inheriting from $7."
+	vhpr2a_default_template: STRING = "conforming inheritance from frozen class $7."
 	vhpr3a_default_template: STRING = "invalid type '$7' in parent clause."
 	vhrc1a_default_template: STRING = "`$7' is not the final name of a feature in $8."
 	vhrc2a_default_template: STRING = "feature name `$7' appears as first element of two Rename_pairs."
@@ -14894,6 +14936,7 @@ feature {NONE} -- Implementation
 	vffd6_etl_code: STRING = "VFFD-6"
 	vffd7_etl_code: STRING = "VFFD-7"
 	vhpr1_etl_code: STRING = "VHPR-1"
+	vhpr2_etl_code: STRING = "VHPR-2"
 	vgcc1_etl_code: STRING = "VGCC-1"
 	vgcc3_etl_code: STRING = "VGCC-3"
 	vgcc5_etl_code: STRING = "VGCC-5"
@@ -15147,6 +15190,7 @@ feature {NONE} -- Implementation
 	vhay0a_template_code: STRING = "vhay0a"
 	vhpr1a_template_code: STRING = "vhpr1a"
 	vhpr1b_template_code: STRING = "vhpr1b"
+	vhpr2a_template_code: STRING = "vhpr2a"
 	vhpr3a_template_code: STRING = "vhpr3a"
 	vhrc1a_template_code: STRING = "vhrc1a"
 	vhrc2a_template_code: STRING = "vhrc2a"

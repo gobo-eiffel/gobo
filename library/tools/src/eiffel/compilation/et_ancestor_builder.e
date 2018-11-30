@@ -344,6 +344,11 @@ feature {NONE} -- Ancestors
 							error_handler.report_gvhso2a_error (current_class)
 						end
 						has_error := True
+					elseif a_parent_class.is_frozen and l_is_conforming then
+							-- Error: cannot inherit from a frozen class.
+						set_fatal_error (current_class)
+						error_handler.report_vhpr2a_error (current_class, a_type)
+						has_error := True
 					elseif not has_error then
 						add_parent_to_ancestors (a_parent, l_is_conforming)
 						if current_class.has_ancestors_error then
