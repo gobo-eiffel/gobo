@@ -613,7 +613,11 @@ feature -- Basic operations
 		do
 			across a_settings.primary_settings as l_primary_settings loop
 				if STRING_.same_case_insensitive (l_primary_settings.key, "all_assertions") then
-					override_all_assertions (l_primary_settings.item)
+					if attached system_config.targets as l_targets then
+						l_targets.do_all (agent {ET_ECF_TARGET}.override_all_assertions (l_primary_settings.item))
+					else
+						override_all_assertions (l_primary_settings.item)
+					end
 				else
 					settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
 				end
