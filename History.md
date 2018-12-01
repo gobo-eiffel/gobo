@@ -10,8 +10,7 @@
 ### Gobo Eiffel Tools Library
 
 * Do not report a syntax error for manifest characters of the form `'''`.
-  Apparently it is allowed by the ECMA standard. (Note that I see nothing
-  in the standard forbiding `"""` either!)
+  Apparently it is allowed by the ECMA standard.
 
 ### Gobo Eiffel XSLT Library
 
