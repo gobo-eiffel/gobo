@@ -7,6 +7,12 @@
 * Made sure that validity error `VHPR-2` (conforming inheritance from
   a frozen class) is reported correctly.
 
+### Gobo Eiffel Tools Library
+
+* Do not report a syntax error for manifest characters of the form `'''`.
+  Apparently it is allowed by the ECMA standard. (Note that I see nothing
+  in the standard forbiding `"""` either!)
+
 ### Gobo Eiffel XSLT Library
 
 * Made unit tests compilable in void-safe mode.

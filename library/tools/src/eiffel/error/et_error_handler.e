@@ -588,17 +588,6 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SCTQ_error (a_filename: STRING; p: ET_POSITION)
-			-- Character quote should be declared as '%''
-			-- and not as ''' in character constant.
-			-- (SCTQ: Syntax Character Triple-Quote)
-		require
-			a_filename_not_void: a_filename /= Void
-			p_not_void: p /= Void
-		do
-			report_syntax_error (a_filename, p)
-		end
-
 	report_SIFU_error (a_filename: STRING; p: ET_POSITION)
 			-- An underscore may not be the first character
 			-- of an integer constant. (ETL2 p.420)

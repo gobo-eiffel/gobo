@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2013/09/19 $"
 	revision: "$Revision: #1 $"
@@ -3379,14 +3379,6 @@ feature {NONE} -- Processing
 			-- valid_string: (\'[^%\n]\').recognizes (text_substring (1, 3))
 			valid_c: text_item (2) = c
 		do
-			if c = '%'' then
-					-- Syntax error: character quote should be declared
-					-- as '%'' and not as ''' in character constant.
-				column := column + 1
-				set_syntax_error
-				error_handler.report_SCTQ_error (filename, current_position)
-				column := column - 1
-			end
 			last_literal_start := 2
 			last_literal_end := 2
 			last_token := E_CHARACTER
