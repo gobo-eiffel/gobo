@@ -3,7 +3,7 @@ note
 	description: "Routines that support passing of xsl:with-param"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ feature -- Optimization
 		end
 
 	check_with_params (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking of all in  `a_parameters'.
 		require
 			parameter_list_not_void: a_parameters /= Void
@@ -59,7 +59,7 @@ feature -- Optimization
 		end
 
 	optimize_with_params (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_context: XM_XPATH_STATIC_CONTEXT;
-		a_context_item_type: XM_XPATH_ITEM_TYPE)
+		a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Optimize all in  `a_parameters'.
 		require
 			parameter_list_not_void: a_parameters /= Void
@@ -119,7 +119,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	check_parameter_static_type (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_parameter_static_type (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Check static type of `select_expression' in `a_parameter'.
 		require
 			a_parameter_not_void: a_parameter /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	optimize_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Optimize `select_expression' in `a_parameter'.
 		require
 			a_parameter_not_void: a_parameter /= Void

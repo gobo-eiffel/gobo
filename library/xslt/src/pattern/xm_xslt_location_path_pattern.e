@@ -5,7 +5,7 @@ note
 		"XSLT location path patterns (e.g. A/B/C)"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -262,7 +262,7 @@ feature -- Optimization
 			end
 		end
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Type-check the pattern;
 		local
 			l_filter_expression, l_expression: XM_XPATH_EXPRESSION

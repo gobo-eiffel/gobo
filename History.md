@@ -7,6 +7,10 @@
 * Made sure that validity error `VHPR-2` (conforming inheritance from
   a frozen class) is reported correctly.
 
+### Gobo Eiffel XSLT Library
+
+* Made unit tests compilable in void-safe mode.
+
 ## Version 4.3 - 28 November 2018
 
 ### geant

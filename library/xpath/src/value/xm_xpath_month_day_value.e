@@ -5,7 +5,7 @@ note
 		"Objects that represent XML Schema gMonthDay values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,12 +113,13 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: detachable XM_XPATH_CONTEXT): INTEGER
 			-- Comparison of `Current' to `other'
 		local
 			l_mdv: XM_XPATH_MONTH_DAY_VALUE
 			l_dt1, l_dt2: DT_DATE_TIME
 			l_time: DT_TIME
+			l_implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			l_mdv := other.as_month_day_value
 			if zoned = l_mdv.zoned then
@@ -149,7 +150,12 @@ feature -- Comparison
  				check attached zoned_date as l_zoned_date and attached l_mdv.local_date as l_mdv_local_date then
 					create l_time.make (0,0,0)
 					create l_dt2.make_from_date_time (l_mdv_local_date, l_time)
-					a_context.implicit_timezone.convert_to_utc (l_dt2)
+					if a_context /= Void then
+						l_implicit_timezone := a_context.implicit_timezone
+					else
+						create l_implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+					end
+					l_implicit_timezone.convert_to_utc (l_dt2)
 					create l_time.make (0,0,0)
 					create l_dt1.make_from_date_time (l_zoned_date.date, l_time)
 					l_zoned_date.time_zone.convert_to_utc (l_dt1)
@@ -162,7 +168,12 @@ feature -- Comparison
 					l_mdv_zoned_date.time_zone.convert_to_utc (l_dt2)
 					create l_time.make (0,0,0)
 					create l_dt1.make_from_date_time (l_local_date, l_time)
-					a_context.implicit_timezone.convert_to_utc (l_dt1)
+					if a_context /= Void then
+						l_implicit_timezone := a_context.implicit_timezone
+					else
+						create l_implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+					end
+					l_implicit_timezone.convert_to_utc (l_dt1)
 					Result := l_dt1.three_way_comparison (l_dt2)
 				end
 			end

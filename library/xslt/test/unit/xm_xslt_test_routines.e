@@ -5,7 +5,7 @@ note
 		"Test character maps and other serialization features."
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,10 +29,10 @@ feature {NONE} -- Test support routines
 	Buffer_size: INTEGER = 8000
 			-- Size of read buffer used by `read_utf8_results_file'
 
-	last_utf8_string: UC_UTF8_STRING
+	last_utf8_string: detachable UC_UTF8_STRING
 			-- Last contents read by `read_utf8_results_file'
 
-	last_latin1_string: STRING
+	last_latin1_string: detachable STRING
 			-- Last contents read by `read_results_file'
 
 	read_utf8_results_file (a_filename: STRING)
@@ -64,6 +64,7 @@ feature {NONE} -- Test support routines
 			-- Read `a_filename' within `data_dirname' as Latin-1 bytes and set `last_latin1_string' to contents.
 		local
 			l_test_file: KL_TEXT_INPUT_FILE
+			l_last_latin1_string: like last_latin1_string
 		do
 			create l_test_file.make (file_system.pathname (data_dirname, a_filename))
 			assert ("Test file exists", l_test_file /= Void)
@@ -71,12 +72,13 @@ feature {NONE} -- Test support routines
 			assert ("Test file readable", l_test_file.is_open_read)
 			from
 				l_test_file.read_string (Buffer_size)
-				last_latin1_string := STRING_.cloned_string (l_test_file.last_string)
+				l_last_latin1_string := STRING_.cloned_string (l_test_file.last_string)
+				last_latin1_string := l_last_latin1_string
 			until
 				l_test_file.end_of_input
 			loop
 				l_test_file.read_string (Buffer_size)
-				last_latin1_string := STRING_.appended_string (last_latin1_string, l_test_file.last_string)
+				last_latin1_string := STRING_.appended_string (l_last_latin1_string, l_test_file.last_string)
 			end
 			l_test_file.close
 		ensure

@@ -5,7 +5,7 @@ note
 		"Objects that represent an XPath boolean value"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,7 +87,7 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: detachable XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		do
 			if value = other.as_boolean_value.value then

@@ -5,7 +5,7 @@ note
 		"Test building XSLT stylesheet tree"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,6 +44,7 @@ feature -- Test
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
 			l_transformer: detachable XM_XSLT_TRANSFORMER
+			l_last_loaded_module: detachable XM_XPATH_TREE_DOCUMENT
 			l_uri_source: XM_XSLT_URI_SOURCE
 			l_template_1: detachable XM_XSLT_TEMPLATE
 			l_template_2: detachable XM_XSLT_TEMPLATE
@@ -62,8 +63,10 @@ feature -- Test
 			create l_uri_source.make (books_xsl_uri.full_reference)
 			l_stylesheet_compiler.prepare (l_uri_source, dummy_uri)
 			assert ("Stylesheet compiled without errors", not l_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", l_stylesheet_compiler.last_loaded_module /= Void)
-			if not attached {XM_XSLT_STYLESHEET} l_stylesheet_compiler.last_loaded_module.document_element as l_document_element then
+			l_last_loaded_module := l_stylesheet_compiler.last_loaded_module
+			assert ("Stylesheet not void", l_last_loaded_module /= Void)
+			check asserted_above: l_last_loaded_module /= Void then end
+			if not attached {XM_XSLT_STYLESHEET} l_last_loaded_module.document_element as l_document_element then
 				assert ("document_element_not_void", False)
 			elseif l_document_element.is_stylesheet_in_error then
 				assert ("Stylesheet compiled without errors", False)

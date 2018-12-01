@@ -5,7 +5,7 @@ note
 		"Objects that represent XPath duration values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -167,7 +167,7 @@ feature -- Comparison
 			Result := normalized_duration.same_expression (a_other.normalized_duration)
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: detachable XM_XPATH_CONTEXT): INTEGER
 			-- Comparison of `Current' to `other'
 		local
 			l_duration: like duration

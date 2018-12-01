@@ -5,7 +5,7 @@ note
 		"Test schematron"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output, l_second_output: XM_OUTPUT
 			l_test_string: STRING
@@ -51,6 +51,7 @@ feature -- Test
 			l_string_resolver: XM_STRING_URI_RESOLVER
 			l_test_file: KL_TEXT_INPUT_FILE
 			l_factory: XM_XSLT_NULL_MESSAGE_EMITTER_FACTORY
+			l_last_output: detachable STRING
 		do
 			create l_string_resolver.make
 			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (l_string_resolver)
@@ -67,6 +68,7 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (wai_schema_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -81,7 +83,10 @@ feature -- Test
 			assert ("catalog_resolver", attached {XM_CATALOG_RESOLVER} l_configuration.entity_resolver)
 
 			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.resize (2 * shared_catalog_manager.bootstrap_resolver.well_known_system_ids.count)
-			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.put (l_output.last_output, "string:/transform")
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.put (l_last_output, "string:/transform")
 
 			-- now use the generated transform to produce a report
 
@@ -91,8 +96,8 @@ feature -- Test
 			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
-			assert ("transformer", l_transformer /= Void)
 			assert ("transformer 2", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (evil_wai_uri.full_reference)
 			create l_second_output
 			l_second_output.set_output_to_string
@@ -113,7 +118,10 @@ feature -- Test
 				l_test_string := STRING_.appended_string (l_test_string, l_test_file.last_string)
 			end
 			l_test_file.close
-			assert ("Results same as test file", STRING_.same_string (l_test_string, l_second_output.last_output))
+			l_last_output := l_second_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert ("Results same as test file", STRING_.same_string (l_test_string, l_last_output))
 		end
 
 	test_schematron_conformance

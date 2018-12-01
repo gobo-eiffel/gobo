@@ -5,7 +5,7 @@ note
 		"Test stripper rules"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,12 +36,13 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_test_string: STRING
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
 			l_test_file: KL_TEXT_INPUT_FILE
+			l_last_output: detachable STRING
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -55,6 +56,7 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (strip_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -75,7 +77,10 @@ feature -- Test
 				l_test_string := STRING_.appended_string (l_test_string, l_test_file.last_string)
 			end
 			l_test_file.close
-			assert ("Results same as test file", STRING_.same_string (l_test_string, l_output.last_output))
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert ("Results same as test file", STRING_.same_string (l_test_string, l_last_output))
 		end
 
 feature {NONE} -- Implementation

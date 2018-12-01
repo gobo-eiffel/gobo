@@ -28,7 +28,7 @@
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="none" use="none"/>
-			<void_safety support="none" use="none"/>
+			<void_safety support="all" use="all"/>
 		</capability>
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>

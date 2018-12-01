@@ -5,7 +5,7 @@ note
 		"Test xs:for-each-group"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,10 +36,11 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_last_output: detachable STRING
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -53,13 +54,17 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (cities_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert_strings_equal ("Correct result", expected_result_string_one, l_output.last_output.out)
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert_strings_equal ("Correct result", expected_result_string_one, l_last_output.out)
 		end
 
 	test_grouping_starting_with
@@ -68,10 +73,11 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer:detachable  XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_last_output: detachable STRING
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -85,13 +91,17 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (xslt_intro_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert_strings_equal ("Correct result", expected_result_string_two, l_output.last_output.out)
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert_strings_equal ("Correct result", expected_result_string_two, l_last_output.out)
 		end
 
 	test_current_grouping_key
@@ -100,10 +110,11 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_last_output: detachable STRING
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -117,13 +128,17 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (titles_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert_strings_equal ("Correct result", expected_result_string_three, l_output.last_output.out)
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert_strings_equal ("Correct result", expected_result_string_three, l_last_output.out)
 		end
 
 	test_group_adjacent
@@ -132,10 +147,11 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_last_output: detachable STRING
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -149,13 +165,17 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (mobile_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert_strings_equal ("Correct result", expected_result_string_four, l_output.last_output.out)
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert_strings_equal ("Correct result", expected_result_string_four, l_last_output.out)
 		end
 
 	test_group_ending_with
@@ -164,10 +184,11 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_last_output: detachable STRING
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -181,13 +202,17 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (continued_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
-			assert_strings_equal ("Correct result", expected_result_string_five, l_output.last_output.out)
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert_strings_equal ("Correct result", expected_result_string_five, l_last_output.out)
 		end
 
 	expected_result_string_one: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?><table><tr><th>Position</th><th>Country</th><th>City List</th><th>Population</th></tr><tr><td>1</td><td>Italia</td><td>Milano, Venezia</td><td>6</td></tr><tr><td>2</td><td>France</td><td>Paris, Lyon</td><td>9</td></tr><tr><td>3</td><td>Deutschland</td><td>M%%/252/nchen</td><td>4</td></tr></table>"

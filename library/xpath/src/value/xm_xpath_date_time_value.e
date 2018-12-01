@@ -5,7 +5,7 @@ note
 		"Objects that represent XPath xs:dateTime values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,6 +25,9 @@ inherit
 		redefine
 			make, make_from_date_time, make_from_zoned_date_time, make_from_date, make_from_zoned_date
 		end
+
+	DT_SHARED_SYSTEM_CLOCK
+		export {NONE} all end
 
 create
 
@@ -196,11 +199,12 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: detachable XM_XPATH_CONTEXT): INTEGER
 			-- Comparison of `Current' to `other'
 		local
 			a_date_time: XM_XPATH_DATE_TIME_VALUE
 			dt1, dt2: DT_DATE_TIME
+			l_implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			a_date_time := other.as_date_time_value
 			if zoned = a_date_time.zoned then
@@ -222,7 +226,12 @@ feature -- Comparison
  			elseif zoned then
  				check attached zoned_date_time as l_zoned_date_time and attached a_date_time.local_date_time as l_other_local_date_time then
 					create dt2.make_from_date_time (l_other_local_date_time.date, l_other_local_date_time.time)
-					a_context.implicit_timezone.convert_to_utc (dt2)
+					if a_context /= Void then
+						l_implicit_timezone := a_context.implicit_timezone
+					else
+						create l_implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+					end
+					l_implicit_timezone.convert_to_utc (dt2)
 					create dt1.make_from_date_time (l_zoned_date_time.date_time.date, l_zoned_date_time.date_time.time)
 					l_zoned_date_time.time_zone.convert_to_utc (dt1)
 					Result := dt1.three_way_comparison (dt2)
@@ -232,7 +241,12 @@ feature -- Comparison
 					create dt2.make_from_date_time (l_other_zoned_date_time.date_time.date, l_other_zoned_date_time.date_time.time)
 					l_other_zoned_date_time.time_zone.convert_to_utc (dt2)
 					create dt1.make_from_date_time (l_local_date_time.date, l_local_date_time.time)
-					a_context.implicit_timezone.convert_to_utc (dt1)
+					if a_context /= Void then
+						l_implicit_timezone := a_context.implicit_timezone
+					else
+						create l_implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+					end
+					l_implicit_timezone.convert_to_utc (dt1)
 					Result := dt1.three_way_comparison (dt2)
 				end
 			end

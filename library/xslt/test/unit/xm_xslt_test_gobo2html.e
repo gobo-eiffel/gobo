@@ -5,7 +5,7 @@ note
 		"Test gobo2html"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,10 +34,12 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_last_output: detachable STRING
+			l_last_latin1_string: like last_latin1_string
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -51,6 +53,7 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (structure_index_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -58,8 +61,14 @@ feature -- Test
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
 			read_results_file (from_saxon_html_filename)
+			l_last_latin1_string := last_latin1_string
+			assert ("postcondition_of_read_results_file", l_last_latin1_string /= Void)
+			check asserted_above: l_last_latin1_string /= Void then end
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
 			-- TODO: this %N will need removing when indentation is rationalized
-			assert ("Correct result", STRING_.same_string (l_output.last_output + "%N", last_latin1_string))
+			assert ("Correct result", STRING_.same_string (l_last_output + "%N", l_last_latin1_string))
 		end
 
 	test_transform2xml
@@ -68,10 +77,12 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_last_output: detachable STRING
+			l_last_latin1_string: like last_latin1_string
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -85,6 +96,7 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (structure_index_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -92,7 +104,13 @@ feature -- Test
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
 			read_results_file (from_saxon_xml_filename)
-			assert ("Correct result", STRING_.same_string (l_output.last_output, last_latin1_string))
+			l_last_latin1_string := last_latin1_string
+			assert ("postcondition_of_read_results_file", l_last_latin1_string /= Void)
+			check asserted_above: l_last_latin1_string /= Void then end
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
+			assert ("Correct result", STRING_.same_string (l_last_output, l_last_latin1_string))
 		end
 
 	test_transform2xhtml
@@ -101,10 +119,12 @@ feature -- Test
 			l_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_error_listener: XM_XSLT_TESTING_ERROR_LISTENER
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri_source, l_second_uri_source: XM_XSLT_URI_SOURCE
 			l_output: XM_OUTPUT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_last_output: detachable STRING
+			l_last_latin1_string: like last_latin1_string
 		do
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
@@ -118,6 +138,7 @@ feature -- Test
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
+			check asserted_above: l_transformer /= Void then end
 			create l_second_uri_source.make (structure_index_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -125,8 +146,14 @@ feature -- Test
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Transform successful", not l_transformer.is_error)
 			read_results_file (structure_index_xhtml_filename)
+			l_last_latin1_string := last_latin1_string
+			assert ("postcondition_of_read_results_file", l_last_latin1_string /= Void)
+			check asserted_above: l_last_latin1_string /= Void then end
+			l_last_output := l_output.last_output
+			assert ("set_output_to_string", l_last_output /= Void)
+			check asserted_above: l_last_output /= Void then end
 			-- TODO: this %N will need removing when indentation is rationalized
-			assert ("Correct result", STRING_.same_string (l_output.last_output + "%N", last_latin1_string))
+			assert ("Correct result", STRING_.same_string (l_last_output + "%N", l_last_latin1_string))
 		end
 
 feature {NONE} -- Debug
