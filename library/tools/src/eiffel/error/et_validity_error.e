@@ -523,9 +523,10 @@ feature {NONE} -- Initialization
 			-- Create a new VAVE error: the expression `an_expression' of a
 			-- loop variant in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself) is of type `a_type'
-			-- which is not "INTEGER".
+			-- which is not a sized variant of "INTEGER".
 			--
 			-- ETL2: p.130
+			-- ECMA 367-2: p.48
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -14580,7 +14581,7 @@ feature {NONE} -- Implementation
 	vaol1a_default_template: STRING = "old expression does not appear in a postcondition."
 	vape0a_default_template: STRING = "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
 	vape0b_default_template: STRING = "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
-	vave0a_default_template: STRING = "loop variant expression of non-INTEGER type '$7'."
+	vave0a_default_template: STRING = "loop variant expression of type '$7' is not a sized variant of INTEGER."
 	vbac1a_default_template: STRING = "the source of the assigner call (of type '$7') does not conform nor convert to its target (of type '$8')."
 	vbac2a_default_template: STRING = "query `$7' in class $8 has no assigner command."
 	vcch1a_default_template: STRING = "class is not marked as deferred but has deferred feature `$7'."

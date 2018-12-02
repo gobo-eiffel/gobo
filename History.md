@@ -9,6 +9,9 @@
 * Relaxed the validity rule where the result type of once functions cannot
   contain anchored types to just *unqualified* anchored types. This is to
   be compatible with ISE Eiffel.
+* Relaxed validity rule `VAVE` so that the loop variant expressions can
+  not only be of type `INTEGER` but also of one of its sized variants.
+  
 
 ### Gobo Eiffel Tools Library
 

@@ -963,9 +963,10 @@ feature -- Validity errors
 			-- Report VAVE error: the expression `an_expression' of a
 			-- loop variant in `a_class_impl' and viewed from one of
 			-- its descendants `a_class' (possibly itself) is of type
-			-- `a_type' which is not "INTEGER".
+			-- `a_type' which is not a sized variant of "INTEGER".
 			--
 			-- ETL2: p.130
+			-- ECMA 367-2: p.48
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void

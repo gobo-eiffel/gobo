@@ -4309,16 +4309,32 @@ feature {NONE} -- Instruction validity
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			had_error: BOOLEAN
 			l_named_type: ET_NAMED_TYPE
-			integer_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
-			integer_type := current_universe_impl.integer_type
 			l_expression := a_variant.expression
 			l_expression_context := new_context (current_type)
-			check_expression_validity (l_expression, l_expression_context, integer_type)
+			check_expression_validity (l_expression, l_expression_context, current_universe_impl.integer_type)
 			if has_fatal_error then
 				had_error := True
-			elseif not l_expression_context.same_named_type (integer_type, current_type) then
+			elseif l_expression_context.same_named_type (current_universe_impl.integer_8_type, current_type) then
+				-- OK.
+			elseif l_expression_context.same_named_type (current_universe_impl.integer_16_type, current_type) then
+				-- OK.
+			elseif l_expression_context.same_named_type (current_universe_impl.integer_32_type, current_type) then
+				-- OK.
+			elseif l_expression_context.same_named_type (current_universe_impl.integer_64_type, current_type) then
+				-- OK.
+			elseif l_expression_context.same_named_type (current_universe_impl.natural_8_type, current_type) then
+				-- OK.
+			elseif l_expression_context.same_named_type (current_universe_impl.natural_16_type, current_type) then
+				-- OK.
+			elseif l_expression_context.same_named_type (current_universe_impl.natural_32_type, current_type) then
+				-- OK.
+			elseif l_expression_context.same_named_type (current_universe_impl.natural_64_type, current_type) then
+				-- OK.
+			else
+					-- The type of the loop variant expression is not
+					-- a sized variant of "INTEGER".
 				had_error := True
 				set_fatal_error
 				l_named_type := l_expression_context.named_type
