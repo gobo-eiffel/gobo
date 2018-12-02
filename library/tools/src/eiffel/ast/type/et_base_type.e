@@ -5,7 +5,7 @@ note
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,7 @@ inherit
 			is_named_type,
 			is_base_type,
 			has_anchored_type,
+			has_unqualified_anchored_type,
 			has_identifier_anchored_type,
 			depends_on_qualified_anchored_type,
 			has_formal_types,
@@ -280,6 +281,15 @@ feature -- Status report
 		do
 			if attached actual_parameters as l_actual_parameters then
 				Result := l_actual_parameters.has_anchored_type
+			end
+		end
+
+	has_unqualified_anchored_type: BOOLEAN
+			-- Does current type contain an unqualified anchored type
+			-- (i.e. 'like Current' or 'like feature_name')?
+		do
+			if attached actual_parameters as l_actual_parameters then
+				Result := l_actual_parameters.has_unqualified_anchored_type
 			end
 		end
 

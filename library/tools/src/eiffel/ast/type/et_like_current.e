@@ -5,7 +5,7 @@ note
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,8 @@ inherit
 			conforms_from_tuple_type_with_type_marks,
 			type_with_type_mark,
 			is_type_reference_with_type_mark,
-			is_type_detachable_with_type_mark
+			is_type_detachable_with_type_mark,
+			has_unqualified_anchored_type
 		end
 
 create
@@ -222,6 +223,13 @@ feature -- Status report
 			-- overridden by `a_type_mark', if not Void
 		do
 			Result := a_context.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark))
+		end
+
+	has_unqualified_anchored_type: BOOLEAN
+			-- Does current type contain an unqualified anchored type
+			-- (i.e. 'like Current' or 'like feature_name')?
+		do
+			Result := True
 		end
 
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN

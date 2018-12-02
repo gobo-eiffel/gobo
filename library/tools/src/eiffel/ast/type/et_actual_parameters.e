@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -168,6 +168,23 @@ feature -- Status report
 			nb := count
 			from i := 1 until i > nb loop
 				if type (i).has_anchored_type then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	has_unqualified_anchored_type: BOOLEAN
+			-- Does one of current types contain an unqualified anchored type
+			-- (i.e. 'like Current' or 'like feature_name')?
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if type (i).has_unqualified_anchored_type then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

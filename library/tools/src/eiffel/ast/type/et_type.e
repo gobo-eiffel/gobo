@@ -5,7 +5,7 @@ note
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -422,6 +422,13 @@ feature -- Status report
 
 	has_anchored_type: BOOLEAN
 			-- Does current type contain an anchored type?
+		do
+			-- Result := False
+		end
+
+	has_unqualified_anchored_type: BOOLEAN
+			-- Does current type contain an unqualified anchored type
+			-- (i.e. 'like Current' or 'like feature_name')?
 		do
 			-- Result := False
 		end

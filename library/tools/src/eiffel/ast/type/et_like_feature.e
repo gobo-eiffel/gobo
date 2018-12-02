@@ -34,6 +34,7 @@ inherit
 			type_with_type_mark,
 			is_type_reference_with_type_mark,
 			is_type_detachable_with_type_mark,
+			has_unqualified_anchored_type,
 			depends_on_qualified_anchored_type
 		end
 
@@ -621,6 +622,13 @@ feature -- Status report
 					Result := False
 				end
 			end
+		end
+
+	has_unqualified_anchored_type: BOOLEAN
+			-- Does current type contain an unqualified anchored type
+			-- (i.e. 'like Current' or 'like feature_name')?
+		do
+			Result := True
 		end
 
 	depends_on_qualified_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN

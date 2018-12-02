@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,7 @@ inherit
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
 			named_type_is_formal_type,
+			has_unqualified_anchored_type,
 			depends_on_qualified_anchored_type,
 			has_formal_types,
 			same_syntactical_qualified_like_identifier_with_type_marks,
@@ -485,6 +486,13 @@ feature -- Status report
 					Result := False
 				end
 			end
+		end
+
+	has_unqualified_anchored_type: BOOLEAN
+			-- Does current type contain an unqualified anchored type
+			-- (i.e. 'like Current' or 'like feature_name')?
+		do
+			Result := target_type.has_unqualified_anchored_type
 		end
 
 	depends_on_qualified_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN

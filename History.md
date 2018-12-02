@@ -6,6 +6,9 @@
 
 * Made sure that validity error `VHPR-2` (conforming inheritance from
   a frozen class) is reported correctly.
+* Relaxed the validity rule where the result type of once functions cannot
+  contain anchored types to just *unqualified* anchored types. This is to
+  be compatible with ISE Eiffel.
 
 ### Gobo Eiffel Tools Library
 
