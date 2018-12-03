@@ -16,7 +16,7 @@ feature -- Access
 
 	input: KL_STDIN_FILE
 			-- Standard input file
-		once
+		once ("PROCESS")
 			create Result.make
 		ensure
 			instance_free: class
@@ -26,7 +26,7 @@ feature -- Access
 
 	output: KL_STDOUT_FILE
 			-- Standard output file
-		once
+		once ("PROCESS")
 			create Result.make
 		ensure
 			instance_free: class
@@ -36,7 +36,7 @@ feature -- Access
 
 	error: KL_STDERR_FILE
 			-- Standard error file
-		once
+		once ("PROCESS")
 			create Result.make
 		ensure
 			instance_free: class

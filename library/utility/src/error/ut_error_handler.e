@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -119,9 +119,9 @@ feature -- Status report
 			-- Is `info_file' set to something other than
 			-- the null output stream?
 		do
-			Result := info_file /= null_output_stream
+			Result := not attached {KL_NULL_TEXT_OUTPUT_STREAM} info_file
 		ensure
-			definition: Result implies (info_file /= null_output_stream)
+			definition: Result implies not attached {KL_NULL_TEXT_OUTPUT_STREAM} info_file
 		end
 
 feature -- Setting
