@@ -90,7 +90,7 @@
 		<set name="gelint_option" value="false" unless="${gelint_option}"/>
 		<set name="gc_option" value="no"/>
 		<set name="gc_option" value="boehm" if="${BOEHM_GC}"/>
-		<gec ecf="${ecf_filename}" finalize="${finalize}" gelint="${gelint_option}" gc="${gc_option}" c_compile="no" catcall="error" split="${split}" split_size="${split_size_option}"/>
+		<gec ecf="${ecf_filename}" target="${system}" finalize="${finalize}" gelint="${gelint_option}" gc="${gc_option}" c_compile="no" catcall="error" split="${split}" split_size="${split_size_option}"/>
 		<exec executable="gecc ${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="gecc ${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>
@@ -127,7 +127,7 @@
 		<set name="compatible" value="true" if="${GOBO_COMPATIBLE}"/>
 		<set name="project_path" value="${GOBO_BUILD_PREFIX}" if="${GOBO_BUILD_PREFIX}"/>
 		<set name="project_path" value="" unless="${GOBO_BUILD_PREFIX}"/>
-		<ise ecf="${ecf_filename}" system="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true" project_path="${project_path}"/>
+		<ise ecf="${ecf_filename}" system="${system}" target="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true" project_path="${project_path}"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<set name="compilation_directory" value="EIFGENs" unless="${GOBO_BUILD_PREFIX}"/>
