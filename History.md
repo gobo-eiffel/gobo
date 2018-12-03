@@ -11,7 +11,11 @@
   be compatible with ISE Eiffel.
 * Relaxed validity rule `VAVE` so that the loop variant expressions can
   not only be of type `INTEGER` but also of one of its sized variants.
-  
+* Fixed bug when the type of the anchor of a qualified anchored type
+  (e.g. `like {A}.f` or `like a.b`) appearing in the signature of a
+  redeclared feature is itself a qualified anchored type. In some valid
+  cases, a validity error `VDRD-2` was emitted, indicating that the signature
+  of the redeclared feature did not conform to the one in the parent.
 
 ### Gobo Eiffel Tools Library
 

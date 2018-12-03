@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_system_processor)
 			current_class_impl := current_class
+			create classes_to_be_processed.make (0)
 		end
 
 feature -- Validity checking
@@ -208,7 +209,7 @@ feature {NONE} -- Type validity
 				-- The target type may also be made up of qualified anchored types.
 			l_target_type.process (Current)
 			if not has_fatal_error then
-				l_class := l_target_type.base_class (current_class)
+				l_class := base_class (l_target_type, current_class_impl, current_class)
 				l_class.process (system_processor.feature_flattener)
 				if not l_class.features_flattened or else l_class.has_flattening_error then
 					set_fatal_error
@@ -298,6 +299,102 @@ feature {NONE} -- Type validity
 			reset_fatal_error (had_error)
 		end
 
+	base_class (a_type: ET_TYPE; a_class_impl: ET_CLASS; a_context: ET_TYPE_CONTEXT): ET_CLASS
+			-- Base class of `a_type' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_context' (possibly itself).
+			-- (Definition of base class in ETL2 page 198).
+			-- Return "*UNKNOWN*" class if identifier types could not be resolved,
+			-- or in case of unmatched formal generic parameter.
+		require
+			a_type_not_void: a_type /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			l_seed: INTEGER
+			l_class: ET_CLASS
+			l_target_type: ET_TYPE
+			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+		do
+			if attached {ET_QUALIFIED_LIKE_IDENTIFIER} a_type as l_qualified_anchored_type then
+				l_target_type := l_qualified_anchored_type.target_type
+				if a_class_impl.interface_checked then
+					l_seed := l_qualified_anchored_type.seed
+				else
+						-- Qualified anchored type not resolved yet.
+					l_class := base_class (l_target_type, a_class_impl, a_class_impl)
+					l_class.process (system_processor.feature_flattener)
+					if l_class.features_flattened_successfully and then attached l_class.named_query (l_qualified_anchored_type.name) as l_query then
+						l_seed := l_query.first_seed
+					else
+							-- Make sure that the error will be reported.
+							-- For that, we need to force the interface
+							-- of `a_class_impl' to be checked.
+						classes_to_be_processed.force_last (a_class_impl)
+					end
+				end
+				if l_seed = 0 then
+						-- Qualified anchored type could not resolved.
+					Result := tokens.unknown_class
+				else
+					l_class := base_class (l_target_type, a_class_impl, a_context)
+					l_class.process (system_processor.feature_flattener)
+					if not l_class.features_flattened_successfully then
+						Result := tokens.unknown_class
+					elseif attached l_class.seeded_query (l_seed) as l_query then
+						l_target_context := a_context.as_nested_type_context
+						l_target_context.force_last (l_target_type)
+						Result := base_class (l_query.type, l_query.implementation_class, l_target_context)
+						l_target_context.remove_last
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we resolved
+							-- current qualified anchored type.
+						Result := tokens.unknown_class
+					end
+				end
+			elseif attached {ET_LIKE_FEATURE} a_type as l_anchored_type then
+				a_class_impl.process (system_processor.feature_flattener)
+				l_seed := l_anchored_type.seed
+				if l_seed = 0 then
+						-- Anchored type could not resolved.
+					Result := tokens.unknown_class
+				elseif l_anchored_type.is_like_argument then
+					l_class := a_context.base_class
+					l_index := l_anchored_type.index
+					if not l_class.features_flattened_successfully then
+						Result := tokens.unknown_class
+					elseif attached l_class.seeded_feature (l_seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+						Result := base_class (l_args.item (l_index).type, l_feature.implementation_class, a_context)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := tokens.unknown_class
+					end
+				else
+					l_class := a_context.base_class
+					l_class.process (system_processor.feature_flattener)
+					if not l_class.features_flattened_successfully then
+						Result := tokens.unknown_class
+					elseif attached l_class.seeded_query (l_seed) as l_query then
+						Result := base_class (l_query.type, l_query.implementation_class, a_context)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we resolved
+							-- current anchored type.
+						Result := tokens.unknown_class
+					end
+				end
+			else
+				Result := a_type.base_class (a_context)
+			end
+		ensure
+			base_class_not_void: Result /= Void
+		end
+
 feature {ET_AST_NODE} -- Type processing
 
 	process_class (a_type: ET_CLASS)
@@ -348,8 +445,28 @@ feature {NONE} -- Access
 	in_qualified_anchored_type: BOOLEAN
 			-- Is the type being checked contained in a qualified anchored type?
 
+	classes_to_be_processed: DS_HASH_SET [ET_CLASS]
+			-- Classes that need to be processed
+			-- Classes that need their interface to be checked as a result of processing `current_class';
+			-- `current_class' will not be fully valid unless these classes are also successfully processed.
+
+feature {ET_INTERFACE_CHECKER} -- Access
+
+	set_classes_to_be_processed (a_classes: like classes_to_be_processed)
+			-- Set `classes_to_be_processed' to `a_classes'.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class_to_be_processed: not a_classes.has_void
+		do
+			classes_to_be_processed := a_classes
+		ensure
+			classes_to_be_processed_set: classes_to_be_processed = a_classes
+		end
+
 invariant
 
 	current_class_impl_not_void: current_class_impl /= Void
+	classes_to_be_processed_not_void: classes_to_be_processed /= Void
+	no_void_class_to_be_processed: not classes_to_be_processed.has_void
 
 end

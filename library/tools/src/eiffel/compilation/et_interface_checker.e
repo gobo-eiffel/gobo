@@ -5,7 +5,7 @@ note
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,8 +26,6 @@ inherit
 			process_class
 		end
 
-	ET_SHARED_FEATURE_NAME_TESTER
-
 create
 
 	make
@@ -39,14 +37,8 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_system_processor)
 			create classes_to_be_processed.make (10)
-			create parent_checker3.make (a_system_processor)
-			parent_checker3.set_classes_to_be_processed (classes_to_be_processed)
 			create qualified_anchored_type_checker.make (a_system_processor)
-			create named_features.make_map (400)
-			named_features.set_key_equality_tester (feature_name_tester)
-			create feature_adaptation_resolver.make (a_system_processor)
-			create dotnet_feature_adaptation_resolver.make (a_system_processor)
-			create signature_checker.make (a_system_processor)
+			qualified_anchored_type_checker.set_classes_to_be_processed (classes_to_be_processed)
 			create unfolded_tuple_actual_parameters_resolver.make (a_system_processor)
 		end
 
@@ -155,19 +147,9 @@ feature {NONE} -- Processing
 						error_handler.report_compilation_status (Current, current_class, system_processor)
 						check_qualified_anchored_signatures_validity
 						resolve_signatures_unfolded_tuple_actual_parameters
-						if not current_class.redeclared_signatures_checked then
-								-- An error occurred when checking the conformance of
-								-- redeclared signatures in the feature flattener. This
-								-- could have been caused by the fact that qualified types
-								-- could not be resolved yet. Check the conformance of
-								-- signatures again, and this time reports valid errors
-								-- if any.
-							check_signatures_validity
-						end
 						if not current_class.is_dotnet then
 								-- No need to check validity of .NET classes.
 							check_constraint_creations_validity
-							check_parents_validity
 						end
 					end
 				else
@@ -261,117 +243,6 @@ feature {NONE} -- Signature validity
 	qualified_anchored_type_checker: ET_QUALIFIED_ANCHORED_TYPE_CHECKER
 			-- Qualified anchored type checker
 
-	check_signatures_validity
-			-- Check signature validity for redeclarations and joinings
-			-- for all features of `current_class'.
-		do
-			resolve_feature_adaptations
-			if not current_class.has_interface_error then
-				from named_features.start until named_features.after loop
-					check_signature_validity (named_features.item_for_iteration)
-					named_features.forth
-				end
-			end
-			named_features.wipe_out
-		ensure
-			named_features_wiped_out: named_features.is_empty
-		end
-
-	check_signature_validity (a_feature: ET_FLATTENED_FEATURE)
-			-- Check signature validity for redeclarations and joinings for `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-			signature_checker.check_signature_validity (a_feature, current_class, True)
-			if signature_checker.has_fatal_error then
-				set_fatal_error (current_class)
-			end
-		end
-
-	signature_checker: ET_SIGNATURE_CHECKER
-			-- Signature validity checker
-
-feature {NONE} -- Feature adaptation
-
-	feature_adaptation_resolver: ET_FEATURE_ADAPTATION_RESOLVER
-			-- Feature adaptation resolver
-
-	dotnet_feature_adaptation_resolver: ET_DOTNET_FEATURE_ADAPTATION_RESOLVER
-			-- Feature adaptation resolver for .NET classes
-
-	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
-			-- Features indexed by name
-
-	resolve_feature_adaptations
-			-- Resolve the feature adaptations of the inheritance clause of
-			-- `current_class' and put resulting features in `named_features'.
-		do
-			if current_class.is_dotnet then
-				dotnet_feature_adaptation_resolver.resolve_feature_adaptations (current_class, named_features)
-				if dotnet_feature_adaptation_resolver.has_fatal_error then
-					set_fatal_error (current_class)
-				end
-			else
-				feature_adaptation_resolver.resolve_feature_adaptations (current_class, named_features)
-				if feature_adaptation_resolver.has_fatal_error then
-					set_fatal_error (current_class)
-				end
-			end
-			resolve_inherited_features (current_class.queries)
-			resolve_inherited_features (current_class.procedures)
-		end
-
-	resolve_inherited_features (a_feature_list: ET_FEATURE_LIST)
-			-- We have to reconstruct `flattened_feature' and `flattened_parent'
-			-- objects of type ET_INHERITED_FEATURE (these are non-redeclared
-			-- inherited features) as they were when this was first done in
-			-- ET_FEATURE_FLATTENER. In order to achieve that, we made sure
-			-- in ET_FEATURE_FLATTENER that:
-			-- flattened_feature.first_precursor = flattened_parent.precursor_feature.
-		require
-			a_feature_list_not_void: a_feature_list /= Void
-		local
-			l_feature: ET_FEATURE
-			i, nb: INTEGER
-			l_parent_feature: detachable ET_PARENT_FEATURE
-			l_first_precursor: detachable ET_FEATURE
-		do
-			from
-					-- Non-redeclared inherited features are listed from
-					-- `declared_count + 1' to `count' in the feature list.
-				i := a_feature_list.declared_count + 1
-				nb := a_feature_list.count
-			until
-				i > nb
-			loop
-				l_feature := a_feature_list.item (i)
-				named_features.search (l_feature.name)
-				if named_features.found then
-					if attached {ET_INHERITED_FEATURE} named_features.found_item as l_inherited_feature then
-						l_inherited_feature.set_flattened_feature (l_feature)
-						l_parent_feature := l_inherited_feature.parent_feature
-						if l_parent_feature.merged_feature = Void then
-							l_inherited_feature.set_flattened_parent (l_parent_feature)
-						else
-							from
-								l_first_precursor := l_feature.first_precursor
-							until
-								l_parent_feature = Void
-							loop
-								if l_parent_feature.precursor_feature = l_first_precursor then
-									l_inherited_feature.set_flattened_parent (l_parent_feature)
-									l_parent_feature := Void
-								else
-									l_parent_feature := l_parent_feature.merged_feature
-								end
-							end
-						end
-					end
-				end
-				i := i + 1
-			end
-		end
-
 feature {NONE} -- Constraint creation validity
 
 	check_constraint_creations_validity
@@ -448,20 +319,6 @@ feature {NONE} -- Constraint creation validity
 			end
 		end
 
-feature {NONE} -- Parents validity
-
-	check_parents_validity
-			-- Check validity of parents of `current_class'.
-		do
-			parent_checker3.check_parents_validity (current_class)
-			if parent_checker3.has_fatal_error then
-				set_fatal_error (current_class)
-			end
-		end
-
-	parent_checker3: ET_PARENT_CHECKER3
-			-- Parent validity checker (third pass)
-
 feature {NONE} -- Access
 
 	classes_to_be_processed: DS_HASH_SET [ET_CLASS]
@@ -473,13 +330,7 @@ feature {NONE} -- Access
 
 invariant
 
-	parent3_checker_not_void: parent_checker3 /= Void
 	qualified_anchored_type_checker_not_void: qualified_anchored_type_checker /= Void
-	named_features_not_void: named_features /= Void
-	no_void_named_feature: not named_features.has_void_item
-	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
-	dotnet_feature_adaptation_resolver_not_void: dotnet_feature_adaptation_resolver /= Void
-	signature_checker_not_void: signature_checker /= Void
 	unfolded_tuple_actual_parameters_resolver_not_void: unfolded_tuple_actual_parameters_resolver /= Void
 	classes_to_be_processed_not_void: classes_to_be_processed /= Void
 	no_void_class_to_be_processed: not classes_to_be_processed.has_void

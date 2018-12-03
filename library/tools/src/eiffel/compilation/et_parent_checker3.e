@@ -5,7 +5,7 @@ note
 		"Eiffel parent validity third pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 			-- Create a new parent third pass checker.
 		do
 			precursor (a_system_processor)
-			create classes_to_be_processed.make (0)
 		end
 
 feature -- Validity checking
@@ -102,11 +101,12 @@ feature {NONE} -- Parent validity
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
 			a_creation_procedure: detachable ET_PROCEDURE
-			a_constraint_class: ET_CLASS
-			a_constraint_error: BOOLEAN
 		do
 			a_class := a_type.base_class
-			if a_class.is_generic and then attached a_class.formal_parameters as a_formals then
+			a_class.process (system_processor.interface_checker)
+			if not a_class.interface_checked_successfully then
+				set_fatal_error
+			elseif a_class.is_generic and then attached a_class.formal_parameters as a_formals then
 				an_actuals := a_type.actual_parameters
 				if an_actuals = Void or else an_actuals.count /= a_formals.count then
 						-- Error already reported during first pass of
@@ -143,72 +143,31 @@ feature {NONE} -- Parent validity
 									-- Note that we already checked in ET_PARENT_CHECKER1 that
 									-- `an_actual_class' had to be preparsed.
 								an_actual_class.process (system_processor.feature_flattener)
-								if not an_actual_class.features_flattened or else an_actual_class.has_flattening_error then
+								if not an_actual_class.features_flattened_successfully then
 									set_fatal_error
 								else
 									from j := 1 until j > nb2 loop
 										a_name := a_creator.feature_name (j)
-										a_constraint_error := False
-										if a_class.interface_checked and not a_class.has_interface_error then
-											a_seed := a_name.seed
-										else
-												-- Compute the seed of the creation procedure here.
-												-- Do not report error, that will be done when `a_class' will be
-												-- processed (it will be put in `classes_to_be_processed' when
-												-- there is an error).
-											if attached a_formal.constraint_base_type as a_constraint_base_type then
-												a_constraint_class := a_constraint_base_type.base_class
-											else
-													-- We know that the constraint is not
-													-- void since we have a creation clause.
-													-- So we must have something like that:
-													-- "[G -> H create make end, H -> G]".
-													-- We consider that the base class of the
-													-- constraint is 'ANY' in that case.
-												a_constraint_class := a_class.universe.detachable_any_type.base_class
-											end
-												-- Build the feature table.
-											a_constraint_class.process (system_processor.feature_flattener)
-											if not a_constraint_class.features_flattened or else a_constraint_class.has_flattening_error then
-												a_constraint_error := True
-											else
-												a_creation_procedure := a_constraint_class.named_procedure (a_name)
-												if a_creation_procedure /= Void then
-													a_seed := a_creation_procedure.first_seed
-												else
-													a_constraint_error := True
-												end
-											end
-										end
-										if a_constraint_error then
+										a_seed := a_name.seed
+										a_creation_procedure := an_actual_class.seeded_procedure (a_seed)
+										if a_creation_procedure = Void then
+												-- Internal error: the conformance of the actual
+												-- parameter to its generic constraint has been
+												-- checked during the second pass.
 											set_fatal_error
-											if not a_class.interface_checked then
-													-- Make sure that the error will be reported.
-													-- For that, we need to force the interface
-													-- of `a_class' to be checked.
-												classes_to_be_processed.force_last (a_class)
-											end
-										else
-											a_creation_procedure := an_actual_class.seeded_procedure (a_seed)
-											if a_creation_procedure = Void then
-													-- Internal error: the conformance of the actual
-													-- parameter to its generic constraint has been
-													-- checked during the second pass.
-												set_fatal_error
-												error_handler.report_giaaa_error
-											elseif a_formal_type /= Void then
-												if not has_formal_type_error and a_formal_parameter /= Void then
-													if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
-														set_fatal_error
-														error_handler.report_vtcg4b_error (current_class, current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
-													end
+											error_handler.report_giaaa_error
+										elseif a_formal_type /= Void then
+											if not has_formal_type_error and a_formal_parameter /= Void then
+												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
+													set_fatal_error
+													error_handler.report_vtcg4b_error (current_class, current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
 												end
-											elseif not a_creation_procedure.is_creation_exported_to (a_class, an_actual_class, system_processor) then
-												set_fatal_error
-												error_handler.report_vtcg4a_error (current_class, current_class, a_type.position, i, a_name, an_actual_class, a_class)
 											end
-											j := j + 1
+										elseif not a_creation_procedure.is_creation_exported_to (a_class, an_actual_class, system_processor) then
+											set_fatal_error
+											error_handler.report_vtcg4a_error (current_class, current_class, a_type.position, i, a_name, an_actual_class, a_class)
 										end
+										j := j + 1
 									end
 								end
 							end
@@ -249,30 +208,5 @@ feature {ET_AST_NODE} -- Type dispatcher
 		do
 			check_class_type_validity (a_type)
 		end
-
-feature {NONE} -- Access
-
-	classes_to_be_processed: DS_HASH_SET [ET_CLASS]
-			-- Classes that need to be processed
-			-- Classes that need their interface to be checked as a result of processing `current_class';
-			-- `current_class' will not be fully valid unless these classes are also successfully processed.
-
-feature {ET_INTERFACE_CHECKER} -- Access
-
-	set_classes_to_be_processed (a_classes: like classes_to_be_processed)
-			-- Set `classes_to_be_processed' to `a_classes'.
-		require
-			a_classes_not_void: a_classes /= Void
-			no_void_class_to_be_processed: not a_classes.has_void
-		do
-			classes_to_be_processed := a_classes
-		ensure
-			classes_to_be_processed_set: classes_to_be_processed = a_classes
-		end
-
-invariant
-
-	classes_to_be_processed_not_void: classes_to_be_processed /= Void
-	no_void_class_to_be_processed: not classes_to_be_processed.has_void
 
 end
