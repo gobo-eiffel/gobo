@@ -11,6 +11,9 @@
   compiler.
 * Fixed bug in generated C code of inline agent where its result was wrongly
   stored in the placeholder in place of the result of its enclosing once function.
+* Fixed bug when parsing the language string in external routines. The arguments
+  part in `signature` was not considered as optional.
+* Added support for `"C++ struct ..."` in external routines.
 
 ### Gobo Eiffel Tools Library
 
