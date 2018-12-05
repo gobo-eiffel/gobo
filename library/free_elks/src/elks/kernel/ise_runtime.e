@@ -108,10 +108,10 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	new_special_of_reference_instance_of (type_id: INTEGER): SPECIAL [detachable ANY]
+	new_special_of_reference_instance_of (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
 			-- New instance of dynamic `type_id' that represents
-			-- a SPECIAL with can contain `a_capacity' element. To create a SPECIAL of
-			-- basic type, use `SPECIAL'.		
+			-- a SPECIAL with can contain `a_capacity' elements of reference type.
+			-- To create a SPECIAL of basic type, use class SPECIAL directly.	
 		external
  			"built_in static"
 		ensure

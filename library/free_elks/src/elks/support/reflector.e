@@ -95,14 +95,14 @@ feature -- Creation
 
 	new_special_any_instance (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
 			-- New instance of dynamic `type_id' that represents
-			-- a SPECIAL with can contain `a_capacity' element. To create a SPECIAL of
-			-- basic type, use `SPECIAL'.
+			-- a SPECIAL with can contain `a_capacity' elements of reference type.
+			-- To create a SPECIAL of basic type, use class SPECIAL directly.
 		require
 			a_capacity_valid: a_capacity >= 0
 			type_id_nonnegative: type_id >= 0
 			special_type: is_special_any_type (type_id)
 		do
-			Result := {ISE_RUNTIME}.new_special_of_reference_instance_of (type_id)
+			Result := {ISE_RUNTIME}.new_special_of_reference_instance_of (type_id, a_capacity)
 		ensure
 			instance_free: class
 			dynamic_type_set: Result.generating_type.type_id = type_id

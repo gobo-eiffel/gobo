@@ -519,7 +519,7 @@ extern EIF_REFERENCE GE_new_instance_of_type_index(EIF_TYPE_INDEX a_type);
  * To create a SPECIAL of basic type, use class SPECIAL directly.
  */
 extern EIF_REFERENCE GE_new_special_of_reference_instance_of_type_index(EIF_TYPE_INDEX a_type, EIF_INTEGER a_capacity);
-#define GE_new_special_of_reference_instance_of_encoded_type(a_type, a_capacity) GE_new_special_instance_of_type_index(GE_decoded_type(a_type).id, (a_capacity))
+#define GE_new_special_of_reference_instance_of_encoded_type(a_type, a_capacity) GE_new_special_of_reference_instance_of_type_index(GE_decoded_type(a_type).id, (a_capacity))
 
 /*
  * New instance of tuple of type `a_type'.
