@@ -22,6 +22,11 @@
   redeclared feature is itself a qualified anchored type. In some valid
   cases, a validity error `VDRD-2` was emitted, indicating that the signature
   of the redeclared feature did not conform to the one in the parent.
+* Fixed bug in the dynamic type set builder where types in object-tests
+  (e.g. `T` in `attached {T} x`) were marked as alive (types with possible
+  direct instances) as if they were creation types. This caused internal
+  errors during the C code generation for the types whose base class was
+  deferred.
 
 ### Gobo Eiffel Tools Library
 

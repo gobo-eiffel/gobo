@@ -1833,6 +1833,7 @@ feature {NONE} -- Event handling
 	report_object_test (a_object_test: ET_OBJECT_TEST)
 			-- Report that the object-test `a_object_test' has been processed.
 		do
+				-- Object-tests are of type "BOOLEAN".
 			report_constant_expression (a_object_test, current_universe_impl.boolean_type)
 		end
 
@@ -1844,7 +1845,6 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
 			end
 		end
 
