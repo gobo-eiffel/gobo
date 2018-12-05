@@ -262,6 +262,7 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #define RTI64C(x) GE_int64(x)
 #define EIF_OBJECT EIF_REFERENCE
 #define EIF_OBJ EIF_OBJECT
+#define OVERHEAD sizeof(EIF_ANY)
 /* Function pointer call to make sure all arguments are correctly pushed onto stack. */
 /* FUNCTION_CAST is for standard C calls. */
 /* FUNCTION_CAST_TYPE is for non-standard C calls. */
