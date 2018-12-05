@@ -6159,11 +6159,13 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				-- Declaration of variables.
 				--
 				-- Variable for rescue chain.
-			once_features.search (current_feature.static_feature.implementation_feature)
-			if once_features.found then
-				l_is_once := True
-				l_once_index := once_features.found_item
-				l_once_kind := once_kind (current_feature)
+			if current_agent = Void then
+				once_features.search (current_feature.static_feature.implementation_feature)
+				if once_features.found then
+					l_is_once := True
+					l_once_index := once_features.found_item
+					l_once_kind := once_kind (current_feature)
+				end
 			end
 			l_rescue := a_feature.rescue_clause
 			if l_rescue /= Void or l_is_once then
@@ -6859,11 +6861,13 @@ feature {NONE} -- Instruction generation
 				-- need to use the content of the boxed value in place of Result
 				-- in case its fields get modified.
 			if l_target.is_result and then not (l_target_type.is_expanded and then not l_target_type.is_basic) then
-				once_features.search (current_feature.static_feature.implementation_feature)
-				if once_features.found then
-					l_once_index := once_features.found_item
-					l_once_kind := once_kind (current_feature)
-					print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
+				if current_agent = Void then
+					once_features.search (current_feature.static_feature.implementation_feature)
+					if once_features.found then
+						l_once_index := once_features.found_item
+						l_once_kind := once_kind (current_feature)
+						print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
+					end
 				end
 			end
 		end
@@ -7126,11 +7130,13 @@ feature {NONE} -- Instruction generation
 				-- need to use the content of the boxed value in place of Result
 				-- in case its fields get modified.
 			if l_target.is_result and then not (l_target_type.is_expanded and then not l_target_type.is_basic) then
-				once_features.search (current_feature.static_feature.implementation_feature)
-				if once_features.found then
-					l_once_index := once_features.found_item
-					l_once_kind := once_kind (current_feature)
-					print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
+				if current_agent = Void then
+					once_features.search (current_feature.static_feature.implementation_feature)
+					if once_features.found then
+						l_once_index := once_features.found_item
+						l_once_kind := once_kind (current_feature)
+						print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
+					end
 				end
 			end
 		end
@@ -7307,11 +7313,13 @@ feature {NONE} -- Instruction generation
 				-- need to use the content of the boxed value in place of Result
 				-- in case its fields get modified.
 			if l_target.is_result and then not (l_dynamic_type.is_expanded and then not l_dynamic_type.is_basic) then
-				once_features.search (current_feature.static_feature.implementation_feature)
-				if once_features.found then
-					l_once_index := once_features.found_item
-					l_once_kind := once_kind (current_feature)
-					print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
+				if current_agent = Void then
+					once_features.search (current_feature.static_feature.implementation_feature)
+					if once_features.found then
+						l_once_index := once_features.found_item
+						l_once_kind := once_kind (current_feature)
+						print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
+					end
 				end
 			end
 		end
@@ -12302,22 +12310,26 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 								-- the Result itself) is kept in the 'GE_onces' C struct. So we
 								-- need to use the content of the boxed value in place of Result
 								-- in case its fields get modified.
-							once_features.search (current_feature.static_feature.implementation_feature)
-							if once_features.found then
-								l_once_index := once_features.found_item
-								l_once_kind := once_kind (current_feature)
-									-- The once value has been boxed.
-									-- It needs to be unboxed.
-								current_file.put_character ('(')
-								current_file.put_character ('(')
-								print_boxed_type_cast (l_static_type, current_file)
-								current_file.put_character ('(')
-								print_once_value (current_feature, l_once_kind, l_once_index)
-								current_file.put_character (')')
-								current_file.put_character (')')
-								current_file.put_string (c_arrow)
-								print_boxed_attribute_item_name (l_static_type, current_file)
-								current_file.put_character (')')
+							if current_agent = Void then
+								once_features.search (current_feature.static_feature.implementation_feature)
+								if once_features.found then
+									l_once_index := once_features.found_item
+									l_once_kind := once_kind (current_feature)
+										-- The once value has been boxed.
+										-- It needs to be unboxed.
+									current_file.put_character ('(')
+									current_file.put_character ('(')
+									print_boxed_type_cast (l_static_type, current_file)
+									current_file.put_character ('(')
+									print_once_value (current_feature, l_once_kind, l_once_index)
+									current_file.put_character (')')
+									current_file.put_character (')')
+									current_file.put_string (c_arrow)
+									print_boxed_attribute_item_name (l_static_type, current_file)
+									current_file.put_character (')')
+								else
+									print_result_name (current_file)
+								end
 							else
 								print_result_name (current_file)
 							end
@@ -12345,23 +12357,27 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						-- the Result itself) is kept in the 'GE_onces' C struct. So we
 						-- need to use the content of the boxed value in place of Result
 						-- in case its fields get modified.
-					once_features.search (current_feature.static_feature.implementation_feature)
-					if once_features.found then
-						l_dynamic_type_set := dynamic_type_set (an_expression)
-						l_static_type := l_dynamic_type_set.static_type
-						if l_static_type.is_expanded and then not l_static_type.is_basic then
-							l_once_index := once_features.found_item
-							l_once_kind := once_kind (current_feature)
-								-- The once value has been boxed.
-								-- It needs to be unboxed.
-							current_file.put_character ('(')
-							print_boxed_type_cast (l_static_type, current_file)
-							current_file.put_character ('(')
-							print_once_value (current_feature, l_once_kind, l_once_index)
-							current_file.put_character (')')
-							current_file.put_character (')')
-							current_file.put_string (c_arrow)
-							print_boxed_attribute_item_name (l_static_type, current_file)
+					if current_agent = Void then
+						once_features.search (current_feature.static_feature.implementation_feature)
+						if once_features.found then
+							l_dynamic_type_set := dynamic_type_set (an_expression)
+							l_static_type := l_dynamic_type_set.static_type
+							if l_static_type.is_expanded and then not l_static_type.is_basic then
+								l_once_index := once_features.found_item
+								l_once_kind := once_kind (current_feature)
+									-- The once value has been boxed.
+									-- It needs to be unboxed.
+								current_file.put_character ('(')
+								print_boxed_type_cast (l_static_type, current_file)
+								current_file.put_character ('(')
+								print_once_value (current_feature, l_once_kind, l_once_index)
+								current_file.put_character (')')
+								current_file.put_character (')')
+								current_file.put_string (c_arrow)
+								print_boxed_attribute_item_name (l_static_type, current_file)
+							else
+								print_result_name (current_file)
+							end
 						else
 							print_result_name (current_file)
 						end
@@ -16141,10 +16157,13 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 			-- Print body of declaration of agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
+		local
+			l_old_agent: like current_agent
 		do
+			l_old_agent := current_agent
 			current_agent := an_agent
 			an_agent.process (Current)
-			current_agent := Void
+			current_agent := l_old_agent
 		end
 
 	print_call_agent_body_declaration (an_agent: ET_CALL_AGENT)

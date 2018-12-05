@@ -9,6 +9,8 @@
   in generated C code.
 * Added header files to the C runtime to allow compilation of the ISE Eiffel
   compiler.
+* Fixed bug in generated C code of inline agent where its result was wrongly
+  stored in the placeholder in place of the result of its enclosing once function.
 
 ### Gobo Eiffel Tools Library
 
