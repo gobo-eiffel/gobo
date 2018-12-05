@@ -2,6 +2,12 @@
 
 ## Version ?? - ??
 
+
+### gec
+
+* Fixed name of built-in feature `ISE_RUNTIME.new_special_of_reference_instance_of` 
+  in generated C code.
+
 ### Gobo Eiffel Tools Library
 
 * Made sure that validity error `VHPR-2` (conforming inheritance from
