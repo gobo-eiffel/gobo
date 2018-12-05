@@ -563,7 +563,7 @@ void GE_unmark_object(EIF_POINTER obj)
  * Note: returned object is not initialized and may
  * hence violate its invariant.
  * `a_type' cannot represent a SPECIAL type, use
- * `GE_new_special_instance_of_special_type_index' instead.
+ * `GE_new_special_of_reference_instance_of_type_index' instead.
  */
 EIF_REFERENCE GE_new_instance_of_type_index(EIF_TYPE_INDEX a_type)
 {
@@ -579,10 +579,10 @@ EIF_REFERENCE GE_new_instance_of_type_index(EIF_TYPE_INDEX a_type)
 
 /*
  * New instance of dynamic `a_type' that represents
- * a SPECIAL with can contain `a_capacity' element. To create a SPECIAL of
- * basic type, use `SPECIAL'.
+ * a SPECIAL with can contain `a_capacity' elements of reference type.
+ * To create a SPECIAL of basic type, use class SPECIAL directly.
  */
-EIF_REFERENCE GE_new_special_any_instance_of_type_index(EIF_TYPE_INDEX a_type, EIF_INTEGER a_capacity)
+EIF_REFERENCE GE_new_special_of_reference_instance_of_type_index(EIF_TYPE_INDEX a_type, EIF_INTEGER a_capacity)
 {
 	EIF_REFERENCE (*l_new)(EIF_INTEGER,EIF_BOOLEAN);
 

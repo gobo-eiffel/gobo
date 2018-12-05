@@ -101,7 +101,7 @@ feature -- Internal C routines
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
 			-- `type_id' cannot represent a SPECIAL type, use
-			-- `new_special_any_instance' instead.		
+			-- `new_special_of_reference_instance_of' instead.		
 		external
  			"built_in static"
 		ensure
