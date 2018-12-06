@@ -5,7 +5,7 @@ note
 		"Test XPath abs() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,7 +55,7 @@ feature -- Test
 			-- Test fn:abs (10.5) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -65,10 +65,11 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DECIMAL_VALUE} evaluated_items.item (1) as a_decimal_value then
 				assert ("Decimal value", False)
 			else
-				assert ("Result is 10.5", a_decimal_value.value.is_equal (ten_and_a_half))
+				assert ("Result is 10.5", attached a_decimal_value.value as l_value and then l_value.is_equal (ten_and_a_half))
 			end
 		end
 
@@ -76,7 +77,7 @@ feature -- Test
 			-- Test fn:abs (-10.5) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -86,10 +87,11 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DECIMAL_VALUE} evaluated_items.item (1) as a_decimal_value then
 				assert ("Decimal value", False)
 			else
-				assert ("Result is 10.5", a_decimal_value.value.is_equal (ten_and_a_half))
+				assert ("Result is 10.5", attached a_decimal_value.value as l_value and then l_value.is_equal (ten_and_a_half))
 			end
 		end
 
@@ -97,7 +99,7 @@ feature -- Test
 			-- Test fn:abs (10.5E0) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -107,6 +109,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DOUBLE_VALUE} evaluated_items.item (1) as a_double_value then
 				assert ("Double value", False)
 			else
@@ -118,7 +121,7 @@ feature -- Test
 			-- Test fn:abs (-10.5) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -128,6 +131,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DOUBLE_VALUE} evaluated_items.item (1) as a_double_value then
 				assert ("Double value", False)
 			else
@@ -139,7 +143,7 @@ feature -- Test
 			-- Test fn:abs (xs:float(10.5E0)) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -149,6 +153,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_FLOAT_VALUE} evaluated_items.item (1) as a_float_value then
 				assert ("Float value", False)
 			else
@@ -160,7 +165,7 @@ feature -- Test
 			-- Test fn:abs ((xs:float(-10.5)) returns 10.5.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -170,6 +175,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_FLOAT_VALUE} evaluated_items.item (1) as a_float_value then
 				assert ("Float value", False)
 			else

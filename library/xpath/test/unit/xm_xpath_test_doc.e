@@ -5,7 +5,7 @@ note
 		"Test XPath collection(), doc() and doc-available functions."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2001-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2001-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,6 +58,7 @@ feature -- Test
 			-- Test fn:collection("../data/").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
@@ -65,7 +66,10 @@ feature -- Test
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("collection ('../data/')")
 			assert ("No error", not an_evaluator.is_error)
-			assert ("At least 10 documents", an_evaluator.evaluated_items.count >= 10)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("evaluated_item_not_void", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("At least 10 documents", evaluated_items.count >= 10)
 			-- TODO: add tests that all documents have same base URI, but each has a separate document-uri.
 		end
 
@@ -73,6 +77,7 @@ feature -- Test
 			-- Test fn:collection().
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_unicode
@@ -81,7 +86,10 @@ feature -- Test
 			an_evaluator.evaluate ("collection ()")
 			assert ("No error", not an_evaluator.is_error)
 			if attached (create {KL_DIRECTORY}.make (file_system.current_working_directory)).filenames as l_current_directory_filenames then
-				assert ("At least as many documents as files in current working directory", an_evaluator.evaluated_items.count >= l_current_directory_filenames.count)
+				evaluated_items := an_evaluator.evaluated_items
+				assert ("evaluated_item_not_void", evaluated_items /= Void)
+				check asserted_above: evaluated_items /= Void then end
+				assert ("At least as many documents as files in current working directory", evaluated_items.count >= l_current_directory_filenames.count)
 			end
 		end
 
@@ -99,6 +107,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("Boolean value", False)
 			else
@@ -120,6 +129,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("Boolean value", False)
 			else

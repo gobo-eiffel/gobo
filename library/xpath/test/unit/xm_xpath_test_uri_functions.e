@@ -5,7 +5,7 @@ note
 		"Test XPath uri function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,7 +66,7 @@ feature -- Tests
 			-- Test fn:escape-html-uri ("http://www.example.com/00/Weather/CA/Los 20Angeles#ocean").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -76,6 +76,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
 				assert ("String value", False)
 			else
@@ -87,7 +88,7 @@ feature -- Tests
 			-- Test fn:encode-for-uri ("http://www.example.com/00/Weather/CA/Los%20Angeles#ocean").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -97,6 +98,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
 				assert ("String value", False)
 			else
@@ -108,7 +110,7 @@ feature -- Tests
 			-- Test fn:concat("http://www.example.com/", encode-for-uri("~bébé")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -118,6 +120,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
 				assert ("String value", False)
 			else
@@ -129,7 +132,7 @@ feature -- Tests
 			-- Test fn:concat("http://www.example.com/", encode-for-uri("100% organic"))
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -139,6 +142,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
 				assert ("String value", False)
 			else
@@ -150,7 +154,7 @@ feature -- Tests
 			-- Test fn:iri-to-uri ("http://www.example.com/00/Weather/CA/Los%20Angeles#ocean").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -160,6 +164,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
 				assert ("String value", False)
 			else
@@ -171,7 +176,7 @@ feature -- Tests
 			-- Test fn:iri-to-uri ("http://www.example.com/~bébé")..
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -181,6 +186,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_STRING_VALUE} evaluated_items.item (1) as a_string_value then
 				assert ("String value", False)
 			else
@@ -192,7 +198,7 @@ feature -- Tests
 			-- Test fn:resolve-uri ("http://www.example.com/index.html").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -202,6 +208,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("AnyURI value", evaluated_items.item (1).is_any_uri)
 			assert_strings_equal ("Correct result", "http://www.example.com/index.html", evaluated_items.item (1).as_any_uri.string_value)
 		end
@@ -210,7 +217,7 @@ feature -- Tests
 			-- Test fn:resolve-uri ("./contents.html", "http://www.example.com/index.html").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -220,6 +227,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("AnyURI value", evaluated_items.item (1).is_any_uri)
 			assert_strings_equal ("Correct result", "http://www.example.com/contents.html", evaluated_items.item (1).as_any_uri.string_value)
 		end
@@ -228,7 +236,7 @@ feature -- Tests
 			-- Test fn:resolve-uri ("./contents.html").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -238,6 +246,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("AnyURI value", evaluated_items.item (1).is_any_uri)
 			assert_strings_case_insensitive_equal ("Correct result", expected_resolved_uri, evaluated_items.item (1).as_any_uri.string_value)
 		end

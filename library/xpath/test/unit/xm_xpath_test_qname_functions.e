@@ -5,7 +5,7 @@ note
 		"Test XPath QName functions."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,7 +45,7 @@ feature -- Test
 			-- Test fn:resolve-QName('hello', /*[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
@@ -54,6 +54,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("QName value", evaluated_items.item (1).is_qname_value)
 			assert ("No prefix", evaluated_items.item (1).as_qname_value.optional_prefix.count = 0)
 			assert ("No namespace", evaluated_items.item (1).as_qname_value.namespace_uri.count = 0)
@@ -64,7 +65,7 @@ feature -- Test
 			-- Test fn:resolve-QName('eg:myFunc', /*[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
@@ -73,6 +74,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("QName value", evaluated_items.item (1).is_qname_value)
 			assert ("Prefix is eg", STRING_.same_string (evaluated_items.item (1).as_qname_value.optional_prefix, "eg"))
 			assert ("Correct namespace", STRING_.same_string (evaluated_items.item (1).as_qname_value.namespace_uri, "http://www.gobosoft.com/xpath-tests/eg"))
@@ -83,7 +85,7 @@ feature -- Test
 			-- Test fn:QName("http://www.example.com/example", "ht:person").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
@@ -92,6 +94,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("QName value", evaluated_items.item (1).is_qname_value)
 			assert ("Prefix is eg", STRING_.same_string (evaluated_items.item (1).as_qname_value.optional_prefix, "ht"))
 			assert ("Correct namespace", STRING_.same_string (evaluated_items.item (1).as_qname_value.namespace_uri, "http://www.example.com/example"))
@@ -102,7 +105,7 @@ feature -- Test
 			-- Test fn:QName("http://www.example.com/example", "person").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
@@ -111,6 +114,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("QName value", evaluated_items.item (1).is_qname_value)
 			assert ("No prefix", evaluated_items.item (1).as_qname_value.optional_prefix.count = 0)
 			assert ("Correct namespace", STRING_.same_string (evaluated_items.item (1).as_qname_value.namespace_uri, "http://www.example.com/example"))
@@ -121,7 +125,7 @@ feature -- Test
 			-- Test fn:namespace-uri-from-QName(fn:QName("http://www.example.com/example", "person")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
@@ -130,6 +134,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("AnyURI value", evaluated_items.item (1).is_any_uri)
 			assert ("Correct namespace", STRING_.same_string (evaluated_items.item (1).as_any_uri.string_value, "http://www.example.com/example"))
 		end
@@ -138,7 +143,7 @@ feature -- Test
 			-- Test fn:local-name-from-QName(fn:QName("http://www.example.com/example", "person")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
@@ -147,6 +152,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value (basic- XSLT support)", evaluated_items.item (1).is_string_value)
 			assert ("Correct name", STRING_.same_string (evaluated_items.item (1).string_value, "person"))
 		end
@@ -155,7 +161,7 @@ feature -- Test
 			-- Test fn:prefix-from-QName(fn:QName("http://www.example.com/example", "person")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
@@ -170,7 +176,7 @@ feature -- Test
 			-- Test fn:prefix-from-QName(fn:QName("http://www.example.com/example", "people:person")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (qnames_xml_uri.full_reference, False, False, False, True)
@@ -179,6 +185,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value (basic- XSLT support)", evaluated_items.item (1).is_string_value)
 			assert ("Correct name", STRING_.same_string (evaluated_items.item (1).string_value, "people"))
 		end

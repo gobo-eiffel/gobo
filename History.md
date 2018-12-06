@@ -40,6 +40,10 @@
 * Do not report a syntax error for manifest characters of the form `'''`.
   Apparently it is allowed by the ECMA standard.
 
+### Gobo Eiffel XPath Library
+
+* Made unit tests compilable in void-safe mode.
+
 ### Gobo Eiffel XSLT Library
 
 * Made unit tests compilable in void-safe mode.

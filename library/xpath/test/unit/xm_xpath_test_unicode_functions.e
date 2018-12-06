@@ -5,7 +5,7 @@ note
 		"Test XPath unicode functions."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,7 +47,7 @@ feature -- Tests
 			-- Test fn:upper-case().
 		local
 			l_evaluator: XM_XPATH_EVALUATOR
-			l_evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			l_evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 			l_function: STRING
 		do
 			create l_evaluator.make (18, False)
@@ -58,6 +58,7 @@ feature -- Tests
 			assert ("No evaluation error", not l_evaluator.is_error)
 			l_evaluated_items := l_evaluator.evaluated_items
 			assert ("One evaluated item", l_evaluated_items /= Void and then l_evaluated_items.count = 1)
+			check asserted_above: l_evaluated_items /= Void then end
 			assert ("String value", l_evaluated_items.item (1).is_string_value)
 			assert ("Correct result", STRING_.same_string (Upper_essen, l_evaluated_items.item (1).as_string_value.string_value))
 		end
@@ -66,7 +67,7 @@ feature -- Tests
 			-- Test fn:lower-case().
 		local
 			l_evaluator: XM_XPATH_EVALUATOR
-			l_evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			l_evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create l_evaluator.make (18, False)
 			l_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
@@ -75,6 +76,7 @@ feature -- Tests
 			assert ("No evaluation error", not l_evaluator.is_error)
 			l_evaluated_items := l_evaluator.evaluated_items
 			assert ("One evaluated item", l_evaluated_items /= Void and then l_evaluated_items.count = 1)
+			check asserted_above: l_evaluated_items /= Void then end
 			assert ("String value", l_evaluated_items.item (1).is_string_value)
 			assert ("Correct result", STRING_.same_string (Unorthodox_essen, l_evaluated_items.item (1).as_string_value.string_value))
 		end
@@ -83,7 +85,7 @@ feature -- Tests
 			-- Test fn:codepoints-to-string((2309, 2358, 2378, 2325)).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
@@ -92,6 +94,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value", evaluated_items.item (1).is_string_value)
 		end
 
@@ -99,7 +102,7 @@ feature -- Tests
 			-- Test fn:string-to-codepoints ("Thérèse")
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
@@ -108,6 +111,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Seven evaluated items", evaluated_items /= Void and then evaluated_items.count = 7)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("Eighty-four", evaluated_items.item (1).is_integer_value
 					  and then evaluated_items.item (1).as_integer_value.is_platform_integer
 					  and then  evaluated_items.item (1).as_integer_value.as_integer = 84)
@@ -135,7 +139,7 @@ feature -- Tests
 			-- Test fn:codepoint-equal ("abc", "ab").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
@@ -144,6 +148,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("Boolean value false", evaluated_items.item (1).is_boolean_value and then not evaluated_items.item (1).as_boolean_value.value)
 		end
 
@@ -152,7 +157,7 @@ feature -- Tests
 		local
 			an_expression: STRING
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
@@ -161,6 +166,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("Empty string", evaluated_items.item (1).is_string_value and then evaluated_items.item (1).as_string_value.string_value.is_empty)
 			an_evaluator.evaluate ("normalize-unicode('fred', ' fully-normalized')")
 			assert ("Normalization form not supported", an_evaluator.is_error and then STRING_.same_string (an_evaluator.error_value.code, "FOCH0003"))
@@ -171,6 +177,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value", evaluated_items.item (1).is_string_value)
 			assert_strings_equal ("Same string under NFC", raw_affin, evaluated_items.item (1).as_string_value.string_value)
 			an_expression := STRING_.concat ("normalize-unicode('", raw_affin)
@@ -179,6 +186,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value", evaluated_items.item (1).is_string_value)
 			assert_strings_equal ("Decomposed string under NFD", decomposed_affin, evaluated_items.item (1).as_string_value.string_value)
 			an_expression := STRING_.concat ("normalize-unicode('", affin_with_ligature)
@@ -187,6 +195,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value", evaluated_items.item (1).is_string_value)
 			assert_strings_equal ("Same string under NFC 2", affin_with_ligature, evaluated_items.item (1).as_string_value.string_value)
 			an_expression := STRING_.concat ("normalize-unicode('", affin_with_ligature)
@@ -195,6 +204,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value", evaluated_items.item (1).is_string_value)
 			assert_strings_equal ("partially decomposed string under NFD", canonically_decomposed_affin_with_ligature, evaluated_items.item (1).as_string_value.string_value)
 			an_expression := STRING_.concat ("normalize-unicode('", raw_affin)
@@ -203,6 +213,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value", evaluated_items.item (1).is_string_value)
 			assert_strings_equal ("Same string under NFKC", raw_affin, evaluated_items.item (1).as_string_value.string_value)
 			an_expression := STRING_.concat ("normalize-unicode('", raw_affin)
@@ -211,6 +222,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value", evaluated_items.item (1).is_string_value)
 			assert_strings_equal ("Decomposed string under NFKD", decomposed_affin, evaluated_items.item (1).as_string_value.string_value)
 			an_expression := STRING_.concat ("normalize-unicode('", affin_with_ligature)
@@ -219,6 +231,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value", evaluated_items.item (1).is_string_value)
 			assert_strings_equal ("Composed under NFKC", raw_affin, evaluated_items.item (1).as_string_value.string_value)
 			an_expression := STRING_.concat ("normalize-unicode('", affin_with_ligature)
@@ -227,6 +240,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("String value", evaluated_items.item (1).is_string_value)
 			assert_strings_equal ("Decomposed string under NFKD", decomposed_affin, evaluated_items.item (1).as_string_value.string_value)
 		end

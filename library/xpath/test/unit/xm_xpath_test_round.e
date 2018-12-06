@@ -5,7 +5,7 @@ note
 		"Test XPath round() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,10 +81,11 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DECIMAL_VALUE} evaluated_items.item (1) as a_decimal_value then
 				assert ("Decimal value", False)
 			else
-				assert ("Result is three", a_decimal_value.value.is_equal (three))
+				assert ("Result is three", attached a_decimal_value.value as l_value and then l_value.is_equal (three))
 			end
 		end
 
@@ -102,10 +103,11 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DECIMAL_VALUE} evaluated_items.item (1) as a_decimal_value then
 				assert ("Decimal value", False)
 			else
-				assert ("Result is two", a_decimal_value.value.is_equal (two))
+				assert ("Result is two", attached a_decimal_value.value as l_value and then l_value.is_equal (two))
 			end
 		end
 
@@ -123,10 +125,11 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DECIMAL_VALUE} evaluated_items.item (1) as a_decimal_value then
 				assert ("Decimal value", False)
 			else
-				assert ("Result is minus two", a_decimal_value.value.is_equal (minus_two))
+				assert ("Result is minus two", attached a_decimal_value.value as l_value and then l_value.is_equal (minus_two))
 			end
 		end
 
@@ -144,6 +147,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DOUBLE_VALUE} evaluated_items.item (1) as a_double_value then
 				assert ("Double value", False)
 			else
@@ -165,6 +169,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DOUBLE_VALUE} evaluated_items.item (1) as a_double_value then
 				assert ("Double value", False)
 			else
@@ -186,6 +191,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_DOUBLE_VALUE} evaluated_items.item (1) as a_double_value then
 				assert ("Double value", False)
 			else
@@ -207,6 +213,7 @@ feature -- Tests
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_FLOAT_VALUE} evaluated_items.item (1) as a_float_value then
 				assert ("Float value", False)
 			else

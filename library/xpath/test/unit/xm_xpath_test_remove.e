@@ -5,7 +5,7 @@ note
 		"Test XPath remove() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,7 +57,7 @@ feature -- Test
 			-- Test fn:remove ((1, 2, 3), 2) returns (1, 3)
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -67,6 +67,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Two values", evaluated_items /= Void and then evaluated_items.count = 2)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
 				assert ("First value is integer", False)
 			else

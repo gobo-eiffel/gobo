@@ -5,7 +5,7 @@ note
 		"Test system ids and line numbers"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2001-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2001-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,8 +52,11 @@ feature -- Test. These tests check the system_id and base_uri routines
 			-- Read a file with a DTD and entities
 		local
 			system_id: STRING
-			document: XM_XPATH_TREE_DOCUMENT
-			tiny_document: XM_XPATH_TINY_DOCUMENT
+			parser: XM_EIFFEL_PARSER
+			tiny_tree_pipe: detachable XM_XPATH_TINYTREE_CALLBACKS_PIPE
+			tree_pipe: detachable XM_XPATH_TREE_CALLBACKS_PIPE
+			document: detachable XM_XPATH_TREE_DOCUMENT
+			tiny_document: detachable XM_XPATH_TINY_DOCUMENT
 			document_element, item_element: XM_XPATH_ELEMENT
 			a_base_uri: STRING
 			a_fingerprint, counter: INTEGER
@@ -63,41 +66,44 @@ feature -- Test. These tests check the system_id and base_uri routines
 		do
 			conformance.set_basic_xslt_processor
 			system_id := books2_xml_uri.full_reference
-			make_parser (system_id, is_tiny)
-			parser.parse_from_system (system_id)
+			parser := new_parser
 			if is_tiny then
+				tiny_tree_pipe := new_tiny_tree_pipe (parser, system_id)
+			else
+				tree_pipe := new_tree_pipe (parser, system_id)
+			end
+			parser.parse_from_system (system_id)
+			if tiny_tree_pipe /= Void then
 				assert ("No parsing error", not tiny_tree_pipe.tree.has_error)
 				tiny_document := tiny_tree_pipe.document
 				assert ("Document not void", tiny_document /= Void)
+				check asserted_above: tiny_document /= Void then end
 				assert ("Line number zero", tiny_document.line_number = 0)
 				assert_strings_equal ("Base-URI equals SYSTEM ID for document", tiny_document.system_id, tiny_document.base_uri)
-			else
-				assert ("No parsing error", not tree_pipe.tree.has_error)
-				document := tree_pipe.document
-				assert ("Document not void", document /= Void)
-				assert ("Line number zero", document.line_number = 0)
-				assert_strings_equal ("Base-URI equals SYSTEM ID for document", document.system_id, document.base_uri)
-
-			end
-			a_base_uri := resolved_uri_string ("books2.xml")
-			if is_tiny then
+				a_base_uri := resolved_uri_string ("books2.xml")
 				assert_strings_case_insensitive_equal ("SYSTEM ID for document", a_base_uri, tiny_document.system_id)
-			else
-				assert_strings_case_insensitive_equal ("SYSTEM ID for document", a_base_uri, document.system_id)
-			end
-
-			-- Test document_element
-			document_element := Void
-			if is_tiny then
+				-- Test document_element
+				document_element := Void
 				if attached {XM_XPATH_TINY_ELEMENT} tiny_document.document_element as l_tiny_element then
 					document_element := l_tiny_element
 				end
-			else
+			elseif tree_pipe /= Void then
+				assert ("No parsing error", not tree_pipe.tree.has_error)
+				document := tree_pipe.document
+				assert ("Document not void", document /= Void)
+				check asserted_above: document /= Void then end
+				assert ("Line number zero", document.line_number = 0)
+				assert_strings_equal ("Base-URI equals SYSTEM ID for document", document.system_id, document.base_uri)
+				a_base_uri := resolved_uri_string ("books2.xml")
+				assert_strings_case_insensitive_equal ("SYSTEM ID for document", a_base_uri, document.system_id)
+				-- Test document_element
+				document_element := Void
 				if attached {XM_XPATH_TREE_ELEMENT} document.document_element as l_tree_element then
 					document_element := l_tree_element
 				end
 			end
 			assert ("Document element not void", document_element /= Void)
+			check asserted_above: document_element /= Void then end
 			assert ("Document element line number is 7", document_element.line_number = 7)
 			if not attached {XM_XPATH_ELEMENT} document_element.first_child as books_element then
 				assert ("Books", False)
@@ -109,14 +115,10 @@ feature -- Test. These tests check the system_id and base_uri routines
 
 			-- look for "ITEM" number 6 descendant of the document_element
 
-			if is_tiny then
-				a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
-			else
-				a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
-			end
+			a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
 			create element_test.make (Element_node, a_fingerprint, "ITEM")
 			item_element := Void
-			if is_tiny then
+			if tiny_document /= Void then
 				if not attached {XM_XPATH_TINY_ELEMENT} document_element as l_tiny_element then
 					assert ("is_tiny", False)
 				else
@@ -134,7 +136,7 @@ feature -- Test. These tests check the system_id and base_uri routines
 						item_element := l_tiny_item_element
 					end
 				end
-			else
+			elseif document /= Void then
 				if not attached {XM_XPATH_TREE_ELEMENT} document_element as l_tree_element then
 					assert ("not_is_tiny", False)
 				else
@@ -154,6 +156,7 @@ feature -- Test. These tests check the system_id and base_uri routines
 				end
 			end
 			assert ("sixth item", item_element /= Void)
+			check asserted_above: item_element /= Void then end
 			assert_strings_case_insensitive_equal ("SYSTEM ID for ITEM", a_base_uri, item_element.system_id)
 			assert_strings_equal ("Base URI for ITEM", "http://www.gobosoft.com/xml-tests/AAMilne-book", item_element.base_uri)
 			assert ("Item element line number is 35", item_element.line_number = 35)
@@ -165,13 +168,13 @@ feature -- Test. These tests check the system_id and base_uri routines
 				assert ("PI1 line number is 36", a_pi.line_number = 36)
 			end
 			item_element := Void
-			if is_tiny then
+			if tiny_descendants /= Void then
 				tiny_descendants.forth
 				tiny_descendants.forth
 				if attached {XM_XPATH_TINY_ELEMENT} tiny_descendants.item as l_tiny_item_element then
 					item_element := l_tiny_item_element
 				end
-			else
+			elseif descendants /= Void then
 				descendants.forth
 				descendants.forth
 				if attached {XM_XPATH_TREE_ELEMENT} descendants.item as l_tree_item_element then
@@ -179,6 +182,7 @@ feature -- Test. These tests check the system_id and base_uri routines
 				end
 			end
 			assert ("eighth item", item_element /= Void)
+			check asserted_above: item_element /= Void then end
 			assert_strings_case_insensitive_equal ("SYSTEM ID for ITEM 2", a_base_uri, item_element.system_id)
 			assert_strings_case_insensitive_equal ("Base URI for ITEM 2", a_base_uri, item_element.base_uri)
 			if not attached {XM_XPATH_PROCESSING_INSTRUCTION} item_element.first_child as a_pi then
@@ -198,41 +202,52 @@ feature -- Test. These tests check the system_id and base_uri routines
 
 feature {NONE} -- Implementation
 
-	make_parser (a_base_uri: STRING; is_tiny: BOOLEAN)
-			-- Create XML parser.
-		require
-			a_base_uri_not_void: a_base_uri /= Void
+	new_parser: XM_EIFFEL_PARSER
+			-- New XML parser
 		local
 			l_uri: UT_URI
 			l_entity_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
 			l_uri := file_uri.filename_to_uri (file_system.pathname (data_dirname, "dummy.xml"))
 			l_entity_resolver := new_file_resolver_with_uri (l_uri)
-			create parser.make
-			parser.set_resolver (l_entity_resolver)
-			create l_uri.make (a_base_uri)
-			if is_tiny then
-				create tiny_tree_pipe.make (parser, True, a_base_uri, l_uri)
-				parser.set_callbacks (tiny_tree_pipe.start)
-				parser.set_dtd_callbacks (tiny_tree_pipe.emitter)
-			else
-				create tree_pipe.make (parser, True, a_base_uri, l_uri)
-				parser.set_callbacks (tree_pipe.start)
-				parser.set_dtd_callbacks (tree_pipe.emitter)
-			end
-			parser.set_string_mode_ascii
+			create Result.make
+			Result.set_resolver (l_entity_resolver)
+			Result.set_string_mode_ascii
 		ensure
-			parser_not_void: parser /= Void
+			new_parser_not_void: Result /= Void
 		end
 
-	parser: XM_EIFFEL_PARSER
-			-- XML parser
+	new_tiny_tree_pipe (a_parser: XM_EIFFEL_PARSER; a_base_uri: STRING): XM_XPATH_TINYTREE_CALLBACKS_PIPE
+			-- New tiny tree pipe
+		require
+			a_parser_not_void: a_parser /= Void
+			a_base_uri_not_void: a_base_uri /= Void
+		local
+			l_uri: UT_URI
+		do
+			create l_uri.make (a_base_uri)
+			create Result.make (a_parser, True, a_base_uri, l_uri)
+			a_parser.set_callbacks (Result.start)
+			a_parser.set_dtd_callbacks (Result.emitter)
+		ensure
+			new_tiny_tree_pipe_not_void: Result /= Void
+		end
 
-	tiny_tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
-			-- Tiny tree pipe
-
-	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
-			-- Tree pipe
+	new_tree_pipe (a_parser: XM_EIFFEL_PARSER; a_base_uri: STRING): XM_XPATH_TREE_CALLBACKS_PIPE
+			-- New tree pipe
+		require
+			a_parser_not_void: a_parser /= Void
+			a_base_uri_not_void: a_base_uri /= Void
+		local
+			l_uri: UT_URI
+		do
+			create l_uri.make (a_base_uri)
+			create Result.make (a_parser, True, a_base_uri, l_uri)
+			a_parser.set_callbacks (Result.start)
+			a_parser.set_dtd_callbacks (Result.emitter)
+		ensure
+			new_tree_pipe_not_void: Result /= Void
+		end
 
 	data_dirname: STRING
 			-- Name of directory containing data files

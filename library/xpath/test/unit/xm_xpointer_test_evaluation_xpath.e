@@ -5,7 +5,7 @@ note
 		"Test xpointer evaluation for the XPath implementation"
 
 	library: "Gobo Eiffel XPointer Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class XM_XPOINTER_TEST_EVALUATION_XPATH
 inherit
 
 	TS_TEST_CASE
+		redefine
+			make_default
+		end
 
 	KL_SHARED_STANDARD_FILES
 
@@ -36,13 +39,22 @@ create
 
 	make_default
 
+feature {NONE} -- Initialization
+
+	make_default
+			-- <Precursor>
+		do
+			precursor
+			make_parser ("inline:")
+		end
+
 feature -- Test
 
 	test_shorthand
 			-- Test parsing shorthand pointer
 		local
 			a_processor: XM_XPATH_XPOINTER
-			a_document: XM_XPATH_DOCUMENT
+			a_document:detachable XM_XPATH_DOCUMENT
 			system_id: STRING
 			a_node: XM_XPATH_NODE
 		do
@@ -53,9 +65,10 @@ feature -- Test
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			a_document := tree_pipe.document
 			assert ("Document not void", a_document /= Void)
+			check asserted_above: a_document /= Void then end
 			create a_processor.make (False)
 			a_processor.evaluate ("S", a_document)
-			assert ("Evaluated without error", a_processor.value /= Void and then not a_processor.value.is_error)
+			assert ("Evaluated without error", attached a_processor.value as l_value and then not l_value.is_error)
 			if not attached {XM_XPATH_SINGLETON_NODE} a_processor.value as a_node_value then
 				assert ("Singleton node", False)
 			else
@@ -65,7 +78,7 @@ feature -- Test
 					assert ("an_element_not_void" , False)
 				else
 					assert ("Category element", STRING_.same_string (an_element.local_part, "CATEGORY"))
-					assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+					assert ("Science cataegory", attached an_element.attribute_value_by_name ("", "DESC") as l_attribute_value and then STRING_.same_string (l_attribute_value, "Science"))
 				end
 			end
 		end
@@ -74,7 +87,7 @@ feature -- Test
 			-- Test element() scheme and xmlns scheme gives no error
 		local
 			a_processor: XM_XPATH_XPOINTER
-			a_document: XM_XPATH_DOCUMENT
+			a_document: detachable XM_XPATH_DOCUMENT
 			system_id: STRING
 			a_node: XM_XPATH_NODE
 			an_element_scheme: XM_XPATH_XPOINTER_ELEMENT_SCHEME
@@ -87,13 +100,14 @@ feature -- Test
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			a_document := tree_pipe.document
 			assert ("Document not void", a_document /= Void)
+			check asserted_above: a_document /= Void then end
 			create a_processor.make (False)
 			create an_element_scheme.make
 			a_processor.register_scheme (an_element_scheme)
 			create an_xmlns_scheme.make
 			a_processor.register_scheme (an_xmlns_scheme)
 			a_processor.evaluate ("xmlns(fred = urn:fred:jane) element(/1/2/1)", a_document)
-			assert ("Evaluated without error", a_processor.value /= Void and then not a_processor.value.is_error)
+			assert ("Evaluated without error", attached a_processor.value as l_value and then not l_value.is_error)
 			if not attached {XM_XPATH_SINGLETON_NODE} a_processor.value as a_node_value then
 				assert ("Singleton node", False)
 			else
@@ -103,7 +117,7 @@ feature -- Test
 					assert ("an_element_not_void" , False)
 				else
 					assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
-					assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+					assert ("Science cataegory", attached an_element.attribute_value_by_name ("", "DESC") as l_attribute_value and then STRING_.same_string (l_attribute_value, "Science"))
 				end
 			end
 		end
@@ -112,7 +126,7 @@ feature -- Test
 			-- Test gexslt:xpath() scheme.
 		local
 			a_processor: XM_XPATH_XPOINTER
-			a_document: XM_XPATH_DOCUMENT
+			a_document: detachable XM_XPATH_DOCUMENT
 			system_id: STRING
 			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
 			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
@@ -124,13 +138,14 @@ feature -- Test
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			a_document := tree_pipe.document
 			assert ("Document not void", a_document /= Void)
+			check asserted_above: a_document /= Void then end
 			create a_processor.make (True)
 			create an_xpath_scheme.make
 			a_processor.register_scheme (an_xpath_scheme)
 			create an_xmlns_scheme.make
 			a_processor.register_scheme (an_xmlns_scheme)
 			a_processor.evaluate ("xmlns(gexslt = " + Gexslt_eiffel_type_uri + ") gexslt:xpath(/BOOKLIST/CATEGORIES/CATEGORY[1])", a_document)
-			assert ("Evaluated without error", a_processor.value /= Void and then not a_processor.value.is_error)
+			assert ("Evaluated without error", attached a_processor.value as l_value and then not l_value.is_error)
 			if not attached {XM_XPATH_SEQUENCE_EXTENT} a_processor.value as a_sequence_extent then
 				assert ("Sequence_extent", False)
 			else
@@ -139,16 +154,16 @@ feature -- Test
 					assert ("an_element_not_void" , False)
 				else
 					assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
-					assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+					assert ("Science cataegory", attached an_element.attribute_value_by_name ("", "DESC") as l_attribute_value and then STRING_.same_string (l_attribute_value, "Science"))
 				end
 			end
 		end
 
 	test_xpath_scheme
 			-- Test W3C xpath() scheme.
-			local
+		local
 			a_processor: XM_XPATH_XPOINTER
-			a_document: XM_XPATH_DOCUMENT
+			a_document: detachable XM_XPATH_DOCUMENT
 			system_id: STRING
 			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
 			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
@@ -160,13 +175,14 @@ feature -- Test
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			a_document := tree_pipe.document
 			assert ("Document not void", a_document /= Void)
+			check asserted_above: a_document /= Void then end
 			create a_processor.make (True)
 			create an_xpath_scheme.make_w3c
 			a_processor.register_scheme (an_xpath_scheme)
 			create an_xmlns_scheme.make
 			a_processor.register_scheme (an_xmlns_scheme)
 			a_processor.evaluate ("xpath2(/BOOKLIST/CATEGORIES/CATEGORY[1])", a_document)
-			assert ("Evaluated without error", a_processor.value /= Void and then not a_processor.value.is_error)
+			assert ("Evaluated without error", attached a_processor.value as l_value and then not l_value.is_error)
 			if not attached {XM_XPATH_SEQUENCE_EXTENT} a_processor.value as a_sequence_extent then
 				assert ("Sequence_extent", False)
 			else
@@ -176,7 +192,7 @@ feature -- Test
 					assert ("an_element_not_void" , False)
 				else
 					assert ("Category element", an_element /= Void and then STRING_.same_string (an_element.local_part, "CATEGORY"))
-					assert ("Science cataegory", STRING_.same_string (an_element.attribute_value_by_name ("", "DESC"), "Science"))
+					assert ("Science cataegory",attached an_element.attribute_value_by_name ("", "DESC") as l_attribute_value and then STRING_.same_string (l_attribute_value, "Science"))
 				end
 			end
 		end

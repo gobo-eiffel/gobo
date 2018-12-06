@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2001-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2001-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,9 @@ class XM_XPATH_TEST_BUILDER
 inherit
 
 	TS_TEST_CASE
+		redefine
+			make_default
+		end
 
 	XM_XPATH_TYPE
 
@@ -37,12 +40,21 @@ create
 
 	make_default
 
+feature {NONE} -- Initialization
+
+	make_default
+			-- <Precursor>
+		do
+			precursor
+			make_parser ("inline:")
+		end
+
 feature -- Test
 
 	test_simple
 			-- Simple tree.
 		local
-			document: XM_XPATH_TREE_DOCUMENT
+			document: detachable XM_XPATH_TREE_DOCUMENT
 			a_name: STRING
 		do
 			conformance.set_basic_xslt_processor
@@ -51,6 +63,7 @@ feature -- Test
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			document := tree_pipe.document
 			assert ("Document not void", document /= Void)
+			check asserted_above: document /= Void then end
 
 			-- Test document_element
 
@@ -102,7 +115,7 @@ feature -- Test
 			-- Read a file with a DTD
 		local
 			system_id: STRING
-			document: XM_XPATH_TREE_DOCUMENT
+			document: detachable XM_XPATH_TREE_DOCUMENT
 			an_element: XM_XPATH_TREE_ELEMENT
 			a_node: XM_XPATH_NODE
 			a_name: STRING
@@ -123,6 +136,7 @@ feature -- Test
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			document := tree_pipe.document
 			assert ("Document not void", document /= Void)
+			check asserted_above: document /= Void then end
 
 			-- Test document_element
 
@@ -142,7 +156,7 @@ feature -- Test
 
 					-- Test parent
 
-					assert ("Parent", document_element.is_same_node (books_element.parent))
+					assert ("Parent", attached books_element.parent as l_books_element_parent and then document_element.is_same_node (l_books_element_parent))
 
 					-- Test first_child of first child
 
@@ -299,7 +313,7 @@ feature -- Test
 			-- Read a file with namespaces
 		local
 			system_id: STRING
-			document: XM_XPATH_TREE_DOCUMENT
+			document: detachable XM_XPATH_TREE_DOCUMENT
 			a_name: STRING
 		do
 			conformance.set_basic_xslt_processor
@@ -309,6 +323,7 @@ feature -- Test
 			assert ("No parsing error", not tree_pipe.tree.has_error)
 			document := tree_pipe.document
 			assert ("Document not void", document /= Void)
+			check asserted_above: document /= Void then end
 
 			-- Test document_element
 

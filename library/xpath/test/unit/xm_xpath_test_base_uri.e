@@ -5,7 +5,7 @@ note
 		"Test XPath base-uri() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,6 +89,7 @@ feature -- Tests
 			-- Test fn:base-uri().
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -96,8 +97,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri()")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_case_insensitive_equal ("Correct base-URI", document_uri, a_uri.string_value)
@@ -122,6 +126,7 @@ feature -- Tests
 			-- Test fn:base-uri(()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -129,13 +134,17 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("Empty sequence",  an_evaluator.evaluated_items.count = 0)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("Empty sequence", evaluated_items.count = 0)
 		end
 
 	test_empty_sequence_tiny_tree
 			-- Test fn:base-uri(()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -143,13 +152,17 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("Empty sequence",  an_evaluator.evaluated_items.count = 0)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("Empty sequence",  evaluated_items.count = 0)
 		end
 
 	test_element_with_xml_base
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -157,8 +170,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
@@ -169,6 +185,7 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -176,8 +193,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
@@ -188,6 +208,7 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -195,8 +216,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
@@ -207,6 +231,7 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -214,8 +239,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
@@ -226,6 +254,7 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/nested-element).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -233,8 +262,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/nested-element)")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_equal ("Correct base-URI", xml_base_uri, a_uri.string_value)
@@ -245,6 +277,7 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/nested-element).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -252,8 +285,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/nested-element)")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_equal ("Correct base-URI", xml_base_uri, a_uri.string_value)
@@ -264,6 +300,7 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -271,8 +308,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction())")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
@@ -283,6 +323,7 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -290,8 +331,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction())")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_equal ("Correct base-URI", nested_xml_base_uri, a_uri.string_value)
@@ -302,6 +346,7 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[1]/processing-instruction()[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -309,8 +354,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/processing-instruction()[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item",  evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)
@@ -321,6 +369,7 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[1]/processing-instruction()[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -328,8 +377,11 @@ feature -- Tests
 			assert ("Build successful", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/processing-instruction()[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
-			assert ("One evaluated item",  an_evaluator.evaluated_items.count = 1)
-			if not attached {XM_XPATH_ANY_URI_VALUE} an_evaluator.evaluated_items.item (1) as a_uri then
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluation error 2", evaluated_items /= Void)
+			check asserted_above: evaluated_items /= Void then end
+			assert ("One evaluated item", an_evaluator /= Void and then evaluated_items.count = 1)
+			if not attached {XM_XPATH_ANY_URI_VALUE} evaluated_items.item (1) as a_uri then
 				assert ("AnyURI value", False)
 			else
 				assert_strings_case_insensitive_equal ("Correct base-URI", secondary_uri, a_uri.string_value)

@@ -5,7 +5,7 @@ note
 		"Test expression tokenizer"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -290,9 +290,11 @@ feature -- Debugging
 				Result := STRING_.appended_string (s, "%"")
 			elseif tokenizer.last_token = Unknown_token then
 				Result := "(unknown token)"
-			else
-				s := STRING_.appended_string ("%"", tokenizer.token_name (tokenizer.last_token))
+			elseif attached tokenizer.token_name (tokenizer.last_token) as l_token_name then
+				s := STRING_.appended_string ("%"", l_token_name)
 				Result := STRING_.appended_string (s, "%"")
+			else
+				Result := "%"%""
 			end
 		ensure
 			result_not_void: Result /= Void

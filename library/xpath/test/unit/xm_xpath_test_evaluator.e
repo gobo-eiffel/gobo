@@ -5,7 +5,7 @@ note
 		"Test stand-alone XPath evaluation"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2001-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2001-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,6 +74,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_NODE} evaluated_items.item (1) as a_node then
 				assert ("Node not void",False)
 			else
@@ -95,6 +96,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_NODE} evaluated_items.item (1) as a_node then
 				assert ("Node not void", False)
 			else
@@ -116,6 +118,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			assert ("Node not void", attached {XM_XPATH_NODE} evaluated_items.item (1))
 		end
 
@@ -133,6 +136,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Twenty evaluated items", evaluated_items /= Void and then evaluated_items.count = 20)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (19) as an_integer_value then
 				assert ("an_integer_value_not_void", False)
 			else
@@ -154,6 +158,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
 				assert ("an_integer_value_not_void", False)
 			else
@@ -175,6 +180,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -196,6 +202,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -217,6 +224,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -238,6 +246,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -259,6 +268,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -280,6 +290,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -303,6 +314,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -324,6 +336,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -347,6 +360,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -477,6 +491,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -499,6 +514,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -520,6 +536,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -541,6 +558,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -562,6 +580,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -578,17 +597,22 @@ feature -- Test
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
+			l_static_context: detachable XM_XPATH_STAND_ALONE_CONTEXT
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successful", not an_evaluator.was_build_error)
+			l_static_context := an_evaluator.static_context
+			assert ("Build successful 2", l_static_context /= Void)
+			check asserted_above: l_static_context /= Void then end
 			create an_integer_value.make (7)
-			an_evaluator.static_context.declare_variable ("fred", an_integer_value)
+			l_static_context.declare_variable ("fred", an_integer_value)
 			an_evaluator.evaluate ("(8, ($fred - 1), 9) < (8, ($fred - 2), 4)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -626,6 +650,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -647,6 +672,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_BOOLEAN_VALUE} evaluated_items.item (1) as a_boolean_value then
 				assert ("a_boolean_value_not_void", False)
 			else
@@ -677,13 +703,17 @@ feature -- Test
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			a_string_value: XM_XPATH_STRING_VALUE
+			l_static_context: detachable XM_XPATH_STAND_ALONE_CONTEXT
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successful", not an_evaluator.was_build_error)
+			l_static_context := an_evaluator.static_context
+			assert ("Build successful 2", l_static_context /= Void)
+			check asserted_above: l_static_context /= Void then end
 			create a_string_value.make ("seven")
-			an_evaluator.static_context.declare_variable ("fred", a_string_value)
+			l_static_context.declare_variable ("fred", a_string_value)
 			an_evaluator.evaluate ("(1 to $fred)")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert ("XPTY0004", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
@@ -812,7 +842,7 @@ feature {NONE} -- Implementation
 			another_node: like a_node
 		do
 			another_node := a_node.first_child
-			if another_node /= Void and then STRING_.same_string (another_node.node_name, "TITLE") then
+			if another_node /= Void and then attached another_node.node_name as l_node_name and then STRING_.same_string (l_node_name, "TITLE") then
 				another_node := another_node.first_child
 				if another_node /= Void then
 					Result := STRING_.same_string (another_node.string_value, a_title)

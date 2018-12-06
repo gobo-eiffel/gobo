@@ -5,7 +5,7 @@ note
 		"Test XPath index-of() function."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,6 +71,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Two items", evaluated_items /= Void and then evaluated_items.count = 2)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
 				assert ("an_integer_value_not_void_1", False)
 			else
@@ -97,6 +98,7 @@ feature -- Test
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Two items", evaluated_items /= Void and then evaluated_items.count = 2)
+			check asserted_above: evaluated_items /= Void then end
 			if not attached {XM_XPATH_MACHINE_INTEGER_VALUE} evaluated_items.item (1) as an_integer_value then
 				assert ("an_integer_value_not_void_1", False)
 			else
