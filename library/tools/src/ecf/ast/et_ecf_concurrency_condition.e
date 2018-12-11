@@ -73,6 +73,7 @@ feature -- Status report
 			l_expected_value: detachable STRING
 			l_ecf_version: detachable UT_VERSION
 			l_splitter: ST_SPLITTER
+			l_default_capabilities: like default_capabilities
 		do
 			l_expected_value := a_state.concurrency_mode
 			if l_expected_value = Void then
@@ -80,7 +81,11 @@ feature -- Status report
 				if l_ecf_version = Void then
 					l_ecf_version := {UT_SHARED_ECF_VERSIONS}.ecf_last_known
 				end
-				l_expected_value := default_capabilities (l_ecf_version).use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
+				l_default_capabilities := default_capabilities (l_ecf_version)
+				l_expected_value := l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
+				if l_expected_value = Void then
+					l_expected_value := l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
+				end
 			end
 			if l_expected_value /= Void then
 				if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then

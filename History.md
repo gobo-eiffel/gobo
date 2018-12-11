@@ -34,15 +34,14 @@
   direct instances) as if they were creation types. This caused internal
   errors during the C code generation for the types whose base class was
   deferred.
+* Fixed bug when processing ECF files where conditions `<concurrency>` and
+  `<void_safety>` were not taking into account the `support` capability
+  value when the `use` value was not specified.
 
 ### Gobo Eiffel Tools Library
 
 * Do not report a syntax error for manifest characters of the form `'''`.
   Apparently it is allowed by the ECMA standard.
-
-### Gobo Eiffel XPath Library
-
-* Made unit tests compilable in void-safe mode.
 
 ### Gobo Eiffel XSLT Library
 
