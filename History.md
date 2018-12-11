@@ -14,6 +14,9 @@
 * Fixed bug when parsing the language string in external routines. The arguments
   part in `signature` was not considered as optional.
 * Added support for `"C++ struct ..."` in external routines.
+* Fixed C compilation errors with `msc` as back-end C compiler when compiling
+  ISE EiffelTime. See [https://support.eiffel.com/report_detail/19508]() for
+  details.
 
 ### Gobo Eiffel Tools Library
 
