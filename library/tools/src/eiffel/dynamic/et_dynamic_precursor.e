@@ -5,7 +5,7 @@ note
 		"Eiffel feature precursors equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,13 +55,13 @@ feature -- Status report
 
 feature -- Access
 
-	parent_type: ET_DYNAMIC_TYPE
+	parent_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Parent type of current precursor
 
 	current_feature: ET_DYNAMIC_FEATURE
 			-- Feature to which current precursor is a precursor
 
-	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_PRECURSOR
+	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_PRECURSOR
 			-- Dynamic precursor of `current_feature';
 			-- `a_feature' is the precursor of `current_feaure' in `a_parent_type'
 		do

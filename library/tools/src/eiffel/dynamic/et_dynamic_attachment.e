@@ -5,7 +5,7 @@ note
 		"Eiffel attachments at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class ET_DYNAMIC_ATTACHMENT
 
 feature -- Status report
 
-	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN
+	has_type (a_type: ET_DYNAMIC_PRIMARY_TYPE): BOOLEAN
 			-- Does `source_type' contain `a_type'?
 		require
 			a_type_not_void: a_type /= Void
@@ -50,7 +50,7 @@ feature -- Access
 	current_feature: ET_DYNAMIC_FEATURE
 			-- Feature where the attachment appears
 
-	current_type: ET_DYNAMIC_TYPE
+	current_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type to which `current_feature' belongs
 
 	attachment: ET_AST_NODE

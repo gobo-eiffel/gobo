@@ -17,6 +17,10 @@
 * Fixed C compilation errors with `msc` as back-end C compiler when compiling
   ISE EiffelTime. See [https://support.eiffel.com/report_detail/19508]() for
   details.
+* Adapted generated C code so that the FreeELKS introspection classes work
+  in void-safe mode.
+* Improved interoperability with ISE Eiffel by making sure that type
+  `attached NONE` is different from type `detachable NONE` in void-safe mode.
 
 ### Gobo Eiffel Tools Library
 

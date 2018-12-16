@@ -1067,6 +1067,30 @@ feature -- Output
 			append_to_string (a_string)
 		end
 
+	runtime_name_to_text: STRING
+			-- Textual representation of unaliased version of current type
+			-- as returned by 'TYPE.runtime_name'.
+			-- (Create a new string at each call.)
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		do
+			create Result.make (15)
+			append_runtime_name_to_string (Result)
+		ensure
+			runtime_name_to_text_not_void: Result /= Void
+		end
+
+	append_runtime_name_to_string (a_string: STRING)
+			-- Append to `a_string' textual representation of unaliased
+			-- version of current type as returned by 'TYPE.runtime_name'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			append_unaliased_to_string (a_string)
+		end
+
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'
 		do

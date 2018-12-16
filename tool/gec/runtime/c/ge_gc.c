@@ -4,7 +4,7 @@
 		"C functions used to access garbage collector facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,7 +85,7 @@ void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_
  */
 #ifdef GE_USE_BOEHM_GC
 void GE_boehm_dispose(void* C, void* disp) {
-	((GE_types[((EIF_REFERENCE)C)->id]).dispose)(GE_current_context(), (EIF_REFERENCE) C);
+	((GE_types[((EIF_REFERENCE)C)->id][0]).dispose)(GE_current_context(), (EIF_REFERENCE) C);
 }
 #endif
 

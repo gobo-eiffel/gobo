@@ -1165,9 +1165,6 @@ feature -- Class header
 		do
 			if is_expanded then
 				Result := True
-			elseif is_none then
-					-- Class type "NONE" is always detachable regardless of type marks.
-				Result := False
 			elseif attached class_mark as l_class_mark and then l_class_mark.is_attachment_mark then
 				Result := l_class_mark.is_attached_mark
 			elseif attached universe.implicit_attachment_type_mark as l_type_mark and then l_type_mark.is_attachment_mark then

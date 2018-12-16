@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic TUPLE types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_DYNAMIC_TUPLE_TYPE
 
 inherit
 
-	ET_DYNAMIC_TYPE
+	ET_DYNAMIC_PRIMARY_TYPE
 		rename
 			make as make_type
 		redefine
@@ -87,7 +87,7 @@ feature -- Features
 			-- of reference type?
 		local
 			i, nb: INTEGER
-			l_type: ET_DYNAMIC_TYPE
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if has_reference_attributes then
 				Result := True
@@ -103,7 +103,7 @@ feature -- Features
 				has_reference_attributes := True
 				nb := item_type_sets.count
 				from i := 1 until i > nb loop
-					l_type := item_type_sets.item (i).static_type
+					l_type := item_type_sets.item (i).static_type.primary_type
 					if l_type.is_expanded and then l_type.has_nested_reference_attributes then
 							-- Note that for non-generic expanded types, there is no type other
 							-- than itself that conforms to it. However for generic expanded types,

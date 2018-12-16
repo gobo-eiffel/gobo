@@ -5,7 +5,7 @@ note
 		"Eiffel qualified procedure calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,7 +57,7 @@ feature -- Access
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
 			-- Run-time procedure in `a_type' corresponding to current call;
 			-- Void if no such procedure
 		do
@@ -66,7 +66,7 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 feature {ET_DYNAMIC_TYPE_BUILDER} -- Implementation
 
-	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
+	put_type_with_tuple_label (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Add `a_type' to current set when the current call is a call to a Tuple label.
 		do
 			a_builder.propagate_tuple_label_setter_dynamic_types (Current, a_type)

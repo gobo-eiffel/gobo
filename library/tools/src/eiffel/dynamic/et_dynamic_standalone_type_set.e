@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets with no sources nor targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			static_type := a_type
 			if a_type.is_expanded then
-				put_type (a_type)
+				put_type (a_type.primary_type)
 			end
 		ensure
 			static_type_set: static_type = a_type
@@ -106,7 +106,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put_type (a_type: ET_DYNAMIC_TYPE)
+	put_type (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Add `a_type' to current set.
 			-- Do not check for type conformance with `static_type' and do not propagate to targets.
 		local
@@ -124,17 +124,17 @@ feature -- Element change
 			end
 		end
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
+	put_type_from_type_set (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		do
-			if a_type.conforms_to_type (static_type) then
+			if a_type.conforms_to_type (static_type.primary_type) then
 				put_type (a_type)
 			end
 		end
 
 feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 
-	dynamic_types: detachable ET_DYNAMIC_TYPE_HASH_LIST
+	dynamic_types: detachable ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 			-- Dynamic types in current set;
 			-- Void if no type in the set
 

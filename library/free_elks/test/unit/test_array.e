@@ -78,7 +78,7 @@ feature -- Test
 			assert_iarrays_same ("ai_all_cleared", <<0, 0, 0, 0>>, l_ai)
 			assert_integers_equal ("ai_same_lower", 4, l_ai.lower)
 			assert_integers_equal ("ai_same_upper", 7, l_ai.upper)
-			l_as := <<"1", "2", "3", "4">>
+			l_as := {ARRAY [detachable STRING]} <<"1", "2", "3", "4">>
 			assert_arrays_equal ("as_initialized", <<"1", "2", "3", "4">>, l_as)
 			l_as.clear_all
 			create void_as.make_filled (Void, 1, 4)

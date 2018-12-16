@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets pulling types from subsets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			static_type := a_type
 			if a_type.is_expanded then
-				put_type (a_type)
+				put_type (a_type.primary_type)
 			end
 		ensure
 			static_type_set: static_type = a_type

@@ -7010,7 +7010,7 @@ feature {NONE} -- Expression validity
 					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 				end
 				a_context.copy_type_context (l_result_context_list.last)
-				report_if_expression (a_expression, tokens.like_current, a_context)
+				report_if_expression (a_expression, tokens.identity_type, a_context)
 			end
 			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
 		end
@@ -13577,7 +13577,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_if_expression (a_expression: ET_IF_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
-			-- Report that a 'if' epxression of type `a_type' in context
+			-- Report that a 'if' expression of type `a_type' in context
 			-- of `a_context' has been processed.
 		require
 			no_error: not has_fatal_error

@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -170,8 +170,8 @@ feature -- Processing
 			l_system: ET_SYSTEM
 			l_dynamic_system: ET_DYNAMIC_SYSTEM
 			l_builder: ET_DYNAMIC_PUSH_TYPE_SET_BUILDER
-			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 		do
 			l_class := a_target_type.base_class

@@ -5,7 +5,7 @@ note
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -371,6 +371,7 @@ feature {NONE} -- Validity checking
 			a_class := a_type.base_class
 			if a_class.is_none then
 				if a_type.is_generic then
+						-- Class "NONE" is not generic.
 					set_fatal_error
 					if not class_interface_error_only then
 						if current_class = current_class_impl then

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ inherit
 
 	ET_DYNAMIC_TARGET
 
-	ET_DYNAMIC_TYPES
+	ET_DYNAMIC_PRIMARY_TYPES
 
 feature -- Status report
 
@@ -47,7 +47,7 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		local
-			l_type: ET_DYNAMIC_TYPE
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 		do
 			if count <= other.count then
@@ -138,7 +138,7 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 
-	dynamic_types: detachable ET_DYNAMIC_TYPES
+	dynamic_types: detachable ET_DYNAMIC_PRIMARY_TYPES
 			-- Dynamic types in current set;
 			-- Void if no type in the set
 		deferred

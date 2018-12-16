@@ -9,7 +9,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,7 +57,7 @@ feature -- Access
 	current_feature: ET_DYNAMIC_FEATURE
 			-- Feature where the object-equality expression appears
 
-	current_type: ET_DYNAMIC_TYPE
+	current_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type to which `current_feature' belongs
 
 	position: ET_POSITION
@@ -76,7 +76,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
+	put_type_from_type_set (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		do
 			propagate_type (a_type, a_system, a_system.dynamic_type_set_builder)
@@ -116,7 +116,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	propagate_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
+	propagate_type (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate `a_type' from `target_type_set' using `a_builder'.
 		require
 			a_type_not_void: a_type /= Void

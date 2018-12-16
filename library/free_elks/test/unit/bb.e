@@ -11,4 +11,9 @@ feature
 			item_set: item = v
 		end
 
+	has_default: BOOLEAN
+		do
+			Result := ({G}).has_default
+		end
+
 end

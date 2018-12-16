@@ -233,8 +233,13 @@ EIF_REFERENCE GE_generating_type_of_encoded_type(EIF_ENCODED_TYPE a_type)
 	const char* l_name;
 #ifdef GE_USE_TYPE_NAME
 /* TODO: check that `a_type' is valid. */
-/* TODO: handle type annotations. */
-	l_name = GE_type_infos[GE_decoded_type(a_type).id].name;
+	EIF_TYPE l_decoded_type;
+
+	l_decoded_type = GE_decoded_type(a_type);
+	l_name = GE_type_infos[l_decoded_type.id].name;
+	if (!l_decoded_type.annotations) {
+		l_name++;
+	}
 #else
 	l_name = "";
 #endif
@@ -249,12 +254,15 @@ EIF_ENCODED_TYPE GE_encoded_type_from_name(EIF_POINTER a_name)
 {
 #ifdef GE_USE_TYPE_NAME
 /* TODO: check that `a_type' is valid. */
-/* TODO: handle type annotations. */
 	int i;
+	const char* l_name;
 
 	for (i = 1; i <= GE_type_info_count; i++) {
-		if (strcmp((char*)a_name, GE_type_infos[i].name) == 0) {
+		l_name = GE_type_infos[i].name;
+		if (strcmp((char*)a_name, l_name + 1) == 0) {
 			return (EIF_INTEGER)GE_encoded_type(GE_new_type(i, 0x0));
+		} else if (strcmp((char*)a_name, l_name) == 0) {
+			return (EIF_INTEGER)GE_encoded_type(GE_new_type(i, ATTACHED_FLAG));
 		}
 	}
 #endif
@@ -267,19 +275,25 @@ EIF_ENCODED_TYPE GE_encoded_type_from_name(EIF_POINTER a_name)
 EIF_BOOLEAN GE_encoded_type_conforms_to(EIF_ENCODED_TYPE a_type_1, EIF_ENCODED_TYPE a_type_2)
 {
 #ifdef GE_USE_ANCESTORS
-	GE_type_info l_type_info_1;
+	GE_type_info l_type_info_1, l_type_info_2;
 	GE_ancestor** l_ancestors;
 	uint32_t l_ancestor_count, i;
+	EIF_TYPE l_decoded_type_1, l_decoded_type_2;
 	EIF_TYPE_INDEX l_type_index_1, l_type_index_2, l_ancestor_type_index;
+	uint32_t l_flags_1, l_flags_2;
 
-/* TODO: take into account type annotation */
-	l_type_index_1 = GE_decoded_type(a_type_1).id;
-	l_type_index_2 = GE_decoded_type(a_type_2).id;
+	l_decoded_type_1 = GE_decoded_type(a_type_1);
+	l_decoded_type_2 = GE_decoded_type(a_type_2);
+	l_type_index_1 = l_decoded_type_1.id;
+	l_type_index_2 = l_decoded_type_2.id;
 	l_type_info_1 = GE_type_infos[l_type_index_1];
-	if (l_type_info_1.flags & GE_TYPE_FLAG_NONE) {
-			/* NONE */
-		uint32_t l_flags = GE_type_infos[l_type_index_2].flags;
-		return EIF_TEST(!(l_flags & GE_TYPE_FLAG_EXPANDED));
+	l_type_info_2 = GE_type_infos[l_type_index_2];
+	l_flags_1 = l_type_info_1.flags;
+	l_flags_2 = l_type_info_2.flags;
+	if (!(l_flags_1 & GE_TYPE_FLAG_EXPANDED || l_decoded_type_1.annotations & ATTACHED_FLAG) && (l_flags_2 & GE_TYPE_FLAG_EXPANDED || l_decoded_type_2.annotations & ATTACHED_FLAG)) {
+		return EIF_FALSE;
+	} else if (l_flags_1 & GE_TYPE_FLAG_NONE) {
+		return EIF_TEST(!(l_flags_2 & GE_TYPE_FLAG_EXPANDED));
 	} else {
 		l_ancestors = l_type_info_1.ancestors;
 		l_ancestor_count = l_type_info_1.ancestor_count;
@@ -599,12 +613,15 @@ EIF_REFERENCE GE_new_special_of_reference_instance_of_type_index(EIF_TYPE_INDEX 
  */
 EIF_REFERENCE GE_new_type_instance_of_encoded_type(EIF_ENCODED_TYPE a_type)
 {
+	EIF_TYPE l_decoded_type;
 	EIF_TYPE_INDEX l_type_index;
+	EIF_TYPE_INDEX l_annotations;
 	EIF_REFERENCE l_result;
 
-/* TODO: take into account type annotation. */
-	l_type_index = GE_decoded_type(a_type).id;
-	l_result = (EIF_REFERENCE)&(GE_types[l_type_index]);
+	l_decoded_type = GE_decoded_type(a_type);
+	l_type_index = l_decoded_type.id;
+	l_annotations = l_decoded_type.annotations;
+	l_result = (EIF_REFERENCE)&(GE_types[l_type_index][l_annotations]);
 	if (l_result->id == 0) {
 		l_result = EIF_VOID;
 		GE_raise(GE_EX_PROG);

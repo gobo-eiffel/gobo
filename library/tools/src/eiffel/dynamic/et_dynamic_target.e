@@ -5,7 +5,7 @@ note
 		"Eiffel targets when propagating dynamic types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class ET_DYNAMIC_TARGET
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
+	put_type_from_type_set (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		require
 			a_type_not_void: a_type /= Void
@@ -24,7 +24,7 @@ feature -- Element change
 		deferred
 		end
 
-	put_type_from_attachment (a_type: ET_DYNAMIC_TYPE; an_attachment: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM)
+	put_type_from_attachment (a_type: ET_DYNAMIC_PRIMARY_TYPE; an_attachment: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `an_attachment' to current target.
 		require
 			a_type_not_void: a_type /= Void

@@ -5,7 +5,7 @@ note
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,6 +26,7 @@ inherit
 			tuple_keyword, actual_parameters,
 			resolved_formal_parameters_with_type_mark,
 			append_unaliased_to_string,
+			append_runtime_name_to_string,
 			type_with_type_mark,
 			type_mark,
 			overridden_type_mark
@@ -424,10 +425,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		do
 			other_base_class := other.base_class
 			if other_base_class.is_none then
-					-- Class type "NONE" is always detachable regardless of type marks.
-					-- Therefore it conforms to any detachable tuple type since tuple types are reference types.
+					-- Class type "detachable NONE" conforms to any class type that is not expanded nor attached.
+					-- Class type "attached NONE" conforms to any attached class type that is not expanded.
+					-- And tuple types are reference types.
 				if other_context.attachment_type_conformance_mode then
-					Result := is_type_detachable_with_type_mark (a_type_mark, a_context)
+					Result := is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context)
 				else
 					Result := True
 				end
@@ -530,6 +532,25 @@ feature -- Output
 			if attached actual_parameters as l_actual_parameters and then not l_actual_parameters.is_empty then
 				a_string.append_character (' ')
 				l_actual_parameters.append_unaliased_to_string (a_string)
+			end
+		end
+
+	append_runtime_name_to_string (a_string: STRING)
+			-- Append to `a_string' textual representation of unaliased
+			-- version of current type as returned by 'TYPE.runtime_name'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		do
+			if base_class.current_system.attachment_type_conformance_mode then
+					-- Void-safe mode.
+				if is_attached then
+					a_string.append_character ('!')
+				end
+			end
+			a_string.append_string (tuple_string)
+			if attached actual_parameters as l_actual_parameters and then not l_actual_parameters.is_empty then
+				a_string.append_character (' ')
+				l_actual_parameters.append_runtime_name_to_string (a_string)
 			end
 		end
 

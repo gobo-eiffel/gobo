@@ -5,7 +5,7 @@ note
 		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ feature -- Access
 	current_feature: ET_DYNAMIC_FEATURE
 			-- Feature where the call appears
 
-	current_type: ET_DYNAMIC_TYPE
+	current_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type to which `current_feature' belongs
 
 	position: ET_POSITION
@@ -69,7 +69,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
+	put_type_from_type_set (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			l_dynamic_feature: like seeded_dynamic_feature
@@ -78,7 +78,7 @@ feature -- Element change
 			if not is_tuple_label then
 				l_dynamic_feature := seeded_dynamic_feature (a_type, a_system)
 				if l_dynamic_feature = Void then
-					if a_type.conforms_to_type (target_type_set.static_type) then
+					if a_type.conforms_to_type (target_type_set.static_type.primary_type) then
 							-- Internal error: there should be a feature with that seed
 							-- in all descendants of `target_type_set.static_type'.
 						l_builder := a_system.dynamic_type_set_builder
@@ -127,7 +127,7 @@ feature -- Element change
 			end
 		end
 
-	propagate_type (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
+	propagate_type (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate `a_type' from `target_type_set' using `a_builder'.
 		require
 			a_type_not_void: a_type /= Void
@@ -140,7 +140,7 @@ feature -- Element change
 				l_system := a_builder.current_dynamic_system
 				l_dynamic_feature := seeded_dynamic_feature (a_type, l_system)
 				if l_dynamic_feature = Void then
-					if a_type.conforms_to_type (target_type_set.static_type) then
+					if a_type.conforms_to_type (target_type_set.static_type.primary_type) then
 							-- Internal error: there should be a feature with that seed
 							-- in all descendants of `target_type_set.static_type'.
 						a_builder.set_fatal_error
@@ -158,7 +158,7 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
 			-- Run-time feature in `a_type' corresponding to current call;
 			-- Void if no such feature
 		require
@@ -170,7 +170,7 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 feature {NONE} -- Implementation
 
-	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE; a_system: ET_DYNAMIC_SYSTEM)
+	put_type_with_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_feature: ET_DYNAMIC_FEATURE; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' to current set.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		require
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 								else
 									l_manifest_tuple_type := l_source_argument_type_set.static_type
 									if attached {ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET} l_target_argument_type_set as l_open_operand_type_set and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type) then
-										l_open_operand_type_set.put_type (l_manifest_tuple_type)
+										l_open_operand_type_set.put_type (l_manifest_tuple_type.primary_type)
 									else
 										l_source_argument_type_set.put_target (l_target_argument_type_set, a_system)
 									end
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
+	propagate_type_with_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_feature: ET_DYNAMIC_FEATURE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate `a_type' from `target_type_set' using `a_builder'.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		require
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 									else
 										l_manifest_tuple_type := l_source_argument_type_set.static_type
 										if attached {ET_DYNAMIC_AGENT_OPERAND_PULL_TYPE_SET} l_target_argument_type_set as l_open_operand_type_set and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type) then
-											l_open_operand_type_set.put_type (l_manifest_tuple_type)
+											l_open_operand_type_set.put_type (l_manifest_tuple_type.primary_type)
 										else
 											create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)
 											l_target_argument_type_set.put_source (l_attachment, l_system)
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 
 feature {ET_DYNAMIC_TYPE_BUILDER} -- Implementation
 
-	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
+	put_type_with_tuple_label (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Add `a_type' to current set when the current call is a call to a Tuple label.
 		require
 			tuple_label: is_tuple_label

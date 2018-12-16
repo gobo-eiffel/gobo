@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders where types are pushed to supersets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,14 +73,14 @@ feature -- Generation
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			i, nb: INTEGER
-			l_type: ET_DYNAMIC_TYPE
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			j, nb2: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
 			l_precursor: detachable ET_DYNAMIC_PRECURSOR
 			l_other_precursors: detachable ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
-			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			old_object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			has_fatal_error := False
@@ -251,6 +251,7 @@ feature {NONE} -- Event handling
 			-- of `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
@@ -260,24 +261,37 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
+				l_primary_type := l_type.primary_type
+				mark_type_alive (l_primary_type)
 				set_dynamic_type_set (l_type, an_expression)
 					-- Make sure that types "SPECIAL [XXX]" (used in feature 'area'), and
 					-- "INTEGER" (used in feature 'lower' and 'upper') are marked as alive.
-				l_queries := l_type.queries
-				if l_queries.count < 3 then
+				l_queries := l_primary_type.queries
+				if
+					current_dynamic_system.array_area_feature = Void or
+					current_dynamic_system.array_lower_feature = Void or
+					current_dynamic_system.array_upper_feature = Void
+				then
 						-- Error already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
--- TODO: internal error
+				elseif l_queries.count < 3 then
+						-- Internal error: should not happen after the wellformedness
+						-- of the expected attributes in class "ARRAY" has been checked
+						-- in ET_DYNAMIC_SYSTEM.compile_kernel.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
 						-- Feature 'area' should be the first in the list of features.
 					l_dynamic_type_set := l_queries.item (1).result_type_set
 					if l_dynamic_type_set = Void then
-							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+							-- Internal error: should not happen after the wellformedness
+							-- of the expected attributes in class "ARRAY" has been checked
+							-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
-					elseif attached {ET_DYNAMIC_SPECIAL_TYPE} l_dynamic_type_set.static_type as l_special_type then
+						error_handler.report_giaaa_error
+					elseif attached {ET_DYNAMIC_SPECIAL_TYPE} l_dynamic_type_set.static_type.primary_type as l_special_type then
 						mark_type_alive (l_special_type)
-						l_special_type.put_target (l_dynamic_type_set, current_dynamic_system)
+						l_dynamic_type_set.static_type.put_target (l_dynamic_type_set, current_dynamic_system)
 						l_item_type_set := l_special_type.item_type_set
 						nb := an_expression.count
 						from i := 1 until i > nb loop
@@ -300,20 +314,24 @@ feature {NONE} -- Event handling
 						-- Feature 'lower' should be the second in the list of features.
 					l_dynamic_type_set := l_queries.item (2).result_type_set
 					if l_dynamic_type_set = Void then
-							-- Error in feature 'lower', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+							-- Internal error: should not happen after the wellformedness
+							-- of the expected attributes in class "ARRAY" has been checked
+							-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
--- TODO: internal error
+						error_handler.report_giaaa_error
 					else
-						mark_type_alive (l_dynamic_type_set.static_type)
+						mark_type_alive (l_dynamic_type_set.static_type.primary_type)
 					end
 						-- Feature 'upper' should be the third in the list of features.
 					l_dynamic_type_set := l_queries.item (3).result_type_set
 					if l_dynamic_type_set = Void then
-							-- Error in feature 'upper', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+							-- Internal error: should not happen after the wellformedness
+							-- of the expected attributes in class "ARRAY" has been checked
+							-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
--- TODO: internal error
+						error_handler.report_giaaa_error
 					else
-						mark_type_alive (l_dynamic_type_set.static_type)
+						mark_type_alive (l_dynamic_type_set.static_type.primary_type)
 					end
 				end
 			end
@@ -324,6 +342,7 @@ feature {NONE} -- Event handling
 			-- `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_expression: ET_EXPRESSION
@@ -331,9 +350,10 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
+				l_primary_type := l_type.primary_type
+				mark_type_alive (l_primary_type)
 				set_dynamic_type_set (l_type, an_expression)
-				if attached {ET_DYNAMIC_TUPLE_TYPE} l_type as l_tuple_type then
+				if attached {ET_DYNAMIC_TUPLE_TYPE} l_primary_type as l_tuple_type then
 					l_item_type_sets := l_tuple_type.item_type_sets
 					nb := an_expression.count
 					if l_item_type_sets.count /= nb then
@@ -376,6 +396,7 @@ feature {NONE} -- Implementation
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_tuple_type: ET_TUPLE_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			j, nb_items: INTEGER
 		do
@@ -414,12 +435,22 @@ feature {NONE} -- Implementation
 				end
 			end
 			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_parameters, current_universe_impl.tuple_type.named_base_class)
-			if attached {ET_DYNAMIC_TUPLE_TYPE} current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type) as l_dynamic_tuple_type then
+			l_dynamic_type := current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
+			if attached {ET_DYNAMIC_TUPLE_TYPE} l_dynamic_type.primary_type as l_dynamic_tuple_type then
 				mark_type_alive (l_dynamic_tuple_type)
-				if an_agent_type.attribute_count < 2 then
-						-- Internal error: missing feature 'closed_operands' in the Agent type,
-						-- already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+				if
+					current_dynamic_system.routine_rout_disp_feature = Void or
+					current_dynamic_system.routine_closed_operands_feature = Void
+				then
+						-- Error already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
+				elseif an_agent_type.attribute_count < 2 then
+						-- Internal error: should not happen after the wellformedness
+						-- of the expected attributes in class "ROUTINE" has been checked
+						-- in ET_DYNAMIC_SYSTEM.compile_kernel.
+						-- The second attribute is supposed to be 'closed_operands' in the Agent type
+					set_fatal_error
+					error_handler.report_giaaa_error
 				elseif not attached an_agent_type.queries.item (2).result_type_set as l_result_type_set then
 						-- Internal error: an attribute should have a result type set.
 					set_fatal_error

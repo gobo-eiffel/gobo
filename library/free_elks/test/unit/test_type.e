@@ -5,7 +5,7 @@ note
 		"Test features of class TYPE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,7 +56,8 @@ feature -- Test
 				assert_false ("attached_non_void_safe", ({attached STRING_8}).is_attached)
 				assert_false ("none_non_void_safe", ({NONE}).is_attached)
 			end
-			assert_false ("detachable", ({detachable STRING_8}).is_attached)
+			assert_false ("detachable_string_8", ({detachable STRING_8}).is_attached)
+			assert_false ("detachable_none", ({detachable NONE}).is_attached)
 				-- Expanded types are considered as attached
 				-- even in non-void-safe mode.
 			assert_true ("basic_expanded", ({INTEGER_32}).is_attached)
@@ -115,16 +116,22 @@ feature -- Test
 			-- Test feature 'has_default'.
 		do
 			assert_true ("detachable_string_8", ({detachable STRING_8}).has_default)
+			assert_true ("detachable_none", ({detachable NONE}).has_default)
 			assert_true ("basic_expanded", ({INTEGER_32}).has_default)
 			assert_true ("non_basic_expanded", ({UTF_CONVERTER}).has_default)
+			assert_true ("bb_detachable_string_8", (create {BB [detachable STRING_8]}).has_default)
 			if not eiffel_compiler.is_ise then
 					-- Crashing with ISE 16.05.9.9057:
 				assert_true ("non_basic_generic_expanded", ({TYPED_POINTER [ANY]}).has_default)
 			end
 			if is_void_safe_mode then
 				assert_false ("attached_string_8_void_safe", ({attached STRING_8}).has_default)
+				assert_false ("attached_none_void_safe", ({attached NONE}).has_default)
+				assert_false ("bb_attached_string_8_void_safe", (create {BB [attached STRING_8]}).has_default)
 			else
 				assert_true ("attached_string_8_non_void_safe", ({attached STRING_8}).has_default)
+				assert_true ("attached_none_non_void_safe", ({attached NONE}).has_default)
+				assert_true ("bb_attached_string_8_non_void_safe", (create {BB [attached STRING_8]}).has_default)
 			end
 		end
 

@@ -970,6 +970,10 @@ feature -- Kernel types
 	detachable_type_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "detachable TYPE [detachable ANY]"
 
+	type_like_current_type: ET_CLASS_TYPE
+			-- Class type "TYPE [like Current]", with implicit 'attached' type mark on 'TYPE'
+			-- but no implicit type mark on 'like Current'
+
 	type_detachable_like_current_type: ET_CLASS_TYPE
 			-- Class type "TYPE [detachable like Current]"
 
@@ -977,10 +981,7 @@ feature -- Kernel types
 			-- Class type "detachable TYPE [EXCEPTION]"
 
 	type_detachable_exception_type: ET_CLASS_TYPE
-			-- Class type "TYPE [detachable EXCEPTION]", with implicit 'attached' type mark"
-
-	type_like_current_type: ET_CLASS_TYPE
-			-- Class type "TYPE [like Current]", with implicit 'attached' type mark"
+			-- Class type "TYPE [detachable EXCEPTION]", with implicit 'attached' type mark
 
 	typed_pointer_any_type: ET_CLASS_TYPE
 			-- Class type "TYPED_POINTER [ANY]"
@@ -1661,7 +1662,7 @@ feature -- Kernel types
 			create type_detachable_exception_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 				-- "TYPE [like Current]"
 			create l_parameters.make_with_capacity (1)
-			l_parameters.put_first (tokens.like_current)
+			l_parameters.put_first (tokens.identity_type)
 			create type_like_current_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 

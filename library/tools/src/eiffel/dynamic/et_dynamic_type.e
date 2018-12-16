@@ -5,12 +5,12 @@ note
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_TYPE
+deferred class ET_DYNAMIC_TYPE
 
 inherit
 
@@ -23,55 +23,14 @@ inherit
 			has_type
 		end
 
-	ET_SHARED_TOKEN_CONSTANTS
-		export {NONE} all end
-
 	HASHABLE
 
 	DEBUG_OUTPUT
 
-create
-
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_type: like base_type; a_class: like base_class)
-			-- Create a new type.
-		require
-			a_type_not_void: a_type /= Void
-			a_type_base_type: a_type.is_base_type
-			a_class_not_void: a_class /= Void
-		do
-			base_type := a_type
-			base_class := a_class
-			hash_code := a_class.hash_code
-			queries := empty_features
-			procedures := empty_features
-			create conforming_ancestors.make (a_class.conforming_ancestors.count)
-			create conforming_descendants.make_empty (Current)
-			create alive_conforming_descendants.make_empty (Current)
-			conforming_descendants.put_type (Current)
-			if is_expanded then
-				set_alive
-				alive_conforming_descendants.set_never_void
-				conforming_descendants.set_never_void
-			end
-		ensure
-			base_type_set: base_type = a_type
-			base_class_set: base_class = a_class
-			expanded_type_alive: is_expanded implies is_alive
-		end
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
 
 feature -- Status report
-
-	is_alive: BOOLEAN
-			-- Is current type considered alive?
-			-- (e.g. instances of this type may be created)
-
-	was_alive: BOOLEAN
-			-- Was current type considered alive during the last iteration?
-			-- (e.g. instances of this type may be created)
 
 	is_expanded: BOOLEAN
 			-- Is current type expanded?
@@ -87,7 +46,7 @@ feature -- Status report
 			-- set should also be non-empty. Therefore it is recommended to
 			-- use 'not can_be_void'.)
 		do
-			Result := not base_class.is_none and is_alive
+			Result := not base_class.is_none and primary_type.is_alive
 		end
 
 	is_generic: BOOLEAN
@@ -96,24 +55,6 @@ feature -- Status report
 			Result := base_class.is_generic
 		ensure
 			definition: Result = base_class.is_generic
-		end
-
-	is_agent_type: BOOLEAN
-			-- Is current type an agent type?
-		do
-			-- Result := False
-		end
-
-	is_special: BOOLEAN
-			-- Is current type a SPECIAL type?
-		do
-			-- Result := False
-		end
-
-	is_tuple: BOOLEAN
-			-- Is current type a TUPLE type?
-		do
-			-- Result := False
 		end
 
 	is_basic: BOOLEAN
@@ -127,27 +68,14 @@ feature -- Status report
 			definition: Result = base_class.is_basic
 		end
 
-	has_static: BOOLEAN
-			-- Does current type contain features that are used as static features?
-
-	is_used: BOOLEAN
-			-- Should current type used in the system?
-		do
-			Result := is_alive or has_static or (attached meta_type as l_meta_type and then l_meta_type.is_used)
-		ensure
-			is_alive: is_alive implies Result
-			has_static: has_static implies Result
-			has_meta_type: (attached meta_type as l_meta_type and then l_meta_type.is_used) implies Result
-		end
-
-	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN
+	has_type (a_type: ET_DYNAMIC_PRIMARY_TYPE): BOOLEAN
 			-- Do current dynamic types contain `a_type'?
 		do
 			if count = 1 then
-				Result := a_type = Current
+				Result := a_type = primary_type
 			end
 		ensure then
-			definition: Result = (a_type = Current)
+			definition: Result = (a_type = primary_type)
 		end
 
 feature -- Status setting
@@ -158,63 +86,44 @@ feature -- Status setting
 			-- `is_never_void' is already True unless current type is NONE or is not alive.
 		end
 
-feature -- Conformance
-
-	conforms_to_type (other: ET_DYNAMIC_TYPE): BOOLEAN
-			-- Does current type conform to `other' type?
-		require
-			other_not_void: other /= Void
-		local
-			l_other_base_type: ET_BASE_TYPE
-		do
-			l_other_base_type := other.base_type
-			Result := base_type.conforms_to_type (l_other_base_type, l_other_base_type, base_type, tokens.null_system_processor)
-		end
-
-feature -- Status setting
-
-	set_alive
-			-- Set `is_alive' to True.
-			-- (Note that in order to make sure that the 'dispose' feature, if it exists, is
-			-- compiled into the system, the feature ET_DYNAMIC_TYPE_SET_BUILDER.mark_type_alive
-			-- needs to be called. Likewise to compute ET_DYNAMIC_TYPE_SET_BUILDER.alive_conforming_descendants.)
-		do
-			if not is_alive then
-				is_alive := True
-				alive_conforming_descendants.put_type (Current)
-			end
-		ensure
-			alive_set: is_alive
-		end
-
-	set_was_alive
-			-- Set `was_alive' to True.
-		do
-			was_alive := True
-		ensure
-			was_alive_set: was_alive
-		end
-
-	set_static (b: BOOLEAN)
-			-- Set `has_static' to `b'.
-		do
-			has_static := b
-		ensure
-			static_set: has_static = b
-		end
-
 feature -- Access
 
 	base_type: ET_BASE_TYPE
 			-- Base type
+		deferred
+		ensure
+			base_type_not_void: Result /= Void
+			base_type_base_type: Result.is_base_type
+		end
 
 	base_class: ET_CLASS
 			-- Base class
+		deferred
+		ensure
+			base_class_not_void: Result /= Void
+		end
 
-	meta_type: detachable ET_DYNAMIC_TYPE
+	primary_type: ET_DYNAMIC_PRIMARY_TYPE
+			-- Primary version of current type
+		deferred
+		ensure
+			primary_type_not_void: Result /= Void
+		end
+
+	meta_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 			-- Type representing current type, if any.
 			-- If current type is of the form 'T', then
-			-- the meta type will be 'TYPE [T]'.
+			-- the meta type will be 'detachable TYPE [T]'.
+
+	type_mark: detachable ET_TYPE_MARK
+			-- Type mark (e.g. 'attached') to override `primary_type'
+		deferred
+		end
+
+	type_id: INTEGER
+			-- Type id
+		deferred
+		end
 
 	static_type: ET_DYNAMIC_TYPE
 			-- Type at compilation time
@@ -224,44 +133,17 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE
+	dynamic_type (i: INTEGER): ET_DYNAMIC_PRIMARY_TYPE
 			-- Dynamic type at index `i'
 		do
-			Result := Current
+			Result := primary_type
 		end
 
-	index_of (a_type: ET_DYNAMIC_TYPE): INTEGER
-			-- Index of first occurrence of `a_type'?
+	index_of (a_type: ET_DYNAMIC_PRIMARY_TYPE): INTEGER
+			-- Index of first occurrence of `a_type'.
+			-- 0 if type not found.
 		do
 			if has_type (a_type) then
-				Result := 1
-			end
-		end
-
-	conforming_ancestors: DS_HASH_SET [ET_DYNAMIC_TYPE]
-			-- All types (both alive and dead) to which the current type conforms
-
-	conforming_descendants: ET_DYNAMIC_STANDALONE_TYPE_SET
-			-- All types (both alive and dead) that conform to current type
-			-- (Might be useful when retrieving Storable files or getting from
-			-- an external routine any other objects created outside of Eiffel.)
-
-	alive_conforming_descendants: ET_DYNAMIC_STANDALONE_TYPE_SET
-			-- Types that conform to current type and that are considered alive
-			-- (e.g. instances of this type may be created)
-
-	hash_code: INTEGER
-			-- Hash code
-
-	id: INTEGER
-			-- ID
-
-feature -- Measurement
-
-	count: INTEGER
-			-- Number of types in current type set
-		do
-			if not base_class.is_none and is_alive then
 				Result := 1
 			end
 		end
@@ -276,512 +158,29 @@ feature -- Setting
 			meta_type_set: meta_type = a_type
 		end
 
-	set_id (i: INTEGER)
-			-- Set `id' to `i'.
+feature -- Measurement
+
+	count: INTEGER
+			-- Number of types in current type set
 		do
-			id := i
-		ensure
-			id_set: id = i
+			if not base_class.is_none and primary_type.is_alive then
+				Result := 1
+			end
 		end
 
-	set_hash_code (a_code: INTEGER)
-			-- Set `hash_code' to `a_code'.
+feature -- Conformance
+
+	conforms_to_type (other: ET_DYNAMIC_TYPE): BOOLEAN
+			-- Does current type conform to `other' type?
 		require
-			a_code_not_negative: a_code >= 0
-		do
-			hash_code := a_code
-		ensure
-			hash_code_set: hash_code = a_code
-		end
-
-feature -- Features
-
-	attribute_count: INTEGER
-			-- Number of attributes
-
-	has_reference_attributes: BOOLEAN
-			-- Does current type contain attributes whose types are declared of reference type?
-
-	has_nested_reference_attributes: BOOLEAN
-			-- Does current type contain attributes whose types are declared of reference type,
-			-- or recursively does it contain expanded attributes whose type contains attributes
-			-- of reference type?
+			other_not_void: other /= Void
 		local
-			i, nb: INTEGER
-			l_type: ET_DYNAMIC_TYPE
+			l_base_type: ET_BASE_TYPE
+			l_other_base_type: ET_BASE_TYPE
 		do
-			if has_reference_attributes then
-				Result := True
-			elseif is_basic then
-				Result := False
-			else
-					-- Look at the attributes of the types of expanded attributes, if any.
-					--
-					-- We should not have cyclic recursive enclosed expanded objects.
-					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
-					-- or by another proper handling if ECMA relaxed this rule
-					-- (through the introduction of attached types). But in case
-					-- such a cyclic recursion has slipped through, we temporarily
-					-- set `has_reference_attributes' to True to break that cycle.
-				has_reference_attributes := True
-				nb := attribute_count
-				from i := 1 until i > nb loop
-					if attached queries.item (i).result_type_set as l_result_type_set then
-						l_type := l_result_type_set.static_type
-						if l_type.is_expanded and then l_type.has_nested_reference_attributes then
-								-- Note that for non-generic expanded types, there is no type other
-								-- than itself that conforms to it. However for generic expanded types,
-								-- other generic derivations of the same generic class may conform to
-								-- it. But it is OK to take only the static type of the expanded attribute
-								-- into account even in that case, and we won't miss any sub-attribute
-								-- of reference types in conforming expanded generic derivations.
-								-- Indeed, if that static type has expanded attributes, then conforming
-								-- generic derivations cannot have these attributes of reference
-								-- type (because no reference type conforms to an expanded type).
-							Result := True
-							i := nb + 1
-						else
-							i := i + 1
-						end
-					else
-							-- Should never happen: queries have a result type set.
-						i := i + 1
-					end
-				end
-				has_reference_attributes := False
-			end
-		end
-
-	has_generic_expanded_attributes: BOOLEAN
-			-- Does current type contain attributes whose types are declared of generic expanded type?
-			-- Note that for non-generic expanded types, there is no type other than itself
-			-- that conforms to it. Therefore we don't need to keep the type-id in its instances.
-			-- However for generic expanded types, other generic derivations of the same generic
-			-- class may conform to it. So as for reference types, we need to keep the type-id
-			-- in its instances. That's why we need to know whether the current type has such
-			-- kind of attributes.
-
-	queries: ET_DYNAMIC_FEATURE_LIST
-			-- Queries executed at run-time, if any
-			-- (Note that attributes are stored first, from 1 to `attribute_count'.)
-
-	procedures: ET_DYNAMIC_FEATURE_LIST
-			-- Procedures executed at run-time, if any
-
-	dynamic_query (a_query: ET_QUERY; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
-			-- Run-time query associated with `a_query'
-		require
-			a_query_not_void: a_query /= Void
-			valid_query: base_class.queries.has (a_query)
-			a_system_not_void: a_system /= Void
-		local
-			i, nb: INTEGER
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_result: detachable ET_DYNAMIC_FEATURE
-		do
-			if queries = empty_features then
-				create queries.make_with_capacity (base_class.queries.count)
-				Result := new_dynamic_query (a_query, a_system)
-				if Result.is_attribute then
-					put_attribute (Result, a_system)
-				else
-					queries.put_last (Result)
-				end
-			else
-				nb := queries.count
-				from i := 1 until i > nb loop
-					l_dynamic_feature := queries.item (i)
-					if l_dynamic_feature.static_feature = a_query then
-						l_result := l_dynamic_feature
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-				if l_result /= Void then
-					Result := l_result
-				else
-					Result := new_dynamic_query (a_query, a_system)
-					if Result.is_attribute then
-						put_attribute (Result, a_system)
-					else
-						queries.force_last (Result)
-					end
-				end
-			end
-		ensure
-			dynamic_query_not_void: Result /= Void
-			is_query: Result.is_query
-		end
-
-	dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
-			-- Run-time procedure associated with `a_procedure'
-		require
-			a_feature_not_void: a_procedure /= Void
-			valid_procedure: base_class.procedures.has (a_procedure)
-			a_system_not_void: a_system /= Void
-		local
-			i, nb: INTEGER
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_result: detachable ET_DYNAMIC_FEATURE
-		do
-			if procedures = empty_features then
-				create procedures.make_with_capacity (base_class.procedures.count)
-				Result := new_dynamic_procedure (a_procedure, a_system)
-				procedures.put_last (Result)
-			else
-				nb := procedures.count
-				from i := 1 until i > nb loop
-					l_dynamic_feature := procedures.item (i)
-					if l_dynamic_feature.static_feature = a_procedure then
-						l_result := l_dynamic_feature
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-				if l_result /= Void then
-					Result := l_result
-				else
-					Result := new_dynamic_procedure (a_procedure, a_system)
-					procedures.force_last (Result)
-				end
-			end
-		ensure
-			dynamic_procedure_not_void: Result /= Void
-			is_procedure: Result.is_procedure
-		end
-
-	seeded_dynamic_query (a_seed: INTEGER; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
-			-- Run-time query with seed `a_seed';
-			-- Void if no such query
-		require
-			a_system_not_void: a_system /= Void
-		local
-			i, nb: INTEGER
-			l_dynamic_query: ET_DYNAMIC_FEATURE
-		do
-			if queries = empty_features then
-				if attached base_class.seeded_query (a_seed) as l_query then
-					create queries.make_with_capacity (base_class.queries.count)
-					Result := new_dynamic_query (l_query, a_system)
-					if Result.is_attribute then
-						put_attribute (Result, a_system)
-					else
-						queries.put_last (Result)
-					end
-				end
-			else
-				nb := queries.count
-				from i := 1 until i > nb loop
-					l_dynamic_query := queries.item (i)
-					if l_dynamic_query.static_feature.has_seed (a_seed) then
-						Result := l_dynamic_query
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-				if Result = Void then
-					if attached base_class.seeded_query (a_seed) as l_query then
-						Result := new_dynamic_query (l_query, a_system)
-						if Result.is_attribute then
-							put_attribute (Result, a_system)
-						else
-							queries.force_last (Result)
-						end
-					end
-				end
-			end
-		ensure
-			is_query: Result /= Void implies Result.is_query
-		end
-
-	seeded_dynamic_procedure (a_seed: INTEGER; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
-			-- Run-time procedure with seed `a_seed';
-			-- Void if no such procedure
-		require
-			a_system_not_void: a_system /= Void
-		local
-			i, nb: INTEGER
-			l_dynamic_procedure: ET_DYNAMIC_FEATURE
-		do
-			if procedures = empty_features then
-				if attached base_class.seeded_procedure (a_seed) as l_procedure then
-					create procedures.make_with_capacity (base_class.procedures.count)
-					Result := new_dynamic_procedure (l_procedure, a_system)
-					procedures.put_last (Result)
-				end
-			else
-				nb := procedures.count
-				from i := 1 until i > nb loop
-					l_dynamic_procedure := procedures.item (i)
-					if l_dynamic_procedure.static_feature.has_seed (a_seed) then
-						Result := l_dynamic_procedure
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-				if Result = Void then
-					if attached base_class.seeded_procedure (a_seed) as l_procedure then
-						Result := new_dynamic_procedure (l_procedure, a_system)
-						procedures.force_last (Result)
-					end
-				end
-			end
-		ensure
-			is_procedure: Result /= Void implies Result.is_procedure
-		end
-
-	set_attribute_position (an_attribute: ET_DYNAMIC_FEATURE; a_position: INTEGER)
-			-- Make sure that `an_attribute' is at position `i' if
-			-- this is already a known attribute in current type.
-			-- Do nothing otherwise.
-		require
-			an_attribute_not_void: an_attribute /= Void
-			a_position_large_enough: a_position >= 1
-			a_position_small_enough: a_position <= attribute_count
-		local
-			i: INTEGER
-		do
-			i := queries.index_of (an_attribute)
-			if i >= 1 and i <= attribute_count then
-				if a_position /= i then
-					queries.put (queries.item (a_position), i)
-					queries.put (an_attribute, a_position)
-				end
-			end
-		ensure
-			position_set: (old queries.index_of (an_attribute) >= 1 and old queries.index_of (an_attribute) <= attribute_count) implies queries.item (a_position) = an_attribute
-			same_attribute_count: attribute_count = old attribute_count
-		end
-
-	use_all_attributes (a_system: ET_DYNAMIC_SYSTEM)
-			-- Make sure that all attributes of current type are marked as
-			-- used and hence included in the generated run-time instances.
-		require
-			a_system_not_void: a_system /= Void
-		local
-			l_queries: ET_QUERY_LIST
-			l_query: ET_QUERY
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			i, nb: INTEGER
-		do
-			l_queries := base_class.queries
-			nb := l_queries.count
-			from i := 1 until i > nb loop
-				l_query := l_queries.item (i)
-				if l_query.is_attribute then
-					l_dynamic_feature := dynamic_query (l_query, a_system)
-				else
-						-- Check if we have built-in attributes.
-					if attached {ET_EXTERNAL_FUNCTION} l_query as l_external_function and then l_external_function.is_builtin and then is_builtin_attribute (l_external_function, l_external_function.builtin_class_code, l_external_function.builtin_feature_code) then
-						l_dynamic_feature := dynamic_query (l_external_function, a_system)
-					end
-				end
-				i := i + 1
-			end
-		end
-
-	is_builtin_attribute (a_feature: ET_FEATURE; a_builtin_class_code, a_builtin_feature_code: NATURAL_8): BOOLEAN
-			-- Is built-in feature `a_feature' with code `a_built_class_code'
-			-- and `a_builtin_feature_code' considered as an attribute or not
-			-- in the current type?
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-			inspect a_builtin_class_code
-			when {ET_TOKEN_CODES}.builtin_boolean_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_boolean_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_character_8_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_character_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_character_32_ref_class then
-				 if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_character_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_integer_8_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_integer_16_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_integer_32_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_integer_64_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_natural_8_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_natural_16_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_natural_32_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_natural_64_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_pointer_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_pointer_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_real_32_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_real_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_real_64_ref_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_real_n_ref_item then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_special_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_count then
-					Result := True
-				elseif a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_capacity then
-					Result := True
-				end
-			when {ET_TOKEN_CODES}.builtin_tuple_class then
-				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_tuple_object_comparison then
-					Result := True
-				end
-			else
-				Result := False
-			end
-		ensure
-			is_query: Result implies a_feature.is_query
-		end
-
-feature {NONE} -- Features
-
-	put_attribute (an_attribute: ET_DYNAMIC_FEATURE; a_system: ET_DYNAMIC_SYSTEM)
-			-- Add `an_attribute' to `queries'.
-		require
-			an_attribute_not_void: an_attribute /= Void
-			is_attribute: an_attribute.is_attribute
-			is_query: an_attribute.is_query
-			a_system_not_void: a_system /= Void
-		local
-			l_type: ET_DYNAMIC_TYPE
-			l_dynamic_type_set_builder: ET_DYNAMIC_TYPE_SET_BUILDER
-		do
-			attribute_count := attribute_count + 1
-			if queries.count < attribute_count then
-				queries.force_last (an_attribute)
-			else
-				queries.force_last (queries.item (attribute_count))
-				queries.put (an_attribute, attribute_count)
-			end
-			if not attached an_attribute.result_type_set as l_result_type_set then
-					-- Should never happen. The precondition says that `an_attribute'
-					-- is a query, an therefore has a result type set.
-				check is_query: False end
-			else
-				l_type := l_result_type_set.static_type
-				if not l_type.is_expanded then
-					has_reference_attributes := True
-				elseif l_type.is_generic then
-					has_generic_expanded_attributes := True
-				end
-			end
-			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
-			l_dynamic_type_set_builder.propagate_reference_field_dynamic_types (an_attribute)
-			l_dynamic_type_set_builder.propagate_set_reference_field_dynamic_types (an_attribute)
-		ensure
-			one_more: attribute_count = old attribute_count + 1
-			reference_attribute: (attached an_attribute.result_type_set as l_result_type_set and then not l_result_type_set.is_expanded) implies has_reference_attributes
-			generic_expanded_attribute: (attached an_attribute.result_type_set as l_result_type_set and then l_result_type_set.is_expanded and then l_result_type_set.static_type.is_generic) implies has_generic_expanded_attributes
-		end
-
-feature -- Calls
-
-	query_calls: detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
-			-- First qualified query call with current type as target static type
-			-- (Other calls are accessed with 'query_calls.next'.)
-
-	procedure_calls: detachable ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
-			-- First qualified procedure call with current type as target static type
-			-- (Other calls are accessed with 'procedure_calls.next'.)
-
-	put_query_call (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL)
-			-- Add `a_call' to the list of qualified query calls.
-		require
-			a_call_not_void: a_call /= Void
-		do
-			a_call.set_next (query_calls)
-			query_calls := a_call
-		end
-
-	put_procedure_call (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL)
-			-- Add `a_call' to the list of qualified procedure calls.
-		require
-			a_call_not_void: a_call /= Void
-		do
-			a_call.set_next (procedure_calls)
-			procedure_calls := a_call
-		end
-
-feature -- Equality expressions
-
-	equality_expressions: detachable ET_DYNAMIC_EQUALITY_EXPRESSION
-			-- First equality expression with current type as static type of the left operand;
-			-- Needed to build the dynamic type sets of feature 'is_equal' which is internally
-			-- called when the operands involved in the equality expression are of expanded types.
-			-- (Other equality expressions are accessed with `equality_expressions.next'.)
-
-	object_equality_expressions: detachable ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
-			-- First object-equality expression with current type as static type of the left operand;
-			-- Needed to build the dynamic type sets of feature 'is_equal' which is internally called.
-			-- (Other object-equality expressions are accessed with `equality_expressions.next'.)
-
-	put_equality_expression (a_equality: ET_DYNAMIC_EQUALITY_EXPRESSION)
-			-- Add `a_equality' to the list of equality expressions.
-		require
-			a_equality_not_void: a_equality /= Void
-		do
-			a_equality.set_next (equality_expressions)
-			equality_expressions := a_equality
-		end
-
-	put_object_equality_expression (a_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION)
-			-- Add `a_equality' to the list of object-equality expressions.
-		require
-			a_equality_not_void: a_equality /= Void
-		do
-			a_equality.set_next (object_equality_expressions)
-			object_equality_expressions := a_equality
-		end
-
-feature -- Element change
-
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
-			-- Add `a_type' coming from `a_type_set' to current target.
-		do
-		end
-
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM)
-			-- Add `a_target' to current set.
-			-- (Targets are supersets of current set.)
-		do
-			if is_alive then
-				a_target.put_type_from_type_set (Current, Current, a_system)
-			end
-			if not is_never_void then
-				a_target.propagate_can_be_void (Current)
-			end
+			l_base_type := primary_type.base_type
+			l_other_base_type := other.primary_type.base_type
+			Result := l_base_type.conforms_to_type_with_type_marks (l_other_base_type, other.type_mark, l_other_base_type, type_mark, l_base_type, tokens.null_system_processor)
 		end
 
 feature -- Output
@@ -792,78 +191,32 @@ feature -- Output
 			Result := base_type.debug_output
 		end
 
-feature -- Link
+feature -- Element change
 
-	next_type: detachable ET_DYNAMIC_TYPE
-			-- Next dynamic type with the same base class in the surrounding system
-
-	set_next_type (a_type: like next_type)
-			-- Set `next_type' to `a_type'.
+	put_type_from_type_set (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
+			-- Add `a_type' coming from `a_type_set' to current target.
 		do
-			next_type := a_type
-		ensure
-			next_type_set: next_type = a_type
+		end
+
+	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM)
+			-- Add `a_target' to current set.
+			-- (Targets are supersets of current set.)
+		do
+			if primary_type.is_alive then
+				a_target.put_type_from_type_set (primary_type, Current, a_system)
+			end
+			if not is_never_void then
+				a_target.propagate_can_be_void (Current)
+			end
 		end
 
 feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 
-	dynamic_types: ET_DYNAMIC_TYPES
+	dynamic_types: ET_DYNAMIC_PRIMARY_TYPES
 			-- Dynamic types in current set;
 			-- Void if no type in the set
 		do
 			Result := Current
 		end
-
-feature {NONE} -- Implementation
-
-	new_dynamic_query (a_query: ET_QUERY; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
-			-- Run-time query associated with `a_query';
-			-- Create a new object at each call.
-		require
-			a_query_not_void: a_query /= Void
-			valid_query: base_class.queries.has (a_query)
-			a_system_not_void: a_system /= Void
-		do
-			create Result.make (a_query, Current, a_system)
-		ensure
-			new_dynamic_query_not_void: Result /= Void
-			is_query: Result.is_query
-		end
-
-	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
-			-- Run-time procedure associated with `a_procedure';
-			-- Create a new object at each call.
-		require
-			a_procedure_not_void: a_procedure /= Void
-			valid_procedure: base_class.procedures.has (a_procedure)
-			a_system_not_void: a_system /= Void
-		do
-			create Result.make (a_procedure, Current, a_system)
-		ensure
-			new_dynamic_procedure_not_void: Result /= Void
-			is_procedure: Result.is_procedure
-		end
-
-	empty_features: ET_DYNAMIC_FEATURE_LIST
-			-- Empty feature list
-		once
-			create Result.make
-		ensure
-			features_not_void: Result /= Void
-			features_empty: Result.is_empty
-		end
-
-invariant
-
-	base_type_not_void: base_type /= Void
-	base_type_base_type: base_type.is_base_type
-	base_class_not_void: base_class /= Void
-	conforming_ancestors_not_void: conforming_ancestors /= Void
-	conforming_descendants_not_void: conforming_descendants /= Void
-	alive_conforming_descendants_not_void: alive_conforming_descendants /= Void
-	queries_not_void: queries /= Void
-	procedures_not_void: procedures /= Void
-	attribute_count_not_negative: attribute_count >= 0
-	attribute_count_constraint: attribute_count <= queries.count
 
 end

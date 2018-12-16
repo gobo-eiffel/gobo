@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	root_type: detachable ET_DYNAMIC_TYPE
+	root_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 			-- Root type
 
 	root_creation_procedure: detachable ET_DYNAMIC_FEATURE
@@ -116,7 +116,7 @@ feature -- Access
 
 	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
-			-- (Note: there is a frozen feature called `system' in
+			-- (Note: there is a frozen feature called 'system' in
 			-- class GENERAL of SmartEiffel 1.0)
 
 	system_processor: ET_SYSTEM_PROCESSOR
@@ -183,73 +183,73 @@ feature -- Status setting
 
 feature -- Types
 
-	boolean_type: ET_DYNAMIC_TYPE
+	boolean_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "BOOLEAN"
 
-	character_8_type: ET_DYNAMIC_TYPE
+	character_8_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "CHARACTER_8"
 
-	character_32_type: ET_DYNAMIC_TYPE
+	character_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "CHARACTER_32"
 
-	immutable_string_32_type: ET_DYNAMIC_TYPE
+	immutable_string_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "IMMUTABLE_STRING_32"
 
-	integer_8_type: ET_DYNAMIC_TYPE
+	integer_8_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "INTEGER_8"
 
-	integer_16_type: ET_DYNAMIC_TYPE
+	integer_16_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "INTEGER_16"
 
-	integer_32_type: ET_DYNAMIC_TYPE
+	integer_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "INTEGER_32"
 
-	integer_64_type: ET_DYNAMIC_TYPE
+	integer_64_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "INTEGER_64"
 
-	natural_8_type: ET_DYNAMIC_TYPE
+	natural_8_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "NATURAL_8"
 
-	natural_16_type: ET_DYNAMIC_TYPE
+	natural_16_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "NATURAL_16"
 
-	natural_32_type: ET_DYNAMIC_TYPE
+	natural_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "NATURAL_32"
 
-	natural_64_type: ET_DYNAMIC_TYPE
+	natural_64_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "NATURAL_64"
 
-	real_32_type: ET_DYNAMIC_TYPE
+	real_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "REAL_32"
 
-	real_64_type: ET_DYNAMIC_TYPE
+	real_64_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "REAL_64"
 
-	pointer_type: ET_DYNAMIC_TYPE
+	pointer_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "POINTER"
 
-	any_type: ET_DYNAMIC_TYPE
+	any_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "ANY"
 
-	none_type: ET_DYNAMIC_TYPE
+	none_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "NONE"
 
-	string_8_type: ET_DYNAMIC_TYPE
+	string_8_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "STRING_8"
 
-	string_32_type: ET_DYNAMIC_TYPE
+	string_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "STRING_32"
 
-	special_character_8_type: ET_DYNAMIC_TYPE
+	special_character_8_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "SPECIAL [CHARACTER_8]"
 
-	special_character_32_type: ET_DYNAMIC_TYPE
+	special_character_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "SPECIAL [CHARACTER_32]"
 
-	ise_exception_manager_type: ET_DYNAMIC_TYPE
+	ise_exception_manager_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "ISE_EXCEPTION_MANAGER"
 
-	unknown_type: ET_DYNAMIC_TYPE
+	unknown_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "*UNKNOWN*"
 
 	dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE
@@ -260,32 +260,63 @@ feature -- Types
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 		local
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_secondary_type: ET_DYNAMIC_SECONDARY_TYPE
+		do
+			l_primary_type := dynamic_primary_type (a_type, a_context)
+			if current_system.attachment_type_conformance_mode then
+				if a_type.is_type_expanded (a_context) or a_type.is_type_detachable (a_context) then
+					Result := l_primary_type
+				elseif attached l_primary_type.attached_type as l_attached_type then
+					Result := l_attached_type
+				else
+					create l_secondary_type.make (l_primary_type, tokens.implicit_attached_type_mark)
+					l_primary_type.set_attached_type (l_secondary_type)
+					propagate_type_of_type_result_type (l_secondary_type)
+					Result := l_secondary_type
+				end
+			else
+				Result := l_primary_type
+			end
+		ensure
+			dynamic_type_not_void: Result /= Void
+		end
+
+	dynamic_primary_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_PRIMARY_TYPE
+			-- Dynamic primary type corresponding to `a_type' in `a_context';
+			-- Create a new one if it does not exist yet
+		require
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		local
 			i: INTEGER
-			l_type: ET_DYNAMIC_TYPE
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_base_class: ET_CLASS
 			l_any: ET_CLASS_TYPE
-			l_result: detachable ET_DYNAMIC_TYPE
+			l_result: detachable ET_DYNAMIC_PRIMARY_TYPE
 			l_is_reentrant: BOOLEAN
 			l_old_dynamic_types_count: INTEGER
 			l_implicit_type_mark: detachable ET_TYPE_MARK
 		do
-			if in_dynamic_type then
+			if in_dynamic_primary_type then
 				l_is_reentrant := True
 			else
-				in_dynamic_type := True
+				in_dynamic_primary_type := True
 				l_old_dynamic_types_count := dynamic_types.count
 			end
+			l_implicit_type_mark := tokens.implicit_detachable_type_mark
 			l_base_class := a_type.base_class (a_context)
 			i := l_base_class.index
 			if i >= 1 and i <= dynamic_types.count then
 				l_type := dynamic_types.item (i)
 				if l_type.base_class /= l_base_class then
 					-- Wrong index.
-				elseif not current_system.attachment_type_conformance_mode and not l_base_class.is_generic and not l_base_class.is_tuple_class then
+				elseif not l_base_class.is_generic and not l_base_class.is_tuple_class then
 					if a_type.is_type_expanded (a_context) = l_type.is_expanded then
 						l_result := l_type
 					elseif not attached l_type.next_type as l_next_type then
-						l_result := new_dynamic_type (a_type, a_context)
+						l_result := new_dynamic_primary_type (a_type, l_implicit_type_mark, a_context)
 					else
 						check
 							same_expandedness: a_type.is_type_expanded (a_context) = l_next_type.is_expanded
@@ -296,18 +327,13 @@ feature -- Types
 						-- Traverse all dynamic types with the same base class.
 						-- If not found then add this new dynamic type.
 					l_any := current_system.any_type
-					if current_system.attachment_type_conformance_mode then
-						l_implicit_type_mark := tokens.implicit_separate_type_mark
-					else
-						l_implicit_type_mark := tokens.implicit_attached_separate_type_mark
-					end
 					from until
 						l_result /= Void
 					loop
 						if l_type.base_type.same_base_type_with_type_marks (a_type, l_implicit_type_mark, a_context, l_implicit_type_mark, l_any) then
 							l_result := l_type
 						elseif not attached l_type.next_type as l_next_type then
-							l_result := new_dynamic_type (a_type, a_context)
+							l_result := new_dynamic_primary_type (a_type, l_implicit_type_mark, a_context)
 						else
 							l_type := l_next_type
 						end
@@ -331,37 +357,29 @@ feature -- Types
 						set_fatal_error
 					end
 				end
-				Result := new_dynamic_type (a_type, a_context)
+				Result := new_dynamic_primary_type (a_type, l_implicit_type_mark, a_context)
 			end
 			if not l_is_reentrant then
-				in_dynamic_type := False
+				in_dynamic_primary_type := False
 				initialize_dynamic_types (l_old_dynamic_types_count + 1, dynamic_types.count)
 			end
 		ensure
-			dynamic_type_not_void: Result /= Void
+			dynamic_primary_type_not_void: Result /= Void
 		end
 
-	meta_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE
+	meta_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_PRIMARY_TYPE
 			-- Dynamic type corresponding to the meta type of `a_type';
 			-- Create a new one if it does not exist yet
 			--
 			-- If `a_type' represents the Eiffel type 'T', then
-			-- the meta type will represent the Eiffel type 'TYPE [T]'.
+			-- the meta type will represent the Eiffel type 'detachable TYPE [T]'.
 		require
 			a_type_not_void: a_type /= Void
-		local
-			l_base_type: ET_CLASS_TYPE
-			l_base_class: ET_NAMED_CLASS
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			if attached a_type.meta_type as l_meta_type then
 				Result := l_meta_type
 			else
-				l_base_class := current_system.type_any_type.named_base_class
-				create l_parameters.make_with_capacity (1)
-				l_parameters.put_first (a_type.base_type)
-				create l_base_type.make_generic (Void, l_base_class.name, l_parameters, l_base_class)
-				Result := dynamic_type (l_base_type, current_system.any_type)
+				Result := dynamic_primary_type (current_system.type_like_current_type, a_type.base_type)
 				a_type.set_meta_type (Result)
 			end
 		ensure
@@ -369,16 +387,16 @@ feature -- Types
 			definition: Result = a_type.meta_type
 		end
 
-	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			-- Dynamic types in the system
 
 feature {NONE} -- Types
 
-	in_dynamic_type: BOOLEAN
-			-- Flag to handle properly re-entrant calls to `dynamic_type'
+	in_dynamic_primary_type: BOOLEAN
+			-- Flag to handle properly re-entrant calls to `dynamic_primary_type'
 
-	new_dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE
-			-- New dynamic type corresponding to `a_type' in `a_context'
+	new_dynamic_primary_type (a_type: ET_TYPE; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_PRIMARY_TYPE
+			-- New dynamic primary type corresponding to `a_type' altered with `a_type_mark' in `a_context'
 		require
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void
@@ -387,7 +405,7 @@ feature {NONE} -- Types
 			l_base_type: ET_BASE_TYPE
 			l_base_class: ET_CLASS
 		do
-			l_base_type := a_type.base_type (a_context)
+			l_base_type := a_type.base_type_with_type_mark (a_type_mark, a_context)
 			l_base_class := l_base_type.base_class
 			if l_base_type.same_as_base_class then
 				l_base_type := l_base_class
@@ -412,7 +430,7 @@ feature {NONE} -- Types
 			new_dynamic_type_not_void: Result /= Void
 		end
 
-	new_special_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
+	new_special_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_PRIMARY_TYPE
 			-- New dynamic "SPECIAL" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -442,7 +460,7 @@ feature {NONE} -- Types
 			new_special_type_not_void: Result /= Void
 		end
 
-	new_tuple_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
+	new_tuple_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_PRIMARY_TYPE
 			-- New dynamic "TUPLE" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -482,7 +500,7 @@ feature {NONE} -- Types
 			new_tuple_type_not_void: Result /= Void
 		end
 
-	new_type_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
+	new_type_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_PRIMARY_TYPE
 			-- New dynamic "TYPE" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -521,7 +539,7 @@ feature {NONE} -- Types
 			new_type_type_not_void: Result /= Void
 		end
 
-	new_procedure_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
+	new_procedure_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_PRIMARY_TYPE
 			-- New dynamic "PROCEDURE" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -530,6 +548,7 @@ feature {NONE} -- Types
 		local
 			l_base_class: ET_CLASS
 			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
+			l_tuple_type: ET_DYNAMIC_TYPE
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -540,8 +559,8 @@ feature {NONE} -- Types
 			l_base_class := a_base_type.base_class
 			l_actual_parameters := a_base_type.actual_parameters
 			if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
-				l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
-				l_actual_parameters := l_item_type.base_type.actual_parameters
+				l_tuple_type := dynamic_type (l_actual_parameters.type (1), l_any)
+				l_actual_parameters := l_tuple_type.base_type.actual_parameters
 				if l_actual_parameters /= Void then
 					nb := l_actual_parameters.count
 					if nb > 0 then
@@ -571,7 +590,7 @@ feature {NONE} -- Types
 			new_procedure_type_not_void: Result /= Void
 		end
 
-	new_function_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
+	new_function_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_PRIMARY_TYPE
 			-- New dynamic "FUNCTION" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -580,6 +599,7 @@ feature {NONE} -- Types
 		local
 			l_base_class: ET_CLASS
 			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
+			l_tuple_type: ET_DYNAMIC_TYPE
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -597,8 +617,8 @@ feature {NONE} -- Types
 					-- Unless proven otherwise after possible attachments,
 					-- the result is assumed to be never Void.
 				l_return_type_set.set_never_void
-				l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
-				l_actual_parameters := l_item_type.base_type.actual_parameters
+				l_tuple_type := dynamic_type (l_actual_parameters.type (1), l_any)
+				l_actual_parameters := l_tuple_type.base_type.actual_parameters
 				if l_actual_parameters /= Void then
 					nb := l_actual_parameters.count
 					if nb > 0 then
@@ -628,7 +648,7 @@ feature {NONE} -- Types
 			new_function_type_not_void: Result /= Void
 		end
 
-	new_predicate_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
+	new_predicate_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_PRIMARY_TYPE
 			-- New dynamic "PREDICATE" type corresponding to `a_base_type'
 		require
 			a_base_type_not_void: a_base_type /= Void
@@ -637,6 +657,7 @@ feature {NONE} -- Types
 		local
 			l_base_class: ET_CLASS
 			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
+			l_tuple_type: ET_DYNAMIC_TYPE
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -651,8 +672,8 @@ feature {NONE} -- Types
 			if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
 				l_return_type := boolean_type
 				l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
-				l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
-				l_actual_parameters := l_item_type.base_type.actual_parameters
+				l_tuple_type := dynamic_type (l_actual_parameters.type (1), l_any)
+				l_actual_parameters := l_tuple_type.base_type.actual_parameters
 				if l_actual_parameters /= Void then
 					nb := l_actual_parameters.count
 					if nb > 0 then
@@ -679,13 +700,13 @@ feature {NONE} -- Types
 			new_predicate_type_not_void: Result /= Void
 		end
 
-	register_dynamic_type (a_type: ET_DYNAMIC_TYPE)
+	register_dynamic_type (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Add `a_type' to `dynamic_types'.
 		require
 			a_type_not_void: a_type /= Void
 		local
 			i: INTEGER
-			l_other_type: ET_DYNAMIC_TYPE
+			l_other_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_base_class: ET_CLASS
 		do
 			dynamic_types.force_last (a_type)
@@ -716,7 +737,7 @@ feature {NONE} -- Types
 			valid_bounds: a_start <= a_end + 1
 		local
 			i: INTEGER
-			l_type: ET_DYNAMIC_TYPE
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_base_class: ET_CLASS
 		do
 			from i := a_start until i > a_end loop
@@ -742,7 +763,7 @@ feature {NONE} -- Types
 			end
 		end
 
-	initialize_special_type (a_type: ET_DYNAMIC_TYPE)
+	initialize_special_type (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Initialize "SPECIAL" type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -758,7 +779,7 @@ feature {NONE} -- Types
 			end
 		end
 
-	initialize_array_type (a_type: ET_DYNAMIC_TYPE)
+	initialize_array_type (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Initialize "ARRAY" type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -777,7 +798,7 @@ feature {NONE} -- Types
 			end
 		end
 
-	initialize_typed_pointer_type (a_type: ET_DYNAMIC_TYPE)
+	initialize_typed_pointer_type (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Initialize "TYPED_POINTER" type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -790,7 +811,7 @@ feature {NONE} -- Types
 			end
 		end
 
-	initialize_procedure_type (a_type: ET_DYNAMIC_TYPE)
+	initialize_procedure_type (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Initialize "PROCEDURE" type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -821,7 +842,7 @@ feature {NONE} -- Types
 			end
 		end
 
-	initialize_function_type (a_type: ET_DYNAMIC_TYPE)
+	initialize_function_type (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Initialize "FUNCTION" type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -852,7 +873,7 @@ feature {NONE} -- Types
 			end
 		end
 
-	initialize_predicate_type (a_type: ET_DYNAMIC_TYPE)
+	initialize_predicate_type (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Initialize "PREDICATE" type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -904,7 +925,7 @@ feature {NONE} -- Types
 			end
 		end
 
-	propagate_attribute_type_sets (a_type: ET_DYNAMIC_TYPE)
+	propagate_attribute_type_sets (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- If `all_attributes_used' is set, then make sure that all
 			-- attributes of `a_type' are marked as used and their type sets
 			-- propagated to `ise_runtime_reference_field' and
@@ -922,7 +943,7 @@ feature {NONE} -- Types
 			end
 		end
 
-	propagate_alive_conforming_descendants (a_type: ET_DYNAMIC_TYPE)
+	propagate_alive_conforming_descendants (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- If `a_type' is alive, then propagage `a_type' to all
 			-- `dynamic_type_set_builder.alive_conforming_descendants' to
 			-- which it conforms.
@@ -941,10 +962,10 @@ feature {NONE} -- Types
 			a_type_not_void: a_type /= Void
 		local
 			l_old_in_create_meta_type: BOOLEAN
-			l_meta_type: ET_DYNAMIC_TYPE
+			l_meta_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 				-- Make sure that we don't create the meta type of the meta type that
-				-- we are about to create, otherwise we wold enter an infinite loop.
+				-- we are about to create, otherwise we would enter an infinite loop.
 			l_old_in_create_meta_type := in_create_meta_type
 			in_create_meta_type := True
 			l_meta_type := meta_type (a_type)
@@ -958,7 +979,7 @@ feature {NONE} -- Types
 
 feature -- New instance types
 
-	is_new_instance_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN
+	is_new_instance_type (a_type: ET_DYNAMIC_PRIMARY_TYPE): BOOLEAN
 			-- Has `a_type' been specified as a type which can have instances
 			-- created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'?
 		require
@@ -968,10 +989,10 @@ feature -- New instance types
 		do
 			if attached new_instance_types as l_new_instance_types then
 				l_name := a_type.base_type.unaliased_to_text
-				l_name.replace_substring_all ("[attached] ", "")
-				l_name.replace_substring_all ("[detachable] ", "")
 				l_name.replace_substring_all ("attached ", "")
+				l_name.replace_substring_all ("[attached] ", "")
 				l_name.replace_substring_all ("detachable ", "")
+				l_name.replace_substring_all ("[detachable] ", "")
 				Result := l_new_instance_types.has (l_name)
 			else
 				Result := True
@@ -1070,7 +1091,7 @@ feature -- Compilation
 						set_fatal_error
 						error_handler.report_vsrc1a_error (l_class)
 					else
-						l_dynamic_root_type := dynamic_type (l_class, l_class)
+						l_dynamic_root_type := dynamic_primary_type (l_class, l_class)
 						root_type := l_dynamic_root_type
 						if l_class.has_interface_error then
 								-- Error already reported.
@@ -1158,7 +1179,7 @@ feature -- Compilation
 			a_class_not_void: a_class /= Void
 			a_system_processor_not_void: a_system_processor /= Void
 		local
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			has_fatal_error := False
@@ -1180,7 +1201,7 @@ feature -- Compilation
 						set_fatal_error
 						error_handler.report_vsrc1a_error (a_class)
 					else
-						l_dynamic_type := dynamic_type (a_class, a_class)
+						l_dynamic_type := dynamic_primary_type (a_class, a_class)
 						if a_class.has_interface_error then
 								-- Error already reported.
 							set_fatal_error
@@ -1231,7 +1252,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				boolean_type := dynamic_type (l_class_type, l_any)
+				boolean_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "CHARACTER_8".
 				l_class_type := current_system.character_8_type
 				l_class := l_class_type.base_class
@@ -1239,7 +1260,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				character_8_type := dynamic_type (l_class_type, l_any)
+				character_8_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "CHARACTER_32".
 				l_class_type := current_system.character_32_type
 				l_class := l_class_type.base_class
@@ -1247,7 +1268,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				character_32_type := dynamic_type (l_class_type, l_any)
+				character_32_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "INTEGER_8".
 				l_class_type := current_system.integer_8_type
 				l_class := l_class_type.base_class
@@ -1255,7 +1276,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				integer_8_type := dynamic_type (l_class_type, l_any)
+				integer_8_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "INTEGER_16".
 				l_class_type := current_system.integer_16_type
 				l_class := l_class_type.base_class
@@ -1263,7 +1284,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				integer_16_type := dynamic_type (l_class_type, l_any)
+				integer_16_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "INTEGER_32".
 				l_class_type := current_system.integer_32_type
 				l_class := l_class_type.base_class
@@ -1271,7 +1292,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				integer_32_type := dynamic_type (l_class_type, l_any)
+				integer_32_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "INTEGER_64".
 				l_class_type := current_system.integer_64_type
 				l_class := l_class_type.base_class
@@ -1279,7 +1300,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				integer_64_type := dynamic_type (l_class_type, l_any)
+				integer_64_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "NATURAL_8".
 				l_class_type := current_system.natural_8_type
 				l_class := l_class_type.base_class
@@ -1287,7 +1308,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				natural_8_type := dynamic_type (l_class_type, l_any)
+				natural_8_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "NATURAL_16".
 				l_class_type := current_system.natural_16_type
 				l_class := l_class_type.base_class
@@ -1295,7 +1316,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				natural_16_type := dynamic_type (l_class_type, l_any)
+				natural_16_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "NATURAL_32".
 				l_class_type := current_system.natural_32_type
 				l_class := l_class_type.base_class
@@ -1303,7 +1324,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				natural_32_type := dynamic_type (l_class_type, l_any)
+				natural_32_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "NATURAL_64".
 				l_class_type := current_system.natural_64_type
 				l_class := l_class_type.base_class
@@ -1311,7 +1332,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				natural_64_type := dynamic_type (l_class_type, l_any)
+				natural_64_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "REAL_32".
 				l_class_type := current_system.real_32_type
 				l_class := l_class_type.base_class
@@ -1319,7 +1340,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				real_32_type := dynamic_type (l_class_type, l_any)
+				real_32_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "REAL_64".
 				l_class_type := current_system.real_64_type
 				l_class := l_class_type.base_class
@@ -1327,7 +1348,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				real_64_type := dynamic_type (l_class_type, l_any)
+				real_64_type := dynamic_primary_type (l_class_type, l_any)
 					-- Type "POINTER".
 				l_class_type := current_system.pointer_type
 				l_class := l_class_type.base_class
@@ -1335,7 +1356,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				pointer_type := dynamic_type (l_class_type, l_any)
+				pointer_type := dynamic_primary_type (l_class_type, l_any)
 					-- Class "SPECIAL".
 				special_count_feature := Void
 				special_capacity_feature := Void
@@ -1387,13 +1408,13 @@ feature {NONE} -- Compilation
 				create l_actual_parameters.make_with_capacity (1)
 				l_actual_parameters.put_first (current_system.character_8_type)
 				create l_generic_class_type.make_generic (Void, l_class.name, l_actual_parameters, l_class)
-				special_character_8_type := dynamic_type (l_generic_class_type, l_any)
+				special_character_8_type := dynamic_primary_type (l_generic_class_type, l_any)
 					-- Type "SPECIAL [CHARACTER_32]"
 				l_class := current_system.special_any_type.base_class
 				create l_actual_parameters.make_with_capacity (1)
 				l_actual_parameters.put_first (current_system.character_32_type)
 				create l_generic_class_type.make_generic (Void, l_class.name, l_actual_parameters, l_class)
-				special_character_32_type := dynamic_type (l_generic_class_type, l_any)
+				special_character_32_type := dynamic_primary_type (l_generic_class_type, l_any)
 					-- Type "STRING_8".
 				l_class_type := current_system.string_8_type
 				l_class := l_class_type.base_class
@@ -1402,7 +1423,7 @@ feature {NONE} -- Compilation
 					error_handler.report_gvknl1a_error (l_class)
 					string_8_type := unknown_type
 				else
-					string_8_type := dynamic_type (l_class_type, l_any)
+					string_8_type := dynamic_primary_type (l_class_type, l_any)
 					if l_class.has_interface_error then
 							-- Error already reported.
 						set_fatal_error
@@ -1426,7 +1447,7 @@ feature {NONE} -- Compilation
 									-- Internal error: an attribute should have a result type.
 								set_fatal_error
 								error_handler.report_giaaa_error
-							elseif l_result_type_set.static_type /= special_character_8_type then
+							elseif l_result_type_set.static_type.primary_type /= special_character_8_type then
 								set_fatal_error
 								error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_8_type.base_type)
 							end
@@ -1463,7 +1484,7 @@ feature {NONE} -- Compilation
 					error_handler.report_gvknl1a_error (l_class)
 					string_32_type := unknown_type
 				else
-					string_32_type := dynamic_type (l_class_type, l_any)
+					string_32_type := dynamic_primary_type (l_class_type, l_any)
 					if l_class.has_interface_error then
 							-- Error already reported.
 						set_fatal_error
@@ -1487,7 +1508,7 @@ feature {NONE} -- Compilation
 									-- Internal error: an attribute should have a result type.
 								set_fatal_error
 								error_handler.report_giaaa_error
-							elseif l_result_type_set.static_type /= special_character_32_type then
+							elseif l_result_type_set.static_type.primary_type /= special_character_32_type then
 								set_fatal_error
 								error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_32_type.base_type)
 							end
@@ -1524,7 +1545,7 @@ feature {NONE} -- Compilation
 					error_handler.report_gvknl1a_error (l_class)
 					immutable_string_32_type := unknown_type
 				else
-					immutable_string_32_type := dynamic_type (l_class_type, l_any)
+					immutable_string_32_type := dynamic_primary_type (l_class_type, l_any)
 					if l_class.has_interface_error then
 							-- Error already reported.
 						set_fatal_error
@@ -1548,7 +1569,7 @@ feature {NONE} -- Compilation
 									-- Internal error: an attribute should have a result type.
 								set_fatal_error
 								error_handler.report_giaaa_error
-							elseif l_result_type_set.static_type /= special_character_32_type then
+							elseif l_result_type_set.static_type.primary_type /= special_character_32_type then
 								set_fatal_error
 								error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_32_type.base_type)
 							end
@@ -1787,7 +1808,7 @@ feature {NONE} -- Compilation
 					error_handler.report_gvknl1a_error (l_class)
 					ise_exception_manager_type := unknown_type
 				else
-					ise_exception_manager_type := dynamic_type (l_class_type, l_any)
+					ise_exception_manager_type := dynamic_primary_type (l_class_type, l_any)
 					l_class.process (a_system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 							-- Error already reported by the previous
@@ -1907,15 +1928,15 @@ feature {NONE} -- Compilation
 					end
 				end
 					-- Type "ANY".
-				any_type := dynamic_type (current_system.any_type, l_any)
+				any_type := dynamic_primary_type (current_system.any_type, l_any)
 					-- Type "NONE".
-				none_type := dynamic_type (current_system.detachable_none_type, l_any)
+				none_type := dynamic_primary_type (current_system.detachable_none_type, l_any)
 			end
 		end
 
 	compile_all_features (a_class: ET_CLASS)
-			-- Make sure that all features of non-deferred non-generic classes
-			-- will be included in the compilation: their dynamic type sets
+			-- Make sure that all features declared in non-deferred non-generic
+			-- classes will be included in the compilation: their dynamic type sets
 			-- will be computed.
 		require
 			a_class_not_void: a_class /= Void
@@ -1925,14 +1946,13 @@ feature {NONE} -- Compilation
 			l_procedures: ET_PROCEDURE_LIST
 			l_procedure: ET_PROCEDURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 		do
 			if a_class.implementation_checked and then not a_class.has_implementation_error then
 				if not a_class.is_deferred and not a_class.is_generic then
-					l_dynamic_type := dynamic_type (a_class, a_class)
+					l_dynamic_type := dynamic_primary_type (a_class, a_class)
 					l_queries := a_class.queries
-					--nb := l_queries.count
 					nb := l_queries.declared_count
 					from i := 1 until i > nb loop
 						l_query := l_queries.item (i)
@@ -1940,7 +1960,6 @@ feature {NONE} -- Compilation
 						i := i + 1
 					end
 					l_procedures := a_class.procedures
-					--nb := l_procedures.count
 					nb := l_procedures.declared_count
 					from i := 1 until i > nb loop
 						l_procedure := l_procedures.item (i)
@@ -2065,7 +2084,7 @@ feature -- Feature setting
 			a_feature_not_void: a_feature /= Void
 		local
 			i: INTEGER
-			l_type: ET_DYNAMIC_TYPE
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			ise_runtime_new_type_instance_of_feature := a_feature
 			from
@@ -2074,14 +2093,9 @@ feature -- Feature setting
 				i < 1
 			loop
 				l_type := dynamic_types.item (i)
-				create_meta_type (l_type)
-				if attached l_type.meta_type as l_meta_type then
-					dynamic_type_set_builder.mark_type_alive (l_meta_type)
-					dynamic_type_set_builder.propagate_type_of_type_result_type (l_meta_type, a_feature)
-				else
-						-- The postcondition of `create_meta_type' says that
-						-- 'a_type.meta_type' is not void.
-					check False end
+				propagate_type_of_type_result_type (l_type)
+				if attached l_type.attached_type as l_attached_type then
+					propagate_type_of_type_result_type (l_attached_type)
 				end
 				i := i - 1
 			end
@@ -2097,8 +2111,8 @@ feature -- Feature setting
 			ise_runtime_reference_field_feature_void: ise_runtime_reference_field_feature = Void
 			a_feature_not_void: a_feature /= Void
 		local
-			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 			l_attribute: ET_DYNAMIC_FEATURE
 			j, l_attribute_count: INTEGER
@@ -2136,8 +2150,8 @@ feature -- Feature setting
 			ise_runtime_set_reference_field_feature_void: ise_runtime_set_reference_field_feature = Void
 			a_feature_not_void: a_feature /= Void
 		local
-			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 			l_attribute: ET_DYNAMIC_FEATURE
 			j, l_attribute_count: INTEGER
@@ -2178,7 +2192,7 @@ feature -- Feature setting
 			ise_runtime_type_conforms_to_feature_set: ise_runtime_type_conforms_to_feature = a_feature
 		end
 
-feature {NONE} -- Static features
+feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Static features
 
 	array_area_feature: detachable ET_QUERY
 			-- Expected attribute 'area' in class "ARRAY"

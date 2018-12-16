@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic SPECIAL types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_DYNAMIC_SPECIAL_TYPE
 
 inherit
 
-	ET_DYNAMIC_TYPE
+	ET_DYNAMIC_PRIMARY_TYPE
 		rename
 			make as make_type
 		redefine
@@ -84,7 +84,7 @@ feature -- Features
 					-- such a cyclic recursion has slipped through, we temporarily
 					-- set `has_reference_attributes' to True to break that cycle.
 				has_reference_attributes := True
-				if item_type_set.static_type.has_nested_reference_attributes then
+				if item_type_set.static_type.primary_type.has_nested_reference_attributes then
 						-- Note that for non-generic expanded types, there is no type other
 						-- than itself that conforms to it. However for generic expanded types,
 						-- other generic derivations of the same generic class may conform to

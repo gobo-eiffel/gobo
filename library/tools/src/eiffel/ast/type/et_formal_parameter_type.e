@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1942,10 +1942,12 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- type is itself a formal generic parameter.
 						-- No type other than itself conforms to a formal generic type,
 						-- unless it is declared as 'reference' and 'detachable' in
-						-- which case "NONE" conforms to it.
+						-- which case "detachable NONE" and "attached NONE" conform
+						-- to it, or it is declared as 'reference' and not declared
+						-- as 'detachable' in which case "attached NONE" conforms to it.
 					if is_type_reference_with_type_mark (a_type_mark, a_context) and other.base_class.is_none then
 						if other_context.attachment_type_conformance_mode then
-							Result := is_type_detachable_with_type_mark (a_type_mark, a_context)
+							Result := is_type_detachable_with_type_mark (a_type_mark, a_context) or other.is_type_attached_with_type_mark (other_type_mark, other_context)
 						else
 							Result := True
 						end

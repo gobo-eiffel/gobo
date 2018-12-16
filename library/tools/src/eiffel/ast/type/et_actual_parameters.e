@@ -559,4 +559,30 @@ feature -- Output
 			a_string.append_character (']')
 		end
 
+	append_runtime_name_to_string (a_string: STRING)
+			-- Append to `a_string' textual representation of unaliased
+			-- version of current actual parameters as returned by 'TYPE.runtime_name'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			a_type: ET_TYPE
+		do
+			a_string.append_character ('[')
+			nb := count
+			if nb >= 1 then
+				a_type := type (1)
+				a_type.append_runtime_name_to_string (a_string)
+				from i := 2 until i > nb loop
+					a_string.append_string (", ")
+					a_type := type (i)
+					a_type.append_runtime_name_to_string (a_string)
+					i := i + 1
+				end
+			end
+			a_string.append_character (']')
+		end
+
 end

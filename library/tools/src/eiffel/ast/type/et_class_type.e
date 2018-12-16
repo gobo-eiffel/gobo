@@ -24,6 +24,7 @@ inherit
 			conforms_from_class_type_with_type_marks,
 			resolved_formal_parameters_with_type_mark,
 			append_unaliased_to_string,
+			append_runtime_name_to_string,
 			type_with_type_mark,
 			type_mark,
 			overridden_type_mark,
@@ -343,9 +344,6 @@ feature -- Status report
 		do
 			if is_expanded then
 				Result := True
-			elseif base_class.is_none then
-					-- Class type "NONE" is always detachable regardless of type marks.
-				Result := False
 			elseif attached type_mark as l_type_mark and then l_type_mark.is_attachment_mark then
 				Result := l_type_mark.is_attached_mark
 			else
@@ -357,10 +355,7 @@ feature -- Status report
 			-- Same as `is_type_attached' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		do
-			if base_class.is_none then
-					-- Class type "NONE" is always detachable regardless of type marks.
-				Result := False
-			elseif a_type_mark = Void then
+			if a_type_mark = Void then
 				Result := is_attached
 			elseif a_type_mark.is_attached_mark then
 				Result := True
@@ -620,9 +615,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				end
 			elseif not is_type_expanded_with_type_mark (a_type_mark, a_context) then
 				if other_base_class.is_none then
-						-- Class type "NONE" is always detachable regardless of type marks.
-						-- Therefore it conforms to any class type that is not expanded nor attached.
-					Result := True
+						-- Class type "detachable NONE" conforms to any class type that is not expanded nor attached.
+						-- Class type "attached NONE" conforms to any attached class type that is not expanded.
+					if other_context.attachment_type_conformance_mode then
+						Result := is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context)
+					else
+						Result := True
+					end
 				elseif not other_base_class.is_preparsed then
 						-- This class is not even preparsed (i.e. we know nothing about it,
 						-- not even its filename). Therefore it is impossible to determine
@@ -863,10 +862,31 @@ feature -- Output
 				a_string.append_character (' ')
 			end
 			a_string.append_string (base_class.upper_name)
-
 			if attached actual_parameters as l_parameters and then not l_parameters.is_empty then
 				a_string.append_character (' ')
 				l_parameters.append_unaliased_to_string (a_string)
+			end
+		end
+
+	append_runtime_name_to_string (a_string: STRING)
+			-- Append to `a_string' textual representation of unaliased
+			-- version of current type as returned by 'TYPE.runtime_name'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		local
+			l_base_class: ET_CLASS
+		do
+			l_base_class := base_class
+			if l_base_class.current_system.attachment_type_conformance_mode then
+					-- Void-safe mode.
+				if is_attached and then not is_expanded then
+					a_string.append_character ('!')
+				end
+			end
+			a_string.append_string (base_class.upper_name)
+			if attached actual_parameters as l_parameters and then not l_parameters.is_empty then
+				a_string.append_character (' ')
+				l_parameters.append_runtime_name_to_string (a_string)
 			end
 		end
 

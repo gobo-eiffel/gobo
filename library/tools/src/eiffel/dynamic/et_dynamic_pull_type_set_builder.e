@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders where types are pulled from subsets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,14 +73,14 @@ feature -- Generation
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			i, nb: INTEGER
-			l_type: ET_DYNAMIC_TYPE
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			j, nb2: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
 			l_precursor: detachable ET_DYNAMIC_PRECURSOR
 			l_other_precursors: detachable ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
-			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			l_procedure_call: detachable ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			l_query_call: detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_target: ET_DYNAMIC_TYPE_SET
@@ -262,7 +262,7 @@ feature -- Generation
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
-	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL)
+	propagate_call_type (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Propagate `a_type' from target type set `a_call'.
 		do
 			a_call.propagate_type (a_type, Current)
@@ -432,15 +432,14 @@ feature {NONE} -- Generation
 
 feature {NONE} -- CAT-calls
 
-	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: detachable ET_DYNAMIC_FEATURE;
-		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
-		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
+	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_dynamic_feature: detachable ET_DYNAMIC_FEATURE;
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_PRIMARY_TYPE;
+		an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Append to `a_message' the error message of a CAT-call error in `a_call'.
 			-- When the target is of type `a_target_type', we try to pass to the corresponding
 			-- feature `a_dynamic_feature' an actual argument of type `an_actual_type' (which
 			-- is one of the types of `an_actual_type_set') which does not conform to the type
-			-- of the `arg'-th corresponding formal argument `a_formal_type' (which is one of
-			-- the types of `a_formal_type_set').
+			-- of the `arg'-th corresponding formal argument `a_formal_type'.
 			-- When `a_dynamic_feature' is Void, then the call is assumed to be a Tuple label setter.
 		local
 			l_class_impl: ET_CLASS
@@ -461,7 +460,7 @@ feature {NONE} -- CAT-calls
 					-- the target type set is not void.
 				check target_not_void: False end
 			else
-				precursor (a_message, a_target_type, a_dynamic_feature, arg, a_formal_type, a_formal_type_set, an_actual_type, an_actual_type_set, a_call)
+				precursor (a_message, a_target_type, a_dynamic_feature, arg, a_formal_type, an_actual_type, an_actual_type_set, a_call)
 				a_message.append_string (":%N")
 				l_visited_sources := shared_visited_sources
 				l_visited_sources.wipe_out
@@ -484,7 +483,7 @@ feature {NONE} -- CAT-calls
 						a_message.append_string (a_call.current_type.base_type.to_text)
 						a_message.append_string (" (")
 						l_class_impl := a_call.current_feature.static_feature.implementation_class
-						if a_call.current_type.base_type.base_class /= l_class_impl then
+						if a_call.current_type.base_class /= l_class_impl then
 							a_message.append_string (l_class_impl.upper_name)
 							a_message.append_character (',')
 						end
@@ -505,7 +504,7 @@ feature {NONE} -- CAT-calls
 								a_message.append_string (l_source.current_type.base_type.to_text)
 								a_message.append_string (" (")
 								l_class_impl := l_source.current_feature.static_feature.implementation_class
-								if l_source.current_type.base_type.base_class /= l_class_impl then
+								if l_source.current_type.base_class /= l_class_impl then
 									a_message.append_string (l_class_impl.upper_name)
 									a_message.append_character (',')
 								end
@@ -596,7 +595,7 @@ feature {NONE} -- CAT-calls
 						a_message.append_string (a_call.current_type.base_type.to_text)
 						a_message.append_string (" (")
 						l_class_impl := a_call.current_feature.static_feature.implementation_class
-						if a_call.current_type.base_type.base_class /= l_class_impl then
+						if a_call.current_type.base_class /= l_class_impl then
 							a_message.append_string (l_class_impl.upper_name)
 							a_message.append_character (',')
 						end
@@ -624,7 +623,7 @@ feature {NONE} -- CAT-calls
 								a_message.append_string (l_source.current_type.base_type.to_text)
 								a_message.append_string (" (")
 								l_class_impl := l_source.current_feature.static_feature.implementation_class
-								if l_source.current_type.base_type.base_class /= l_class_impl then
+								if l_source.current_type.base_class /= l_class_impl then
 									a_message.append_string (l_class_impl.upper_name)
 									a_message.append_character (',')
 								end
@@ -730,12 +729,12 @@ feature {NONE} -- Event handling
 			if not l_result_type_set.is_expanded then
 				l_result_type_set := new_dynamic_type_set (l_result_type_set.static_type)
 				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
-				a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
+				a_target_type_set.static_type.primary_type.put_query_call (l_dynamic_query_call)
 				create l_result_attachment.make (a_result_type_set, an_expression, current_dynamic_feature, current_dynamic_type)
 				l_result_type_set.put_source (l_result_attachment, current_dynamic_system)
 			else
 				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
-				a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
+				a_target_type_set.static_type.primary_type.put_query_call (l_dynamic_query_call)
 			end
 		end
 
@@ -744,6 +743,7 @@ feature {NONE} -- Event handling
 			-- of `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
@@ -755,31 +755,45 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
+				l_primary_type := l_type.primary_type
+				mark_type_alive (l_primary_type)
 				set_dynamic_type_set (l_type, an_expression)
 					-- Make sure that types "SPECIAL [XXX]" (used in feature 'area'), and
 					-- "INTEGER" (used in feature 'lower' and 'upper') are marked as alive.
-				l_queries := l_type.queries
-				if l_queries.count < 3 then
+				l_queries := l_primary_type.queries
+				if
+					current_dynamic_system.array_area_feature = Void or
+					current_dynamic_system.array_lower_feature = Void or
+					current_dynamic_system.array_upper_feature = Void
+				then
 						-- Error already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
--- TODO: internal error
+				elseif l_queries.count < 3 then
+						-- Internal error: should not happen after the wellformedness
+						-- of the expected attributes in class "ARRAY" has been checked
+						-- in ET_DYNAMIC_SYSTEM.compile_kernel.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
 						-- Feature 'area' should be the first in the list of features.
 					l_dynamic_type_set := l_queries.item (1).result_type_set
 					if l_dynamic_type_set = Void then
-							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+							-- Internal error: should not happen after the wellformedness
+							-- of the expected attributes in class "ARRAY" has been checked
+							-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
--- TODO: report internal error.
+						error_handler.report_giaaa_error
 					else
-						if not attached {ET_DYNAMIC_SPECIAL_TYPE} l_dynamic_type_set.static_type as l_special_type then
-								-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+						if not attached {ET_DYNAMIC_SPECIAL_TYPE} l_dynamic_type_set.static_type.primary_type as l_special_type then
+								-- Internal error: should not happen after the wellformedness
+								-- of the expected attributes in class "ARRAY" has been checked
+								-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 							set_fatal_error
--- TODO: report internal error.
+							error_handler.report_giaaa_error
 						else
 							mark_type_alive (l_special_type)
 							if not l_dynamic_type_set.is_expanded then
-								create l_area_attachment.make (l_special_type, an_expression, current_dynamic_feature, current_dynamic_type)
+								create l_area_attachment.make (l_dynamic_type_set.static_type, an_expression, current_dynamic_feature, current_dynamic_type)
 								l_dynamic_type_set.put_source (l_area_attachment, current_dynamic_system)
 							end
 							l_item_type_set := l_special_type.item_type_set
@@ -805,20 +819,24 @@ feature {NONE} -- Event handling
 						-- Feature 'lower' should be the second in the list of features.
 					l_dynamic_type_set := l_queries.item (2).result_type_set
 					if l_dynamic_type_set = Void then
-							-- Error in feature 'lower', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+							-- Internal error: should not happen after the wellformedness
+							-- of the expected attributes in class "ARRAY" has been checked
+							-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
--- TODO: internal error
+						error_handler.report_giaaa_error
 					else
-						mark_type_alive (l_dynamic_type_set.static_type)
+						mark_type_alive (l_dynamic_type_set.static_type.primary_type)
 					end
 						-- Feature 'upper' should be the third in the list of features.
 					l_dynamic_type_set := l_queries.item (3).result_type_set
 					if l_dynamic_type_set = Void then
-							-- Error in feature 'upper', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+							-- Internal error: should not happen after the wellformedness
+							-- of the expected attributes in class "ARRAY" has been checked
+							-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
--- TODO: internal error
+						error_handler.report_giaaa_error
 					else
-						mark_type_alive (l_dynamic_type_set.static_type)
+						mark_type_alive (l_dynamic_type_set.static_type.primary_type)
 					end
 				end
 			end
@@ -829,6 +847,7 @@ feature {NONE} -- Event handling
 			-- `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
@@ -838,9 +857,10 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
+				l_primary_type := l_type.primary_type
+				mark_type_alive (l_primary_type)
 				set_dynamic_type_set (l_type, an_expression)
-				if not attached {ET_DYNAMIC_TUPLE_TYPE} l_type as l_tuple_type then
+				if not attached {ET_DYNAMIC_TUPLE_TYPE} l_primary_type as l_tuple_type then
 						-- Internal error: the type of a manifest tuple should be a tuple type.
 					set_fatal_error
 					error_handler.report_giaaa_error
@@ -887,6 +907,7 @@ feature {NONE} -- Implementation
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_tuple_type: ET_TUPLE_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			j, nb_items: INTEGER
 			l_item_attachment: ET_DYNAMIC_AGENT_CLOSED_OPERANDS_ITEM_ATTACHMENT
@@ -928,17 +949,27 @@ feature {NONE} -- Implementation
 				end
 			end
 			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_parameters, current_universe_impl.tuple_type.named_base_class)
-			if not attached {ET_DYNAMIC_TUPLE_TYPE} current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type) as l_dynamic_tuple_type then
+			l_dynamic_type := current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
+			if not attached {ET_DYNAMIC_TUPLE_TYPE} l_dynamic_type.primary_type as l_dynamic_tuple_type then
 					-- Internal error: the dynamic type of a Tuple type
 					-- should be a dynamic tuple type.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
 				mark_type_alive (l_dynamic_tuple_type)
-				if an_agent_type.attribute_count < 2 then
-						-- Internal error: missing feature 'closed_operands' in the Agent type,
-						-- already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+				if
+					current_dynamic_system.routine_rout_disp_feature = Void or
+					current_dynamic_system.routine_closed_operands_feature = Void
+				then
+						-- Error already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
+				elseif an_agent_type.attribute_count < 2 then
+						-- Internal error: should not happen after the wellformedness
+						-- of the expected attributes in class "ROUTINE" has been checked
+						-- in ET_DYNAMIC_SYSTEM.compile_kernel.
+						-- The second attribute is supposed to be 'closed_operands' in the Agent type
+					set_fatal_error
+					error_handler.report_giaaa_error
 				elseif not attached an_agent_type.queries.item (2).result_type_set as l_result_type_set then
 						-- Internal error: an attribute should have a result type set.
 					set_fatal_error

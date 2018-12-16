@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic ROUTINE types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class ET_DYNAMIC_ROUTINE_TYPE
 
 inherit
 
-	ET_DYNAMIC_TYPE
+	ET_DYNAMIC_PRIMARY_TYPE
 		redefine
 			is_agent_type
 		end
@@ -46,7 +46,7 @@ feature -- Setting
 		ensure
 			set_rout_disp_final_feature_set: set_rout_disp_final_feature = a_feature
 		end
-		
+
 invariant
 
 	open_operand_type_sets_not_void: open_operand_type_sets /= Void
