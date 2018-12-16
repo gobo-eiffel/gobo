@@ -4,8 +4,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="free_elks"
-	uuid="E1FFE100-60B0-0001-0001-001000000001"
-	library_target="free_elks">
+	library_target="free_elks"
+	uuid="E1FFE100-60B0-0001-0001-000000000001"
+>
 
 	<description>
 		description: "ECF file for the FreeELKS Library"
@@ -34,7 +35,6 @@
 		<mapping old_name="CHARACTER" new_name="CHARACTER_8"/>
 		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
 		<mapping old_name="DOUBLE" new_name="REAL_64"/>
-
 		<cluster name="free_elks" location="./" recursive="true">
 			<file_rule>
 				<exclude>/structures/cursor_tree/compact_cursor_tree.e$</exclude>
