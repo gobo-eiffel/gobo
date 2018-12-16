@@ -5,7 +5,7 @@ note
 		"Test features of class EXCEPTION_MANAGER"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 
 	EXCEPTION_MANAGER_FACTORY
 		export {NONE} all end
-	
+
 create
 
 	make_default
@@ -28,7 +28,6 @@ feature -- Test
 	test_last_exception
 			-- Test feature 'last_exception'.
 		local
-			d: DOUBLE
 			l_retried: BOOLEAN
 		do
 			if not l_retried then

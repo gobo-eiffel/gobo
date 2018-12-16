@@ -5,7 +5,7 @@ note
 		"Test features of class ANY"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -82,7 +82,7 @@ feature -- Test
 	test_generating_type
 			-- Test feature 'generating_type'.
 		local
-			l_type: STRING
+			l_type: TYPE [detachable ANY]
 			s: STRING_8
 			i: INTEGER_16
 			aa: AA
@@ -94,48 +94,38 @@ feature -- Test
 			create s.make (0)
 			l_type := s.generating_type
 			assert ("not_void1", l_type /= Void )
-			assert ("type1", l_type.same_type (""))
-			assert_equal ("value1", "STRING_8", l_type)
-			assert ("new_object1", l_type /= s.generating_type)
+			assert ("type1", l_type.same_type ({detachable STRING_8}))
+			assert_equal ("value1", {detachable STRING_8}, l_type)
 				-- INTEGER_16.
 			i := 5
 			l_type := i.generating_type
 			assert ("not_void2", l_type /= Void )
-			assert ("type2", l_type.same_type (""))
-			assert_equal ("value2", "INTEGER_16", l_type)
-			assert ("new_object2", l_type /= i.generating_type)
+			assert ("type2", l_type.same_type ({INTEGER_16}))
+			assert_equal ("value2", {INTEGER_16}, l_type)
 				-- AA.
 			create aa
 			l_type := aa.generating_type
 			assert ("not_void3", l_type /= Void )
-			assert ("type3", l_type.same_type (""))
-			assert_equal ("value3", "AA", l_type)
-			assert ("new_object3", l_type /= aa.generating_type)
+			assert ("type3", l_type.same_type ({detachable AA}))
+			assert_equal ("value3", {detachable AA}, l_type)
 				-- BB [INTEGER_64].
 			create bb
 			l_type := bb.generating_type
 			assert ("not_void4", l_type /= Void )
-			assert ("type4", l_type.same_type (""))
-			assert_equal ("value4", "BB [INTEGER_64]", l_type)
-			assert ("new_object4", l_type /= bb.generating_type)
+			assert ("type4", l_type.same_type ({detachable BB [INTEGER_64]}))
+			assert_equal ("value4", {detachable BB [INTEGER_64]}, l_type)
 				-- CC [STRING_32, CHARACTER_32].
 			create cc
 			l_type := cc.generating_type
 			assert ("not_void5", l_type /= Void )
-			assert ("type5", l_type.same_type (""))
-			if is_void_safe_mode then
-				assert_equal ("value5", "CC [!STRING_32, CHARACTER_32]", l_type)
-			else
-				assert_equal ("value5", "CC [STRING_32, CHARACTER_32]", l_type)
-			end
-			assert ("new_object5", l_type /= cc.generating_type)
+			assert ("type5", l_type.same_type ({detachable CC [STRING_32, CHARACTER_32]}))
+			assert_equal ("value5", {detachable CC [STRING_32, CHARACTER_32]}, l_type)
 				-- SPECIAL [BOOLEAN].
 			create sp.make_filled (True, 2)
 			l_type := sp.generating_type
 			assert ("not_void6", l_type /= Void )
-			assert ("type6", l_type.same_type (""))
-			assert_equal ("value6", "SPECIAL [BOOLEAN]", l_type)
-			assert ("new_object6", l_type /= sp.generating_type)
+			assert ("type6", l_type.same_type ({detachable SPECIAL [BOOLEAN]}))
+			assert_equal ("value6", {detachable SPECIAL [BOOLEAN]}, l_type)
 		end
 
 	test_same_type
@@ -936,11 +926,5 @@ feature {NONE} -- Implementation
 		ensure
 			normalized_addresses_not_void: Result /= Void
 		end
-	
-	is_void_safe_mode: BOOLEAN
-			-- Is current test compiled in void-safe mode?
-		once
-			Result := {attached STRING_8} /= {detachable STRING_8}
-		end
-		
+
 end

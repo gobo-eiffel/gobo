@@ -217,17 +217,7 @@ feature {NONE} -- Implementation
 	is_void_safe_mode: BOOLEAN
 			-- Is current test compiled in void-safe mode?
 		once
-			Result := {attached STRING_8} /= {detachable STRING_8}
-		end
-
-	is_generating_type_attached: BOOLEAN
-			-- Does the current compiler consider generating types
-			-- of objects as attached?
-		local
-			l_string: STRING_8
-		once
-			create l_string.make_empty
-			Result := is_void_safe_mode and then l_string.generating_type = {attached STRING_8}
+			Result := {attached STRING_8} /~ {detachable STRING_8}
 		end
 
 end

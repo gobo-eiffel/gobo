@@ -5,7 +5,7 @@ note
 		"Test features of class FUNCTION"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ feature -- Test
 			p2: FUNCTION [CHARACTER]
 			p3: FUNCTION [CHARACTER]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 				-- 1 open, 0 closed.
 			a.put ('g', 1)
 			p1 := agent a.item
@@ -115,7 +115,7 @@ feature -- Test
 			p4: FUNCTION [ANY, ANY]
 		do
 				-- 1 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('g', 1)
 			p1 := agent a.item
 			assert_characters_equal ("item1a", 'g', p1.item ([1]))
@@ -123,7 +123,7 @@ feature -- Test
 			p1 := agent a.item
 			assert_characters_equal ("item1b", 'h', p1.item ([1]))
 				-- 1 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('a', 1)
 			p1 := agent a.item (?)
 			assert_characters_equal ("item2a", 'a', p1.item ([1]))
@@ -131,7 +131,7 @@ feature -- Test
 			p1 := agent a.item (?)
 			assert_characters_equal ("item2b", 'b', p1.item ([1]))
 				-- 0 open, 1 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('z', 1)
 			p2 := agent a.item (1)
 			assert_characters_equal ("item3a", 'z', p2.item ([]))
@@ -139,7 +139,7 @@ feature -- Test
 			p2 := agent a.item (1)
 			assert_characters_equal ("item3b", 'y', p2.item ([]))
 				-- 0 open, 1 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('x', 1)
 			p2 := agent a.item (1)
 			assert_characters_equal ("item4a", 'x', p2.item (Void))
@@ -147,7 +147,7 @@ feature -- Test
 			p2 := agent a.item (1)
 			assert_characters_equal ("item4b", 'w', p2.item (Void))
 				-- Pass too many operands.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('b', 1)
 			p1 := agent a.item (?)
 			assert_characters_equal ("item5a", 'b', p1.item ([1, "gobo"]))
@@ -155,7 +155,7 @@ feature -- Test
 			p1 := agent a.item (?)
 			assert_characters_equal ("item5b", 'c', p1.item ([1, "gobo"]))
 				-- Polymorphic agent.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('x', 1)
 			p3 := agent a.item (?)
 			assert_characters_equal ("item6a", 'x', p3.item ([1, "gobo"]))
@@ -169,7 +169,7 @@ feature -- Test
 			p3 := agent a.item (1)
 			assert_characters_equal ("item7b", 'j', p3.item ([5, "gobo"]))
 				-- Polymorphic agent with boxing.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('f', 1)
 			p4 := agent a.item (?)
 			assert_equal ("item8a", 'f', p4.item ([1, "gobo"]))
@@ -178,7 +178,7 @@ feature -- Test
 			assert_equal ("item8b", 'e', p4.item ([1, "gobo"]))
 			if not eiffel_compiler.is_ise then
 					-- Does not work with ISE 6.3.
-				create b1.make (1, 1)
+				create b1.make_filled ('%U', 1, 1)
 				b1.put ('p', 1)
 				b := b1
 				p4 := agent b.item (?)
@@ -252,7 +252,7 @@ feature -- Test
 			p2: FUNCTION [ARRAY [CHARACTER], CHARACTER]
 			p3: FUNCTION [CHARACTER]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 				-- 2 open, 0 closed.
 			a.put ('g', 1)
 			p1 := agent {ARRAY [CHARACTER]}.item (?)
@@ -323,7 +323,7 @@ feature -- Test
 			p3: FUNCTION [CHARACTER]
 		do
 				-- 2 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('g', 1)
 			p1 := agent {TO_SPECIAL [CHARACTER]}.item (?)
 			assert_characters_equal ("item1a", 'g', p1.item ([a, 1]))
@@ -331,7 +331,7 @@ feature -- Test
 			p1 := agent {TO_SPECIAL [CHARACTER]}.item (?)
 			assert_characters_equal ("item1b", 'p', p1.item ([a, 1]))
 				-- 2 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('h', 1)
 			p1 := agent {TO_SPECIAL [CHARACTER]}.item
 			assert_characters_equal ("item2a", 'h', p1.item ([a, 1]))
@@ -339,7 +339,7 @@ feature -- Test
 			p1 := agent {TO_SPECIAL [CHARACTER]}.item
 			assert_characters_equal ("item2b", 'g', p1.item ([a, 1]))
 				-- 1 open, 1 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('z', 1)
 			p2 := agent {TO_SPECIAL [CHARACTER]}.item (1)
 			assert_characters_equal ("item3b", 'z', p2.item ([a]))
@@ -347,7 +347,7 @@ feature -- Test
 			p2 := agent {TO_SPECIAL [CHARACTER]}.item (1)
 			assert_characters_equal ("item3a", 'x', p2.item ([a]))
 				-- Pass too many operands.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('d', 1)
 			p1 := agent {TO_SPECIAL [CHARACTER]}.item
 			assert_characters_equal ("item4a", 'd', p1.item ([a, 1, "gobo"]))
@@ -355,7 +355,7 @@ feature -- Test
 			p1 := agent {TO_SPECIAL [CHARACTER]}.item
 			assert_characters_equal ("item4b", 'c', p1.item ([a, 1, "gobo"]))
 				-- Polymorphic agent.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('t', 1)
 			p3 := agent {TO_SPECIAL [CHARACTER]}.item
 			assert_characters_equal ("item5a", 't', p3.item ([a, 1, "gobo"]))
@@ -379,7 +379,7 @@ feature -- Test
 			p3: FUNCTION [CHARACTER]
 			p4: FUNCTION [CHARACTER]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 				-- 1 open, 1 closed.
 			a.put ('g', 1)
 			p1 := agent f (a, ?)
@@ -458,7 +458,7 @@ feature -- Test
 			p2: FUNCTION [CHARACTER]
 			p3: FUNCTION [CHARACTER]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 				-- 1 open, 0 closed.
 			a.put ('g', 1)
 			p1 := agent a.item
@@ -551,7 +551,7 @@ feature -- Test
 			p3: FUNCTION [CHARACTER]
 		do
 				-- 1 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('g', 1)
 			p1 := agent a.item
 			p1.call ([1])
@@ -561,7 +561,7 @@ feature -- Test
 			p1.call ([1])
 			assert_characters_equal ("last_result1b", 'h', p1.last_result)
 				-- 1 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('a', 1)
 			p1 := agent a.item (?)
 			p1.call ([1])
@@ -571,7 +571,7 @@ feature -- Test
 			p1.call ([1])
 			assert_characters_equal ("last_result2b", 'b', p1.last_result)
 				-- 0 open, 1 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('z', 1)
 			p2 := agent a.item (1)
 			p2.call ([])
@@ -581,7 +581,7 @@ feature -- Test
 			p2.call ([])
 			assert_characters_equal ("last_result3b", 'y', p2.last_result)
 				-- 0 open, 1 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('x', 1)
 			p2 := agent a.item (1)
 			p2.call (Void)
@@ -591,7 +591,7 @@ feature -- Test
 			p2.call (Void)
 			assert_characters_equal ("last_result4b", 'w', p2.last_result)
 				-- Pass too many operands.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('b', 1)
 			p1 := agent a.item (?)
 			p1.call ([1, "gobo"])
@@ -601,7 +601,7 @@ feature -- Test
 			p1.call ([1, "gobo"])
 			assert_characters_equal ("last_result5b", 'c', p1.last_result)
 				-- Polymorphic agent.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('f', 1)
 			p3 := agent a.item (?)
 			p3.call ([1, "gobo"])
@@ -688,7 +688,7 @@ feature -- Test
 			p2: FUNCTION [ARRAY [CHARACTER], CHARACTER]
 			p3: FUNCTION [CHARACTER]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 				-- 2 open, 0 closed.
 			a.put ('g', 1)
 			p1 := agent {ARRAY [CHARACTER]}.item (?)
@@ -771,7 +771,7 @@ feature -- Test
 			p3: FUNCTION [CHARACTER]
 		do
 				-- 2 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('g', 1)
 			p1 := agent {TO_SPECIAL [CHARACTER]}.item (?)
 			p1.call ([a, 1])
@@ -781,7 +781,7 @@ feature -- Test
 			p1.call ([a, 1])
 			assert_characters_equal ("last_result1b", 'p', p1.last_result)
 				-- 2 open, 0 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('h', 1)
 			p1 := agent {TO_SPECIAL [CHARACTER]}.item
 			p1.call ([a, 1])
@@ -791,7 +791,7 @@ feature -- Test
 			p1.call ([a, 1])
 			assert_characters_equal ("last_result2b", 'g', p1.last_result)
 				-- 1 open, 1 closed.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('z', 1)
 			p2 := agent {TO_SPECIAL [CHARACTER]}.item (1)
 			p2.call ([a])
@@ -801,7 +801,7 @@ feature -- Test
 			p2.call ([a])
 			assert_characters_equal ("last_result3b", 'x', p2.last_result)
 				-- Pass too many operands.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('d', 1)
 			p1 := agent {TO_SPECIAL [CHARACTER]}.item
 			p1.call ([a, 1, "gobo"])
@@ -811,7 +811,7 @@ feature -- Test
 			p1.call ([a, 1, "gobo"])
 			assert_characters_equal ("last_result4b", 'c', p1.last_result)
 				-- Polymorphic agent.
-			create {ARRAY [CHARACTER]} a.make (1, 1)
+			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
 			a.put ('t', 1)
 			p3 := agent {TO_SPECIAL [CHARACTER]}.item
 			p3.call ([a, 1, "gobo"])
@@ -839,7 +839,7 @@ feature -- Test
 			p3: FUNCTION [CHARACTER]
 			p4: FUNCTION [CHARACTER]
 		do
-			create a.make (1, 1)
+			create a.make_filled ('%U', 1, 1)
 				-- 1 open, 1 closed.
 			a.put ('g', 1)
 			p1 := agent f (a, ?)

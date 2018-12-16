@@ -5,7 +5,7 @@ note
 		"Test features of class ARRAY"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -254,7 +254,7 @@ feature -- Test
 			i2 := 5
 			l_array := <<s1, i2>>
 			assert ("item1", l_array.item (1) = s1)
-			assert_strings_equal ("item2a", i2.generating_type, l_array.item (2).generating_type)
+			assert_equal ("item2a", i2.generating_type, l_array.item (2).generating_type)
 			assert_strings_equal ("item2b", i2.out, l_array.item (2).out)
 		end
 

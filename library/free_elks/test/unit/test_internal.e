@@ -5,7 +5,7 @@ note
 		"Test features of class INTERNAL"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2010-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -866,7 +866,7 @@ feature {NONE} -- Implementation
 	is_void_safe_mode: BOOLEAN
 			-- Is current test compiled in void-safe mode?
 		once
-			Result := {attached STRING_8} /= {detachable STRING_8}
+			Result := {attached STRING_8} /~ {detachable STRING_8}
 		end
-		
+
 end
