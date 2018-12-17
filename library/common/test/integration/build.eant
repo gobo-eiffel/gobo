@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="precomp" default="help">
+<project name="integration" default="help">
 
 	<description>
 		system: "Gobo Eiffel Library Tester"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -25,12 +25,12 @@
 			Remove other intermediary generated files.
 		</description>
 
-		<delete directory="Tprecomp"/>
+		<delete directory="Tintegration"/>
 	</target>
 
 	<target name="init_system" export="NONE">
-		<set name="system" value="xprecomp"/>
-		<set name="library" value="precomp"/>
+		<set name="system" value="xintegration"/>
+		<set name="library" value="integration"/>
 		<set name="system_dir" value="${GOBO}/library/common/test/${library}"/>
 	</target>
 

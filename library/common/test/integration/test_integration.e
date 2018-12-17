@@ -2,7 +2,7 @@ note
 
 	description:
 
-		"Test precompilation of Gobo Library classes"
+		"Test integration of all Gobo Eiffel classes"
 
 	library: "Gobo Eiffel Library"
 	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
@@ -10,7 +10,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TEST_PRECOMP
+class TEST_INTEGRATION
 
 inherit
 
@@ -35,25 +35,25 @@ create
 feature -- Test
 
 	test_ge
-			-- Test precompilation with Gobo Eiffel.
+			-- Test integration of all classes with Gobo Eiffel.
 		do
 			if eiffel_compiler.is_ge then
-				precomp_ge
+				integrate_ge
 			end
 		end
 
 	test_ise
-			-- Test precompilation with ISE Eiffel.
+			-- Test integration of all classes with ISE Eiffel.
 		do
 			if eiffel_compiler.is_ise then
-				precomp_ise
+				integrate_ise
 			end
 		end
 
-feature {NONE} -- Precompilation
+feature {NONE} -- Integration
 
-	precomp_ge
-			-- Test precompilation with Gobo Eiffel.
+	integrate_ge
+			-- Test integration of all classes with Gobo Eiffel.
 		local
 			old_cwd: STRING
 		do
@@ -68,8 +68,8 @@ feature {NONE} -- Precompilation
 			file_system.recursive_delete_directory (testdir)
 		end
 
-	precomp_ise
-			-- Test precompilation with ISE Eiffel.
+	integrate_ise
+			-- Test integration of all classes with ISE Eiffel.
 		local
 			dotnet: STRING
 			l_compatible: STRING
@@ -82,7 +82,7 @@ feature {NONE} -- Precompilation
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Make sure that there is not left-over from
-				-- previous precompilation.
+				-- previous integrations.
 			assert ("EIFGEN_not_exists", not file_system.directory_exists ("EIFGEN"))
 			assert ("EIFGENs_not_exists", not file_system.directory_exists ("EIFGENs"))
 				-- Compilation options.
@@ -96,7 +96,7 @@ feature {NONE} -- Precompilation
 			if l_compatible /= Void and then l_compatible.count > 0 then
 				l_compat_option := " -compat"
 			end
-				-- Eiffel precompilation.
+				-- Eiffel compilation.
 			assert_execute ("ecb" + l_compat_option + l_config_option + " -batch -config " + ecf_filename  + output_log)
 				-- Done.
 			file_system.cd (old_cwd)
@@ -106,18 +106,18 @@ feature {NONE} -- Precompilation
 feature {NONE} -- Implementation
 
 	ecf_filename: STRING
-			-- Name of ECF file used for precompilation
+			-- Name of ECF file used for integration of all classes
 		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"library", "common", "test", "precomp", "precomp.ecf">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"library", "common", "test", "integration", "integration.ecf">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			ecf_filename_not_void: Result /= Void
 			ecf_filename_not_empty: Result.count > 0
 		end
 
-	testdir: STRING = "Tprecomp"
+	testdir: STRING = "Tintegration"
 			-- Name of temporary directory where to launch
-			-- the precompilation
+			-- the integration of all classes
 
 	output_log_filename: STRING = "output.log"
 			-- Output log filename

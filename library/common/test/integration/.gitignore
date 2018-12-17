@@ -1,5 +1,5 @@
-xprecomp
-Tprecomp
+xintegration
+Tintegration
 compile_*.*
 *.exe
 *.dll

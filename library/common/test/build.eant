@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Gobo Eiffel Library Tester"
-		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -26,75 +26,75 @@
 		</description>
 
 		<precursor/>
-		<geant target="test_precomp${debug_suffix}${eiffel_suffix}"/>
+		<geant target="test_integration${debug_suffix}${eiffel_suffix}"/>
 	</target>
 
-	<target name="test_precomp" depend="init">
+	<target name="test_integration" depend="init">
 		<description>
-			Run all precomp tests.
+			Run all integration tests.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
 			or 'ge' if this variable is not defined.
 			Compile in debug mode if ${debug} is defined.
 			Remove intermediary generated files after running tests.
 		</description>
 
-		<geant target="test_in_subfolder" arguments="precomp"/>
+		<geant target="test_in_subfolder" arguments="integration"/>
 	</target>
 
-	<target name="test_precomp_ge" depend="init">
+	<target name="test_integration_ge" depend="init">
 		<description>
-			Run all precomp tests with Gobo Eiffel.
+			Run all integration tests with Gobo Eiffel.
 			Compile in debug mode if ${debug} is defined.
 			Remove intermediary generated files after running tests.
 		</description>
 
 		<set name="eiffel" value="ge"/>
-		<geant target="test_precomp"/>
+		<geant target="test_integration"/>
 	</target>
 
-	<target name="test_precomp_ise" depend="init">
+	<target name="test_integration_ise" depend="init">
 		<description>
-			Run all precomp tests with ISE Eiffel.
+			Run all integration tests with ISE Eiffel.
 			Compile in debug mode if ${debug} is defined.
 			Remove intermediary generated files after running tests.
 		</description>
 
 		<set name="eiffel" value="ise"/>
-		<geant target="test_precomp"/>
+		<geant target="test_integration"/>
 	</target>
 
-	<target name="test_precomp_debug" depend="init">
+	<target name="test_integration_debug" depend="init">
 		<description>
-			Run all precomp tests in debug mode.
+			Run all integration tests in debug mode.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
 			or 'ge' if this variable is not defined.
 			Remove intermediary generated files after running tests.
 		</description>
 
 		<set name="debug" value="true"/>
-		<geant target="test_precomp"/>
+		<geant target="test_integration"/>
 	</target>
 
-	<target name="test_precomp_debug_ge" depend="init">
+	<target name="test_integration_debug_ge" depend="init">
 		<description>
-			Run all precomp tests with Gobo Eiffel in debug mode.
+			Run all integration tests with Gobo Eiffel in debug mode.
 			Remove intermediary generated files after running tests.
 		</description>
 
 		<set name="eiffel" value="ge"/>
 		<set name="debug" value="true"/>
-		<geant target="test_precomp"/>
+		<geant target="test_integration"/>
 	</target>
 
-	<target name="test_precomp_debug_ise" depend="init">
+	<target name="test_integration_debug_ise" depend="init">
 		<description>
-			Run all precomp tests with ISE Eiffel in debug mode.
+			Run all integration tests with ISE Eiffel in debug mode.
 			Remove intermediary generated files after running tests.
 		</description>
 
 		<set name="eiffel" value="ise"/>
 		<set name="debug" value="true"/>
-		<geant target="test_precomp"/>
+		<geant target="test_integration"/>
 	</target>
 	
 </project>

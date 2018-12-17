@@ -3,16 +3,16 @@
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
-	name="precomp"
-	library_target="precomp"
+	name="integration"
+	library_target="integration"
 	uuid="E1FFE100-60B0-0003-3003-000000000001"
 >
 	<description>
-		system: "Gobo Eiffel all classes compilation"
+		system: "Gobo Eiffel all classes integration"
 		copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-	<target name="precomp">
+	<target name="integration">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -27,7 +27,7 @@
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="false"/>
 		<library name="free_elks_test_unit" location="${GOBO_LIBRARY}/library/free_elks/test/unit/system.ecf" readonly="false"/>
 		<library name="common_test_common" location="${GOBO_LIBRARY}/library/common/test/common/library.ecf" readonly="false"/>
-		<library name="common_test_precomp" location="${GOBO_LIBRARY}/library/common/test/precomp/system.ecf" readonly="false"/>
+		<library name="common_test_integration" location="${GOBO_LIBRARY}/library/common/test/integration/system.ecf" readonly="false"/>
 		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="false"/>
 		<library name="kernel_test_unit" location="$GOBO/library/kernel/test/unit/system.ecf" readonly="false"/>
 		<library name="argument" location="$GOBO/library/argument/library.ecf" readonly="false"/>

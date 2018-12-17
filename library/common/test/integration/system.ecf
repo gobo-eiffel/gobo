@@ -3,12 +3,12 @@
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
-	name="xprecomp"
+	name="xintegration"
 	library_target="all_classes"
 	uuid="E1FFE100-60B0-0003-3002-000000000001"
 >
 	<description>
-		system: "Gobo Eiffel Library Tester"
+		system: "Gobo Eiffel all classes integration Tester"
 		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 		license: "MIT License"
 	</description>
@@ -27,12 +27,12 @@
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
-		<cluster name="precomp_tester" location="./"/>
+		<cluster name="integration_tester" location="./"/>
 	</target>
-	<target name="xprecomp" extends="all_classes">
-		<root class="XPRECOMP" feature="make"/>
+	<target name="xintegration" extends="all_classes">
+		<root class="XINTEGRATION" feature="make"/>
 		<setting name="console_application" value="true"/>
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
-		<cluster name="precomp_testgen" location="${GOBO_TESTGEN}"/>
+		<cluster name="integration_testgen" location="${GOBO_TESTGEN}"/>
 	</target>
 </system>
