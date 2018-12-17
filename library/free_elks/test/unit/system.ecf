@@ -20,7 +20,6 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true"/>
-		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="none"/>
 		</capability>
@@ -32,6 +31,7 @@
 	</target>
 	<target name="xfree_elks" extends="all_classes">
 		<root class="XFREE_ELKS" feature="make"/>
+		<setting name="console_application" value="true"/>
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<cluster name="fe_testgen" location="${GOBO_TESTGEN}"/>
 	</target>

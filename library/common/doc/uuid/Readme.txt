@@ -15,7 +15,7 @@ V: Version
 LLLL                TNNN
 0001 - free_elks    0001, 3001
 0002 - kernel       0001, 3001
-0003 - common
+0003 - common       3001-3003
 0004 - structure
 0005 - math
 0006 - pattern
