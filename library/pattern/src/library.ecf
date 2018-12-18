@@ -4,8 +4,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="pattern"
-	uuid="E1FFE100-60B0-0001-0006-001000000001"
-	library_target="pattern">
+	library_target="pattern"
+	uuid="E1FFE100-60B0-0006-0001-000000000001"
+>
 
 	<description>
 		description: "ECF file for the Gobo Eiffel Pattern Library"

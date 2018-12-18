@@ -4,31 +4,33 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="do_nothing"
-	uuid="E1FFE100-60B0-0001-0006-003000000001"
+	library_target="all_classes"
+	uuid="E1FFE100-60B0-0006-2001-000000000001"
 >
 	<description>
 		system: "Example for the Singleton pattern with does nothing"
 		copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-	<target name="do_nothing">
-		<root class="DO_NOTHING" feature="make"/>
+	<target name="all_classes">
+		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true"/>
-		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency support="none" use="none"/>
-			<void_safety support="all" use="all"/>
+			<concurrency support="none"/>
 		</capability>
 		<variable name="GOBO_LIBRARY" value="../../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
-		<library name="pattern" location="${GOBO_LIBRARY}/library/pattern/library.ecf" readonly="true"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<cluster name="do_nothing" location="./"/>
+	</target>
+	<target name="do_nothing" extends="all_classes">
+		<root class="DO_NOTHING" feature="make"/>
+		<setting name="console_application" value="true"/>
 	</target>
 </system>
