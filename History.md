@@ -44,6 +44,8 @@
 * Fixed bug when processing ECF files where conditions `<concurrency>` and
   `<void_safety>` were not taking into account the `support` capability
   value when the `use` value was not specified.
+* Made sure that all targets in the ECF file are affected when overriding
+  the setting `library_root`.
 
 ### Gobo Eiffel Tools Library
 

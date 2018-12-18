@@ -618,6 +618,8 @@ feature -- Basic operations
 			-- Override settings of current target with `a_settings'.
 		require
 			a_settings_not_void: a_settings /= Void
+		local
+			i, nb: INTEGER
 		do
 			across a_settings.primary_settings as l_primary_settings loop
 				if STRING_.same_case_insensitive (l_primary_settings.key, "all_assertions") then
@@ -625,6 +627,12 @@ feature -- Basic operations
 						l_targets.do_all (agent {ET_ECF_TARGET}.override_all_assertions (l_primary_settings.item))
 					else
 						override_all_assertions (l_primary_settings.item)
+					end
+				elseif STRING_.same_case_insensitive (l_primary_settings.key, {ET_ECF_SETTING_NAMES}.library_root_setting_name) and attached system_config.targets as l_targets then
+					nb := l_targets.count
+					from i := 1 until i > nb loop
+						l_targets.target (i).settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
+						i := i + 1
 					end
 				else
 					settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
