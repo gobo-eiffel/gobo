@@ -20,8 +20,8 @@ LLLL                TNNN
 0005 - math         0001, 2001, 3001-3002
 0006 - pattern      0001, 2001, 3001-3002
 0007 - thread       0001, 3001
-0008 - time
-0009 - utility
+0008 - time         0001, 2001, 3001-3002
+0009 - utility      0001, 3001-3003
 0010 - regexp
 0011 - string
 0012 - argument

@@ -42,6 +42,15 @@
 		<library name="structure_test_unit" location="${GOBO_LIBRARY}/library/structure/test/unit/system.ecf" readonly="false"/>
 		<library name="thread" location="${GOBO_LIBRARY}/library/thread/library_${GOBO_EIFFEL}.ecf" readonly="false"/>
 		<library name="thread_test_unit" location="${GOBO_LIBRARY}/library/thread/test/unit/system.ecf" readonly="false"/>
+		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="false"/>
+		<library name="time_example_clock" location="${GOBO_LIBRARY}/library/time/example/clock/system.ecf" readonly="false"/>
+		<library name="time_test_example" location="${GOBO_LIBRARY}/library/time/test/example/system.ecf" readonly="false"/>
+		<library name="time_test_unit" location="${GOBO_LIBRARY}/library/time/test/unit/system.ecf" readonly="false"/>
+		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="false"/>
+		<library name="utility_test_unit_support" location="${GOBO_LIBRARY}/library/utility/test/unit/support/system.ecf" readonly="false"/>
+		<library name="utility_test_unit_transcoder" location="${GOBO_LIBRARY}/library/utility/test/unit/transcoder/system.ecf" readonly="false"/>
+		<library name="utility_test_unit_uri" location="${GOBO_LIBRARY}/library/utility/test/unit/uri/system.ecf" readonly="false"/>
+		
 		<library name="argument" location="${GOBO_LIBRARY}/library/argument/library.ecf" readonly="false"/>
 		<library name="lexical" location="${GOBO_LIBRARY}/library/lexical/library.ecf" readonly="false"/>
 		<library name="lexical_skl" location="${GOBO_LIBRARY}/library/lexical/library_skl.ecf" readonly="false"/>
@@ -51,9 +60,7 @@
 		<library name="string" location="${GOBO_LIBRARY}/library/string/library.ecf" readonly="false"/>
 		<library name="test" location="${GOBO_LIBRARY}/library/test/library.ecf" readonly="false"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="false"/>
-		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="false"/>
 		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="false"/>		
-		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="false"/>
 		<library name="xml" location="${GOBO_LIBRARY}/library/xml/library.ecf" readonly="false"/>
 		<library name="xpath" location="${GOBO_LIBRARY}/library/xpath/library.ecf" readonly="false"/>
 		<library name="xslt" location="${GOBO_LIBRARY}/library/xslt/library.ecf" readonly="false"/>
