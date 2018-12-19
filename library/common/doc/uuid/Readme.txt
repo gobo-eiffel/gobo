@@ -22,8 +22,8 @@ LLLL                TNNN
 0007 - thread       0001, 3001
 0008 - time         0001, 2001, 3001-3002
 0009 - utility      0001, 3001-3003
-0010 - regexp
-0011 - string
+0010 - regexp       0001, 2001, 3001
+0011 - string       0001, 1001, 3001
 0012 - argument
 0013 - lexical
 0014 - parse
