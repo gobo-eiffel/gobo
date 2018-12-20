@@ -42,7 +42,6 @@
 		<library name="regexp_example_pcre" location="${GOBO_LIBRARY}/library/regexp/example/pcre/system.ecf" readonly="false"/>
 		<library name="regexp_test_example" location="${GOBO_LIBRARY}/library/regexp/test/example/system.ecf" readonly="false"/>
 		<library name="regexp_test_unit" location="${GOBO_LIBRARY}/library/regexp/test/unit/system.ecf" readonly="false"/>
-		<library name="regexp_test_unit_pcretest" location="${GOBO_LIBRARY}/library/regexp/test/unit/pcretest/system.ecf" readonly="false"/>
 		<library name="string" location="${GOBO_LIBRARY}/library/string/library.ecf" readonly="false"/>
 		<library name="string_test_unit" location="${GOBO_LIBRARY}/library/string/test/unit/system.ecf" readonly="false"/>
 		<library name="string_tool_geuc" location="${GOBO_LIBRARY}/library/string/tool/geuc/src/system.ecf" readonly="false"/>
