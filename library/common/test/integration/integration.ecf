@@ -26,14 +26,35 @@
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="false"/>
 		<library name="free_elks_test_unit" location="${GOBO_LIBRARY}/library/free_elks/test/unit/system.ecf" readonly="false"/>
+		<library name="argument" location="${GOBO_LIBRARY}/library/argument/library.ecf" readonly="false"/>
+		<library name="argument_example" location="${GOBO_LIBRARY}/library/argument/example/system.ecf" readonly="false"/>
+		<library name="argument_test_example" location="${GOBO_LIBRARY}/library/argument/test/example/system.ecf" readonly="false"/>
+		<library name="argument_test_unit" location="${GOBO_LIBRARY}/library/argument/test/unit/system.ecf" readonly="false"/>
 		<library name="common_test_common" location="${GOBO_LIBRARY}/library/common/test/common/library.ecf" readonly="false"/>
 		<library name="common_test_integration" location="${GOBO_LIBRARY}/library/common/test/integration/system.ecf" readonly="false"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="false"/>
 		<library name="kernel_test_unit" location="${GOBO_LIBRARY}/library/kernel/test/unit/system.ecf" readonly="false"/>
+		<library name="lexical" location="${GOBO_LIBRARY}/library/lexical/library.ecf" readonly="false"/>
+		<library name="lexical_skl" location="${GOBO_LIBRARY}/library/lexical/library_skl.ecf" readonly="false"/>
+		<library name="lexical_example_ascii2ps" location="${GOBO_LIBRARY}/library/lexical/example/ascii2ps/system.ecf" readonly="false"/>
+		<library name="lexical_example_eiffel_scanner" location="${GOBO_LIBRARY}/library/lexical/example/eiffel_scanner/system.ecf" readonly="false"/>
+		<library name="lexical_example_gegrep" location="${GOBO_LIBRARY}/library/lexical/example/gegrep/system.ecf" readonly="false"/>
+		<library name="lexical_test_example" location="${GOBO_LIBRARY}/library/lexical/test/example/system.ecf" readonly="false"/>
+		<library name="lexical_test_unit" location="${GOBO_LIBRARY}/library/lexical/test/unit/system.ecf" readonly="false"/>
 		<library name="math" location="${GOBO_LIBRARY}/library/math/library.ecf" readonly="false"/>
 		<library name="math_example_decimal_telco" location="${GOBO_LIBRARY}/library/math/example/decimal/telco/system.ecf" readonly="false"/>
 		<library name="math_test_example" location="${GOBO_LIBRARY}/library/math/test/example/system.ecf" readonly="false"/>
 		<library name="math_test_unit_decimal_acceptance" location="${GOBO_LIBRARY}/library/math/test/unit/decimal/acceptance/system.ecf" readonly="false"/>
+		<library name="parse" location="${GOBO_LIBRARY}/library/parse/library.ecf" readonly="false"/>
+		<library name="parse_skl" location="${GOBO_LIBRARY}/library/parse/library_skl.ecf" readonly="false"/>
+		<library name="parse_example_calc" location="${GOBO_LIBRARY}/library/parse/example/calc/system.ecf" readonly="false"/>
+		<library name="parse_example_eiffel_parser" location="${GOBO_LIBRARY}/library/parse/example/eiffel_parser/system.ecf" readonly="false">
+			<renaming old_name="EIFFEL_SCANNER" new_name="PR_EIFFEL_SCANNER"/>
+			<renaming old_name="EIFFEL_TOKENS" new_name="PR_EIFFEL_TOKENS"/>
+		</library>
+		<library name="parse_example_mcalc" location="${GOBO_LIBRARY}/library/parse/example/mcalc/system.ecf" readonly="false"/>
+		<library name="parse_example_rpcalc" location="${GOBO_LIBRARY}/library/parse/example/rpcalc/system.ecf" readonly="false"/>
+		<library name="parse_test_example" location="${GOBO_LIBRARY}/library/parse/test/example/system.ecf" readonly="false"/>
 		<library name="pattern" location="${GOBO_LIBRARY}/library/pattern/library.ecf" readonly="false"/>
 		<library name="pattern_example_singleton_do_nothing" location="${GOBO_LIBRARY}/library/pattern/example/singleton/do_nothing/system.ecf" readonly="false"/>
 		<library name="pattern_test_example" location="${GOBO_LIBRARY}/library/pattern/test/example/system.ecf" readonly="false"/>
@@ -58,11 +79,6 @@
 		<library name="utility_test_unit_transcoder" location="${GOBO_LIBRARY}/library/utility/test/unit/transcoder/system.ecf" readonly="false"/>
 		<library name="utility_test_unit_uri" location="${GOBO_LIBRARY}/library/utility/test/unit/uri/system.ecf" readonly="false"/>
 		
-		<library name="argument" location="${GOBO_LIBRARY}/library/argument/library.ecf" readonly="false"/>
-		<library name="lexical" location="${GOBO_LIBRARY}/library/lexical/library.ecf" readonly="false"/>
-		<library name="lexical_skl" location="${GOBO_LIBRARY}/library/lexical/library_skl.ecf" readonly="false"/>
-		<library name="parse" location="${GOBO_LIBRARY}/library/parse/library.ecf" readonly="false"/>
-		<library name="parse_skl" location="${GOBO_LIBRARY}/library/parse/library_skl.ecf" readonly="false"/>
 		<library name="test" location="${GOBO_LIBRARY}/library/test/library.ecf" readonly="false"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="false"/>
 		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="false"/>		

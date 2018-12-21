@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="lexical"
-	uuid="E1FFE100-60B0-0001-0013-001000000001"
+	uuid="E1FFE100-60B0-0013-0001-000000000001"
 	library_target="lexical">
 
 	<description>
@@ -30,9 +30,9 @@
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 		<library name="lexical_skl" location="${GOBO_LIBRARY}/library/lexical/library_skl.ecf" readonly="true"/>
 		<library name="parse_skl" location="${GOBO_LIBRARY}/library/parse/library_skl.ecf" readonly="true"/>
-		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
-		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<library name="pattern" location="${GOBO_LIBRARY}/library/pattern/library.ecf" readonly="true"/>
+		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
+		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
 
 		<cluster name="lexical" location="./" recursive="true">

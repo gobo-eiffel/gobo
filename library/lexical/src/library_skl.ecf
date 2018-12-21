@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="lexical_skl"
-	uuid="E1FFE100-60B0-0001-0013-001000000002"
+	uuid="E1FFE100-60B0-0013-0002-000000000001"
 	library_target="lexical_skl">
 
 	<description>

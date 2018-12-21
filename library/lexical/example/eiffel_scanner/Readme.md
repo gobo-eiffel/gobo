@@ -20,7 +20,7 @@ the *Gobo Eiffel Tools Library* in `$Gobo/library/tools/src/eiffel/parser`.
    if necessary.
 
 2. Choose either `execute` or `benchmark` as the creation procedure of
-   the root class `EIFFEL_SCANNER` in yourXace or ECF file.
+   the root class `EIFFEL_SCANNER` in your Xace or ECF file.
 
 3. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Xace or ECF file (e,g, `<compiler>.ecf`). Alternatively
@@ -43,4 +43,4 @@ the *Gobo Eiffel Tools Library* in `$Gobo/library/tools/src/eiffel/parser`.
 
 ## Authors
 
-Copyright (c) 1997-2017, Eric Bezault and others
+Copyright (c) 1997-2018, Eric Bezault and others
