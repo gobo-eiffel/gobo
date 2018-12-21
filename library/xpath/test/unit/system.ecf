@@ -4,8 +4,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="xpath"
-	uuid="E1FFE100-60B0-0001-0016-004000000001"
 	library_target="all_classes"
+	uuid="E1FFE100-60B0-0016-3001-000000000001"
 >
 	<description>
 		system: "Gobo Eiffel XPath Library Unit Tester: Eiffel XPath test suite"
@@ -46,27 +46,25 @@
 			<debug name="XPath Integer values" enabled="false"/>
 			<debug name="XPath Double values" enabled="false"/>
 		</option>
-		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency support="none" use="none"/>
-			<void_safety support="all" use="all"/>
+			<concurrency support="none"/>
 		</capability>
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 		<library name="math" location="${GOBO_LIBRARY}/library/math/library.ecf" readonly="true"/>
-		<library name="pattern" location="${GOBO_LIBRARY}/library/pattern/library.ecf" readonly="true"/>
-		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
-		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
 		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="true"/>
+		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
 		<library name="xml" location="${GOBO_LIBRARY}/library/xml/library.ecf" readonly="true"/>
 		<library name="xpath" location="${GOBO_LIBRARY}/library/xpath/library.ecf" readonly="true"/>
 		<cluster name="xpath_tester" location="./"/>
 	</target>
 	<target name="xpath" extends="all_classes">
 		<root class="XPATH" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<cluster name="xpath_testgen" location="${GOBO_TESTGEN}"/>
 	</target>
 </system>

@@ -78,12 +78,26 @@
 		<library name="utility_test_unit_support" location="${GOBO_LIBRARY}/library/utility/test/unit/support/system.ecf" readonly="false"/>
 		<library name="utility_test_unit_transcoder" location="${GOBO_LIBRARY}/library/utility/test/unit/transcoder/system.ecf" readonly="false"/>
 		<library name="utility_test_unit_uri" location="${GOBO_LIBRARY}/library/utility/test/unit/uri/system.ecf" readonly="false"/>
+		<library name="xml" location="${GOBO_LIBRARY}/library/xml/library.ecf" readonly="false"/>
+		<library name="xml_example_event_print" location="${GOBO_LIBRARY}/library/xml/example/event/print/system.ecf" readonly="false"/>
+		<library name="xml_example_event_tagcount" location="${GOBO_LIBRARY}/library/xml/example/event/tagcount/system.ecf" readonly="false"/>
+		<library name="xml_example_tree_formatter" location="${GOBO_LIBRARY}/library/xml/example/tree/formatter/system.ecf" readonly="false"/>
+		<library name="xml_example_tree_namespaces" location="${GOBO_LIBRARY}/library/xml/example/tree/namespaces/system.ecf" readonly="false"/>
+		<library name="xml_test_example" location="${GOBO_LIBRARY}/library/xml/test/example/system.ecf" readonly="false"/>
+		<library name="xml_test_unit_eiffel" location="${GOBO_LIBRARY}/library/xml/test/unit/eiffel/system.ecf" readonly="false"/>
+		<library name="xml_test_unit_general" location="${GOBO_LIBRARY}/library/xml/test/unit/general/system.ecf" readonly="false"/>
+		<library name="xml_test_unit_oasis" location="${GOBO_LIBRARY}/library/xml/test/unit/oasis/system.ecf" readonly="false"/>
+		<library name="xml_test_unit_xpointer" location="${GOBO_LIBRARY}/library/xml/test/unit/xpointer/system.ecf" readonly="false"/>
+		<library name="xpath" location="${GOBO_LIBRARY}/library/xpath/library.ecf" readonly="false"/>
+		<library name="xpath_test_unit" location="${GOBO_LIBRARY}/library/xpath/test/unit/system.ecf" readonly="false"/>
+		<library name="xslt" location="${GOBO_LIBRARY}/library/xslt/library.ecf" readonly="false"/>
+		<library name="xslt_example_schematron" location="${GOBO_LIBRARY}/library/xslt/example/schematron/system.ecf" readonly="false"/>
+		<library name="xslt_example_serializer" location="${GOBO_LIBRARY}/library/xslt/example/serializer/system.ecf" readonly="false"/>
+		<library name="xslt_test_example" location="${GOBO_LIBRARY}/library/xslt/test/example/system.ecf" readonly="false"/>
+		<library name="xslt_test_unit" location="${GOBO_LIBRARY}/library/xslt/test/unit/system.ecf" readonly="false"/>
 		
 		<library name="test" location="${GOBO_LIBRARY}/library/test/library.ecf" readonly="false"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="false"/>
 		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="false"/>		
-		<library name="xml" location="${GOBO_LIBRARY}/library/xml/library.ecf" readonly="false"/>
-		<library name="xpath" location="${GOBO_LIBRARY}/library/xpath/library.ecf" readonly="false"/>
-		<library name="xslt" location="${GOBO_LIBRARY}/library/xslt/library.ecf" readonly="false"/>
 	</target>
 </system>

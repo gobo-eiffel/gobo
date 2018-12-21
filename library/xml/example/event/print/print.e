@@ -48,7 +48,6 @@ feature -- Processing
 			event_parser_not_void: event_parser /= Void
 		local
 			a_dtd_printer: XM_DTD_PRETTY_PRINT_FILTER
-			a_parser: XM_PARSER
 			l_filename: like filename
 			l_event_parser: like event_parser
 		do
