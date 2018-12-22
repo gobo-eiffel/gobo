@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="geant_tool_test" default="help">
+<project name="geant_unit_test" default="help">
 
 	<description>
-		system: "Gobo Eiffel Ant Tester"
-		copyright: "Copyright (c) 2002-2016, Sven Ehrke and others"
+		system: "Gobo Eiffel Ant Unit Tester"
+		copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -23,14 +23,14 @@
 		<description>
 			Remove other intermediary generated files.
 		</description>
-
-		<delete directory="Tgeant"/>
+		
+		<delete directory="Tgeant_unit"/>
 	</target>
 
 	<target name="init_system" export="NONE">
-		<set name="system" value="xgeant_tool"/>
+		<set name="system" value="xgeant"/>
 		<set name="tool" value="geant"/>
-		<set name="system_dir" value="${GOBO}/tool/${tool}/test/tool"/>
+		<set name="system_dir" value="${GOBO}/tool/${tool}/test/unit"/>
 	</target>
 
 </project>

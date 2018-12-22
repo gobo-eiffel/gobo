@@ -51,7 +51,7 @@ feature -- Execution
 		local
 			new_cwd: STRING
 		do
-			test_dir := Execution_environment.interpreted_string (file_system.nested_pathname ("${GOBO}", <<"tool", "geant", "test", "tool", "tmp", "test_geant">>))
+			test_dir := Execution_environment.interpreted_string (file_system.nested_pathname ("${GOBO}", <<"tool", "geant", "test", "unit", "Tgeant_unit">>))
 
 			old_cwd := file_system.current_working_directory
 			new_cwd := test_dir

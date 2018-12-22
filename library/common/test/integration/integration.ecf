@@ -106,5 +106,22 @@
 		<library name="test_example_concat2" location="${GOBO_LIBRARY}/library/test/example/concat2/system.ecf" readonly="false"/>
 		<library name="test_test_example" location="${GOBO_LIBRARY}/library/test/test/example/system.ecf" readonly="false"/>
 		<library name="test_test_unit" location="${GOBO_LIBRARY}/library/test/test/unit/system.ecf" readonly="false"/>
+		<library name="geant" location="${GOBO_LIBRARY}/tool/geant/src/system.ecf" readonly="false"/>
+		<library name="geant_test_tool" location="${GOBO_LIBRARY}/tool/geant/test/tool/system.ecf" readonly="false"/>
+		<library name="geant_test_unit" location="${GOBO_LIBRARY}/tool/geant/test/unit/system.ecf" readonly="false"/>
+		<library name="gec" location="${GOBO_LIBRARY}/tool/gec/src/system.ecf" readonly="false"/>
+		<library name="gec_test_tool" location="${GOBO_LIBRARY}/tool/gec/test/tool/system.ecf" readonly="false"/>
+		<library name="gecc" location="${GOBO_LIBRARY}/tool/gecc/src/system.ecf" readonly="false"/>
+		<library name="gecc_test_tool" location="${GOBO_LIBRARY}/tool/gecc/test/tool/system.ecf" readonly="false"/>
+		<library name="gedoc" location="${GOBO_LIBRARY}/tool/gedoc/src/system.ecf" readonly="false"/>
+		<library name="gedoc_test_tool" location="${GOBO_LIBRARY}/tool/gedoc/test/tool/system.ecf" readonly="false"/>
+		<library name="gelex" location="${GOBO_LIBRARY}/tool/gelex/src/system.ecf" readonly="false"/>
+		<library name="gelex_test_tool" location="${GOBO_LIBRARY}/tool/gelex/test/tool/system.ecf" readonly="false"/>
+		<library name="gelint" location="${GOBO_LIBRARY}/tool/gelint/src/system.ecf" readonly="false"/>
+		<library name="gelint_test_tool" location="${GOBO_LIBRARY}/tool/gelint/test/tool/system.ecf" readonly="false"/>
+		<library name="getest" location="${GOBO_LIBRARY}/tool/getest/src/system.ecf" readonly="false"/>
+		<library name="getest_test_tool" location="${GOBO_LIBRARY}/tool/getest/test/tool/system.ecf" readonly="false"/>
+		<library name="geyacc" location="${GOBO_LIBRARY}/tool/geyacc/src/system.ecf" readonly="false"/>
+		<library name="geyacc_test_tool" location="${GOBO_LIBRARY}/tool/geyacc/test/tool/system.ecf" readonly="false"/>
 	</target>
 </system>
