@@ -119,8 +119,14 @@
 		<library name="gelex_test_tool" location="${GOBO_LIBRARY}/tool/gelex/test/tool/system.ecf" readonly="false"/>
 		<library name="gelint" location="${GOBO_LIBRARY}/tool/gelint/src/system.ecf" readonly="false"/>
 		<library name="gelint_test_tool" location="${GOBO_LIBRARY}/tool/gelint/test/tool/system.ecf" readonly="false"/>
+		<library name="gepp" location="${GOBO_LIBRARY}/tool/gepp/src/system.ecf" readonly="false"/>
+		<library name="gepp_test_tool" location="${GOBO_LIBRARY}/tool/gepp/test/tool/system.ecf" readonly="false"/>
 		<library name="getest" location="${GOBO_LIBRARY}/tool/getest/src/system.ecf" readonly="false"/>
 		<library name="getest_test_tool" location="${GOBO_LIBRARY}/tool/getest/test/tool/system.ecf" readonly="false"/>
+		<library name="gexace" location="${GOBO_LIBRARY}/tool/gexace/src/system.ecf" readonly="false"/>
+		<library name="gexace_test_tool" location="${GOBO_LIBRARY}/tool/gexace/test/tool/system.ecf" readonly="false"/>
+		<library name="gexslt" location="${GOBO_LIBRARY}/tool/gexslt/src/system.ecf" readonly="false"/>
+		<library name="gexslt_test_tool" location="${GOBO_LIBRARY}/tool/gexslt/test/tool/system.ecf" readonly="false"/>
 		<library name="geyacc" location="${GOBO_LIBRARY}/tool/geyacc/src/system.ecf" readonly="false"/>
 		<library name="geyacc_test_tool" location="${GOBO_LIBRARY}/tool/geyacc/test/tool/system.ecf" readonly="false"/>
 	</target>

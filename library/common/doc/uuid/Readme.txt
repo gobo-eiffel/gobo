@@ -40,7 +40,7 @@ LLLL                TNNN
 1006 - geyacc       0001, 3001
 1007 - getest       0001, 3001
 1008 - geant        0001, 3001-3002
-1009 - gexslt
-1010 - gepp
-1011 - gexace
+1009 - gexslt       0001, 3001
+1010 - gepp         0001, 3001
+1011 - gexace       0001, 3001
 
