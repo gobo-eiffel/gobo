@@ -4,8 +4,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="test"
-	uuid="E1FFE100-60B0-0001-0019-001000000001"
-	library_target="test">
+	library_target="test"
+	uuid="E1FFE100-60B0-0019-0001-000000000001"
+>
 
 	<description>
 		description: "ECF file for the Gobo Eiffel Test Library"
@@ -33,7 +34,6 @@
 		<library name="parse_skl" location="${GOBO_LIBRARY}/library/parse/library_skl.ecf" readonly="true"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
-		<library name="thread" location="${GOBO_LIBRARY}/library/thread/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
 

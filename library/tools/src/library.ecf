@@ -4,8 +4,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="tools"
-	uuid="E1FFE100-60B0-0001-0018-001000000001"
-	library_target="tools">
+	library_target="tools"
+	uuid="E1FFE100-60B0-0018-0001-000000000001"
+>
 
 	<description>
 		description: "ECF file for the Gobo Eiffel Tools Library"

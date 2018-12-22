@@ -95,9 +95,16 @@
 		<library name="xslt_example_serializer" location="${GOBO_LIBRARY}/library/xslt/example/serializer/system.ecf" readonly="false"/>
 		<library name="xslt_test_example" location="${GOBO_LIBRARY}/library/xslt/test/example/system.ecf" readonly="false"/>
 		<library name="xslt_test_unit" location="${GOBO_LIBRARY}/library/xslt/test/unit/system.ecf" readonly="false"/>
-		
+		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="false"/>
+		<library name="tools_example_bang2create" location="${GOBO_LIBRARY}/library/tools/example/bang2create/system.ecf" readonly="false"/>
+		<library name="tools_example_pretty_printer" location="${GOBO_LIBRARY}/library/tools/example/pretty_printer/system.ecf" readonly="false"/>
+		<library name="tools_test_example" location="${GOBO_LIBRARY}/library/tools/test/example/system.ecf" readonly="false"/>
+		<library name="tools_test_unit" location="${GOBO_LIBRARY}/library/tools/test/unit/system.ecf" readonly="false"/>
 		<library name="test" location="${GOBO_LIBRARY}/library/test/library.ecf" readonly="false"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="false"/>
-		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="false"/>		
+		<library name="test_example_concat1" location="${GOBO_LIBRARY}/library/test/example/concat1/system.ecf" readonly="false"/>
+		<library name="test_example_concat2" location="${GOBO_LIBRARY}/library/test/example/concat2/system.ecf" readonly="false"/>
+		<library name="test_test_example" location="${GOBO_LIBRARY}/library/test/test/example/system.ecf" readonly="false"/>
+		<library name="test_test_unit" location="${GOBO_LIBRARY}/library/test/test/unit/system.ecf" readonly="false"/>
 	</target>
 </system>

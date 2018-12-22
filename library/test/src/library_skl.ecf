@@ -4,8 +4,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="test_skl"
-	uuid="E1FFE100-60B0-0001-0019-001000000002"
-	library_target="test_skl">
+	library_target="test_skl"
+	uuid="E1FFE100-60B0-0019-0002-000000000001"
+>
 
 	<description>
 		description: "ECF file for the Gobo Eiffel test harness"
