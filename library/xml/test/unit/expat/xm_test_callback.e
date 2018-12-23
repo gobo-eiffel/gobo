@@ -48,6 +48,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_OPERATING_SYSTEM
+	KL_SHARED_FILE_SYSTEM
 
 create
 
@@ -88,7 +89,7 @@ feature {NONE} -- Test
 				-- report version
 			assert ("Expat version", version /= Void)
 
-			create a_file.make ("test.xml")
+			create a_file.make (file_system.pathname (data_dirname, "test.xml"))
 			a_file.open_read
 			assert ("a_file_is_open_read", a_file.is_open_read)
 			parse_from_stream (a_file)
@@ -350,4 +351,16 @@ feature -- Handlers
 			Result := True
 		end
 
+feature {NONE} -- Implementation
+
+	data_dirname: STRING
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}", <<"library", "xml", "test", "unit", "expat", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
 end
