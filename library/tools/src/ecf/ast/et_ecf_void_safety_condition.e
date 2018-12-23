@@ -69,29 +69,32 @@ feature -- Status report
 	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		local
-			l_expected_value: detachable STRING
+			l_state_value: detachable STRING
 			l_ecf_version: detachable UT_VERSION
 			l_splitter: ST_SPLITTER
 			l_default_capabilities: like default_capabilities
 		do
-			l_expected_value := a_state.void_safety_mode
-			if l_expected_value = Void then
+			l_state_value := a_state.target.capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
+			if l_state_value = Void then
+				l_state_value := a_state.target.capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
+			end
+			if l_state_value = Void then
 				l_ecf_version := a_state.target.system_config.ecf_version
 				if l_ecf_version = Void then
 					l_ecf_version := {UT_SHARED_ECF_VERSIONS}.ecf_last_known
 				end
 				l_default_capabilities := default_capabilities (l_ecf_version)
-				l_expected_value := l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
-				if l_expected_value = Void then
-					l_expected_value := l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
+				l_state_value := l_default_capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
+				if l_state_value = Void then
+					l_state_value := l_default_capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
 				end
 			end
-			if l_expected_value /= Void then
+			if l_state_value /= Void then
 				if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
 					create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
-					Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive (?, l_expected_value))
+					Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive (?, l_state_value))
 				else
-					Result := STRING_.same_case_insensitive (value, l_expected_value)
+					Result := STRING_.same_case_insensitive (value, l_state_value)
 				end
 			end
 			Result := (is_excluded /= Result)

@@ -62,19 +62,21 @@ feature -- Status report
 	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		local
-			l_expected_value: STRING
+			l_finalize_mode: BOOLEAN
+			l_state_value: STRING
 			l_splitter: ST_SPLITTER
 		do
-			if a_state.finalize_mode then
-				l_expected_value := {ET_ECF_SETTING_NAMES}.finalize_setting_value
+			l_finalize_mode := attached a_state.target.settings.value ({ET_ECF_SETTING_NAMES}.finalize_setting_name) as l_finalize and then STRING_.same_case_insensitive (l_finalize, {ET_ECF_SETTING_NAMES}.true_setting_value)
+			if l_finalize_mode then
+				l_state_value := {ET_ECF_SETTING_NAMES}.finalize_setting_value
 			else
-				l_expected_value := {ET_ECF_SETTING_NAMES}.workbench_setting_value
+				l_state_value := {ET_ECF_SETTING_NAMES}.workbench_setting_value
 			end
 			if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
 				create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
-				Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive (?, l_expected_value))
+				Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive (?, l_state_value))
 			else
-				Result := STRING_.same_case_insensitive (value, l_expected_value)
+				Result := STRING_.same_case_insensitive (value, l_state_value)
 			end
 			Result := (is_excluded /= Result)
 		end

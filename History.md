@@ -26,6 +26,8 @@
 
 * Made sure that validity error `VHPR-2` (conforming inheritance from
   a frozen class) is reported correctly.
+* Do not report a syntax error for manifest characters of the form `'''`.
+  Apparently it is allowed by the ECMA standard.
 * Relaxed the validity rule where the result type of once functions cannot
   contain anchored types to just *unqualified* anchored types. This is to
   be compatible with ISE Eiffel.
@@ -46,11 +48,9 @@
   value when the `use` value was not specified.
 * Made sure that all targets in the ECF file are affected when overriding
   the setting `library_root`.
-
-### Gobo Eiffel Tools Library
-
-* Do not report a syntax error for manifest characters of the form `'''`.
-  Apparently it is allowed by the ECMA standard.
+* Fixed bug when processing ECF files where conditions were not taking into
+  account the setting and capability values of the parent target when not
+  specified in the current target.
 
 ### Gobo Eiffel XSLT Library
 

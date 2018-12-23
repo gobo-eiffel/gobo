@@ -382,34 +382,6 @@ feature -- Setting
 
 feature -- Basic operations
 
-	update_state (a_state: ET_ECF_STATE)
-			-- Update `a_state' with information found in
-			-- `parent' if any, and overridden by information
-			-- found in current target.
-		require
-			a_state_not_void: a_state /= Void
-		local
-			l_value: detachable STRING
-		do
-			if attached parent as l_parent and then attached l_parent.target as l_parent_target then
-				l_parent_target.update_state (a_state)
-			end
-			l_value := capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
-			if l_value = Void then
-				l_value := capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
-			end
-			a_state.set_concurrency_mode (l_value)
-			l_value := capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
-			if l_value = Void then
-				l_value := capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
-			end
-			a_state.set_void_safety_mode (l_value)
-			l_value := settings.value ({ET_ECF_SETTING_NAMES}.msil_generation_setting_name)
-			if l_value /= Void and then l_value.is_boolean then
-				a_state.set_dotnet (l_value.to_boolean)
-			end
-		end
-
 	fill_universe (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
 			-- Add to `a_universe' the clusters, libraries and .NET assemblies
 			-- of current target,  and recursive its parent target if any, whose

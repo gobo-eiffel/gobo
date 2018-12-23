@@ -80,8 +80,6 @@ feature {NONE} -- Element change
 						a_override_target.call ([l_target])
 					end
 					create l_state.make (l_target, ise_version)
-					l_state.set_finalize_mode (attached l_target.settings.value ({ET_ECF_SETTING_NAMES}.finalize_setting_name) as l_finalize and then STRING_.same_case_insensitive (l_finalize, {ET_ECF_SETTING_NAMES}.true_setting_value))
-					l_target.update_state (l_state)
 					select_target (l_target, l_system, l_state)
 					parse_libraries (l_system, l_state)
 					from parsed_libraries.start until parsed_libraries.after loop
