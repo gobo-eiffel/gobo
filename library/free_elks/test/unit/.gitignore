@@ -9,6 +9,7 @@ compile_*.*
 *.o
 *.obj
 *.pdb
+*.rc
 *.ilk
 *.wb
 *.log
