@@ -5,7 +5,7 @@ note
 		"Eiffel type marks (e.g. 'attached', 'detachable', 'expanded', 'reference', 'separate', '!' or '?')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,91 @@ inherit
 
 feature -- Status report
 
+	is_attachment_mark: BOOLEAN
+			-- Is current type mark an attachment mark?
+		do
+			Result := is_attached_mark or is_detachable_mark
+		ensure
+			definition: Result = (is_attached_mark or is_detachable_mark)
+		end
+
+	is_explicit_attachment_mark: BOOLEAN
+			-- Is current type mark an explicit attachment mark?
+		do
+			Result := is_attached or is_detachable or is_bang or is_question_mark
+		ensure
+			definition: Result = (is_attached or is_detachable or is_bang or is_question_mark)
+			is_attachment_mark: Result implies is_attachment_mark
+		end
+
+	is_attached_mark: BOOLEAN
+			-- Is current type mark an attached mark?
+		do
+			Result := is_attached or is_bang
+		end
+
+	is_detachable_mark: BOOLEAN
+			-- Is current type mark a detachable mark?
+		do
+			Result := is_detachable or is_question_mark
+		end
+
+	is_attached: BOOLEAN
+			-- Is current type mark the keyword 'attached'?
+		do
+			-- Result := False
+		end
+
+	is_detachable: BOOLEAN
+			-- Is current type mark the keyword 'detachable'?
+		do
+			-- Result := False
+		end
+
+	is_question_mark: BOOLEAN
+			-- Is current type mark the symbol '?'?
+		do
+			-- Result := False
+		end
+
+	is_bang: BOOLEAN
+			-- Is current type mark the symbol '!'?
+		do
+			-- Result := False
+		end
+
+	is_separateness_mark: BOOLEAN
+			-- Is current type mark a mark to indicate whether
+			-- the type should be separate or not?
+		do
+			Result := is_separate_mark
+		ensure
+			defintion: Result = is_separate_mark
+		end
+
+	is_explicit_separateness_mark: BOOLEAN
+			-- Is current type mark an explicit mark to indicate whether
+			-- the type should be separate or not?
+		do
+			Result := is_separate
+		ensure
+			defintion: Result = is_separate
+			is_separateness_mark: Result implies is_separateness_mark
+		end
+
+	is_separate_mark: BOOLEAN
+			-- Is current type mark a mark to indicate that
+			-- the type should be separate?
+		do
+			Result := is_separate
+		end
+
+	is_separate: BOOLEAN
+			-- Is current type mark the keyword 'separate'?
+		do
+			-- Result := False
+		end
+
 	is_expandedness_mark: BOOLEAN
 			-- Is current type mark a mark to indicate whether
 			-- the type should be expanded or reference?
@@ -25,6 +110,16 @@ feature -- Status report
 			Result := is_expanded_mark or is_reference_mark
 		ensure
 			defintion: Result = (is_expanded_mark or is_reference_mark)
+		end
+
+	is_explicit_expandedness_mark: BOOLEAN
+			-- Is current type mark an explicit mark to indicate whether
+			-- the type should be expanded or reference?
+		do
+			Result := is_expanded or is_reference
+		ensure
+			defintion: Result = (is_expanded or is_reference)
+			is_expandedness_mark: Result implies is_expandedness_mark
 		end
 
 	is_expanded_mark: BOOLEAN
@@ -41,86 +136,24 @@ feature -- Status report
 			Result := is_reference
 		end
 
-	is_separateness_mark: BOOLEAN
-			-- Is current type mark a mark to indicate whether
-			-- the type should be separate or not?
-		do
-			Result := is_separate_mark
-		end
-
-	is_separate_mark: BOOLEAN
-			-- Is current type mark a mark to indicate that
-			-- the type should be separate?
-		do
-			Result := is_separate
-		end
-
-	is_attachment_mark: BOOLEAN
-			-- Is current type mark an attachment mark?
-		do
-			Result := is_attached_mark or is_detachable_mark
-		ensure
-			definition: Result = (is_attached_mark or is_detachable_mark)
-		end
-
-	is_attached_mark: BOOLEAN
-			-- Is current type mark an attached mark?
-		do
-			Result := is_attached or is_bang
-		end
-
-	is_detachable_mark: BOOLEAN
-			-- Is current type mark a detachable mark?
-		do
-			Result := is_detachable or is_question_mark
-		end
-
-	is_implicit_mark: BOOLEAN
-			-- Is current type mark implicit?
-		do
-			Result := False
-		end
-
-	is_attached: BOOLEAN
-			-- Is current type mark 'attached'?
-		do
-			-- Result := False
-		end
-
-	is_detachable: BOOLEAN
-			-- Is current type mark 'detachable'?
-		do
-			-- Result := False
-		end
-
 	is_expanded: BOOLEAN
-			-- Is current type mark 'expanded'?
+			-- Is current type mark the keyword 'expanded'?
 		do
 			-- Result := False
 		end
 
 	is_reference: BOOLEAN
-			-- Is current type mark 'reference'?
+			-- Is current type mark the keyword 'reference'?
 		do
 			-- Result := False
 		end
 
-	is_separate: BOOLEAN
-			-- Is current type mark 'separate'?
+	is_implicit_mark: BOOLEAN
+			-- Is current type mark implicit (i.e. has no explicit keyword or symbol)?
 		do
-			-- Result := False
-		end
-
-	is_question_mark: BOOLEAN
-			-- Is current type mark '?'?
-		do
-			-- Result := False
-		end
-
-	is_bang: BOOLEAN
-			-- Is current type mark '!'?
-		do
-			-- Result := False
+			Result := not (is_explicit_expandedness_mark or is_explicit_separateness_mark or is_explicit_attachment_mark)
+		ensure
+			definition: Result = not (is_explicit_expandedness_mark or is_explicit_separateness_mark or is_explicit_attachment_mark)
 		end
 
 feature -- Access
@@ -202,71 +235,109 @@ feature -- Access
 			overridden_type_mark_not_void: Result /= Void
 		end
 
-	text: STRING
-			-- Textual representation of type mark
+feature -- Output
+
+	attachment_text: STRING
+			-- Textual representation of the attachment mark.
+			-- Empty if not an attachment mark.
+			-- Implicit attachment mark is enclosed between brackets
+			-- (e.g. "[attached]").
 		do
 			if is_attached_mark then
-				if is_separate_mark then
-					if is_expanded_mark then
-						Result := tokens.attached_separate_expanded_type_mark_name
-					elseif is_reference_mark then
-						Result := tokens.attached_separate_reference_type_mark_name
-					else
-						Result := tokens.attached_separate_type_mark_name
-					end
-				elseif is_expanded_mark then
-					Result := tokens.attached_expanded_type_mark_name
-				elseif is_reference_mark then
-					Result := tokens.attached_reference_type_mark_name
-				else
+				if is_explicit_attachment_mark then
 					Result := tokens.attached_keyword_name
+				else
+					Result := tokens.implicit_attached_type_mark_name
 				end
 			elseif is_detachable_mark then
-				if is_separate_mark then
-					if is_expanded_mark then
-						Result := tokens.detachable_separate_expanded_type_mark_name
-					elseif is_reference_mark then
-						Result := tokens.detachable_separate_reference_type_mark_name
-					else
-						Result := tokens.detachable_separate_type_mark_name
-					end
-				elseif is_expanded_mark then
-					Result := tokens.detachable_expanded_type_mark_name
-				elseif is_reference_mark then
-					Result := tokens.detachable_reference_type_mark_name
-				else
+				if is_explicit_attachment_mark then
 					Result := tokens.detachable_keyword_name
-				end
-			elseif is_separate_mark then
-				if is_expanded_mark then
-					Result := tokens.separate_expanded_type_mark_name
-				elseif is_reference_mark then
-					Result := tokens.separate_reference_type_mark_name
 				else
-					Result := tokens.separate_keyword_name
+					Result := tokens.implicit_detachable_type_mark_name
 				end
-			elseif is_expanded_mark then
-				Result := tokens.expanded_keyword_name
-			elseif is_reference_mark then
-				Result := tokens.reference_keyword_name
 			else
 				Result := tokens.no_type_mark_name
 			end
 		ensure
-			text_not_void: Result /= Void
-			text_not_empty: not is_implicit_mark implies Result.count > 0
+			attachment_text_not_void: Result /= Void
+			attachment_text_not_empty: is_attachment_mark = not Result.is_empty
 		end
 
-	is_type_mark: BOOLEAN
-			-- Is `Current' a type mark?
+	separateness_text: STRING
+			-- Textual representation of the separateness mark.
+			-- Empty if not a separateness mark.
+			-- Implicit separateness mark is enclosed between brackets
+			-- (e.g. "[separate]").
 		do
-			Result := is_implicit_mark or is_expandedness_mark or is_separateness_mark or is_attachment_mark
+			if is_separate_mark then
+				if is_explicit_separateness_mark then
+					Result := tokens.separate_keyword_name
+				else
+					Result := tokens.implicit_separate_type_mark_name
+				end
+			else
+				Result := tokens.no_type_mark_name
+			end
+		ensure
+			separateness_text_not_void: Result /= Void
+			separateness_text_not_empty: is_separateness_mark = not Result.is_empty
+		end
+
+	expandedness_text: STRING
+			-- Textual representation of the expandedness mark.
+			-- Empty if not an expandedness mark.
+			-- Implicit expandedness mark is enclosed between brackets
+			-- (e.g. "[expanded]").
+		do
+			if is_expanded_mark then
+				if is_explicit_expandedness_mark then
+					Result := tokens.expanded_keyword_name
+				else
+					Result := tokens.implicit_expanded_type_mark_name
+				end
+			elseif is_reference_mark then
+				if is_explicit_expandedness_mark then
+					Result := tokens.reference_keyword_name
+				else
+					Result := tokens.implicit_reference_type_mark_name
+				end
+			else
+				Result := tokens.no_type_mark_name
+			end
+		ensure
+			expandedness_text_not_void: Result /= Void
+			expandedness_text_not_empty: is_expandedness_mark = not Result.is_empty
+		end
+
+	append_to_string_with_space (a_string: STRING)
+			-- Append textual representation of
+			-- current type mark to `a_string',
+			-- followed by a space.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			l_mark_text: STRING
+		do
+			l_mark_text := attachment_text
+			if not l_mark_text.is_empty then
+				a_string.append_string (l_mark_text)
+				a_string.append_character (' ')
+			end
+			l_mark_text := separateness_text
+			if not l_mark_text.is_empty then
+				a_string.append_string (l_mark_text)
+				a_string.append_character (' ')
+			end
+			l_mark_text := expandedness_text
+			if not l_mark_text.is_empty then
+				a_string.append_string (l_mark_text)
+				a_string.append_character (' ')
+			end
 		end
 
 invariant
 
 	expandedness_consistency: not (is_expanded_mark and is_reference_mark)
 	attachment_consistency: not (is_attached_mark and is_detachable_mark)
-	explicit_consistency: is_type_mark implies (not is_implicit_mark implies (is_expandedness_mark or is_separateness_mark or is_attachment_mark))
 
 end

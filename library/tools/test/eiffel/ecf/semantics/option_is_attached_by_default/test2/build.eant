@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<project name="option_is_attached_by_default_test2" default="help">
+
+	<description>
+		description: "Eiffel Ant file for 'option_is_attached_by_default_test2'"
+		copyright: "Copyright (c) 2018, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="aa"/>
+		<set name="system_dir" value="${GOBO}/library/tools/test/eiffel/ecf/semantics/option_is_attached_by_default/test2"/>
+	</target>
+
+</project>

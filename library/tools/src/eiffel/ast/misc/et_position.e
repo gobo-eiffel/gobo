@@ -5,7 +5,7 @@ note
 		"Positions in Eiffel texts"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@ deferred class ET_POSITION
 inherit
 
 	ANY
-	
+
 	KL_IMPORTED_INTEGER_ROUTINES
 
 feature -- Access
@@ -91,7 +91,7 @@ feature -- Output
 		end
 
 	append_to_string_with_filename (a_filename: STRING; a_string: STRING)
-			-- Append `to_text' to `a_string'.
+			-- Append `to_text' (with `a_filename') to `a_string'.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_string_not_void: a_string /= Void

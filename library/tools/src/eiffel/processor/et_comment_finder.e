@@ -36,8 +36,7 @@ inherit
 			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
-			process_attachment_separate_keywords,
-			process_attachment_symbol_separate_keyword,
+			process_attachment_mark_separate_keyword,
 			process_attribute,
 			process_bang_instruction,
 			process_binary_integer_constant,
@@ -442,15 +441,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
-			-- Process `a_keywords'.
-		do
-			if not excluded_nodes.has (a_keywords) then
-				precursor (a_keywords)
-			end
-		end
-
-	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
+	process_attachment_mark_separate_keyword (a_keywords: ET_ATTACHMENT_MARK_SEPARATE_KEYWORD)
 			-- Process `a_keywords'.
 		do
 			if not excluded_nodes.has (a_keywords) then

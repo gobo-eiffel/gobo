@@ -3750,7 +3750,7 @@ feature -- Types
 			like_0_not_void: Result /= Void
 		end
 
-	attached_separate_type_mark: ET_ATTACHMENT_SEPARATE_KEYWORDS
+	attached_separate_type_mark: ET_ATTACHMENT_MARK_SEPARATE_KEYWORD
 			-- 'attached separate' type mark
 		once ("PROCESS")
 			create Result.make (attached_keyword, separate_keyword)
@@ -3759,7 +3759,7 @@ feature -- Types
 			attached_separate_type_mark_not_void: Result /= Void
 		end
 
-	detachable_separate_type_mark: ET_ATTACHMENT_SEPARATE_KEYWORDS
+	detachable_separate_type_mark: ET_ATTACHMENT_MARK_SEPARATE_KEYWORD
 			-- 'detachable separate' type mark
 		once ("PROCESS")
 			create Result.make (detachable_keyword, separate_keyword)
@@ -5922,18 +5922,11 @@ feature -- Keyword and symbol names
 	xor_keyword_name: STRING = "xor"
 			-- Eiffel keyword names
 
-	attached_expanded_type_mark_name: STRING = "attached expanded"
-	attached_reference_type_mark_name: STRING = "attached reference"
-	attached_separate_type_mark_name: STRING = "attached separate"
-	attached_separate_expanded_type_mark_name: STRING = "attached separate expanded"
-	attached_separate_reference_type_mark_name: STRING = "attached separate reference"
-	detachable_expanded_type_mark_name: STRING = "detachable expanded"
-	detachable_reference_type_mark_name: STRING = "detachable reference"
-	detachable_separate_type_mark_name: STRING = "detachable separate"
-	detachable_separate_expanded_type_mark_name: STRING = "detachable separate expanded"
-	detachable_separate_reference_type_mark_name: STRING = "detachable separate reference"
-	separate_expanded_type_mark_name: STRING = "separate expanded"
-	separate_reference_type_mark_name: STRING = "separate reference"
+	implicit_attached_type_mark_name: STRING = "[attached]"
+	implicit_detachable_type_mark_name: STRING = "[detachable]"
+	implicit_expanded_type_mark_name: STRING = "[expanded]"
+	implicit_reference_type_mark_name: STRING = "[reference]"
+	implicit_separate_type_mark_name: STRING = "[separate]"
 	no_type_mark_name: STRING = ""
 			-- Type mark names
 

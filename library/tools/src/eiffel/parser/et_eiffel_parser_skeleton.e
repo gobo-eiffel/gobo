@@ -1012,12 +1012,14 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				l_type_mark := a_type_mark
 				if l_type_mark = Void then
 					l_type_mark := current_universe.implicit_attachment_type_mark
+				elseif attached {ET_KEYWORD} l_type_mark as l_keyword and then l_keyword.is_separate then
+					l_type_mark := ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, l_keyword)
 				end
 				if a_base_class.name.same_class_name (tokens.tuple_class_name) then
-					if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
+					if a_type_mark /= Void and then a_type_mark.is_expandedness_mark then
 							-- A TUPLE type is not a class type. It cannot
 							-- be prefixed by 'expanded' or 'reference'.
-							-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
+							-- But it can be prefixed by 'attached', 'detachable', '!', '?' or 'separate'.
 						report_syntax_error (a_type_mark.position)
 						Result := ast_factory.new_tuple_type (Void, a_name, Void, a_base_class)
 					else
@@ -1072,12 +1074,14 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					l_type_mark := a_type_mark
 					if l_type_mark = Void then
 						l_type_mark := current_universe.implicit_attachment_type_mark
+					elseif attached {ET_KEYWORD} l_type_mark as l_keyword and then l_keyword.is_separate then
+						l_type_mark := ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, l_keyword)
 					end
 					if a_base_class.name.same_class_name (tokens.tuple_class_name) then
-						if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
+						if a_type_mark /= Void and then a_type_mark.is_expandedness_mark then
 								-- A TUPLE type is not a class type. It cannot
 								-- be prefixed by 'expanded' or 'reference'.
-								-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
+								-- But it can be prefixed by 'attached', 'detachable', '!', '?' or separate.
 							report_syntax_error (a_type_mark.position)
 							Result := ast_factory.new_tuple_type (Void, a_name, a_parameters, a_base_class)
 						else
@@ -1770,6 +1774,8 @@ feature {NONE} -- AST factory
 					l_type_mark := a_type_mark
 					if l_type_mark = Void then
 						l_type_mark := current_universe.implicit_attachment_type_mark
+					elseif attached {ET_KEYWORD} l_type_mark as l_keyword and then l_keyword.is_separate then
+						l_type_mark := ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, l_keyword)
 					end
 					if a_generics /= Void then
 						Result := ast_factory.new_generic_class_type (l_type_mark, a_name, a_generics, l_class)
@@ -1992,6 +1998,8 @@ feature {NONE} -- AST factory
 				l_type_mark := a_type_mark
 				if l_type_mark = Void then
 					l_type_mark := current_universe.implicit_attachment_type_mark
+				elseif attached {ET_KEYWORD} l_type_mark as l_keyword and then l_keyword.is_separate then
+					l_type_mark := ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, l_keyword)
 				end
 				Result := ast_factory.new_tuple_type (l_type_mark, a_tuple, a_generics, a_class)
 			end

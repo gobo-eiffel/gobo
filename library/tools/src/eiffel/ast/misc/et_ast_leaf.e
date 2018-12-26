@@ -5,7 +5,7 @@ note
 		"Eiffel AST leaf nodes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,10 @@ inherit
 		rename
 			make as make_with_position,
 			make_default as make,
-			is_null as is_null_position
+			is_null as is_null_position,
+			to_text as position_to_text,
+			append_to_string as append_position_to_string,
+			append_to_string_with_filename as append_position_to_string_with_filename
 		end
 
 feature -- Status report

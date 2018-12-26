@@ -235,17 +235,10 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
+	process_attachment_mark_separate_keyword (a_keywords: ET_ATTACHMENT_MARK_SEPARATE_KEYWORD)
 			-- Process `a_keywords'.
 		do
-			a_keywords.attachment_keyword.process (Current)
-			a_keywords.separateness_keyword.process (Current)
-		end
-
-	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
-			-- Process `a_keywords'.
-		do
-			a_keywords.attachment_symbol.process (Current)
+			a_keywords.attachment_mark.process (Current)
 			a_keywords.separateness_keyword.process (Current)
 		end
 

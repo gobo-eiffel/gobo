@@ -718,19 +718,19 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 	| E_ATTACHED Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' E_SEPARATE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '?' E_SEPARATE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_TUPLE Constraint_tuple_actual_parameters_opt
@@ -740,19 +740,19 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 	| E_ATTACHED E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '?' E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Constraint_type_no_identifier: Class_name Constraint_actual_parameters
@@ -766,19 +766,19 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 	| E_ATTACHED Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' E_SEPARATE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '?' E_SEPARATE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_TUPLE Constraint_tuple_actual_parameters
@@ -788,19 +788,19 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 	| E_ATTACHED E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '?' E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
-		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_constraint_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Constraint_actual_parameters_opt: -- Empty
@@ -2551,19 +2551,19 @@ Type_no_class_name: Class_name Actual_parameters
 	| E_ATTACHED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| '!' E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| '?' E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_TUPLE Tuple_actual_parameters_opt
@@ -2573,19 +2573,19 @@ Type_no_class_name: Class_name Actual_parameters
 	| E_ATTACHED E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| '!' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| '?' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Type_no_identifier: Class_name Actual_parameters
@@ -2599,19 +2599,19 @@ Type_no_identifier: Class_name Actual_parameters
 	| E_ATTACHED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| '!' E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| '?' E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_TUPLE Tuple_actual_parameters
@@ -2621,19 +2621,19 @@ Type_no_identifier: Class_name Actual_parameters
 	| E_ATTACHED E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| '!' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| '?' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Type_no_bang_identifier: Class_name
@@ -2649,19 +2649,19 @@ Type_no_bang_identifier: Class_name
 	| E_ATTACHED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' Class_name Actual_parameters
 		{ $$ := new_named_type ($1, $2, $3) }
 	| '!' E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| '?' E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_named_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_TUPLE Tuple_actual_parameters_opt
@@ -2671,19 +2671,19 @@ Type_no_bang_identifier: Class_name
 	| E_ATTACHED E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' E_TUPLE Tuple_actual_parameters
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| '!' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2, $3) }
 	| '?' E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_tuple_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	;
 
 Class_name: E_IDENTIFIER
@@ -2870,39 +2870,39 @@ Anchored_type: E_LIKE Identifier
 	| E_ATTACHED E_LIKE Identifier
 		{ $$ := new_like_feature ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE E_LIKE Identifier
-		{ $$ := new_like_feature (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_like_feature (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE E_LIKE Identifier
 		{ $$ := new_like_feature ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE E_LIKE Identifier
-		{ $$ := new_like_feature (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_like_feature (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' E_LIKE Identifier
 		{ $$ := new_like_feature ($1, $2, $3) }
 	| '!' E_SEPARATE E_LIKE Identifier
-		{ $$ := new_like_feature (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_like_feature (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_LIKE Identifier
 		{ $$ := new_like_feature ($1, $2, $3) }
 	| '?' E_SEPARATE E_LIKE Identifier
-		{ $$ := new_like_feature (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_like_feature (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current (current_universe.implicit_attachment_type_mark, $1, $2) }
 	| E_SEPARATE E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, $1), $2, $3) }
 	| E_ATTACHED E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_DETACHABLE E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '!' E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
 	| '!' E_SEPARATE E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
 	| '?' E_SEPARATE E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| Qualified_anchored_type
 		{ $$ := $1 }
 	;
@@ -2920,11 +2920,11 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 	| E_ATTACHED E_LIKE '{' Type '}' '.' Identifier
 		{$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))}
 	| E_ATTACHED E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
-		{$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))}
+		{$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))}
 	| E_DETACHABLE E_LIKE '{' Type '}' '.' Identifier
 		{$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))}
 	| E_DETACHABLE E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
-		{$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))}
+		{$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))}
 	| '!' E_LIKE '{' Type '}' '.' Identifier
 		{
 			if system_processor.older_ise_version (ise_6_1_0) then
@@ -2938,7 +2938,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
 			end
 		}
 	| '?' E_LIKE '{' Type '}' '.' Identifier
@@ -2954,7 +2954,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
 			end
 		}
 	| E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
@@ -2962,19 +2962,19 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 	| E_ATTACHED Anchored_type_with_no_type_mark '.' Identifier
 		{$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))}
 	| E_ATTACHED E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
-		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, new_dot_feature_name ($4, $5))}
+		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))}
 	| E_DETACHABLE Anchored_type_with_no_type_mark '.' Identifier
 		{$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))}
 	| E_DETACHABLE E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
-		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, new_dot_feature_name ($4, $5))}
+		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))}
 	| '!' Anchored_type_with_no_type_mark '.' Identifier
 		{$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))}
 	| '!' E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
-		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))}
+		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))}
 	| '?' Anchored_type_with_no_type_mark '.' Identifier
 		{$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))}
 	| '?' E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
-		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))}
+		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))}
 	;
 	
 ------------------------------------------------------------------------------------

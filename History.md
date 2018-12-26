@@ -51,6 +51,12 @@
 * Fixed bug when processing ECF files where conditions were not taking into
   account the setting and capability values of the parent target when not
   specified in the current target.
+* Fixed bug where `separate T` was considered `attached` even with the
+  option `is_attached_by_default="false"` in the ECF file.
+
+### Gobo Eiffel XPath Library
+
+* Made unit tests compilable in void-safe mode.
 
 ### Gobo Eiffel XSLT Library
 

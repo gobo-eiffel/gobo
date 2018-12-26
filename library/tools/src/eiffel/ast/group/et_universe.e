@@ -76,6 +76,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize universe.
 		do
+			implicit_attachment_type_mark := tokens.implicit_attached_type_mark
 			create master_classes.make_map (3000)
 			master_classes.set_key_equality_tester (class_name_tester)
 			create master_class_mutex.make
@@ -1944,7 +1945,7 @@ feature -- Class mapping
 
 feature -- Compilation options
 
-	implicit_attachment_type_mark: detachable ET_TYPE_MARK
+	implicit_attachment_type_mark: ET_TYPE_MARK
 			-- Implicit attachment type mark when a type in a class of the
 			-- current universe is declared with no explicit attachment type mark
 
@@ -1957,6 +1958,8 @@ feature -- Compilation options setting
 
 	set_implicit_attachment_type_mark (a_type_mark: like implicit_attachment_type_mark)
 			-- Set `implicit_attachment_type_mark' to `a_type_mark'.
+		require
+			a_type_mark_not_void: a_type_mark /= Void
 		do
 			implicit_attachment_type_mark := a_type_mark
 		ensure
@@ -2765,6 +2768,7 @@ invariant
 	universe_is_current: universe = Current
 	master_classes_not_void: master_classes /= Void
 	no_void_master_class: not master_classes.has_void_item
+	implicit_attachment_type_mark_not_void: implicit_attachment_type_mark /= Void
 		-- Kernel types.
 	any_type_not_void: any_type /= Void
 	detachable_any_type_not_void: detachable_any_type /= Void

@@ -31,8 +31,7 @@ inherit
 			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
-			process_attachment_separate_keywords,
-			process_attachment_symbol_separate_keyword,
+			process_attachment_mark_separate_keyword,
 			process_attribute,
 			process_bang_instruction,
 			process_binary_integer_constant,
@@ -646,19 +645,16 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.source.process (Current)
 		end
 
-	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
+	process_attachment_mark_separate_keyword (a_keywords: ET_ATTACHMENT_MARK_SEPARATE_KEYWORD)
 			-- Process `a_keywords'.
+		local
+			l_attachment_mark: ET_TYPE_MARK
 		do
-			a_keywords.attachment_keyword.process (Current)
-			print_space
-			a_keywords.separateness_keyword.process (Current)
-		end
-
-	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
-			-- Process `a_keywords'.
-		do
-			a_keywords.attachment_symbol.process (Current)
-			print_space
+			l_attachment_mark := a_keywords.attachment_mark
+			if not l_attachment_mark.is_implicit_mark then
+				l_attachment_mark.process (Current)
+				print_space
+			end
 			a_keywords.separateness_keyword.process (Current)
 		end
 
@@ -1064,7 +1060,7 @@ feature {ET_AST_NODE} -- Processing
 						--
 						-- even if this is not syntactically correct since the end
 						-- of the class is missing.
-					tokens.semicolon_symbol.process (Current)				
+					tokens.semicolon_symbol.process (Current)
 				end
 				l_indexing.process (Current)
 				process_comments
@@ -1087,8 +1083,8 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		do
 			if attached a_type.type_mark as l_type_mark then
-				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
+					l_type_mark.process (Current)
 					print_space
 				end
 			end
@@ -3095,8 +3091,8 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		do
 			if attached a_type.type_mark as l_type_mark then
-				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
+					l_type_mark.process (Current)
 					print_space
 				end
 			end
@@ -3541,8 +3537,8 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		do
 			if attached a_type.type_mark as l_type_mark then
-				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
+					l_type_mark.process (Current)
 					print_space
 				end
 			end
@@ -3555,8 +3551,8 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		do
 			if attached a_type.type_mark as l_type_mark then
-				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
+					l_type_mark.process (Current)
 					print_space
 				end
 			end
@@ -4666,8 +4662,8 @@ feature {ET_AST_NODE} -- Processing
 			l_feature_name: ET_FEATURE_NAME
 		do
 			if attached a_type.type_mark as l_type_mark then
-				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
+					l_type_mark.process (Current)
 					print_space
 				end
 			end
@@ -4696,8 +4692,8 @@ feature {ET_AST_NODE} -- Processing
 			l_feature_name: ET_FEATURE_NAME
 		do
 			if attached a_type.type_mark as l_type_mark then
-				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
+					l_type_mark.process (Current)
 					print_space
 				end
 			end
@@ -5047,8 +5043,8 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		do
 			if attached a_type.type_mark as l_type_mark then
-				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
+					l_type_mark.process (Current)
 					print_space
 				end
 			end

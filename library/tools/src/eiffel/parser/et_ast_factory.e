@@ -1550,21 +1550,13 @@ feature -- AST nodes
 			end
 		end
 
-	new_attachment_separate_keywords (a_attachment_keyword: detachable ET_KEYWORD;
-		a_separateness_keyword: detachable ET_KEYWORD): detachable ET_ATTACHMENT_SEPARATE_KEYWORDS
-			-- New attachment keyword ('attached' or 'detachable') followed by the keyword 'separate'
+	new_attachment_mark_separate_keyword (a_attachment_mark: detachable ET_TYPE_MARK;
+		a_separateness_keyword: detachable ET_KEYWORD): detachable ET_ATTACHMENT_MARK_SEPARATE_KEYWORD
+			-- New attachment mark ('attached', 'detachable', '!' or '?',
+			-- possibly implicit) followed by the keyword 'separate'
 		do
-			if a_attachment_keyword /= Void and a_separateness_keyword /= Void then
-				create Result.make (a_attachment_keyword, a_separateness_keyword)
-			end
-		end
-
-	new_attachment_symbol_separate_keyword (a_attachment_symbol: detachable ET_SYMBOL;
-		a_separateness_keyword: detachable ET_KEYWORD): detachable ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD
-			-- New attachment symbol ('!' or '?') followed by the keyword 'separate'
-		do
-			if a_attachment_symbol /= Void and a_separateness_keyword /= Void then
-				create Result.make (a_attachment_symbol, a_separateness_keyword)
+			if a_attachment_mark /= Void and a_separateness_keyword /= Void then
+				create Result.make (a_attachment_mark, a_separateness_keyword)
 			end
 		end
 
