@@ -1017,8 +1017,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				end
 				if a_base_class.name.same_class_name (tokens.tuple_class_name) then
 					if a_type_mark /= Void and then a_type_mark.is_expandedness_mark then
-							-- A TUPLE type is not a class type. It cannot
-							-- be prefixed by 'expanded' or 'reference'.
+							-- A TUPLE type is not a class type. It cannot be prefixed by 'expanded'.
 							-- But it can be prefixed by 'attached', 'detachable', '!', '?' or 'separate'.
 						report_syntax_error (a_type_mark.position)
 						Result := ast_factory.new_tuple_type (Void, a_name, Void, a_base_class)
@@ -1055,9 +1054,8 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formal := a_formals.formal_parameter_by_name (a_name)
 			if a_formal /= Void then
 				if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
-						-- A formal parameter type is not a class type.
-						-- It cannot be prefixed by 'expanded' or 'reference'.
-						-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
+						-- A TUPLE type is not a class type. It cannot be prefixed by 'expanded'.
+						-- But it can be prefixed by 'attached', 'detachable', '!', '?' or 'separate'.
 					report_syntax_error (a_type_mark.position)
 				end
 					-- A formal parameter cannot have actual generic parameters.

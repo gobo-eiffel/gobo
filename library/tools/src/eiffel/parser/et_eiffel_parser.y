@@ -713,8 +713,6 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_SEPARATE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
-	| E_REFERENCE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE Class_name Constraint_actual_parameters_opt
@@ -760,8 +758,6 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 	| E_EXPANDED Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_SEPARATE Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type ($1, $2, $3) }
-	| E_REFERENCE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
@@ -2546,8 +2542,6 @@ Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_SEPARATE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
-	| E_REFERENCE Class_name Actual_parameters_opt
-		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE Class_name Actual_parameters_opt
@@ -2593,8 +2587,6 @@ Type_no_identifier: Class_name Actual_parameters
 	| E_EXPANDED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type ($1, $2, $3) }
-	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
@@ -2643,8 +2635,6 @@ Type_no_bang_identifier: Class_name
 	| E_EXPANDED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_SEPARATE Class_name Actual_parameters_opt
-		{ $$ := new_named_type ($1, $2, $3) }
-	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_ATTACHED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }

@@ -56,6 +56,9 @@
 * Interoperability with ISE Eiffel: let `like Current` be attached in
   void-safe mode even with the option `is_attached_by_default="false"`
   in the ECF file.
+* Interoperability with ISE Eiffel: do not accept `reference` before 
+  class types anymore (e.g. `reference INTEGER`), only before the
+  declaration of a formal generic parameter (e.g. `class C [reference G]`).
 
 ### Gobo Eiffel XPath Library
 
