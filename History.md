@@ -53,6 +53,9 @@
   specified in the current target.
 * Fixed bug where `separate T` was considered `attached` even with the
   option `is_attached_by_default="false"` in the ECF file.
+* Interoperability with ISE Eiffel: let `like Current` be attached in
+  void-safe mode even with the option `is_attached_by_default="false"`
+  in the ECF file.
 
 ### Gobo Eiffel XPath Library
 

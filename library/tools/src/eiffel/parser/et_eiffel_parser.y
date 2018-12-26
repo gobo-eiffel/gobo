@@ -2858,7 +2858,7 @@ Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type ';'
 Anchored_type_with_no_type_mark: E_LIKE Identifier
 		{ $$ := new_like_feature (Void, $1, $2) }
 	| E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current (current_universe.implicit_attachment_type_mark, $1, $2) }
+		{ $$ := ast_factory.new_like_current (tokens.implicit_attached_type_mark, $1, $2) }
 	| Qualified_anchored_type_with_no_type_mark
 		{ $$ := $1 }
 	;
@@ -2884,9 +2884,9 @@ Anchored_type: E_LIKE Identifier
 	| '?' E_SEPARATE E_LIKE Identifier
 		{ $$ := new_like_feature (ast_factory.new_attachment_mark_separate_keyword ($1, $2), $3, $4) }
 	| E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current (current_universe.implicit_attachment_type_mark, $1, $2) }
+		{ $$ := ast_factory.new_like_current (tokens.implicit_attached_type_mark, $1, $2) }
 	| E_SEPARATE E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, $1), $2, $3) }
+		{ $$ := ast_factory.new_like_current (ast_factory.new_attachment_mark_separate_keyword (tokens.implicit_attached_type_mark, $1), $2, $3) }
 	| E_ATTACHED E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE E_LIKE E_CURRENT
