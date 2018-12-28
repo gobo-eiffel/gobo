@@ -3706,7 +3706,8 @@ feature -- Feature names
 feature -- Types
 
 	like_current: ET_LIKE_CURRENT
-			-- Type 'like Current' with implicit 'attached' type mark
+			-- Type '[attached] like Current',
+			-- where '[attached]' is an implicit type mark
 		once ("PROCESS")
 			create Result.make (implicit_attached_type_mark)
 		ensure

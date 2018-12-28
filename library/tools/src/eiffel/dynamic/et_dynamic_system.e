@@ -372,14 +372,14 @@ feature -- Types
 			-- Create a new one if it does not exist yet
 			--
 			-- If `a_type' represents the Eiffel type 'T', then
-			-- the meta type will represent the Eiffel type 'detachable TYPE [T]'.
+			-- the meta type will represent the Eiffel type '[detachable] TYPE [T]'.
 		require
 			a_type_not_void: a_type /= Void
 		do
 			if attached a_type.meta_type as l_meta_type then
 				Result := l_meta_type
 			else
-				Result := dynamic_primary_type (current_system.type_like_current_type, a_type.base_type)
+				Result := dynamic_primary_type (current_system.type_identity_type, a_type.base_type)
 				a_type.set_meta_type (Result)
 			end
 		ensure
@@ -1669,7 +1669,7 @@ feature {NONE} -- Compilation
 				end
 					-- Class "TYPED_POINTER".
 				typed_pointer_to_pointer_feature := Void
-				l_class := current_system.typed_pointer_any_type.base_class
+				l_class := current_system.typed_pointer_identity_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
@@ -1714,7 +1714,7 @@ feature {NONE} -- Compilation
 				routine_closed_operands_feature := Void
 				routine_rout_disp_feature := Void
 				routine_set_rout_disp_final_feature := Void
-				l_class := current_system.routine_type.base_class
+				l_class := current_system.routine_identity_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)

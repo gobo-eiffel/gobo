@@ -59,6 +59,8 @@
 * Interoperability with ISE Eiffel: do not accept `reference` before 
   class types anymore (e.g. `reference INTEGER`), only before the
   declaration of a formal generic parameter (e.g. `class C [reference G]`).
+* Improved the way some kernel types and their implicit attachment mark
+  are processed in void-safe mode.
 
 ### Gobo Eiffel XPath Library
 

@@ -5295,7 +5295,7 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			l_expression_context := new_context (current_type)
 			l_iterable_expression := a_across_component.iterable_expression
-			l_iterable_type := current_universe_impl.iterable_detachable_any_type
+			l_iterable_type := current_universe_impl.iterable_detachable_separate_any_type
 			check_expression_validity (l_iterable_expression, l_expression_context, l_iterable_type)
 			if has_fatal_error then
 				l_had_error := True
@@ -6068,7 +6068,9 @@ feature {NONE} -- Expression validity
 				set_fatal_error
 				error_handler.report_vucr0f_error (current_class, current_class_impl, an_expression)
 			else
-				a_context.force_last (tokens.attached_like_current)
+				if not a_context.is_type_attached then
+					a_context.force_last (tokens.attached_like_current)
+				end
 				report_current (an_expression)
 			end
 		end
@@ -6092,11 +6094,14 @@ feature {NONE} -- Expression validity
 				set_fatal_error
 				error_handler.report_vucr0g_error (current_class, current_class_impl, an_expression)
 			else
-				l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+				l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 				l_typed_pointer_class := l_typed_pointer_type.named_base_class
 				if l_typed_pointer_class.actual_class.is_preparsed then
 						-- Class TYPED_POINTER has been found in the universe.
 						-- Use ISE's implementation: the type of '$Current' is 'TYPED_POINTER [like Current]'.
+					if not a_context.is_type_attached then
+						a_context.force_last (tokens.attached_like_current)
+					end
 					report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 					a_context.force_last (l_typed_pointer_type)
 						-- Need current type to create an object of type 'TYPED_POINTER [<current_type>]'.
@@ -6208,7 +6213,7 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			l_detachable_any_type := current_system.detachable_any_type
-			l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+			l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 			l_typed_pointer_class := l_typed_pointer_type.named_base_class
 			if l_typed_pointer_class.actual_class.is_preparsed then
 					-- Class TYPED_POINTER has been found in the universe.
@@ -6219,7 +6224,7 @@ feature {NONE} -- Expression validity
 					a_context.force_last (l_typed_pointer_type)
 						-- It might occur that the current type is needed to create
 						-- an object of type 'TYPED_POINTER [<type-of-expr>]'.
--- TODO: try to find out whether <type-of_expr> depends on the type of current.
+-- TODO: try to find out whether <type-of-expr> depends on the type of current.
 					report_current_type_needed
 				end
 			else
@@ -6332,7 +6337,7 @@ feature {NONE} -- Expression validity
 								report_object_test_local (l_identifier, l_object_test)
 								l_seed := l_object_test.name.seed
 								l_identifier.set_seed (l_seed)
-								l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 								l_typed_pointer_class := l_typed_pointer_type.named_base_class
 								if l_typed_pointer_class.actual_class.is_preparsed then
 										-- Class TYPED_POINTER has been found in the universe.
@@ -6393,7 +6398,7 @@ feature {NONE} -- Expression validity
 								report_across_cursor (l_identifier, l_across_component)
 								l_seed := l_across_component.cursor_name.seed
 								l_identifier.set_seed (l_seed)
-								l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 								l_typed_pointer_class := l_typed_pointer_type.named_base_class
 								if l_typed_pointer_class.actual_class.is_preparsed then
 										-- Class TYPED_POINTER has been found in the universe.
@@ -6455,7 +6460,7 @@ feature {NONE} -- Expression validity
 											error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
 										else
 											report_attribute_address (an_expression, l_query)
-											l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+											l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 											l_typed_pointer_class := l_typed_pointer_type.named_base_class
 											if l_typed_pointer_class.actual_class.is_preparsed then
 													-- Class TYPED_POINTER has been found in the universe.
@@ -6548,7 +6553,7 @@ feature {NONE} -- Expression validity
 							l_argument := l_arguments.formal_argument (l_seed)
 							l_identifier := l_name.argument_name.identifier
 							report_formal_argument (l_identifier, l_argument)
-							l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 							l_typed_pointer_class := l_typed_pointer_type.named_base_class
 							if l_typed_pointer_class.actual_class.is_preparsed then
 									-- Class TYPED_POINTER has been found in the universe.
@@ -6612,7 +6617,7 @@ feature {NONE} -- Expression validity
 							l_local := l_locals.local_variable (l_seed)
 							l_identifier := l_name.local_name.identifier
 							report_local_variable (l_identifier, l_local)
-							l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 							l_typed_pointer_class := l_typed_pointer_type.named_base_class
 							if l_typed_pointer_class.actual_class.is_preparsed then
 									-- Class TYPED_POINTER has been found in the universe.
@@ -6649,7 +6654,7 @@ feature {NONE} -- Expression validity
 						l_object_test := l_object_tests.object_test (l_seed)
 						l_identifier := l_name.object_test_local_name.identifier
 						report_object_test_local (l_identifier, l_object_test)
-						l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 						l_typed_pointer_class := l_typed_pointer_type.named_base_class
 						if l_typed_pointer_class.actual_class.is_preparsed then
 								-- Class TYPED_POINTER has been found in the universe.
@@ -6696,7 +6701,7 @@ feature {NONE} -- Expression validity
 						l_across_component := l_across_components.across_component (l_seed)
 						l_identifier := l_name.across_cursor_name
 						report_across_cursor (l_identifier, l_across_component)
-						l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 						l_typed_pointer_class := l_typed_pointer_type.named_base_class
 						if l_typed_pointer_class.actual_class.is_preparsed then
 								-- Class TYPED_POINTER has been found in the universe.
@@ -6749,7 +6754,7 @@ feature {NONE} -- Expression validity
 										error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
 									else
 										report_attribute_address (an_expression, l_query)
-										l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+										l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 										l_typed_pointer_class := l_typed_pointer_type.named_base_class
 										if l_typed_pointer_class.actual_class.is_preparsed then
 												-- Class TYPED_POINTER has been found in the universe.
@@ -8027,7 +8032,7 @@ feature {NONE} -- Expression validity
 						-- Its type is 'ARRAY [NONE]'.
 					a_context.force_last (current_system.none_type)
 				end
-				l_array_type := current_system.array_like_current_type
+				l_array_type := current_system.array_identity_type
 				report_manifest_array (a_expression, l_array_type, a_context)
 				a_context.force_last (l_array_type)
 			else
@@ -8122,7 +8127,7 @@ feature {NONE} -- Expression validity
 						update_common_ancestor_type_list (l_item_context, l_result_context_list, l_old_result_context_list_count)
 						a_context.copy_type_context (l_result_context_list.last)
 					end
-					l_array_type := current_system.array_like_current_type
+					l_array_type := current_system.array_identity_type
 					report_manifest_array (a_expression, l_array_type, a_context)
 					a_context.force_last (l_array_type)
 				end
@@ -8257,7 +8262,7 @@ feature {NONE} -- Expression validity
 					check_expression_validity (an_expression.expression (1), a_context, l_detachable_any_type)
 				end
 				if not has_fatal_error then
-					l_tuple_type := current_universe_impl.tuple_like_current_type
+					l_tuple_type := current_universe_impl.tuple_identity_type
 					report_manifest_tuple (an_expression, l_tuple_type, a_context)
 					a_context.force_last (l_tuple_type)
 				end
@@ -8324,8 +8329,6 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			l_type := an_expression.type
--- TODO: I think that the formal generic parameters of `l_type' need to
--- be resolved in the context of `current_type'.
 			check_type_validity (l_type)
 			if not has_fatal_error then
 				if not l_type.is_base_type then
@@ -8335,7 +8338,7 @@ feature {NONE} -- Expression validity
 					report_current_type_needed
 				end
 				a_context.force_last (l_type)
-				l_type_type := current_universe_impl.type_like_current_type
+				l_type_type := current_universe_impl.type_identity_type
 				report_manifest_type (an_expression, l_type_type, a_context)
 				a_context.force_last (l_type_type)
 			end
@@ -9625,7 +9628,7 @@ feature {NONE} -- Expression validity
 						end
 					end
 				else
-					l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+					l_typed_pointer_type := current_universe_impl.typed_pointer_Identity_type
 					l_typed_pointer_class := l_typed_pointer_type.named_base_class
 					if l_typed_pointer_class.actual_class.is_preparsed then
 							-- Class TYPED_POINTER has been found in the universe.
@@ -11486,24 +11489,21 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_query, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				if an_open_operands = Void or else an_open_operands.is_empty then
+					a_tuple_type := current_universe_impl.tuple_type
+				else
+					create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				end
 				a_type := a_query.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
 					a_context.force_last (a_tuple_type)
-					an_agent_type := current_universe_impl.predicate_like_current_type
+					an_agent_type := current_universe_impl.predicate_identity_type
 				else
-					an_agent_class := current_universe_impl.function_type.named_base_class
-					if current_universe_impl.function_type.actual_parameter_count = 3 then
-						create a_parameters.make_with_capacity (3)
-						a_parameters.put_first (a_type)
-						a_parameters.put_first (a_tuple_type)
-						a_parameters.put_first (current_type)
-					else
-						create a_parameters.make_with_capacity (2)
-						a_parameters.put_first (a_type)
-						a_parameters.put_first (a_tuple_type)
-					end
+					an_agent_class := current_universe_impl.function_identity_any_type.named_base_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_type)
+					a_parameters.put_first (a_tuple_type)
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				report_unqualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
@@ -11542,9 +11542,16 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_procedure, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				if an_open_operands = Void or else an_open_operands.is_empty then
+					a_tuple_type := current_universe_impl.tuple_type
+				elseif an_open_operands.count = 1 then
+					a_context.force_last (an_open_operands.type (1))
+					a_tuple_type := current_universe_impl.tuple_identity_type
+				else
+					create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				end
 				a_context.force_last (a_tuple_type)
-				an_agent_type := current_universe_impl.procedure_like_current_type
+				an_agent_type := current_universe_impl.procedure_identity_type
 				report_unqualified_procedure_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -11605,14 +11612,14 @@ feature {NONE} -- Agent validity
 									an_expression.set_procedure (True)
 									check_qualified_vape_validity (a_name, l_procedure, a_class)
 									had_error := has_fatal_error
-									check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+									check_qualified_procedure_call_agent_validity (an_expression, l_procedure, a_context)
 									has_fatal_error := has_fatal_error or had_error
 								elseif attached a_class.named_query (a_name) as l_query then
 									a_name.set_seed (l_query.first_seed)
 									an_expression.set_procedure (False)
 									check_qualified_vape_validity (a_name, l_query, a_class)
 									had_error := has_fatal_error
-									check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+									check_qualified_query_call_agent_validity (an_expression, l_query, a_context)
 									has_fatal_error := has_fatal_error or had_error
 								else
 									if a_class.is_tuple_class then
@@ -11623,7 +11630,7 @@ feature {NONE} -- Agent validity
 												l_label.set_tuple_label (True)
 												l_label.set_seed (a_seed)
 												an_expression.set_procedure (False)
-												check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
+												check_qualified_tuple_label_call_agent_validity (an_expression, a_class, a_context)
 											end
 										end
 									end
@@ -11640,7 +11647,7 @@ feature {NONE} -- Agent validity
 									an_expression.set_procedure (False)
 									check_qualified_vape_validity (a_name, l_query, a_class)
 									had_error := has_fatal_error
-									check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+									check_qualified_query_call_agent_validity (an_expression, l_query, a_context)
 									has_fatal_error := has_fatal_error or had_error
 								else
 									if a_class.is_tuple_class then
@@ -11651,7 +11658,7 @@ feature {NONE} -- Agent validity
 												l_label.set_tuple_label (True)
 												l_label.set_seed (a_seed)
 												an_expression.set_procedure (False)
-												check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
+												check_qualified_tuple_label_call_agent_validity (an_expression, a_class, a_context)
 											end
 										end
 									end
@@ -11661,7 +11668,7 @@ feature {NONE} -- Agent validity
 											an_expression.set_procedure (True)
 											check_qualified_vape_validity (a_name, l_procedure, a_class)
 											had_error := has_fatal_error
-											check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+											check_qualified_procedure_call_agent_validity (an_expression, l_procedure, a_context)
 											has_fatal_error := has_fatal_error or had_error
 										else
 											set_fatal_error
@@ -11696,7 +11703,7 @@ feature {NONE} -- Agent validity
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
-						check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
+						check_qualified_tuple_label_call_agent_validity (an_expression, a_class, a_context)
 					end
 				end
 			elseif an_expression.is_procedure then
@@ -11721,7 +11728,7 @@ feature {NONE} -- Agent validity
 						else
 							check_qualified_vape_validity (a_name, l_procedure, a_class)
 							had_error := has_fatal_error
-							check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+							check_qualified_procedure_call_agent_validity (an_expression, l_procedure, a_context)
 							has_fatal_error := has_fatal_error or had_error
 						end
 					end
@@ -11748,7 +11755,7 @@ feature {NONE} -- Agent validity
 						else
 							check_qualified_vape_validity (a_name, l_query, a_class)
 							had_error := has_fatal_error
-							check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+							check_qualified_query_call_agent_validity (an_expression, l_query, a_context)
 							has_fatal_error := has_fatal_error or had_error
 						end
 					end
@@ -11756,15 +11763,13 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_qualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_qualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of qualified query call agent.
 			-- `a_context' represents the type of the target.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			qualified_call_agent: an_expression.is_qualified_call
-			a_target_not_void: a_target /= Void
-			valid_target: a_target = an_expression.target
 			query_call: not an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
 			a_query_not_void: a_query /= Void
@@ -11773,7 +11778,6 @@ feature {NONE} -- Agent validity
 			a_name: ET_FEATURE_NAME
 			a_type: ET_TYPE
 			a_seed: INTEGER
-			a_target_type: ET_TYPE
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
@@ -11807,25 +11811,21 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_query, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				a_target_type := tokens.identity_type
-				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				if an_open_operands = Void or else an_open_operands.is_empty then
+					a_tuple_type := current_universe_impl.tuple_type
+				else
+					create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				end
 				a_type := a_query.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
 					a_context.force_last (a_tuple_type)
-					an_agent_type := current_universe_impl.predicate_like_current_type
+					an_agent_type := current_universe_impl.predicate_identity_type
 				else
-					an_agent_class := current_universe_impl.function_type.named_base_class
-					if current_universe_impl.function_type.actual_parameter_count = 3 then
-						create a_parameters.make_with_capacity (3)
-						a_parameters.put_first (a_type)
-						a_parameters.put_first (a_tuple_type)
-						a_parameters.put_first (a_target_type)
-					else
-						create a_parameters.make_with_capacity (2)
-						a_parameters.put_first (a_type)
-						a_parameters.put_first (a_tuple_type)
-					end
+					an_agent_class := current_universe_impl.function_identity_any_type.named_base_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_type)
+					a_parameters.put_first (a_tuple_type)
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				report_qualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
@@ -11833,15 +11833,13 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_qualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_qualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of qualified procedure call agent.
 			-- `a_context' represents the type of the target.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			qualified_call_agent: an_expression.is_qualified_call
-			a_target_not_void: a_target /= Void
-			valid_target: a_target = an_expression.target
 			procedure_call: an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
 			a_procedure_not_void: a_procedure /= Void
@@ -11880,22 +11878,27 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_procedure, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				if an_open_operands = Void or else an_open_operands.is_empty then
+					a_tuple_type := current_universe_impl.tuple_type
+				elseif an_open_operands.count = 1 then
+					a_context.force_last (an_open_operands.type (1))
+					a_tuple_type := current_universe_impl.tuple_identity_type
+				else
+					create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				end
 				a_context.force_last (a_tuple_type)
-				an_agent_type := current_universe_impl.procedure_like_current_type
+				an_agent_type := current_universe_impl.procedure_identity_type
 				report_qualified_procedure_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
 		end
 
-	check_qualified_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_qualified_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of qualified tuple label call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			qualified_call_agent: an_expression.is_qualified_call
-			a_target_not_void: a_target /= Void
-			valid_target: a_target = an_expression.target
 			a_target_class_not_void: a_target_class /= Void
 			a_target_class_is_tuple: a_target_class.is_tuple_class
 			query_call: not an_expression.is_procedure
@@ -11909,7 +11912,6 @@ feature {NONE} -- Agent validity
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_agent_type: ET_CLASS_TYPE
 			l_agent_class: ET_NAMED_CLASS
-			l_target_type: ET_TYPE
 		do
 			has_fatal_error := False
 			l_name := an_expression.name
@@ -11940,22 +11942,14 @@ feature {NONE} -- Agent validity
 				error_handler.report_giaaa_error
 			else
 				l_type := a_target_class.formal_parameter_type (l_index)
-				l_target_type := tokens.identity_type
 				if l_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
 					a_context.force_last (current_universe_impl.tuple_type)
-					l_agent_type := current_universe_impl.predicate_like_current_type
+					l_agent_type := current_universe_impl.predicate_identity_type
 				else
-					l_agent_class := current_universe_impl.function_type.named_base_class
-					if current_universe_impl.function_type.actual_parameter_count = 3 then
-						create l_parameters.make_with_capacity (3)
-						l_parameters.put_first (l_type)
-						l_parameters.put_first (current_universe_impl.tuple_type)
-						l_parameters.put_first (l_target_type)
-					else
-						create l_parameters.make_with_capacity (2)
-						l_parameters.put_first (l_type)
-						l_parameters.put_first (current_universe_impl.tuple_type)
-					end
+					l_agent_class := current_universe_impl.function_identity_any_type.named_base_class
+					create l_parameters.make_with_capacity (2)
+					l_parameters.put_first (l_type)
+					l_parameters.put_first (current_universe_impl.tuple_type)
 					create l_agent_type.make_generic (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
 				end
 				report_tuple_label_call_agent (an_expression, l_agent_type, a_context)
@@ -12012,14 +12006,14 @@ feature {NONE} -- Agent validity
 									an_expression.set_procedure (True)
 									check_qualified_vape_validity (a_name, l_procedure, a_class)
 									had_error := has_fatal_error
-									check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+									check_typed_procedure_call_agent_validity (an_expression, l_procedure, a_context)
 									has_fatal_error := has_fatal_error or had_error
 								elseif attached a_class.named_query (a_name) as l_query then
 									a_name.set_seed (l_query.first_seed)
 									an_expression.set_procedure (False)
 									check_qualified_vape_validity (a_name, l_query, a_class)
 									had_error := has_fatal_error
-									check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+									check_typed_query_call_agent_validity (an_expression, l_query, a_context)
 									has_fatal_error := has_fatal_error or had_error
 								else
 									if a_class.is_tuple_class then
@@ -12030,7 +12024,7 @@ feature {NONE} -- Agent validity
 												l_label.set_tuple_label (True)
 												l_label.set_seed (a_seed)
 												an_expression.set_procedure (False)
-												check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
+												check_typed_tuple_label_call_agent_validity (an_expression, a_class, a_context)
 											end
 										end
 									end
@@ -12047,7 +12041,7 @@ feature {NONE} -- Agent validity
 									an_expression.set_procedure (False)
 									check_qualified_vape_validity (a_name, l_query, a_class)
 									had_error := has_fatal_error
-									check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+									check_typed_query_call_agent_validity (an_expression, l_query, a_context)
 									has_fatal_error := has_fatal_error or had_error
 								else
 									if a_class.is_tuple_class then
@@ -12058,7 +12052,7 @@ feature {NONE} -- Agent validity
 												l_label.set_tuple_label (True)
 												l_label.set_seed (a_seed)
 												an_expression.set_procedure (False)
-												check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
+												check_typed_tuple_label_call_agent_validity (an_expression, a_class, a_context)
 											end
 										end
 									end
@@ -12068,7 +12062,7 @@ feature {NONE} -- Agent validity
 											an_expression.set_procedure (True)
 											check_qualified_vape_validity (a_name, l_procedure, a_class)
 											had_error := has_fatal_error
-											check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+											check_typed_procedure_call_agent_validity (an_expression, l_procedure, a_context)
 											has_fatal_error := has_fatal_error or had_error
 										else
 											set_fatal_error
@@ -12094,7 +12088,7 @@ feature {NONE} -- Agent validity
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
-						check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
+						check_typed_tuple_label_call_agent_validity (an_expression, a_class, a_context)
 					end
 				elseif an_expression.is_procedure then
 					a_context.force_last (a_target_type)
@@ -12109,7 +12103,7 @@ feature {NONE} -- Agent validity
 					else
 						check_qualified_vape_validity (a_name, l_procedure, a_class)
 						had_error := has_fatal_error
-						check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+						check_typed_procedure_call_agent_validity (an_expression, l_procedure, a_context)
 						has_fatal_error := has_fatal_error or had_error
 					end
 				else
@@ -12125,22 +12119,20 @@ feature {NONE} -- Agent validity
 					else
 						check_qualified_vape_validity (a_name, l_query, a_class)
 						had_error := has_fatal_error
-						check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+						check_typed_query_call_agent_validity (an_expression, l_query, a_context)
 						has_fatal_error := has_fatal_error or had_error
 					end
 				end
 			end
 		end
 
-	check_typed_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_typed_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of typed query call agent.
 			-- `a_context' represents the type of the target.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			qualified_call_agent: an_expression.is_qualified_call
-			a_target_not_void: a_target /= Void
-			valid_target: a_target = an_expression.target
 			query_call: not an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
 			a_query_not_void: a_query /= Void
@@ -12149,7 +12141,6 @@ feature {NONE} -- Agent validity
 			a_name: ET_FEATURE_NAME
 			a_result_type: ET_TYPE
 			a_seed: INTEGER
-			a_target_type: ET_TYPE
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
@@ -12161,7 +12152,6 @@ feature {NONE} -- Agent validity
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_seed := a_name.seed
-			a_target_type := a_target.type
 			if not a_query.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
@@ -12179,26 +12169,22 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_query, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				a_target_type := tokens.identity_type
-				an_open_operands.put_first (a_target_type)
-				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				if an_open_operands.count = 0 then
+					a_tuple_type := current_universe_impl.tuple_identity_type
+				else
+					an_open_operands.put_first (tokens.identity_type)
+					create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				end
 				a_result_type := a_query.type
 -- TODO: like argument
 				if a_result_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
 					a_context.force_last (a_tuple_type)
-					an_agent_type := current_universe_impl.predicate_like_current_type
+					an_agent_type := current_universe_impl.predicate_identity_type
 				else
-					an_agent_class := current_universe_impl.function_type.named_base_class
-					if current_universe_impl.function_type.actual_parameter_count = 3 then
-						create a_parameters.make_with_capacity (3)
-						a_parameters.put_first (a_result_type)
-						a_parameters.put_first (a_tuple_type)
-						a_parameters.put_first (a_target_type)
-					else
-						create a_parameters.make_with_capacity (2)
-						a_parameters.put_first (a_result_type)
-						a_parameters.put_first (a_tuple_type)
-					end
+					an_agent_class := current_universe_impl.function_identity_any_type.named_base_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_result_type)
+					a_parameters.put_first (a_tuple_type)
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				report_qualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
@@ -12206,15 +12192,13 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_typed_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_typed_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of typed procedure call agent.
 			-- `a_context' represents the type of the target.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			qualified_call_agent: an_expression.is_qualified_call
-			a_target_not_void: a_target /= Void
-			valid_target: a_target = an_expression.target
 			procedure_call: an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
 			a_procedure_not_void: a_procedure /= Void
@@ -12251,23 +12235,26 @@ feature {NONE} -- Agent validity
 				set_fatal_error
 			end
 			if not has_fatal_error then
-				an_open_operands.put_first (tokens.identity_type)
-				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				if an_open_operands.count = 0 then
+					a_tuple_type := current_universe_impl.tuple_identity_type
+				else
+					an_open_operands.put_first (tokens.identity_type)
+					create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				end
 				a_context.force_last (a_tuple_type)
-				an_agent_type := current_universe_impl.procedure_like_current_type
+				an_agent_type := current_universe_impl.procedure_identity_type
 				report_qualified_procedure_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
 		end
 
-	check_typed_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_typed_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of typed tuple label call agent.
+			-- `a_context' represents the type of the target.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			qualified_call_agent: an_expression.is_qualified_call
-			a_target_not_void: a_target /= Void
-			valid_target: a_target = an_expression.target
 			a_target_class_not_void: a_target_class /= Void
 			a_target_class_is_tuple: a_target_class.is_tuple_class
 			query_call: not an_expression.is_procedure
@@ -12281,8 +12268,6 @@ feature {NONE} -- Agent validity
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_agent_type: ET_CLASS_TYPE
 			l_agent_class: ET_NAMED_CLASS
-			l_target_type: ET_TYPE
-			l_open_operands: ET_ACTUAL_PARAMETER_LIST
 			l_tuple_type: ET_TUPLE_TYPE
 		do
 			has_fatal_error := False
@@ -12307,25 +12292,15 @@ feature {NONE} -- Agent validity
 				error_handler.report_giaaa_error
 			else
 				l_type := a_target_class.formal_parameter_type (l_index)
-				l_target_type := a_target.type
-				create l_open_operands.make_with_capacity (1)
-				l_open_operands.put_first (l_target_type)
-				create l_tuple_type.make (tokens.implicit_attached_type_mark, l_open_operands, current_universe_impl.tuple_type.named_base_class)
+				l_tuple_type := current_universe_impl.tuple_identity_type
 				if l_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
 					a_context.force_last (l_tuple_type)
-					l_agent_type := current_universe_impl.predicate_like_current_type
+					l_agent_type := current_universe_impl.predicate_identity_type
 				else
-					l_agent_class := current_universe_impl.function_type.named_base_class
-					if current_universe_impl.function_type.actual_parameter_count = 3 then
-						create l_parameters.make_with_capacity (3)
-						l_parameters.put_first (l_type)
-						l_parameters.put_first (l_tuple_type)
-						l_parameters.put_first (l_target_type)
-					else
-						create l_parameters.make_with_capacity (2)
-						l_parameters.put_first (l_type)
-						l_parameters.put_first (l_tuple_type)
-					end
+					l_agent_class := current_universe_impl.function_identity_any_type.named_base_class
+					create l_parameters.make_with_capacity (2)
+					l_parameters.put_first (l_type)
+					l_parameters.put_first (l_tuple_type)
 					create l_agent_type.make_generic (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
 				end
 				report_tuple_label_call_agent (an_expression, l_agent_type, a_context)
@@ -13103,25 +13078,22 @@ feature {NONE} -- Agent validity
 			end
 			check_agent_arguments_validity (an_expression, a_formal_arguments, Void, an_open_operands, a_context)
 			if not has_fatal_error then
-				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				if an_open_operands = Void or else an_open_operands.is_empty then
+					a_tuple_type := current_universe_impl.tuple_type
+				else
+					create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				end
 				a_type := an_expression.type
 -- TODO: like argument
 				if not has_fatal_error then
 					if a_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
 						a_context.force_last (a_tuple_type)
-						an_agent_type := current_universe_impl.predicate_like_current_type
+						an_agent_type := current_universe_impl.predicate_identity_type
 					else
-						an_agent_class := current_universe_impl.function_type.named_base_class
-						if current_universe_impl.function_type.actual_parameter_count = 3 then
-							create a_parameters.make_with_capacity (3)
-							a_parameters.put_first (a_type)
-							a_parameters.put_first (a_tuple_type)
-							a_parameters.put_first (current_type)
-						else
-							create a_parameters.make_with_capacity (2)
-							a_parameters.put_first (a_type)
-							a_parameters.put_first (a_tuple_type)
-						end
+						an_agent_class := current_universe_impl.function_identity_any_type.named_base_class
+						create a_parameters.make_with_capacity (2)
+						a_parameters.put_first (a_type)
+						a_parameters.put_first (a_tuple_type)
 						create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 					end
 					report_query_inline_agent (an_expression, an_agent_type, a_context)
@@ -13151,9 +13123,16 @@ feature {NONE} -- Agent validity
 			end
 			check_agent_arguments_validity (an_expression, a_formal_arguments, Void, an_open_operands, a_context)
 			if not has_fatal_error then
-				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				if an_open_operands = Void or else an_open_operands.is_empty then
+					a_tuple_type := current_universe_impl.tuple_type
+				elseif an_open_operands.count = 1 then
+					a_context.force_last (an_open_operands.type (1))
+					a_tuple_type := current_universe_impl.tuple_identity_type
+				else
+					create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				end
 				a_context.force_last (a_tuple_type)
-				an_agent_type := current_universe_impl.procedure_like_current_type
+				an_agent_type := current_universe_impl.procedure_identity_type
 				report_procedure_inline_agent (an_expression, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
