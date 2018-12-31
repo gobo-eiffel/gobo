@@ -1,0 +1,13 @@
+
+Testing validation...
+Running Test Cases
+
+Test Summary for validation
+
+# Passed:     2 tests
+# FAILED:     1 test
+# Aborted:    0 test
+# Total:      3 tests (58 assertions)
+
+Test Results:
+FAIL:  [validity/vape1/test3] test_failed

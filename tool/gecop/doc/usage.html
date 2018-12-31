@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Using gecop</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Using gecop</strong></font></td>
+    <td align="right"><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   <h2>Command-line options</h2>
+   
+   <p>
+    The usual way to invoke <i>gecop</i> is as follows:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gecop --tool=&lt;eiffel_tool&gt;</tt></i></font>
+     
+    </blockquote>
+    
+    This will run the Eiffel language conformance validation suite with the
+    Eiffel tool to be tested <font color="#800000"><i><tt>&lt;eiffel_tool&gt;</tt></i></font>
+    (typically an Eiffel compiler) and produce a report.
+    
+   </p>
+   <p>
+    Here is the list of options that can be used with <i>gecop</i>:
+    
+    <dl>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-h</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--help</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Print a summary of the command-line options of <i>gecop</i> and exit.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--tool=&lt;ge|ise|gec|gelint|ge_debug|ge_lint|ise_debug|ise_dotnet|ise_dotnet_debug&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Eiffel tool to be tested against the validation suite.
+      			By default it uses the optimized compilation mode (e.g. finalize mode)
+      			for a given Eiffel tool, unless the suffix <font color="#800000"><i><tt>debug</tt></i></font>
+      			is provided (e.g. workbench mode with assertion monitoring turned on).
+      			(default: ge)
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--validation=&lt;directory_name&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Directory containing the Eiffel validation suite.
+      			(default: $GOBO/tool/gecop/validation)
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--filter=&lt;regexp&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			When specified, run only the test cases matching this regexp.
+      			(default: no filter)
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--aggregate=&lt;no|yes&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Should test results be aggregated into a single report?
+      			(default: yes)
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--diff=&lt;no|yes&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Should test results be compared with the previous run?
+      			(default: yes)
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--keep-testdir</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Do no delete temporary directory after running the validation suite.
+      			(default: delete testdir)
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-V</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--version</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Print the version number of <i>gecop</i> and exit.
+      		
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2018, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>31 December 2018</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

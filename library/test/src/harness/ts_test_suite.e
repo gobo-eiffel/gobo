@@ -16,6 +16,8 @@ inherit
 
 	TS_TEST
 
+	ITERABLE [TS_TEST]
+
 create
 
 	make
@@ -88,6 +90,14 @@ feature -- Element change
 			a_test_not_void: a_test /= Void
 		do
 			tests.put_last (a_test)
+		end
+
+feature -- Iteration
+
+	new_cursor: ITERATION_CURSOR [TS_TEST]
+			-- <Precursor>
+		do
+			Result := tests.new_iterator
 		end
 
 feature {NONE} -- Implementation

@@ -1,0 +1,64 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Gobo Eiffel Cop"
+
+	tool: "Gobo Eiffel Cop"
+	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gecop/index">
+<chapterinfo>
+	<copyright>
+		<year>2018</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>31 December 2018</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Cop</title>
+
+<para>
+<projectname>Gobo Eiffel Cop</projectname>, or <projectname>gecop</projectname>
+for short, is an open source tool to validate the conformance of Eiffel tools 
+(typically compilers) to the ECMA Eiffel standard. It also tests the
+interoperability with the ISE Eiffel compiler. It comes with a validation suite
+to exercise the Eiffel tool under test.
+</para>
+<para>
+This documentation of <projectname>gecop</projectname> is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="usage">Using <projectname>gecop</projectname></link>
+		</term>
+		<listitem><para>
+			Command-line options.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

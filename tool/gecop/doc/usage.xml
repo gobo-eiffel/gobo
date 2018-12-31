@@ -1,0 +1,126 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Using gecop"
+
+	tool: "Gobo Eiffel Cop"
+	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gecop/usage">
+<chapterinfo>
+	<copyright>
+		<year>2018</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>31 December 2018</date>
+</chapterinfo>
+
+<title>Using gecop</title>
+
+<section><title>Command-line options</title>
+<para>
+The usual way to invoke <projectname>gecop</projectname> is as follows:
+<blockquote>
+	<filename>gecop --tool=&lt;eiffel_tool&gt;</filename>
+</blockquote>
+
+This will run the Eiffel language conformance validation suite with the
+Eiffel tool to be tested <filename>&lt;eiffel_tool&gt;</filename>
+(typically an Eiffel compiler) and produce a report.
+</para><para>
+Here is the list of options that can be used with <projectname>gecop</projectname>:
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>-h</filename>
+		</term>
+		<term>
+			<filename>--help</filename>
+		</term>
+		<listitem><para>
+			Print a summary of the command-line options of <projectname>gecop</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--tool=&lt;ge|ise|gec|gelint|ge_debug|ge_lint|ise_debug|ise_dotnet|ise_dotnet_debug&gt;</filename>
+		</term>
+		<listitem><para>
+			Eiffel tool to be tested against the validation suite.
+			By default it uses the optimized compilation mode (e.g. finalize mode)
+			for a given Eiffel tool, unless the suffix <filename>debug</filename>
+			is provided (e.g. workbench mode with assertion monitoring turned on).
+			(default: ge)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--validation=&lt;directory_name&gt;</filename>
+		</term>
+		<listitem><para>
+			Directory containing the Eiffel validation suite.
+			(default: $GOBO/tool/gecop/validation)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--filter=&lt;regexp&gt;</filename>
+		</term>
+		<listitem><para>
+			When specified, run only the test cases matching this regexp.
+			(default: no filter)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--aggregate=&lt;no|yes&gt;</filename>
+		</term>
+		<listitem><para>
+			Should test results be aggregated into a single report?
+			(default: yes)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--diff=&lt;no|yes&gt;</filename>
+		</term>
+		<listitem><para>
+			Should test results be compared with the previous run?
+			(default: yes)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--keep-testdir</filename>
+		</term>
+		<listitem><para>
+			Do no delete temporary directory after running the validation suite.
+			(default: delete testdir)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>-V</filename>
+		</term>
+		<term>
+			<filename>--version</filename>
+		</term>
+		<listitem><para>
+			Print the version number of <projectname>gecop</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</para>
+</section>
+
+</chapter>

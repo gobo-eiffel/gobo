@@ -5,7 +5,7 @@ note
 		"Testers: test harness to execute registered test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/12/24 $"
 	revision: "$Revision: #13 $"
@@ -248,6 +248,16 @@ feature -- Element change
 	build_suite
 			-- Add to `suite' the test cases that need to executed.
 		do
+		end
+
+	set_suite (a_suite: like suite)
+			-- Set `suite' to `a_suite'.
+		require
+			a_suite_not_void: a_suite /= Void
+		do
+			internal_suite := a_suite
+		ensure
+			suite_set: suite = a_suite
 		end
 
 feature -- Execution

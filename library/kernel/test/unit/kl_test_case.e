@@ -120,7 +120,7 @@ feature -- Directory names
 		end
 
 	kernel_dirname: STRING
-			-- Full directory name of "$GOBO/test/kernel"
+			-- Full directory name of "$GOBO/library/kernel/test/unit"
 		once
 			Result := file_system.nested_pathname ("$GOBO", <<"library", "kernel", "test", "unit">>)
 		ensure

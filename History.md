@@ -2,7 +2,6 @@
 
 ## Version ?? - ??
 
-
 ### gec
 
 * Fixed name of built-in feature `ISE_RUNTIME.new_special_of_reference_instance_of` 
@@ -21,6 +20,11 @@
   in void-safe mode.
 * Improved interoperability with ISE Eiffel by making sure that type
   `attached NONE` is different from type `detachable NONE` in void-safe mode.
+
+### gecop
+
+* New tool to validate the conformance of Eiffel tools (typically compilers)
+  to the ECMA Eiffel standard.
 
 ### Gobo Eiffel Tools Library
 
