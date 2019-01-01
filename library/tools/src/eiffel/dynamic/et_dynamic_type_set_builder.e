@@ -241,9 +241,7 @@ feature {ET_DYNAMIC_SYSTEM} -- Generation
 				until
 					l_alive_conforming_descendants.after
 				loop
-					if a_type.conforms_to_type (l_alive_conforming_descendants.key_for_iteration.primary_type) then
-						l_alive_conforming_descendants.item_for_iteration.put_type_from_type_set (a_type, a_type, current_dynamic_system)
-					end
+					l_alive_conforming_descendants.item_for_iteration.put_type_from_type_set (a_type, a_type, current_dynamic_system)
 					l_alive_conforming_descendants.forth
 				end
 			end
@@ -335,15 +333,17 @@ feature {ET_DYNAMIC_FEATURE} -- Generation
 				Result := l_alive_conforming_descendants_per_type.found_item
 			else
 				Result := new_dynamic_type_set (a_type)
-				l_primary_type := a_type.primary_type
-				l_dynamic_types := current_dynamic_system.dynamic_types
-				nb := l_dynamic_types.count
-				from i := 1 until i > nb loop
-					l_other_type := l_dynamic_types.item (i)
-					if l_other_type.is_alive and then l_other_type.conforms_to_type (l_primary_type) then
-						Result.put_type_from_type_set (l_other_type, l_other_type, current_dynamic_system)
+				if Result /= a_type then
+					l_primary_type := a_type.primary_type
+					l_dynamic_types := current_dynamic_system.dynamic_types
+					nb := l_dynamic_types.count
+					from i := 1 until i > nb loop
+						l_other_type := l_dynamic_types.item (i)
+						if l_other_type.is_alive then
+							Result.put_type_from_type_set (l_other_type, l_other_type, current_dynamic_system)
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 		ensure

@@ -192,9 +192,6 @@ feature -- Types
 	character_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "CHARACTER_32"
 
-	immutable_string_32_type: ET_DYNAMIC_PRIMARY_TYPE
-			-- Type "IMMUTABLE_STRING_32"
-
 	integer_8_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "INTEGER_8"
 
@@ -239,6 +236,9 @@ feature -- Types
 
 	string_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "STRING_32"
+
+	immutable_string_32_type: ET_DYNAMIC_PRIMARY_TYPE
+			-- Type "IMMUTABLE_STRING_32"
 
 	special_character_8_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "SPECIAL [CHARACTER_8]"
@@ -365,6 +365,27 @@ feature -- Types
 			end
 		ensure
 			dynamic_primary_type_not_void: Result /= Void
+		end
+
+	attached_type (a_type: ET_DYNAMIC_PRIMARY_TYPE): ET_DYNAMIC_TYPE
+			-- Attached version of `a_type', or `a_type' itself if it
+			-- is expanded or we are in non-void-safe mode
+		require
+			a_type_not_void: a_type /= Void
+		do
+			if current_system.attachment_type_conformance_mode then
+				if attached a_type.attached_type as l_attached_type then
+					Result := l_attached_type
+				elseif a_type.is_expanded then
+					Result := a_type
+				else
+					Result := dynamic_type (tokens.attached_like_current, a_type.base_type)
+				end
+			else
+				Result := a_type
+			end
+		ensure
+			attached_type_not_void: Result /= Void
 		end
 
 	meta_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_PRIMARY_TYPE
@@ -1447,9 +1468,9 @@ feature {NONE} -- Compilation
 									-- Internal error: an attribute should have a result type.
 								set_fatal_error
 								error_handler.report_giaaa_error
-							elseif l_result_type_set.static_type.primary_type /= special_character_8_type then
+							elseif l_result_type_set.static_type /= attached_type (special_character_8_type) then
 								set_fatal_error
-								error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_8_type.base_type)
+								error_handler.report_gvkfe3a_error (l_class, l_area_feature, attached_type (special_character_8_type).base_type)
 							end
 						end
 						if not attached l_class.named_query (tokens.count_feature_name) as l_count_feature then
@@ -1508,9 +1529,9 @@ feature {NONE} -- Compilation
 									-- Internal error: an attribute should have a result type.
 								set_fatal_error
 								error_handler.report_giaaa_error
-							elseif l_result_type_set.static_type.primary_type /= special_character_32_type then
+							elseif l_result_type_set.static_type /= attached_type (special_character_32_type) then
 								set_fatal_error
-								error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_32_type.base_type)
+								error_handler.report_gvkfe3a_error (l_class, l_area_feature, attached_type (special_character_32_type).base_type)
 							end
 						end
 						if not attached l_class.named_query (tokens.count_feature_name) as l_count_feature then
@@ -1569,9 +1590,9 @@ feature {NONE} -- Compilation
 									-- Internal error: an attribute should have a result type.
 								set_fatal_error
 								error_handler.report_giaaa_error
-							elseif l_result_type_set.static_type.primary_type /= special_character_32_type then
+							elseif l_result_type_set.static_type /= attached_type (special_character_32_type) then
 								set_fatal_error
-								error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_32_type.base_type)
+								error_handler.report_gvkfe3a_error (l_class, l_area_feature, attached_type (special_character_32_type).base_type)
 							end
 						end
 						if not attached l_class.named_query (tokens.count_feature_name) as l_count_feature then

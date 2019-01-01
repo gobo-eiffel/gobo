@@ -398,7 +398,7 @@ feature -- Argument parsing
 			l_parser.set_parameters_description ("")
 				-- tool
 			create tool_option.make_with_long_form ("tool")
-			tool_option.set_description ("Eiffel tool to be tested against the validation suite. (default: gec)")
+			tool_option.set_description ("Eiffel tool to be tested against the validation suite. (default: ge)")
 			tool_option.extend ("ge")
 			tool_option.extend ("ise")
 			tool_option.extend ("gec")

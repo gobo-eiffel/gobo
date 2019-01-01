@@ -148,7 +148,22 @@ feature -- Factory
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET
 			-- New dynamic type set
 		do
-			Result := a_type.primary_type.alive_conforming_descendants
+			if in_new_dynamic_type_set then
+				create {ET_DYNAMIC_STANDALONE_TYPE_SET} Result.make_empty (a_type)
+			else
+				in_new_dynamic_type_set := True
+				if a_type.is_expanded then
+					if a_type.is_generic then
+						Result := alive_conforming_descendants (a_type)
+						Result.set_never_void
+					else
+						Result := a_type
+					end
+				else
+					Result := alive_conforming_descendants (a_type)
+				end
+				in_new_dynamic_type_set := False
+			end
 		end
 
 feature -- Status report
@@ -1683,6 +1698,8 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
+					-- The local variable is assumed to be detachable
+					-- unless proven otherwise with a CAP.
 				l_dynamic_type := current_dynamic_system.dynamic_type (a_local.type, current_type)
 				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
 				set_dynamic_type_set (l_dynamic_type_set, a_local.name)
@@ -3251,7 +3268,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_dynamic_system.dynamic_type (tokens.attached_like_current, current_dynamic_system.ise_exception_manager_type.base_type)
+				l_result_type := current_dynamic_system.attached_type (current_dynamic_system.ise_exception_manager_type)
 				mark_type_alive (l_result_type.primary_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3853,6 +3870,11 @@ feature {NONE} -- Implementation
 
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within current feature
+
+	in_new_dynamic_type_set: BOOLEAN
+			-- Flag to handle properly re-entrant calls to `new_dynamic_type_set'
+			-- (when `new_dynamic_type_set' calls `alive_conforming_descendants'
+			-- which calls `new_dynamic_type_set')
 
 	dummy_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Dummy dynamic type
