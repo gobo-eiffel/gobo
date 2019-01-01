@@ -40,13 +40,8 @@ feature {NONE} -- Initialization
 			queries := empty_features
 			procedures := empty_features
 			create conforming_ancestors.make (a_class.conforming_ancestors.count)
-			create conforming_descendants.make_empty (Current)
-			create alive_conforming_descendants.make_empty (Current)
-			conforming_descendants.put_type (Current)
 			if is_expanded then
 				set_alive
-				alive_conforming_descendants.set_never_void
-				conforming_descendants.set_never_void
 			end
 		ensure
 			base_type_set: base_type = a_type
@@ -58,11 +53,6 @@ feature -- Status report
 
 	is_alive: BOOLEAN
 			-- Is current type considered alive?
-			-- (e.g. instances of this type may be created)
-
-	was_alive: BOOLEAN
-			-- Was current type considered alive during the last iteration
-			-- in ET_DYNAMIC_TYPE_BUILDER.build_dynamic_type_sets?
 			-- (e.g. instances of this type may be created)
 
 	is_agent_type: BOOLEAN
@@ -106,18 +96,9 @@ feature -- Status setting
 		do
 			if not is_alive then
 				is_alive := True
-				alive_conforming_descendants.put_type (Current)
 			end
 		ensure
 			alive_set: is_alive
-		end
-
-	set_was_alive
-			-- Set `was_alive' to True.
-		do
-			was_alive := True
-		ensure
-			was_alive_set: was_alive
 		end
 
 	set_static (b: BOOLEAN)
@@ -157,15 +138,6 @@ feature -- Access
 
 	conforming_ancestors: DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE]
 			-- All types (both alive and dead) to which the current type conforms
-
-	conforming_descendants: ET_DYNAMIC_STANDALONE_TYPE_SET
-			-- All types (both alive and dead) that conform to current type
-			-- (Might be useful when retrieving Storable files or getting from
-			-- an external routine any other objects created outside of Eiffel.)
-
-	alive_conforming_descendants: ET_DYNAMIC_STANDALONE_TYPE_SET
-			-- Types that conform to current type and that are considered alive
-			-- (e.g. instances of this type may be created)
 
 	hash_code: INTEGER
 			-- Hash code
@@ -733,8 +705,6 @@ feature {NONE} -- Implementation
 invariant
 
 	conforming_ancestors_not_void: conforming_ancestors /= Void
-	conforming_descendants_not_void: conforming_descendants /= Void
-	alive_conforming_descendants_not_void: alive_conforming_descendants /= Void
 	queries_not_void: queries /= Void
 	procedures_not_void: procedures /= Void
 	attribute_count_not_negative: attribute_count >= 0

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,6 @@ inherit
 			report_creation_expression,
 			report_creation_instruction,
 			report_current,
-			report_current_type_needed,
 			report_equality_expression,
 			report_formal_argument,
 			report_formal_argument_declaration,
@@ -180,7 +179,6 @@ feature -- Generation
 		local
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_other_type: ET_DYNAMIC_PRIMARY_TYPE
 			j, nb2: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
@@ -358,29 +356,6 @@ feature -- Generation
 							is_built := False
 						end
 						l_object_equality := l_object_equality.next
-					end
-					i := i + 1
-				end
-					-- Process dynamic types.
-				from i := 1 until i > nb loop
-					l_type := l_dynamic_types.item (i)
-					from
-						if l_type.was_alive then
-							j := old_nb + 1
-						elseif l_type.is_alive then
-							j := 1
-							l_type.set_was_alive
-						else
-							j := nb + 1
-						end
-					until
-						j > nb
-					loop
-						l_other_type := l_dynamic_types.item (j)
-						if l_type.conforms_to_type (l_other_type) then
-							l_other_type.alive_conforming_descendants.put_type (l_type)
-						end
-						j := j + 1
 					end
 					i := i + 1
 				end
@@ -645,7 +620,6 @@ feature {NONE} -- Generation
 				end
 			end
 			had_error := has_fatal_error
-			a_feature.set_current_type_needed (False)
 			if a_feature.is_precursor then
 				check_precursor_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
 			else
@@ -1374,15 +1348,6 @@ feature {NONE} -- Event handling
 				if current_index.item = 0 then
 					current_index.put (an_expression.index)
 				end
-			end
-		end
-
-	report_current_type_needed
-			-- Report that the current type is needed to execute the feature being analyzed.
-			-- This might be needed for optimization purposes.
-		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_current_type_needed (True)
 			end
 		end
 

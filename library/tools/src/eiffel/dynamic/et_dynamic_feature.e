@@ -5,7 +5,7 @@ note
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -411,10 +411,6 @@ feature -- Status report
 			end
 		end
 
-	is_current_type_needed: BOOLEAN
-			-- Is current type is needed to execute current feature?
-			-- (This might be needed for optimization purposes.)
-
 	is_builtin: BOOLEAN
 			-- Is current feature built-in?
 		do
@@ -778,14 +774,6 @@ feature -- Status setting
 		ensure
 			address_set: is_address = b
 			regular_set: b implies is_regular
-		end
-
-	set_current_type_needed (b: BOOLEAN)
-			-- Set `is_current_type_needed' to `b'.
-		do
-			is_current_type_needed := b
-		ensure
-			current_type_needed_set: is_current_type_needed = b
 		end
 
 feature -- Output

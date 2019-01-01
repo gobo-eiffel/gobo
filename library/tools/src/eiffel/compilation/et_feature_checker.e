@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -771,7 +771,6 @@ feature {NONE} -- Feature validity
 			l_type := a_feature.type
 			check_query_type_validity (l_type, a_feature)
 			if not has_fatal_error then
-				report_current_type_needed
 				report_result_declaration (l_type)
 				if in_precursor then
 -- TODO: when processing a precursor, its signature should be resolved to the
@@ -1281,7 +1280,6 @@ feature {NONE} -- Feature validity
 			l_type := a_feature.type
 			check_query_type_validity (l_type, a_feature)
 			if not has_fatal_error then
-				report_current_type_needed
 				report_result_declaration (l_type)
 				if in_precursor then
 -- TODO: when processing a precursor, its signature should be resolved to the
@@ -2538,7 +2536,6 @@ feature {NONE} -- Instruction validity
 			l_overloaded_queries: DS_ARRAYED_LIST [ET_QUERY]
 		do
 			has_fatal_error := False
-			report_current_type_needed
 			l_call := an_instruction.call
 			l_target := l_call.target
 			l_target_context := new_context (current_type)
@@ -3277,9 +3274,6 @@ feature {NONE} -- Instruction validity
 			l_name: ET_FEATURE_NAME
 			l_position: ET_POSITION
 			had_error: BOOLEAN
-			l_type: detachable ET_TYPE
-			l_locals: detachable ET_LOCAL_VARIABLE_LIST
-			l_local_seed: INTEGER
 			l_name_position: ET_POSITION
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
@@ -3305,60 +3299,8 @@ feature {NONE} -- Instruction validity
 			if l_explicit_creation_type /= Void then
 				check_type_validity (l_explicit_creation_type)
 				l_position := l_explicit_creation_type.position
-					-- Check whether the creation type, as it appears in the class where
-					-- this creation instruction has been written, depends on the type of
-					-- the 'Current' entity.
-				if not has_fatal_error and then not l_explicit_creation_type.is_base_type then
-						-- The explicit creation type contains formal generic parameters
-						-- or anchored types whose resolved value may vary in various
-						-- descendant classes/types.
-					report_current_type_needed
-				end
 			else
 				l_position := l_target.position
-					-- Check whether the creation type, as it appears in the class where
-					-- this creation instruction has been written, depends on the type of
-					-- the 'Current' entity.
-				if attached {ET_RESULT} l_target as l_result then
-						-- Use type of implementation feature because the types of the signature
-						-- of `current_feature' might have been resolved for `current_class'
-						-- (or for its parent class when processing precursors in the context
-						-- of current class).
-					l_type := current_closure_impl.type
-					if l_type = Void then
-						-- This error will be reported in `check_writable_validity'.
-					elseif not l_type.is_base_type then
-							-- The type of 'Result' contains formal generic parameters
-							-- or anchored types whose resolved value may vary in various
-							-- descendant classes/types.
-						report_current_type_needed
-					end
-				elseif attached {ET_IDENTIFIER} l_target as l_identifier then
-					if l_identifier.is_local then
-						l_local_seed := l_identifier.seed
-						l_locals := current_closure_impl.locals
-						if l_locals = Void then
-							-- This error will be reported in `check_writable_validity'.
-						elseif l_local_seed < 1 or l_local_seed > l_locals.count then
-							-- This error will be reported in `check_writable_validity'.
-						else
-								-- Contrary to the types appearing in the signatures, types of
-								-- local variables in the AST are those found in the implementation
-								-- class of `feature_impl', i.e. not resolved yet.
-							l_type := l_locals.local_variable (l_local_seed).type
-							if not l_type.is_base_type then
-									-- The type of the local variable contains formal generic parameters
-									-- or anchored types whose resolved value may vary in various
-									-- descendant classes/types.
-								report_current_type_needed
-							end
-						end
-					else
-							-- This is an attribute. Its type may vary in various
-							-- descendant classes/types.
-						report_current_type_needed
-					end
-				end
 			end
 			if not has_fatal_error then
 				if l_creation_call /= default_creation_call then
@@ -4359,9 +4301,6 @@ feature {NONE} -- Instruction validity
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
-				-- This is an unqualified call, so there is a good chance that we
-				-- will need the type of current to figure out which feature to call.
-			report_current_type_needed
 			if not attached {ET_FEATURE} current_feature_impl as l_feature_impl then
 					-- The Precursor instruction does not appear in a Routine_body.
 				set_fatal_error
@@ -4505,11 +4444,6 @@ feature {NONE} -- Instruction validity
 		do
 			has_fatal_error := False
 			l_target := a_call.target
-			if l_target.is_current then
-					-- If the target is the current object there is a good chance that
-					-- we will need its type to figure out which feature to call.
-				report_current_type_needed
-			end
 			l_context := new_context (current_type)
 			l_name := a_call.name
 			l_seed := l_name.seed
@@ -4722,12 +4656,6 @@ feature {NONE} -- Instruction validity
 			l_type := an_instruction.type
 			check_type_validity (l_type)
 			if not has_fatal_error then
-				if not l_type.is_base_type then
-						-- The type used to figure out which feature to call contains formal
-						-- generic parameters or anchored types whose resolved value may vary
-						-- in various descendant classes/types.
-					report_current_type_needed
-				end
 				l_name := an_instruction.name
 				l_seed := l_name.seed
 				if l_seed = 0 then
@@ -4965,9 +4893,6 @@ feature {NONE} -- Instruction validity
 			l_checked: BOOLEAN
 		do
 			has_fatal_error := False
-				-- This is an unqualified call, so there is a good chance that we
-				-- will need the type of current to figure out which feature to call.
-			report_current_type_needed
 			l_name := a_call.name
 			l_seed := l_name.seed
 			if attached {ET_IDENTIFIER} l_name as l_identifier then
@@ -5849,12 +5774,6 @@ feature {NONE} -- Expression validity
 			l_creation_type := an_expression.type
 			check_type_validity (l_creation_type)
 			if not has_fatal_error then
-				if not l_creation_type.is_base_type then
-						-- The creation type contains formal generic parameters
-						-- or anchored types whose resolved value may vary in various
-						-- descendant classes/types.
-					report_current_type_needed
-				end
 				if l_creation_call /= default_creation_call then
 						-- There is an explicit creation call.
 					if l_seed = 0 then
@@ -6104,8 +6023,6 @@ feature {NONE} -- Expression validity
 					end
 					report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 					a_context.force_last (l_typed_pointer_type)
-						-- Need current type to create an object of type 'TYPED_POINTER [<current_type>]'.
-					report_current_type_needed
 				else
 						-- Use the ETL2 implementation: the type of '$Current' is POINTER.
 					l_pointer_type := current_universe_impl.pointer_type
@@ -6222,10 +6139,6 @@ feature {NONE} -- Expression validity
 				if not has_fatal_error then
 					report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 					a_context.force_last (l_typed_pointer_type)
-						-- It might occur that the current type is needed to create
-						-- an object of type 'TYPED_POINTER [<type-of-expr>]'.
--- TODO: try to find out whether <type-of-expr> depends on the type of current.
-					report_current_type_needed
 				end
 			else
 					-- Use the ETL2 implementation: the type of '$(expr)' is POINTER.
@@ -6356,13 +6269,6 @@ feature {NONE} -- Expression validity
 										a_context.copy_type_context (current_object_test_types.found_item)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
-										l_type := l_object_test.type
-										if l_type /= Void and then not l_type.is_base_type then
-												-- The type of the object-test local contains formal generic parameters
-												-- or anchored types whose resolved value may vary in various
-												-- descendant classes/types.
-											report_current_type_needed
-										end
 									end
 								else
 										-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
@@ -6470,8 +6376,6 @@ feature {NONE} -- Expression validity
 													a_context.force_last (l_type)
 													report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 													a_context.force_last (l_typed_pointer_type)
-														-- The type of the attribute may vary in various descendant classes/types.
-													report_current_type_needed
 														-- No need to check validity in the context of `current_type' again.
 													already_checked := True
 												end
@@ -6562,12 +6466,6 @@ feature {NONE} -- Expression validity
 								a_context.force_last (l_type)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
-								if not l_type.is_base_type then
-										-- The type of the argument contains formal generic parameters
-										-- or anchored types whose resolved value may vary in various
-										-- descendant classes/types.
-									report_current_type_needed
-								end
 							else
 									-- Use the ETL2 implementation: the type of '$argument' is POINTER.
 								l_pointer_type := current_universe_impl.pointer_type
@@ -6626,12 +6524,6 @@ feature {NONE} -- Expression validity
 								a_context.force_last (l_type)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
-								if not l_type.is_base_type then
-										-- The type of the local variable contains formal generic parameters
-										-- or anchored types whose resolved value may vary in various
-										-- descendant classes/types.
-									report_current_type_needed
-								end
 							else
 									-- Use the ETL2 implementation: the type of '$local' is POINTER.
 								l_pointer_type := current_universe_impl.pointer_type
@@ -6672,13 +6564,6 @@ feature {NONE} -- Expression validity
 								a_context.copy_type_context (current_object_test_types.found_item)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
-								l_type := l_object_test.type
-								if l_type /= Void and then not l_type.is_base_type then
-										-- The type of the object-test local contains formal generic parameters
-										-- or anchored types whose resolved value may vary in various
-										-- descendant classes/types.
-									report_current_type_needed
-								end
 							end
 						else
 								-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
@@ -6763,8 +6648,6 @@ feature {NONE} -- Expression validity
 											a_context.force_last (l_type)
 											report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 											a_context.force_last (l_typed_pointer_type)
-												-- The type of the attribute may vary in various descendant classes/types.
-											report_current_type_needed
 										else
 												-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
 											l_pointer_type := current_universe_impl.pointer_type
@@ -7080,11 +6963,6 @@ feature {NONE} -- Expression validity
 			l_name := an_expression.name
 			l_detachable_any_type := current_system.detachable_any_type
 			l_target := an_expression.left
-			if l_target.is_current then
-					-- If the target is the current object there is a good chance that
-					-- we will need its type to figure out which feature to call.
-				report_current_type_needed
-			end
 			l_seed := l_name.seed
 			if l_seed = 0 then
 					-- We need to resolve `l_name' in the implementation
@@ -8220,9 +8098,6 @@ feature {NONE} -- Expression validity
 			l_tuple_type: ET_TUPLE_TYPE
 		do
 			has_fatal_error := False
--- TODO: check that the type of the manifest tuple does not depend on the
--- type of current. Be pessimistic for now and report it.
-			report_current_type_needed
 				-- Try to find out whether the expected type (i.e. `current_target_type')
 				-- for the manifest tuple is 'TUPLE [...]'. If this is the case then we
 				-- use these item types as expected types for the corresponding items
@@ -8331,12 +8206,6 @@ feature {NONE} -- Expression validity
 			l_type := an_expression.type
 			check_type_validity (l_type)
 			if not has_fatal_error then
-				if not l_type.is_base_type then
-						-- The type of the manifest type contains formal generic parameters
-						-- or anchored types whose resolved value may vary in various
-						-- descendant classes/types.
-					report_current_type_needed
-				end
 				a_context.force_last (l_type)
 				l_type_type := current_universe_impl.type_identity_type
 				report_manifest_type (an_expression, l_type_type, a_context)
@@ -8774,9 +8643,6 @@ feature {NONE} -- Expression validity
 			l_class: ET_CLASS
 		do
 			has_fatal_error := False
-				-- This is an unqualified call, so there is a good chance that we
-				-- will need the type of current to figure out which feature to call.
-			report_current_type_needed
 			if not attached {ET_FEATURE} current_feature_impl as l_feature_impl then
 					-- The Precursor expression does not appear in a Routine_body.
 				set_fatal_error
@@ -8938,11 +8804,6 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			l_target := a_call.target
-			if l_target.is_current then
-					-- If the target is the current object there is a good chance that
-					-- we will need its type to figure out which feature to call.
-				report_current_type_needed
-			end
 			l_name := a_call.name
 			l_seed := l_name.seed
 			if l_seed = 0 then
@@ -9636,12 +9497,6 @@ feature {NONE} -- Expression validity
 						a_context.force_last (l_type)
 						report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 						a_context.force_last (l_typed_pointer_type)
-						if not l_type.is_base_type then
-								-- The type of Result contains formal generic parameters
-								-- or anchored types whose resolved value may vary in various
-								-- descendant classes/types.
-							report_current_type_needed
-						end
 					else
 							-- Use the ETL2 implementation: the type of '$argument' is POINTER.
 						l_pointer_type := current_universe_impl.pointer_type
@@ -9682,12 +9537,6 @@ feature {NONE} -- Expression validity
 			l_type := an_expression.type
 			check_type_validity (l_type)
 			if not has_fatal_error then
-				if not l_type.is_base_type then
-						-- The type used to figure out which feature to call contains formal
-						-- generic parameters or anchored types whose resolved value may vary
-						-- in various descendant classes/types.
-					report_current_type_needed
-				end
 				l_name := an_expression.name
 				l_seed := l_name.seed
 				if l_seed = 0 then
@@ -10113,9 +9962,6 @@ feature {NONE} -- Expression validity
 			l_checked: BOOLEAN
 		do
 			has_fatal_error := False
-				-- This is an unqualified call, so there is a good chance that we
-				-- will need the type of current to figure out which feature to call.
-			report_current_type_needed
 			l_name := a_call.name
 			l_seed := l_name.seed
 			if attached {ET_IDENTIFIER} l_name as l_identifier then
@@ -10472,7 +10318,6 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 							error_handler.report_vucr0c_error (current_class, current_class_impl, l_identifier, l_attribute)
 						else
-							report_current_type_needed
 							report_attribute_assignment_target (a_writable, l_attribute)
 						end
 					end
@@ -10504,7 +10349,6 @@ feature {NONE} -- Expression validity
 										set_fatal_error
 										error_handler.report_vucr0c_error (current_class, current_class_impl, l_identifier, l_attribute)
 									else
-										report_current_type_needed
 										report_attribute_assignment_target (a_writable, l_attribute)
 									end
 								else
@@ -11364,8 +11208,6 @@ feature {NONE} -- Agent validity
 			l_had_error: BOOLEAN
 		do
 			has_fatal_error := False
--- TODO: do we need to call `report_current_type_needed'.
-			report_current_type_needed
 			if in_static_feature then
 					-- Error: we cannot use an unqualified call agent in a static feature.
 				set_fatal_error
@@ -11575,8 +11417,6 @@ feature {NONE} -- Agent validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
--- TODO: do we need to call `report_current_type_needed'.
-			report_current_type_needed
 			a_name := an_expression.name
 			l_detachable_any_type := current_system.detachable_any_type
 			a_seed := a_name.seed
@@ -11975,8 +11815,6 @@ feature {NONE} -- Agent validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
--- TODO: do we need to call `report_current_type_needed'.
-			report_current_type_needed
 			a_name := an_expression.name
 			a_target_type := a_target.type
 			check_type_validity (a_target_type)
@@ -13507,14 +13345,6 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
-		do
-		end
-
-	report_current_type_needed
-			-- Report that the current type is needed to execute the feature being analyzed.
-			-- This might be needed for optimization purposes.
-		require
-			no_error: not has_fatal_error
 		do
 		end
 
