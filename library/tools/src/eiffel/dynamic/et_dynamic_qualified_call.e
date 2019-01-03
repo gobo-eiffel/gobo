@@ -5,7 +5,7 @@ note
 		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,7 +78,7 @@ feature -- Element change
 			if not is_tuple_label then
 				l_dynamic_feature := seeded_dynamic_feature (a_type, a_system)
 				if l_dynamic_feature = Void then
-					if a_type.conforms_to_type (target_type_set.static_type.primary_type) then
+					if a_type.conforms_to_primary_type (target_type_set.static_type.primary_type) then
 							-- Internal error: there should be a feature with that seed
 							-- in all descendants of `target_type_set.static_type'.
 						l_builder := a_system.dynamic_type_set_builder
@@ -140,7 +140,7 @@ feature -- Element change
 				l_system := a_builder.current_dynamic_system
 				l_dynamic_feature := seeded_dynamic_feature (a_type, l_system)
 				if l_dynamic_feature = Void then
-					if a_type.conforms_to_type (target_type_set.static_type.primary_type) then
+					if a_type.conforms_to_primary_type (target_type_set.static_type.primary_type) then
 							-- Internal error: there should be a feature with that seed
 							-- in all descendants of `target_type_set.static_type'.
 						a_builder.set_fatal_error

@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -251,7 +251,7 @@ feature {NONE} -- Processing
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile (l_system_processor)
 			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
-			l_system_processor.record_end_time (dt2, "Degree 2")
+			l_system_processor.record_end_time (dt2, "Degree -2")
 			l_root_type := a_system.root_type
 			if l_root_type = Void then
 				-- Do nothing.
@@ -280,6 +280,18 @@ feature {NONE} -- Processing
 				end
 				l_generator.generate (l_system_name)
 				if is_metrics and not is_silent then
+					error_handler.info_file.put_string ("Type count: ")
+					error_handler.info_file.put_integer (l_system.dynamic_types.count)
+					error_handler.info_file.put_new_line
+					error_handler.info_file.put_string ("Alive type count: ")
+					error_handler.info_file.put_integer (l_system.alive_dynamic_type_count)
+					error_handler.info_file.put_new_line
+					error_handler.info_file.put_string ("Feature count: ")
+					error_handler.info_file.put_integer (l_system.dynamic_feature_count)
+					error_handler.info_file.put_new_line
+					error_handler.info_file.put_string ("Dynamic type set count: ")
+					error_handler.info_file.put_integer (l_builder.dynamic_type_set_count)
+					error_handler.info_file.put_new_line
 					error_handler.info_file.put_string ("Never void targets: ")
 					error_handler.info_file.put_integer (l_generator.never_void_target_count)
 					error_handler.info_file.put_new_line

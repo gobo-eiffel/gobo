@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets to which new types can be added"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -165,7 +165,7 @@ feature -- Element change
 			l_dynamic_types: like dynamic_types
 			l_dynamic_type_list: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 		do
-			if a_type.conforms_to_type (static_type.primary_type) then
+			if a_type.conforms_to_primary_type (static_type.primary_type) then
 				l_dynamic_types := dynamic_types
 				if not attached a_type_set.dynamic_types as l_other_dynamic_types then
 						-- The precondition says that `a_type_set' contains `a_type'.

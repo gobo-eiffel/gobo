@@ -67,6 +67,7 @@
   are processed in void-safe mode.
 * Improved the way dynamic type sets and their attachment marks are 
   processed in void-safe mode.
+* Improved speed when computing dynamic type sets.
 
 ### Gobo Eiffel XPath Library
 

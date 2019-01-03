@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			make_basic_types
 			nb := current_system.master_classes.capacity
 			create dynamic_types.make (nb)
+			create dynamic_generic_types_by_name.make (nb)
 				-- Reset the index of classes so that `dynamic_type' can work properly.
 			current_system.classes_do_recursive (agent {ET_CLASS}.set_index (0))
 			create null_dynamic_type_set_builder.make (Current)
@@ -293,11 +294,12 @@ feature -- Types
 			i: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_base_class: ET_CLASS
-			l_any: ET_CLASS_TYPE
+			l_base_type: ET_BASE_TYPE
 			l_result: detachable ET_DYNAMIC_PRIMARY_TYPE
 			l_is_reentrant: BOOLEAN
 			l_old_dynamic_types_count: INTEGER
 			l_implicit_type_mark: detachable ET_TYPE_MARK
+			l_type_name: STRING
 		do
 			if in_dynamic_primary_type then
 				l_is_reentrant := True
@@ -316,7 +318,8 @@ feature -- Types
 					if a_type.is_type_expanded (a_context) = l_type.is_expanded then
 						l_result := l_type
 					elseif not attached l_type.next_type as l_next_type then
-						l_result := new_dynamic_primary_type (a_type, l_implicit_type_mark, a_context)
+						l_base_type := a_type.base_type_with_type_mark (l_implicit_type_mark, a_context)
+						l_result := new_dynamic_primary_type (l_base_type)
 					else
 						check
 							same_expandedness: a_type.is_type_expanded (a_context) = l_next_type.is_expanded
@@ -324,19 +327,18 @@ feature -- Types
 						l_result := l_next_type
 					end
 				else
-						-- Traverse all dynamic types with the same base class.
-						-- If not found then add this new dynamic type.
-					l_any := current_system.any_type
-					from until
-						l_result /= Void
-					loop
-						if l_type.base_type.same_base_type_with_type_marks (a_type, l_implicit_type_mark, a_context, l_implicit_type_mark, l_any) then
-							l_result := l_type
-						elseif not attached l_type.next_type as l_next_type then
-							l_result := new_dynamic_primary_type (a_type, l_implicit_type_mark, a_context)
-						else
-							l_type := l_next_type
-						end
+					l_base_type := a_type.base_type_with_type_mark (l_implicit_type_mark, a_context)
+					l_type_name := type_name_buffer
+					l_type_name.wipe_out
+					l_base_type.append_runtime_name_to_string (l_type_name)
+					dynamic_generic_types_by_name.search (l_type_name)
+					if dynamic_generic_types_by_name.found then
+						l_result := dynamic_generic_types_by_name.found_item
+					else
+						create l_type_name.make (l_type_name.count)
+						l_type_name.append_string (type_name_buffer)
+						l_result := new_dynamic_primary_type (l_base_type)
+						dynamic_generic_types_by_name.force_last (l_result, l_type_name)
 					end
 				end
 			end
@@ -357,7 +359,12 @@ feature -- Types
 						set_fatal_error
 					end
 				end
-				Result := new_dynamic_primary_type (a_type, l_implicit_type_mark, a_context)
+				l_base_type := a_type.base_type_with_type_mark (l_implicit_type_mark, a_context)
+				Result := new_dynamic_primary_type (l_base_type)
+				if l_base_class.is_generic or l_base_class.is_tuple_class then
+					l_type_name := l_base_type.runtime_name_to_text
+					dynamic_generic_types_by_name.force_last (Result, l_type_name)
+				end
 			end
 			if not l_is_reentrant then
 				in_dynamic_primary_type := False
@@ -416,17 +423,19 @@ feature {NONE} -- Types
 	in_dynamic_primary_type: BOOLEAN
 			-- Flag to handle properly re-entrant calls to `dynamic_primary_type'
 
-	new_dynamic_primary_type (a_type: ET_TYPE; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_PRIMARY_TYPE
-			-- New dynamic primary type corresponding to `a_type' altered with `a_type_mark' in `a_context'
+	dynamic_generic_types_by_name: DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, STRING]
+			-- Dynamic generic types in the system, indexed by their names
+
+	new_dynamic_primary_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_PRIMARY_TYPE
+			-- New dynamic primary type corresponding to `a_base_type'
 		require
-			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
+			a_base_type_not_void: a_base_type /= Void
+			is_base_type: a_base_type.is_base_type
 		local
 			l_base_type: ET_BASE_TYPE
 			l_base_class: ET_CLASS
 		do
-			l_base_type := a_type.base_type_with_type_mark (a_type_mark, a_context)
+			l_base_type := a_base_type
 			l_base_class := l_base_type.base_class
 			if l_base_type.same_as_base_class then
 				l_base_type := l_base_class
@@ -748,6 +757,7 @@ feature {NONE} -- Types
 					-- No other type has been inserted.
 				l_base_class.set_index (dynamic_types.count)
 			end
+			propagate_conforming_ancestors (a_type)
 		end
 
 	initialize_dynamic_types (a_start, a_end: INTEGER)
@@ -973,6 +983,69 @@ feature {NONE} -- Types
 		do
 			if a_type.is_alive then
 				dynamic_type_set_builder.propagate_alive_conforming_descendants (a_type)
+			end
+		end
+
+	propagate_conforming_ancestors (a_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Fill in 'conforming_ancestors' of `a_type' and
+			-- add `a_type' to 'conforming_ancestors' of other types.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			i, nb: INTEGER
+			l_other_type: detachable ET_DYNAMIC_PRIMARY_TYPE
+			l_conforming_ancestors: DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE]
+			l_ancestor_base_types: ET_BASE_TYPE_LIST
+			l_index: INTEGER
+			l_base_type: ET_BASE_TYPE
+			l_other_base_type: ET_BASE_TYPE
+			l_base_class: ET_CLASS
+			l_other_base_class: ET_CLASS
+		do
+			l_base_class := a_type.base_class
+			if not l_base_class.is_none then
+				l_base_type := a_type.base_type
+				l_conforming_ancestors := a_type.conforming_ancestors
+				l_conforming_ancestors.force_last (a_type)
+				l_ancestor_base_types := l_base_class.conforming_ancestors
+				nb := l_ancestor_base_types.count
+				from
+					l_other_base_class := l_base_class
+				until
+					i > nb
+				loop
+					l_index := l_other_base_class.index
+					if l_index >= 1 and l_index <= dynamic_types.count then
+						from
+							l_other_type := dynamic_types.item (l_index)
+						until
+							l_other_type = Void
+						loop
+							if l_other_type /= a_type and then not l_other_type.base_class.is_none then
+								l_other_base_type := l_other_type.base_type
+								if l_base_type.conforms_to_type_with_type_marks (l_other_base_type, l_other_type.type_mark, l_other_base_type, a_type.type_mark, l_base_type, tokens.null_system_processor) then
+									l_conforming_ancestors.force_last (l_other_type)
+								end
+							end
+							l_other_type := l_other_type.next_type
+						end
+					end
+					i := i + 1
+					if i <= nb then
+						l_other_base_class := l_ancestor_base_types.item (i).base_class
+					end
+				end
+				nb := dynamic_types.count
+				from i := 1 until i > nb loop
+					l_other_type := dynamic_types.item (i)
+					if l_other_type /= a_type and then not l_other_type.base_class.is_none then
+						l_other_base_type := l_other_type.base_type
+						if l_other_base_type.conforms_to_type_with_type_marks (l_base_type, a_type.type_mark, l_base_type, l_other_type.type_mark, l_other_base_type, tokens.null_system_processor) then
+							l_other_type.conforming_ancestors.force_last (a_type)
+						end
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -2242,6 +2315,39 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Static features
 	routine_set_rout_disp_final_feature: detachable ET_PROCEDURE
 			-- Expected procedure 'set_rout_disp_final' in class "ROUTINE"
 
+feature -- Measurement
+
+	alive_dynamic_type_count: INTEGER
+			-- Number of dynamic types which are alive in `dynamic_types'
+		local
+			i, nb: INTEGER
+		do
+			nb := dynamic_types.count
+			from i := 1 until i > nb loop
+				if dynamic_types.item (i).is_alive then
+					Result := Result + 1
+				end
+				i := i + 1
+			end
+		ensure
+			alive_dynamic_type_count_not_negative: Result >= 0
+		end
+
+	dynamic_feature_count: INTEGER
+			-- Number of dynamic features in the types of `dynamic_types'
+		local
+			i, nb: INTEGER
+		do
+			nb := dynamic_types.count
+			from i := 1 until i > nb loop
+				Result := Result + dynamic_types.item (i).queries.count
+				Result := Result + dynamic_types.item (i).procedures.count
+				i := i + 1
+			end
+		ensure
+			dynamic_feature_count_not_negative: Result >= 0
+		end
+
 feature {NONE} -- Implementation
 
 	empty_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -2253,11 +2359,21 @@ feature {NONE} -- Implementation
 			dynamic_type_sets_empty: Result.is_empty
 		end
 
+	type_name_buffer: STRING
+			-- Buffer to hold type names
+		once
+			create Result.make (200)
+		ensure
+			type_name_buffer_not_void: Result /= Void
+		end
+
 invariant
 
 	current_system_not_void: current_system /= Void
 	dynamic_types_not_void: dynamic_types /= Void
 	no_void_dynamic_type: not dynamic_types.has_void
+	dynamic_generic_types_by_name_not_void: dynamic_generic_types_by_name /= Void
+	no_void_dynamic_generic_type: not dynamic_generic_types_by_name.has_void_item
 	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void
 	boolean_type_not_void: boolean_type /= Void

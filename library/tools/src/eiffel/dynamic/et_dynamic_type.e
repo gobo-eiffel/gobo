@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -178,9 +178,15 @@ feature -- Conformance
 			l_base_type: ET_BASE_TYPE
 			l_other_base_type: ET_BASE_TYPE
 		do
-			l_base_type := primary_type.base_type
-			l_other_base_type := other.primary_type.base_type
-			Result := l_base_type.conforms_to_type_with_type_marks (l_other_base_type, other.type_mark, l_other_base_type, type_mark, l_base_type, tokens.null_system_processor)
+			if other = Current then
+				Result := True
+			else
+				l_base_type := primary_type.base_type
+				l_other_base_type := other.primary_type.base_type
+				if l_other_base_type.is_type_attached_with_type_mark (other.type_mark, l_other_base_type) implies l_base_type.is_type_attached_with_type_mark (type_mark, l_base_type) then
+					Result := primary_type.conforms_to_primary_type (other.primary_type)
+				end
+			end
 		end
 
 feature -- Output

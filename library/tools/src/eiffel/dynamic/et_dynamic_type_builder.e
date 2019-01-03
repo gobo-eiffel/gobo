@@ -149,6 +149,7 @@ feature -- Factory
 		do
 			if in_new_dynamic_type_set then
 				create {ET_DYNAMIC_STANDALONE_TYPE_SET} Result.make_empty (a_type)
+				dynamic_type_set_count := dynamic_type_set_count + 1
 			else
 				in_new_dynamic_type_set := True
 				if a_type.is_expanded then
@@ -378,7 +379,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_dynamic_system)
 				if l_dynamic_feature = Void then
 					l_target_type_set := a_call.target_type_set
-					if a_type.conforms_to_type (l_target_type_set.static_type.primary_type) then
+					if a_type.conforms_to_primary_type (l_target_type_set.static_type.primary_type) then
 							-- Internal error: there should be a feature with seed
 							-- `l_seed' in all descendants of `l_target_type_set.static_type'.
 						set_fatal_error
@@ -482,7 +483,7 @@ feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} 
 			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_formal_type_set := a_feature.argument_type_set (1)
-			if l_formal_type_set /= Void and then a_type.conforms_to_type (l_formal_type_set.static_type.primary_type) then
+			if l_formal_type_set /= Void and then a_type.conforms_to_primary_type (l_formal_type_set.static_type.primary_type) then
 				propagate_builtin_actual_argument_dynamic_types (a_type, 1, a_feature)
 			end
 		end
@@ -749,7 +750,7 @@ feature {NONE} -- CAT-calls
 								nb2 := l_source_type_set.count
 								from j := 1 until j > nb2 loop
 									l_source_type := l_source_type_set.dynamic_type (j)
-									if not l_source_type.conforms_to_type (l_target_type.primary_type) then
+									if not l_source_type.conforms_to_primary_type (l_target_type.primary_type) then
 										report_catcall_error (a_type, Void, 1, l_target_type, l_source_type, l_source_type_set, a_call)
 									end
 									j := j + 1
@@ -791,7 +792,7 @@ feature {NONE} -- CAT-calls
 										nb2 := l_source_type_set.count
 										from j := 1 until j > nb2 loop
 											l_source_type := l_source_type_set.dynamic_type (j)
-											if not l_source_type.conforms_to_type (l_target_type.primary_type) then
+											if not l_source_type.conforms_to_primary_type (l_target_type.primary_type) then
 												report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source_type_set, a_call)
 											end
 											j := j + 1

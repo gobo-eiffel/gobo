@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -6936,7 +6936,7 @@ feature {NONE} -- Instruction generation
 			l_non_conforming_types.resize (nb)
 			from i := 1 until i > nb loop
 				l_dynamic_type := l_source_type_set.dynamic_type (i)
-				if l_dynamic_type.conforms_to_type (l_target_primary_type) then
+				if l_dynamic_type.conforms_to_primary_type (l_target_primary_type) then
 					l_conforming_types.put_last (l_dynamic_type)
 				else
 					l_non_conforming_types.put_last (l_dynamic_type)
@@ -9085,7 +9085,7 @@ feature {NONE} -- Expression generation
 -- TODO: deal with void-safety, when `a_target_type' is attached and we pass Void.
 			l_source_primary_type := a_source_type_set.static_type.primary_type
 			l_target_primary_type := a_target_type.primary_type
-			if not l_source_primary_type.conforms_to_type (l_target_primary_type) then
+			if not l_source_primary_type.conforms_to_primary_type (l_target_primary_type) then
 					-- Make sure that CAT-call errors will be reported at run-time.
 				nb := a_source_type_set.count
 				l_non_conforming_types := attachment_dynamic_type_ids
@@ -9094,7 +9094,7 @@ feature {NONE} -- Expression generation
 				end
 				from i := 1 until i > nb loop
 					l_dynamic_type := a_source_type_set.dynamic_type (i)
-					if not l_dynamic_type.conforms_to_type (l_target_primary_type) then
+					if not l_dynamic_type.conforms_to_primary_type (l_target_primary_type) then
 						l_non_conforming_types.put_last (l_dynamic_type.id)
 					end
 					i := i + 1
@@ -9533,7 +9533,7 @@ feature {NONE} -- Expression generation
 			l_target_type := l_target_type_set.static_type.primary_type
 			l_source_type_set := dynamic_type_set (an_expression.expression)
 			l_source_type := l_source_type_set.static_type.primary_type
-			if l_source_type.conforms_to_type (l_target_type) then
+			if l_source_type.conforms_to_primary_type (l_target_type) then
 -- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
 				an_expression.expression.process (Current)
 			else
@@ -10037,7 +10037,7 @@ feature {NONE} -- Expression generation
 					end
 						-- Call 'is_equal'.
 					l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
-					if not l_dynamic_type.conforms_to_type (l_formal_type.primary_type) then
+					if not l_dynamic_type.conforms_to_primary_type (l_formal_type.primary_type) then
 							-- We won't be able to call 'is_equal' because the type of the
 							-- actual argument does not conform to formal type. The only
 							-- way of the equality to be True as to have both operands Void.
@@ -11387,7 +11387,7 @@ feature {NONE} -- Expression generation
 						current_file.put_character (':')
 					end
 					l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
-					if not l_dynamic_type.conforms_to_type (l_formal_type.primary_type) then
+					if not l_dynamic_type.conforms_to_primary_type (l_formal_type.primary_type) then
 							-- We won't be able to call 'is_equal' because the type of the
 							-- actual argument does not conform to formal type. The only
 							-- way of the equality to be True as to have both operands Void.
@@ -11627,7 +11627,7 @@ feature {NONE} -- Expression generation
 			else
 				from i := 1 until i > nb loop
 					l_dynamic_type := l_source_type_set.dynamic_type (i)
-					if l_dynamic_type.conforms_to_type (l_target_primary_type) then
+					if l_dynamic_type.conforms_to_primary_type (l_target_primary_type) then
 						nb_conforming_types := nb_conforming_types + 1
 					else
 						nb_non_conforming_types := nb_non_conforming_types + 1
@@ -13471,7 +13471,7 @@ feature {NONE} -- Equality generation
 						error_handler.report_giaaa_error
 					else
 						l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
-						if not l_dynamic_type.conforms_to_type (l_formal_type.primary_type) then
+						if not l_dynamic_type.conforms_to_primary_type (l_formal_type.primary_type) then
 								-- We won't be able to call 'is_equal' because the type of the
 								-- actual argument does not conform to formal type.
 							print_indentation
@@ -13819,7 +13819,7 @@ feature {NONE} -- Equality generation
 						error_handler.report_giaaa_error
 					else
 						l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
-						if not l_dynamic_type.conforms_to_type (l_formal_type.primary_type) then
+						if not l_dynamic_type.conforms_to_primary_type (l_formal_type.primary_type) then
 								-- We won't be able to call 'is_equal' because the type of the
 								-- actual argument does not conform to formal type.
 							print_indentation
@@ -14030,7 +14030,7 @@ feature {NONE} -- Object-test generation
 			l_non_conforming_types.resize (nb)
 			from j := 1 until j > nb loop
 				l_dynamic_type := l_source_type_set.dynamic_type (j)
-				if l_dynamic_type.conforms_to_type (l_target_type.primary_type) then
+				if l_dynamic_type.conforms_to_primary_type (l_target_type.primary_type) then
 					l_conforming_types.put_last (l_dynamic_type)
 				else
 					l_non_conforming_types.put_last (l_dynamic_type)
@@ -18355,7 +18355,7 @@ feature {NONE} -- Built-in feature generation
 				l_non_conforming_types.resize (nb)
 				from i := 1 until i > nb loop
 					l_dynamic_type := l_argument_type_set.dynamic_type (i)
-					if current_type.conforms_to_type (l_dynamic_type) then
+					if current_type.conforms_to_primary_type (l_dynamic_type) then
 						l_conforming_types.put_last (l_dynamic_type)
 					else
 						l_non_conforming_types.put_last (l_dynamic_type)
@@ -25843,7 +25843,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 						l_conforming_types.resize (nb)
 						from i := 1 until i > nb loop
 							l_dynamic_type := l_tuple_source_type_set.dynamic_type (i)
-							if l_dynamic_type.conforms_to_type (l_tuple_target_primary_type) then
+							if l_dynamic_type.conforms_to_primary_type (l_tuple_target_primary_type) then
 								l_conforming_types.put_last (l_dynamic_type)
 							else
 								l_has_non_conforming_types := True
@@ -30654,7 +30654,7 @@ feature {NONE} -- Type generation
 			-- conforms are before this type is the list.
 		local
 			l_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE]
-			i, j, nb: INTEGER
+			i, nb: INTEGER
 			l_type, l_other_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			nb := dynamic_types.count
@@ -30665,19 +30665,15 @@ feature {NONE} -- Type generation
 			end
 			from i := 1 until i > nb loop
 				l_type := dynamic_types.item (i)
-				from j := 1 until j > nb loop
-					if i /= j then
-						l_other_type := dynamic_types.item (j)
-						if l_type.conforms_to_type (l_other_type) then
-							if l_type /= current_dynamic_system.none_type then
-								l_type.conforming_ancestors.force (l_other_type)
-							end
-							l_sorter.put_relation (l_other_type, l_type)
-						end
-					elseif l_type /= current_dynamic_system.none_type then
-						l_type.conforming_ancestors.force (l_type)
+				across l_type.conforming_ancestors as l_conforming_ancestors loop
+					l_other_type := l_conforming_ancestors.item
+					if l_other_type /= l_type then
+						l_sorter.put_relation (l_other_type, l_type)
 					end
-					j := j + 1
+				end
+				l_other_type := current_dynamic_system.none_type
+				if l_other_type /= l_type and then l_type.conforms_to_primary_type (l_other_type) then
+					l_sorter.put_relation (l_other_type, l_type)
 				end
 				i := i + 1
 			end

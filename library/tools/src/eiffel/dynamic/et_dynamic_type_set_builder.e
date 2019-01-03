@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -98,6 +98,11 @@ feature -- Factory
 			dynamic_type_set_not_void: Result /= Void
 			static_type_set: Result.static_type = a_type
 		end
+
+feature -- Measurement
+
+	dynamic_type_set_count: INTEGER
+			-- Number of dynamic type sets created by `new_dynamic_type_set'
 
 feature -- Generation
 

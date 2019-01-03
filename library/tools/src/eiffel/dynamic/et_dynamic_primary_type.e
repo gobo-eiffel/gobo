@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -136,9 +136,6 @@ feature -- Access
 	attached_type: detachable ET_DYNAMIC_SECONDARY_TYPE
 			-- Attached version of current type, if already available
 
-	conforming_ancestors: DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE]
-			-- All types (both alive and dead) to which the current type conforms
-
 	hash_code: INTEGER
 			-- Hash code
 
@@ -178,6 +175,25 @@ feature -- Setting
 		ensure
 			hash_code_set: hash_code = a_code
 		end
+
+feature -- Conformance
+
+	conforms_to_primary_type (other: ET_DYNAMIC_PRIMARY_TYPE): BOOLEAN
+			-- Does current type conform to `other' type?
+		require
+			other_not_void: other /= Void
+		do
+			if other = Current then
+				Result := True
+			elseif base_class.is_none then
+				Result := not other.is_expanded
+			else
+				Result := conforming_ancestors.has (other)
+			end
+		end
+
+	conforming_ancestors: DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE]
+			-- All types (both alive and dead) to which the current type conforms
 
 feature -- Features
 
@@ -260,38 +276,28 @@ feature -- Features
 			valid_query: base_class.queries.has (a_query)
 			a_system_not_void: a_system /= Void
 		local
-			i, nb: INTEGER
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			nb: INTEGER
 			l_result: detachable ET_DYNAMIC_FEATURE
+			l_queries_by_seed: like queries_by_seed
 		do
-			if queries = empty_features then
-				create queries.make_with_capacity (base_class.queries.count)
+			l_queries_by_seed := queries_by_seed
+			if l_queries_by_seed = Void then
+				nb := base_class.queries.count
+				create queries.make_with_capacity (nb)
+				create l_queries_by_seed.make_map (nb)
+				queries_by_seed := l_queries_by_seed
+			else
+				l_result := l_queries_by_seed.value (a_query.first_seed)
+			end
+			if l_result /= Void then
+				Result := l_result
+			else
 				Result := new_dynamic_query (a_query, a_system)
+				register_feature_seeds (Result, l_queries_by_seed)
 				if Result.is_attribute then
 					put_attribute (Result, a_system)
 				else
-					queries.put_last (Result)
-				end
-			else
-				nb := queries.count
-				from i := 1 until i > nb loop
-					l_dynamic_feature := queries.item (i)
-					if l_dynamic_feature.static_feature = a_query then
-						l_result := l_dynamic_feature
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-				if l_result /= Void then
-					Result := l_result
-				else
-					Result := new_dynamic_query (a_query, a_system)
-					if Result.is_attribute then
-						put_attribute (Result, a_system)
-					else
-						queries.force_last (Result)
-					end
+					queries.force_last (Result)
 				end
 			end
 		ensure
@@ -306,31 +312,25 @@ feature -- Features
 			valid_procedure: base_class.procedures.has (a_procedure)
 			a_system_not_void: a_system /= Void
 		local
-			i, nb: INTEGER
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			nb: INTEGER
 			l_result: detachable ET_DYNAMIC_FEATURE
+			l_procedures_by_seed: like procedures_by_seed
 		do
-			if procedures = empty_features then
-				create procedures.make_with_capacity (base_class.procedures.count)
-				Result := new_dynamic_procedure (a_procedure, a_system)
-				procedures.put_last (Result)
+			l_procedures_by_seed := procedures_by_seed
+			if l_procedures_by_seed = Void then
+				nb := base_class.procedures.count
+				create procedures.make_with_capacity (nb)
+				create l_procedures_by_seed.make_map (nb)
+				procedures_by_seed := l_procedures_by_seed
 			else
-				nb := procedures.count
-				from i := 1 until i > nb loop
-					l_dynamic_feature := procedures.item (i)
-					if l_dynamic_feature.static_feature = a_procedure then
-						l_result := l_dynamic_feature
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-				if l_result /= Void then
-					Result := l_result
-				else
-					Result := new_dynamic_procedure (a_procedure, a_system)
-					procedures.force_last (Result)
-				end
+				l_result := l_procedures_by_seed.value (a_procedure.first_seed)
+			end
+			if l_result /= Void then
+				Result := l_result
+			else
+				Result := new_dynamic_procedure (a_procedure, a_system)
+				register_feature_seeds (Result, l_procedures_by_seed)
+				procedures.force_last (Result)
 			end
 		ensure
 			dynamic_procedure_not_void: Result /= Void
@@ -343,39 +343,28 @@ feature -- Features
 		require
 			a_system_not_void: a_system /= Void
 		local
-			i, nb: INTEGER
-			l_dynamic_query: ET_DYNAMIC_FEATURE
+			nb: INTEGER
+			l_result: detachable ET_DYNAMIC_FEATURE
+			l_queries_by_seed: like queries_by_seed
 		do
-			if queries = empty_features then
-				if attached base_class.seeded_query (a_seed) as l_query then
-					create queries.make_with_capacity (base_class.queries.count)
-					Result := new_dynamic_query (l_query, a_system)
-					if Result.is_attribute then
-						put_attribute (Result, a_system)
-					else
-						queries.put_last (Result)
-					end
-				end
+			l_queries_by_seed := queries_by_seed
+			if l_queries_by_seed = Void then
+				nb := base_class.queries.count
+				create queries.make_with_capacity (nb)
+				create l_queries_by_seed.make_map (nb)
+				queries_by_seed := l_queries_by_seed
 			else
-				nb := queries.count
-				from i := 1 until i > nb loop
-					l_dynamic_query := queries.item (i)
-					if l_dynamic_query.static_feature.has_seed (a_seed) then
-						Result := l_dynamic_query
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-				if Result = Void then
-					if attached base_class.seeded_query (a_seed) as l_query then
-						Result := new_dynamic_query (l_query, a_system)
-						if Result.is_attribute then
-							put_attribute (Result, a_system)
-						else
-							queries.force_last (Result)
-						end
-					end
+				l_result := l_queries_by_seed.value (a_seed)
+			end
+			if l_result /= Void then
+				Result := l_result
+			elseif attached base_class.seeded_query (a_seed) as l_query then
+				Result := new_dynamic_query (l_query, a_system)
+				register_feature_seeds (Result, l_queries_by_seed)
+				if Result.is_attribute then
+					put_attribute (Result, a_system)
+				else
+					queries.force_last (Result)
 				end
 			end
 		ensure
@@ -388,32 +377,25 @@ feature -- Features
 		require
 			a_system_not_void: a_system /= Void
 		local
-			i, nb: INTEGER
-			l_dynamic_procedure: ET_DYNAMIC_FEATURE
+			nb: INTEGER
+			l_result: detachable ET_DYNAMIC_FEATURE
+			l_procedures_by_seed: like procedures_by_seed
 		do
-			if procedures = empty_features then
-				if attached base_class.seeded_procedure (a_seed) as l_procedure then
-					create procedures.make_with_capacity (base_class.procedures.count)
-					Result := new_dynamic_procedure (l_procedure, a_system)
-					procedures.put_last (Result)
-				end
+			l_procedures_by_seed := procedures_by_seed
+			if l_procedures_by_seed = Void then
+				nb := base_class.procedures.count
+				create procedures.make_with_capacity (nb)
+				create l_procedures_by_seed.make_map (nb)
+				procedures_by_seed := l_procedures_by_seed
 			else
-				nb := procedures.count
-				from i := 1 until i > nb loop
-					l_dynamic_procedure := procedures.item (i)
-					if l_dynamic_procedure.static_feature.has_seed (a_seed) then
-						Result := l_dynamic_procedure
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-				if Result = Void then
-					if attached base_class.seeded_procedure (a_seed) as l_procedure then
-						Result := new_dynamic_procedure (l_procedure, a_system)
-						procedures.force_last (Result)
-					end
-				end
+				l_result := l_procedures_by_seed.value (a_seed)
+			end
+			if l_result /= Void then
+				Result := l_result
+			elseif attached base_class.seeded_procedure (a_seed) as l_procedure then
+				Result := new_dynamic_procedure (l_procedure, a_system)
+				register_feature_seeds (Result, l_procedures_by_seed)
+				procedures.force_last (Result)
 			end
 		ensure
 			is_procedure: Result /= Void implies Result.is_procedure
@@ -589,6 +571,30 @@ feature {NONE} -- Features
 			one_more: attribute_count = old attribute_count + 1
 			reference_attribute: (attached an_attribute.result_type_set as l_result_type_set and then not l_result_type_set.is_expanded) implies has_reference_attributes
 			generic_expanded_attribute: (attached an_attribute.result_type_set as l_result_type_set and then l_result_type_set.is_expanded and then l_result_type_set.static_type.primary_type.is_generic) implies has_generic_expanded_attributes
+		end
+
+	queries_by_seed: detachable DS_HASH_TABLE [ET_DYNAMIC_FEATURE, INTEGER]
+			-- Cache for `seeded_dynamic_query' and `dynamic_query'
+
+	procedures_by_seed: detachable DS_HASH_TABLE [ET_DYNAMIC_FEATURE, INTEGER]
+			-- Cache for `seeded_dynamic_procedure' and `dynamic_procedure'
+
+	register_feature_seeds (a_feature: ET_DYNAMIC_FEATURE; a_features_by_seed: DS_HASH_TABLE [ET_DYNAMIC_FEATURE, INTEGER])
+			-- Add `a_feature' to `a_features_by_seed' for each of its seeds.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_features_by_seed_not_void: a_features_by_seed /= Void
+		local
+			i, nb: INTEGER
+		do
+			a_features_by_seed.force_last (a_feature, a_feature.static_feature.first_seed)
+			if attached a_feature.static_feature.other_seeds as l_other_seeds then
+				nb := l_other_seeds.count
+				from i := 1 until i > nb loop
+					a_features_by_seed.force_last (a_feature, l_other_seeds.item (i))
+					i := i + 1
+				end
+			end
 		end
 
 feature -- Calls
