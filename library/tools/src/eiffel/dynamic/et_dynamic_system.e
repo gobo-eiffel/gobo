@@ -1038,10 +1038,19 @@ feature {NONE} -- Types
 				nb := dynamic_types.count
 				from i := 1 until i > nb loop
 					l_other_type := dynamic_types.item (i)
-					if l_other_type /= a_type and then not l_other_type.base_class.is_none then
-						l_other_base_type := l_other_type.base_type
-						if l_other_base_type.conforms_to_type_with_type_marks (l_base_type, a_type.type_mark, l_base_type, l_other_type.type_mark, l_other_base_type, tokens.null_system_processor) then
-							l_other_type.conforming_ancestors.force_last (a_type)
+					l_other_base_class := l_other_type.base_class
+					if l_other_base_class.index = i and then not l_other_base_class.is_none and then (l_other_base_class = l_base_class or else l_other_base_class.conforming_ancestors.has_class (l_base_class)) then
+						from
+						until
+							l_other_type = Void
+						loop
+							if l_other_type /= a_type then
+								l_other_base_type := l_other_type.base_type
+								if l_other_base_type.conforms_to_type_with_type_marks (l_base_type, a_type.type_mark, l_base_type, l_other_type.type_mark, l_other_base_type, tokens.null_system_processor) then
+									l_other_type.conforming_ancestors.force_last (a_type)
+								end
+							end
+							l_other_type := l_other_type.next_type
 						end
 					end
 					i := i + 1
