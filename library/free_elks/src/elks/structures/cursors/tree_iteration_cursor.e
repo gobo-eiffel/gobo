@@ -12,7 +12,7 @@ create {TREE}
 
 feature {NONE} -- Creation
 
-	make (target: TREE [G])
+	make (target: like node)
 			-- Initialize the cursor with a target tree `target`.
 		do
 			node := target
@@ -90,7 +90,7 @@ feature {NONE} -- Iteration state
 			-- Current node with an item.
 
 	child_index: STACK [like {TREE [G]}.child_index]
-			--
+			-- Indexes of children to iterate over.
 
 ;note
 	library: "EiffelBase: Library of reusable components for Eiffel."

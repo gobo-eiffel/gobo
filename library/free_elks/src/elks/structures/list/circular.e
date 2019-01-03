@@ -3,9 +3,9 @@ note
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: circular, ring, sequence;
-	access: index, cursor, membership;
-	contents: generic;
+	names: circular, ring, sequence
+	access: index, cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,10 +14,10 @@ deferred class CIRCULAR [G] inherit
 	CHAIN [G]
 		redefine
 			remove,
-			forth, back, before, after, off,
+			off,
 			move, go_i_th,
 			valid_cursor_index, exhausted,
-			first, last, index
+			first, last
 		end
 
 feature -- Access
@@ -274,7 +274,7 @@ invariant
 	not_off_unless_empty: off implies is_empty
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

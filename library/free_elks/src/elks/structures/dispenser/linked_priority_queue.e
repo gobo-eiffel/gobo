@@ -34,8 +34,6 @@ class LINKED_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 		undefine
 			copy, is_equal,
 			prune_all, append, readable, writable, fill
-		redefine
-			put, remove
 		end
 
 create

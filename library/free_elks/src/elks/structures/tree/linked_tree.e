@@ -23,7 +23,8 @@ class LINKED_TREE [G] inherit
 			child_item,
 			child_off
 		redefine
-			parent, clone_node
+			new_cursor,
+			parent
 		select
 			has,
 			new_cursor
@@ -99,7 +100,10 @@ class LINKED_TREE [G] inherit
 			child_isfirst, child_islast, valid_cursor_index,
 			copy, is_equal
 		redefine
-			first_child, new_cell, new_tree, child_cursor
+			child_cursor,
+			first_child,
+			new_cell,
+			new_tree
 		select
 			is_leaf
 		end
@@ -149,6 +153,14 @@ feature -- Access
 			-- Current cursor position
 		do
 			create Result.make (child, child_after, child_before)
+		end
+
+feature -- Iteration
+
+	new_cursor: LINKED_TREE_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature {RECURSIVE_CURSOR_TREE} -- Element change

@@ -1,14 +1,14 @@
 note
 	description: "[
-		Sequential, dynamically modifiable lists,
-		without commitment to a particular representation
+			Sequential, dynamically modifiable lists,
+			without commitment to a particular representation
 		]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: dynamic_list, sequence;
-	access: index, cursor, membership;
-	contents: generic;
+	names: dynamic_list, sequence
+	access: index, cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,7 +29,7 @@ deferred class DYNAMIC_LIST [G] inherit
 		undefine
 			is_equal
 		redefine
-			put_left, put_right,
+			put_right,
 			remove_left, remove_right
 		end
 
@@ -37,7 +37,7 @@ deferred class DYNAMIC_LIST [G] inherit
 		undefine
 			is_equal
 		redefine
-			put_left, put_right,
+			put_right,
 			remove_left, remove_right, wipe_out
 		select
 			wipe_out
@@ -133,7 +133,7 @@ feature -- Removal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

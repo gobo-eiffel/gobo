@@ -17,7 +17,8 @@ class TWO_WAY_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off, child_islast
 		redefine
-			parent, clone_node
+			new_cursor,
+			parent
 		select
 			has,
 			new_cursor
@@ -129,6 +130,14 @@ feature -- Access
 			-- Current cursor position
 		do
 			create Result.make (child, child_after, child_before)
+		end
+
+feature -- Iteration
+
+	new_cursor: TWO_WAY_TREE_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature -- Status report

@@ -43,10 +43,6 @@
 				<exclude>/structures/cursors/compact_tree_cursor.e$</exclude>
 				<exclude>/structures/cursors/linked_cursor_tree_cursor.e$</exclude>
 				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>
-				<exclude>/structures/tree/linked_tree.e$</exclude>
-				<exclude>/structures/tree/two_way_tree.e$</exclude>
-				<exclude>/structures/cursors/linked_tree_cursor.e$</exclude>
-				<exclude>/structures/cursors/two_way_tree_cursor.e$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

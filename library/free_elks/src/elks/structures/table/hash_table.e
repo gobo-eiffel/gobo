@@ -15,7 +15,7 @@ class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 		rename
 			has as has_item
 		redefine
-			has_item, copy, is_equal
+			copy, is_equal
 		end
 
 	TABLE [G, K]
@@ -28,7 +28,7 @@ class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 		export
 			{NONE} prune_all
 		redefine
-			copy, is_equal, wipe_out, has_item
+			copy, is_equal
 		end
 
 	TABLE_ITERABLE [G, K]

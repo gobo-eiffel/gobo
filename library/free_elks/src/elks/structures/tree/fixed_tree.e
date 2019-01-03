@@ -7,7 +7,6 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-
 	names: fixed_tree, tree, fixed_list
 	representation: recursive, array
 	access: cursor, membership
@@ -31,7 +30,7 @@ class FIXED_TREE [G] inherit
 			child_off, child_after, child_before,
 			child_item
 		redefine
-			parent, attach_to_parent, child_capacity, clone_node
+			parent, attach_to_parent, child_capacity
 		end
 
 create
@@ -627,6 +626,7 @@ feature {NONE} -- private access fixed_list
 		end
 
 note
+	ca_ignore: "CA024", "CA024: use an across loop instead of a regular one"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

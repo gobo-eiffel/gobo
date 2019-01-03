@@ -27,7 +27,7 @@ class ARRAYED_TREE [G] inherit
 			writable_child, child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
-			duplicate_all, fill_subtree, clone_node
+			duplicate_all, fill_subtree
 		end
 
 create
@@ -604,14 +604,6 @@ feature -- Access: children
 	wipe_out
 		do
 			arrayed_list.wipe_out
-		end
-
-	move (i: INTEGER)
-			-- Move child
-		obsolete
-			"Use feature `child_move' instead. [2017-05-31]"
-		do
-			child_move (i)
 		end
 
 	child_move (i: INTEGER)

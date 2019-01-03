@@ -1,7 +1,7 @@
 ﻿note
 	description: "[
-		Sets whose items may be compared according to a total order relation;
-		implemented as sorted two-way lists.
+			Sets whose items may be compared according to a total order relation;
+			implemented as sorted two-way lists.
 		]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
@@ -25,8 +25,6 @@ class TWO_WAY_SORTED_SET [G -> COMPARABLE] inherit
 			min, max, index_of,
 			prune_all, occurrences,
 			is_equal, fill, copy
-		redefine
-			merge, intersect, subtract
 		select
 			 extend, put, prune
 		end

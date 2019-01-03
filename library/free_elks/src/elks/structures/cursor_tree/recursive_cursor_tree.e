@@ -3,10 +3,10 @@ note
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: recursive_cursor_tree, cursor_tree, tree;
-	access: cursor, membership;
-	representation: recursive;
-	contents: generic;
+	names: recursive_cursor_tree, cursor_tree, tree
+	access: cursor, membership
+	representation: recursive
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +14,7 @@ deferred class RECURSIVE_CURSOR_TREE [G] inherit
 
 	CURSOR_TREE [G]
 		redefine
-			is_empty, extendible, extend
+			extendible, extend
 		end
 
 feature -- Access
@@ -385,7 +385,7 @@ invariant
 	coherency: not above implies (attached active_parent as a and then a.child = active)
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -28,10 +28,7 @@ inherit
 			fill_list,
 			child_remove,
 			child_after,
-			child_capacity,
-			child_start,
-			child_forth,
-			clone_node
+			child_capacity
 		end
 
 create

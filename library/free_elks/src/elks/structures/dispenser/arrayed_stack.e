@@ -3,11 +3,11 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: dispenser, array;
-	representation: array;
-	access: fixed, lifo, membership;
-	size: fixed;
-	contents: generic;
+	names: dispenser, array
+	representation: array
+	access: fixed, lifo, membership
+	size: fixed
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,8 +16,6 @@ class ARRAYED_STACK [G] inherit
 	STACK [G]
 		undefine
 			copy, is_equal, prune_all, replace, is_inserted
-		redefine
-			linear_representation
 		select
 			remove, extend, put
 		end

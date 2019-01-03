@@ -19,8 +19,7 @@ class MULTI_ARRAY_LIST [G] inherit
 	DYNAMIC_LIST [G]
 		redefine
 			start, finish, move, has, first, last, prune_all, search,
-			remove, duplicate, wipe_out, put_left, put_right,
-			put_front, extend
+			duplicate, wipe_out, put_left
 		end
 
 create

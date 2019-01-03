@@ -3,16 +3,13 @@ note
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: infinite, storage ;
+	names: infinite, storage
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class INFINITE [G] inherit
 
 	BOX [G]
-		redefine
-			is_empty
-		end
 
 feature -- Status report
 
@@ -28,7 +25,7 @@ invariant
 	always_full: full
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
