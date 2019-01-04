@@ -5,7 +5,7 @@ note
 		"Eiffel conversion-from expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,8 +17,6 @@ inherit
 	ET_CONVERT_EXPRESSION
 		undefine
 			is_never_void
-		redefine
-			process
 		end
 
 	ET_CREATION_EXPRESSION

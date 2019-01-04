@@ -8,7 +8,7 @@ note
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2019, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,6 @@ inherit
 			cursor_search_back,
 			has_void
 		redefine
-			new_cursor,
 			equality_tester,
 			root_node
 		end

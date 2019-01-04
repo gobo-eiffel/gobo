@@ -5,7 +5,7 @@ note
 		"Objects that are XPath values that are not a sequence (strictly, a sequence of one item)"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2019, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,7 @@ inherit
 
 	XM_XPATH_ITEM
 		redefine
-			as_item_value, is_atomic_value, as_atomic_value
+			is_atomic_value, as_atomic_value
 		end
 
 	HASHABLE

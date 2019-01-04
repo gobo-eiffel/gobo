@@ -10,7 +10,7 @@ note
 		in Eiffel.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,8 +21,7 @@ inherit
 
 	DS_BILINEAR_CURSOR [K]
 		redefine
-			next_cursor,
-			before
+			next_cursor
 		end
 
 create {DS_SPARSE_TABLE_KEYS}

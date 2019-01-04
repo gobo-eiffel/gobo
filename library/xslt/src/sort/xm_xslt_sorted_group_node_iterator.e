@@ -5,7 +5,7 @@ note
 		"Objects that render a sorted iteration of groups of nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2019, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,6 @@ inherit
 			is_reversible_iterator,
 			is_singleton_iterator, as_singleton_iterator
 		redefine
-			current_group_iterator,
 			is_error, error_value, index
 		end
 

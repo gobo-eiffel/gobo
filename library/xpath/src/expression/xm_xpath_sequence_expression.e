@@ -5,7 +5,7 @@ note
 		"A concatenation of two XPath Expressions (comma operator)"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2019, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,8 +17,8 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			is_sequence_expression, as_sequence_expression,
-			item_type, sub_expressions, contains_recursive_tail_function_calls,
-			simplify, promote, compute_cardinality, create_iterator, create_node_iterator,
+			sub_expressions, contains_recursive_tail_function_calls,
+			simplify, promote, create_iterator, create_node_iterator,
 			same_expression, mark_tail_function_calls
 		end
 

@@ -6,7 +6,7 @@ note
 		%modified through integer access"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #11 $"
@@ -27,9 +27,7 @@ inherit
 			put_last,
 			force_last,
 			extend_last,
-			append_last,
-			do_until,
-			do_if_until
+			append_last
 		end
 
 feature -- Access
