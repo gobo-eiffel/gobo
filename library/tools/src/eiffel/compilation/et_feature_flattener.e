@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1253,16 +1253,20 @@ feature {NONE} -- Feature adaptation validity
 			if a_parent_feature.has_redefine then
 				if a_redeclared_feature.is_deferred /= a_parent_feature.is_deferred then
 					if a_redeclared_feature.is_deferred then
-							-- Error: Used 'redefine' instead of 'undefine'.
-							-- Need to use 'undefine' to redeclare an
-							-- effective feature to a deferred feature.
-							-- (Not considered as a fatal error by gelint.)
-						error_handler.report_vdrd5a_error (current_class, a_parent_feature, a_redeclared_feature)
+						if not a_parent_feature.has_other_deferred then
+								-- Error: Used 'redefine' instead of 'undefine'.
+								-- Need to use 'undefine' to redeclare an
+								-- effective feature to a deferred feature.
+								-- (Not considered as a fatal error by gelint.)
+							error_handler.report_vdrd5a_error (current_class, a_parent_feature, a_redeclared_feature)
+						end
 					else
-							-- Error: No need to 'redefine' to redeclare
-							-- a deferred feature to an effective feature.
-							-- (Not considered as a fatal error by gelint.)
-						error_handler.report_vdrs4b_error (current_class, a_parent_feature, a_redeclared_feature)
+						if not a_parent_feature.has_other_effective then
+								-- Error: No need to 'redefine' to redeclare
+								-- a deferred feature to an effective feature.
+								-- (Not considered as a fatal error by gelint.)
+							error_handler.report_vdrs4b_error (current_class, a_parent_feature, a_redeclared_feature)
+						end
 					end
 				end
 			elseif a_redeclared_feature.is_deferred then

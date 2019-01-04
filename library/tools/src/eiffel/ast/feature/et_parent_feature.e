@@ -5,7 +5,7 @@ note
 		"Eiffel parent features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +46,8 @@ feature -- Initialization
 			redefine_name := Void
 			undefine_name := Void
 			select_name := Void
+			has_other_deferred := False
+			has_other_effective := False
 		ensure
 			parent_set: parent = a_parent
 			precursor_feature_set: precursor_feature = a_feature
@@ -60,6 +62,14 @@ feature -- Status report
 		ensure
 			definition: Result = (has_undefine or precursor_feature.is_deferred)
 		end
+
+	has_other_deferred: BOOLEAN
+			-- Is there another feature inherited as deferred from the
+			-- same parent under the same name (after possible renaming)?
+
+	has_other_effective: BOOLEAN
+			-- Is there another feature inherited as effective from the
+			-- same parent under the same name (after possible renaming)?
 
 	has_seed (a_seed: INTEGER): BOOLEAN
 			-- Does current parent feature have `a_seed'?
@@ -220,6 +230,24 @@ feature -- Comparison
 			Result := (precursor_feature = l_other_precursor) or else (precursor_feature.version = l_other_precursor.version)
 		ensure
 			definition: Result = (precursor_feature.version = other.precursor_feature.version)
+		end
+
+feature -- Status setting
+
+	set_has_other_deferred (b: BOOLEAN)
+			-- Set `has_other_deferred' to `b'.
+		do
+			has_other_deferred := b
+		ensure
+			has_other_deferred_set: has_other_deferred = b
+		end
+
+	set_has_other_effective (b: BOOLEAN)
+			-- Set `has_other_effective' to `b'.
+		do
+			has_other_effective := b
+		ensure
+			has_other_effective_set: has_other_effective = b
 		end
 
 feature -- Setting

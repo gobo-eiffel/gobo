@@ -68,6 +68,9 @@
 * Improved the way dynamic type sets and their attachment marks are 
   processed in void-safe mode.
 * Improved speed when computing dynamic type sets.
+* Made sure that no `VDRS-4` error is reported when two features are
+  inherited under the same name (after possible renaming) from the same
+  parent and one is deferred and not the other.
 
 ### Gobo Eiffel XPath Library
 

@@ -5,7 +5,7 @@ note
 		"Eiffel features being processed through the Feature_adaptation clause"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -237,11 +237,35 @@ feature -- Element change
 			a_feature_not_merged: a_feature.merged_feature = Void
 			same_name: (not is_dotnet and not a_feature.precursor_feature.implementation_class.current_system.alias_transition_mode) implies a_feature.name.same_feature_name (name)
 		local
+			l_parent_feature: detachable ET_PARENT_FEATURE
+			l_parent: ET_PARENT
+			l_feature_deferred: BOOLEAN
 			a_seed: INTEGER
 			i, nb: INTEGER
 			need_twin: BOOLEAN
 			l_other_seeds: like other_seeds
 		do
+			from
+				l_parent_feature := parent_feature
+				l_parent := a_feature.parent
+				l_feature_deferred := a_feature.is_deferred
+			until
+				l_parent_feature = Void
+			loop
+				if l_parent_feature.parent = l_parent then
+					if l_feature_deferred then
+						l_parent_feature.set_has_other_deferred (True)
+					else
+						l_parent_feature.set_has_other_effective (True)
+					end
+					if l_parent_feature.is_deferred then
+						a_feature.set_has_other_deferred (True)
+					else
+						a_feature.set_has_other_effective (True)
+					end
+				end
+				l_parent_feature := l_parent_feature.merged_feature
+			end
 			a_feature.set_merged_feature (parent_feature.merged_feature)
 			parent_feature.set_merged_feature (a_feature)
 			need_twin := is_other_seeds_shared
