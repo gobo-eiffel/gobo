@@ -17,15 +17,15 @@ feature
 		do
 		end	
 
-	after: BOOLEAN
+	forth
 		do
-			Result := True
 		end
 
 feature {AA}
 
-	forth
+	after: BOOLEAN
 		do
+			Result := True
 		end
 
 end

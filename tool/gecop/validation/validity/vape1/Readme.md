@@ -19,4 +19,4 @@ A *Precondition* of a feature `r` of a class `S` is valid if and only if every f
 * We should also take into account the case where `f` is the feature of a call agent (e.g. `agent f`).
 * We should also take into account the case where `f` appears in an *Address* expression  (e.g. `$f`).
 * We should also take into account the case where `f` is the feature of a Non-object call (e.g. `{A}.f`).
-* We should also take into account the case where `f` is the feature `new_cursor` called behind the scene by an `across` expression or instruction.
+* We should also take into account the case where `f` is one of the features `new_cursor`, `after` or `forth` called behind the scene by an `across` expression or instruction.

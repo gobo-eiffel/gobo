@@ -4,13 +4,12 @@ Running Test Cases
 
 Test Summary for validation
 
-# Passed:     13 tests
-# FAILED:     5 tests
+# Passed:     18 tests
+# FAILED:     4 tests
 # Aborted:    0 test
-# Total:      18 tests (131 assertions)
+# Total:      22 tests (160 assertions)
 
 Test Results:
-FAIL:  [validity/vape1/test14] test_failed
 FAIL:  [validity/vape2/test1] test_failed
 FAIL:  [validity/vape2/test2] test_failed
 FAIL:  [validity/vape2/test3] test_failed
