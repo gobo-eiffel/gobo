@@ -3392,7 +3392,7 @@ feature {NONE} -- Initialization
 			position := a_result.position
 			code := template_code (veen2b_template_code)
 			etl_code := veen2_etl_code
-			default_template := default_message_template (veen2b_default_template)
+			default_template := default_message_template (veen2f_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
