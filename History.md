@@ -25,6 +25,7 @@
 
 * New tool to validate the conformance of Eiffel tools (typically compilers)
   to the ECMA Eiffel standard.
+* Added tests for the validity rules `VAPE-1` and `VAPE-2`.
 
 ### Gobo Eiffel Tools Library
 

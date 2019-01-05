@@ -1,0 +1,2 @@
+[VAPE] class AA (20,8): feature `g' of class AA appearing in the precondition of `f' is not exported to class ANY to which feature `f' is exported.
+----

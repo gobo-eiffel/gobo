@@ -1,0 +1,2 @@
+[VAPE] class AA (21,16): feature `new_cursor' of class BB appearing in the precondition of `f' is not exported to class ANY to which feature `f' is exported.
+----
