@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/23 $"
 	revision: "$Revision: #35 $"
@@ -909,13 +909,13 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
+	report_vape1a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Report VAPE-1 error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
 			-- one of its descendants `a_class' (possibly itself), is not exported to class
 			-- `a_client' to which `a_pre_feature' is exported.
 			--
-			-- ETL2: p.122
+			-- ECMA 367-2, 8.9.5 page 58.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -927,20 +927,20 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vape_error (a_class) then
-				create an_error.make_vape0a (a_class, a_class_impl, a_name, a_feature, a_pre_feature, a_client)
+			if reportable_vape1_error (a_class) then
+				create an_error.make_vape1a (a_class, a_class_impl, a_name, a_feature, a_pre_feature, a_client)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
+	report_vape1b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Report VAPE-1 error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
 			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
 			-- a_class' (possibly itself), is not exported to class `a_client' to which
 			-- `a_pre_feature' is exported.
 			--
-			-- ETL2: p.122
+			-- ECMA- 367-2, 8.9.5 page 58.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -953,8 +953,8 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vape_error (a_class) then
-				create an_error.make_vape0b (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client)
+			if reportable_vape1_error (a_class) then
+				create an_error.make_vape1b (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client)
 				report_validity_error (an_error)
 			end
 		end
@@ -7468,8 +7468,8 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vape_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VAPE error be reported when it
+	reportable_vape1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VAPE-1 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

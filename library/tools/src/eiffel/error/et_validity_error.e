@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,8 +27,8 @@ create
 
 	make,
 	make_vaol1a,
-	make_vape0a,
-	make_vape0b,
+	make_vape1a,
+	make_vape1b,
 	make_vave0a,
 	make_vbac1a,
 	make_vbac2a,
@@ -411,13 +411,13 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 		end
 
-	make_vape0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
+	make_vape1a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Create a new VAPE-1 error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and viewed from
 			-- one of its descendants `a_class' (possibly itself), is not exported to class
 			-- `a_client' to which `a_pre_feature' is exported.
 			--
-			-- ETL2: p.122
+			-- ECMA 367-2, 8.9.5 page 58.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -430,9 +430,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_name.position
-			code := template_code (vape0a_template_code)
-			etl_code := vape_etl_code
-			default_template := default_message_template (vape0a_default_template)
+			code := template_code (vape1a_template_code)
+			etl_code := vape1_etl_code
+			default_template := default_message_template (vape1a_default_template)
 			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -463,14 +463,14 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = name of client of feature `$9'
 		end
 
-	make_vape0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
+	make_vape1b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Create a new VAPE-1 error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
 			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
 			-- a_class' (possibly itself), is not exported to class `a_client' to which
 			-- `a_pre_feature' is exported.
 			--
-			-- ETL2: p.122
+			-- ECMA 367-2, 8.9.5 page 58.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -484,9 +484,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_name.position
-			code := template_code (vape0b_template_code)
-			etl_code := vape_etl_code
-			default_template := default_message_template (vape0b_default_template)
+			code := template_code (vape1b_template_code)
+			etl_code := vape1_etl_code
+			default_template := default_message_template (vape1b_default_template)
 			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -14579,8 +14579,8 @@ feature {NONE} -- Implementation
 		end
 
 	vaol1a_default_template: STRING = "old expression does not appear in a postcondition."
-	vape0a_default_template: STRING = "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
-	vape0b_default_template: STRING = "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
+	vape1a_default_template: STRING = "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape1b_default_template: STRING = "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
 	vave0a_default_template: STRING = "loop variant expression of type '$7' is not a sized variant of INTEGER."
 	vbac1a_default_template: STRING = "the source of the assigner call (of type '$7') does not conform nor convert to its target (of type '$8')."
 	vbac2a_default_template: STRING = "query `$7' in class $8 has no assigner command."
@@ -14890,7 +14890,7 @@ feature {NONE} -- Implementation
 			-- Default templates
 
 	vaol1_etl_code: STRING = "VAOL-1"
-	vape_etl_code: STRING = "VAPE"
+	vape1_etl_code: STRING = "VAPE-1"
 	vave_etl_code: STRING = "VAVE"
 	vbac1_etl_code: STRING = "VBAC-1"
 	vbac2_etl_code: STRING = "VBAC-2"
@@ -15068,8 +15068,8 @@ feature {NONE} -- Implementation
 		end
 
 	vaol1a_template_code: STRING = "vaol1a"
-	vape0a_template_code: STRING = "vape0a"
-	vape0b_template_code: STRING = "vape0b"
+	vape1a_template_code: STRING = "vape1a"
+	vape1b_template_code: STRING = "vape1b"
 	vave0a_template_code: STRING = "vave0a"
 	vbac1a_template_code: STRING = "vbac1a"
 	vbac2a_template_code: STRING = "vbac2a"

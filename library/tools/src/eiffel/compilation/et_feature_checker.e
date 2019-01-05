@@ -10460,7 +10460,7 @@ feature {NONE} -- Expression validity
 						-- Another error has already reported.
 					else
 						set_fatal_error
-						error_handler.report_vape0b_error (current_class, current_class_impl, a_name, a_feature, a_class, current_feature.as_feature, l_client)
+						error_handler.report_vape1b_error (current_class, current_class_impl, a_name, a_feature, a_class, current_feature.as_feature, l_client)
 					end
 					i := i + 1
 				end
@@ -10509,7 +10509,7 @@ feature {NONE} -- Expression validity
 						-- Another error has already reported.
 					else
 						set_fatal_error
-						error_handler.report_vape0a_error (current_class, current_class_impl, a_name, a_feature, current_feature.as_feature, l_client)
+						error_handler.report_vape1a_error (current_class, current_class_impl, a_name, a_feature, current_feature.as_feature, l_client)
 					end
 					i := i + 1
 				end

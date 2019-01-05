@@ -5,7 +5,7 @@ note
 		"Null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ inherit
 			reportable_gvsrc5_error,
 			reportable_gvsrc6_error,
 			reportable_vaol1_error,
-			reportable_vape_error,
+			reportable_vape1_error,
 			reportable_vave_error,
 			reportable_vbac1_error,
 			reportable_vbac2_error,
@@ -299,8 +299,8 @@ feature -- Validity error status
 			Result := False
 		end
 
-	reportable_vape_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VAPE error be reported when it
+	reportable_vape1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VAPE-1 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

@@ -5,7 +5,7 @@ See also [VAPE-2](../vape2)
 
 ### VAPE: Precondition Export rule
 
-ECMA-367-2, 8.9.5 page 58.
+ECMA 367-2, 8.9.5 page 58.
 
 A *Precondition* of a feature `r` of a class `S` is valid if and only if every feature `f` appearing in every *Assertion_clause* of its unfolded form `u` satisfies the following two conditions for every class `C` to which `r` is available:
 
