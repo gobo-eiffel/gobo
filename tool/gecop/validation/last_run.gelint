@@ -7,7 +7,7 @@ Test Summary for validation
 # Passed:     12 tests
 # FAILED:     6 tests
 # Aborted:    0 test
-# Total:      18 tests (126 assertions)
+# Total:      18 tests (132 assertions)
 
 Test Results:
 FAIL:  [validity/vape1/test14] test_failed

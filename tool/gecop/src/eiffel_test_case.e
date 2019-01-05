@@ -4,7 +4,7 @@ note
 
 		"Eiffel standard test cases"
 
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,9 +110,9 @@ feature -- Test Gobo Eiffel Compiler
 			concat_output3
 				-- Test.
 			create l_directory.make (program_dirname)
-			if l_directory.there_exists (agent output_recognized (?, l_directory, passed_filename_regexp ("gec"), output_log_filename)) then
+			if l_directory.there_exists (agent output_recognized (?, l_directory, passed_filename_regexp ("gec?"), output_log_filename)) then
 				assert ("test_passed", True)
-			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("gec"), output_log_filename)) then
+			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("gec?"), output_log_filename)) then
 				assert ("test_failed", False)
 			else
 				assert ("unknown_test_result", False)
@@ -217,9 +217,9 @@ feature -- Test gelint
 			concat_output1 (agent filter_output_gelint)
 				-- Test.
 			create l_directory.make (program_dirname)
-			if l_directory.there_exists (agent output_recognized (?, l_directory, passed_filename_regexp ("gelint"), output_log_filename)) then
+			if l_directory.there_exists (agent output_recognized (?, l_directory, passed_filename_regexp ("(gelint|gec?)"), output_log_filename)) then
 				assert ("test_passed", True)
-			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("gelint"), output_log_filename)) then
+			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("(gelint|gec?)"), output_log_filename)) then
 				assert ("test_failed", False)
 			else
 				assert ("unknown_test_result", False)
@@ -872,8 +872,8 @@ feature {NONE} -- Regular expressions
 			create Result.make
 			Result.compile (".*passed.*\." + a_file_extension)
 		ensure
-			passed_regexp_gec_not_void: Result /= Void
-			passed_regexp_gec_compiled: Result.is_compiled
+			passed_filename_regexp_not_void: Result /= Void
+			passed_filename_regexp_compiled: Result.is_compiled
 		end
 
 	failed_filename_regexp (a_file_extension: STRING): RX_PCRE_REGULAR_EXPRESSION
@@ -886,8 +886,8 @@ feature {NONE} -- Regular expressions
 			create Result.make
 			Result.compile (".*failed.*\." + a_file_extension)
 		ensure
-			failed_regexp_gec_not_void: Result /= Void
-			failed_regexp_gec_compiled: Result.is_compiled
+			failed_filename_regexp_not_void: Result /= Void
+			failed_filename_regexp_compiled: Result.is_compiled
 		end
 
 invariant
