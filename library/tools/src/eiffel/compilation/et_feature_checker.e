@@ -12198,9 +12198,7 @@ feature {NONE} -- Agent validity
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
-				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
-				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
@@ -12349,9 +12347,7 @@ feature {NONE} -- Agent validity
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
-				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
-				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
@@ -12470,9 +12466,7 @@ feature {NONE} -- Agent validity
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
-				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
-				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
@@ -12560,9 +12554,7 @@ feature {NONE} -- Agent validity
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
-				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
-				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
@@ -12651,9 +12643,7 @@ feature {NONE} -- Agent validity
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
-				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
-				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
@@ -12810,9 +12800,7 @@ feature {NONE} -- Agent validity
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
 				current_initialization_scope := new_attachment_scope
-				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
-				current_attachment_scope.copy_scope (l_old_attachment_scope)
 			end
 			if in_static_feature then
 					-- Error: we cannot use an inline agent in a static feature.
