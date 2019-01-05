@@ -17,6 +17,7 @@ feature {ANY}
 		require
 			g
 		do
+			print ("Failed")
 		end
 
 feature {STRING}

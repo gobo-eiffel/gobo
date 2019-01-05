@@ -17,7 +17,7 @@ feature {ANY}
 		require
 			(agent: BOOLEAN do Result := g end).item ([])
 		do
-			print (5)
+			print ("Failed")
 		end
 
 feature {STRING}

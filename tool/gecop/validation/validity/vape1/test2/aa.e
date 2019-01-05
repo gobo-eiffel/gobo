@@ -17,6 +17,7 @@ feature {ANY}
 		require
 			(agent g).item ([])
 		do
+			print ("Failed")
 		end
 
 feature {STRING}
