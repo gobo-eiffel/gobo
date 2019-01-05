@@ -6345,6 +6345,7 @@ feature {NONE} -- Expression validity
 							if l_procedure /= Void then
 								l_seed := l_procedure.first_seed
 								l_name.set_seed (l_seed)
+								check_unqualified_vape_validity (l_name, l_procedure)
 								report_procedure_address (an_expression, l_procedure)
 									-- $feature_name is of type POINTER, even
 									-- in ISE and its TYPED_POINTER support.
@@ -6358,6 +6359,7 @@ feature {NONE} -- Expression validity
 								if l_query /= Void then
 									l_seed := l_query.first_seed
 									l_name.set_seed (l_seed)
+									check_unqualified_vape_validity (l_name, l_query)
 									if l_query.is_attribute then
 										if in_static_feature then
 												-- Error: we cannot access the address of an attribute
@@ -6622,6 +6624,7 @@ feature {NONE} -- Expression validity
 					else
 						l_procedure := current_class.seeded_procedure (l_seed)
 						if l_procedure /= Void then
+							check_unqualified_vape_validity (l_name, l_procedure)
 							report_procedure_address (an_expression, l_procedure)
 								-- $feature_name is of type POINTER, even
 								-- in ISE and its TYPED_POINTER support.
@@ -6631,6 +6634,7 @@ feature {NONE} -- Expression validity
 						else
 							l_query := current_class.seeded_query (l_seed)
 							if l_query /= Void then
+								check_unqualified_vape_validity (l_name, l_query)
 								if l_query.is_attribute then
 									if in_static_feature then
 											-- Error: we cannot access the address of an attribute

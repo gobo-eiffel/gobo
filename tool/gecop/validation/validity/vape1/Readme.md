@@ -1,7 +1,7 @@
 # Validity VAPE-1
 
 These tests are exercising the condition 1 of the validity rule below.
-See also [VAPE-2](../vape2)
+See also [VAPE-2](../vape2).
 
 ### VAPE: Precondition Export rule
 

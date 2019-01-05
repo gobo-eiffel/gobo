@@ -74,6 +74,9 @@
 * Made sure that no `VDRS-4` error is reported when two features are
   inherited under the same name (after possible renaming) from the same
   parent and one is deferred and not the other.
+* Report a validity error `VAPE-1` when the address expression `$g` 
+  appears in the precondition of `f` and `g` is not exported to all
+  classes to which `f` is exported.
 
 ### Gobo Eiffel XPath Library
 
