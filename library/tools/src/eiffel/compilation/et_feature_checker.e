@@ -9302,13 +9302,12 @@ feature {NONE} -- Expression validity
 			l_is_attached: BOOLEAN
 		do
 			has_fatal_error := False
-			if in_precondition then
+			if current_inline_agent = Void and in_precondition then
+-- TODO: check the case where we are in the precondition of an inline agent.
 					-- The entity Result appears in a precondition.
 				set_fatal_error
 				if current_class_impl = current_class then
-					if attached current_inline_agent as l_current_inline_agent then
-						error_handler.report_veen2f_error (current_class, an_expression, l_current_inline_agent)
-					elseif current_feature_impl.is_feature then
+					if current_feature_impl.is_feature then
 						error_handler.report_veen2b_error (current_class, an_expression, current_feature_impl.as_feature)
 					else
 							-- Internal error: invariants don't have preconditions.
@@ -9427,13 +9426,12 @@ feature {NONE} -- Expression validity
 			l_pointer_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
-			if in_precondition then
+			if current_inline_agent = Void and in_precondition then
+-- TODO: check the case where we are in the precondition of an inline agent.
 					-- The entity Result appears in a precondition.
 				set_fatal_error
 				if current_class_impl = current_class then
-					if attached current_inline_agent as l_current_inline_agent then
-						error_handler.report_veen2f_error (current_class, an_expression.result_keyword, l_current_inline_agent)
-					elseif current_feature_impl.is_feature then
+					if current_feature_impl.is_feature then
 						error_handler.report_veen2b_error (current_class, an_expression.result_keyword, current_feature_impl.as_feature)
 					else
 							-- Internal error: invariants don't have preconditions.

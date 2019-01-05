@@ -77,6 +77,9 @@
 * Report a validity error `VAPE-1` when the address expression `$g` 
   appears in the precondition of `f` and `g` is not exported to all
   classes to which `f` is exported.
+* Fixed bug where a `VEEN-2` validity error was erroneously reported
+  when the entity `Result` appears in the body of a function inline
+  agent which itself appears in the precondition of a feature.
 
 ### Gobo Eiffel XPath Library
 
