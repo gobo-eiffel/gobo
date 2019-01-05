@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,6 +68,15 @@ feature -- Initialization
 
 feature -- Access
 
+	result_index: INTEGER
+			-- Index of `implicit_result' in enclosing feature;
+			-- Used to get dynamic information about this result.
+
+	attached_result_index: INTEGER
+			-- Index of attached version (with a CAP, Certified Attachment Pattern)
+			-- of `implicit_result' in enclosing feature;
+			-- Used to get dynamic information about this result.
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -105,6 +114,28 @@ feature -- Status report
 			-- or not.
 		do
 			Result := False
+		end
+
+feature -- Setting
+
+	set_result_index (i: INTEGER)
+			-- Set `result_index' to `i'.
+		require
+			i_not_negative: i >= 0
+		do
+			result_index := i
+		ensure
+			result_index_set: result_index = i
+		end
+
+	set_attached_result_index (i: INTEGER)
+			-- Set `attached_result_index' to `i'.
+		require
+			i_not_negative: i >= 0
+		do
+			attached_result_index := i
+		ensure
+			attached_result_index_set: attached_result_index = i
 		end
 
 feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions

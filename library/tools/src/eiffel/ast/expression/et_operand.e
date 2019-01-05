@@ -5,7 +5,7 @@ note
 		"Eiffel argument or target components appearing in feature calls or agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,7 @@ feature -- Setting
 	set_index (i: INTEGER)
 			-- Set `index' to `i'.
 		require
-			i_nonnegative: i >= 0
+			i_not_negative: i >= 0
 		do
 			index := i
 		ensure

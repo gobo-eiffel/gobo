@@ -6456,7 +6456,7 @@ feature {NONE} -- Expression validity
 						else
 							l_argument := l_arguments.formal_argument (l_seed)
 							l_identifier := l_name.argument_name.identifier
-							report_formal_argument (l_identifier, l_argument)
+							report_formal_argument (l_identifier, False, l_argument)
 							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 							l_typed_pointer_class := l_typed_pointer_type.named_base_class
 							if l_typed_pointer_class.actual_class.is_preparsed then
@@ -6514,7 +6514,7 @@ feature {NONE} -- Expression validity
 						else
 							l_local := l_locals.local_variable (l_seed)
 							l_identifier := l_name.local_name.identifier
-							report_local_variable (l_identifier, l_local)
+							report_local_variable (l_identifier, False, l_local)
 							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 							l_typed_pointer_class := l_typed_pointer_type.named_base_class
 							if l_typed_pointer_class.actual_class.is_preparsed then
@@ -6688,6 +6688,7 @@ feature {NONE} -- Expression validity
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_formal: ET_FORMAL_ARGUMENT
 			l_type: ET_TYPE
+			l_is_attached: BOOLEAN
 		do
 			has_fatal_error := False
 			if current_inline_agent = Void and in_invariant then
@@ -6741,9 +6742,10 @@ feature {NONE} -- Expression validity
 								-- Even though this formal argument has not been declared as attached,
 								-- we can guarantee that at this stage this entity is attached.
 							a_context.force_last (tokens.attached_like_current)
+							l_is_attached := True
 						end
 					end
-					report_formal_argument (a_name, l_formal)
+					report_formal_argument (a_name, l_is_attached, l_formal)
 				end
 			end
 		end
@@ -7645,6 +7647,7 @@ feature {NONE} -- Expression validity
 			l_seed: INTEGER
 			l_local: ET_LOCAL_VARIABLE
 			l_type: ET_TYPE
+			l_is_attached: BOOLEAN
 		do
 			has_fatal_error := False
 			if current_inline_agent = Void and (in_precondition or in_postcondition) then
@@ -7688,11 +7691,14 @@ feature {NONE} -- Expression validity
 					l_type := l_local.type
 					a_context.force_last (l_type)
 					if current_system.attachment_type_conformance_mode then
+						l_is_attached := True
 						if not a_context.is_type_attached then
 							if current_attachment_scope.has_local_variable (a_name) then
 									-- Even though this local variable has not been declared as attached,
 									-- we can guarantee that at this stage this entity is attached.
 								a_context.force_last (tokens.attached_like_current)
+							else
+								l_is_attached := False
 							end
 						elseif not a_context.is_type_detachable and not a_context.is_type_expanded then
 							if system_processor.is_ise then
@@ -7700,6 +7706,7 @@ feature {NONE} -- Expression validity
 									-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
 								if not current_attachment_scope.has_local_variable (a_name) then
 									a_context.force_last (tokens.detachable_like_current)
+									l_is_attached := False
 								end
 							elseif not current_initialization_scope.has_local_variable (a_name) then
 									-- Error: local variable declared as attached and
@@ -7709,7 +7716,7 @@ feature {NONE} -- Expression validity
 							end
 						end
 					end
-					report_local_variable (a_name, l_local)
+					report_local_variable (a_name, l_is_attached, l_local)
 				end
 			end
 		end
@@ -9288,6 +9295,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			l_type: detachable ET_TYPE
+			l_is_attached: BOOLEAN
 		do
 			has_fatal_error := False
 			if in_precondition then
@@ -9370,11 +9378,14 @@ feature {NONE} -- Expression validity
 				else
 					a_context.force_last (l_type)
 					if current_system.attachment_type_conformance_mode then
+						l_is_attached := True
 						if not a_context.is_type_attached then
 							if current_attachment_scope.has_result then
 									-- Even though this 'Result' entity has not been declared as attached,
 									-- we can guarantee that at this stage it is attached.
 								a_context.force_last (tokens.attached_like_current)
+							else
+								l_is_attached := False
 							end
 						elseif not (current_inline_agent = Void and in_postcondition) and then (not a_context.is_type_detachable and not a_context.is_type_expanded) then
 							if system_processor.is_ise then
@@ -9382,6 +9393,7 @@ feature {NONE} -- Expression validity
 									-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
 								if not current_attachment_scope.has_result then
 									a_context.force_last (tokens.detachable_like_current)
+									l_is_attached := False
 								end
 							elseif not current_initialization_scope.has_result then
 									-- Error: 'Result' entity declared as attached and
@@ -9391,7 +9403,7 @@ feature {NONE} -- Expression validity
 							end
 						end
 					end
-					report_result (an_expression)
+					report_result (an_expression, l_is_attached)
 				end
 			end
 		end
@@ -13356,8 +13368,10 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_formal_argument (a_name: ET_IDENTIFIER; a_formal: ET_FORMAL_ARGUMENT)
+	report_formal_argument (a_name: ET_IDENTIFIER; a_is_attached: BOOLEAN; a_formal: ET_FORMAL_ARGUMENT)
 			-- Report that a call to formal argument `a_name' has been processed.
+			-- `a_is_attached' means that we know (with a CAP, Certified Attachment Pattern)
+			-- that this formal argument is attached at this position in the code.
 		require
 			no_error: not has_fatal_error
 			a_name_not_void: a_name /= Void
@@ -13474,8 +13488,10 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_local_variable (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
+	report_local_variable (a_name: ET_IDENTIFIER; a_is_attached: BOOLEAN; a_local: ET_LOCAL_VARIABLE)
 			-- Report that a call to local variable `a_name' has been processed.
+			-- `a_is_attached' means that we know (with a CAP, Certified Attachment Pattern)
+			-- that this local variable is attached at this position in the code.
 		require
 			no_error: not has_fatal_error
 			a_name_not_void: a_name /= Void
@@ -13760,8 +13776,10 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_result (an_expression: ET_RESULT)
+	report_result (an_expression: ET_RESULT; a_is_attached: BOOLEAN)
 			-- Report that the result entity has been processed.
+			-- `a_is_attached' means that we know (with a CAP, Certified Attachment Pattern)
+			-- that the result entity is attached at this position in the code.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void

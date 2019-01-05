@@ -32,6 +32,7 @@ inherit
 			propagate_builtin_formal_argument_dynamic_types,
 			propagate_builtin_result_dynamic_types,
 			propagate_call_agent_result_dynamic_types,
+			propagate_cap_dynamic_types,
 			propagate_creation_dynamic_type,
 			propagate_if_expression_dynamic_types,
 			propagate_inline_agent_result_dynamic_types,
@@ -670,6 +671,14 @@ feature {NONE} -- Implementation
 			else
 				l_dynamic_type_set.put_target (a_result_type_set, current_dynamic_system)
 			end
+		end
+
+	propagate_cap_dynamic_types (a_expression: ET_EXPRESSION; a_detachable_type_set, a_attached_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of a possibly Void expression to
+			-- the dynamic types of its attached counterpart when it is
+			-- known to be attached with a CAP (Certified Attachment Pattern).
+		do
+			a_detachable_type_set.put_target (a_attached_type_set, current_dynamic_system)
 		end
 
 	propagate_creation_dynamic_type (a_creation_type: ET_DYNAMIC_TYPE; a_creation: ET_CREATION_INSTRUCTION)

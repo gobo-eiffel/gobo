@@ -5,7 +5,7 @@ note
 		"Eiffel local variables"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,6 +70,15 @@ feature -- Access
 			Result := Current
 		end
 
+	index: INTEGER
+			-- Index of local variable in enclosing feature;
+			-- Used to get dynamic information about this variable.
+
+	attached_index: INTEGER
+			-- Index of attached version (with a CAP, Certified Attachment Pattern)
+			-- of local variable in enclosing feature;
+			-- Used to get dynamic information about this variable.
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -104,6 +113,26 @@ feature -- Setting
 			declared_type := a_type
 		ensure
 			declared_type_set: declared_type = a_type
+		end
+
+	set_index (i: INTEGER)
+			-- Set `index' to `i'.
+		require
+			i_not_negative: i >= 0
+		do
+			index := i
+		ensure
+			index_set: index = i
+		end
+
+	set_attached_index (i: INTEGER)
+			-- Set `attached_index' to `i'.
+		require
+			i_not_negative: i >= 0
+		do
+			attached_index := i
+		ensure
+			attached_index_set: attached_index = i
 		end
 
 feature -- Status setting

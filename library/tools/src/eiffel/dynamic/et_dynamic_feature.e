@@ -127,6 +127,7 @@ feature {NONE} -- Initialization
 						end
 						l_dynamic_type_sets.put_last (l_dynamic_type_set)
 						arg.name.set_index (i)
+						arg.set_index (i)
 						i := i + 1
 					end
 				end
