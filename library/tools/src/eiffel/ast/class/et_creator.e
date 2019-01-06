@@ -5,7 +5,7 @@ note
 		"Eiffel creation clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -180,6 +180,18 @@ feature -- Basic operations
 						i := i - 1
 					end
 				end
+			end
+		end
+
+	add_creation_clients_to (a_name: ET_FEATURE_NAME; a_clients: ET_CLIENT_LIST)
+			-- If feature name `a_name' is listed in current creation clause,
+			-- then add its creation clients to `a_clients'.
+		require
+			a_name_not_void: a_name /= Void
+			a_clients_not_void: a_clients /= Void
+		do
+			if has_feature_name (a_name) then
+				a_clients.append_first (clients)
 			end
 		end
 

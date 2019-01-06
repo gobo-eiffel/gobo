@@ -5,7 +5,7 @@ note
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #22 $"
@@ -335,6 +335,25 @@ feature -- Status report
 			routine: Result implies is_routine
 		end
 
+	is_creation_procedure (a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
+			-- Is current feature a creation procedure in `a_class'?
+			-- (Note: Use `a_system_processor.feature_flattener' on `a_class' if needed
+			-- to determine whether current feature is the version of 'default_create'
+			-- in `a_class'.)
+		require
+			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
+		do
+			if not attached a_class.creators as l_creators then
+				if not a_class.is_deferred and a_class.is_preparsed then
+					a_class.process (a_system_processor.feature_flattener)
+					Result := has_seed (a_class.current_system.default_create_seed)
+				end
+			else
+				Result := l_creators.has_feature_name (name)
+			end
+		end
+
 	is_routine: BOOLEAN
 			-- Is feature a routine?
 		do
@@ -642,6 +661,32 @@ feature -- Export status
 			a_class_not_void: a_class /= Void
 		do
 			Result := a_class.is_creation_directly_exported_to (name, a_client)
+		end
+
+	add_creation_clients_to (a_clients: ET_CLIENT_LIST; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
+			-- If current feature is listed in the creation clauses
+			-- of `a_class', then add its creation clients to `a_clients'.
+			-- If current feature the version of 'default_create' in `a_class'
+			-- with `a_class' being a non-deferred class with no creation clauses,
+			-- then add "ANY" to `a_clients'.
+			-- (Note: Use `a_system_processor.feature_flattener' on `a_class' if needed
+			-- to determine whether current feature is the version of 'default_create'
+			-- in `a_class'.)
+		require
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
+		do
+			if not attached a_class.creators as l_creators then
+				if not a_class.is_deferred and a_class.is_preparsed then
+					a_class.process (a_system_processor.feature_flattener)
+					if has_seed (a_class.current_system.default_create_seed) then
+						a_clients.append_first (a_class.universe.any_clients)
+					end
+				end
+			else
+				l_creators.add_creation_clients_to (name, a_clients)
+			end
 		end
 
 	clients: ET_CLIENT_LIST

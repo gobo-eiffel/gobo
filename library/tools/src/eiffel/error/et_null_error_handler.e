@@ -30,6 +30,7 @@ inherit
 			reportable_gvsrc6_error,
 			reportable_vaol1_error,
 			reportable_vape1_error,
+			reportable_vape2_error,
 			reportable_vave_error,
 			reportable_vbac1_error,
 			reportable_vbac2_error,
@@ -301,6 +302,13 @@ feature -- Validity error status
 
 	reportable_vape1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VAPE-1 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vape2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VAPE-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

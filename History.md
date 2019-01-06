@@ -80,6 +80,10 @@
 * Fixed bug where a `VEEN-2` validity error was erroneously reported
   when the entity `Result` appears in the body of a function inline
   agent which itself appears in the precondition of a feature.
+* Report a validity error `VAPE-2` when a creation call with the
+  creation procedure `make` appears in the precondition of `f` and
+  `make` is not exported for creation to all classes to which `f`
+  is exported.
 
 ### Gobo Eiffel XPath Library
 

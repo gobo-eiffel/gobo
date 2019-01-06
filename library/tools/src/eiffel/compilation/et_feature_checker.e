@@ -180,6 +180,9 @@ feature {NONE} -- Initialization
 			create default_creation_call_name.make (tokens.default_create_feature_name.name)
 			default_creation_call_name.set_seed (current_system.default_create_seed)
 			create default_creation_call.make (default_creation_call_name, Void)
+				-- VAPE validity check.
+			create vape_non_exported_clients.make_with_capacity (20)
+			create vape_creation_clients.make_with_capacity (20)
 		end
 
 feature -- Status report
@@ -3470,17 +3473,22 @@ feature {NONE} -- Instruction validity
 								error_handler.report_vgcc8b_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
 							end
 						end
-					elseif not l_procedure.is_creation_exported_to (current_class, l_class, system_processor) then
-							-- The procedure is not a creation procedure exported to `current_class',
-							-- and it is not the implicit creation procedure 'default_create'.
-						if current_class /= current_class_impl and current_class.is_deferred and l_creation_type.is_like_current then
-							-- In case of flat Degree 3, it is OK to create an entity
-							-- declared of type 'like Current' in the current class
-							-- if the current class is deferred.
-						else
-							set_fatal_error
-							error_handler.report_vgcc6e_error (current_class, current_class_impl, l_name, l_procedure, l_class)
+					else
+						if not l_procedure.is_creation_exported_to (current_class, l_class, system_processor) then
+								-- The procedure is not a creation procedure exported to `current_class',
+								-- and it is not the implicit creation procedure 'default_create'.
+							if current_class /= current_class_impl and current_class.is_deferred and l_creation_type.is_like_current then
+								-- In case of flat Degree 3, it is OK to create an entity
+								-- declared of type 'like Current' in the current class
+								-- if the current class is deferred.
+							else
+								set_fatal_error
+								error_handler.report_vgcc6e_error (current_class, current_class_impl, l_name, l_procedure, l_class)
+							end
 						end
+						had_error := has_fatal_error
+						check_creation_vape_validity (l_name, l_procedure, l_class)
+						had_error := had_error or has_fatal_error
 					end
 					had_error := has_fatal_error
 					check_actual_arguments_validity (l_creation_call, l_creation_context, l_procedure, l_class)
@@ -5888,55 +5896,55 @@ feature {NONE} -- Expression validity
 				end
 			end
 			if not has_fatal_error then
-				check l_class_not_void: l_class /= Void end
-				if l_class /= Void then
-					report_create_supplier (l_creation_type, current_class, current_feature)
-					l_creation_type_context := new_context (current_type)
-					l_named_creation_type := l_creation_type.shallow_named_type (l_creation_type_context)
-					free_context (l_creation_type_context)
-					if attached {ET_CLASS_TYPE} l_named_creation_type as l_class_type then
-						check_creation_type_validity (l_class_type, an_expression.type_position)
+				check l_class_not_void: l_class /= Void then end
+				report_create_supplier (l_creation_type, current_class, current_feature)
+				l_creation_type_context := new_context (current_type)
+				l_named_creation_type := l_creation_type.shallow_named_type (l_creation_type_context)
+				free_context (l_creation_type_context)
+				if attached {ET_CLASS_TYPE} l_named_creation_type as l_class_type then
+					check_creation_type_validity (l_class_type, an_expression.type_position)
+				end
+				if l_procedure = Void then
+						-- No creation call, and feature 'default_create' not
+						-- supported by the underlying Eiffel compiler.
+					check
+						no_call: l_creation_call = default_creation_call
+						no_default_create: current_system.default_create_seed = 0
 					end
-					if l_procedure = Void then
-							-- No creation call, and feature 'default_create' not
-							-- supported by the underlying Eiffel compiler.
-						check
-							no_call: l_creation_call = default_creation_call
-							no_default_create: current_system.default_create_seed = 0
-						end
-						if l_class.creators /= Void then
-								-- The class explicitly declares creation procedures,
-								-- so the creation call was required.
+					if l_class.creators /= Void then
+							-- The class explicitly declares creation procedures,
+							-- so the creation call was required.
+						set_fatal_error
+						error_handler.report_vgcc5a_error (current_class, current_class_impl, an_expression, l_class)
+					elseif l_class.is_deferred then
+							-- The class is deferred, so the creation is invalid.
+						set_fatal_error
+						error_handler.report_vgcc1a_error (current_class, current_class_impl, an_expression, l_class)
+					end
+				else
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_named_creation_type as l_formal_parameter_type then
+							-- The creation type if a formal generic parameter.
+							-- We need to find out what creation procedures are
+							-- declared with the associated constraint.
+						l_index := l_formal_parameter_type.index
+						l_formal_parameters := current_class.formal_parameters
+						if l_formal_parameters = Void or else l_index > l_formal_parameters.count then
+								-- Internal error: `l_formal_parameter' is supposed
+								-- to be a formal parameter of `current_class'.
 							set_fatal_error
-							error_handler.report_vgcc5a_error (current_class, current_class_impl, an_expression, l_class)
-						elseif l_class.is_deferred then
-								-- The class is deferred, so the creation is invalid.
-							set_fatal_error
-							error_handler.report_vgcc1a_error (current_class, current_class_impl, an_expression, l_class)
+							error_handler.report_giaaa_error
+						else
+							l_formal_parameter := l_formal_parameters.formal_parameter (l_index)
+							l_creator := l_formal_parameter.creation_procedures
+							if l_creator = Void or else not l_creator.has_feature (l_procedure) then
+									-- The creation procedure of the expression is not
+									-- one of those declared with the associated constraint.
+								set_fatal_error
+								error_handler.report_vgcc8a_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
+							end
 						end
 					else
-						if attached {ET_FORMAL_PARAMETER_TYPE} l_named_creation_type as l_formal_parameter_type then
-								-- The creation type if a formal generic parameter.
-								-- We need to find out what creation procedures are
-								-- declared with the associated constraint.
-							l_index := l_formal_parameter_type.index
-							l_formal_parameters := current_class.formal_parameters
-							if l_formal_parameters = Void or else l_index > l_formal_parameters.count then
-									-- Internal error: `l_formal_parameter' is supposed
-									-- to be a formal parameter of `current_class'.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								l_formal_parameter := l_formal_parameters.formal_parameter (l_index)
-								l_creator := l_formal_parameter.creation_procedures
-								if l_creator = Void or else not l_creator.has_feature (l_procedure) then
-										-- The creation procedure of the expression is not
-										-- one of those declared with the associated constraint.
-									set_fatal_error
-									error_handler.report_vgcc8a_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
-								end
-							end
-						elseif not l_procedure.is_creation_exported_to (current_class, l_class, system_processor) then
+						if not l_procedure.is_creation_exported_to (current_class, l_class, system_processor) then
 								-- The procedure is not a creation procedure exported to `current_class',
 								-- and it is not the implicit creation procedure 'default_create'.
 							if current_class /= current_class_impl and current_class.is_deferred and l_creation_type.is_like_current then
@@ -5949,24 +5957,26 @@ feature {NONE} -- Expression validity
 							end
 						end
 						had_error := has_fatal_error
-						check_actual_arguments_validity (l_creation_call, a_context, l_procedure, l_class)
-						if had_error then
-							set_fatal_error
+						check_creation_vape_validity (l_name, l_procedure, l_class)
+						had_error := had_error or has_fatal_error
+					end
+					check_actual_arguments_validity (l_creation_call, a_context, l_procedure, l_class)
+					if had_error then
+						set_fatal_error
+					end
+					if not has_fatal_error then
+						if current_system.attachment_type_conformance_mode then
+								-- When we have:
+								--
+								--   create {detachable FOO}.make
+								--
+								-- even if 'detachable FOO' is detachable, the type of
+								-- the creation expression is attached.
+							l_creation_type_context := new_context (current_type)
+							l_named_creation_type := l_creation_type.shallow_named_type_with_type_mark (tokens.implicit_attached_type_mark, l_creation_type_context)
+							free_context (l_creation_type_context)
 						end
-						if not has_fatal_error then
-							if current_system.attachment_type_conformance_mode then
-									-- When we have:
-									--
-									--   create {detachable FOO}.make
-									--
-									-- even if 'detachable FOO' is detachable, the type of
-									-- the creation expression is attached.
-								l_creation_type_context := new_context (current_type)
-								l_named_creation_type := l_creation_type.shallow_named_type_with_type_mark (tokens.implicit_attached_type_mark, l_creation_type_context)
-								free_context (l_creation_type_context)
-							end
-							report_creation_expression (an_expression, l_named_creation_type, l_procedure)
-						end
+						report_creation_expression (an_expression, l_named_creation_type, l_procedure)
 					end
 				end
 			end
@@ -10418,106 +10428,6 @@ feature {NONE} -- Expression validity
 			type_appended_to_context: not has_fatal_error implies (a_context.count = old (a_context.count) + 1)
 		end
 
-	check_qualified_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS)
-			-- Check VAPE validity rule when there is a qualified call to `a_feature'
-			-- named `a_name' in a precondition of `current_feature' in `current_class'.
-			-- `a_class' is the base class of the target.
-			-- Set `has_fatal_error' if a fatal error occurred.
-			--
-			-- The validity rule VAPE says that all features which are called in a precondition
-			-- of a feature `f' should be exported to every class to which `f' is exported.
-		require
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_class_not_void: a_class /= Void
-		local
-			l_feature_clients: ET_CLIENT_LIST
-			l_clients: ET_CLIENT_LIST
-			l_client: ET_CLIENT
-			l_client_class: ET_CLASS
-			i, nb: INTEGER
-		do
-			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
-					-- VAPE validity rule only applies to preconditions.
-				l_feature_clients := a_feature.clients
-				l_clients := current_feature.clients
-				nb := l_clients.count
-				from i := 1 until i > nb loop
-					l_client := l_clients.client (i)
-					l_client_class := l_client.base_class
-					if l_client_class.is_none then
-						-- "NONE" is a descendant of all classes.
-					elseif l_client_class.is_unknown then
-						-- ISE considers client classes which are not known in the
-						-- current universe as if they were "NONE".
-					elseif a_feature.is_exported_to (l_client_class, system_processor) then
-						-- The feature is exported to `l_client'.
-					elseif not l_client_class.is_parsed and then not l_feature_clients.is_none_or_unknown then
-						-- ISE considers that if the client class is known in the current universe
-						-- but is not compiled in the system (i.e. we don't know its ancestors),
-						-- then we consider any other class known in the current universe
-						-- as being one of its ancestors.
-					elseif l_client_class.has_ancestors_error then
-						-- Another error has already reported.
-					else
-						set_fatal_error
-						error_handler.report_vape1b_error (current_class, current_class_impl, a_name, a_feature, a_class, current_feature.as_feature, l_client)
-					end
-					i := i + 1
-				end
-			end
-		end
-
-	check_unqualified_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
-			-- Check VAPE validity rule when there is an unqualified call to `a_feature'
-			-- named `a_name' in a precondition of `current_feature' in `current_class'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-			--
-			-- The validity rule VAPE says that all features which are called in a precondition
-			-- of a feature `f' should be exported to every class to which `f' is exported.
-		require
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-		local
-			l_feature_clients: ET_CLIENT_LIST
-			l_clients: ET_CLIENT_LIST
-			l_client: ET_CLIENT
-			l_client_class: ET_CLASS
-			i, nb: INTEGER
-		do
-			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
-					-- VAPE validity rule only applies to preconditions.
-				l_feature_clients := a_feature.clients
-				l_clients := current_feature.clients
-				nb := l_clients.count
-				from i := 1 until i > nb loop
-					l_client := l_clients.client (i)
-					l_client_class := l_client.base_class
-					if l_client_class.is_none then
-						-- "NONE" is a descendant of all classes.
-					elseif l_client_class.is_unknown then
-						-- ISE considers client classes which are not known in the
-						-- current universe as if they were "NONE".
-					elseif a_feature.is_exported_to (l_client_class, system_processor) then
-						-- The feature is exported to `l_client'.
-					elseif not l_client_class.is_parsed and then not l_feature_clients.is_none_or_unknown then
-						-- ISE considers that if the client class is known in the current universe
-						-- but is not compiled in the system (i.e. we don't know its ancestors),
-						-- then we consider any other class known in the current universe
-						-- as being one of its ancestors.
-					elseif l_client_class.has_ancestors_error then
-						-- Another error has already reported.
-					else
-						set_fatal_error
-						error_handler.report_vape1a_error (current_class, current_class_impl, a_name, a_feature, current_feature.as_feature, l_client)
-					end
-					i := i + 1
-				end
-			end
-		end
-
 	check_expression_validity (an_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
 			-- Check validity of `an_expression' (whose possible attachment target
 			-- is of type `a_target_type') in `current_feature' of `current_type'.
@@ -10776,6 +10686,167 @@ feature {NONE} -- Expression validity
 				end
 			end
 		end
+
+feature {NONE} -- VAPE validity
+
+	check_qualified_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS)
+			-- Check VAPE validity rule when there is a qualified call to `a_feature'
+			-- named `a_name' in a precondition of `current_feature' in `current_class'.
+			-- `a_class' is the base class of the type of target of the qualified call.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- The validity rule VAPE says that all features which are called in a precondition
+			-- of a feature `f' should be exported to every class to which `f' is exported.
+		require
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_class_not_void: a_class /= Void
+		local
+			l_non_exported_clients: ET_CLIENT_LIST
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			if in_precondition and then current_feature.is_feature then
+					-- VAPE validity rule only applies to preconditions.
+				l_non_exported_clients := vape_non_exported_clients
+				l_non_exported_clients.wipe_out
+				add_vape_non_exported_clients_to (a_feature, a_class, False, current_feature.clients, l_non_exported_clients)
+				nb := l_non_exported_clients.count
+				from i := 1 until i > nb loop
+					set_fatal_error
+					error_handler.report_vape1b_error (current_class, current_class_impl, a_name, a_feature, a_class, current_feature.as_feature, l_non_exported_clients.client (i))
+					i := i + 1
+				end
+				l_non_exported_clients.wipe_out
+			end
+		end
+
+	check_unqualified_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
+			-- Check VAPE validity rule when there is an unqualified call to `a_feature'
+			-- named `a_name' in a precondition of `current_feature' in `current_class'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- The validity rule VAPE says that all features which are called in a precondition
+			-- of a feature `f' should be exported to every class to which `f' is exported.
+		require
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_non_exported_clients: ET_CLIENT_LIST
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			if in_precondition and then current_feature.is_feature then
+					-- VAPE validity rule only applies to preconditions.
+				l_non_exported_clients := vape_non_exported_clients
+				l_non_exported_clients.wipe_out
+				add_vape_non_exported_clients_to (a_feature, current_class, False, current_feature.clients, l_non_exported_clients)
+				nb := l_non_exported_clients.count
+				from i := 1 until i > nb loop
+					set_fatal_error
+					error_handler.report_vape1a_error (current_class, current_class_impl, a_name, a_feature, current_feature.as_feature, l_non_exported_clients.client (i))
+					i := i + 1
+				end
+				l_non_exported_clients.wipe_out
+			end
+		end
+
+	check_creation_vape_validity (a_name: ET_CALL_NAME; a_procedure: ET_PROCEDURE; a_class: ET_CLASS)
+			-- Check VAPE validity rule when there is a creation with creation procedure `a_procedure'
+			-- named `a_name' in a precondition of `current_feature' in `current_class'.
+			-- `a_class' is the base class of the creation type.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- The validity rule VAPE says that all features which are called in a precondition
+			-- of a feature `f' should be exported to every class to which `f' is exported.
+		require
+			a_name_not_void: a_name /= Void
+			a_procedure_not_void: a_procedure /= Void
+			a_class_not_void: a_class /= Void
+		local
+			l_non_exported_clients: ET_CLIENT_LIST
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			if in_precondition and then current_feature.is_feature then
+					-- VAPE validity rule only applies to preconditions.
+				l_non_exported_clients := vape_non_exported_clients
+				l_non_exported_clients.wipe_out
+				add_vape_non_exported_clients_to (a_procedure, a_class, True, current_feature.clients, l_non_exported_clients)
+				nb := l_non_exported_clients.count
+				from i := 1 until i > nb loop
+					set_fatal_error
+					error_handler.report_vape2a_error (current_class, current_class_impl, a_name, a_procedure, a_class, current_feature.as_feature, l_non_exported_clients.client (i))
+					i := i + 1
+				end
+				l_non_exported_clients.wipe_out
+			end
+		end
+
+	add_vape_non_exported_clients_to (a_feature: ET_FEATURE; a_class: ET_CLASS; a_is_creation_procedure: BOOLEAN; a_currrent_clients, a_non_exported_clients: ET_CLIENT_LIST)
+			-- Add to `a_non_exported_clients' the clients from `a_currrent_clients'
+			-- to which `a_feature' fron `a_class' is not_exported.
+			-- If `a_is_creation_procedure' is True, then `a_feature' is considered to be
+			-- used as creation procedure.
+			-- `a_current_clients' are supposed to be the clients to which `current_feature'
+			-- is exported, or its creation clients if we consider `current_feature' as
+			-- a creation procedure.
+			--
+			-- The validity rule VAPE says that all features which are called in a precondition
+			-- of a feature `f' should be exported to every class to which `f' is exported.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_class_not_void: a_class /= Void
+			a_currrent_clients_not_void: a_currrent_clients /= Void
+			a_non_exported_clients_not_void: a_non_exported_clients /= Void
+		local
+			l_feature_clients: ET_CLIENT_LIST
+			l_client: ET_CLIENT
+			l_client_class: ET_CLASS
+			i, nb: INTEGER
+			l_feature_clients_is_none_or_unknown: BOOLEAN
+		do
+			if a_is_creation_procedure then
+				l_feature_clients := vape_creation_clients
+				l_feature_clients.wipe_out
+				a_feature.add_creation_clients_to (l_feature_clients, a_class, system_processor)
+				l_feature_clients_is_none_or_unknown := l_feature_clients.is_none_or_unknown
+				l_feature_clients.wipe_out
+			else
+				l_feature_clients_is_none_or_unknown := a_feature.clients.is_none_or_unknown
+			end
+			nb := a_currrent_clients.count
+			from i := nb until i < 1 loop
+				l_client := a_currrent_clients.client (i)
+				l_client_class := l_client.base_class
+				if l_client_class.is_none then
+					-- "NONE" is a descendant of all classes.
+				elseif l_client_class.is_unknown then
+					-- ISE considers client classes which are not known in the
+					-- current universe as if they were "NONE".
+				elseif not a_is_creation_procedure and then a_feature.is_exported_to (l_client_class, system_processor) then
+					-- The feature is exported to `l_client'.
+				elseif a_is_creation_procedure and then a_feature.is_creation_exported_to (l_client_class, a_class, system_processor) then
+					-- The creation procedure is exported to `l_client'.
+				elseif not l_client_class.is_parsed and then not l_feature_clients_is_none_or_unknown then
+					-- ISE considers that if the client class is known in the current universe
+					-- but is not compiled in the system (i.e. we don't know its ancestors),
+					-- then we consider any other class known in the current universe
+					-- as being one of its ancestors.
+				elseif l_client_class.has_ancestors_error then
+					-- Another error has already reported.
+				else
+					a_non_exported_clients.force_first (l_client)
+				end
+				i := i - 1
+			end
+		end
+
+	vape_non_exported_clients: ET_CLIENT_LIST
+			-- List of clients used to determine VAPE validity errors
+
+	vape_creation_clients: ET_CLIENT_LIST
+			-- List of clients used to determine VAPE validity errors
 
 feature {NONE} -- Parenthesis call validity
 
@@ -15839,5 +15910,8 @@ invariant
 		-- Common Ancestor Types.
 	common_ancestor_type_list_not_void: common_ancestor_type_list /= Void
 	no_void_common_ancestor_type: not common_ancestor_type_list.has_void
+		-- VAPE validity check.
+	vape_non_exported_clients_not_void: vape_non_exported_clients /= Void
+	vape_creation_clients_not_void: vape_creation_clients /= Void
 
 end

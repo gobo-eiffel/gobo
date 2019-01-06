@@ -5,7 +5,7 @@ note
 		"Eiffel AST lists where insertions to and removals from the head are optimized"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #10 $"
@@ -161,6 +161,51 @@ feature -- Element change
 		ensure
 			same_count: count = old count
 			inserted: item (i) = an_item
+		end
+
+	extend_first (a_other: ET_HEAD_LIST [like item])
+			-- Put all items of `a_other' at first positions in list.
+		require
+			a_other_not_void: a_other /= Void
+			not_full: count + a_other.count <= capacity
+		local
+			i: INTEGER
+			l_new_count: INTEGER
+		do
+			l_new_count := count
+			from i := a_other.count until i < 1 loop
+				fixed_array.force (storage, a_other.item (i), l_new_count)
+				l_new_count := l_new_count + 1
+				i := i - 1
+			end
+			count := l_new_count
+		ensure
+			new_first: first = old a_other.first
+			same_last: last = old last
+		end
+
+	append_first (a_other: ET_HEAD_LIST [like item])
+			-- Put all items of `a_other' at first positions in list.
+			-- Resize list if necessary.
+		require
+			a_other_not_void: a_other /= Void
+		local
+			i: INTEGER
+			l_new_count: INTEGER
+		do
+			if count + a_other.count > capacity then
+				resize (new_capacity (count + a_other.count))
+			end
+			l_new_count := count
+			from i := a_other.count until i < 1 loop
+				fixed_array.force (storage, a_other.item (i), l_new_count)
+				l_new_count := l_new_count + 1
+				i := i - 1
+			end
+			count := l_new_count
+		ensure
+			new_first: first = old a_other.first
+			same_last: last = old last
 		end
 
 feature -- Removal
