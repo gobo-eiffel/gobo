@@ -5,7 +5,7 @@ note
 		"Eiffel clients"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,21 @@ feature {NONE} -- Initialization
 
 	make (a_name: like name; a_named_base_class: like named_base_class)
 			-- Create a client named `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_named_base_class_not_void: a_named_base_class /= Void
+		do
+			name := a_name
+			named_base_class := a_named_base_class
+		ensure
+			name_set: name = a_name
+			named_base_class_set: named_base_class = a_named_base_class
+		end
+
+feature -- Initialization
+
+	reset (a_name: like name; a_named_base_class: like named_base_class)
+			-- Reset current client to be a client named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
 			a_named_base_class_not_void: a_named_base_class /= Void

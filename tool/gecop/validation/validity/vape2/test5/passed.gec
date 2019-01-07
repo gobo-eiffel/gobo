@@ -1,0 +1,2 @@
+[VAPE-2] class BB (15,16): procedure `make' of formal generic parameter #1 appearing in the precondition of `f' is not exported for creation to class ANY to which feature `f' is exported.
+----

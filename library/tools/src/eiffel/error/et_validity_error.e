@@ -30,6 +30,7 @@ create
 	make_vape1a,
 	make_vape1b,
 	make_vape2a,
+	make_vape2b,
 	make_vave0a,
 	make_vbac1a,
 	make_vbac2a,
@@ -413,8 +414,8 @@ feature {NONE} -- Initialization
 		end
 
 	make_vape1a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Create a new VAPE-1 error: `a_feature' named `a_name', appearing in an unqualified
-			-- call in a precondition of `a_pre_feature' in `a_class_impl' and viewed from
+			-- Create a new VAPE-1 error: `a_feature' named `a_name' of an unqualified call
+			-- appearing in a precondition of `a_pre_feature' in `a_class_impl' and viewed from
 			-- one of its descendants `a_class' (possibly itself), is not exported to class
 			-- `a_client' to which `a_pre_feature' is exported.
 			--
@@ -465,9 +466,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_vape1b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Create a new VAPE-1 error: `a_feature' named `a_name', appearing in a qualified
-			-- call with target's base class `a_target_class' in a precondition of
-			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- Create a new VAPE-1 error: `a_feature' named `a_name' of a qualified
+			-- call with target's base class `a_target_class', appearing in a precondition
+			-- of `a_pre_feature' in `a_class_impl' and view from one of its descendants
 			-- a_class' (possibly itself), is not exported to class `a_client' to which
 			-- `a_pre_feature' is exported.
 			--
@@ -521,9 +522,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_vape2a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_procedure: ET_PROCEDURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Create a new VAPE-2 error: `a_procedure' named `a_name', appearing in a creation instruction
-			-- or expression with creation type's base class `a_target_class' in a precondition of
-			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- Create a new VAPE-2 error: `a_procedure' named `a_name' of a creation instruction
+			-- or expression with creation type's base class `a_target_class', appearing in a
+			-- precondition of `a_pre_feature' in `a_class_impl' and view from one of its descendants
 			-- a_class' (possibly itself), is not exported for creation to class `a_client'
 			-- to which `a_pre_feature' is exported.
 			--
@@ -572,6 +573,62 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = procedure name of the creation call
 			-- dollar8: $8 = name of corresponding procedure in class $9
 			-- dollar9: $9 = base class of creation type
+			-- dollar10: $10 = name of feature containing precondition
+			-- dollar11: $11 = name of client of feature `$10'
+		end
+
+	make_vape2b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_procedure: ET_PROCEDURE; a_formal: ET_FORMAL_PARAMETER; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Create a new VAPE-2 error: `a_procedure' named `a_name' of a creation instruction
+			-- or expression with `a_formal' as creation type, appearing in a precondition of
+			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- a_class' (possibly itself), is not exported for creation to class `a_client'
+			-- to which `a_pre_feature' is exported.
+			--
+			-- ECMA 367-2, 8.9.5 page 58.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_procedure_not_void: a_procedure /= Void
+			a_formal_not_void: a_formal /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vape2b_template_code)
+			etl_code := vape2_etl_code
+			default_template := default_message_template (vape2b_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_procedure.lower_name, 8)
+			parameters.put (a_formal.index.out, 9)
+			parameters.put (a_pre_feature.lower_name, 10)
+			parameters.put (a_client.name.upper_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = procedure name of the creation call
+			-- dollar8: $8 = name of corresponding procedure in class $9
+			-- dollar9: $9 = index of formal generic parameter
 			-- dollar10: $10 = name of feature containing precondition
 			-- dollar11: $11 = name of client of feature `$10'
 		end
@@ -14639,6 +14696,7 @@ feature {NONE} -- Implementation
 	vape1a_default_template: STRING = "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
 	vape1b_default_template: STRING = "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
 	vape2a_default_template: STRING = "procedure `$8' of class $9 appearing in the precondition of `$10' is not exported for creation to class $11 to which feature `$10' is exported."
+	vape2b_default_template: STRING = "procedure `$8' of formal generic parameter #$9 appearing in the precondition of `$10' is not exported for creation to class $11 to which feature `$10' is exported."
 	vave0a_default_template: STRING = "loop variant expression of type '$7' is not a sized variant of INTEGER."
 	vbac1a_default_template: STRING = "the source of the assigner call (of type '$7') does not conform nor convert to its target (of type '$8')."
 	vbac2a_default_template: STRING = "query `$7' in class $8 has no assigner command."
@@ -14646,7 +14704,7 @@ feature {NONE} -- Implementation
 	vcch1b_default_template: STRING = "class is not marked as deferred but has deferred feature `$7' inherited from $8."
 	vcch2a_default_template: STRING = "class is marked as deferred but has no deferred feature."
 	vcfg1a_default_template: STRING = "formal generic parameter '$7' has the same name as a class in the surrounding universe."
-	vcfg2a_default_template: STRING = "'$7' is the name of formal generic parameters #$7 and #$8."
+	vcfg2a_default_template: STRING = "'$7' is the name of formal generic parameters #$8 and #$9."
 	vcfg3a_default_template: STRING = "invalid type '$7' in constraint of formal generic parameter."
 	vcfg3b_default_template: STRING = "constraint of formal generic parameter '$7' is '$8' itself."
 	vcfg3c_default_template: STRING = "constraint of formal generic parameter '$7' is another formal generic parameter '$8'."
@@ -15130,6 +15188,7 @@ feature {NONE} -- Implementation
 	vape1a_template_code: STRING = "vape1a"
 	vape1b_template_code: STRING = "vape1b"
 	vape2a_template_code: STRING = "vape2a"
+	vape2b_template_code: STRING = "vape2b"
 	vave0a_template_code: STRING = "vave0a"
 	vbac1a_template_code: STRING = "vbac1a"
 	vbac2a_template_code: STRING = "vbac2a"

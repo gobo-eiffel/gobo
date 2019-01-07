@@ -910,8 +910,8 @@ feature -- Validity errors
 		end
 
 	report_vape1a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Report VAPE-1 error: `a_feature' named `a_name', appearing in an unqualified
-			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
+			-- Report VAPE-1 error: `a_feature' named `a_name' of an unqualified call
+			-- appearing in a precondition of `a_pre_feature' in `a_class_impl' and view from
 			-- one of its descendants `a_class' (possibly itself), is not exported to class
 			-- `a_client' to which `a_pre_feature' is exported.
 			--
@@ -934,9 +934,9 @@ feature -- Validity errors
 		end
 
 	report_vape1b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Report VAPE-1 error: `a_feature' named `a_name', appearing in a qualified
-			-- call with target's base class `a_target_class' in a precondition of
-			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- Report VAPE-1 error: `a_feature' named `a_name' of a qualified
+			-- call with target's base class `a_target_class', appearing in a precondition
+			-- of `a_pre_feature' in `a_class_impl' and view from one of its descendants
 			-- a_class' (possibly itself), is not exported to class `a_client' to which
 			-- `a_pre_feature' is exported.
 			--
@@ -960,9 +960,9 @@ feature -- Validity errors
 		end
 
 	report_vape2a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_procedure: ET_PROCEDURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Report VAPE-2 error: `a_procedure' named `a_name', appearing in a creation instruction
-			-- or expression with creation type's base class `a_target_class' in a precondition of
-			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- Report VAPE-2 error: `a_procedure' named `a_name' of a creation instruction
+			-- or expression with creation type's base class `a_target_class', appearing in a
+			-- precondition of `a_pre_feature' in `a_class_impl' and view from one of its descendants
 			-- a_class' (possibly itself), is not exported for creation to class `a_client'
 			-- to which `a_pre_feature' is exported.
 			--
@@ -981,6 +981,32 @@ feature -- Validity errors
 		do
 			if reportable_vape2_error (a_class) then
 				create an_error.make_vape2a (a_class, a_class_impl, a_name, a_procedure, a_target_class, a_pre_feature, a_client)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vape2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_procedure: ET_PROCEDURE; a_formal: ET_FORMAL_PARAMETER; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Report VAPE-2 error: `a_procedure' named `a_name' of a creation instruction
+			-- or expression with `a_formal' as creation type, appearing in a precondition of
+			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- a_class' (possibly itself), is not exported for creation to class `a_client'
+			-- to which `a_pre_feature' is exported.
+			--
+			-- ECMA 367-2, 8.9.5 page 58.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_procedure_not_void: a_procedure /= Void
+			a_formal_not_void: a_formal /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vape2_error (a_class) then
+				create an_error.make_vape2b (a_class, a_class_impl, a_name, a_procedure, a_formal, a_pre_feature, a_client)
 				report_validity_error (an_error)
 			end
 		end
