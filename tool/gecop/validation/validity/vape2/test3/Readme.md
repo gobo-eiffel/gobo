@@ -1,6 +1,6 @@
 # Validity VAPE-2
 
-This test is exercising the condition 2 of the validity rule [VAPE](..).
+This test is exercising the condition [2](..) of the validity rule [VAPE](../../vape).
 
 ### Description
 

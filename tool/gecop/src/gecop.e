@@ -7,7 +7,7 @@ note
 			An Eiffel language conformance validation suite.
 		]"
 
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,7 +41,8 @@ feature -- Execution
 			l_tested_eiffel_tool: STRING
 			l_tester: TS_TESTER
 			l_test_suite: TS_TEST_SUITE
-			l_output_string: KL_STRING_OUTPUT_STREAM
+			l_output_stream: KL_STRING_OUTPUT_STREAM
+			l_output_string: STRING
 			l_aggregate, l_diff: BOOLEAN
 			l_filter: detachable RX_PCRE_REGULAR_EXPRESSION
 		do
@@ -80,15 +81,26 @@ feature -- Execution
 				create l_relative_path.make_default
 				process_directory (l_directory, l_relative_path, l_tested_eiffel_tool, l_filter, l_tester)
 				l_directory.close
-				create l_output_string.make_empty
+				create l_output_stream.make_empty
 				l_aggregate := not aggregate_option.was_found or else aggregate_option.parameter
-				run_tests (l_tester, l_aggregate, l_output_string)
+				run_tests (l_tester, l_aggregate, l_output_stream)
+				l_output_string := l_output_stream.string
+					-- Make the output hyperlinked with Markdown.
+					-- This will allow to jump directly to the failing test case folder
+					-- when browsing im a Markdown aware environment (like GitHub).
+				l_output_string.replace_substring_all ("[", "\[[")
+				l_output_string.replace_substring_all ("]", "]()\]")
+				l_output_string.replace_substring_all ("_", "\_")
+				l_output_string.replace_substring_all ("...", "...</br>")
+				l_output_string.replace_substring_all ("#", "    #")
+				l_output_string.replace_substring_all ("%NFAIL", "</br>%NFAIL")
+				l_output_string.replace_substring_all ("%N</br>%N", "%N%N")
 				l_diff := not diff_option.was_found or else diff_option.parameter
 				if l_diff then
-					report_diff_with_last_run (l_output_string.string, l_validation_directory_name, l_tested_eiffel_tool)
+					report_diff_with_last_run (l_output_string, l_validation_directory_name, l_tested_eiffel_tool)
 				end
 				if keep_testdir_flag.was_found then
-					write_last_run_file (l_output_string.string, l_tested_eiffel_tool)
+					write_last_run_file (l_output_string, l_tested_eiffel_tool)
 				else
 					file_system.recursive_delete_directory (test_dirname)
 				end
@@ -254,8 +266,8 @@ feature {NONE} -- Processing
 			l_output_filename: STRING
 			l_output_file: KL_TEXT_OUTPUT_FILE
 		do
-			if attached file_extension (a_tested_eiffel_tool) as l_file_extension then
-				l_output_filename := file_system.pathname (test_dirname, "last_run" + l_file_extension)
+			if attached last_run_filename_suffix (a_tested_eiffel_tool) as l_last_run_filename_suffix then
+				l_output_filename := file_system.pathname (test_dirname, "last_run" + l_last_run_filename_suffix + ".md")
 			else
 				l_output_filename := file_system.pathname (test_dirname, "last_run.log")
 			end
@@ -283,8 +295,8 @@ feature {NONE} -- Processing
 			l_input_string: STRING
 			l_has_diff: BOOLEAN
 		do
-			if attached file_extension (a_tested_eiffel_tool) as l_file_extension then
-				l_input_filename := file_system.pathname (a_validation_directory_name, "last_run" + l_file_extension)
+			if attached last_run_filename_suffix (a_tested_eiffel_tool) as l_last_run_filename_suffix then
+				l_input_filename := file_system.pathname (a_validation_directory_name, "last_run" + l_last_run_filename_suffix + ".md")
 				create l_input_file.make (l_input_filename)
 				l_input_file.open_read
 				if l_input_file.is_open_read then
@@ -459,16 +471,16 @@ feature -- Argument parsing
 
 feature {NONE} -- Implementation
 
-	file_extension (a_tested_eiffel_tool: STRING): detachable STRING
-			-- File extension associated with `a_tested_eiffel_tool'
+	last_run_filename_suffix (a_tested_eiffel_tool: STRING): detachable STRING
+			-- Filename suffix for the 'last_run' file associated with `a_tested_eiffel_tool'
 		do
 			if a_tested_eiffel_tool.starts_with ("ise") then
-				Result := ".ise"
+				Result := "_ise"
 			elseif a_tested_eiffel_tool.starts_with ("ge") then
 				if a_tested_eiffel_tool.ends_with ("lint") then
-					Result := ".gelint"
+					Result := "_gelint"
 				else
-					Result := ".gec"
+					Result := "_gec"
 				end
 			end
 		end

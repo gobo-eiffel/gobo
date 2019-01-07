@@ -28,6 +28,7 @@
 * Added tests for the validity rules `VAPE-1` and `VAPE-2`.
 * Do not duplicate expected test results of the validation suite for `gec` and
   `gelint` when they are the same.
+* Made the validation suite browsable with the GitHub Markdown facilities.
 
 ### Gobo Eiffel Tools Library
 
