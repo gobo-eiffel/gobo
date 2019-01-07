@@ -1,6 +1,6 @@
 # Validity VAPE
 
-These tests are exercising the validity rule below.</br>
+These [tests](.) are exercising the validity rule below.</br>
 Click on the condition numbers to below to see tests specific to these conditions.
 
 ### VAPE: Precondition Export rule

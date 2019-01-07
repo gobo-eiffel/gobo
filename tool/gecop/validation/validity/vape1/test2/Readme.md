@@ -1,6 +1,6 @@
 # Validity VAPE-1
 
-This test is exercising the condition [1](..) of the validity rule [VAPE](../../vape).
+This [test](.) is exercising the condition [1](../Readme.md) of the validity rule [VAPE](../../vape/Readme.md).
 
 ### Description
 
