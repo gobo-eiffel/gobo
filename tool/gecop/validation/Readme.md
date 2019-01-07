@@ -1,6 +1,6 @@
 # Gobo Eiffel Cop Validation Suite
 
-This folder contains the validation suite for *Gobo Eiffel Cop*
+This folder contains the [validation suite](.) for *Gobo Eiffel Cop*
 (`gecop`). `gecop` is a tool to validate the conformance of
 Eiffel tools (typically compilers) to the ECMA Eiffel standard.
 It also tests the interoperability with the ISE Eiffel compiler.

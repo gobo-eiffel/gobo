@@ -85,16 +85,7 @@ feature -- Execution
 				l_aggregate := not aggregate_option.was_found or else aggregate_option.parameter
 				run_tests (l_tester, l_aggregate, l_output_stream)
 				l_output_string := l_output_stream.string
-					-- Make the output hyperlinked with Markdown.
-					-- This will allow to jump directly to the failing test case folder
-					-- when browsing im a Markdown aware environment (like GitHub).
-				l_output_string.replace_substring_all ("[", "\[[")
-				l_output_string.replace_substring_all ("]", "]()\]")
-				l_output_string.replace_substring_all ("_", "\_")
-				l_output_string.replace_substring_all ("...", "...</br>")
-				l_output_string.replace_substring_all ("#", "    #")
-				l_output_string.replace_substring_all ("%NFAIL", "</br>%NFAIL")
-				l_output_string.replace_substring_all ("%N</br>%N", "%N%N")
+				l_output_string := text_to_markdown (l_output_string)
 				l_diff := not diff_option.was_found or else diff_option.parameter
 				if l_diff then
 					report_diff_with_last_run (l_output_string, l_validation_directory_name, l_tested_eiffel_tool)
@@ -324,6 +315,25 @@ feature {NONE} -- Processing
 				std.output.put_line ("No Diff since last run")
 			end
 			std.output.put_new_line
+		end
+
+	text_to_markdown (a_string: STRING): STRING
+			-- Convert `a_string' to a Markdown hyperlinked text.
+			-- This will allow to jump directly to the failing test case folder
+			-- when browsing in a Markdown aware environment (like GitHub).
+		require
+			a_string_not_void: a_string /= Void
+		local
+			l_test_case_name_rexgexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_test_case_name_rexgexp.make
+			l_test_case_name_rexgexp.compile ("\[([^\]]+)\]")
+			l_test_case_name_rexgexp.match (a_string)
+			Result := l_test_case_name_rexgexp.replace_all ("\[[\1\](\1\)\]")
+			Result.replace_substring_all ("_", "\_")
+			Result.replace_substring_all ("...", "...</br>")
+			Result.replace_substring_all ("#", "    #")
+			Result.replace_substring_all ("%NFAIL", "</br>%NFAIL")
 		end
 
 feature -- Error handling

@@ -4,8 +4,8 @@ This folder contains the source code of *Gobo Eiffel Cop*
 (`gecop`). `gecop` is a tool to validate the conformance of
 Eiffel tools (typically compilers) to the ECMA Eiffel standard.
 It also tests the interoperability with the ISE Eiffel compiler.
-It comes with a validation suite to exercise the Eiffel tool
-under test.
+It comes with a [validation suite](validation/Readme.md) to 
+exercise the Eiffel tool under test.
 
 **Included in this folder:**
 
