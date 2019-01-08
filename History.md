@@ -85,6 +85,10 @@
   creation procedure `make` appears in the precondition of `f` and
   `make` is not exported for creation to all classes to which `f`
   is exported.
+* Report a validity error `VAPE` when an implicit conversion appears
+  in the precondition of `f` and the associated convert feature is not
+  exported (or exported for creation in case of a convert procedure)
+  to all classes to which `f` is exported.
 
 ### Gobo Eiffel XPath Library
 

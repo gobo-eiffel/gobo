@@ -1,0 +1,2 @@
+[VAPE-2] class AA (21,7): procedure `make_from_cc' of class BB appearing in the precondition of `f' is not exported for creation to class ANY to which feature `f' is exported.
+----

@@ -7,23 +7,25 @@ create
 feature
 
 	make
+		local
+			c: CC
 		do
-			f
+			create c.make
+			f (c)
 		end
 
 feature {ANY}
 
-	f
+	f (c: CC)
 		require
-			g
+			g (c)
 		do
+			print ("Failed")
 		end
 
-feature {STRING}
-
-	g: BOOLEAN
+	g (b: BB): BOOLEAN
 		do
 			Result := True
 		end
-		
+
 end

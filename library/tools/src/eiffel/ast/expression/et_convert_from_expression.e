@@ -38,10 +38,18 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 			a_feature_not_void: a_feature /= Void
 			e_not_void: e /= Void
+		local
+			l_name: ET_IDENTIFIER
+			l_position: ET_POSITION
 		do
 			type := a_type
 			convert_feature := a_feature
 			expression := e
+			create l_name.make (a_feature.name.name)
+			l_name.set_seed (a_feature.name.seed)
+			l_position := e.position
+			l_name.set_position (l_position.line, l_position.column)
+			name := l_name
 		ensure
 			type_set: type = a_type
 			convert_feature_set: convert_feature = a_feature
@@ -63,11 +71,6 @@ feature -- Access
 
 	name: ET_FEATURE_NAME
 			-- Feature name
-		do
-			Result := convert_feature.name
-		ensure then
-			definition: Result = convert_feature.name
-		end
 
 	arguments: ET_ACTUAL_ARGUMENTS
 			-- Arguments

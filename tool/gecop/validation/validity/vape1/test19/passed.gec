@@ -1,0 +1,2 @@
+[VAPE-1] class AA (21,7): feature `to_bb' of class CC appearing in the precondition of `f' is not exported to class ANY to which feature `f' is exported.
+----

@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
 
-<project name="vape1_test3" default="help">
+<project name="aa" default="help">
 
 	<description>
-		description: "Eiffel Ant file for 'vape1_test3'"
+		description: "Eiffel Ant file for 'aa'"
 		copyright: "Copyright (c) 2018, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>
@@ -20,7 +18,7 @@
 
 	<target name="init_system" export="NONE">
 		<set name="system" value="aa"/>
-		<set name="system_dir" value="${GOBO}/library/tools/test/eiffel/validity/vape1/test3"/>
+		<set name="system_dir" value="${aa.dir}"/>
 	</target>
 
 </project>

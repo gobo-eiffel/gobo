@@ -14289,8 +14289,11 @@ feature {NONE} -- Conversion
 							l_target_named_type := a_target_type.named_type
 							create l_convert_from_expression.make (l_target_named_type, l_convert_feature, a_source)
 							if attached l_convert_class.seeded_procedure (l_convert_feature.name.seed) as l_conversion_procedure then
-								report_creation_expression (l_convert_from_expression, l_target_named_type, l_conversion_procedure)
-								Result := l_convert_from_expression
+								check_creation_vape_validity (l_convert_from_expression.name, l_conversion_procedure, l_convert_class)
+								if not has_fatal_error then
+									report_creation_expression (l_convert_from_expression, l_target_named_type, l_conversion_procedure)
+									Result := l_convert_from_expression
+								end
 							else
 									-- Internal error: the seed of the convert feature should correspond
 									-- to a procedure of `l_convert_class'.
@@ -14307,8 +14310,11 @@ feature {NONE} -- Conversion
 						else
 							create l_convert_to_expression.make (a_source, l_convert_feature)
 							if attached l_convert_class.seeded_query (l_convert_feature.name.seed) as l_conversion_query then
-								report_qualified_call_expression (l_convert_to_expression, a_source_type, l_conversion_query)
-								Result := l_convert_to_expression
+								check_qualified_vape_validity (l_convert_to_expression.name, l_conversion_query, l_convert_class)
+								if not has_fatal_error then
+									report_qualified_call_expression (l_convert_to_expression, a_source_type, l_conversion_query)
+									Result := l_convert_to_expression
+								end
 							else
 									-- Internal error: the seed of the convert feature should correspond
 									-- to a query of `l_convert_class'.

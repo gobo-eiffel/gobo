@@ -7,24 +7,25 @@ create
 feature
 
 	make
+		local
+			c: CC
 		do
-			f
+			create c.make
+			f (c)
 		end
 
 feature {ANY}
 
-	f
+	f (c: CC)
 		require
-			(agent: BOOLEAN do Result := g end).item ([])
+			g (c)
 		do
-			print (5)
+			print ("Failed")
 		end
 
-feature {STRING}
-
-	g: BOOLEAN
+	g (b: BB): BOOLEAN
 		do
 			Result := True
 		end
-		
+
 end
