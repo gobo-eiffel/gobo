@@ -8,4 +8,4 @@ In this test, feature `f` is exported to `ANY`. It has an address expression `$g
 
 ### Notes
 
-* ISE Eiffel (as of 18.11.10.2592 and above) fails to report this validity rule violation.
+* ISE Eiffel (as of 18.11.10.2592 and after) fails to report this validity rule violation.

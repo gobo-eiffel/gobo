@@ -8,4 +8,4 @@ In this test, feature `f` in class `BB` is exported to `ANY`. It has a creation 
 
 ### Notes
 
-* ISE Eiffel (as of 18.11.10.2592 and above) fails to report this validity rule violation.
+* ISE Eiffel (as of 18.11.10.2592 and after) fails to report this validity rule violation.

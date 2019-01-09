@@ -14704,7 +14704,7 @@ feature {NONE} -- Implementation
 	vcch1b_default_template: STRING = "class is not marked as deferred but has deferred feature `$7' inherited from $8."
 	vcch2a_default_template: STRING = "class is marked as deferred but has no deferred feature."
 	vcfg1a_default_template: STRING = "formal generic parameter '$7' has the same name as a class in the surrounding universe."
-	vcfg2a_default_template: STRING = "'$7' is the name of formal generic parameters #$8 and #$9."
+	vcfg2a_default_template: STRING = "formal generic parameters #$8 and #$9 have the same name '$7'."
 	vcfg3a_default_template: STRING = "invalid type '$7' in constraint of formal generic parameter."
 	vcfg3b_default_template: STRING = "constraint of formal generic parameter '$7' is '$8' itself."
 	vcfg3c_default_template: STRING = "constraint of formal generic parameter '$7' is another formal generic parameter '$8'."

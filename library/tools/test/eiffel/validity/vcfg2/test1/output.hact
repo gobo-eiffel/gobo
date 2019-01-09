@@ -1,9 +1,0 @@
-Analyzing clusters
-
--------------------------------------------------------------------------------
-Error code: VCFG(2)
-Error: class has two formal generic parameters with the same name.
-What to do: make sure that all formal parameter names are different. 
-
-Class: CC [G, G]
-Parameter name: g

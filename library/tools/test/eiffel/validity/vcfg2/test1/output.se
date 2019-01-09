@@ -1,9 +1,0 @@
-****** Fatal Error : Formal generic name appears twice in formal
-generic list (VCFG.2).
-Line 1 column 14 in CC (c.e) :
-class CC [G, G]
-             ^
-Line 1 column 11 in CC (c.e) :
-class CC [G, G]
-          ^
-------

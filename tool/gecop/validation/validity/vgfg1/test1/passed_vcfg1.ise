@@ -1,13 +1,15 @@
-Eiffel compilation manager
-Processing options
 -------------------------------------------------------------------------------
 
 Error code: VCFG(1)
+
 Error: Formal generic parameter has the same name as a class.
 What to do: make sure that name of formal generic parameter is different
   from names of all classes in surrounding universe.  
 
-Class: CC [DD]
-Parameter name: dd
+Class: BB [CC]
+Parameter name: CC
+Line: 1
+  ->class BB [CC]
+  
 
 -------------------------------------------------------------------------------

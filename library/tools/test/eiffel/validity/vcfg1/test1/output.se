@@ -1,6 +1,0 @@
-****** Fatal Error : A formal generic argument must not be the
-name of an existing class (VCFG.1).
-Line 1 column 11 in CC (c.e) :
-class CC [DD]
-          ^
-------

@@ -8,12 +8,10 @@ feature
 
 	make
 		local
-			b: BB
-			d: DD
+			b: BB [ANY]
 		do
-			create d
 			create b
-			print (b.item)
+			print ("Failed")
 		end
 
-end -- class AA
+end

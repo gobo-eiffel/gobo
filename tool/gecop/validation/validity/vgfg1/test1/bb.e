@@ -1,0 +1,3 @@
+class BB [CC]
+
+end
