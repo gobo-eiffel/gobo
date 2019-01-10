@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2050,7 +2050,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 											other_index := l_constraint_formal_type.index
 											if an_index = other_index then
 												if other_context.attachment_type_conformance_mode then
-													Result := not is_type_detachable_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context)
+													Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context))
+														and (other.is_type_detachable_with_type_mark (other_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
 												else
 													Result := True
 												end
@@ -2066,7 +2067,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 													other_index := l_other_formal_type.index
 													if an_index = other_index then
 														if other_context.attachment_type_conformance_mode then
-															Result := not is_type_detachable_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context)
+															Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context))
+																and (other.is_type_detachable_with_type_mark (other_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
 														else
 															Result := True
 														end

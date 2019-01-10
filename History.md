@@ -90,6 +90,10 @@
   in the precondition of `f` and the associated convert feature is not
   exported (or exported for creation in case of a convert procedure)
   to all classes to which `f` is exported.
+* Fixed bug in void-safety mode when a generic constraint is of the
+  form `C [G -> H, H -> G]` where `G` was erroneously considered as
+  not conforming to `H`. This issue did not exist in non-void-safety
+  mode.
 
 ### Gobo Eiffel XPath Library
 
