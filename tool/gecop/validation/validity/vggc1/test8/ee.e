@@ -1,0 +1,3 @@
+class EE
+
+end

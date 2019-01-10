@@ -1,0 +1,3 @@
+class DD [G]
+
+end

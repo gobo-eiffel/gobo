@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+
+Error code: VTGC(1)
+
+Error: class has invalid constraint for formal generic parameter.
+What to do: make sure that all types appearing in the constraint are
+  either class names or names of other formal generic parameters.
+
+Class: BB
+Line: 1
+  ->class BB [G -> CC [like Current]]
+  
+
+-------------------------------------------------------------------------------

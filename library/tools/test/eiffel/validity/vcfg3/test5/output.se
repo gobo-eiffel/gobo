@@ -1,6 +1,0 @@
-Unable to find file for class "G". 
-****** Fatal Error : Unable to load class.
-Line 1 column 20 in CC (c.e) :
-class CC [G -> DD [G], H]
-                   ^
-------

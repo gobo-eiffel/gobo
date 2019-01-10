@@ -1,7 +1,7 @@
 # Validity VAPE
 
 These [tests](.) are exercising the validity rule below.</br>
-Click on the condition numbers to below to see tests specific to these conditions.
+Click on the `[tests]` label following the condition numbers to below to see tests specific to these conditions.
 
 ### VAPE: Precondition Export rule
 
@@ -9,17 +9,17 @@ Click on the condition numbers to below to see tests specific to these condition
 
 A *Precondition* of a feature `r` of a class `S` is valid if and only if every feature `f` appearing in every *Assertion_clause* of its unfolded form `u` satisfies the following two conditions for every class `C` to which `r` is available:
 
-[1.](../vape1) If `f` appears as feature of a call in `u` or any of its subexpressions, `f` is available to `C`.</br>
-[2.](../vape2) If `u` or any of its subexpressions uses `f` as creation procedure of a *Creation_expression*, `f` is available for creation to `C`.
+1. [\[tests\]](../vape1) If `f` appears as feature of a call in `u` or any of its subexpressions, `f` is available to `C`.
+2. [\[tests\]](../vape2) If `u` or any of its subexpressions uses `f` as creation procedure of a *Creation_expression*, `f` is available for creation to `C`.
 
 #####ECMA 367-3 (working version 3-36), 8.9.7 page 45.
 
 A *Precondition* of a feature `r` of a class `S` is valid if and only if every feature `f` appearing in its
 unfolded form `u` satisfies the following two conditions for every class `C` to which `r` is available:
 
-[1.](../vape1) If `f` appears as the static feature of a call in `u` or any of its subexpressions, `f` is available
-to `C`.</br>
-[2.](../vape2) If `u` or any of its subexpressions uses `f` as creation procedure of a *Creation_expression*,
+1. [\[tests\]](../vape1) If `f` appears as the static feature of a call in `u` or any of its subexpressions, `f` is available
+to `C`.
+2. [\[tests\]](../vape2) If `u` or any of its subexpressions uses `f` as creation procedure of a *Creation_expression*,
 `f` is available for creation to `C`.
 
 ### Notes

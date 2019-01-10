@@ -29,7 +29,7 @@
 * Do not duplicate expected test results of the validation suite for `gec` and
   `gelint` when they are the same.
 * Made the validation suite browsable with the GitHub Markdown facilities.
-* Added tests for the validity rule `VGFG`.
+* Added tests for the validity rules `VGFG` and `VGGC`.
 
 ### Gobo Eiffel Tools Library
 

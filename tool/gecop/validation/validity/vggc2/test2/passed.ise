@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+
+Error code: VTGC(2)
+
+Error: An error occurred in the renaming clause of a formal generic.
+What to do:
+  In the case of a multi-constraint generic (like in  'G -> {A,B}')
+  one has to ensure that for every used feature there are no ambiguities.
+  In order to achieve that goal you can use a renaming clause.
+  For example: G -> {A rename f as g end, B}
+Hint: The renaming for formal generics is analogous to the
+  renaming occurring during inheritance.
+
+Class: BB [G -> CC rename f as g end]
+Renaming of constraint class: CC
+  at position #1  of formal G
+The following features do not occur in the base class and therefore cannot be renamed:
+   `f'
+
+-------------------------------------------------------------------------------

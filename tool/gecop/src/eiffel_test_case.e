@@ -213,7 +213,7 @@ feature -- Test gelint
 			else
 				a_debug := ""
 			end
-			execute_shell ("gelint --variable=GOBO_EIFFEL=ge --flat --no-benchmark " + ecf_filename + output1_log)
+			execute_shell ("gelint --variable=GOBO_EIFFEL=ge --flat " + ecf_filename + output1_log)
 			concat_output1 (agent filter_output_gelint)
 				-- Test.
 			create l_directory.make (program_dirname)

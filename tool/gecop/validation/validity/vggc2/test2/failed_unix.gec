@@ -1,0 +1,4 @@
+Syntax error:
+line 1 column 19 in $GOBO/tool/gecop/validation/validity/vggc2/test2/bb.e
+class BB [G -> CC rename f as g end]
+                  ^
