@@ -16,11 +16,17 @@ feature
 	item2: H
 
 	f
+		local
+			a: detachable ANY
 		do
 				-- H conforms to G.
 			item1 := item2
 				-- G conforms to H.
 			item2 := item1
+				-- G conforms to 'detachable ANY'.
+			a := item1
+				-- H conforms to 'detachable ANY'.
+			a := item2
 		end
 
 end

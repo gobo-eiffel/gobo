@@ -94,6 +94,9 @@
   form `C [G -> H, H -> G]` where `G` was erroneously considered as
   not conforming to `H`. This issue did not exist in non-void-safety
   mode.
+* Fixed bug where a formal generic parameter `G` was not assumed to
+  conform to `detachable ANY` when there was a cycle in the generic
+  constraints (e.g. `[G -> H, H -> G]`).
 
 ### Gobo Eiffel XPath Library
 

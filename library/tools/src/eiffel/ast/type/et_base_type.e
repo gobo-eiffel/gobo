@@ -5,7 +5,7 @@ note
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -373,8 +373,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					else
 							-- There is a cycle of the form "A [G -> H, H -> G]"
 							-- in the constraint of `a_formal'. Therefore `other'
-							-- can only conform to itself.
-						Result := False
+							-- can only conform to itself and to "detachable ANY".
+							-- Keep the attachment mark of `other' (possibly overridden by `other_type_mark').
+						l_detachable_any_type := a_base_class.current_system.detachable_any_type
+						Result := conforms_from_class_type_with_type_marks (l_detachable_any_type, other.overridden_type_mark (other_type_mark), other_context, a_type_mark, a_context, a_system_processor)
 					end
 				end
 			else
