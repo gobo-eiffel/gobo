@@ -5,7 +5,7 @@ note
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -194,6 +194,7 @@ inherit
 			new_constraint_actual_parameters,
 			new_constraint_creator,
 			new_constraint_labeled_actual_parameter_semicolon,
+			new_constraint_renames,
 			new_convert_feature_comma,
 			new_convert_features,
 			new_convert_function,
@@ -318,6 +319,8 @@ inherit
 			new_target_type,
 			new_then_compound,
 			new_type_comma,
+			new_type_constraint_comma,
+			new_type_constraint_list,
 			new_unique_attribute,
 			new_variant
 		end
@@ -339,7 +342,7 @@ feature -- Status report
 			-- Should the generated AST be decorated with Feature
 			-- and Feature_clause header comments?
 
-feature -- Statut setting
+feature -- Status setting
 
 	set_keep_all_breaks (b: BOOLEAN)
 			-- Set `keep_all_breaks' to `b'.
@@ -2076,7 +2079,7 @@ feature -- AST nodes
 		end
 
 	new_constrained_formal_parameter (a_type_mark: detachable ET_KEYWORD; a_name: detachable ET_IDENTIFIER;
-		an_arrow: detachable ET_SYMBOL; a_constraint: detachable ET_TYPE;
+		an_arrow: detachable ET_SYMBOL; a_constraint: detachable ET_CONSTRAINT;
 		a_creation: detachable ET_CONSTRAINT_CREATOR; a_class: detachable ET_CLASS): detachable ET_CONSTRAINED_FORMAL_PARAMETER
 			-- New constrained formal generic parameter
 		do
@@ -2134,6 +2137,18 @@ feature -- AST nodes
 				Result := a_parameter
 			elseif a_parameter /= Void then
 				create {ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER_SEMICOLON} Result.make (a_parameter, a_semicolon)
+			end
+		end
+
+	new_constraint_renames (a_rename: detachable ET_KEYWORD; a_end: detachable ET_KEYWORD; nb: INTEGER): detachable ET_CONSTRAINT_RENAME_LIST
+			-- New constraint rename clause with given capacity
+		do
+			create Result.make_with_capacity (nb)
+			if a_rename /= Void then
+				Result.set_rename_keyword (a_rename)
+			end
+			if a_end /= Void then
+				Result.set_end_keyword (a_end)
 			end
 		end
 
@@ -3889,6 +3904,28 @@ feature -- AST nodes
 				Result := a_type
 			elseif a_type /= Void then
 				create {ET_TYPE_COMMA} Result.make (a_type, a_comma)
+			end
+		end
+
+	new_type_constraint_comma (a_type_constraint: detachable ET_TYPE_CONSTRAINT; a_comma: detachable ET_SYMBOL): detachable ET_TYPE_CONSTRAINT_ITEM
+			-- New type_constraint-comma
+		do
+			if a_comma = Void then
+				Result := a_type_constraint
+			elseif a_type_constraint /= Void then
+				create {ET_TYPE_CONSTRAINT_COMMA} Result.make (a_type_constraint, a_comma)
+			end
+		end
+
+	new_type_constraint_list (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_TYPE_CONSTRAINT_LIST
+			-- New type constraint list with capacity `nb'
+		do
+			create Result.make_with_capacity (nb)
+			if a_left /= Void then
+				Result.set_left_brace (a_left)
+			end
+			if a_right /= Void then
+				Result.set_right_brace (a_right)
 			end
 		end
 

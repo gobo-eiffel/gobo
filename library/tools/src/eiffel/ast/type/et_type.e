@@ -5,7 +5,7 @@ note
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,14 @@ inherit
 	ET_ACTUAL_PARAMETER
 		undefine
 			resolved_syntactical_constraint_with_type
+		end
+
+	ET_TYPE_CONSTRAINT
+		rename
+			count as type_constraint_count,
+			has_formal_parameter as is_formal_parameter
+		undefine
+			conforms_to_type_with_type_marks
 		end
 
 	ET_CONSTRAINT_TYPE
@@ -834,35 +842,47 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
-			-- Does current type appearing in `a_context' conform
-			-- to `other' type appearing in `other_context'?
+	conforms_to_constraint (a_constraint: ET_CONSTRAINT; a_constraint_context, a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
+			-- Does current type appearing in `a_context' conform to all
+			-- types in `a_constraint' type appearing in `a_constraint_context'?
 			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
+			a_constraint_not_void: a_constraint /= Void
+			a_constraint_context_not_void: a_constraint_context /= Void
+			a_constraint_context_valid: a_constraint_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 			a_system_processor_not_void: a_system_processor /= Void
 		do
-			Result := conforms_to_type_with_type_marks (other, Void, other_context, Void, a_context, a_system_processor)
+			Result := conforms_to_constraint_with_type_marks (a_constraint, Void, a_constraint_context, Void, a_context, a_system_processor)
 		end
 
-	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
-			-- Same as `conforms_to_type' except that the type mark status of `Current'
-			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
+	conforms_to_constraint_with_type_marks (a_constraint: ET_CONSTRAINT; a_constraint_type_mark: detachable ET_TYPE_MARK; a_constraint_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
+			-- Same as `conforms_to_constraint' except that the type mark status of `Current'
+			-- and the types in `a_constraint' is overridden by `a_type_mark' and
+			-- `a_constraint_type_mark', if not Void
 		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
+			a_constraint_not_void: a_constraint /= Void
+			a_constraint_context_not_void: a_constraint_context /= Void
+			a_constraint_context_valid: a_constraint_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 			a_system_processor_not_void: a_system_processor /= Void
-		deferred
+		local
+			i, nb: INTEGER
+		do
+			Result := True
+			nb := a_constraint.count
+			from i := 1 until i > nb loop
+				if not conforms_to_type_with_type_marks (a_constraint.type_constraint (i).type, a_constraint_type_mark, a_constraint_context, a_type_mark, a_context, a_system_processor) then
+					Result := False
+					i := nb -- Jump out of the loop.
+				end
+				i := i + 1
+			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance

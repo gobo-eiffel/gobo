@@ -5,7 +5,7 @@ note
 		"Eiffel parent validity second pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -92,7 +92,7 @@ feature {NONE} -- Parent validity
 			an_actuals: detachable ET_ACTUAL_PARAMETERS
 			an_actual: ET_TYPE
 			a_formal: ET_FORMAL_PARAMETER
-			a_constraint: detachable ET_TYPE
+			a_constraint: detachable ET_CONSTRAINT
 			a_class: ET_CLASS
 			l_conforms: BOOLEAN
 		do
@@ -144,14 +144,14 @@ feature {NONE} -- Parent validity
 							-- "LIST[ANY]", not just "LIST[G]". So, the constraint
 							-- needs to be handled in the correct type context.
 						constraint_context.set (a_type, current_class)
-						l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_class, system_processor)
+						l_conforms := an_actual.conforms_to_constraint (a_constraint, constraint_context, current_class, system_processor)
 						if not l_conforms then
 							if a_class.tuple_constraint_position = i then
 								a_type.resolve_unfolded_tuple_actual_parameters_2 (current_class, constraint_context, system_processor)
 								if attached a_type.actual_parameters as l_actual_parameters and then l_actual_parameters /= an_actuals then
 									an_actuals := l_actual_parameters
 									an_actual := an_actuals.type (i)
-									l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_class, system_processor)
+									l_conforms := an_actual.conforms_to_constraint (a_constraint, constraint_context, current_class, system_processor)
 								end
 							end
 						end

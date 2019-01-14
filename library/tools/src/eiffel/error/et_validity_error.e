@@ -10231,7 +10231,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = anchor name
 		end
 
-	make_vtcg3a (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE)
+	make_vtcg3a (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_constraint: ET_CONSTRAINT)
 			-- Create a new VTCG-3 error: actual generic paramater `an_actual'
 			-- of `a_type' appearing in `a_class_impl' and viewed from one of
 			-- its decendants `a_class' (possibly itself) does not conform to
@@ -10251,7 +10251,7 @@ feature {NONE} -- Initialization
 			--       A
 			--   end
 			--
-			--   class X
+			--   class X [G]
 			--   end
 			--
 			--   class Y [G, H -> X [G]]
@@ -10284,7 +10284,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (an_actual.to_text, 7)
-			parameters.put (a_constraint.to_text, 8)
+			parameters.put (a_constraint.types_to_text, 8)
 			parameters.put (a_type.to_text, 9)
 			set_compilers (True)
 		ensure

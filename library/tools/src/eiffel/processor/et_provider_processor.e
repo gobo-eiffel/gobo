@@ -5,7 +5,7 @@ note
 		"Eiffel provider processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -449,8 +449,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
+		local
+			i, nb: INTEGER
+			l_constraint: ET_CONSTRAINT
 		do
-			process_type  (a_parameter.constraint)
+			l_constraint := a_parameter.constraint
+			nb := l_constraint.count
+			from i := 1 until i > nb loop
+				process_type (l_constraint.type_constraint (i).type)
+				i := i + 1
+			end
 		end
 
 	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION)
@@ -1212,7 +1220,7 @@ feature {ET_AST_NODE} -- Processing
 			a_provider_not_void: a_provider /= Void
 		deferred
 		end
-		
+
 	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do

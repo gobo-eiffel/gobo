@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-20189, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -376,6 +376,13 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_constraint_creator (a_list: ET_CONSTRAINT_CREATOR)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_constraint_rename_list (a_list: ET_CONSTRAINT_RENAME_LIST)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -1449,6 +1456,27 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
+		deferred
+		end
+
+	process_type_constraint_comma (a_type_constraint_comma: ET_TYPE_CONSTRAINT_COMMA)
+			-- Process `a_type_constraint_comma'.
+		require
+			a_type_constraint_comma_not_void: a_type_constraint_comma /= Void
+		deferred
+		end
+
+	process_type_constraint_list (a_list: ET_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_type_rename_constraint (a_type_rename_constraint: ET_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		require
+			a_type_rename_constraint_not_void: a_type_rename_constraint /= Void
 		deferred
 		end
 

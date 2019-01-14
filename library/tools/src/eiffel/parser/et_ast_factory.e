@@ -5,7 +5,7 @@ note
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1759,7 +1759,7 @@ feature -- AST nodes
 		end
 
 	new_constrained_formal_parameter (a_type_mark: detachable ET_KEYWORD; a_name: detachable ET_IDENTIFIER;
-		an_arrow: detachable ET_SYMBOL; a_constraint: detachable ET_TYPE;
+		an_arrow: detachable ET_SYMBOL; a_constraint: detachable ET_CONSTRAINT;
 		a_creation: detachable ET_CONSTRAINT_CREATOR; a_class: detachable ET_CLASS): detachable ET_CONSTRAINED_FORMAL_PARAMETER
 			-- New constrained formal generic parameter
 		do
@@ -1839,6 +1839,14 @@ feature -- AST nodes
 			if a_name /= Void then
 				create Result.make (a_type_mark, a_name)
 			end
+		end
+
+	new_constraint_renames (a_rename: detachable ET_KEYWORD; a_end: detachable ET_KEYWORD; nb: INTEGER): detachable ET_CONSTRAINT_RENAME_LIST
+			-- New constraint rename clause with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			create Result.make_with_capacity (nb)
 		end
 
 	new_convert_feature_comma (a_convert_feature: detachable ET_CONVERT_FEATURE; a_comma: detachable ET_SYMBOL): detachable ET_CONVERT_FEATURE_ITEM
@@ -3589,6 +3597,31 @@ feature -- AST nodes
 			-- New type-comma
 		do
 			Result := a_type
+		end
+
+	new_type_constraint_comma (a_type_constraint: detachable ET_TYPE_CONSTRAINT; a_comma: detachable ET_SYMBOL): detachable ET_TYPE_CONSTRAINT_ITEM
+			-- New type_constraint-comma
+		do
+			Result := a_type_constraint
+		end
+
+	new_type_constraint_list (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_TYPE_CONSTRAINT_LIST
+			-- New type constraint list with capacity `nb'
+		require
+			nb_positive: nb >= 0
+		do
+			create Result.make_with_capacity (nb)
+			if a_left /= Void and then not a_left.position.is_null then
+				Result.set_left_brace (a_left)
+			end
+		end
+
+	new_type_rename_constraint (a_type: detachable ET_TYPE; a_renames: detachable ET_CONSTRAINT_RENAME_LIST): detachable ET_TYPE_RENAME_CONSTRAINT
+			-- New type-rename constraint
+		do
+			if a_type /= Void and a_renames /= Void then
+				create Result.make (a_type, a_renames)
+			end
 		end
 
 	new_unique_attribute (a_name: detachable ET_EXTENDED_FEATURE_NAME; a_type: detachable ET_DECLARED_TYPE;

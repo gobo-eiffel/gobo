@@ -24,6 +24,7 @@ inherit
 			is_type_reference_with_type_mark,
 			is_type_detachable_with_type_mark,
 			has_formal_types,
+			is_formal_parameter,
 			same_syntactical_class_type_with_type_marks,
 			same_syntactical_formal_parameter_type_with_type_marks,
 			same_syntactical_like_current_with_type_marks,
@@ -1104,6 +1105,14 @@ feature -- Status report
 			end
 		end
 
+	is_formal_parameter (i: INTEGER): BOOLEAN
+			-- Is current type a formal generic parameter with index `i'?
+		do
+			Result := index = i
+		ensure then
+			definition: Result = (index = i)
+		end
+
 feature -- Comparison
 
 	same_syntactical_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
@@ -1328,6 +1337,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
 			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_root_context_base_class: ET_CLASS
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1345,7 +1355,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					if l_formal_type.index = other.index then
+					l_root_context_base_class := a_context.root_context.base_class
+					if other_context.base_class /= l_root_context_base_class then
+						Result := False
+					elseif l_formal_type.index = other.index then
 						if a_context.attachment_type_conformance_mode then
 							Result := is_type_attached_with_type_mark (a_type_mark, a_context) = other.is_type_attached_with_type_mark (other_type_mark, other_context)
 								and is_type_detachable_with_type_mark (a_type_mark, a_context) = other.is_type_detachable_with_type_mark (other_type_mark, other_context)
@@ -1626,6 +1639,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
 			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_root_context_base_class: ET_CLASS
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1643,7 +1657,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					if l_formal_type.index = other.index then
+					l_root_context_base_class := a_context.root_context.base_class
+					if other_context.base_class /= l_root_context_base_class then
+						Result := False
+					elseif l_formal_type.index = other.index then
 						if a_context.attachment_type_conformance_mode then
 							Result := is_type_attached_with_type_mark (a_type_mark, a_context) = other.is_type_attached_with_type_mark (other_type_mark, other_context)
 								and is_type_detachable_with_type_mark (a_type_mark, a_context) = other.is_type_detachable_with_type_mark (other_type_mark, other_context)
@@ -1768,6 +1785,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
 			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_root_context_base_class: ET_CLASS
+			l_use_base_type: BOOLEAN
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1785,12 +1804,29 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					if l_formal_type.index = other.index then
+					l_root_context_base_class := a_context.root_context.base_class
+					if other_context.base_class /= l_root_context_base_class then
+						l_use_base_type := True
+					elseif l_formal_type.index = other.index then
 						if a_context.attachment_type_conformance_mode then
 							Result := is_type_attached_with_type_mark (a_type_mark, a_context) = other.is_type_attached_with_type_mark (other_type_mark, other_context)
 								and is_type_detachable_with_type_mark (a_type_mark, a_context) = other.is_type_detachable_with_type_mark (other_type_mark, other_context)
 						else
 							Result := True
+						end
+					else
+						l_use_base_type := True
+					end
+					if l_use_base_type then
+						if a_context.is_root_context then
+							Result := base_type (a_context).same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+						elseif a_context /= other_context then
+							l_root_context := a_context.as_nested_type_context
+							l_root_context.force_last (tokens.like_0)
+							Result := base_type (l_root_context).same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_root_context)
+							l_root_context.remove_last
+						else
+							Result := base_type (a_context.root_context).same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context.root_context)
 						end
 					end
 				else
@@ -1882,6 +1918,16 @@ feature -- Conformance
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
+						-- The context of the formal generic parameter is the root context of `a_context'
+						-- (because we took the actual parameter of its base type).
+						-- Note that other types may be temporarily added to `a_context' or `other_context'
+						-- when calling other nested "conforms_*" routines below. When these contexts are different,
+						-- then the types are added directly to these contexts if they are nested (hence the use of
+						-- 'like_0' below). Otherwise a copy of the context will be done and the types added to
+						-- this copy. We don't do the copy now, but postpone it to when/if types need to be added.
+						-- Hence the use of 'a_context.root_context' which will force the creation of a new
+						-- nested context when calling 'a_context.as_nested_type_context' (because it's not a
+						-- nested context).
 					if a_context.is_root_context then
 						Result := other.conforms_from_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context, other_type_mark, other_context, a_system_processor)
 					elseif a_context /= other_context then
@@ -1980,11 +2026,17 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			an_actual: ET_NAMED_TYPE
 			an_index, other_index: INTEGER
-			a_class: ET_CLASS
 			l_formal: ET_FORMAL_PARAMETER
-			visited: ARRAY [BOOLEAN]
 			l_context_base_class: ET_CLASS
+			l_root_context_base_class: ET_CLASS
 			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_done: BOOLEAN
+			i, nb: INTEGER
+			l_type: ET_TYPE
+			l_has_other_formal: BOOLEAN
+			l_visited: ARRAY [NATURAL_32]
+			j, nb2: INTEGER
+			l_formal_type_mark: detachable ET_TYPE_MARK
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -2004,7 +2056,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- type is itself a formal generic parameter.
 					an_index := l_formal_type.index
 					other_index := other.index
-					if an_index = other_index then
+					l_root_context_base_class := a_context.root_context.base_class
+					if other_context.base_class /= l_root_context_base_class then
+						Result := False
+					elseif an_index = other_index then
 						if other_context.attachment_type_conformance_mode then
 							Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context))
 								and (other.is_type_detachable_with_type_mark (other_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
@@ -2014,84 +2069,147 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					else
 							-- Check for constraints of the form "[G -> H,
 							-- H -> K, K]" where "G" conforms to "K".
-							-- (Note that since `a_context' and `other_context'
-							-- are both root contexts, and knowing that their
-							-- root contexts are the same, it does not matter
-							-- whether we operate in `a_context' or `other_context'
-							-- from now on.)
-						a_class := a_context.root_context.base_class
-						if attached a_class.formal_parameters as l_formals and then other_index <= l_formals.count then
+						if attached l_root_context_base_class.formal_parameters as l_formals and then other_index <= l_formals.count then
 							l_formal := l_formals.formal_parameter (other_index)
 							if attached l_formal.constraint as l_constraint then
 									-- We know that there is a constraint.
-								if attached l_formal.constraint_base_type then
+								if not l_formal.has_constraint_cycle then
 										-- There is no cycle of the form
 										-- "[G -> G]" or "[G -> H, H -> G]".
-									if other_context.is_root_context then
-										Result := l_constraint.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context, a_system_processor)
-									elseif a_context /= other_context then
-										l_root_context := other_context.as_nested_type_context
-										l_root_context.force_last (tokens.like_0)
-										Result := l_constraint.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), l_root_context, a_system_processor)
-										l_root_context.remove_last
-									else
-										Result := l_constraint.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context.root_context, a_system_processor)
-									end
+									Result := l_constraint.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context, a_system_processor)
 								else
-										-- There is a cycle. If `other' is "G" and current
-										-- type is "K", we still want to return True when
+										-- There is a cycle. If `other' is "H" and current
+										-- type is "G", we still want to return True when
 										-- "[G -> H, H -> K, K -> G]" but False (and
 										-- without entering an infinite loop) when
-										-- "[G -> H, H -> G, K]".
-									if attached {ET_FORMAL_PARAMETER_TYPE} l_constraint as l_constraint_formal_type then
-										from
-											create visited.make_filled (False, 1, l_formals.count)
-											visited.put (True, other_index)
-											other_index := l_constraint_formal_type.index
-											if an_index = other_index then
+										-- "[G, H -> K, K -> H]".
+									nb := l_constraint.count
+									from i := 1 until i > nb loop
+										l_type := l_constraint.type_constraint (i).type
+										if attached {ET_FORMAL_PARAMETER_TYPE} l_type as l_constraint_formal_type then
+											if l_constraint_formal_type.index = an_index then
 												if other_context.attachment_type_conformance_mode then
-													Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context))
-														and (other.is_type_detachable_with_type_mark (other_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
+													l_formal_type_mark := other.overridden_type_mark (other_type_mark)
+													Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies l_constraint_formal_type.is_type_attached_with_type_mark (l_formal_type_mark, other_context))
+														and (l_constraint_formal_type.is_type_detachable_with_type_mark (l_formal_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
 												else
 													Result := True
 												end
-													-- Jump out of the loop.
-												visited.put (True, other_index)
-											end
-										until
-											Result or visited.item (other_index)
-										loop
-											visited.put (True, other_index)
-											if other_index <= l_formals.count then
-												if attached {ET_FORMAL_PARAMETER_TYPE} l_formals.formal_parameter (other_index).constraint as l_other_formal_type then
-													other_index := l_other_formal_type.index
-													if an_index = other_index then
-														if other_context.attachment_type_conformance_mode then
-															Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context))
-																and (other.is_type_detachable_with_type_mark (other_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
-														else
-															Result := True
-														end
-															-- Jump out of the loop.
-														visited.put (True, other_index)
-													end
-												else
-														-- Internal error: we know that there is a cycle
-														-- of the form "[G -> H, H -> G]", so the constraint
-														-- has to be a formal parameter.
-													Result := False
+												if Result = True then
+													i := nb -- Jump out of the loop.
 												end
 											else
-													-- Internal error: does `other' type really
-													-- appear in `other_context'?
-												Result := False
+												l_has_other_formal := True
 											end
 										end
-									else
-											-- Internal error: we know that there is a cycle
-											-- of the form "[G -> H, H -> G]", so the constraint
-											-- has to be a formal parameter.
-										Result := False
+										i := i + 1
+									end
+									if not Result and l_has_other_formal then
+											-- We didn't find a conforming version (taking into account attachment marks)
+											-- of `Current' in `l_constraint'. But there are some other formal parameters
+											-- to follow in `l_constraint'. Let's check first that `Current' (modulo
+											-- attachmnent marks) is at least in one of the constraints of `l_formals'.
+										nb := l_formals.count
+										l_done := True
+										from i := 1 until i > nb loop
+											if attached l_formals.formal_parameter (i).constraint as l_other_constraint and then l_other_constraint.has_formal_parameter (an_index) then
+												l_done := False
+												i := nb -- Jump out of the loop.
+											end
+											i := i + 1
+										end
+										if not l_done then
+											from
+												create l_visited.make_filled (0, 1, nb)
+												l_visited.put (0b01, other_index)
+											until
+												l_done
+											loop
+												l_done := True
+												from i := 1 until i > nb loop
+													if l_visited.item (i) & 0b11 = 0b01 or l_visited.item (i) & 0b1100 = 0b0100 or l_visited.item (i) & 0b010000 = 0b110000 then
+														if attached l_formals.formal_parameter (i).constraint as l_other_constraint then
+															nb2 := l_other_constraint.count
+															from j := 1 until j > nb2 loop
+																if attached {ET_FORMAL_PARAMETER_TYPE} l_other_constraint.type_constraint (j).type as l_constraint_formal_type then
+																	other_index := l_constraint_formal_type.index
+																	if l_visited.item (i) & 0b11 = 0b01 then
+																			-- No type mark.
+																		if not attached l_constraint_formal_type.type_mark as l_constraint_type_mark or else not l_constraint_type_mark.is_attachment_mark then
+																			if l_visited.item (other_index) & 0b11 = 0 then
+																				l_visited.put (l_visited.item (other_index) | 0b01, other_index)
+																				l_done := False
+																			end
+																		elseif l_constraint_type_mark.is_attached_mark then
+																			if l_visited.item (other_index) & 0b1100 = 0 then
+																				l_visited.put (l_visited.item (other_index) | 0b0100, other_index)
+																				l_done := False
+																			end
+																		else
+																			if l_visited.item (other_index) & 0b110000 = 0 then
+																				l_visited.put (l_visited.item (other_index) | 0b010000, other_index)
+																				l_done := False
+																			end
+																		end
+																	end
+																	if l_visited.item (i) & 0b1100 = 0b0100 then
+																			-- 'attached' type mark.
+																		if l_visited.item (other_index) & 0b1100 = 0 then
+																			l_visited.put (l_visited.item (other_index) | 0b0100, other_index)
+																			l_done := False
+																		end
+																	end
+																	if l_visited.item (i) & 0b010000 = 0b110000 then
+																			-- 'detachable' type mark
+																		if l_visited.item (other_index) & 0b110000 = 0 then
+																			l_visited.put (l_visited.item (other_index) | 0b010000, other_index)
+																			l_done := False
+																		end
+																	end
+																end
+																j := j + 1
+															end
+														end
+													end
+													i := i + 1
+												end
+											end
+											if l_visited.item (an_index) /= 0 then
+												if l_visited.item (an_index) & 0b11 /= 0 then
+														-- It's as if we had "[G, H -> G]".
+													if other_context.attachment_type_conformance_mode then
+														l_formal_type_mark := other.overridden_type_mark (other_type_mark)
+														l_formal := l_formals.formal_parameter (an_index)
+														Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies l_formal.is_type_attached_with_type_mark (l_formal_type_mark, other_context))
+															and (l_formal.is_type_detachable_with_type_mark (l_formal_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
+													else
+														Result := True
+													end
+												end
+												if not Result and l_visited.item (an_index) & 0b1100 /= 0 then
+														-- It's as if we had "[G, H -> attached G]".
+													if other_context.attachment_type_conformance_mode then
+														l_formal_type_mark := tokens.attached_keyword.overridden_type_mark (other.overridden_type_mark (other_type_mark))
+														l_formal := l_formals.formal_parameter (an_index)
+														Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies l_formal.is_type_attached_with_type_mark (l_formal_type_mark, other_context))
+															and (l_formal.is_type_detachable_with_type_mark (l_formal_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
+													else
+														Result := True
+													end
+												end
+												if not Result and l_visited.item (an_index) & 0b110000 /= 0 then
+														-- It's as if we had "[G, H -> detachable G]".
+													if other_context.attachment_type_conformance_mode then
+														l_formal_type_mark := tokens.detachable_keyword.overridden_type_mark (other.overridden_type_mark (other_type_mark))
+														l_formal := l_formals.formal_parameter (an_index)
+														Result := (is_type_attached_with_type_mark (a_type_mark, a_context) implies l_formal.is_type_attached_with_type_mark (l_formal_type_mark, other_context))
+															and (l_formal.is_type_detachable_with_type_mark (l_formal_type_mark, other_context) implies is_type_detachable_with_type_mark (a_type_mark, a_context))
+													else
+														Result := True
+													end
+												end
+											end
+										end
 									end
 								end
 							end

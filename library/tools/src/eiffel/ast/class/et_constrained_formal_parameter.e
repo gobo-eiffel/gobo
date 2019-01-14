@@ -5,7 +5,7 @@ note
 		"Eiffel constrained formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,7 +60,7 @@ feature -- Access
 	arrow_symbol: ET_SYMBOL
 			-- '->' symbol
 
-	constraint: ET_TYPE
+	constraint: ET_CONSTRAINT
 			-- Generic constraint
 
 	creation_procedures: detachable ET_CONSTRAINT_CREATOR
@@ -79,6 +79,8 @@ feature -- Access
 		do
 			if attached creation_procedures as l_creation_procedures then
 				Result := l_creation_procedures.last_leaf
+			elseif attached renames as l_renames then
+				Result := l_renames.last_leaf
 			else
 				Result := constraint.last_leaf
 			end

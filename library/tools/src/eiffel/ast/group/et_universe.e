@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #18 $"
@@ -944,6 +944,11 @@ feature -- Kernel types
 			-- Class type "[attached] SPECIAL [detachable ANY]",
 			-- where '[attached]' is an implicit type mark
 
+	special_identity_type: ET_CLASS_TYPE
+			-- Class type "[attached] SPECIAL [identity]",
+			-- where '[attached]' is an implicit type mark,
+			-- and 'identity' is 'like Current' with no type mark modifier
+
 	string_type: ET_CLASS_TYPE
 			-- Class type "[attached] STRING",
 			-- where '[attached]' is an implicit type mark
@@ -1545,10 +1550,14 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
 			create special_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
-				-- Type "SPECIAL [detachable ANY]".
+				-- Type "[attached] SPECIAL [detachable ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
 			create special_detachable_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+				-- Type "[attached] SPECIAL [identity]".
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (tokens.identity_type)
+			create special_identity_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_string_type
@@ -1772,6 +1781,7 @@ feature -- Kernel types
 			routine_identity_type := tokens.unknown_generic_class_type
 			special_any_type := tokens.unknown_generic_class_type
 			special_detachable_any_type := tokens.unknown_generic_class_type
+			special_identity_type := tokens.unknown_generic_class_type
 			string_type := tokens.unknown_class_type
 			detachable_string_type := tokens.unknown_class_type
 			string_8_type := tokens.unknown_class_type
@@ -2809,6 +2819,7 @@ invariant
 	routine_identity_type_not_void: routine_identity_type /= Void
 	special_any_type_not_void: special_any_type /= Void
 	special_detachable_any_type_not_void: special_detachable_any_type /= Void
+	special_identity_type_not_void: special_identity_type /= Void
 	string_8_type_not_void: string_8_type /= Void
 	string_32_type_not_void: string_32_type /= Void
 	system_object_type_not_void: system_object_type /= Void

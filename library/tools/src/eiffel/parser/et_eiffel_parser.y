@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ create
 %token <detachable ET_KEYWORD> E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
 %token <detachable ET_KEYWORD> E_DEFERRED E_EXPANDED E_REFERENCE E_SEPARATE
 %token <detachable ET_KEYWORD> E_ATTACHED E_DETACHABLE
-%token <detachable ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_RECAST E_ASSIGN
+%token <detachable ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_ASSIGN
 %token <detachable ET_KEYWORD> E_ACROSS E_SOME
 %token <detachable ET_AGENT_KEYWORD> E_AGENT
 %token <detachable ET_PRECURSOR_KEYWORD> E_PRECURSOR
@@ -77,7 +77,7 @@ create
 %token <detachable ET_SYMBOL_OPERATOR> E_DIV '/' E_GE '>' E_LE '<' E_MOD '^' '*'
 %token <detachable ET_VOID> E_VOID
 
-%token <detachable ET_POSITION> E_CHARERR E_STRERR E_INTERR
+%token <detachable ET_POSITION> E_CHARERR E_STRERR
 
 %token <detachable ET_KEYWORD> E_OLD
 %token <detachable ET_SYMBOL> '{' '}'
@@ -141,7 +141,8 @@ create
 %type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameter_list
 %type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_tuple_actual_parameters Constraint_tuple_actual_parameters_opt
 %type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_tuple_labeled_actual_parameter_list
-%type <detachable ET_CONSTRAINT_CREATOR> Constraint_create Constraint_create_procedure_list
+%type <detachable ET_CONSTRAINT_CREATOR> Constraint_creator Constraint_creator_opt Constraint_create_procedure_list
+%type <detachable ET_CONSTRAINT_RENAME_LIST> Constraint_renames Constraint_rename_list
 %type <detachable ET_CONSTRAINT_TYPE> Constraint_type Constraint_type_no_identifier
 %type <detachable ET_CONVERT_FEATURE> Convert_feature
 %type <detachable ET_CONVERT_FEATURE_ITEM> Convert_feature_comma
@@ -221,6 +222,9 @@ create
 %type <detachable ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
 %type <detachable ET_SYMBOL> Left_parenthesis
 %type <detachable ET_TYPE> Type Type_no_class_name Type_no_identifier Type_no_bang_identifier
+%type <detachable ET_TYPE_CONSTRAINT> Type_rename_constraint
+%type <detachable ET_TYPE_CONSTRAINT_ITEM> Type_rename_constraint_comma
+%type <detachable ET_TYPE_CONSTRAINT_LIST> Type_rename_constraints Type_rename_constraint_list
 %type <detachable ET_TYPE_ITEM> Type_comma
 %type <detachable ET_TYPE_LIST> Convert_types Convert_type_list
 %type <detachable ET_VARIANT> Variant_clause Variant_clause_opt
@@ -599,71 +603,126 @@ Formal_parameter_comma: Formal_parameter ','
 	;
 
 Formal_parameter: Identifier
-		{
-			$$ := ast_factory.new_formal_parameter (Void, $1, last_class)
-			if $$ /= Void then
-				register_constraint (Void)
-			end
-		}
+		{ $$ := ast_factory.new_formal_parameter (Void, $1, last_class) }
 	| E_EXPANDED Identifier
-		{
-			$$ := ast_factory.new_formal_parameter ($1, $2, last_class)
-			if $$ /= Void then
-				register_constraint (Void)
-			end
-		}
+		{ $$ := ast_factory.new_formal_parameter ($1, $2, last_class) }
 	| E_REFERENCE Identifier
+		{ $$ := ast_factory.new_formal_parameter ($1, $2, last_class) }
+	| Identifier E_ARROW Type_rename_constraint Constraint_creator_opt
+		{ $$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, $3, $4, last_class) }
+	| E_EXPANDED Identifier E_ARROW Type_rename_constraint Constraint_creator_opt
+		{ $$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, $4, $5, last_class) }
+	| E_REFERENCE Identifier E_ARROW Type_rename_constraint Constraint_creator_opt
+		{ $$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, $4, $5, last_class) }
+	| Identifier E_ARROW Type_rename_constraints Constraint_creator_opt
+		{ $$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, $3, $4, last_class) }
+	| E_EXPANDED Identifier E_ARROW Type_rename_constraints Constraint_creator_opt
+		{ $$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, $4, $5, last_class) }
+	| E_REFERENCE Identifier E_ARROW Type_rename_constraints Constraint_creator_opt
+		{ $$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, $4, $5, last_class) }
+	;
+
+Type_rename_constraint: Constraint_type
 		{
-			$$ := ast_factory.new_formal_parameter ($1, $2, last_class)
+			$$ := dummy_constraint ($1)
 			if $$ /= Void then
-				register_constraint (Void)
+				register_constraint ($1)
 			end
 		}
-	| Identifier E_ARROW Constraint_type
+	| Constraint_type Constraint_renames
 		{
-			$$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), Void, last_class)
+			$$ := ast_factory.new_type_rename_constraint (dummy_constraint ($1), $2)
 			if $$ /= Void then
-				register_constraint ($3)
-			end
-		}
-	| E_EXPANDED Identifier E_ARROW Constraint_type
-		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void, last_class)
-			if $$ /= Void then
-				register_constraint ($4)
-			end
-		}
-	| E_REFERENCE Identifier E_ARROW Constraint_type
-		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void, last_class)
-			if $$ /= Void then
-				register_constraint ($4)
-			end
-		}
-	| Identifier E_ARROW Constraint_type Constraint_create
-		{
-			$$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), $4, last_class)
-			if $$ /= Void then
-				register_constraint ($3)
-			end
-		}
-	| E_EXPANDED Identifier E_ARROW Constraint_type Constraint_create
-		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5, last_class)
-			if $$ /= Void then
-				register_constraint ($4)
-			end
-		}
-	| E_REFERENCE Identifier E_ARROW Constraint_type Constraint_create
-		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5, last_class)
-			if $$ /= Void then
-				register_constraint ($4)
+				register_constraint ($1)
 			end
 		}
 	;
 
-Constraint_create: E_CREATE E_END
+Type_rename_constraints: '{'
+		{
+			add_symbol ($1)
+			add_counter
+		}
+	  Type_rename_constraint_list
+		{
+			$$ := $3
+			remove_symbol
+			remove_counter
+		}
+	;
+
+Type_rename_constraint_list: Type_rename_constraint '}'
+		{
+			$$ := ast_factory.new_type_constraint_list (last_symbol, $2, counter_value)
+			if $$ /= Void and attached $1 as l_type_constraint then
+				$$.put_first (l_type_constraint)
+			end
+		}
+	| Type_rename_constraint_comma Type_rename_constraint_list
+		{
+			$$ := $2
+			if $$ /= Void and attached $1 as l_type_constraint then
+				$$.put_first (l_type_constraint)
+			end
+		}
+	;
+
+Type_rename_constraint_comma: Type_rename_constraint ','
+		{
+			$$ := ast_factory.new_type_constraint_comma ($1, $2)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+	
+Constraint_renames: E_RENAME E_END
+		{ $$ := ast_factory.new_constraint_renames ($1, $2, 0) }
+	| E_RENAME
+		{
+			add_keyword ($1)
+			add_counter
+		}
+	  Constraint_rename_list
+		{
+			$$ := $3
+			remove_keyword
+			remove_counter
+		}
+	;
+
+Constraint_rename_list: Rename E_END
+		{
+			$$ := ast_factory.new_constraint_renames (last_keyword, $2, counter_value)
+			if $$ /= Void and attached $1 as l_rename then
+				$$.put_first (l_rename)
+			end
+		}
+	| Rename_comma E_END
+		{
+			$$ := ast_factory.new_constraint_renames (last_keyword, $2, counter_value)
+			if $$ /= Void and attached $1 as l_rename then
+				$$.put_first (l_rename)
+			end
+				-- TODO: syntax error.
+			raise_error
+		}
+	| Rename_comma Constraint_rename_list
+		{
+			$$ := $2
+			if $$ /= Void and attached $1 as l_rename then
+				$$.put_first (l_rename)
+			end
+		}
+	;
+
+Constraint_creator_opt:  -- Empty
+		-- { $$ := Void }
+	| Constraint_creator
+		{ $$ := $1 }
+	;
+	
+Constraint_creator: E_CREATE E_END
 		{ $$ := ast_factory.new_constraint_creator ($1, $2, 0) }
 	| E_CREATE
 		{

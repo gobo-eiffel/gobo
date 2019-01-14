@@ -1344,6 +1344,7 @@ feature {NONE} -- Compilation
 			l_class_type: ET_CLASS_TYPE
 			l_class: ET_CLASS
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if not a_system_processor.stop_requested then
 				dynamic_types.wipe_out
@@ -1717,6 +1718,8 @@ feature {NONE} -- Compilation
 						set_fatal_error
 					else
 							-- Check features 'area', and 'lower' and 'upper' of class ARRAY.
+						create l_context.make_with_capacity (l_class, 1)
+						l_context.put_last (l_class.formal_parameter_type (1))
 						if not attached l_class.named_query (tokens.area_feature_name) as l_array_area_feature then
 							if attached l_class.named_procedure (tokens.area_feature_name) as l_procedure then
 								set_fatal_error
@@ -1728,7 +1731,7 @@ feature {NONE} -- Compilation
 						elseif not l_array_area_feature.is_attribute then
 							set_fatal_error
 							error_handler.report_gvkfe2a_error (l_class, l_array_area_feature)
-						elseif not l_array_area_feature.type.same_named_type (current_system.special_any_type.base_class, current_system.special_any_type.base_class, l_class) then
+						elseif not l_array_area_feature.type.same_named_type (current_system.special_identity_type, l_context, l_class) then
 							set_fatal_error
 							error_handler.report_gvkfe3a_error (l_class, l_array_area_feature, current_system.special_any_type.base_class)
 						else

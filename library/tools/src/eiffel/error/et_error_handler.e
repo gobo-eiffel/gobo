@@ -5466,7 +5466,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtcg3a_error (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE)
+	report_vtcg3a_error (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_constraint: ET_CONSTRAINT)
 			-- Report VTCG-3 error: actual generic paramater `an_actual'
 			-- of `a_type' appearing in `a_class_impl' and viewed from one of
 			-- its decendants `a_class' (possibly itself) does not conform to
@@ -5486,7 +5486,7 @@ feature -- Validity errors
 			--       A
 			--   end
 			--
-			--   class X
+			--   class X [G]
 			--   end
 			--
 			--   class Y [G, H -> X [G]]

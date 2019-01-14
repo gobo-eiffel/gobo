@@ -5,7 +5,7 @@ note
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -273,6 +273,11 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_constraint_creator (a_list: ET_CONSTRAINT_CREATOR)
+			-- Process `a_list'.
+		do
+		end
+
+	process_constraint_rename_list (a_list: ET_CONSTRAINT_RENAME_LIST)
 			-- Process `a_list'.
 		do
 		end
@@ -1034,6 +1039,21 @@ feature {ET_AST_NODE} -- Processing
 
 	process_type_comma (a_type: ET_TYPE_COMMA)
 			-- Process `a_type'.
+		do
+		end
+
+	process_type_constraint_comma (a_type_constraint_comma: ET_TYPE_CONSTRAINT_COMMA)
+			-- Process `a_type_constraint_comma'.
+		do
+		end
+
+	process_type_constraint_list (a_list: ET_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		do
+		end
+
+	process_type_rename_constraint (a_type_rename_constraint: ET_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
 		do
 		end
 

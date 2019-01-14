@@ -279,7 +279,7 @@ feature {NONE} -- Constraint creation validity
 						-- So we must have something like that:
 						-- "[G -> H create make end, H -> G]".
 						-- We consider that the base class of the
-						-- constraint is 'ANY' in that case.
+						-- constraint is 'detachable ANY' in that case.
 					a_class := current_universe.detachable_any_type.base_class
 				end
 					-- Build the feature table.

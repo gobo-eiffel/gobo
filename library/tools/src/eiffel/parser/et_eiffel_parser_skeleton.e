@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -614,31 +614,88 @@ feature {NONE} -- Basic operations
 
 	set_formal_parameters (a_parameters: detachable ET_FORMAL_PARAMETER_LIST)
 			-- Set formal generic parameters of `last_class'.
-		require
-			no_constraint: a_parameters = Void implies constraints.is_empty
-			same_count: a_parameters /= Void implies constraints.count = a_parameters.count
 		local
 			a_class: like last_class
-			a_constraint: detachable ET_CONSTRAINT_TYPE
-			a_type: detachable  ET_TYPE
-			i, nb: INTEGER
+			a_type: detachable ET_TYPE
+			l_type_constraint_item: ET_TYPE_CONSTRAINT_ITEM
+			i, j, k: INTEGER
 		do
 			if a_parameters /= Void then
 				a_class := last_class
 				if a_class /= Void then
-					nb := a_parameters.count
-					from i := nb until i < 1 loop
+					from
+						i := a_parameters.count
+						j := constraints.count
+					until
+						i < 1
+					loop
 						if attached {ET_CONSTRAINED_FORMAL_PARAMETER} a_parameters.formal_parameter (i) as a_constrained_formal then
-							a_constraint := constraints.item (i)
-							if a_constraint /= Void then
-								a_type := a_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
+							if attached {ET_TYPE_RENAME_CONSTRAINT} a_constrained_formal as l_type_constraint then
+								if j > 0 and then attached constraints.item (j) as l_constraint then
+									a_type := l_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
+								else
+									a_type := Void
+								end
+								j := j - 1
+								if a_type /= Void then
+									l_type_constraint.set_type (a_type)
+								else
+									a_parameters.remove (i)
+								end
+							elseif attached {ET_TYPE_CONSTRAINT} a_constrained_formal as l_type_constraint then
+								if j > 0 and then attached constraints.item (j) as l_constraint then
+									a_type := l_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
+								else
+									a_type := Void
+								end
+								j := j - 1
 								if a_type /= Void then
 									a_constrained_formal.set_constraint (a_type)
 								else
 									a_parameters.remove (i)
 								end
-							else
-								a_parameters.remove (i)
+							elseif attached {ET_TYPE_CONSTRAINT_LIST} a_constrained_formal as l_type_constraint_list then
+								from
+									k := l_type_constraint_list.count
+								until
+									k < 1
+								loop
+									if j > 0 and then attached constraints.item (j) as l_constraint then
+										a_type := l_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
+									else
+										a_type := Void
+									end
+									j := j - 1
+									l_type_constraint_item := l_type_constraint_list.item (k)
+									if attached {ET_TYPE_CONSTRAINT_COMMA} l_type_constraint_item as l_type_constraint_comma then
+										if attached {ET_TYPE_RENAME_CONSTRAINT} l_type_constraint_comma.type_constraint as l_type_constraint then
+											if a_type /= Void then
+												l_type_constraint.set_type (a_type)
+											else
+												l_type_constraint_list.remove (k)
+											end
+										else
+											if a_type /= Void then
+												l_type_constraint_comma.set_type_constraint (a_type)
+											else
+												l_type_constraint_list.remove (k)
+											end
+										end
+									elseif attached {ET_TYPE_RENAME_CONSTRAINT} l_type_constraint_item as l_type_constraint then
+										if a_type /= Void then
+											l_type_constraint.set_type (a_type)
+										else
+											l_type_constraint_list.remove (k)
+										end
+									else
+										if a_type /= Void then
+											l_type_constraint_list.put (a_type, k)
+										else
+											l_type_constraint_list.remove (k)
+										end
+									end
+									k := k - 1
+								end
 							end
 						end
 						i := i - 1

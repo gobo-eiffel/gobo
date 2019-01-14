@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, second pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,9 +84,15 @@ feature {NONE} -- Constraint validity
 			-- if an error occurred.
 		require
 			a_formal_not_void: a_formal /= Void
+		local
+			i, nb: INTEGER
 		do
 			if attached a_formal.constraint as a_constraint then
-				a_constraint.process (Current)
+				nb := a_constraint.count
+				from i := 1 until i > nb loop
+					a_constraint.type_constraint (i).type.process (Current)
+					i := i + 1
+				end
 			end
 		end
 
@@ -105,7 +111,7 @@ feature {NONE} -- Constraint validity
 			i, nb: INTEGER
 			an_actual: ET_TYPE
 			a_formal: ET_FORMAL_PARAMETER
-			a_constraint: detachable ET_TYPE
+			a_constraint: detachable ET_CONSTRAINT
 			l_actuals: detachable ET_ACTUAL_PARAMETERS
 			a_class: ET_CLASS
 			l_conforms: BOOLEAN
@@ -158,14 +164,14 @@ feature {NONE} -- Constraint validity
 							-- "LIST [ANY]", not just "LIST [G]". So, the constraint
 							-- needs to be handled in the correct type context.
 						constraint_context.set (a_type, current_class)
-						l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_class, system_processor)
+						l_conforms := an_actual.conforms_to_constraint (a_constraint, constraint_context, current_class, system_processor)
 						if not l_conforms then
 							if a_class.tuple_constraint_position = i then
 								a_type.resolve_unfolded_tuple_actual_parameters_2 (current_class, constraint_context, system_processor)
 								if attached a_type.actual_parameters as l_actual_parameters and then l_actual_parameters /= l_actuals then
 									l_actuals := l_actual_parameters
 									an_actual := l_actuals.type (i)
-									l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_class, system_processor)
+									l_conforms := an_actual.conforms_to_constraint (a_constraint, constraint_context, current_class, system_processor)
 								end
 							end
 						end

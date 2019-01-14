@@ -5,7 +5,7 @@ note
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +54,7 @@ inherit
 			process_constant_attribute,
 			process_constrained_formal_parameter,
 			process_constraint_creator,
+			process_constraint_rename_list,
 			process_convert_feature_list,
 			process_convert_function,
 			process_convert_procedure,
@@ -167,6 +168,8 @@ inherit
 			process_token,
 			process_true_constant,
 			process_tuple_type,
+			process_type_constraint_list,
+			process_type_rename_constraint,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
@@ -1269,6 +1272,48 @@ feature {ET_AST_NODE} -- Processing
 					tokens.comma_symbol.process (Current)
 				end
 				comment_finder.add_excluded_node (l_feature_name)
+				comment_finder.find_comments (l_item, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+				i := i + 1
+			end
+			a_list.end_keyword.process (Current)
+		end
+
+	process_constraint_rename (a_rename: ET_RENAME)
+			-- Process `a_rename'.
+		require
+			a_rename_not_void: a_rename /= Void
+		do
+			process_feature_name (a_rename.old_name)
+			print_space
+			a_rename.as_keyword.process (Current)
+			print_space
+			a_rename.new_name.process (Current)
+		end
+
+	process_constraint_rename_list (a_list: ET_CONSTRAINT_RENAME_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+			l_item: ET_RENAME_ITEM
+			l_rename: ET_RENAME
+		do
+			a_list.rename_keyword.process (Current)
+			print_space
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				l_item := a_list.item (i)
+				l_rename := l_item.rename_pair
+				process_constraint_rename (l_rename)
+				if i /= nb then
+						-- The AST may or may not contain the comma.
+						-- So we have to print it explicitly here.
+					tokens.comma_symbol.process (Current)
+				end
+				comment_finder.add_excluded_node (l_rename.old_name)
+				comment_finder.add_excluded_node (l_rename.as_keyword)
+				comment_finder.add_excluded_node (l_rename.new_name)
 				comment_finder.find_comments (l_item, comment_list)
 				comment_finder.reset_excluded_nodes
 				print_space
@@ -5059,6 +5104,43 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 				l_folded_actual_parameters.process (Current)
 			end
+		end
+
+	process_type_constraint_list (a_list: ET_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+			l_item: ET_TYPE_CONSTRAINT_ITEM
+			l_type_constraint: ET_TYPE_CONSTRAINT
+		do
+			a_list.left_brace.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				l_item := a_list.item (i)
+				l_type_constraint := l_item.type_constraint
+				l_type_constraint.process (Current)
+				comment_finder.add_excluded_node (l_type_constraint)
+				comment_finder.find_comments (l_item, comment_list)
+				comment_finder.reset_excluded_nodes
+				if i /= nb then
+						-- The AST may or may not contain the comma.
+						-- So we have to print it explicitly here.
+					tokens.comma_symbol.process (Current)
+					print_space
+				end
+				i := i + 1
+			end
+			a_list.right_brace.process (Current)
+		end
+
+	process_type_rename_constraint (a_type_rename_constraint: ET_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		do
+			a_type_rename_constraint.type.process (Current)
+			print_space
+			set_target_type (a_type_rename_constraint.type)
+			a_type_rename_constraint.renames.process (Current)
+			set_target_type (Void)
 		end
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)

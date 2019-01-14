@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,7 +64,7 @@ feature -- Access
 	type_mark: detachable ET_KEYWORD
 			-- 'expanded', 'reference' keyword
 
-	constraint: detachable ET_TYPE
+	constraint: detachable ET_CONSTRAINT
 			-- Generic constraint
 		do
 			-- Result := Void
@@ -134,6 +134,13 @@ feature -- Status report
 			-- Has formal parameter been declared as reference?
 		do
 			Result := attached type_mark as l_type_mark and then l_type_mark.is_reference
+		end
+
+	has_constraint_cycle: BOOLEAN
+			-- Is there some cycle in the constraint?
+			-- (e.g. "[G -> G]" or "[G -> H, H -> G]")
+		do
+			Result := constraint_base_type = Void
 		end
 
 feature -- Setting

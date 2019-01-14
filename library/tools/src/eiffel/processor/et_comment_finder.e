@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,6 +64,7 @@ inherit
 			process_constant_attribute,
 			process_constrained_formal_parameter,
 			process_constraint_creator,
+			process_constraint_rename_list,
 			process_convert_builtin_expression,
 			process_convert_feature_comma,
 			process_convert_feature_list,
@@ -198,6 +199,9 @@ inherit
 			process_token,
 			process_tuple_type,
 			process_type_comma,
+			process_type_constraint_comma,
+			process_type_constraint_list,
+			process_type_rename_constraint,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unfolded_empty_tuple_actual_parameters,
@@ -662,6 +666,14 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_constraint_creator (a_list: ET_CONSTRAINT_CREATOR)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
+			end
+		end
+
+	process_constraint_rename_list (a_list: ET_CONSTRAINT_RENAME_LIST)
 			-- Process `a_list'.
 		do
 			if not excluded_nodes.has (a_list) then
@@ -1752,6 +1764,30 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_type) then
 				precursor (a_type)
+			end
+		end
+
+	process_type_constraint_comma (a_type_constraint_comma: ET_TYPE_CONSTRAINT_COMMA)
+			-- Process `a_type_constraint_comma'.
+		do
+			if not excluded_nodes.has (a_type_constraint_comma) then
+				precursor (a_type_constraint_comma)
+			end
+		end
+
+	process_type_constraint_list (a_list: ET_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
+			end
+		end
+
+	process_type_rename_constraint (a_type_rename_constraint: ET_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		do
+			if not excluded_nodes.has (a_type_rename_constraint) then
+				precursor (a_type_rename_constraint)
 			end
 		end
 

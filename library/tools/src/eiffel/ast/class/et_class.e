@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #46 $"
@@ -192,7 +192,11 @@ feature -- Initialization
 				nb := l_formal_parameters.count
 				from i := 1 until i > nb loop
 					if attached l_formal_parameters.formal_parameter (i).constraint as l_constraint then
-						l_unfolded_tuple_actual_parameters_resolver.resolve_type (l_constraint, Current)
+						nb2 := l_constraint.count
+						from j := 1 until j > nb2 loop
+							l_unfolded_tuple_actual_parameters_resolver.resolve_type (l_constraint.type_constraint (j).type, Current)
+							j := j + 1
+						end
 					end
 					i := i + 1
 				end
@@ -1320,20 +1324,28 @@ feature -- Genericity
 			-- Set `formal_parameters' to `a_parameters'.
 		local
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			formal_parameters := a_parameters
 			tuple_constraint_position := 0
 			if a_parameters /= Void then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
-					if attached {ET_TUPLE_TYPE} a_parameters.formal_parameter (i).constraint then
-						if tuple_constraint_position /= 0 then
-								-- This is not a single-tuple class: there are more than one
-								-- Tuple type as formal parameter constraint.
-							tuple_constraint_position := 0
-							i := nb -- Jump out of the loop.
-						else
-							tuple_constraint_position := i
+					if attached a_parameters.formal_parameter (i).constraint as l_constraint then
+						nb2 := l_constraint.count
+						from j := 1 until j > nb2 loop
+							if attached {ET_TUPLE_TYPE} l_constraint.type_constraint (j).type then
+								if tuple_constraint_position /= 0 then
+										-- This is not a single-tuple class: there are more than one
+										-- formal parameter with a Tuple type as constraint.
+									tuple_constraint_position := 0
+									i := nb -- Jump out of the outer loop.
+								else
+									tuple_constraint_position := i
+								end
+								j := nb2 -- Jump out of the inner loop.
+							end
+							j := j + 1
 						end
 					end
 					i := i + 1

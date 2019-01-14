@@ -5,7 +5,7 @@ note
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -781,7 +781,7 @@ feature -- Type processing
 				elseif attached actual_parameters as l_actual_parameters then
 					if attached l_formal_parameters.formal_parameter (l_tuple_constraint_position).constraint as l_tuple_constraint then
 						l_actual := l_actual_parameters.type (l_tuple_constraint_position)
-						if not l_actual.conforms_to_type (l_tuple_constraint, a_constraint_context, a_context, a_system_processor) then
+						if not l_actual.conforms_to_constraint (l_tuple_constraint, a_constraint_context, a_context, a_system_processor) then
 							create l_actual_sublist.make (l_actual_parameters, l_tuple_constraint_position, l_tuple_constraint_position)
 							create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actual_sublist, a_context.root_context.base_class.universe.tuple_type.named_base_class)
 							create l_tuple_keyword.make (tokens.tuple_keyword.name)
