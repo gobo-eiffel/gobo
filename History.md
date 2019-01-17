@@ -31,6 +31,11 @@
 * Made the validation suite browsable with the GitHub Markdown facilities.
 * Added tests for the validity rules `VGFG` and `VGGC`.
 
+### gelex
+
+* Fixed examples in the documentation.
+
+
 ### Gobo Eiffel Tools Library
 
 * Made sure that validity error `VHPR-2` (conforming inheritance from

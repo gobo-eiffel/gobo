@@ -112,7 +112,7 @@ feature</strong></em> -- Access
 
 <em><strong>feature</strong></em> -- Analysis
 
-<em>    analyze </em><em><strong>is</strong></em><em>
+<em>    analyze </em><em>
             </em>--<em> </em>Count the number of characters and lines
             -- in input file and display the results.<em>
         </em><em><strong>do</strong></em><em>
@@ -157,10 +157,11 @@ color="#0000FF"><em>
 
     YY_COMPRESSED_SCANNER_SKELETON
 
-    ARGUMENTS
-        </em><em><strong>export</strong></em><em>
-            </em>{<em>NONE</em>}<em> </em><em><strong>all</strong></em><em>
-        </em><em><strong>end</strong></em><em>
+    KL_SHARED_ARGUMENTS
+        </em><em><strong>export</strong></em><em> </em>{<em>NONE</em>}<em> </em><em><strong>all</strong></em><em> </em><em><strong>end</strong></em><em>
+
+    KL_SHARED_STANDARD_FILES
+        </em><em><strong>export</strong></em><em> </em>{<em>NONE</em>}<em> </em><em><strong>all</strong></em><em> </em><em><strong>end</strong></em><em>
 
 </em><em><strong>create</strong></em><em>
 
@@ -186,7 +187,7 @@ color="#0000FF">  {
                  io.put_real </em>(<em>text.to_real</em>)<em>
                  io.put_new_line</em></font><font color="#0000FF">
             }
-</font><font color="#FF0000">class|inherit|feature|is|do|if|then|else|end </font><font
+</font><font color="#FF0000">class|inherit|feature|do|if|then|else|end </font><font
 color="#0000FF">   {
                  </font><font color="#008080"><em>io.put_string </em>(&quot;<em>A keyword: </em>&quot;)<em>
                  io.put_string </em>(<em>text</em>)<em>
@@ -219,18 +220,21 @@ color="#0000FF">           {
 <font color="#008080">
 <em><strong>feature</strong></em> -- Scanning
 
-    <em>scan_file </em><em><strong>is</strong></em><em>
+    <em>scan_file </em><em>
             </em>-- Scan file whose name has been given as argument.<em>
             </em>-- Scan standard input if no argument has been given.<em>
         </em><em><strong>local</strong></em><em>
-            a_file</em>:<em> FILE
+            l_file</em>:<em> KL_TEXT_INPUT_FILE
+            l_input</em>:<em> KI_TEXT_INPUT_STREAM
         </em><em><strong>do</strong></em><em>
-            </em><em><strong>if</strong></em><em> argument_count </em>&gt;= <em>1 </em><em><strong>then</strong></em><em>
-                </em><em><strong>create</strong> a_file.make_open_read </em>(<em>argument </em>(<em>1</em>))<em>
+            </em><em><strong>if</strong></em><em> Arguments.argument_count </em>&gt;= <em>1 </em><em><strong>then</strong></em><em>
+                </em><em><strong>create</strong> l_file.make </em>(<em>Arguments.argument </em>(<em>1</em>))<em>
+                </em><em>l_file.open_read</em><em>
+                </em><em>l_input</em> := <em>l_file</em><em>
             </em><em><strong>else</strong></em><em>
-                a_file </em>:=<em> io.input
+                l_input </em>:=<em> std.input
             </em><em><strong>end</strong></em><em>
-            set_input_buffer </em>(<em>new_file_buffer </em>(<em>a_file</em>))<em>
+            set_input_buffer </em>(<em>new_file_buffer </em>(<em>l_input</em>))<em>
             scan
         </em><em><strong>end</strong></em>
 
@@ -247,7 +251,7 @@ be explained in the rest of the <a href="index.html">documentation</a>.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            <font size="2"><b>Copyright © 1998-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -257,7 +261,7 @@ be explained in the rest of the <a href="index.html">documentation</a>.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 15 February 2005</font><br>
+            <strong>Last Updated:</strong> 17 January 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$
