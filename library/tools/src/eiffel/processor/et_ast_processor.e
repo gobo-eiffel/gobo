@@ -207,6 +207,20 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_base_type_constraint_list (a_list: ET_BASE_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_base_type_rename_constraint (a_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		require
+			a_type_rename_constraint_not_void: a_type_rename_constraint /= Void
+		deferred
+		end
+
 	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		require

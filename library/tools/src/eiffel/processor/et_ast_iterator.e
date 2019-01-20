@@ -281,6 +281,27 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_base_type_constraint_list (a_list: ET_BASE_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.left_brace.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+			a_list.right_brace.process (Current)
+		end
+
+	process_base_type_rename_constraint (a_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		do
+			a_type_rename_constraint.type.process (Current)
+			a_type_rename_constraint.renames.process (Current)
+		end
+
 	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do

@@ -24,6 +24,7 @@ inherit
 	ET_TYPE_CONSTRAINT
 		rename
 			count as type_constraint_count,
+			type as type_constraint_type,
 			has_formal_parameter as is_formal_parameter
 		undefine
 			conforms_to_type_with_type_marks
@@ -286,6 +287,14 @@ feature -- Access
 		end
 
 	type: ET_TYPE
+			-- Type
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
+
+	type_constraint_type: like Current
 			-- Type
 		do
 			Result := Current

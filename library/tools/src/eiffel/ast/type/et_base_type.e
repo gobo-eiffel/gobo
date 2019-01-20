@@ -18,6 +18,8 @@ inherit
 		rename
 			base_class as base_class_in_context,
 			named_base_class as named_base_class_in_context
+		undefine
+			type_constraint
 		redefine
 			reset,
 			reset_qualified_anchored_types,
@@ -74,6 +76,15 @@ inherit
 		redefine
 			base_class,
 			is_root_context
+		end
+
+	ET_BASE_TYPE_CONSTRAINT
+		rename
+			count as type_constraint_count,
+			type as type_constraint_type,
+			has_formal_parameter as is_formal_parameter
+		undefine
+			conforms_to_type_with_type_marks
 		end
 
 feature -- Initialization
@@ -276,6 +287,11 @@ feature -- Status report
 		deferred
 		end
 
+	is_attached: BOOLEAN
+			-- Is current type attached?
+		deferred
+		end
+
 	has_anchored_type: BOOLEAN
 			-- Does current type contain an anchored type?
 		do
@@ -341,44 +357,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			an_index: INTEGER
 			a_formal: ET_FORMAL_PARAMETER
-			l_detachable_any_type: ET_CLASS_TYPE
 			a_base_class: ET_CLASS
 		do
 			an_index := other.index
 			a_base_class := other_context.base_class
 			if attached a_base_class.formal_parameters as a_formals and then an_index <= a_formals.count then
 				a_formal := a_formals.formal_parameter (an_index)
-				if a_formal.constraint = Void then
-						-- `a_formal' is implicitly constrained by "detachable ANY",
-						-- so it conforms to any type to which "detachable ANY" conforms.
-					if not a_base_class.is_preparsed then
-							-- Internal error: we have a formal parameter of a class that
-							-- is not even preparsed (i.e. for which we know nothing,
-							-- not even its filename). Therefore it is impossible to
-							-- determine whether "detachable ANY" conforms to it.
-						Result := False
-					else
-							-- Keep the attachment mark of `other' (possibly overridden by `other_type_mark').
-						l_detachable_any_type := a_base_class.current_system.detachable_any_type
-						Result := conforms_from_class_type_with_type_marks (l_detachable_any_type, other.overridden_type_mark (other_type_mark), other_context, a_type_mark, a_context, a_system_processor)
-					end
-				else
-					if attached a_formal.constraint_base_type as l_base_type then
-							-- The constraint of `a_formal' is not another formal
-							-- parameter, or if it is there is no cycle and
-							-- the resolved base type of this constraint has
-							-- been made available in `base_type'.
-							-- Keep the attachment mark of `other' (possibly overridden by `other_type_mark').
-						Result := l_base_type.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context, a_system_processor)
-					else
-							-- There is a cycle of the form "A [G -> H, H -> G]"
-							-- in the constraint of `a_formal'. Therefore `other'
-							-- can only conform to itself and to "detachable ANY".
-							-- Keep the attachment mark of `other' (possibly overridden by `other_type_mark').
-						l_detachable_any_type := a_base_class.current_system.detachable_any_type
-						Result := conforms_from_class_type_with_type_marks (l_detachable_any_type, other.overridden_type_mark (other_type_mark), other_context, a_type_mark, a_context, a_system_processor)
-					end
-				end
+				Result := a_formal.constraint_base_types.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context, a_system_processor)
 			else
 					-- Internal error: does `other' type really appear in `other_context'?
 				Result := False

@@ -85,6 +85,10 @@ feature -- Access
 	implementation_class: ET_CLASS
 			-- Class where the current formal generic parameter appears
 
+	constraint_index: INTEGER
+			-- Index of base type constraint (in 'constraint_base_types') to be used
+			-- in case of multiple constraints for this formal generic parameter
+
 	named_base_class (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS
 			-- Same as `base_class' except that it returns information about this
 			-- class (e.g. its name) as known from the universe it is used from
@@ -92,17 +96,31 @@ feature -- Access
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
 			-- or unmatched formal generic parameter.
 		local
-			an_actual: ET_NAMED_TYPE
-			a_class: ET_CLASS
-			a_formal: ET_FORMAL_PARAMETER
-			an_index: INTEGER
+			l_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_constraint_index: INTEGER
+			l_ancestor_actual: ET_TYPE
+			l_actual: ET_NAMED_TYPE
+			l_actual_base_class: ET_CLASS
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_actual_constraint_index: INTEGER
 		do
+			l_formal_type := Current
+			l_index := index
+			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
-				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
-					Result := l_actual_parameters.type (index).named_base_class (a_context)
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_ancestor_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_actual_formal_type.index
+						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
+					else
+						Result := l_ancestor_actual.named_base_class (a_context)
+					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
 						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
@@ -110,43 +128,37 @@ feature -- Access
 						-- of actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				end
-			elseif index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
+			end
+			if Result /= Void then
+				-- Already computed.
+			elseif l_index <= a_context.base_type_actual_count then
+				l_actual := a_context.base_type_actual (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					a_class := a_context.root_context.base_class
-					an_index := l_formal_type.index
-					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
-						a_formal := l_formals.formal_parameter (an_index)
-						if attached a_formal.constraint_base_type as l_base_type then
-							Result := l_base_type.named_base_class
-						elseif not a_class.is_preparsed then
-								-- Internal error: we have a formal parameter of a class that
-								-- is not even preparsed (i.e. for which we know nothing,
-								-- not even its filename). Therefore it is impossible to
-								-- determine its base class.
-							Result := tokens.unknown_class
+					l_actual_base_class := a_context.root_context.base_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
+						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
+							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.named_base_class
 						else
-								-- This formal parameter has either no constraint
-								-- or a cyclic constraint of the form "[G -> H,
-								-- H -> G]". The base class is considered to be
-								-- "detachable ANY" in these two cases.
-							Result := a_class.universe.detachable_any_type.named_base_class
+								-- Internal error: formal constraint not matched.
+							Result := tokens.unknown_class
 						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
 					end
+				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
+					Result := l_base_type.named_base_class
 				else
-					if a_context.is_root_context then
-						Result := an_actual.named_base_class (a_context)
-					else
-						l_root_context := a_context.as_nested_type_context
-						l_root_context.force_last (tokens.like_0)
-						Result := an_actual.named_base_class (l_root_context)
-						l_root_context.remove_last
-					end
+						-- Should never happen: `a_context.base_type' is the
+						-- result of call to `base_type'. So `l_actual'
+						-- is either a formal generic parameter or a
+						-- base type itself.
+					Result := tokens.unknown_class
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -158,18 +170,33 @@ feature -- Access
 			-- Same as `base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			an_actual: ET_NAMED_TYPE
-			a_class: ET_CLASS
-			a_formal: ET_FORMAL_PARAMETER
-			an_index: INTEGER
+			l_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_ancestor_actual: ET_TYPE
+			l_actual: ET_NAMED_TYPE
+			l_actual_base_class: ET_CLASS
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
+			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
+			l_actual_constraint_index: INTEGER
 		do
+			l_formal_type := Current
+			l_index := index
+			l_constraint_index := constraint_index
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
-				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
-					Result := l_actual_parameters.type (index).base_type_with_type_mark (l_type_mark, a_context)
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_ancestor_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_formal_type.index
+						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
+					else
+						Result := l_ancestor_actual.base_type_with_type_mark (l_type_mark, a_context)
+					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
 						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
@@ -177,44 +204,37 @@ feature -- Access
 						-- of actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				end
-			elseif index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
+			end
+			if Result /= Void then
+				-- Already computed.
+			elseif l_index <= a_context.base_type_actual_count then
+				l_actual := a_context.base_type_actual (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					a_class := a_context.root_context.base_class
-					an_index := l_formal_type.index
-					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
-						a_formal := l_formals.formal_parameter (an_index)
-						if attached a_formal.constraint_base_type as l_base_type then
-							Result := l_base_type.type_with_type_mark (l_type_mark)
-						elseif not a_class.is_preparsed then
-								-- Internal error: we have a formal parameter of a class that
-								-- is not even preparsed (i.e. for which we know nothing,
-								-- not even its filename). Therefore it is impossible to
-								-- determine its base type.
-							Result := tokens.unknown_class
+					l_actual_base_class := a_context.root_context.base_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
+						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
+							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.type_with_type_mark (l_type_mark)
 						else
-								-- This formal parameter has either no constraint
-								-- or a cyclic constraint of the form "[G -> H,
-								-- H -> G]". The base type is considered to be
-								-- "detachable ANY" in these two cases.
-							Result := a_class.universe.detachable_any_type.type_with_type_mark (l_type_mark)
+								-- Internal error: formal constraint not matched.
+							Result := tokens.unknown_class
 						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
 					end
+				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
+					Result := l_base_type.type_with_type_mark (l_type_mark)
 				else
-					if attached {ET_BASE_TYPE} an_actual as l_base_type then
-						Result := l_base_type.type_with_type_mark (l_type_mark)
-					else
-							-- Should never happen: `a_context.base_type' is the
-							-- result of call to `base_type'. So `an_actual'
-							-- is either a formal generic parameter or a
-							-- base type itself.
-						Result := tokens.unknown_class
-					end
+						-- Should never happen: `a_context.base_type' is the
+						-- result of call to `base_type'. So `l_actual'
+						-- is either a formal generic parameter or a
+						-- base type itself.
+					Result := tokens.unknown_class
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -226,19 +246,33 @@ feature -- Access
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			an_actual: ET_TYPE
-			a_formal: ET_FORMAL_PARAMETER
-			an_index: INTEGER
+			l_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_actual: ET_TYPE
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
+			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
+			l_actual_constraint_index: INTEGER
 			l_root_context: ET_BASE_TYPE
 		do
+			l_formal_type := Current
+			l_index := index
+			l_constraint_index := constraint_index
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_root_context := a_context.root_context
 			l_context_base_class := l_root_context.base_class
 			if l_context_base_class /= implementation_class then
-				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
-					Result := l_actual_parameters.type (index).shallow_base_type_with_type_mark (l_type_mark, a_context)
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_formal_type.index
+						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
+					else
+						Result := l_actual.shallow_base_type_with_type_mark (l_type_mark, a_context)
+					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
 						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
@@ -246,35 +280,30 @@ feature -- Access
 						-- of actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				end
-			elseif attached l_root_context.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
-				an_actual := l_actual_parameters.type (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
+			end
+			if Result /= Void then
+				-- Already computed.
+			elseif attached l_root_context.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+				l_actual := l_actual_parameters.type (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					an_index := l_formal_type.index
-					if attached l_context_base_class.formal_parameters as l_formals and then an_index <= l_formals.count then
-						a_formal := l_formals.formal_parameter (an_index)
-						if attached a_formal.constraint_base_type as l_base_type then
-							Result := l_base_type.type_with_type_mark (l_type_mark)
-						elseif not l_context_base_class.is_preparsed then
-								-- Internal error: we have a formal parameter of a class that
-								-- is not even preparsed (i.e. for which we know nothing,
-								-- not even its filename). Therefore it is impossible to
-								-- determine its base type.
-							Result := tokens.unknown_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_context_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
+						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
+							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.type_with_type_mark (l_type_mark)
 						else
-								-- This formal parameter has either no constraint
-								-- or a cyclic constraint of the form "[G -> H,
-								-- H -> G]". The base type is considered to be
-								-- "detachable ANY" in these two cases.
-							Result := l_context_base_class.current_system.detachable_any_type.type_with_type_mark (l_type_mark)
+								-- Internal error: formal constraint not matched.
+							Result := tokens.unknown_class
 						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
 					end
 				else
-					if attached {ET_BASE_TYPE} an_actual as l_base_type then
+					if attached {ET_BASE_TYPE} l_actual as l_base_type then
 						Result := l_base_type.type_with_type_mark (l_type_mark)
 					else
 							-- Should never happen: `a_context.base_type' is the
@@ -294,17 +323,32 @@ feature -- Access
 			-- `i'-th actual generic parameter's type of the base type of current
 			-- type when it appears in `a_context'
 		local
-			an_actual: ET_NAMED_TYPE
-			a_class: ET_CLASS
-			a_formal: ET_FORMAL_PARAMETER
-			an_index: INTEGER
+			l_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_ancestor_actual: ET_TYPE
+			l_actual: ET_NAMED_TYPE
+			l_actual_base_class: ET_CLASS
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
+			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_actual_constraint_index: INTEGER
+			l_constraint_base_type: ET_BASE_TYPE
 		do
+			l_formal_type := Current
+			l_index := index
+			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
-				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
-					Result := l_actual_parameters.type (index).base_type_actual (i, a_context)
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_ancestor_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_formal_type.index
+						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
+					else
+						Result := l_ancestor_actual.base_type_actual (i, a_context)
+					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
 						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
@@ -312,44 +356,38 @@ feature -- Access
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				end
-			elseif index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
+			end
+			if Result /= Void then
+				-- Already computed.
+			elseif l_index <= a_context.base_type_actual_count then
+				l_actual := a_context.base_type_actual (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					a_class := a_context.root_context.base_class
-					an_index := l_formal_type.index
-					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
-						a_formal := l_formals.formal_parameter (an_index)
-						if attached a_formal.constraint_base_type as l_base_type then
-							if a_context.is_root_context then
-								Result := l_base_type.base_type_actual (i, a_context)
-							else
-								l_root_context := a_context.as_nested_type_context
-								l_root_context.force_last (tokens.like_0)
-								Result := l_base_type.base_type_actual (i, l_root_context)
-								l_root_context.remove_last
-							end
+					l_actual_base_class := a_context.root_context.base_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
+						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
+							l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type
+							Result := l_constraint_base_type.base_type_actual (i, l_constraint_base_type)
 						else
-								-- This formal parameter has either no constraint
-								-- or a cyclic constraint of the form "[G -> H,
-								-- H -> G]". The base type is considered to be
-								-- "detachable ANY" in these two cases.
+								-- Internal error: formal constraint not matched.
 							Result := tokens.unknown_class
 						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
 					end
+				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
+					Result := l_base_type.base_type_actual (i, l_base_type)
 				else
-					if a_context.is_root_context then
-						Result := an_actual.base_type_actual (i, a_context)
-					else
-						l_root_context := a_context.as_nested_type_context
-						l_root_context.force_last (tokens.like_0)
-						Result := an_actual.base_type_actual (i, l_root_context)
-						l_root_context.remove_last
-					end
+						-- Should never happen: `a_context.base_type' is the
+						-- result of call to `base_type'. So `l_actual'
+						-- is either a formal generic parameter or a
+						-- base type itself.
+					Result := tokens.unknown_class
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -361,17 +399,32 @@ feature -- Access
 			-- `i'-th actual generic parameter of the base type of current
 			-- type when it appears in `a_context'
 		local
-			an_actual: ET_NAMED_TYPE
-			a_class: ET_CLASS
-			a_formal: ET_FORMAL_PARAMETER
-			an_index: INTEGER
+			l_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_ancestor_actual: ET_TYPE
+			l_actual: ET_NAMED_TYPE
+			l_actual_base_class: ET_CLASS
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
+			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_actual_constraint_index: INTEGER
+			l_constraint_base_type: ET_BASE_TYPE
 		do
+			l_formal_type := Current
+			l_index := index
+			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
-				if attached  l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
-					Result := l_actual_parameters.type (index).base_type_actual_parameter (i, a_context)
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_ancestor_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_formal_type.index
+						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
+					else
+						Result := l_ancestor_actual.base_type_actual_parameter (i, a_context)
+					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
 						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
@@ -379,44 +432,38 @@ feature -- Access
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				end
-			elseif index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
+			end
+			if Result /= Void then
+				-- Already computed.
+			elseif l_index <= a_context.base_type_actual_count then
+				l_actual := a_context.base_type_actual (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					a_class := a_context.root_context.base_class
-					an_index := l_formal_type.index
-					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
-						a_formal := l_formals.formal_parameter (an_index)
-						if attached a_formal.constraint_base_type as l_base_type then
-							if a_context.is_root_context then
-								Result := l_base_type.base_type_actual_parameter (i, a_context)
-							else
-								l_root_context := a_context.as_nested_type_context
-								l_root_context.force_last (tokens.like_0)
-								Result := l_base_type.base_type_actual_parameter (i, l_root_context)
-								l_root_context.remove_last
-							end
+					l_actual_base_class := a_context.root_context.base_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
+						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
+							l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type
+							Result := l_constraint_base_type.base_type_actual_parameter (i, l_constraint_base_type)
 						else
-								-- This formal parameter has either no constraint
-								-- or a cyclic constraint of the form "[G -> H,
-								-- H -> G]". The base type is considered to be
-								-- "detachable ANY" in these two cases.
+								-- Internal error: formal constraint not matched.
 							Result := tokens.unknown_class
 						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
 					end
+				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
+					Result := l_base_type.base_type_actual_parameter (i, l_base_type)
 				else
-					if a_context.is_root_context then
-						Result := an_actual.base_type_actual_parameter (i, a_context)
-					else
-						l_root_context := a_context.as_nested_type_context
-						l_root_context.force_last (tokens.like_0)
-						Result := an_actual.base_type_actual_parameter (i, l_root_context)
-						l_root_context.remove_last
-					end
+						-- Should never happen: `a_context.base_type' is the
+						-- result of call to `base_type'. So `l_actual'
+						-- is either a formal generic parameter or a
+						-- base type itself.
+					Result := tokens.unknown_class
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -429,17 +476,32 @@ feature -- Access
 			-- the base type of current type when it appears in `a_context';
 			-- 0 if it does not exist
 		local
-			an_actual: ET_NAMED_TYPE
-			a_class: ET_CLASS
-			a_formal: ET_FORMAL_PARAMETER
-			an_index: INTEGER
+			l_formal_type: detachable ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_ancestor_actual: ET_TYPE
+			l_actual: ET_NAMED_TYPE
+			l_actual_base_class: ET_CLASS
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
+			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_actual_constraint_index: INTEGER
 		do
+			l_index := index
+			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
-			if l_context_base_class /= implementation_class then
-				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
-					Result := l_actual_parameters.type (index).base_type_index_of_label (a_label, a_context)
+			if l_context_base_class = implementation_class then
+				l_formal_type := Current
+			else
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_ancestor_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_formal_type.index
+						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
+					else
+						Result := l_ancestor_actual.base_type_index_of_label (a_label, a_context)
+					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
 						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
@@ -447,44 +509,37 @@ feature -- Access
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := 0
 				end
-			elseif index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
+			end
+			if l_formal_type = Void then
+				-- Already computed.
+			elseif l_index <= a_context.base_type_actual_count then
+				l_actual := a_context.base_type_actual (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					a_class := a_context.root_context.base_class
-					an_index := l_formal_type.index
-					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
-						a_formal := l_formals.formal_parameter (an_index)
-						if attached a_formal.constraint_base_type as l_base_type then
-							if a_context.is_root_context then
-								Result := l_base_type.base_type_index_of_label (a_label, a_context)
-							else
-								l_root_context := a_context.as_nested_type_context
-								l_root_context.force_last (tokens.like_0)
-								Result := l_base_type.base_type_index_of_label (a_label, l_root_context)
-								l_root_context.remove_last
-							end
+					l_actual_base_class := a_context.root_context.base_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
+						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
+							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.index_of_label (a_label)
 						else
-								-- This formal parameter has either no constraint
-								-- or a cyclic constraint of the form "[G -> H,
-								-- H -> G]". The base type is considered to be
-								-- "detachable ANY" in these two cases.
+								-- Internal error: formal constraint not matched.
 							Result := 0
 						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := 0
 					end
+				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
+					Result := l_base_type.index_of_label (a_label)
 				else
-					if a_context.is_root_context then
-						Result := an_actual.base_type_index_of_label (a_label, a_context)
-					else
-						l_root_context := a_context.as_nested_type_context
-						l_root_context.force_last (tokens.like_0)
-						Result := an_actual.base_type_index_of_label (a_label, l_root_context)
-						l_root_context.remove_last
-					end
+						-- Should never happen: `a_context.base_type' is the
+						-- result of call to `base_type'. So `l_actual'
+						-- is either a formal generic parameter or a
+						-- base type itself.
+					Result := 0
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -601,16 +656,32 @@ feature -- Measurement
 	base_type_actual_count (a_context: ET_TYPE_CONTEXT): INTEGER
 			-- Number of actual generic parameters of the base type of current type
 		local
-			an_actual: ET_NAMED_TYPE
-			a_class: ET_CLASS
-			a_formal: ET_FORMAL_PARAMETER
-			an_index: INTEGER
+			l_formal_type: detachable ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_ancestor_actual: ET_TYPE
+			l_actual: ET_NAMED_TYPE
+			l_actual_base_class: ET_CLASS
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
+			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
+			l_actual_constraint_index: INTEGER
 		do
+			l_index := index
+			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
-			if l_context_base_class /= implementation_class then
-				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
-					Result := l_actual_parameters.type (index).base_type_actual_count (a_context)
+			if l_context_base_class = implementation_class then
+				l_formal_type := Current
+			else
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_ancestor_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_formal_type.index
+						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
+					else
+						Result := l_ancestor_actual.base_type_actual_count (a_context)
+					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
 						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
@@ -618,33 +689,34 @@ feature -- Measurement
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := 0
 				end
-			elseif index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
+			end
+			if l_formal_type = Void then
+				-- Already computed.
+			elseif l_index <= a_context.base_type_actual_count then
+				l_actual := a_context.base_type_actual (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					a_class := a_context.root_context.base_class
-					an_index := l_formal_type.index
-					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
-						a_formal := l_formals.formal_parameter (an_index)
-						if attached a_formal.constraint_base_type as l_base_type then
-							Result := l_base_type.actual_parameter_count
+					l_actual_base_class := a_context.root_context.base_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
+						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
+							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.actual_parameter_count
 						else
-								-- This formal parameter has either no constraint
-								-- or a cyclic constraint of the form "[G -> H,
-								-- H -> G]". The base type is considered to be
-								-- "detachable ANY" in these two cases.
+								-- Internal error: formal constraint not matched.
 							Result := 0
 						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := 0
 					end
-				elseif attached {ET_BASE_TYPE} an_actual as l_base_type then
+				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
 					Result := l_base_type.actual_parameter_count
 				else
 						-- Should never happen: `a_context.base_type' is the
-						-- result of call to `base_type'. So `an_actual'
+						-- result of call to `base_type'. So `l_actual'
 						-- is either a formal generic parameter or a
 						-- base type itself.
 					Result := 0
@@ -773,6 +845,8 @@ feature -- Status report
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
+			l_base_types: ET_CONSTRAINT_BASE_TYPES
+			i, nb: INTEGER
 			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_type_mark := overridden_type_mark (a_type_mark)
@@ -807,17 +881,31 @@ feature -- Status report
 								Result := l_formal_type.is_type_attached_with_type_mark (l_type_mark, l_root_context)
 								l_root_context.remove_last
 							end
-						elseif attached a_formal.constraint_base_type as l_base_type then
+						elseif l_type_mark /= Void and then l_type_mark.is_attached_mark then
+							Result := True
+						else
+							l_base_types := a_formal.constraint_base_types
+							nb := l_base_types.count
 							if a_context.is_root_context then
-								Result := l_base_type.is_type_attached_with_type_mark (l_type_mark, a_context)
+								from i := 1 until i > nb loop
+									if l_base_types.type_constraint (i).type.is_type_attached_with_type_mark (l_type_mark, a_context) then
+										Result := True
+										i := nb -- Jump out of the loop
+									end
+									i := i + 1
+								end
 							else
 								l_root_context := a_context.as_nested_type_context
 								l_root_context.force_last (tokens.like_0)
-								Result := l_base_type.is_type_attached_with_type_mark (l_type_mark, l_root_context)
+								from i := 1 until i > nb loop
+									if l_base_types.type_constraint (i).type.is_type_attached_with_type_mark (l_type_mark, l_root_context) then
+										Result := True
+										i := nb -- Jump out of the loop
+									end
+									i := i + 1
+								end
 								l_root_context.remove_last
 							end
-						else
-							Result := l_type_mark /= Void and then l_type_mark.is_attached_mark
 						end
 					else
 							-- Internal error: does current type really
@@ -995,17 +1083,34 @@ feature -- Status report
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context'?
 		local
-			an_actual: ET_NAMED_TYPE
-			a_base_class: ET_CLASS
-			a_formal: ET_FORMAL_PARAMETER
-			an_index: INTEGER
+			l_formal_type: detachable ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_ancestor_actual: ET_TYPE
+			l_actual: ET_NAMED_TYPE
+			l_actual_base_class: ET_CLASS
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
+			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
+			l_actual_constraint_index: INTEGER
+			l_constraint_base_type: ET_BASE_TYPE
 			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
+			l_index := index
+			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
-			if l_context_base_class /= implementation_class then
-				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
-					Result := l_actual_parameters.type (index).base_type_has_class (a_class, a_context)
+			if l_context_base_class = implementation_class then
+				l_formal_type := Current
+			else
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_ancestor_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_formal_type.index
+						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
+					else
+						Result := l_ancestor_actual.base_type_has_class (a_class, a_context)
+					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
 						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
@@ -1013,36 +1118,32 @@ feature -- Status report
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := a_class.is_unknown
 				end
-			elseif index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
+			end
+			if l_formal_type = Void then
+				-- Already computed.
+			elseif l_index <= a_context.base_type_actual_count then
+				l_actual := a_context.base_type_actual (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					a_base_class := a_context.root_context.base_class
-					an_index := l_formal_type.index
-					if attached a_base_class.formal_parameters as l_formals and then an_index <= l_formals.count then
-						a_formal := l_formals.formal_parameter (an_index)
-						if attached a_formal.constraint_base_type as l_base_type then
+					l_actual_base_class := a_context.root_context.base_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
+						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
+							l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type
 							if a_context.is_root_context then
-								Result := l_base_type.base_type_has_class (a_class, a_context)
+								Result := l_constraint_base_type.base_type_has_class (a_class, a_context)
 							else
 								l_root_context := a_context.as_nested_type_context
 								l_root_context.force_last (tokens.like_0)
-								Result := l_base_type.base_type_has_class (a_class, l_root_context)
+								Result := l_constraint_base_type.base_type_has_class (a_class, l_root_context)
 								l_root_context.remove_last
 							end
-						elseif not a_base_class.is_preparsed then
-								-- Internal error: we have a formal parameter of a class that
-								-- is not even preparsed (i.e. for which we know nothing,
-								-- not even its filename). Therefore it is impossible to
-								-- determine its base class.
-							Result := a_class.is_unknown
 						else
-								-- This formal parameter has either no constraint
-								-- or a cyclic constraint of the form "[G -> H,
-								-- H -> G]". The base type is considered to be
-								-- "detachable ANY" in these two cases.
-							Result := (a_class = a_base_class.universe.detachable_any_type.base_class)
+								-- Internal error: formal constraint not matched.
+							Result := a_class.is_unknown
 						end
 					else
 							-- Internal error: formal parameter not matched.
@@ -1050,11 +1151,11 @@ feature -- Status report
 					end
 				else
 					if a_context.is_root_context then
-						Result := an_actual.base_type_has_class (a_class, a_context)
+						Result := l_actual.base_type_has_class (a_class, a_context)
 					else
 						l_root_context := a_context.as_nested_type_context
 						l_root_context.force_last (tokens.like_0)
-						Result := an_actual.base_type_has_class (a_class, l_root_context)
+						Result := l_actual.base_type_has_class (a_class, l_root_context)
 						l_root_context.remove_last
 					end
 				end
@@ -2330,6 +2431,125 @@ feature -- Output
 			a_string.append_string (upper_name)
 		end
 
+feature {NONE} -- Implementation
+
+	other_constraint_index (a_constraint_index: INTEGER; a_formal: ET_FORMAL_PARAMETER_TYPE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT; a_other_formal: ET_FORMAL_PARAMETER_TYPE; a_other_type: ET_TYPE; a_system_processor: ET_SYSTEM_PROCESSOR): INTEGER
+			-- Contraint index for `a_other_formal' corresponding to the
+			-- contraint index `a_constraint_index' of `a_formal'.
+			--
+			-- For example if we have:
+			--
+			--    class C [G -> VV, XX] end
+			--
+			--    class D [H -> UU, YY, ZZ] inherit C [H] end
+			--
+			-- where ZZ conforms to VV and UU conforms to XX, then
+			-- {G, 1} will give {H, 3} and {G, 2} will give {H, 1}.
+			--
+			-- In case conformance between constraints need to be checked, then
+			-- the constraints of `a_formal' will be considered to be in the
+			-- context `a_context' + `a_type', and the constraints of `a_other_formal'
+			-- will be considered to be in the context `a_context' + `a_other_type'.
+			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		require
+			a_constraint_index_positive: a_constraint_index >= 1
+			a_formal_not_void: a_formal /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_other_formal_not_void: a_other_formal /= Void
+			a_other_type_not_void: a_other_type /= Void
+			a_system_processor_not_void: a_system_processor /= Void
+		local
+			l_implementation_class: ET_CLASS
+			l_other_implementation_class: ET_CLASS
+			l_index: INTEGER
+			l_other_index: INTEGER
+			l_other_formal: ET_FORMAL_PARAMETER
+			l_other_constraint_base_types: ET_CONSTRAINT_BASE_TYPES
+			l_constraint_base_types: ET_CONSTRAINT_BASE_TYPES
+			l_base_type: ET_BASE_TYPE
+			i, nb: INTEGER
+			l_context: ET_TYPE_CONTEXT
+			l_nested_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_other_context: ET_TYPE_CONTEXT
+			l_other_nested_context: ET_NESTED_TYPE_CONTEXT
+			l_modified_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_context_used: BOOLEAN
+		do
+			Result := 1
+			l_implementation_class := a_formal.implementation_class
+			l_other_implementation_class := a_other_formal.implementation_class
+			l_index := a_formal.index
+			l_other_index := a_other_formal.index
+			if l_other_implementation_class = l_implementation_class and l_other_index = l_index then
+				Result := a_constraint_index
+			elseif attached l_other_implementation_class.formal_parameters as l_other_formals and then l_other_index <= l_other_formals.count then
+				l_other_formal := l_other_formals.formal_parameter (l_other_index)
+				l_other_constraint_base_types := l_other_formal.constraint_base_types
+				nb := l_other_constraint_base_types.count
+				if nb = 1 then
+					Result := 1
+				elseif attached l_implementation_class.formal_parameters as l_formals and then l_index <= l_formals.count then
+					l_constraint_base_types := l_formals.formal_parameter (index).constraint_base_types
+					if l_constraint_base_types.count = 1 then
+						Result := 1
+					elseif a_constraint_index <= l_constraint_base_types.count then
+						l_base_type := l_constraint_base_types.type_constraint (constraint_index).type
+						if a_other_type = tokens.like_0 then
+							l_other_context := a_context.root_context
+						elseif a_other_type = tokens.identity_type then
+							l_other_context := a_context
+							l_context_used := True
+						elseif attached {ET_NESTED_TYPE_CONTEXT} a_context as l_nested_type_context then
+							l_nested_context := a_context.to_nested_type_context
+							l_other_nested_context := l_nested_type_context
+							l_other_nested_context.force_last (a_other_type)
+							l_other_context := l_other_nested_context
+							l_modified_context := l_other_nested_context
+							l_context_used := True
+						else
+							l_other_nested_context := a_context.to_nested_type_context
+							l_other_nested_context.force_last (a_other_type)
+							l_other_context := l_other_nested_context
+						end
+						if l_nested_context /= Void then
+							l_nested_context.force_last (a_type)
+							l_context := l_nested_context
+						elseif a_type = tokens.identity_type then
+							l_context := a_context
+						elseif l_context_used then
+							l_nested_context := a_context.to_nested_type_context
+							l_nested_context.force_last (a_type)
+							l_context := l_nested_context
+						elseif attached {ET_NESTED_TYPE_CONTEXT} a_context as l_nested_type_context then
+							l_nested_context := l_nested_type_context
+							l_nested_context.force_last (a_type)
+							l_context := l_nested_context
+							l_modified_context := l_nested_context
+						else
+							l_nested_context := a_context.to_nested_type_context
+							l_nested_context.force_last (a_type)
+							l_context := l_nested_context
+						end
+						from i := 1 until i > nb loop
+							if l_other_constraint_base_types.type_constraint (i).type.conforms_to_type_with_type_marks (l_base_type, Void, l_context, a_other_formal.type_mark, l_other_context, a_system_processor) then
+								Result := i
+								i := nb -- Jump out of the loop.
+							end
+							i := i + 1
+						end
+						if l_modified_context /= Void then
+							l_modified_context.remove_last
+						end
+					end
+				end
+			end
+		ensure
+			other_constraint_index_positive: Result >= 1
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)
@@ -2341,6 +2561,7 @@ feature -- Processing
 invariant
 
 	index_positive: index >= 1
+	constraint_index_positive: constraint_index >= 1
 	implementation_class_not_void: implementation_class /= Void
 
 end

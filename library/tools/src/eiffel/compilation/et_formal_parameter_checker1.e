@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,6 +48,9 @@ feature {NONE} -- Initialization
 			precursor (a_system_processor)
 			create formal_parameter_sorter.make_default
 			create direct_formal_parameter_sorter.make_default
+			create all_base_types.make (20)
+			create formal_dependencies.make (100)
+			create base_type_dependencies.make (100)
 		end
 
 feature -- Validity checking
@@ -75,6 +78,15 @@ feature -- Validity checking
 			current_class := a_class
 			if attached current_class.formal_parameters as a_parameters then
 				nb := a_parameters.count
+				initalize_formal_dependencies (nb)
+				all_base_types.wipe_out
+				base_type_dependencies.wipe_out
+					-- Add "detachable ANY" in `all_base_types' at index 1.
+				all_base_types.force_last (current_universe.detachable_any_type)
+				from i := 1 until i > nb loop
+					base_type_dependencies.force_last (No_dependency)
+					i := i + 1
+				end
 				from i := 1 until i > nb loop
 					a_formal := a_parameters.formal_parameter (i)
 					a_name := a_formal.name
@@ -99,6 +111,10 @@ feature -- Validity checking
 					i := i + 1
 				end
 				check_constraint_cycles
+				set_constraint_base_types (a_parameters)
+				formal_dependencies.wipe_out
+				all_base_types.wipe_out
+				base_type_dependencies.wipe_out
 			end
 			current_class := old_class
 		end
@@ -116,17 +132,32 @@ feature {NONE} -- Constraint validity
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_formal_not_void: a_formal /= Void
+		local
+			l_constraint: ET_CONSTRAINT
+			l_type_constraint: ET_TYPE_CONSTRAINT
+			i, nb: INTEGER
 		do
-			if attached a_formal.constraint as a_constraint then
-				current_formal := a_formal
-				a_constraint.process (Current)
+			if attached {ET_CONSTRAINED_FORMAL_PARAMETER} a_formal as l_constrained_formal then
+				current_formal := l_constrained_formal
+				l_constraint := l_constrained_formal.constraint
+				nb := l_constraint.count
+				from i := 1 until i > nb loop
+					l_type_constraint := l_constraint.type_constraint (i)
+					current_type_constraint := l_type_constraint
+					l_type_constraint.type.process (Current)
+					i := i + 1
+				end
+				current_type_constraint := Void
 				current_formal := Void
+			else
+					-- "detachable ANY" is at index 1 in `all_base_types'.
+				base_type_dependencies.replace (Detachable_type_mark, a_formal.index)
 			end
 		end
 
-	check_class_type_constraint (a_type: ET_CLASS_TYPE; a_formal: ET_FORMAL_PARAMETER)
-			-- Check whether `a_type' is valid when appearing in a
-			-- constraint of `a_formal' in `current_class'. Record
+	check_class_type_constraint (a_type: ET_CLASS_TYPE; a_type_constraint: ET_TYPE_CONSTRAINT; a_formal: ET_CONSTRAINED_FORMAL_PARAMETER)
+			-- Check whether `a_type' is valid when appearing in a constraint
+			-- `a_type_constraint' of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
 			-- cycles later on. Do not check whether the actual generic
 			-- parameters of `a_type' conform to their corresponding
@@ -135,12 +166,15 @@ feature {NONE} -- Constraint validity
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			a_type_constraint_not_void: a_type_constraint /= Void
 			a_formal_not_void: a_formal /= Void
 		local
 			i, nb: INTEGER
 			a_class: ET_CLASS
 			l_formal: ET_FORMAL_PARAMETER
 			l_actual: ET_TYPE
+			l_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT
+			l_value: INTEGER
 		do
 			a_class := a_type.base_class
 			a_class.process (system_processor.eiffel_parser)
@@ -193,11 +227,30 @@ feature {NONE} -- Constraint validity
 					end
 				end
 			end
-			if a_formal.constraint = a_type then
-					-- `a_type' is the constraint of `a_formal'.
+			if a_type_constraint.type = a_type then
+					-- `a_type' is one of the constraints of `a_formal'.
 					-- Set its base type if valid.
 				if a_type.is_named_type then
-					a_formal.set_constraint_base_type (a_type)
+						-- Add this base type to `all_base_types'.
+					if attached a_type_constraint.renames as l_renames then
+						create l_type_rename_constraint.make (a_type, l_renames)
+						all_base_types.force_last (l_type_rename_constraint)
+					else
+						all_base_types.force_last (a_type)
+					end
+					nb := current_class.formal_parameter_count
+					from i := 1 until i > nb loop
+						base_type_dependencies.force_last (No_dependency)
+						i := i + 1
+					end
+						-- Add constraint dependency between `a_formal'
+						-- and this base type.
+					if a_type.is_attached then
+						l_value := Attached_type_mark
+					else
+						l_value := Detachable_type_mark
+					end
+					base_type_dependencies.replace (l_value, (all_base_types.count - 1) * nb + a_formal.index)
 				else
 					-- The constraint contains anchored types or other
 					-- invalid types in its actual generic parameters.
@@ -207,9 +260,9 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_formal_parameter_type_constraint (a_type: ET_FORMAL_PARAMETER_TYPE; a_formal: ET_FORMAL_PARAMETER)
-			-- Check whether `a_type' is valid when appearing in a
-			-- constraint of `a_formal' in `current_class'. Record
+	check_formal_parameter_type_constraint (a_type: ET_FORMAL_PARAMETER_TYPE; a_type_constraint: ET_TYPE_CONSTRAINT; a_formal: ET_CONSTRAINED_FORMAL_PARAMETER)
+			-- Check whether `a_type' is valid when appearing in a constraint
+			-- `a_type_constraint' of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
 			-- cycles later on. Do not check whether the actual generic
 			-- parameters of `a_type' conform to their corresponding
@@ -218,57 +271,76 @@ feature {NONE} -- Constraint validity
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			a_type_constraint_not_void: a_type_constraint /= Void
 			a_formal_not_void: a_formal /= Void
 		local
 			index1, index2: INTEGER
 			a_parameters: detachable ET_FORMAL_PARAMETER_LIST
 			other_formal: ET_FORMAL_PARAMETER
+			l_value: INTEGER
 		do
 			index1 := a_type.index
 			index2 := a_formal.index
 			a_parameters := current_class.formal_parameters
-			if a_formal.constraint = a_type then
+			if a_type_constraint.type = a_type then
 					-- Check validity when the constraint of `a_formal'
 					-- parameter is itself a formal parameter.
 				if a_parameters = Void or else index1 > a_parameters.count then
 						-- Internal error.
 					set_fatal_error
 					error_handler.report_giaaa_error
-				elseif index1 = index2 then
-						-- The constraint of the formal parameter is
-						-- itself (e.g. "A [G -> G]"). This is not
-						-- considered as a fatal error by gelint. The
-						-- base class of this formal parameter will be
-						-- considered to be "detachable ANY".
-					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
-						error_handler.report_vcfg3b_error (current_class, a_formal, a_type)
-					end
-				elseif index1 < index2 then
-						-- This formal is constrained by another formal
-						-- parameter appearing before (e.g. "A [G, H -> G]").
-						-- This is not considered as a fatal error by gelint.
-						-- The base class of this formal parameter will be the
-						-- base class of its constraint, or "detachable ANY"
-						-- if there is a cycle (e.g. "A [G -> H, H -> G]").
-					other_formal := a_parameters.formal_parameter (index1)
-					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
-					formal_parameter_sorter.force_relation (other_formal, a_formal)
-					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
-						error_handler.report_vcfg3c_error (current_class, a_formal, a_type)
-					end
 				else
-					check last_case: index1 > index2 end
-						-- This formal is constrained by another formal
-						-- parameter appearing after (e.g. "A [G -> H, H]").
-						-- This is not considered as a fatal error by gelint.
-						-- The base class of this formal parameter will be the
-						-- base class of its constraint, or "detachable ANY "
-						-- if there is a cycle (e.g. "A [G -> H, H -> G]").
-					other_formal := a_parameters.formal_parameter (index1)
-					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
-					formal_parameter_sorter.force_relation (other_formal, a_formal)
-					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
-						error_handler.report_vcfg3d_error (current_class, a_formal, a_type)
+					if not attached a_type.type_mark as l_type_mark then
+						l_value := No_type_mark
+					elseif l_type_mark.is_attached_mark then
+						l_value := Attached_type_mark
+					elseif l_type_mark.is_detachable_mark then
+						l_value := Detachable_type_mark
+					else
+						l_value := No_type_mark
+					end
+					formal_dependencies.replace (l_value, (index2 - 1) * a_parameters.count + index1)
+					if index1 = index2 then
+							-- The constraint of the formal parameter is
+							-- itself (e.g. "A [G -> G]"). This is not
+							-- considered as a fatal error by gelint. The
+							-- base class of this formal parameter will be
+							-- considered to be "detachable ANY".
+						if system_processor.older_or_same_ise_version (ise_6_1_latest) then
+							error_handler.report_vcfg3b_error (current_class, a_formal, a_type)
+						end
+						a_formal.set_has_constraint_cycle (True)
+					elseif index1 < index2 then
+							-- This formal is constrained by another formal
+							-- parameter appearing before (e.g. "A [G, H -> G]").
+							-- This is not considered as a fatal error by gelint.
+							-- The base class of this formal parameter will be the
+							-- base class of its constraint, or "detachable ANY"
+							-- if there is a cycle (e.g. "A [G -> H, H -> G]").
+						other_formal := a_parameters.formal_parameter (index1)
+						if attached {ET_CONSTRAINED_FORMAL_PARAMETER} other_formal as l_other_constrained_formal then
+							direct_formal_parameter_sorter.force_relation (l_other_constrained_formal, a_formal)
+						end
+						formal_parameter_sorter.force_relation (other_formal, a_formal)
+						if system_processor.older_or_same_ise_version (ise_6_1_latest) then
+							error_handler.report_vcfg3c_error (current_class, a_formal, a_type)
+						end
+					else
+						check last_case: index1 > index2 end
+							-- This formal is constrained by another formal
+							-- parameter appearing after (e.g. "A [G -> H, H]").
+							-- This is not considered as a fatal error by gelint.
+							-- The base class of this formal parameter will be the
+							-- base class of its constraint, or "detachable ANY "
+							-- if there is a cycle (e.g. "A [G -> H, H -> G]").
+						other_formal := a_parameters.formal_parameter (index1)
+						if attached {ET_CONSTRAINED_FORMAL_PARAMETER} other_formal as l_other_constrained_formal then
+							direct_formal_parameter_sorter.force_relation (l_other_constrained_formal, a_formal)
+						end
+						formal_parameter_sorter.force_relation (other_formal, a_formal)
+						if system_processor.older_or_same_ise_version (ise_6_1_latest) then
+							error_handler.report_vcfg3d_error (current_class, a_formal, a_type)
+						end
 					end
 				end
 			else
@@ -308,9 +380,9 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_like_type_constraint (a_type: ET_LIKE_TYPE; a_formal: ET_FORMAL_PARAMETER)
-			-- Check whether `a_type' is valid when appearing in a
-			-- constraint of `a_formal' in `current_class'. Record
+	check_like_type_constraint (a_type: ET_LIKE_TYPE; a_type_constraint: ET_TYPE_CONSTRAINT; a_formal: ET_CONSTRAINED_FORMAL_PARAMETER)
+			-- Check whether `a_type' is valid when appearing in a constraint
+			-- `a_type_constraint' of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
 			-- cycles later on. Do not check whether the actual generic
 			-- parameters of `a_type' conform to their corresponding
@@ -319,6 +391,7 @@ feature {NONE} -- Constraint validity
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			a_type_constraint_not_void: a_type_constraint /= Void
 			a_formal_not_void: a_formal /= Void
 		do
 				-- It is not valid to have anchored types in constraints.
@@ -326,9 +399,9 @@ feature {NONE} -- Constraint validity
 			error_handler.report_vcfg3a_error (current_class, a_type)
 		end
 
-	check_tuple_type_constraint (a_type: ET_TUPLE_TYPE; a_formal: ET_FORMAL_PARAMETER)
-			-- Check whether `a_type' is valid when appearing in a
-			-- constraint of `a_formal' in `current_class'. Record
+	check_tuple_type_constraint (a_type: ET_TUPLE_TYPE; a_type_constraint: ET_TYPE_CONSTRAINT; a_formal: ET_CONSTRAINED_FORMAL_PARAMETER)
+			-- Check whether `a_type' is valid when appearing in a constraint
+			-- `a_type_constraint' of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
 			-- cycles later on. Do not check whether the actual generic
 			-- parameters of `a_type' conform to their corresponding
@@ -337,9 +410,12 @@ feature {NONE} -- Constraint validity
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			a_type_constraint_not_void: a_type_constraint /= Void
 			a_formal_not_void: a_formal /= Void
 		local
 			i, nb: INTEGER
+			l_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT
+			l_value: INTEGER
 		do
 			if attached a_type.actual_parameters as a_parameters then
 				nb := a_parameters.count
@@ -348,17 +424,177 @@ feature {NONE} -- Constraint validity
 					i := i + 1
 				end
 			end
-			if a_formal.constraint = a_type then
-					-- `a_type' is the constraint of `a_formal'.
+			if a_type_constraint.type = a_type then
+					-- `a_type' is one of the constraints of `a_formal'.
 					-- Set its base type if valid.
 				if a_type.is_named_type then
-					a_formal.set_constraint_base_type (a_type)
+						-- Add this base type to `all_base_types'.
+					if attached a_type_constraint.renames as l_renames then
+						create l_type_rename_constraint.make (a_type, l_renames)
+						all_base_types.force_last (l_type_rename_constraint)
+					else
+						all_base_types.force_last (a_type)
+					end
+					nb := current_class.formal_parameter_count
+					from i := 1 until i > nb loop
+						base_type_dependencies.force_last (No_dependency)
+						i := i + 1
+					end
+						-- Add constraint dependency between `a_formal'
+						-- and this base type.
+					if a_type.is_attached then
+						l_value := Attached_type_mark
+					else
+						l_value := Detachable_type_mark
+					end
+					base_type_dependencies.replace (l_value, (all_base_types.count - 1) * nb + a_formal.index)
 				else
 					-- The constraint contains anchored types or other
 					-- invalid types in its actual generic parameters.
 					-- The error has already been reported in one of the
 					-- corresponding `check_*_constraint' routines.
 				end
+			end
+		end
+
+	set_constraint_base_types (a_formal_parameters: ET_FORMAL_PARAMETER_LIST)
+			-- Set 'constraint_base_types' of all formal generic
+			-- parameters in `a_formal_parameters'.
+			-- Resolve recursive constraint dependencies (such
+			-- as "G -> H")if any.
+		require
+			a_formal_parameters_not_void: a_formal_parameters /= Void
+		local
+			i: INTEGER
+			l_index_g: INTEGER
+			l_index_h: INTEGER
+			l_formal_count: INTEGER
+			l_all_base_type_count: INTEGER
+			l_formal_dependency: INTEGER
+			l_value_g: INTEGER
+			l_value_h: INTEGER
+			l_done: BOOLEAN
+			l_no_base_type_dependency: BOOLEAN
+			l_type_constraint: ET_BASE_TYPE_CONSTRAINT
+			l_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT
+			l_base_type: ET_BASE_TYPE
+			l_count: INTEGER
+			l_base_type_list: ET_BASE_TYPE_CONSTRAINT_LIST
+		do
+			l_all_base_type_count := all_base_types.count
+			l_formal_count := a_formal_parameters.count
+			from
+			until
+				l_done
+			loop
+				l_done := True
+					-- Follow formal dependencies "G -> H".
+				from l_index_g := 1 until l_index_g > l_formal_count loop
+					from l_index_h := 1 until l_index_h > l_formal_count loop
+						l_formal_dependency := formal_dependencies.item ((l_index_g - 1) * l_formal_count + l_index_h)
+						if l_formal_dependency /= No_dependency then
+							from i := 1 until i > l_all_base_type_count loop
+								l_value_g := base_type_dependencies.item ((i - 1) * l_formal_count + l_index_g)
+								l_value_h := base_type_dependencies.item ((i - 1) * l_formal_count + l_index_h)
+								if l_value_h /= No_dependency then
+									if l_formal_dependency = Attached_type_mark then
+										l_value_h := Attached_type_mark
+									elseif l_formal_dependency = Detachable_type_mark then
+										if not all_base_types.item (i).type.is_expanded then
+											l_value_h := Detachable_type_mark
+										end
+									end
+									if l_value_h > l_value_g then
+										base_type_dependencies.replace (l_value_h, (i - 1) * l_formal_count + l_index_g)
+										l_done := False
+									end
+								end
+								i := i + 1
+							end
+						end
+						l_index_h := l_index_h + 1
+					end
+					l_index_g := l_index_g + 1
+				end
+				if l_done then
+						-- Try to find formal parameters with no entry in
+						-- `base_type_dependencies' yet. This may happen
+						-- in case of single constraints with cycles
+						-- (e.g. "G -> H, H -> G", or "G -> G"). In that
+						-- case, the base type will be "detachable ANY",
+						-- which is a index 1 in `all_base_types'.
+					from l_index_g := 1 until l_index_g > l_formal_count loop
+						l_no_base_type_dependency := True
+						from i := 1 until i > l_all_base_type_count loop
+							if base_type_dependencies.item ((i - 1) * l_formal_count + l_index_g) /= No_dependency then
+								l_no_base_type_dependency := False
+								i := l_all_base_type_count -- Jump out of the loop.
+							end
+							i := i + 1
+						end
+						if l_no_base_type_dependency then
+								-- "detachable ANY" is at index 1 in `all_base_types'.
+							base_type_dependencies.replace (Detachable_type_mark, l_index_g)
+							l_done := False
+							l_index_g := l_formal_count -- Jump out of the loop.
+						end
+						l_index_g := l_index_g + 1
+					end
+				end
+			end
+			from l_index_g := 1 until l_index_g > l_formal_count loop
+				if attached {ET_CONSTRAINED_FORMAL_PARAMETER} a_formal_parameters.formal_parameter (l_index_g) as l_constrained_formal then
+					from i := 1 until i > l_all_base_type_count loop
+						l_type_constraint := all_base_types.item (i)
+						l_base_type := l_type_constraint.type
+						l_value_g := base_type_dependencies.item ((i - 1) * l_formal_count + l_index_g)
+						if l_value_g = Attached_type_mark then
+							if l_base_type.is_attached then
+								all_base_types.force_last (l_type_constraint)
+							else
+								l_base_type := l_base_type.type_with_type_mark (tokens.attached_keyword)
+								if attached l_type_constraint.renames as l_renames then
+									create l_type_rename_constraint.make (l_base_type, l_renames)
+									all_base_types.force_last (l_type_rename_constraint)
+								else
+									all_base_types.force_last (l_base_type)
+								end
+							end
+						elseif l_value_g = Detachable_type_mark then
+							if l_base_type.is_attached then
+								l_base_type := l_base_type.type_with_type_mark (tokens.detachable_keyword)
+								if attached l_type_constraint.renames as l_renames then
+									create l_type_rename_constraint.make (l_base_type, l_renames)
+									all_base_types.force_last (l_type_rename_constraint)
+								else
+									all_base_types.force_last (l_base_type)
+								end
+							else
+								all_base_types.force_last (l_type_constraint)
+							end
+						end
+						i := i + 1
+					end
+					l_count := all_base_types.count - l_all_base_type_count
+					if l_count = 0 then
+						-- Should never happen.
+					elseif l_count = 1 then
+						l_constrained_formal.set_constraint_base_types (all_base_types.last)
+					else
+						from
+							create l_base_type_list.make_with_capacity (all_base_types.item (l_count), l_count)
+							l_count := l_count - 1
+						until
+							l_count = 0
+						loop
+							l_base_type_list.put_first (all_base_types.item (l_count))
+							l_count := l_count - 1
+						end
+						l_constrained_formal.set_constraint_base_types (l_base_type_list)
+					end
+					all_base_types.keep_first (l_all_base_type_count)
+				end
+				l_index_g := l_index_g + 1
 			end
 		end
 
@@ -369,14 +605,8 @@ feature {NONE} -- Constraint cycles
 			-- generic parameters of `current_class'.
 			-- Set `has_fatal_error' if an error occurred.
 		local
-			a_formal: ET_FORMAL_PARAMETER
-			an_index: INTEGER
-			a_parameters: detachable ET_FORMAL_PARAMETER_LIST
-			a_parameters_count: INTEGER
-			a_base_type: detachable ET_BASE_TYPE
 			has_cycle: BOOLEAN
 			i, nb: INTEGER
-			l_detachable_any_type: ET_CLASS_TYPE
 		do
 			if direct_formal_parameter_sorter.count > 0 then
 				direct_formal_parameter_sorter.sort
@@ -391,42 +621,9 @@ feature {NONE} -- Constraint cycles
 					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
 						error_handler.report_vcfg3e_error (current_class, l_cycle)
 					end
-				end
-				a_parameters := current_class.formal_parameters
-				if a_parameters = Void then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif not attached direct_formal_parameter_sorter.sorted_items as a_sorted_formals then
-						-- Internal error: the postcondition of `sort' in DS_TOPOLOGICAL_SORTER
-						-- says that `sorted_item' should nto be void.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_detachable_any_type := current_universe.detachable_any_type
-					a_parameters_count := a_parameters.count
-					nb := a_sorted_formals.count
+					nb := l_cycle.count
 					from i := 1 until i > nb loop
-						a_formal := a_sorted_formals.item (i)
-						if attached {ET_FORMAL_PARAMETER_TYPE} a_formal.constraint as a_constraint then
-							an_index := a_constraint.index
-							if an_index > a_parameters_count then
-									-- Internal error.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-									-- We have "G -> H" and the base type of
-									-- H has already been processed (thanks to
-									-- the topological sort). So the base type
-									-- of G is the base type of H.
-								a_base_type := a_parameters.formal_parameter (an_index).constraint_base_type
-								if a_base_type /= Void then
-									a_formal.set_constraint_base_type (a_base_type)
-								else
-									a_formal.set_constraint_base_type (l_detachable_any_type)
-								end
-							end
-						end
+						l_cycle.item (i).set_has_constraint_cycle (True)
 						i := i + 1
 					end
 				end
@@ -458,9 +655,27 @@ feature {NONE} -- Constraint cycles
 			-- Formal generic parameter sorter to detect cycles
 			-- of the form "A [G -> ARRAY [H], H -> LIST [G]]"
 
-	direct_formal_parameter_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]
+	direct_formal_parameter_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_CONSTRAINED_FORMAL_PARAMETER]
 			-- Formal generic parameter sorter to detect cycles
 			-- of the form "A [G -> H, H -> G]"
+
+feature {NONE} -- Implementation
+
+	initalize_formal_dependencies (a_formal_parameter_count: INTEGER)
+			-- Initialize `formal_dependencies' for
+			-- `a_formal_parameter_count' formal parameters.
+		require
+			a_formal_parameter_count_not_negative: a_formal_parameter_count >= 0
+		local
+			i, nb: INTEGER
+		do
+			formal_dependencies.wipe_out
+			nb := a_formal_parameter_count * a_formal_parameter_count
+			from i := 1 until i > nb loop
+				formal_dependencies.force_last (No_dependency)
+				i := i + 1
+			end
+		end
 
 feature {ET_AST_NODE} -- Type dispatcher
 
@@ -473,16 +688,16 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
-			if attached current_formal as l_current_formal then
-				check_class_type_constraint (a_type, l_current_formal)
+			if attached current_formal as l_current_formal and attached current_type_constraint as l_current_type_constraint then
+				check_class_type_constraint (a_type, l_current_type_constraint, l_current_formal)
 			end
 		end
 
 	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Process `a_type'.
 		do
-			if attached current_formal as l_current_formal then
-				check_formal_parameter_type_constraint (a_type, l_current_formal)
+			if attached current_formal as l_current_formal and attached current_type_constraint as l_current_type_constraint then
+				check_formal_parameter_type_constraint (a_type, l_current_type_constraint, l_current_formal)
 			end
 		end
 
@@ -503,8 +718,8 @@ feature {ET_AST_NODE} -- Type dispatcher
 		require
 			a_type_not_void: a_type /= Void
 		do
-			if attached current_formal as l_current_formal then
-				check_like_type_constraint (a_type, l_current_formal)
+			if attached current_formal as l_current_formal and attached current_type_constraint as l_current_type_constraint then
+				check_like_type_constraint (a_type, l_current_type_constraint, l_current_formal)
 			end
 		end
 
@@ -523,19 +738,56 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
-			if attached current_formal as l_current_formal then
-				check_tuple_type_constraint (a_type, l_current_formal)
+			if attached current_formal as l_current_formal and attached current_type_constraint as l_current_type_constraint then
+				check_tuple_type_constraint (a_type, l_current_type_constraint, l_current_formal)
 			end
 		end
 
 feature {NONE} -- Access
 
-	current_formal: detachable ET_FORMAL_PARAMETER
+	all_base_types: DS_ARRAYED_LIST [ET_BASE_TYPE_CONSTRAINT]
+			-- List of all base types of all formal generic parameters
+			-- of the class being processed
+
+	formal_dependencies: DS_ARRAYED_LIST [INTEGER]
+			-- Constraint dependencies between formal parameters
+			-- (when we have something like that: "G -> H").
+			-- Indexing: (index_of_G - 1) * number_of_formal_parameters + index_of_H
+			-- Values:
+			--   No_dependency: no dependency between "G" and "H"
+			--   Attached_type_mark: "G -> attached H"
+			--   Detachable_type_mark: "G -> detachable H"
+			--   No_type_mark: "G -> H"
+
+	base_type_dependencies: DS_ARRAYED_LIST [INTEGER]
+			-- Constraint dependencies between a formal paramater
+			-- and a base type (when we have something like "G -> FOO")
+			-- Indexing: (index_of_FOO_in_all_base_types - 1) * number_of_formal_parameters + index_of_G
+			-- Values:
+			--   No_dependency: no dependency between "G" and "FOO"
+			--   Attached_type_mark: "G -> attached FOO" (or just "G -> FOO" if "FOO" is attached)
+			--   Detachable_type_mark: "G -> detachable FOO" (or just "G -> FOO" if "FOO" is detachable)	
+
+	current_formal: detachable ET_CONSTRAINED_FORMAL_PARAMETER
 			-- Formal generic parameter being processed
+
+	current_type_constraint: detachable ET_TYPE_CONSTRAINT
+			-- Type constraint being processed
+
+feature {NONE} -- Constants
+
+	No_dependency: INTEGER = 0
+	Detachable_type_mark: INTEGER = 1
+	Attached_type_mark: INTEGER = 2
+	No_type_mark: INTEGER = 3
 
 invariant
 
 	formal_parameter_sorter_not_void: formal_parameter_sorter /= Void
 	direct_formal_parameter_sorter_not_void: direct_formal_parameter_sorter /= Void
+	all_base_types_not_void: all_base_types /= Void
+	no_void_base_type: not all_base_types.has_void
+	formal_dependencies_not_void: formal_dependencies /= Void
+	base_type_dependencies_not_void: base_type_dependencies /= Void
 
 end

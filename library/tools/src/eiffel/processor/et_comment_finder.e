@@ -39,6 +39,8 @@ inherit
 			process_attachment_mark_separate_keyword,
 			process_attribute,
 			process_bang_instruction,
+			process_base_type_constraint_list,
+			process_base_type_rename_constraint,
 			process_binary_integer_constant,
 			process_braced_class_name,
 			process_braced_type,
@@ -466,6 +468,22 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_instruction) then
 				precursor (an_instruction)
+			end
+		end
+
+	process_base_type_constraint_list (a_list: ET_BASE_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
+			end
+		end
+
+	process_base_type_rename_constraint (a_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		do
+			if not excluded_nodes.has (a_type_rename_constraint) then
+				precursor (a_type_rename_constraint)
 			end
 		end
 

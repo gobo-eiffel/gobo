@@ -34,6 +34,8 @@ inherit
 			process_attachment_mark_separate_keyword,
 			process_attribute,
 			process_bang_instruction,
+			process_base_type_constraint_list,
+			process_base_type_rename_constraint,
 			process_binary_integer_constant,
 			process_braced_type_list,
 			process_bracket_expression,
@@ -739,6 +741,32 @@ feature {ET_AST_NODE} -- Processing
 				l_creation_call.process (Current)
 				set_target_type (Void)
 			end
+		end
+
+	process_base_type_constraint_list (a_list: ET_BASE_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+			l_type_constraint: ET_BASE_TYPE_CONSTRAINT
+		do
+			a_list.left_brace.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				l_type_constraint := a_list.item (i)
+				l_type_constraint.process (Current)
+				if i /= nb then
+					tokens.comma_symbol.process (Current)
+					print_space
+				end
+				i := i + 1
+			end
+			a_list.right_brace.process (Current)
+		end
+
+	process_base_type_rename_constraint (a_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		do
+			process_type_rename_constraint (a_type_rename_constraint)
 		end
 
 	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)

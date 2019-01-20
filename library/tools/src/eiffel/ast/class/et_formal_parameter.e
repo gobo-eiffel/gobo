@@ -78,15 +78,13 @@ feature -- Access
 			constraint_not_void: Result /= Void implies constraint /= Void
 		end
 
-	constraint_base_type: detachable ET_BASE_TYPE
-			-- Base type of constraint;
-			-- Void means that there is no explicit constraint
-			-- (i.e. the implicit constraint is "ANY"), or there
-			-- is a cycle of the form "A [G -> H, H -> G]" in
-			-- the constraints (i.e. the base type is also considered
-			-- to be "ANY" in that case)
+	constraint_base_types: ET_CONSTRAINT_BASE_TYPES
+			-- Base types of `constraint'.
+			-- "detachable ANY" if no constraint.
 		do
-			-- Result := Void
+			Result := implementation_class.universe.detachable_any_type
+		ensure
+			constraint_base_types_not_void: Result /= Void
 		end
 
 	hash_code: INTEGER
@@ -140,7 +138,7 @@ feature -- Status report
 			-- Is there some cycle in the constraint?
 			-- (e.g. "[G -> G]" or "[G -> H, H -> G]")
 		do
-			Result := constraint_base_type = Void
+			-- Result := False
 		end
 
 feature -- Setting
@@ -163,18 +161,6 @@ feature -- Setting
 			type_mark_set: type_mark = a_keyword
 		end
 
-	set_constraint_base_type (a_type: like constraint_base_type)
-			-- Set `constraint_base_type' to `a_type'.
-		require
-			constrained: constraint /= Void
-			a_type_not_void: a_type /= Void
-			a_type_named: a_type.is_named_type
-		do
-			check not_constrained: constraint = Void end
-		ensure
-			constraint_base_type_set: constraint_base_type = a_type
-		end
-
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)
@@ -182,9 +168,5 @@ feature -- Processing
 		do
 			a_processor.process_formal_parameter (Current)
 		end
-
-invariant
-
-	constraint_base_type_named: attached constraint_base_type as l_constraint_base_type implies l_constraint_base_type.is_named_type
 
 end

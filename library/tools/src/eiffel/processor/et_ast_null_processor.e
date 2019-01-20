@@ -152,6 +152,16 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_base_type_constraint_list (a_list: ET_BASE_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		do
+		end
+
+	process_base_type_rename_constraint (a_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		do
+		end
+
 	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do

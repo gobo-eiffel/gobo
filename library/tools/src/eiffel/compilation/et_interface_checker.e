@@ -5,7 +5,7 @@ note
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -271,17 +271,7 @@ feature {NONE} -- Constraint creation validity
 			i, j, nb: INTEGER
 		do
 			if attached a_formal.creation_procedures as a_creator then
-				if attached a_formal.constraint_base_type as a_base_type then
-					a_class := a_base_type.base_class
-				else
-						-- We know that the constraint is not
-						-- void since we have a creation clause.
-						-- So we must have something like that:
-						-- "[G -> H create make end, H -> G]".
-						-- We consider that the base class of the
-						-- constraint is 'detachable ANY' in that case.
-					a_class := current_universe.detachable_any_type.base_class
-				end
+				a_class := a_formal.constraint_base_types.type_constraint (1).type.base_class
 					-- Build the feature table.
 				a_class.process (system_processor.feature_flattener)
 				if not a_class.features_flattened or else a_class.has_flattening_error then
