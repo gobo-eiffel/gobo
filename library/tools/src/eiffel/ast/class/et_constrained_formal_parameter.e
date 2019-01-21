@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			constraint_base_types := implementation_class.universe.detachable_any_type
 		ensure
 			name_set: name = a_name
+			constraint_index_set: constraint_index = 1
 			constraint_set: constraint = a_constraint
 			creation_procedures_set: creation_procedures = a_creation
 			implementation_class_set: implementation_class = a_class
@@ -108,6 +109,7 @@ feature -- Setting
 			-- Set `constraint_base_types' to `a_base_types'.
 		require
 			a_base_types_not_void: a_base_types /= Void
+			a_base_types_are_named_types: a_base_types.are_named_types
 		do
 			constraint_base_types := a_base_types
 		ensure

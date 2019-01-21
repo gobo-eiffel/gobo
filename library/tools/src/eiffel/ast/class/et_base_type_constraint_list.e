@@ -115,6 +115,27 @@ feature -- Access
 			Result := right_brace
 		end
 
+feature -- Status report
+
+	are_named_types: BOOLEAN
+			-- Are all types named types (only made up of named types)?
+		local
+			j: INTEGER
+		do
+			Result := True
+			from
+				j := count - 1
+			until
+				j < 0
+			loop
+				if not storage.item (j).is_named_type then
+					Result := False
+					j := 0 -- Jump out of the loop.
+				end
+				j := j - 1
+			end
+		end
+
 feature -- Setting
 
 	set_left_brace (l: like left_brace)

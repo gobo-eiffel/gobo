@@ -19,6 +19,10 @@ deferred class ET_BASE_TYPE_CONSTRAINT
 inherit
 
 	ET_CONSTRAINT_BASE_TYPES
+		rename
+			has_formal_parameter as is_formal_parameter,
+			are_named_types as is_named_type
+		end
 
 	ET_TYPE_CONSTRAINT
 		redefine

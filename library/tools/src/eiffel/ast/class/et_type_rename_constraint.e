@@ -21,7 +21,7 @@ inherit
 	ET_TYPE_CONSTRAINT
 		redefine
 			renames,
-			has_formal_parameter
+			is_formal_parameter
 		end
 
 create
@@ -82,10 +82,16 @@ feature -- Access
 
 feature -- Status report
 
-	has_formal_parameter (i: INTEGER): BOOLEAN
-			-- Is one of the constraint types the `i'-th formal generic parameter of the enclosing class?
+	is_formal_parameter (i: INTEGER): BOOLEAN
+			-- Is `type' the `i'-th formal generic parameter of the enclosing class?
 		do
 			Result := type.is_formal_parameter (i)
+		end
+
+	is_named_type: BOOLEAN
+			-- Is `type' a named type (only made up of named types)?
+		do
+			Result := type.is_named_type
 		end
 
 feature -- Setting

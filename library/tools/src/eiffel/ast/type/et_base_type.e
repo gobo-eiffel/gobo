@@ -81,8 +81,7 @@ inherit
 	ET_BASE_TYPE_CONSTRAINT
 		rename
 			count as type_constraint_count,
-			type as type_constraint_type,
-			has_formal_parameter as is_formal_parameter
+			type as type_constraint_type
 		undefine
 			conforms_to_type_with_type_marks
 		end

@@ -21,7 +21,7 @@ inherit
 	ET_BASE_TYPE_CONSTRAINT
 		undefine
 			renames,
-			has_formal_parameter
+			is_formal_parameter
 		redefine
 			type
 		end

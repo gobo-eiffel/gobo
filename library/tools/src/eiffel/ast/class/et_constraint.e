@@ -43,6 +43,11 @@ feature -- Status report
 			-- Result := False	
 		end
 
+	are_named_types: BOOLEAN
+			-- Are all types named types (only made up of named types)?
+		deferred
+		end
+
 feature -- Measurement
 
 	count: INTEGER

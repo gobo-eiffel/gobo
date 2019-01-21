@@ -115,8 +115,27 @@ feature -- Status report
 			until
 				j < 0
 			loop
-				if storage.item (j).type_constraint.has_formal_parameter (i) then
+				if storage.item (j).type_constraint.is_formal_parameter (i) then
 					Result := True
+					j := 0 -- Jump out of the loop.
+				end
+				j := j - 1
+			end
+		end
+
+	are_named_types: BOOLEAN
+			-- Are all types named types (only made up of named types)?
+		local
+			j: INTEGER
+		do
+			Result := True
+			from
+				j := count - 1
+			until
+				j < 0
+			loop
+				if not storage.item (j).type_constraint.is_named_type then
+					Result := False
 					j := 0 -- Jump out of the loop.
 				end
 				j := j - 1

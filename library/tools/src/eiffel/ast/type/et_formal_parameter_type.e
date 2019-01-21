@@ -62,11 +62,13 @@ feature {NONE} -- Initialization
 			type_mark := a_type_mark
 			name := a_name
 			index := an_index
+			constraint_index := 1
 			implementation_class := a_class
 		ensure
 			type_mark_set: type_mark = a_type_mark
 			name_set: name = a_name
 			index_set: index = an_index
+			constraint_index_set: constraint_index = 1
 			implementation_class_set: implementation_class = a_class
 		end
 
@@ -2183,14 +2185,18 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				else
 					if a_context.is_root_context then
 						Result := an_actual.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context, a_system_processor)
-					elseif a_context /= other_context then
+					else
+						check
+								-- The precondition says that `other_context' is a root context.
+								-- So it cannot be the same object as `a_context' which is not a root context here.
+								-- Furthermore, `a_context' is a nested type context, otherwise it would be a root context.
+							precondition_other_context_is_root: a_context /= other_context
+						end
 						l_root_context := a_context.as_nested_type_context
 						l_root_context.force_last (tokens.like_0)
 						Result := an_actual.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context, a_system_processor)
 						l_root_context.remove_last
-					else
-						Result := an_actual.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context, a_system_processor)
- 					end
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?

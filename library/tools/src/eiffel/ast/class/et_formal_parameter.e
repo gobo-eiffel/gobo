@@ -42,9 +42,11 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			index := 1
+			constraint_index := 1
 			implementation_class := a_class
 		ensure
 			name_set: name = a_name
+			constraint_index_set: constraint_index = 1
 			implementation_class_set: implementation_class = a_class
 		end
 
@@ -85,6 +87,7 @@ feature -- Access
 			Result := implementation_class.universe.detachable_any_type
 		ensure
 			constraint_base_types_not_void: Result /= Void
+			constraint_base_types_are_named_types: Result.are_named_types
 		end
 
 	hash_code: INTEGER
