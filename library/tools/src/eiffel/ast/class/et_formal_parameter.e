@@ -90,6 +90,20 @@ feature -- Access
 			constraint_base_types_are_named_types: Result.are_named_types
 		end
 
+	recursive_formal_constraints: detachable SPECIAL [NATURAL_32]
+			-- Formal parameters which are constraints (recursively) of
+			-- the current formal parameter, or Void if no such constraint.
+			-- Indexed by formal parameter indexes (index 0 is not used).
+			-- Flags:
+			--  No_type_mark (0b1): as if we had "G -> H".
+			--  Attached_mark (0b10): as if we had "G -> attached H".
+			--  Detachable_mark (0b100): as if we had "G -> detachable H".
+		do
+			-- Result := Void
+		ensure
+			valid_count: Result /= Void implies Result.count = implementation_class.formal_parameter_count + 1
+		end
+
 	hash_code: INTEGER
 			-- Hash code value
 		do
@@ -163,6 +177,13 @@ feature -- Setting
 		ensure
 			type_mark_set: type_mark = a_keyword
 		end
+
+feature -- Flags
+
+	No_type_mark: NATURAL_32 = 0b1
+	Attached_mark: NATURAL_32 = 0b10
+	Detachable_mark: NATURAL_32 = 0b100
+			-- Flags for `recursive_formal_constraints'
 
 feature -- Processing
 

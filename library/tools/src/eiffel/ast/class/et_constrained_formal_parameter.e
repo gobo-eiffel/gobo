@@ -20,6 +20,7 @@ inherit
 		redefine
 			constraint, creation_procedures, last_leaf, process,
 			constraint_base_types, has_constraint_cycle,
+			recursive_formal_constraints,
 			reset
 		end
 
@@ -56,7 +57,7 @@ feature -- Initialization
 		do
 			constraint.reset
 			constraint_base_types := implementation_class.universe.detachable_any_type
-			has_constraint_cycle := False
+			recursive_formal_constraints := Void
 			reset_constraint_creation_procedures
 		end
 
@@ -75,6 +76,15 @@ feature -- Access
 			-- Base types of `constraint'.
 			-- "detachable ANY" if no constraint.
 
+	recursive_formal_constraints: detachable SPECIAL [NATURAL_32]
+			-- Formal parameters which are constraints (recursively) of
+			-- the current formal parameter, or Void if no such constraint.
+			-- Indexed by formal parameter indexes (index 0 is not used).
+			-- Flags:
+			--  No_type_mark (0b1): as if we had "G -> H".
+			--  Attached_mark (0b10): as if we had "G -> attached H".
+			--  Detachable_mark (0b100): as if we had "G -> detachable H".
+
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
@@ -92,6 +102,9 @@ feature -- Status report
 	has_constraint_cycle: BOOLEAN
 			-- Is there some cycle in the constraint?
 			-- (e.g. "[G -> G]" or "[G -> H, H -> G]")
+		do
+			Result := attached recursive_formal_constraints as l_recursive_formal_constraints and then l_recursive_formal_constraints.item (index) /= 0
+		end
 
 feature -- Setting
 
@@ -116,6 +129,16 @@ feature -- Setting
 			constraint_base_types_set: constraint_base_types = a_base_types
 		end
 
+	set_recursive_formal_constraints (a_recursive_formal_constraints: like recursive_formal_constraints)
+			-- Set `recursive_formal_constraints' to `a_recursive_formal_constraints'.
+		require
+			valid_count: a_recursive_formal_constraints /= Void implies a_recursive_formal_constraints.count = implementation_class.formal_parameter_count + 1
+		do
+			recursive_formal_constraints := a_recursive_formal_constraints
+		ensure
+			recursive_formal_constraints_set: recursive_formal_constraints = a_recursive_formal_constraints
+		end
+
 	set_arrow_symbol (an_arrow: like arrow_symbol)
 			-- Set `arrow_symbol' to `an_arrow'.
 		require
@@ -131,7 +154,7 @@ feature -- Status setting
 	set_has_constraint_cycle (b: BOOLEAN)
 			-- Set `has_constraint_cycle' to `b'.
 		do
-			has_constraint_cycle := b
+--			has_constraint_cycle := b
 		ensure
 			has_constraint_cycle_set: has_constraint_cycle = b
 		end

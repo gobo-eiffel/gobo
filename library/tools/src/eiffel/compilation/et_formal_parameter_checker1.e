@@ -50,7 +50,8 @@ feature {NONE} -- Initialization
 			create base_types.make (10)
 			create formal_dependencies.make (100)
 			create base_type_dependencies.make (100)
-			create formal_dependency_cycle.make (10)
+			create recursive_formal_constraints.make (10)
+			create recursive_formal_constraints_to_be_processed.make (10)
 		end
 
 feature -- Validity checking
@@ -104,7 +105,7 @@ feature -- Validity checking
 					i := i + 1
 				end
 				propagate_recursive_formal_dependencies (a_parameters)
-				set_constraint_cycle (a_parameters)
+				set_recursive_formal_constraints (a_parameters)
 				set_constraint_base_types (a_parameters)
 				formal_dependencies.wipe_out
 				all_base_types.wipe_out
@@ -464,10 +465,9 @@ feature {NONE} -- Base type constraints
 			end
 		end
 
-	set_constraint_cycle (a_formal_parameters: ET_FORMAL_PARAMETER_LIST)
-			-- Set 'has_constraint_cycle' of all formal generic
-			-- parameters in `a_formal_parameters' involved in
-			-- a constraint cycle (e.g. "[G -> H, H -> K, K -> G]").
+	set_recursive_formal_constraints (a_formal_parameters: ET_FORMAL_PARAMETER_LIST)
+			-- Set 'recursive_formal_constraints' of all formal generic
+			-- parameters in `a_formal_parameters'.
 		require
 			a_formal_parameters_not_void: a_formal_parameters /= Void
 		local
@@ -475,33 +475,70 @@ feature {NONE} -- Base type constraints
 			l_index_h: INTEGER
 			l_index_k: INTEGER
 			l_formal_count: INTEGER
+			l_value_h: NATURAL_32
+			l_value_k: INTEGER
 			l_done: BOOLEAN
+			l_all_zeros: BOOLEAN
+			l_dependencies: SPECIAL [NATURAL_32]
 		do
 			l_formal_count := a_formal_parameters.count
 			from l_index_g := 1 until l_index_g > l_formal_count loop
 				if attached {ET_CONSTRAINED_FORMAL_PARAMETER} a_formal_parameters.formal_parameter (l_index_g) as l_constrained_formal then
-					formal_dependency_cycle.wipe_out
-					add_n_items_to_list (No_dependency, l_formal_count, formal_dependency_cycle)
+					recursive_formal_constraints.wipe_out
+					add_n_flags_to_list (0, l_formal_count, recursive_formal_constraints)
+					recursive_formal_constraints_to_be_processed.wipe_out
+					add_n_flags_to_list (0, l_formal_count, recursive_formal_constraints_to_be_processed)
+					recursive_formal_constraints_to_be_processed.replace ({ET_FORMAL_PARAMETER}.No_type_mark, l_index_g)
 					from
-						formal_dependency_cycle.replace (Visited_mark, l_index_g)
+						l_done := False
 					until
 						l_done
 					loop
 						l_done := True
 						from l_index_h := 1 until l_index_h > l_formal_count loop
-							if formal_dependency_cycle.item (l_index_h) = Visited_mark then
-								l_done := False
-								formal_dependency_cycle.replace (Traversed_mark, l_index_h)
+							l_value_h := recursive_formal_constraints_to_be_processed.item (l_index_h)
+							if l_value_h /= 0 then
 								from l_index_k := 1 until l_index_k > l_formal_count loop
-									if formal_dependencies.item ((l_index_h - 1) * l_formal_count + l_index_k) /= No_dependency then
-										if l_index_k = l_index_g then
-												-- Cycle detected.
-											l_constrained_formal.set_has_constraint_cycle (True)
-											l_index_k := l_formal_count -- Jump out of inner loop.
-											l_index_h := l_formal_count -- Jump out of outer loop.
-											l_done := True
-										elseif formal_dependency_cycle.item (l_index_k) = No_dependency then
-											formal_dependency_cycle.replace (Visited_mark, l_index_k)
+									l_value_k := formal_dependencies.item ((l_index_h - 1) * l_formal_count + l_index_k)
+									if l_value_h & {ET_FORMAL_PARAMETER}.No_type_mark = {ET_FORMAL_PARAMETER}.No_type_mark then
+											-- No type mark.
+										recursive_formal_constraints_to_be_processed.replace (l_value_h.bit_xor ({ET_FORMAL_PARAMETER}.No_type_mark), l_index_h)
+										if l_value_k = No_type_mark then
+											if recursive_formal_constraints.item (l_index_k) & {ET_FORMAL_PARAMETER}.No_type_mark /= {ET_FORMAL_PARAMETER}.No_type_mark then
+												recursive_formal_constraints.replace (recursive_formal_constraints.item (l_index_k) | {ET_FORMAL_PARAMETER}.No_type_mark, l_index_k)
+												recursive_formal_constraints_to_be_processed.replace (recursive_formal_constraints_to_be_processed.item (l_index_k) | {ET_FORMAL_PARAMETER}.No_type_mark, l_index_k)
+												l_done := False
+											end
+										elseif l_value_k = Attached_type_mark then
+											if recursive_formal_constraints.item (l_index_k) & {ET_FORMAL_PARAMETER}.Attached_mark /= {ET_FORMAL_PARAMETER}.Attached_mark then
+												recursive_formal_constraints.replace (recursive_formal_constraints.item (l_index_k) | {ET_FORMAL_PARAMETER}.Attached_mark, l_index_k)
+												recursive_formal_constraints_to_be_processed.replace (recursive_formal_constraints_to_be_processed.item (l_index_k) | {ET_FORMAL_PARAMETER}.Attached_mark, l_index_k)
+												l_done := False
+											end
+										elseif l_value_k = Detachable_type_mark then
+											if recursive_formal_constraints.item (l_index_k) & {ET_FORMAL_PARAMETER}.Detachable_mark /= {ET_FORMAL_PARAMETER}.Detachable_mark then
+												recursive_formal_constraints.replace (recursive_formal_constraints.item (l_index_k) | {ET_FORMAL_PARAMETER}.Detachable_mark, l_index_k)
+												recursive_formal_constraints_to_be_processed.replace (recursive_formal_constraints_to_be_processed.item (l_index_k) | {ET_FORMAL_PARAMETER}.Detachable_mark, l_index_k)
+												l_done := False
+											end
+										end
+									end
+									if l_value_h & {ET_FORMAL_PARAMETER}.Attached_mark = {ET_FORMAL_PARAMETER}.Attached_mark then
+											-- 'attached' type mark.
+										recursive_formal_constraints_to_be_processed.replace (l_value_h.bit_xor ({ET_FORMAL_PARAMETER}.Attached_mark), l_index_h)
+										if recursive_formal_constraints.item (l_index_k) & {ET_FORMAL_PARAMETER}.Attached_mark /= {ET_FORMAL_PARAMETER}.Attached_mark then
+											recursive_formal_constraints.replace (recursive_formal_constraints.item (l_index_k) | {ET_FORMAL_PARAMETER}.Attached_mark, l_index_k)
+											recursive_formal_constraints_to_be_processed.replace (recursive_formal_constraints_to_be_processed.item (l_index_k) | {ET_FORMAL_PARAMETER}.Attached_mark, l_index_k)
+											l_done := False
+										end
+									end
+									if l_value_h & {ET_FORMAL_PARAMETER}.Detachable_mark = {ET_FORMAL_PARAMETER}.Detachable_mark then
+											-- 'detachable' type mark.
+										recursive_formal_constraints_to_be_processed.replace (l_value_h.bit_xor ({ET_FORMAL_PARAMETER}.Detachable_mark), l_index_h)
+										if recursive_formal_constraints.item (l_index_k) & {ET_FORMAL_PARAMETER}.Detachable_mark /= {ET_FORMAL_PARAMETER}.Detachable_mark then
+											recursive_formal_constraints.replace (recursive_formal_constraints.item (l_index_k) | {ET_FORMAL_PARAMETER}.Detachable_mark, l_index_k)
+											recursive_formal_constraints_to_be_processed.replace (recursive_formal_constraints_to_be_processed.item (l_index_k) | {ET_FORMAL_PARAMETER}.Detachable_mark, l_index_k)
+											l_done := False
 										end
 									end
 									l_index_k := l_index_k + 1
@@ -510,10 +547,27 @@ feature {NONE} -- Base type constraints
 							l_index_h := l_index_h + 1
 						end
 					end
+					l_all_zeros := True
+					from l_index_h := 1 until l_index_h > l_formal_count loop
+						if recursive_formal_constraints.item (l_index_h) /= 0 then
+							l_all_zeros := False
+							l_index_h := l_formal_count -- Jump out of the loop.
+						end
+						l_index_h := l_index_h + 1
+					end
+					if not l_all_zeros then
+						create l_dependencies.make_filled (0, l_formal_count + 1)
+						from l_index_h := 1 until l_index_h > l_formal_count loop
+							l_dependencies.put (recursive_formal_constraints.item (l_index_h), l_index_h)
+							l_index_h := l_index_h + 1
+						end
+						l_constrained_formal.set_recursive_formal_constraints (l_dependencies)
+					end
 				end
 				l_index_g := l_index_g + 1
 			end
-			formal_dependency_cycle.wipe_out
+			recursive_formal_constraints.wipe_out
+			recursive_formal_constraints_to_be_processed.wipe_out
 		end
 
 	set_constraint_base_types (a_formal_parameters: ET_FORMAL_PARAMETER_LIST)
@@ -702,9 +756,13 @@ feature {NONE} -- Access
 			--   Attached_type_mark: "G -> attached FOO" (or just "G -> FOO" if "FOO" is attached)
 			--   Detachable_type_mark: "G -> detachable FOO" (or just "G -> FOO" if "FOO" is detachable)	
 
-	formal_dependency_cycle: DS_ARRAYED_LIST [INTEGER]
-			-- Used to detect cycles in formal generic constraints,
-			-- (e.g. "[G -> H, H -> G]")
+	recursive_formal_constraints: DS_ARRAYED_LIST [NATURAL_32]
+			-- Used to build the 'recursive_formal_constraints'
+			-- of the formal generic parameters being processed
+
+	recursive_formal_constraints_to_be_processed: DS_ARRAYED_LIST [NATURAL_32]
+			-- Used to build the 'recursive_formal_constraints'
+			-- of the formal generic parameters being processed
 
 	current_formal: detachable ET_CONSTRAINED_FORMAL_PARAMETER
 			-- Formal generic parameter being processed
@@ -715,6 +773,22 @@ feature {NONE} -- Access
 feature {NONE} -- Implementation
 
 	add_n_items_to_list (a_value: INTEGER; n: INTEGER; a_list: DS_ARRAYED_LIST [INTEGER])
+			-- Add `n' times `a_value' to the end of `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+			n_not_negative: n >= 0
+		local
+			i: INTEGER
+		do
+			from i := 1 until i > n loop
+				a_list.force_last (a_value)
+				i := i + 1
+			end
+		ensure
+			new_count: a_list.count = old a_list.count + n
+		end
+
+	add_n_flags_to_list (a_value: NATURAL; n: INTEGER; a_list: DS_ARRAYED_LIST [NATURAL_32])
 			-- Add `n' times `a_value' to the end of `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -747,6 +821,7 @@ invariant
 	no_void_base_type: not base_types.has_void
 	formal_dependencies_not_void: formal_dependencies /= Void
 	base_type_dependencies_not_void: base_type_dependencies /= Void
-	formal_dependency_cycle_not_void: formal_dependency_cycle /= Void
+	recursive_formal_constraints_not_void: recursive_formal_constraints /= Void
+	recursive_formal_constraints_to_be_processed_not_void: recursive_formal_constraints_to_be_processed /= Void
 
 end
