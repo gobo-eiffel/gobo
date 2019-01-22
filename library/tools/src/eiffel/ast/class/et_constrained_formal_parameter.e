@@ -149,16 +149,6 @@ feature -- Setting
 			arrow_symbol_set: arrow_symbol = an_arrow
 		end
 
-feature -- Status setting
-
-	set_has_constraint_cycle (b: BOOLEAN)
-			-- Set `has_constraint_cycle' to `b'.
-		do
---			has_constraint_cycle := b
-		ensure
-			has_constraint_cycle_set: has_constraint_cycle = b
-		end
-
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)
