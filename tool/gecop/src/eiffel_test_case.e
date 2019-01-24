@@ -15,6 +15,7 @@ inherit
 
 	TS_TEST_CASE
 		redefine
+			make_default,
 			tear_down, set_up
 		end
 
@@ -26,7 +27,8 @@ inherit
 
 create
 
-	make
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -39,12 +41,20 @@ feature {NONE} -- Initialization
 			a_test_dirname_not_void: a_test_dirname /= Void
 			a_test_dirname_not_empty: not a_test_dirname.is_empty
 		do
-			program_dirname := a_program_dirname
-			test_dirname := a_test_dirname
 			make_default
+			program_dirname := a_program_dirname
+			testrun_dirname := a_test_dirname
 		ensure
 			program_dirname_set: program_dirname = a_program_dirname
-			test_dirname_set: test_dirname = a_test_dirname
+			testrun_dirname_set: testrun_dirname = a_test_dirname
+		end
+
+	make_default
+			-- <Precursor>
+		do
+			program_dirname := default_testrun_dirname
+			testrun_dirname := default_testrun_dirname
+			precursor
 		end
 
 feature -- Test
@@ -565,7 +575,7 @@ feature -- Execution
 		local
 			a_testdir: STRING
 		do
-			a_testdir := test_dirname
+			a_testdir := testrun_dirname
 			-- assert (a_testdir + "_not_exists", not file_system.directory_exists (a_testdir))
 			old_cwd := file_system.cwd
 			file_system.recursive_create_directory (a_testdir)
@@ -636,7 +646,7 @@ Result := ""
 			ecf_filename_not_empty: Result.count > 0
 		end
 
-	test_dirname: STRING
+	testrun_dirname: STRING
 			-- Name of temporary directory where to run the test
 
 feature {NONE} -- Output logs
@@ -890,11 +900,16 @@ feature {NONE} -- Regular expressions
 			failed_filename_regexp_compiled: Result.is_compiled
 		end
 
+feature {NONE} -- Constants
+
+	default_testrun_dirname: STRING = "test1"
+			-- Default value for `testrun_dirname'
+
 invariant
 
 	program_dirname_not_void: program_dirname /= Void
 	program_dirname_not_empty: not program_dirname.is_empty
-	test_dirname_not_void: test_dirname /= Void
-	test_dirname_not_empty: not test_dirname.is_empty
+	testrun_dirname_not_void: testrun_dirname /= Void
+	testrun_dirname_not_empty: not testrun_dirname.is_empty
 
 end
