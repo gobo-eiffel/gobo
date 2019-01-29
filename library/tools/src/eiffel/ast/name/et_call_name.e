@@ -5,7 +5,7 @@ note
 		"Eiffel feature call names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,6 +55,12 @@ feature -- Access
 			-- or index of formal argument or local variable
 			-- in the enclosing feature, or index of label in
 			-- tuple type
+
+	target_type: detachable ET_NAMED_TYPE
+			-- Type of the target of the call to be used when `seed'
+			-- is not enough to determine the feature to be used
+			-- (e.g. in case of formal generic parameters with multiple
+			-- constraints)
 
 feature -- Setting
 

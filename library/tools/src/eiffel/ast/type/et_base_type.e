@@ -56,6 +56,7 @@ inherit
 			is_type_attached_with_type_mark as context_is_type_attached_with_type_mark,
 			is_type_detachable as context_is_type_detachable,
 			is_type_detachable_with_type_mark as context_is_type_detachable_with_type_mark,
+			add_adapted_classes_to_list as context_add_adapted_classes_to_list,
 			same_named_type as context_same_named_type,
 			same_named_type_with_type_marks as context_same_named_type_with_type_marks,
 			same_base_type as context_same_base_type,
@@ -72,7 +73,8 @@ inherit
 			conforms_from_formal_parameter_type_with_type_marks as context_conforms_from_formal_parameter_type_with_type_marks,
 			conforms_from_tuple_type_with_type_marks as context_conforms_from_tuple_type_with_type_marks,
 			base_type_has_class as context_base_type_has_class,
-			named_type_has_class as context_named_type_has_class
+			named_type_has_class as context_named_type_has_class,
+			named_type_is_formal_type as context_named_type_is_formal_type
 		redefine
 			base_class,
 			is_root_context
@@ -84,6 +86,8 @@ inherit
 			type as type_constraint_type
 		undefine
 			conforms_to_type_with_type_marks
+		redefine
+			base_class
 		end
 
 feature -- Initialization
@@ -551,6 +555,20 @@ feature -- Type context
 			-- Does the named type of current context contain `a_class'?
 		do
 			Result := named_type_has_class (a_class, Current)
+		end
+
+	context_named_type_is_formal_type: BOOLEAN
+			-- Is named type of current context a formal parameter?
+		do
+			Result := named_type_is_formal_type (Current)
+		end
+
+	context_add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Add to `a_list' the base class of current context or the constraint
+			-- base types (in the same order they appear in 'constraint_base_types')
+			-- in case of a formal parameter.
+		do
+			add_adapted_classes_to_list (a_list, Current)
 		end
 
 	context_same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN

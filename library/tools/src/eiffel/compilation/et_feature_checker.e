@@ -184,6 +184,8 @@ feature {NONE} -- Initialization
 			create vape_non_descendant_clients.make_with_capacity (20)
 			create vape_creation_clients.make_with_capacity (20)
 			create vape_client.make (current_class.name, current_class)
+				-- Adapted classes.
+			create adapted_classes.make (20)
 		end
 
 feature -- Status report
@@ -4449,10 +4451,13 @@ feature {NONE} -- Instruction validity
 			a_call_not_void: a_call /= Void
 		local
 			l_context: ET_NESTED_TYPE_CONTEXT
+			l_constraint_context: ET_NESTED_TYPE_CONTEXT
 			l_target: ET_EXPRESSION
 			l_name: ET_CALL_NAME
 			l_class: ET_CLASS
 			l_seed: INTEGER
+			l_adapted_classes: like adapted_classes
+			l_adapted_class: ET_ADAPTED_CLASS
 		do
 			has_fatal_error := False
 			l_target := a_call.target
@@ -4472,44 +4477,60 @@ feature {NONE} -- Instruction validity
 				else
 					check_expression_validity (l_target, l_context, current_system.detachable_any_type)
 					if not has_fatal_error then
-						l_class := l_context.base_class
-						l_class.process (system_processor.interface_checker)
-						if not l_class.interface_checked or else l_class.has_interface_error then
-							set_fatal_error
-						elseif l_class.is_dotnet then
-								-- A class coming from a .NET assembly can contain overloaded
-								-- features (i.e. several features with the same name).
-								-- We have to be careful about that here.
-							check_qualified_dotnet_procedure_call_instruction_validity (a_call, l_class, l_context)
-						elseif attached l_class.named_procedure (l_name) as l_procedure then
-							l_seed := l_procedure.first_seed
-							l_name.set_seed (l_seed)
-							check_qualified_procedure_call_instruction_validity (a_call, l_procedure, l_class, l_context)
-						elseif attached l_class.named_query (l_name) as l_query then
-								-- Check for parenthesis alias.
-							l_seed := l_query.first_seed
-							l_name.set_seed (l_seed)
-							check_query_parenthesis_call_validity (a_call, l_query, l_class, l_context)
-							if a_call.parenthesis_call = Void then
-									-- In a call instruction, the feature has to be a procedure.
-								set_fatal_error
-								error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
-							end
+						l_adapted_classes := adapted_classes
+						l_adapted_classes.wipe_out
+						l_context.add_adapted_classes_to_list (l_adapted_classes)
+						if l_adapted_classes.count > 1 then
+-- TODO: multiple generic constraints.
 						else
-							set_fatal_error
-								-- ISE Eiffel 5.4 reports this error as a VEEN,
-								-- but it is in fact a VUEX-2 (ETL2 p.368).
-							error_handler.report_vuex2a_error (current_class, l_name, l_class)
+							l_adapted_class := l_adapted_classes.first
+							l_class := l_adapted_class.base_class
+							l_class.process (system_processor.interface_checker)
+							if not l_class.interface_checked or else l_class.has_interface_error then
+								set_fatal_error
+							elseif l_class.is_dotnet then
+									-- A class coming from a .NET assembly can contain overloaded
+									-- features (i.e. several features with the same name).
+									-- We have to be careful about that here.
+								check_qualified_dotnet_procedure_call_instruction_validity (a_call, l_class, l_context)
+							elseif attached l_adapted_class.named_procedure (l_name) as l_procedure then
+								l_seed := l_procedure.first_seed
+								l_name.set_seed (l_seed)
+								check_qualified_procedure_call_instruction_validity (a_call, l_procedure, l_class, l_context)
+							elseif attached l_adapted_class.named_query (l_name) as l_query then
+									-- Check for parenthesis alias.
+								l_seed := l_query.first_seed
+								l_name.set_seed (l_seed)
+								check_query_parenthesis_call_validity (a_call, l_query, l_class, l_context)
+								if a_call.parenthesis_call = Void then
+										-- In a call instruction, the feature has to be a procedure.
+									set_fatal_error
+									error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
+								end
+							else
+								set_fatal_error
+									-- ISE Eiffel 5.4 reports this error as a VEEN,
+									-- but it is in fact a VUEX-2 (ETL2 p.368).
+								error_handler.report_vuex2a_error (current_class, l_name, l_class)
+							end
 						end
+						l_adapted_classes.wipe_out
 					end
 				end
 			else
-					-- The seed  was already computed in a proper ancestor (or in another
+					-- The seed was already computed in a proper ancestor (or in another
 					-- generic derivation) of `current_class' where this instruction
 					-- was written.
 				check_expression_validity (l_target, l_context, current_system.detachable_any_type)
 				if not has_fatal_error then
-					l_class := l_context.base_class
+					if attached l_name.target_type as l_target_type and then l_context.named_type_is_formal_type then
+						l_constraint_context := new_context (current_type)
+						l_constraint_context.force_last (l_target_type)
+						l_class := l_constraint_context.base_class
+						free_context (l_constraint_context)
+					else
+						l_class := l_context.base_class
+					end
 					l_class.process (system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
@@ -6962,7 +6983,6 @@ feature {NONE} -- Expression validity
 			l_procedure: detachable ET_PROCEDURE
 			other_class: ET_CLASS
 			other_query: detachable ET_QUERY
-			other_procedure: detachable ET_PROCEDURE
 			other_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			other_formal: ET_FORMAL_ARGUMENT
 			l_type: ET_TYPE
@@ -6981,6 +7001,9 @@ feature {NONE} -- Expression validity
 			l_old_object_test_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_scope_changed: BOOLEAN
+			l_constraint_context: ET_NESTED_TYPE_CONTEXT
+			l_adapted_classes: like adapted_classes
+			l_adapted_class: ET_ADAPTED_CLASS
 		do
 			has_fatal_error := False
 			l_name := an_expression.name
@@ -7008,28 +7031,34 @@ feature {NONE} -- Expression validity
 						an_expression.set_boolean_operator (True)
 					end
 					if not has_fatal_error then
-						l_class.process (system_processor.interface_checker)
-						if not l_class.interface_checked or else l_class.has_interface_error then
-							set_fatal_error
+						l_adapted_classes := adapted_classes
+						l_adapted_classes.wipe_out
+						a_context.add_adapted_classes_to_list (l_adapted_classes)
+						if l_adapted_classes.count > 1 then
+-- TODO: multiple generic constraints.
 						else
-							l_query := l_class.named_query (l_name)
-							if l_query /= Void then
+							l_adapted_class := l_adapted_classes.first
+							l_class := l_adapted_class.base_class
+							l_class.process (system_processor.interface_checker)
+							if not l_class.interface_checked or else l_class.has_interface_error then
+								set_fatal_error
+							elseif attached l_adapted_class.named_query (l_name) as l_named_query then
+								l_query := l_named_query
 								l_seed := l_query.first_seed
 								l_name.set_seed (l_seed)
+							elseif attached l_adapted_class.named_procedure (l_name) as l_named_procedure then
+								l_procedure := l_named_procedure
+									-- In an infix expression the feature has to be a query.
+								set_fatal_error
+								error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
 							else
-								l_procedure := l_class.named_procedure (l_name)
-								if l_procedure /= Void then
-										-- In an infix expression the feature has to be a query.
-									set_fatal_error
-									error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
-								else
-									set_fatal_error
-										-- ISE Eiffel 5.4 reports this error as a VEEN,
-										-- but it is in fact a VUEX-2 (ETL2 p.368).
-									error_handler.report_vuex2a_error (current_class, l_name, l_class)
-								end
+								set_fatal_error
+									-- ISE Eiffel 5.4 reports this error as a VEEN,
+									-- but it is in fact a VUEX-2 (ETL2 p.368).
+								error_handler.report_vuex2a_error (current_class, l_name, l_class)
 							end
 						end
+						l_adapted_classes.wipe_out
 					end
 				end
 			end
@@ -7041,7 +7070,14 @@ feature {NONE} -- Expression validity
 						-- this expression was written.
 					check_expression_validity (l_target, a_context, l_detachable_any_type)
 					if not has_fatal_error then
-						l_class := a_context.base_class
+						if attached l_name.target_type as l_target_type and then a_context.named_type_is_formal_type then
+							l_constraint_context := new_context (current_type)
+							l_constraint_context.force_last (l_target_type)
+							l_class := l_constraint_context.base_class
+							free_context (l_constraint_context)
+						else
+							l_class := a_context.base_class
+						end
 						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
@@ -7260,30 +7296,38 @@ feature {NONE} -- Expression validity
 											-- the target (i.e. the left-hand-side) to the type
 											-- of the argument (i.e. the right-hand-side).
 										if current_class = current_class_impl then
-											other_class := l_actual_context.base_class
-											if
-												other_class /= l_class or else
-												not l_actual_context.same_named_context (l_formal_context)
-											then
-													-- Either the base classes of the left- and right-hand sides
-													-- are not the same, or they have different types. No need
-													-- to go further if the left- and right-hand sides have the
-													-- same types.
-													-- Left-hand side type: `l_formal_context'
-													-- Right-hand side type: `l_actual_context'
-												other_class.process (system_processor.interface_checker)
-												if other_class.interface_checked and then not other_class.has_interface_error then
-													other_query := other_class.named_query (l_name)
-													if other_query = Void then
-														other_procedure := other_class.named_procedure (l_name)
-														if other_procedure /= Void then
+											l_adapted_classes := adapted_classes
+											l_adapted_classes.wipe_out
+											l_actual_context.add_adapted_classes_to_list (l_adapted_classes)
+											if l_adapted_classes.count > 1 then
+-- TODO: multiple generic constraints.
+												other_class := l_class
+											else
+												l_adapted_class := l_adapted_classes.first
+												other_class := l_adapted_class.base_class
+												if
+													other_class /= l_class or else
+													not l_actual_context.same_named_context (l_formal_context)
+												then
+														-- Either the base classes of the left- and right-hand sides
+														-- are not the same, or they have different types. No need
+														-- to go further if the left- and right-hand sides have the
+														-- same types.
+														-- Left-hand side type: `l_formal_context'
+														-- Right-hand side type: `l_actual_context'
+													other_class.process (system_processor.interface_checker)
+													if not other_class.interface_checked or else other_class.has_interface_error then
+														-- Do nothing.
+													elseif attached l_adapted_class.named_query (l_name) as l_named_query then
+														other_query := l_named_query
+													elseif attached l_adapted_class.named_procedure (l_name) as l_other_procedure then
 																-- In an infix expression the feature has to be a query.
-															set_fatal_error
-															error_handler.report_vkcn2a_error (current_class, l_name, other_procedure, l_class)
-														end
+														set_fatal_error
+														error_handler.report_vkcn2a_error (current_class, l_name, l_other_procedure, l_class)
 													end
 												end
 											end
+											l_adapted_classes.wipe_out
 											if other_query /= Void then
 												if other_query.is_exported_to (current_class, system_processor) then
 														-- There is an exported query with the same name in the
@@ -8829,6 +8873,9 @@ feature {NONE} -- Expression validity
 			l_name: ET_CALL_NAME
 			l_class: ET_CLASS
 			l_seed: INTEGER
+			l_constraint_context: ET_NESTED_TYPE_CONTEXT
+			l_adapted_classes: like adapted_classes
+			l_adapted_class: ET_ADAPTED_CLASS
 		do
 			has_fatal_error := False
 			l_target := a_call.target
@@ -8859,88 +8906,96 @@ feature {NONE} -- Expression validity
 						end
 					end
 					if not has_fatal_error then
-						l_class.process (system_processor.interface_checker)
-						if not l_class.interface_checked or else l_class.has_interface_error then
-							set_fatal_error
-						elseif l_class.is_dotnet then
-								-- A class coming from a .NET assembly can contain overloaded
-								-- features (i.e. several features with the same name).
-								-- We have to be careful about that here.
-							check_qualified_dotnet_query_call_expression_validity (a_call, l_class, a_context)
-						elseif attached l_class.named_query (l_name) as l_query then
-							l_seed := l_query.first_seed
-							l_name.set_seed (l_seed)
-								-- Check for parenthesis alias.
-							check_query_parenthesis_call_validity (a_call, l_query, l_class, a_context)
-							if has_fatal_error then
-								-- Do nothing
-							elseif attached a_call.parenthesis_call as l_parenthesis_call then
-								a_call.set_index (l_parenthesis_call.index)
-							else
-								check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context)
-							end
-						elseif attached l_class.named_procedure (l_name) as l_procedure then
-								-- In a call expression, the feature has to be a query.
-							set_fatal_error
-							error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
-						elseif l_class.is_tuple_class and then attached {ET_IDENTIFIER} l_name as l_label then
-								-- Check whether this is a tuple label.
-							l_seed := a_context.base_type_index_of_label (l_label)
-							if l_seed /= 0 then
-								l_label.set_tuple_label (True)
-								l_label.set_seed (l_seed)
-								check_qualified_tuple_label_call_expression_validity (a_call, l_class, a_context)
+						l_adapted_classes := adapted_classes
+						l_adapted_classes.wipe_out
+						a_context.add_adapted_classes_to_list (l_adapted_classes)
+						if l_adapted_classes.count > 1 then
+-- TODO: multiple generic constraints.
+						else
+							l_adapted_class := l_adapted_classes.first
+							l_class := l_adapted_class.base_class
+							l_class.process (system_processor.interface_checker)
+							if not l_class.interface_checked or else l_class.has_interface_error then
+								set_fatal_error
+							elseif l_class.is_dotnet then
+									-- A class coming from a .NET assembly can contain overloaded
+									-- features (i.e. several features with the same name).
+									-- We have to be careful about that here.
+								check_qualified_dotnet_query_call_expression_validity (a_call, l_class, a_context)
+							elseif attached l_adapted_class.named_query (l_name) as l_query then
+								l_seed := l_query.first_seed
+								l_name.set_seed (l_seed)
+									-- Check for parenthesis alias.
+								check_query_parenthesis_call_validity (a_call, l_query, l_class, a_context)
+								if has_fatal_error then
+									-- Do nothing
+								elseif attached a_call.parenthesis_call as l_parenthesis_call then
+									a_call.set_index (l_parenthesis_call.index)
+								else
+									check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context)
+								end
+							elseif attached l_adapted_class.named_procedure (l_name) as l_procedure then
+									-- In a call expression, the feature has to be a query.
+								set_fatal_error
+								error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
+							elseif l_class.is_tuple_class and then attached {ET_IDENTIFIER} l_name as l_label then
+									-- Check whether this is a tuple label.
+								l_seed := a_context.base_type_index_of_label (l_label)
+								if l_seed /= 0 then
+									l_label.set_tuple_label (True)
+									l_label.set_seed (l_seed)
+									check_qualified_tuple_label_call_expression_validity (a_call, l_class, a_context)
+								else
+									set_fatal_error
+										-- ISE Eiffel 5.4 reports this error as a VEEN,
+										-- but it is in fact a VUEX-2 (ETL2 p.368).
+									error_handler.report_vuex2a_error (current_class, l_name, l_class)
+								end
 							else
 								set_fatal_error
 									-- ISE Eiffel 5.4 reports this error as a VEEN,
 									-- but it is in fact a VUEX-2 (ETL2 p.368).
 								error_handler.report_vuex2a_error (current_class, l_name, l_class)
 							end
-						else
-							set_fatal_error
-								-- ISE Eiffel 5.4 reports this error as a VEEN,
-								-- but it is in fact a VUEX-2 (ETL2 p.368).
-							error_handler.report_vuex2a_error (current_class, l_name, l_class)
 						end
 					end
 				end
-			elseif l_name.is_tuple_label then
+			else
 					-- The seed  was already computed in a proper ancestor (or in
 					-- another generic derivation) of `current_class' where
 					-- this expression was written.
 				check_expression_validity (l_target, a_context, current_system.detachable_any_type)
 				if not has_fatal_error then
-					l_class := a_context.base_class
-					l_class.process (system_processor.interface_checker)
-					if not l_class.interface_checked or else l_class.has_interface_error then
-						set_fatal_error
-					elseif not l_class.is_tuple_class then
-							-- Report internal error: if we got a call to tuple label,
-							-- the class has to be TUPLE because it is not possible
-							-- to inherit from TUPLE.
-						set_fatal_error
-						error_handler.report_giaaa_error
+					if attached l_name.target_type as l_target_type and then a_context.named_type_is_formal_type then
+						l_constraint_context := new_context (current_type)
+						l_constraint_context.force_last (l_target_type)
+						l_class := l_constraint_context.base_class
+						free_context (l_constraint_context)
 					else
-						check_qualified_tuple_label_call_expression_validity (a_call, l_class, a_context)
+						l_class := a_context.base_class
 					end
-				end
-			else
-					-- The seed was already computed in a proper ancestor (or in
-					-- another generic derivation) of `current_class' where
-					-- this expression was written.
-				check_expression_validity (l_target, a_context, current_system.detachable_any_type)
-				if not has_fatal_error then
-					l_class := a_context.base_class
 					l_class.process (system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
-					elseif attached l_class.seeded_query (l_seed) as l_query then
-						check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context)
+					elseif l_name.is_tuple_label then
+						if l_class.is_tuple_class then
+							check_qualified_tuple_label_call_expression_validity (a_call, l_class, a_context)
+						else
+								-- Report internal error: if we got a call to tuple label,
+								-- the class has to be TUPLE because it is not possible
+								-- to inherit from TUPLE.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
 					else
-							-- Report internal error: if we got a seed, there should be
-							-- a query for this seed.
-						set_fatal_error
-						error_handler.report_giaaa_error
+						if attached l_class.seeded_query (l_seed) as l_query then
+							check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context)
+						else
+								-- Report internal error: if we got a seed, there should be
+								-- a query for this seed.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
 					end
 				end
 			end
@@ -15325,6 +15380,11 @@ feature -- Precursors
 			precursor_procedures_set: precursor_procedures = a_procedure_set
 		end
 
+feature {NONE} -- Adapted classes
+
+	adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			-- Either base classes of types, or constraint base types in case of formal parameters
+
 feature {NONE} -- Choice constants
 
 	character_choice_constant: ET_C1_CHARACTER_CONSTANT
@@ -15965,5 +16025,8 @@ invariant
 	vape_non_descendant_clients_not_void: vape_non_descendant_clients /= Void
 	vape_creation_clients_not_void: vape_creation_clients /= Void
 	vape_client_not_void: vape_client /= Void
+		-- Adapted classes.
+	adapted_classes_not_void: adapted_classes /= Void
+	no_void_adapted_class: not adapted_classes.has_void
 
 end

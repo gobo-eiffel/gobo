@@ -44,7 +44,9 @@ inherit
 			position, append_to_string,
 			is_named_type, is_valid_context,
 			debug_output, copy, is_equal,
-			append_unaliased_to_string
+			append_unaliased_to_string,
+			named_query,
+			named_procedure
 		end
 
 	ET_SHARED_CLASS_CODES
@@ -2010,23 +2012,15 @@ feature -- Features
 	named_query (a_name: ET_CALL_NAME): detachable ET_QUERY
 			-- Query named `a_name';
 			-- Void if no such query
-		require
-			a_name_not_void: a_name /= Void
 		do
 			Result := queries.named_feature (a_name)
-		ensure
-			registered: Result /= Void implies Result.is_registered
 		end
 
 	named_procedure (a_name: ET_CALL_NAME): detachable ET_PROCEDURE
 			-- Procedure named `a_name';
 			-- Void if no such procedure
-		require
-			a_name_not_void: a_name /= Void
 		do
 			Result := procedures.named_feature (a_name)
-		ensure
-			registered: Result /= Void implies Result.is_registered
 		end
 
 	named_feature (a_name: ET_CALL_NAME): detachable ET_FEATURE

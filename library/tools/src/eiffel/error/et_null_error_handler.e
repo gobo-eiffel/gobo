@@ -83,6 +83,7 @@ inherit
 			reportable_vgcp1_error,
 			reportable_vgcp2_error,
 			reportable_vgcp3_error,
+			reportable_vggc2_error,
 			reportable_vhay_error,
 			reportable_vhpr1_error,
 			reportable_vhpr2_error,
@@ -673,6 +674,13 @@ feature -- Validity error status
 
 	reportable_vgcp3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCP-3 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vggc2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGGC-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

@@ -617,6 +617,7 @@ feature {NONE} -- Basic operations
 		local
 			a_class: like last_class
 			a_type: detachable ET_TYPE
+			l_constraint: ET_CONSTRAINT
 			l_type_constraint_item: ET_TYPE_CONSTRAINT_ITEM
 			i, j, k: INTEGER
 		do
@@ -630,9 +631,10 @@ feature {NONE} -- Basic operations
 						i < 1
 					loop
 						if attached {ET_CONSTRAINED_FORMAL_PARAMETER} a_parameters.formal_parameter (i) as a_constrained_formal then
-							if attached {ET_TYPE_RENAME_CONSTRAINT} a_constrained_formal as l_type_constraint then
-								if j > 0 and then attached constraints.item (j) as l_constraint then
-									a_type := l_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
+							l_constraint := a_constrained_formal.constraint
+							if attached {ET_TYPE_RENAME_CONSTRAINT} l_constraint as l_type_constraint then
+								if j > 0 and then attached constraints.item (j) as l_constraint_type then
+									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
 								else
 									a_type := Void
 								end
@@ -642,9 +644,9 @@ feature {NONE} -- Basic operations
 								else
 									a_parameters.remove (i)
 								end
-							elseif attached {ET_TYPE_CONSTRAINT} a_constrained_formal as l_type_constraint then
-								if j > 0 and then attached constraints.item (j) as l_constraint then
-									a_type := l_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
+							elseif attached {ET_TYPE_CONSTRAINT} l_constraint as l_type_constraint then
+								if j > 0 and then attached constraints.item (j) as l_constraint_type then
+									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
 								else
 									a_type := Void
 								end
@@ -654,14 +656,14 @@ feature {NONE} -- Basic operations
 								else
 									a_parameters.remove (i)
 								end
-							elseif attached {ET_TYPE_CONSTRAINT_LIST} a_constrained_formal as l_type_constraint_list then
+							elseif attached {ET_TYPE_CONSTRAINT_LIST} l_constraint as l_type_constraint_list then
 								from
 									k := l_type_constraint_list.count
 								until
 									k < 1
 								loop
-									if j > 0 and then attached constraints.item (j) as l_constraint then
-										a_type := l_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
+									if j > 0 and then attached constraints.item (j) as l_constraint_type then
+										a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
 									else
 										a_type := Void
 									end

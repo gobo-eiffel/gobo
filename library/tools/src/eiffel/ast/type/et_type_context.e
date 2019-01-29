@@ -5,7 +5,7 @@ note
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -283,6 +283,14 @@ feature -- Status report
 		deferred
 		end
 
+	named_type_is_formal_type: BOOLEAN
+			-- Is named type of current context a formal parameter?
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	attachment_type_conformance_mode: BOOLEAN
 			-- Should attachment status be taken into account when checking
 			-- conformance of types?
@@ -294,6 +302,20 @@ feature -- Status report
 			-- Should the generated application be SCOOP-capable?
 		do
 			Result := root_context.base_class.current_system.scoop_mode
+		end
+
+feature -- Basic operations
+
+	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Add to `a_list' the base class of current context or the constraint
+			-- base types (in the same order they appear in 'constraint_base_types')
+			-- in case of a formal parameter.
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			at_least_one_more: a_list.count > old a_list.count
 		end
 
 feature -- Comparison
@@ -409,6 +431,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
@@ -451,6 +474,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end

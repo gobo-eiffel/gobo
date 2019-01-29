@@ -1326,7 +1326,6 @@ feature {NONE} -- Feature adaptation validity
 			l_precursor_feature: ET_FEATURE
 			l_extended_name: ET_EXTENDED_FEATURE_NAME
 			l_name: ET_FEATURE_NAME
-			l_alias_name: detachable ET_ALIAS_NAME
 		do
 			if attached a_parent_feature.new_name as l_new_name then
 				check has_rename: a_parent_feature.has_rename end
@@ -1343,55 +1342,52 @@ feature {NONE} -- Feature adaptation validity
 						set_fatal_error (current_class)
 						error_handler.report_vhrc4a_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 					end
-				else
-					l_alias_name := l_extended_name.alias_name
-					if l_alias_name /= Void then
-							-- Check VHRC-4, ECMA p. 46.
-						if l_alias_name.is_bracket then
-							if not l_precursor_feature.is_bracketable then
-									-- A feature with a Bracket alias should be
-									-- a function with one or more arguments.
-								set_fatal_error (current_class)
-								error_handler.report_vhrc4b_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
-							end
-						elseif l_alias_name.is_parenthesis then
-							if not l_precursor_feature.is_parenthesisable then
-									-- A feature with a Parenthesis alias should be
-									-- a function with one or more arguments.
-								set_fatal_error (current_class)
-								error_handler.report_vfav4e_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
-							end
-						elseif l_precursor_feature.is_prefixable then
-							if l_alias_name.is_prefixable then
-								l_alias_name.set_prefix
-							else
-									-- A feature with a binary Operator alias should be
-									-- a function with exactly one argument.
-								set_fatal_error (current_class)
-								error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
-							end
-						elseif l_precursor_feature.is_infixable then
-							if l_alias_name.is_infixable then
-								l_alias_name.set_infix
-							else
-									-- A feature with a unary Operator alias should be
-									-- a query with no argument.
-								set_fatal_error (current_class)
-								error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
-							end
-						elseif l_alias_name.is_infix then
-								-- A feature with a binary Operator alias should be
-								-- a function with exactly one argument.
-							set_fatal_error (current_class)
-							error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
-						else
-							check is_prefix: l_alias_name.is_prefix end
-								-- A feature with a unary Operator alias should be
-								-- a query with no argument.
-							set_fatal_error (current_class)
-							error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
-						end
+				elseif not attached l_extended_name.alias_name as l_alias_name then
+					-- Do nothing.
+					-- Else, check VHRC-4, ECMA p. 46.
+				elseif l_alias_name.is_bracket then
+					if not l_precursor_feature.is_bracketable then
+							-- A feature with a Bracket alias should be
+							-- a function with one or more arguments.
+						set_fatal_error (current_class)
+						error_handler.report_vhrc4b_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 					end
+				elseif l_alias_name.is_parenthesis then
+					if not l_precursor_feature.is_parenthesisable then
+							-- A feature with a Parenthesis alias should be
+							-- a function with one or more arguments.
+						set_fatal_error (current_class)
+						error_handler.report_vfav4e_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
+					end
+				elseif l_precursor_feature.is_prefixable then
+					if l_alias_name.is_prefixable then
+						l_alias_name.set_prefix
+					else
+							-- A feature with a binary Operator alias should be
+							-- a function with exactly one argument.
+						set_fatal_error (current_class)
+						error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
+					end
+				elseif l_precursor_feature.is_infixable then
+					if l_alias_name.is_infixable then
+						l_alias_name.set_infix
+					else
+							-- A feature with a unary Operator alias should be
+							-- a query with no argument.
+						set_fatal_error (current_class)
+						error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
+					end
+				elseif l_alias_name.is_infix then
+						-- A feature with a binary Operator alias should be
+						-- a function with exactly one argument.
+					set_fatal_error (current_class)
+					error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
+				else
+					check is_prefix: l_alias_name.is_prefix end
+						-- A feature with a unary Operator alias should be
+						-- a query with no argument.
+					set_fatal_error (current_class)
+					error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 				end
 			end
 		end

@@ -479,9 +479,7 @@ feature -- Status report
 		end
 
 	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Is named type of current type, or if it is a qualified type
-			-- is the named type of its  target type (recursively),
-			-- a formal parameter when viewed from `a_context'?
+			-- Is named type of current type a formal parameter when viewed from `a_context'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
@@ -518,6 +516,22 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		do
 			Result := named_type_has_class (a_class, a_context)
+		end
+
+feature -- Basic operations
+
+	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Add to `a_list' the base class of current type when it appears in `a_context' or
+			-- the constraint base types (in the same order they appear in 'constraint_base_types')
+			-- in case of a formal parameter.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			a_list.force_last (base_class (a_context))
+		ensure
+			at_least_one_more: a_list.count > old a_list.count
 		end
 
 feature -- Comparison
@@ -661,6 +675,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
@@ -777,6 +792,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
@@ -825,6 +841,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.

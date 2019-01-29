@@ -30,6 +30,13 @@ inherit
 			type
 		end
 
+	ET_ADAPTED_CLASS
+		rename
+			base_type as type
+		redefine
+			type
+		end
+
 feature -- Access
 
 	type_constraint (i: INTEGER): ET_BASE_TYPE_CONSTRAINT
@@ -44,6 +51,14 @@ feature -- Access
 		deferred
 		ensure then
 			is_named_type: Result.is_named_type
+		end
+
+	base_class: ET_CLASS
+			-- Base class of `type'
+		do
+			Result := type.base_class
+		ensure then
+			definition: Result = type.base_class
 		end
 
 end

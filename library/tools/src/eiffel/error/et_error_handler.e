@@ -3442,6 +3442,189 @@ feature -- Validity errors
 			end
 		end
 
+	report_vggc2a_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VGGC-2 error: the feature name appearing as first
+			-- element of the Rename_pair `a_rename' for the constraint type
+			-- `a_constraint' of formal parameter `a_formal' in `a_class' is
+			-- not the final name of a feature in the base class of `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc2_error (a_class) then
+				create l_error.make_vggc2a (a_class, a_constraint, a_rename, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc2b_error (a_class: ET_CLASS; a_constraint: ET_FORMAL_PARAMETER_TYPE; a_renames: ET_CONSTRAINT_RENAME_LIST; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VGGC-2 error: the constraint type `a_constraint' of formal
+			-- parameter `a_formal' in `a_class' is itself a formal parameter,
+			-- and therefore cannot have a rename clause but has one (`a_renames').
+			--
+			-- Not in ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_renames_not_void: a_renames /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc2_error (a_class) then
+				create l_error.make_vggc2b (a_class, a_constraint, a_renames, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc2c_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_renames: ET_CONSTRAINT_RENAME_LIST; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VGGC-2 error: the constraint type `a_constraint' of formal
+			-- parameter `a_formal' in `a_class' is "NONE", and therefore cannot have
+			-- a rename clause but has one (`a_renames').
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_constraint_is_none: a_constraint.base_class.is_none
+			a_renames_not_void: a_renames /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc2_error (a_class) then
+				create l_error.make_vggc2c (a_class, a_constraint, a_renames, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc2d_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VGGC-2 error: a feature name appears more than once
+			-- (e.g. also in `a_rename1') as first element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc2_error (a_class) then
+				create l_error.make_vggc2d (a_class, a_constraint, a_rename1, a_rename2, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc2e_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VGGC-2 error: a feature name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc2_error (a_class) then
+				create l_error.make_vggc2e (a_class, a_constraint, a_rename1, a_rename2, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc2f_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VGGC-2 error: an alias name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc2_error (a_class) then
+				create l_error.make_vggc2f (a_class, a_constraint, a_rename1, a_rename2, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc2g_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VGGC-2 error: the feature name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the final name
+			-- of a feature in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc2_error (a_class) then
+				create l_error.make_vggc2g (a_class, a_constraint, a_rename, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc2h_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VGGC-2 error: the alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of
+			-- an alias in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc2_error (a_class) then
+				create l_error.make_vggc2h (a_class, a_constraint, a_rename, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_vhay0a_error (a_class: ET_CLASS)
 			-- Report VHAY error: `a_class' implicitly inherits
 			-- from unknown class ANY.
@@ -7882,6 +8065,16 @@ feature -- Validity error status
 
 	reportable_vgcp3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCP-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vggc2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGGC-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

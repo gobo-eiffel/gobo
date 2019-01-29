@@ -144,6 +144,14 @@ create
 	make_vgcp3a,
 	make_vgcp3b,
 	make_vgcp3c,
+	make_vggc2a,
+	make_vggc2b,
+	make_vggc2c,
+	make_vggc2d,
+	make_vggc2e,
+	make_vggc2f,
+	make_vggc2g,
+	make_vggc2h,
 	make_vhay0a,
 	make_vhpr1a,
 	make_vhpr1b,
@@ -5847,6 +5855,376 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = procedure name
+		end
+
+	make_vggc2a (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: the feature name appearing as first
+			-- element of the Rename_pair `a_rename' for the constraint type
+			-- `a_constraint' of formal parameter `a_formal' in `a_class' is
+			-- not the final name of a feature in the base class of `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.old_name.position
+			code := template_code (vggc2a_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.old_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc2b (a_class: ET_CLASS; a_constraint: ET_FORMAL_PARAMETER_TYPE; a_renames: ET_CONSTRAINT_RENAME_LIST; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: the constraint type `a_constraint' of formal
+			-- parameter `a_formal' in `a_class' is itself a formal parameter,
+			-- and therefore cannot have a rename clause but has one (`a_renames').
+			--
+			-- Not in ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_renames_not_void: a_renames /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_constraint.name.position
+			code := template_code (vggc2b_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_constraint.upper_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = constraint formal type
+		end
+
+	make_vggc2c (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_renames: ET_CONSTRAINT_RENAME_LIST; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: the constraint type `a_constraint' of formal
+			-- parameter `a_formal' in `a_class' is "NONE", and therefore cannot have
+			-- a rename clause but has one (`a_renames').
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_constraint_is_none: a_constraint.base_class.is_none
+			a_renames_not_void: a_renames /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_constraint.name.position
+			code := template_code (vggc2c_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_constraint.upper_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = constraint "NONE"
+		end
+
+	make_vggc2d (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: a feature name appears more than once
+			-- (e.g. also in `a_rename1') as first element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename2.old_name.position
+			code := template_code (vggc2d_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2d_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename2.old_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc2e (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: a feature name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename2.new_name.feature_name.position
+			code := template_code (vggc2e_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2e_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename2.new_name.feature_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc2f (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: an alias name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vggc2f_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2f_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc2g (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: the feature name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the final name
+			-- of a feature in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.new_name.feature_name.position
+			code := template_code (vggc2g_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2g_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc2h (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: the alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of
+			-- an alias in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vggc2h_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2h_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
 		end
 
 	make_vhay0a (a_class: ET_CLASS)
@@ -14449,7 +14827,6 @@ feature {NONE} -- Implementation
 	vcfg1a_default_template: STRING = "formal generic parameter '$7' has the same name as a class in the surrounding universe."
 	vcfg2a_default_template: STRING = "formal generic parameters #$8 and #$9 have the same name '$7'."
 	vcfg3a_default_template: STRING = "invalid type '$7' in constraint of formal generic parameter."
-	vcfg3b_default_template: STRING = "constraint of formal generic parameter '$7' is '$8' itself."
 	vdjr0a_default_template: STRING = "joined deferred features `$7' inherited from $8 and $9 don't have the same signature. Different number of arguments."
 	vdjr0b_default_template: STRING = "joined deferred features `$7' inherited from $8 and $9 don't have the same signature. Type of argument number $10 differs."
 	vdjr0c_default_template: STRING = "joined deferred features `$7' inherited from $8 and $9 don't have the same signature. Type of result differs."
@@ -14553,14 +14930,22 @@ feature {NONE} -- Implementation
 	vgcp2b_default_template: STRING = "`$7' is not the final name of a procedure."
 	vgcp3a_default_template: STRING = "procedure name `$7' appears twice in creation clause."
 	vgcp3b_default_template: STRING = "procedure name `$7' appears in two different creation clauses."
-	vgcp3c_default_template: STRING = "procedure name `$7' appears twice in creation clause of constraint."
+	vgcp3c_default_template: STRING = "procedure name `$7' appears twice in creation clause of generic constraint."
+	vggc2a_default_template: STRING = "`$7' is not the final name of a feature in generic constraint $8."
+	vggc2b_default_template: STRING = "generic constraint $7 is a formal generic parameter and therefore cannot have a rename clause."
+	vggc2c_default_template: STRING = "generic constraint $7 cannot have a rename clause."
+	vggc2d_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair in generic constraint $8."
+	vggc2e_default_template: STRING = "feature name `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vggc2f_default_template: STRING = "alias name `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vggc2g_default_template: STRING = "`$7' is already the final name of a feature in generic constraint $8."
+	vggc2h_default_template: STRING = "`$7' is already the alias name of a feature in generic constraint $8."
 	vhay0a_default_template: STRING = "implicitly inherits from unknown class ANY."
 	vhpr1a_default_template: STRING = "inheritance cycle $7."
 	vhpr1b_default_template: STRING = "inheritance cycle when inheriting from $7."
 	vhpr2a_default_template: STRING = "conforming inheritance from frozen class $7."
 	vhpr3a_default_template: STRING = "invalid type '$7' in parent clause."
 	vhrc1a_default_template: STRING = "`$7' is not the final name of a feature in $8."
-	vhrc2a_default_template: STRING = "feature name `$7' appears as first element of two Rename_pairs."
+	vhrc2a_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair."
 	vhrc4a_default_template: STRING = "`$7' is of the Prefix form but `$8' in $9 is not an attribute nor a function with no argument."
 	vhrc4b_default_template: STRING = "`$7' has a Bracket alias `$8' but `$9' in $10 is not a query with at least one argument."
 	vhrc4c_default_template: STRING = "`$7' has a binary Operator alias `$8' but `$9' in $10 is not a query with exactly one argument."
@@ -14644,11 +15029,11 @@ feature {NONE} -- Implementation
 	vtat2b_default_template: STRING = "invalid type '$7' when part of a qualified anchored type: the type of anchor `$8' must not depend (possibly recursively) on a qualified anchored type."
 	vtcg3a_default_template: STRING = "actual generic parameter '$7' in type '$9' does not conform to constraint '$8'."
 	vtcg4a_default_template: STRING = "base class $9 of the $7-th actual generic parameter of $10 does not make feature `$8' available as creation procedure to class $10."
-	vtcg4b_default_template: STRING = "the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8' as creation procedure in its generic constraint."
+	vtcg4b_default_template: STRING = "the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8' as creation procedure in its constraint."
 	vtct0a_default_template: STRING = "type based on unknown class $7."
 	vtct0b_default_template: STRING = "type based on unknown class $7."
-	vtgc0a_default_template: STRING = "`$7' is not the final name of a procedure in constraint's base class $8."
-	vtgc0b_default_template: STRING = "`$7' is not the final name of a procedure in constraint's base class $8."
+	vtgc0a_default_template: STRING = "`$7' is not the final name of a procedure in generic constraint's base class $8."
+	vtgc0b_default_template: STRING = "`$7' is not the final name of a procedure in generic constraint's base class $8."
 	vtug1a_default_template: STRING = "type '$7' has actual generic parameters but class $8 is not generic."
 	vtug2a_default_template: STRING = "type '$7' has wrong number of actual generic parameters."
 	vuar1a_default_template: STRING = "the number of actual arguments is not the same as the number of formal arguments of feature `$8' in class $9."
@@ -14802,6 +15187,7 @@ feature {NONE} -- Implementation
 	vgcp1_etl_code: STRING = "VGCP-1"
 	vgcp2_etl_code: STRING = "VGCP-2"
 	vgcp3_etl_code: STRING = "VGCP-3"
+	vggc2_etl_code: STRING = "VGGC-2"
 	vhay_etl_code: STRING = "VHAY"
 	vhpr3_etl_code: STRING = "VHPR-3"
 	vhrc1_etl_code: STRING = "VHRC-1"
@@ -15041,6 +15427,14 @@ feature {NONE} -- Implementation
 	vgcp3a_template_code: STRING = "vgcp3a"
 	vgcp3b_template_code: STRING = "vgcp3b"
 	vgcp3c_template_code: STRING = "vgcp3c"
+	vggc2a_template_code: STRING = "vggc2a"
+	vggc2b_template_code: STRING = "vggc2b"
+	vggc2c_template_code: STRING = "vggc2c"
+	vggc2d_template_code: STRING = "vggc2d"
+	vggc2e_template_code: STRING = "vggc2e"
+	vggc2f_template_code: STRING = "vggc2f"
+	vggc2g_template_code: STRING = "vggc2g"
+	vggc2h_template_code: STRING = "vggc2h"
 	vhay0a_template_code: STRING = "vhay0a"
 	vhpr1a_template_code: STRING = "vhpr1a"
 	vhpr1b_template_code: STRING = "vhpr1b"

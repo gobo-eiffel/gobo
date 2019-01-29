@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -510,21 +510,17 @@ feature -- Status report
 		end
 
 	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Is named type of current type, or if it is a qualified type
-			-- is the named type of its  target type (recursively),
-			-- a formal parameter when viewed from `a_context'?
+			-- Is named type of current type a formal parameter when viewed from `a_context'?
 		local
 			l_base_class: ET_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
-			l_target_type := target_type
-			if l_target_type.named_type_is_formal_type (a_context) then
-				Result := True
-			elseif seed = 0 then
+			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
+				l_target_type := target_type
 				l_base_class := l_target_type.base_class (a_context)
 				if attached l_base_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.as_nested_type_context

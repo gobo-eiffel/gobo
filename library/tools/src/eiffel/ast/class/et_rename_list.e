@@ -5,7 +5,7 @@ note
 		"Eiffel lists of rename pairs"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,7 +71,7 @@ feature -- Access
 			rename_pair_not_void: Result /= Void
 		end
 
-	index_of (a_old_name: ET_FEATURE_NAME): INTEGER
+	index_of_old_name (a_old_name: ET_FEATURE_NAME): INTEGER
 			-- Index of rename pair with old name `a_old_name';
 			-- 0 if it does not exist
 		require
@@ -86,6 +86,41 @@ feature -- Access
 					i := nb + 1 -- Jump out of the loop.
 				else
 					i := i + 1
+				end
+			end
+		ensure
+			index_large_enough: Result >= 0
+			index_small_enough: Result <= count
+		end
+
+	index_of_new_name (a_new_name: ET_CALL_NAME): INTEGER
+			-- Index of rename pair with new name `a_new_name';
+			-- 0 if it does not exist
+		require
+			a_new_name_not_void: a_new_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+				-- This assignment attempt is to avoid too many polymorphic
+				-- calls to `same_feature_name'.
+			if attached {ET_IDENTIFIER} a_new_name as l_id then
+				from i := 0 until i > nb loop
+					if l_id.same_feature_name (storage.item (i).rename_pair.new_name.feature_name) then
+						Result := count - i
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			else
+				from i := 0 until i > nb loop
+					if attached storage.item (i).rename_pair.new_name.alias_name as l_alias_name and then l_alias_name.same_call_name (a_new_name) then
+						Result := count - i
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
 				end
 			end
 		ensure
