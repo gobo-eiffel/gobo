@@ -1182,24 +1182,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3a_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
-			-- Report VCFG-3 error: invalid type `a_type' in
-			-- constraint of formal generic parameter of `a_class'.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vcfg3_error (a_class) then
-				create an_error.make_vcfg3a (a_class, a_type)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vdjr0a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
 			-- Report VDJR error: Features `f1' and `f2'
 			-- don't have the same number of arguments when
@@ -2568,10 +2550,10 @@ feature -- Validity errors
 		end
 
 	report_vfav1a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Report VFAV-1 error: `a_feature' has an infix operator alias
-			-- but is not a function with exactly one argument.
+			-- Report VFAV-1 error: `a_feature' has a binary operator alias
+			-- but is not a query with exactly one argument.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2589,10 +2571,10 @@ feature -- Validity errors
 		end
 
 	report_vfav1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Report VFAV-1 error: `a_feature' has a prefix operator alias
+			-- Report VFAV-1 error: `a_feature' has a unary operator alias
 			-- but is not a query with no argument.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2613,7 +2595,7 @@ feature -- Validity errors
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2636,7 +2618,7 @@ feature -- Validity errors
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2659,7 +2641,7 @@ feature -- Validity errors
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2682,7 +2664,7 @@ feature -- Validity errors
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2705,7 +2687,7 @@ feature -- Validity errors
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2728,7 +2710,7 @@ feature -- Validity errors
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2747,11 +2729,305 @@ feature -- Validity errors
 			end
 		end
 
+	report_vfav1i_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VFAV-1 error: `a_feature' has a prefix name but is
+			-- not a query with no argument.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_prefix: a_feature.name.is_prefix
+			a_feature_not_prefixable: not a_feature.is_prefixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1i (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1j_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VFAV-1 error: `a_feature' has an infix name but is
+			-- not a query with exactly one argument.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_infix: a_feature.name.is_infix
+			a_feature_not_infixable: not a_feature.is_infixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1j (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1k_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VFAV-1 error: `a_feature' has an operator alias
+			-- which can be either unary or binary, but it is not a
+			-- query with no argument or exactly one argument.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_prefixable_and_infixable: l_alias_name.is_prefixable and l_alias_name.is_infixable
+			a_feature_not_prefixable_nor_infixable: not a_feature.is_prefixable and not a_feature.is_infixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1k (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1l_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Report VFAV-1 error: the Rename_pair
+			-- `a_rename' has a new name of the Prefix form,
+			-- but the corresponding feature `f' is not a
+			-- query with no argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1l (a_class, a_type, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1m_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Report VFAV-1 error: the Rename_pair `a_rename' has
+			-- a new name with a binary operator alias,
+			-- but the corresponding feature `f' is not a
+			-- function with exactly one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_infix: l_new_alias_name.is_infix
+			f_not_void: f /= Void
+			f_not_infixable: not f.is_infixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1m (a_class, a_type, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1n_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Report VFAV-1 error: the Rename_pair `a_rename' has
+			-- a new name with a unary operator alias,
+			-- but the corresponding feature `f' is not a
+			-- query with no argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
+			a_rename_alias_prefix: l_new_name_alias_name.is_prefix
+			f_not_void: f /= Void
+			f_not_prefixable: not f.is_prefixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1n (a_class, a_type, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1o_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Report VFAV-1 error: the Rename_pair `a_rename' has
+			-- a new name of the Infix form, but the corresponding feature
+			-- `f' is not a function with one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1o (a_class, a_type, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1p_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Report VFAV-1 error: the Rename_pair `a_rename' has a new name
+			-- with an operator alias which can be either unary or binary,
+			-- but the corresponding feature `f' is not a query with no argument
+			-- or exactly one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
+			a_rename_alias_prefixable_and_infixable: l_new_name_alias_name.is_prefixable and l_new_name_alias_name.is_infixable
+			f_not_void: f /= Void
+			f_not_prefixable_nor_infixable: not f.is_prefixable and not not f.is_infixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1p (a_class, a_type, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1q_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-1 error: a unary operator alias name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create l_error.make_vfav1q (a_class, a_constraint, a_rename1, a_rename2, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav1r_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-1 error: a binary operator alias name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_alias_name_is_inefix: a_alias_name.is_infix
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create l_error.make_vfav1r (a_class, a_constraint, a_rename1, a_rename2, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav1s_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-1 error: the unary operator alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of the
+			-- alias of `a_feature' in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+			a_feature_not_void: a_feature /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create l_error.make_vfav1s (a_class, a_constraint, a_rename, a_alias_name, a_feature, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav1t_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-1 error: the binary operator alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of the
+			-- alias of `a_feature' in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_alias_name_is_infix: a_alias_name.is_infix
+			a_feature_not_void: a_feature /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create l_error.make_vfav1t (a_class, a_constraint, a_rename, a_alias_name, a_feature, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_vfav2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFAV-2 error: `a_feature' has a bracket alias
 			-- but is not a function with at least one argument.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2772,7 +3048,7 @@ feature -- Validity errors
 			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2795,7 +3071,7 @@ feature -- Validity errors
 			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2818,7 +3094,7 @@ feature -- Validity errors
 			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2837,11 +3113,90 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Report VFAV-4 error: `a_feature' has a parenthesis alias
+	report_vfav2e_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Report VFAV-2 error: the Rename_pair
+			-- `a_rename' has a new_name with a bracket alias,
+			-- but the corresponding feature `f' is not a
+			-- function with at least one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_bracket: l_new_alias_name.is_bracket
+			f_not_void: f /= Void
+			f_not_bracketable: not f.is_bracketable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav2_error (a_class) then
+				create an_error.make_vfav2e (a_class, a_type, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav2f_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-2 error: a bracket alias name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav2_error (a_class) then
+				create l_error.make_vfav2f (a_class, a_constraint, a_rename1, a_rename2, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav2g_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-2 error: the bracket alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of the
+			-- alias of `a_feature' in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+			a_feature_not_void: a_feature /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav2_error (a_class) then
+				create l_error.make_vfav2g (a_class, a_constraint, a_rename, a_alias_name, a_feature, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav3a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VFAV-3 error: `a_feature' has a parenthesis alias
 			-- but is not a feature with at least one argument.
 			--
-			-- ISE
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2852,17 +3207,17 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vfav4_error (a_class) then
-				create an_error.make_vfav4a (a_class, a_feature)
+			if reportable_vfav3_error (a_class) then
+				create an_error.make_vfav3a (a_class, a_feature)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav4b_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
-			-- Report VFAV-4 error: `a_feature1' and `a_feature2' have both
+	report_vfav3b_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+			-- Report VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
-			-- ISE
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2875,17 +3230,17 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vfav4_error (a_class) then
-				create an_error.make_vfav4b (a_class, a_feature1, a_feature2)
+			if reportable_vfav3_error (a_class) then
+				create an_error.make_vfav3b (a_class, a_feature1, a_feature2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav4c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
-			-- Report VFAV-4 error: `a_feature1' and `a_feature2' have both
+	report_vfav3c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+			-- Report VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
-			-- ISE
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2898,17 +3253,17 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vfav4_error (a_class) then
-				create an_error.make_vfav4c (a_class, a_feature1, a_feature2)
+			if reportable_vfav3_error (a_class) then
+				create an_error.make_vfav3c (a_class, a_feature1, a_feature2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav4d_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
-			-- Report VFAV-4 error: `a_feature1' and `a_feature2' have both
+	report_vfav3d_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+			-- Report VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
-			-- ISE
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2921,23 +3276,25 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vfav4_error (a_class) then
-				create an_error.make_vfav4d (a_class, a_feature1, a_feature2)
+			if reportable_vfav3_error (a_class) then
+				create an_error.make_vfav3d (a_class, a_feature1, a_feature2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav4e_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VFAV-4 error: the Rename_pair
+	report_vfav3e_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Report VFAV-3 error: the Rename_pair
 			-- `a_rename' has a new_name with a parenthesis alias,
 			-- but the corresponding feature `f' is not a
 			-- feature with at least one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
 			--
-			-- ISE
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
+			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
 			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
 			a_rename_alias_parenthesis: l_new_alias_name.is_parenthesis
@@ -2946,9 +3303,61 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vfav4_error (a_class) then
-				create an_error.make_vfav4e (a_class, a_parent, a_rename, f)
+			if reportable_vfav3_error (a_class) then
+				create an_error.make_vfav3e (a_class, a_type, a_rename, f)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav3f_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-3 error: a parenthesis alias name appears more than
+			-- once (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav3_error (a_class) then
+				create l_error.make_vfav3f (a_class, a_constraint, a_rename1, a_rename2, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav3g_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-3 error: the parenthesis alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of the
+			-- alias of `a_feature' in `a_constraint'.
+			--
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+			a_feature_not_void: a_feature /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav3_error (a_class) then
+				create l_error.make_vfav3g (a_class, a_constraint, a_rename, a_alias_name, a_feature, a_formal)
+				report_validity_error (l_error)
 			end
 		end
 
@@ -2967,46 +3376,6 @@ feature -- Validity errors
 		do
 			if reportable_vffd4_error (a_class) then
 				create an_error.make_vffd4a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vffd5a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Report VFFD-5 error: `a_feature' has a prefix name but is
-			-- not an attribute or a function with no argument.
-			--
-			-- ETL2: p.69
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_prefix: a_feature.name.is_prefix
-			a_feature_not_prefixable: not a_feature.is_prefixable
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vffd5_error (a_class) then
-				create an_error.make_vffd5a (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vffd6a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Report VFFD-6 error: `a_feature' has an infix name but is
-			-- not a function with exactly one argument.
-			--
-			-- ETL2: p.69
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_infix: a_feature.name.is_infix
-			a_feature_not_infixable: not a_feature.is_infixable
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vffd6_error (a_class) then
-				create an_error.make_vffd6a (a_class, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -3442,6 +3811,24 @@ feature -- Validity errors
 			end
 		end
 
+	report_vggc1a_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
+			-- Report VGGC-1 error: invalid type `a_type' in
+			-- constraint of formal generic parameter of `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc1_error (a_class) then
+				create an_error.make_vggc1a (a_class, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vggc2a_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
 			-- Report VGGC-2 error: the feature name appearing as first
 			-- element of the Rename_pair `a_rename' for the constraint type
@@ -3553,33 +3940,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vggc2f_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
-			-- Report VGGC-2 error: an alias name appears more than once
-			-- (e.g. also in `a_rename1') as second element of the Rename_pair
-			-- `a_rename2' in the constraint `a_constraint' of formal parameter
-			-- `a_formal' in `a_class'.
-			--
-			-- ECMA 367-2, 8.12.9 page 80.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_constraint_not_void: a_constraint /= Void
-			a_alias_name_not_void: a_alias_name /= Void
-			a_rename1_not_void: a_rename1 /= Void
-			a_rename2_not_void: a_rename2 /= Void
-			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
-			a_formal_not_void: a_formal /= Void
-		local
-			l_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vggc2_error (a_class) then
-				create l_error.make_vggc2f (a_class, a_constraint, a_rename1, a_rename2, a_alias_name, a_formal)
-				report_validity_error (l_error)
-			end
-		end
-
-	report_vggc2g_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+	report_vggc2f_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
 			-- Report VGGC-2 error: the feature name which appears as second
 			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
 			-- of formal parameter `a_formal' in `a_class' is already the final name
@@ -3596,31 +3957,7 @@ feature -- Validity errors
 			l_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vggc2_error (a_class) then
-				create l_error.make_vggc2g (a_class, a_constraint, a_rename, a_formal)
-				report_validity_error (l_error)
-			end
-		end
-
-	report_vggc2h_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_formal: ET_FORMAL_PARAMETER)
-			-- Report VGGC-2 error: the alias name which appears as second
-			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
-			-- of formal parameter `a_formal' in `a_class' is already the name of
-			-- an alias in `a_constraint'.
-			--
-			-- ECMA 367-2, 8.12.9 page 80.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_constraint_not_void: a_constraint /= Void
-			a_rename_not_void: a_rename /= Void
-			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
-			a_formal_not_void: a_formal /= Void
-		local
-			l_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vggc2_error (a_class) then
-				create l_error.make_vggc2h (a_class, a_constraint, a_rename, a_alias_name, a_formal)
+				create l_error.make_vggc2f (a_class, a_constraint, a_rename, a_formal)
 				report_validity_error (l_error)
 			end
 		end
@@ -3757,124 +4094,6 @@ feature -- Validity errors
 		do
 			if reportable_vhrc2_error (a_class) then
 				create an_error.make_vhrc2a (a_class, a_parent, a_rename1, a_rename2)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vhrc4a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VHRC-4 error: the Rename_pair
-			-- `a_rename' has a new_name of the Prefix form,
-			-- but the corresponding feature `f' is not an
-			-- attibute nor a function with no argument.
-			--
-			-- ETR: p.23
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vhrc4_error (a_class) then
-				create an_error.make_vhrc4a (a_class, a_parent, a_rename, f)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vhrc4b_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VHRC-4 error: the Rename_pair
-			-- `a_rename' has a new_name with a bracket alias,
-			-- but the corresponding feature `f' is not a
-			-- function with at least one argument.
-			--
-			-- ECMA: p.46
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_bracket: l_new_alias_name.is_bracket
-			f_not_void: f /= Void
-			f_not_bracketable: not f.is_bracketable
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vhrc4_error (a_class) then
-				create an_error.make_vhrc4b (a_class, a_parent, a_rename, f)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vhrc4c_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VHRC-4 error: the Rename_pair `a_rename' has
-			-- a new_name with a binary operator alias,
-			-- but the corresponding feature `f' is not a
-			-- function with exactly one argument.
-			--
-			-- ECMA: p.46
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_infix: l_new_alias_name.is_infix
-			f_not_void: f /= Void
-			f_not_infixable: not f.is_infixable
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vhrc4_error (a_class) then
-				create an_error.make_vhrc4c (a_class, a_parent, a_rename, f)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vhrc4d_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VHRC-4 error: the Rename_pair `a_rename' has
-			-- a new_name with a unary operator alias,
-			-- but the corresponding feature `f' is not a
-			-- query with no argument.
-			--
-			-- ECMA: p.46
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
-			a_rename_alias_prefix: l_new_name_alias_name.is_prefix
-			f_not_void: f /= Void
-			f_not_prefixable: not f.is_prefixable
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vhrc4_error (a_class) then
-				create an_error.make_vhrc4d (a_class, a_parent, a_rename, f)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vhrc5a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VHRC-5 error: the Rename_pair `a_rename' has
-			-- a new_name of the Infix form, but the corresponding feature
-			-- `f' is not a function with one argument.
-			--
-			-- ETR: p.23
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vhrc5_error (a_class) then
-				create an_error.make_vhrc5a (a_class, a_parent, a_rename, f)
 				report_validity_error (an_error)
 			end
 		end
@@ -7623,16 +7842,6 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vcfg3_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VCFG-3 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
 	reportable_vdjr_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VDJR error be reported when it
 			-- appears in `a_class'?
@@ -7943,6 +8152,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vfav3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFAV-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vfav4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAV-4 error be reported when it
 			-- appears in `a_class'?
@@ -7955,26 +8174,6 @@ feature -- Validity error status
 
 	reportable_vffd4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-4 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_vffd5_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VFFD-5 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_vffd6_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VFFD-6 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -8073,6 +8272,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vggc1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGGC-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vggc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGGC-2 error be reported when it
 			-- appears in `a_class'?
@@ -8135,26 +8344,6 @@ feature -- Validity error status
 
 	reportable_vhrc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-2 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_vhrc4_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VHRC-4 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_vhrc5_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VHRC-5 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

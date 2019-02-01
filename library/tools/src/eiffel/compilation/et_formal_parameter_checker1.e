@@ -286,7 +286,7 @@ feature {NONE} -- Constraint validity
 		do
 				-- It is not valid to have anchored types in constraints.
 			set_fatal_error
-			error_handler.report_vcfg3a_error (current_class, a_type)
+			error_handler.report_vggc1a_error (current_class, a_type)
 		end
 
 	check_tuple_type_constraint (a_type: ET_TUPLE_TYPE; a_type_constraint: ET_TYPE_CONSTRAINT; a_formal: ET_CONSTRAINED_FORMAL_PARAMETER)

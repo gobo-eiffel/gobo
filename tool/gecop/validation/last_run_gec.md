@@ -4,12 +4,14 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     38 tests
-    # FAILED:     3 tests
+    # Passed:     75 tests
+    # FAILED:     5 tests
     # Aborted:    0 test
-    # Total:      41 tests (381 assertions)
+    # Total:      80 tests (735 assertions)
 
 Test Results:</br>
-FAIL:  \[[validity/vggc2/test1](validity/vggc2/test1)\] test\_failed</br>
-FAIL:  \[[validity/vggc2/test2](validity/vggc2/test2)\] test\_failed</br>
-FAIL:  \[[validity/vggc2/test3](validity/vggc2/test3)\] test\_failed
+FAIL:  \[[validity/vfav4/test1](validity/vfav4/test1)\] unknown\_test\_result</br>
+FAIL:  \[[validity/vfav4/test3](validity/vfav4/test3)\] unknown\_test\_result</br>
+FAIL:  \[[validity/vfav4/test4](validity/vfav4/test4)\] unknown\_test\_result</br>
+FAIL:  \[[validity/vfav4/test5](validity/vfav4/test5)\] unknown\_test\_result</br>
+FAIL:  \[[validity/vfav4/test6](validity/vfav4/test6)\] unknown\_test\_result

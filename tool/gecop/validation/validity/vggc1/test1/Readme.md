@@ -9,4 +9,3 @@ In this test, the constraint of the formal generic parameter of class `BB` is `C
 ### Notes
 
 * ISE Eiffel (as of 18.11.10.2592 and after) reports this validity rule violation using the old code `VTGC-1`.
-* `gec` and `gelint` report this validity rule violation using the old code `VCFG-3`.

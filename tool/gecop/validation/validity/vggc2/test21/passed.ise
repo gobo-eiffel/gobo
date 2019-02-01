@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 1 in class BB [G -> CC]
+Use the alias form of the infix routine.
+
+class BB [G -> CC rename infix "+" as g end]
+-------------------------^
+
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 5 in class CC
+Use the alias form of the infix routine.
+
+    infix "+" (i: INTEGER): INTEGER
+----^
+        do
+
+-------------------------------------------------------------------------------
+Passed
