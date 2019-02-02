@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -240,8 +240,30 @@ feature -- Test
 			a_regexp.compile ("oo$")
 			assert ("compiled1", a_regexp.is_compiled)
 			a_regexp.match_substring ("foobar", 1, 3)
-				-- Matched because the "oo" is at the end of the substring>
+				-- Matched because the "oo" is at the end of the substring.
 			assert ("matched1", a_regexp.has_matched)
+		end
+
+	test_captured_substring1
+			-- Test feature 'captured_substring'.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("(BODY(\.PEEK)?(\[.*])|RFC822\.HEADER|RFC822\.TEXT) \{([0-9]+)\}\r\n")
+			assert ("compiled1", l_regexp.is_compiled)
+			l_regexp.match ("* 9 FETCH (UID 1271 RFC822.TEXT {44004}%R%N")
+			assert_integers_equal ("match_count1", 5, l_regexp.match_count)
+				-- Entire match.
+			assert_strings_equal ("captured_substring0", "RFC822.TEXT {44004}%R%N", l_regexp.captured_substring (0))
+				-- Match: (BODY(\.PEEK)?(\[.*])|RFC822\.HEADER|RFC822\.TEXT)
+			assert_strings_equal ("captured_substring1", "RFC822.TEXT", l_regexp.captured_substring (1))
+				-- Match: (\.PEEK)
+			assert_strings_equal ("captured_substring2", "", l_regexp.captured_substring (2))
+				-- Match: (\[.*])
+			assert_strings_equal ("captured_substring3", "", l_regexp.captured_substring (3))
+				-- Match: ([0-9]+)
+			assert_strings_equal ("captured_substring4", "44004", l_regexp.captured_substring (4))
 		end
 
 feature -- Test Input 1
