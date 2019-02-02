@@ -14,7 +14,7 @@
   part in `signature` was not considered as optional.
 * Added support for `"C++ struct ..."` in external routines.
 * Fixed C compilation errors with `msc` as back-end C compiler when compiling
-  ISE EiffelTime. See [https://support.eiffel.com/report_detail/19508]() for
+  ISE EiffelTime. See [here](https://support.eiffel.com/report_detail/19508) for
   details.
 * Adapted generated C code so that the FreeELKS introspection classes work
   in void-safe mode.
