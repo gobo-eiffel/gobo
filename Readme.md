@@ -61,7 +61,7 @@ The supported Eiffel compilers, in alphabetical order, are:
 * ISE Eiffel 18.07.10.1981 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file
-[Release_notes.md](Release_notes.md). 
+[Release_notes.md](./Release_notes.md). 
 This software might work with other Eiffel compilers and/or other compiler
 versions, however no test has been made yet.
 To have a better understanding of the way this software has been designed
@@ -151,4 +151,4 @@ are available to help you make the first steps.
 
 ## Authors
 
-Copyright (c) 1997-2018, Eric Bezault and others
+Copyright (c) 1997-2019, Eric Bezault and others

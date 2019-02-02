@@ -9,7 +9,7 @@ in parallel anymore since all supported Eiffel compliers accept ECF files.
 Note that the support for `gexace` and Xace files will be terminated in
 the next release of Gobo.
 
-To see what else is new, please read [History.md](History.md).
+To see what else is new, please read [History.md](./History.md).
 
 ## Compiler specific notes
 
@@ -27,4 +27,4 @@ To see what else is new, please read [History.md](History.md).
 
 ## Authors
 
-Copyright (c) 1997-2018, Eric Bezault and others
+Copyright (c) 1997-2019, Eric Bezault and others
