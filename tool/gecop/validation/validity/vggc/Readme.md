@@ -5,7 +5,7 @@ Click on the `[tests]` label following the condition numbers below to see tests 
 
 ### VGGC: Generic Constraint rule
 
-#####ECMA 367-2, 8.12.9 page 80.
+####ECMA 367-2, 8.12.9 page 80.
 
 A *Constraint* part appearing in the *Formal\_generics* part of a class `C` is valid if and only if it satisfies the following conditions for every *Single\_constraint* listing a type `T` in its *Constraining\_types*:
 
@@ -13,7 +13,7 @@ A *Constraint* part appearing in the *Formal\_generics* part of a class `C` is v
 2. [\[tests\]](../vggc2) If a *Renaming* clause `rename rename_list end` is present, a class definition of the form `class NEW inherit BT rename rename_list end` (preceded by `deferred` if the base class of `T` is deferred), where `BT` is the base class of `T`, would be valid.
 3. \[tests\] Every name listed in the *Constraint\_creators* is the generically constrained name of a procedure `p` of one of the corresponding constraining types.
 
-#####ECMA 367-3 (working version 3-36), 8.12.12 page 71.
+####ECMA 367-3 (working version 3-36), 8.12.12 page 71.
 
 A *Constraint* part appearing in the *Formal\_generics* part of a class `C` is valid if and only if it satisfies
 the following conditions for every *Single\_constraint* listing a type `T` in its *Constraining\_types*:
