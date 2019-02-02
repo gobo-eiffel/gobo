@@ -21,6 +21,7 @@ inherit
 			constraint, creation_procedures, last_leaf, process,
 			constraint_base_types, has_constraint_cycle,
 			recursive_formal_constraints,
+			reset_constraint_base_types,
 			reset
 		end
 
@@ -56,9 +57,16 @@ feature -- Initialization
 			-- Reset type as it was just after it was last parsed.
 		do
 			constraint.reset
+			reset_constraint_base_types
+			reset_constraint_creation_procedures
+		end
+
+	reset_constraint_base_types
+			-- Reset `constraint_base_types' and `recursive_formal_constraints'
+			-- as they were just after the current formal parameter was last parsed.
+		do
 			constraint_base_types := implementation_class.universe.detachable_any_type
 			recursive_formal_constraints := Void
-			reset_constraint_creation_procedures
 		end
 
 feature -- Access

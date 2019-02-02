@@ -189,7 +189,8 @@ feature -- Initialization
 			queries.reset
 			procedures.reset
 			if attached formal_parameters as l_formal_parameters then
-				l_formal_parameters.reset
+				l_formal_parameters.reset_constraint_creation_procedures
+				l_formal_parameters.reset_constraint_base_types
 				create l_unfolded_tuple_actual_parameters_resolver.make (tokens.null_system_processor)
 				nb := l_formal_parameters.count
 				from i := 1 until i > nb loop

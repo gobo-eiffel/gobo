@@ -52,6 +52,12 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
+	reset_constraint_base_types
+			-- Reset `constraint_base_types' and `recursive_formal_constraints'
+			-- as they were just after the current formal parameter was last parsed.
+		do
+		end
+
 	reset_constraint_creation_procedures
 			-- Reset constraint creation procedures as they were just
 			-- after they were last parsed.
