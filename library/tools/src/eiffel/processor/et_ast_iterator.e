@@ -169,6 +169,9 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_name.alias_keyword.process (Current)
 			a_name.alias_string.process (Current)
+			if attached a_name.convert_keyword as l_convert_keyword then
+				l_convert_keyword.process (Current)
+			end
 		end
 
 	process_alias_name (a_name: ET_ALIAS_NAME)
@@ -176,6 +179,9 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_name.alias_keyword.process (Current)
 			a_name.alias_string.process (Current)
+			if attached a_name.convert_keyword as l_convert_keyword then
+				l_convert_keyword.process (Current)
+			end
 		end
 
 	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME)

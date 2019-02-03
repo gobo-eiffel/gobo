@@ -693,6 +693,9 @@ feature -- Access
 	alias_string: ET_MANIFEST_STRING
 			-- Name of alias
 
+	convert_keyword: detachable ET_KEYWORD
+			-- 'convert' keyword
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -712,7 +715,11 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			Result := alias_string
+			if attached convert_keyword as l_convert_keyword then
+				Result := l_convert_keyword
+			else
+				Result := alias_string
+			end
 		end
 
 feature -- Setting
@@ -725,6 +732,16 @@ feature -- Setting
 			alias_keyword := an_alias
 		ensure
 			alias_keyword_set: alias_keyword = an_alias
+		end
+
+	set_convert_keyword (a_keyword: like convert_keyword)
+			-- Set `convert_keyword' to `a_keyword'.
+		require
+			a_keyword_not_void: a_keyword /= Void
+		do
+			convert_keyword := a_keyword
+		ensure
+			convert_keyword_set: convert_keyword = a_keyword
 		end
 
 feature -- Status setting

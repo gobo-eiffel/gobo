@@ -242,6 +242,7 @@ feature {NONE} -- Feature flattening
 			l_declared_procedure_count: INTEGER
 			l_query: ET_QUERY
 			l_procedure: ET_PROCEDURE
+			l_alias_name: detachable ET_ALIAS_NAME
 		do
 			has_signature_error := False
 			resolve_feature_adaptations
@@ -322,6 +323,7 @@ feature {NONE} -- Feature flattening
 						-- Check validity of 'infix "..."', 'prefix "..."'
 						-- and 'alias "..."' names.
 					l_feature_name := l_query.name
+					l_alias_name := l_query.alias_name
 					if l_feature_name.is_prefix then
 						if not l_query.is_prefixable then
 								-- A feature with a Prefix name should be either
@@ -336,7 +338,7 @@ feature {NONE} -- Feature flattening
 							set_fatal_error (current_class)
 							error_handler.report_vfav1j_error (current_class, l_query)
 						end
-					elseif not attached l_query.alias_name as l_alias_name then
+					elseif l_alias_name = Void then
 						-- OK.
 					elseif l_alias_name.is_bracket then
 						if not l_query.is_bracketable then
@@ -391,6 +393,12 @@ feature {NONE} -- Feature flattening
 						set_fatal_error (current_class)
 						error_handler.report_giaaa_error
 					end
+					if l_alias_name /= Void and then l_alias_name.convert_keyword /= Void and then not l_alias_name.is_infix then
+							-- When the 'convert' mark is specified, the alias
+							-- should be a binary operator alias.
+						set_fatal_error (current_class)
+						error_handler.report_vfav4a_error (current_class, l_alias_name)
+					end
 					if l_query.is_once and then not l_query.is_once_per_object then
 						a_type := l_query.type
 							-- The type of a once function should not contain
@@ -425,6 +433,7 @@ feature {NONE} -- Feature flattening
 						-- Check validity of 'infix "..."', 'prefix "..."'
 						-- and 'alias "..."' names.
 					l_feature_name := l_procedure.name
+					l_alias_name := l_procedure.alias_name
 					if l_feature_name.is_prefix then
 							-- A feature with a Prefix name should be
 							-- a query with no argument.
@@ -435,7 +444,7 @@ feature {NONE} -- Feature flattening
 							-- a query with exactly one argument.
 						set_fatal_error (current_class)
 						error_handler.report_vfav1j_error (current_class, l_procedure)
-					elseif not attached l_procedure.alias_name as l_alias_name then
+					elseif l_alias_name = Void then
 							-- OK.
 					elseif l_alias_name.is_bracket then
 							-- A feature with a Bracket alias should be
@@ -470,6 +479,12 @@ feature {NONE} -- Feature flattening
 						set_fatal_error (current_class)
 						error_handler.report_giaaa_error
 					end
+					if l_alias_name /= Void and then l_alias_name.convert_keyword /= Void and then not l_alias_name.is_infix then
+							-- When the 'convert' mark is specified, the alias
+							-- should be a binary operator alias.
+						set_fatal_error (current_class)
+						error_handler.report_vfav4a_error (current_class, l_alias_name)
+					end
 					i := i + 1
 				end
 				check_anchored_signatures
@@ -479,7 +494,8 @@ feature {NONE} -- Feature flattening
 						-- Check that two features have not the same alias. Take into account
 						-- the infix and prefix properties to differentiate two alias names.
 					a_feature := a_named_feature.flattened_feature
-					if attached a_feature.alias_name as l_alias_name then
+					l_alias_name := a_feature.alias_name
+					if l_alias_name /= Void then
 						aliased_features.search (l_alias_name)
 						if aliased_features.found then
 							set_fatal_error (current_class)
@@ -1350,12 +1366,14 @@ feature {NONE} -- Feature adaptation validity
 			l_precursor_feature: ET_FEATURE
 			l_extended_name: ET_EXTENDED_FEATURE_NAME
 			l_name: ET_FEATURE_NAME
+			l_alias_name: detachable ET_ALIAS_NAME
 		do
 			if attached a_parent_feature.new_name as l_new_name then
 				check has_rename: a_parent_feature.has_rename end
 				l_precursor_feature := a_parent_feature.precursor_feature
 				l_extended_name := l_new_name.new_name
 				l_name := l_extended_name.feature_name
+				l_alias_name := l_extended_name.alias_name
 				if l_name.is_infix then
 					if not l_precursor_feature.is_infixable then
 						set_fatal_error (current_class)
@@ -1366,7 +1384,7 @@ feature {NONE} -- Feature adaptation validity
 						set_fatal_error (current_class)
 						error_handler.report_vfav1l_error (current_class, a_parent_feature.parent.type, l_new_name, l_precursor_feature)
 					end
-				elseif not attached l_extended_name.alias_name as l_alias_name then
+				elseif l_alias_name = Void then
 					-- OK.
 				elseif l_alias_name.is_bracket then
 					if not l_precursor_feature.is_bracketable then
@@ -1419,6 +1437,12 @@ feature {NONE} -- Feature adaptation validity
 						-- Internal error: no other kind of alias name.
 					set_fatal_error (current_class)
 					error_handler.report_giaaa_error
+				end
+				if l_alias_name /= Void and then l_alias_name.convert_keyword /= Void and then not l_alias_name.is_infix then
+						-- When the 'convert' mark is specified, the alias
+						-- should be a binary operator alias.
+					set_fatal_error (current_class)
+					error_handler.report_vfav4a_error (current_class, l_alias_name)
 				end
 			end
 		end

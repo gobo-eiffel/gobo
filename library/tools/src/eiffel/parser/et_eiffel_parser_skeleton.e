@@ -1391,17 +1391,17 @@ feature {NONE} -- AST factory
 		end
 
 	new_alias_free_name (an_alias: detachable ET_KEYWORD;
-		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_FREE_NAME
+		a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_FREE_NAME
 			-- New alias free feature name
 		do
 			if a_string /= Void then
 				if a_string.value.count > 0 then
-					Result := ast_factory.new_alias_free_name (an_alias, a_string)
+					Result := ast_factory.new_alias_free_name (an_alias, a_string, a_convert)
 				else
 					-- TODO: error.
 				end
 			else
-				Result := ast_factory.new_alias_free_name (an_alias, a_string)
+				Result := ast_factory.new_alias_free_name (an_alias, a_string, a_convert)
 			end
 		end
 
@@ -1634,11 +1634,11 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_formal_arguments (a_left, a_right, nb)
 		end
 
-	new_invalid_alias_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_FREE_NAME
+	new_invalid_alias_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_FREE_NAME
 			-- New invalid alias feature name
 		do
 -- ERROR
-			Result := new_alias_free_name (an_alias, a_string)
+			Result := new_alias_free_name (an_alias, a_string, a_convert)
 		end
 
 	new_invalid_infix_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME

@@ -3361,6 +3361,26 @@ feature -- Validity errors
 			end
 		end
 
+	report_vfav4a_error (a_class: ET_CLASS; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-4 error: `a_alias_name' has a convert mark
+			-- but it is not binary operator alias.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_not_infix: not a_alias_name.is_infix
+			a_alias_name_has_convert: a_alias_name.convert_keyword /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4a (a_class, a_alias_name)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_vffd4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFFD-4 error: deferred `a_feature' is marked as frozen.
 			--

@@ -137,6 +137,7 @@ create
 	make_vfav3e,
 	make_vfav3f,
 	make_vfav3g,
+	make_vfav4a,
 	make_vffd4a,
 	make_vffd7a,
 	make_vffd7b,
@@ -5659,6 +5660,48 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = alias name
 			-- dollar8: $8 = feature name
 			-- dollar9: $9 = constraint base class
+		end
+
+	make_vfav4a (a_class: ET_CLASS; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_alias_name' has a convert mark
+			-- but it is not binary operator alias.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_not_infix: not a_alias_name.is_infix
+			a_alias_name_has_convert: a_alias_name.convert_keyword /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := ast_position (a_alias_name)
+			code := template_code (vfav4a_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
 		end
 
 	make_vffd4a (a_class: ET_CLASS; a_feature: ET_FEATURE)
@@ -15356,6 +15399,7 @@ feature {NONE} -- Implementation
 	vfav3e_default_template: STRING = "`$7' has a Parenthesis alias `$8' but `$9' in $10 is not a feature with at least one argument."
 	vfav3f_default_template: STRING = "Parenthesis alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
 	vfav3g_default_template: STRING = "`$7' is already the Parenthesis alias of feature `$8' in generic constraint $9."
+	vfav4a_default_template: STRING = "`$7' has a convert mark but it is not a binary operator alias."
 	vffd4a_default_template: STRING = "deferred feature `$7' is marked as frozen."
 	vffd7a_default_template: STRING = "feature `$7' is a once funtion but its type contains an anchored type."
 	vffd7b_default_template: STRING = "feature `$7' is a once funtion but its type contains a formal generic parameter."
@@ -15857,6 +15901,7 @@ feature {NONE} -- Implementation
 	vfav3e_template_code: STRING = "vfav3e"
 	vfav3f_template_code: STRING = "vfav3f"
 	vfav3g_template_code: STRING = "vfav3g"
+	vfav4a_template_code: STRING = "vfav4a"
 	vffd4a_template_code: STRING = "vffd4a"
 	vffd5a_template_code: STRING = "vffd5a"
 	vffd6a_template_code: STRING = "vffd6a"

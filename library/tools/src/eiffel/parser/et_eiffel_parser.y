@@ -190,7 +190,7 @@ create
 %type <detachable ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
 %type <detachable ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
 %type <detachable ET_INVARIANTS> Invariant_clause Invariant_clause_opt
-%type <detachable ET_KEYWORD> Frozen_opt External_opt Is_opt
+%type <detachable ET_KEYWORD> Frozen_opt External_opt Is_opt Alias_convert_opt
 %type <detachable ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
 %type <detachable ET_KEYWORD_FEATURE_NAME_LIST> Undefine_clause Undefine_clause_opt Redefine_clause Redefine_clause_opt
 %type <detachable ET_LIKE_TYPE> Anchored_type Anchored_type_with_no_type_mark
@@ -2172,54 +2172,60 @@ Extended_feature_name: Feature_name
 		}
 	;
 
-Alias_name: E_ALIAS E_STRNOT
-		{ $$ := ast_factory.new_alias_not_name ($1, $2) }
-	| E_ALIAS E_STRPLUS
-		{ $$ := ast_factory.new_alias_plus_name ($1, $2) }
-	| E_ALIAS E_STRMINUS
-		{ $$ := ast_factory.new_alias_minus_name ($1, $2) }
-	| E_ALIAS E_STRSTAR
-		{ $$ := ast_factory.new_alias_times_name ($1, $2) }
-	| E_ALIAS E_STRSLASH
-		{ $$ := ast_factory.new_alias_divide_name ($1, $2) }
-	| E_ALIAS E_STRDIV
-		{ $$ := ast_factory.new_alias_div_name ($1, $2) }
-	| E_ALIAS E_STRMOD
-		{ $$ := ast_factory.new_alias_mod_name ($1, $2) }
-	| E_ALIAS E_STRPOWER
-		{ $$ := ast_factory.new_alias_power_name ($1, $2) }
-	| E_ALIAS E_STRLT
-		{ $$ := ast_factory.new_alias_lt_name ($1, $2) }
-	| E_ALIAS E_STRLE
-		{ $$ := ast_factory.new_alias_le_name ($1, $2) }
-	| E_ALIAS E_STRGT
-		{ $$ := ast_factory.new_alias_gt_name ($1, $2) }
-	| E_ALIAS E_STRGE
-		{ $$ := ast_factory.new_alias_ge_name ($1, $2) }
-	| E_ALIAS E_STRAND
-		{ $$ := ast_factory.new_alias_and_name ($1, $2) }
-	| E_ALIAS E_STRANDTHEN
-		{ $$ := ast_factory.new_alias_and_then_name ($1, $2) }
-	| E_ALIAS E_STROR
-		{ $$ := ast_factory.new_alias_or_name ($1, $2) }
-	| E_ALIAS E_STRORELSE
-		{ $$ := ast_factory.new_alias_or_else_name ($1, $2) }
-	| E_ALIAS E_STRIMPLIES
-		{ $$ := ast_factory.new_alias_implies_name ($1, $2) }
-	| E_ALIAS E_STRXOR
-		{ $$ := ast_factory.new_alias_xor_name ($1, $2) }
-	| E_ALIAS E_STRDOTDOT
-		{ $$ := ast_factory.new_alias_dotdot_name ($1, $2) }
-	| E_ALIAS E_STRFREEOP
-		{ $$ := ast_factory.new_alias_free_name ($1, $2) }
-	| E_ALIAS E_STRBRACKET
-		{ $$ := ast_factory.new_alias_bracket_name ($1, $2) }
-	| E_ALIAS E_STRPARENTHESIS
-		{ $$ := ast_factory.new_alias_parenthesis_name ($1, $2) }
-	| E_ALIAS E_STRING
-		{ $$ := new_invalid_alias_name ($1, $2) }
+Alias_name: E_ALIAS E_STRNOT Alias_convert_opt
+		{ $$ := ast_factory.new_alias_not_name ($1, $2, $3) }
+	| E_ALIAS E_STRPLUS Alias_convert_opt
+		{ $$ := ast_factory.new_alias_plus_name ($1, $2, $3) }
+	| E_ALIAS E_STRMINUS Alias_convert_opt
+		{ $$ := ast_factory.new_alias_minus_name ($1, $2, $3) }
+	| E_ALIAS E_STRSTAR Alias_convert_opt
+		{ $$ := ast_factory.new_alias_times_name ($1, $2, $3) }
+	| E_ALIAS E_STRSLASH Alias_convert_opt
+		{ $$ := ast_factory.new_alias_divide_name ($1, $2, $3) }
+	| E_ALIAS E_STRDIV Alias_convert_opt
+		{ $$ := ast_factory.new_alias_div_name ($1, $2, $3) }
+	| E_ALIAS E_STRMOD Alias_convert_opt
+		{ $$ := ast_factory.new_alias_mod_name ($1, $2, $3) }
+	| E_ALIAS E_STRPOWER Alias_convert_opt
+		{ $$ := ast_factory.new_alias_power_name ($1, $2, $3) }
+	| E_ALIAS E_STRLT Alias_convert_opt
+		{ $$ := ast_factory.new_alias_lt_name ($1, $2, $3) }
+	| E_ALIAS E_STRLE Alias_convert_opt
+		{ $$ := ast_factory.new_alias_le_name ($1, $2, $3) }
+	| E_ALIAS E_STRGT Alias_convert_opt
+		{ $$ := ast_factory.new_alias_gt_name ($1, $2, $3) }
+	| E_ALIAS E_STRGE Alias_convert_opt
+		{ $$ := ast_factory.new_alias_ge_name ($1, $2, $3) }
+	| E_ALIAS E_STRAND Alias_convert_opt
+		{ $$ := ast_factory.new_alias_and_name ($1, $2, $3) }
+	| E_ALIAS E_STRANDTHEN Alias_convert_opt
+		{ $$ := ast_factory.new_alias_and_then_name ($1, $2, $3) }
+	| E_ALIAS E_STROR Alias_convert_opt
+		{ $$ := ast_factory.new_alias_or_name ($1, $2, $3) }
+	| E_ALIAS E_STRORELSE Alias_convert_opt
+		{ $$ := ast_factory.new_alias_or_else_name ($1, $2, $3) }
+	| E_ALIAS E_STRIMPLIES Alias_convert_opt
+		{ $$ := ast_factory.new_alias_implies_name ($1, $2, $3) }
+	| E_ALIAS E_STRXOR Alias_convert_opt
+		{ $$ := ast_factory.new_alias_xor_name ($1, $2, $3) }
+	| E_ALIAS E_STRDOTDOT Alias_convert_opt
+		{ $$ := ast_factory.new_alias_dotdot_name ($1, $2, $3) }
+	| E_ALIAS E_STRFREEOP Alias_convert_opt
+		{ $$ := ast_factory.new_alias_free_name ($1, $2, $3) }
+	| E_ALIAS E_STRBRACKET Alias_convert_opt
+		{ $$ := ast_factory.new_alias_bracket_name ($1, $2, $3) }
+	| E_ALIAS E_STRPARENTHESIS Alias_convert_opt
+		{ $$ := ast_factory.new_alias_parenthesis_name ($1, $2, $3) }
+	| E_ALIAS E_STRING Alias_convert_opt
+		{ $$ := new_invalid_alias_name ($1, $2, $3) }
 	;
 
+Alias_convert_opt: -- Empty
+		{ $$ := Void }
+	| E_CONVERT
+		{ $$ := $1 }
+	;
+	
 ------------------------------------------------------------------------------------
 
 Feature_formal_arguments: Formal_arguments

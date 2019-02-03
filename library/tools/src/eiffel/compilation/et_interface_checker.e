@@ -452,6 +452,12 @@ feature {NONE} -- Constraint renaming validity
 					set_fatal_error (current_class)
 					error_handler.report_giaaa_error
 				end
+				if l_alias_name /= Void and then l_alias_name.convert_keyword /= Void and then not l_alias_name.is_infix then
+						-- When the 'convert' mark is specified, the alias
+						-- should be a binary operator alias.
+					set_fatal_error (current_class)
+					error_handler.report_vfav4a_error (current_class, l_alias_name)
+				end
 				if not l_has_new_name_error then
 					new_name_rename_table.search (l_new_name)
 					if not new_name_rename_table.found then

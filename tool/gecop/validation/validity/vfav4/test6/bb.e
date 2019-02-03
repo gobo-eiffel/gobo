@@ -1,4 +1,4 @@
-class BB [G -> CC rename f as h alias "+" convert end]
+class BB [G -> CC rename f as g alias "+" convert end]
 
 feature
 
