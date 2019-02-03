@@ -23,7 +23,6 @@ inherit
 			renames,
 			is_formal_parameter
 		redefine
-			type,
 			named_query,
 			named_procedure
 		end
