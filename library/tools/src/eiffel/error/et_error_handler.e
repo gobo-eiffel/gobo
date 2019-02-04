@@ -1949,7 +1949,6 @@ feature -- Validity errors
 		do
 			if reportable_vdrs4_error (a_class) then
 				create an_error.make_vdrs4b (a_class, a_deferred, an_effective)
-				an_error.set_ise_reported (False)
 				report_validity_error (an_error)
 			end
 		end

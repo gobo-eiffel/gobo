@@ -102,6 +102,8 @@
 * Fixed bug where a formal generic parameter `G` was not assumed to
   conform to `detachable ANY` when there was a cycle in the generic
   constraints (e.g. `[G -> H, H -> G]`).
+* Took into account the fact that ISE Eiffel now reports VDRS-4 errors
+  as of version 19.01.
 
 ### Gobo Eiffel XPath Library
 

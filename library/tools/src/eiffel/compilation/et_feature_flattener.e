@@ -35,6 +35,9 @@ inherit
 	ET_SHARED_CLASS_NAME_TESTER
 		export {NONE} all end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 create
 
 	make
@@ -1305,7 +1308,10 @@ feature {NONE} -- Feature adaptation validity
 								-- Error: No need to 'redefine' to redeclare
 								-- a deferred feature to an effective feature.
 								-- (Not considered as a fatal error by gelint.)
-							error_handler.report_vdrs4b_error (current_class, a_parent_feature, a_redeclared_feature)
+							if not system_processor.older_ise_version (ise_19_01_0) then
+									-- ISE Eiffel did not report this error before 19.01.
+								error_handler.report_vdrs4b_error (current_class, a_parent_feature, a_redeclared_feature)
+							end
 						end
 					end
 				end

@@ -323,6 +323,16 @@ feature -- Access
 			ise_17_11_0_not_void: Result /= Void
 		end
 
+	ise_19_01_0: UT_VERSION
+			-- ISE 19.01.0
+			-- First release reporting VDRS-4 errors.
+		once
+			create Result.make (19, 01, 0, 0)
+		ensure
+			instance_free: class
+			ise_19_01_0_not_void: Result /= Void
+		end
+
 	ise_latest: UT_VERSION
 			-- After the latest release of ISE
 		once
