@@ -30,6 +30,7 @@
   `gelint` when they are the same.
 * Made the validation suite browsable with the GitHub Markdown facilities.
 * Added tests for the validity rules `VGFG` and `VGGC`.
+* Added tests for the validity rule `VFAV`.
 
 ### gelex
 

@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+
+Error code: VFAV(2)
+
+Error: alias clause lists a bracket alias for a feature that is not a query
+  with at least one argument or class has other feature with bracket alias.
+What to do: ensure that class has at most one feature with bracket alias
+  and that this feature is a query with at least one argument.
+
+Class: AA
+Feature name: f
+Parent: BB
+
+-------------------------------------------------------------------------------

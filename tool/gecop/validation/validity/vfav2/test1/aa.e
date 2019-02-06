@@ -7,13 +7,12 @@ create
 feature
 
 	make
-		local
-			b: BB [CC]
-			c: CC
 		do
-			create b
-			create c
-			b.f (c)
+			f
+		end
+		
+	f alias "[]"
+		do
 		end
 
 end

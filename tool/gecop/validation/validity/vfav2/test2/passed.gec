@@ -1,2 +1,2 @@
-[VFAV-2] class BB (1,39): `g' has a Bracket alias `alias "[]"' but `f' in CC is not a query with at least one argument.
+[VFAV-2] class AA (16,10): feature `f' has a Bracket alias `alias "[]"' but is not a query with at least one argument.
 ----

@@ -1,8 +1,0 @@
-****** Fatal Error : Feature found is a procedure.
-Line 5 column 2 in CC (c.e) :
-	f
-	^
-Line 14 column 13 in AA (a.e) :
-			print (b + b)
-			         ^
-------

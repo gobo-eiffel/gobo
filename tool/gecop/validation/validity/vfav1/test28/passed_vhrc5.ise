@@ -1,0 +1,23 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 6 in class BB
+Use the alias form of the infix routine.
+
+    CC
+        rename f as infix "+"
+--------------------^
+    end
+
+-------------------------------------------------------------------------------
+
+Error code: VHRC(5)
+
+Error: invalid renaming into Infix
+What to do: use a non-Infix new name, or make sure renamed feature is
+  a function with exactly one argument.
+
+Class: BB
+Feature name: f
+Parent: CC
+
+-------------------------------------------------------------------------------

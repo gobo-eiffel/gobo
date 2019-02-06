@@ -1,0 +1,2 @@
+[VFAV-1] class BB (1,39): `g' has an Operator alias `alias "+"' which can be either unary or binary, but `f' in CC is not a query with no argument or exactly one argument.
+----

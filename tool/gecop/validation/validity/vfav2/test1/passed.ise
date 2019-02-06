@@ -7,10 +7,11 @@ Error: alias clause lists a bracket alias for a feature that is not a query
 What to do: ensure that class has at most one feature with bracket alias
   and that this feature is a query with at least one argument.
 
-Class: BB [G -> CC rename f as g alias "[]" end]
-Feature name: g
-Line: 1
-  ->class BB [G -> CC rename f as g alias "[]" end]
-  
+Class: AA
+Feature name: f
+Line: 14
+      
+->  f alias "[]"
+      do
 
 -------------------------------------------------------------------------------

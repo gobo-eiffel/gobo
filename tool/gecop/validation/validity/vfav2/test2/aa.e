@@ -8,12 +8,13 @@ feature
 
 	make
 		local
-			b: BB [CC]
-			c: CC
+			b: BOOLEAN
 		do
-			create b
-			create c
-			b.f (c)
+			b := f
+		end
+		
+	f alias "[]": BOOLEAN
+		do
 		end
 
 end

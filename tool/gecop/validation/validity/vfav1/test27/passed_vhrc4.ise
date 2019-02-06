@@ -1,0 +1,23 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 7 in class BB
+Use the alias form of the prefix routine.
+
+        rename
+            f as prefix "+"
+-----------------^
+        end
+
+-------------------------------------------------------------------------------
+
+Error code: VHRC(4)
+
+Error: invalid renaming into Prefix
+What to do: use a non-Prefix new name, or make sure renamed feature is
+  a function with no argument.
+
+Class: BB
+Feature name: f
+Parent: CC
+
+-------------------------------------------------------------------------------

@@ -5,7 +5,7 @@ note
 		"Eiffel feature adaptation resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -132,18 +132,18 @@ feature {NONE} -- Feature recording
 					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_query)
 				else
 					a_features.put_last_new (l_query, a_name)
-					if current_system.alias_transition_mode then
-						l_alias_name := l_query.alias_name
-						if l_alias_name /= Void then
-							if l_query.is_infixable then
-								if l_alias_name.is_infixable then
-									l_alias_name.set_infix
-								end
-							elseif l_query.is_prefixable then
-								if l_alias_name.is_prefixable then
-									l_alias_name.set_prefix
-								end
+					l_alias_name := l_query.alias_name
+					if l_alias_name /= Void then
+						if l_query.is_infixable then
+							if l_alias_name.is_infixable then
+								l_alias_name.set_infix
 							end
+						elseif l_query.is_prefixable then
+							if l_alias_name.is_prefixable then
+								l_alias_name.set_prefix
+							end
+						end
+						if current_system.alias_transition_mode then
 							if not alias_mapping.has (l_alias_name) then
 								alias_mapping.force_last_new (a_name, l_alias_name)
 							else
@@ -341,7 +341,13 @@ feature {NONE} -- Feature recording
 					if not a_features.found and then l_alias_name /= Void then
 						alias_mapping.search (l_alias_name)
 						if alias_mapping.found then
-							a_features.search (alias_mapping.found_item)
+							if {KL_ANY_ROUTINES}.same_objects (l_alias_name, a_name) = not {KL_ANY_ROUTINES}.same_objects (alias_mapping.found_key, alias_mapping.found_item) then
+									-- The test above is trying to express the following:
+									--     'infix "+"' matches 'f alias "+"'
+									--     'f alias "+"' matches 'infix "+"'
+									--     'f alias "+"' does not match 'g alias "+"'
+								a_features.search (alias_mapping.found_item)
+							end
 						end
 					end
 				end

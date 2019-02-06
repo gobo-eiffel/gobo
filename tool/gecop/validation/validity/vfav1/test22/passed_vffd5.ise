@@ -1,0 +1,21 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 5 in class BB
+Use the alias form of the prefix routine.
+
+    prefix "+" (i, j: INTEGER): INTEGER
+----^
+        do
+
+-------------------------------------------------------------------------------
+
+Error code: VFFD(5)
+
+Error: incorrect signature for Prefix feature. 
+What to do: make sure that the Declaration_body describes an attribute
+  or a function with no argument, or choose a non-Prefix name.
+
+Class: BB
+Feature name: prefix "+"
+
+-------------------------------------------------------------------------------

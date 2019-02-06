@@ -1,0 +1,21 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 5 in class BB
+Use the alias form of the infix routine.
+
+    infix "+" (i, j: INTEGER): INTEGER
+----^
+        do
+
+-------------------------------------------------------------------------------
+
+Error code: VFFD(6)
+
+Error: incorrect signature for Infix feature. 
+What to do: make sure that the Declaration_body describes a function
+  with exactly one argument, or choose a non-Infix name.
+
+Class: BB
+Feature name: infix "+"
+
+-------------------------------------------------------------------------------
