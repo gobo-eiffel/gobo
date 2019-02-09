@@ -727,6 +727,26 @@ feature -- Access
 			end
 		end
 
+	type_with_constraint_index (a_constraint_index: INTEGER): ET_FORMAL_PARAMETER_TYPE
+			-- Same as current type but with `a_constraint_index'.
+			-- May return the `Current' object if it has the same constraint index.
+		require
+			a_constraint_index_positive: a_constraint_index >= 1
+		do
+			if a_constraint_index = constraint_index then
+				Result := Current
+			else
+				create Result.make_with_constraint_index (type_mark, name, index, a_constraint_index, implementation_class)
+			end
+		ensure
+			type_with_constraint_index_not_void: Result /= Void
+			type_mark_set: Result.type_mark = type_mark
+			name_set: Result.name = name
+			index_set: Result.index = index
+			constraint_index_set: Result.constraint_index = a_constraint_index
+			implementation_class_set: Result.implementation_class = implementation_class
+		end
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code

@@ -5,7 +5,7 @@ note
 		"Eiffel creation expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,18 +19,18 @@ inherit
 			is_never_void
 		end
 
+	ET_CREATION_COMPONENT
+		redefine
+			type
+		end
+
 feature -- Access
 
 	type: ET_TYPE
 			-- Creation type
 		deferred
-		ensure
+		ensure then
 			type_not_void: Result /= Void
-		end
-
-	creation_call: detachable ET_CREATION_CALL
-			-- Call to creation procedure
-		deferred
 		end
 
 	name: detachable ET_FEATURE_NAME

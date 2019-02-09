@@ -1275,7 +1275,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE)
+	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: detachable ET_PROCEDURE)
 			-- Report that a creation expression, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -1289,22 +1289,24 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_creation_type := current_dynamic_system.dynamic_type (a_creation_type, current_type)
 				l_dynamic_creation_primary_type := l_dynamic_creation_type.primary_type
-				l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
-				l_dynamic_procedure.set_creation (True)
 				mark_type_alive (l_dynamic_creation_primary_type)
-				if attached an_expression.arguments as l_actuals then
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						l_actual := l_actuals.actual_argument (i)
-						propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
-						i := i + 1
+				if a_procedure /= Void then
+					l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
+					l_dynamic_procedure.set_creation (True)
+					if attached an_expression.arguments as l_actuals then
+						nb := l_actuals.count
+						from i := 1 until i > nb loop
+							l_actual := l_actuals.actual_argument (i)
+							propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
+							i := i + 1
+						end
 					end
 				end
 				set_dynamic_type_set (l_dynamic_creation_type, an_expression)
 			end
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE)
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: detachable ET_PROCEDURE)
 			-- Report that a creation instruction, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -1318,15 +1320,17 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_creation_type := current_dynamic_system.dynamic_type (a_creation_type, current_type)
 				l_dynamic_creation_primary_type := l_dynamic_creation_type.primary_type
-				l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
-				l_dynamic_procedure.set_creation (True)
 				mark_type_alive (l_dynamic_creation_primary_type)
-				if attached an_instruction.arguments as l_actuals then
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						l_actual := l_actuals.actual_argument (i)
-						propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
-						i := i + 1
+				if a_procedure /= Void then
+					l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
+					l_dynamic_procedure.set_creation (True)
+					if attached an_instruction.arguments as l_actuals then
+						nb := l_actuals.count
+						from i := 1 until i > nb loop
+							l_actual := l_actuals.actual_argument (i)
+							propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
+							i := i + 1
+						end
 					end
 				end
 				propagate_creation_dynamic_type (l_dynamic_creation_type, an_instruction)

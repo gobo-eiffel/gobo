@@ -5,7 +5,7 @@ note
 		"Eiffel creation instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,8 @@ inherit
 		redefine
 			reset
 		end
+
+	ET_CREATION_COMPONENT
 
 feature -- Initialization
 
@@ -37,11 +39,6 @@ feature -- Access
 
 	target: ET_WRITABLE
 			-- Target of the creation
-
-	type: detachable ET_TYPE
-			-- Creation type
-		deferred
-		end
 
 	creation_call: detachable ET_QUALIFIED_CALL
 			-- Call to creation procedure

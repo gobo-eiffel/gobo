@@ -114,15 +114,13 @@ feature -- Validity checking
 			a_creator: detachable ET_CONSTRAINT_CREATOR
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_creation_procedure: detachable ET_PROCEDURE
 			an_index: INTEGER
 			a_formal_parameters: detachable ET_FORMAL_PARAMETER_LIST
 			a_formal_parameter: detachable ET_FORMAL_PARAMETER
 			a_formal_creator: detachable ET_CONSTRAINT_CREATOR
-			a_formal_type: detachable ET_FORMAL_PARAMETER_TYPE
-			has_formal_type_error: BOOLEAN
 			i, nb: INTEGER
-			j, nb2: INTEGER
+			j, nb_creators: INTEGER
+			k, nb_parameters: INTEGER
 			had_error: BOOLEAN
 			old_context: ET_TYPE_CONTEXT
 			old_class: ET_CLASS
@@ -155,46 +153,55 @@ feature -- Validity checking
 						a_formal := a_formals.formal_parameter (i)
 						a_creator := a_formal.creation_procedures
 						if a_creator /= Void and then not a_creator.is_empty then
-							a_base_class := a_named_actual.base_class (current_context)
-							if attached {ET_FORMAL_PARAMETER_TYPE} a_named_actual as l_attached_formal_type then
-								a_formal_type := l_attached_formal_type
+							nb_creators := a_creator.count
+							if attached {ET_FORMAL_PARAMETER_TYPE} a_named_actual as a_formal_type then
 								an_index := a_formal_type.index
 								if a_formal_parameters = Void or else an_index > a_formal_parameters.count then
 										-- Internal error: `a_formal_parameter' is supposed to be
 										-- a formal parameter of `current_context''s base class.
-									has_formal_type_error := True
 									set_fatal_error
 									error_handler.report_giaaa_error
 								else
-									has_formal_type_error := False
 									a_formal_parameter := a_formal_parameters.formal_parameter (an_index)
 									a_formal_creator := a_formal_parameter.creation_procedures
-								end
-							end
-							nb2 := a_creator.count
-							if nb2 > 0 then
-								a_base_class.process (system_processor.interface_checker)
-								if not a_base_class.interface_checked or else a_base_class.has_interface_error then
-									set_fatal_error
-								else
-									from j := 1 until j > nb2 loop
+									from j := 1 until j > nb_creators loop
 										a_name := a_creator.feature_name (j)
 										a_seed := a_name.seed
-										a_creation_procedure := a_base_class.seeded_procedure (a_seed)
-										if a_creation_procedure = Void then
+										if attached a_name.target_type as l_target_type then
+											a_base_class := l_target_type.base_class (current_context)
+										else
+											a_base_class := a_formal_type.base_class (current_context)
+										end
+										a_base_class.process (system_processor.interface_checker)
+										if not a_base_class.interface_checked_successfully then
+											set_fatal_error
+										elseif not attached a_base_class.seeded_procedure (a_seed) as l_creation_procedure then
 												-- Internal error: `a_type' is supposed to be a valid type.
 											set_fatal_error
 											error_handler.report_giaaa_error
-										elseif a_formal_type /= Void then
-											if not has_formal_type_error and a_formal_parameter /= Void then
-												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
-													set_fatal_error
-													if not class_interface_error_only then
-														error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
-													end
-												end
+										elseif a_formal_creator = Void or else not a_formal_creator.has_feature (l_creation_procedure) then
+											set_fatal_error
+											if not class_interface_error_only then
+												error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
 											end
-										elseif not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, system_processor) then
+										end
+										j := j + 1
+									end
+								end
+							else
+								a_base_class := a_named_actual.base_class (current_context)
+								a_base_class.process (system_processor.interface_checker)
+								if not a_base_class.interface_checked_successfully then
+									set_fatal_error
+								else
+									from j := 1 until j > nb_creators loop
+										a_name := a_creator.feature_name (j)
+										a_seed := a_name.seed
+										if not attached a_base_class.seeded_procedure (a_seed) as l_creation_procedure then
+												-- Internal error: `a_type' is supposed to be a valid type.
+											set_fatal_error
+											error_handler.report_giaaa_error
+										elseif not l_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, system_processor) then
 											if system_processor.is_ise and then (current_class.is_deferred and an_actual.is_like_current) then
 												-- ISE accepts code of the form:
 												--
@@ -255,7 +262,7 @@ feature -- Validity checking
 												-- which was nevertheless not more unsafe than the other cases above.
 											elseif
 												system_processor.older_ise_version (ise_6_0_6_7358) and then
-												(a_base_class.is_deferred and a_creation_procedure.has_seed (current_system.default_create_seed))
+												(a_base_class.is_deferred and l_creation_procedure.has_seed (current_system.default_create_seed))
 											then
 												-- ISE started to report this VTCG error with version 6.0.6.7358.
 												-- However we report it anyway, except when the creation procedure
@@ -273,30 +280,48 @@ feature -- Validity checking
 										j := j + 1
 									end
 								end
-							end
-								-- Since the corresponding formal generic parameter
-								-- has creation procedures associated with it, it
-								-- is possible to create instances of `an_actual'
-								-- through that means. So we need to check recursively
-								-- its validity as a creation type.
-							if attached {ET_CLASS_TYPE} a_named_actual as l_class_type then
-								had_error := has_fatal_error
-								check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
-								if had_error then
-									set_fatal_error
+									-- Since the corresponding formal generic parameter
+									-- has creation procedures associated with it, it
+									-- is possible to create instances of `an_actual'
+									-- through that means. So we need to check recursively
+									-- its validity as a creation type.
+								if attached {ET_CLASS_TYPE} a_named_actual as l_class_type then
+									had_error := has_fatal_error
+									check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
+									if had_error then
+										set_fatal_error
+									end
+								elseif attached {ET_TUPLE_TYPE} a_named_actual as l_tuple_type then
+										-- This covers the case where we have:
+										--    FOO [TUPLE [MY_EXPANDED [BAR]]
+										-- and FOO was declared as:
+										--    class FOO [G -> TUPLE create default_create end]
+									if attached l_tuple_type.actual_parameters as a_parameters then
+										nb_parameters := a_parameters.count
+										from k := 1 until k > nb_parameters loop
+											if attached {ET_CLASS_TYPE} a_parameters.type (k) as l_class_type and then l_class_type.is_expanded then
+													-- If the actual parameter is expanded, then the creation of an instance
+													-- of that type will be implicit, so we need to check recursively
+													-- its validity as a creation type.
+												had_error := has_fatal_error
+												check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
+												if had_error then
+													set_fatal_error
+												end
+											end
+											k := k + 1
+										end
+									end
 								end
 							end
-						else
-								-- We need to check whether `an_actual' is expanded.
-								-- In that case the creation of an instance of that
-								-- type will be implicit, so we need to check recursively
+						elseif attached {ET_CLASS_TYPE} a_named_actual as l_class_type and then l_class_type.is_expanded then
+								-- If `a_named_actual' is expanded, then the creation of an instance
+								-- of that type will be implicit, so we need to check recursively
 								-- its validity as a creation type.
-							if attached {ET_CLASS_TYPE} a_named_actual as l_class_type and then l_class_type.is_expanded then
-								had_error := has_fatal_error
-								check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
-								if had_error then
-									set_fatal_error
-								end
+							had_error := has_fatal_error
+							check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
+							if had_error then
+								set_fatal_error
 							end
 						end
 						i := i + 1

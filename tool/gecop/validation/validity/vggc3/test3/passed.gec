@@ -1,0 +1,4 @@
+[VGGC-3] class BB (1,32): feature `make' in CC appearing as creator `make' in the generic constraint is not a procedure.
+----
+[VGGC-3] class BB (1,32): features `make' in '[attached] CC' and `make' in '[attached] DD' appear both as creator `make' in the generic constraint.
+----

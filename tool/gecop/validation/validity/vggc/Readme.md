@@ -11,7 +11,7 @@ A *Constraint* part appearing in the *Formal\_generics* part of a class `C` is v
 
 1. [\[tests\]](../vggc1) `T` involves no anchored type.
 2. [\[tests\]](../vggc2) If a *Renaming* clause `rename rename_list end` is present, a class definition of the form `class NEW inherit BT rename rename_list end` (preceded by `deferred` if the base class of `T` is deferred), where `BT` is the base class of `T`, would be valid.
-3. \[tests\] Every name listed in the *Constraint\_creators* is the generically constrained name of a procedure `p` of one of the corresponding constraining types.
+3. [\[tests\]](../vggc3) Every name listed in the *Constraint\_creators* is the generically constrained name of a procedure `p` of one of the corresponding constraining types.
 
 ### ECMA 367-3 (working version 3-36), 8.12.12 page 71
 
@@ -31,3 +31,5 @@ the following conditions for every *Single\_constraint* listing a type `T` in it
 * Note that condition 2 seems to reject the case where `BT` is frozen (we cannot inherit from frozen class), but it is accepted by ISE Eiffel (as of 18.11.10.2592 and after) and Gobo Eiffel.
 * Note that condition 2 seems to reject the case where `BT` is a *Tuple\_type* (we can only inherit from *Class\_type*s, not from *Tuple\_type*s), but it is accepted by ISE Eiffel (as of 18.11.10.2592 and after) and Gobo Eiffel.
 * Note that we cannot have a `rename` clause if the base type of `BT` is `NONE`. This is a consequence of condition 2 because inheriting from `NONE` would introduce an inheritance graph cycle, which is not valid.
+* The condition 3 has mysteriously been removed from ECMA 367-3. This is a mistake as the names listed in the *Constraint\_creators* need to be found somewhere.
+* ISE Eiffel (as of 18.11.10.2592 and after) and Gobo Eiffel are stricter for condition 3, replacing *one* with *exactly one*. In other words, we cannot have two constraints with such generically constrained name (even if it is the same procedure, unless the two constraints are actually the same type with the same attachment mark).

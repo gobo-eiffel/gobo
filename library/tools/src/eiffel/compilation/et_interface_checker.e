@@ -618,45 +618,86 @@ feature {NONE} -- Constraint creation validity
 		require
 			a_formal_not_void: a_formal /= Void
 		local
+			l_constraint_base_types: ET_CONSTRAINT_BASE_TYPES
 			a_name, other_name: ET_FEATURE_NAME
 			a_class: ET_CLASS
-			i, j, nb: INTEGER
+			i, j: INTEGER
+			nb_constaints: INTEGER
+			nb_creators: INTEGER
+			l_has_flattening_error: BOOLEAN
+			l_constraint: ET_BASE_TYPE_CONSTRAINT
+			l_found_constraint: detachable ET_BASE_TYPE_CONSTRAINT
+			l_found_feature: detachable ET_FEATURE
 		do
 			if attached a_formal.creation_procedures as a_creator then
-				a_class := a_formal.constraint_base_types.type_constraint (1).type.base_class
-					-- Build the feature table.
-				a_class.process (system_processor.feature_flattener)
-				if not a_class.features_flattened or else a_class.has_flattening_error then
-					set_fatal_error (current_class)
-				else
-					nb := a_creator.count
-					from i := 1 until i > nb loop
-						a_name := a_creator.feature_name (i)
-						from j := 1 until j >= i loop
-							other_name := a_creator.feature_name (j)
-							if other_name.same_feature_name (a_name) then
-									-- Feature name appears twice in Creation clause.
-									-- This is not considered as a fatal error.
-								error_handler.report_vgcp3c_error (current_class, other_name, a_name)
+				l_constraint_base_types := a_formal.constraint_base_types
+					-- Build the feature tables.
+				nb_constaints := l_constraint_base_types.count
+				from i := 1 until i > nb_constaints loop
+					a_class := l_constraint_base_types.type_constraint (i).base_class
+					a_class.process (system_processor.feature_flattener)
+					if not a_class.features_flattened_successfully then
+						set_fatal_error (current_class)
+						l_has_flattening_error := True
+					end
+					i := i + 1
+				end
+				nb_creators := a_creator.count
+				from i := 1 until i > nb_creators loop
+					a_name := a_creator.feature_name (i)
+					from j := 1 until j >= i loop
+						other_name := a_creator.feature_name (j)
+						if other_name.same_feature_name (a_name) then
+								-- Feature name appears twice in Creation clause.
+								-- This is not considered as a fatal error.
+							error_handler.report_vgcp3c_error (current_class, other_name, a_name)
+						end
+						j := j + 1
+					end
+					if l_has_flattening_error then
+						-- We cannot go further.
+					else
+						l_found_constraint := Void
+						l_found_feature := Void
+						from j := 1 until j > nb_constaints loop
+							l_constraint := l_constraint_base_types.type_constraint (j)
+							if attached l_constraint.named_feature (a_name) as l_feature then
+								if l_found_constraint /= Void and l_found_feature /= Void then
+									if l_found_feature /= l_feature or not l_found_constraint.type.same_named_type (l_constraint.type, current_class, current_class) then
+											-- This is not considered as an error if this is the same feature and
+											-- the constraint types are the same (with the same type marks).
+										set_fatal_error (current_class)
+										error_handler.report_vggc3d_error (current_class, a_name, l_found_feature, l_found_constraint, l_feature, l_constraint)
+									end
+								else
+									l_found_constraint := l_constraint
+									l_found_feature := l_feature
+									if l_feature.is_procedure then
+											-- We found a creation procedure.
+										a_name.set_seed (l_feature.first_seed)
+										if nb_constaints > 1 then
+											a_name.set_target_type (a_formal.type_with_constraint_index (j))
+										end
+									else
+											-- This feature is not a procedure.
+										set_fatal_error (current_class)
+										error_handler.report_vggc3c_error (current_class, a_name, l_feature, l_found_constraint.base_class)
+									end
+								end
 							end
 							j := j + 1
 						end
-						if attached a_class.named_procedure (a_name) as a_procedure then
-								-- We finally got a valid creation
-								-- procedure. Record its seed.
-							a_name.set_seed (a_procedure.first_seed)
-						elseif attached a_class.named_query (a_name) as a_query then
-								-- This feature is not a procedure.
+						if l_found_constraint = Void then
+								-- This name is not the final name of a feature in any of the constraints.
 							set_fatal_error (current_class)
-							error_handler.report_vtgc0b_error (current_class, a_name, a_query, a_class)
-						else
-								-- This name is not the final name of
-								-- a feature on `current_class'.
-							set_fatal_error (current_class)
-							error_handler.report_vtgc0a_error (current_class, a_name, a_class)
+							if l_constraint_base_types.count = 1 then
+								error_handler.report_vggc3a_error (current_class, a_name, l_constraint_base_types.type_constraint (1).base_class)
+							else
+								error_handler.report_vggc3b_error (current_class, a_name, l_constraint_base_types)
+							end
 						end
-						i := i + 1
 					end
+					i := i + 1
 				end
 			end
 		end

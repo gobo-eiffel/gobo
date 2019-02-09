@@ -142,17 +142,13 @@ create
 	make_vffd7a,
 	make_vffd7b,
 	make_vgcc1a,
-	make_vgcc1b,
 	make_vgcc3a,
 	make_vgcc5a,
-	make_vgcc5b,
 	make_vgcc6a,
 	make_vgcc6b,
 	make_vgcc6c,
 	make_vgcc6d,
-	make_vgcc6e,
 	make_vgcc8a,
-	make_vgcc8b,
 	make_vgcp1a,
 	make_vgcp2a,
 	make_vgcp2b,
@@ -166,6 +162,10 @@ create
 	make_vggc2d,
 	make_vggc2e,
 	make_vggc2f,
+	make_vggc3a,
+	make_vggc3b,
+	make_vggc3c,
+	make_vggc3d,
 	make_vhay0a,
 	make_vhpr1a,
 	make_vhpr1b,
@@ -254,8 +254,6 @@ create
 	make_vtcg4b,
 	make_vtct0a,
 	make_vtct0b,
-	make_vtgc0a,
-	make_vtgc0b,
 	make_vtug1a,
 	make_vtug2a,
 	make_vuar1a,
@@ -5829,12 +5827,12 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
-	make_vgcc1a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS)
-			-- Create a new VGCC-1 error: the creation expression `a_creation',
-			-- appearing in `a_class_impl' and viewed from one
-			-- of its descendants `a_class' (possibly iteself), has no
-			-- Creation_call part but the base class `a_target' of the
-			-- creation type is deferred.
+	make_vgcc1a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_COMPONENT; a_target: ET_CLASS)
+			-- Create a new VGCC-1 error: the creation instruction or
+			-- expression `a_creation', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly
+			-- itself), has no Creation_call part but the base class
+			-- `a_target' of the creation type is deferred.
 			--
 			-- ECMA 367-2: p.109
 		require
@@ -5850,51 +5848,6 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc1a_template_code)
 			etl_code := vgcc1_etl_code
 			default_template := default_message_template (vgcc1a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_target.upper_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = creation type base class name
-		end
-
-	make_vgcc1b (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS)
-			-- Create a new VGCC-1 error: the creation instruction `a_creation',
-			-- appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' (possibly itself), has no Creation_call
-			-- part but the base class `a_target' of the creation type
-			-- is deferred.
-			--
-			-- ECMA 367-2: p.109
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_creation_not_void: a_creation /= Void
-			a_target_not_void: a_target /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_creation.position
-			code := template_code (vgcc1b_template_code)
-			etl_code := vgcc1_etl_code
-			default_template := default_message_template (vgcc1b_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -5969,12 +5922,12 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = target type (named type)
 		end
 
-	make_vgcc5a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS)
-			-- Create a new VGCC-5 error: the creation expression `a_creation',
-			-- appearing in `a_class_impl' and viewed from one
-			-- of its descendants `a_class' (possibly iteself), has no
-			-- Creation_call part but the base class `a_target' of the
-			-- creation type has a Creators part.
+	make_vgcc5a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_COMPONENT; a_target: ET_CLASS)
+			-- Create a new VGCC-5 error: the creation instruction or
+			-- expression `a_creation', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly
+			-- itself), has no Creation_call part but the base class
+			-- `a_target' of the creation type has a Creators part.
 			--
 			-- ETL2: p.286
 		require
@@ -5990,51 +5943,6 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc5a_template_code)
 			etl_code := vgcc5_etl_code
 			default_template := default_message_template (vgcc5a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_target.upper_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = creation type base class name
-		end
-
-	make_vgcc5b (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS)
-			-- Create a new VGCC-5 error: the creation instruction `a_creation',
-			-- appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' (possibly itself), has no Creation_call
-			-- part but the base class `a_target' of the creation type
-			-- has a Creators part.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_creation_not_void: a_creation /= Void
-			a_target_not_void: a_target /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_creation.position
-			code := template_code (vgcc5b_template_code)
-			etl_code := vgcc5_etl_code
-			default_template := default_message_template (vgcc5b_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -6152,9 +6060,9 @@ feature {NONE} -- Initialization
 
 	make_vgcc6c (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself),
-			-- is not exported for creation to `a_class'.
+			-- a creation instruction or expression with creation procedure name `a_name'
+			-- in `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself), is not exported for creation to `a_class'.
 			--
 			-- ETL2: p.286
 		require
@@ -6245,60 +6153,12 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = base class of creation type
 		end
 
-	make_vgcc6e (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
-			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself),
-			-- is not exported for creation to `a_class'.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vgcc6e_template_code)
-			etl_code := vgcc6_etl_code
-			default_template := default_message_template (vgcc6e_default_template)
-			create parameters.make_filled (empty_string, 1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_feature.lower_name, 8)
-			parameters.put (a_target.upper_name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the creation call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of creation type
-		end
-
 	make_vgcc8a (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER)
 			-- Create a new VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), is not
-			-- listed as creation procedure for the formal parameter `a_formal' in `a_class'.
+			-- a creation instruction or expression with creation procedure name `a_name'
+			-- in `a_class_impl' and viewed from one of its descendants `a_class' (possibly
+			-- itself), is not listed as creation procedure for the formal parameter
+			-- `a_formal' in `a_class'.
 			--
 			-- In ISE Eiffel only.
 		require
@@ -6316,58 +6176,6 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc8a_template_code)
 			etl_code := vgcc8_etl_code
 			default_template := default_message_template (vgcc8a_default_template)
-			create parameters.make_filled (empty_string, 1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_feature.lower_name, 8)
-			parameters.put (a_target.upper_name, 9)
-			parameters.put (a_formal.index.out, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the creation call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of creation type
-			-- dollar10: $10 = index of formal parameter in class $5
-		end
-
-	make_vgcc8b (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER)
-			-- Create a new VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), is not
-			-- listed as creation procedure for the formal parameter `a_formal' in `a_class'.
-			--
-			-- In ISE Eiffel only.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			a_formal_not_void: a_formal /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vgcc8b_template_code)
-			etl_code := vgcc8_etl_code
-			default_template := default_message_template (vgcc8b_default_template)
 			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -6954,6 +6762,201 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
 			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc3a (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS)
+			-- Create a new VGGC-3 error: creation procedure name `cp'
+			-- is not the final name of a feature in the base class
+			-- `a_constraint' of a generic constraint in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			a_constraint_not_void: a_constraint /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := cp.position
+			code := template_code (vggc3a_template_code)
+			etl_code := vggc3_etl_code
+			default_template := default_message_template (vggc3a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (cp.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = constraint base class name
+		end
+
+	make_vggc3b (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraints: ET_CONSTRAINT_BASE_TYPES)
+			-- Create a new VGGC-3 error: creation procedure name `cp'
+			-- is not the final name of a feature in the base class of
+			-- any of the generic constraints `a_constraints' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			a_constraints_not_void: a_constraints /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := cp.position
+			code := template_code (vggc3b_template_code)
+			etl_code := vggc3_etl_code
+			default_template := default_message_template (vggc3b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (cp.lower_name, 7)
+			parameters.put (a_constraints.types_to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = generic constraints
+		end
+
+	make_vggc3c (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS)
+			-- Create a new VGGC-3 error: creation procedure name `cp'
+			-- is the final name (after possible renaming) of `f' in the
+			-- base class `a_constraint' of  a generic constraint in `a_class',
+			-- but `f' is not a procedure.
+			-- Note that the name of `f' in `a_constraint' may be different from `cp'
+			-- if it has been renamed in the rename clause of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f_not_void: f /= Void
+			f_not_procedure: not f.is_procedure
+			a_constraint_not_void: a_constraint /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := cp.position
+			code := template_code (vggc3c_template_code)
+			etl_code := vggc3_etl_code
+			default_template := default_message_template (vggc3c_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (cp.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			parameters.put (f.lower_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = constraint base class name
+			-- dollar9: $9 = name of feature in constraint base class
+		end
+
+	make_vggc3d (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f1: ET_FEATURE; a_constraint1: ET_BASE_TYPE_CONSTRAINT; f2: ET_FEATURE; a_constraint2: ET_BASE_TYPE_CONSTRAINT)
+			-- Create a new VGGC-3 error: creation procedure name `cp' is the final name
+			-- (after possible renaming) of a feature in the base class of both
+			-- generic constraints `a_constraint1' and `a_constraint2' in `a_class'.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint1'
+			-- may be different from `cp' if they have been renamed in the rename clause
+			--  of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := cp.position
+			code := template_code (vggc3d_template_code)
+			etl_code := vggc3_etl_code
+			default_template := default_message_template (vggc3d_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (cp.lower_name, 7)
+			parameters.put (a_constraint1.type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.type.to_text, 10)
+			parameters.put (f2.lower_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = name of feature in second constraint base class
 		end
 
 	make_vhay0a (a_class: ET_CLASS)
@@ -11080,97 +11083,6 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = type base class
-		end
-
-	make_vtgc0a (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS)
-			-- Create a new VTGC error: creation procedure name `cp'
-			-- is not the final name of a feature in the base class
-			-- `a_constraint' of a generic constraint of `a_class'.
-			--
-			-- ETL3 (4.82-00-00): p.261 (CTGC)
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			cp_not_void: cp /= Void
-			a_constraint_not_void: a_constraint /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := cp.position
-			code := template_code (vtgc0a_template_code)
-			etl_code := vtgc_etl_code
-			default_template := default_message_template (vtgc0a_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (cp.lower_name, 7)
-			parameters.put (a_constraint.upper_name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = creation procedure name
-			-- dollar8: $8 = constraint base class name
-		end
-
-	make_vtgc0b (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS)
-			-- Create a new VTGC error: creation procedure name `cp'
-			-- is not the final name of a procedure in the base class
-			-- `a_constraint' of a generic constraint of `a_class'.
-			--
-			-- ETL3 (4.82-00-00): p.261 (CTGC)
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			cp_not_void: cp /= Void
-			f_not_void: f /= Void
-			f_name: f.name.same_feature_name (cp)
-			f_not_procedure: not f.is_procedure
-			a_constraint_not_void: a_constraint /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := cp.position
-			code := template_code (vtgc0b_template_code)
-			etl_code := vtgc_etl_code
-			default_template := default_message_template (vtgc0b_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (cp.lower_name, 7)
-			parameters.put (a_constraint.upper_name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = creation procedure name
-			-- dollar8: $8 = constraint base class name
 		end
 
 	make_vtug1a (a_class: ET_CLASS; a_type: ET_CLASS_TYPE)
@@ -15403,18 +15315,14 @@ feature {NONE} -- Implementation
 	vffd4a_default_template: STRING = "deferred feature `$7' is marked as frozen."
 	vffd7a_default_template: STRING = "feature `$7' is a once funtion but its type contains an anchored type."
 	vffd7b_default_template: STRING = "feature `$7' is a once funtion but its type contains a formal generic parameter."
-	vgcc1a_default_template: STRING = "creation expression with no Creation_call part, but $7 is deferred."
-	vgcc1b_default_template: STRING = "creation instruction with no Creation_call part, but $7 is deferred."
+	vgcc1a_default_template: STRING = "creation with no Creation_call part, but $7 is deferred."
 	vgcc3a_default_template: STRING = "explicit creation type '$7' does not conform to target entity type '$8'."
-	vgcc5a_default_template: STRING = "creation expression with no Creation_call part, but $7 has a Creators part."
-	vgcc5b_default_template: STRING = "creation instruction with no Creation_call part, but $7 has a Creators part."
+	vgcc5a_default_template: STRING = "creation with no Creation_call part, but $7 has a Creators part."
 	vgcc6a_default_template: STRING = "`$7' is the final name of a once-procedure."
 	vgcc6b_default_template: STRING = "`$7' is not the final name of a procedure in class $9."
 	vgcc6c_default_template: STRING = "procedure `$8' of class $9 is not exported for creation to class $5."
 	vgcc6d_default_template: STRING = "`$7' is not the final name of a procedure in class $9."
-	vgcc6e_default_template: STRING = "procedure `$8' of class $9 is not exported for creation to class $5."
 	vgcc8a_default_template: STRING = "procedure `$8' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5."
-	vgcc8b_default_template: STRING = "procedure `$8' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5."
 	vgcp1a_default_template: STRING = "deferred class has a creation clause."
 	vgcp2a_default_template: STRING = "`$7' is not the final name of a procedure."
 	vgcp2b_default_template: STRING = "`$7' is not the final name of a procedure."
@@ -15428,6 +15336,10 @@ feature {NONE} -- Implementation
 	vggc2d_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair in generic constraint $8."
 	vggc2e_default_template: STRING = "feature name `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
 	vggc2f_default_template: STRING = "`$7' is already the final name of a feature in generic constraint $8."
+	vggc3a_default_template: STRING = "`$7' is not the final name of a procedure in generic constraint's base class $8."
+	vggc3b_default_template: STRING = "`$7' is not the final name of a procedure in the base class of any of generic constraints $8."
+	vggc3c_default_template: STRING = "feature `$9' in $8 appearing as creator `$7' in the generic constraint is not a procedure."
+	vggc3d_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' appear both as creator `$7' in the generic constraint."
 	vhay0a_default_template: STRING = "implicitly inherits from unknown class ANY."
 	vhpr1a_default_template: STRING = "inheritance cycle $7."
 	vhpr1b_default_template: STRING = "inheritance cycle when inheriting from $7."
@@ -15516,8 +15428,6 @@ feature {NONE} -- Implementation
 	vtcg4b_default_template: STRING = "the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8' as creation procedure in its constraint."
 	vtct0a_default_template: STRING = "type based on unknown class $7."
 	vtct0b_default_template: STRING = "type based on unknown class $7."
-	vtgc0a_default_template: STRING = "`$7' is not the final name of a procedure in generic constraint's base class $8."
-	vtgc0b_default_template: STRING = "`$7' is not the final name of a procedure in generic constraint's base class $8."
 	vtug1a_default_template: STRING = "type '$7' has actual generic parameters but class $8 is not generic."
 	vtug2a_default_template: STRING = "type '$7' has wrong number of actual generic parameters."
 	vuar1a_default_template: STRING = "the number of actual arguments is not the same as the number of formal arguments of feature `$8' in class $9."
@@ -15671,6 +15581,7 @@ feature {NONE} -- Implementation
 	vgcp3_etl_code: STRING = "VGCP-3"
 	vggc1_etl_code: STRING = "VGGC-1"
 	vggc2_etl_code: STRING = "VGGC-2"
+	vggc3_etl_code: STRING = "VGGC-3"
 	vhay_etl_code: STRING = "VHAY"
 	vhpr3_etl_code: STRING = "VHPR-3"
 	vhrc1_etl_code: STRING = "VHRC-1"
@@ -15719,7 +15630,6 @@ feature {NONE} -- Implementation
 	vtcg3_etl_code: STRING = "VTCG-3"
 	vtcg4_etl_code: STRING = "VTCG-4"
 	vtct_etl_code: STRING = "VTCT"
-	vtgc_etl_code: STRING = "VTGC"
 	vtug1_etl_code: STRING = "VTUG-1"
 	vtug2_etl_code: STRING = "VTUG-2"
 	vuar1_etl_code: STRING = "VUAR-1"
@@ -15908,17 +15818,13 @@ feature {NONE} -- Implementation
 	vffd7a_template_code: STRING = "vffd7a"
 	vffd7b_template_code: STRING = "vffd7b"
 	vgcc1a_template_code: STRING = "vgcc1a"
-	vgcc1b_template_code: STRING = "vgcc1b"
 	vgcc3a_template_code: STRING = "vgcc3a"
 	vgcc5a_template_code: STRING = "vgcc5a"
-	vgcc5b_template_code: STRING = "vgcc5b"
 	vgcc6a_template_code: STRING = "vgcc6a"
 	vgcc6b_template_code: STRING = "vgcc6b"
 	vgcc6c_template_code: STRING = "vgcc6c"
 	vgcc6d_template_code: STRING = "vgcc6d"
-	vgcc6e_template_code: STRING = "vgcc6e"
 	vgcc8a_template_code: STRING = "vgcc8a"
-	vgcc8b_template_code: STRING = "vgcc8b"
 	vgcp1a_template_code: STRING = "vgcp1a"
 	vgcp2a_template_code: STRING = "vgcp2a"
 	vgcp2b_template_code: STRING = "vgcp2b"
@@ -15933,6 +15839,10 @@ feature {NONE} -- Implementation
 	vggc2e_template_code: STRING = "vggc2e"
 	vggc2f_template_code: STRING = "vggc2f"
 	vggc2h_template_code: STRING = "vggc2h"
+	vggc3a_template_code: STRING = "vggc3a"
+	vggc3b_template_code: STRING = "vggc3b"
+	vggc3c_template_code: STRING = "vggc3c"
+	vggc3d_template_code: STRING = "vggc3d"
 	vhay0a_template_code: STRING = "vhay0a"
 	vhpr1a_template_code: STRING = "vhpr1a"
 	vhpr1b_template_code: STRING = "vhpr1b"

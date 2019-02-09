@@ -83,6 +83,7 @@ inherit
 			reportable_vgcp3_error,
 			reportable_vggc1_error,
 			reportable_vggc2_error,
+			reportable_vggc3_error,
 			reportable_vhay_error,
 			reportable_vhpr1_error,
 			reportable_vhpr2_error,
@@ -134,7 +135,6 @@ inherit
 			reportable_vtcg3_error,
 			reportable_vtcg4_error,
 			reportable_vtct_error,
-			reportable_vtgc_error,
 			reportable_vtug1_error,
 			reportable_vtug2_error,
 			reportable_vuar1_error,
@@ -676,6 +676,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vggc3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGGC-3 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vhay_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHAY error be reported when it
 			-- appears in `a_class'?
@@ -1014,13 +1021,6 @@ feature -- Validity error status
 
 	reportable_vtct_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCT error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
-	reportable_vtgc_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VTGC error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

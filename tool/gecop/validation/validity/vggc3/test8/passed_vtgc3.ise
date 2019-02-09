@@ -1,0 +1,21 @@
+-------------------------------------------------------------------------------
+
+Error code: VTGC(3)
+
+Error: Every feature name listed in the creators part of
+  the constraint must occur in exactly one constraining
+  class.
+What to do: Use renaming if there are several candidates
+  or make sure that the creation constraint feature really
+  exists.
+
+Class: BB [G -> {attached CC, detachable CC} create make end]
+The feature `make' occurs in the following set of constraint classes:
+
+	{attached CC}.make  from formal G at constraint position #1.
+	{detachable CC}.make  from formal G at constraint position #2.
+Line: 1
+  ->class BB [G -> {attached CC, detachable CC} create make end]
+  
+
+-------------------------------------------------------------------------------

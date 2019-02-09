@@ -3439,10 +3439,10 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc1a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS)
-			-- Report VGCC-1 error: the creation expression `a_creation',
-			-- appearing in `a_class_impl' and viewed from one
-			-- of its descendants `a_class' (possibly itself), has no
+	report_vgcc1a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_COMPONENT; a_target: ET_CLASS)
+			-- Report VGCC-1 error: the creation instruction or expression
+			-- `a_creation', appearing in `a_class_impl' and viewed from
+			-- one of its descendants `a_class' (possibly itself), has no
 			-- Creation_call part but the base class `a_target' of the
 			-- creation type is deferred.
 			--
@@ -3458,29 +3458,6 @@ feature -- Validity errors
 		do
 			if reportable_vgcc1_error (a_class) then
 				create an_error.make_vgcc1a (a_class, a_class_impl, a_creation, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc1b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS)
-			-- Report VGCC-1 error: the creation instruction `a_creation',
-			-- appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' (possibly itself), has no Creation_call
-			-- part but the base class `a_target' of the creation type
-			-- is deferred.
-			--
-			-- ECMA 367-2: p.109
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_creation_not_void: a_creation /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc1_error (a_class) then
-				create an_error.make_vgcc1b (a_class, a_class_impl, a_creation, a_target)
 				report_validity_error (an_error)
 			end
 		end
@@ -3511,9 +3488,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc5a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS)
-			-- Report VGCC-5 error: the creation expression `a_creation',
-			-- appearing in  `a_class_impl' and viewed from one
+	report_vgcc5a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_COMPONENT; a_target: ET_CLASS)
+			-- Report VGCC-5 error: the creation instruction or expression
+			-- `a_creation', appearing in  `a_class_impl' and viewed from one
 			-- of its descendants `a_class' (possibly itself), has no
 			-- Creation_call part but the base class `a_target' of the
 			-- creation type has a Creators part.
@@ -3530,29 +3507,6 @@ feature -- Validity errors
 		do
 			if reportable_vgcc5_error (a_class) then
 				create an_error.make_vgcc5a (a_class, a_class_impl, a_creation, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc5b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS)
-			-- Report VGCC-5 error: the creation instruction `a_creation',
-			-- appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' (possibly itself), has no Creation_call
-			-- part but the base class `a_target' of the creation type
-			-- has a Creators part.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_creation_not_void: a_creation /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc5_error (a_class) then
-				create an_error.make_vgcc5b (a_class, a_class_impl, a_creation, a_target)
 				report_validity_error (an_error)
 			end
 		end
@@ -3602,9 +3556,9 @@ feature -- Validity errors
 
 	report_vgcc6c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in
-			-- `a_class_impl' and viewed from one of its descendants `a_class'
-			-- (possibly itself), is not exported for creation to `a_class'.
+			-- a creation instruction or expression with creation procedure name
+			-- `a_name' in `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself), is not exported for creation to `a_class'.
 			--
 			-- ETL2: p.286
 		require
@@ -3643,35 +3597,12 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc6e_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
-			-- Report VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in
-			-- `a_class_impl' and viewed from one of its descendants `a_class'
-			-- (possibly itself), is not exported for creation to `a_class'.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc6_error (a_class) then
-				create an_error.make_vgcc6e (a_class, a_class_impl, a_name, a_feature, a_target)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vgcc8a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER)
 			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), is
-			-- not listed as creation procedure for the formal parameter `a_formal'
-			-- in `a_class'.
+			-- a creation instruction or expression with creation procedure name
+			-- `a_name' in `a_class_impl' and viewed from one of its descendants
+			-- `a_class' (possibly itself), is not listed as creation procedure
+			-- for the formal parameter `a_formal' in `a_class'.
 			--
 			-- In ISE Eiffel only.
 		require
@@ -3687,30 +3618,6 @@ feature -- Validity errors
 		do
 			if reportable_vgcc8_error (a_class) then
 				create an_error.make_vgcc8a (a_class, a_class_impl, a_name, a_feature, a_target, a_formal)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vgcc8b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER)
-			-- Report VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), is
-			-- not listed as creation procedure for the formal parameter `a_formal' in `a_class'.
-			--
-			-- In ISE Eiffel only.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			a_formal_not_void: a_formal /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vgcc8_error (a_class) then
-				create an_error.make_vgcc8b (a_class, a_class_impl, a_name, a_feature, a_target, a_formal)
 				report_validity_error (an_error)
 			end
 		end
@@ -3977,6 +3884,97 @@ feature -- Validity errors
 		do
 			if reportable_vggc2_error (a_class) then
 				create l_error.make_vggc2f (a_class, a_constraint, a_rename, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc3a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS)
+			-- Report VGGC-3 error: creation procedure name `cp'
+			-- is not the final name of a feature in the base class
+			-- `a_constraint' of a generic constraint in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			a_constraint_not_void: a_constraint /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc3_error (a_class) then
+				create l_error.make_vggc3a (a_class, cp, a_constraint)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc3b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraints: ET_CONSTRAINT_BASE_TYPES)
+			-- Report VGGC-3 error: creation procedure name `cp'
+			-- is not the final name of a feature in the base class of
+			-- any of the generic constraints `a_constraints' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			a_constraints_not_void: a_constraints /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc3_error (a_class) then
+				create l_error.make_vggc3b (a_class, cp, a_constraints)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc3c_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS)
+			-- Report VGGC-3 error: creation procedure name `cp'
+			-- is the final name (after possible renaming) of `f' in the
+			-- base class `a_constraint' of a generic constraint in `a_class',
+			-- but `f' is not a procedure.
+			-- Note that the name of `f' in `a_constraint' may be different from `cp'
+			-- if it has been renamed in the rename clause of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f_not_void: f /= Void
+			f_not_procedure: not f.is_procedure
+			a_constraint_not_void: a_constraint /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc3_error (a_class) then
+				create l_error.make_vggc3c (a_class, cp, f, a_constraint)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vggc3d_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f1: ET_FEATURE; a_constraint1: ET_BASE_TYPE_CONSTRAINT; f2: ET_FEATURE; a_constraint2: ET_BASE_TYPE_CONSTRAINT)
+			-- Report VGGC-3 error: creation procedure name `cp' is the final name
+			-- (after possible renaming) of a feature in the base class of both
+			-- generic constraints `a_constraint1' and `a_constraint2' in `a_class'.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint1'
+			-- may be different from `cp' if they have been renamed in the rename clause
+			--  of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vggc3_error (a_class) then
+				create l_error.make_vggc3d (a_class, cp, f1, a_constraint1, f2, a_constraint2)
 				report_validity_error (l_error)
 			end
 		end
@@ -5823,49 +5821,6 @@ feature -- Validity errors
 		do
 			if reportable_vtct_error (a_class) then
 				create an_error.make_vtct0a (a_class, a_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vtgc0a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS)
-			-- Report VTGC error: creation procedure name `cp'
-			-- is not the final name of a feature in the base class
-			-- `a_constraint' of a generic constraint of `a_class'.
-			--
-			-- ETL3 (4.82-00-00): p.261 (CTGC)
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			cp_not_void: cp /= Void
-			a_constraint_not_void: a_constraint /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtgc_error (a_class) then
-				create an_error.make_vtgc0a (a_class, cp, a_constraint)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vtgc0b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS)
-			-- Report VTGC error: creation procedure name `cp'
-			-- is not the final name of a procedure in the base class
-			-- `a_constraint' of a generic constraint of `a_class'.
-			--
-			-- ETL3 (4.82-00-00): p.261 (CTGC)
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			cp_not_void: cp /= Void
-			f_not_void: f /= Void
-			f_name: f.name.same_feature_name (cp)
-			f_not_procedure: not f.is_procedure
-			a_constraint_not_void: a_constraint /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtgc_error (a_class) then
-				create an_error.make_vtgc0b (a_class, cp, f, a_constraint)
 				report_validity_error (an_error)
 			end
 		end
@@ -8311,6 +8266,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vggc3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGGC-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vhay_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHAY error be reported when it
 			-- appears in `a_class'?
@@ -8793,16 +8758,6 @@ feature -- Validity error status
 
 	reportable_vtct_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCT error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_vtgc_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VTGC error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

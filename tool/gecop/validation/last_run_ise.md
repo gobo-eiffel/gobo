@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     106 tests
-    # FAILED:     23 tests
+    # Passed:     119 tests
+    # FAILED:     24 tests
     # Aborted:    0 test
-    # Total:      129 tests (2496 assertions)
+    # Total:      143 tests (2768 assertions)
 
 Test Results:</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
@@ -32,4 +32,5 @@ FAIL:  \[[validity/vfav1/test13](validity/vfav1/test13)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test8](validity/vfav1/test8)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test9](validity/vfav1/test9)\] test\_failed</br>
 FAIL:  \[[validity/vfav2/test11](validity/vfav2/test11)\] test\_failed</br>
-FAIL:  \[[validity/vfav3/test11](validity/vfav3/test11)\] test\_failed
+FAIL:  \[[validity/vfav3/test11](validity/vfav3/test11)\] test\_failed</br>
+FAIL:  \[[validity/vggc3/test2](validity/vggc3/test2)\] test\_failed

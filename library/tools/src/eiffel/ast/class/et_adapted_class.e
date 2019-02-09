@@ -1,7 +1,7 @@
 note
 
 	description:
-	
+
 		"Adapted Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
@@ -53,6 +53,22 @@ feature -- Features
 			a_name_not_void: a_name /= Void
 		do
 			Result := base_class.procedures.named_feature (a_name)
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
+	named_feature (a_name: ET_CALL_NAME): detachable ET_FEATURE
+			-- Feature named `a_name' in `base_class'.
+			-- Take into account possible renaming.
+			-- Void if no such feature.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if attached named_procedure (a_name) as l_procedure then
+				Result := l_procedure
+			else
+				Result := named_query (a_name)
+			end
 		ensure
 			registered: Result /= Void implies Result.is_registered
 		end

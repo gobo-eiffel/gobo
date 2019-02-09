@@ -653,9 +653,13 @@ Type_rename_constraints: '{'
 
 Type_rename_constraint_list: Type_rename_constraint '}'
 		{
-			$$ := ast_factory.new_type_constraint_list (last_symbol, $2, counter_value)
-			if $$ /= Void and attached $1 as l_type_constraint then
-				$$.put_first (l_type_constraint)
+			if attached $1 as l_type_constraint then
+				$$ := ast_factory.new_type_constraint_list (last_symbol, $2, counter_value + 1)
+				if $$ /= Void then
+					$$.put_first (l_type_constraint)
+				end
+			else
+				$$ := ast_factory.new_type_constraint_list (last_symbol, $2, counter_value)
 			end
 		}
 	| Type_rename_constraint_comma Type_rename_constraint_list
@@ -693,9 +697,13 @@ Constraint_renames: E_RENAME E_END
 
 Constraint_rename_list: Rename E_END
 		{
-			$$ := ast_factory.new_constraint_renames (last_keyword, $2, counter_value)
-			if $$ /= Void and attached $1 as l_rename then
-				$$.put_first (l_rename)
+			if attached $1 as l_rename then
+				$$ := ast_factory.new_constraint_renames (last_keyword, $2, counter_value + 1)
+				if $$ /= Void then
+					$$.put_first (l_rename)
+				end
+			else
+				$$ := ast_factory.new_constraint_renames (last_keyword, $2, counter_value)
 			end
 		}
 	| Rename_comma E_END

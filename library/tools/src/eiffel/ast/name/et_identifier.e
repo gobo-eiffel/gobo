@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -219,6 +219,7 @@ feature -- Initialization
 		do
 			if not is_local and not is_argument then
 				seed := 0
+				target_type := Void
 				if is_tuple_label then
 					set_feature_name (True)
 				end

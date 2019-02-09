@@ -27,6 +27,7 @@ feature -- Initialization
 			-- Reset call name as it was when it was last parsed.
 		do
 			seed := 0
+			target_type := Void
 		end
 
 feature -- Access
@@ -70,6 +71,14 @@ feature -- Setting
 			seed := a_seed
 		ensure
 			seed_set: seed = a_seed
+		end
+
+	set_target_type (a_type: like target_type)
+			-- Set `target_type' to `a_type'.
+		do
+			target_type := a_type
+		ensure
+			target_type_set: target_type = a_type
 		end
 
 feature -- Status report
