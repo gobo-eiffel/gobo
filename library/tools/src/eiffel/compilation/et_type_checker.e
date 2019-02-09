@@ -90,7 +90,7 @@ feature -- Validity checking
 			current_feature_impl := old_feature_impl
 		end
 
-	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_context: ET_TYPE_CONTEXT; a_position: ET_POSITION)
+	check_creation_type_validity (a_type: ET_BASE_TYPE; a_current_class_impl: ET_CLASS; a_current_context: ET_TYPE_CONTEXT; a_position: ET_POSITION)
 			-- Check validity of `a_type' as a creation type written in `a_current_class_impl'
 			-- and viewed from `a_current_context'. Note that `a_type' should already be a valid
 			-- type by itself (call `check_type_validity' for that).
@@ -120,7 +120,7 @@ feature -- Validity checking
 			a_formal_creator: detachable ET_CONSTRAINT_CREATOR
 			i, nb: INTEGER
 			j, nb_creators: INTEGER
-			k, nb_parameters: INTEGER
+			nb_parameters: INTEGER
 			had_error: BOOLEAN
 			old_context: ET_TYPE_CONTEXT
 			old_class: ET_CLASS
@@ -138,6 +138,27 @@ feature -- Validity checking
 			a_type_class.process (system_processor.interface_checker)
 			if not a_type_class.interface_checked or else a_type_class.has_interface_error then
 				set_fatal_error
+			elseif attached {ET_TUPLE_TYPE} a_type as l_tuple_type then
+					-- This covers the case where we have:
+					--    FOO [TUPLE [MY_EXPANDED [BAR]]
+					-- and FOO was declared as:
+					--    class FOO [G -> TUPLE create default_create end]
+				if attached l_tuple_type.actual_parameters as a_parameters then
+					nb_parameters := a_parameters.count
+					from i := 1 until i > nb_parameters loop
+						if attached {ET_BASE_TYPE} a_parameters.type (i) as l_base_type and then l_base_type.is_expanded then
+								-- If the actual parameter is expanded, then the creation of an instance
+								-- of that type will be implicit, so we need to check recursively
+								-- its validity as a creation type.
+							had_error := has_fatal_error
+							check_creation_type_validity (l_base_type, current_class_impl, current_context, a_position)
+							if had_error then
+								set_fatal_error
+							end
+						end
+						i := i + 1
+					end
+				end
 			elseif an_actuals /= Void and then not an_actuals.is_empty then
 				a_formals := a_type_class.formal_parameters
 				nb := an_actuals.count
@@ -285,41 +306,20 @@ feature -- Validity checking
 									-- is possible to create instances of `an_actual'
 									-- through that means. So we need to check recursively
 									-- its validity as a creation type.
-								if attached {ET_CLASS_TYPE} a_named_actual as l_class_type then
+								if attached {ET_BASE_TYPE} a_named_actual as l_base_type then
 									had_error := has_fatal_error
-									check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
+									check_creation_type_validity (l_base_type, current_class_impl, current_context, a_position)
 									if had_error then
 										set_fatal_error
 									end
-								elseif attached {ET_TUPLE_TYPE} a_named_actual as l_tuple_type then
-										-- This covers the case where we have:
-										--    FOO [TUPLE [MY_EXPANDED [BAR]]
-										-- and FOO was declared as:
-										--    class FOO [G -> TUPLE create default_create end]
-									if attached l_tuple_type.actual_parameters as a_parameters then
-										nb_parameters := a_parameters.count
-										from k := 1 until k > nb_parameters loop
-											if attached {ET_CLASS_TYPE} a_parameters.type (k) as l_class_type and then l_class_type.is_expanded then
-													-- If the actual parameter is expanded, then the creation of an instance
-													-- of that type will be implicit, so we need to check recursively
-													-- its validity as a creation type.
-												had_error := has_fatal_error
-												check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
-												if had_error then
-													set_fatal_error
-												end
-											end
-											k := k + 1
-										end
-									end
 								end
 							end
-						elseif attached {ET_CLASS_TYPE} a_named_actual as l_class_type and then l_class_type.is_expanded then
+						elseif attached {ET_BASE_TYPE} a_named_actual as l_base_type and then l_base_type.is_expanded then
 								-- If `a_named_actual' is expanded, then the creation of an instance
 								-- of that type will be implicit, so we need to check recursively
 								-- its validity as a creation type.
 							had_error := has_fatal_error
-							check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
+							check_creation_type_validity (l_base_type, current_class_impl, current_context, a_position)
 							if had_error then
 								set_fatal_error
 							end

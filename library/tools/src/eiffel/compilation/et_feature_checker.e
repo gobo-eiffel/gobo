@@ -2257,8 +2257,8 @@ feature {NONE} -- Type checking
 				else
 					l_context := new_context (current_type)
 					if a_type.is_type_expanded (l_context) then
-						if attached {ET_CLASS_TYPE} a_type.shallow_named_type (l_context) as l_class_type then
-							type_checker.check_creation_type_validity (l_class_type, current_class_impl, l_context, a_type.position)
+						if attached {ET_BASE_TYPE} a_type.shallow_named_type (l_context) as l_base_type then
+							type_checker.check_creation_type_validity (l_base_type, current_class_impl, l_context, a_type.position)
 							if type_checker.has_fatal_error then
 								set_fatal_error
 							end
@@ -2287,8 +2287,8 @@ feature {NONE} -- Type checking
 			else
 				l_context := new_context (current_type)
 				if a_type.is_type_expanded (l_context) then
-					if attached {ET_CLASS_TYPE} a_type.shallow_named_type (l_context) as l_class_type then
-						type_checker.check_creation_type_validity (l_class_type, current_class_impl, l_context, a_type.position)
+					if attached {ET_BASE_TYPE} a_type.shallow_named_type (l_context) as l_base_type then
+						type_checker.check_creation_type_validity (l_base_type, current_class_impl, l_context, a_type.position)
 						if type_checker.has_fatal_error then
 							set_fatal_error
 						end
@@ -2331,7 +2331,7 @@ feature {NONE} -- Type checking
 			Result := not type_checker.has_fatal_error
 		end
 
-	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_position: ET_POSITION)
+	check_creation_type_validity (a_type: ET_BASE_TYPE; a_position: ET_POSITION)
 			-- Check validity of `a_type' as a creation type in `current_type'.
 			-- Note that `a_type' should already be a valid type by itself
 			-- (call `check_type_validity' for that).
@@ -3502,14 +3502,14 @@ feature {NONE} -- Instruction validity
 			else
 				l_type_position := l_target.position
 			end
-			if attached {ET_CLASS_TYPE} l_creation_named_type as l_class_type then
-				if l_explicit_creation_type = Void and then not is_type_valid (l_class_type) then
+			if attached {ET_BASE_TYPE} l_creation_named_type as l_base_type then
+				if l_explicit_creation_type = Void and then not is_type_valid (l_base_type) then
 						-- There is no explicit creation type, and the type of the target is not a valid type.
 						-- This error should already have been reported when the target was declared.
 					set_fatal_error
 				else
 					had_error := has_fatal_error
-					check_creation_type_validity (l_class_type, l_type_position)
+					check_creation_type_validity (l_base_type, l_type_position)
 				end
 			end
 			had_error := had_error or has_fatal_error
@@ -6114,8 +6114,8 @@ feature {NONE} -- Expression validity
 			l_creation_named_type := l_creation_type.shallow_named_type (a_context)
 			a_context.remove_last
 			report_create_supplier (l_creation_type, current_class, current_feature)
-			if attached {ET_CLASS_TYPE} l_creation_named_type as l_class_type then
-				check_creation_type_validity (l_class_type, a_expression.type_position)
+			if attached {ET_BASE_TYPE} l_creation_named_type as l_base_type then
+				check_creation_type_validity (l_base_type, a_expression.type_position)
 				had_error := has_fatal_error
 			end
 			if a_procedure = Void then

@@ -184,11 +184,11 @@ feature {NONE} -- Parent validity
 									-- its validity as a creation type.
 								an_actual.process (Current)
 							end
-						elseif attached {ET_CLASS_TYPE} an_actual as a_class_type and then a_class_type.is_expanded then
+						elseif attached {ET_BASE_TYPE} an_actual as l_base_type and then l_base_type.is_expanded then
 								-- If `an_actual' is expanded, then the creation of an instance
 								-- of that type will be implicit, so we need to check recursively
 								-- its validity as a creation type.
-							a_class_type.process (Current)
+							l_base_type.process (Current)
 						end
 						i := i + 1
 					end
@@ -215,11 +215,11 @@ feature {NONE} -- Parent validity
 			if attached a_type.actual_parameters as a_parameters then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
-					if attached {ET_CLASS_TYPE} a_parameters.type (i) as a_class_type and then a_class_type.is_expanded then
+					if attached {ET_BASE_TYPE} a_parameters.type (i) as l_base_type and then l_base_type.is_expanded then
 							-- If the actual parameter is expanded, then the creation of an instance
 							-- of that type will be implicit, so we need to check recursively
 							-- its validity as a creation type.
-						a_class_type.process (Current)
+						l_base_type.process (Current)
 					end
 					i := i + 1
 				end
