@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel Time Library Tester"
-		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="all_classes">
@@ -21,9 +21,6 @@
 		</file_rule>
 		<option warning="true"/>
 		<setting name="console_application" value="true"/>
-		<capability>
-			<concurrency support="none"/>
-		</capability>
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
@@ -33,6 +30,9 @@
 	<target name="xtime" extends="all_classes">
 		<root class="XTIME" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<cluster name="dt_testgen" location="${GOBO_TESTGEN}"/>
 	</target>

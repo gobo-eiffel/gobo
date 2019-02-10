@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -190,7 +190,6 @@ feature {NONE} -- Processing
 			a_dynamic_system: ET_DYNAMIC_SYSTEM
 			a_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_system_processor: ET_SYSTEM_PROCESSOR
-			l_thread_count: INTEGER
 			dt1: detachable DT_DATE_TIME
 		do
 			error_handler.set_ise
@@ -198,12 +197,7 @@ feature {NONE} -- Processing
 			if ise_version = Void then
 				ise_version := ise_latest
 			end
-			l_thread_count := thread_count
-			if l_thread_count > 1 and {PLATFORM}.is_thread_capable then
-				create {ET_SYSTEM_MULTIPROCESSOR} l_system_processor.make (l_thread_count)
-			else
-				create l_system_processor.make
-			end
+			l_system_processor := {ET_SYSTEM_PROCESSOR_FACTORY}.new_system_processor (thread_count)
 			l_system_processor.set_error_handler (error_handler)
 			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
 			l_system_processor.set_nested_benchmark_shown (is_nested_benchmark and not is_no_benchmark and not is_silent)

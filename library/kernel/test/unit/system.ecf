@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel Kernel Library Unit Tester"
-		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="all_classes">
@@ -20,9 +20,6 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true"/>
-		<capability>
-			<concurrency support="none"/>
-		</capability>
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
@@ -34,6 +31,9 @@
 	<target name="xkernel" extends="all_classes">
 		<root class="XKERNEL" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<cluster name="kl_testgen" location="${GOBO_TESTGEN}"/>
 	</target>

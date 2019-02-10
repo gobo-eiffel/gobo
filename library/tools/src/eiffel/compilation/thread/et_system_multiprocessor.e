@@ -829,7 +829,7 @@ feature {NONE} -- Metrics
 				i := i + 1
 			end
 		ensure
-			total_processed_class_count__recursive_not_negative: Result >= 0
+			total_processed_class_count_recursive_not_negative: Result >= 0
 		end
 
 invariant

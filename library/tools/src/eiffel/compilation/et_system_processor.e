@@ -1708,7 +1708,7 @@ feature -- Metrics
 	postponed_class_count: INTEGER
 			-- Number of classes whose processing has been processed
 
-feature {ET_SYSTEM_MULTIPROCESSOR} -- Metrics
+feature {ET_SYSTEM_PROCESSOR} -- Metrics
 
 	report_processor_metrics (a_processor_id: INTEGER)
 			-- Report metrics when current system processor is part of a multiprocessor.

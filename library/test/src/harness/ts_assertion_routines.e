@@ -5,7 +5,7 @@ note
 		"Assertion routines"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/03/17 $"
 	revision: "$Revision: #17 $"
@@ -114,7 +114,7 @@ feature {TS_TEST_HANDLER} -- Basic operations
 
 feature {TS_TEST_HANDLER} -- Equality
 
-	assert_equal (a_tag: STRING; expected, actual: detachable ANY)
+	assert_equal (a_tag: STRING; expected, actual: detachable separate ANY)
 			-- Assert that `equal (expected, actual)'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -131,7 +131,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_equal (a_tag: STRING; expected, actual: detachable ANY)
+	check_equal (a_tag: STRING; expected, actual: detachable separate ANY)
 			-- Check that `equal (expected, actual)'.
 			-- Violation of this assertion is not fatal.
 		require
@@ -145,7 +145,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_not_equal (a_tag: STRING; expected, actual: detachable ANY)
+	assert_not_equal (a_tag: STRING; expected, actual: detachable separate ANY)
 			-- Assert that `not equal (expected, actual)'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -162,7 +162,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_not_equal (a_tag: STRING; expected, actual: detachable ANY)
+	check_not_equal (a_tag: STRING; expected, actual: detachable separate ANY)
 			-- Check that `not equal (expected, actual)'.
 			-- Violation of this assertion is not fatal.
 		require
@@ -176,7 +176,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_same (a_tag: STRING; expected, actual: detachable ANY)
+	assert_same (a_tag: STRING; expected, actual: detachable separate ANY)
 			-- Assert that `expected = actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -193,7 +193,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_same (a_tag: STRING; expected, actual: detachable ANY)
+	check_same (a_tag: STRING; expected, actual: detachable separate ANY)
 			-- Check that `expected = actual'.
 			-- Violation of this assertion is not fatal.
 		require
@@ -207,7 +207,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_not_same (a_tag: STRING; expected, actual: detachable ANY)
+	assert_not_same (a_tag: STRING; expected, actual: detachable separate ANY)
 			-- Assert that `expected /= actual'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -224,7 +224,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			end
 		end
 
-	check_not_same (a_tag: STRING; expected, actual: detachable ANY)
+	check_not_same (a_tag: STRING; expected, actual: detachable separate ANY)
 			-- Check that `expected /= actual'.
 			-- Violation of this assertion is not fatal.
 		require
@@ -1242,7 +1242,7 @@ feature {TS_TEST_HANDLER} -- Exception
 		do
 			assertions.add_assertion
 			if attached raised_exception (a_routine) as l_exception then
-				l_message := assert_strings_equal_message (a_tag, "No exception", l_exception.generating_type.name)
+				l_message := assert_strings_equal_message (a_tag, "No exception", l_exception.generating_type.name.as_string_8)
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			else
@@ -1277,11 +1277,11 @@ feature {TS_TEST_HANDLER} -- Exception
 		do
 			assertions.add_assertion
 			if not attached raised_exception (a_routine) as l_exception then
-				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name, "No exception")
+				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name.as_string_8, "No exception")
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			elseif not attached {DEVELOPER_EXCEPTION} l_exception as l_developer_exception then
-				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name, l_exception.generating_type.name)
+				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name.as_string_8, l_exception.generating_type.name.as_string_8)
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			elseif not attached l_developer_exception.description as l_description then
@@ -1425,15 +1425,15 @@ feature {TS_TEST_HANDLER} -- Execution
 
 feature {NONE} -- Messages
 
-	void_or_out (an_any: detachable ANY): detachable STRING
+	void_or_out (an_any: detachable separate ANY): detachable STRING
 			-- Return `an_any.out' or Void if `an_any' is Void.
 		do
 			if an_any /= Void then
-				Result := an_any.out
+				create Result.make_from_separate (an_any.out)
 			end
 		end
 
-	assert_equal_message (a_tag: STRING; expected, actual: detachable ANY): STRING
+	assert_equal_message (a_tag: STRING; expected, actual: detachable separate ANY): STRING
 			-- Message stating that `expected' and `actual' should be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -1441,7 +1441,7 @@ feature {NONE} -- Messages
 			Result := assert_strings_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
 		end
 
-	assert_not_equal_message (a_tag: STRING; expected, actual: detachable ANY): STRING
+	assert_not_equal_message (a_tag: STRING; expected, actual: detachable separate ANY): STRING
 			-- Message stating that `expected' and `actual' should not be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -1449,7 +1449,7 @@ feature {NONE} -- Messages
 			Result := assert_strings_not_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
 		end
 
-	assert_strings_equal_message (a_tag: STRING; expected, actual: detachable STRING): STRING
+	assert_strings_equal_message (a_tag: STRING; expected, actual: detachable separate STRING): STRING
 			-- Message stating that `expected' and `actual' should be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -1460,19 +1460,19 @@ feature {NONE} -- Messages
 			if expected = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (expected)
+				Result.append_string (create {STRING}.make_from_separate (expected))
 			end
 			Result.append_string ("%N   but  got: ")
 			if actual = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (actual)
+				Result.append_string (create {STRING}.make_from_separate (actual))
 			end
 		ensure
 			message_not_void: Result /= Void
 		end
 
-	assert_strings_not_equal_message (a_tag: STRING; expected, actual: detachable STRING): STRING
+	assert_strings_not_equal_message (a_tag: STRING; expected, actual: detachable separate STRING): STRING
 			-- Message stating that `expected' and `actual' should not be equal.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -1483,13 +1483,13 @@ feature {NONE} -- Messages
 			if actual = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (actual)
+				Result.append_string (create {STRING}.make_from_separate (actual))
 			end
 			Result.append_string ("%N   should not match: ")
 			if expected = Void then
 				Result.append_string ("Void")
 			else
-				Result.append_string (expected)
+				Result.append_string (create {STRING}.make_from_separate (expected))
 			end
 		ensure
 			message_not_void: Result /= Void

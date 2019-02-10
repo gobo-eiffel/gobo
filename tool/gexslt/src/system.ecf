@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel XSLT 2.0 processor"
-		copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="all_classes">
@@ -33,9 +33,6 @@
 			<debug name="XSLT pattern parsing" enabled="false"/>
 			<debug name="XSLT memo function" enabled="false"/>
 		</option>
-		<capability>
-			<concurrency support="none"/>
-		</capability>
 		<variable name="GOBO_LIBRARY" value="../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
@@ -50,5 +47,8 @@
 	<target name="gexslt" extends="all_classes">
 		<root class="GEXSLT" feature="execute"/>
 		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
 	</target>
 </system>

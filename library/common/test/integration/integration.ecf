@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel all classes integration"
-		copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="integration">
@@ -20,9 +20,6 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true"/>
-		<capability>
-			<concurrency support="none"/>
-		</capability>
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="false"/>
 		<library name="free_elks_test_unit" location="${GOBO_LIBRARY}/library/free_elks/test/unit/system.ecf" readonly="false"/>
@@ -68,8 +65,16 @@
 		<library name="string_tool_geuc" location="${GOBO_LIBRARY}/library/string/tool/geuc/src/system.ecf" readonly="false"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="false"/>
 		<library name="structure_test_unit" location="${GOBO_LIBRARY}/library/structure/test/unit/system.ecf" readonly="false"/>
-		<library name="thread" location="${GOBO_LIBRARY}/library/thread/library_${GOBO_EIFFEL}.ecf" readonly="false"/>
-		<library name="thread_test_unit" location="${GOBO_LIBRARY}/library/thread/test/unit/system.ecf" readonly="false"/>
+		<library name="thread" location="${GOBO_LIBRARY}/library/thread/library_${GOBO_EIFFEL}.ecf" readonly="false">
+			<condition>
+				<concurrency excluded_value="scoop"/>
+			</condition>
+		</library>
+		<library name="thread_test_unit" location="${GOBO_LIBRARY}/library/thread/test/unit/system.ecf" readonly="false">
+			<condition>
+				<concurrency excluded_value="scoop"/>
+			</condition>
+		</library>
 		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="false"/>
 		<library name="time_example_clock" location="${GOBO_LIBRARY}/library/time/example/clock/system.ecf" readonly="false"/>
 		<library name="time_test_example" location="${GOBO_LIBRARY}/library/time/test/example/system.ecf" readonly="false"/>
@@ -111,7 +116,11 @@
 		<library name="geant_test_unit" location="${GOBO_LIBRARY}/tool/geant/test/unit/system.ecf" readonly="false"/>
 		<library name="gec" location="${GOBO_LIBRARY}/tool/gec/src/system.ecf" readonly="false"/>
 		<library name="gec_test_tool" location="${GOBO_LIBRARY}/tool/gec/test/tool/system.ecf" readonly="false"/>
-		<library name="gecc" location="${GOBO_LIBRARY}/tool/gecc/src/system.ecf" readonly="false"/>
+		<library name="gecc" location="${GOBO_LIBRARY}/tool/gecc/src/system.ecf" readonly="false">
+			<condition>
+				<concurrency excluded_value="scoop"/>
+			</condition>
+		</library>
 		<library name="gecc_test_tool" location="${GOBO_LIBRARY}/tool/gecc/test/tool/system.ecf" readonly="false"/>
 		<library name="gecop" location="${GOBO_LIBRARY}/tool/gecop/src/system.ecf" readonly="false"/>
 		<library name="gecop_test_tool" location="${GOBO_LIBRARY}/tool/gecop/test/tool/system.ecf" readonly="false"/>
@@ -131,5 +140,17 @@
 		<library name="gexslt_test_tool" location="${GOBO_LIBRARY}/tool/gexslt/test/tool/system.ecf" readonly="false"/>
 		<library name="geyacc" location="${GOBO_LIBRARY}/tool/geyacc/src/system.ecf" readonly="false"/>
 		<library name="geyacc_test_tool" location="${GOBO_LIBRARY}/tool/geyacc/test/tool/system.ecf" readonly="false"/>
+	</target>
+	<target name="integration_none" extends="integration">
+		<root all_classes="true"/>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
+	</target>
+	<target name="integration_thread" extends="integration">
+		<root all_classes="true"/>
+		<capability>
+			<concurrency use="thread"/>
+		</capability>
 	</target>
 </system>

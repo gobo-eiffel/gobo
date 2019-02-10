@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Doc"
 
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -551,17 +551,16 @@ feature -- Argument parsing
 			l_thread_count: INTEGER
 		do
 			l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
-			if thread_option.was_found then
-				l_thread_count := thread_option.parameter
+			if a_thread_option.was_found then
+				l_thread_count := a_thread_option.parameter
 				if l_thread_count <= 0 then
 					l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + l_thread_count
 				end
 			end
-			if l_thread_count > 1 and {PLATFORM}.is_thread_capable then
-				create {ET_SYSTEM_MULTIPROCESSOR} Result.make (l_thread_count)
-			else
-				create Result.make
+			if l_thread_count < 1 or not {PLATFORM}.is_thread_capable then
+				l_thread_count := 1
 			end
+			Result := {ET_SYSTEM_PROCESSOR_FACTORY}.new_system_processor (l_thread_count)
 			Result.set_error_handler (error_handler)
 		ensure
 			new_system_processor_not_void: Result /= Void

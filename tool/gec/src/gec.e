@@ -222,11 +222,7 @@ feature {NONE} -- Processing
 			error_handler.set_ise
 			error_handler.set_verbose (is_verbose)
 			l_thread_count := thread_count
-			if l_thread_count > 1 and {PLATFORM}.is_thread_capable then
-				create {ET_SYSTEM_MULTIPROCESSOR} l_system_processor.make (l_thread_count)
-			else
-				create l_system_processor.make
-			end
+			l_system_processor := {ET_SYSTEM_PROCESSOR_FACTORY}.new_system_processor (l_thread_count)
 			l_system_processor.set_error_handler (error_handler)
 			l_system_processor.set_ise_version (ise_latest)
 			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)

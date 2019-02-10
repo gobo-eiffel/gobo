@@ -192,7 +192,7 @@ feature -- Cluster errors
 			mutex.lock
 			report_info (an_error)
 			set_has_eiffel_error (True)
-			if info_file = std.output then
+			if attached {KL_STDOUT_FILE} info_file then
 				info_file.put_line ("----")
 			end
 			mutex.unlock
@@ -341,7 +341,7 @@ feature -- Universe errors
 			mutex.lock
 			report_info (an_error)
 			set_has_eiffel_error (True)
-			if info_file = std.output then
+			if attached {KL_STDOUT_FILE} info_file then
 				info_file.put_line ("----")
 			end
 			mutex.unlock
@@ -444,7 +444,7 @@ feature -- .NET assembly errors
 			mutex.lock
 			report_info (an_error)
 			set_has_eiffel_error (True)
-			if info_file = std.output then
+			if attached {KL_STDOUT_FILE} info_file then
 				info_file.put_line ("----")
 			end
 			mutex.unlock
@@ -717,7 +717,7 @@ feature -- System errors
 			mutex.lock
 			report_info (an_error)
 			set_has_eiffel_error (True)
-			if info_file = std.output then
+			if attached {KL_STDOUT_FILE} info_file then
 				info_file.put_line ("----")
 			end
 			mutex.unlock
@@ -884,7 +884,7 @@ feature -- Validity errors
 				mutex.lock
 				report_info (an_error)
 				set_has_eiffel_error (True)
-				if info_file = std.output then
+				if attached {KL_STDOUT_FILE} info_file then
 					info_file.put_line ("----")
 				end
 				mutex.unlock
@@ -9256,7 +9256,7 @@ feature -- Internal errors
 			mutex.lock
 			report_error (an_error)
 			set_has_internal_error (True)
-			if error_file = std.error then
+			if attached {KL_STDERR_FILE} error_file then
 				error_file.put_line ("----")
 			end
 			mutex.unlock

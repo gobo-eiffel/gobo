@@ -36,6 +36,10 @@
 
 * Fixed examples in the documentation.
 
+### getest
+
+* Changed the signature of some `assert_*` routines to be able to compare
+  some `separate` objects in SCOOP mode.
 
 ### Gobo Eiffel Tools Library
 
@@ -113,6 +117,12 @@
 ### Gobo Eiffel XSLT Library
 
 * Made unit tests compilable in void-safe mode.
+
+### Miscellaneous
+
+* All Gobo ECF files are now SCOOP capable. It does not mean that the
+  code in Gobo takes advantage of the SCOOP model, but rather that its
+  classes can be used in a SCOOP application.
 
 ## Version 4.3 - 28 November 2018
 
