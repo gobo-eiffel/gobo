@@ -41,6 +41,12 @@
 * Changed the signature of some `assert_*` routines to be able to compare
   some `separate` objects in SCOOP mode.
 
+### Gobo Eiffel Kernel Library
+
+* Unmarked as instance-free the feature `eol` in `KI_TEXT_INPUT_STREAM`
+  and `KI_TEXT_OUTPUT_STREAM` so that it can be implemented using the
+  bridge pattern in descendant classes.
+
 ### Gobo Eiffel Tools Library
 
 * Made sure that validity error `VHPR-2` (conforming inheritance from
