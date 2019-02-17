@@ -5,7 +5,7 @@ note
 		"Eiffel symbol operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -162,33 +162,33 @@ feature -- Access
 		do
 			inspect code
 			when infix_div_code then
-				Result := tokens.infix_div_name
+				Result := tokens.alias_div_name
 			when infix_divide_code then
-				Result := tokens.infix_divide_name
+				Result := tokens.alias_divide_name
 			when infix_ge_code then
-				Result := tokens.infix_ge_name
+				Result := tokens.alias_ge_name
 			when infix_gt_code then
-				Result := tokens.infix_gt_name
+				Result := tokens.alias_gt_name
 			when infix_le_code then
-				Result := tokens.infix_le_name
+				Result := tokens.alias_le_name
 			when infix_lt_code then
-				Result := tokens.infix_lt_name
+				Result := tokens.alias_lt_name
 			when infix_minus_code then
-				Result := tokens.infix_minus_name
+				Result := tokens.alias_minus_name
 			when infix_mod_code then
-				Result := tokens.infix_mod_name
+				Result := tokens.alias_mod_name
 			when infix_plus_code then
-				Result := tokens.infix_plus_name
+				Result := tokens.alias_plus_name
 			when infix_power_code then
-				Result := tokens.infix_power_name
+				Result := tokens.alias_power_name
 			when infix_times_code then
-				Result := tokens.infix_times_name
+				Result := tokens.alias_times_name
 			when infix_dotdot_code then
-				Result := tokens.infix_dotdot_name
+				Result := tokens.alias_dotdot_name
 			when prefix_minus_code then
-				Result := tokens.prefix_minus_name
+				Result := tokens.alias_minus_name
 			when prefix_plus_code then
-				Result := tokens.prefix_plus_name
+				Result := tokens.alias_plus_name
 			else
 					-- Should never happen.
 				Result := tokens.unknown_name

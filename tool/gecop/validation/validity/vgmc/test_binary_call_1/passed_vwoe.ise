@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+
+Error code: VWOE
+
+Error: invalid Operator_expression.
+What to do: make sure that equivalent dot form is valid Call. 
+
+Class: BB [G -> {CC, DD}]
+Feature: f
+	There is no feature infix "+" in type set {CC,DD}
+Line: 9
+      do
+->      i := a + 5
+      end
+
+-------------------------------------------------------------------------------

@@ -3957,7 +3957,7 @@ feature -- Validity errors
 			-- Report VGGC-3 error: creation procedure name `cp' is the final name
 			-- (after possible renaming) of a feature in the base class of both
 			-- generic constraints `a_constraint1' and `a_constraint2' in `a_class'.
-			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint1'
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
 			-- may be different from `cp' if they have been renamed in the rename clause
 			--  of the generic constraint.
 			--
@@ -3975,6 +3975,58 @@ feature -- Validity errors
 		do
 			if reportable_vggc3_error (a_class) then
 				create l_error.make_vggc3d (a_class, cp, f1, a_constraint1, f2, a_constraint2)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vgmc0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; f2: ET_FEATURE; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a feature in the base
+			-- class of both generic constraints `a_constraint1' and `a_constraint2'.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
+			-- may be different from `a_name' if they have been renamed in the rename clause
+			--  of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgmc_error (a_class) then
+				create l_error.make_vgmc0a (a_class, a_class_impl, a_name, f1, a_constraint1, f2, a_constraint2)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vgmc0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_constraints: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Report VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- not the final name of a feature in the base class of any of the
+			-- generic constraints `a_constraints'.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_constraints_not_void: a_constraints /= Void
+			no_void_constraint: not a_constraints.has_void
+			multiple_constraints: a_constraints.count > 1
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgmc_error (a_class) then
+				create l_error.make_vgmc0b (a_class, a_class_impl, a_name, a_constraints)
 				report_validity_error (l_error)
 			end
 		end
@@ -4236,6 +4288,26 @@ feature -- Validity errors
 		do
 			if reportable_vkcn1_error (a_class) then
 				create an_error.make_vkcn1a (a_class, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vkcn1b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_target: ET_CLASS)
+			-- Report VKCN-1 error: tuple label `a_name' of tuple class `a_target', appearing
+			-- in the qualified instruction call `a_name' in `a_class', is not
+			-- a procedure.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vkcn1_error (a_class) then
+				create an_error.make_vkcn1b (a_class, a_name, a_target)
 				report_validity_error (an_error)
 			end
 		end
@@ -8268,6 +8340,16 @@ feature -- Validity error status
 
 	reportable_vggc3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGGC-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vgmc_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGMC error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

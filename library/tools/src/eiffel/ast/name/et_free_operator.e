@@ -5,7 +5,7 @@ note
 		"Eiffel free operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,13 +100,8 @@ feature -- Access
 	name: STRING
 			-- Name of feature
 		do
-			if is_infix_freeop then
-				create Result.make (operator_name.count + 8)
-				Result.append_string (infix_double_quote)
-			else
-				create Result.make (operator_name.count + 9)
-				Result.append_string (prefix_double_quote)
-			end
+			create Result.make (operator_name.count + 8)
+			Result.append_string (alias_double_quote)
 			Result.append_string (operator_name)
 			Result.append_character ('%"')
 		end
@@ -144,7 +139,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	prefix_double_quote: STRING = "prefix %""
-	infix_double_quote: STRING = "infix %""
+	alias_double_quote: STRING = "alias %""
 
 end

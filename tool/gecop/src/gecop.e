@@ -167,7 +167,7 @@ feature {NONE} -- Processing
 						l_test_name := unix_file_system.pathname (l_test_suite_name, l_entry_name)
 					end
 					a_relative_path.force_last (l_entry_name)
-					if l_entry_name.count >= 5 and then (l_entry_name.starts_with ("test") and l_entry_name.item (5).is_digit) then
+					if l_entry_name.count >= 4 and then l_entry_name.starts_with ("test") then
 						if a_filter = Void or else a_filter.matches (l_test_name) then
 							if l_test_suite = Void then
 								create l_test_suite.make (l_test_suite_name, a_tester.variables)

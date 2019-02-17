@@ -362,8 +362,8 @@ feature {NONE} -- Test ISE Eiffel
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7, a_pattern8: STRING
-			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7, a_regexp8: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7, a_pattern8, a_pattern9: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7, a_regexp8, a_regexp9: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 		do
 				-- Compile regexps.
@@ -407,6 +407,11 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp8.compile (a_pattern8)
 			assert ("cannot compile regexp '" + a_pattern8 + "'", a_regexp8.is_compiled)
 			a_regexp8.optimize
+			a_pattern9 := "<[0-9A-F]{16}>(.*)"
+			create a_regexp9.make
+			a_regexp9.compile (a_pattern9)
+			assert ("cannot compile regexp '" + a_pattern9 + "'", a_regexp9.is_compiled)
+			a_regexp9.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -451,7 +456,13 @@ feature {NONE} -- Test ISE Eiffel
 								out_file.put_new_line
 								l_empty_line := False
 							end
-							out_file.put_line (a_line)
+							if a_regexp9.recognizes (a_line) then
+									-- These are object addresses in exception traces.
+								out_file.put_string ("<XXXXXXXXXXXXXXXX>")
+								out_file.put_line (a_regexp9.captured_substring (1))
+							else
+								out_file.put_line (a_line)
+							end
 						end
 						a_regexp1.wipe_out
 						a_regexp2.wipe_out
@@ -461,6 +472,7 @@ feature {NONE} -- Test ISE Eiffel
 						a_regexp6.wipe_out
 						a_regexp7.wipe_out
 						a_regexp8.wipe_out
+						a_regexp9.wipe_out
 						in_file.read_line
 					end
 					in_file.close

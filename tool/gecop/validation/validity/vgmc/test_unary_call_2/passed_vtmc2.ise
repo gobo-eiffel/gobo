@@ -1,0 +1,25 @@
+-------------------------------------------------------------------------------
+
+Error code: VTMC(2)
+
+Error: Cannot call feature on formal generic type because more than one
+       constraining type has a feature with that name.
+
+What to do: Make sure that the name of the feature is unambiguous:
+         Apply a renaming to the feature names of the constraining
+         types in such a way that the name of the feature you want
+         to call is unique.
+
+Class: BB [G -> {CC, DD}]
+Feature: f
+The feature `prefix "+"' occurs in the following set of constraint classes:
+
+	{CC}.f  from formal G at constraint position #1.
+	{DD}.g  from formal G at constraint position #2.
+
+Line: 9
+      do
+->      i := + a
+      end
+
+-------------------------------------------------------------------------------

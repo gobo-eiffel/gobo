@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     119 tests
-    # FAILED:     24 tests
+    # Passed:     140 tests
+    # FAILED:     33 tests
     # Aborted:    0 test
-    # Total:      143 tests (2768 assertions)
+    # Total:      173 tests (3692 assertions)
 
 Test Results:</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
@@ -33,4 +33,13 @@ FAIL:  \[[validity/vfav1/test8](validity/vfav1/test8)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test9](validity/vfav1/test9)\] test\_failed</br>
 FAIL:  \[[validity/vfav2/test11](validity/vfav2/test11)\] test\_failed</br>
 FAIL:  \[[validity/vfav3/test11](validity/vfav3/test11)\] test\_failed</br>
-FAIL:  \[[validity/vggc3/test2](validity/vggc3/test2)\] test\_failed
+FAIL:  \[[validity/vggc3/test2](validity/vggc3/test2)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_agent\_1](validity/vgmc/test\_agent\_1)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_agent\_2](validity/vgmc/test\_agent\_2)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_1](validity/vgmc/test\_parenthesis\_call\_1)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_2](validity/vgmc/test\_parenthesis\_call\_2)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_3](validity/vgmc/test\_parenthesis\_call\_3)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_4](validity/vgmc/test\_parenthesis\_call\_4)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_typed\_agent\_1](validity/vgmc/test\_typed\_agent\_1)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_typed\_agent\_2](validity/vgmc/test\_typed\_agent\_2)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_unary\_call\_1](validity/vgmc/test\_unary\_call\_1)\] test\_failed

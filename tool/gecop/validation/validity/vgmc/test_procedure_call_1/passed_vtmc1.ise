@@ -1,0 +1,22 @@
+-------------------------------------------------------------------------------
+
+Error code: VTMC(1)
+
+Error: Cannot call feature. Feature not found.
+       No constraining type has a feature with that name.
+
+What to do: Make sure that the name of the feature is correct:
+       - Correct the feature name to feature which is available.
+       - Ensure that the feature name occurs in exactly one
+         constraining type.
+
+Class: BB [G -> {CC, DD}]
+Feature: f
+The feature with name `f' does not occur in the following type set:
+   {CC,DD}
+Line: 7
+      do
+->      a.f
+      end
+
+-------------------------------------------------------------------------------

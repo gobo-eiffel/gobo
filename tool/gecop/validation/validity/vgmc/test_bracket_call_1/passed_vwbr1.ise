@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: VWBR(1)
+
+Error: no feature with bracket alias is found in target class of bracket
+  expression.
+What to do: use another feature of target class or ensure that it has a
+  feature with bracket alias.
+
+Class: BB [G -> {CC, DD}]
+Feature: f
+Target class set: {CC,DD}
+Line: 9
+      do
+->      i := a [5]
+      end
+
+-------------------------------------------------------------------------------

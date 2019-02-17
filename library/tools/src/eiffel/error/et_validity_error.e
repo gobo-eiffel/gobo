@@ -166,6 +166,8 @@ create
 	make_vggc3b,
 	make_vggc3c,
 	make_vggc3d,
+	make_vgmc0a,
+	make_vgmc0b,
 	make_vhay0a,
 	make_vhpr1a,
 	make_vhpr1b,
@@ -179,6 +181,7 @@ create
 	make_vjaw0c,
 	make_vjrv0a,
 	make_vkcn1a,
+	make_vkcn1b,
 	make_vkcn1c,
 	make_vkcn2a,
 	make_vkcn2c,
@@ -6907,7 +6910,7 @@ feature {NONE} -- Initialization
 			-- Create a new VGGC-3 error: creation procedure name `cp' is the final name
 			-- (after possible renaming) of a feature in the base class of both
 			-- generic constraints `a_constraint1' and `a_constraint2' in `a_class'.
-			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint1'
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
 			-- may be different from `cp' if they have been renamed in the rename clause
 			--  of the generic constraint.
 			--
@@ -6957,6 +6960,130 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = name of feature in first constraint base class
 			-- dollar10: $10 = second constraint
 			-- dollar11: $11 = name of feature in second constraint base class
+		end
+
+	make_vgmc0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; f2: ET_FEATURE; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a feature in the base
+			-- class of both generic constraints `a_constraint1' and `a_constraint2'.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
+			-- may be different from `a_name' if they have been renamed in the rename clause
+			--  of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0a_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0a_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (f2.lower_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = name of feature in second constraint base class
+		end
+
+	make_vgmc0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_constraints: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- not the final name of a feature in the base class of any of the
+			-- generic constraints `a_constraints'.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_constraints_not_void: a_constraints /= Void
+			no_void_constraint: not a_constraints.has_void
+			multiple_constraints: a_constraints.count > 1
+		local
+			l_constraint_to_text: STRING
+			i, nb: INTEGER
+			l_not_first: BOOLEAN
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0b_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			create l_constraint_to_text.make (15)
+			l_constraint_to_text.append_character ('{')
+			nb := a_constraints.count
+			from i := 1 until i > nb loop
+				if l_not_first then
+					l_constraint_to_text.append_character (',')
+					l_constraint_to_text.append_character (' ')
+				else
+					l_not_first := True
+				end
+				a_constraints.item (i).base_type.append_to_string (l_constraint_to_text)
+				i := i + 1
+			end
+			l_constraint_to_text.append_character ('}')
+			parameters.put (l_constraint_to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = generic constraints
 		end
 
 	make_vhay0a (a_class: ET_CLASS)
@@ -7532,6 +7659,50 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $9
 			-- dollar9: $9 = base class of target of the call
+		end
+
+	make_vkcn1b (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_target: ET_CLASS)
+			-- Create a new VKCN-1 error: tuple label `a_name' of tuple class `a_target',
+			-- appearing in the qualified instruction call `a_name' in `a_class', is not
+			-- a procedure.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_target_not_void: a_target /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (vkcn1b_template_code)
+			etl_code := vkcn1_etl_code
+			default_template := default_message_template (vkcn1b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_target.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = base class of target of the call
 		end
 
 	make_vkcn1c (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
@@ -15340,6 +15511,8 @@ feature {NONE} -- Implementation
 	vggc3b_default_template: STRING = "`$7' is not the final name of a procedure in the base class of any of generic constraints $8."
 	vggc3c_default_template: STRING = "feature `$9' in $8 appearing as creator `$7' in the generic constraint is not a procedure."
 	vggc3d_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' appear both as creator `$7' in the generic constraint."
+	vgmc0a_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' have both the same generically constrained name `$7'."
+	vgmc0b_default_template: STRING = "`$7' is not the final name of a feature in the base class of any of generic constraints $8."
 	vhay0a_default_template: STRING = "implicitly inherits from unknown class ANY."
 	vhpr1a_default_template: STRING = "inheritance cycle $7."
 	vhpr1b_default_template: STRING = "inheritance cycle when inheriting from $7."
@@ -15353,6 +15526,7 @@ feature {NONE} -- Implementation
 	vjaw0c_default_template: STRING = "`$7' is the name of a formal argument of an inline agent. A Writable is either a local variable (including Result) or an attribute."
 	vjrv0a_default_template: STRING = "the type '$7' of the target entity of the assignment attempt is not a reference type."
 	vkcn1a_default_template: STRING = "query `$8' of class $9 appears in a call instruction."
+	vkcn1b_default_template: STRING = "tuple label `$7' appears in a call instruction."
 	vkcn1c_default_template: STRING = "query `$8' appears in a call instruction."
 	vkcn2a_default_template: STRING = "procedure `$8' of class $9 appears in a call expression."
 	vkcn2c_default_template: STRING = "procedure `$8' appears in a call expression."
@@ -15582,6 +15756,7 @@ feature {NONE} -- Implementation
 	vggc1_etl_code: STRING = "VGGC-1"
 	vggc2_etl_code: STRING = "VGGC-2"
 	vggc3_etl_code: STRING = "VGGC-3"
+	vgmc_etl_code: STRING = "VGMC"
 	vhay_etl_code: STRING = "VHAY"
 	vhpr3_etl_code: STRING = "VHPR-3"
 	vhrc1_etl_code: STRING = "VHRC-1"
@@ -15843,6 +16018,8 @@ feature {NONE} -- Implementation
 	vggc3b_template_code: STRING = "vggc3b"
 	vggc3c_template_code: STRING = "vggc3c"
 	vggc3d_template_code: STRING = "vggc3d"
+	vgmc0a_template_code: STRING = "vgmc0a"
+	vgmc0b_template_code: STRING = "vgmc0b"
 	vhay0a_template_code: STRING = "vhay0a"
 	vhpr1a_template_code: STRING = "vhpr1a"
 	vhpr1b_template_code: STRING = "vhpr1b"
@@ -15856,6 +16033,7 @@ feature {NONE} -- Implementation
 	vjaw0c_template_code: STRING = "vjaw0c"
 	vjrv0a_template_code: STRING = "vjrv0a"
 	vkcn1a_template_code: STRING = "vkcn1a"
+	vkcn1b_template_code: STRING = "vkcn1b"
 	vkcn1c_template_code: STRING = "vkcn1c"
 	vkcn2a_template_code: STRING = "vkcn2a"
 	vkcn2c_template_code: STRING = "vkcn2c"

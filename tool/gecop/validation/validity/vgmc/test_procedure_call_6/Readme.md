@@ -1,0 +1,11 @@
+# Validity VGMC
+
+This [test](.) is exercising the validity rule [VGMC](../Readme.md).
+
+### Description
+
+In this test, the formal generic parameter `G` of class `BB` has two constraints `CC [COMPARABLE]` and `CC [NUMERIC]`. There is a call `a.f` where `a` is of type `G` and `f` is the name of a feature in `CC`. This violates `VGMC`, even though the features are in fact the same feature in `CC`.
+
+### Notes
+
+* ISE Eiffel (as of 18.11.10.2592 and after) reports this validity rule violation using the old code `VTMC-2`.

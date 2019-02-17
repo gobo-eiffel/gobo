@@ -5,7 +5,7 @@ note
 		"Eiffel keyword operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,15 +100,15 @@ feature -- Access
 		do
 			inspect code
 			when infix_and_code then
-				Result := tokens.infix_and_name
+				Result := tokens.alias_and_name
 			when infix_implies_code then
-				Result := tokens.infix_implies_name
+				Result := tokens.alias_implies_name
 			when infix_or_code then
-				Result := tokens.infix_or_name
+				Result := tokens.alias_or_name
 			when infix_xor_code then
-				Result := tokens.infix_xor_name
+				Result := tokens.alias_xor_name
 			when prefix_not_code then
-				Result := tokens.prefix_not_name
+				Result := tokens.alias_not_name
 			else
 					-- Should never happen.
 				Result := tokens.unknown_name

@@ -5,7 +5,7 @@ note
 		"Eiffel binary 'or else' operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +46,7 @@ feature -- Access
 	name: STRING
 			-- Name of feature call
 		do
-			Result := tokens.infix_or_else_name
+			Result := tokens.alias_or_else_name
 		end
 
 	or_keyword: ET_TOKEN

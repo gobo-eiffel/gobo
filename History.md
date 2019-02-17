@@ -31,6 +31,7 @@
 * Made the validation suite browsable with the GitHub Markdown facilities.
 * Added tests for the validity rules `VGFG` and `VGGC`.
 * Added tests for the validity rule `VFAV`.
+* Added tests for the validity rule `VGMC`.
 
 ### gelex
 

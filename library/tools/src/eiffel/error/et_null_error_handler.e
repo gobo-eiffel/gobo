@@ -84,6 +84,7 @@ inherit
 			reportable_vggc1_error,
 			reportable_vggc2_error,
 			reportable_vggc3_error,
+			reportable_vgmc_error,
 			reportable_vhay_error,
 			reportable_vhpr1_error,
 			reportable_vhpr2_error,
@@ -678,6 +679,13 @@ feature -- Validity error status
 
 	reportable_vggc3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGGC-3 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vgmc_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGMC error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
