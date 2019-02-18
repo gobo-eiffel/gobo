@@ -3104,7 +3104,7 @@ feature {NONE} -- Instruction validity
 			check_writable_validity (l_target, l_target_context)
 			reset_fatal_error (l_had_error or has_fatal_error)
 			if has_fatal_error then
-				-- We cannot go further.
+				check_orphan_actual_arguments_validity (l_creation_call)
 			elseif l_seed = 0 and l_creation_call /= default_creation_call then
 					-- There is an explicit creation call.
 					-- We need to resolve `l_name' in the implementation
@@ -3116,6 +3116,7 @@ feature {NONE} -- Instruction validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (l_creation_call)
 				else
 					if l_explicit_creation_type /= Void then
 						l_creation_context.force_last (l_explicit_creation_type)
@@ -3123,11 +3124,14 @@ feature {NONE} -- Instruction validity
 						l_creation_context.force_last (l_target_context.first)
 					end
 					l_adapted_class := adapted_class (l_name, l_creation_context)
-					if not has_fatal_error then
+					if has_fatal_error then
+						check_orphan_actual_arguments_validity (l_creation_call)
+					else
 						l_class := l_adapted_class.base_class
 						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked_successfully then
 							set_fatal_error
+							check_orphan_actual_arguments_validity (l_creation_call)
 						elseif l_class.is_dotnet then
 								-- A class coming from a .NET assembly can contain overloaded
 								-- features (i.e. several features with the same name).
@@ -3141,11 +3145,13 @@ feature {NONE} -- Instruction validity
 								-- This is not a procedure.
 							set_fatal_error
 							error_handler.report_vgcc6d_error (current_class, l_name, l_query, l_class)
+							check_orphan_actual_arguments_validity (l_creation_call)
 						else
 							set_fatal_error
 								-- ISE Eiffel 5.4 reports this error as a VEEN,
 								-- but it is in fact a VUEX-2 (ETL2 p.368).
 							error_handler.report_vuex2a_error (current_class_impl, l_name, l_class)
+							check_orphan_actual_arguments_validity (l_creation_call)
 						end
 					end
 				end
@@ -3165,6 +3171,7 @@ feature {NONE} -- Instruction validity
 				l_class.process (system_processor.interface_checker)
 				if not l_class.interface_checked_successfully then
 					set_fatal_error
+					check_orphan_actual_arguments_validity (l_creation_call)
 				elseif l_seed /= 0 then
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
 						check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_procedure, l_class, l_target_context, l_creation_context)
@@ -3173,6 +3180,7 @@ feature {NONE} -- Instruction validity
 							-- `l_procedure' should not be void.
 						set_fatal_error
 						error_handler.report_giaaa_error
+						check_orphan_actual_arguments_validity (l_creation_call)
 					end
 				else
 					check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, Void, l_class, l_target_context, l_creation_context)
@@ -3213,7 +3221,6 @@ feature {NONE} -- Instruction validity
 			l_name: ET_FEATURE_NAME
 			l_original_name: ET_FEATURE_NAME
 			i: INTEGER
-			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 		do
 			has_fatal_error := False
@@ -3229,10 +3236,9 @@ feature {NONE} -- Instruction validity
 			l_overloaded_procedures := new_overloaded_procedures
 			l_class.add_overloaded_procedures (l_original_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				l_actuals := a_creation_call.arguments
-				keep_best_overloaded_features (l_overloaded_procedures, l_original_name, l_actuals, a_creation_context, False, True)
+				keep_best_overloaded_features (l_overloaded_procedures, l_original_name, a_creation_call.arguments, a_creation_context, False, True)
 				if has_fatal_error then
-					-- Do nothing.
+					check_orphan_actual_arguments_validity (a_creation_call)
 				elseif l_overloaded_procedures.count = 1 then
 					l_procedure := l_overloaded_procedures.first
 					l_seed := l_procedure.first_seed
@@ -3243,16 +3249,19 @@ feature {NONE} -- Instruction validity
 -- TODO: report VIOF
 					set_fatal_error
 					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (a_creation_call)
 				end
 			elseif attached a_adapted_class.named_query (l_name) as l_query then
 					-- This is not a procedure.
 				set_fatal_error
 				error_handler.report_vgcc6d_error (current_class, l_name, l_query, l_class)
+				check_orphan_actual_arguments_validity (a_creation_call)
 			else
 				set_fatal_error
 					-- ISE Eiffel 5.4 reports this error as a VEEN,
 					-- but it is in fact a VUEX-2 (ETL2 p.368).
 				error_handler.report_vuex2a_error (current_class_impl, l_name, l_class)
+				check_orphan_actual_arguments_validity (a_creation_call)
 			end
 			free_overloaded_procedures (l_overloaded_procedures)
 		end
@@ -3450,7 +3459,7 @@ feature {NONE} -- Instruction validity
 
 	check_no_creation_procedure_call_validity (a_creation_component: ET_CREATION_COMPONENT; a_creation_call: ET_CREATION_CALL; a_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_creation_component' when there is no creation procedure.
-			-- This happens when there is oo creation call, and feature 'default_create' is
+			-- This happens when there is no creation call, and feature 'default_create' is
 			-- not supported by the underlying Eiffel compiler.
 			-- The validity of the creation type and of the target of the creation are
 			-- assumed to have already been checked.
@@ -4250,6 +4259,7 @@ feature {NONE} -- Instruction validity
 			l_ancestor: detachable ET_BASE_TYPE
 			l_class: ET_CLASS
 			l_context: ET_NESTED_TYPE_CONTEXT
+			l_has_parenthesis_call: BOOLEAN
 		do
 			has_fatal_error := False
 			if not attached {ET_FEATURE} current_feature_impl as l_feature_impl then
@@ -4262,6 +4272,7 @@ feature {NONE} -- Instruction validity
 						-- reported in the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (an_instruction)
 			elseif in_rescue then
 					-- The Precursor instruction does not appear in a Routine_body.
 				set_fatal_error
@@ -4272,6 +4283,7 @@ feature {NONE} -- Instruction validity
 						-- reported in the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (an_instruction)
 			elseif attached current_inline_agent as l_current_inline_agent then
 					-- The associated feature of inline agents cannot be redefined.
 				set_fatal_error
@@ -4282,6 +4294,7 @@ feature {NONE} -- Instruction validity
 						-- reported in the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (an_instruction)
 			elseif current_feature.first_precursor = Void then
 					-- Immediate features cannot have Precursor.
 				set_fatal_error
@@ -4294,6 +4307,7 @@ feature {NONE} -- Instruction validity
 				else
 					error_handler.report_vdpr3d_error (current_class, an_instruction, l_feature_impl)
 				end
+				check_orphan_actual_arguments_validity (an_instruction)
 			elseif not attached an_instruction.parent_type as l_unresolved_parent_type then
 					-- Internal error: the Precursor construct should
 					-- already have been resolved when flattening the
@@ -4302,6 +4316,7 @@ feature {NONE} -- Instruction validity
 					-- and hence on the ancestor class `current_class_impl'.
 				set_fatal_error
 				error_handler.report_giaaa_error
+				check_orphan_actual_arguments_validity (an_instruction)
 			else
 				l_parent_type := l_unresolved_parent_type
 				if current_class /= current_class_impl and l_parent_type.is_generic then
@@ -4314,6 +4329,7 @@ feature {NONE} -- Instruction validity
 							-- of `current_class_impl', and hence of `current_class'.
 						set_fatal_error
 						error_handler.report_giaaa_error
+						check_orphan_actual_arguments_validity (an_instruction)
 					else
 						l_parent_type := l_ancestor
 					end
@@ -4329,17 +4345,15 @@ feature {NONE} -- Instruction validity
 							l_context := new_context (current_type)
 							check_precursor_parenthesis_call_validity (an_instruction, l_query, l_class, l_parent_type, l_context)
 							free_context (l_context)
+							if not has_fatal_error and then an_instruction.parenthesis_call /= Void then
+								l_has_parenthesis_call := True
+							end
 						end
-						if has_fatal_error then
-								-- Do nothing
-						elseif an_instruction.parenthesis_call = Void then
--- TODO: I don't think that it's a internal error. We should report that the precursor
--- in a function cannot be used as an instruction.
-								-- Internal error: the Precursor construct should
-								-- already have been resolved when flattening the
-								-- features of `current_class_impl'.
+						if not has_fatal_error and then not l_has_parenthesis_call then
+								-- The precursor in a function cannot be used as an instruction.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_vkcn1a_error (current_class, l_precursor_keyword, l_query, l_class)
+							check_orphan_actual_arguments_validity (an_instruction)
 						end
 					else
 							-- Internal error: the Precursor construct should
@@ -4347,6 +4361,7 @@ feature {NONE} -- Instruction validity
 							-- features of `current_class_impl'.
 						set_fatal_error
 						error_handler.report_giaaa_error
+						check_orphan_actual_arguments_validity (an_instruction)
 					end
 				end
 			end
@@ -4403,7 +4418,7 @@ feature {NONE} -- Instruction validity
 			l_seed := l_name.seed
 			check_expression_validity (l_target, l_context, current_system.detachable_any_type)
 			if has_fatal_error then
-				-- We cannot go further.
+				check_orphan_actual_arguments_validity (a_call)
 			elseif l_seed = 0 then
 					-- We need to resolve `l_name' in the implementation
 					-- class of `current_feature_impl' first.
@@ -4414,13 +4429,17 @@ feature {NONE} -- Instruction validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				else
 					l_adapted_class := adapted_class (l_name, l_context)
-					if not has_fatal_error then
+					if has_fatal_error then
+						check_orphan_actual_arguments_validity (a_call)
+					else
 						l_class := l_adapted_class.base_class
 						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked_successfully then
 							set_fatal_error
+							check_orphan_actual_arguments_validity (a_call)
 						elseif l_class.is_dotnet then
 								-- A class coming from a .NET assembly can contain overloaded
 								-- features (i.e. several features with the same name).
@@ -4436,11 +4455,12 @@ feature {NONE} -- Instruction validity
 							l_name.set_seed (l_seed)
 							check_query_parenthesis_call_validity (a_call, l_query, l_class, l_context, Void)
 							if has_fatal_error then
-								-- Do nothing
+								-- Do nothing.
 							elseif a_call.parenthesis_call = Void then
 									-- In a call instruction, the feature has to be a procedure.
 								set_fatal_error
 								error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
+								check_orphan_actual_arguments_validity (a_call)
 							end
 						elseif l_class.is_tuple_class and then attached {ET_IDENTIFIER} l_name as l_label then
 								-- Check whether this is a tuple label.
@@ -4451,23 +4471,26 @@ feature {NONE} -- Instruction validity
 									-- Check for parenthesis alias.
 								check_tuple_label_parenthesis_call_validity (a_call, l_class, l_context, Void)
 								if has_fatal_error then
-									-- Do nothing
+									-- Do nothing.
 								elseif a_call.parenthesis_call = Void then
 										-- In a call instruction, the feature has to be a procedure.
 									set_fatal_error
 									error_handler.report_vkcn1b_error (current_class, l_label, l_class)
+									check_orphan_actual_arguments_validity (a_call)
 								end
 							else
 								set_fatal_error
 									-- ISE Eiffel 5.4 reports this error as a VEEN,
 									-- but it is in fact a VUEX-2 (ETL2 p.368).
 								error_handler.report_vuex2a_error (current_class, l_name, l_class)
+								check_orphan_actual_arguments_validity (a_call)
 							end
 						else
 							set_fatal_error
 								-- ISE Eiffel 5.4 reports this error as a VEEN,
 								-- but it is in fact a VUEX-2 (ETL2 p.368).
 							error_handler.report_vuex2a_error (current_class, l_name, l_class)
+							check_orphan_actual_arguments_validity (a_call)
 						end
 					end
 				end
@@ -4479,6 +4502,7 @@ feature {NONE} -- Instruction validity
 				l_class.process (system_processor.interface_checker)
 				if not l_class.interface_checked_successfully then
 					set_fatal_error
+					check_orphan_actual_arguments_validity (a_call)
 				elseif attached l_class.seeded_procedure (l_seed) as l_procedure then
 					check_qualified_procedure_call_instruction_validity (a_call, l_procedure, l_class, l_context)
 				else
@@ -4486,6 +4510,7 @@ feature {NONE} -- Instruction validity
 						-- a procedure should not be void.
 					set_fatal_error
 					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 			free_context (l_context)
@@ -4532,7 +4557,7 @@ feature {NONE} -- Instruction validity
 			if not l_overloaded_procedures.is_empty then
 				keep_best_overloaded_features (l_overloaded_procedures, l_original_name, a_call.arguments, a_context, False, False)
 				if has_fatal_error then
-					-- Do nothing.
+					check_orphan_actual_arguments_validity (a_call)
 				elseif l_overloaded_procedures.count = 1 then
 					l_procedure := l_overloaded_procedures.first
 					l_seed := l_procedure.first_seed
@@ -4543,21 +4568,24 @@ feature {NONE} -- Instruction validity
 -- TODO: report VIOF
 					set_fatal_error
 					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			elseif attached a_adapted_class.named_query (l_name) as l_query then
 				check_query_parenthesis_call_validity (a_call, l_query, l_class, a_context, Void)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif a_call.parenthesis_call = Void then
 						-- In a call instruction, the feature has to be a procedure.
 					set_fatal_error
 					error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			else
 				set_fatal_error
 					-- ISE Eiffel 5.4 reports this error as a VEEN,
 					-- but it is in fact a VUEX-2 (ETL2 p.368).
 				error_handler.report_vuex2a_error (current_class, l_name, l_class)
+				check_orphan_actual_arguments_validity (a_call)
 			end
 			free_overloaded_procedures (l_overloaded_procedures)
 		end
@@ -4581,10 +4609,12 @@ feature {NONE} -- Instruction validity
 					-- In a call instruction, the feature has to be a procedure.
 				set_fatal_error
 				error_handler.report_vkcn1a_error (current_class, a_call.name, l_query, a_class)
+				check_orphan_actual_arguments_validity (a_call)
 			else
 					-- The feature is either a query or a procedure.
 				set_fatal_error
 				error_handler.report_giaaa_error
+				check_orphan_actual_arguments_validity (a_call)
 			end
 		end
 
@@ -4649,7 +4679,7 @@ feature {NONE} -- Instruction validity
 			l_seed := l_name.seed
 			check_type_validity (l_type)
 			if has_fatal_error then
-				-- We cannot go further.
+				check_orphan_actual_arguments_validity (an_instruction)
 			elseif l_seed = 0 then
 					-- We need to resolve `l_name' in the implementation
 					-- class of `current_feature_impl' first.
@@ -4660,14 +4690,18 @@ feature {NONE} -- Instruction validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (an_instruction)
 				else
 					l_context.force_last (l_type)
 					l_adapted_class := adapted_class (l_name, l_context)
-					if not has_fatal_error then
+					if has_fatal_error then
+						check_orphan_actual_arguments_validity (an_instruction)
+					else
 						l_class := l_adapted_class.base_class
 						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked_successfully then
 							set_fatal_error
+							check_orphan_actual_arguments_validity (an_instruction)
 						elseif l_class.is_dotnet then
 								-- A class coming from a .NET assembly can contain overloaded
 								-- features (i.e. several features with the same name).
@@ -4683,17 +4717,19 @@ feature {NONE} -- Instruction validity
 							l_name.set_seed (l_seed)
 							check_static_parenthesis_call_validity (an_instruction, l_query, l_class, l_context)
 							if has_fatal_error then
-								-- Do nothing
+								-- Do nothing.
 							elseif an_instruction.parenthesis_call = Void then
 									-- In a call instruction, the feature has to be a procedure.
 								set_fatal_error
 								error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
+								check_orphan_actual_arguments_validity (an_instruction)
 							end
 						else
 							set_fatal_error
 								-- ISE Eiffel 5.4 reports this error as a VEEN,
 								-- but it is in fact a VUEX-2 (ETL2 p.368).
 							error_handler.report_vuex2a_error (current_class, l_name, l_class)
+							check_orphan_actual_arguments_validity (an_instruction)
 						end
 					end
 				end
@@ -4706,6 +4742,7 @@ feature {NONE} -- Instruction validity
 				l_class.process (system_processor.interface_checker)
 				if not l_class.interface_checked_successfully then
 					set_fatal_error
+					check_orphan_actual_arguments_validity (an_instruction)
 				elseif attached l_class.seeded_procedure (l_seed) as l_procedure then
 					check_static_procedure_call_instruction_validity (an_instruction, l_procedure, l_class, l_context)
 				else
@@ -4713,6 +4750,7 @@ feature {NONE} -- Instruction validity
 						-- a procedure for this seed.
 					set_fatal_error
 					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (an_instruction)
 				end
 			end
 			free_context (l_context)
@@ -4761,7 +4799,7 @@ feature {NONE} -- Instruction validity
 			if not l_overloaded_procedures.is_empty then
 				keep_best_overloaded_features (l_overloaded_procedures, l_original_name, a_call.arguments, a_context, True, False)
 				if has_fatal_error then
-					-- Do nothing.
+					check_orphan_actual_arguments_validity (a_call)
 				elseif l_overloaded_procedures.count = 1 then
 					l_procedure := l_overloaded_procedures.first
 					l_seed := l_procedure.first_seed
@@ -4772,21 +4810,24 @@ feature {NONE} -- Instruction validity
 -- TODO: report VIOF
 					set_fatal_error
 					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			elseif attached a_adapted_class.named_query (l_name) as l_query then
 				check_static_parenthesis_call_validity (a_call, l_query, l_class, a_context)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif a_call.parenthesis_call = Void then
 						-- In a call instruction, the feature has to be a procedure.
 					set_fatal_error
 					error_handler.report_vkcn1a_error (current_class, l_name, l_query, l_class)
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			else
 				set_fatal_error
 					-- ISE Eiffel 5.4 reports this error as a VEEN,
 					-- but it is in fact a VUEX-2 (ETL2 p.368).
 				error_handler.report_vuex2a_error (current_class, l_name, l_class)
+				check_orphan_actual_arguments_validity (a_call)
 			end
 			free_overloaded_procedures (l_overloaded_procedures)
 		end
@@ -4853,12 +4894,13 @@ feature {NONE} -- Instruction validity
 						-- the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				l_context := new_context (current_type)
 				check_across_cursor_parenthesis_call_validity (a_call, a_name, l_context)
 				free_context (l_context)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif a_call.parenthesis_call /= Void then
 					-- The validity checking has already been done with the
 					-- unfolded form of the parenthesis call.
@@ -4889,6 +4931,7 @@ feature {NONE} -- Instruction validity
 					else
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 		end
@@ -4923,7 +4966,7 @@ feature {NONE} -- Instruction validity
 				end
 			end
 			if l_checked then
-				-- Do nothing
+				-- Do nothing.
 			elseif l_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
 					-- class of `current_feature_impl' first.
@@ -4934,6 +4977,7 @@ feature {NONE} -- Instruction validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				elseif attached current_class.named_procedure (l_name) as l_procedure then
 						-- Note that we need to check the interface of `current_class' again.
 						-- It's already done in `check_feature_validity'.
@@ -4948,17 +4992,19 @@ feature {NONE} -- Instruction validity
 					check_query_parenthesis_call_validity (a_call, l_query, current_class, l_context, Void)
 					free_context (l_context)
 					if has_fatal_error then
-						-- Do nothing
+						-- Do nothing.
 					elseif a_call.parenthesis_call = Void then
 							-- In a call instruction, the feature has to be a procedure.
 						set_fatal_error
 						error_handler.report_vkcn1c_error (current_class, l_name, l_query)
+						check_orphan_actual_arguments_validity (a_call)
 					end
 				else
 					set_fatal_error
 						-- ISE Eiffel 5.4 reports this error as a VEEN,
 						-- but it is in fact a VUEX-1 (ETL2 p.368).
 					error_handler.report_vuex1a_error (current_class, l_name)
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			elseif attached current_class.seeded_procedure (l_seed) as l_procedure then
 					-- Note that we don't need to check the interface of `current_class' again
@@ -4971,6 +5017,7 @@ feature {NONE} -- Instruction validity
 					-- a procedure for this seed.
 				set_fatal_error
 				error_handler.report_giaaa_error
+				check_orphan_actual_arguments_validity (a_call)
 			end
 		end
 
@@ -4993,12 +5040,13 @@ feature {NONE} -- Instruction validity
 						-- the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				l_context := new_context (current_type)
 				check_formal_argument_parenthesis_call_validity (a_call, a_name, l_context)
 				free_context (l_context)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif a_call.parenthesis_call /= Void then
 					-- The validity checking has already been done with the
 					-- unfolded form of the parenthesis call.
@@ -5027,6 +5075,7 @@ feature {NONE} -- Instruction validity
 							-- Internal error: invariants don't have formal arguments.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 		end
@@ -5050,12 +5099,13 @@ feature {NONE} -- Instruction validity
 						-- the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				l_context := new_context (current_type)
 				check_local_variable_parenthesis_call_validity (a_call, a_name, l_context)
 				free_context (l_context)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif a_call.parenthesis_call /= Void then
 					-- The validity checking has already been done with the
 					-- unfolded form of the parenthesis call.
@@ -5084,6 +5134,7 @@ feature {NONE} -- Instruction validity
 							-- Internal error: invariants don't have local variables.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 		end
@@ -5107,12 +5158,13 @@ feature {NONE} -- Instruction validity
 						-- the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				l_context := new_context (current_type)
 				check_object_test_local_parenthesis_call_validity (a_call, a_name, l_context)
 				free_context (l_context)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif a_call.parenthesis_call /= Void then
 					-- The validity checking has already been done with the
 					-- unfolded form of the parenthesis call.
@@ -5143,6 +5195,7 @@ feature {NONE} -- Instruction validity
 					else
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 		end
@@ -5785,7 +5838,7 @@ feature {NONE} -- Expression validity
 			a_context.force_last (l_creation_type)
 			check_type_validity (l_creation_type)
 			if has_fatal_error then
-				-- We cannot go further.
+				check_orphan_actual_arguments_validity (l_creation_call)
 			elseif l_seed = 0 and l_creation_call /= default_creation_call then
 						-- There is an explicit creation call.
 						-- We need to resolve `l_name' in the implementation
@@ -5797,13 +5850,17 @@ feature {NONE} -- Expression validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (l_creation_call)
 				else
 					l_adapted_class := adapted_class (l_name, a_context)
-					if not has_fatal_error then
+					if has_fatal_error then
+						check_orphan_actual_arguments_validity (l_creation_call)
+					else
 						l_class := l_adapted_class.base_class
 						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked_successfully then
 							set_fatal_error
+							check_orphan_actual_arguments_validity (l_creation_call)
 						elseif l_class.is_dotnet then
 								-- A class coming from a .NET assembly can contain overloaded
 								-- features (i.e. several features with the same name).
@@ -5817,11 +5874,13 @@ feature {NONE} -- Expression validity
 								-- This is not a procedure.
 							set_fatal_error
 							error_handler.report_vgcc6b_error (current_class, l_name, l_query, l_class)
+							check_orphan_actual_arguments_validity (l_creation_call)
 						else
 							set_fatal_error
 								-- ISE Eiffel 5.4 reports this error as a VEEN,
 								-- but it is in fact a VUEX-2 (ETL2 p.368).
 							error_handler.report_vuex2a_error (current_class, l_name, l_class)
+							check_orphan_actual_arguments_validity (l_creation_call)
 						end
 					end
 				end
@@ -5836,6 +5895,7 @@ feature {NONE} -- Expression validity
 				l_class.process (system_processor.interface_checker)
 				if not l_class.interface_checked_successfully then
 					set_fatal_error
+					check_orphan_actual_arguments_validity (l_creation_call)
 				elseif l_seed /= 0 then
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
 						check_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_procedure, l_class, a_context)
@@ -5844,6 +5904,7 @@ feature {NONE} -- Expression validity
 							-- `l_procedure' should not be void.
 						set_fatal_error
 						error_handler.report_giaaa_error
+						check_orphan_actual_arguments_validity (l_creation_call)
 					end
 				else
 					check_creation_procedure_call_expression_validity (an_expression, l_creation_call, Void, l_class, a_context)
@@ -5877,7 +5938,6 @@ feature {NONE} -- Expression validity
 			l_name: ET_FEATURE_NAME
 			l_original_name: ET_FEATURE_NAME
 			i: INTEGER
-			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 		do
 			has_fatal_error := False
@@ -5893,10 +5953,9 @@ feature {NONE} -- Expression validity
 			l_overloaded_procedures := new_overloaded_procedures
 			l_class.add_overloaded_procedures (l_original_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				l_actuals := a_creation_call.arguments
-				keep_best_overloaded_features (l_overloaded_procedures, l_original_name, l_actuals, a_context, False, True)
+				keep_best_overloaded_features (l_overloaded_procedures, l_original_name, a_creation_call.arguments, a_context, False, True)
 				if has_fatal_error then
-					-- Do nothing.
+					check_orphan_actual_arguments_validity (a_creation_call)
 				elseif l_overloaded_procedures.count = 1 then
 					l_procedure := l_overloaded_procedures.first
 					l_seed := l_procedure.first_seed
@@ -5907,16 +5966,19 @@ feature {NONE} -- Expression validity
 -- TODO: report VIOF
 					set_fatal_error
 					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (a_creation_call)
 				end
 			elseif attached a_adapted_class.named_query (l_name) as l_query then
 					-- This is not a procedure.
 				set_fatal_error
 				error_handler.report_vgcc6b_error (current_class, l_name, l_query, l_class)
+				check_orphan_actual_arguments_validity (a_creation_call)
 			else
 				set_fatal_error
 					-- ISE Eiffel 5.4 reports this error as a VEEN,
 					-- but it is in fact a VUEX-2 (ETL2 p.368).
 				error_handler.report_vuex2a_error (current_class, l_name, l_class)
+				check_orphan_actual_arguments_validity (a_creation_call)
 			end
 			free_overloaded_procedures (l_overloaded_procedures)
 		end
@@ -6186,8 +6248,6 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_procedure: detachable ET_PROCEDURE
-			l_query: detachable ET_QUERY
 			l_name: ET_FEATURE_NAME
 			l_identifier: ET_IDENTIFIER
 			l_seed: INTEGER
@@ -6337,81 +6397,70 @@ feature {NONE} -- Expression validity
 								already_checked := True
 							end
 						end
-					else
-							-- Try to see if it is of the form '$feature_name'.
--- TODO: I don't think we need to check the interface of `current_class' again.
--- I guess that's already done in `check_feature_validity'.
-						current_class.process (system_processor.interface_checker)
-						if not current_class.interface_checked or else current_class.has_interface_error then
-							set_fatal_error
-						else
-							l_procedure := current_class.named_procedure (l_name)
-							if l_procedure /= Void then
-								l_seed := l_procedure.first_seed
-								l_name.set_seed (l_seed)
-								check_unqualified_vape_validity (l_name, l_procedure)
-								report_procedure_address (an_expression, l_procedure)
-									-- $feature_name is of type POINTER, even
-									-- in ISE and its TYPED_POINTER support.
-								l_pointer_type := current_universe_impl.pointer_type
-								a_context.force_last (l_pointer_type)
-								report_pointer_expression (an_expression, l_pointer_type)
-									-- No need to check validity in the context of `current_type' again.
-								already_checked := True
+						-- Try to see if it is of the form '$feature_name'.
+					elseif attached current_class.named_procedure (l_name) as l_procedure then
+							-- Note that we need to check the interface of `current_class' again.
+							-- It's already done in `check_feature_validity'
+						l_seed := l_procedure.first_seed
+						l_name.set_seed (l_seed)
+						check_unqualified_vape_validity (l_name, l_procedure)
+						report_procedure_address (an_expression, l_procedure)
+							-- $feature_name is of type POINTER, even
+							-- in ISE and its TYPED_POINTER support.
+						l_pointer_type := current_universe_impl.pointer_type
+						a_context.force_last (l_pointer_type)
+						report_pointer_expression (an_expression, l_pointer_type)
+							-- No need to check validity in the context of `current_type' again.
+						already_checked := True
+					elseif attached current_class.named_query (l_name) as l_query then
+						l_seed := l_query.first_seed
+						l_name.set_seed (l_seed)
+						check_unqualified_vape_validity (l_name, l_query)
+						if l_query.is_attribute then
+							if in_static_feature then
+									-- Error: we cannot access the address of an attribute
+									-- from a static feature.
+								set_fatal_error
+								error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
 							else
-								l_query := current_class.named_query (l_name)
-								if l_query /= Void then
-									l_seed := l_query.first_seed
-									l_name.set_seed (l_seed)
-									check_unqualified_vape_validity (l_name, l_query)
-									if l_query.is_attribute then
-										if in_static_feature then
-												-- Error: we cannot access the address of an attribute
-												-- from a static feature.
-											set_fatal_error
-											error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
-										else
-											report_attribute_address (an_expression, l_query)
-											l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-											l_typed_pointer_class := l_typed_pointer_type.named_base_class
-											if l_typed_pointer_class.actual_class.is_preparsed then
-													-- Class TYPED_POINTER has been found in the universe.
-													-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
-												l_type := l_query.type
-												if l_type.is_base_type or current_class = current_type then
-													a_context.force_last (l_type)
-													report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-													a_context.force_last (l_typed_pointer_type)
-														-- No need to check validity in the context of `current_type' again.
-													already_checked := True
-												end
-											else
-													-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
-												l_pointer_type := current_universe_impl.pointer_type
-												a_context.force_last (l_pointer_type)
-												report_pointer_expression (an_expression, l_pointer_type)
-													-- No need to check validity in the context of `current_type' again.
-												already_checked := True
-											end
-										end
-									else
-										report_function_address (an_expression, l_query)
-											-- $feature_name is of type POINTER, even
-											-- in ISE and its TYPED_POINTER support.
-										l_pointer_type := current_universe_impl.pointer_type
-										a_context.force_last (l_pointer_type)
-										report_pointer_expression (an_expression, l_pointer_type)
+								report_attribute_address (an_expression, l_query)
+								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+								l_typed_pointer_class := l_typed_pointer_type.named_base_class
+								if l_typed_pointer_class.actual_class.is_preparsed then
+										-- Class TYPED_POINTER has been found in the universe.
+										-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
+									l_type := l_query.type
+									if l_type.is_base_type or current_class = current_type then
+										a_context.force_last (l_type)
+										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+										a_context.force_last (l_typed_pointer_type)
 											-- No need to check validity in the context of `current_type' again.
 										already_checked := True
 									end
 								else
-									set_fatal_error
-										-- ISE Eiffel 5.4 reports this error as a VEEN,
-										-- but it is in fact a VUAR-4 (ETL2 p.369).
-									error_handler.report_vuar4a_error (current_class_impl, l_name)
+										-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
+									l_pointer_type := current_universe_impl.pointer_type
+									a_context.force_last (l_pointer_type)
+									report_pointer_expression (an_expression, l_pointer_type)
+										-- No need to check validity in the context of `current_type' again.
+									already_checked := True
 								end
 							end
+						else
+							report_function_address (an_expression, l_query)
+								-- $feature_name is of type POINTER, even
+								-- in ISE and its TYPED_POINTER support.
+							l_pointer_type := current_universe_impl.pointer_type
+							a_context.force_last (l_pointer_type)
+							report_pointer_expression (an_expression, l_pointer_type)
+								-- No need to check validity in the context of `current_type' again.
+							already_checked := True
 						end
+					else
+						set_fatal_error
+							-- ISE Eiffel 5.4 reports this error as a VEEN,
+							-- but it is in fact a VUAR-4 (ETL2 p.369).
+						error_handler.report_vuar4a_error (current_class_impl, l_name)
 					end
 				end
 			end
@@ -6618,66 +6667,55 @@ feature {NONE} -- Expression validity
 							report_pointer_expression (an_expression, l_pointer_type)
 						end
 					end
-				else
-						-- This is of the form '$feature_name'.
--- TODO: I don't think we need to check the interface of `current_class' again.
--- I guess that's already done in `check_feature_validity'.
-					current_class.process (system_processor.interface_checker)
-					if not current_class.interface_checked or else current_class.has_interface_error then
-						set_fatal_error
-					else
-						l_procedure := current_class.seeded_procedure (l_seed)
-						if l_procedure /= Void then
-							check_unqualified_vape_validity (l_name, l_procedure)
-							report_procedure_address (an_expression, l_procedure)
-								-- $feature_name is of type POINTER, even
-								-- in ISE and its TYPED_POINTER support.
-							l_pointer_type := current_universe_impl.pointer_type
-							a_context.force_last (l_pointer_type)
-							report_pointer_expression (an_expression, l_pointer_type)
+					-- This is of the form '$feature_name'.
+				elseif attached current_class.seeded_procedure (l_seed) as l_procedure then
+						-- Note that we need to check the interface of `current_class' again.
+						-- It's already done in `check_feature_validity'
+					check_unqualified_vape_validity (l_name, l_procedure)
+					report_procedure_address (an_expression, l_procedure)
+						-- $feature_name is of type POINTER, even
+						-- in ISE and its TYPED_POINTER support.
+					l_pointer_type := current_universe_impl.pointer_type
+					a_context.force_last (l_pointer_type)
+					report_pointer_expression (an_expression, l_pointer_type)
+				elseif attached current_class.seeded_query (l_seed) as l_query then
+					check_unqualified_vape_validity (l_name, l_query)
+					if l_query.is_attribute then
+						if in_static_feature then
+								-- Error: we cannot access the address of an attribute
+								-- from a static feature.
+							set_fatal_error
+							error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
 						else
-							l_query := current_class.seeded_query (l_seed)
-							if l_query /= Void then
-								check_unqualified_vape_validity (l_name, l_query)
-								if l_query.is_attribute then
-									if in_static_feature then
-											-- Error: we cannot access the address of an attribute
-											-- from a static feature.
-										set_fatal_error
-										error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
-									else
-										report_attribute_address (an_expression, l_query)
-										l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-										l_typed_pointer_class := l_typed_pointer_type.named_base_class
-										if l_typed_pointer_class.actual_class.is_preparsed then
-												-- Class TYPED_POINTER has been found in the universe.
-												-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
-											l_type := l_query.type
-											a_context.force_last (l_type)
-											report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-											a_context.force_last (l_typed_pointer_type)
-										else
-												-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
-											l_pointer_type := current_universe_impl.pointer_type
-											a_context.force_last (l_pointer_type)
-											report_pointer_expression (an_expression, l_pointer_type)
-										end
-									end
-								else
-									report_function_address (an_expression, l_query)
-										-- $feature_name is of type POINTER, even
-										-- in ISE and its TYPED_POINTER support.
-									l_pointer_type := current_universe_impl.pointer_type
-									a_context.force_last (l_pointer_type)
-									report_pointer_expression (an_expression, l_pointer_type)
-								end
+							report_attribute_address (an_expression, l_query)
+							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+							l_typed_pointer_class := l_typed_pointer_type.named_base_class
+							if l_typed_pointer_class.actual_class.is_preparsed then
+									-- Class TYPED_POINTER has been found in the universe.
+									-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
+								l_type := l_query.type
+								a_context.force_last (l_type)
+								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+								a_context.force_last (l_typed_pointer_type)
 							else
-									-- Internal error: if we got a seed, `l_query' should not be void.
-								set_fatal_error
-								error_handler.report_giaaa_error
+									-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
+								l_pointer_type := current_universe_impl.pointer_type
+								a_context.force_last (l_pointer_type)
+								report_pointer_expression (an_expression, l_pointer_type)
 							end
 						end
+					else
+						report_function_address (an_expression, l_query)
+							-- $feature_name is of type POINTER, even
+							-- in ISE and its TYPED_POINTER support.
+						l_pointer_type := current_universe_impl.pointer_type
+						a_context.force_last (l_pointer_type)
+						report_pointer_expression (an_expression, l_pointer_type)
 					end
+				else
+						-- Internal error: if we got a seed, `l_query' should not be void.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				end
 			end
 		end
@@ -8663,6 +8701,7 @@ feature {NONE} -- Expression validity
 			l_precursor_keyword: ET_PRECURSOR_KEYWORD
 			l_parent_type: ET_BASE_TYPE
 			l_class: ET_CLASS
+			l_has_parenthesis_call: BOOLEAN
 		do
 			has_fatal_error := False
 			if not attached {ET_FEATURE} current_feature_impl as l_feature_impl then
@@ -8675,6 +8714,7 @@ feature {NONE} -- Expression validity
 						-- reported in the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (an_expression)
 			elseif in_precondition or in_postcondition then
 					-- The Precursor expression does not appear in a Routine_body.
 				set_fatal_error
@@ -8685,6 +8725,7 @@ feature {NONE} -- Expression validity
 						-- reported in the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (an_expression)
 			elseif attached current_inline_agent as l_current_inline_agent then
 					-- The associated feature of inline agents cannot be redefined.
 				set_fatal_error
@@ -8695,6 +8736,7 @@ feature {NONE} -- Expression validity
 						-- reported in the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (an_expression)
 			elseif current_feature.first_precursor = Void then
 					-- Immediate features cannot have Precursor.
 				set_fatal_error
@@ -8707,6 +8749,7 @@ feature {NONE} -- Expression validity
 				else
 					error_handler.report_vdpr3d_error (current_class, an_expression, l_feature_impl)
 				end
+				check_orphan_actual_arguments_validity (an_expression)
 			elseif not attached an_expression.parent_type as l_unresolved_parent_type then
 					-- Internal error: the Precursor construct should
 					-- already have been resolved when flattening the
@@ -8715,6 +8758,7 @@ feature {NONE} -- Expression validity
 					-- and hence on the ancestor class `current_class_impl'.
 				set_fatal_error
 				error_handler.report_giaaa_error
+				check_orphan_actual_arguments_validity (an_expression)
 			else
 				l_parent_type := l_unresolved_parent_type
 				if current_class /= current_class_impl and l_parent_type.is_generic then
@@ -8728,6 +8772,7 @@ feature {NONE} -- Expression validity
 							-- of `current_class_impl', and hence of `current_class'.
 						set_fatal_error
 						error_handler.report_giaaa_error
+						check_orphan_actual_arguments_validity (an_expression)
 					end
 				end
 				if not has_fatal_error then
@@ -8737,22 +8782,26 @@ feature {NONE} -- Expression validity
 							-- Check for parenthesis alias.
 						if current_class = current_class_impl then
 							check_precursor_parenthesis_call_validity (an_expression, l_query, l_class, l_parent_type, a_context)
+							if not has_fatal_error and then attached an_expression.parenthesis_call as l_parenthesis_call then
+								an_expression.set_index (l_parenthesis_call.index)
+								l_has_parenthesis_call := True
+							end
 						end
-						if has_fatal_error then
-							-- Do nothing
-						elseif attached an_expression.parenthesis_call as l_parenthesis_call then
-							an_expression.set_index (l_parenthesis_call.index)
-						else
+						if not has_fatal_error and then not l_has_parenthesis_call then
 							check_precursor_query_expression_validity (an_expression, l_query, l_class, l_parent_type, a_context)
 						end
+					elseif attached l_class.seeded_procedure (l_precursor_keyword.seed) as l_procedure then
+							-- The precursor in a procedure cannot be used as an expression.
+						set_fatal_error
+						error_handler.report_vkcn2a_error (current_class, l_precursor_keyword, l_procedure, l_class)
+						check_orphan_actual_arguments_validity (an_expression)
 					else
--- TODO: I don't think that it's a internal error. We should report that precursor
--- in a procedure cannot be used as an expression.
 							-- Internal error: the Precursor construct should
 							-- already have been resolved when flattening the
 							-- features of `current_class_impl'.
 						set_fatal_error
 						error_handler.report_giaaa_error
+						check_orphan_actual_arguments_validity (an_expression)
 					end
 				end
 			end
@@ -8835,7 +8884,7 @@ feature {NONE} -- Expression validity
 			l_seed := l_name.seed
 			check_expression_validity (l_target, a_context, current_system.detachable_any_type)
 			if has_fatal_error then
-				-- We cannot go further.
+				check_orphan_actual_arguments_validity (a_call)
 			elseif l_seed = 0 then
 					-- We need to resolve `l_name' in the implementation
 					-- class of `current_feature_impl' first.
@@ -8846,9 +8895,12 @@ feature {NONE} -- Expression validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				else
 					l_adapted_class := adapted_class (l_name, a_context)
-					if not has_fatal_error then
+					if has_fatal_error then
+						check_orphan_actual_arguments_validity (a_call)
+					else
 						l_class := l_adapted_class.base_class
 							-- It is useful to know which binary expressions are
 							-- boolean operators between two boolean expressions
@@ -8864,6 +8916,7 @@ feature {NONE} -- Expression validity
 						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked_successfully then
 							set_fatal_error
+							check_orphan_actual_arguments_validity (a_call)
 						elseif l_class.is_dotnet then
 								-- A class coming from a .NET assembly can contain overloaded
 								-- features (i.e. several features with the same name).
@@ -8875,7 +8928,7 @@ feature {NONE} -- Expression validity
 								-- Check for parenthesis alias.
 							check_query_parenthesis_call_validity (a_call, l_query, l_class, a_context, a_call_info)
 							if has_fatal_error then
-								-- Do nothing
+								-- Do nothing.
 							elseif attached a_call.parenthesis_call as l_parenthesis_call then
 								a_call.set_index (l_parenthesis_call.index)
 							else
@@ -8885,6 +8938,7 @@ feature {NONE} -- Expression validity
 								-- In a call expression, the feature has to be a query.
 							set_fatal_error
 							error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
+							check_orphan_actual_arguments_validity (a_call)
 						else
 							if l_class.is_tuple_class and then attached {ET_IDENTIFIER} l_name as l_label then
 									-- Check whether this is a tuple label.
@@ -8895,7 +8949,7 @@ feature {NONE} -- Expression validity
 										-- Check for parenthesis alias.
 									check_tuple_label_parenthesis_call_validity (a_call, l_class, a_context, a_call_info)
 									if has_fatal_error then
-										-- Do nothing
+										-- Do nothing.
 									elseif attached a_call.parenthesis_call as l_parenthesis_call then
 										a_call.set_index (l_parenthesis_call.index)
 									else
@@ -8908,6 +8962,7 @@ feature {NONE} -- Expression validity
 									-- ISE Eiffel 5.4 reports this error as a VEEN,
 									-- but it is in fact a VUEX-2 (ETL2 p.368).
 								error_handler.report_vuex2a_error (current_class, l_name, l_class)
+								check_orphan_actual_arguments_validity (a_call)
 							end
 						end
 					end
@@ -8920,6 +8975,7 @@ feature {NONE} -- Expression validity
 				l_class.process (system_processor.interface_checker)
 				if not l_class.interface_checked_successfully then
 					set_fatal_error
+					check_orphan_actual_arguments_validity (a_call)
 				elseif l_name.is_tuple_label then
 					if l_class.is_tuple_class then
 						check_qualified_tuple_label_call_expression_validity (a_call, l_class, a_context, a_call_info)
@@ -8929,16 +8985,16 @@ feature {NONE} -- Expression validity
 							-- to inherit from TUPLE.
 						set_fatal_error
 						error_handler.report_giaaa_error
+						check_orphan_actual_arguments_validity (a_call)
 					end
+				elseif attached l_class.seeded_query (l_seed) as l_query then
+					check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context, a_call_info)
 				else
-					if attached l_class.seeded_query (l_seed) as l_query then
-						check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context, a_call_info)
-					else
-							-- Report internal error: if we got a seed, there should be
-							-- a query for this seed.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					end
+						-- Report internal error: if we got a seed, there should be
+						-- a query for this seed.
+					set_fatal_error
+					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 		end
@@ -8989,14 +9045,14 @@ feature {NONE} -- Expression validity
 			if not l_overloaded_queries.is_empty then
 				keep_best_overloaded_features (l_overloaded_queries, l_original_name, a_call.arguments, a_context, False, False)
 				if has_fatal_error then
-					-- Do nothing.
+					check_orphan_actual_arguments_validity (a_call)
 				elseif l_overloaded_queries.count = 1 then
 					l_query := l_overloaded_queries.first
 					l_seed := l_query.first_seed
 					l_name.set_seed (l_seed)
 					check_query_parenthesis_call_validity (a_call, l_query, l_class, a_context, Void)
 					if has_fatal_error then
-						-- Do nothing
+						-- Do nothing.
 					elseif attached a_call.parenthesis_call as l_parenthesis_call then
 						a_call.set_index (l_parenthesis_call.index)
 					else
@@ -9007,16 +9063,19 @@ feature {NONE} -- Expression validity
 -- TODO: report VIOF
 					set_fatal_error
 					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			elseif attached a_adapted_class.named_procedure (l_name) as l_procedure then
 					-- In a call expression, the feature has to be a query.
 				set_fatal_error
 				error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				set_fatal_error
 					-- ISE Eiffel 5.4 reports this error as a VEEN,
 					-- but it is in fact a VUEX-2 (ETL2 p.368).
 				error_handler.report_vuex2a_error (current_class, l_name, l_class)
+				check_orphan_actual_arguments_validity (a_call)
 			end
 			free_overloaded_queries (l_overloaded_queries)
 		end
@@ -9086,10 +9145,12 @@ feature {NONE} -- Expression validity
 					-- In a call expression, the feature has to be a query.
 				set_fatal_error
 				error_handler.report_vkcn2a_error (current_class, a_call.name, l_procedure, a_class)
+				check_orphan_actual_arguments_validity (a_call)
 			else
 					-- The feature is either a query or a procedure.
 				set_fatal_error
 				error_handler.report_giaaa_error
+				check_orphan_actual_arguments_validity (a_call)
 			end
 		end
 
@@ -9175,6 +9236,7 @@ feature {NONE} -- Expression validity
 						-- processing the implementation of `current_feature_impl'.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (a_call)
 			end
 			if l_seed > a_context.base_type_actual_count then
 					-- Report internal error: the index of the labeled
@@ -9603,7 +9665,7 @@ feature {NONE} -- Expression validity
 			l_type := an_expression.type
 			check_type_validity (l_type)
 			if has_fatal_error then
-				-- We cannot go further.
+				check_orphan_actual_arguments_validity (an_expression)
 			elseif l_seed = 0 then
 					-- We need to resolve `l_name' in the implementation
 					-- class of `current_feature_impl' first.
@@ -9614,14 +9676,18 @@ feature {NONE} -- Expression validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (an_expression)
 				else
 					a_context.force_last (l_type)
 					l_adapted_class := adapted_class (l_name, a_context)
-					if not has_fatal_error then
+					if has_fatal_error then
+						check_orphan_actual_arguments_validity (an_expression)
+					else
 						l_class := l_adapted_class.base_class
 						l_class.process (system_processor.interface_checker)
 						if not l_class.interface_checked_successfully then
 							set_fatal_error
+							check_orphan_actual_arguments_validity (an_expression)
 						elseif l_class.is_dotnet then
 								-- A class coming from a .NET assembly can contain overloaded
 								-- features (i.e. several features with the same name).
@@ -9633,7 +9699,7 @@ feature {NONE} -- Expression validity
 								-- Check for parenthesis alias.
 							check_static_parenthesis_call_validity (an_expression, l_query, l_class, a_context)
 							if has_fatal_error then
-								-- Do nothing
+								-- Do nothing.
 							elseif attached an_expression.parenthesis_call as l_parenthesis_call then
 								an_expression.set_index (l_parenthesis_call.index)
 							else
@@ -9643,11 +9709,13 @@ feature {NONE} -- Expression validity
 								-- In a call expression, the feature has to be a query.
 							set_fatal_error
 							error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
+							check_orphan_actual_arguments_validity (an_expression)
 						else
 							set_fatal_error
 								-- ISE Eiffel 5.4 reports this error as a VEEN,
 								-- but it is in fact a VUEX-2 (ETL2 p.368).
 							error_handler.report_vuex2a_error (current_class, l_name, l_class)
+							check_orphan_actual_arguments_validity (an_expression)
 						end
 					end
 				end
@@ -9660,6 +9728,7 @@ feature {NONE} -- Expression validity
 				l_class.process (system_processor.interface_checker)
 				if not l_class.interface_checked_successfully then
 					set_fatal_error
+					check_orphan_actual_arguments_validity (an_expression)
 				elseif attached l_class.seeded_query (l_seed) as l_query then
 					check_static_query_call_expression_validity (an_expression, l_query, l_class, a_context)
 				else
@@ -9667,6 +9736,7 @@ feature {NONE} -- Expression validity
 						-- a query for this seed.
 					set_fatal_error
 					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (an_expression)
 				end
 			end
 		end
@@ -9714,14 +9784,14 @@ feature {NONE} -- Expression validity
 			if not l_overloaded_queries.is_empty then
 				keep_best_overloaded_features (l_overloaded_queries, l_original_name, a_call.arguments, a_context, True, False)
 				if has_fatal_error then
-					-- Do nothing.
+					check_orphan_actual_arguments_validity (a_call)
 				elseif l_overloaded_queries.count = 1 then
 					l_query := l_overloaded_queries.first
 					l_seed := l_query.first_seed
 					l_name.set_seed (l_seed)
 					check_static_parenthesis_call_validity (a_call, l_query, l_class, a_context)
 					if has_fatal_error then
-						-- Do nothing
+						-- Do nothing.
 					elseif attached a_call.parenthesis_call as l_parenthesis_call then
 						a_call.set_index (l_parenthesis_call.index)
 					else
@@ -9732,16 +9802,19 @@ feature {NONE} -- Expression validity
 -- TODO: report VIOF
 					set_fatal_error
 					error_handler.report_giaaa_error
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			elseif attached a_adapted_class.named_procedure (l_name) as l_procedure then
 					-- In a call expression, the feature has to be a query.
 				set_fatal_error
 				error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				set_fatal_error
 					-- ISE Eiffel 5.4 reports this error as a VEEN,
 					-- but it is in fact a VUEX-2 (ETL2 p.368).
 				error_handler.report_vuex2a_error (current_class, l_name, l_class)
+				check_orphan_actual_arguments_validity (a_call)
 			end
 			free_overloaded_queries (l_overloaded_queries)
 		end
@@ -9876,12 +9949,9 @@ feature {NONE} -- Expression validity
 							error_handler.report_giaaa_error
 						end
 					else
--- TODO: I don't think we need to check the interface of `current_class' again.
--- I guess that's already done in `check_feature_validity'.
-						current_class.process (system_processor.interface_checker)
-						if not current_class.interface_checked or else current_class.has_interface_error then
-							set_fatal_error
-						elseif attached current_class.named_query (l_name) as l_query then
+							-- Note that we need to check the interface of `current_class' again.
+							-- It's already done in `check_feature_validity'.
+						if attached current_class.named_query (l_name) as l_query then
 							if not l_query.is_attribute then
 								set_fatal_error
 								error_handler.report_vwst1b_error (current_class, l_name, l_query)
@@ -9910,28 +9980,23 @@ feature {NONE} -- Expression validity
 					end
 				end
 				if not had_error and not already_checked then
--- TODO: I don't think we need to check the interface of `current_class' again.
--- I guess that's already done in `check_feature_validity'.
-					current_class.process (system_processor.interface_checker)
-					if not current_class.interface_checked or else current_class.has_interface_error then
+						-- Note that we need to check the interface of `current_class' again.
+						-- It's already done in `check_feature_validity'.
+					if not attached current_class.seeded_query (l_seed) as l_query then
+							-- Internal error: if we got a seed, `l_query' should not be void.
 						set_fatal_error
+						error_handler.report_giaaa_error
 					else
-						if not attached current_class.seeded_query (l_seed) as l_query then
-								-- Internal error: if we got a seed, `l_query' should not be void.
+						if not l_query.is_attribute then
 							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							if not l_query.is_attribute then
-								set_fatal_error
-								if current_class = current_class_impl then
-									error_handler.report_vwst1b_error (current_class, l_name, l_query)
-								elseif not has_implementation_error (current_feature_impl) then
-										-- Internal error: this error should have been reported when
-										-- processing the implementation of `current_feature_impl' or in
-										-- the feature flattener when redeclaring attribute `l_query'
-										-- to a non-attribute in an ancestor of `current_class'.
-									error_handler.report_giaaa_error
-								end
+							if current_class = current_class_impl then
+								error_handler.report_vwst1b_error (current_class, l_name, l_query)
+							elseif not has_implementation_error (current_feature_impl) then
+									-- Internal error: this error should have been reported when
+									-- processing the implementation of `current_feature_impl' or in
+									-- the feature flattener when redeclaring attribute `l_query'
+									-- to a non-attribute in an ancestor of `current_class'.
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -10007,10 +10072,11 @@ feature {NONE} -- Expression validity
 						-- the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				check_across_cursor_parenthesis_call_validity (a_call, a_name, a_context)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
 					a_call.set_index (l_parenthesis_call.index)
 				else
@@ -10025,6 +10091,7 @@ feature {NONE} -- Expression validity
 					else
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 		end
@@ -10061,7 +10128,7 @@ feature {NONE} -- Expression validity
 				end
 			end
 			if l_checked then
-				-- Do nothing	
+				-- Do nothing.
 			elseif l_seed = 0 then
 					-- We need to resolve `l_name' in the implementation
 					-- class of `current_feature_impl' first.
@@ -10072,6 +10139,7 @@ feature {NONE} -- Expression validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				elseif attached current_class.named_query (l_name) as l_query then
 						-- Note that we need to check the interface of `current_class' again.
 						-- It's already done in `check_feature_validity'.
@@ -10080,7 +10148,7 @@ feature {NONE} -- Expression validity
 						-- Check for parenthesis alias.
 					check_query_parenthesis_call_validity (a_call, l_query, current_class, a_context, Void)
 					if has_fatal_error then
-						-- Do nothing
+						-- Do nothing.
 					elseif attached a_call.parenthesis_call as l_parenthesis_call then
 						a_call.set_index (l_parenthesis_call.index)
 					else
@@ -10090,11 +10158,13 @@ feature {NONE} -- Expression validity
 						-- In a call expression, the feature has to be a query.
 					set_fatal_error
 					error_handler.report_vkcn2c_error (current_class, l_name, l_procedure)
+					check_orphan_actual_arguments_validity (a_call)
 				else
 					set_fatal_error
 						-- ISE Eiffel 5.4 reports this error as a VEEN,
 						-- but it is in fact a VUEX-1 (ETL2 p.368).
 					error_handler.report_vuex1a_error (current_class, l_name)
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			elseif attached current_class.seeded_query (l_seed) as l_query then
 					-- Note that we don't need to check the interface of `current_class' again
@@ -10107,6 +10177,7 @@ feature {NONE} -- Expression validity
 					-- a query for this seed.
 				set_fatal_error
 				error_handler.report_giaaa_error
+				check_orphan_actual_arguments_validity (a_call)
 			end
 		end
 
@@ -10132,10 +10203,11 @@ feature {NONE} -- Expression validity
 						-- the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				check_formal_argument_parenthesis_call_validity (a_call, a_name, a_context)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
 					a_call.set_index (l_parenthesis_call.index)
 				else
@@ -10149,6 +10221,7 @@ feature {NONE} -- Expression validity
 							-- Internal error: invariants don't have arguments.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 		end
@@ -10175,10 +10248,11 @@ feature {NONE} -- Expression validity
 						-- the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				check_local_variable_parenthesis_call_validity (a_call, a_name, a_context)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
 					a_call.set_index (l_parenthesis_call.index)
 				else
@@ -10192,6 +10266,7 @@ feature {NONE} -- Expression validity
 							-- Internal error: invariants don't have local variables.
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 		end
@@ -10218,10 +10293,11 @@ feature {NONE} -- Expression validity
 						-- the implementation feature.
 					error_handler.report_giaaa_error
 				end
+				check_orphan_actual_arguments_validity (a_call)
 			else
 				check_object_test_local_parenthesis_call_validity (a_call, a_name, a_context)
 				if has_fatal_error then
-					-- Do nothing
+					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
 					a_call.set_index (l_parenthesis_call.index)
 				else
@@ -10236,6 +10312,7 @@ feature {NONE} -- Expression validity
 					else
 						error_handler.report_giaaa_error
 					end
+					check_orphan_actual_arguments_validity (a_call)
 				end
 			end
 		end
@@ -10418,63 +10495,54 @@ feature {NONE} -- Expression validity
 								-- the implementation feature.
 							error_handler.report_giaaa_error
 						end
-					else
--- TODO: I don't think we need to check the interface of `current_class' again.
--- I guess that's already done in `check_feature_validity'.
-						current_class.process (system_processor.interface_checker)
-						if not current_class.interface_checked or else current_class.has_interface_error then
-							set_fatal_error
-						else
-							if attached current_class.named_query (l_identifier) as l_attribute then
-								if l_attribute.is_attribute then
-									l_seed := l_attribute.first_seed
-									l_identifier.set_seed (l_seed)
-									l_type := l_attribute.type
-									a_context.force_last (l_type)
-									if in_static_feature then
-											-- Error: attributes cannot be used in static features.
-										set_fatal_error
-										error_handler.report_vucr0c_error (current_class, current_class_impl, l_identifier, l_attribute)
-									else
-										report_attribute_assignment_target (a_writable, l_attribute)
-									end
-								else
-										-- There is a feature with that name, but it
-										-- it is not an attribute.
-									set_fatal_error
-									error_handler.report_vjaw0a_error (current_class, l_identifier, l_attribute)
-								end
+					elseif attached current_class.named_query (l_identifier) as l_attribute then
+							-- Note that we need to check the interface of `current_class' again.
+							-- It's already done in `check_feature_validity'
+						if l_attribute.is_attribute then
+							l_seed := l_attribute.first_seed
+							l_identifier.set_seed (l_seed)
+							l_type := l_attribute.type
+							a_context.force_last (l_type)
+							if in_static_feature then
+									-- Error: attributes cannot be used in static features.
+								set_fatal_error
+								error_handler.report_vucr0c_error (current_class, current_class_impl, l_identifier, l_attribute)
 							else
-								if attached current_class.named_procedure (l_identifier) as l_procedure then
-										-- There is a feature with that name, but it
-										-- it is not an attribute.
-									set_fatal_error
-									error_handler.report_vjaw0a_error (current_class, l_identifier, l_procedure)
-								else
-										-- There is no feature with that name.
-										-- Check whether this is an argument in order
-										-- to give a better error message.
-									set_fatal_error
-									if attached current_closure_impl.arguments as l_arguments and then l_arguments.index_of (l_identifier) /= 0 then
-										if attached current_inline_agent as l_current_inline_agent then
-											error_handler.report_vjaw0c_error (current_class, l_identifier, l_current_inline_agent)
-										elseif current_feature_impl.is_feature then
-											error_handler.report_vjaw0b_error (current_class, l_identifier, current_feature_impl.as_feature)
-										else
-											-- Internal error: invariants don't have writables.
-											error_handler.report_giaaa_error
-										end
-									else
-										if attached current_inline_agent as l_current_inline_agent then
-											error_handler.report_veen0b_error (current_class, l_identifier, l_current_inline_agent)
-										elseif current_feature_impl.is_feature then
-											error_handler.report_veen0a_error (current_class, l_identifier, current_feature_impl.as_feature)
-										else
-												-- Internal error: invariants don't have writables.
-											error_handler.report_giaaa_error
-										end
-									end
-								end
+								report_attribute_assignment_target (a_writable, l_attribute)
+							end
+						else
+								-- There is a feature with that name, but it
+								-- it is not an attribute.
+							set_fatal_error
+							error_handler.report_vjaw0a_error (current_class, l_identifier, l_attribute)
+						end
+					elseif attached current_class.named_procedure (l_identifier) as l_procedure then
+							-- There is a feature with that name, but it
+							-- it is not an attribute.
+						set_fatal_error
+						error_handler.report_vjaw0a_error (current_class, l_identifier, l_procedure)
+					else
+							-- There is no feature with that name.
+							-- Check whether this is an argument in order
+							-- to give a better error message.
+						set_fatal_error
+						if attached current_closure_impl.arguments as l_arguments and then l_arguments.index_of (l_identifier) /= 0 then
+							if attached current_inline_agent as l_current_inline_agent then
+								error_handler.report_vjaw0c_error (current_class, l_identifier, l_current_inline_agent)
+							elseif current_feature_impl.is_feature then
+								error_handler.report_vjaw0b_error (current_class, l_identifier, current_feature_impl.as_feature)
+							else
+								-- Internal error: invariants don't have writables.
+								error_handler.report_giaaa_error
+							end
+						else
+							if attached current_inline_agent as l_current_inline_agent then
+								error_handler.report_veen0b_error (current_class, l_identifier, l_current_inline_agent)
+							elseif current_feature_impl.is_feature then
+								error_handler.report_veen0a_error (current_class, l_identifier, current_feature_impl.as_feature)
+							else
+									-- Internal error: invariants don't have writables.
+								error_handler.report_giaaa_error
 							end
 						end
 					end
@@ -10516,32 +10584,6 @@ feature {NONE} -- Expression validity
 			end
 			current_context := old_context
 			current_target_type := old_target_type
-		end
-
-	check_expressions_validity (an_expressions: ET_EXPRESSIONS)
-			-- Check validity of `an_expressions' (without any indication
-			-- about the type of the possible attachment target)
-			-- in `current_feature' of `current_type'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			an_expressions_not_void: an_expressions /= Void
-		local
-			l_expression_context: ET_NESTED_TYPE_CONTEXT
-			l_detachable_any_type: ET_CLASS_TYPE
-			i, nb: INTEGER
-		do
-			has_fatal_error := True
-			if an_expressions /= Void then
-				l_detachable_any_type := current_system.detachable_any_type
-				l_expression_context := new_context (current_type)
-				nb := an_expressions.count
-				from i := 1 until i > nb loop
-					check_expression_validity (an_expressions.expression (i), l_expression_context, l_detachable_any_type)
-					l_expression_context.wipe_out
-					i := i + 1
-				end
-				free_context (l_expression_context)
-			end
 		end
 
 	check_actual_arguments_validity (a_call: ET_CALL_WITH_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT; a_feature: ET_FEATURE; a_class: detachable ET_CLASS)
@@ -10748,6 +10790,34 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 				end
 			end
+		end
+
+	check_orphan_actual_arguments_validity (a_call: ET_CALL_WITH_ACTUAL_ARGUMENTS)
+			-- Check validity of actual argument expressions of `a_call' when
+			-- an error occurred when trying to determine the feature of the call.
+			-- Keep `has_fatal_error' to True.
+		require
+			a_call_not_void: a_call /= Void
+			has_fatal_error: has_fatal_error
+		local
+			l_context: ET_NESTED_TYPE_CONTEXT
+			l_detachable_any_type: ET_CLASS_TYPE
+			i, nb: INTEGER
+		do
+			if attached a_call.arguments as l_actuals and then not l_actuals.is_empty then
+				l_detachable_any_type := current_system.detachable_any_type
+				l_context := new_context (current_type)
+				nb := l_actuals.count
+				from i := 1 until i > nb loop
+					check_expression_validity (l_actuals.actual_argument (i), l_context, l_detachable_any_type)
+					l_context.wipe_out
+					i := i + 1
+				end
+				free_context (l_context)
+			end
+			set_fatal_error
+		ensure
+			still_has_fatal_error: has_fatal_error
 		end
 
 feature {NONE} -- VAPE validity
@@ -10980,7 +11050,9 @@ feature {NONE} -- Parenthesis call validity
 				-- Do nothing.
 			else
 				check_across_cursor_validity (a_name, a_context)
-				if not has_fatal_error then
+				if has_fatal_error then
+					check_orphan_actual_arguments_validity (a_call)
+				else
 					check_identifier_parenthesis_call_validity (l_regular_call, a_name, l_actuals, a_context)
 				end
 			end
@@ -11015,7 +11087,9 @@ feature {NONE} -- Parenthesis call validity
 				-- Do nothing.
 			else
 				check_formal_argument_validity (a_name, a_context)
-				if not has_fatal_error then
+				if has_fatal_error then
+					check_orphan_actual_arguments_validity (a_call)
+				else
 					check_identifier_parenthesis_call_validity (l_regular_call, a_name, l_actuals, a_context)
 				end
 			end
@@ -11053,25 +11127,22 @@ feature {NONE} -- Parenthesis call validity
 			l_base_class: ET_CLASS
 			l_adapted_class: ET_ADAPTED_CLASS
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
-			l_position: ET_POSITION
 		do
 			has_fatal_error := False
 			create l_parenthesis.make
-			l_position := a_actuals.left_symbol.position
-			if l_position.is_null then
-				l_position := a_name.position
-			end
-			l_parenthesis.set_position (l_position.line, l_position.column)
+			set_parenthesis_call_position (l_parenthesis, a_actuals)
 			l_adapted_class := adapted_class (l_parenthesis, a_context)
-			if not has_fatal_error then
+			if has_fatal_error then
+				check_orphan_actual_arguments_validity (a_call)
+			else
 				l_base_class := l_adapted_class.base_class
 					-- Look for a feature with 'alias "()"' in `l_adapted_class'.
 				l_base_class.process (system_processor.interface_checker)
 				if not l_base_class.interface_checked_successfully then
 					set_fatal_error
+					check_orphan_actual_arguments_validity (a_call)
 				elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
 						-- Build the unfolded parenthesis call.
-					set_parenthesis_call_position (l_parenthesis, a_actuals)
 					l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 					a_call.set_parenthesis_call (a_name, l_parenthesis, a_actuals)
 					if attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
@@ -11080,8 +11151,10 @@ feature {NONE} -- Parenthesis call validity
 						check_qualified_feature_call_expression_validity (l_parenthesis_call_expression, l_unfolded_feature, l_base_class, a_context, Void)
 					else
 							-- The parenthesis call is either an instruction or an expression.
+							-- Check the validity of the arguments of the call despite the error.
 						set_fatal_error
 						error_handler.report_giaaa_error
+						check_orphan_actual_arguments_validity (a_call)
 					end
 				end
 			end
@@ -11119,30 +11192,27 @@ feature {NONE} -- Parenthesis call validity
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
 			l_qualified_unfolded_target: ET_QUALIFIED_CALL_EXPRESSION
 			l_unqualified_unfolded_target: ET_UNQUALIFIED_CALL_EXPRESSION
-			l_position: ET_POSITION
 		do
 			has_fatal_error := False
 			if attached {ET_REGULAR_FEATURE_CALL} a_call as l_regular_call then
 				l_actuals := l_regular_call.arguments
 				if a_query.arguments_count = 0 and (l_actuals /= Void and then l_actuals.count > 0) then
 					create l_parenthesis.make
-					l_position := l_actuals.left_symbol.position
-					if l_position.is_null then
-						l_position := a_call.name.position
-					end
-					l_parenthesis.set_position (l_position.line, l_position.column)
+					set_parenthesis_call_position (l_parenthesis, l_actuals)
 					a_context.force_last (a_query.type)
 					l_adapted_class := adapted_class (l_parenthesis, a_context)
 					a_context.remove_last
-					if not has_fatal_error then
+					if has_fatal_error then
+						check_orphan_actual_arguments_validity (a_call)
+					else
 						l_base_class := l_adapted_class.base_class
 							-- Look for a feature with 'alias "()"' in `l_adapted_class'.
 						l_base_class.process (system_processor.interface_checker)
 						if not l_base_class.interface_checked_successfully then
 							set_fatal_error
+							check_orphan_actual_arguments_validity (a_call)
 						elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
 								-- Build the unfolded parenthesis call.
-							set_parenthesis_call_position (l_parenthesis, l_actuals)
 							l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 							if attached l_regular_call.target as l_target then
 								create l_qualified_unfolded_target.make (l_target, l_regular_call.name, Void)
@@ -11154,7 +11224,7 @@ feature {NONE} -- Parenthesis call validity
 								check_unqualified_query_call_expression_validity (l_unqualified_unfolded_target, a_query, a_context)
 							end
 							if has_fatal_error then
-								-- Do nothing.
+								check_orphan_actual_arguments_validity (a_call)
 							elseif attached {ET_PARENTHESIS_INSTRUCTION} l_regular_call.parenthesis_call as l_parenthesis_call_instruction then
 								check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
 							elseif attached {ET_PARENTHESIS_EXPRESSION} l_regular_call.parenthesis_call as l_parenthesis_call_expression then
@@ -11163,6 +11233,7 @@ feature {NONE} -- Parenthesis call validity
 									-- The parenthesis call is either an instruction or an expression.
 								set_fatal_error
 								error_handler.report_giaaa_error
+								check_orphan_actual_arguments_validity (a_call)
 							end
 						end
 					end
@@ -11199,7 +11270,9 @@ feature {NONE} -- Parenthesis call validity
 				-- Do nothing.
 			else
 				check_local_variable_validity (a_name, a_context)
-				if not has_fatal_error then
+				if has_fatal_error then
+					check_orphan_actual_arguments_validity (a_call)
+				else
 					check_identifier_parenthesis_call_validity (l_regular_call, a_name, l_actuals, a_context)
 				end
 			end
@@ -11234,7 +11307,9 @@ feature {NONE} -- Parenthesis call validity
 				-- Do nothing.
 			else
 				check_object_test_local_validity (a_name, a_context)
-				if not has_fatal_error then
+				if has_fatal_error then
+					check_orphan_actual_arguments_validity (a_call)
+				else
 					check_identifier_parenthesis_call_validity (l_regular_call, a_name, l_actuals, a_context)
 				end
 			end
@@ -11265,37 +11340,35 @@ feature {NONE} -- Parenthesis call validity
 			l_adapted_class: ET_ADAPTED_CLASS
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
 			l_unfolded_target: ET_PRECURSOR_EXPRESSION
-			l_position: ET_POSITION
 		do
 			has_fatal_error := False
 			l_actuals := a_call.arguments
 			if a_parent_query.arguments_count = 0 and (l_actuals /= Void and then l_actuals.count > 0) then
 				create l_parenthesis.make
-				l_position := l_actuals.left_symbol.position
-				if l_position.is_null then
-					l_position := a_call.precursor_keyword.position
-				end
-				l_parenthesis.set_position (l_position.line, l_position.column)
+				set_parenthesis_call_position (l_parenthesis, l_actuals)
 				a_context.force_last (a_parent_query.type)
 				l_adapted_class := adapted_class (l_parenthesis, a_context)
 				a_context.remove_last
-				if not has_fatal_error then
+				if has_fatal_error then
+					check_orphan_actual_arguments_validity (a_call)
+				else
 					l_base_class := l_adapted_class.base_class
 						-- Look for a feature with 'alias "()"' in `l_adapted_class'.
 					l_base_class.process (system_processor.interface_checker)
 					if not l_base_class.interface_checked_successfully then
 						set_fatal_error
+						check_orphan_actual_arguments_validity (a_call)
 					elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
 							-- Build the unfolded parenthesis call.
 						create l_unfolded_target.make (a_call.parent_name, Void)
 						l_unfolded_target.set_parent_type (a_call.parent_type)
 						l_unfolded_target.set_precursor_keyword (a_call.precursor_keyword)
-						set_parenthesis_call_position (l_parenthesis, l_actuals)
 						l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 						a_call.set_parenthesis_call (l_unfolded_target, l_parenthesis, l_actuals)
 						check_precursor_query_expression_validity (l_unfolded_target, a_parent_query, a_parent_class, a_parent_type, a_context)
 						if has_fatal_error then
-							-- Do nothing.
+							set_fatal_error
+							check_orphan_actual_arguments_validity (a_call)
 						elseif attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
 							check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
 						elseif attached {ET_PARENTHESIS_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
@@ -11304,6 +11377,7 @@ feature {NONE} -- Parenthesis call validity
 								-- The parenthesis call is either an instruction or an expression.
 							set_fatal_error
 							error_handler.report_giaaa_error
+							check_orphan_actual_arguments_validity (a_call)
 						end
 					end
 				end
@@ -11338,35 +11412,33 @@ feature {NONE} -- Parenthesis call validity
 			l_adapted_class: ET_ADAPTED_CLASS
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
 			l_unfolded_target: ET_STATIC_CALL_EXPRESSION
-			l_position: ET_POSITION
 		do
 			has_fatal_error := False
 			l_actuals := a_call.arguments
 			if a_query.arguments_count = 0 and (l_actuals /= Void and then l_actuals.count > 0) then
 				create l_parenthesis.make
-				l_position := l_actuals.left_symbol.position
-				if l_position.is_null then
-					l_position := a_call.name.position
-				end
-				l_parenthesis.set_position (l_position.line, l_position.column)
+				set_parenthesis_call_position (l_parenthesis, l_actuals)
 				a_context.force_last (a_query.type)
 				l_adapted_class := adapted_class (l_parenthesis, a_context)
 				a_context.remove_last
-				if not has_fatal_error then
+				if has_fatal_error then
+					check_orphan_actual_arguments_validity (a_call)
+				else
 					l_base_class := l_adapted_class.base_class
 						-- Look for a feature with 'alias "()"' in `l_adapted_class'.
 					l_base_class.process (system_processor.interface_checker)
 					if not l_base_class.interface_checked_successfully then
 						set_fatal_error
+						check_orphan_actual_arguments_validity (a_call)
 					elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
 							-- Build the unfolded parenthesis call.
 						create l_unfolded_target.make (a_call.static_type, a_call.qualified_name, Void)
-						set_parenthesis_call_position (l_parenthesis, l_actuals)
 						l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 						a_call.set_parenthesis_call (l_unfolded_target, l_parenthesis, l_actuals)
 						check_static_query_call_expression_validity (l_unfolded_target, a_query, a_class, a_context)
 						if has_fatal_error then
-							-- Do nothing.
+							set_fatal_error
+							check_orphan_actual_arguments_validity (a_call)
 						elseif attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
 							check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
 						elseif attached {ET_PARENTHESIS_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
@@ -11375,6 +11447,7 @@ feature {NONE} -- Parenthesis call validity
 								-- The parenthesis call is either an instruction or an expression.
 							set_fatal_error
 							error_handler.report_giaaa_error
+							check_orphan_actual_arguments_validity (a_call)
 						end
 					end
 				end
@@ -11416,7 +11489,6 @@ feature {NONE} -- Parenthesis call validity
 			l_adapted_class: ET_ADAPTED_CLASS
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
 			l_unfolded_target: ET_QUALIFIED_CALL_EXPRESSION
-			l_position: ET_POSITION
 		do
 			has_fatal_error := False
 			l_name := a_call.name
@@ -11428,34 +11500,34 @@ feature {NONE} -- Parenthesis call validity
 					-- it needs to have more actual parameters.
 				set_fatal_error
 				error_handler.report_giaaa_error
+				check_orphan_actual_arguments_validity (a_call)
 			elseif attached {ET_QUALIFIED_REGULAR_FEATURE_CALL} a_call as l_regular_call then
 				l_actuals := l_regular_call.arguments
 				if l_actuals /= Void and then l_actuals.count > 0 then
 					create l_parenthesis.make
-					l_position := l_actuals.left_symbol.position
-					if l_position.is_null then
-						l_position := l_name.position
-					end
-					l_parenthesis.set_position (l_position.line, l_position.column)
+					set_parenthesis_call_position (l_parenthesis, l_actuals)
 					l_type := a_class.formal_parameter_type (l_seed)
 					a_context.force_last (l_type)
 					l_adapted_class := adapted_class (l_parenthesis, a_context)
 					a_context.remove_last
-					if not has_fatal_error then
+					if has_fatal_error then
+						check_orphan_actual_arguments_validity (a_call)
+					else
 						l_base_class := l_adapted_class.base_class
 							-- Look for a feature with 'alias "()"' in `l_adapted_class'.
 						l_base_class.process (system_processor.interface_checker)
 						if not l_base_class.interface_checked_successfully then
 							set_fatal_error
+							check_orphan_actual_arguments_validity (a_call)
 						elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
 								-- Build the unfolded parenthesis call.
-							set_parenthesis_call_position (l_parenthesis, l_actuals)
 							l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 							create l_unfolded_target.make (l_regular_call.target, l_regular_call.name, Void)
 							l_regular_call.set_parenthesis_call (l_unfolded_target, l_parenthesis, l_actuals)
 							check_qualified_tuple_label_call_expression_validity (l_unfolded_target, a_class, a_context, Void)
 							if has_fatal_error then
-								-- Do nothing.
+								set_fatal_error
+								check_orphan_actual_arguments_validity (a_call)
 							elseif attached {ET_PARENTHESIS_INSTRUCTION} l_regular_call.parenthesis_call as l_parenthesis_call_instruction then
 								check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
 							elseif attached {ET_PARENTHESIS_EXPRESSION} l_regular_call.parenthesis_call as l_parenthesis_call_expression then
@@ -11464,6 +11536,7 @@ feature {NONE} -- Parenthesis call validity
 									-- The parenthesis call is either an instruction or an expression.
 								set_fatal_error
 								error_handler.report_giaaa_error
+								check_orphan_actual_arguments_validity (a_call)
 							end
 						end
 					end
