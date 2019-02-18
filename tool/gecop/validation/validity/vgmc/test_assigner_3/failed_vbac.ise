@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+
+Error code: VBAC(2)
+
+Error: target of assigner call has no associated assigner command.
+What to do: add an assigner mark to the declaration of the target feature
+  or use a dot form of a call.
+
+Class: BB [G -> {CC, DD}]
+Feature: f
+Line: 7
+      do
+->      a.z (5) := 4
+      end
+
+-------------------------------------------------------------------------------
