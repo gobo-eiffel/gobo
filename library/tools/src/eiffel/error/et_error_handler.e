@@ -4031,6 +4031,35 @@ feature -- Validity errors
 			end
 		end
 
+	report_vgmc0c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; f2: ET_FEATURE; a_constraint2: ET_ADAPTED_CLASS)
+			-- Report VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a feature with two different
+			-- versions in the base class of both generic constraints `a_constraint1'
+			-- and `a_constraint2'.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
+			-- may be different from `a_name' if they have been renamed in the rename clause
+			--  of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgmc_error (a_class) then
+				create l_error.make_vgmc0c (a_class, a_class_impl, a_name, f1, a_constraint1, f2, a_constraint2)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_vhay0a_error (a_class: ET_CLASS)
 			-- Report VHAY error: `a_class' implicitly inherits
 			-- from unknown class ANY.

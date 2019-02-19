@@ -228,14 +228,16 @@ feature {NONE} -- Processing
 			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
 			l_system_processor.set_nested_benchmark_shown (is_nested_benchmark and not is_no_benchmark and not is_silent)
 			l_system_processor.set_metrics_shown (is_metrics and not is_silent)
+			if is_gelint then
+				l_system_processor.set_flat_mode (True)
+				l_system_processor.set_flat_dbc_mode (True)
+			end
 			dt_total := l_system_processor.benchmark_start_time
 			if l_thread_count > 1 then
 				l_system_processor.compile (a_system)
 			end
 			create l_system.make (a_system, l_system_processor)
 			if is_gelint then
-				l_system_processor.set_flat_mode (True)
-				l_system_processor.set_flat_dbc_mode (True)
 				l_system.set_full_class_checking (True)
 			end
 			l_system.set_catcall_error_mode (catcall_error_mode)
