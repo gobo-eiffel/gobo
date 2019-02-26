@@ -46,7 +46,10 @@ inherit
 			debug_output, copy, is_equal,
 			append_unaliased_to_string,
 			named_query,
-			named_procedure
+			named_procedure,
+			add_overloaded_queries,
+			add_overloaded_procedures,
+			adapted_class_base_type_index_of_label
 		end
 
 	ET_SHARED_CLASS_CODES
@@ -2069,26 +2072,14 @@ feature -- Features
 
 	add_overloaded_queries (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [ET_QUERY])
 			-- Add to `a_list' queries whose name or overloaded name is `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_list_not_void: a_list /= Void
-			no_void_item: not a_list.has_void
 		do
 			queries.add_overloaded_features (a_name, a_list)
-		ensure
-			no_void_item: not a_list.has_void
 		end
 
 	add_overloaded_procedures (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [ET_PROCEDURE])
 			-- Add to `a_list' procedures whose name or overloaded name is `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_list_not_void: a_list /= Void
-			no_void_item: not a_list.has_void
 		do
 			procedures.add_overloaded_features (a_name, a_list)
-		ensure
-			no_void_item: not a_list.has_void
 		end
 
 	queries: ET_QUERY_LIST
@@ -2304,6 +2295,14 @@ feature -- Features
 			else
 				Result := procedures.has_inherited_feature (a_feature)
 			end
+		end
+
+	adapted_class_base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT): INTEGER
+			-- Index of actual generic parameter with label `a_label'
+			-- in `a_context.base_type'.
+			-- 0 if it does not exist.
+		do
+			Result := a_context.base_type_index_of_label (a_label)
 		end
 
 feature -- Feature registration

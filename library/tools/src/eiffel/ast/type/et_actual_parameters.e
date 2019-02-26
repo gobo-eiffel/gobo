@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -516,17 +516,19 @@ feature -- Output
 			a_string_not_void: a_string /= Void
 		local
 			i, nb: INTEGER
-			a_type: ET_TYPE
 		do
 			a_string.append_character ('[')
 			nb := count
 			if nb >= 1 then
-				a_type := type (1)
-				a_type.append_to_string (a_string)
-				from i := 2 until i > nb loop
-					a_string.append_string (", ")
-					a_type := type (i)
-					a_type.append_to_string (a_string)
+				from i := 1 until i > nb loop
+					if i > 1 then
+						a_string.append_string (", ")
+					end
+					if attached actual_parameter (i).label as l_label then
+						a_string.append_string (l_label.lower_name)
+						a_string.append_string (": ")
+					end
+					type (i).append_to_string (a_string)
 					i := i + 1
 				end
 			end

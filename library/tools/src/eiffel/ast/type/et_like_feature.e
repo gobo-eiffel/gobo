@@ -21,6 +21,7 @@ inherit
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
 			named_type_is_formal_type,
+			add_adapted_classes_to_list,
 			same_syntactical_like_feature_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -762,6 +763,43 @@ feature -- Status report
 						-- introduced in the AST since we resolved
 						-- current anchored type.
 					Result := a_class.is_unknown
+				end
+			end
+		end
+
+feature -- Basic operations
+
+	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Add to `a_list' the base class of current type when it appears in `a_context' or
+			-- the constraint base types (in the same order they appear in 'constraint_base_types')
+			-- in case of a formal parameter.
+		local
+			l_class: ET_CLASS
+			l_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				a_list.force_last (tokens.unknown_class)
+			elseif is_like_argument then
+				l_class := a_context.base_class
+				l_index := index
+				if attached l_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					l_args.item (l_index).type.add_adapted_classes_to_list (a_list, a_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					a_list.force_last (tokens.unknown_class)
+				end
+			else
+				l_class := a_context.base_class
+				if attached l_class.seeded_query (seed) as l_query then
+					l_query.type.add_adapted_classes_to_list (a_list, a_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current anchored type.
+					a_list.force_last (tokens.unknown_class)
 				end
 			end
 		end

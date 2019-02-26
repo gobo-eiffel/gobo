@@ -83,7 +83,8 @@ inherit
 	ET_BASE_TYPE_CONSTRAINT
 		rename
 			count as type_constraint_count,
-			type as type_constraint_type
+			type as type_constraint_type,
+			base_type_index_of_label as adapted_class_base_type_index_of_label
 		undefine
 			conforms_to_type_with_type_marks
 		redefine

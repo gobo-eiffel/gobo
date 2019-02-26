@@ -1,2 +1,2 @@
-[VGMC] class XX (BB,9,11): features `f' in '[attached] DD' and `f' in '[attached] CC' are two versions of the feature with the generically constrained name `fc'.
+[VGMC] class XX (BB,9,11): queries `f' in '[attached] DD' and `f' in '[attached] CC' are two versions with different types of the query with the generically constrained name `fc'.
 ----

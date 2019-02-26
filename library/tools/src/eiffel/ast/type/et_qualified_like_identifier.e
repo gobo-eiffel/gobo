@@ -25,6 +25,7 @@ inherit
 			has_unqualified_anchored_type,
 			depends_on_qualified_anchored_type,
 			has_formal_types,
+			add_adapted_classes_to_list,
 			same_syntactical_qualified_like_identifier_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -588,6 +589,37 @@ feature -- Status report
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
 					Result := a_class.is_unknown
+				end
+			end
+		end
+
+feature -- Basic operations
+
+	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Add to `a_list' the base class of current type when it appears in `a_context' or
+			-- the constraint base types (in the same order they appear in 'constraint_base_types')
+			-- in case of a formal parameter.
+		local
+			l_class: ET_CLASS
+			l_target_type: ET_TYPE
+			l_target_context: ET_NESTED_TYPE_CONTEXT
+		do
+			if seed = 0 then
+					-- Qualified anchored type not resolved yet.
+				a_list.force_last (tokens.unknown_class)
+			else
+				l_target_type := target_type
+				l_class := l_target_type.base_class (a_context)
+				if attached l_class.seeded_query (seed) as l_query then
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
+					l_query.type.add_adapted_classes_to_list (a_list, l_target_context)
+					l_target_context.remove_last
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+					a_list.force_last (tokens.unknown_class)
 				end
 			end
 		end

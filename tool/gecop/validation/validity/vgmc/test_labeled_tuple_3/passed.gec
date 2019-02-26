@@ -1,0 +1,2 @@
+[VGMC] class BB (10,12): feature `f' in 'detachable CC' and tuple item at index '1' in 'detachable TUPLE [f: [attached] INTEGER]' have both the same generically constrained name `f'.
+----

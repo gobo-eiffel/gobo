@@ -5,7 +5,7 @@ note
 		"Eiffel AST lists where insertions to and removals from the tail are optimized"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #11 $"
@@ -257,6 +257,22 @@ feature -- Removal
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
+		end
+
+	keep_first (n: INTEGER_32)
+			-- Keep `n` first items in list.
+		require
+			valid_n: 0 <= n and n <= count
+		do
+			if n = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.keep_head (storage, 0, count + 1)
+			else
+				fixed_array.keep_head (storage, n + 1, count + 1)
+			end
+			count := n
+		ensure
+			new_count: count = n
 		end
 
 	wipe_out

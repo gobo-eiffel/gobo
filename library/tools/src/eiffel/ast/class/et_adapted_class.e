@@ -73,4 +73,43 @@ feature -- Features
 			registered: Result /= Void implies Result.is_registered
 		end
 
+	add_overloaded_queries (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [ET_QUERY])
+			-- Add to `a_list' queries whose name or overloaded name is `a_name'.
+			-- Take into account possible renaming.
+		require
+			a_name_not_void: a_name /= Void
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has_void
+		do
+			base_class.add_overloaded_queries (a_name, a_list)
+		ensure
+			no_void_item: not a_list.has_void
+		end
+
+	add_overloaded_procedures (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [ET_PROCEDURE])
+			-- Add to `a_list' procedures whose name or overloaded name is `a_name'.
+			-- Take into account possible renaming.
+		require
+			a_name_not_void: a_name /= Void
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has_void
+		do
+			base_class.add_overloaded_procedures (a_name, a_list)
+		ensure
+			no_void_item: not a_list.has_void
+		end
+
+	base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT): INTEGER
+			-- Index of actual generic parameter with label `a_label'
+			-- in `a_context.base_type' when current is an ET_CLASS,
+			-- in `base_type' otherwise.
+			-- 0 if it does not exist.
+		require
+			a_label_not_void: a_label /= Void
+			a_context_not_void: a_context /= Void
+			a_context_is_valid: a_context.is_valid_context
+		do
+			Result := base_type.index_of_label (a_label)
+		end
+
 end

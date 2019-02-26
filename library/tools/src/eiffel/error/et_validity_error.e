@@ -169,6 +169,10 @@ create
 	make_vgmc0a,
 	make_vgmc0b,
 	make_vgmc0c,
+	make_vgmc0d,
+	make_vgmc0e,
+	make_vgmc0f,
+	make_vgmc0g,
 	make_vhay0a,
 	make_vhpr1a,
 	make_vhpr1b,
@@ -6963,65 +6967,7 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = name of feature in second constraint base class
 		end
 
-	make_vgmc0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; f2: ET_FEATURE; a_constraint2: ET_ADAPTED_CLASS)
-			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
-			-- viewed from one of its descendants `a_class' (possibly itself), is
-			-- the final name (after possible renaming) of a feature in the base
-			-- class of both generic constraints `a_constraint1' and `a_constraint2'.
-			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
-			-- may be different from `a_name' if they have been renamed in the rename clause
-			--  of the generic constraint.
-			--
-			-- ECMA 367-2, 8.12.22 page 83.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			f1_not_void: f1 /= Void
-			a_constraint1_not_void: a_constraint1 /= Void
-			f2_not_void: f2 /= Void
-			a_constraint2_not_void: a_constraint2 /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vgmc0a_template_code)
-			etl_code := vgmc_etl_code
-			default_template := default_message_template (vgmc0a_default_template)
-			create parameters.make_filled (empty_string, 1, 11)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_constraint1.base_type.to_text, 8)
-			parameters.put (f1.lower_name, 9)
-			parameters.put (a_constraint2.base_type.to_text, 10)
-			parameters.put (f2.lower_name, 11)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = call name
-			-- dollar8: $8 = first constraint
-			-- dollar9: $9 = name of feature in first constraint base class
-			-- dollar10: $10 = second constraint
-			-- dollar11: $11 = name of feature in second constraint base class
-		end
-
-	make_vgmc0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_constraints: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+	make_vgmc0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_constraints: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
 			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
 			-- viewed from one of its descendants `a_class' (possibly itself), is
 			-- not the final name of a feature in the base class of any of the
@@ -7044,9 +6990,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_name.position
-			code := template_code (vgmc0b_template_code)
+			code := template_code (vgmc0a_template_code)
 			etl_code := vgmc_etl_code
-			default_template := default_message_template (vgmc0b_default_template)
+			default_template := default_message_template (vgmc0a_default_template)
 			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -7087,15 +7033,14 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = generic constraints
 		end
 
-	make_vgmc0c (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; f2: ET_FEATURE; a_constraint2: ET_ADAPTED_CLASS)
+	make_vgmc0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; f2: ET_FEATURE; a_constraint2: ET_ADAPTED_CLASS)
 			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
 			-- viewed from one of its descendants `a_class' (possibly itself), is
-			-- the final name (after possible renaming) of a feature with two different
-			-- versions in the base class of both generic constraints `a_constraint1'
-			-- and `a_constraint2'.
+			-- the final name (after possible renaming) of a feature in the base
+			-- class of both generic constraints `a_constraint1' and `a_constraint2'.
 			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
 			-- may be different from `a_name' if they have been renamed in the rename clause
-			--  of the generic constraint.
+			-- of the generic constraint.
 			--
 			-- ECMA 367-2, 8.12.22 page 83.
 		require
@@ -7111,9 +7056,290 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_name.position
+			code := template_code (vgmc0b_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0b_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (f2.lower_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = name of feature in second constraint base class
+		end
+
+	make_vgmc0c (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; a_tuple_index2: INTEGER; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a feature in the base
+			-- class of generic constraint `a_constraint1' and a tuple label in
+			-- the generic constraint `a_constraint2'.
+			-- Note that the name of `f1' in `a_constraint1' may be different from
+			-- `a_name' if it has been renamed in the rename clause of the generic
+			-- constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
 			code := template_code (vgmc0c_template_code)
 			etl_code := vgmc_etl_code
 			default_template := default_message_template (vgmc0c_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (a_tuple_index2.out, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = index of tuple label in second constraint base class
+		end
+
+	make_vgmc0d (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_tuple_index1: INTEGER; a_constraint1: ET_ADAPTED_CLASS; a_tuple_index2: INTEGER; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- a tuple label in both generic constraints `a_constraint1' and
+			-- `a_constraint2'.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0d_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0d_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (a_tuple_index1.out, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (a_tuple_index2.out, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = index of tuple label in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = index of tuple label in second constraint base class
+		end
+
+	make_vgmc0e (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_QUERY; a_constraint1: ET_ADAPTED_CLASS; f2: ET_QUERY; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a query with two different
+			-- versions in the base class of both generic constraints `a_constraint1'
+			-- and `a_constraint2', and these versions have different types.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
+			-- may be different from `a_name' if they have been renamed in the rename clause
+			-- of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0e_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0e_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (f2.lower_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = name of feature in second constraint base class
+		end
+
+	make_vgmc0f (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_tuple_index: INTEGER; a_constraint1: ET_ADAPTED_CLASS; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- a tuple label whose corresponding items at index `a_tuple_index'
+			-- in generic constraints `a_constraint1' and `a_constraint2' have
+			-- a different type.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0f_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0f_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_tuple_index.out, 8)
+			parameters.put (a_constraint1.base_type.to_text, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = tuple item index
+			-- dollar9: $9 = first constraint
+			-- dollar10: $10 = second constraint
+		end
+
+	make_vgmc0g (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; f2: ET_FEATURE; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in an agent in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a feature with two different
+			-- versions in the base class of both generic constraints `a_constraint1'
+			-- and `a_constraint2', and these versions have different signatures.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
+			-- may be different from `a_name' if they have been renamed in the rename clause
+			-- of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0g_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0g_default_template)
 			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -15571,9 +15797,13 @@ feature {NONE} -- Implementation
 	vggc3b_default_template: STRING = "`$7' is not the final name of a procedure in the base class of any of generic constraints $8."
 	vggc3c_default_template: STRING = "feature `$9' in $8 appearing as creator `$7' in the generic constraint is not a procedure."
 	vggc3d_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' appear both as creator `$7' in the generic constraint."
-	vgmc0a_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' have both the same generically constrained name `$7'."
-	vgmc0b_default_template: STRING = "`$7' is not the final name of a feature in the base class of any of generic constraints $8."
-	vgmc0c_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' are two versions of the feature with the generically constrained name `$7'."
+	vgmc0a_default_template: STRING = "`$7' is not the final name of a feature in the base class of any of generic constraints $8."
+	vgmc0b_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' have both the same generically constrained name `$7'."
+	vgmc0c_default_template: STRING = "feature `$9' in '$8' and tuple item at index '$11' in '$10' have both the same generically constrained name `$7'."
+	vgmc0d_default_template: STRING = "`$7' is a tuple label in both generic constraints '$8' and '$10'."
+	vgmc0e_default_template: STRING = "queries `$9' in '$8' and `$11' in '$10' are two versions with different types of the query with the generically constrained name `$7'."
+	vgmc0f_default_template: STRING = "tuple items at index '$8' in generic constraints '$9' and '$10' corresponding the tuple label `$7' have different types."
+	vgmc0g_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' are two versions with different signatures of the feature with the generically constrained name `$7'."
 	vhay0a_default_template: STRING = "implicitly inherits from unknown class ANY."
 	vhpr1a_default_template: STRING = "inheritance cycle $7."
 	vhpr1b_default_template: STRING = "inheritance cycle when inheriting from $7."
@@ -16082,6 +16312,10 @@ feature {NONE} -- Implementation
 	vgmc0a_template_code: STRING = "vgmc0a"
 	vgmc0b_template_code: STRING = "vgmc0b"
 	vgmc0c_template_code: STRING = "vgmc0c"
+	vgmc0d_template_code: STRING = "vgmc0d"
+	vgmc0e_template_code: STRING = "vgmc0e"
+	vgmc0f_template_code: STRING = "vgmc0f"
+	vgmc0g_template_code: STRING = "vgmc0g"
 	vhay0a_template_code: STRING = "vhay0a"
 	vhpr1a_template_code: STRING = "vhpr1a"
 	vhpr1b_template_code: STRING = "vhpr1b"

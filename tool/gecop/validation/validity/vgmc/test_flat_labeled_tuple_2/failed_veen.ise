@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: VEEN
+
+Error: unknown identifier.
+What to do: make sure that identifier, if needed, is final name of
+  feature of class, or local entity or formal argument of routine.
+
+Class: XX [G -> TUPLE [g: INTEGER_32]]
+Feature: f
+Identifier: g
+Target type: Generic #1
+Line: 7
+      do
+->      if a.g = i then
+          print ("Passed")
+
+-------------------------------------------------------------------------------

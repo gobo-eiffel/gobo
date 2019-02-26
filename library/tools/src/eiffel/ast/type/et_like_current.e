@@ -5,7 +5,7 @@ note
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,7 @@ inherit
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
 			is_like_current,
+			add_adapted_classes_to_list,
 			same_syntactical_like_current_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -244,6 +245,16 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		do
 			Result := a_context.named_type_has_class (a_class)
+		end
+
+feature -- Basic operations
+
+	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Add to `a_list' the base class of current type when it appears in `a_context' or
+			-- the constraint base types (in the same order they appear in 'constraint_base_types')
+			-- in case of a formal parameter.
+		do
+			a_context.add_adapted_classes_to_list (a_list)
 		end
 
 feature -- Comparison

@@ -5,7 +5,7 @@ note
 		"Eiffel types appearing in nested type contexts and representing n-th type in these contexts"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2015-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2015-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ inherit
 			named_type_with_type_mark,
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
+			add_adapted_classes_to_list,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
 			same_named_tuple_type_with_type_marks,
@@ -416,6 +417,27 @@ feature -- Status report
 				l_previous_context.force_last (tokens.like_0)
 				Result := l_previous_context.root_context.named_type_has_class (a_class, l_previous_context)
 				l_previous_context.remove_last
+			end
+		end
+
+feature -- Basic operations
+
+	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Add to `a_list' the base class of current type when it appears in `a_context' or
+			-- the constraint base types (in the same order they appear in 'constraint_base_types')
+			-- in case of a formal parameter.
+		local
+			l_previous_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_previous_context := a_context.as_nested_type_context
+			if l_previous_context.valid_index (index) then
+				l_previous_context := a_context.as_nested_type_context
+				l_previous_context.force_last (previous)
+				l_previous_context.item (index).add_adapted_classes_to_list (a_list, l_previous_context)
+				l_previous_context.remove_last
+			else
+					-- We reached the root context.
+				l_previous_context.root_context.context_add_adapted_classes_to_list (a_list)
 			end
 		end
 
