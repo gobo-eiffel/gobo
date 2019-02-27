@@ -5,7 +5,7 @@ note
 		"Options that are not flags and need a parameter"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2019, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,8 @@ inherit
 		redefine
 			initialize,
 			example,
-			names
+			names,
+			enable_mandatory
 		end
 
 feature {NONE} -- Initialization
@@ -34,7 +35,9 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	default_parameter: like parameter
-			-- Default value for `parameter' when no parameter is provided
+			-- Default value for `parameter' when the current option
+			-- is not specified on the command-line or its parameter
+			-- is not provided
 
 	example: STRING
 			-- Example for the usage of the option
@@ -98,7 +101,7 @@ feature -- Access
 			-- Last value given to the option, or default value
 			-- if no parameter was provided to the option
 		require
-			was_found_or_no_parameter_needed: was_found or not needs_parameter
+			was_found_or_no_parameter_needed: was_found or has_default_parameter
 		local
 			l_parameters: like parameters
 		do
@@ -106,7 +109,7 @@ feature -- Access
 			if not l_parameters.is_empty then
 				Result := l_parameters.last
 			else
-				check precondition_was_found_or_no_parameter_needed: not needs_parameter end
+				check precondition_was_found_or_has_default_parameter: has_default_parameter end
 				Result := default_parameter
 			end
 		end
@@ -117,7 +120,7 @@ feature -- Access
 		end
 
 	occurrences: INTEGER
-			-- Number of times this flag was encountered
+			-- Number of times this option was encountered
 		do
 			Result := parameters.count
 		end
@@ -133,6 +136,10 @@ feature -- Status report
 	needs_parameter: BOOLEAN
 			-- Does this option need a parameter?
 
+	has_default_parameter: BOOLEAN
+			-- Has a default parameter been given, to be used when
+			-- the current option is not specified on the command-line?
+
 feature -- Status setting
 
 	set_parameter_description (a_string: STRING)
@@ -146,8 +153,22 @@ feature -- Status setting
 		end
 
 	set_default_parameter (a_parameter: like default_parameter)
-			-- Set the parameter as optional. If no parameter is given,
-			-- the corresponding parameter value is set to `default_parameter'.
+			-- Set `default_parameter' to be used when the current
+			-- option is not specified on the command-line.
+		require
+			option_not_mandatory: not is_mandatory
+		do
+			has_default_parameter := True
+			default_parameter := a_parameter
+		ensure
+			has_default_parameter: has_default_parameter
+			default_parameter_set: default_parameter = a_parameter
+		end
+
+	set_parameter_optional (a_parameter: like default_parameter)
+			-- Set the parameter as optional. If the current option is
+			-- is specified with no parameter, then the corresponding
+			-- parameter value is set to `default_parameter'.
 			-- This only works for long forms and makes it impossible to
 			-- specify the parameter as `--option parameter'.
 		require
@@ -156,13 +177,23 @@ feature -- Status setting
 			needs_parameter := False
 			default_parameter := a_parameter
 		ensure
-			not_needed: not needs_parameter
+			is_parameter_optional: is_parameter_optional
 			default_parameter_set: default_parameter = a_parameter
+		end
+
+	enable_mandatory
+			-- Make the option mandatory.
+		do
+			is_mandatory := True
+			has_default_parameter := False
+		ensure then
+			has_no_default_parameter: not has_default_parameter
 		end
 
 invariant
 
 	options_allows_parameter: allows_parameter
 	parameters_not_void: parameters /= Void
+	mandatory_has_no_default_parameter: is_mandatory implies not has_default_parameter
 
 end

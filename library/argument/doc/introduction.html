@@ -30,7 +30,7 @@
     		<i>options</i> and
     		<i>parameters</i>. Parameters (sometimes
     		also called operands) are the main inputs to the
-    		program, for example the filename to a edit in a text
+    		program, for example the filename to be edited in a text
     		editor or the URL that a web-browser should open on
     		startup.
     	
@@ -70,7 +70,7 @@
    	
    <p>
     		Options and parameters can be mixed together and there are
-    		ways to combine options. This can create creating complex
+    		ways to combine options. This can create complex
     		command lines. The following is an example call of the
     		<i>GNU ls</i> command available on most Linux
     		systems:
@@ -142,9 +142,9 @@
    
    	
    <p>
-    		With this goals in mind, the library will not satisfy
+    		With these goals in mind, the library will not satisfy
     		every need you might have for parsing. Specially, the
-    		library imposes a certain, standard way of command
+    		library imposes a certain standard way of command
     		line parsing onto the application. If you want a very
     		different way of command line parsing, perhaps because
     		you want to be 'backward compatible' with another
@@ -268,7 +268,7 @@
    
    	
    <p>
-    		Lets go for an example that shows how to apply these
+    		Let's go for an example that shows how to apply these
     		four steps in practice. The example is rather lengthy,
     		but it shows most of the possibilities of the library.
     		The different steps in the usage strategy above have
@@ -287,7 +287,7 @@
    <pre>
 feature -- Options and Flags
 
-   allmost_all_flag: AP_FLAG
+   almost_all_flag: AP_FLAG
    long_format_flag: AP_FLAG
    color_option: AP_ENUMERATION_OPTION
    ignore_option: AP_STRING_OPTION
@@ -308,9 +308,9 @@ feature -- Main
 
             -- STEP 2: Creation and configuration of the flags
 
-         create allmost_all_flag.make ('A',"allmost-all")
-         allmost_all_flag.set_description ("do not list implied . and ..")
-         parser.options.force_last (allmost_all_flag)
+         create almost_all_flag.make ('A', "almost-all")
+         almost_all_flag.set_description ("do not list implied . and ..")
+         parser.options.force_last (almost_all_flag)
 
          create long_format_flag.make_with_short_form ('l')
          long_format_flag.set_description ("use a long listing format")
@@ -323,7 +323,7 @@ feature -- Main
          color_option.extend ("auto")
          parser.options.force_last (color_option)
 
-         create ignore_option.make ('I',"ignore")
+         create ignore_option.make ('I', "ignore")
          ignore_option.set_description ("do not list implied entries matching shell PATTERN")
          ignore_option.set_parameter_description ("PATTERN")
          parser.options.force_last (ignore_option)
@@ -334,21 +334,21 @@ feature -- Main
 
             -- STEP 4: Read results
 
-         if allmost_all_flag.was_found then
-            print ("list allmost all%N")
+         if almost_all_flag.was_found then
+            print ("list almost all%N")
          end
          if long_format_flag.was_found then
             print ("use long format%N")
          end
          if color_option.was_found then
-            print ("use coloring "+color_option.parameter+"%N")
+            print ("use coloring " + color_option.parameter + "%N")
          end
 
          if ignore_option.was_found then
             from
                ignore_option.parameters.start
             until ignore_option.parameters.off loop
-               print ("ignore pattern: "+
+               print ("ignore pattern: " +
                       ignore_option.parameters.item_for_iteration+"%N")
                ignore_option.parameters.forth
             end
@@ -356,7 +356,7 @@ feature -- Main
          from
             parser.parameters.start
          until parser.parameters.off loop
-            print ("parameter: "+
+            print ("parameter: " +
                    parser.parameters.item_for_iteration+"%N")
             parser.parameters.forth
          end
@@ -364,14 +364,14 @@ feature -- Main
 </pre>
    
    	<p>
-    		If we now call the application with the arguments are
+    		If we now call the application with the arguments which are
     		given in the example above, we get the following output:
     	
    </p>
    
    <pre>
 $ ./my_ls -Al /tmp -I '*~' -I*.bak --color=always
-list allmost all
+list almost all
 use long format
 use coloring always
 ignore pattern: *~
@@ -393,7 +393,7 @@ usage: ls_example [-A] [-l] [--color=never|always|auto] [-I PATTERN] [file] ...
 List information about the FILEs (the current directory by default).
 
 Options:
--A, --allmost-all             do not list implied . and ..
+-A, --almost-all              do not list implied . and ..
     --color=never|always|auto control whether color is used to distinguish
                               file types.
 -h, --help                    Display this help text.
@@ -403,7 +403,7 @@ Options:
 </pre>
    
    	<p>
-    		A second example is provided in the <font color="#008080"><i><tt>$GOBO/example/argument</tt></i></font>
+    		A second example is provided in the <font color="#800000"><i><tt>$GOBO/library/argument/example</tt></i></font>
     		directory.
     	
    </p>
@@ -414,7 +414,7 @@ Options:
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2001-2012, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>3 December 2012</font></address>
+     <address><font size="2"><b>Copyright © 2001-2019, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>26 February 2019</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="parser.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

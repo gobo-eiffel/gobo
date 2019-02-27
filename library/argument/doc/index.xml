@@ -5,7 +5,7 @@
 
 		"Gobo Eiffel Argument Library documentation"
 
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2019, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,14 +14,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/index">
 <chapterinfo>
 	<copyright>
-		<year>2001-2012</year>
+		<year>2001-2019</year>
 		<holder>Bernd Schoeller</holder>
 	</copyright>
 	<author>
 		<firstname>Bernd</firstname><surname>Schoeller</surname>
 	</author>
 	<email>bernd@fams.de</email>
-	<date>3 December 2012</date>
+	<date>27 February 2019</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Argument Library</title>
@@ -66,19 +66,19 @@ This document is structured as follows:
 		</term>
 		<listitem><para>
 
-			An reference of available options and a guide
-			on how to create own option types.
+			A reference of available options and a guide
+			on how to create customized option types.
  
 		</para></listitem>
 	</varlistentry>
 
 	<varlistentry>
 		<term>
-			<link linkend="alternate">Alternative options lists</link>
+			<link linkend="alternate">Lists of alternative options</link>
 		</term>
 		<listitem><para>
 
-			Alternative options lists are an advanced way
+			Lists of alternative options are an advanced way
 			to specify options sets that are used for
 			different operation modes of the application.
 

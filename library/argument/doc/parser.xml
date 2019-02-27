@@ -14,14 +14,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/parser">
 <chapterinfo>
 	<copyright>
-		<year>2001-2012</year>
+		<year>2001-2019</year>
 		<holder>Bernd Schoeller</holder>
 	</copyright>
 	<author>
 		<firstname>Bernd</firstname><surname>Schoeller</surname>
 	</author>
 	<email>bernd@fams.de</email>
-	<date>3 December 2012</date>
+	<date>27 February 2019</date>
 </chapterinfo>
 
 <title>The Argument Parser</title>
@@ -36,7 +36,9 @@
 	occurrence, supplying it (through the
 	<featurename>last_option_parameter</featurename> query) with a
 	parameter that was given to the option if the option required
-	it.
+	it. The parser is automatically equiped with a help option.
+	There is also a class <classname>AP_BASIC_PARSER</classname>
+	which does not have a help option by default.
 
  </para>
 
@@ -63,26 +65,13 @@
 		</para></listitem></varlistentry>
 
 		<varlistentry><term>
-			<featurename>make_empty</featurename>
-		</term><listitem><para>
-
-			This creation routine does not create a help
-			option. It should be used if an own or no help
-			flag should be used.
-
-		</para></listitem></varlistentry>
-
-		<varlistentry><term>
 			<featurename>help_option</featurename>
 		</term><listitem><para>
 
 			This query allows access to the instance of
 			<classname>AP_DISPLAY_HELP_FLAG</classname>
 			that is created by the creation with
-			<featurename>make</featurename>. If the
-			instance was created with
-			<featurename>make_empty</featurename>, the
-			result of this query will be Void.
+			<featurename>make</featurename>.
 
 		</para></listitem></varlistentry>
 
@@ -121,7 +110,7 @@
 		</term><listitem><para>
 
 			This text is a short description of the kind
-			of (non-option) parameters are expected by the
+			of (non-option) parameters expected by the
 			application. The default value is 'parameters
 			...', but should be set to a more descriptive text.
 			It can be set by the
@@ -222,8 +211,7 @@
 			supplied <classname>DS_LIST</classname>. The
 			cursor on the list will be used during parsing
 			to mark the current argument that is parsed
-			and should not be moved by other parts
-			classes.
+			and should not be moved by other clients.
 
 		</para></listitem></varlistentry>
 
@@ -238,7 +226,7 @@
 	<title>Results of parsing</title>
 
 	<para>
-		Options and their arguments can be directly read from the
+		Options and their parameters can be directly read from the
 		corresponding instances. The other results of the parsing
 		process are provided through the following queries:
 	</para>

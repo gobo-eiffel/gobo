@@ -3,9 +3,9 @@
 <!--
 	description:
 
-		"Alternative Options Lists"
+		"Lists of Alternative Options"
 
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2019, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,22 +14,22 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/alternate">
 <chapterinfo>
 	<copyright>
-		<year>2001-2012</year>
+		<year>2001-2019</year>
 		<holder>Bernd Schoeller</holder>
 	</copyright>
 	<author>
 		<firstname>Bernd</firstname><surname>Schoeller</surname>
 	</author>
 	<email>bernd@fams.de</email>
-	<date>3 December 2012</date>
+	<date>27 February 2019</date>
 </chapterinfo>
 
-<title>Alternative Options Lists</title>
+<title>Lists of Alternative Options</title>
 
 <para>
-	Some application offer different 'modes' of operation, each
+	Some applications offer different 'modes' of operation, each
 	one with a different set of options. For example, a
-	compression program (think WinZip or gzip) may be used for
+	compression program (think of WinZip or gzip) may be used for
 	compression and for decompression of files. In decompression
 	mode, specifying the compression algorithm to use does not
 	make any sense, as the program should be able to extract this
@@ -37,7 +37,7 @@
 </para>
 
 <para>
-	<emphasis>Alternative options lists</emphasis> allows you to
+	<emphasis>Lists of alternative options</emphasis> allow you to
 	define sets of options for different operation modes of the
 	application. The very first option passed to the application
 	is used to select one of the operation modes, altering the set
@@ -49,7 +49,7 @@
 	<title>Usage</title>
 
 	<para>
-		Alternative options lists are created by instantiating
+		List of alternative options are created by instantiating
 		<classname>ALTERNATIVE_OPTIONS_LIST</classname> and
 		adding it to the
 		<featurename>alternative_options_lists</featurename>
@@ -61,8 +61,8 @@
 	<para>
 
 		<classname>ALTERNATIVE_OPTIONS_LIST</classname> is
-		itself a list (a child of
-		<classname>DS_LINKED_LIST[AP_OPTION]</classname>) that
+		itself a list (an heir of
+		<classname>DS_LINKED_LIST [AP_OPTION]</classname>) that
 		can contain option objects. Upon creation, a special
 		option needs to be provided to
 		<featurename>make</featurename>, the
@@ -70,7 +70,7 @@
 		option that is encountered during parsing is the
 		introduction option, then the list of available
 		options during parsing will be replaced by the list
-		provided in the alternative option list.
+		provided in the list of alternative options.
 
 	</para>
 
@@ -129,16 +129,16 @@ feature -- Main
          parser.set_application_description ("Compress or decompress a file")
          parser.set_parameters_description ("file")
 
-         create decompress_flag.make ('d',"decompress")
+         create decompress_flag.make ('d', "decompress")
          decompress_flag.set_description ("Decompress file")
 
-         create strength_option.make ('s',"strength")
+         create strength_option.make ('s', "strength")
          strength_option.set_description ("Compression strength (1..9)")
 
-         create check_flag.make ('c',"check")
+         create check_flag.make ('c', "check")
          check_flag.set_description ("Enable checksum computation after decompression")
 
-         create output_option.make ('o',"output")
+         create output_option.make ('o', "output")
          output_option.set_description ("Output to specified file")
          output_option.set_parameter_description ("file")
 
@@ -184,9 +184,8 @@ Options:
 	</para>
 
 	<para>
-		<emphasis>P.S.:</emphasis> You can see that the help
-		flag was also added using an empty alternative options
-		list.
+		Note that the help flag was also added using an empty
+		list of alternative options.
 	</para>
 
 </section>

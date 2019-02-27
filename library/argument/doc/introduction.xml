@@ -5,7 +5,7 @@
 
 		"Argument Parser Introduction"
 
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2019, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,14 +14,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/introduction">
 <chapterinfo>
 	<copyright>
-		<year>2001-2012</year>
+		<year>2001-2019</year>
 		<holder>Bernd Schoeller</holder>
 	</copyright>
 	<author>
 		<firstname>Bernd</firstname><surname>Schoeller</surname>
 	</author>
 	<email>bernd@fams.de</email>
-	<date>3 December 2012</date>
+	<date>26 February 2019</date>
 </chapterinfo>
 
 <title>Argument Parser Introduction</title>
@@ -43,7 +43,7 @@
 		<emphasis>options</emphasis> and
 		<emphasis>parameters</emphasis>. Parameters (sometimes
 		also called operands) are the main inputs to the
-		program, for example the filename to a edit in a text
+		program, for example the filename to be edited in a text
 		editor or the URL that a web-browser should open on
 		startup.
 	</para>
@@ -77,7 +77,7 @@
 
 	<para>
 		Options and parameters can be mixed together and there are
-		ways to combine options. This can create creating complex
+		ways to combine options. This can create complex
 		command lines. The following is an example call of the
 		<emphasis>GNU ls</emphasis> command available on most Linux
 		systems:
@@ -137,9 +137,9 @@
 	</para>
 
 	<para>
-		With this goals in mind, the library will not satisfy
+		With these goals in mind, the library will not satisfy
 		every need you might have for parsing. Specially, the
-		library imposes a certain, standard way of command
+		library imposes a certain standard way of command
 		line parsing onto the application. If you want a very
 		different way of command line parsing, perhaps because
 		you want to be 'backward compatible' with another
@@ -239,7 +239,7 @@
 	<title>An example</title>
 
 	<para>
-		Lets go for an example that shows how to apply these
+		Let's go for an example that shows how to apply these
 		four steps in practice. The example is rather lengthy,
 		but it shows most of the possibilities of the library.
 		The different steps in the usage strategy above have
@@ -255,7 +255,7 @@
 <programlisting>
 feature -- Options and Flags
 
-   allmost_all_flag: AP_FLAG
+   almost_all_flag: AP_FLAG
    long_format_flag: AP_FLAG
    color_option: AP_ENUMERATION_OPTION
    ignore_option: AP_STRING_OPTION
@@ -276,9 +276,9 @@ feature -- Main
 
             -- STEP 2: Creation and configuration of the flags
 
-         create allmost_all_flag.make ('A',"allmost-all")
-         allmost_all_flag.set_description ("do not list implied . and ..")
-         parser.options.force_last (allmost_all_flag)
+         create almost_all_flag.make ('A', "almost-all")
+         almost_all_flag.set_description ("do not list implied . and ..")
+         parser.options.force_last (almost_all_flag)
 
          create long_format_flag.make_with_short_form ('l')
          long_format_flag.set_description ("use a long listing format")
@@ -291,7 +291,7 @@ feature -- Main
          color_option.extend ("auto")
          parser.options.force_last (color_option)
 
-         create ignore_option.make ('I',"ignore")
+         create ignore_option.make ('I', "ignore")
          ignore_option.set_description ("do not list implied entries matching shell PATTERN")
          ignore_option.set_parameter_description ("PATTERN")
          parser.options.force_last (ignore_option)
@@ -302,21 +302,21 @@ feature -- Main
 
             -- STEP 4: Read results
 
-         if allmost_all_flag.was_found then
-            print ("list allmost all%N")
+         if almost_all_flag.was_found then
+            print ("list almost all%N")
          end
          if long_format_flag.was_found then
             print ("use long format%N")
          end
          if color_option.was_found then
-            print ("use coloring "+color_option.parameter+"%N")
+            print ("use coloring " + color_option.parameter + "%N")
          end
 
          if ignore_option.was_found then
             from
                ignore_option.parameters.start
             until ignore_option.parameters.off loop
-               print ("ignore pattern: "+
+               print ("ignore pattern: " +
                       ignore_option.parameters.item_for_iteration+"%N")
                ignore_option.parameters.forth
             end
@@ -324,7 +324,7 @@ feature -- Main
          from
             parser.parameters.start
          until parser.parameters.off loop
-            print ("parameter: "+
+            print ("parameter: " +
                    parser.parameters.item_for_iteration+"%N")
             parser.parameters.forth
          end
@@ -332,13 +332,13 @@ feature -- Main
 </programlisting>
 
 	<para>
-		If we now call the application with the arguments are
+		If we now call the application with the arguments which are
 		given in the example above, we get the following output:
 	</para>
 
 <programlisting>
 $ ./my_ls -Al /tmp -I '*~' -I*.bak --color=always
-list allmost all
+list almost all
 use long format
 use coloring always
 ignore pattern: *~
@@ -359,7 +359,7 @@ usage: ls_example [-A] [-l] [--color=never|always|auto] [-I PATTERN] [file] ...
 List information about the FILEs (the current directory by default).
 
 Options:
--A, --allmost-all             do not list implied . and ..
+-A, --almost-all              do not list implied . and ..
     --color=never|always|auto control whether color is used to distinguish
                               file types.
 -h, --help                    Display this help text.
@@ -369,7 +369,7 @@ Options:
 </programlisting>
 
 	<para>
-		A second example is provided in the <classname>$GOBO/example/argument</classname>
+		A second example is provided in the <filename>$GOBO/library/argument/example</filename>
 		directory.
 	</para>
 

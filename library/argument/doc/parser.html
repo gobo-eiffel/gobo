@@ -21,7 +21,9 @@
    	occurrence, supplying it (through the
    	<font color="#008080"><i><tt>last_option_parameter</tt></i></font> query) with a
    	parameter that was given to the option if the option required
-   	it.
+   	it. The parser is automatically equiped with a help option.
+   	There is also a class <font color="#008080"><i><tt>AP_BASIC_PARSER</tt></i></font>
+   	which does not have a help option by default.
    
    
   </p>
@@ -57,20 +59,6 @@
     
     		
     <dt>
-     			<font color="#008080"><i><tt>make_empty</tt></i></font>
-     		
-    </dt>
-    <dd>
-     
-     			This creation routine does not create a help
-     			option. It should be used if an own or no help
-     			flag should be used.
-     
-     		
-    </dd>
-    
-    		
-    <dt>
      			<font color="#008080"><i><tt>help_option</tt></i></font>
      		
     </dt>
@@ -79,10 +67,7 @@
      			This query allows access to the instance of
      			<font color="#008080"><i><tt>AP_DISPLAY_HELP_FLAG</tt></i></font>
      			that is created by the creation with
-     			<font color="#008080"><i><tt>make</tt></i></font>. If the
-     			instance was created with
-     			<font color="#008080"><i><tt>make_empty</tt></i></font>, the
-     			result of this query will be Void.
+     			<font color="#008080"><i><tt>make</tt></i></font>.
      
      		
     </dd>
@@ -132,7 +117,7 @@
     <dd>
      
      			This text is a short description of the kind
-     			of (non-option) parameters are expected by the
+     			of (non-option) parameters expected by the
      			application. The default value is 'parameters
      			...', but should be set to a more descriptive text.
      			It can be set by the
@@ -262,8 +247,7 @@
      			supplied <font color="#008080"><i><tt>DS_LIST</tt></i></font>. The
      			cursor on the list will be used during parsing
      			to mark the current argument that is parsed
-     			and should not be moved by other parts
-     			classes.
+     			and should not be moved by other clients.
      
      		
     </dd>
@@ -280,7 +264,7 @@
    
    	
    <p>
-    		Options and their arguments can be directly read from the
+    		Options and their parameters can be directly read from the
     		corresponding instances. The other results of the parsing
     		process are provided through the following queries:
     	
@@ -313,7 +297,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2001-2012, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>3 December 2012</font></address>
+     <address><font size="2"><b>Copyright © 2001-2019, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 February 2019</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="introduction.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="options.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

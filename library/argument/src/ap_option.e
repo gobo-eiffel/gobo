@@ -5,7 +5,7 @@ note
 		"Abstract representations of an option, that might or might not require an extra argument"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2019, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		ensure
 			short_form_set: has_short_form and short_form = a_short_form
 			long_form_set: has_long_form and long_form = a_long_form
-			no_optional_parameter: not parameter_is_optional
+			no_optional_parameter: not is_parameter_optional
 		end
 
 	make_with_short_form (a_short_form: CHARACTER)
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		ensure
 			short_form_set: has_short_form and short_form = a_short_form
 			no_long_form: not has_long_form
-			no_optional_parameter: not parameter_is_optional
+			no_optional_parameter: not is_parameter_optional
 		end
 
 	make_with_long_form (a_long_form: STRING)
@@ -143,7 +143,7 @@ feature -- Access
 		end
 
 	occurrences: INTEGER
-			-- Number of times this flag was encountered
+			-- Number of times this option was encountered
 		deferred
 		end
 
@@ -155,11 +155,6 @@ feature -- Access
 			-- Short form
 
 feature -- Status report
-
-	allows_parameter: BOOLEAN
-			-- Does this option allow a parameter?
-		deferred
-		end
 
 	has_long_form: BOOLEAN
 			-- Does this option have a long form?
@@ -173,22 +168,37 @@ feature -- Status report
 			-- Does this option have a short form?
 
 	is_hidden: BOOLEAN
-			-- Is the options hidden and should not show up in help texts?
+			-- Is the option hidden and should not show up in help texts?
 
 	is_mandatory: BOOLEAN
 			-- Is the option not optional?
+
+	allows_parameter: BOOLEAN
+			-- Does this option allow a parameter?
+		deferred
+		end
 
 	needs_parameter: BOOLEAN
 			-- Does this option need a parameter?
 		deferred
 		end
 
-	parameter_is_optional: BOOLEAN
+	is_parameter_optional: BOOLEAN
 			-- Is the parameter allowed, but optional?
 		do
 			Result := allows_parameter and not needs_parameter
 		ensure
 			definition: Result = (allows_parameter and not needs_parameter)
+		end
+
+	parameter_is_optional: BOOLEAN
+			-- Is the parameter allowed, but optional?
+		obsolete
+			"Use `is_parameter_optional' instead. [2019-02-26]"
+		do
+			Result := is_parameter_optional
+		ensure
+			definition: Result = is_parameter_optional
 		end
 
 	was_found: BOOLEAN
@@ -225,7 +235,7 @@ feature -- Element change
 	set_short_form (a_short_form: CHARACTER)
 			-- Make `a_short_form' the short form.
 		require
-			no_optional_parameter: not parameter_is_optional
+			no_optional_parameter: not is_parameter_optional
 		do
 			short_form := a_short_form
 			has_short_form := True

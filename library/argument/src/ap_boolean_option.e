@@ -5,7 +5,7 @@ note
 		"Options that need a yes or no parameter"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2019, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -96,7 +96,7 @@ feature -- Status setting
 		require
 			not_short_form: not has_short_form
 		do
-			set_default_parameter (True)
+			set_parameter_optional (True)
 		ensure
 			not_needed: not needs_parameter
 			default_parameter_set: default_parameter = True

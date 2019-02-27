@@ -141,7 +141,7 @@ feature -- Tests
 			assert ("option_was_not_found", not o1.was_found)
 		end
 
-	test_parse_option_with_optional_parameter
+	test_parse_option_with_optional_parameter_1
 			-- Can we parse an option that has an optional parameter?
 		local
 			p: AP_BASIC_PARSER
@@ -152,14 +152,56 @@ feature -- Tests
 			o1.set_parameter_as_optional
 			p.options.force_last (o1)
 			p.parse_array (<< "--option", "ccc" >>)
-			assert ("option_was_found",o1.was_found)
-			assert ("parameter_is_void",o1.parameter = Void)
+			assert ("option_was_found", o1.was_found)
+			assert ("parameter_is_void", o1.parameter = Void)
 			assert_strings_equal ("ccc_was_passed", "ccc", p.parameters.first)
 			p.parse_array (<< "--option=ddd" >>)
 			assert ("option_was_found", o1.was_found)
 			assert_strings_equal ("ddd_was_passed", "ddd", o1.parameter)
 			p.parse_array (<< "xxx" >>)
 			assert ("option_was_not_found", not o1.was_found)
+		end
+
+	test_parse_option_with_optional_parameter_2
+			-- Can we parse an option that has an optional parameter?
+		local
+			p: AP_BASIC_PARSER
+			o1: AP_STRING_OPTION
+		do
+			create p.make
+			create o1.make_with_long_form ("option")
+			o1.set_parameter_optional ("gobo")
+			p.options.force_last (o1)
+			p.parse_array (<< "--option", "ccc" >>)
+			assert ("option_was_found", o1.was_found)
+			assert_strings_equal ("parameter_is_gobo", "gobo", o1.parameter)
+			assert_strings_equal ("ccc_was_passed", "ccc", p.parameters.first)
+			p.parse_array (<< "--option=ddd" >>)
+			assert ("option_was_found", o1.was_found)
+			assert_strings_equal ("ddd_was_passed", "ddd", o1.parameter)
+			p.parse_array (<< "xxx" >>)
+			assert ("option_was_not_found", not o1.was_found)
+		end
+
+	test_parse_option_with_default_parameter
+			-- Can we parse an option that has default parameter?
+		local
+			p: AP_BASIC_PARSER
+			o1: AP_STRING_OPTION
+		do
+			create p.make
+			create o1.make_with_long_form ("option")
+			o1.set_default_parameter ("gobo")
+			p.options.force_last (o1)
+			p.parse_array (<< "--option", "ccc" >>)
+			assert ("option_was_found", o1.was_found)
+			assert_strings_equal ("ccc_was_passed", "ccc", o1.parameter)
+			p.parse_array (<< "--option=ddd" >>)
+			assert ("option_was_found", o1.was_found)
+			assert_strings_equal ("ddd_was_passed", "ddd", o1.parameter)
+			p.parse_array (<< "xxx" >>)
+			assert ("option_was_not_found", not o1.was_found)
+			assert_strings_equal ("gobo_is_default_parameter", "gobo", o1.parameter)
 		end
 
 	test_parse_integer_options

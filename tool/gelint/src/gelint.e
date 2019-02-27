@@ -416,7 +416,7 @@ feature -- Argument parsing
 			create ise_option.make_with_long_form ("ise")
 			ise_option.set_description ("Version of Eiffel whose semantics should be used during code analysis. (default: latest version)")
 			ise_option.set_parameter_description ("major[.minor[.revision[.build]]]")
-			ise_option.set_default_parameter (ise_latest.out)
+			ise_option.set_parameter_optional (ise_latest.out)
 			l_parser.options.force_last (ise_option)
 				-- ecma.
 			create ecma_flag.make_with_long_form ("ecma")

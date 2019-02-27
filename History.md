@@ -42,6 +42,16 @@
 * Changed the signature of some `assert_*` routines to be able to compare
   some `separate` objects in SCOOP mode.
 
+### Gobo Eiffel Argument Library
+
+* In class `AP_OPTION_WITH_PARAMETER`, made the difference between
+  `set_default_parameter` which provides a default parameter value
+  be used when the current option is not specified on the command-line
+  (when the option is not mandatory), and `set_parameter_optional`
+  which makes it possible to specify the current option on the
+  command-line with no parameter (the parameter is optional, even
+  when the option is mandatory).
+
 ### Gobo Eiffel Kernel Library
 
 * Unmarked as instance-free the feature `eol` in `KI_TEXT_INPUT_STREAM`

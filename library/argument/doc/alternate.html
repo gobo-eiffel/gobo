@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-  <title>Alternative Options Lists</title>
+  <title>Lists of Alternative Options</title>
  </head>
  <body bgcolor="#FFFFFF">
   <table border="0" width="100%">
    <tr>
-    <td><font size="6"><strong>Alternative Options Lists</strong></font></td>
+    <td><font size="6"><strong>Lists of Alternative Options</strong></font></td>
     <td align="right"><a href="options.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>
   </table>
   <hr size="1" />
   <p>
-   	Some application offer different 'modes' of operation, each
+   	Some applications offer different 'modes' of operation, each
    	one with a different set of options. For example, a
-   	compression program (think WinZip or gzip) may be used for
+   	compression program (think of WinZip or gzip) may be used for
    	compression and for decompression of files. In decompression
    	mode, specifying the compression algorithm to use does not
    	make any sense, as the program should be able to extract this
@@ -22,7 +22,7 @@
    
   </p>
   <p>
-   	<i>Alternative options lists</i> allows you to
+   	<i>Lists of alternative options</i> allow you to
    	define sets of options for different operation modes of the
    	application. The very first option passed to the application
    	is used to select one of the operation modes, altering the set
@@ -36,7 +36,7 @@
    
    	
    <p>
-    		Alternative options lists are created by instantiating
+    		List of alternative options are created by instantiating
     		<font color="#008080"><i><tt>ALTERNATIVE_OPTIONS_LIST</tt></i></font> and
     		adding it to the
     		<font color="#008080"><i><tt>alternative_options_lists</tt></i></font>
@@ -50,8 +50,8 @@
    <p>
     
     		<font color="#008080"><i><tt>ALTERNATIVE_OPTIONS_LIST</tt></i></font> is
-    		itself a list (a child of
-    		<font color="#008080"><i><tt>DS_LINKED_LIST[AP_OPTION]</tt></i></font>) that
+    		itself a list (an heir of
+    		<font color="#008080"><i><tt>DS_LINKED_LIST [AP_OPTION]</tt></i></font>) that
     		can contain option objects. Upon creation, a special
     		option needs to be provided to
     		<font color="#008080"><i><tt>make</tt></i></font>, the
@@ -59,7 +59,7 @@
     		option that is encountered during parsing is the
     		introduction option, then the list of available
     		options during parsing will be replaced by the list
-    		provided in the alternative option list.
+    		provided in the list of alternative options.
     
     	
    </p>
@@ -124,16 +124,16 @@ feature -- Main
          parser.set_application_description ("Compress or decompress a file")
          parser.set_parameters_description ("file")
 
-         create decompress_flag.make ('d',"decompress")
+         create decompress_flag.make ('d', "decompress")
          decompress_flag.set_description ("Decompress file")
 
-         create strength_option.make ('s',"strength")
+         create strength_option.make ('s', "strength")
          strength_option.set_description ("Compression strength (1..9)")
 
-         create check_flag.make ('c',"check")
+         create check_flag.make ('c', "check")
          check_flag.set_description ("Enable checksum computation after decompression")
 
-         create output_option.make ('o',"output")
+         create output_option.make ('o', "output")
          output_option.set_description ("Output to specified file")
          output_option.set_parameter_description ("file")
 
@@ -182,9 +182,8 @@ Options:
    
    	
    <p>
-    		<i>P.S.:</i> You can see that the help
-    		flag was also added using an empty alternative options
-    		list.
+    		Note that the help flag was also added using an empty
+    		list of alternative options.
     	
    </p>
    
@@ -194,7 +193,7 @@ Options:
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2001-2012, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>3 December 2012</font></address>
+     <address><font size="2"><b>Copyright © 2001-2019, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 February 2019</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="options.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>
