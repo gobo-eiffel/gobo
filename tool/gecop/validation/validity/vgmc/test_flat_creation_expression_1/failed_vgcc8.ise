@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+
+Error code: VGCC(8)
+
+Error: Creation instruction on generic parameter uses call to
+       improper feature.
+What to do: make sure that feature of call is a creation feature
+            of the constraint class.
+
+Class: XX [G -> {CC rename make as make_c end, DD rename make as make_d end} create make_c, make_d end]
+Source class: BB [G -> ZZ create make end]
+Feature: f
+Feature name: make
+Line: 9
+      do
+->      a := create {G}.make
+      end
+
+-------------------------------------------------------------------------------

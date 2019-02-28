@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+
+Error code: VGCC(1)
+
+Error: Creation instruction applies to target of generic type
+   which does not have a suitable creation constraint.
+What to do: Make sure that the constraint has a creation part
+   and that it lists the feature you need.
+   For an abstract creation (create x) a version of
+   `default_create' from `ANY' is required.
+
+Class: BB [G -> {CC, DD}]
+Feature: f
+Line: 9
+      do
+->      a := create {G}.make
+      end
+
+-------------------------------------------------------------------------------

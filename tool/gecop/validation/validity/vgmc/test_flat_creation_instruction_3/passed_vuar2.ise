@@ -1,0 +1,22 @@
+-------------------------------------------------------------------------------
+
+Error code: VUAR(2)
+
+Type error: non-compatible actual argument in feature call. 
+What to do: make sure that type of actual argument is compatible with
+  the type of corresponding formal argument. 
+
+Class: XX [G -> {CC rename make as make_c end, DD rename make as make_d end} create make_c, make_d end]
+Source class: BB [G -> ZZ create make end]
+Feature: f
+Called feature: make (a: detachable DD) from DD
+Argument name: a
+Argument position: 1
+Formal argument type: detachable DD
+Actual argument type: detachable CC
+Line: 9
+      do
+->      create a.make (c)
+      end
+
+-------------------------------------------------------------------------------

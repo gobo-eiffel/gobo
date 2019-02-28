@@ -1,0 +1,2 @@
+[VUAR-2] class XX (BB,9,13): the 1-th actual argument (of type 'detachable CC') does not conform to the corresponding formal argument (of type 'detachable DD') of feature `make' in class DD.
+----

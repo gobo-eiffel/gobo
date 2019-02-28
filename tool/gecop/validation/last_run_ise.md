@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     149 tests
-    # FAILED:     41 tests
+    # Passed:     155 tests
+    # FAILED:     44 tests
     # Aborted:    0 test
-    # Total:      190 tests (4053 assertions)
+    # Total:      199 tests (4242 assertions)
 
 Test Results:</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
@@ -37,6 +37,9 @@ FAIL:  \[[validity/vggc3/test2](validity/vggc3/test2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_agent\_1](validity/vgmc/test\_agent\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_agent\_2](validity/vgmc/test\_agent\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_assigner\_3](validity/vgmc/test\_assigner\_3)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_flat\_creation\_expression\_1](validity/vgmc/test\_flat\_creation\_expression\_1)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_flat\_creation\_instruction\_1](validity/vgmc/test\_flat\_creation\_instruction\_1)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_flat\_creation\_instruction\_2](validity/vgmc/test\_flat\_creation\_instruction\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_flat\_labeled\_tuple\_1](validity/vgmc/test\_flat\_labeled\_tuple\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_flat\_labeled\_tuple\_2](validity/vgmc/test\_flat\_labeled\_tuple\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_flat\_query\_call\_4](validity/vgmc/test\_flat\_query\_call\_4)\] test\_failed</br>
