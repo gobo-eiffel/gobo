@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     148 tests
+    # Passed:     149 tests
     # FAILED:     41 tests
     # Aborted:    0 test
-    # Total:      189 tests (4032 assertions)
+    # Total:      190 tests (4053 assertions)
 
 Test Results:</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
