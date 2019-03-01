@@ -2737,10 +2737,6 @@ feature {NONE} -- Instruction validity
 			l_source_context: ET_NESTED_TYPE_CONTEXT
 			l_convert_expression: detachable ET_CONVERT_EXPRESSION
 			had_error: BOOLEAN
-			l_target_type_detachable: BOOLEAN
-			l_target_type_attached: BOOLEAN
-			l_source_type_attached: BOOLEAN
-			l_source_entity_attached: BOOLEAN
 		do
 			has_fatal_error := False
 			l_target := an_instruction.target
@@ -2771,22 +2767,6 @@ feature {NONE} -- Instruction validity
 			if not has_fatal_error then
 					-- Both source and target are valid. Check whether the type of the
 					-- source conforms or converts to the type of the target.
-				if current_system.attachment_type_conformance_mode then
-					l_target_type_detachable := l_target_context.is_type_detachable
-					l_target_type_attached := l_target_context.is_type_attached
-					l_source_type_attached := l_source_context.is_type_attached
-					if not l_source_type_attached then
-						if not l_target_type_detachable then
-							if is_entity_attached (l_source) then
-								l_source_entity_attached := True
-								l_source_context.force_last (tokens.attached_like_current)
-							end
-						else
--- TODO: to be done only when the target is a stable attribute.
-							l_source_entity_attached := is_entity_attached (l_source)
-						end
-					end
-				end
 				if not l_source_context.conforms_to_context (l_target_context, system_processor) then
 						-- The source does not conform to the target.
 						-- Try to find out whether it converts to it.
@@ -2805,11 +2785,6 @@ feature {NONE} -- Instruction validity
 					then
 						-- Compatibility with ISE 5.6.0610.
 					else
-						if current_system.attachment_type_conformance_mode then
-							if l_source_entity_attached then
-								l_source_context.remove_last
-							end
-						end
 							-- The type of the source does not conform nor convert to the type of the target.
 						set_fatal_error
 						error_handler.report_vjar0a_error (current_class, current_class_impl, an_instruction, l_source_context.named_type, l_target_context.named_type)
@@ -2818,11 +2793,11 @@ feature {NONE} -- Instruction validity
 				if not has_fatal_error then
 					if current_system.attachment_type_conformance_mode then
 						if attached {ET_RESULT} l_target then
-							if not l_target_type_detachable then
+							if not l_target_context.is_type_detachable then
 								current_initialization_scope.add_result
 							elseif attached current_closure_impl.type as l_result_type and then not l_result_type.is_type_detachable (current_type) then
 								if l_result_type.is_type_attached (current_type) then
-									if l_source_type_attached or l_source_entity_attached then
+									if l_source_context.is_type_attached then
 										current_initialization_scope.add_result
 									else
 										current_initialization_scope.remove_result
@@ -2835,19 +2810,19 @@ feature {NONE} -- Instruction validity
 									end
 								end
 							end
-							if not l_target_type_attached then
-								if l_source_type_attached or l_source_entity_attached then
+							if not l_target_context.is_type_attached then
+								if l_source_context.is_type_attached then
 									current_attachment_scope.add_result
 								else
 									current_attachment_scope.remove_result
 								end
 							end
 						elseif attached {ET_IDENTIFIER} l_target as l_identifier then
-							if not l_target_type_detachable then
+							if not l_target_context.is_type_detachable then
 								current_initialization_scope.add_name (l_identifier)
 							end
-							if not l_target_type_attached then
-								if l_source_type_attached or l_source_entity_attached then
+							if not l_target_context.is_type_attached then
+								if l_source_context.is_type_attached then
 									current_attachment_scope.add_name (l_identifier)
 								else
 									current_attachment_scope.remove_name (l_identifier)
@@ -8796,7 +8771,7 @@ feature {NONE} -- Expression validity
 			l_name := a_call.name
 				-- Check that the target of the call is attached.
 			if current_system.target_type_attachment_mode then
-				if not a_context.is_type_attached and then not is_entity_attached (a_call.target) then
+				if not a_context.is_type_attached then
 						-- Error: the target of the call is not attached.
 					set_fatal_error
 					error_handler.report_vuta2a_error (current_class, current_class_impl, l_name, a_feature, a_context.named_type)
@@ -8926,7 +8901,7 @@ feature {NONE} -- Expression validity
 			end
 				-- Check that the target of the call is attached.
 			if current_system.target_type_attachment_mode then
-				if not a_context.is_type_attached and then not is_entity_attached (a_call.target) then
+				if not a_context.is_type_attached then
 						-- Error: the target of the call is not attached.
 					set_fatal_error
 					error_handler.report_vuta2b_error (current_class, current_class_impl, l_name, a_context.named_type)
@@ -10414,9 +10389,6 @@ feature {NONE} -- Expression validity
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
 			had_error: BOOLEAN
-			l_formal_type_detachable: BOOLEAN
-			l_actual_type_attached: BOOLEAN
-			l_actual_entity_attached: BOOLEAN
 			l_tuple_argument_position: INTEGER
 			l_is_not_compatible: BOOLEAN
 			l_old_target: ET_EXPRESSION
@@ -10510,102 +10482,84 @@ feature {NONE} -- Expression validity
 				end
 				nb := l_actuals.count
 				from i := 1 until i > nb loop
-					l_actual_entity_attached := False
 					l_actual := l_actuals.actual_argument (i)
 					l_formal := l_formals.formal_argument (i)
 					l_formal_context.force_last (l_formal.type)
 					check_actual_argument_validity (l_actual, l_actual_context, l_formal_context, a_call, a_class)
+					l_is_not_compatible := False
 					if has_fatal_error then
 						had_error := True
-					else
-						if current_system.attachment_type_conformance_mode then
-							l_formal_type_detachable := l_formal_context.is_type_detachable
-							l_actual_type_attached := l_actual_context.is_type_attached
-							if not l_formal_type_detachable and not l_actual_type_attached then
-								if is_entity_attached (l_actual) then
-									l_actual_entity_attached := True
-									l_actual_context.force_last (tokens.attached_like_current)
-								end
-							end
-						end
-						l_is_not_compatible := False
-						if l_actual_context.conforms_to_context (l_formal_context, system_processor) then
-							-- Done.
-						elseif current_class /= current_class_impl then
-								-- Convertibility can only be resolved in the implementation class
-							l_is_not_compatible := True
-						elseif attached convert_expression (l_actual, l_actual_context, l_formal_context) as l_convert_expression and then not has_fatal_error then
-								-- The actual type does not conform to the format type, but it converts to it.
-								-- Insert the conversion feature call in the AST.
-							if l_actual_list /= Void then
-								if attached {ET_EXPRESSION_COMMA} l_actual_list.item (i) as l_expression_comma then
-									l_expression_comma.set_expression (l_convert_expression)
-								else
-									l_actual_list.put (l_convert_expression, i)
-								end
-							elseif attached {ET_INFIX_EXPRESSION} a_call as l_infix_expression then
-								l_infix_expression.set_right (l_convert_expression)
+					elseif l_actual_context.conforms_to_context (l_formal_context, system_processor) then
+						-- Done.
+					elseif current_class /= current_class_impl then
+							-- Convertibility can only be resolved in the implementation class
+						l_is_not_compatible := True
+					elseif attached convert_expression (l_actual, l_actual_context, l_formal_context) as l_convert_expression and then not has_fatal_error then
+							-- The actual type does not conform to the format type, but it converts to it.
+							-- Insert the conversion feature call in the AST.
+						if l_actual_list /= Void then
+							if attached {ET_EXPRESSION_COMMA} l_actual_list.item (i) as l_expression_comma then
+								l_expression_comma.set_expression (l_convert_expression)
 							else
-								l_is_not_compatible := True
+								l_actual_list.put (l_convert_expression, i)
 							end
-						elseif has_fatal_error then
-								-- Error already reported when calling `convert_expression'.
-							had_error := True
 						elseif attached {ET_INFIX_EXPRESSION} a_call as l_infix_expression then
-							l_class := a_class
-								-- Use a local variable because ISE does not support
-								-- this CAP (i.e. considering `l_class' as attached
-								-- after the check-instruction) for formal arguments!
-							check qualified_call: l_class /= Void then end
+							l_infix_expression.set_right (l_convert_expression)
+						else
+							l_is_not_compatible := True
+						end
+					elseif has_fatal_error then
+							-- Error already reported when calling `convert_expression'.
+						had_error := True
+					elseif attached {ET_INFIX_EXPRESSION} a_call as l_infix_expression then
+						l_class := a_class
+							-- Use a local variable because ISE does not support
+							-- this CAP (i.e. considering `l_class' as attached
+							-- after the check-instruction) for formal arguments!
+						check qualified_call: l_class /= Void then end
+						l_formal_context.remove_last
+						l_old_target := l_infix_expression.left
+						check_converted_target_infix_expression_validity (l_infix_expression, l_class, a_context, l_actual_context, a_call_info)
+						l_formal_context.force_last (l_formal.type)
+						if l_old_target = l_infix_expression.left then
+							l_is_not_compatible := True
+						end
+					else
+							-- Try Tuple-argument-unfolding.
+						if l_tuple_argument_position < 0 and then current_class = current_class_impl then
 							l_formal_context.remove_last
-							l_old_target := l_infix_expression.left
-							check_converted_target_infix_expression_validity (l_infix_expression, l_class, a_context, l_actual_context, a_call_info)
+							l_tuple_argument_position := tuple_argument_position (l_formals, a_context)
 							l_formal_context.force_last (l_formal.type)
-							if l_old_target = l_infix_expression.left then
-								l_is_not_compatible := True
+						end
+						if
+							l_tuple_argument_position = i and then
+							current_class = current_class_impl and then
+							attached {ET_CALL_WITH_ACTUAL_ARGUMENT_LIST} a_call as l_call and then
+							not attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_call.arguments
+						then
+							l_actual_list := create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST}.make (l_call.arguments, l_tuple_argument_position, nb)
+							l_actuals := l_actual_list
+							l_call.set_arguments (l_actual_list)
+								-- Reprocess this actual argument now that it has been
+								-- converted to a Tuple argument.
+							i := i - 1
+						else
+							l_is_not_compatible := True
+						end
+					end
+					if l_is_not_compatible then
+						had_error := True
+						set_fatal_error
+						l_actual_named_type := l_actual_context.named_type
+						l_formal_named_type := l_formal_context.named_type
+						if a_class /= Void then
+							if l_name.is_precursor then
+								error_handler.report_vdpr4b_error (current_class, current_class_impl, l_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
+							else
+								error_handler.report_vuar2a_error (current_class, current_class_impl, l_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
 							end
 						else
-								-- Try Tuple-argument-unfolding.
-							if l_tuple_argument_position < 0 and then current_class = current_class_impl then
-								l_formal_context.remove_last
-								l_tuple_argument_position := tuple_argument_position (l_formals, a_context)
-								l_formal_context.force_last (l_formal.type)
-							end
-							if
-								l_tuple_argument_position = i and then
-								current_class = current_class_impl and then
-								attached {ET_CALL_WITH_ACTUAL_ARGUMENT_LIST} a_call as l_call and then
-								not attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_call.arguments
-							then
-								l_actual_list := create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST}.make (l_call.arguments, l_tuple_argument_position, nb)
-								l_actuals := l_actual_list
-								l_call.set_arguments (l_actual_list)
-									-- Reprocess this actual argument now that it has been
-									-- converted to a Tuple argument.
-								i := i - 1
-							else
-								l_is_not_compatible := True
-							end
-						end
-						if l_is_not_compatible then
-							if current_system.attachment_type_conformance_mode then
-								if l_actual_entity_attached then
-									l_actual_context.remove_last
-								end
-							end
-							had_error := True
-							set_fatal_error
-							l_actual_named_type := l_actual_context.named_type
-							l_formal_named_type := l_formal_context.named_type
-							if a_class /= Void then
-								if l_name.is_precursor then
-									error_handler.report_vdpr4b_error (current_class, current_class_impl, l_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-								else
-									error_handler.report_vuar2a_error (current_class, current_class_impl, l_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-								end
-							else
-								error_handler.report_vuar2b_error (current_class, current_class_impl, l_name, a_feature, i, l_actual_named_type, l_formal_named_type)
-							end
+							error_handler.report_vuar2b_error (current_class, current_class_impl, l_name, a_feature, i, l_actual_named_type, l_formal_named_type)
 						end
 					end
 					l_formal_context.remove_last
@@ -11660,13 +11614,6 @@ feature {NONE} -- Agent validity
 			a_name := an_expression.name
 			a_seed := a_name.seed
 			check_expression_validity (a_target, a_context, current_system.detachable_any_type)
-			if not has_fatal_error then
-				if current_system.attachment_type_conformance_mode then
-					if not a_context.is_type_attached and is_entity_attached (a_target) then
-						a_context.force_last (tokens.attached_like_current)
-					end
-				end
-			end
 			l_adapted_classes := new_adapted_classes
 			if not has_fatal_error then
 				a_context.add_adapted_classes_to_list (l_adapted_classes)
@@ -13243,9 +13190,6 @@ feature {NONE} -- Agent validity
 			l_formal_named_type: ET_NAMED_TYPE
 			l_convert_expression: detachable ET_CONVERT_EXPRESSION
 			l_actual_type: ET_TYPE
-			l_formal_type_detachable: BOOLEAN
-			l_actual_type_attached: BOOLEAN
-			l_actual_entity_attached: BOOLEAN
 		do
 			has_fatal_error := False
 			if not attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_agent.arguments as l_actual_list then
@@ -13320,58 +13264,41 @@ feature {NONE} -- Agent validity
 							check_expression_validity (l_actual, l_actual_context, l_formal_context)
 							if has_fatal_error then
 								-- Do nothing.
-							else
-								if current_system.attachment_type_conformance_mode then
-									l_formal_type_detachable := l_formal_context.is_type_detachable
-									l_actual_type_attached := l_actual_context.is_type_attached
-									if not l_formal_type_detachable and not l_actual_type_attached then
-										if is_entity_attached (l_actual) then
-											l_actual_entity_attached := True
-											l_actual_context.force_last (tokens.attached_like_current)
-										end
-									end
-								end
-								if not l_actual_context.conforms_to_context (l_formal_context, system_processor) then
-										-- The actual type does not conform to the format type.
-										-- Try to find out whether it converts to it.
-									l_convert_expression := convert_expression (l_actual, l_actual_context, l_formal_context)
-									if has_fatal_error then
-										-- Nothing to be done.
-									elseif l_convert_expression /= Void then
-											-- Insert the conversion feature call in the AST.
-											-- Convertibility should be resolved in the implementation class.
-										check implementation_class: current_class = current_class_impl end
-										if attached {ET_AGENT_ARGUMENT_OPERAND_COMMA} l_actual_list.item (i) as l_argument_comma then
-											l_argument_comma.set_agent_actual_argument (l_convert_expression)
-										else
-											l_actual_list.put (l_convert_expression, i)
-										end
+							elseif not l_actual_context.conforms_to_context (l_formal_context, system_processor) then
+									-- The actual type does not conform to the format type.
+									-- Try to find out whether it converts to it.
+								l_convert_expression := convert_expression (l_actual, l_actual_context, l_formal_context)
+								if has_fatal_error then
+									-- Nothing to be done.
+								elseif l_convert_expression /= Void then
+										-- Insert the conversion feature call in the AST.
+										-- Convertibility should be resolved in the implementation class.
+									check implementation_class: current_class = current_class_impl end
+									if attached {ET_AGENT_ARGUMENT_OPERAND_COMMA} l_actual_list.item (i) as l_argument_comma then
+										l_argument_comma.set_agent_actual_argument (l_convert_expression)
 									else
-										if current_system.attachment_type_conformance_mode then
-											if l_actual_entity_attached then
-												l_actual_context.remove_last
-											end
-										end
-										set_fatal_error
-										l_actual_named_type := l_actual_context.named_type
-										l_formal_named_type := l_formal_context.named_type
-										if attached {ET_CALL_AGENT} an_agent as l_call_agent and a_feature /= Void then
-											if l_call_agent.is_qualified_call then
-													-- Make sure that `a_context' (which is the same object as `l_formal_context') represents
-													-- the type of the target of the agent and not the type of the formal argument.
-												l_formal_context.remove_last
-												error_handler.report_vpca4a_error (current_class, current_class_impl, l_call_agent.name, a_feature, a_context.base_class, i, l_actual_named_type, l_formal_named_type)
-												l_formal_context.force_last (l_formal_type)
-											else
-												error_handler.report_vpca4b_error (current_class, current_class_impl, l_call_agent.name, a_feature, i, l_actual_named_type, l_formal_named_type)
-											end
-										elseif attached {ET_INLINE_AGENT} an_agent as l_inline_agent then
--- TODO: inline agent
+										l_actual_list.put (l_convert_expression, i)
+									end
+								else
+									set_fatal_error
+									l_actual_named_type := l_actual_context.named_type
+									l_formal_named_type := l_formal_context.named_type
+									if attached {ET_CALL_AGENT} an_agent as l_call_agent and a_feature /= Void then
+										if l_call_agent.is_qualified_call then
+												-- Make sure that `a_context' (which is the same object as `l_formal_context') represents
+												-- the type of the target of the agent and not the type of the formal argument.
+											l_formal_context.remove_last
+											error_handler.report_vpca4a_error (current_class, current_class_impl, l_call_agent.name, a_feature, a_context.base_class, i, l_actual_named_type, l_formal_named_type)
+											l_formal_context.force_last (l_formal_type)
 										else
-												-- Internal error: unknown kind of agent.
-											set_fatal_error
-											error_handler.report_giaaa_error
+											error_handler.report_vpca4b_error (current_class, current_class_impl, l_call_agent.name, a_feature, i, l_actual_named_type, l_formal_named_type)
 										end
+									elseif attached {ET_INLINE_AGENT} an_agent as l_inline_agent then
+-- TODO: inline agent
+									else
+											-- Internal error: unknown kind of agent.
+										set_fatal_error
+										error_handler.report_giaaa_error
 									end
 								end
 							end
@@ -15441,30 +15368,6 @@ feature {NONE} -- Across components
 			-- scope of their cursors
 
 feature {NONE} -- Attachments
-
-	is_entity_attached (a_expression: ET_EXPRESSION): BOOLEAN
-			-- Is the unparenthesized version of `a_expression', whose type is not attached,
-			-- an entity (i.e. local variable, 'Result', formal argument, stable attribute)
-			-- which is guaranteed to be attached at this stage of execution?
-		require
-			a_expression_not_void: a_expression /= Void
-		local
-			l_unparenthesized_expression: ET_EXPRESSION
-		do
-			l_unparenthesized_expression := a_expression.unparenthesized_expression
-			if attached {ET_RESULT} l_unparenthesized_expression then
-				Result := current_attachment_scope.has_result
-			elseif attached {ET_IDENTIFIER} l_unparenthesized_expression as l_identifier then
-				if l_identifier.is_local then
-					Result := current_attachment_scope.has_local_variable (l_identifier)
-				elseif l_identifier.is_argument then
-					Result := current_attachment_scope.has_formal_argument (l_identifier)
-				elseif attached current_class.seeded_query (l_identifier.seed) as l_query and then l_query.is_attribute then
--- TODO: see whether the attribute is declared as stable.
-					Result := current_attachment_scope.has_attribute (l_identifier)
-				end
-			end
-		end
 
 	build_assertions_attachment_scope (a_assertions: ET_ASSERTIONS)
 			-- Build attachment scope of `a_assertions' in `current_attachment_scope'.
