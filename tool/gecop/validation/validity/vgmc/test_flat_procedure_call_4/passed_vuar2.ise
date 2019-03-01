@@ -1,0 +1,22 @@
+-------------------------------------------------------------------------------
+
+Error code: VUAR(2)
+
+Type error: non-compatible actual argument in feature call. 
+What to do: make sure that type of actual argument is compatible with
+  the type of corresponding formal argument. 
+
+Class: XX [G -> {CC, DD}]
+Source class: BB [G -> {CC rename f as fc end, DD rename f as fd end}]
+Feature: g
+Called feature: f (a: DD) from DD
+Argument name: a
+Argument position: 1
+Formal argument type: DD
+Actual argument type: CC
+Line: 7
+      do
+->      a.fc (c)
+      end
+
+-------------------------------------------------------------------------------

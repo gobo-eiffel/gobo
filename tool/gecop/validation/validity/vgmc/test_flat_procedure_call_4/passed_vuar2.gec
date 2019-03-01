@@ -1,0 +1,2 @@
+[VUAR-2] class XX (BB,7,6): the 1-th actual argument (of type '[attached] CC') does not conform to the corresponding formal argument (of type '[attached] DD') of feature `f' in class DD.
+----
