@@ -675,9 +675,6 @@ feature {NONE} -- Constraint creation validity
 									if l_feature.is_procedure then
 											-- We found a creation procedure.
 										a_name.set_seed (l_feature.first_seed)
-										if nb_constaints > 1 then
-											a_name.set_target_type (a_formal.type_with_constraint_index (j))
-										end
 									else
 											-- This feature is not a procedure.
 										set_fatal_error (current_class)
@@ -690,7 +687,7 @@ feature {NONE} -- Constraint creation validity
 						if l_found_constraint = Void then
 								-- This name is not the final name of a feature in any of the constraints.
 							set_fatal_error (current_class)
-							if l_constraint_base_types.count = 1 then
+							if nb_constaints = 1 then
 								error_handler.report_vggc3a_error (current_class, a_name, l_constraint_base_types.type_constraint (1).base_class)
 							else
 								error_handler.report_vggc3b_error (current_class, a_name, l_constraint_base_types)

@@ -219,7 +219,6 @@ feature -- Initialization
 		do
 			if not is_local and not is_argument then
 				seed := 0
-				target_type := Void
 				if is_tuple_label then
 					set_feature_name (True)
 				end

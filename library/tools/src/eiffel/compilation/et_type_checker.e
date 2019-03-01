@@ -118,8 +118,10 @@ feature -- Validity checking
 			a_formal_parameters: detachable ET_FORMAL_PARAMETER_LIST
 			a_formal_parameter: detachable ET_FORMAL_PARAMETER
 			a_formal_creator: detachable ET_CONSTRAINT_CREATOR
+			a_formal_base_types: ET_CONSTRAINT_BASE_TYPES
 			i, nb: INTEGER
 			j, nb_creators: INTEGER
+			k, nb_base_types: INTEGER
 			nb_parameters: INTEGER
 			had_error: BOOLEAN
 			old_context: ET_TYPE_CONTEXT
@@ -184,27 +186,27 @@ feature -- Validity checking
 									error_handler.report_giaaa_error
 								else
 									a_formal_parameter := a_formal_parameters.formal_parameter (an_index)
+									a_formal_base_types := a_formal_parameter.constraint_base_types
 									a_formal_creator := a_formal_parameter.creation_procedures
+									nb_base_types := a_formal_base_types.count
 									from j := 1 until j > nb_creators loop
 										a_name := a_creator.feature_name (j)
 										a_seed := a_name.seed
-										if attached a_name.target_type as l_target_type then
-											a_base_class := l_target_type.base_class (current_context)
-										else
-											a_base_class := a_formal_type.base_class (current_context)
-										end
-										a_base_class.process (system_processor.interface_checker)
-										if not a_base_class.interface_checked_successfully then
-											set_fatal_error
-										elseif not attached a_base_class.seeded_procedure (a_seed) as l_creation_procedure then
-												-- Internal error: `a_type' is supposed to be a valid type.
-											set_fatal_error
-											error_handler.report_giaaa_error
-										elseif a_formal_creator = Void or else not a_formal_creator.has_feature (l_creation_procedure) then
-											set_fatal_error
-											if not class_interface_error_only then
-												error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
+										from k := 1 until k > nb_base_types loop
+											a_base_class := a_formal_base_types.type_constraint (k).base_class
+											a_base_class.process (system_processor.interface_checker)
+											if not a_base_class.interface_checked_successfully then
+												set_fatal_error
+											elseif not attached a_base_class.seeded_procedure (a_seed) as l_creation_procedure then
+												-- We are in the case of multiple constraints and the
+												-- procedure with this seed comes from another constraint.
+											elseif a_formal_creator = Void or else not a_formal_creator.has_feature (l_creation_procedure) then
+												set_fatal_error
+												if not class_interface_error_only then
+													error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
+												end
 											end
+											k := k + 1
 										end
 										j := j + 1
 									end

@@ -27,7 +27,6 @@ feature -- Initialization
 			-- Reset call name as it was when it was last parsed.
 		do
 			seed := 0
-			target_type := Void
 		end
 
 feature -- Access
@@ -57,12 +56,6 @@ feature -- Access
 			-- in the enclosing feature, or index of label in
 			-- tuple type
 
-	target_type: detachable ET_NAMED_TYPE
-			-- Type of the target of the call to be used when `seed'
-			-- is not enough to determine the feature to be used
-			-- (e.g. in case of formal generic parameters with multiple
-			-- constraints)
-
 feature -- Setting
 
 	set_seed (a_seed: INTEGER)
@@ -71,14 +64,6 @@ feature -- Setting
 			seed := a_seed
 		ensure
 			seed_set: seed = a_seed
-		end
-
-	set_target_type (a_type: like target_type)
-			-- Set `target_type' to `a_type'.
-		do
-			target_type := a_type
-		ensure
-			target_type_set: target_type = a_type
 		end
 
 feature -- Status report

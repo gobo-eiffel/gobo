@@ -96,7 +96,9 @@ feature {NONE} -- Parent validity
 			a_formal_parameters: detachable ET_FORMAL_PARAMETER_LIST
 			a_formal_parameter: detachable ET_FORMAL_PARAMETER
 			a_formal_creator: detachable ET_CONSTRAINT_CREATOR
+			a_formal_base_types: ET_CONSTRAINT_BASE_TYPES
 			j, nb_creators: INTEGER
+			k, nb_base_types: INTEGER
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
 		do
@@ -128,27 +130,25 @@ feature {NONE} -- Parent validity
 									error_handler.report_giaaa_error
 								else
 									a_formal_parameter := a_formal_parameters.formal_parameter (an_index)
+									a_formal_base_types := a_formal_parameter.constraint_base_types
 									a_formal_creator := a_formal_parameter.creation_procedures
+									nb_base_types := a_formal_base_types.count
 									from j := 1 until j > nb_creators loop
 										a_name := a_creator.feature_name (j)
 										a_seed := a_name.seed
-										if attached a_name.target_type as l_target_type then
-											an_actual_class := l_target_type.base_class (current_class)
-										else
-											an_actual_class := a_formal_type.base_class (current_class)
-										end
-										an_actual_class.process (system_processor.feature_flattener)
-										if not an_actual_class.features_flattened_successfully then
-											set_fatal_error
-										elseif not attached an_actual_class.seeded_procedure (a_seed) as a_creation_procedure then
-												-- Internal error: the conformance of the actual
-												-- parameter to its generic constraint has been
-												-- checked during the second pass.
-											set_fatal_error
-											error_handler.report_giaaa_error
-										elseif a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
-											set_fatal_error
-											error_handler.report_vtcg4b_error (current_class, current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
+										from k := 1 until k > nb_base_types loop
+											an_actual_class := a_formal_base_types.type_constraint (k).base_class
+											an_actual_class.process (system_processor.feature_flattener)
+											if not an_actual_class.features_flattened_successfully then
+												set_fatal_error
+											elseif not attached an_actual_class.seeded_procedure (a_seed) as a_creation_procedure then
+												-- We are in the case of multiple constraints and the
+												-- procedure with this seed comes from another constraint.
+											elseif a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
+												set_fatal_error
+												error_handler.report_vtcg4b_error (current_class, current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
+											end
+											k := k + 1
 										end
 										j := j + 1
 									end
