@@ -6,7 +6,7 @@
 		"Using gec"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>28 October 2018</date>
+	<date>5 March 2019</date>
 </chapterinfo>
 
 <title>Using gec</title>
@@ -73,6 +73,14 @@ used with <projectname>gec</projectname>:
 		</term>
 		<listitem><para>
 			Run gelint on the full content of each class being compiled.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--ise=major[.minor[.revision[.build]]]</filename>
+		</term>
+		<listitem><para>
+			Version of ISE Eiffel whose semantics should be used during compilation.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

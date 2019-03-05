@@ -224,7 +224,7 @@ feature {NONE} -- Processing
 			l_thread_count := thread_count
 			l_system_processor := {ET_SYSTEM_PROCESSOR_FACTORY}.new_system_processor (l_thread_count)
 			l_system_processor.set_error_handler (error_handler)
-			l_system_processor.set_ise_version (ise_latest)
+			l_system_processor.set_ise_version (ise_version)
 			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
 			l_system_processor.set_nested_benchmark_shown (is_nested_benchmark and not is_no_benchmark and not is_silent)
 			l_system_processor.set_metrics_shown (is_metrics and not is_silent)
@@ -361,6 +361,10 @@ feature -- Arguments
 			Result := gelint_flag.was_found or ecf_gelint_option
 		end
 
+	ise_version: UT_VERSION
+			-- ISE version, whose semantics should be
+			-- used by the Eiffel code analysis process
+
 	catcall_error_mode: BOOLEAN
 			-- Are CAT-call errors considered as fatal errors?
 		do
@@ -483,6 +487,9 @@ feature -- Argument parsing
 	gelint_flag: AP_FLAG
 			-- Flag for '--gelint'
 
+	ise_option: AP_STRING_OPTION
+			-- Option for '--ise=major[.minor[.revision[.build]]]'
+
 	c_compile_option: AP_ENUMERATION_OPTION
 			-- Option for '--cc=<no|script|make|gecc>'
 
@@ -556,6 +563,12 @@ feature -- Argument parsing
 			create gelint_flag.make_with_long_form ("gelint")
 			gelint_flag.set_description ("Run gelint on the full content of each class being compiled.")
 			a_parser.options.force_last (gelint_flag)
+				-- ise.
+			create ise_option.make_with_long_form ("ise")
+			ise_option.set_description ("Version of Eiffel whose semantics should be used during code analysis. (default: latest version)")
+			ise_option.set_parameter_description ("major[.minor[.revision[.build]]]")
+			ise_option.set_default_parameter (ise_latest.out)
+			a_parser.options.force_last (ise_option)
 				-- catcall
 			create catcall_option.make_with_long_form ("catcall")
 			catcall_option.set_description ("Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? (default: warning)")
@@ -643,6 +656,7 @@ feature -- Argument parsing
 			else
 				ecf_filename := a_parser.parameters.first
 			end
+			set_ise_version (ise_option, a_parser)
 			set_override_settings (setting_option, a_parser)
 			set_override_capabilities (capability_option, a_parser)
 			set_override_variables (variable_option, a_parser)
@@ -668,6 +682,45 @@ feature -- Argument parsing
 			gc_option_not_void: gc_option /= Void
 			thread_option_not_void: thread_option /= Void
 			new_instance_types_option_not_void: new_instance_types_option /= Void
+		end
+
+	set_ise_version (a_option: like ise_option; a_parser: AP_PARSER)
+			-- Set `ise_version' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+		local
+			l_ise_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ise_version: detachable UT_VERSION
+		do
+			l_ise_version := ise_latest
+			if not attached a_option.parameter as l_parameter then
+				report_usage_message (a_parser)
+				Exceptions.die (1)
+			elseif not STRING_.same_string (l_parameter, ise_latest.out) then
+				create l_ise_regexp.make
+				l_ise_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?(\.([0-9]+))?")
+				if l_ise_regexp.recognizes (l_parameter) then
+					inspect l_ise_regexp.match_count
+					when 2 then
+						create l_ise_version.make_major (l_ise_regexp.captured_substring (1).to_integer)
+					when 4 then
+						create l_ise_version.make_major_minor (l_ise_regexp.captured_substring (1).to_integer, l_ise_regexp.captured_substring (3).to_integer)
+					when 6 then
+						create l_ise_version.make (l_ise_regexp.captured_substring (1).to_integer, l_ise_regexp.captured_substring (3).to_integer, l_ise_regexp.captured_substring (5).to_integer, 0)
+					when 8 then
+						create l_ise_version.make (l_ise_regexp.captured_substring (1).to_integer, l_ise_regexp.captured_substring (3).to_integer, l_ise_regexp.captured_substring (5).to_integer, l_ise_regexp.captured_substring (7).to_integer)
+					else
+						report_usage_message (a_parser)
+						Exceptions.die (1)
+					end
+				else
+					report_usage_message (a_parser)
+					Exceptions.die (1)
+				end
+			end
+			ise_version := l_ise_version
 		end
 
 	set_override_settings (a_option: like setting_option; a_parser: AP_PARSER)
@@ -866,12 +919,14 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	ecf_filename_not_void: ecf_filename /= Void
+	ise_version_not_void: ise_version /= Void
 	target_option_not_void: target_option /= Void
 	setting_option_not_void: setting_option /= Void
 	capability_option_not_void: capability_option /= Void
 	variable_option_not_void: variable_option /= Void
 	catcall_option_not_void: catcall_option /= Void
 	gelint_flag_not_void: gelint_flag /= Void
+	ise_option_not_void: ise_option /= Void
 	finalize_flag_not_void: finalize_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	no_benchmark_flag_not_void: no_benchmark_flag /= Void

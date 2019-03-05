@@ -20,6 +20,8 @@
   in void-safe mode.
 * Improved interoperability with ISE Eiffel by making sure that type
   `attached NONE` is different from type `detachable NONE` in void-safe mode.
+* Added option `--ise=major[.minor[.revision[.build]]]` to specify the version
+  of ISE Eiffel whose semantics should be used during compilation.
 
 ### gecop
 
