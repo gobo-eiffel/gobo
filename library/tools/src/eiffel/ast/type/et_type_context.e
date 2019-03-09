@@ -65,6 +65,27 @@ feature -- Access
 			named_base_class_not_void: Result /= Void
 		end
 
+	adapted_class_with_named_feature (a_name: ET_CALL_NAME): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter
+			-- one of its constraint base types containing a feature named `a_name'
+			-- (or any of the constraints if none contains such feature)
+		require
+			a_name_not_void: a_name /= Void
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	adapted_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter
+			-- one of its constraint base types containing a feature with seed
+			-- `a_seed' (or any of the constraints if none contains such feature)
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	base_type: ET_BASE_TYPE
 			-- Base type of current context
 		require
@@ -311,11 +332,14 @@ feature -- Basic operations
 			-- base types (in the same order they appear in 'constraint_base_types')
 			-- in case of a formal parameter.
 		require
+			a_list_not_void: a_list /= Void
+			no_void_adapted_class: not a_list.has_void
 			valid_context: is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
 			at_least_one_more: a_list.count > old a_list.count
+			no_void_adapted_class: not a_list.has_void
 		end
 
 feature -- Comparison
@@ -606,22 +630,36 @@ feature -- Conversion
 	as_nested_type_context: ET_NESTED_TYPE_CONTEXT
 			-- Nested type context corresponding to the same type as current;
 			-- Return `Current' is already a nested type context.
+		require
+			valid_context: is_valid_context
 		do
 			Result := to_nested_type_context
 		ensure
 			new_type_context_not_void: Result /= Void
-			valid_context: is_valid_context implies Result.is_valid_context
 			same_root_context: Result.same_root_context (Current)
 		end
 
 	to_nested_type_context: ET_NESTED_TYPE_CONTEXT
 			-- Nested type context corresponding to the same type as current;
 			-- Return a new object at each call.
+		require
+			valid_context: is_valid_context
 		deferred
 		ensure
 			new_type_context_not_void: Result /= Void
-			valid_context: is_valid_context implies Result.is_valid_context
 			same_root_context: Result.same_root_context (Current)
+		end
+
+feature -- Duplication
+
+	copy_to_type_context (other: ET_NESTED_TYPE_CONTEXT)
+			-- Copy current context to `other'.
+		require
+			other_not_void: other /= Void
+			valid_context: is_valid_context
+		deferred
+		ensure
+			same_root_context: other.same_root_context (Current)
 		end
 
 end

@@ -58,8 +58,8 @@ feature -- Features
 		do
 			l_index := renames.index_of_new_name (a_name)
 			if l_index /= 0 then
-				Result := base_class.queries.named_feature (renames.rename_pair (l_index).old_name)
-			elseif attached type.base_class.queries.named_feature (a_name) as l_query and then renames.index_of_old_name (l_query.name) = 0 then
+				Result := base_class.named_query (renames.rename_pair (l_index).old_name)
+			elseif attached base_class.named_query (a_name) as l_query and then renames.index_of_old_name (l_query.name) = 0 then
 				Result := l_query
 			end
 		end
@@ -73,8 +73,8 @@ feature -- Features
 		do
 			l_index := renames.index_of_new_name (a_name)
 			if l_index /= 0 then
-				Result := base_class.procedures.named_feature (renames.rename_pair (l_index).old_name)
-			elseif attached base_class.procedures.named_feature (a_name) as l_procedure and then renames.index_of_old_name (l_procedure.name) = 0 then
+				Result := base_class.named_procedure (renames.rename_pair (l_index).old_name)
+			elseif attached base_class.named_procedure (a_name) as l_procedure and then renames.index_of_old_name (l_procedure.name) = 0 then
 				Result := l_procedure
 			end
 		end

@@ -62,6 +62,7 @@ feature -- Processing
 			-- so for its parent classes recursively.
 		local
 			a_processor: like Current
+			l_other_class: ET_CLASS
 		do
 			if a_class.is_none then
 				a_class.set_interface_checked
@@ -80,6 +81,14 @@ feature -- Processing
 				set_fatal_error (a_class)
 			else
 				internal_process_class (a_class)
+				from
+				until
+					classes_to_be_processed.is_empty
+				loop
+					l_other_class := classes_to_be_processed.last
+					classes_to_be_processed.remove (l_other_class)
+					process_class (l_other_class)
+				end
 			end
 		ensure then
 			interface_checked: a_class.interface_checked
@@ -118,7 +127,6 @@ feature {NONE} -- Processing
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			l_parent_clause: ET_PARENT_LIST
-			l_other_class: ET_CLASS
 		do
 			old_class := current_class
 			current_class := a_class
@@ -165,14 +173,6 @@ feature {NONE} -- Processing
 				end
 			end
 			current_class := old_class
-			from
-			until
-				classes_to_be_processed.is_empty
-			loop
-				l_other_class := classes_to_be_processed.last
-				classes_to_be_processed.remove (l_other_class)
-				process_class (l_other_class)
-			end
 		ensure
 			interface_checked: a_class.interface_checked
 		end

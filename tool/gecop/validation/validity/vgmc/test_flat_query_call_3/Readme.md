@@ -4,7 +4,7 @@ This [test](.) is exercising the validity rule [VGMC](../Readme.md).
 
 ### Description
 
-In this test, the formal generic parameter `G` of class `XX` has two constraints `CC` and `DD`. It inherits `f` from class `BB` with the call `z.f`, where `z` is of type `G` when viewed in the context of `XX`. But features `f` in the constraint `CC` and `f` in the constraint `DD` are two different versions in `XX` (with different types) of the feature `f` appearing in class text of `BB`. This violates `VGMC` because we don't know what is the type of the resulting expression, in particular when it is used as the target of another call.
+In this test, the formal generic parameter `G` of class `XX` has two constraints `CC` and `DD`. It inherits `g` from class `BB` with the call `z.f`, where `z` is of type `G` when viewed in the context of `XX`. But features `f` in the constraint `CC` and `f` in the constraint `DD` are two different versions in `XX` (with different types) of the feature `f` appearing in class text of `BB`. This violates `VGMC` because we don't know what is the type of the resulting expression, in particular when it is used as the target of another call.
 
 ### Notes
 

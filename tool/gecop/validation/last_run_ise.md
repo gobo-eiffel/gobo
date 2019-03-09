@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     156 tests
-    # FAILED:     44 tests
+    # Passed:     157 tests
+    # FAILED:     49 tests
     # Aborted:    0 test
-    # Total:      200 tests (4263 assertions)
+    # Total:      206 tests (4390 assertions)
 
 Test Results:</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
@@ -42,6 +42,10 @@ FAIL:  \[[validity/vgmc/test\_flat\_creation\_instruction\_1](validity/vgmc/test
 FAIL:  \[[validity/vgmc/test\_flat\_creation\_instruction\_2](validity/vgmc/test\_flat\_creation\_instruction\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_flat\_labeled\_tuple\_1](validity/vgmc/test\_flat\_labeled\_tuple\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_flat\_labeled\_tuple\_2](validity/vgmc/test\_flat\_labeled\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_flat\_qualified\_anchored\_type\_1](validity/vgmc/test\_flat\_qualified\_anchored\_type\_1)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_flat\_qualified\_anchored\_type\_2](validity/vgmc/test\_flat\_qualified\_anchored\_type\_2)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_flat\_qualified\_anchored\_type\_3](validity/vgmc/test\_flat\_qualified\_anchored\_type\_3)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_flat\_qualified\_anchored\_type\_4](validity/vgmc/test\_flat\_qualified\_anchored\_type\_4)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_flat\_query\_call\_4](validity/vgmc/test\_flat\_query\_call\_4)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_1](validity/vgmc/test\_labeled\_tuple\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_2](validity/vgmc/test\_labeled\_tuple\_2)\] test\_failed</br>
@@ -51,6 +55,7 @@ FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_1](validity/vgmc/test\_parenthe
 FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_2](validity/vgmc/test\_parenthesis\_call\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_3](validity/vgmc/test\_parenthesis\_call\_3)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_4](validity/vgmc/test\_parenthesis\_call\_4)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_qualified\_anchored\_type\_2](validity/vgmc/test\_qualified\_anchored\_type\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_typed\_agent\_1](validity/vgmc/test\_typed\_agent\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_typed\_agent\_2](validity/vgmc/test\_typed\_agent\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_unary\_call\_1](validity/vgmc/test\_unary\_call\_1)\] test\_failed

@@ -57,6 +57,8 @@ inherit
 			is_type_detachable as context_is_type_detachable,
 			is_type_detachable_with_type_mark as context_is_type_detachable_with_type_mark,
 			add_adapted_classes_to_list as context_add_adapted_classes_to_list,
+			adapted_class_with_named_feature as context_adapted_class_with_named_feature,
+			adapted_class_with_seeded_feature as context_adapted_class_with_seeded_feature,
 			same_named_type as context_same_named_type,
 			same_named_type_with_type_marks as context_same_named_type_with_type_marks,
 			same_base_type as context_same_base_type,
@@ -442,6 +444,22 @@ feature -- Type context
 			Result.put_last (a_type)
 		end
 
+	context_adapted_class_with_named_feature (a_name: ET_CALL_NAME): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter
+			-- one of its constraint base types containing a feature named `a_name'
+			-- (or any of the constraints if none contains such feature)
+		do
+			Result := adapted_class_with_named_feature (a_name, Current)
+		end
+
+	context_adapted_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter
+			-- one of its constraint base types containing a feature with seed
+			-- `a_seed' (or any of the constraints if none contains such feature)
+		do
+			Result := adapted_class_with_seeded_feature (a_seed, Current)
+		end
+
 	context_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_BASE_TYPE
 			-- Same as `base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
@@ -598,6 +616,12 @@ feature -- Type context
 			-- Return a new object at each call.
 		do
 			create Result.make_with_capacity (Current, 1)
+		end
+
+	copy_to_type_context (other: ET_NESTED_TYPE_CONTEXT)
+			-- Copy current context to `other'.
+		do
+			other.reset (Current)
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context

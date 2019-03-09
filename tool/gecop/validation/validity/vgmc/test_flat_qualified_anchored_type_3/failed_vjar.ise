@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+
+Error code: VJAR
+
+Type error: source of assignment is not compatible with target. 
+What to do: make sure that type of source (right-hand side)
+  is compatible with type of target. 
+
+Class: XX [G -> {DD, CC}]
+Source class: BB
+Feature: g
+Target name: i
+Target type: [detachable like {[like z] Generic #1}.f] detachable Generic #1
+Source type: EE
+Line: 14
+      do
+->      i := create {EE}
+      end
+
+-------------------------------------------------------------------------------

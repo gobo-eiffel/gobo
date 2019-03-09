@@ -26,6 +26,8 @@ inherit
 			depends_on_qualified_anchored_type,
 			has_formal_types,
 			add_adapted_classes_to_list,
+			adapted_class_with_named_feature,
+			adapted_class_with_seeded_feature,
 			same_syntactical_qualified_like_identifier_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -93,26 +95,132 @@ feature -- Access
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
 			-- or unmatched formal generic parameter.
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.named_base_class (l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := tokens.unknown_class
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.named_base_class (l_target_context)
+					l_target_context.keep_first (l_old_count)
+				end
+			end
+		end
+
+	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- named `a_name' (or any of the constraints if none contains such feature)
+		local
+			l_adapted_class: ET_ADAPTED_CLASS
+			l_target_type: ET_TYPE
+			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
+		do
+			if seed = 0 then
+					-- Qualified anchored type not resolved yet.
+				Result := tokens.unknown_class
+			else
+				l_target_type := target_type
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := tokens.unknown_class
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.adapted_class_with_named_feature (a_name, l_target_context)
+					l_target_context.keep_first (l_old_count)
+				end
+			end
+		end
+
+	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains such feature)
+		local
+			l_adapted_class: ET_ADAPTED_CLASS
+			l_target_type: ET_TYPE
+			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
+		do
+			if seed = 0 then
+					-- Qualified anchored type not resolved yet.
+				Result := tokens.unknown_class
+			else
+				l_target_type := target_type
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := tokens.unknown_class
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.adapted_class_with_seeded_feature (a_seed, l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -121,26 +229,42 @@ feature -- Access
 			-- Same as `base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.base_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := tokens.unknown_class
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.base_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -149,29 +273,45 @@ feature -- Access
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := tokens.unknown_class
+				else
 					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 						-- Here we have to use `base_type' and not `shallow_base_type'
 						-- because otherwise the actual generic parameters will not
 						-- be viewed from `a_context' but from `l_target_context'.
 					Result := l_query.type.base_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := tokens.unknown_class
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -180,26 +320,42 @@ feature -- Access
 			-- `i'-th actual generic parameter's type of the base type of current
 			-- type when it appears in `a_context'
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.base_type_actual (i, l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := tokens.unknown_class
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.base_type_actual (i, l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -208,26 +364,42 @@ feature -- Access
 			-- `i'-th actual generic parameter of the base type of current
 			-- type when it appears in `a_context'
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.base_type_actual_parameter (i, l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := tokens.unknown_class
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.base_type_actual_parameter (i, l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -237,26 +409,42 @@ feature -- Access
 			-- the base type of current type when it appears in `a_context';
 			-- 0 if it does not exist
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := 0
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.base_type_index_of_label (a_label, l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := 0
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.base_type_index_of_label (a_label, l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -265,26 +453,42 @@ feature -- Access
 			-- Same as `named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.named_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := tokens.unknown_class
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.named_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -293,29 +497,45 @@ feature -- Access
 			-- Same as `shallow_named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := tokens.unknown_class
+				else
 					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 						-- Here we have to use `named_type' and not `shallow_named_type'
 						-- because otherwise the actual generic parameters will not
 						-- be viewed from `a_context' but from `l_target_context'.
 					Result := l_query.type.named_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := tokens.unknown_class
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -346,31 +566,50 @@ feature -- Access
 			Result := qualified_name.last_leaf
 		end
 
+	implementation_class: ET_CLASS
+			-- Class where the current type appears
+
 feature -- Measurement
 
 	base_type_actual_count (a_context: ET_TYPE_CONTEXT): INTEGER
 			-- Number of actual generic parameters of the base type of current type
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := 0
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.base_type_actual_count (l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := 0
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.base_type_actual_count (l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -381,26 +620,42 @@ feature -- Status report
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := False
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -409,26 +664,42 @@ feature -- Status report
 			-- Same as `is_type_reference' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := False
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -437,26 +708,42 @@ feature -- Status report
 			-- Same as `is_type_attached' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.is_type_attached_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := False
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.is_type_attached_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -465,26 +752,42 @@ feature -- Status report
 			-- Same as `is_type_detachable' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := False
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -513,26 +816,42 @@ feature -- Status report
 	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Is named type of current type a formal parameter when viewed from `a_context'?
 		local
-			l_base_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_base_class := l_target_type.base_class (a_context)
-				if attached l_base_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.named_type_is_formal_type (l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := False
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.named_type_is_formal_type (l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -541,26 +860,42 @@ feature -- Status report
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context'?
 		local
-			l_base_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := a_class.is_unknown
 			else
 				l_target_type := target_type
-				l_base_class := l_target_type.base_class (a_context)
-				if attached l_base_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.base_type_has_class (a_class, l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := a_class.is_unknown
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.base_type_has_class (a_class, l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -569,26 +904,42 @@ feature -- Status report
 			-- Does the named type of current type contain `a_class'
 			-- when it appears in `a_context'?
 		local
-			l_base_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := a_class.is_unknown
 			else
 				l_target_type := target_type
-				l_base_class := l_target_type.base_class (a_context)
-				if attached l_base_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					Result := l_query.type.named_type_has_class (a_class, l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					Result := a_class.is_unknown
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					Result := l_query.type.named_type_has_class (a_class, l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -600,26 +951,42 @@ feature -- Basic operations
 			-- the constraint base types (in the same order they appear in 'constraint_base_types')
 			-- in case of a formal parameter.
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				a_list.force_last (tokens.unknown_class)
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.as_nested_type_context
-					l_target_context.force_last (l_target_type)
-					l_query.type.add_adapted_classes_to_list (a_list, l_target_context)
-					l_target_context.remove_last
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
 				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
 						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
 					a_list.force_last (tokens.unknown_class)
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
+					l_query.type.add_adapted_classes_to_list (a_list, l_target_context)
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -641,9 +1008,11 @@ feature -- Comparison
 			-- Same as `same_named_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if other = Current and then other_type_mark = a_type_mark and then other_context = a_context then
 				Result := True
@@ -652,21 +1021,35 @@ feature -- Comparison
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -675,9 +1058,11 @@ feature -- Comparison
 			-- Same as `same_base_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if other = Current and then other_type_mark = a_type_mark and then other_context = a_context then
 				Result := True
@@ -686,21 +1071,35 @@ feature -- Comparison
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -719,7 +1118,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_query: detachable ET_QUERY
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_other_target_type: ET_TYPE
 		do
@@ -739,12 +1138,22 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					if other.seed = seed then
 						Result := True
 					else
-						l_class := l_other_target_type.base_class (other_context)
-						l_query := l_class.seeded_query (other.seed)
+						if other.implementation_class = other_context.root_context.base_class then
+							l_adapted_class := l_other_target_type.adapted_class_with_named_feature (other.name, other_context)
+							l_query := l_adapted_class.named_query (other.name)
+						else
+							l_adapted_class := l_other_target_type.adapted_class_with_seeded_feature (other.seed, other_context)
+							l_query := l_adapted_class.base_class.seeded_query (seed)
+						end
 						Result := l_query /= Void and then l_query.has_seed (seed)
 						if not Result then
-							l_class := l_target_type.base_class (a_context)
-							l_query := l_class.seeded_query (seed)
+							if implementation_class = a_context.root_context.base_class then
+								l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+								l_query := l_adapted_class.named_query (name)
+							else
+								l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+								l_query := l_adapted_class.base_class.seeded_query (seed)
+							end
 							Result := l_query /= Void and then l_query.has_seed (other.seed)
 						end
 					end
@@ -758,30 +1167,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -792,30 +1217,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -826,30 +1267,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -860,30 +1317,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -894,30 +1367,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -928,30 +1417,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -962,9 +1467,11 @@ feature -- Conformance
 			-- Same as `conforms_to_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if other = Current and then other_type_mark = a_type_mark and then other_context = a_context then
 				Result := True
@@ -973,21 +1480,35 @@ feature -- Conformance
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context, a_system_processor)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -1002,30 +1523,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context, a_system_processor)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -1038,30 +1575,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context, a_system_processor)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -1074,30 +1627,46 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := False
 			else
 				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				if attached l_class.seeded_query (seed) as l_query then
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_class := l_target_type.adapted_class_with_named_feature (name, a_context)
+					l_query := l_adapted_class.named_query (name)
+				else
+					l_adapted_class := l_target_type.adapted_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
 					if a_context /= other_context then
 						l_target_context := a_context.as_nested_type_context
 					else
 						l_target_context := a_context.to_nested_type_context
 					end
+					l_old_count := l_target_context.count
 					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_class, l_adapted_class, l_target_context)
 					Result := l_query.type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context, a_system_processor)
-					l_target_context.remove_last
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current qualified anchored type.
-					Result := False
+					l_target_context.keep_first (l_old_count)
 				end
 			end
 		end
@@ -1117,5 +1686,6 @@ feature -- Resolving
 invariant
 
 	qualified_name_not_void: qualified_name /= Void
+	implementation_class_not_void: implementation_class /= Void
 
 end

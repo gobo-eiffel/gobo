@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,11 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_system_processor)
 			current_class_impl := current_class
+			create adapted_class_checker.make (a_system_processor)
+			adapted_class_checker.set_feature_flattening_error_only (True)
+			create adapted_classes.make (20)
+			create target_context.make_with_capacity (current_class, 10)
+			create other_context.make_with_capacity (current_class, 10)
 			create classes_to_be_processed.make (0)
 		end
 
@@ -133,7 +138,7 @@ feature {NONE} -- Type validity
 			args: detachable ET_FORMAL_ARGUMENT_LIST
 			l_index: INTEGER
 		do
-			if in_qualified_anchored_type then
+			if in_qualified_anchored_type and then system_processor.qualified_anchored_types_cycle_detection_enabled then
 				l_seed := a_type.seed
 				if l_seed /= 0 then
 						-- Anchored type already resolved.
@@ -142,14 +147,12 @@ feature {NONE} -- Type validity
 							args := l_feature.arguments
 							l_index := a_type.index
 							if args /= Void and then l_index <= args.count then
-								if system_processor.qualified_anchored_types_cycle_detection_enabled then
-									if args.item (l_index).type.depends_on_qualified_anchored_type (current_class) then
-											-- Error: the type of the anchor appearing in a qualified
-											-- anchored type should not depend on a qualified anchored type.
-											-- This is a way to avoid cycles in qualified anchored types.
-										set_fatal_error
-										error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
-									end
+								if args.item (l_index).type.depends_on_qualified_anchored_type (current_class) then
+										-- Error: the type of the anchor appearing in a qualified
+										-- anchored type should not depend on a qualified anchored type.
+										-- This is a way to avoid cycles in qualified anchored types.
+									set_fatal_error
+									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
 								end
 							else
 									-- Internal error: it was already checked in previous compilation
@@ -166,14 +169,12 @@ feature {NONE} -- Type validity
 						end
 					else
 						if attached current_class.seeded_query (l_seed) as l_query then
-							if system_processor.qualified_anchored_types_cycle_detection_enabled then
-								if  l_query.type.depends_on_qualified_anchored_type (current_class) then
-										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not depend on a qualified anchored type.
-										-- This is a way to avoid cycles in qualified anchored types.
-									set_fatal_error
-									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
-								end
+							if  l_query.type.depends_on_qualified_anchored_type (current_class) then
+									-- Error: the type of the anchor appearing in a qualified
+									-- anchored type should not depend on a qualified anchored type.
+									-- This is a way to avoid cycles in qualified anchored types.
+								set_fatal_error
+								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
 							end
 						else
 								-- Internal error: if we got a seed, then `l_query' should not be void.
@@ -199,83 +200,144 @@ feature {NONE} -- Type validity
 		local
 			l_target_type: ET_TYPE
 			l_class: ET_CLASS
+			l_name: ET_FEATURE_NAME
 			l_seed: INTEGER
 			old_in_qualified_anchored_type: BOOLEAN
+			l_adapted_class: ET_ADAPTED_CLASS
+			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_has_multiple_constraints: BOOLEAN
+			i, nb: INTEGER
+			l_first_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_first_adapted_class: detachable ET_ADAPTED_CLASS
+			l_first_query: detachable ET_QUERY
+			l_target_context_count: INTEGER
 		do
 			has_fatal_error := False
 			old_in_qualified_anchored_type := in_qualified_anchored_type
 			in_qualified_anchored_type := True
+			l_name := a_type.name
+			l_seed := a_type.seed
 			l_target_type := a_type.target_type
 				-- The target type may also be made up of qualified anchored types.
 			l_target_type.process (Current)
+			l_adapted_classes := adapted_classes
 			if not has_fatal_error then
-				l_class := base_class (l_target_type, current_class_impl, current_class)
-				l_class.process (system_processor.feature_flattener)
-				if not l_class.features_flattened or else l_class.has_flattening_error then
+				add_adapted_classes_to_list (l_adapted_classes, l_target_type, current_class_impl, current_class)
+					-- Make sure that any error will be reported.
+					-- For that, we need to force the interface
+					-- of all adapted classes to be checked.
+				nb := l_adapted_classes.count
+				from i := 1 until i > nb loop
+					l_class := l_adapted_classes.item (i).base_class
+					if not l_class.interface_checked then
+						classes_to_be_processed.force_last (l_class)
+					end
+					i := i + 1
+				end
+				l_has_multiple_constraints := nb > 1
+				target_context.set (l_target_type, current_class)
+				l_target_context_count := target_context.count
+				adapted_class_checker.check_adapted_classes_validity (l_name, l_adapted_classes, target_context, current_class, current_class_impl)
+			end
+			if adapted_class_checker.has_fatal_error then
+				set_fatal_error
+			elseif l_seed = 0 then
+				l_adapted_class := l_adapted_classes.first
+				l_class := l_adapted_class.base_class
+					-- Not resolved yet. It needs to be resolved
+					-- in the implementation class first.
+				if current_class /= current_class_impl then
+						-- Internal error: it should have been resolved in
+						-- the implementation class.
 					set_fatal_error
-				else
-					l_seed := a_type.seed
-					if l_seed = 0 then
-							-- Not resolved yet. It needs to be resolved
-							-- in the implementation class first.
-						if current_class /= current_class_impl then
-								-- Internal error: it should have been resolved in
-								-- the implementation class.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							if attached l_class.named_query (a_type.name) as l_query then
-									-- The fact that the signature of `l_query' is valid
-									-- or not (e.g. conformance of redeclared signature),
-									-- and hence its type, will be checked later on (by
-									-- ET_TYPE_CHECKER.check_type_validity) when, while
-									-- checking (in ET_FEATURE_CHECKER) the implementation
-									-- of feature whose signature contains `a_type', we
-									-- will check the validity of its signature again.
-								a_type.resolve_identifier_type (l_query.first_seed)
+					error_handler.report_giaaa_error
+				elseif attached l_adapted_class.named_query (l_name) as l_query then
+						-- The fact that the signature of `l_query' is valid
+						-- or not (e.g. conformance of redeclared signature),
+						-- and hence its type, will be checked later on (by
+						-- ET_TYPE_CHECKER.check_type_validity) when, while
+						-- checking (in ET_FEATURE_CHECKER) the implementation
+						-- of feature whose signature contains `a_type', we
+						-- will check the validity of its signature again.
+					a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
-								if system_processor.qualified_anchored_types_cycle_detection_enabled then
-									if  l_query.type.depends_on_qualified_anchored_type (l_class) then
-											-- Error: the type of the anchor appearing in a qualified
-											-- anchored type should not depend on a qualified anchored type.
-											-- This is a way to avoid cycles in qualified anchored types.
-										set_fatal_error
-										error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
-									end
-								end
-							else
-									-- Error: there is no query with this final name.
-								set_fatal_error
-								error_handler.report_vtat1c_error (current_class, a_type, l_class)
-							end
-						end
-					else
-						if attached l_class.seeded_query (l_seed) as l_query then
-								-- The fact that the signature of `l_query' is valid
-								-- or not (e.g. conformance of redeclared signature),
-								-- and hence its type, will be checked later on (by
-								-- ET_TYPE_CHECKER.check_type_validity) when, while
-								-- checking (in ET_FEATURE_CHECKER) the implementation
-								-- of feature whose signature contains `a_type', we
-								-- will check the validity of its signature again.
--- TODO: check that `l_query' is exported to `current_class'.
-							if system_processor.qualified_anchored_types_cycle_detection_enabled then
-								if  l_query.type.depends_on_qualified_anchored_type (l_class) then
-										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not depend on a qualified anchored type.
-										-- This is a way to avoid cycles in qualified anchored types.
-									set_fatal_error
-									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
-								end
-							end
-						else
-								-- Internal error: if we got a seed, then `l_query' should not be void.
+					if system_processor.qualified_anchored_types_cycle_detection_enabled then
+						if l_query.type.depends_on_qualified_anchored_type (l_class) then
+								-- Error: the type of the anchor appearing in a qualified
+								-- anchored type should not depend on a qualified anchored type.
+								-- This is a way to avoid cycles in qualified anchored types.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
 						end
 					end
+				else
+						-- Error: there is no query with this final name.
+					set_fatal_error
+					error_handler.report_vtat1c_error (current_class, a_type, l_class)
+				end
+			elseif l_adapted_classes.is_empty then
+					-- Internal error: the seed was already computed in a proper ancestor
+					-- (or in another generic derivation) of `current_class' where this
+					-- type was written. So, if we got a seed, there should be a query
+					-- for this seed.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				nb := l_adapted_classes.count
+				from i := 1 until i > nb loop
+					l_adapted_class := l_adapted_classes.item (i)
+					l_class := l_adapted_class.base_class
+					if attached l_class.seeded_query (l_seed) as l_query then
+							-- The fact that the signature of `l_query' is valid
+							-- or not (e.g. conformance of redeclared signature),
+							-- and hence its type, will be checked later on (by
+							-- ET_TYPE_CHECKER.check_type_validity) when, while
+							-- checking (in ET_FEATURE_CHECKER) the implementation
+							-- of feature whose signature contains `a_type', we
+							-- will check the validity of its signature again.
+-- TODO: check that `l_query' is exported to `current_class'.
+						if system_processor.qualified_anchored_types_cycle_detection_enabled then
+							if l_query.type.depends_on_qualified_anchored_type (l_class) then
+									-- Error: the type of the anchor appearing in a qualified
+									-- anchored type should not depend on a qualified anchored type.
+									-- This is a way to avoid cycles in qualified anchored types.
+								set_fatal_error
+								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+							end
+						end
+						adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, target_context)
+						target_context.force_last (l_query.type)
+						if l_first_context /= Void and l_first_adapted_class /= Void and l_first_query /= Void then
+							if not target_context.same_named_context (l_first_context) then
+									-- Two queries with the same seed and different result types.
+								set_fatal_error
+								error_handler.report_vgmc0e_error (current_class, current_class_impl, l_name, l_first_query, l_first_adapted_class, l_query, l_adapted_class)
+							end
+						elseif nb > 1 then
+							l_first_context := other_context
+							l_first_context.copy_type_context (target_context)
+							l_first_adapted_class := l_adapted_class
+							l_first_query := l_query
+						end
+						target_context.keep_first (l_target_context_count)
+					elseif l_class.is_none then
+-- TODO: "NONE" conforms to all reference types.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+							-- Internal error: the seed was already computed in a proper ancestor
+							-- (or in another generic derivation) of `current_class' where this
+							-- type was written. So, if we got a seed, there should be a query
+							-- for this seed.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					end
+					i := i + 1
 				end
 			end
+			target_context.reset (tokens.unknown_class)
+			other_context.reset (tokens.unknown_class)
+			l_adapted_classes.wipe_out
 			in_qualified_anchored_type := old_in_qualified_anchored_type
 		end
 
@@ -299,101 +361,136 @@ feature {NONE} -- Type validity
 			reset_fatal_error (had_error)
 		end
 
-	base_class (a_type: ET_TYPE; a_class_impl: ET_CLASS; a_context: ET_TYPE_CONTEXT): ET_CLASS
-			-- Base class of `a_type' appearing in `a_class_impl' and viewed
-			-- from one of its descendants `a_context' (possibly itself).
-			-- (Definition of base class in ETL2 page 198).
-			-- Return "*UNKNOWN*" class if identifier types could not be resolved,
-			-- or in case of unmatched formal generic parameter.
+	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_type: ET_TYPE; a_class_impl: ET_CLASS; a_context: ET_TYPE_CONTEXT)
+			-- Add to `a_list' the base class of `a_type' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_context' (possibly itself), or the constraint base
+			-- types (in the same order they appear in 'constraint_base_types') in case of a
+			-- formal parameter.
 		require
+			a_list_not_void: a_list /= Void
+			no_void_adapted_class: not a_list.has_void
 			a_type_not_void: a_type /= Void
 			a_class_impl_not_void: a_class_impl /= Void
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+			a_context_not_formal_parameter: not a_context.named_type_is_formal_type
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			l_seed: INTEGER
-			l_class: ET_CLASS
+			l_name: ET_FEATURE_NAME
 			l_target_type: ET_TYPE
-			l_target_context: ET_NESTED_TYPE_CONTEXT
 			l_index: INTEGER
+			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_class: detachable ET_ADAPTED_CLASS
+			l_has_multiple_constraints: BOOLEAN
+			l_current_class: ET_CLASS
 		do
 			if attached {ET_QUALIFIED_LIKE_IDENTIFIER} a_type as l_qualified_anchored_type then
+				l_current_class := a_context.base_class
+				if not l_current_class.interface_checked then
+						-- Make sure that any error will be reported.
+						-- For that, we need to force the interface
+						-- of `l_current_class' (and as a consequence of
+						-- its ancestor class `a_class_impl') to be checked.
+					classes_to_be_processed.force_last (l_current_class)
+				end
+				l_name := l_qualified_anchored_type.name
+				l_seed := l_qualified_anchored_type.seed
 				l_target_type := l_qualified_anchored_type.target_type
-				if a_class_impl.interface_checked then
-					l_seed := l_qualified_anchored_type.seed
-				else
-						-- Qualified anchored type not resolved yet.
-					l_class := base_class (l_target_type, a_class_impl, a_class_impl)
-					l_class.process (system_processor.feature_flattener)
-					if l_class.features_flattened_successfully and then attached l_class.named_query (l_qualified_anchored_type.name) as l_query then
-						l_seed := l_query.first_seed
+				l_adapted_classes := adapted_classes
+				add_adapted_classes_to_list (l_adapted_classes, l_target_type, a_class_impl, a_context)
+				l_has_multiple_constraints := l_adapted_classes.count > 1
+				a_context.copy_to_type_context (target_context)
+				target_context.force_last (l_target_type)
+				adapted_class_checker.check_adapted_classes_validity (l_name, l_adapted_classes, target_context, l_current_class, a_class_impl)
+				if not l_adapted_classes.is_empty then
+					l_adapted_class := l_adapted_classes.first
+				end
+				l_adapted_classes.wipe_out
+				if adapted_class_checker.has_fatal_error then
+						-- Cannot go further.
+					a_list.force_last (tokens.unknown_class)
+				elseif l_adapted_class = Void then
+						-- Internal error: either we don't have a seed and we should have
+						-- gotten exactly one adapted class, or the seed was already computed
+						-- in a proper ancestor (or in another generic derivation) of
+						-- `l_current_class' where this type was written. So, if we got a
+						-- seed, there should be a query for this seed.
+					a_list.force_last (tokens.unknown_class)
+				elseif l_seed = 0 then
+						-- Not resolved yet. It needs to be resolved
+						-- in the implementation class first.
+					if l_current_class /= a_class_impl then
+							-- Internal error: it should have been resolved in
+							-- the implementation class.
+						a_list.force_last (tokens.unknown_class)
+					elseif attached l_adapted_class.named_query (l_name) as l_query then
+						adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, target_context)
+						add_adapted_classes_to_list (a_list, l_query.type, l_query.implementation_class, target_context)
 					else
-							-- Make sure that the error will be reported.
-							-- For that, we need to force the interface
-							-- of `a_class_impl' to be checked.
-						classes_to_be_processed.force_last (a_class_impl)
+							-- The error will be reported later, when checking the
+							-- interface of `l_current_class'
+						a_list.force_last (tokens.unknown_class)
+					end
+				else
+					if attached l_adapted_class.base_class.seeded_query (l_seed) as l_query then
+						adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, target_context)
+						add_adapted_classes_to_list (a_list, l_query.type, l_query.implementation_class, target_context)
+					else
+							-- Internal error: the seed was already computed in a proper ancestor
+							-- (or in another generic derivation) of `l_current_class' where this
+							-- type was written. So, if we got a seed, there should be a query
+							-- for this seed.
+						a_list.force_last (tokens.unknown_class)
 					end
 				end
-				if l_seed = 0 then
-						-- Qualified anchored type could not resolved.
-					Result := tokens.unknown_class
-				else
-					l_class := base_class (l_target_type, a_class_impl, a_context)
-					l_class.process (system_processor.feature_flattener)
-					if not l_class.features_flattened_successfully then
-						Result := tokens.unknown_class
-					elseif attached l_class.seeded_query (l_seed) as l_query then
-						l_target_context := a_context.as_nested_type_context
-						l_target_context.force_last (l_target_type)
-						Result := base_class (l_query.type, l_query.implementation_class, l_target_context)
-						l_target_context.remove_last
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current qualified anchored type.
-						Result := tokens.unknown_class
-					end
-				end
+				target_context.reset (tokens.unknown_class)
 			elseif attached {ET_LIKE_FEATURE} a_type as l_anchored_type then
-				a_class_impl.process (system_processor.feature_flattener)
+				l_current_class := a_context.base_class
+				l_current_class.process (system_processor.feature_flattener)
 				l_seed := l_anchored_type.seed
 				if l_seed = 0 then
 						-- Anchored type could not resolved.
-					Result := tokens.unknown_class
+					a_list.force_last (tokens.unknown_class)
 				elseif l_anchored_type.is_like_argument then
-					l_class := a_context.base_class
 					l_index := l_anchored_type.index
-					if not l_class.features_flattened_successfully then
-						Result := tokens.unknown_class
-					elseif attached l_class.seeded_feature (l_seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-						Result := base_class (l_args.item (l_index).type, l_feature.implementation_class, a_context)
+					if not l_current_class.features_flattened_successfully then
+						a_list.force_last (tokens.unknown_class)
+					elseif attached l_current_class.seeded_feature (l_seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+						add_adapted_classes_to_list (a_list, l_args.item (l_index).type, l_feature.implementation_class, a_context)
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := tokens.unknown_class
+						a_list.force_last (tokens.unknown_class)
 					end
 				else
-					l_class := a_context.base_class
-					l_class.process (system_processor.feature_flattener)
-					if not l_class.features_flattened_successfully then
-						Result := tokens.unknown_class
-					elseif attached l_class.seeded_query (l_seed) as l_query then
-						Result := base_class (l_query.type, l_query.implementation_class, a_context)
+					if not l_current_class.features_flattened_successfully then
+						a_list.force_last (tokens.unknown_class)
+					elseif attached l_current_class.seeded_query (l_seed) as l_query then
+						add_adapted_classes_to_list (a_list, l_query.type, l_query.implementation_class, a_context)
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we resolved
 							-- current anchored type.
-						Result := tokens.unknown_class
+						a_list.force_last (tokens.unknown_class)
 					end
 				end
 			else
-				Result := a_type.base_class (a_context)
+				a_type.add_adapted_classes_to_list (a_list, a_context)
 			end
 		ensure
-			base_class_not_void: Result /= Void
+			at_least_one_more: a_list.count > old a_list.count
+			no_void_adapted_class: not a_list.has_void
 		end
+
+feature {NONE} -- Multiple generic constraints
+
+	adapted_class_checker: ET_ADAPTED_CLASS_CHECKER
+			-- Adapted class checker
+
+	adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			-- List of adapted classes
 
 feature {ET_AST_NODE} -- Type processing
 
@@ -442,6 +539,12 @@ feature {NONE} -- Access
 	current_class_impl: ET_CLASS
 			-- Class where the type being processed has been written
 
+	target_context: ET_NESTED_TYPE_CONTEXT
+			-- Context for type conformance checking
+
+	other_context: ET_NESTED_TYPE_CONTEXT
+			-- Context for type conformance checking
+
 	in_qualified_anchored_type: BOOLEAN
 			-- Is the type being checked contained in a qualified anchored type?
 
@@ -466,6 +569,11 @@ feature {ET_INTERFACE_CHECKER} -- Access
 invariant
 
 	current_class_impl_not_void: current_class_impl /= Void
+	adapted_class_checker_not_void: adapted_class_checker /= Void
+	adapted_classes_not_void: adapted_classes /= Void
+	no_void_adapted_class: not adapted_classes.has_void
+	target_context_not_void: target_context /= Void
+	other_context_not_void: other_context /= Void
 	classes_to_be_processed_not_void: classes_to_be_processed /= Void
 	no_void_class_to_be_processed: not classes_to_be_processed.has_void
 

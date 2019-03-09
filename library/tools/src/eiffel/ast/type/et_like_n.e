@@ -20,6 +20,8 @@ inherit
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
 			add_adapted_classes_to_list,
+			adapted_class_with_named_feature,
+			adapted_class_with_seeded_feature,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
 			same_named_tuple_type_with_type_marks,
@@ -97,6 +99,44 @@ feature -- Access
 			else
 					-- We reached the root context.
 				Result := l_previous_context.root_context.named_base_class
+			end
+		end
+
+	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- named `a_name' (or any of the constraints if none contains such feature)
+		local
+			l_previous_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_previous_context := a_context.as_nested_type_context
+			if l_previous_context.valid_index (index) then
+				l_previous_context := a_context.as_nested_type_context
+				l_previous_context.force_last (previous)
+				Result := l_previous_context.item (index).adapted_class_with_named_feature (a_name, l_previous_context)
+				l_previous_context.remove_last
+			else
+					-- We reached the root context.
+				Result := l_previous_context.root_context.context_adapted_class_with_named_feature (a_name)
+			end
+		end
+
+	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains such feature)
+		local
+			l_previous_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_previous_context := a_context.as_nested_type_context
+			if l_previous_context.valid_index (index) then
+				l_previous_context := a_context.as_nested_type_context
+				l_previous_context.force_last (previous)
+				Result := l_previous_context.item (index).adapted_class_with_seeded_feature (a_seed, l_previous_context)
+				l_previous_context.remove_last
+			else
+					-- We reached the root context.
+				Result := l_previous_context.root_context.context_adapted_class_with_seeded_feature (a_seed)
 			end
 		end
 

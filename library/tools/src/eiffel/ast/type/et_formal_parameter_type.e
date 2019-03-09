@@ -26,6 +26,8 @@ inherit
 			has_formal_types,
 			is_formal_parameter,
 			add_adapted_classes_to_list,
+			adapted_class_with_named_feature,
+			adapted_class_with_seeded_feature,
 			same_syntactical_class_type_with_type_marks,
 			same_syntactical_formal_parameter_type_with_type_marks,
 			same_syntactical_like_current_with_type_marks,
@@ -174,6 +176,162 @@ feature -- Access
 					end
 				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
 					Result := l_base_type.named_base_class
+				else
+						-- Should never happen: `a_context.base_type' is the
+						-- result of call to `base_type'. So `l_actual'
+						-- is either a formal generic parameter or a
+						-- base type itself.
+					Result := tokens.unknown_class
+				end
+			else
+					-- Internal error: formal parameter not matched.
+				Result := tokens.unknown_class
+			end
+		end
+
+	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- named `a_name' (or any of the constraints if none contains such feature)
+		local
+			l_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_ancestor_actual: ET_TYPE
+			l_actual: ET_NAMED_TYPE
+			l_actual_base_class: ET_CLASS
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_constraint_base_types: ET_CONSTRAINT_BASE_TYPES
+			l_constraint_base_type: ET_BASE_TYPE_CONSTRAINT
+			i, nb: INTEGER
+		do
+			l_formal_type := Current
+			l_index := index
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_ancestor_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_actual_formal_type.index
+					else
+						Result := l_ancestor_actual.adapted_class_with_named_feature (a_name, a_context)
+					end
+				else
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
+						-- base class of `l_ancestor'. So there should not be a mismatch between the number
+						-- of actual and formal generic parameters in `l_ancestor'.
+					Result := tokens.unknown_class
+				end
+			end
+			if Result /= Void then
+				-- Already computed.
+			elseif l_index <= a_context.base_type_actual_count then
+				l_actual := a_context.base_type_actual (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					l_actual_base_class := a_context.root_context.base_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_constraint_base_types := l_actual_formal.constraint_base_types
+						Result := l_constraint_base_types.type_constraint (1)
+						nb := l_constraint_base_types.count
+						from i := 1 until i > nb loop
+							l_constraint_base_type := l_constraint_base_types.type_constraint (i)
+							if l_constraint_base_type.named_feature (a_name) /= Void then
+								Result := l_constraint_base_type
+								i := nb -- Jump out of the loop.
+							end
+							i := i + 1
+						end
+					else
+							-- Internal error: formal parameter not matched.
+						Result := tokens.unknown_class
+					end
+				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
+					Result := l_base_type.adapted_class_with_named_feature (a_name, a_context)
+				else
+						-- Should never happen: `a_context.base_type' is the
+						-- result of call to `base_type'. So `l_actual'
+						-- is either a formal generic parameter or a
+						-- base type itself.
+					Result := tokens.unknown_class
+				end
+			else
+					-- Internal error: formal parameter not matched.
+				Result := tokens.unknown_class
+			end
+		end
+
+	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains such feature)
+		local
+			l_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_index: INTEGER
+			l_ancestor_actual: ET_TYPE
+			l_actual: ET_NAMED_TYPE
+			l_actual_base_class: ET_CLASS
+			l_actual_formal: ET_FORMAL_PARAMETER
+			l_actual_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_constraint_base_types: ET_CONSTRAINT_BASE_TYPES
+			l_constraint_base_type: ET_BASE_TYPE_CONSTRAINT
+			i, nb: INTEGER
+		do
+			l_formal_type := Current
+			l_index := index
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
+					l_ancestor_actual := l_actual_parameters.type (l_index)
+					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
+						l_formal_type := l_actual_formal_type
+						l_index := l_actual_formal_type.index
+					else
+						Result := l_ancestor_actual.adapted_class_with_seeded_feature (a_seed, a_context)
+					end
+				else
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
+						-- base class of `l_ancestor'. So there should not be a mismatch between the number
+						-- of actual and formal generic parameters in `l_ancestor'.
+					Result := tokens.unknown_class
+				end
+			end
+			if Result /= Void then
+				-- Already computed.
+			elseif l_index <= a_context.base_type_actual_count then
+				l_actual := a_context.base_type_actual (l_index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					l_actual_base_class := a_context.root_context.base_class
+					l_actual_index := l_actual_formal_type.index
+					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
+						l_constraint_base_types := l_actual_formal.constraint_base_types
+						Result := l_constraint_base_types.type_constraint (1)
+						nb := l_constraint_base_types.count
+						from i := 1 until i > nb loop
+							l_constraint_base_type := l_constraint_base_types.type_constraint (i)
+							if l_constraint_base_type.base_class.seeded_feature (a_seed) /= Void then
+								Result := l_constraint_base_type
+								i := nb -- Jump out of the loop.
+							end
+							i := i + 1
+						end
+					else
+							-- Internal error: formal parameter not matched.
+						Result := tokens.unknown_class
+					end
+				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
+					Result := l_base_type.adapted_class_with_seeded_feature (a_seed, a_context)
 				else
 						-- Should never happen: `a_context.base_type' is the
 						-- result of call to `base_type'. So `l_actual'

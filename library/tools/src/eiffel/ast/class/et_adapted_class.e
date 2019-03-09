@@ -40,7 +40,7 @@ feature -- Features
 		require
 			a_name_not_void: a_name /= Void
 		do
-			Result := base_class.queries.named_feature (a_name)
+			Result := base_class.named_query (a_name)
 		ensure
 			registered: Result /= Void implies Result.is_registered
 		end
@@ -52,7 +52,7 @@ feature -- Features
 		require
 			a_name_not_void: a_name /= Void
 		do
-			Result := base_class.procedures.named_feature (a_name)
+			Result := base_class.named_procedure (a_name)
 		ensure
 			registered: Result /= Void implies Result.is_registered
 		end

@@ -117,6 +117,62 @@ feature -- Access
 			end
 		end
 
+	adapted_class_with_named_feature (a_name: ET_CALL_NAME): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter
+			-- one of its constraint base types containing a feature named `a_name'
+			-- (or any of the constraints if none contains such feature)
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.context_adapted_class_with_named_feature (a_name)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.context_adapted_class_with_named_feature (a_name)
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.adapted_class_with_named_feature (a_name, Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.adapted_class_with_named_feature (a_name, Current)
+				put_last (l_type)
+			end
+		end
+
+	adapted_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter
+			-- one of its constraint base types containing a feature with seed
+			-- `a_seed' (or any of the constraints if none contains such feature)
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.context_adapted_class_with_seeded_feature (a_seed)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.context_adapted_class_with_seeded_feature (a_seed)
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.adapted_class_with_seeded_feature (a_seed, Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.adapted_class_with_seeded_feature (a_seed, Current)
+				put_last (l_type)
+			end
+		end
+
 	base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_BASE_TYPE
 			-- Same as `base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
@@ -1252,20 +1308,33 @@ feature -- Duplication
 			end
 		ensure
 			cloned_type_context_not_void: Result /= Void
+			same_root_context: Result.same_root_context (Current)
 		end
 
 	copy_type_context (other: ET_NESTED_TYPE_CONTEXT)
 			-- Copy `other' to current context.
+		require
+			other_not_void: other /= Void
 		local
 			i, nb: INTEGER
 		do
-			wipe_out
-			set_root_context (other.root_context)
-			nb := other.count
-			from i := 1 until i > nb loop
-				force_last (other.item (i))
-				i := i + 1
+			if other /= Current then
+				wipe_out
+				set_root_context (other.root_context)
+				nb := other.count
+				from i := 1 until i > nb loop
+					force_last (other.item (i))
+					i := i + 1
+				end
 			end
+		ensure
+			same_root_context: same_root_context (other)
+		end
+
+	copy_to_type_context (other: ET_NESTED_TYPE_CONTEXT)
+			-- Copy current context to `other'.
+		do
+			other.copy_type_context (Current)
 		end
 
 feature {NONE} -- Implementation

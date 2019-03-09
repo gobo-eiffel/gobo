@@ -6,7 +6,7 @@ note
 		or 'like Current.b.c' or 'like {A}.b.c'
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,19 +27,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_type: like target_type; a_name: like qualified_name)
+	make (a_type_mark: like type_mark; a_type: like target_type; a_name: like qualified_name; a_class: ET_CLASS)
 			-- Create a new 'like a.b.c' type.
 		require
 			a_type_not_void: a_type /= Void
 			a_name_not_void: a_name /= Void
+			a_class_not_void: a_class /= Void
 		do
 			type_mark := a_type_mark
 			target_type := a_type
 			qualified_name := a_name
+			implementation_class := a_class
 		ensure
 			type_mark_set: type_mark = a_type_mark
 			target_type_set: target_type = a_type
 			qualified_name_set: qualified_name = a_name
+			implementation_class_set: implementation_class = a_class
 		end
 
 feature -- Access
@@ -63,7 +66,7 @@ feature -- Access
 			if l_type_mark = type_mark then
 				Result := Current
 			else
-				create Result.make (a_type_mark, target_type, qualified_name)
+				create Result.make (a_type_mark, target_type, qualified_name, implementation_class)
 			end
 		end
 
@@ -81,7 +84,7 @@ feature -- Type processing
 			l_resolved_target_type := l_target_type.resolved_formal_parameters (a_parameters)
 			l_type_mark := overridden_type_mark (a_type_mark)
 			if l_type_mark /= type_mark or l_resolved_target_type /= l_target_type then
-				create Result.make (l_type_mark, l_resolved_target_type, qualified_name)
+				create Result.make (l_type_mark, l_resolved_target_type, qualified_name, implementation_class)
 			else
 				Result := Current
 			end

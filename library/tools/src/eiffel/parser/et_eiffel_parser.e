@@ -20049,7 +20049,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2973")
 end
 
-yyval113 := ast_factory.new_qualified_like_braced_type (Void, yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_braced_type (Void, yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp113 := yyvsp113 + 1
@@ -20078,7 +20078,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2975")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (Void, yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (Void, yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp113 := yyvsp113 + 1
@@ -20123,7 +20123,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2981")
 end
 
-yyval113 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 7
 	yyvsp113 := yyvsp113 + 1
@@ -20152,7 +20152,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2983")
 end
 
-yyval113 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 7
 	yyvsp113 := yyvsp113 + 1
@@ -20181,7 +20181,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2985")
 end
 
-yyval113 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 8
 	yyvsp113 := yyvsp113 + 1
@@ -20210,7 +20210,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2987")
 end
 
-yyval113 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 7
 	yyvsp113 := yyvsp113 + 1
@@ -20239,7 +20239,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2989")
 end
 
-yyval113 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 8
 	yyvsp113 := yyvsp113 + 1
@@ -20271,7 +20271,7 @@ end
 			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
-				yyval113 := ast_factory.new_qualified_like_braced_type (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval113 := ast_factory.new_qualified_like_braced_type (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -20305,7 +20305,7 @@ end
 			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
-				yyval113 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval113 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -20339,7 +20339,7 @@ end
 			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
-				yyval113 := ast_factory.new_qualified_like_braced_type (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval113 := ast_factory.new_qualified_like_braced_type (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -20374,7 +20374,7 @@ end
 			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
-				yyval113 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval113 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_mark_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs119.item (yyvsp119), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -20406,7 +20406,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3023")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp113 := yyvsp113 + 1
@@ -20435,7 +20435,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3025")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp113 := yyvsp113 + 1
@@ -20464,7 +20464,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3027")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp113 := yyvsp113 + 1
@@ -20493,7 +20493,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3029")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp113 := yyvsp113 + 1
@@ -20522,7 +20522,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3031")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp113 := yyvsp113 + 1
@@ -20551,7 +20551,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3033")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (yyvs5.item (yyvsp5 - 1), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (yyvs5.item (yyvsp5 - 1), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp113 := yyvsp113 + 1
@@ -20579,7 +20579,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3035")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs5.item (yyvsp5 - 1), yyvs2.item (yyvsp2)), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs5.item (yyvsp5 - 1), yyvs2.item (yyvsp2)), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp113 := yyvsp113 + 1
@@ -20608,7 +20608,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3037")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (yyvs23.item (yyvsp23), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (yyvs23.item (yyvsp23), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp113 := yyvsp113 + 1
@@ -20637,7 +20637,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3039")
 end
 
-yyval113 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+yyval113 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_mark_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs95.item (yyvsp95), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), last_class)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp113 := yyvsp113 + 1

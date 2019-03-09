@@ -106,6 +106,31 @@ feature -- Access
 			named_base_class_not_void: Result /= Void
 		end
 
+	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- named `a_name' (or any of the constraints if none contains such feature)
+		require
+			a_name_not_void: a_name /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := base_class (a_context)
+		end
+
+	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains such feature)
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := base_class (a_context)
+		end
+
 	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Base type of current type, when it appears in `a_context',
 			-- only made up of class names and generic formal parameters
@@ -525,6 +550,8 @@ feature -- Basic operations
 			-- the constraint base types (in the same order they appear in 'constraint_base_types')
 			-- in case of a formal parameter.
 		require
+			a_list_not_void: a_list /= Void
+			no_void_adapted_class: not a_list.has_void
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
@@ -532,6 +559,7 @@ feature -- Basic operations
 			a_list.force_last (base_class (a_context))
 		ensure
 			at_least_one_more: a_list.count > old a_list.count
+			no_void_adapted_class: not a_list.has_void
 		end
 
 feature -- Comparison

@@ -21,6 +21,8 @@ inherit
 			named_type_has_class,
 			is_like_current,
 			add_adapted_classes_to_list,
+			adapted_class_with_named_feature,
+			adapted_class_with_seeded_feature,
 			same_syntactical_like_current_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -69,6 +71,22 @@ feature -- Access
 			-- or unmatched formal generic parameter.
 		do
 			Result := a_context.named_base_class
+		end
+
+	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- named `a_name' (or any of the constraints if none contains such feature)
+		do
+			Result := a_context.adapted_class_with_named_feature (a_name)
+		end
+
+	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint base types containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains such feature)
+		do
+			Result := a_context.adapted_class_with_seeded_feature (a_seed)
 		end
 
 	base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
