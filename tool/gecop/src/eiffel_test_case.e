@@ -362,8 +362,8 @@ feature {NONE} -- Test ISE Eiffel
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7, a_pattern8, a_pattern9: STRING
-			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7, a_regexp8, a_regexp9: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7, a_pattern8, a_pattern9, a_pattern10: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7, a_regexp8, a_regexp9, a_regexp10: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 		do
 				-- Compile regexps.
@@ -412,6 +412,11 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp9.compile (a_pattern9)
 			assert ("cannot compile regexp '" + a_pattern9 + "'", a_regexp9.is_compiled)
 			a_regexp9.optimize
+			a_pattern10 := "(.*([^-]|[^-]-)) @[0-9]+ *"
+			create a_regexp10.make
+			a_regexp10.compile (a_pattern10)
+			assert ("cannot compile regexp '" + a_pattern10 + "'", a_regexp10.is_compiled)
+			a_regexp10.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -460,6 +465,10 @@ feature {NONE} -- Test ISE Eiffel
 									-- These are object addresses in exception traces.
 								out_file.put_string ("<XXXXXXXXXXXXXXXX>")
 								out_file.put_line (a_regexp9.captured_substring (1))
+							elseif a_regexp10.recognizes (a_line) then
+									-- These are breakpoint positions in exception traces.
+								out_file.put_string (a_regexp10.captured_substring (1))
+								out_file.put_line (" @N")
 							else
 								out_file.put_line (a_line)
 							end
@@ -473,6 +482,7 @@ feature {NONE} -- Test ISE Eiffel
 						a_regexp7.wipe_out
 						a_regexp8.wipe_out
 						a_regexp9.wipe_out
+						a_regexp10.wipe_out
 						in_file.read_line
 					end
 					in_file.close
@@ -727,16 +737,21 @@ feature {NONE} -- Output logs
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1: STRING
-			a_regexp1: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2: STRING
+			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
 			l_input_filename: STRING
 		do
-				-- Compile regexp.
+				-- Compile regexps.
 			a_pattern1 := "<[0-9A-F]{16}>(.*)"
 			create a_regexp1.make
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
+			a_pattern2 := "(.*([^-]|[^-]-)) @[0-9]+ *"
+			create a_regexp2.make
+			a_regexp2.compile (a_pattern2)
+			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
+			a_regexp2.optimize
 				-- Copy files.
 			create out_file.make (output_log_filename)
 			out_file.open_append
@@ -759,10 +774,15 @@ feature {NONE} -- Output logs
 									-- These are object addresses in exception traces.
 								out_file.put_string ("<XXXXXXXXXXXXXXXX>")
 								out_file.put_line (a_regexp1.captured_substring (1))
+							elseif a_regexp2.recognizes (a_line) then
+									-- These are breakpoint positions in exception traces.
+								out_file.put_string (a_regexp2.captured_substring (1))
+								out_file.put_line (" @N")
 							else
 								out_file.put_line (a_line)
 							end
 							a_regexp1.wipe_out
+							a_regexp2.wipe_out
 							in_file.read_line
 						end
 						in_file.close

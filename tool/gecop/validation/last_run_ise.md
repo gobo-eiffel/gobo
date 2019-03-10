@@ -7,7 +7,7 @@ Test Summary for validation
     # Passed:     157 tests
     # FAILED:     49 tests
     # Aborted:    0 test
-    # Total:      206 tests (4390 assertions)
+    # Total:      206 tests (4866 assertions)
 
 Test Results:</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>

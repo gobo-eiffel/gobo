@@ -11,121 +11,121 @@ In thread           Root thread            0x0 (thread id)
 Class / Object      Routine                Nature of exception           Effect
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    process_unary_as @82   
+                    process_unary_as @N
 <XXXXXXXXXXXXXXXX>                         Feature call on void target.  Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    process_unary_as @82   
+                    process_unary_as @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    process_un_plus_as @1  
+                    process_un_plus_as @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
-UN_PLUS_AS          process @1                                          
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
--------------------------------------------------------------------------------
-AST_FEATURE_CHECKER_GENERATOR
-                    process_assign_as @24  
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
--------------------------------------------------------------------------------
-ASSIGN_AS           process @1                                          
+UN_PLUS_AS          process @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    process_eiffel_list_with_matcher @9
+                    process_assign_as @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+ASSIGN_AS           process @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    process_eiffel_list @1 
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
--------------------------------------------------------------------------------
-EIFFEL_LIST         process @1                                          
+                    process_eiffel_list_with_matcher @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    process_compound @2    
+                    process_eiffel_list @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+EIFFEL_LIST         process @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    process_do_as @4       
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
--------------------------------------------------------------------------------
-DO_AS               process @1                                          
+                    process_compound @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    process_routine_as @44 
+                    process_do_as @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+DO_AS               process @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AST_FEATURE_CHECKER_GENERATOR
+                    process_routine_as @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
 -------------------------------------------------------------------------------
-ROUTINE_AS          process @1                                          
+ROUTINE_AS          process @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    safe_process @2        
+                    safe_process @N
 <XXXXXXXXXXXXXXXX>  (From AST_VISITOR)     Routine failure.              Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    process_body_as @1     
+                    process_body_as @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
-BODY_AS             process @1                                          
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
--------------------------------------------------------------------------------
-AST_FEATURE_CHECKER_GENERATOR
-                    process_feature_as @10 
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
--------------------------------------------------------------------------------
-FEATURE_AS          process @1                                          
+BODY_AS             process @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
 AST_FEATURE_CHECKER_GENERATOR
-                    type_check_and_code @17
+                    process_feature_as @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
-EIFFEL_CLASS_C      pass3 @56                                           
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
--------------------------------------------------------------------------------
-DEGREE_3            process_class @4                                    
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
--------------------------------------------------------------------------------
-DEGREE_3            execute @21                                         
+FEATURE_AS          process @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
-SYSTEM_I            process_degree_3 @2                                 
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
--------------------------------------------------------------------------------
-SYSTEM_I            do_recompilation @66                                
+AST_FEATURE_CHECKER_GENERATOR
+                    type_check_and_code @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
-SYSTEM_I            recompile @8                                        
+EIFFEL_CLASS_C      pass3 @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
 -------------------------------------------------------------------------------
-WORKBENCH_I         recompile @23                                       
+DEGREE_3            process_class @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
 -------------------------------------------------------------------------------
-E_PROJECT           melt @8                                             
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
--------------------------------------------------------------------------------
-E_PROJECT           quick_melt @4                                       
+DEGREE_3            execute @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
-EWB_QUICK_MELT      perform_compilation @1                              
+SYSTEM_I            process_degree_3 @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
+-------------------------------------------------------------------------------
+SYSTEM_I            do_recompilation @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
-EWB_QUICK_MELT      compile @4                                          
+SYSTEM_I            recompile @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
+-------------------------------------------------------------------------------
+WORKBENCH_I         recompile @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
+-------------------------------------------------------------------------------
+E_PROJECT           melt @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Rescue
+-------------------------------------------------------------------------------
+E_PROJECT           quick_melt @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+EWB_QUICK_MELT      perform_compilation @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+EWB_QUICK_MELT      compile @N
 <XXXXXXXXXXXXXXXX>  (From EWB_COMP)        Routine failure.              Fail
 -------------------------------------------------------------------------------
-EWB_QUICK_MELT      execute @7                                          
+EWB_QUICK_MELT      execute @N
 <XXXXXXXXXXXXXXXX>  (From EWB_COMP)        Routine failure.              Fail
 -------------------------------------------------------------------------------
-ES_BATCH            execute @45                                         
+ES_BATCH            execute @N
 <XXXXXXXXXXXXXXXX>  (From ES)              Routine failure.              Rescue
 -------------------------------------------------------------------------------
-ES_BATCH            make @13                                            
+ES_BATCH            make @N
 <XXXXXXXXXXXXXXXX>  (From ES)              Routine failure.              Fail
 -------------------------------------------------------------------------------
-EB_KERNEL           make @5                                             
+EB_KERNEL           make @N
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
 EB_KERNEL           root's creation                                     
