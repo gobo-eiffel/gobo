@@ -21,6 +21,7 @@ inherit
 	ET_BASE_TYPE_CONSTRAINT
 		undefine
 			renames,
+			reset_renames,
 			is_formal_parameter
 		redefine
 			named_query,

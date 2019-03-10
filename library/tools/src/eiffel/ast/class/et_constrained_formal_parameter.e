@@ -21,6 +21,7 @@ inherit
 			constraint, creation_procedures, last_leaf, process,
 			constraint_base_types, has_constraint_cycle,
 			recursive_formal_constraints,
+			reset_constraint_renames,
 			reset_constraint_base_types,
 			reset
 		end
@@ -59,6 +60,13 @@ feature -- Initialization
 			constraint.reset
 			reset_constraint_base_types
 			reset_constraint_creation_procedures
+		end
+
+	reset_constraint_renames
+			-- Reset constraint renames as they were just
+			-- after they were last parsed.
+		do
+			constraint.reset_renames
 		end
 
 	reset_constraint_base_types

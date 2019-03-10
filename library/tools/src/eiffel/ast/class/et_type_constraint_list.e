@@ -20,7 +20,8 @@ inherit
 
 	ET_CONSTRAINT
 		redefine
-			has_formal_parameter
+			has_formal_parameter,
+			reset_renames
 		end
 
 	ET_HEAD_LIST [ET_TYPE_CONSTRAINT_ITEM]
@@ -63,6 +64,22 @@ feature -- Initialization
 				i < 0
 			loop
 				storage.item (i).type_constraint.reset
+				i := i - 1
+			end
+		end
+
+	reset_renames
+			-- Reset renames of type constraints as they were just
+			-- after they were last parsed.
+		local
+			i: INTEGER
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				storage.item (i).type_constraint.reset_renames
 				i := i - 1
 			end
 		end

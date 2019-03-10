@@ -21,6 +21,7 @@ inherit
 	ET_TYPE_CONSTRAINT
 		redefine
 			renames,
+			reset_renames,
 			is_formal_parameter
 		end
 
@@ -49,6 +50,13 @@ feature -- Initialization
 			-- Reset constraint as it was just after it was last parsed.
 		do
 			type.reset
+			renames.reset
+		end
+
+	reset_renames
+			-- Reset renames as they were just
+			-- after they were last parsed.
+		do
 			renames.reset
 		end
 

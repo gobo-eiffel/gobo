@@ -58,6 +58,12 @@ feature -- Initialization
 		do
 		end
 
+	reset_constraint_renames
+			-- Reset constraint renames as they were just
+			-- after they were last parsed.
+		do
+		end
+
 	reset_constraint_creation_procedures
 			-- Reset constraint creation procedures as they were just
 			-- after they were last parsed.

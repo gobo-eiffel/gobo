@@ -192,6 +192,7 @@ feature -- Initialization
 			queries.reset
 			procedures.reset
 			if attached formal_parameters as l_formal_parameters then
+				l_formal_parameters.reset_constraint_renames
 				l_formal_parameters.reset_constraint_creation_procedures
 				create l_unfolded_tuple_actual_parameters_resolver.make (tokens.null_system_processor)
 				nb := l_formal_parameters.count
@@ -253,6 +254,7 @@ feature -- Initialization
 			queries.reset_after_features_flattened
 			procedures.reset_after_features_flattened
 			if attached formal_parameters as l_formal_parameters then
+				l_formal_parameters.reset_constraint_renames
 				l_formal_parameters.reset_constraint_creation_procedures
 			end
 			if attached invariants as l_invariants then

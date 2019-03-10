@@ -23,6 +23,12 @@ feature -- Initialization
 		deferred
 		end
 
+	reset_renames
+			-- Reset renames of type constraints as they were just
+			-- after they were last parsed.
+		do
+		end
+
 feature -- Access
 
 	type_constraint (i: INTEGER): ET_TYPE_CONSTRAINT

@@ -40,6 +40,19 @@ feature -- Initialization
 			end
 		end
 
+	reset_constraint_renames
+			-- Reset constraint renames as they were just
+			-- after they were last parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				formal_parameter (i).reset_constraint_renames
+				i := i + 1
+			end
+		end
+
 	reset_constraint_creation_procedures
 			-- Reset constraint creation procedures as they were just
 			-- after they were last parsed.

@@ -337,6 +337,7 @@ feature {NONE} -- Constraint renaming validity
 			l_old_duplicated: BOOLEAN
 			l_has_new_name_error: BOOLEAN
 			l_has_new_alias_error: BOOLEAN
+			l_feature: detachable ET_FEATURE
 		do
 			old_name_rename_table.wipe_out
 			nb := a_renames.count
@@ -357,6 +358,7 @@ feature {NONE} -- Constraint renaming validity
 				l_old_duplicated := False
 				l_has_new_name_error := False
 				l_has_new_alias_error := False
+				l_feature := Void
 				old_name_rename_table.search (l_old_name)
 				if not old_name_rename_table.found then
 					old_name_rename_table.put_new (l_rename_pair, l_old_name)
@@ -368,7 +370,12 @@ feature {NONE} -- Constraint renaming validity
 					set_fatal_error (current_class)
 					error_handler.report_vggc2d_error (current_class, a_constraint, old_name_rename_table.found_item, l_rename_pair, a_formal)
 				end
-				if not attached l_base_class.named_feature (l_old_name) as l_feature then
+				if attached l_base_class.named_feature (l_old_name) as l_named_feature then
+					l_feature := l_named_feature
+					l_old_name.set_seed (l_feature.first_seed)
+					l_new_name.set_seed (l_feature.first_seed)
+				end
+				if l_feature = Void then
 						-- Error: There is no feature named `l_old_name' in the
 						-- base class of the constraint type.
 					if not l_old_duplicated then
