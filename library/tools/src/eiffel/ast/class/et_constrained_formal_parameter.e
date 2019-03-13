@@ -46,7 +46,6 @@ feature {NONE} -- Initialization
 			constraint_base_types := implementation_class.universe.detachable_any_type
 		ensure
 			name_set: name = a_name
-			constraint_index_set: constraint_index = 1
 			constraint_set: constraint = a_constraint
 			creation_procedures_set: creation_procedures = a_creation
 			implementation_class_set: implementation_class = a_class

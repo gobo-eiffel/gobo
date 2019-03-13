@@ -51,8 +51,7 @@ inherit
 
 create
 
-	make,
-	make_with_constraint_index
+	make
 
 feature {NONE} -- Initialization
 
@@ -63,33 +62,14 @@ feature {NONE} -- Initialization
 			an_index_positive: an_index >= 1
 			a_class_not_void: a_class /= Void
 		do
-			make_with_constraint_index (a_type_mark, a_name, an_index, 1, a_class)
-		ensure
-			type_mark_set: type_mark = a_type_mark
-			name_set: name = a_name
-			index_set: index = an_index
-			constraint_index_set: constraint_index = 1
-			implementation_class_set: implementation_class = a_class
-		end
-
-	make_with_constraint_index (a_type_mark: like type_mark; a_name: like name; an_index, a_constraint_index: INTEGER; a_class: ET_CLASS)
-			-- Create a new formal generic parameter type.
-		require
-			a_name_not_void: a_name /= Void
-			an_index_positive: an_index >= 1
-			a_constraint_index_positive: a_constraint_index >= 1
-			a_class_not_void: a_class /= Void
-		do
 			type_mark := a_type_mark
 			name := a_name
 			index := an_index
-			constraint_index := a_constraint_index
 			implementation_class := a_class
 		ensure
 			type_mark_set: type_mark = a_type_mark
 			name_set: name = a_name
 			index_set: index = an_index
-			constraint_index_set: constraint_index = a_constraint_index
 			implementation_class_set: implementation_class = a_class
 		end
 
@@ -108,10 +88,6 @@ feature -- Access
 	implementation_class: ET_CLASS
 			-- Class where the current formal generic parameter appears
 
-	constraint_index: INTEGER
-			-- Index of base type constraint (in 'constraint_base_types') to be used
-			-- in case of multiple constraints for this formal generic parameter
-
 	named_base_class (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS
 			-- Same as `base_class' except that it returns information about this
 			-- class (e.g. its name) as known from the universe it is used from
@@ -121,18 +97,15 @@ feature -- Access
 		local
 			l_formal_type: ET_FORMAL_PARAMETER_TYPE
 			l_index: INTEGER
-			l_constraint_index: INTEGER
 			l_ancestor_actual: ET_TYPE
 			l_actual: ET_NAMED_TYPE
 			l_actual_base_class: ET_CLASS
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_actual_constraint_index: INTEGER
 		do
 			l_formal_type := Current
 			l_index := index
-			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
 				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
@@ -140,7 +113,6 @@ feature -- Access
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_actual_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_ancestor_actual.named_base_class (a_context)
 					end
@@ -163,13 +135,8 @@ feature -- Access
 					l_actual_index := l_actual_formal_type.index
 					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
-							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.named_base_class
-						else
-								-- Internal error: formal constraint not matched.
-							Result := tokens.unknown_class
-						end
+							-- Use the first constraint in case of multiple generic constraints.
+						Result := l_actual_formal.constraint_base_types.type_constraint (1).type.named_base_class
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
@@ -358,14 +325,11 @@ feature -- Access
 			l_actual_base_class: ET_CLASS
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
-			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
-			l_actual_constraint_index: INTEGER
 		do
 			l_formal_type := Current
 			l_index := index
-			l_constraint_index := constraint_index
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -374,7 +338,6 @@ feature -- Access
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_ancestor_actual.base_type_with_type_mark (l_type_mark, a_context)
 					end
@@ -397,13 +360,8 @@ feature -- Access
 					l_actual_index := l_actual_formal_type.index
 					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
-							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.type_with_type_mark (l_type_mark)
-						else
-								-- Internal error: formal constraint not matched.
-							Result := tokens.unknown_class
-						end
+							-- Use the first constraint in case of multiple generic constraints.
+						Result := l_actual_formal.constraint_base_types.type_constraint (1).type.type_with_type_mark (l_type_mark)
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
@@ -432,15 +390,12 @@ feature -- Access
 			l_actual: ET_TYPE
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
-			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
-			l_actual_constraint_index: INTEGER
 			l_root_context: ET_BASE_TYPE
 		do
 			l_formal_type := Current
 			l_index := index
-			l_constraint_index := constraint_index
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_root_context := a_context.root_context
 			l_context_base_class := l_root_context.base_class
@@ -450,7 +405,6 @@ feature -- Access
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_actual.shallow_base_type_with_type_mark (l_type_mark, a_context)
 					end
@@ -472,13 +426,8 @@ feature -- Access
 					l_actual_index := l_actual_formal_type.index
 					if attached l_context_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
-							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.type_with_type_mark (l_type_mark)
-						else
-								-- Internal error: formal constraint not matched.
-							Result := tokens.unknown_class
-						end
+							-- Use the first constraint in case of multiple generic constraints.
+						Result := l_actual_formal.constraint_base_types.type_constraint (1).type.type_with_type_mark (l_type_mark)
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
@@ -508,14 +457,11 @@ feature -- Access
 			l_actual_base_class: ET_CLASS
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
-			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_actual_constraint_index: INTEGER
 			l_constraint_base_type: ET_BASE_TYPE
 		do
 			l_formal_type := Current
 			l_index := index
-			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
 				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
@@ -523,7 +469,6 @@ feature -- Access
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_ancestor_actual.base_type_actual (i, a_context)
 					end
@@ -546,14 +491,9 @@ feature -- Access
 					l_actual_index := l_actual_formal_type.index
 					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
-							l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type
-							Result := l_constraint_base_type.base_type_actual (i, l_constraint_base_type)
-						else
-								-- Internal error: formal constraint not matched.
-							Result := tokens.unknown_class
-						end
+							-- Use the first constraint in case of multiple generic constraints.
+						l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (1).type
+						Result := l_constraint_base_type.base_type_actual (i, l_constraint_base_type)
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
@@ -584,14 +524,11 @@ feature -- Access
 			l_actual_base_class: ET_CLASS
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
-			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_actual_constraint_index: INTEGER
 			l_constraint_base_type: ET_BASE_TYPE
 		do
 			l_formal_type := Current
 			l_index := index
-			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
 				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then l_index <= l_actual_parameters.count then
@@ -599,7 +536,6 @@ feature -- Access
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_ancestor_actual.base_type_actual_parameter (i, a_context)
 					end
@@ -622,14 +558,9 @@ feature -- Access
 					l_actual_index := l_actual_formal_type.index
 					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
-							l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type
-							Result := l_constraint_base_type.base_type_actual_parameter (i, l_constraint_base_type)
-						else
-								-- Internal error: formal constraint not matched.
-							Result := tokens.unknown_class
-						end
+							-- Use the first constraint in case of multiple generic constraints.
+						l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (1).type
+						Result := l_constraint_base_type.base_type_actual_parameter (i, l_constraint_base_type)
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
@@ -661,12 +592,9 @@ feature -- Access
 			l_actual_base_class: ET_CLASS
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
-			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_actual_constraint_index: INTEGER
 		do
 			l_index := index
-			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
 			if l_context_base_class = implementation_class then
 				l_formal_type := Current
@@ -676,7 +604,6 @@ feature -- Access
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_ancestor_actual.base_type_index_of_label (a_label, a_context)
 					end
@@ -699,13 +626,8 @@ feature -- Access
 					l_actual_index := l_actual_formal_type.index
 					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
-							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.index_of_label (a_label)
-						else
-								-- Internal error: formal constraint not matched.
-							Result := 0
-						end
+							-- Use the first constraint in case of multiple generic constraints.
+						Result := l_actual_formal.constraint_base_types.type_constraint (1).type.index_of_label (a_label)
 					else
 							-- Internal error: formal parameter not matched.
 						Result := 0
@@ -736,14 +658,11 @@ feature -- Access
 			l_actual_base_class: ET_CLASS
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
-			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
-			l_actual_constraint_index: INTEGER
 		do
 			l_formal_type := Current
 			l_index := index
-			l_constraint_index := constraint_index
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -752,7 +671,6 @@ feature -- Access
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_ancestor_actual.named_type_with_type_mark (l_type_mark, a_context)
 					end
@@ -775,12 +693,7 @@ feature -- Access
 					l_actual_index := l_actual_formal_type.index
 					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index = l_actual_formal_type.constraint_index then
-							Result := l_actual_formal_type.type_with_type_mark (l_type_mark)
-						else
-							create {ET_FORMAL_PARAMETER_TYPE} Result.make_with_constraint_index (l_type_mark, l_actual_formal_type.name, l_actual_index, l_actual_constraint_index, l_actual_formal_type.implementation_class)
-						end
+						Result := l_actual_formal_type.type_with_type_mark (l_type_mark)
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
@@ -809,15 +722,12 @@ feature -- Access
 			l_actual: ET_TYPE
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
-			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
-			l_actual_constraint_index: INTEGER
 			l_root_context: ET_BASE_TYPE
 		do
 			l_formal_type := Current
 			l_index := index
-			l_constraint_index := constraint_index
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_root_context := a_context.root_context
 			l_context_base_class := l_root_context.base_class
@@ -827,7 +737,6 @@ feature -- Access
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_actual.shallow_named_type_with_type_mark (l_type_mark, a_context)
 					end
@@ -849,12 +758,7 @@ feature -- Access
 					l_actual_index := l_actual_formal_type.index
 					if attached l_context_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index = l_actual_formal_type.constraint_index then
-							Result := l_actual_formal_type.type_with_type_mark (l_type_mark)
-						else
-							create {ET_FORMAL_PARAMETER_TYPE} Result.make_with_constraint_index (l_type_mark, l_actual_formal_type.name, l_actual_index, l_actual_constraint_index, l_actual_formal_type.implementation_class)
-						end
+						Result := l_actual_formal_type.type_with_type_mark (l_type_mark)
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
@@ -883,28 +787,8 @@ feature -- Access
 			if l_type_mark = type_mark then
 				Result := Current
 			else
-				create Result.make_with_constraint_index (l_type_mark, name, index, constraint_index, implementation_class)
+				create Result.make (l_type_mark, name, index, implementation_class)
 			end
-		end
-
-	type_with_constraint_index (a_constraint_index: INTEGER): ET_FORMAL_PARAMETER_TYPE
-			-- Same as current type but with `a_constraint_index'.
-			-- May return the `Current' object if it has the same constraint index.
-		require
-			a_constraint_index_positive: a_constraint_index >= 1
-		do
-			if a_constraint_index = constraint_index then
-				Result := Current
-			else
-				create Result.make_with_constraint_index (type_mark, name, index, a_constraint_index, implementation_class)
-			end
-		ensure
-			type_with_constraint_index_not_void: Result /= Void
-			type_mark_set: Result.type_mark = type_mark
-			name_set: Result.name = name
-			index_set: Result.index = index
-			constraint_index_set: Result.constraint_index = a_constraint_index
-			implementation_class_set: Result.implementation_class = implementation_class
 		end
 
 	position: ET_POSITION
@@ -946,12 +830,9 @@ feature -- Measurement
 			l_actual_base_class: ET_CLASS
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
-			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_actual_constraint_index: INTEGER
 		do
 			l_index := index
-			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
 			if l_context_base_class = implementation_class then
 				l_formal_type := Current
@@ -961,7 +842,6 @@ feature -- Measurement
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_ancestor_actual.base_type_actual_count (a_context)
 					end
@@ -984,13 +864,8 @@ feature -- Measurement
 					l_actual_index := l_actual_formal_type.index
 					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
-							Result := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type.actual_parameter_count
-						else
-								-- Internal error: formal constraint not matched.
-							Result := 0
-						end
+							-- Use the first constraint in case of multiple generic constraints.
+						Result := l_actual_formal.constraint_base_types.type_constraint (1).type.actual_parameter_count
 					else
 							-- Internal error: formal parameter not matched.
 						Result := 0
@@ -1364,14 +1239,11 @@ feature -- Status report
 			l_actual_base_class: ET_CLASS
 			l_actual_formal: ET_FORMAL_PARAMETER
 			l_actual_index: INTEGER
-			l_constraint_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_actual_constraint_index: INTEGER
 			l_constraint_base_type: ET_BASE_TYPE
 			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_index := index
-			l_constraint_index := constraint_index
 			l_context_base_class := a_context.base_class
 			if l_context_base_class = implementation_class then
 				l_formal_type := Current
@@ -1381,7 +1253,6 @@ feature -- Status report
 					if attached {ET_FORMAL_PARAMETER_TYPE} l_ancestor_actual as l_actual_formal_type then
 						l_formal_type := l_actual_formal_type
 						l_index := l_formal_type.index
-						l_constraint_index := other_constraint_index (constraint_index, Current, l_ancestor, a_context, l_actual_formal_type, tokens.identity_type, tokens.null_system_processor)
 					else
 						Result := l_ancestor_actual.base_type_has_class (a_class, a_context)
 					end
@@ -1404,20 +1275,15 @@ feature -- Status report
 					l_actual_index := l_actual_formal_type.index
 					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
-						l_actual_constraint_index := other_constraint_index (l_constraint_index, l_formal_type, tokens.identity_type, a_context, l_actual_formal_type, tokens.like_0, tokens.null_system_processor)
-						if l_actual_constraint_index <= l_actual_formal.constraint_base_types.count then
-							l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (l_actual_constraint_index).type
-							if a_context.is_root_context then
-								Result := l_constraint_base_type.base_type_has_class (a_class, a_context)
-							else
-								l_root_context := a_context.as_nested_type_context
-								l_root_context.force_last (tokens.like_0)
-								Result := l_constraint_base_type.base_type_has_class (a_class, l_root_context)
-								l_root_context.remove_last
-							end
+							-- Use the first constraint in case of multiple generic constraints.
+						l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (1).type
+						if a_context.is_root_context then
+							Result := l_constraint_base_type.base_type_has_class (a_class, a_context)
 						else
-								-- Internal error: formal constraint not matched.
-							Result := a_class.is_unknown
+							l_root_context := a_context.as_nested_type_context
+							l_root_context.force_last (tokens.like_0)
+							Result := l_constraint_base_type.base_type_has_class (a_class, l_root_context)
+							l_root_context.remove_last
 						end
 					else
 							-- Internal error: formal parameter not matched.
@@ -2677,125 +2543,6 @@ feature -- Output
 			a_string.append_string (upper_name)
 		end
 
-feature {NONE} -- Implementation
-
-	other_constraint_index (a_constraint_index: INTEGER; a_formal: ET_FORMAL_PARAMETER_TYPE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT; a_other_formal: ET_FORMAL_PARAMETER_TYPE; a_other_type: ET_TYPE; a_system_processor: ET_SYSTEM_PROCESSOR): INTEGER
-			-- Contraint index for `a_other_formal' corresponding to the
-			-- contraint index `a_constraint_index' of `a_formal'.
-			--
-			-- For example if we have:
-			--
-			--    class C [G -> VV, XX] end
-			--
-			--    class D [H -> UU, YY, ZZ] inherit C [H] end
-			--
-			-- where ZZ conforms to VV and UU conforms to XX, then
-			-- {G, 1} will give {H, 3} and {G, 2} will give {H, 1}.
-			--
-			-- In case conformance between constraints need to be checked, then
-			-- the constraints of `a_formal' will be considered to be in the
-			-- context `a_context' + `a_type', and the constraints of `a_other_formal'
-			-- will be considered to be in the context `a_context' + `a_other_type'.
-			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		require
-			a_constraint_index_positive: a_constraint_index >= 1
-			a_formal_not_void: a_formal /= Void
-			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_other_formal_not_void: a_other_formal /= Void
-			a_other_type_not_void: a_other_type /= Void
-			a_system_processor_not_void: a_system_processor /= Void
-		local
-			l_implementation_class: ET_CLASS
-			l_other_implementation_class: ET_CLASS
-			l_index: INTEGER
-			l_other_index: INTEGER
-			l_other_formal: ET_FORMAL_PARAMETER
-			l_other_constraint_base_types: ET_CONSTRAINT_BASE_TYPES
-			l_constraint_base_types: ET_CONSTRAINT_BASE_TYPES
-			l_base_type: ET_BASE_TYPE
-			i, nb: INTEGER
-			l_context: ET_TYPE_CONTEXT
-			l_nested_context: detachable ET_NESTED_TYPE_CONTEXT
-			l_other_context: ET_TYPE_CONTEXT
-			l_other_nested_context: ET_NESTED_TYPE_CONTEXT
-			l_modified_context: detachable ET_NESTED_TYPE_CONTEXT
-			l_context_used: BOOLEAN
-		do
-			Result := 1
-			l_implementation_class := a_formal.implementation_class
-			l_other_implementation_class := a_other_formal.implementation_class
-			l_index := a_formal.index
-			l_other_index := a_other_formal.index
-			if l_other_implementation_class = l_implementation_class and l_other_index = l_index then
-				Result := a_constraint_index
-			elseif attached l_other_implementation_class.formal_parameters as l_other_formals and then l_other_index <= l_other_formals.count then
-				l_other_formal := l_other_formals.formal_parameter (l_other_index)
-				l_other_constraint_base_types := l_other_formal.constraint_base_types
-				nb := l_other_constraint_base_types.count
-				if nb = 1 then
-					Result := 1
-				elseif attached l_implementation_class.formal_parameters as l_formals and then l_index <= l_formals.count then
-					l_constraint_base_types := l_formals.formal_parameter (index).constraint_base_types
-					if l_constraint_base_types.count = 1 then
-						Result := 1
-					elseif a_constraint_index <= l_constraint_base_types.count then
-						l_base_type := l_constraint_base_types.type_constraint (constraint_index).type
-						if a_other_type = tokens.like_0 then
-							l_other_context := a_context.root_context
-						elseif a_other_type = tokens.identity_type then
-							l_other_context := a_context
-							l_context_used := True
-						elseif attached {ET_NESTED_TYPE_CONTEXT} a_context as l_nested_type_context then
-							l_nested_context := a_context.to_nested_type_context
-							l_other_nested_context := l_nested_type_context
-							l_other_nested_context.force_last (a_other_type)
-							l_other_context := l_other_nested_context
-							l_modified_context := l_other_nested_context
-							l_context_used := True
-						else
-							l_other_nested_context := a_context.to_nested_type_context
-							l_other_nested_context.force_last (a_other_type)
-							l_other_context := l_other_nested_context
-						end
-						if l_nested_context /= Void then
-							l_nested_context.force_last (a_type)
-							l_context := l_nested_context
-						elseif a_type = tokens.identity_type then
-							l_context := a_context
-						elseif l_context_used then
-							l_nested_context := a_context.to_nested_type_context
-							l_nested_context.force_last (a_type)
-							l_context := l_nested_context
-						elseif attached {ET_NESTED_TYPE_CONTEXT} a_context as l_nested_type_context then
-							l_nested_context := l_nested_type_context
-							l_nested_context.force_last (a_type)
-							l_context := l_nested_context
-							l_modified_context := l_nested_context
-						else
-							l_nested_context := a_context.to_nested_type_context
-							l_nested_context.force_last (a_type)
-							l_context := l_nested_context
-						end
-						from i := 1 until i > nb loop
-							if l_other_constraint_base_types.type_constraint (i).type.conforms_to_type_with_type_marks (l_base_type, Void, l_context, a_other_formal.type_mark, l_other_context, a_system_processor) then
-								Result := i
-								i := nb -- Jump out of the loop.
-							end
-							i := i + 1
-						end
-						if l_modified_context /= Void then
-							l_modified_context.remove_last
-						end
-					end
-				end
-			end
-		ensure
-			other_constraint_index_positive: Result >= 1
-		end
-
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)
@@ -2807,7 +2554,6 @@ feature -- Processing
 invariant
 
 	index_positive: index >= 1
-	constraint_index_positive: constraint_index >= 1
 	implementation_class_not_void: implementation_class /= Void
 
 end

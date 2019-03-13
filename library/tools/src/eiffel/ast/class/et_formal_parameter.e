@@ -42,11 +42,9 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			index := 1
-			constraint_index := 1
 			implementation_class := a_class
 		ensure
 			name_set: name = a_name
-			constraint_index_set: constraint_index = 1
 			implementation_class_set: implementation_class = a_class
 		end
 
