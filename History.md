@@ -126,13 +126,14 @@
 * Fixed bug where a formal generic parameter `G` was not assumed to
   conform to `detachable ANY` when there was a cycle in the generic
   constraints (e.g. `[G -> H, H -> G]`).
-* Took into account the fact that ISE Eiffel now reports VDRS-4 errors
-  as of version 19.01.
+* Took into account the fact that ISE Eiffel now reports `VDRS-4`
+  errors as of version 19.01.
 * Fixed bug when processing a `Precursor` instruction in a function
   or a `Precursor` expression in a procedure. An internal error was
   reported.
 * Check validity of actual arguments in a call even when it was not
   possible to determine the feature of the call.
+* Added support for multiple generic constraints.
 
 ### Gobo Eiffel XPath Library
 
