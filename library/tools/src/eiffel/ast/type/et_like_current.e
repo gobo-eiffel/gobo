@@ -20,9 +20,9 @@ inherit
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
 			is_like_current,
-			add_adapted_classes_to_list,
-			adapted_class_with_named_feature,
-			adapted_class_with_seeded_feature,
+			add_adapted_base_classes_to_list,
+			adapted_base_class_with_named_feature,
+			adapted_base_class_with_seeded_feature,
 			same_syntactical_like_current_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -73,20 +73,22 @@ feature -- Access
 			Result := a_context.named_base_class
 		end
 
-	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
-			-- a formal parameter one of its constraint base types containing a feature
-			-- named `a_name' (or any of the constraints if none contains such feature)
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature named `a_name' (or any of the constraints if none contains such
+			-- feature)
 		do
-			Result := a_context.adapted_class_with_named_feature (a_name)
+			Result := a_context.adapted_base_class_with_named_feature (a_name)
 		end
 
-	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
-			-- a formal parameter one of its constraint base types containing a feature
-			-- with seed `a_seed' (or any of the constraints if none contains such feature)
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
 		do
-			Result := a_context.adapted_class_with_seeded_feature (a_seed)
+			Result := a_context.adapted_base_class_with_seeded_feature (a_seed)
 		end
 
 	base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
@@ -267,12 +269,12 @@ feature -- Status report
 
 feature -- Basic operations
 
-	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' the base class of current type when it appears in `a_context' or
-			-- the constraint base types (in the same order they appear in 'constraint_base_types')
-			-- in case of a formal parameter.
+			-- the adapted base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
 		do
-			a_context.add_adapted_classes_to_list (a_list)
+			a_context.add_adapted_base_classes_to_list (a_list)
 		end
 
 feature -- Comparison

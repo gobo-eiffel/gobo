@@ -51,8 +51,8 @@ feature {NONE} -- Initialization
 			create constraint_context.make_with_capacity (current_class, 1)
 			create target_context.make_with_capacity (current_class, 10)
 			create other_context.make_with_capacity (current_class, 10)
-			create adapted_class_checker.make (a_system_processor)
-			create adapted_classes.make (20)
+			create adapted_base_class_checker.make (a_system_processor)
+			create adapted_base_classes.make (20)
 		end
 
 feature -- Validity checking
@@ -769,12 +769,12 @@ feature {NONE} -- Validity checking
 			l_target_type: ET_TYPE
 			l_class: ET_CLASS
 			old_in_qualified_anchored_type: BOOLEAN
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			i, nb: INTEGER
 			l_first_context: detachable ET_NESTED_TYPE_CONTEXT
-			l_first_adapted_class: detachable ET_ADAPTED_CLASS
+			l_first_adapted_base_class: detachable ET_ADAPTED_CLASS
 			l_first_query: detachable ET_QUERY
 			l_target_context_count: INTEGER
 		do
@@ -785,20 +785,20 @@ feature {NONE} -- Validity checking
 			l_seed := a_type.seed
 			l_target_type := a_type.target_type
 			l_target_type.process (Current)
-			l_adapted_classes := adapted_classes
+			l_adapted_base_classes := adapted_base_classes
 			if not has_fatal_error then
 				report_qualified_anchored_type_supplier (l_target_type, current_context.root_context)
 				target_context.set (l_target_type, current_context.root_context)
 				l_target_context_count := target_context.count
-				target_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (l_name, l_adapted_classes, target_context)
+				target_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, target_context)
 			end
 			if has_fatal_error then
 				-- Cannot go further.
 			elseif l_seed = 0 then
-				l_adapted_class := l_adapted_classes.first
-				l_class := l_adapted_class.base_class
+				l_adapted_base_class := l_adapted_base_classes.first
+				l_class := l_adapted_base_class.base_class
 					-- Not resolved yet. It needs to be resolved
 					-- in the implementation class first.
 				if current_class /= current_class_impl then
@@ -806,7 +806,7 @@ feature {NONE} -- Validity checking
 						-- the implementation class.
 					set_fatal_error
 					error_handler.report_giaaa_error
-				elseif attached l_adapted_class.named_query (l_name) as l_query then
+				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
 					a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
 					if system_processor.qualified_anchored_types_cycle_detection_enabled then
@@ -827,7 +827,7 @@ feature {NONE} -- Validity checking
 						error_handler.report_vtat1c_error (current_class, a_type, l_class)
 					end
 				end
-			elseif l_adapted_classes.is_empty then
+			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
 					-- (or in another generic derivation) of `current_class' where this
 					-- type was written. So, if we got a seed, there should be a query
@@ -835,10 +835,10 @@ feature {NONE} -- Validity checking
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				nb := l_adapted_classes.count
+				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
-					l_adapted_class := l_adapted_classes.item (i)
-					l_class := l_adapted_class.base_class
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					l_class := l_adapted_base_class.base_class
 					if attached l_class.seeded_query (l_seed) as l_query then
 -- TODO: check that `l_query' is exported to `current_class'.
 						if system_processor.qualified_anchored_types_cycle_detection_enabled then
@@ -852,18 +852,18 @@ feature {NONE} -- Validity checking
 								end
 							end
 						end
-						adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, target_context)
+						adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, target_context)
 						target_context.force_last (l_query.type)
-						if l_first_context /= Void and l_first_adapted_class /= Void and l_first_query /= Void then
+						if l_first_context /= Void and l_first_adapted_base_class /= Void and l_first_query /= Void then
 							if not target_context.same_named_context (l_first_context) then
 									-- Two queries with the same seed and different result types.
 								set_fatal_error
-								error_handler.report_vgmc0e_error (current_class, current_class_impl, l_name, l_first_query, l_first_adapted_class, l_query, l_adapted_class)
+								error_handler.report_vgmc0e_error (current_class, current_class_impl, l_name, l_first_query, l_first_adapted_base_class, l_query, l_adapted_base_class)
 							end
 						elseif nb > 1 then
 							l_first_context := other_context
 							l_first_context.copy_type_context (target_context)
-							l_first_adapted_class := l_adapted_class
+							l_first_adapted_base_class := l_adapted_base_class
 							l_first_query := l_query
 						end
 						target_context.keep_first (l_target_context_count)
@@ -884,7 +884,7 @@ feature {NONE} -- Validity checking
 			end
 			target_context.reset (tokens.unknown_class)
 			other_context.reset (tokens.unknown_class)
-			l_adapted_classes.wipe_out
+			l_adapted_base_classes.wipe_out
 			in_qualified_anchored_type := old_in_qualified_anchored_type
 		end
 
@@ -915,8 +915,8 @@ feature {NONE} -- Validity checking
 
 feature {NONE} -- Multiple generic constraints
 
-	check_adapted_classes_validity (a_name: ET_CALL_NAME; a_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
-			-- Check validity of `a_adapted_classes' in case of multiple generic constraints
+	check_adapted_base_classes_validity (a_name: ET_CALL_NAME; a_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Check validity of `a_adapted_base_classes' in case of multiple generic constraints
 			-- when they are the possible base classes of a target of call name `a_name'.
 			-- `a_context' represents the type of the target of the call.
 			-- Keep in that list:
@@ -929,27 +929,27 @@ feature {NONE} -- Multiple generic constraints
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_name_not_void: a_name /= Void
-			a_adapted_classes_not_void: a_adapted_classes /= Void
-			no_void_adapted_class: not a_adapted_classes.has_void
+			a_adapted_base_classes_not_void: a_adapted_base_classes /= Void
+			no_void_adapted_base_class: not a_adapted_base_classes.has_void
 			a_context_not_void: a_context /= Void
 			a_context_is_valid: a_context.is_valid_context
 		do
 			has_fatal_error := False
-			adapted_class_checker.set_class_interface_error_only (class_interface_error_only)
-			adapted_class_checker.check_adapted_classes_validity (a_name, a_adapted_classes, a_context, current_class, current_class_impl)
-			if adapted_class_checker.has_fatal_error then
+			adapted_base_class_checker.set_class_interface_error_only (class_interface_error_only)
+			adapted_base_class_checker.check_adapted_base_classes_validity (a_name, a_adapted_base_classes, a_context, current_class, current_class_impl)
+			if adapted_base_class_checker.has_fatal_error then
 				set_fatal_error
 			end
 		ensure
-			in_implementation_class: (current_class_impl = current_class or a_name.seed = 0) implies a_adapted_classes.count = 1
-			not_in_implementation_class: (current_class_impl /= current_class and a_name.seed /= 0) implies across a_adapted_classes as l_adapted_classes all a_name.is_tuple_label or else (not l_adapted_classes.item.base_class.is_none implies l_adapted_classes.item.base_class.seeded_feature (a_name.seed) /= Void) end
+			in_implementation_class: (current_class_impl = current_class or a_name.seed = 0) implies a_adapted_base_classes.count = 1
+			not_in_implementation_class: (current_class_impl /= current_class and a_name.seed /= 0) implies across a_adapted_base_classes as l_adapted_base_classes all a_name.is_tuple_label or else (not l_adapted_base_classes.item.base_class.is_none implies l_adapted_base_classes.item.base_class.seeded_feature (a_name.seed) /= Void) end
 		end
 
-	adapted_class_checker: ET_ADAPTED_CLASS_CHECKER
-			-- Adapted class checker
+	adapted_base_class_checker: ET_ADAPTED_BASE_CLASS_CHECKER
+			-- Adapted base class checker
 
-	adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
-			-- List of adapted classes
+	adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			-- List of adapted base classes
 
 feature -- Error reporting
 
@@ -1087,8 +1087,8 @@ invariant
 	constraint_context_not_void: constraint_context /= Void
 	target_context_not_void: target_context /= Void
 	other_context_not_void: other_context /= Void
-	adapted_class_checker_not_void: adapted_class_checker /= Void
-	adapted_classes_not_void: adapted_classes /= Void
-	no_void_adapted_class: not adapted_classes.has_void
+	adapted_base_class_checker_not_void: adapted_base_class_checker /= Void
+	adapted_base_classes_not_void: adapted_base_classes /= Void
+	no_void_adapted_base_class: not adapted_base_classes.has_void
 
 end

@@ -25,9 +25,9 @@ inherit
 			is_type_detachable_with_type_mark,
 			has_formal_types,
 			is_formal_parameter,
-			add_adapted_classes_to_list,
-			adapted_class_with_named_feature,
-			adapted_class_with_seeded_feature,
+			add_adapted_base_classes_to_list,
+			adapted_base_class_with_named_feature,
+			adapted_base_class_with_seeded_feature,
 			same_syntactical_class_type_with_type_marks,
 			same_syntactical_formal_parameter_type_with_type_marks,
 			same_syntactical_like_current_with_type_marks,
@@ -189,10 +189,11 @@ feature -- Access
 			end
 		end
 
-	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
-			-- a formal parameter one of its constraint base types containing a feature
-			-- named `a_name' (or any of the constraints if none contains such feature)
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature named `a_name' (or any of the constraints if none contains such
+			-- feature)
 		local
 			l_formal_type: ET_FORMAL_PARAMETER_TYPE
 			l_index: INTEGER
@@ -216,7 +217,7 @@ feature -- Access
 						l_formal_type := l_actual_formal_type
 						l_index := l_actual_formal_type.index
 					else
-						Result := l_ancestor_actual.adapted_class_with_named_feature (a_name, a_context)
+						Result := l_ancestor_actual.adapted_base_class_with_named_feature (a_name, a_context)
 					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
@@ -253,7 +254,7 @@ feature -- Access
 						Result := tokens.unknown_class
 					end
 				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
-					Result := l_base_type.adapted_class_with_named_feature (a_name, a_context)
+					Result := l_base_type.adapted_base_class_with_named_feature (a_name, a_context)
 				else
 						-- Should never happen: `a_context.base_type' is the
 						-- result of call to `base_type'. So `l_actual'
@@ -267,10 +268,11 @@ feature -- Access
 			end
 		end
 
-	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
-			-- a formal parameter one of its constraint base types containing a feature
-			-- with seed `a_seed' (or any of the constraints if none contains such feature)
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
 		local
 			l_formal_type: ET_FORMAL_PARAMETER_TYPE
 			l_index: INTEGER
@@ -294,7 +296,7 @@ feature -- Access
 						l_formal_type := l_actual_formal_type
 						l_index := l_actual_formal_type.index
 					else
-						Result := l_ancestor_actual.adapted_class_with_seeded_feature (a_seed, a_context)
+						Result := l_ancestor_actual.adapted_base_class_with_seeded_feature (a_seed, a_context)
 					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
@@ -331,7 +333,7 @@ feature -- Access
 						Result := tokens.unknown_class
 					end
 				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
-					Result := l_base_type.adapted_class_with_seeded_feature (a_seed, a_context)
+					Result := l_base_type.adapted_base_class_with_seeded_feature (a_seed, a_context)
 				else
 						-- Should never happen: `a_context.base_type' is the
 						-- result of call to `base_type'. So `l_actual'
@@ -1488,10 +1490,10 @@ feature -- Status report
 
 feature -- Basic operations
 
-	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' the base class of current type when it appears in `a_context' or
-			-- the constraint base types (in the same order they appear in 'constraint_base_types')
-			-- in case of a formal parameter.
+			-- the adapted base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
 		local
 			l_formal_type: ET_FORMAL_PARAMETER_TYPE
 			l_index: INTEGER
@@ -1515,7 +1517,7 @@ feature -- Basic operations
 						l_formal_type := l_actual_formal_type
 						l_index := l_actual_formal_type.index
 					else
-						l_ancestor_actual.add_adapted_classes_to_list (a_list, a_context)
+						l_ancestor_actual.add_adapted_base_classes_to_list (a_list, a_context)
 					end
 				else
 						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
@@ -1547,7 +1549,7 @@ feature -- Basic operations
 						a_list.force_last (tokens.unknown_class)
 					end
 				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
-					l_base_type.add_adapted_classes_to_list (a_list, a_context)
+					l_base_type.add_adapted_base_classes_to_list (a_list, a_context)
 				else
 						-- Should never happen: `a_context.base_type' is the
 						-- result of call to `base_type'. So `l_actual'

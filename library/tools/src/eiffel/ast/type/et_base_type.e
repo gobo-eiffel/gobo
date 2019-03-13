@@ -56,9 +56,9 @@ inherit
 			is_type_attached_with_type_mark as context_is_type_attached_with_type_mark,
 			is_type_detachable as context_is_type_detachable,
 			is_type_detachable_with_type_mark as context_is_type_detachable_with_type_mark,
-			add_adapted_classes_to_list as context_add_adapted_classes_to_list,
-			adapted_class_with_named_feature as context_adapted_class_with_named_feature,
-			adapted_class_with_seeded_feature as context_adapted_class_with_seeded_feature,
+			add_adapted_base_classes_to_list as context_add_adapted_base_classes_to_list,
+			adapted_base_class_with_named_feature as context_adapted_base_class_with_named_feature,
+			adapted_base_class_with_seeded_feature as context_adapted_base_class_with_seeded_feature,
 			same_named_type as context_same_named_type,
 			same_named_type_with_type_marks as context_same_named_type_with_type_marks,
 			same_base_type as context_same_base_type,
@@ -444,20 +444,21 @@ feature -- Type context
 			Result.put_last (a_type)
 		end
 
-	context_adapted_class_with_named_feature (a_name: ET_CALL_NAME): ET_ADAPTED_CLASS
-			-- Base class of current context, or in case of a formal parameter
-			-- one of its constraint base types containing a feature named `a_name'
-			-- (or any of the constraints if none contains such feature)
+	context_adapted_base_class_with_named_feature (a_name: ET_CALL_NAME): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter one
+			-- of its constraint adapted base classes containing a feature named
+			-- `a_name' (or any of the constraints if none contains such feature)
 		do
-			Result := adapted_class_with_named_feature (a_name, Current)
+			Result := adapted_base_class_with_named_feature (a_name, Current)
 		end
 
-	context_adapted_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+	context_adapted_base_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
 			-- Base class of current context, or in case of a formal parameter
-			-- one of its constraint base types containing a feature with seed
-			-- `a_seed' (or any of the constraints if none contains such feature)
+			-- one of its constraint adapted base classes containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
 		do
-			Result := adapted_class_with_seeded_feature (a_seed, Current)
+			Result := adapted_base_class_with_seeded_feature (a_seed, Current)
 		end
 
 	context_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_BASE_TYPE
@@ -582,12 +583,12 @@ feature -- Type context
 			Result := named_type_is_formal_type (Current)
 		end
 
-	context_add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
-			-- Add to `a_list' the base class of current context or the constraint
-			-- base types (in the same order they appear in 'constraint_base_types')
-			-- in case of a formal parameter.
+	context_add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Add to `a_list' the base class of current context' or the adapted
+			-- base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
 		do
-			add_adapted_classes_to_list (a_list, Current)
+			add_adapted_base_classes_to_list (a_list, Current)
 		end
 
 	context_same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN

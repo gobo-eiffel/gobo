@@ -117,58 +117,59 @@ feature -- Access
 			end
 		end
 
-	adapted_class_with_named_feature (a_name: ET_CALL_NAME): ET_ADAPTED_CLASS
-			-- Base class of current context, or in case of a formal parameter
-			-- one of its constraint base types containing a feature named `a_name'
-			-- (or any of the constraints if none contains such feature)
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter one
+			-- of its constraint adapted base classes containing a feature named
+			-- `a_name' (or any of the constraints if none contains such feature)
 		local
 			l_type: ET_TYPE
 			l_index: INTEGER
 		do
 			if count = 0 then
-				Result := root_context.context_adapted_class_with_named_feature (a_name)
+				Result := root_context.context_adapted_base_class_with_named_feature (a_name)
 			elseif attached {ET_LIKE_N} last as l_like_n then
 				l_index := l_like_n.index
 				if l_index = 0 or l_index >= count then
-					Result := root_context.context_adapted_class_with_named_feature (a_name)
+					Result := root_context.context_adapted_base_class_with_named_feature (a_name)
 				else
 					l_type := item (l_index)
 					put (l_like_n.previous, count)
-					Result := l_type.adapted_class_with_named_feature (a_name, Current)
+					Result := l_type.adapted_base_class_with_named_feature (a_name, Current)
 					put (l_like_n, count)
 				end
 			else
 				l_type := last
 				remove_last
-				Result := l_type.adapted_class_with_named_feature (a_name, Current)
+				Result := l_type.adapted_base_class_with_named_feature (a_name, Current)
 				put_last (l_type)
 			end
 		end
 
-	adapted_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
 			-- Base class of current context, or in case of a formal parameter
-			-- one of its constraint base types containing a feature with seed
-			-- `a_seed' (or any of the constraints if none contains such feature)
+			-- one of its constraint adapted base classes containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
 		local
 			l_type: ET_TYPE
 			l_index: INTEGER
 		do
 			if count = 0 then
-				Result := root_context.context_adapted_class_with_seeded_feature (a_seed)
+				Result := root_context.context_adapted_base_class_with_seeded_feature (a_seed)
 			elseif attached {ET_LIKE_N} last as l_like_n then
 				l_index := l_like_n.index
 				if l_index = 0 or l_index >= count then
-					Result := root_context.context_adapted_class_with_seeded_feature (a_seed)
+					Result := root_context.context_adapted_base_class_with_seeded_feature (a_seed)
 				else
 					l_type := item (l_index)
 					put (l_like_n.previous, count)
-					Result := l_type.adapted_class_with_seeded_feature (a_seed, Current)
+					Result := l_type.adapted_base_class_with_seeded_feature (a_seed, Current)
 					put (l_like_n, count)
 				end
 			else
 				l_type := last
 				remove_last
-				Result := l_type.adapted_class_with_seeded_feature (a_seed, Current)
+				Result := l_type.adapted_base_class_with_seeded_feature (a_seed, Current)
 				put_last (l_type)
 			end
 		end
@@ -603,30 +604,30 @@ feature -- Status report
 
 feature -- Basic operations
 
-	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
-			-- Add to `a_list' the base class of current context or the constraint
-			-- base types (in the same order they appear in 'constraint_base_types')
-			-- in case of a formal parameter.
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Add to `a_list' the base class of current context' or the adapted
+			-- base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
 		local
 			l_type: ET_TYPE
 			l_index: INTEGER
 		do
 			if count = 0 then
-				root_context.context_add_adapted_classes_to_list (a_list)
+				root_context.context_add_adapted_base_classes_to_list (a_list)
 			elseif attached {ET_LIKE_N} last as l_like_n then
 				l_index := l_like_n.index
 				if l_index = 0 or l_index >= count then
-					root_context.context_add_adapted_classes_to_list (a_list)
+					root_context.context_add_adapted_base_classes_to_list (a_list)
 				else
 					l_type := item (l_index)
 					put (l_like_n.previous, count)
-					l_type.add_adapted_classes_to_list (a_list, Current)
+					l_type.add_adapted_base_classes_to_list (a_list, Current)
 					put (l_like_n, count)
 				end
 			else
 				l_type := last
 				remove_last
-				l_type.add_adapted_classes_to_list (a_list, Current)
+				l_type.add_adapted_base_classes_to_list (a_list, Current)
 				put_last (l_type)
 			end
 		end

@@ -21,9 +21,9 @@ inherit
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
 			named_type_is_formal_type,
-			add_adapted_classes_to_list,
-			adapted_class_with_named_feature,
-			adapted_class_with_seeded_feature,
+			add_adapted_base_classes_to_list,
+			adapted_base_class_with_named_feature,
+			adapted_base_class_with_seeded_feature,
 			same_syntactical_like_feature_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -138,10 +138,11 @@ feature -- Access
 			end
 		end
 
-	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
-			-- a formal parameter one of its constraint base types containing a feature
-			-- named `a_name' (or any of the constraints if none contains such feature)
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature named `a_name' (or any of the constraints if none contains such
+			-- feature)
 		local
 			l_class: ET_CLASS
 			l_index: INTEGER
@@ -153,7 +154,7 @@ feature -- Access
 				l_class := a_context.base_class
 				l_index := index
 				if attached l_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					Result := l_args.item (l_index).type.adapted_class_with_named_feature (a_name, a_context)
+					Result := l_args.item (l_index).type.adapted_base_class_with_named_feature (a_name, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -163,7 +164,7 @@ feature -- Access
 			else
 				l_class := a_context.base_class
 				if attached l_class.seeded_query (seed) as l_query then
-					Result := l_query.type.adapted_class_with_named_feature (a_name, a_context)
+					Result := l_query.type.adapted_base_class_with_named_feature (a_name, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -173,10 +174,11 @@ feature -- Access
 			end
 		end
 
-	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
-			-- a formal parameter one of its constraint base types containing a feature
-			-- with seed `a_seed' (or any of the constraints if none contains such feature)
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
 		local
 			l_class: ET_CLASS
 			l_index: INTEGER
@@ -188,7 +190,7 @@ feature -- Access
 				l_class := a_context.base_class
 				l_index := index
 				if attached l_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					Result := l_args.item (l_index).type.adapted_class_with_seeded_feature (a_seed, a_context)
+					Result := l_args.item (l_index).type.adapted_base_class_with_seeded_feature (a_seed, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -198,7 +200,7 @@ feature -- Access
 			else
 				l_class := a_context.base_class
 				if attached l_class.seeded_query (seed) as l_query then
-					Result := l_query.type.adapted_class_with_seeded_feature (a_seed, a_context)
+					Result := l_query.type.adapted_base_class_with_seeded_feature (a_seed, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -841,10 +843,10 @@ feature -- Status report
 
 feature -- Basic operations
 
-	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' the base class of current type when it appears in `a_context' or
-			-- the constraint base types (in the same order they appear in 'constraint_base_types')
-			-- in case of a formal parameter.
+			-- the adapted base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
 		local
 			l_class: ET_CLASS
 			l_index: INTEGER
@@ -856,7 +858,7 @@ feature -- Basic operations
 				l_class := a_context.base_class
 				l_index := index
 				if attached l_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					l_args.item (l_index).type.add_adapted_classes_to_list (a_list, a_context)
+					l_args.item (l_index).type.add_adapted_base_classes_to_list (a_list, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -866,7 +868,7 @@ feature -- Basic operations
 			else
 				l_class := a_context.base_class
 				if attached l_class.seeded_query (seed) as l_query then
-					l_query.type.add_adapted_classes_to_list (a_list, a_context)
+					l_query.type.add_adapted_base_classes_to_list (a_list, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved

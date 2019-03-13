@@ -187,8 +187,8 @@ feature {NONE} -- Initialization
 			create vape_creation_clients.make_with_capacity (20)
 			create vape_client.make (current_class.name, current_class)
 				-- Adapted classes.
-			create unused_adapted_classes.make (100)
-			create adapted_class_checker.make (a_system_processor)
+			create unused_adapted_base_classes.make (100)
+			create adapted_base_class_checker.make (a_system_processor)
 		end
 
 feature -- Status report
@@ -3052,8 +3052,8 @@ feature {NONE} -- Instruction validity
 			l_creation_call: detachable ET_QUALIFIED_CALL
 			l_name: ET_FEATURE_NAME
 			l_name_position: ET_POSITION
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			i, nb: INTEGER
 			l_had_error: BOOLEAN
@@ -3082,25 +3082,25 @@ feature {NONE} -- Instruction validity
 			l_had_error := has_fatal_error
 			check_writable_validity (l_target, l_target_context)
 			reset_fatal_error (l_had_error or has_fatal_error)
-			l_adapted_classes := new_adapted_classes
+			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
 				if l_explicit_creation_type /= Void then
 					l_creation_context.force_last (l_explicit_creation_type)
 				else
 					l_creation_context.force_last (l_target_context.first)
 				end
-				l_creation_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (l_name, l_adapted_classes, l_creation_context)
+				l_creation_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, l_creation_context)
 			end
 			if has_fatal_error then
 				check_orphan_actual_arguments_validity (l_creation_call)
 			elseif l_seed = 0 then
-				l_adapted_class := l_adapted_classes.first
-				l_class := l_adapted_class.base_class
+				l_adapted_base_class := l_adapted_base_classes.first
+				l_class := l_adapted_base_class.base_class
 				if l_creation_call = default_creation_call then
 						-- There is no explicit creation call.
-					check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, Void, l_adapted_class, l_has_multiple_constraints, l_target_context, l_creation_context)
+					check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, Void, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
 				elseif current_class_impl /= current_class then
 						-- We need to resolve `l_name' in the implementation
 						-- class of `current_feature_impl' first.
@@ -3115,12 +3115,12 @@ feature {NONE} -- Instruction validity
 						-- A class coming from a .NET assembly can contain overloaded
 						-- features (i.e. several features with the same name).
 						-- We have to be careful about that here.
-					check_dotnet_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_adapted_class, l_has_multiple_constraints, l_target_context, l_creation_context)
-				elseif attached l_adapted_class.named_procedure (l_name) as l_procedure then
+					check_dotnet_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
+				elseif attached l_adapted_base_class.named_procedure (l_name) as l_procedure then
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
-					check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_procedure, l_adapted_class, l_has_multiple_constraints, l_target_context, l_creation_context)
-				elseif attached l_adapted_class.named_query (l_name) as l_query then
+					check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_procedure, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
+				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
 						-- This is not a procedure.
 					set_fatal_error
 					error_handler.report_vgcc6d_error (current_class, l_name, l_query, l_class)
@@ -3132,7 +3132,7 @@ feature {NONE} -- Instruction validity
 					error_handler.report_vuex2a_error (current_class_impl, l_name, l_class)
 					check_orphan_actual_arguments_validity (l_creation_call)
 				end
-			elseif l_adapted_classes.is_empty then
+			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
 					-- (or in another generic derivation) of `current_class' where this
 					-- creation instruction was written. So, if we got a seed, there should
@@ -3141,12 +3141,12 @@ feature {NONE} -- Instruction validity
 				error_handler.report_giaaa_error
 				check_orphan_actual_arguments_validity (l_creation_call)
 			else
-				nb := l_adapted_classes.count
+				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
-					l_adapted_class := l_adapted_classes.item (i)
-					l_class := l_adapted_class.base_class
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					l_class := l_adapted_base_class.base_class
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
-						check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_procedure, l_adapted_class, l_has_multiple_constraints, l_target_context, l_creation_context)
+						check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_procedure, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
 					elseif l_class.is_none then
 -- TODO: "NONE" conforms to all reference types.
 						set_fatal_error
@@ -3168,10 +3168,10 @@ feature {NONE} -- Instruction validity
 			end
 			free_context (l_creation_context)
 			free_context (l_target_context)
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
-	check_dotnet_creation_procedure_call_instruction_validity (a_instruction: ET_CREATION_INSTRUCTION; a_creation_call: ET_CREATION_CALL; a_adapted_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_target_context, a_creation_context: ET_NESTED_TYPE_CONTEXT)
+	check_dotnet_creation_procedure_call_instruction_validity (a_instruction: ET_CREATION_INSTRUCTION; a_creation_call: ET_CREATION_CALL; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_target_context, a_creation_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_instruction' with .NET creation type base class.
 			--
 			-- A class coming from a .NET assembly can contain overloaded
@@ -3183,7 +3183,7 @@ feature {NONE} -- Instruction validity
 			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_target_context' represents the type of the creation target.
 			-- `a_creation_context' represents the creation type of `a_instruction'.
-			-- `a_adapted_class' is the base class (or the best possible constraint in case of multiple
+			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the creation type.
 			-- `a_has_multiple_constraints' means that creation type is a formal parameter
 			-- with multiple constraints.
@@ -3191,8 +3191,8 @@ feature {NONE} -- Instruction validity
 		require
 			a_instruction_not_void: a_instruction /= Void
 			a_creation_call_not_void: a_creation_call /= Void
-			a_adapted_class_not_void: a_adapted_class /= Void
-			a_class_is_dotnet: a_adapted_class.base_class.is_dotnet
+			a_adapted_base_class_not_void: a_adapted_base_class /= Void
+			a_class_is_dotnet: a_adapted_base_class.base_class.is_dotnet
 			a_target_context_not_void: a_target_context /= Void
 			a_creation_context_not_void: a_creation_context /= Void
 			a_creation_context_count: a_creation_context.count = 1
@@ -3204,19 +3204,19 @@ feature {NONE} -- Instruction validity
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 		do
 			has_fatal_error := False
-			l_class := a_adapted_class.base_class
+			l_class := a_adapted_base_class.base_class
 			l_name := a_creation_call.name
 			l_overloaded_procedures := new_overloaded_procedures
-			a_adapted_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
+			a_adapted_base_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_class), a_creation_call.arguments, a_creation_context, False, True)
+				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_base_class), a_creation_call.arguments, a_creation_context, False, True)
 				if has_fatal_error then
 					check_orphan_actual_arguments_validity (a_creation_call)
 				elseif l_overloaded_procedures.count = 1 then
 					l_procedure := l_overloaded_procedures.first
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
-					check_creation_procedure_call_instruction_validity (a_instruction, a_creation_call, l_procedure, a_adapted_class, a_has_multiple_constraints, a_target_context, a_creation_context)
+					check_creation_procedure_call_instruction_validity (a_instruction, a_creation_call, l_procedure, a_adapted_base_class, a_has_multiple_constraints, a_target_context, a_creation_context)
 				else
 					-- Ambiguity in overloaded procedures.
 -- TODO: report VIOF
@@ -3224,7 +3224,7 @@ feature {NONE} -- Instruction validity
 					error_handler.report_giaaa_error
 					check_orphan_actual_arguments_validity (a_creation_call)
 				end
-			elseif attached a_adapted_class.named_query (l_name) as l_query then
+			elseif attached a_adapted_base_class.named_query (l_name) as l_query then
 					-- This is not a procedure.
 				set_fatal_error
 				error_handler.report_vgcc6d_error (current_class, l_name, l_query, l_class)
@@ -3239,16 +3239,16 @@ feature {NONE} -- Instruction validity
 			free_overloaded_procedures (l_overloaded_procedures)
 		end
 
-	check_creation_procedure_call_instruction_validity (a_instruction: ET_CREATION_INSTRUCTION; a_creation_call: ET_CREATION_CALL; a_procedure: detachable ET_PROCEDURE; a_adapted_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_target_context, a_creation_context: ET_NESTED_TYPE_CONTEXT)
+	check_creation_procedure_call_instruction_validity (a_instruction: ET_CREATION_INSTRUCTION; a_creation_call: ET_CREATION_CALL; a_procedure: detachable ET_PROCEDURE; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_target_context, a_creation_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_instruction' with `a_procedure' as creation procedure.
 			-- The validity of the creation type and of the target of the creation are
 			-- assumed to have already been checked.
 			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_target_context' represents the type of the creation target.
 			-- `a_creation_context' represents the creation type of `a_instruction'.
-			-- `a_adapted_class' is the base class (or the best possible constraint in case of multiple
+			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the creation type.
-			-- `a_adapted_class' is the base class (or the best possible constraint in case of multiple
+			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the creation type.
 			-- `a_has_multiple_constraints' means that creation type is a formal parameter
 			-- with multiple constraints.
@@ -3258,7 +3258,7 @@ feature {NONE} -- Instruction validity
 			a_creation_call_not_void: a_creation_call /= Void
 			no_call_if_not_procedure: a_procedure = Void implies a_creation_call = default_creation_call
 			no_default_create_if_not_procedure: a_procedure = Void implies current_system.default_create_seed = 0
-			a_adapted_class_not_void: a_adapted_class /= Void
+			a_adapted_base_class_not_void: a_adapted_base_class /= Void
 			a_target_context_not_void: a_target_context /= Void
 			a_creation_context_not_void: a_creation_context /= Void
 			a_creation_context_count: a_creation_context.count = 1
@@ -3273,7 +3273,7 @@ feature {NONE} -- Instruction validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			l_class := a_adapted_class.base_class
+			l_class := a_adapted_base_class.base_class
 			l_target := a_instruction.target
 			l_creation_type := a_creation_context.last
 			a_creation_context.remove_last
@@ -3308,7 +3308,7 @@ feature {NONE} -- Instruction validity
 				if a_has_multiple_constraints then
 					l_creation_context := new_context (current_type)
 					l_creation_context.copy_type_context (a_creation_context)
-					adapted_class_checker.reset_context_if_multiple_constraints (a_has_multiple_constraints, a_adapted_class, l_creation_context)
+					adapted_base_class_checker.reset_context_if_multiple_constraints (a_has_multiple_constraints, a_adapted_base_class, l_creation_context)
 					check_formal_creation_procedure_call_validity (a_instruction, a_creation_call, a_procedure, l_class, l_formal_type, l_creation_context)
 					free_context (l_creation_context)
 				else
@@ -4397,8 +4397,8 @@ feature {NONE} -- Instruction validity
 			l_name: ET_CALL_NAME
 			l_seed: INTEGER
 			l_class: ET_CLASS
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_context_count: INTEGER
 			i, nb: INTEGER
@@ -4410,18 +4410,18 @@ feature {NONE} -- Instruction validity
 			l_seed := l_name.seed
 			check_expression_validity (l_target, l_context, current_system.detachable_any_type)
 			l_context_count := l_context.count
-			l_adapted_classes := new_adapted_classes
+			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
-				l_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (l_name, l_adapted_classes, l_context)
+				l_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, l_context)
 			end
 			if has_fatal_error then
 				check_orphan_actual_arguments_validity (a_call)
 			elseif l_seed = 0 then
-				l_adapted_class := l_adapted_classes.first
-				l_class := l_adapted_class.base_class
-				adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, l_context)
+				l_adapted_base_class := l_adapted_base_classes.first
+				l_class := l_adapted_base_class.base_class
+				adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, l_context)
 					-- We need to resolve `l_name' in the implementation
 					-- class of `current_feature_impl' first.
 				if current_class_impl /= current_class then
@@ -4436,12 +4436,12 @@ feature {NONE} -- Instruction validity
 						-- A class coming from a .NET assembly can contain overloaded
 						-- features (i.e. several features with the same name).
 						-- We have to be careful about that here.
-					check_qualified_dotnet_procedure_call_instruction_validity (a_call, l_adapted_class, l_context)
-				elseif attached l_adapted_class.named_procedure (l_name) as l_procedure then
+					check_qualified_dotnet_procedure_call_instruction_validity (a_call, l_adapted_base_class, l_context)
+				elseif attached l_adapted_base_class.named_procedure (l_name) as l_procedure then
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
 					check_qualified_procedure_call_instruction_validity (a_call, l_procedure, l_class, l_context)
-				elseif attached l_adapted_class.named_query (l_name) as l_query then
+				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
 						-- Check for parenthesis alias.
 					l_seed := l_query.first_seed
 					l_name.set_seed (l_seed)
@@ -4457,7 +4457,7 @@ feature {NONE} -- Instruction validity
 				else
 					if l_class.is_tuple_class and then attached {ET_IDENTIFIER} l_name as l_label then
 							-- Check whether this is a tuple label.
-						l_seed := l_adapted_class.base_type_index_of_label (l_label, l_context)
+						l_seed := l_adapted_base_class.base_type_index_of_label (l_label, l_context)
 						if l_seed /= 0 then
 							l_label.set_tuple_label (True)
 							l_label.set_seed (l_seed)
@@ -4481,7 +4481,7 @@ feature {NONE} -- Instruction validity
 						check_orphan_actual_arguments_validity (a_call)
 					end
 				end
-			elseif l_adapted_classes.is_empty then
+			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
 					-- (or in another generic derivation) of `current_class' where this
 					-- instruction was written. So, if we got a seed, there should be a
@@ -4490,12 +4490,12 @@ feature {NONE} -- Instruction validity
 				error_handler.report_giaaa_error
 				check_orphan_actual_arguments_validity (a_call)
 			else
-				nb := l_adapted_classes.count
+				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
-					l_adapted_class := l_adapted_classes.item (i)
-					l_class := l_adapted_class.base_class
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					l_class := l_adapted_base_class.base_class
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
-						adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, l_context)
+						adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, l_context)
 						check_qualified_procedure_call_instruction_validity (a_call, l_procedure, l_class, l_context)
 						l_context.keep_first (l_context_count)
 					elseif l_class.is_none then
@@ -4518,10 +4518,10 @@ feature {NONE} -- Instruction validity
 				end
 			end
 			free_context (l_context)
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
-	check_qualified_dotnet_procedure_call_instruction_validity (a_call: ET_QUALIFIED_FEATURE_CALL_INSTRUCTION; a_adapted_class: ET_ADAPTED_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_qualified_dotnet_procedure_call_instruction_validity (a_call: ET_QUALIFIED_FEATURE_CALL_INSTRUCTION; a_adapted_base_class: ET_ADAPTED_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of qualified call `a_call' to a .NET procedure.
 			--
 			-- A class coming from a .NET assembly can contain overloaded
@@ -4529,14 +4529,14 @@ feature {NONE} -- Instruction validity
 			-- We have to be careful about that here.
 			--
 			-- The validity of the target of the call is assumed to have already been checked.
-			-- `a_adapted_class' is the base class (or the best possible constraint in case of multiple
+			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the target of the call.
 			-- `a_context' represents the type of the target of `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			a_adapted_class_not_void: a_adapted_class /= Void
-			a_class_is_dotnet: a_adapted_class.base_class.is_dotnet
+			a_adapted_base_class_not_void: a_adapted_base_class /= Void
+			a_class_is_dotnet: a_adapted_base_class.base_class.is_dotnet
 			a_context_not_void: a_context /= Void
 			in_implementation_class: current_class_impl = current_class
 		local
@@ -4547,12 +4547,12 @@ feature {NONE} -- Instruction validity
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 		do
 			has_fatal_error := False
-			l_class := a_adapted_class.base_class
+			l_class := a_adapted_base_class.base_class
 			l_name := a_call.name
 			l_overloaded_procedures := new_overloaded_procedures
-			a_adapted_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
+			a_adapted_base_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_class), a_call.arguments, a_context, False, False)
+				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_base_class), a_call.arguments, a_context, False, False)
 				if has_fatal_error then
 					check_orphan_actual_arguments_validity (a_call)
 				elseif l_overloaded_procedures.count = 1 then
@@ -4567,7 +4567,7 @@ feature {NONE} -- Instruction validity
 					error_handler.report_giaaa_error
 					check_orphan_actual_arguments_validity (a_call)
 				end
-			elseif attached a_adapted_class.named_query (l_name) as l_query then
+			elseif attached a_adapted_base_class.named_query (l_name) as l_query then
 				check_query_parenthesis_call_validity (a_call, l_query, l_class, a_context, Void)
 				if has_fatal_error then
 					-- Do nothing.
@@ -4667,8 +4667,8 @@ feature {NONE} -- Instruction validity
 			l_type: ET_TYPE
 			l_name: ET_FEATURE_NAME
 			l_seed: INTEGER
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_context_count: INTEGER
 			i, nb: INTEGER
@@ -4679,20 +4679,20 @@ feature {NONE} -- Instruction validity
 			l_name := an_instruction.name
 			l_seed := l_name.seed
 			check_type_validity (l_type)
-			l_adapted_classes := new_adapted_classes
+			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
 				l_context.force_last (l_type)
 				l_context_count := l_context.count
-				l_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (l_name, l_adapted_classes, l_context)
+				l_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, l_context)
 			end
 			if has_fatal_error then
 				check_orphan_actual_arguments_validity (an_instruction)
 			elseif l_seed = 0 then
-				l_adapted_class := l_adapted_classes.first
-				l_class := l_adapted_class.base_class
-				adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, l_context)
+				l_adapted_base_class := l_adapted_base_classes.first
+				l_class := l_adapted_base_class.base_class
+				adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, l_context)
 					-- We need to resolve `l_name' in the implementation
 					-- class of `current_feature_impl' first.
 				if current_class_impl /= current_class then
@@ -4707,12 +4707,12 @@ feature {NONE} -- Instruction validity
 						-- A class coming from a .NET assembly can contain overloaded
 						-- features (i.e. several features with the same name).
 						-- We have to be careful about that here.
-					check_static_dotnet_procedure_call_instruction_validity (an_instruction, l_adapted_class, l_context)
-				elseif attached l_adapted_class.named_procedure (l_name) as l_procedure then
+					check_static_dotnet_procedure_call_instruction_validity (an_instruction, l_adapted_base_class, l_context)
+				elseif attached l_adapted_base_class.named_procedure (l_name) as l_procedure then
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
 					check_static_procedure_call_instruction_validity (an_instruction, l_procedure, l_class, l_context)
-				elseif attached l_adapted_class.named_query (l_name) as l_query then
+				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
 						-- Check for parenthesis alias.
 					l_seed := l_query.first_seed
 					l_name.set_seed (l_seed)
@@ -4732,7 +4732,7 @@ feature {NONE} -- Instruction validity
 					error_handler.report_vuex2a_error (current_class, l_name, l_class)
 					check_orphan_actual_arguments_validity (an_instruction)
 				end
-			elseif l_adapted_classes.is_empty then
+			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
 					-- (or in another generic derivation) of `current_class' where this
 					-- instruction was written. So, if we got a seed, there should be a
@@ -4741,12 +4741,12 @@ feature {NONE} -- Instruction validity
 				error_handler.report_giaaa_error
 				check_orphan_actual_arguments_validity (an_instruction)
 			else
-				nb := l_adapted_classes.count
+				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
-					l_adapted_class := l_adapted_classes.item (i)
-					l_class := l_adapted_class.base_class
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					l_class := l_adapted_base_class.base_class
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
-						adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, l_context)
+						adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, l_context)
 						check_static_procedure_call_instruction_validity (an_instruction, l_procedure, l_class, l_context)
 						l_context.keep_first (l_context_count)
 					elseif l_class.is_none then
@@ -4769,10 +4769,10 @@ feature {NONE} -- Instruction validity
 				end
 			end
 			free_context (l_context)
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
-	check_static_dotnet_procedure_call_instruction_validity (a_call: ET_STATIC_CALL_INSTRUCTION; a_adapted_class: ET_ADAPTED_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_static_dotnet_procedure_call_instruction_validity (a_call: ET_STATIC_CALL_INSTRUCTION; a_adapted_base_class: ET_ADAPTED_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of static call `a_call' to a .NET procedure.
 			--
 			-- A class coming from a .NET assembly can contain overloaded
@@ -4780,15 +4780,15 @@ feature {NONE} -- Instruction validity
 			-- We have to be careful about that here.
 			--
 			-- The validity of the static type part of the call is assumed to have already been checked.
-			-- `a_adapted_class' is the base class (or the best possible constraint in case of multiple
+			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the static type part of `a_call'.
 			-- `a_context' represents the static type part of `a_call'.
 			-- It will be altered on exit to represent the type of `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			a_adapted_class_not_void: a_adapted_class /= Void
-			a_class_is_dotnet: a_adapted_class.base_class.is_dotnet
+			a_adapted_base_class_not_void: a_adapted_base_class /= Void
+			a_class_is_dotnet: a_adapted_base_class.base_class.is_dotnet
 			a_context_not_void: a_context /= Void
 			in_implementation_class: current_class_impl = current_class
 		local
@@ -4799,12 +4799,12 @@ feature {NONE} -- Instruction validity
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 		do
 			has_fatal_error := False
-			l_class := a_adapted_class.base_class
+			l_class := a_adapted_base_class.base_class
 			l_name := a_call.name
 			l_overloaded_procedures := new_overloaded_procedures
-			a_adapted_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
+			a_adapted_base_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_class), a_call.arguments, a_context, True, False)
+				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_base_class), a_call.arguments, a_context, True, False)
 				if has_fatal_error then
 					check_orphan_actual_arguments_validity (a_call)
 				elseif l_overloaded_procedures.count = 1 then
@@ -4819,7 +4819,7 @@ feature {NONE} -- Instruction validity
 					error_handler.report_giaaa_error
 					check_orphan_actual_arguments_validity (a_call)
 				end
-			elseif attached a_adapted_class.named_query (l_name) as l_query then
+			elseif attached a_adapted_base_class.named_query (l_name) as l_query then
 				check_static_parenthesis_call_validity (a_call, l_query, l_class, a_context)
 				if has_fatal_error then
 					-- Do nothing.
@@ -5817,8 +5817,8 @@ feature {NONE} -- Expression validity
 			in_implementation_class: current_class = current_class_impl
 		local
 			l_name: ET_OPERATOR
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
 			l_right_class: ET_CLASS
 			l_cast_expression: detachable ET_INFIX_CAST_EXPRESSION
 			l_left_expression: ET_EXPRESSION
@@ -5828,18 +5828,18 @@ feature {NONE} -- Expression validity
 		do
 			l_name := a_expression.name
 			l_left_expression := a_expression.left
-			l_adapted_classes := new_adapted_classes
-			a_right_context.add_adapted_classes_to_list (l_adapted_classes)
-			check_adapted_classes_validity (l_name, l_adapted_classes, a_right_context)
-			l_adapted_class := l_adapted_classes.first
-			l_right_class := l_adapted_class.base_class
+			l_adapted_base_classes := new_adapted_base_classes
+			a_right_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+			check_adapted_base_classes_validity (l_name, l_adapted_base_classes, a_right_context)
+			l_adapted_base_class := l_adapted_base_classes.first
+			l_right_class := l_adapted_base_class.base_class
 			if has_fatal_error then
 				-- Done.
 			elseif a_right_context.same_named_context (a_left_context) then
 				-- Done.
 			elseif l_right_class = a_left_class then
 				-- Done.
-			elseif not attached l_adapted_class.named_query (l_name) as l_query then
+			elseif not attached l_adapted_base_class.named_query (l_name) as l_query then
 				-- Done.
 			elseif not l_query.is_exported_to (current_class, system_processor) then
 				-- Done.
@@ -5861,7 +5861,7 @@ feature {NONE} -- Expression validity
 				l_new_query := l_query
 				l_formal := l_formal_arguments.formal_argument (1)
 			end
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 			if l_cast_expression = Void or l_formal = Void or l_new_query = Void then
 				-- Done.
 			elseif a_right_context.conforms_to_type (l_formal.type, a_right_context, system_processor) then
@@ -5949,8 +5949,8 @@ feature {NONE} -- Expression validity
 			l_name: ET_FEATURE_NAME
 			l_name_position: ET_POSITION
 			l_creation_call: detachable ET_CREATION_CALL
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			i, nb: INTEGER
 		do
@@ -5971,20 +5971,20 @@ feature {NONE} -- Expression validity
 			l_creation_type := an_expression.type
 			a_context.force_last (l_creation_type)
 			check_type_validity (l_creation_type)
-			l_adapted_classes := new_adapted_classes
+			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
-				a_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (l_name, l_adapted_classes, a_context)
+				a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, a_context)
 			end
 			if has_fatal_error then
 				check_orphan_actual_arguments_validity (l_creation_call)
 			elseif l_seed = 0 then
-				l_adapted_class := l_adapted_classes.first
-				l_class := l_adapted_class.base_class
+				l_adapted_base_class := l_adapted_base_classes.first
+				l_class := l_adapted_base_class.base_class
 				if l_creation_call = default_creation_call then
 						-- There is no explicit creation call.
-					check_creation_procedure_call_expression_validity (an_expression, l_creation_call, Void, l_adapted_class, l_has_multiple_constraints, a_context)
+					check_creation_procedure_call_expression_validity (an_expression, l_creation_call, Void, l_adapted_base_class, l_has_multiple_constraints, a_context)
 				elseif current_class_impl /= current_class then
 						-- We need to resolve `l_name' in the implementation
 						-- class of `current_feature_impl' first.
@@ -5999,12 +5999,12 @@ feature {NONE} -- Expression validity
 						-- A class coming from a .NET assembly can contain overloaded
 						-- features (i.e. several features with the same name).
 						-- We have to be careful about that here.
-					check_dotnet_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_adapted_class, l_has_multiple_constraints, a_context)
-				elseif attached l_adapted_class.named_procedure (l_name) as l_procedure then
+					check_dotnet_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_adapted_base_class, l_has_multiple_constraints, a_context)
+				elseif attached l_adapted_base_class.named_procedure (l_name) as l_procedure then
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
-					check_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_procedure, l_adapted_class, l_has_multiple_constraints, a_context)
-				elseif attached l_adapted_class.named_query (l_name) as l_query then
+					check_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_procedure, l_adapted_base_class, l_has_multiple_constraints, a_context)
+				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
 						-- This is not a procedure.
 					set_fatal_error
 					error_handler.report_vgcc6b_error (current_class, l_name, l_query, l_class)
@@ -6016,7 +6016,7 @@ feature {NONE} -- Expression validity
 					error_handler.report_vuex2a_error (current_class, l_name, l_class)
 					check_orphan_actual_arguments_validity (l_creation_call)
 				end
-			elseif l_adapted_classes.is_empty then
+			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
 					-- (or in another generic derivation) of `current_class' where this
 					-- creation expression was written. So, if we got a seed, there should
@@ -6025,12 +6025,12 @@ feature {NONE} -- Expression validity
 				error_handler.report_giaaa_error
 				check_orphan_actual_arguments_validity (l_creation_call)
 			else
-				nb := l_adapted_classes.count
+				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
-					l_adapted_class := l_adapted_classes.item (i)
-					l_class := l_adapted_class.base_class
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					l_class := l_adapted_base_class.base_class
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
-						check_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_procedure, l_adapted_class, l_has_multiple_constraints, a_context)
+						check_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_procedure, l_adapted_base_class, l_has_multiple_constraints, a_context)
 					elseif l_class.is_none then
 -- TODO: "NONE" conforms to all reference types.
 						set_fatal_error
@@ -6050,10 +6050,10 @@ feature {NONE} -- Expression validity
 					i := i + 1
 				end
 			end
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
-	check_dotnet_creation_procedure_call_expression_validity (a_expression: ET_CREATION_EXPRESSION; a_creation_call: ET_CREATION_CALL; a_adapted_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_dotnet_creation_procedure_call_expression_validity (a_expression: ET_CREATION_EXPRESSION; a_creation_call: ET_CREATION_CALL; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_expression' with .NET creation type base class.
 			--
 			-- A class coming from a .NET assembly can contain overloaded
@@ -6063,7 +6063,7 @@ feature {NONE} -- Expression validity
 			-- The validity of the type of the creation is assumed to have already been checked.
 			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_context' represents the creation type of `a_expression'.
-			-- `a_adapted_class' is the base class (or the best possible constraint in case of multiple
+			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the creation type.
 			-- `a_has_multiple_constraints' means that creation type is a formal parameter
 			-- with multiple constraints.
@@ -6071,7 +6071,7 @@ feature {NONE} -- Expression validity
 		require
 			a_expression_not_void: a_expression /= Void
 			a_creation_call_not_void: a_creation_call /= Void
-			a_adapted_class_not_void: a_adapted_class /= Void
+			a_adapted_base_class_not_void: a_adapted_base_class /= Void
 			a_context_not_void: a_context /= Void
 			a_context_count: a_context.count = 1
 		local
@@ -6082,19 +6082,19 @@ feature {NONE} -- Expression validity
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 		do
 			has_fatal_error := False
-			l_class := a_adapted_class.base_class
+			l_class := a_adapted_base_class.base_class
 			l_name := a_creation_call.name
 			l_overloaded_procedures := new_overloaded_procedures
-			a_adapted_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
+			a_adapted_base_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_class), a_creation_call.arguments, a_context, False, True)
+				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_base_class), a_creation_call.arguments, a_context, False, True)
 				if has_fatal_error then
 					check_orphan_actual_arguments_validity (a_creation_call)
 				elseif l_overloaded_procedures.count = 1 then
 					l_procedure := l_overloaded_procedures.first
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
-					check_creation_procedure_call_expression_validity (a_expression, a_creation_call, l_procedure, a_adapted_class, a_has_multiple_constraints, a_context)
+					check_creation_procedure_call_expression_validity (a_expression, a_creation_call, l_procedure, a_adapted_base_class, a_has_multiple_constraints, a_context)
 				else
 					-- Ambiguity in overloaded procedures.
 -- TODO: report VIOF
@@ -6102,7 +6102,7 @@ feature {NONE} -- Expression validity
 					error_handler.report_giaaa_error
 					check_orphan_actual_arguments_validity (a_creation_call)
 				end
-			elseif attached a_adapted_class.named_query (l_name) as l_query then
+			elseif attached a_adapted_base_class.named_query (l_name) as l_query then
 					-- This is not a procedure.
 				set_fatal_error
 				error_handler.report_vgcc6b_error (current_class, l_name, l_query, l_class)
@@ -6117,12 +6117,12 @@ feature {NONE} -- Expression validity
 			free_overloaded_procedures (l_overloaded_procedures)
 		end
 
-	check_creation_procedure_call_expression_validity (a_expression: ET_CREATION_EXPRESSION; a_creation_call: ET_CREATION_CALL; a_procedure: detachable ET_PROCEDURE; a_adapted_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_creation_procedure_call_expression_validity (a_expression: ET_CREATION_EXPRESSION; a_creation_call: ET_CREATION_CALL; a_procedure: detachable ET_PROCEDURE; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_expression' with `a_procedure' as creation procedure.
 			-- The validity of the type of the creation is assumed to have already been checked.
 			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_context' represents the creation type of `a_expression'.
-			-- `a_adapted_class' is the base class (or the best possible constraint in case of multiple
+			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the creation type.
 			-- `a_has_multiple_constraints' means that creation type is a formal parameter
 			-- with multiple constraints.
@@ -6132,7 +6132,7 @@ feature {NONE} -- Expression validity
 			a_creation_call_not_void: a_creation_call /= Void
 			no_call_if_not_procedure: a_procedure = Void implies a_creation_call = default_creation_call
 			no_default_create_if_not_procedure: a_procedure = Void implies current_system.default_create_seed = 0
-			a_adapted_class_not_void: a_adapted_class /= Void
+			a_adapted_base_class_not_void: a_adapted_base_class /= Void
 			a_context_not_void: a_context /= Void
 			a_context_count: a_context.count = 1
 		local
@@ -6143,7 +6143,7 @@ feature {NONE} -- Expression validity
 			l_class: ET_CLASS
 		do
 			has_fatal_error := False
-			l_class := a_adapted_class.base_class
+			l_class := a_adapted_base_class.base_class
 			l_creation_type := a_context.last
 			a_context.remove_last
 			l_creation_named_type := l_creation_type.shallow_named_type (a_context)
@@ -6159,7 +6159,7 @@ feature {NONE} -- Expression validity
 				if a_has_multiple_constraints then
 					l_creation_context := new_context (current_type)
 					l_creation_context.copy_type_context (a_context)
-					adapted_class_checker.reset_context_if_multiple_constraints (a_has_multiple_constraints, a_adapted_class, l_creation_context)
+					adapted_base_class_checker.reset_context_if_multiple_constraints (a_has_multiple_constraints, a_adapted_base_class, l_creation_context)
 					check_formal_creation_procedure_call_validity (a_expression, a_creation_call, a_procedure, l_class, l_formal_type, l_creation_context)
 					free_context (l_creation_context)
 				else
@@ -8509,13 +8509,13 @@ feature {NONE} -- Expression validity
 			l_name: ET_CALL_NAME
 			l_seed: INTEGER
 			l_class: ET_CLASS
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_context_count: INTEGER
 			i, nb: INTEGER
 			l_first_context: detachable ET_NESTED_TYPE_CONTEXT
-			l_first_adapted_class: detachable ET_ADAPTED_CLASS
+			l_first_adapted_base_class: detachable ET_ADAPTED_CLASS
 			l_first_query: detachable ET_QUERY
 			l_first_tuple_label: INTEGER
 			l_other_query: detachable ET_QUERY
@@ -8526,18 +8526,18 @@ feature {NONE} -- Expression validity
 			l_seed := l_name.seed
 			check_expression_validity (l_target, a_context, current_system.detachable_any_type)
 			l_context_count := a_context.count
-			l_adapted_classes := new_adapted_classes
+			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
-				a_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (l_name, l_adapted_classes, a_context)
+				a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, a_context)
 			end
 			if has_fatal_error then
 				check_orphan_actual_arguments_validity (a_call)
 			elseif l_seed = 0 then
-				l_adapted_class := l_adapted_classes.first
-				l_class := l_adapted_class.base_class
-				adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+				l_adapted_base_class := l_adapted_base_classes.first
+				l_class := l_adapted_base_class.base_class
+				adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 					-- We need to resolve `l_name' in the implementation
 					-- class of `current_feature_impl' first.
 				if current_class_impl /= current_class then
@@ -8567,8 +8567,8 @@ feature {NONE} -- Expression validity
 						-- A class coming from a .NET assembly can contain overloaded
 						-- features (i.e. several features with the same name).
 						-- We have to be careful about that here.
-					check_qualified_dotnet_query_call_expression_validity (a_call, l_adapted_class, a_context, a_call_info)
-				elseif attached l_adapted_class.named_query (l_name) as l_query then
+					check_qualified_dotnet_query_call_expression_validity (a_call, l_adapted_base_class, a_context, a_call_info)
+				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
 					l_seed := l_query.first_seed
 					l_name.set_seed (l_seed)
 						-- Check for parenthesis alias.
@@ -8580,7 +8580,7 @@ feature {NONE} -- Expression validity
 					else
 						check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context, a_call_info)
 					end
-				elseif attached l_adapted_class.named_procedure (l_name) as l_procedure then
+				elseif attached l_adapted_base_class.named_procedure (l_name) as l_procedure then
 						-- In a call expression, the feature has to be a query.
 					set_fatal_error
 					error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
@@ -8588,7 +8588,7 @@ feature {NONE} -- Expression validity
 				else
 					if l_class.is_tuple_class and then attached {ET_IDENTIFIER} l_name as l_label then
 							-- Check whether this is a tuple label.
-						l_seed := l_adapted_class.base_type_index_of_label (l_label, a_context)
+						l_seed := l_adapted_base_class.base_type_index_of_label (l_label, a_context)
 						if l_seed /= 0 then
 							l_label.set_tuple_label (True)
 							l_label.set_seed (l_seed)
@@ -8611,7 +8611,7 @@ feature {NONE} -- Expression validity
 						check_orphan_actual_arguments_validity (a_call)
 					end
 				end
-			elseif l_adapted_classes.is_empty then
+			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
 					-- (or in another generic derivation) of `current_class' where this
 					-- expression was written. So, if we got a seed, a query or tuple label
@@ -8620,11 +8620,11 @@ feature {NONE} -- Expression validity
 				error_handler.report_giaaa_error
 				check_orphan_actual_arguments_validity (a_call)
 			else
-				nb := l_adapted_classes.count
+				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
-					l_adapted_class := l_adapted_classes.item (i)
-					l_class := l_adapted_class.base_class
-					adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					l_class := l_adapted_base_class.base_class
+					adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 					if l_name.is_tuple_label then
 						if l_class.is_tuple_class then
 							check_qualified_tuple_label_call_expression_validity (a_call, l_class, a_context, a_call_info)
@@ -8657,21 +8657,21 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 							-- Avoid reporting several times the same error.
 						i := nb -- Jump out of the loop.
-					elseif l_first_context /= Void and l_first_adapted_class /= Void then
+					elseif l_first_context /= Void and l_first_adapted_base_class /= Void then
 						if not a_context.same_named_context (l_first_context) then
 							set_fatal_error
 							if l_first_query /= Void and l_other_query /= Void then
 									-- Two queries with the same seed and different result types.
-								error_handler.report_vgmc0e_error (current_class, current_class_impl, l_name, l_first_query, l_first_adapted_class, l_other_query, l_adapted_class)
+								error_handler.report_vgmc0e_error (current_class, current_class_impl, l_name, l_first_query, l_first_adapted_base_class, l_other_query, l_adapted_base_class)
 							else
 									-- Two Tuples with different item types at index `l_seed'.
-								error_handler.report_vgmc0f_error (current_class, current_class_impl, l_name, l_seed, l_first_adapted_class, l_adapted_class)
+								error_handler.report_vgmc0f_error (current_class, current_class_impl, l_name, l_seed, l_first_adapted_base_class, l_adapted_base_class)
 							end
 						end
 					elseif nb > 1 then
 						l_first_context := new_context (current_type)
 						l_first_context.copy_type_context (a_context)
-						l_first_adapted_class := l_adapted_class
+						l_first_adapted_base_class := l_adapted_base_class
 						l_first_query := l_other_query
 						l_first_tuple_label := l_seed
 					end
@@ -8684,10 +8684,10 @@ feature {NONE} -- Expression validity
 					free_context (l_first_context)
 				end
 			end
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
-	check_qualified_dotnet_query_call_expression_validity (a_call: ET_QUALIFIED_FEATURE_CALL_EXPRESSION; a_adapted_class: ET_ADAPTED_CLASS; a_context: ET_NESTED_TYPE_CONTEXT; a_call_info: detachable like new_call_info)
+	check_qualified_dotnet_query_call_expression_validity (a_call: ET_QUALIFIED_FEATURE_CALL_EXPRESSION; a_adapted_base_class: ET_ADAPTED_CLASS; a_context: ET_NESTED_TYPE_CONTEXT; a_call_info: detachable like new_call_info)
 			-- Check validity of qualified call `a_call' to a .NET query.
 			--
 			-- A class coming from a .NET assembly can contain overloaded
@@ -8695,7 +8695,7 @@ feature {NONE} -- Expression validity
 			-- We have to be careful about that here.
 			--
 			-- The validity of the target of the call is assumed to have already been checked.
-			-- `a_adapted_class' is the base class (or the best possible constraint in case of multiple
+			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the target of the call.
 			-- `a_context' represents the type of the target of `a_call'.
 			-- It will be altered on exit to represent the type of `a_call'.
@@ -8706,8 +8706,8 @@ feature {NONE} -- Expression validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			a_adapted_class_not_void: a_adapted_class /= Void
-			a_class_is_dotnet: a_adapted_class.base_class.is_dotnet
+			a_adapted_base_class_not_void: a_adapted_base_class /= Void
+			a_class_is_dotnet: a_adapted_base_class.base_class.is_dotnet
 			a_context_not_void: a_context /= Void
 			in_implementation_class: current_class_impl = current_class
 		local
@@ -8718,12 +8718,12 @@ feature {NONE} -- Expression validity
 			l_overloaded_queries: DS_ARRAYED_LIST [ET_QUERY]
 		do
 			has_fatal_error := False
-			l_class := a_adapted_class.base_class
+			l_class := a_adapted_base_class.base_class
 			l_name := a_call.name
 			l_overloaded_queries := new_overloaded_queries
-			a_adapted_class.add_overloaded_queries (l_name, l_overloaded_queries)
+			a_adapted_base_class.add_overloaded_queries (l_name, l_overloaded_queries)
 			if not l_overloaded_queries.is_empty then
-				keep_best_overloaded_features (l_overloaded_queries, adapted_name (l_name, a_adapted_class), a_call.arguments, a_context, False, False)
+				keep_best_overloaded_features (l_overloaded_queries, adapted_name (l_name, a_adapted_base_class), a_call.arguments, a_context, False, False)
 				if has_fatal_error then
 					check_orphan_actual_arguments_validity (a_call)
 				elseif l_overloaded_queries.count = 1 then
@@ -8745,7 +8745,7 @@ feature {NONE} -- Expression validity
 					error_handler.report_giaaa_error
 					check_orphan_actual_arguments_validity (a_call)
 				end
-			elseif attached a_adapted_class.named_procedure (l_name) as l_procedure then
+			elseif attached a_adapted_base_class.named_procedure (l_name) as l_procedure then
 					-- In a call expression, the feature has to be a query.
 				set_fatal_error
 				error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
@@ -9352,13 +9352,13 @@ feature {NONE} -- Expression validity
 			l_type: ET_TYPE
 			l_name: ET_FEATURE_NAME
 			l_seed: INTEGER
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_context_count: INTEGER
 			i, nb: INTEGER
 			l_first_context: detachable ET_NESTED_TYPE_CONTEXT
-			l_first_adapted_class: detachable ET_ADAPTED_CLASS
+			l_first_adapted_base_class: detachable ET_ADAPTED_CLASS
 			l_first_query: detachable ET_QUERY
 			l_other_query: detachable ET_QUERY
 		do
@@ -9367,20 +9367,20 @@ feature {NONE} -- Expression validity
 			l_seed := l_name.seed
 			l_type := an_expression.type
 			check_type_validity (l_type)
-			l_adapted_classes := new_adapted_classes
+			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
 				a_context.force_last (l_type)
 				l_context_count := a_context.count
-				a_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (l_name, l_adapted_classes, a_context)
+				a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, a_context)
 			end
 			if has_fatal_error then
 				check_orphan_actual_arguments_validity (an_expression)
 			elseif l_seed = 0 then
-				l_adapted_class := l_adapted_classes.first
-				l_class := l_adapted_class.base_class
-				adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+				l_adapted_base_class := l_adapted_base_classes.first
+				l_class := l_adapted_base_class.base_class
+				adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 					-- We need to resolve `l_name' in the implementation
 					-- class of `current_feature_impl' first.
 				if current_class_impl /= current_class then
@@ -9395,8 +9395,8 @@ feature {NONE} -- Expression validity
 						-- A class coming from a .NET assembly can contain overloaded
 						-- features (i.e. several features with the same name).
 						-- We have to be careful about that here.
-					check_static_dotnet_query_call_expression_validity (an_expression, l_adapted_class, a_context)
-				elseif attached l_adapted_class.named_query (l_name) as l_query then
+					check_static_dotnet_query_call_expression_validity (an_expression, l_adapted_base_class, a_context)
+				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
 					l_seed := l_query.first_seed
 					l_name.set_seed (l_seed)
 						-- Check for parenthesis alias.
@@ -9408,7 +9408,7 @@ feature {NONE} -- Expression validity
 					else
 						check_static_query_call_expression_validity (an_expression, l_query, l_class, a_context)
 					end
-				elseif attached l_adapted_class.named_procedure (l_name) as l_procedure then
+				elseif attached l_adapted_base_class.named_procedure (l_name) as l_procedure then
 						-- In a call expression, the feature has to be a query.
 					set_fatal_error
 					error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
@@ -9420,7 +9420,7 @@ feature {NONE} -- Expression validity
 					error_handler.report_vuex2a_error (current_class, l_name, l_class)
 					check_orphan_actual_arguments_validity (an_expression)
 				end
-			elseif l_adapted_classes.is_empty then
+			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
 					-- (or in another generic derivation) of `current_class' where this
 					-- expression was written. So, if we got a seed, a query should exist.
@@ -9428,11 +9428,11 @@ feature {NONE} -- Expression validity
 				error_handler.report_giaaa_error
 				check_orphan_actual_arguments_validity (an_expression)
 			else
-				nb := l_adapted_classes.count
+				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
-					l_adapted_class := l_adapted_classes.item (i)
-					l_class := l_adapted_class.base_class
-					adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					l_class := l_adapted_base_class.base_class
+					adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 					if attached l_class.seeded_query (l_seed) as l_query then
 						check_static_query_call_expression_validity (an_expression, l_query, l_class, a_context)
 						l_other_query := l_query
@@ -9451,16 +9451,16 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 							-- Avoid reporting several times the same error.
 						i := nb -- Jump out of the loop.
-					elseif l_first_context /= Void and l_first_adapted_class /= Void and l_first_query /= Void and l_other_query /= Void then
+					elseif l_first_context /= Void and l_first_adapted_base_class /= Void and l_first_query /= Void and l_other_query /= Void then
 						if not a_context.same_named_context (l_first_context) then
 								-- Two queries with the same seed and different result types.
 							set_fatal_error
-							error_handler.report_vgmc0e_error (current_class, current_class_impl, l_name, l_first_query, l_first_adapted_class, l_other_query, l_adapted_class)
+							error_handler.report_vgmc0e_error (current_class, current_class_impl, l_name, l_first_query, l_first_adapted_base_class, l_other_query, l_adapted_base_class)
 						end
 					elseif nb > 1 then
 						l_first_context := new_context (current_type)
 						l_first_context.copy_type_context (a_context)
-						l_first_adapted_class := l_adapted_class
+						l_first_adapted_base_class := l_adapted_base_class
 						l_first_query := l_other_query
 					end
 					if i < nb then
@@ -9472,10 +9472,10 @@ feature {NONE} -- Expression validity
 					free_context (l_first_context)
 				end
 			end
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
-	check_static_dotnet_query_call_expression_validity (a_call: ET_STATIC_CALL_EXPRESSION; a_adapted_class: ET_ADAPTED_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_static_dotnet_query_call_expression_validity (a_call: ET_STATIC_CALL_EXPRESSION; a_adapted_base_class: ET_ADAPTED_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of static call `a_call' to a .NET query.
 			--
 			-- A class coming from a .NET assembly can contain overloaded
@@ -9483,15 +9483,15 @@ feature {NONE} -- Expression validity
 			-- We have to be careful about that here.
 			--
 			-- The validity of the static type part of the call is assumed to have already been checked.
-			-- `a_adapted_class' is the base class (or the best possible constraint in case of multiple
+			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the static type part of `a_call'.
 			-- `a_context' represents the static type part of `a_call'.
 			-- It will be altered on exit to represent the type of `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			a_adapted_class_not_void: a_adapted_class /= Void
-			a_class_is_dotnet: a_adapted_class.base_class.is_dotnet
+			a_adapted_base_class_not_void: a_adapted_base_class /= Void
+			a_class_is_dotnet: a_adapted_base_class.base_class.is_dotnet
 			a_context_not_void: a_context /= Void
 			in_implementation_class: current_class_impl = current_class
 		local
@@ -9502,12 +9502,12 @@ feature {NONE} -- Expression validity
 			l_overloaded_queries: DS_ARRAYED_LIST [ET_QUERY]
 		do
 			has_fatal_error := False
-			l_class := a_adapted_class.base_class
+			l_class := a_adapted_base_class.base_class
 			l_name := a_call.name
 			l_overloaded_queries := new_overloaded_queries
-			a_adapted_class.add_overloaded_queries (l_name, l_overloaded_queries)
+			a_adapted_base_class.add_overloaded_queries (l_name, l_overloaded_queries)
 			if not l_overloaded_queries.is_empty then
-				keep_best_overloaded_features (l_overloaded_queries, adapted_name (l_name, a_adapted_class), a_call.arguments, a_context, True, False)
+				keep_best_overloaded_features (l_overloaded_queries, adapted_name (l_name, a_adapted_base_class), a_call.arguments, a_context, True, False)
 				if has_fatal_error then
 					check_orphan_actual_arguments_validity (a_call)
 				elseif l_overloaded_queries.count = 1 then
@@ -9529,7 +9529,7 @@ feature {NONE} -- Expression validity
 					error_handler.report_giaaa_error
 					check_orphan_actual_arguments_validity (a_call)
 				end
-			elseif attached a_adapted_class.named_procedure (l_name) as l_procedure then
+			elseif attached a_adapted_base_class.named_procedure (l_name) as l_procedure then
 					-- In a call expression, the feature has to be a query.
 				set_fatal_error
 				error_handler.report_vkcn2a_error (current_class, l_name, l_procedure, l_class)
@@ -10923,34 +10923,34 @@ feature {NONE} -- Parenthesis call validity
 			in_implementation_class: current_class_impl = current_class
 		local
 			l_base_class: ET_CLASS
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
 		do
 			has_fatal_error := False
 			create l_parenthesis.make
 			set_parenthesis_call_position (l_parenthesis, a_actuals)
-			l_adapted_classes := new_adapted_classes
-			a_context.add_adapted_classes_to_list (l_adapted_classes)
-			l_has_multiple_constraints := l_adapted_classes.count > 1
-			check_adapted_classes_validity (l_parenthesis, l_adapted_classes, a_context)
-			l_adapted_class := l_adapted_classes.first
-			free_adapted_classes (l_adapted_classes)
+			l_adapted_base_classes := new_adapted_base_classes
+			a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+			l_has_multiple_constraints := l_adapted_base_classes.count > 1
+			check_adapted_base_classes_validity (l_parenthesis, l_adapted_base_classes, a_context)
+			l_adapted_base_class := l_adapted_base_classes.first
+			free_adapted_base_classes (l_adapted_base_classes)
 			if has_fatal_error then
 				check_orphan_actual_arguments_validity (a_call)
 			else
-				l_base_class := l_adapted_class.base_class
-					-- Look for a feature with 'alias "()"' in `l_adapted_class'.
+				l_base_class := l_adapted_base_class.base_class
+					-- Look for a feature with 'alias "()"' in `l_adapted_base_class'.
 				l_base_class.process (system_processor.interface_checker)
 				if not l_base_class.interface_checked_successfully then
 					set_fatal_error
 					check_orphan_actual_arguments_validity (a_call)
-				elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
+				elseif attached l_adapted_base_class.named_feature (l_parenthesis) as l_unfolded_feature then
 						-- Build the unfolded parenthesis call.
 					l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 					a_call.set_parenthesis_call (a_name, l_parenthesis, a_actuals)
-					adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+					adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 					if attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
 						check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
 					elseif attached {ET_PARENTHESIS_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
@@ -10993,8 +10993,8 @@ feature {NONE} -- Parenthesis call validity
 		local
 			l_actuals: detachable ET_ACTUAL_ARGUMENT_LIST
 			l_base_class: ET_CLASS
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
 			l_qualified_unfolded_target: ET_QUALIFIED_CALL_EXPRESSION
@@ -11007,23 +11007,23 @@ feature {NONE} -- Parenthesis call validity
 					create l_parenthesis.make
 					set_parenthesis_call_position (l_parenthesis, l_actuals)
 					a_context.force_last (a_query.type)
-					l_adapted_classes := new_adapted_classes
-					a_context.add_adapted_classes_to_list (l_adapted_classes)
-					l_has_multiple_constraints := l_adapted_classes.count > 1
-					check_adapted_classes_validity (l_parenthesis, l_adapted_classes, a_context)
-					l_adapted_class := l_adapted_classes.first
-					free_adapted_classes (l_adapted_classes)
+					l_adapted_base_classes := new_adapted_base_classes
+					a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+					l_has_multiple_constraints := l_adapted_base_classes.count > 1
+					check_adapted_base_classes_validity (l_parenthesis, l_adapted_base_classes, a_context)
+					l_adapted_base_class := l_adapted_base_classes.first
+					free_adapted_base_classes (l_adapted_base_classes)
 					a_context.remove_last
 					if has_fatal_error then
 						check_orphan_actual_arguments_validity (a_call)
 					else
-						l_base_class := l_adapted_class.base_class
-							-- Look for a feature with 'alias "()"' in `l_adapted_class'.
+						l_base_class := l_adapted_base_class.base_class
+							-- Look for a feature with 'alias "()"' in `l_adapted_base_class'.
 						l_base_class.process (system_processor.interface_checker)
 						if not l_base_class.interface_checked_successfully then
 							set_fatal_error
 							check_orphan_actual_arguments_validity (a_call)
-						elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
+						elseif attached l_adapted_base_class.named_feature (l_parenthesis) as l_unfolded_feature then
 								-- Build the unfolded parenthesis call.
 							l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 							if attached l_regular_call.target as l_target then
@@ -11035,7 +11035,7 @@ feature {NONE} -- Parenthesis call validity
 								l_regular_call.set_parenthesis_call (l_unqualified_unfolded_target, l_parenthesis, l_actuals)
 								check_unqualified_query_call_expression_validity (l_unqualified_unfolded_target, a_query, a_context)
 							end
-							adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+							adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 							if has_fatal_error then
 								check_orphan_actual_arguments_validity (a_call)
 							elseif attached {ET_PARENTHESIS_INSTRUCTION} l_regular_call.parenthesis_call as l_parenthesis_call_instruction then
@@ -11150,8 +11150,8 @@ feature {NONE} -- Parenthesis call validity
 		local
 			l_actuals: detachable ET_ACTUAL_ARGUMENT_LIST
 			l_base_class: ET_CLASS
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
 			l_unfolded_target: ET_PRECURSOR_EXPRESSION
@@ -11162,23 +11162,23 @@ feature {NONE} -- Parenthesis call validity
 				create l_parenthesis.make
 				set_parenthesis_call_position (l_parenthesis, l_actuals)
 				a_context.force_last (a_parent_query.type)
-				l_adapted_classes := new_adapted_classes
-				a_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (l_parenthesis, l_adapted_classes, a_context)
-				l_adapted_class := l_adapted_classes.first
-				free_adapted_classes (l_adapted_classes)
+				l_adapted_base_classes := new_adapted_base_classes
+				a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_parenthesis, l_adapted_base_classes, a_context)
+				l_adapted_base_class := l_adapted_base_classes.first
+				free_adapted_base_classes (l_adapted_base_classes)
 				a_context.remove_last
 				if has_fatal_error then
 					check_orphan_actual_arguments_validity (a_call)
 				else
-					l_base_class := l_adapted_class.base_class
-						-- Look for a feature with 'alias "()"' in `l_adapted_class'.
+					l_base_class := l_adapted_base_class.base_class
+						-- Look for a feature with 'alias "()"' in `l_adapted_base_class'.
 					l_base_class.process (system_processor.interface_checker)
 					if not l_base_class.interface_checked_successfully then
 						set_fatal_error
 						check_orphan_actual_arguments_validity (a_call)
-					elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
+					elseif attached l_adapted_base_class.named_feature (l_parenthesis) as l_unfolded_feature then
 							-- Build the unfolded parenthesis call.
 						create l_unfolded_target.make (a_call.parent_name, Void)
 						l_unfolded_target.set_parent_type (a_call.parent_type)
@@ -11186,7 +11186,7 @@ feature {NONE} -- Parenthesis call validity
 						l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 						a_call.set_parenthesis_call (l_unfolded_target, l_parenthesis, l_actuals)
 						check_precursor_query_expression_validity (l_unfolded_target, a_parent_query, a_parent_class, a_parent_type, a_context)
-						adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+						adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 						if has_fatal_error then
 							set_fatal_error
 							check_orphan_actual_arguments_validity (a_call)
@@ -11229,8 +11229,8 @@ feature {NONE} -- Parenthesis call validity
 		local
 			l_actuals: detachable ET_ACTUAL_ARGUMENT_LIST
 			l_base_class: ET_CLASS
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
 			l_unfolded_target: ET_STATIC_CALL_EXPRESSION
@@ -11241,29 +11241,29 @@ feature {NONE} -- Parenthesis call validity
 				create l_parenthesis.make
 				set_parenthesis_call_position (l_parenthesis, l_actuals)
 				a_context.force_last (a_query.type)
-				l_adapted_classes := new_adapted_classes
-				a_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (l_parenthesis, l_adapted_classes, a_context)
-				l_adapted_class := l_adapted_classes.first
-				free_adapted_classes (l_adapted_classes)
+				l_adapted_base_classes := new_adapted_base_classes
+				a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_parenthesis, l_adapted_base_classes, a_context)
+				l_adapted_base_class := l_adapted_base_classes.first
+				free_adapted_base_classes (l_adapted_base_classes)
 				a_context.remove_last
 				if has_fatal_error then
 					check_orphan_actual_arguments_validity (a_call)
 				else
-					l_base_class := l_adapted_class.base_class
-						-- Look for a feature with 'alias "()"' in `l_adapted_class'.
+					l_base_class := l_adapted_base_class.base_class
+						-- Look for a feature with 'alias "()"' in `l_adapted_base_class'.
 					l_base_class.process (system_processor.interface_checker)
 					if not l_base_class.interface_checked_successfully then
 						set_fatal_error
 						check_orphan_actual_arguments_validity (a_call)
-					elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
+					elseif attached l_adapted_base_class.named_feature (l_parenthesis) as l_unfolded_feature then
 							-- Build the unfolded parenthesis call.
 						create l_unfolded_target.make (a_call.static_type, a_call.qualified_name, Void)
 						l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 						a_call.set_parenthesis_call (l_unfolded_target, l_parenthesis, l_actuals)
 						check_static_query_call_expression_validity (l_unfolded_target, a_query, a_class, a_context)
-						adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+						adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 						if has_fatal_error then
 							set_fatal_error
 							check_orphan_actual_arguments_validity (a_call)
@@ -11313,8 +11313,8 @@ feature {NONE} -- Parenthesis call validity
 			l_seed: INTEGER
 			l_actuals: detachable ET_ACTUAL_ARGUMENT_LIST
 			l_base_class: ET_CLASS
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_parenthesis: ET_PARENTHESIS_SYMBOL
 			l_unfolded_target: ET_QUALIFIED_CALL_EXPRESSION
@@ -11337,29 +11337,29 @@ feature {NONE} -- Parenthesis call validity
 					set_parenthesis_call_position (l_parenthesis, l_actuals)
 					l_type := a_class.formal_parameter_type (l_seed)
 					a_context.force_last (l_type)
-					l_adapted_classes := new_adapted_classes
-					a_context.add_adapted_classes_to_list (l_adapted_classes)
-					l_has_multiple_constraints := l_adapted_classes.count > 1
-					check_adapted_classes_validity (l_parenthesis, l_adapted_classes, a_context)
-					l_adapted_class := l_adapted_classes.first
-					free_adapted_classes (l_adapted_classes)
+					l_adapted_base_classes := new_adapted_base_classes
+					a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+					l_has_multiple_constraints := l_adapted_base_classes.count > 1
+					check_adapted_base_classes_validity (l_parenthesis, l_adapted_base_classes, a_context)
+					l_adapted_base_class := l_adapted_base_classes.first
+					free_adapted_base_classes (l_adapted_base_classes)
 					a_context.remove_last
 					if has_fatal_error then
 						check_orphan_actual_arguments_validity (a_call)
 					else
-						l_base_class := l_adapted_class.base_class
-							-- Look for a feature with 'alias "()"' in `l_adapted_class'.
+						l_base_class := l_adapted_base_class.base_class
+							-- Look for a feature with 'alias "()"' in `l_adapted_base_class'.
 						l_base_class.process (system_processor.interface_checker)
 						if not l_base_class.interface_checked_successfully then
 							set_fatal_error
 							check_orphan_actual_arguments_validity (a_call)
-						elseif attached l_adapted_class.named_feature (l_parenthesis) as l_unfolded_feature then
+						elseif attached l_adapted_base_class.named_feature (l_parenthesis) as l_unfolded_feature then
 								-- Build the unfolded parenthesis call.
 							l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 							create l_unfolded_target.make (l_regular_call.target, l_regular_call.name, Void)
 							l_regular_call.set_parenthesis_call (l_unfolded_target, l_parenthesis, l_actuals)
 							check_qualified_tuple_label_call_expression_validity (l_unfolded_target, a_class, a_context, Void)
-							adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+							adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 							if has_fatal_error then
 								set_fatal_error
 								check_orphan_actual_arguments_validity (a_call)
@@ -11617,13 +11617,13 @@ feature {NONE} -- Agent validity
 			a_class: ET_CLASS
 			a_seed: INTEGER
 			had_error: BOOLEAN
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_context_count: INTEGER
 			i, nb: INTEGER
 			l_first_context: detachable ET_NESTED_TYPE_CONTEXT
-			l_first_adapted_class: detachable ET_ADAPTED_CLASS
+			l_first_adapted_base_class: detachable ET_ADAPTED_CLASS
 			l_first_feature: detachable ET_FEATURE
 			l_other_feature: detachable ET_FEATURE
 			l_first_tuple_label: INTEGER
@@ -11633,18 +11633,18 @@ feature {NONE} -- Agent validity
 			a_seed := a_name.seed
 			check_expression_validity (a_target, a_context, current_system.detachable_any_type)
 			l_context_count := a_context.count
-			l_adapted_classes := new_adapted_classes
+			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
-				a_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (a_name, l_adapted_classes, a_context)
+				a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (a_name, l_adapted_base_classes, a_context)
 			end
 			if has_fatal_error then
 				-- Do nothing.
 			elseif a_seed = 0 then
-				l_adapted_class := l_adapted_classes.first
-				a_class := l_adapted_class.base_class
-				adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+				l_adapted_base_class := l_adapted_base_classes.first
+				a_class := l_adapted_base_class.base_class
+				adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 					-- We need to resolve `a_name' in the implementation
 					-- class of `current_feature_impl' first.
 				if current_class_impl /= current_class then
@@ -11654,7 +11654,7 @@ feature {NONE} -- Agent validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
-				elseif attached l_adapted_class.named_procedure (a_name) as l_procedure then
+				elseif attached l_adapted_base_class.named_procedure (a_name) as l_procedure then
 					a_name.set_seed (l_procedure.first_seed)
 					an_expression.set_procedure (True)
 					check_qualified_vape_validity (a_name, l_procedure, a_class)
@@ -11671,7 +11671,7 @@ feature {NONE} -- Agent validity
 				else
 					if a_class.is_tuple_class and then attached {ET_IDENTIFIER} a_name as l_label then
 							-- Check whether this is a tuple label.
-						a_seed := l_adapted_class.base_type_index_of_label (l_label, a_context)
+						a_seed := l_adapted_base_class.base_type_index_of_label (l_label, a_context)
 						if a_seed /= 0 then
 							l_label.set_tuple_label (True)
 							l_label.set_seed (a_seed)
@@ -11686,7 +11686,7 @@ feature {NONE} -- Agent validity
 						error_handler.report_vpca1b_error (current_class, a_name, a_class)
 					end
 				end
-			elseif l_adapted_classes.is_empty then
+			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
 					-- (or in another generic derivation) of `current_class' where this
 					-- expression was written. So, if we got a seed, a feature or tuple label
@@ -11694,11 +11694,11 @@ feature {NONE} -- Agent validity
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				nb := l_adapted_classes.count
+				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
-					l_adapted_class := l_adapted_classes.item (i)
-					a_class := l_adapted_class.base_class
-					adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					a_class := l_adapted_base_class.base_class
+					adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 					if a_name.is_tuple_label then
 						if a_class.is_tuple_class then
 							check_qualified_tuple_label_call_agent_validity (an_expression, a_class, a_context)
@@ -11755,22 +11755,22 @@ feature {NONE} -- Agent validity
 					if has_fatal_error then
 							-- Avoid reporting several times the same error.
 						i := nb -- Jump out of the loop.
-					elseif l_first_context /= Void and l_first_adapted_class /= Void then
+					elseif l_first_context /= Void and l_first_adapted_base_class /= Void then
 						if not a_context.same_named_context (l_first_context) then
 							set_fatal_error
 							if l_first_feature /= Void and l_other_feature /= Void then
 									-- Two features with the same seed and different signatures.
-								error_handler.report_vgmc0g_error (current_class, current_class_impl, a_name, l_first_feature, l_first_adapted_class, l_other_feature, l_adapted_class)
+								error_handler.report_vgmc0g_error (current_class, current_class_impl, a_name, l_first_feature, l_first_adapted_base_class, l_other_feature, l_adapted_base_class)
 							else
 									-- Two Tuples with different item types at index `a_seed'.
-								error_handler.report_vgmc0f_error (current_class, current_class_impl, a_name, a_seed, l_first_adapted_class, l_adapted_class)
+								error_handler.report_vgmc0f_error (current_class, current_class_impl, a_name, a_seed, l_first_adapted_base_class, l_adapted_base_class)
 							end
 						end
 					elseif nb > 1 then
 
 						l_first_context := new_context (current_type)
 						l_first_context.copy_type_context (a_context)
-						l_first_adapted_class := l_adapted_class
+						l_first_adapted_base_class := l_adapted_base_class
 						l_first_feature := l_other_feature
 						l_first_tuple_label := a_seed
 					end
@@ -11783,7 +11783,7 @@ feature {NONE} -- Agent validity
 					free_context (l_first_context)
 				end
 			end
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
 	check_qualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -11994,13 +11994,13 @@ feature {NONE} -- Agent validity
 			a_class: ET_CLASS
 			a_seed: INTEGER
 			a_target_type: ET_TYPE
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			l_context_count: INTEGER
 			i, nb: INTEGER
 			l_first_context: detachable ET_NESTED_TYPE_CONTEXT
-			l_first_adapted_class: detachable ET_ADAPTED_CLASS
+			l_first_adapted_base_class: detachable ET_ADAPTED_CLASS
 			l_first_feature: detachable ET_FEATURE
 			l_other_feature: detachable ET_FEATURE
 			l_first_tuple_label: INTEGER
@@ -12011,20 +12011,20 @@ feature {NONE} -- Agent validity
 			a_seed := a_name.seed
 			a_target_type := a_target.type
 			check_type_validity (a_target_type)
-			l_adapted_classes := new_adapted_classes
+			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
 				a_context.force_last (a_target_type)
 				l_context_count := a_context.count
-				a_context.add_adapted_classes_to_list (l_adapted_classes)
-				l_has_multiple_constraints := l_adapted_classes.count > 1
-				check_adapted_classes_validity (a_name, l_adapted_classes, a_context)
+				a_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (a_name, l_adapted_base_classes, a_context)
 			end
 			if has_fatal_error then
 				-- Do nothing.
 			elseif a_seed = 0 then
-				l_adapted_class := l_adapted_classes.first
-				a_class := l_adapted_class.base_class
-				adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+				l_adapted_base_class := l_adapted_base_classes.first
+				a_class := l_adapted_base_class.base_class
+				adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 					-- We need to resolve `a_name' in the implementation
 					-- class of `current_feature_impl' first.
 				if current_class_impl /= current_class then
@@ -12034,14 +12034,14 @@ feature {NONE} -- Agent validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
-				elseif attached l_adapted_class.named_procedure (a_name) as l_procedure then
+				elseif attached l_adapted_base_class.named_procedure (a_name) as l_procedure then
 					a_name.set_seed (l_procedure.first_seed)
 					an_expression.set_procedure (True)
 					check_qualified_vape_validity (a_name, l_procedure, a_class)
 					had_error := has_fatal_error
 					check_typed_procedure_call_agent_validity (an_expression, l_procedure, a_context)
 					has_fatal_error := has_fatal_error or had_error
-				elseif attached l_adapted_class.named_query (a_name) as l_query then
+				elseif attached l_adapted_base_class.named_query (a_name) as l_query then
 					a_name.set_seed (l_query.first_seed)
 					an_expression.set_procedure (False)
 					check_qualified_vape_validity (a_name, l_query, a_class)
@@ -12051,7 +12051,7 @@ feature {NONE} -- Agent validity
 				else
 					if a_class.is_tuple_class and then attached {ET_IDENTIFIER} a_name as l_label then
 							-- Check whether this is a tuple label.
-						a_seed := l_adapted_class.base_type_index_of_label (l_label, a_context)
+						a_seed := l_adapted_base_class.base_type_index_of_label (l_label, a_context)
 						if a_seed /= 0 then
 							l_label.set_tuple_label (True)
 							l_label.set_seed (a_seed)
@@ -12066,7 +12066,7 @@ feature {NONE} -- Agent validity
 						error_handler.report_vpca1b_error (current_class, a_name, a_class)
 					end
 				end
-			elseif l_adapted_classes.is_empty then
+			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
 					-- (or in another generic derivation) of `current_class' where this
 					-- expression was written. So, if we got a seed, a feature or tuple label
@@ -12074,11 +12074,11 @@ feature {NONE} -- Agent validity
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				nb := l_adapted_classes.count
+				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
-					l_adapted_class := l_adapted_classes.item (i)
-					a_class := l_adapted_class.base_class
-					adapted_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_class, a_context)
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					a_class := l_adapted_base_class.base_class
+					adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, a_context)
 					if a_name.is_tuple_label then
 						if a_class.is_tuple_class then
 							check_typed_tuple_label_call_agent_validity (an_expression, a_class, a_context)
@@ -12135,22 +12135,22 @@ feature {NONE} -- Agent validity
 					if has_fatal_error then
 							-- Avoid reporting several times the same error.
 						i := nb -- Jump out of the loop.
-					elseif l_first_context /= Void and l_first_adapted_class /= Void then
+					elseif l_first_context /= Void and l_first_adapted_base_class /= Void then
 						if not a_context.same_named_context (l_first_context) then
 							set_fatal_error
 							if l_first_feature /= Void and l_other_feature /= Void then
 									-- Two features with the same seed and different signatures.
-								error_handler.report_vgmc0g_error (current_class, current_class_impl, a_name, l_first_feature, l_first_adapted_class, l_other_feature, l_adapted_class)
+								error_handler.report_vgmc0g_error (current_class, current_class_impl, a_name, l_first_feature, l_first_adapted_base_class, l_other_feature, l_adapted_base_class)
 							else
 									-- Two Tuples with different item types at index `a_seed'.
-								error_handler.report_vgmc0f_error (current_class, current_class_impl, a_name, a_seed, l_first_adapted_class, l_adapted_class)
+								error_handler.report_vgmc0f_error (current_class, current_class_impl, a_name, a_seed, l_first_adapted_base_class, l_adapted_base_class)
 							end
 						end
 					elseif nb > 1 then
 
 						l_first_context := new_context (current_type)
 						l_first_context.copy_type_context (a_context)
-						l_first_adapted_class := l_adapted_class
+						l_first_adapted_base_class := l_adapted_base_class
 						l_first_feature := l_other_feature
 						l_first_tuple_label := a_seed
 					end
@@ -12163,7 +12163,7 @@ feature {NONE} -- Agent validity
 					free_context (l_first_context)
 				end
 			end
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
 	check_typed_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -13381,8 +13381,8 @@ feature {NONE} -- Agent validity
 
 feature {NONE} -- Multiple generic constraints
 
-	check_adapted_classes_validity (a_name: ET_CALL_NAME; a_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
-			-- Check validity of `a_adapted_classes' in case of multiple generic constraints
+	check_adapted_base_classes_validity (a_name: ET_CALL_NAME; a_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Check validity of `a_adapted_base_classes' in case of multiple generic constraints
 			-- when they are the possible base classes of a target of call name `a_name'.
 			-- `a_context' represents the type of the target of the call.
 			-- Keep in that list:
@@ -13395,61 +13395,35 @@ feature {NONE} -- Multiple generic constraints
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_name_not_void: a_name /= Void
-			a_adapted_classes_not_void: a_adapted_classes /= Void
-			no_void_adapted_class: not a_adapted_classes.has_void
+			a_adapted_base_classes_not_void: a_adapted_base_classes /= Void
+			no_void_adapted_base_class: not a_adapted_base_classes.has_void
 			a_context_not_void: a_context /= Void
 			a_context_is_valid: a_context.is_valid_context
 		do
 			has_fatal_error := False
-			adapted_class_checker.check_adapted_classes_validity (a_name, a_adapted_classes, a_context, current_class, current_class_impl)
-			if adapted_class_checker.has_fatal_error then
+			adapted_base_class_checker.check_adapted_base_classes_validity (a_name, a_adapted_base_classes, a_context, current_class, current_class_impl)
+			if adapted_base_class_checker.has_fatal_error then
 				set_fatal_error
 			end
 		ensure
-			in_implementation_class: (current_class_impl = current_class or a_name.seed = 0) implies a_adapted_classes.count = 1
-			not_in_implementation_class: (current_class_impl /= current_class and a_name.seed /= 0) implies across a_adapted_classes as l_adapted_classes all a_name.is_tuple_label or else (not l_adapted_classes.item.base_class.is_none implies l_adapted_classes.item.base_class.seeded_feature (a_name.seed) /= Void) end
+			in_implementation_class: (current_class_impl = current_class or a_name.seed = 0) implies a_adapted_base_classes.count = 1
+			not_in_implementation_class: (current_class_impl /= current_class and a_name.seed /= 0) implies across a_adapted_base_classes as l_adapted_base_classes all a_name.is_tuple_label or else (not l_adapted_base_classes.item.base_class.is_none implies l_adapted_base_classes.item.base_class.seeded_feature (a_name.seed) /= Void) end
 		end
 
-	reset_context_if_multiple_constraints (a_has_multiple_constraints: BOOLEAN; a_adapted_class: ET_ADAPTED_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- When `a_has_multiple_constraints' is True, the named type of `a_context'
-			-- is expected to be a formal generic parameter, and `a_adapted_class' is
-			-- one of its generic constraints. In that case, replace the content of
-			-- `a_context' with the base type of `a_adapted_class', with the necessary
-			-- type mark so that the attachment status of `a_context' is not changed.
-		require
-			a_adapted_class_not_void: a_adapted_class /= Void
-			a_context_not_void: a_context /= Void
-		local
-			l_constraint_type_mark: detachable ET_TYPE
-		do
-			if a_has_multiple_constraints then
-				if a_context.is_type_attached then
-					l_constraint_type_mark := tokens.attached_like_current
-				elseif a_context.is_type_detachable then
-					l_constraint_type_mark := tokens.detachable_like_current
-				end
-				a_context.wipe_out
-				a_context.force_last (a_adapted_class.base_type)
-				if l_constraint_type_mark /= Void then
-					a_context.force_last (l_constraint_type_mark)
-				end
-			end
-		end
+	adapted_base_class_checker: ET_ADAPTED_BASE_CLASS_CHECKER
+			-- Adapted base class checker
 
-	adapted_class_checker: ET_ADAPTED_CLASS_CHECKER
-			-- Adapted class checker
-
-	adapted_name (a_name: ET_CALL_NAME; a_adapted_class: ET_ADAPTED_CLASS): ET_CALL_NAME
-			-- Name in `a_adapted_class.base_class` corresponding to `a_name' in `a_adapted_class'.
-			-- Takes into account possible renaming if `a_adapted_class' is a generic constraint.
+	adapted_name (a_name: ET_CALL_NAME; a_adapted_base_class: ET_ADAPTED_CLASS): ET_CALL_NAME
+			-- Name in `a_adapted_base_class.base_class` corresponding to `a_name' in `a_adapted_base_class'.
+			-- Takes into account possible renaming if `a_adapted_base_class' is a generic constraint.
 		require
 			a_name_not_void: a_name /= Void
-			a_adapted_class_not_void: a_adapted_class /= Void
+			a_adapted_base_class_not_void: a_adapted_base_class /= Void
 		local
 			i: INTEGER
 		do
 			Result := a_name
-			if attached {ET_BASE_TYPE_CONSTRAINT} a_adapted_class as l_constraint and then attached l_constraint.renames as l_renames then
+			if attached {ET_BASE_TYPE_CONSTRAINT} a_adapted_base_class as l_constraint and then attached l_constraint.renames as l_renames then
 				i := l_renames.index_of_new_name (a_name)
 				if i /= 0 then
 					Result := l_renames.rename_pair (i).old_name
@@ -13459,31 +13433,31 @@ feature {NONE} -- Multiple generic constraints
 			adapted_name_not_void: Result /= Void
 		end
 
-	new_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
-			-- New empty list of adapted classes
+	new_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			-- New empty list of adapted base classes
 		do
-			if unused_adapted_classes.is_empty then
+			if unused_adapted_base_classes.is_empty then
 				create Result.make (20)
 			else
-				Result := unused_adapted_classes.last
-				unused_adapted_classes.remove_last
+				Result := unused_adapted_base_classes.last
+				unused_adapted_base_classes.remove_last
 			end
 		ensure
-			new_adapted_classes_not_void: Result /= Void
-			new_adapted_classes_is_empty: Result.is_empty
+			new_adapted_base_classes_not_void: Result /= Void
+			new_adapted_base_classes_is_empty: Result.is_empty
 		end
 
-	free_adapted_classes (a_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
-			-- Free `a_adapted_classes' so that it can be reused.
+	free_adapted_base_classes (a_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Free `a_adapted_base_classes' so that it can be reused.
 		require
-			a_adapted_classes_not_void: a_adapted_classes /= Void
+			a_adapted_base_classes_not_void: a_adapted_base_classes /= Void
 		do
-			a_adapted_classes.wipe_out
-			unused_adapted_classes.force_last (a_adapted_classes)
+			a_adapted_base_classes.wipe_out
+			unused_adapted_base_classes.force_last (a_adapted_base_classes)
 		end
 
-	unused_adapted_classes: DS_ARRAYED_LIST [DS_ARRAYED_LIST [ET_ADAPTED_CLASS]]
-			-- Adapted class lists hat are not currently used
+	unused_adapted_base_classes: DS_ARRAYED_LIST [DS_ARRAYED_LIST [ET_ADAPTED_CLASS]]
+			-- Adapted base class lists hat are not currently used
 
 feature {NONE} -- Conversion
 
@@ -13588,18 +13562,18 @@ feature {NONE} -- Conversion
 			a_context_not_void: a_context /= Void
 		local
 			i, nb: INTEGER
-			l_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			j, l_class_count: INTEGER
 			l_has_tuple_class: BOOLEAN
 		do
 			nb := a_formals.count
-			l_adapted_classes := new_adapted_classes
+			l_adapted_base_classes := new_adapted_base_classes
 			from i := 1 until i > nb loop
 				l_has_tuple_class := False
-				a_formals.formal_argument (i).type.add_adapted_classes_to_list (l_adapted_classes, a_context)
-				l_class_count := l_adapted_classes.count
+				a_formals.formal_argument (i).type.add_adapted_base_classes_to_list (l_adapted_base_classes, a_context)
+				l_class_count := l_adapted_base_classes.count
 				from j := 1 until j > l_class_count loop
-					if l_adapted_classes.item (j).base_class.is_tuple_class then
+					if l_adapted_base_classes.item (j).base_class.is_tuple_class then
 						l_has_tuple_class := True
 						j := l_class_count -- Jump out of the loop.
 					end
@@ -13617,7 +13591,7 @@ feature {NONE} -- Conversion
 				end
 				i := i + 1
 			end
-			free_adapted_classes (l_adapted_classes)
+			free_adapted_base_classes (l_adapted_base_classes)
 		ensure
 			tuple_argument_position_large_enough: Result >= 0
 			tuple_argument_position_small_enough: Result <= a_formals.count
@@ -16152,10 +16126,10 @@ invariant
 	vape_non_descendant_clients_not_void: vape_non_descendant_clients /= Void
 	vape_creation_clients_not_void: vape_creation_clients /= Void
 	vape_client_not_void: vape_client /= Void
-		-- Adapted classes.
-	unused_adapted_classes_not_void: unused_adapted_classes /= Void
-	no_void_adapted_classes: not unused_adapted_classes.has_void
-	adapted_class_checker_not_void: adapted_class_checker /= Void
+		-- Adapted base classes.
+	unused_adapted_base_classes_not_void: unused_adapted_base_classes /= Void
+	no_void_adapted_base_classes: not unused_adapted_base_classes.has_void
+	adapted_base_class_checker_not_void: adapted_base_class_checker /= Void
 		-- Call infos.
 	unused_call_infos_not_void: unused_call_infos /= Void
 	no_void_unused_call_info: not unused_call_infos.has_void

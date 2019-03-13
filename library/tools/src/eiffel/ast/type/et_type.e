@@ -79,6 +79,12 @@ feature -- Access
 	base_class (a_context: ET_TYPE_CONTEXT): ET_CLASS
 			-- Base class of current type when it appears in `a_context'
 			-- (Definition of base class in ETL2 page 198).
+			--
+			-- Note that in case of a formal parameter with multiple
+			-- constraints, then return the base class of the first
+			-- constraint. In order to get the other base classes,
+			-- use `add_adapted_base_classes_to_list'.
+			--
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
 			-- or unmatched formal generic parameter.
 		require
@@ -106,10 +112,11 @@ feature -- Access
 			named_base_class_not_void: Result /= Void
 		end
 
-	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
-			-- a formal parameter one of its constraint base types containing a feature
-			-- named `a_name' (or any of the constraints if none contains such feature)
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature named `a_name' (or any of the constraints if none contains such
+			-- feature)
 		require
 			a_name_not_void: a_name /= Void
 			a_context_not_void: a_context /= Void
@@ -119,10 +126,11 @@ feature -- Access
 			Result := base_class (a_context)
 		end
 
-	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
-			-- a formal parameter one of its constraint base types containing a feature
-			-- with seed `a_seed' (or any of the constraints if none contains such feature)
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
@@ -136,6 +144,12 @@ feature -- Access
 			-- only made up of class names and generic formal parameters
 			-- when the root type of `a_context' is a generic type not
 			-- fully derived (Definition of base type in ETL2 p.198).
+			--
+			-- Note that in case of a formal parameter with multiple
+			-- constraints, then return the base type of the first
+			-- constraint. In order to get the other base types,
+			-- use `add_adapted_base_classes_to_list'.
+			--
 			-- Replace by "*UNKNOWN*" any unresolved identifier type, or
 			-- unmatched formal generic parameter if this parameter
 			-- is current type.
@@ -545,13 +559,13 @@ feature -- Status report
 
 feature -- Basic operations
 
-	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' the base class of current type when it appears in `a_context' or
-			-- the constraint base types (in the same order they appear in 'constraint_base_types')
-			-- in case of a formal parameter.
+			-- the adapted base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
 		require
 			a_list_not_void: a_list /= Void
-			no_void_adapted_class: not a_list.has_void
+			no_void_adapted_base_class: not a_list.has_void
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
@@ -559,7 +573,7 @@ feature -- Basic operations
 			a_list.force_last (base_class (a_context))
 		ensure
 			at_least_one_more: a_list.count > old a_list.count
-			no_void_adapted_class: not a_list.has_void
+			no_void_adapted_base_class: not a_list.has_void
 		end
 
 feature -- Comparison

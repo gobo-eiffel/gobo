@@ -19,9 +19,9 @@ inherit
 			named_type_with_type_mark,
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
-			add_adapted_classes_to_list,
-			adapted_class_with_named_feature,
-			adapted_class_with_seeded_feature,
+			add_adapted_base_classes_to_list,
+			adapted_base_class_with_named_feature,
+			adapted_base_class_with_seeded_feature,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
 			same_named_tuple_type_with_type_marks,
@@ -102,10 +102,11 @@ feature -- Access
 			end
 		end
 
-	adapted_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
-			-- a formal parameter one of its constraint base types containing a feature
-			-- named `a_name' (or any of the constraints if none contains such feature)
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature named `a_name' (or any of the constraints if none contains such
+			-- feature)
 		local
 			l_previous_context: ET_NESTED_TYPE_CONTEXT
 		do
@@ -113,15 +114,15 @@ feature -- Access
 			if l_previous_context.valid_index (index) then
 				l_previous_context := a_context.as_nested_type_context
 				l_previous_context.force_last (previous)
-				Result := l_previous_context.item (index).adapted_class_with_named_feature (a_name, l_previous_context)
+				Result := l_previous_context.item (index).adapted_base_class_with_named_feature (a_name, l_previous_context)
 				l_previous_context.remove_last
 			else
 					-- We reached the root context.
-				Result := l_previous_context.root_context.context_adapted_class_with_named_feature (a_name)
+				Result := l_previous_context.root_context.context_adapted_base_class_with_named_feature (a_name)
 			end
 		end
 
-	adapted_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
 			-- Base class of current type when it appears in `a_context', or in case of
 			-- a formal parameter one of its constraint base types containing a feature
 			-- with seed `a_seed' (or any of the constraints if none contains such feature)
@@ -132,11 +133,11 @@ feature -- Access
 			if l_previous_context.valid_index (index) then
 				l_previous_context := a_context.as_nested_type_context
 				l_previous_context.force_last (previous)
-				Result := l_previous_context.item (index).adapted_class_with_seeded_feature (a_seed, l_previous_context)
+				Result := l_previous_context.item (index).adapted_base_class_with_seeded_feature (a_seed, l_previous_context)
 				l_previous_context.remove_last
 			else
 					-- We reached the root context.
-				Result := l_previous_context.root_context.context_adapted_class_with_seeded_feature (a_seed)
+				Result := l_previous_context.root_context.context_adapted_base_class_with_seeded_feature (a_seed)
 			end
 		end
 
@@ -462,10 +463,10 @@ feature -- Status report
 
 feature -- Basic operations
 
-	add_adapted_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
 			-- Add to `a_list' the base class of current type when it appears in `a_context' or
-			-- the constraint base types (in the same order they appear in 'constraint_base_types')
-			-- in case of a formal parameter.
+			-- the adapted base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
 		local
 			l_previous_context: ET_NESTED_TYPE_CONTEXT
 		do
@@ -473,11 +474,11 @@ feature -- Basic operations
 			if l_previous_context.valid_index (index) then
 				l_previous_context := a_context.as_nested_type_context
 				l_previous_context.force_last (previous)
-				l_previous_context.item (index).add_adapted_classes_to_list (a_list, l_previous_context)
+				l_previous_context.item (index).add_adapted_base_classes_to_list (a_list, l_previous_context)
 				l_previous_context.remove_last
 			else
 					-- We reached the root context.
-				l_previous_context.root_context.context_add_adapted_classes_to_list (a_list)
+				l_previous_context.root_context.context_add_adapted_base_classes_to_list (a_list)
 			end
 		end
 
