@@ -10,8 +10,8 @@ routines to the singleton class as if it was a regular class.
 **To compile and run this example:**
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Xace or ECF file (e.g. `<compiler>.ecf`). Alternatively
-   you can use `geant` to launch the compilation:
+   the provided ECF file. Alternatively you can use `geant` to launch
+   the compilation:
    
         geant compile_<compiler>
        
@@ -30,4 +30,4 @@ routines to the singleton class as if it was a regular class.
 
 ## Authors
 
-Copyright (c) 2003-2017, Eric Bezault and others
+Copyright (c) 2003-2019, Eric Bezault and others

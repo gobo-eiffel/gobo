@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Documentation Format"
 
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -134,7 +134,7 @@ feature -- Access
 
 	input_filename: STRING
 			-- Name of the input file.
-			-- It can be an Xace file, an ECF file or an Eiffel class file.
+			-- It can be an ECF file or an Eiffel class file.
 
 	target_name: detachable STRING
 			-- Name of target to be used in ECF file.
@@ -338,7 +338,7 @@ feature -- Status report
 feature {NONE} -- Eiffel config file parsing
 
 	parse_input_file (a_input_filename: STRING)
-			-- Read `a_input_filename'. It can be a Xace file,
+			-- Read `a_input_filename'. It can be
 			-- an ECF file or an Eiffel class file.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -352,9 +352,7 @@ feature {NONE} -- Eiffel config file parsing
 			l_file.open_read
 			if l_file.is_open_read then
 				nb := a_input_filename.count
-				if nb > 5 and then STRING_.same_string (a_input_filename.substring (nb - 4, nb), ".xace") then
-					parse_xace_file (l_file)
-				elseif nb > 2 and then STRING_.same_string (a_input_filename.substring (nb - 1, nb), ".e") then
+				if nb > 2 and then STRING_.same_string (a_input_filename.substring (nb - 1, nb), ".e") then
 					parse_eiffel_file (l_file)
 				else
 					parse_ecf_file (l_file)
@@ -362,43 +360,6 @@ feature {NONE} -- Eiffel config file parsing
 				l_file.close
 			else
 				report_cannot_read_error (a_input_filename)
-			end
-		ensure
-			has_error_if_void: last_system = Void implies has_error
-		end
-
-	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM)
-			-- Read Xace file `a_file'.
-			-- Put result in `last_system' if no error occurred.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-		local
-			l_xace_parser: ET_XACE_SYSTEM_PARSER
-			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
-			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
-		do
-			last_system := Void
-			if silent_flag then
-				create l_xace_error_handler.make_null
-			else
-				create l_xace_error_handler.make_standard
-			end
-			create l_xace_variables.make_map (100)
-			l_xace_variables.set_key_equality_tester (string_equality_tester)
-			if attached override_variables as l_override_variables then
-				across l_override_variables.primary_variables as l_primary_variables loop
-					l_xace_variables.force_last (l_primary_variables.item, l_primary_variables.key)
-				end
-			end
-			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
-			l_xace_parser.parse_file (a_file)
-			if l_xace_error_handler.has_error then
-				has_error := True
-			elseif not attached l_xace_parser.last_system as l_last_system then
-				report_no_system_found_error (a_file.name)
-			else
-				last_system := l_last_system
 			end
 		ensure
 			has_error_if_void: last_system = Void implies has_error
@@ -447,7 +408,7 @@ feature {NONE} -- Eiffel config file parsing
 			a_file_open_read: a_file.is_open_read
 		local
 			l_system: ET_SYSTEM
-			l_cluster: ET_XACE_CLUSTER
+			l_cluster: ET_CLUSTER
 			l_eiffel_preparser: ET_EIFFEL_PREPARSER
 			l_input_classes: like input_classes
 		do

@@ -5,12 +5,16 @@ note
 		"Build commands for 'gexace'"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class GEXACE_BUILD_COMMAND
+
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
 
 inherit
 

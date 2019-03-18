@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-
-<system name="xace2">
-	<root class="FOO" creation="make"/>
-	<option name="assertion" value="generate"/>
-	<cluster name="gefoo" location="${GOBO}/test/src/gexace/data"/>
-</system>

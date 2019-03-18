@@ -6,7 +6,7 @@
 		"HTML Format with ISE's stylesheet"
 
 	tool: "Gobo Eiffel Doc"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/html_ise_stylesheet">
 <chapterinfo>
 	<copyright>
-		<year>2017</year>
+		<year>2017-2019</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 June 2017</date>
+	<date>15 March 2019</date>
 </chapterinfo>
 
 <title>HTML Format with ISE's Stylesheet</title>
@@ -50,19 +50,19 @@ you should use the following command-line:
 </blockquote>
 where <filename>project.ecf</filename> is the ECF file describing the Eiffel project,
 and <filename>some_output_directory</filename> is the directory where the HTML files
-will be generated. Note that an Xace file can also be used in place of the ECF file.
-The command-line option <filename>--library-prefix</filename> tells <projectname>gedoc</projectname>
-that HTML class files should be generated in a subfolder of the output directory 
-whose name is the name of the Eiffel library containing these Eiffel classes
-(one subfolder per library). The command-line option <filename>--force</filename> 
-can be used when you run this command several times to update the documentation
-after some modifications in the Eiffel class. It will tell <projectname>gedoc</projectname>
-to overwrite the files which already exist. Without this option,
-files will not be overwritten and <projectname>gedoc</projectname> will emit an error
-message. Alternatively, the command-line option <filename>--interactive</filename> can
-be used. It will ask confirmation to the user before overwriting files. Finally, if you want
-to generate HTML documentation only for a subset of the classes in your Eiffel project,
-you can use the command-line option <filename>--class</filename> with some wildcards.
+will be generated. The command-line option <filename>--library-prefix</filename> 
+tells <projectname>gedoc</projectname> that HTML class files should be generated
+in a subfolder of the output directory whose name is the name of the Eiffel library
+containing these Eiffel classes (one subfolder per library). The command-line option
+<filename>--force</filename> can be used when you run this command several times to 
+update the documentation after some modifications in the Eiffel class. It will tell
+<projectname>gedoc</projectname> to overwrite the files which already exist. Without
+this option, files will not be overwritten and <projectname>gedoc</projectname> will
+emit an error message. Alternatively, the command-line option <filename>--interactive</filename>
+can be used. It will ask confirmation to the user before overwriting files. Finally, if
+you want to generate HTML documentation only for a subset of the classes in your Eiffel
+project, you can use the command-line option <filename>--class</filename> with some 
+wildcards.
 </para>
 </section>
 

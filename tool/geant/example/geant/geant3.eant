@@ -20,7 +20,7 @@
 		<geant target="append_fs_filename">
 			<fileset
 				dir="${GOBO}/library"
-				include="@(**/*.xace)"
+				include="@(**/*.ecf)"
 			/>
 		</geant>
 		<echo message="my_filenames: ${my_filenames}"/>

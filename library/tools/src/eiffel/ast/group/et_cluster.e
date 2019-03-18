@@ -5,12 +5,12 @@ note
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_CLUSTER
+class ET_CLUSTER
 
 inherit
 
@@ -31,6 +31,32 @@ inherit
 
 	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end
+
+create
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like name; a_pathname: like pathname; a_universe: like universe)
+			-- Create a new cluster.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_universe_not_void: a_universe /= Void
+		do
+			name := a_name
+			pathname := a_pathname
+			is_relative := (a_pathname = Void)
+			universe := a_universe
+			set_scm_mapping_constraint_enabled (True)
+		ensure
+			name_set: name = a_name
+			pathname_set: pathname = a_pathname
+			universe_set: universe = a_universe
+			is_relative: is_relative = (a_pathname = Void)
+			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
+		end
 
 feature -- Status report
 
@@ -242,8 +268,8 @@ feature -- Status report
 
 feature -- Access
 
-	universe: ET_UNIVERSE
-			-- Surrounding universe
+	name: STRING
+			-- Name
 
 	relative_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING
 			-- Name of current group relative its parents and its universe down to `a_universe'
@@ -350,6 +376,9 @@ feature -- Access
 			definition: Result.same_string (implicit_relative_name (a_separator).as_lower)
 		end
 
+	pathname: detachable STRING
+			-- Directory pathname (may be Void)
+
 	full_pathname: STRING
 			-- Full directory pathname
 		local
@@ -391,6 +420,9 @@ feature -- Access
 				Result := name
 			end
 		end
+
+	universe: ET_UNIVERSE
+			-- Surrounding universe
 
 	cluster: ET_CLUSTER
 			-- Current group viewed as a cluster
@@ -967,7 +999,14 @@ feature {NONE} -- Implementation
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
-		deferred
+		do
+			create Result.make (a_name, Void, universe)
+			Result.set_parent (Current)
+			Result.set_recursive (True)
+			Result.set_implicit (True)
+			Result.set_override (is_override)
+			Result.set_read_only (is_read_only)
+			Result.set_use_obsolete_syntax (use_obsolete_syntax)
 		ensure
 			cluster_not_void: Result /= Void
 			name_set: Result.name = a_name

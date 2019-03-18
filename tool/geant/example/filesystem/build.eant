@@ -299,21 +299,21 @@
 		</description>
 
 		<outofdate variable="ood" dir="${GOBO}/library">
-			<fileset dir="kernel" include="@(**/*.xace)"/>
+			<fileset dir="kernel" include="@(**/*.ecf)"/>
 		</outofdate>
 
 		<outofdate variable="ood" dir="${GOBO}/library/kernel">
-			<fileset include="@(**/*.xace)"/>
+			<fileset include="@(**/*.ecf)"/>
 		</outofdate>
 
 		<outofdate variable="ood" dir="${GOBO}/library/kernel">
-			<fileset include="@(**/*.xace)" force="false"/>
+			<fileset include="@(**/*.ecf)" force="false"/>
 		</outofdate>
 
 		<outofdate variable="ood" dir="${GOBO}/library">
 			<fileset
 				dir="kernel"
-				include="@(**/*.xace)"
+				include="@(**/*.ecf)"
 				mapped_filename_directory="${GOBO}/tool/geant/example/tmp/some_other_directory"
 			>
 			</fileset>
@@ -322,7 +322,7 @@
 		<outofdate variable="ood" dir="${GOBO}/test">
 			<fileset
 				dir="${GOBO}/library/kernel"
-				include="@(**/*.xace)"
+				include="@(**/*.ecf)"
 				filename_directory="${GOBO}/library/kernel"
 			>
 			</fileset>
@@ -331,7 +331,7 @@
 		<outofdate variable="ood" dir="${GOBO}/test">
 			<fileset
 				dir="${GOBO}/library/kernel"
-				include="@(**/*.xace)"
+				include="@(**/*.ecf)"
 				filename_directory="${GOBO}/library/kernel"
 				mapped_filename_directory="D:/some_other_directory"
 			>

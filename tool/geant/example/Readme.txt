@@ -349,62 +349,6 @@ attribute:
 This means that target 'B' is executed first, then target 'A' and
 then target 'C'.
 
-gexace:
-=======
-Demonstrates how to generate a compiler specific ace/esd file from a
-compiler independent xace file. It builds on the 'gexace' tool which is
-able to produce specific ace/esd files from xace files.
-
-cd to examples/gexace.
-buildfile build.eant:
-___________________________________________________________
-<project name="geant" default="compile">
-	<target name="init">
-		<set name="system" value="hello"/>
-	</target>
-
-	<target name="compile" depend="init">
-		<description>compiles HELLO</description>
-		<gexace system="ge" xace="${system}.xace"/>
-		<gec ace="ge.xace"/>
-	</target>
-
-	<target name="run" depend="init">
-		<description>executes example</description>
-		<exec executable="${system}"/>
-	</target>
-
-	<target name="clean" depend="init">
-		<description>deletes generated files</description>
-		<gec clean="${system}"/>
-		<delete file="${system}${exe}"/>
-	</target>
-</project>
-___________________________________________________________
-
-invoke 'geant'
-
-	<gexace> calls the gexace tool which generates a SmartEiffel ace file.
-	<se> then will compile our system using SmartEiffel
-
-	Now we could simply invoke the hello program from the commandline
-	but since this would be too easy simply invoke 'geant -v run' which
-	produces the following output:
-
-___________________________________________________________
-Loading Project's configuration from build.eant
-Building Project
-
-geant.init:
-
-  [set] system=hello
-
-geant.run:
-
-  [exec] hello
-Hello World
-___________________________________________________________
-
 
 condidional/if,unless:
 ======================

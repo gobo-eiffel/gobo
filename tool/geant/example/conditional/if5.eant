@@ -12,12 +12,6 @@
 		<echo message="world"/>
 	</target>
 
-	<target name="gexace">
-		<gexace system="ise">
-			<define name="DEBUG" value="true" if="$DEBUG"/>
-		</gexace>
-	</target>
-
 	<target name="gepp">
 		<gepp input="${GOBO}/library/kernel/basic/kl_array_routines.ge" output="kl_array_routines.e" lines="true">
 			<define name="ISE" if="$ISE"/>

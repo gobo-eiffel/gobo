@@ -5,7 +5,7 @@ note
 		"Element name constants for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2019, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,15 +83,6 @@ feature -- Task names
 			-- "unset" task name
 		once
 			Result := "unset"
-		ensure
-			task_name_not_void: Result /= Void
-			task_name_not_empty: Result.count > 0
-		end
-
-	Gexace_task_name: STRING
-			-- "xace" task name
-		once
-			Result := "gexace"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0

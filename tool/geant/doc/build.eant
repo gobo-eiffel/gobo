@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Gobo Eiffel Ant Documentation"
-		copyright: "Copyright (c) 2002-2016, Sven Ehrke and others"
+		copyright: "Copyright (c) 2002-2019, Sven Ehrke and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -45,7 +45,6 @@
 		<geant target="${target}" arguments="geyacc_task"/>
 		<geant target="${target}" arguments="gepp_task"/>
 		<geant target="${target}" arguments="getest_task"/>
-		<geant target="${target}" arguments="gexace_task"/>
 		<geant target="${target}" arguments="input_task"/>
 		<geant target="${target}" arguments="ise_task"/>
 		<geant target="${target}" arguments="mkdir_task"/>

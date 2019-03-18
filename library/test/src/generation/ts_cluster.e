@@ -5,7 +5,7 @@ note
 		"Test config clusters"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -131,13 +131,13 @@ feature -- Processing
 			testcases_not_void: testcases /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
-			a_cluster: ET_LACE_CLUSTER
-			a_clusters: ET_LACE_CLUSTERS
-			a_system: ET_LACE_SYSTEM
+			a_cluster: ET_CLUSTER
+			a_clusters: ET_CLUSTERS
+			a_system: ET_SYSTEM
 			l_system_processor: ET_SYSTEM_PROCESSOR
 		do
 			create a_system.make ("test_generator")
-			create a_cluster.make (name, pathname, a_system)
+			create a_cluster.make (name.name, pathname.name, a_system)
 			create a_clusters.make (a_cluster)
 			a_system.set_clusters (a_clusters)
 			create l_system_processor.make

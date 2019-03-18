@@ -6,7 +6,7 @@
 		"Eiffel Pretty-Printer"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/pretty_printer">
 <chapterinfo>
 	<copyright>
-		<year>2017</year>
+		<year>2017-2019</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>25 March 2017</date>
+	<date>15 March 2019</date>
 </chapterinfo>
 
 <title>Eiffel Pretty-Printer</title>
@@ -50,8 +50,7 @@ There are two ways to pretty-print a single class <classname>FOO</classname>:
 </programlisting>
 where <filename>foo.e</filename> is the file containing class <classname>FOO</classname>,
 and <filename>project.ecf</filename> is an ECF file describing an Eiffel project containing
-class <classname>FOO</classname>. Note that an Xace file can also be used in place of the
-ECF file.
+class <classname>FOO</classname>.
 </para>
 <para>
 The command-line option <filename>--force</filename> tells <projectname>gedoc</projectname>
@@ -71,9 +70,8 @@ Here is how to pretty-print all Eiffel classes in an Eiffel project:
 	<filename>gedoc --force project.ecf</filename>
 </blockquote>
 where <filename>project.ecf</filename> is an ECF file describing the Eiffel project.
-Note that an Xace file can also be used in place of the ECF file. You can also pretty-print
-a subset of classes in this Eiffel project, using the command-line option
-<filename>--class</filename> with wildcards. For example, to pretty-print only
+You can also pretty-print a subset of classes in this Eiffel project, using the command-line 
+option <filename>--class</filename> with wildcards. For example, to pretty-print only
 the classes of a given Eiffel library whose names start with <classname>DS_</classname>,
 just type:
 <blockquote>

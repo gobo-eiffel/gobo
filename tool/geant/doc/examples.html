@@ -403,68 +403,6 @@ C
   </div>
   <div>
    		
-   <h2>gexace</h2>
-   		
-   <p>
-    			Demonstrates how to generate a compiler specific ace/esd file from a
-    			compiler independent xace file. It builds on the 'gexace' tool which is
-    			able to produce specific ace/esd files from xace files.
-    		
-   </p>
-   		
-   <p>cd to examples/gexace and open buildfile 'buildfile build.eant'</p>
-   		<pre>
-  &lt;project name="geant" default="compile"&gt;
-    &lt;target name="init"&gt;
-      &lt;set name="system" value="hello"/&gt;
-    &lt;/target&gt;
-
-    &lt;target name="compile" depend="init"&gt;
-      &lt;description&gt;compiles HELLO&lt;/description&gt;
-      &lt;gexace system="ge" xace="${system}.xace"/&gt;
-      &lt;gec ace="ge.xace"/&gt;
-    &lt;/target&gt;
-
-    &lt;target name="run" depend="init"&gt;
-      &lt;description&gt;executes example&lt;/description&gt;
-      &lt;exec executable="${system}"/&gt;
-    &lt;/target&gt;
-
-    &lt;target name="clean" depend="init"&gt;
-      &lt;description&gt;deletes generated files&lt;/description&gt;
-      &lt;gec clean="${system}"/&gt;
-      &lt;delete file="${system}${exe}"/&gt;
-    &lt;/target&gt;
-  &lt;/project&gt;
-        	</pre>
-   
-   		<p>Now invoke 'geant'. &lt;gexace&gt; calls the gexace tool which generates a SmartEiffel ace file.
-    	&lt;se&gt; then will compile our system using SmartEiffel
-    		
-   </p>
-   		
-   <p>
-    			Now we could simply invoke the hello program from the commandline
-    			but since this would be too easy simply invoke 'geant -v run' which
-    			produces the following output:
-    		
-   </p>
-   		<pre>
-Loading Project's configuration from build.eant
-Building Project
-
-geant.init:
-
-  [set] system=hello
-
-geant.run:
-
-  [exec] hello
-Hello World
-        	</pre>
-   	</div>
-  <div>
-   		
    <h2>conditional/if,unless</h2>
    		
    <p>
@@ -669,7 +607,7 @@ if_demo2.list:
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+     <address><font size="2"><b>Copyright © 2002-2019, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>15 March 2019</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="introduction.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="builtin_variables.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

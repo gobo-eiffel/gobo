@@ -1,14 +1,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml_serializers">
 <chapterinfo>
 	<copyright>
-		<year>2007-2017</year>
+		<year>2007-2019</year>
 		<holder>Colin Adams</holder>
 	</copyright>
 	<author>
 		<firstname>Colin</firstname><surname>Adams</surname>
 	</author>
 	<email>colin@colina.demon.co.uk</email>
-	<date>8 January 2017</date>
+	<date>17 March 2019</date>
 </chapterinfo>
 
 <title>XML serializers</title>
@@ -81,7 +81,7 @@
     The XSLT library includes a serializer that conforms to the <ulink url="http://www.w3.org/TR/xslt-xquery-serialization/">XSLT 2.0 and XQuery 1.0 Serialization specification</ulink>, and so gives
     you all the customizing power of an <ulink url="http://www.w3.org/TR/xslt20/#element-output">xsl:output</ulink> statement.
     It is not necessary to invoke the XSLT engine in order to use this serializer, although you do need to include the XPath and XSLT library
-    clusters (just include the XSLT library.xace file in your system.xace file).
+    clusters (just include the XSLT library.ecf in your system.ecf file).
    </para>
    <para>
     To see how to use the serializer, refer to <filename>${GOBO}/library/xslt/example/serializer/Readme.md</filename>, or to the documentation in 

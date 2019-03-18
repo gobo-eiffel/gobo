@@ -5,12 +5,16 @@ note
 		"Lace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class ET_LACE_PARSER_SKELETON
+
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
 
 inherit
 

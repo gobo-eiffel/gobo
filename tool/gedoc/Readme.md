@@ -19,8 +19,8 @@ Library* (`$GOBO/library/tools`).
 1. Go to folder `src`.
 
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Xace or ECF file (e.g. `<compiler>.ecf`). Alternatively
-   you can use `geant` to launch the compilation:
+   the provided ECF file. Alternatively you can use `geant` to launch
+   the compilation:
    
         geant compile_<compiler>
        
@@ -28,10 +28,10 @@ Library* (`$GOBO/library/tools`).
 
 3. Run `gedoc` using:
 
-        gedoc --format=<output_format> --output=<output_directory> <xace_or_ecf_file>
+        gedoc --format=<output_format> --output=<output_directory> <ecf_file>
 
-    where `<xace_or_ecf_file>` is either an Xace or ECF file.
+    where `<ecf_file>` is an ECF file describing the Eiffel system.
 
 ## Authors
 
-Copyright (c) 2017, Eric Bezault and others
+Copyright (c) 2017-2019, Eric Bezault and others

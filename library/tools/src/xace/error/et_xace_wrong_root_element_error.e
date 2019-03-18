@@ -5,12 +5,16 @@ note
 		"Error: Wrong root element in Xace file"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2011, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_XACE_WRONG_ROOT_ELEMENT_ERROR
+
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
 
 inherit
 

@@ -35,7 +35,7 @@ while the official site (for stable releases) is located at
 * Gobo Eiffel XPath Library
 * Gobo Eiffel XSLT Library
 
-and twelve utilities:
+and eleven utilities:
 
 * Gobo Eiffel Ant (geant)
 * Gobo Eiffel Compiler (gec)
@@ -46,7 +46,6 @@ and twelve utilities:
 * Gobo Eiffel Lint (gelint)
 * Gobo Eiffel Preprocessor (gepp)
 * Gobo Eiffel Test (getest)
-* Gobo Eiffel Xace (gexace)
 * Gobo Eiffel XSLT Processor (gexslt)
 * Gobo Eiffel Yacc (geyacc)
 

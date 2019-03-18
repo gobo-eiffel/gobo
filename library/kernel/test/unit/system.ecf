@@ -4,8 +4,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="xkernel"
-	library_target="all_classes"
 	uuid="E1FFE100-60B0-0002-3001-000000000001"
+	library_target="all_classes"
 >
 	<description>
 		system: "Gobo Eiffel Kernel Library Unit Tester"
@@ -23,7 +23,7 @@
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
-		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/> 
+		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
 		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="true"/>
 		<cluster name="kl_tester" location="./"/>

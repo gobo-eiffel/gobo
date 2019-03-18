@@ -6,7 +6,7 @@
 		"Test Suite"
 
 	library: "Gobo Eiffel Developer Guidelines"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,14 +16,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/test">
 <chapterinfo>
 	<copyright>
-		<year>2001-2016</year>
+		<year>2001-2019</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>22 December 2016</date>
+	<date>15 March 2019</date>
 </chapterinfo>
 
 <title>Test Suite</title>
@@ -31,8 +31,8 @@
 <para>
 Each Eiffel library should come with a unit test suite runnable with 
 <emphasis>getest</emphasis>. The test case classes should be placed in
-<filename>$GOBO/library/&lt;library-name&gt;/test/unit</filename> along with the Xace files, 
-ECF files and the <emphasis>getest</emphasis> configuration 
+<filename>$GOBO/library/&lt;library-name&gt;/test/unit</filename> along
+with the ECF file and the <emphasis>getest</emphasis> configuration 
 files to run the tests.
 </para>
 
@@ -40,8 +40,8 @@ files to run the tests.
 The purpose of these tests is to make sure that the library classes work as 
 expected (i.e. as specified by the assertions) and also to make sure that they 
 compile correctly with the <link linkend="compilers">compilers</link> 
-which compile only alive code. Note that this was the case with the
-previously supported compiler <ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink>.
+which compile only alive code. Note that this is the case with the
+Gobo Eiffel compiler.
 </para>
 
 <para>

@@ -6,7 +6,7 @@
 		"Using gelint"
 
 	tool: "Gobo Eiffel Lint"
-	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/usage">
 <chapterinfo>
 	<copyright>
-		<year>2006-2018</year>
+		<year>2006-2019</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>28 October 2018</date>
+	<date>15 March 2019</date>
 </chapterinfo>
 
 <title>Using gelint</title>
@@ -36,8 +36,7 @@ The usual way to invoke <projectname>gelint</projectname> is as follows:
 This will read the description of your Eiffel system in the ECF file
 <filename>ecf_filename</filename>, perform code analysis on the
 corresponding Eiffel classes and report any syntax or validity
-errors. Note that an Xace file can also be used in place of the
-ECF file. Your Eiffel system can be an Eiffel project or an 
+errors. Your Eiffel system can be an Eiffel project or an 
 Eiffel library. Here is the list of options that can be used with 
 <projectname>gelint</projectname>:
 <variablelist>

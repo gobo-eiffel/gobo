@@ -6,7 +6,7 @@
 		"Naming Conventions"
 
 	library: "Gobo Eiffel Developer Guidelines"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,14 +16,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/naming_conventions">
 <chapterinfo>
 	<copyright>
-		<year>2001-2016</year>
+		<year>2001-2019</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>22 December 2016</date>
+	<date>15 March 2019</date>
 </chapterinfo>
 
 <title>Naming Conventions</title>
@@ -145,8 +145,8 @@ have the same name and put into the two following clusters:
 </para>
 
 <para>
-Only one of these clusters will be included in the ECF file or 
-Xace file of the application depending on the 
+Only one of these clusters will be included in the ECF file of the application
+depending on the 
 <link linkend="compilers">Eiffel compiler</link> used. These clusters can be
 automatically generated with the tool <emphasis>gepp</emphasis> if the different 
 implementations are put in a single file whose extension is 

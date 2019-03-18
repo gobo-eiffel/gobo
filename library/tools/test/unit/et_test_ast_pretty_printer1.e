@@ -5,7 +5,7 @@ note
 		"Test features of class ET_AST_PRETTY_PRINTER"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature -- Test
 			a_system: ET_SYSTEM
 			an_ast_factory: ET_DECORATED_AST_FACTORY
 			l_system_processor: ET_SYSTEM_PROCESSOR
-			a_cluster: ET_XACE_CLUSTER
+			a_cluster: ET_CLUSTER
 			a_class: ET_CLASS
 			a_class_name: ET_IDENTIFIER
 			a_master_class: ET_MASTER_CLASS

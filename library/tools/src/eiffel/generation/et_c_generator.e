@@ -107,9 +107,6 @@ inherit
 			process_void
 		end
 
-	UT_SHARED_TEMPLATE_EXPANDER
-		export {NONE} all end
-
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
@@ -391,9 +388,8 @@ feature {NONE} -- Compilation script generation
 		require
 			a_system_name_not_void: a_system_name /= Void
 		local
-			l_c_config: DS_HASH_TABLE [STRING, STRING]
 			l_obj_filenames: STRING
-			l_variables: DS_HASH_TABLE [STRING, STRING]
+			l_variables: like c_config
 			l_filename: STRING
 			l_base_name: STRING
 			i, nb: INTEGER
@@ -419,8 +415,7 @@ feature {NONE} -- Compilation script generation
 			l_external_c_filenames: DS_HASH_TABLE [STRING, STRING]
 		do
 			l_base_name := a_system_name
-			l_c_config := c_config
-			l_variables := l_c_config.twin
+			l_variables := c_config
 			create l_env_regexp.make
 			l_env_regexp.compile ("\$\(([^)]+)\)")
 			create l_wel_regexp.make
@@ -458,9 +453,9 @@ feature {NONE} -- Compilation script generation
 			l_variables.force (l_includes, "includes")
 				-- C flags.
 			create l_cflags.make (256)
-			l_c_config.search ("cflags")
-			if l_c_config.found then
-				l_cflags.append_string (l_c_config.found_item)
+			l_variables.search ("cflags")
+			if l_variables.found then
+				l_cflags.append_string (l_variables.found_item)
 			end
 			l_external_cflags := current_system.external_cflags
 			nb := l_external_cflags.count
@@ -479,9 +474,9 @@ feature {NONE} -- Compilation script generation
 			l_variables.force (l_cflags, "cflags")
 				-- Linker flags.
 			create l_lflags.make (256)
-			l_c_config.search ("lflags")
-			if l_c_config.found then
-				l_lflags.append_string (l_c_config.found_item)
+			l_variables.search ("lflags")
+			if l_variables.found then
+				l_lflags.append_string (l_variables.found_item)
 			end
 			l_external_linker_flags := current_system.external_linker_flags
 			nb := l_external_linker_flags.count
@@ -532,10 +527,10 @@ feature {NONE} -- Compilation script generation
 			end
 			l_variables.force (l_libs, "libs")
 				-- Executable name.
-			l_variables.force (l_base_name + l_c_config.item ("exe"), "exe")
+			l_variables.force (l_base_name + l_variables.item ("exe"), "exe")
 				-- Object files.
 			create l_obj_filenames.make (100)
-			l_obj := l_c_config.item ("obj")
+			l_obj := l_variables.item ("obj")
 				-- List objects in reverse order so that it looks like
 				-- a countdown when compiling since the filenames are numbered.
 			l_cursor := c_filenames.new_cursor
@@ -586,47 +581,34 @@ feature {NONE} -- Compilation script generation
 				-- Header file.
 			l_variables.force (l_base_name + h_file_extension, "header")
 				-- Script.
-			generate_compilation_shell_script (l_base_name, l_variables, l_obj_filenames, l_pathname, l_replacement, l_env_regexp, l_external_c_filenames)
+			generate_compilation_shell_script (l_base_name, l_variables, l_obj_filenames, l_env_regexp, l_external_c_filenames)
 			if not operating_system.is_windows then
-				generate_compilation_makefile (l_base_name, l_variables, l_obj_filenames, l_pathname, l_replacement, l_env_regexp, l_external_c_filenames)
+				generate_compilation_makefile (l_base_name, l_variables)
 			end
 		end
 
-	generate_compilation_shell_script (a_system_name: STRING; a_variables: like c_config; an_obj_filenames: STRING; a_pathname, a_replacement: detachable STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
+	generate_compilation_shell_script (a_system_name: STRING; a_variables: like c_config; an_obj_filenames: STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
 			-- Generate script to compile the C code.
 		local
 			l_base_name: STRING
 			l_script_filename: STRING
 			l_file: KL_TEXT_OUTPUT_FILE
-			l_c_config: DS_HASH_TABLE [STRING, STRING]
-			l_variables: DS_HASH_TABLE [STRING, STRING]
 			l_link_template: STRING
 			l_command_name: STRING
-			l_obj_filenames: like an_obj_filenames
 			l_rc_template: STRING
 			l_rc_filename: STRING
 			l_res_filename: STRING
 			l_make_template: STRING
-			l_pathname: like a_pathname
 			i, nb: INTEGER
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
-			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_external_make_pathnames: DS_ARRAYED_LIST [STRING]
+			l_pathname: STRING
 			l_replacement: STRING
 			l_external_resource_pathnames: DS_ARRAYED_LIST [STRING]
 			l_cc_template: STRING
 			l_filename: STRING
-			l_external_c_filenames: like an_external_c_filenames
 		do
 			l_base_name := a_system_name
-			l_c_config := c_config
-			l_variables := a_variables
-			l_obj_filenames := an_obj_filenames
-			l_pathname := a_pathname
-			l_replacement := a_replacement
-			l_env_regexp := an_env_regexp
-			l_external_c_filenames := an_external_c_filenames
-
 			if operating_system.is_windows then
 				l_script_filename := l_base_name + bat_file_extension
 			else
@@ -641,57 +623,57 @@ feature {NONE} -- Compilation script generation
 					l_file.put_line ("#!/bin/sh")
 				end
 					-- Make files.
-				l_c_config.search ("make")
-				if l_c_config.found then
-					l_make_template := l_c_config.found_item
+				a_variables.search ("make")
+				if a_variables.found then
+					l_make_template := a_variables.found_item
 					l_external_make_pathnames := current_system.external_make_pathnames
 					nb := l_external_make_pathnames.count
 					from i := 1 until i > nb loop
 						l_pathname := l_external_make_pathnames.item (i)
-						l_env_regexp.match (l_pathname)
+						an_env_regexp.match (l_pathname)
 						l_replacement := STRING_.new_empty_string (l_pathname, 6)
 						l_replacement.append_string ("${\1\}")
-						l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+						l_pathname := Execution_environment.interpreted_string (an_env_regexp.replace_all (l_replacement))
 						if not l_pathname.starts_with ("%"") then
 							l_pathname := "%"" + l_pathname + "%""
 						end
-						l_variables.force (l_pathname, "makefile")
-						l_command_name := template_expander.expand_from_values (l_make_template, l_variables)
+						a_variables.force (l_pathname, "makefile")
+						l_command_name := a_variables.expanded_string (l_make_template, False)
 						l_file.put_line (l_command_name)
 						i := i + 1
 					end
 				end
 					-- Compile files in reverse order so that it looks like
 					-- a countdown since the filenames are numbered.
-				l_cc_template := l_c_config.item ("cc")
+				l_cc_template := a_variables.item ("cc")
 				l_cursor := c_filenames.new_cursor
 				from l_cursor.finish until l_cursor.before loop
 					l_filename := l_cursor.key + l_cursor.item
-					l_variables.force (l_filename, "c")
-					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
+					a_variables.force (l_filename, "c")
+					l_command_name := a_variables.expanded_string (l_cc_template, False)
 					l_file.put_line (l_command_name)
 					l_cursor.back
 				end
-				l_cursor := l_external_c_filenames.new_cursor
+				l_cursor := an_external_c_filenames.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					l_filename := l_cursor.key + l_cursor.item
-					l_variables.force (l_filename, "c")
-					l_command_name := template_expander.expand_from_values (l_cc_template, l_variables)
+					a_variables.force (l_filename, "c")
+					l_command_name := a_variables.expanded_string (l_cc_template, False)
 					l_file.put_line (l_command_name)
 					l_cursor.forth
 				end
 					-- Resource files.
-				l_c_config.search ("rc")
-				if l_c_config.found then
-					l_rc_template := l_c_config.found_item
+				a_variables.search ("rc")
+				if a_variables.found then
+					l_rc_template := a_variables.found_item
 					l_external_resource_pathnames := current_system.external_resource_pathnames
 					nb := l_external_resource_pathnames.count
 					from i := 1 until i > nb loop
 						l_pathname := l_external_resource_pathnames.item (i)
-						l_env_regexp.match (l_pathname)
+						an_env_regexp.match (l_pathname)
 						l_replacement := STRING_.new_empty_string (l_pathname, 6)
 						l_replacement.append_string ("${\1\}")
-						l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+						l_pathname := Execution_environment.interpreted_string (an_env_regexp.replace_all (l_replacement))
 						if file_system.has_extension (l_pathname, res_file_extension) then
 							l_res_filename := l_pathname
 						else
@@ -704,34 +686,34 @@ feature {NONE} -- Compilation script generation
 								l_res_filename := l_pathname.twin
 								l_res_filename.append_string (res_file_extension)
 							end
-							l_variables.force (l_rc_filename, "rc_file")
-							l_variables.force (l_res_filename, "res_file")
-							l_command_name := template_expander.expand_from_values (l_rc_template, l_variables)
+							a_variables.force (l_rc_filename, "rc_file")
+							a_variables.force (l_res_filename, "res_file")
+							l_command_name := a_variables.expanded_string (l_rc_template, False)
 							l_file.put_line (l_command_name)
 						end
-						l_obj_filenames.append_character (' ')
+						an_obj_filenames.append_character (' ')
 						if l_res_filename.starts_with ("%"") then
-							l_obj_filenames.append_string (l_res_filename)
+							an_obj_filenames.append_string (l_res_filename)
 						else
-							l_obj_filenames.append_character ('%"')
-							l_obj_filenames.append_string (l_res_filename)
-							l_obj_filenames.append_character ('%"')
+							an_obj_filenames.append_character ('%"')
+							an_obj_filenames.append_string (l_res_filename)
+							an_obj_filenames.append_character ('%"')
 						end
 						i := i + 1
 					end
 					l_rc_filename :=  l_base_name + rc_file_extension
 					if file_system.file_exists (l_rc_filename) then
 						l_res_filename := l_base_name + res_file_extension
-						l_variables.force (l_rc_filename, "rc_file")
-						l_variables.force (l_res_filename, "res_file")
-						l_command_name := template_expander.expand_from_values (l_rc_template, l_variables)
+						a_variables.force (l_rc_filename, "rc_file")
+						a_variables.force (l_res_filename, "res_file")
+						l_command_name := a_variables.expanded_string (l_rc_template, False)
 						l_file.put_line (l_command_name)
-						l_obj_filenames.append_character (' ')
-						l_obj_filenames.append_string (l_res_filename)
+						an_obj_filenames.append_character (' ')
+						an_obj_filenames.append_string (l_res_filename)
 					end
 				end
-				l_link_template := l_c_config.item ("link")
-				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
+				l_link_template := a_variables.item ("link")
+				l_command_name := a_variables.expanded_string (l_link_template, False)
 				l_file.put_line (l_command_name)
 				l_file.close
 					-- Set executable mode.
@@ -742,37 +724,22 @@ feature {NONE} -- Compilation script generation
 			end
 		end
 
-	generate_compilation_makefile (a_system_name: STRING; a_variables: like c_config; an_obj_filenames: STRING; a_pathname, a_replacement: detachable STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
+	generate_compilation_makefile (a_system_name: STRING; a_variables: like c_config)
 			-- Generate Makefile to compile the C code.
 		local
 			l_base_name: STRING
-			l_c_config: DS_HASH_TABLE [STRING, STRING]
-			l_variables: DS_HASH_TABLE [STRING, STRING]
-			l_obj_filenames: like an_obj_filenames
-			l_pathname: like a_pathname
-			l_replacement: STRING
-			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_external_c_filenames: like an_external_c_filenames
 			l_makefile_filename: STRING
 			l_file: KL_TEXT_OUTPUT_FILE
-			l_link_template: STRING
+			l_makefile_template: STRING
 			l_command_name: STRING
 		do
 			l_base_name := a_system_name
-			l_c_config := c_config
-			l_variables := a_variables
-			l_obj_filenames := an_obj_filenames
-			l_pathname := a_pathname
-			l_replacement := a_replacement
-			l_env_regexp := an_env_regexp
-			l_external_c_filenames := an_external_c_filenames
-
 			l_makefile_filename := l_base_name + make_file_extension
 			create l_file.make (l_makefile_filename)
 			l_file.open_write
 			if l_file.is_open_write then
-				l_link_template := l_c_config.item ("Makefile")
-				l_command_name := template_expander.expand_from_values (l_link_template, l_variables)
+				l_makefile_template := a_variables.item ("Makefile")
+				l_command_name := a_variables.expanded_string (l_makefile_template, False)
 				l_file.put_line (l_command_name)
 				l_file.close
 			else
@@ -781,7 +748,7 @@ feature {NONE} -- Compilation script generation
 			end
 		end
 
-	c_config: DS_HASH_TABLE [STRING, STRING]
+	c_config: DS_STRING_HASH_TABLE
 			-- C compiler configuration
 		local
 			l_name: detachable STRING

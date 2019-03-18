@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel compilation"
-		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -32,17 +32,7 @@
 			Install ${system} directory.
 		</description>
 
-		<available resource="${system_dir}/system.xace" variable="xace_available"/>
-		<geant target="xace" if="${xace_available}=true">
-			<argument name="a_compiler" value="ge"/>
-			<argument name="a_output" value=""/>
-		</geant>
-		<geant target="xace" if="${xace_available}=true">
-			<argument name="a_compiler" value="ise"/>
-			<argument name="a_output" value=""/>
-		</geant>
-		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
-		<geant target="ecf" if="${ecf_available}=true">
+		<geant target="ecf">
 			<argument name="a_ecf_filename" value="${system_dir}/system.ecf"/>
 			<argument name="a_library_root" value=""/>
 		</geant>
@@ -66,17 +56,11 @@
 			Compile in debug mode if ${debug} is defined.
 		</description>
 
-		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
-		<set name="ecf_filename" value="compile_ge.xace"/>
-		<set name="ecf_filename" value="compile_ge.ecf" if="${ecf_available}=true"/>
+		<set name="ecf_filename" value="compile_ge.ecf"/>
 		<delete file="${ecf_filename}"/>
 		<set name="eiffel" value="ge"/>
-		<geant target="xace" unless="${ecf_available}=true">
-			<argument name="a_compiler" value="${eiffel}"/>
-			<argument name="a_output" value="${ecf_filename}"/>
-		</geant>
-		<copy file="${system_dir}/system.ecf" to_file="${ecf_filename}" if="${ecf_available}=true"/>
-		<geant target="ecf" if="${ecf_available}=true">
+		<copy file="${system_dir}/system.ecf" to_file="${ecf_filename}"/>
+		<geant target="ecf">
 			<argument name="a_ecf_filename" value="${ecf_filename}"/>
 			<argument name="a_library_root" value="${system_dir}"/>
 		</geant>
@@ -101,17 +85,12 @@
 			Compile in debug mode if ${debug} is defined.
 		</description>
 
-		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
 		<set name="ecf_filename" value="compile_ise.ecf"/>
 		<delete file="${ecf_filename}"/>
 		<set name="eiffel" value="ise"/>
 		<setenv name="GOBO_EIFFEL" value="ise"/>
-		<geant target="xace" unless="${ecf_available}=true">
-			<argument name="a_compiler" value="${eiffel}"/>
-			<argument name="a_output" value="${ecf_filename}"/>
-		</geant>
-		<copy file="${system_dir}/system.ecf" to_file="${ecf_filename}" if="${ecf_available}=true"/>
-		<geant target="ecf" if="${ecf_available}=true">
+		<copy file="${system_dir}/system.ecf" to_file="${ecf_filename}"/>
+		<geant target="ecf">
 			<argument name="a_ecf_filename" value="${ecf_filename}"/>
 			<argument name="a_library_root" value="${system_dir}"/>
 		</geant>
@@ -195,10 +174,7 @@
 		<set name="project_path" value="" unless="${GOBO_BUILD_PREFIX}"/>
 		<gec clean="${system}"/>
 		<ise clean="${system}" project_path="${project_path}"/>
-		<delete file="compile_ge.ace"/>
-		<delete file="compile_ge.xace"/>
 		<delete file="compile_ge.ecf"/>
-		<delete file="compile_ise.ace"/>
 		<delete file="compile_ise.ecf"/>
 		<delete>
 			<fileset include="vc*.pdb"/>
@@ -215,10 +191,6 @@
 		</description>
 
 		<geant target="clean"/>
-		<delete file="ge.ace"/>
-		<delete file="ge.xace"/>
-		<delete file="ise.ace"/>
-		<delete file="ise.ecf"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
@@ -267,38 +239,6 @@
 		<set name="l_capability_options" value="${l_capability_options} --capability=void_safety=none" if="${GOBO_VOID_UNSAFE}"/>
 		<set name="l_variable_options" value="${l_variable_options} &quot;--variable=GOBO_TESTGEN=${GOBO_TESTGEN}&quot;" if="${GOBO_TESTGEN}"/>
 		<exec executable="gedoc --silent --force --format=ecf_pretty_print ${l_setting_options} ${l_capability_options} ${l_variable_options} ${a_ecf_filename}"/>
-	</target>
-	
-	<target name="xace" depend="init" export="NONE">
-		<argument name="a_compiler"/>
-		<argument name="a_output"/>
-		<description>
-			Build Ace, Xace or ECF file for Eiffel compiler ${a_compiler}.
-			Generate file in ${a_output} if specified.
-			Pass $DEBUG option to 'gexace' if ${debug} is defined.
-			Pass $GOBO_EIFFEL value to 'gexace'.
-			Pass $GOBO_OS value to 'gexace'.
-			Pass $GOBO_CC value to 'gexace' if defined.
-			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
-			Pass $GOBO_DOTNET option to 'gexace' if defined.
-			Pass $GOBO_COMPATIBLE option to 'gexace' if defined.
-			Pass $BOEHM_GC option to 'gexace' if defined.
-			To be redefined in descendant if additional options are
-			necessary.
-		</description>
-
-		<set name="a_format" value="${xace_format}" if="${xace_format}"/>
-		<set name="a_format" value="" unless="${xace_format}"/>
-		<gexace system="${a_compiler}" output="${a_output}" format="${a_format}" xace="${system_dir}/system.xace">
-			<define name="DEBUG" value="${debug}" if="${debug}"/>
-			<define name="GOBO_EIFFEL" value="${eiffel}"/>
-			<define name="GOBO_OS" value="${GOBO_OS}"/>
-			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
-			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
-			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
-			<define name="GOBO_COMPATIBLE" value="true" if="${GOBO_COMPATIBLE}"/>
-			<define name="BOEHM_GC" value="${BOEHM_GC}" if="${BOEHM_GC}"/>
-		</gexace>
 	</target>
 
 	<target name="prepare_compile" depend="init" export="NONE">

@@ -5,12 +5,16 @@ note
 		"Xace option default values"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_XACE_OPTION_DEFAULTS
+
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
 
 inherit
 

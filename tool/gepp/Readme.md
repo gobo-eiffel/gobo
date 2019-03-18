@@ -27,8 +27,8 @@ See `$GOBO/library/common/doc/portability` for details on portability issues.
    `geant scanner` to generate class `GEPP_SCANNER` if necessary.
 
 3. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Xace or ECF file (e.g. `<compiler>.ecf`). Alternatively
-   you can use `geant` to launch the compilation:
+   the provided ECF file. Alternatively you can use `geant` to launch
+   the compilation:
    
         geant compile_<compiler>
        
@@ -40,4 +40,4 @@ See `$GOBO/library/common/doc/portability` for details on portability issues.
 
 ## Authors
 
-Copyright (c) 1997-2017, Eric Bezault and others
+Copyright (c) 1997-2019, Eric Bezault and others

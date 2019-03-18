@@ -46,7 +46,6 @@ feature -- Execution
 		local
 			l_filename: STRING
 			l_file: KL_TEXT_INPUT_FILE
-			nb: INTEGER
 		do
 			Arguments.set_program_name ("gelint")
 				-- For compatibility with ISE's tools, define the environment
@@ -59,14 +58,7 @@ feature -- Execution
 			l_file.open_read
 			if l_file.is_open_read then
 				last_system := Void
-				nb := l_filename.count
-				if nb > 5 and then STRING_.same_string (l_filename.substring (nb - 4, nb), ".xace") then
-					parse_xace_file (l_file)
-				elseif nb > 4 and then STRING_.same_string (l_filename.substring (nb - 3, nb), ".ecf") then
-					parse_ecf_file (l_file)
-				else
-					parse_ace_file (l_file)
-				end
+				parse_ecf_file (l_file)
 				l_file.close
 				if attached last_system as l_last_system then
 					process_system (l_last_system)
@@ -96,60 +88,6 @@ feature -- Access
 			-- Last system parsed, if any
 
 feature {NONE} -- Eiffel config file parsing
-
-	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM)
-			-- Read Ace file `a_file'.
-			-- Put result in `last_system' if no error occurred.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-		local
-			l_lace_parser: ET_LACE_PARSER
-			l_lace_error_handler: ET_LACE_ERROR_HANDLER
-		do
-			last_system := Void
-			if is_silent then
-				create l_lace_error_handler.make_null
-			else
-				create l_lace_error_handler.make_standard
-			end
-			create l_lace_parser.make (l_lace_error_handler)
-			l_lace_parser.parse_file (a_file)
-			if not l_lace_parser.syntax_error then
-				last_system := l_lace_parser.last_system
-			end
-		end
-
-	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM)
-			-- Read Xace file `a_file'.
-			-- Put result in `last_system' if no error occurred.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-		local
-			l_xace_parser: ET_XACE_SYSTEM_PARSER
-			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
-			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
-		do
-			last_system := Void
-			if is_silent then
-				create l_xace_error_handler.make_null
-			else
-				create l_xace_error_handler.make_standard
-			end
-			create l_xace_variables.make_map (100)
-			l_xace_variables.set_key_equality_tester (string_equality_tester)
-			if attached override_variables as l_override_variables then
-				across l_override_variables.primary_variables as l_primary_variables loop
-					l_xace_variables.force_last (l_primary_variables.item, l_primary_variables.key)
-				end
-			end
-			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
-			l_xace_parser.parse_file (a_file)
-			if not l_xace_error_handler.has_error then
-				last_system := l_xace_parser.last_system
-			end
-		end
 
 	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read ECF file `a_file'.

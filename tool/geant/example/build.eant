@@ -13,7 +13,6 @@
 		<geant target="depend"/>
 		<geant target="conditional"/>
 		<geant target="geant"/>
-		<geant target="gexace"/>
 		<geant target="inherit"/>
 		<geant target="misc"/>
 		<delete directory="${GOBO}/tool/geant/example/tmp"/>
@@ -102,7 +101,6 @@
 		<geant file="if5.eant" target="testbreak"/>
 
 		<!-- <set name="DEBUG" value="dummy"/>  -->
-		<!-- <geant file="if5.eant" target="gexace" reuse_variables="true"/> -->
 		<echo message="**2**"/>
 
 		<geant file="if5.eant" target="gepp"/>
@@ -113,13 +111,6 @@
 		<description>execute geant examples</description>
 		<geant file="geant1.eant" target="one"/>
 		<geant file="geant2.eant" target="one"/>
-	</target>
-
-	<target name="gexace" dir="gexace">
-		<description>execute gexace examples</description>
-		<geant file="build.eant" dir="hello" target="compile"/>
-		<geant file="build.eant" target="run" dir="hello"/>
-		<geant file="build.eant" target="clean" dir="hello"/>
 	</target>
 
 	<target name="inherit" dir="inherit">

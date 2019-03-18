@@ -4,8 +4,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="xexpat"
-	library_target="all_classes"
 	uuid="E1FFE100-60B0-0015-3005-000000000001"
+	library_target="all_classes"
 >
 	<description>
 		system: "Gobo Eiffel XML Library Tester: Expat test suite"
@@ -35,6 +35,7 @@
 		<capability>
 			<concurrency use="none"/>
 		</capability>
+		<variable name="GOBO_XML_EXPAT" value="true"/>
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<cluster name="xexpat_testgen" location="${GOBO_TESTGEN}"/>
 	</target>

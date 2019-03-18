@@ -5,12 +5,16 @@ note
 		"Expands special tokens in a template with given parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class UT_TEMPLATE_EXPANDER
+
+obsolete
+
+	"Use KL_STRING_VALUES instead. [2019-03-17]"
 
 inherit
 

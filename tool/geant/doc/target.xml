@@ -6,7 +6,7 @@
 		"Target"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2004, Sven Ehrke and others"
+	copyright: "Copyright (c) 2004-2019, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="target">
 <chapterinfo>
 	<copyright>
-		<year>2002-2005</year>
+		<year>2002-2019</year>
 		<holder>Sven Ehrke</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>15 March 2019</date>
 </chapterinfo>
 
 	<title>Target</title>
@@ -240,7 +240,6 @@
         <ref name="geyacc"/>
         <ref name="gepp"/>
         <ref name="getest"/>
-        <ref name="gexace"/>
         <ref name="gexmlsplit"/>
         <ref name="input"/>
         <ref name="ise"/>

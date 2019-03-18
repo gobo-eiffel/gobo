@@ -5,12 +5,16 @@ note
 		"Error: Wrong attribute value error"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_XACE_WRONG_ATTRIBUTE_VALUE_ERROR
+
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
 
 inherit
 

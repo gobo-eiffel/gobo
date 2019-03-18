@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Install Gobo Eiffel tools"
-# copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+# copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -94,11 +94,6 @@ if [ "$EIF" = "ge" ]; then
 	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/geant/src/system.ecf
 	$STRIP geant${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
-		echo "Compiling gexace..."
-	fi
-	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gexace/src/system.ecf
-	$STRIP gexace${EXE}
-	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gedoc..."
 	fi
 	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gedoc/src/system.ecf
@@ -151,7 +146,6 @@ cd $BIN_DIR
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gec/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gecc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geant/src/build.eant clean
-geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gexace/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gedoc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/getest/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelint/src/build.eant clean

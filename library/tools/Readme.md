@@ -2,10 +2,10 @@
 
 This library is a portable Eiffel class library
 to make easier the development of Eiffel tools such as Eiffel
-pretty-printers or flat-short tools. This library contains a
-Xace and ECF parser to analyze Xa and ECF files, an Eiffel parser
-which builds abstract syntax trees out of Eiffel source code,
-and routines to process these abstract syntax trees. 
+pretty-printers or flat-short tools. This library contains an
+ECF parser to analyze ECF files, an Eiffel parser which builds
+abstract syntax trees out of Eiffel source code, and routines 
+to process these abstract syntax trees. 
 The *Gobo Eiffel Tools Library* is primarily used to develop
 the *Gobo Eiffel Compiler* (`gec`) and *Gobo Eiffel Lint*
 (`gelint`).
@@ -25,8 +25,8 @@ the *Gobo Eiffel Compiler* (`gec`) and *Gobo Eiffel Lint*
      * `parser`: Eiffel parsers.
      * `processor`: AST visitors.
   * `ecf`: ECF parser.
-  * `lace`: LACE parser.
-  * `xace`: Xace parser.
+  * `lace`: LACE parser. These classes are obsolete. `ecf` should be used instead.
+  * `xace`: Xace parser. These classes are obsolete. `ecf` should be used instead.
 * `test`: this folder contains the unit tests for this library as well as
   tests to exercise the examples. It also contains an Eiffel language
   validity test suite.
@@ -36,4 +36,4 @@ future releases.
 
 ## Authors
 
-Copyright (c) 2000-20`7, Eric Bezault and others
+Copyright (c) 2000-2019, Eric Bezault and others

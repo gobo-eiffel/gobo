@@ -5,12 +5,16 @@ note
 		"Lace Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_LACE_AST_FACTORY
+
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
 
 create
 

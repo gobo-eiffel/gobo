@@ -6,7 +6,7 @@
 		"Overview of the XSLT library"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2019, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_overview">
   <chapterinfo>
     <copyright>
-      <year>2004-2016</year>
+      <year>2004-2019</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -23,7 +23,7 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>27 December 2016</date>
+    <date>15 March 2019</date>
   </chapterinfo>
   <title>Overview of the XSLT library</title>
   <para>
@@ -171,7 +171,7 @@
   <section>
     <title>Compiling programs which use the XSLT library</title>
     <para>
-      To see which libraries need to be mounted in your system.xace file,
+      To see which libraries need to be added to  your ECF file,
       take a look at the example program in <filename>${GOBO}/library/xslt/example/schematron</filename>.
     </para>
   </section>

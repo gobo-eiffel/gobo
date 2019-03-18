@@ -6,7 +6,7 @@
 		"Introduction to Gobo Eiffel Ant"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2003, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2019, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_introduction">
 <chapterinfo>
 	<copyright>
-		<year>2002-2005</year>
+		<year>2002-2019</year>
 		<holder>Sven Ehrke</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>15 March 2019</date>
 </chapterinfo>
 
 	<title>Introduction to geant</title>
@@ -92,17 +92,15 @@
     </programlisting>
 
     <para>
-      This script assumes you have a <emphasis>system.xace</emphasis>
+      This script assumes you have a <emphasis>system.ecf</emphasis>
       in your system_dir.
     </para>
 
     <para>
       With this script it is now possible to compile the project for
-      SmartEiffel by typing <userinput>geant
-      compile_se</userinput>. Compile it for VisualEiffel by typing
-      <userinput>geant compile_ve</userinput>. Compile it in debug
-      mode for ISE Eiffel by typing <userinput>geant
-      compile_debug_ise</userinput>.
+      Gobo Eiffel by typing <userinput>geant compile_ge</userinput>
+      or to compile it in debug mode for ISE Eiffel by typing
+      <userinput>geant compile_debug_ise</userinput>.
     </para>
 
     <para>

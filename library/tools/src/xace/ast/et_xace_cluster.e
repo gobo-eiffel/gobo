@@ -5,21 +5,27 @@ note
 		"Xace Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_XACE_CLUSTER
 
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
+
 inherit
 
 	ET_CLUSTER
 		redefine
+			make,
 			prefixed_name,
 			parent, subclusters,
 			is_valid_eiffel_filename,
-			is_valid_directory_name
+			is_valid_directory_name,
+			new_recursive_cluster
 		end
 
 create
@@ -28,35 +34,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname; a_universe: ET_UNIVERSE)
+	make (a_name: like name; a_pathname: like pathname; a_universe: like universe)
 			-- Create a new cluster.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
-			a_universe_not_void: a_universe /= Void
 		do
-			name := a_name
-			pathname := a_pathname
-			is_relative := (a_pathname = Void)
-			universe := a_universe
 			library_prefix := empty_prefix
 			cluster_prefix := empty_prefix
-			set_scm_mapping_constraint_enabled (True)
-		ensure
-			name_set: name = a_name
-			pathname_set: pathname = a_pathname
-			universe_set: universe = a_universe
+			precursor (a_name, a_pathname, a_universe)
+		ensure then
 			prefixed_name_set: prefixed_name = a_name
-			is_relative: is_relative = (a_pathname = Void)
 			no_library_prefix: library_prefix.count = 0
 			no_cluster_prefix: cluster_prefix.count = 0
-			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
 		end
 
 feature -- Access
-
-	name: STRING
-			-- Name
 
 	prefixed_name: STRING
 			-- Cluster name with possible prefixes
@@ -87,9 +77,6 @@ feature -- Access
 
 	cluster_prefix: STRING
 			-- Cluster name prefix specified in <cluster>
-
-	pathname: detachable STRING
-			-- Directory pathname (may be Void)
 
 	libraries: detachable ET_XACE_MOUNTED_LIBRARIES
 			-- Mounted libraries

@@ -5,7 +5,7 @@
 
 		"Installation Procedure"
 
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,21 +15,21 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/installation">
 <chapterinfo>
 	<copyright>
-		<year>2001-2005</year>
+		<year>2001-2019</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>8 March 2005</date>
+	<date>15 March 2019</date>
 </chapterinfo>
 
 
 <title>Installation Procedure</title>
 
 <para>
-geant, XACE files, ...
+geant, ECF files, ...
 </para>
 
 </chapter>

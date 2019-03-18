@@ -61,7 +61,6 @@ env:
   - TRAVIS_GOBO_TEST_DIR=tool/gelint TRAVIS_GOBO_EIFFEL=ise
   - TRAVIS_GOBO_TEST_DIR=tool/gepp TRAVIS_GOBO_EIFFEL=ise
   - TRAVIS_GOBO_TEST_DIR=tool/getest TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/gexace TRAVIS_GOBO_EIFFEL=ise
   - TRAVIS_GOBO_TEST_DIR=tool/gexslt TRAVIS_GOBO_EIFFEL=ise
   - TRAVIS_GOBO_TEST_DIR=tool/geyacc TRAVIS_GOBO_EIFFEL=ise
 
@@ -122,8 +121,6 @@ matrix:
       env: TRAVIS_GOBO_TEST_DIR=tool/gepp TRAVIS_GOBO_EIFFEL=ise
     - os: osx
       env: TRAVIS_GOBO_TEST_DIR=tool/getest TRAVIS_GOBO_EIFFEL=ise
-    - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/gexace TRAVIS_GOBO_EIFFEL=ise
     - os: osx
       env: TRAVIS_GOBO_TEST_DIR=tool/gexslt TRAVIS_GOBO_EIFFEL=ise
     - os: osx

@@ -5,12 +5,16 @@ note
 		"Command-line parsers for 'gexace'"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class GEXACE_COMMAND_LINE_PARSER
+
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
 
 inherit
 

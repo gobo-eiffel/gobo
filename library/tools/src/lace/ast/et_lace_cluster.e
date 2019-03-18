@@ -5,20 +5,27 @@ note
 		"Lace Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_LACE_CLUSTER
 
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
+
 inherit
 
 	ET_CLUSTER
+		rename
+			make as make_cluster
 		redefine
 			parent, subclusters,
 			is_valid_eiffel_filename,
-			is_valid_directory_name
+			is_valid_directory_name,
+			new_recursive_cluster
 		end
 
 create
@@ -34,7 +41,11 @@ feature {NONE} -- Initialization
 			a_universe_not_void: a_universe /= Void
 		do
 			name_id := a_name
+			name := a_name.name
 			pathname_id := a_pathname
+			if a_pathname /= Void then
+				pathname := a_pathname.name
+			end
 			is_relative := (a_pathname = Void)
 			universe := a_universe
 			set_scm_mapping_constraint_enabled (True)
@@ -47,20 +58,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	name: STRING
-			-- Name
-		do
-			Result := name_id.name
-		end
-
-	pathname: detachable STRING
-			-- Directory pathname (may be Void)
-		do
-			if attached pathname_id as l_pathname_id then
-				Result := l_pathname_id.name
-			end
-		end
 
 	name_id: ET_IDENTIFIER
 			-- Name identifier

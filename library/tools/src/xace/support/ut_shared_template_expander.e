@@ -5,12 +5,16 @@ note
 		"Provides global access to a TEMPLATE_EXPANDER"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class UT_SHARED_TEMPLATE_EXPANDER
+
+obsolete
+
+	"Use KL_STRING_VALUES instead. [2019-03-17]"
 
 feature -- Access
 

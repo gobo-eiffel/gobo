@@ -5,7 +5,7 @@ note
 		"Test features of class GEANT_DIRECTORYSET."
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2019, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,7 +60,7 @@ feature -- Test
 			end
 			assert ("has_library_kernel", a_entries.has ("library/kernel"))
 			assert ("has_library_kernel_basic", a_entries.has ("library/kernel/src/basic"))
-			assert ("has_library_tools_xace_generator", a_entries.has ("library/tools/src/xace/generator"))
+			assert ("has_library_tools_eiffel_parser", a_entries.has ("library/tools/src/eiffel/parser"))
 			assert ("not_has_tool_gelint", not a_entries.has ("tool/gelint"))
 			assert ("not_has_library", not a_entries.has ("library"))
 		end
@@ -90,7 +90,7 @@ feature -- Test
 			assert ("not_has_library_kernel_io", not a_entries.has ("library/kernel/src/io"))
 			assert ("not_has_library_kernel_misc", not a_entries.has ("library/kernel/src/misc"))
 			assert ("has_library_xml_tree", a_entries.has ("library/xml/src/tree"))
-			assert ("has_library_tools_xace_generator", a_entries.has ("library/tools/src/xace/generator"))
+			assert ("has_library_tools_eiffel_parser", a_entries.has ("library/tools/src/eiffel/parser"))
 			assert ("not_has_tool_gelint", not a_entries.has ("tool/gelint"))
 			assert ("not_has_library", not a_entries.has ("library"))
 		end

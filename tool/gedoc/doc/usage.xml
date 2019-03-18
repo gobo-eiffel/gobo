@@ -6,7 +6,7 @@
 		"Using gedoc"
 
 	tool: "Gobo Eiffel Doc"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/usage">
 <chapterinfo>
 	<copyright>
-		<year>2017-2018</year>
+		<year>2017-2019</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>28 October 2018</date>
+	<date>15 March 2019</date>
 </chapterinfo>
 
 <title>Using gedoc</title>
@@ -33,11 +33,11 @@ The usual way to invoke <projectname>gedoc</projectname> is as follows:
 <blockquote>
 	<filename>gedoc --format=&lt;output_format&gt; --output=&lt;output_directory&gt; &lt;input_filename&gt;</filename>
 </blockquote>
-This will read the description of your Eiffel project from the Xace or 
+This will read the description of your Eiffel project from the 
 ECF file <filename>input_filename</filename>, analyze it, and generate
 the documentation files in directory <filename>output_directory</filename>
 using the format <filename>output_format</filename>. Note that in addition
-to Xace and ECF, the file <filename>input_filename</filename> can also
+to ECF, the file <filename>input_filename</filename> can also
 be an Eiffel class file. In that case, your Eiffel project will be considered
 to be made up of only one Eiffel class. This is useful when we just want to
 pretty-print one Eiffel file.

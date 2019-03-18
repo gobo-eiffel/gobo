@@ -4,7 +4,7 @@ note
 
 		"Tool to replace !! creation instructions by create keywords"
 
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature -- Execution
 			l_system_processor: ET_SYSTEM_PROCESSOR
 			in_file: KL_TEXT_INPUT_FILE
 			out_file: KL_TEXT_OUTPUT_FILE
-			a_cluster: ET_XACE_CLUSTER
+			a_cluster: ET_CLUSTER
 			a_printer: CREATE_PRINTER
 			a_time_stamp: INTEGER
 			a_parser: ET_EIFFEL_PARSER

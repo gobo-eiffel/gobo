@@ -9,8 +9,8 @@ implementation uses input files with BCD encoded decimals.
 To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace, Xace or ECF file (e.g. <compiler>.ecf). Alternatively
-   you can use 'geant' to launch the compilation:
+   the provided ECF file. Alternatively you can use 'geant' to launch
+   the compilation:
    
        geant compile_<compiler>
        
@@ -52,5 +52,5 @@ To compile this example:
        0.06
 
 --
-Copyright (c) 2005-2008, Paul G. Crismer and others
+Copyright (c) 2005-2019, Paul G. Crismer and others
 Specifications are Copyright (c) 2002, IBM Corporation

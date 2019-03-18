@@ -11,8 +11,8 @@ for details.
 1. Use the script `geant parser` to generate class `MCALC` if necessary.
 
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Xace or ECF file (e.g. `<compiler>.ecf`). Alternatively
-   you can use `geant` to launch the compilation:
+   the provided ECF file. Alternatively you can use `geant` to launch
+   the compilation:
    
         geant compile_<compiler>
        
@@ -27,4 +27,4 @@ for details.
 
 ## Authors
 
-Copyright (c) 1997-2017, Eric Bezault and others
+Copyright (c) 1997-2019, Eric Bezault and others

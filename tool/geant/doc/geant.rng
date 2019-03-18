@@ -3,7 +3,7 @@
 <!--
 	description: "Eiffel Ant RelaxNG specification"
 	system: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2019, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,7 +100,6 @@
 				<ref name="geyacc"/>
 				<ref name="gepp"/>
 				<ref name="getest"/>
-				<ref name="gexace"/>
 				<ref name="gexmlsplit"/>
 				<ref name="ise"/>
 				<ref name="mkdir"/>
@@ -449,50 +448,6 @@
 			</optional>
 			<optional>
 				<attribute name="verbose"/>
-			</optional>
-			<zeroOrMore>
-				<ref name="define"/>
-			</zeroOrMore>
-		</element>
-	</define>
-	<define name="gexace">
-		<element name="gexace">
-			<ref name="dir_if_unless"/>
-			<choice>
-				<attribute name="validate"/>
-				<attribute name="system">
-					<!-- runtime evaluation
-					<choice>
-						<value>ise</value>
-						<value>ge</value>
-					</choice>
-					-->
-				</attribute>
-				<attribute name="library">
-					<!-- runtime evaluation
-					<choice>
-						<value>ise</value>
-						<value>ge</value>
-					</choice>
-					-->
-				</attribute>
-				<attribute name="format">
-					<!-- runtime evaluation
-					<choice>
-						<value>ace</value>
-						<value>ecf</value>
-						<value>xace</value>
-					</choice>
-					-->
-			</choice>
-			<optional>
-				<attribute name="verbose"/>
-			</optional>
-			<optional>
-				<attribute name="xace"/>
-			</optional>
-			<optional>
-				<attribute name="output"/>
 			</optional>
 			<zeroOrMore>
 				<ref name="define"/>

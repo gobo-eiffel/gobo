@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-rem copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
+rem copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -171,7 +171,6 @@ goto exit
 	goto c_compilation
 
 :c_compilation
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec9.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c

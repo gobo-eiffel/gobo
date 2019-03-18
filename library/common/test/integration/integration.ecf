@@ -134,8 +134,6 @@
 		<library name="gepp_test_tool" location="${GOBO_LIBRARY}/tool/gepp/test/tool/system.ecf" readonly="false"/>
 		<library name="getest" location="${GOBO_LIBRARY}/tool/getest/src/system.ecf" readonly="false"/>
 		<library name="getest_test_tool" location="${GOBO_LIBRARY}/tool/getest/test/tool/system.ecf" readonly="false"/>
-		<library name="gexace" location="${GOBO_LIBRARY}/tool/gexace/src/system.ecf" readonly="false"/>
-		<library name="gexace_test_tool" location="${GOBO_LIBRARY}/tool/gexace/test/tool/system.ecf" readonly="false"/>
 		<library name="gexslt" location="${GOBO_LIBRARY}/tool/gexslt/src/system.ecf" readonly="false"/>
 		<library name="gexslt_test_tool" location="${GOBO_LIBRARY}/tool/gexslt/test/tool/system.ecf" readonly="false"/>
 		<library name="geyacc" location="${GOBO_LIBRARY}/tool/geyacc/src/system.ecf" readonly="false"/>

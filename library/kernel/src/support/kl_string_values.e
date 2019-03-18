@@ -34,11 +34,31 @@ feature -- Conversion
 			-- Return a new string each time.
 		require
 			a_string_not_void: a_string /= Void
+		do
+			Result := expanded_string (a_string, True)
+		ensure
+			interpreted_string_not_void: Result /= Void
+			new_string: Result /= a_string
+		end
+
+	expanded_string (a_string: STRING; a_non_defined_as_empty: BOOLEAN): STRING
+			-- String where the variables have been replaced by their values.
+			-- The variables are considered to be either ${[^}]*} or
+			-- $[a-zA-Z0-9_]+ and the dollar sign is escaped using $$.
+			-- If `a_non_defined_as_empty' is True, then non-defined
+			-- variables are replaced by empty strings. Otherwise they
+			-- are left unexpanded.
+			-- The result is not defined when `a_string' does not
+			-- conform to the conventions above.
+			-- Return a new string each time.
+		require
+			a_string_not_void: a_string /= Void
 		local
 			l_name: STRING
 			l_value: detachable STRING
 			i, nb: INTEGER
 			c: CHARACTER
+			has_braces: BOOLEAN
 			stop: BOOLEAN
 		do
 			from
@@ -71,6 +91,7 @@ feature -- Conversion
 							-- It is either ${VAR} or $VAR.
 						l_name := STRING_.new_empty_string (a_string, 5)
 						if c = '{' then
+							has_braces := True
 								-- Looking for a right brace.
 							from
 								i := i + 1
@@ -90,6 +111,7 @@ feature -- Conversion
 								i := i + 1
 							end
 						else
+							has_braces := False
 								-- Looking for a non-alphanumeric character
 								-- (i.e. [^a-zA-Z0-9_]).
 							from
@@ -110,12 +132,21 @@ feature -- Conversion
 						l_value := value (l_name)
 						if l_value /= Void then
 							Result := STRING_.appended_string (Result, l_value)
+						elseif not a_non_defined_as_empty then
+							Result.append_character ('$')
+							if has_braces then
+								Result.append_character ('{')
+							end
+							Result := STRING_.appended_string (Result, l_name)
+							if has_braces then
+								Result.append_character ('}')
+							end
 						end
 					end
 				end
 			end
 		ensure
-			interpreted_string_not_void: Result /= Void
+			expanded_string_not_void: Result /= Void
 			new_string: Result /= a_string
 		end
 

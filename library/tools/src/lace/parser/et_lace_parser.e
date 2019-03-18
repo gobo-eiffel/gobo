@@ -5,12 +5,16 @@ note
 		"Lace parsers"
   
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_LACE_PARSER
+
+obsolete
+
+	"Use ET_ECF_* classes instead. [2019-03-17]"
 
 inherit
 
@@ -238,9 +242,9 @@ feature {NONE} -- Semantic actions
 		do
 				inspect yy_act
 when 1 then
---|#line 55 "et_lace_parser.y"
+--|#line 59 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 55")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 59")
 end
 
 			yyval10 := yyvs10.item (yyvsp10)
@@ -264,9 +268,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
 when 2 then
---|#line 71 "et_lace_parser.y"
+--|#line 75 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 71")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 75")
 end
 
 			yyval10 := new_system (yyvs2.item (yyvsp2).name)
@@ -287,9 +291,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
 when 3 then
---|#line 78 "et_lace_parser.y"
+--|#line 82 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 78")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 82")
 end
 
 
@@ -306,9 +310,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 4 then
---|#line 80 "et_lace_parser.y"
+--|#line 84 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 80")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 84")
 end
 
 yyval8 := yyvs2.item (yyvsp2) 
@@ -327,9 +331,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 5 then
---|#line 84 "et_lace_parser.y"
+--|#line 88 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 84")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 88")
 end
 
 
@@ -346,9 +350,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 6 then
---|#line 86 "et_lace_parser.y"
+--|#line 90 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 86")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 90")
 end
 
 yyval8 := yyvs2.item (yyvsp2) 
@@ -367,9 +371,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 7 then
---|#line 90 "et_lace_parser.y"
+--|#line 94 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 90")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 94")
 end
 
 
@@ -378,9 +382,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 8 then
---|#line 91 "et_lace_parser.y"
+--|#line 95 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 91")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 95")
 end
 
 
@@ -390,9 +394,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 9 then
---|#line 94 "et_lace_parser.y"
+--|#line 98 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 94")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 98")
 end
 
 
@@ -409,9 +413,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 10 then
---|#line 95 "et_lace_parser.y"
+--|#line 99 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 95")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 99")
 end
 
 
@@ -420,9 +424,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 11 then
---|#line 98 "et_lace_parser.y"
+--|#line 102 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 98")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 102")
 end
 
 
@@ -432,9 +436,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 12 then
---|#line 99 "et_lace_parser.y"
+--|#line 103 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 99")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 103")
 end
 
 
@@ -444,9 +448,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 13 then
---|#line 102 "et_lace_parser.y"
+--|#line 106 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 102")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 106")
 end
 
 yyval1 := new_default_value (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)) 
@@ -457,9 +461,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 14 then
---|#line 104 "et_lace_parser.y"
+--|#line 108 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 104")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 108")
 end
 
 yyval1 := new_default_value (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)) 
@@ -470,36 +474,6 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 15 then
---|#line 108 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 108")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 0
-	yyvsp1 := yyvsp1 + 1
-	if yyvsp1 >= yyvsc1 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs1")
-		end
-		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
-	end
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 16 then
---|#line 109 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 109")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 17 then
 --|#line 112 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 112")
@@ -518,7 +492,7 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 18 then
+when 16 then
 --|#line 113 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 113")
@@ -529,10 +503,40 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 19 then
+when 17 then
 --|#line 116 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 116")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
+		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
+	end
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 18 then
+--|#line 117 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 117")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 19 then
+--|#line 120 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 120")
 end
 
 
@@ -549,9 +553,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 20 then
---|#line 118 "et_lace_parser.y"
+--|#line 122 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 118")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 122")
 end
 
 
@@ -569,9 +573,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 21 then
---|#line 120 "et_lace_parser.y"
+--|#line 124 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 120")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 124")
 end
 
 yyval5 := yyvs4.item (yyvsp4) 
@@ -590,9 +594,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 22 then
---|#line 124 "et_lace_parser.y"
+--|#line 128 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 124")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 128")
 end
 
 yyval4 := new_clusters (yyvs3.item (yyvsp3)) 
@@ -610,9 +614,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 23 then
---|#line 126 "et_lace_parser.y"
+--|#line 130 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 126")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 130")
 end
 
 -- TODO: syntax error: the cluster list cannot contain just
@@ -634,9 +638,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 24 then
---|#line 133 "et_lace_parser.y"
+--|#line 137 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 133")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 137")
 end
 
 yyval4 := yyvs4.item (yyvsp4); yyval4.put_last (yyvs3.item (yyvsp3)) 
@@ -647,9 +651,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 25 then
---|#line 135 "et_lace_parser.y"
+--|#line 139 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 135")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 139")
 end
 
 				-- Note: the subcluster has already been inserted
@@ -664,9 +668,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 26 then
---|#line 144 "et_lace_parser.y"
+--|#line 148 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 144")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 148")
 end
 
 yyval3 := yyvs3.item (yyvsp3); yyval3.set_abstract (True) 
@@ -676,9 +680,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 27 then
---|#line 146 "et_lace_parser.y"
+--|#line 150 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 146")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 150")
 end
 
 yyval3 := yyvs3.item (yyvsp3); yyval3.set_recursive (True) 
@@ -688,9 +692,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 28 then
---|#line 148 "et_lace_parser.y"
+--|#line 152 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 148")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 152")
 end
 
 			yyval3 := yyvs3.item (yyvsp3);
@@ -703,9 +707,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 29 then
---|#line 154 "et_lace_parser.y"
+--|#line 158 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 154")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 158")
 end
 
 yyval3 := yyvs3.item (yyvsp3) 
@@ -714,9 +718,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 30 then
---|#line 158 "et_lace_parser.y"
+--|#line 162 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 158")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 162")
 end
 
 			yyval3 := new_qualified_subcluster (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7))
@@ -737,9 +741,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 31 then
---|#line 162 "et_lace_parser.y"
+--|#line 166 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 162")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 166")
 end
 
 			yyval3 := new_qualified_subcluster (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7))
@@ -761,9 +765,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 32 then
---|#line 167 "et_lace_parser.y"
+--|#line 171 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 167")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 171")
 end
 
 			yyval3 := new_qualified_subcluster (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs7.item (yyvsp7))
@@ -786,9 +790,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 33 then
---|#line 175 "et_lace_parser.y"
+--|#line 179 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 175")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 179")
 end
 
 			yyval3 := new_cluster (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2))
@@ -812,9 +816,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 34 then
---|#line 181 "et_lace_parser.y"
+--|#line 185 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 181")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 185")
 end
 
 			yyval3 := new_cluster (yyvs2.item (yyvsp2), Void)
@@ -837,9 +841,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 35 then
---|#line 189 "et_lace_parser.y"
+--|#line 193 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 189")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 193")
 end
 
 			yyval3 := new_cluster (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2))
@@ -861,36 +865,6 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 36 then
---|#line 196 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 196")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 0
-	yyvsp1 := yyvsp1 + 1
-	if yyvsp1 >= yyvsc1 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs1")
-		end
-		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
-	end
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 37 then
---|#line 197 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 197")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 38 then
 --|#line 200 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 200")
@@ -909,7 +883,7 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 39 then
+when 37 then
 --|#line 201 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 201")
@@ -920,10 +894,40 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 40 then
+when 38 then
 --|#line 204 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 204")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
+		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
+	end
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 39 then
+--|#line 205 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 205")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 40 then
+--|#line 208 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 208")
 end
 
 
@@ -940,9 +944,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 41 then
---|#line 206 "et_lace_parser.y"
+--|#line 210 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 206")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 210")
 end
 
 
@@ -960,9 +964,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 42 then
---|#line 208 "et_lace_parser.y"
+--|#line 212 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 208")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 212")
 end
 
 yyval5 := yyvs4.item (yyvsp4) 
@@ -981,9 +985,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 43 then
---|#line 212 "et_lace_parser.y"
+--|#line 216 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 212")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 216")
 end
 
 yyval4 := new_clusters (yyvs3.item (yyvsp3)) 
@@ -1001,9 +1005,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 44 then
---|#line 214 "et_lace_parser.y"
+--|#line 218 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 214")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 218")
 end
 
 yyval4 := yyvs4.item (yyvsp4); yyval4.put_last (yyvs3.item (yyvsp3)) 
@@ -1014,9 +1018,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 45 then
---|#line 218 "et_lace_parser.y"
+--|#line 222 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 218")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 222")
 end
 
 yyval3 := yyvs3.item (yyvsp3); yyval3.set_abstract (True) 
@@ -1026,9 +1030,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 46 then
---|#line 220 "et_lace_parser.y"
+--|#line 224 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 220")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 224")
 end
 
 yyval3 := yyvs3.item (yyvsp3) 
@@ -1037,9 +1041,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 47 then
---|#line 224 "et_lace_parser.y"
+--|#line 228 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 224")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 228")
 end
 
 
@@ -1056,9 +1060,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 48 then
---|#line 226 "et_lace_parser.y"
+--|#line 230 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 226")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 230")
 end
 
 yyval7 := yyvs7.item (yyvsp7) 
@@ -1068,9 +1072,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 49 then
---|#line 228 "et_lace_parser.y"
+--|#line 232 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 228")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 232")
 end
 
 
@@ -1088,9 +1092,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 50 then
---|#line 230 "et_lace_parser.y"
+--|#line 234 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 230")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 234")
 end
 
 
@@ -1108,9 +1112,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 51 then
---|#line 232 "et_lace_parser.y"
+--|#line 236 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 232")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 236")
 end
 
 
@@ -1128,9 +1132,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 52 then
---|#line 236 "et_lace_parser.y"
+--|#line 240 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 236")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 240")
 end
 
 
@@ -1148,9 +1152,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 53 then
---|#line 237 "et_lace_parser.y"
+--|#line 241 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 237")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 241")
 end
 
 yyval7 := yyvs6.item (yyvsp6) 
@@ -1169,9 +1173,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 54 then
---|#line 239 "et_lace_parser.y"
+--|#line 243 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 239")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 243")
 end
 
 yyval7 := yyvs6.item (yyvsp6) 
@@ -1190,9 +1194,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 55 then
---|#line 243 "et_lace_parser.y"
+--|#line 247 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 243")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 247")
 end
 
 create yyval6.make yyval6.put_last (yyvs2.item (yyvsp2)) 
@@ -1210,9 +1214,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 56 then
---|#line 245 "et_lace_parser.y"
+--|#line 249 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 245")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 249")
 end
 
 yyval6 := yyvs6.item (yyvsp6); yyval6.put_last (yyvs2.item (yyvsp2)) 
@@ -1223,9 +1227,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 57 then
---|#line 249 "et_lace_parser.y"
+--|#line 253 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 249")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 253")
 end
 
 
@@ -1234,9 +1238,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 58 then
---|#line 250 "et_lace_parser.y"
+--|#line 254 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 250")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 254")
 end
 
 
@@ -1246,9 +1250,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 59 then
---|#line 253 "et_lace_parser.y"
+--|#line 257 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 253")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 257")
 end
 
 
@@ -1265,9 +1269,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 60 then
---|#line 254 "et_lace_parser.y"
+--|#line 258 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 254")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 258")
 end
 
 
@@ -1276,9 +1280,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 61 then
---|#line 257 "et_lace_parser.y"
+--|#line 261 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 257")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 261")
 end
 
 
@@ -1288,9 +1292,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 62 then
---|#line 258 "et_lace_parser.y"
+--|#line 262 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 258")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 262")
 end
 
 
@@ -1300,9 +1304,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 63 then
---|#line 261 "et_lace_parser.y"
+--|#line 265 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 261")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 265")
 end
 
 
@@ -1313,9 +1317,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 64 then
---|#line 262 "et_lace_parser.y"
+--|#line 266 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 262")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 266")
 end
 
 
@@ -1326,9 +1330,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 65 then
---|#line 266 "et_lace_parser.y"
+--|#line 270 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 266")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 270")
 end
 
 
@@ -1346,9 +1350,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 66 then
---|#line 267 "et_lace_parser.y"
+--|#line 271 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 267")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 271")
 end
 
 
@@ -1359,36 +1363,6 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 67 then
---|#line 270 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 270")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 0
-	yyvsp1 := yyvsp1 + 1
-	if yyvsp1 >= yyvsc1 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs1")
-		end
-		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
-	end
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 68 then
---|#line 271 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 271")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 69 then
 --|#line 274 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 274")
@@ -1407,7 +1381,7 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 70 then
+when 68 then
 --|#line 275 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 275")
@@ -1418,10 +1392,40 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 71 then
+when 69 then
 --|#line 278 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 278")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
+		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
+	end
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 70 then
+--|#line 279 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 279")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 71 then
+--|#line 282 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 282")
 end
 
 
@@ -1430,9 +1434,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 72 then
---|#line 279 "et_lace_parser.y"
+--|#line 283 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 279")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 283")
 end
 
 
@@ -1442,9 +1446,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 73 then
---|#line 282 "et_lace_parser.y"
+--|#line 286 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 282")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 286")
 end
 
 
@@ -1461,9 +1465,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 74 then
---|#line 283 "et_lace_parser.y"
+--|#line 287 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 283")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 287")
 end
 
 
@@ -1472,9 +1476,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 75 then
---|#line 286 "et_lace_parser.y"
+--|#line 290 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 286")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 290")
 end
 
 
@@ -1484,9 +1488,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 76 then
---|#line 287 "et_lace_parser.y"
+--|#line 291 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 287")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 291")
 end
 
 
@@ -1496,9 +1500,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 77 then
---|#line 288 "et_lace_parser.y"
+--|#line 292 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 288")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 292")
 end
 
 
@@ -1508,9 +1512,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 78 then
---|#line 291 "et_lace_parser.y"
+--|#line 295 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 291")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 295")
 end
 
 
@@ -1528,9 +1532,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 79 then
---|#line 292 "et_lace_parser.y"
+--|#line 296 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 292")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 296")
 end
 
 
@@ -1540,9 +1544,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 80 then
---|#line 295 "et_lace_parser.y"
+--|#line 299 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 295")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 299")
 end
 
 
@@ -1559,9 +1563,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 81 then
---|#line 296 "et_lace_parser.y"
+--|#line 300 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 296")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 300")
 end
 
 
@@ -1570,9 +1574,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 82 then
---|#line 299 "et_lace_parser.y"
+--|#line 303 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 299")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 303")
 end
 
 
@@ -1589,9 +1593,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines12.force (yyvs12, yyval12, yyvsp12)
 end
 when 83 then
---|#line 301 "et_lace_parser.y"
+--|#line 305 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 301")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 305")
 end
 
 
@@ -1609,9 +1613,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines12.force (yyvs12, yyval12, yyvsp12)
 end
 when 84 then
---|#line 303 "et_lace_parser.y"
+--|#line 307 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 303")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 307")
 end
 
 yyval12 := yyvs11.item (yyvsp11) 
@@ -1630,9 +1634,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines12.force (yyvs12, yyval12, yyvsp12)
 end
 when 85 then
---|#line 307 "et_lace_parser.y"
+--|#line 311 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 307")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 311")
 end
 
 yyval11 := new_assemblies (yyvs9.item (yyvsp9)) 
@@ -1650,9 +1654,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 86 then
---|#line 309 "et_lace_parser.y"
+--|#line 313 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 309")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 313")
 end
 
 			yyval11 := yyvs11.item (yyvsp11)
@@ -1665,9 +1669,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 87 then
---|#line 316 "et_lace_parser.y"
+--|#line 320 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 316")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 320")
 end
 
 			yyval9 := new_assembly (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2))
@@ -1689,9 +1693,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 88 then
---|#line 321 "et_lace_parser.y"
+--|#line 325 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 321")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 325")
 end
 
 			yyval9 := new_gac_assembly (yyvs2.item (yyvsp2 - 4), yyvs2.item (yyvsp2 - 3), yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2))
@@ -1713,9 +1717,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 89 then
---|#line 328 "et_lace_parser.y"
+--|#line 332 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 328")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 332")
 end
 
 
@@ -1732,9 +1736,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 90 then
---|#line 330 "et_lace_parser.y"
+--|#line 334 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 330")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 334")
 end
 
 yyval8 := yyvs2.item (yyvsp2) 
@@ -1753,36 +1757,6 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 91 then
---|#line 334 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 334")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 0
-	yyvsp1 := yyvsp1 + 1
-	if yyvsp1 >= yyvsc1 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs1")
-		end
-		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
-	end
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 92 then
---|#line 335 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 335")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 93 then
 --|#line 338 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 338")
@@ -1801,7 +1775,7 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 94 then
+when 92 then
 --|#line 339 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 339")
@@ -1812,7 +1786,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 95 then
+when 93 then
 --|#line 342 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 342")
@@ -1831,7 +1805,7 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 96 then
+when 94 then
 --|#line 343 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 343")
@@ -1842,10 +1816,40 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 97 then
---|#line 344 "et_lace_parser.y"
+when 95 then
+--|#line 346 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 344")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 346")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
+		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
+	end
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 96 then
+--|#line 347 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 347")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 97 then
+--|#line 348 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 348")
 end
 
 
@@ -1855,9 +1859,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 98 then
---|#line 347 "et_lace_parser.y"
+--|#line 351 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 347")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 351")
 end
 
 
@@ -1867,9 +1871,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 99 then
---|#line 348 "et_lace_parser.y"
+--|#line 352 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 348")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 352")
 end
 
 
@@ -1879,9 +1883,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 100 then
---|#line 351 "et_lace_parser.y"
+--|#line 355 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 351")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 355")
 end
 
 
@@ -1899,9 +1903,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 101 then
---|#line 352 "et_lace_parser.y"
+--|#line 356 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 352")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 356")
 end
 
 
@@ -1912,9 +1916,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 102 then
---|#line 353 "et_lace_parser.y"
+--|#line 357 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 353")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 357")
 end
 
 
@@ -1925,9 +1929,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 103 then
---|#line 356 "et_lace_parser.y"
+--|#line 360 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 356")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 360")
 end
 
 			add_external_value (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2))
@@ -1940,9 +1944,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 104 then
---|#line 361 "et_lace_parser.y"
+--|#line 365 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 361")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 365")
 end
 
 			add_external_value (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2))
@@ -1955,36 +1959,6 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 105 then
---|#line 368 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 368")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 0
-	yyvsp1 := yyvsp1 + 1
-	if yyvsp1 >= yyvsc1 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs1")
-		end
-		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
-		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
-	end
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 106 then
---|#line 369 "et_lace_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 369")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 107 then
 --|#line 372 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 372")
@@ -2003,7 +1977,7 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 108 then
+when 106 then
 --|#line 373 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 373")
@@ -2014,7 +1988,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 109 then
+when 107 then
 --|#line 376 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 376")
@@ -2033,7 +2007,7 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 110 then
+when 108 then
 --|#line 377 "et_lace_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 377")
@@ -2044,10 +2018,40 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 111 then
---|#line 378 "et_lace_parser.y"
+when 109 then
+--|#line 380 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 378")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 380")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs1")
+		end
+		yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+		yyvs1 := yyspecial_routines1.aliased_resized_area (yyvs1, yyvsc1)
+	end
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 110 then
+--|#line 381 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 381")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 111 then
+--|#line 382 "et_lace_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 382")
 end
 
 
@@ -2057,9 +2061,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 112 then
---|#line 381 "et_lace_parser.y"
+--|#line 385 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 381")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 385")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
@@ -2068,9 +2072,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 113 then
---|#line 383 "et_lace_parser.y"
+--|#line 387 "et_lace_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 383")
+	std.error.put_line ("Executing parser user-code from file 'et_lace_parser.y' at line 387")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 

@@ -5,7 +5,7 @@
 	<description>
 		description: "Gobo Eiffel Tools Library documentation"
 		library: "Gobo Eiffel Tools Library"
-		copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -27,10 +27,7 @@
 		<argument name="target"/>
 
 		<geant target="${target}" arguments="index"/>
-		<geant target="${target}" arguments="ace"/>
 		<geant target="${target}" arguments="ecf"/>
-		<geant target="${target}" arguments="xace"/>
-		<geant target="${target}" arguments="new_xace_option"/>
 		<geant target="${target}" arguments="builtin_routines"/>
 		<geant target="${target}" arguments="new_builtin_routine"/>
 		<geant target="${target}" arguments="applications"/>

@@ -4,8 +4,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
 	name="xtranscoder"
-	library_target="all_classes"
 	uuid="E1FFE100-60B0-0009-3002-000000000001"
+	library_target="all_classes"
 >
 	<description>
 		system: "Gobo Eiffel Utility Library Tester: Transcoder test suite"

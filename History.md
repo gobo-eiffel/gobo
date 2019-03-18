@@ -2,6 +2,10 @@
 
 ## Version ?? - ??
 
+### geant
+
+* Removed task `<gexace>`, because the tool `gexace` is not supported anymore.
+
 ### gec
 
 * Fixed name of built-in feature `ISE_RUNTIME.new_special_of_reference_instance_of` 
@@ -22,6 +26,7 @@
   `attached NONE` is different from type `detachable NONE` in void-safe mode.
 * Added option `--ise=major[.minor[.revision[.build]]]` to specify the version
   of ISE Eiffel whose semantics should be used during compilation.
+* The only Eiffel configuration notation now supported by the `gec` is ECF.
 
 ### gecop
 
@@ -35,14 +40,30 @@
 * Added tests for the validity rule `VFAV`.
 * Added tests for the validity rule `VGMC`.
 
+### gedoc
+
+* The only Eiffel configuration notation now supported by the `gedoc` is ECF.
+
 ### gelex
 
 * Fixed examples in the documentation.
+
+### gelint
+
+* The only Eiffel configuration notation now supported by the `gelint` is ECF.
 
 ### getest
 
 * Changed the signature of some `assert_*` routines to be able to compare
   some `separate` objects in SCOOP mode.
+
+### gexace
+
+* This tool is not supported anymore and has been removed. The only
+  Eiffel configuration notation supported by the Gobo project is ECF.
+  The source code of `gexace` can still be found in
+  `$GOBO/library/tools/src/xace`, but the classes have been marked 
+  as obsolete.
 
 ### Gobo Eiffel Argument Library
 
@@ -134,6 +155,9 @@
 * Check validity of actual arguments in a call even when it was not
   possible to determine the feature of the call.
 * Added support for multiple generic constraints.
+* The only Eiffel configuration notation now supported by the Gobo
+  project is ECF. The classes for the Ace and Xace notations have
+  been marked as obsolete.
 
 ### Gobo Eiffel XPath Library
 

@@ -8,10 +8,6 @@
 	
 	<target name="prepare" depend="init">
 		<mkdir directory="${gedoc_dir}"/>
-			<!-- Generate a 'ge.xace' for 'gedoc': -->
-		<gexace system="ge" output="ge.xace" xace="${GOBO}/tool/geant/src/system.xace">
-			<define name="GOBO_OS" value="${GOBO_OS}"/>
-		</gexace>
 	</target>
 	
 	<target name="fs_variables" depend="init">
@@ -34,7 +30,7 @@
 		</description>
 	
 	
-		<exec executable="gedoc ge.xace ${fs.filename} &gt; ${fs.mapped_filename}">
+		<exec executable="gedoc ${GOBO}/tool/geant/src/system.ecf ${fs.filename} &gt; ${fs.mapped_filename}">
 			<fileset
 				include="@(**/*.e)"
 				exclude="@(**/spec/ise/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
@@ -55,7 +51,7 @@
 		</description>
 	
 	
-		<exec executable="gedoc ge.xace ${fs.filename} &gt; ${fs.mapped_filename}">
+		<exec executable="gedoc ${GOBO}/tool/geant/src/system.ecf ${fs.filename} &gt; ${fs.mapped_filename}">
 			<fileset
 				include="@(**/*.e)"
 				exclude="@(**/spec/ise/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
