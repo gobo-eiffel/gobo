@@ -1,2 +1,0 @@
-[VUTA-2] class BB (9,15): the target (of type 'detachable STRING') of the call to feature `is_empty' is not attached.
-----

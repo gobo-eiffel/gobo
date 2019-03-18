@@ -1,2 +1,0 @@
-[VTUG-1] class AA (14,17): type 'STRING [ANY]' has actual generic parameters but class STRING is not generic.
-----

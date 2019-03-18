@@ -1,8 +1,0 @@
-****** Fatal Error : Multiple rename for the same feature (VHRC.2).
-Line 8 column 4 in BB (b.e) :
-			f as h
-			^
-Line 7 column 4 in BB (b.e) :
-			f as g,
-			^
-------

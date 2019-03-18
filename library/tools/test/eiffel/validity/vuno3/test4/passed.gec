@@ -1,4 +1,0 @@
-[VUNO-3] class AA (11,9): feature `f' of class BB is not valid for static call.
-----
-[VUNO-5] class AA (11,5): class BB is deferred, so it cannot be used as target in a static call.
-----

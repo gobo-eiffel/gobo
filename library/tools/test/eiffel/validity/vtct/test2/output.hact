@@ -1,9 +1,0 @@
-Analyzing clusters
-
--------------------------------------------------------------------------------
-Error code: VD23
-Lace error: Missing basic class. 
-What to do: Check that a class of the given name is available,
-  as the system cannot be compiled without that class.
-
-Class name: any

@@ -1,5 +1,0 @@
-****** Fatal Error : Cyclic anchored definition.
-Line 5 column 6 in BB (b.e) :
-	CC [like name]
-	    ^
-------

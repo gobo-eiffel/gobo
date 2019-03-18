@@ -1,4 +1,0 @@
-[VTUG-1] class AA (14,17): type 'STRING [ANY]' has actual generic parameters but class STRING is not generic.
-----
-[VEEN-8] class AA (15,10): `b' appearing in feature `make' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope.
-----

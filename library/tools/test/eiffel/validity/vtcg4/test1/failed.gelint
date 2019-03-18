@@ -1,2 +1,0 @@
-[VTCG-4] class CC (5,2): the 2-th actual generic parameter of BB, which is the 1-th formal generic parameter of class CC, does not list feature `make2' as creation procedure in its generic constraint.
-----

@@ -1,3 +1,0 @@
-frozen class BB
-
-end

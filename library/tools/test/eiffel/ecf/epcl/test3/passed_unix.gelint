@@ -1,1 +1,0 @@
-[EPCL] ECF ${GOBO}/library/tools/test/eiffel/ecf/epcl/test3/system.ecf (11,32): value 'all' for capability 'catcall_detection' not supported by parent target 'bb'.

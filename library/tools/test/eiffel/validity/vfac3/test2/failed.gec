@@ -1,2 +1,0 @@
-[VBAC-1] class AA (14,13): the source of the assigner call (of type 'attached AA') does not conform nor convert to its target (of type 'detachable STRING').
-----

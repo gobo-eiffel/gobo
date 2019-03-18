@@ -1,4 +1,0 @@
-[EPCY] ECF ${GOBO}\library\tools\test\eiffel\ecf\epcy\test2\system.ecf (9,32): cycle in target parents:
-	bb
-	aa
-	bb

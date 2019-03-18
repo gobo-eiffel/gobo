@@ -1,1 +1,0 @@
-[EPCD] ECF ${GOBO}\library\tools\test\eiffel\ecf\epcd\test1\system.ecf (9,48): value 'none' for capability 'concurrency' not supported by library target 'bb' from parent ECF file "${GOBO}\library\tools\test\eiffel\ecf\epcd\test1\other.ecf".

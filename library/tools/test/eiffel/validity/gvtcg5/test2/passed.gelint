@@ -1,2 +1,0 @@
-[GVTCG-5] class DD (CC,13,9): actual generic parameter 'like foo' in type 'BB [like foo]' is not a reference type but the corresponding formal parameter is marked as reference.
-----

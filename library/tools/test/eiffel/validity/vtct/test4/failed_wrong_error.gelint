@@ -1,2 +1,0 @@
-[VJAR] class AA (13,10): the source of the assignment (of type 'TYPE [THIS_TYPE_DOES_NOT_EXIST]') does not conform nor convert to its target entity (of type 'TYPE [ANY]').
-----

@@ -1,5 +1,0 @@
-[EPCY] ECF ${GOBO}\library\tools\test\eiffel\ecf\epcy\test5\other.ecf (9,62): cycle in target parents:
-	aa in ${GOBO}\library\tools\test\eiffel\ecf\epcy\test5\system.ecf
-	aa in ${GOBO}\library\tools\test\eiffel\ecf\epcy\test5\other.ecf
-	aa in ${GOBO}\library\tools\test\eiffel\ecf\epcy\test5\system.ecf
-	Used in ECF ${GOBO}\library\tools\test\eiffel\ecf\epcy\test5\system.ecf (9,61)

@@ -1,8 +1,0 @@
-****** Fatal Error : This class is not generic (VTUG.1).
-Line 1 column 7 in CC (c.e) :
-class CC
-      ^
-Line 5 column 2 in BB (b.e) :
-	CC [ANY]
-	^
-------

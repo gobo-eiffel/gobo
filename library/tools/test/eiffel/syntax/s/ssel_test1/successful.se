@@ -1,6 +1,0 @@
-****** Fatal Error : Unexpected new line in manifest string.
-Line 4 column 1 in A (d:\gobo/test/gelint/ssel_test1/a.e) :
-
-^
-------
-File "a.bat" not found. Error(s) during `compile_to_c'.

@@ -1,3 +1,0 @@
-class WIDE_CHARACTER
-
-end -- class WIDE_CHARACTER

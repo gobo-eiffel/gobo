@@ -1,9 +1,0 @@
-Analyzing clusters
-
--------------------------------------------------------------------------------
-Error code: VHPR(1)
-Error: cycle in inheritance relation.
-What to do: make sure that Parent clause does not list any descendant.
-
-Names of classes involved in cycle:
-CC, BB

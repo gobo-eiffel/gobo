@@ -1,3 +1,0 @@
-class WIDE_CHARACTER_REF
-
-end -- class WIDE_CHARACTER_REF

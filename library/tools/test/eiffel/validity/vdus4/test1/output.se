@@ -1,8 +1,0 @@
-****** Fatal Error : Same feature name appears twice.
-Line 7 column 4 in BB (b.e) :
-			f, f
-			^
-Line 7 column 7 in BB (b.e) :
-			f, f
-			   ^
-------

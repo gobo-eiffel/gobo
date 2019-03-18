@@ -1,2 +1,0 @@
-[VTAT-2] class AA (16,15): invalid type 'like {BB}.g' when part of a qualified anchored type: the type of anchor `g' must not depend (possibly recursively) on a qualified anchored type.
-----

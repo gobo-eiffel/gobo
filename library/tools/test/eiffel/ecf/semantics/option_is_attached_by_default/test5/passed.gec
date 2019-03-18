@@ -1,2 +1,0 @@
-[VUAR-2] class AA (11,4): the 1-th actual argument (of type 'detachable NONE') does not conform to the corresponding formal argument (of type '[attached] AA') of feature `f'.
-----
