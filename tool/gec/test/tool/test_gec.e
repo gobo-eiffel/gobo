@@ -4,7 +4,7 @@ note
 
 		"Test 'gec'"
 
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,7 +13,7 @@ class TEST_GEC
 
 inherit
 
-	TOOL_TEST_CASE
+	EIFFEL_TOOL_TEST_CASE
 
 create
 
@@ -30,6 +30,7 @@ feature -- Test
 			-- Test 'gec'.
 		do
 			compile_program
+			run_validation
 		end
 
 end
