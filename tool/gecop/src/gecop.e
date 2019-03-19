@@ -216,7 +216,7 @@ feature {NONE} -- Processing
 				a_output_file.put_line ("Testing " + a_tester.suite.name + "...")
 				a_output_file.put_line ("Running Test Cases")
 				a_output_file.put_new_line
-				l_summary.print_summary (a_tester.suite, a_output_file)
+				l_summary.print_summary_without_assertions (a_tester.suite, a_output_file)
 				if not l_summary.is_successful then
 					a_output_file.put_new_line
 					l_summary.print_errors (a_output_file)

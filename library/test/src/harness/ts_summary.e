@@ -251,6 +251,32 @@ feature -- Output
 
 	print_summary (a_test: TS_TEST; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print summary for `a_test' to `a_file'.
+			-- Also print the number of assertions executed.
+		require
+			a_test_not_void: a_test /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_test_summary (a_test, a_file)
+			print_assertions_summary (a_file)
+			a_file.put_new_line
+		end
+
+	print_summary_without_assertions (a_test: TS_TEST; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print summary for `a_test' to `a_file'.
+			-- Do not print the number of assertions executed.
+		require
+			a_test_not_void: a_test /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_test_summary (a_test, a_file)
+			a_file.put_new_line
+		end
+
+	print_test_summary (a_test: TS_TEST; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print summary for `a_test' to `a_file'.
+			-- Do not print the last new-line
 		require
 			a_test_not_void: a_test /= Void
 			a_file_not_void: a_file /= Void
@@ -298,6 +324,14 @@ feature -- Output
 			if test_count > 1 then
 				a_file.put_character ('s')
 			end
+		end
+
+	print_assertions_summary (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print the number of assertions executed.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
 			a_file.put_string (" (")
 			a_file.put_integer (assertion_count)
 			a_file.put_string (" assertion")
@@ -305,7 +339,6 @@ feature -- Output
 				a_file.put_character ('s')
 			end
 			a_file.put_character (')')
-			a_file.put_new_line
 		end
 
 	print_errors (a_file: KI_TEXT_OUTPUT_STREAM)
