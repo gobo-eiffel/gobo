@@ -17,7 +17,8 @@ os:
 before_script:
   # Install Gobo Eiffel
   - export GOBO=$PWD
-  - travis_wait 60 bin/install.sh -v -t gcc
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 bin/install.sh -v -t gcc; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then travis_wait 60 bin/install.sh -v -t clang; fi
   - export PATH=$PATH:$GOBO/bin
   - echo `gec --version`
   # Install ISE Eiffel (see https://www.eiffel.org/setup/)
