@@ -13,7 +13,7 @@ echo "Executing bootstrap.sh..."
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v][--thread=N] <c_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | cc | icc | tcc | no_c"
+	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | clang | cc | icc | tcc | no_c"
 }
 
 VERBOSE=
@@ -154,6 +154,16 @@ elif [ "$CC" = "mingw" ]; then
 	LFLAG_OUT='-o '
 	LLIBS='-lm'
 	echo mingw > $GOBO/tool/gec/config/c/default.cfg
+	c_compilation
+elif [ "$CC" = "clang" ]; then
+	CC=gcc
+	LD=gcc
+#	CFLAGS='-Wno-unused-value -O2'
+	CFLAGS='-Wno-unused-value'
+	LFLAGS=''
+	LFLAG_OUT='-o '
+	LLIBS='-lm -lpthread'
+	echo clang > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "cc" ]; then
 	CC='cc'
