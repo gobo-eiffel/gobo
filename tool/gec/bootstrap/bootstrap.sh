@@ -156,10 +156,10 @@ elif [ "$CC" = "mingw" ]; then
 	echo mingw > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "clang" ]; then
-	CC=gcc
-	LD=gcc
-#	CFLAGS='-Wno-unused-value -O2'
-	CFLAGS='-Wno-unused-value'
+	CC=clang
+	LD=clang
+#	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -O2'
+	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations'
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS='-lm -lpthread'

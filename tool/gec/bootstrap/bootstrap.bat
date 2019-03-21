@@ -139,9 +139,9 @@ goto exit
 	goto c_compilation
 
 :clang
-	set CC=gcc
-	set LD=gcc
-	set CFLAGS=-Wno-unused-value -O2
+	set CC=clang
+	set LD=clang
+	set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -O2
 	set LFLAGS=
 	set LFLAG_OUT=-o 
 	set LLIBS=-lm -lpthread
