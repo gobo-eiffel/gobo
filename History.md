@@ -1,6 +1,6 @@
 # Release History
 
-## Version ?? - ??
+## Version 19.03.21.1 - 21 March 2019
 
 ### geant
 
@@ -172,6 +172,7 @@
 * All Gobo ECF files are now SCOOP capable. It does not mean that the
   code in Gobo takes advantage of the SCOOP model, but rather that its
   classes can be used in a SCOOP application.
+* New version number format: `year.month.day.number_of_commits_on_that_day`.
 
 ## Version 4.3 - 28 November 2018
 

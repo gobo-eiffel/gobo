@@ -56,8 +56,8 @@ library classes provided in this package.
 
 The supported Eiffel compilers, in alphabetical order, are:
 
-* Gobo Eiffel Compiler (gec) 4.3
-* ISE Eiffel 18.07.10.1981 (Classic and .NET)
+* Gobo Eiffel Compiler (gec) 19.03.21.1
+* ISE Eiffel 18.11.10.2592 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file
 [Release_notes.md](./Release_notes.md). 
