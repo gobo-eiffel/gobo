@@ -113,7 +113,7 @@ if [ "$EIF" = "ge" ]; then
 	fi
 	$BIN_DIR/gec$EXE --finalize --no-benchmark --cc=no $THREAD_OPTION $GOBO/tool/gecop/src/system.ecf
 	$BIN_DIR/gecc$EXE $THREAD_OPTION gecop.sh
-		$STRIP gecop${EXE}
+	$STRIP gecop${EXE}
 	if [ "$TEST_ONLY" = "" ]; then
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gelex..."
@@ -149,6 +149,7 @@ geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geant/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gedoc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/getest/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelint/src/build.eant clean
+geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gecop/src/build.eant clean
 if [ "$TEST_ONLY" = "" ]; then
 	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelex/src/build.eant clean
 	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geyacc/src/build.eant clean
