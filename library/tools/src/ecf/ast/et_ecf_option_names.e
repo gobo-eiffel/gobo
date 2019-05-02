@@ -89,7 +89,7 @@ feature -- Names
 			-- Note: introduced in ECF 1.3.0.
 			-- Note: superseded by "void_safety" in ECF 1.5.0,
 			--       where "false" had the meaning of "none",
-			--       and "true" had the meaning of "all" in ECF 1.5.0, and then "transitional" in ECF 1.11.0,
+			--       and "true" had the meaning of "all" in ECF 1.5.0, and then "transitional" in ECF 1.11.0.
 			-- Note: introduced again in ECF 1.9.0.
 			-- Note: merged into "void_safety" in ECF 1.11.0,
 			--       where "true" had the meaning of "all",

@@ -5,7 +5,7 @@ note
 		"ECF file printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2011,7 +2011,7 @@ feature {NONE} -- Adaptation
 			l_default_settings := default_settings (ecf_version)
 			l_original_settings := a_target.settings
 			if a_target.parent /= Void or l_original_settings.secondary_settings = l_default_settings then
-				if ecf_version >= ecf_1_16_0 then
+				if ecf_version >= ecf_1_20_0 then
 					Result := l_original_settings
 				else
 					create Result.make
@@ -2021,6 +2021,28 @@ feature {NONE} -- Adaptation
 				end
 			else
 				Result := explicit_settings (l_original_settings, l_default_settings)
+			end
+			if ecf_version < ecf_1_20_0 then
+					-- Values of setting "dead_code_removal" have changed in ECF 1.20.0.
+				if attached a_target.settings.primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_value then
+					if STRING_.same_case_insensitive (l_value, {ET_ECF_SETTING_NAMES}.none_setting_value) then
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.false_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+					else
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.true_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+					end
+				elseif a_target.parent = Void then
+					if attached a_target.settings.value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_value then
+						if attached l_default_settings.value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_default_value then
+							if not STRING_.same_case_insensitive (l_value, l_default_value) then
+								if STRING_.same_case_insensitive (l_value, {ET_ECF_SETTING_NAMES}.none_setting_value) then
+									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.false_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+								else
+									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.true_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+								end
+							end
+						end
+					end
+				end
 			end
 			if ecf_version < ecf_1_16_0 then
 					-- Setting "multithreaded" has been superseded by setting "concurrency" in ECF 1.7.0,

@@ -5,7 +5,7 @@ note
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2424,6 +2424,8 @@ feature {NONE} -- Element change
 			a_element_not_void: a_element /= Void
 			is_setting: STRING_.same_case_insensitive (a_element.name, xml_setting)
 			a_target_not_void: a_target /= Void
+		local
+			l_setting_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
 				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
@@ -2437,7 +2439,16 @@ feature {NONE} -- Element change
 				if attached a_settings.primary_value (l_name.value) then
 -- TODO: warning: several settings with the same name! (not reported by ISE: use the last one.)
 				end
-				a_settings.set_primary_value (l_name.value, l_value.value)
+				l_setting_value := l_value.value
+				if STRING_.same_case_insensitive (l_name.value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) then
+						-- Values of setting "dead_code_removal" have changed in ECF 1.20.0.
+					if STRING_.same_case_insensitive (l_setting_value, {ET_ECF_SETTING_NAMES}.false_setting_value) then
+						l_setting_value := {ET_ECF_SETTING_NAMES}.none_setting_value
+					elseif STRING_.same_case_insensitive (l_setting_value, {ET_ECF_SETTING_NAMES}.true_setting_value) then
+						l_setting_value := {ET_ECF_SETTING_NAMES}.feature_setting_value
+					end
+				end
+				a_settings.set_primary_value (l_name.value, l_setting_value)
 			end
 		end
 

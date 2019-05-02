@@ -5,7 +5,7 @@ note
 		"Shared ECF version numbers"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2009-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -202,6 +202,16 @@ feature -- Access
 		ensure
 			instance_free: class
 			ecf_1_19_0_not_void: Result /= Void
+		end
+
+	ecf_1_20_0: UT_VERSION
+			-- ECF 1.20.0
+			-- Introduced in ISE 19.05.
+		once
+			create Result.make (1, 20, 0, 0)
+		ensure
+			instance_free: class
+			ecf_1_20_0_not_void: Result /= Void
 		end
 
 	ecf_last_known: UT_VERSION

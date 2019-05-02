@@ -1,5 +1,13 @@
 # Release History
 
+## Version ?? - ??
+
+### Gobo Eiffel Tools Library
+
+* Added support in ECF classes for new values `none|feature|all` for the setting
+  `dead_code_removal` introduced in ECF 1.20.0. Note that `gec` does not take this
+  setting into account.
+
 ## Version 19.03.21.1 - 21 March 2019
 
 ### geant

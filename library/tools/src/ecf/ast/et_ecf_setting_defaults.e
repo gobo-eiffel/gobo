@@ -5,7 +5,7 @@ note
 		"ECF setting default values"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,10 +32,24 @@ feature -- Access
 		require
 			a_ecf_version_not_void: a_ecf_version /= Void
 		do
-			Result := default_settings_1_0_0
+			if a_ecf_version >= ecf_1_20_0 then
+				Result := default_settings_1_20_0
+			else
+				Result := default_settings_1_0_0
+			end
 		ensure
 			instance_free: class
 			default_settings_not_void: Result /= Void
+		end
+
+	default_settings_1_20_0: ET_ECF_SETTINGS
+			-- Default setting values for ECF 1.20.0 and above
+		once
+			create Result.make
+			set_default_settings_1_20_0 (Result)
+		ensure
+			instance_free: class
+			default_settings_1_20_0_not_void: Result /= Void
 		end
 
 	default_settings_1_0_0: ET_ECF_SETTINGS
@@ -55,7 +69,9 @@ feature -- Access
 		require
 			a_ecf_version_not_void: a_ecf_version /= Void
 		do
-			if a_ecf_version >= ecf_1_18_0 then
+			if a_ecf_version >= ecf_1_20_0 then
+				Result := valid_settings_1_20_0
+			elseif a_ecf_version >= ecf_1_18_0 then
 				Result := valid_settings_1_18_0
 			elseif a_ecf_version >= ecf_1_17_0 then
 				Result := valid_settings_1_17_0
@@ -100,7 +116,7 @@ feature -- Access
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.check_vape_setting_name)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.cls_compliant_setting_name)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.console_application_setting_name)
-			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+			Result.force_last (dead_code_removal_setting_value_regexp, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.dotnet_naming_convention_setting_name)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.dynamic_runtime_setting_name)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.enforce_unique_class_names_setting_name)
@@ -136,12 +152,25 @@ feature -- Access
 			no_void_setting_name: not Result.has_void
 		end
 
+	valid_settings_1_20_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+			-- Valid setting values for ECF 1.20.0 and above
+			--
+			-- A void regexp means that there is no constraint on the setting value.
+		once
+			Result := valid_settings_latest
+		ensure
+			instance_free: class
+			valid_settings_1_20_0_not_void: Result /= Void
+			no_void_setting_name: not Result.has_void
+		end
+
 	valid_settings_1_18_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
 			-- Valid setting values for ECF 1.18.0 and above
 			--
 			-- A void regexp means that there is no constraint on the setting value.
 		once
-			Result := valid_settings_latest
+			Result := valid_settings_1_20_0
+			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
 		ensure
 			instance_free: class
 			valid_settings_1_18_0_not_void: Result /= Void
@@ -270,7 +299,7 @@ feature -- Setting
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.check_vape_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.cls_compliant_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.console_application_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
-			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
+			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.all_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.dotnet_naming_convention_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.dynamic_runtime_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.enforce_unique_class_names_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
@@ -294,12 +323,23 @@ feature -- Setting
 			instance_free: class
 		end
 
+	set_default_settings_1_20_0 (a_settings: ET_ECF_SETTINGS)
+			-- Set in `a_settings' the default values for ECF 1.20.0 and above.
+		require
+			a_settings_not_void: a_settings /= Void
+		do
+			set_default_settings_latest (a_settings)
+		ensure
+			instance_free: class
+		end
+
 	set_default_settings_1_0_0 (a_settings: ET_ECF_SETTINGS)
 			-- Set in `a_settings' the default values for ECF 1.0.0 and above.
 		require
 			a_settings_not_void: a_settings /= Void
 		do
-			set_default_settings_latest (a_settings)
+			set_default_settings_1_20_0 (a_settings)
+			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 		ensure
 			instance_free: class
 		end
@@ -326,6 +366,17 @@ feature {NONE} -- Implementation
 			instance_free: class
 			concurrency_setting_value_regexp_not_void: Result /= Void
 			concurrency_setting_value_regexp_compiled: Result.is_compiled
+		end
+
+	dead_code_removal_setting_value_regexp: RX_REGULAR_EXPRESSION
+			-- Regular expression for validation of "dead_code_removal" setting values
+		once
+			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
+			Result.compile ("(?i)(" + {ET_ECF_SETTING_NAMES}.none_setting_value + "|" + {ET_ECF_SETTING_NAMES}.feature_setting_value + "|" + {ET_ECF_SETTING_NAMES}.all_setting_value + ")")
+		ensure
+			instance_free: class
+			dead_code_removal_setting_value_regexp_not_void: Result /= Void
+			dead_code_removal_setting_value_regexp_compiled: Result.is_compiled
 		end
 
 	inline_size_setting_value_regexp: RX_REGULAR_EXPRESSION

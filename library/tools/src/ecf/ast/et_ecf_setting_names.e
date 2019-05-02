@@ -5,7 +5,7 @@ note
 		"ECF setting names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,7 +74,10 @@ feature -- Names
 	dead_code_removal_setting_name: STRING = "dead_code_removal"
 			-- Name of setting "dead_code_removal"
 			--
-			-- Values: true|false
+			-- Values: none|feature|all
+			-- Was: true|false until ECF 1.19.0 included
+			--       where "false" had the meaning of "none",
+			--       and "true" had the meaning of "feature".
 
 	dotnet_naming_convention_setting_name: STRING = "dotnet_naming_convention"
 			-- Name of setting "dotnet_naming_convention"
@@ -247,6 +250,11 @@ feature -- Names
 
 feature -- Values
 
+	all_setting_value: STRING = "all"
+			-- Value "all"
+			--
+			-- Used in "dead_code_removal".
+
 	default_setting_value: STRING = "default"
 			-- Value "default"
 			--
@@ -264,6 +272,11 @@ feature -- Values
 
 	false_setting_value: STRING = "false"
 			-- Value "false"
+
+	feature_setting_value: STRING = "feature"
+			-- Value "feature"
+			--
+			-- Used in "dead_code_removal".
 
 	finalize_setting_value: STRING = "finalize"
 			-- Value "finalize"
@@ -288,7 +301,7 @@ feature -- Values
 	none_setting_value: STRING = "none"
 			-- Value "none"
 			--
-			-- Used in "concurrency".
+			-- Used in "concurrency" and "dead_code_removal".
 
 	scoop_setting_value: STRING = "scoop"
 			-- Value "scoop"
