@@ -4,9 +4,11 @@
 
 ### Gobo Eiffel Tools Library
 
-* Added support in ECF classes for new values `none|feature|all` for the setting
-  `dead_code_removal` introduced in ECF 1.20.0. Note that `gec` does not take this
+* Added support for new values `none|feature|all` for setting `dead_code_removal`
+  in ECF classes as introduced in ECF 1.20.0. Note that `gec` does not take this
   setting into account.
+* Changed default for setting `total_order_on_reals` from `false` to `true` in
+  ECF classes as per ECF 1.20.0.
 
 ## Version 19.03.21.1 - 21 March 2019
 

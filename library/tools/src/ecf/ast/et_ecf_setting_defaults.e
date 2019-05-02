@@ -316,7 +316,7 @@ feature -- Setting
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.msil_use_optimized_precompile_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.old_feature_replication_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.old_verbatim_strings_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
-			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.total_order_on_reals_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
+			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.total_order_on_reals_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.use_all_cluster_name_as_namespace_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.use_cluster_name_as_namespace_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 		ensure
@@ -340,6 +340,7 @@ feature -- Setting
 		do
 			set_default_settings_1_20_0 (a_settings)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
+			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.total_order_on_reals_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 		ensure
 			instance_free: class
 		end
