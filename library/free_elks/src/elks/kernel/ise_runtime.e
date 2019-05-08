@@ -30,29 +30,29 @@ feature -- Feature specific to ISE runtime.
 			instance_free: class
 		end
 
- 	frozen generating_type_of_type (a_type_id: INTEGER): STRING
- 		external
- 			"built_in static"
+	frozen generating_type_of_type (a_type_id: INTEGER): STRING
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 	frozen in_assertion: BOOLEAN
 			-- Are we currently checking some assertions?
- 		external
- 			"built_in static"
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 	frozen once_objects (a_result_type_id: INTEGER): SPECIAL [ANY]
 			-- Once objects initialized in current system.
 			-- `a_result_type_id' is the dynamic type of `SPECIAL [ANY]'.
- 		external
- 			"built_in static"
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 feature -- Internal C routines
 
@@ -83,7 +83,7 @@ feature -- Internal C routines
 	frozen pre_ecma_mapping_status: BOOLEAN
 			-- Do we map old name to new name by default?
 		external
- 			"built_in static"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -91,7 +91,7 @@ feature -- Internal C routines
 	frozen set_pre_ecma_mapping (v: BOOLEAN)
 			-- Set `pre_ecma_mapping_status' with `v'.
 		external
- 			"built_in static"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -874,7 +874,7 @@ feature -- Object marking
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
