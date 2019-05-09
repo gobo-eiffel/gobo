@@ -201,7 +201,7 @@ feature -- Internal C routines
 feature -- Internal support
 
 	frozen reference_field_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): ANY
-			-- Object at `a_physical_offset' bytes from `a_enclosing'.
+			-- Reference field of `a_enclosing' located at `a_physical_offset' bytes.
 		external
 			"built_in static"
 		ensure
@@ -209,7 +209,7 @@ feature -- Internal support
 		end
 
 	frozen raw_reference_field_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): POINTER
-			-- Unprotected object at `a_physical_offset' bytes from `a_enclosing'..
+			-- Unprotected reference field of `a_enclosing' located at `a_physical_offset' bytes.
 		external
 			"built_in static"
 		ensure
@@ -217,7 +217,7 @@ feature -- Internal support
 		end
 
 	frozen dynamic_type_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): INTEGER_32
-			-- Dynamic type of the object at `a_physical_offset' bytes from `a_enclosing'.
+			-- Dynamic type of the field at `a_physical_offset' bytes from `a_enclosing'.
 		external
 			"built_in static"
 		ensure

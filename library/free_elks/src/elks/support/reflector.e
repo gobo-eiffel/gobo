@@ -95,7 +95,7 @@ feature -- Creation
 
 	new_special_any_instance (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
 			-- New instance of dynamic `type_id' that represents
-			-- a SPECIAL with can contain `a_capacity' elements of reference type.
+			-- a SPECIAL which can contain `a_capacity' elements of reference type.
 			-- To create a SPECIAL of basic type, use class SPECIAL directly.
 		require
 			a_capacity_valid: a_capacity >= 0
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
