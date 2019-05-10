@@ -416,7 +416,6 @@ feature -- Measurement
 			-- Number of logical fields in dynamic type `type_id'.
 		require
 			type_id_nonnegative: type_id >= 0
-
 		do
 			Result := {ISE_RUNTIME}.field_count_of_type (type_id)
 		ensure

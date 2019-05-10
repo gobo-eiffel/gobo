@@ -78,7 +78,9 @@ feature -- Access
 	object: ANY
 			-- <Precursor>
 		do
-			Result := object_from_address (object_address)
+			check object_exists: attached {ISE_RUNTIME}.reference_field_at (physical_offset, referring_object.object_address, referring_physical_offset) as l_object then
+				Result := l_object
+			end
 		end
 
 	physical_offset: INTEGER
@@ -103,7 +105,7 @@ feature {REFLECTED_OBJECT} -- Access
 		note
 			compiler: no_gc
 		do
-			Result := dereference (referring_object.object_address, referring_physical_offset) + physical_offset
+			Result := {ISE_RUNTIME}.raw_reference_field_at (physical_offset, referring_object.object_address, referring_physical_offset)
 		end
 
 feature {REFLECTED_COPY_SEMANTICS_OBJECT} -- Access
@@ -111,23 +113,11 @@ feature {REFLECTED_COPY_SEMANTICS_OBJECT} -- Access
 	referring_object: REFLECTED_OBJECT
 			-- Enclosing object containing `object' or a reference to `object.
 
-	referring_physical_offset: INTEGER
+	referring_physical_offset: INTEGER;
 			-- Actual offset in bytes of `object' in `referring_object'.
 
-feature {NONE} -- Implementation
-
-	dereference (ptr: POINTER; offset: INTEGER): POINTER
-		do
-			Result := {ISE_RUNTIME}.raw_reference_field_at (offset, ptr, 0)
-		end
-
-	object_from_address (ptr: POINTER): ANY
-		do
-			Result := {ISE_RUNTIME}.reference_field_at_offset (ptr, 0)
-		end
-
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
