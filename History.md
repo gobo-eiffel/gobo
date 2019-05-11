@@ -9,6 +9,8 @@
   setting into account.
 * Changed default for setting `total_order_on_reals` from `false` to `true` in
   ECF classes as per ECF 1.20.0.
+* Added support for bracket expressions whose target is itself a bracket expression
+  (e.g. `f [i][j]`) in order to be compatible with ISE Eiffel's parser.
 
 ## Version 19.03.21.1 - 21 March 2019
 

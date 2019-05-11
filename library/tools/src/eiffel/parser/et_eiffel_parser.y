@@ -232,7 +232,7 @@ create
 %type <detachable ET_WHEN_PART_LIST> When_list When_list_opt
 %type <detachable ET_WRITABLE> Writable
 
-%expect 82
+%expect 84
 %start Class_declarations
 
 %%
@@ -3864,9 +3864,31 @@ Typed_bracket_expression: Typed_bracket_target '['
 			remove_symbol
 			remove_counter
 		}
+	| Typed_bracket_expression '['
+		{
+			add_symbol ($2)
+			add_counter
+		}
+	  Bracket_actual_list
+		{
+			$$ := ast_factory.new_bracket_expression ($1, $2, $4)
+			remove_symbol
+			remove_counter
+		}
 	;
 	
 Untyped_bracket_expression: Untyped_bracket_target '['
+		{
+			add_symbol ($2)
+			add_counter
+		}
+	  Bracket_actual_list
+		{
+			$$ := ast_factory.new_bracket_expression ($1, $2, $4)
+			remove_symbol
+			remove_counter
+		}
+	| Untyped_bracket_expression '['
 		{
 			add_symbol ($2)
 			add_counter
