@@ -13579,6 +13579,7 @@ feature {NONE} -- Conversion
 					end
 					j := j + 1
 				end
+				l_adapted_base_classes.wipe_out
 				if l_has_tuple_class then
 					if Result /= 0 then
 							-- This is not a single-tuple routine: there are more than one

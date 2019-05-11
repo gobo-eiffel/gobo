@@ -11,6 +11,9 @@
   ECF classes as per ECF 1.20.0.
 * Added support for bracket expressions whose target is itself a bracket expression
   (e.g. `f [i][j]`) in order to be compatible with ISE Eiffel's parser.
+* Fixed bug in the Tuple-argument-unfolding mechanism when the formal argument
+  with a Tuple type was not at the last position. The routine was erroneously 
+  considered as not being a single-tuple routine.
 
 ## Version 19.03.21.1 - 21 March 2019
 
