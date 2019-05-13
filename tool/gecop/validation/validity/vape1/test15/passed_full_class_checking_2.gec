@@ -1,0 +1,6 @@
+[VAPE-1] class BB (ITERATION_CURSOR,17,24): feature `after' of class BB appearing in the precondition of `item' is not exported to class ANY to which feature `item' is exported.
+----
+[VAPE-1] class BB (ITERATION_CURSOR,33,24): feature `after' of class BB appearing in the precondition of `forth' is not exported to class ANY to which feature `forth' is exported.
+----
+[VAPE-1] class AA (21,16): feature `after' of class BB appearing in the precondition of `f' is not exported to class ANY to which feature `f' is exported.
+----
