@@ -5,7 +5,7 @@ note
 		"Eiffel adapted class universes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -140,14 +140,18 @@ feature -- Exporting classes
 			l_other_class: ET_MASTER_CLASS
 			l_class_name: ET_CLASS_NAME
 			l_old_class_name: STRING
+			l_actual_intrinsic_class: ET_CLASS
 		do
 			l_cursor := universe.master_classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item
+				l_actual_intrinsic_class := l_class.actual_intrinsic_class
 				if l_class.is_mapped then
 						-- Do not export mapped classes.
 						-- They will be exported under their actual name.
-				elseif l_class.actual_intrinsic_class.universe = universe then
+				elseif l_actual_intrinsic_class.group.is_hidden then
+						-- Do not export classes in hidden groups.
+				elseif l_actual_intrinsic_class.universe = universe then
 						-- Take into account class renaming and classname prefix.
 					l_class_name := l_cursor.key
 					l_old_class_name := l_class_name.upper_name

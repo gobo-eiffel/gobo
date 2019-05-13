@@ -14,6 +14,7 @@
 * Fixed bug in the Tuple-argument-unfolding mechanism when the formal argument
   with a Tuple type was not at the last position. The routine was erroneously 
   considered as not being a single-tuple routine.
+* Added support for hidden clusters, as defined in ECF.
 
 ## Version 19.03.21.1 - 21 March 2019
 

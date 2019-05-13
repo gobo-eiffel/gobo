@@ -20,9 +20,12 @@ inherit
 		undefine
 			lower_name
 		redefine
-			parent, subclusters,
+			parent,
+			subclusters,
 			pathname,
-			full_pathname, full_unix_pathname,
+			full_pathname,
+			full_unix_pathname,
+			is_hidden,
 			is_valid_eiffel_filename,
 			is_valid_directory_name,
 			new_recursive_cluster,
@@ -209,7 +212,7 @@ feature -- Access
 feature -- Status report
 
 	is_hidden: BOOLEAN
-			-- Should the classes of current cluster not be exported when used as library?
+			-- Should the classes of current group not be exported when part of a library?
 			-- See ET_ADAPTED_UNIVERSE.export_classes.
 
 	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN

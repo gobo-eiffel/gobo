@@ -5,7 +5,7 @@ note
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #9 $"
@@ -95,6 +95,13 @@ feature -- Status report
 			-- not taken into account when repreparsing or reparsing
 			-- the universe? (see 'library' in ISE's LACE.)
 		deferred
+		end
+
+	is_hidden: BOOLEAN
+			-- Should the classes of current group not be exported when part of a library?
+			-- See ET_ADAPTED_UNIVERSE.export_classes.
+		do
+			-- Result := False
 		end
 
 	use_obsolete_syntax: BOOLEAN
