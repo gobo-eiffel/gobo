@@ -122,35 +122,8 @@ feature -- NaN
 
 	is_nan (d: DOUBLE): BOOLEAN
 			-- Does `d' correspond to a Not-A-Number?
-		local
-			p1: MANAGED_POINTER
-			b1, b2, b3, b4, b5, b6, b7, b8: NATURAL_8
 		do
-			if d /= d then
-				Result := True
-			else
-					-- Comparing `d' with itself directly should return False in case
-					-- of NaN as explained in http://en.wikipedia.org/wiki/NaN. But
-					-- there is a bug in lcc-win32 when used as back-end C compiler
-					-- of gec. Hence this other algorithm.
-				create p1.make (8)
-				p1.put_real_64 (d, 0)
-				b1 := p1.read_natural_8 (0)
-				b2 := p1.read_natural_8 (1)
-				b3 := p1.read_natural_8 (2)
-				b4 := p1.read_natural_8 (3)
-				b5 := p1.read_natural_8 (4)
-				b6 := p1.read_natural_8 (5)
-				b7 := p1.read_natural_8 (6)
-				b8 := p1.read_natural_8 (7)
-				if b8 = 127 or b8 = 255 then
-					if b7 > 240 then
-						Result := True
-					elseif b7 = 240 then
-						Result := b6 /= 0 or b5 /= 0 or b4 /= 0 or b3 /= 0 or b2 /= 0 or b1 /= 0
-					end
-				end
-			end
+			Result := d.is_nan
 		ensure
 			instance_free: class
 		end
@@ -159,42 +132,16 @@ feature -- Infinity
 
 	is_plus_infinity (d: DOUBLE): BOOLEAN
 			-- Does `d' correspond to positive infinity?
-		local
-			p1, p2: MANAGED_POINTER
 		do
-				-- Do not compare `d' with `plus_infinity' directly as a workaround
-				-- because of a bug in lcc-win32 when used as back-end C compiler of gec.
-			if d /= d then
-					-- This is a Nan.
-				Result := False
-			else
-				create p1.make (8)
-				p1.put_real_64 (d, 0)
-				create p2.make (8)
-				p2.put_real_64 (plus_infinity, 0)
-				Result := p1.read_natural_64 (0) = p2.read_natural_64 (0)
-			end
+			Result := d.is_positive_infinity
 		ensure
 			instance_free: class
 		end
 
 	is_minus_infinity (d: DOUBLE): BOOLEAN
 			-- Does `d' correspond to minus infinity?
-		local
-			p1, p2: MANAGED_POINTER
 		do
-				-- Do not compare `d' with `minus_infinity' directly as a workaround
-				-- because of a bug in lcc-win32 when used as back-end C compiler of gec.
-			if d /= d then
-					-- This is a Nan.
-				Result := False
-			else
-				create p1.make (8)
-				p1.put_real_64 (d, 0)
-				create p2.make (8)
-				p2.put_real_64 (minus_infinity, 0)
-				Result := p1.read_natural_64 (0) = p2.read_natural_64 (0)
-			end
+			Result := d.is_negative_infinity
 		ensure
 			instance_free: class
 		end

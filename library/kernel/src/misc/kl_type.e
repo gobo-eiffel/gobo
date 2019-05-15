@@ -44,7 +44,6 @@ feature -- Status report
 				Result := attached {REAL_64_REF} v as l_vd and then l_vd.is_nan
 			elseif attached {REAL_32_REF} u as l_ur and then l_ur.is_nan then
 				Result := attached {REAL_32_REF} v as l_vr and then l_vr.is_nan
-
 			end
 		ensure
 			instance_free: class

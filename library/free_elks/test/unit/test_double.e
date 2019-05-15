@@ -5,7 +5,7 @@ note
 		"Test features of class DOUBLE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,6 +32,162 @@ feature -- Test
 			assert ("default", r = 0.0)
 		end
 
+	test_equality_with_nan
+			-- Test '=' expression with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: ANY
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_false ("not_is_equal1", r1 = r2)
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_false ("not_is_equal2", r1 = r2)
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_true ("is_equal1", r1 = r2)
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_false ("not_is_equal3", a1 = a2)
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_false ("not_is_equal4", a1 = a2)
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_true ("is_equal2", a1 = a2)
+		end
+
+	test_non_equality_with_nan
+			-- Test '/=' expression with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: ANY
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_true ("not_is_equal1", r1 /= r2)
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_true ("not_is_equal2", r1 /= r2)
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_false ("is_equal1", r1 /= r2)
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_true ("not_is_equal3", a1 /= a2)
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_true ("not_is_equal4", a1 /= a2)
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_false ("is_equal2", a1 /= a2)
+		end
+
+	test_object_equality_with_nan
+			-- Test '~' expression with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: ANY
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_false ("not_is_equal1", r1 ~ r2)
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_false ("not_is_equal2", r1 ~ r2)
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_true ("is_equal1", r1 ~ r2)
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_false ("not_is_equal3", a1 ~ a2)
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_false ("not_is_equal4", a1 ~ a2)
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_true ("is_equal2", a1 ~ a2)
+		end
+
+	test_non_object_equality_with_nan
+			-- Test '/~' expression with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: ANY
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_true ("not_is_equal1", r1 /~ r2)
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_true ("not_is_equal2", r1 /~ r2)
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_false ("is_equal1", r1 /~ r2)
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_true ("not_is_equal3", a1 /~ a2)
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_true ("not_is_equal4", a1 /~ a2)
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_false ("is_equal2", a1 /~ a2)
+		end
+
+	test_is_equal_with_nan
+			-- Test feature 'is_equal' with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: ANY
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_false ("not_is_equal1", r1.is_equal (r2))
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_false ("not_is_equal2", r1.is_equal (r2))
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_true ("is_equal1", r1.is_equal (r2))
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_false ("not_is_equal3", a1.is_equal (a2))
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_false ("not_is_equal4", a1.is_equal (a2))
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_true ("is_equal2", a1.is_equal (a2))
+		end
+
+	test_standard_is_equal_with_nan
+			-- Test feature 'standard_is_equal' with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: ANY
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_false ("not_standard_is_equal1", r1.standard_is_equal (r2))
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_false ("not_standard_is_equal2", r1.standard_is_equal (r2))
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_true ("standard_is_equal1", r1.standard_is_equal (r2))
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_false ("not_standard_is_equal3", a1.standard_is_equal (a2))
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_false ("not_standard_is_equal4", a1.standard_is_equal (a2))
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_true ("standard_is_equal2", a1.standard_is_equal (a2))
+		end
+		
 	test_is_less
 			-- Test feature 'is_less alias "<"'.
 		local
@@ -48,6 +204,32 @@ feature -- Test
 			assert ("not_less_than2", not (r1 < r2))
 		end
 
+	test_is_less_with_nan
+			-- Test feature 'is_less alias "<"' with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: COMPARABLE
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_true ("less_than1", r1 < r2)
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_false ("not_less_than1", r1 < r2)
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_false ("not_less_than2", r1 < r2)
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_true ("less_than2", a1 < a2)
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_false ("not_less_than3", a1 < a2)
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_false ("not_less_than4", a1 < a2)
+		end
+		
 	test_is_less_equal
 			-- Test feature 'is_less_equal alias "<="'.
 		local
@@ -64,6 +246,32 @@ feature -- Test
 			assert ("less_equal2", r1 <= r2)
 		end
 
+	test_is_less_equal_with_nan
+			-- Test feature 'is_less_equal alias "<="' with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: COMPARABLE
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_true ("less_equal1", r1 <= r2)
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_false ("not_less_equal1", r1 <= r2)
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_true ("less_equal2", r1 <= r2)
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_true ("less_equal3", a1 <= a2)
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_false ("not_less_equal2", a1 <= a2)
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_true ("less_equal_4", a1 <= a2)
+		end
+		
 	test_is_greater
 			-- Test feature 'is_greater alias ">"'.
 		local
@@ -80,6 +288,32 @@ feature -- Test
 			assert ("not_greater_than2", not (r1 > r2))
 		end
 
+	test_is_greater_with_nan
+			-- Test feature 'is_greater alias ">"' with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: COMPARABLE
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_false ("not_greater_than1", r1 > r2)
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_true ("greater_than1", r1 > r2)
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_false ("not_greater_than2", r1 > r2)
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_false ("not_greater_than3", a1 > a2)
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_true ("greater_than_than2", a1 > a2)
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_false ("not_greater_than4", a1 > a2)
+		end
+		
 	test_is_greater_equal
 			-- Test feature 'is_greater_equal alias ">="'.
 		local
@@ -96,6 +330,32 @@ feature -- Test
 			assert ("greater_equal2", r1 >= r2)
 		end
 
+	test_is_greater_equal_with_nan
+			-- Test feature 'is_greater_equal alias ">="' with NaN.
+		local
+			r1, r2: DOUBLE
+			a1, a2: COMPARABLE
+		do
+			r1 := {DOUBLE}.nan
+			r2 := 2.7
+			assert_false ("not_greater_equal1", r1 >= r2)
+			r1 := 10.9
+			r2 := {DOUBLE}.nan
+			assert_true ("greater_equal1", r1 >= r2)
+			r1 := {DOUBLE}.nan
+			r2 := {DOUBLE}.nan
+			assert_true ("greater_equal2", r1 >= r2)
+			a1 := {DOUBLE}.nan
+			a2 := 2.7
+			assert_false ("not_greater_equal2", a1 >= a2)
+			a1 := 10.9
+			a2 := {DOUBLE}.nan
+			assert_true ("greater_equal3", a1 >= a2)
+			a1 := {DOUBLE}.nan
+			a2 := {DOUBLE}.nan
+			assert_true ("greater_equal4", a1 >= a2)
+		end
+		
 	test_out
 			-- Test feature 'out'.
 		local

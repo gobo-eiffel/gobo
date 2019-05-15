@@ -301,6 +301,14 @@ feature -- Compilation options
 			Result := current_system.exception_trace_mode
 		end
 
+	total_order_on_reals_mode: BOOLEAN
+			-- Should NaN values will be lower than any other real values,
+			-- and comparing NaN with another NaN will yield True and not False
+			-- as usually done in IEEE arithmetic?
+		do
+			Result := current_system.total_order_on_reals_mode
+		end
+
 	current_in_exception_trace: BOOLEAN = False
 			-- Should address of current object be displayed when generating an exception trace?
 
@@ -10026,7 +10034,31 @@ feature {NONE} -- Expression generation
 							end
 							l_actual_type_set := equality_type_set
 						end
-						if l_dynamic_type.is_basic then
+						if total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_32_type then
+								-- Optimization: avoid a function call for basic types.
+-- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
+							include_runtime_header_file ("ge_real.h", False, header_file)
+							current_file.put_string (l_not_not)
+							current_file.put_string (c_ge_real_32_is_equal)
+							current_file.put_character ('(')
+							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
+							current_file.put_character (')')
+						elseif total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_64_type then
+								-- Optimization: avoid a function call for basic types.
+-- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
+							include_runtime_header_file ("ge_real.h", False, header_file)
+							current_file.put_string (l_not_not)
+							current_file.put_string (c_ge_real_64_is_equal)
+							current_file.put_character ('(')
+							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
+							current_file.put_character (')')
+						elseif l_dynamic_type.is_basic then
 								-- Optimization: avoid a function call for basic types.
 -- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							current_file.put_character ('(')
@@ -11450,7 +11482,31 @@ feature {NONE} -- Expression generation
 							end
 							l_actual_type_set := equality_type_set
 						end
-						if l_dynamic_type.is_basic then
+						if total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_32_type then
+								-- Optimization: avoid a function call for basic types.
+-- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
+							include_runtime_header_file ("ge_real.h", False, header_file)
+							current_file.put_string (l_not_not)
+							current_file.put_string (c_ge_real_32_is_equal)
+							current_file.put_character ('(')
+							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
+							current_file.put_character (')')
+						elseif total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_64_type then
+								-- Optimization: avoid a function call for basic types.
+-- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
+							include_runtime_header_file ("ge_real.h", False, header_file)
+							current_file.put_string (l_not_not)
+							current_file.put_string (c_ge_real_64_is_equal)
+							current_file.put_character ('(')
+							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
+							current_file.put_character (')')
+						elseif l_dynamic_type.is_basic then
 								-- Optimization: avoid a function call for basic types.
 -- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							current_file.put_character ('(')
@@ -18667,7 +18723,13 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
-				if a_target_type.is_expanded and then a_target_type.is_basic then
+				if total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_32_type then
+					include_runtime_header_file ("ge_real.h", False, header_file)
+					print_builtin_query_c_call (a_feature, c_ge_real_32_is_equal, False, a_target_type, a_check_void_target)
+				elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_64_type then
+					include_runtime_header_file ("ge_real.h", False, header_file)
+					print_builtin_query_c_call (a_feature, c_ge_real_64_is_equal, False, a_target_type, a_check_void_target)
+				elseif a_target_type.is_expanded and then a_target_type.is_basic then
 					print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 					current_file.put_character ('(')
 					current_file.put_character ('(')
@@ -24827,6 +24889,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_32_type then
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				print_builtin_query_c_call (a_feature, c_ge_real_32_is_less, False, a_target_type, a_check_void_target)
+			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_64_type then
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				print_builtin_query_c_call (a_feature, c_ge_real_64_is_less, False, a_target_type, a_check_void_target)
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -36050,6 +36118,8 @@ feature {NONE} -- Constants
 	c_ge_register_dispose: STRING = "GE_register_dispose"
 	c_ge_real_32_field: STRING = "GE_real_32_field"
 	c_ge_real_32_field_at: STRING = "GE_real_32_field_at"
+	c_ge_real_32_is_equal: STRING = "GE_real_32_is_equal"
+	c_ge_real_32_is_less: STRING = "GE_real_32_is_less"
 	c_ge_real_32_is_nan: STRING = "GE_real_32_is_nan"
 	c_ge_real_32_is_negative_infinity: STRING = "GE_real_32_is_negative_infinity"
 	c_ge_real_32_is_positive_infinity: STRING = "GE_real_32_is_positive_infinity"
@@ -36058,6 +36128,8 @@ feature {NONE} -- Constants
 	c_ge_real_32_positive_infinity: STRING = "GE_real_32_positive_infinity"
 	c_ge_real_64_field: STRING = "GE_real_64_field"
 	c_ge_real_64_field_at: STRING = "GE_real_64_field_at"
+	c_ge_real_64_is_equal: STRING = "GE_real_64_is_equal"
+	c_ge_real_64_is_less: STRING = "GE_real_64_is_less"
 	c_ge_real_64_is_nan: STRING = "GE_real_64_is_nan"
 	c_ge_real_64_is_negative_infinity: STRING = "GE_real_64_is_negative_infinity"
 	c_ge_real_64_is_positive_infinity: STRING = "GE_real_64_is_positive_infinity"

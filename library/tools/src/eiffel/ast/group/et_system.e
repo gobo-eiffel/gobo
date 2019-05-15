@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			create external_linker_flags.make (20)
 			console_application_mode := True
 			alias_transition_mode := True
+			total_order_on_reals_mode := True
 			set_system_name (a_name)
 				-- First set the kernel types to some dummy types so that the attached attributes
 				-- get properly set before using `Current'. Otherwise the compiler will complain.
@@ -329,6 +330,11 @@ feature -- Compilation options
 			-- Should functions declared with the old infix/prefix syntax and
 			-- with the new alias syntax considered the same?
 
+	total_order_on_reals_mode: BOOLEAN
+			-- Should NaN values will be lower than any other real values,
+			-- and comparing NaN with another NaN will yield True and not False
+			-- as usually done in IEEE arithmetic?
+
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 
@@ -412,6 +418,14 @@ feature -- Compilation options setting
 			alias_transition_mode := b
 		ensure
 			alias_transition_mode_set: alias_transition_mode = b
+		end
+
+	set_total_order_on_reals_mode (b: BOOLEAN)
+			-- Set `total_order_on_reals_mode' to `b'.
+		do
+			total_order_on_reals_mode := b
+		ensure
+			total_order_on_reals_mode_set: total_order_on_reals_mode = b
 		end
 
 	set_use_boehm_gc (b: BOOLEAN)

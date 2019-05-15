@@ -2,6 +2,11 @@
 
 ## Version ?? - ??
 
+### gec
+
+* Added support for `total_order_on_reals` so that the assertions inherited from
+  `COMPARABLE` do not get violated with NaNs in classes `REAL_32` and `REAL_64`.
+
 ### Gobo Eiffel Tools Library
 
 * Added support for new values `none|feature|all` for setting `dead_code_removal`

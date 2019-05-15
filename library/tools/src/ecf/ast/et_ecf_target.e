@@ -509,6 +509,11 @@ feature -- Basic operations
 			if l_value /= Void and then l_value.is_boolean then
 				a_system.set_exception_trace_mode (l_value.to_boolean)
 			end
+				-- "total_order_on_reals".
+			l_value := settings.value ({ET_ECF_SETTING_NAMES}.total_order_on_reals_setting_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_system.set_total_order_on_reals_mode (l_value.to_boolean)
+			end
 		end
 
 	fill_capabilities (a_system: ET_ECF_SYSTEM)
