@@ -1,5 +1,5 @@
-note
-	description: "Real values, single precision"
+﻿note
+	description: "Real values, single precision."
 	external_name: "System.Single"
 	assembly: "mscorlib"
 	library: "Free implementation of ELKS library"
@@ -42,7 +42,8 @@ convert
 feature -- Comparison
 
 	is_less alias "<" (other: REAL_32): BOOLEAN
-			-- Is `other' greater than current real?
+			-- Is `other` greater than current real?
+			-- See also: `ieee_is_less`.
 		external
 			"built_in"
 		end
@@ -145,6 +146,64 @@ feature -- Basic operations
 			"built_in"
 		end
 
+feature -- IEEE comparison
+
+	ieee_is_equal (other: REAL_32): BOOLEAN
+			-- Is current value equal to `other` according to IEEE 754 standard?
+		note
+			EIS: "name=doi", "src=https://doi.org/10.1109/IEEESTD.2008.4610935", "tag=IEEE 754"
+		external
+			"built_in"
+		end
+
+	ieee_is_greater (other: REAL_32): BOOLEAN
+			-- Is current value greater than `other` according to IEEE 754 standard?
+		note
+			EIS: "name=doi", "src=https://doi.org/10.1109/IEEESTD.2008.4610935", "tag=IEEE 754"
+		external
+			"built_in"
+		end
+
+	ieee_is_greater_equal (other: REAL_32): BOOLEAN
+			-- Is current value greater than or equal to `other` according to IEEE 754 standard?
+		note
+			EIS: "name=doi", "src=https://doi.org/10.1109/IEEESTD.2008.4610935", "tag=IEEE 754"
+		external
+			"built_in"
+		end
+
+	ieee_is_less (other: REAL_32): BOOLEAN
+			-- Is current value less than `other` according to IEEE 754 standard?
+		note
+			EIS: "name=doi", "src=https://doi.org/10.1109/IEEESTD.2008.4610935", "tag=IEEE 754"
+		external
+			"built_in"
+		end
+
+	ieee_is_less_equal (other: REAL_32): BOOLEAN
+			-- Is current value less than or equal to `other` according to IEEE 754 standard?
+		note
+			EIS: "name=doi", "src=https://doi.org/10.1109/IEEESTD.2008.4610935", "tag=IEEE 754"
+		external
+			"built_in"
+		end
+
+	ieee_maximum_number (other: REAL_32): REAL_32
+			-- The greater of current object and `other` according to IEEE 754 standard.
+		note
+			EIS: "name=doi", "src=https://doi.org/10.1109/IEEESTD.2008.4610935", "tag=IEEE 754"
+		external
+			"built_in"
+		end
+
+	ieee_minimum_number (other: REAL_32): REAL_32
+			-- The smaller of current object and `other` according to IEEE 754 standard.
+		note
+			EIS: "name=doi", "src=https://doi.org/10.1109/IEEESTD.2008.4610935", "tag=IEEE 754"
+		external
+			"built_in"
+		end
+
 feature -- Output
 
 	out: STRING
@@ -154,7 +213,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2013/09/19 $"
 	revision: "$Revision: #1 $"
@@ -942,6 +942,13 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.i_th_argument_pointer_name)
 			Result.force_new (-1, tokens.i_th_argument_string_name)
 			Result.force_new (-1, tokens.identity_name)
+			Result.force_new (-1, tokens.ieee_is_equal_name)
+			Result.force_new (-1, tokens.ieee_is_greater_name)
+			Result.force_new (-1, tokens.ieee_is_greater_equal_name)
+			Result.force_new (-1, tokens.ieee_is_less_name)
+			Result.force_new (-1, tokens.ieee_is_less_equal_name)
+			Result.force_new (-1, tokens.ieee_maximum_number_name)
+			Result.force_new (-1, tokens.ieee_minimum_number_name)
 			Result.force_new (-1, tokens.ignore_name)
 			Result.force_new (-1, tokens.implication_name)
 			Result.force_new (-1, tokens.in_assertion_name)

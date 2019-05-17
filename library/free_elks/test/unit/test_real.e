@@ -5,7 +5,7 @@ note
 		"Test features of class REAL"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -354,6 +354,230 @@ feature -- Test
 			a1 := {REAL}.nan
 			a2 := {REAL}.nan
 			assert_true ("greater_equal4", a1 >= a2)
+		end
+
+	test_ieee_is_equal
+			-- Test feature 'ieee_is_equal'.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL} 1.5
+			r2 := {REAL} 2.7
+			assert_false ("not_equal1", r1.ieee_is_equal (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL} 8.2
+			assert_false ("not_equal2", r1.ieee_is_equal (r2))
+			r1 := {REAL} 5.4
+			r2 := {REAL} 5.4
+			assert_true ("equal1", r1.ieee_is_equal (r2))
+		end
+
+	test_ieee_is_equal_with_nan
+			-- Test feature 'ieee_is_equal' with NaN.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL}.nan
+			r2 := {REAL} 2.7
+			assert_false ("not_equal1", r1.ieee_is_less_equal (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL}.nan
+			assert_false ("not_equal2", r1.ieee_is_less_equal (r2))
+			r1 := {REAL}.nan
+			r2 := {REAL}.nan
+			assert_false ("not_equal3", r1.ieee_is_less_equal (r2))
+		end
+		
+	test_ieee_is_less
+			-- Test feature 'ieee_is_less'.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL} 1.5
+			r2 := {REAL} 2.7
+			assert_true ("less_than1", r1.ieee_is_less (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL} 8.2
+			assert_false ("not_less_than1", r1.ieee_is_less (r2))
+			r1 := {REAL} 5.4
+			r2 := {REAL} 5.4
+			assert_false ("not_less_than2", r1.ieee_is_less (r2))
+		end
+
+	test_ieee_is_less_with_nan
+			-- Test feature 'ieee_is_less' with NaN.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL}.nan
+			r2 := {REAL} 2.7
+			assert_false ("not_less_than1", r1.ieee_is_less (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL}.nan
+			assert_false ("not_less_than2", r1.ieee_is_less (r2))
+			r1 := {REAL}.nan
+			r2 := {REAL}.nan
+			assert_false ("not_less_than3", r1.ieee_is_less (r2))
+		end
+		
+	test_ieee_is_less_equal
+			-- Test feature 'ieee_is_less_equal'.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL} 1.5
+			r2 := {REAL} 2.7
+			assert_true ("less_equal1", r1.ieee_is_less_equal (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL} 8.2
+			assert_false ("not_less_equal", r1.ieee_is_less_equal (r2))
+			r1 := {REAL} 5.4
+			r2 := {REAL} 5.4
+			assert_true ("less_equal2", r1.ieee_is_less_equal (r2))
+		end
+
+	test_ieee_is_less_equal_with_nan
+			-- Test feature 'ieee_is_less_equal' with NaN.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL}.nan
+			r2 := {REAL} 2.7
+			assert_false ("not_less_equal1", r1.ieee_is_less_equal (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL}.nan
+			assert_false ("not_less_equal2", r1.ieee_is_less_equal (r2))
+			r1 := {REAL}.nan
+			r2 := {REAL}.nan
+			assert_false ("not_less_equal3", r1.ieee_is_less_equal (r2))
+		end
+		
+	test_ieee_is_greater
+			-- Test feature 'ieee_is_greater'.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL} 1.5
+			r2 := {REAL} 2.7
+			assert_false ("not_greater_than1", r1.ieee_is_greater (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL} 8.2
+			assert_true ("greater_than1", r1.ieee_is_greater (r2))
+			r1 := {REAL} 5.4
+			r2 := {REAL} 5.4
+			assert_false ("not_greater_than2", r1.ieee_is_greater (r2))
+		end
+
+	test_ieee_is_greater_with_nan
+			-- Test feature 'ieee_is_greater' with NaN.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL}.nan
+			r2 := {REAL} 2.7
+			assert_false ("not_greater_than1", r1.ieee_is_greater (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL}.nan
+			assert_false ("not_greater_than2", r1.ieee_is_greater (r2))
+			r1 := {REAL}.nan
+			r2 := {REAL}.nan
+			assert_false ("not_greater_than3", r1.ieee_is_greater (r2))
+		end
+		
+	test_ieee_is_greater_equal
+			-- Test feature 'ieee_is_greater_equal'.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL} 1.5
+			r2 := {REAL} 2.7
+			assert_false ("not_greater_equal1", r1.ieee_is_greater_equal (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL} 8.2
+			assert_true ("greater_equal1", r1.ieee_is_greater_equal (r2))
+			r1 := {REAL} 5.4
+			r2 := {REAL} 5.4
+			assert_true ("greater_equal2", r1.ieee_is_greater_equal (r2))
+		end
+
+	test_ieee_is_greater_equal_with_nan
+			-- Test feature 'ieee_is_greater_equal' with NaN.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL}.nan
+			r2 := {REAL} 2.7
+			assert_false ("not_greater_equal1", r1.ieee_is_greater_equal (r2))
+			r1 := {REAL} 10.9
+			r2 := {REAL}.nan
+			assert_false ("not_greater_equal2", r1.ieee_is_greater_equal (r2))
+			r1 := {REAL}.nan
+			r2 := {REAL}.nan
+			assert_false ("not_greater_equal3", r1.ieee_is_greater_equal (r2))
+		end
+
+	test_ieee_maximum_number_equal
+			-- Test feature 'ieee_maximum_number'.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL} 1.5
+			r2 := {REAL} 2.7
+			assert ("ieee_maximum_number1", r1.ieee_maximum_number (r2) = r2)
+			r1 := {REAL} 10.9
+			r2 := {REAL} 8.2
+			assert ("ieee_maximum_number2", r1.ieee_maximum_number (r2) = r1)
+			r1 := {REAL} 5.4
+			r2 := {REAL} 5.4
+			assert ("ieee_maximum_number3", r1.ieee_maximum_number (r2) = r1)
+		end
+
+	test_ieee_maximum_number_with_nan
+			-- Test feature 'ieee_maximum_number' with NaN.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL}.nan
+			r2 := {REAL} 2.7
+			assert ("ieee_maximum_number1", r1.ieee_maximum_number (r2) = r2)
+			r1 := {REAL} 10.9
+			r2 := {REAL}.nan
+			assert ("ieee_maximum_number2", r1.ieee_maximum_number (r2) = r1)
+			r1 := {REAL}.nan
+			r2 := {REAL}.nan
+			assert ("ieee_maximum_number3", r1.ieee_maximum_number (r2) = r1)
+		end
+
+	test_ieee_minimum_number_equal
+			-- Test feature 'ieee_minimum_number'.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL} 1.5
+			r2 := {REAL} 2.7
+			assert ("ieee_minimum_number1", r1.ieee_minimum_number (r2) = r1)
+			r1 := {REAL} 10.9
+			r2 := {REAL} 8.2
+			assert ("ieee_minimum_number2", r1.ieee_minimum_number (r2) = r2)
+			r1 := {REAL} 5.4
+			r2 := {REAL} 5.4
+			assert ("ieee_minimum_number3", r1.ieee_minimum_number (r2) = r1)
+		end
+
+	test_ieee_minimum_number_with_nan
+			-- Test feature 'ieee_minimum_number' with NaN.
+		local
+			r1, r2: REAL
+		do
+			r1 := {REAL}.nan
+			r2 := {REAL} 2.7
+			assert ("ieee_minimum_number1", r1.ieee_minimum_number (r2) = r2)
+			r1 := {REAL} 10.9
+			r2 := {REAL}.nan
+			assert ("ieee_minimum_number2", r1.ieee_minimum_number (r2) = r1)
+			r1 := {REAL}.nan
+			r2 := {REAL}.nan
+			assert ("ieee_minimum_number3", r1.ieee_minimum_number (r2) = r1)
 		end
 		
 	test_out

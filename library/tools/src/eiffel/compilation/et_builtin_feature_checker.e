@@ -5,7 +5,7 @@ note
 		"Eiffel built-in feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -896,6 +896,13 @@ feature {NONE} -- Built-in validity
 				register_builtin_feature (tokens.floor_real_32_feature_name, Void, current_universe.real_32_type, tokens.builtin_real_n_floor_real_32, l_builtin_features)
 				register_builtin_feature (tokens.floor_real_64_feature_name, Void, current_universe.real_64_type, tokens.builtin_real_n_floor_real_64, l_builtin_features)
 				register_builtin_feature (tokens.identity_feature_name, Void, l_real_n_type, tokens.builtin_real_n_identity, l_builtin_features)
+				register_builtin_feature (tokens.ieee_is_equal_feature_name, <<l_real_n_type.type>>, current_universe.boolean_type, tokens.builtin_real_n_ieee_is_equal, l_builtin_features)
+				register_builtin_feature (tokens.ieee_is_greater_feature_name, <<l_real_n_type.type>>, current_universe.boolean_type, tokens.builtin_real_n_ieee_is_greater, l_builtin_features)
+				register_builtin_feature (tokens.ieee_is_greater_equal_feature_name, <<l_real_n_type.type>>, current_universe.boolean_type, tokens.builtin_real_n_ieee_is_greater_equal, l_builtin_features)
+				register_builtin_feature (tokens.ieee_is_less_feature_name, <<l_real_n_type.type>>, current_universe.boolean_type, tokens.builtin_real_n_ieee_is_less, l_builtin_features)
+				register_builtin_feature (tokens.ieee_is_less_equal_feature_name, <<l_real_n_type.type>>, current_universe.boolean_type, tokens.builtin_real_n_ieee_is_less_equal, l_builtin_features)
+				register_builtin_feature (tokens.ieee_maximum_number_feature_name, <<l_real_n_type.type>>, l_real_n_type, tokens.builtin_real_n_ieee_maximum_number, l_builtin_features)
+				register_builtin_feature (tokens.ieee_minimum_number_feature_name, <<l_real_n_type.type>>, l_real_n_type, tokens.builtin_real_n_ieee_minimum_number, l_builtin_features)
 				register_builtin_feature (tokens.is_less_feature_name, <<l_real_n_type.type>>, current_universe.boolean_type, tokens.builtin_real_n_is_less, l_builtin_features)
 				register_builtin_feature (tokens.is_nan_feature_name, Void, current_universe.boolean_type, tokens.builtin_real_n_is_nan, l_builtin_features)
 				register_builtin_feature (tokens.is_negative_infinity_feature_name, Void, current_universe.boolean_type, tokens.builtin_real_n_is_negative_infinity, l_builtin_features)

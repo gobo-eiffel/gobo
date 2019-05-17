@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -482,21 +482,28 @@ feature -- Built-in codes
 	builtin_real_n_floor_real_32: NATURAL_8 = 3
 	builtin_real_n_floor_real_64: NATURAL_8 = 4
 	builtin_real_n_identity: NATURAL_8 = 5
-	builtin_real_n_is_less: NATURAL_8 = 6
-	builtin_real_n_is_nan: NATURAL_8 = 7
-	builtin_real_n_is_negative_infinity: NATURAL_8 = 8
-	builtin_real_n_is_positive_infinity: NATURAL_8 = 9
-	builtin_real_n_minus: NATURAL_8 = 10
-	builtin_real_n_opposite: NATURAL_8 = 11
-	builtin_real_n_out: NATURAL_8 = 12
-	builtin_real_n_plus: NATURAL_8 = 13
-	builtin_real_n_power: NATURAL_8 = 14
-	builtin_real_n_product: NATURAL_8 = 15
-	builtin_real_n_quotient: NATURAL_8 = 16
-	builtin_real_n_to_double: NATURAL_8 = 17
-	builtin_real_n_truncated_to_integer: NATURAL_8 = 18
-	builtin_real_n_truncated_to_integer_64: NATURAL_8 = 19
-	builtin_real_n_truncated_to_real: NATURAL_8 = 20
+	builtin_real_n_ieee_is_equal: NATURAL_8 = 6
+	builtin_real_n_ieee_is_greater: NATURAL_8 = 7
+	builtin_real_n_ieee_is_greater_equal: NATURAL_8 = 8
+	builtin_real_n_ieee_is_less: NATURAL_8 = 9
+	builtin_real_n_ieee_is_less_equal: NATURAL_8 = 10
+	builtin_real_n_ieee_maximum_number: NATURAL_8 = 11
+	builtin_real_n_ieee_minimum_number: NATURAL_8 = 12
+	builtin_real_n_is_less: NATURAL_8 = 13
+	builtin_real_n_is_nan: NATURAL_8 = 14
+	builtin_real_n_is_negative_infinity: NATURAL_8 = 15
+	builtin_real_n_is_positive_infinity: NATURAL_8 = 16
+	builtin_real_n_minus: NATURAL_8 = 17
+	builtin_real_n_opposite: NATURAL_8 = 18
+	builtin_real_n_out: NATURAL_8 = 19
+	builtin_real_n_plus: NATURAL_8 = 20
+	builtin_real_n_power: NATURAL_8 = 21
+	builtin_real_n_product: NATURAL_8 = 22
+	builtin_real_n_quotient: NATURAL_8 = 23
+	builtin_real_n_to_double: NATURAL_8 = 24
+	builtin_real_n_truncated_to_integer: NATURAL_8 = 25
+	builtin_real_n_truncated_to_integer_64: NATURAL_8 = 26
+	builtin_real_n_truncated_to_real: NATURAL_8 = 27
 			-- Codes for built-in functions from classes "REAL_N"
 
 	builtin_real_n_ref_item: NATURAL_8 = 1

@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1586,6 +1586,69 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			identity_feature_name_not_void: Result /= Void
+		end
+
+	ieee_is_equal_feature_name: ET_FEATURE_NAME
+			-- 'ieee_is_equal' feature name
+		once ("PROCESS")
+			create {ET_IDENTIFIER} Result.make (ieee_is_equal_name)
+		ensure
+			instance_free: class
+			ieee_is_equal_feature_name_not_void: Result /= Void
+		end
+
+	ieee_is_greater_feature_name: ET_FEATURE_NAME
+			-- 'ieee_is_greater' feature name
+		once ("PROCESS")
+			create {ET_IDENTIFIER} Result.make (ieee_is_greater_name)
+		ensure
+			instance_free: class
+			ieee_is_greater_feature_name_not_void: Result /= Void
+		end
+
+	ieee_is_greater_equal_feature_name: ET_FEATURE_NAME
+			-- 'ieee_is_greater_equal' feature name
+		once ("PROCESS")
+			create {ET_IDENTIFIER} Result.make (ieee_is_greater_equal_name)
+		ensure
+			instance_free: class
+			ieee_is_greater_equal_feature_name_not_void: Result /= Void
+		end
+
+	ieee_is_less_feature_name: ET_FEATURE_NAME
+			-- 'ieee_is_less' feature name
+		once ("PROCESS")
+			create {ET_IDENTIFIER} Result.make (ieee_is_less_name)
+		ensure
+			instance_free: class
+			ieee_is_less_feature_name_not_void: Result /= Void
+		end
+
+	ieee_is_less_equal_feature_name: ET_FEATURE_NAME
+			-- 'ieee_is_less_equal' feature name
+		once ("PROCESS")
+			create {ET_IDENTIFIER} Result.make (ieee_is_less_equal_name)
+		ensure
+			instance_free: class
+			ieee_is_less_equal_feature_name_not_void: Result /= Void
+		end
+
+	ieee_maximum_number_feature_name: ET_FEATURE_NAME
+			-- 'ieee_maximum_number' feature name
+		once ("PROCESS")
+			create {ET_IDENTIFIER} Result.make (ieee_maximum_number_name)
+		ensure
+			instance_free: class
+			ieee_maximum_number_feature_name_not_void: Result /= Void
+		end
+
+	ieee_minimum_number_feature_name: ET_FEATURE_NAME
+			-- 'ieee_minimum_number' feature name
+		once ("PROCESS")
+			create {ET_IDENTIFIER} Result.make (ieee_minimum_number_name)
+		ensure
+			instance_free: class
+			ieee_minimum_number_feature_name_not_void: Result /= Void
 		end
 
 	ignore_feature_name: ET_FEATURE_NAME
@@ -5225,6 +5288,27 @@ feature -- Keyword and symbol names
 
 	identity_name: STRING = "identity"
 			-- Name of Eiffel feature 'identity'
+
+	ieee_is_equal_name: STRING = "ieee_is_equal"
+			-- Name of Eiffel feature 'ieee_is_equal'
+
+	ieee_is_greater_name: STRING = "ieee_is_greater"
+			-- Name of Eiffel feature 'ieee_is_greater'
+
+	ieee_is_greater_equal_name: STRING = "ieee_is_greater_equal"
+			-- Name of Eiffel feature 'ieee_is_greater_equal'
+
+	ieee_is_less_name: STRING = "ieee_is_less"
+			-- Name of Eiffel feature 'ieee_is_less'
+
+	ieee_is_less_equal_name: STRING = "ieee_is_less_equal"
+			-- Name of Eiffel feature 'ieee_is_less_equal'
+
+	ieee_maximum_number_name: STRING = "ieee_maximum_number"
+			-- Name of Eiffel feature 'ieee_maximum_number'
+
+	ieee_minimum_number_name: STRING = "ieee_minimum_number"
+			-- Name of Eiffel feature 'ieee_minimum_number'
 
 	ignore_name: STRING = "ignore"
 			-- Name of Eiffel feature 'ignore'

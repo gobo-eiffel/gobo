@@ -3704,6 +3704,48 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_real_n_identity_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_equal then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_real_n_ieee_is_equal_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_greater then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_real_n_ieee_is_greater_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_greater_equal then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_real_n_ieee_is_greater_equal_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_less then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_real_n_ieee_is_less_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_less_equal then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_real_n_ieee_is_less_equal_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_maximum_number then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_real_n_ieee_maximum_number_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_minimum_number then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_real_n_ieee_minimum_number_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when {ET_TOKEN_CODES}.builtin_real_n_is_less then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -15248,6 +15290,20 @@ feature {NONE} -- Query call generation
 				print_builtin_real_n_floor_real_64_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_real_n_identity then
 				print_builtin_real_n_identity_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_equal then
+				print_builtin_real_n_ieee_is_equal_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_greater then
+				print_builtin_real_n_ieee_is_greater_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_greater_equal then
+				print_builtin_real_n_ieee_is_greater_equal_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_less then
+				print_builtin_real_n_ieee_is_less_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_is_less_equal then
+				print_builtin_real_n_ieee_is_less_equal_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_maximum_number then
+				print_builtin_real_n_ieee_maximum_number_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_real_n_ieee_minimum_number then
+				print_builtin_real_n_ieee_minimum_number_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_real_n_is_less then
 				print_builtin_real_n_is_less_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_real_n_is_nan then
@@ -24863,6 +24919,160 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				end
 				current_file.put_character (')')
 			end
+		end
+
+	print_builtin_real_n_ieee_is_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_N.ieee_is_equal'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_c_function_name: STRING
+		do
+			if a_target_type = current_dynamic_system.real_32_type then
+				l_c_function_name := c_ge_real_32_ieee_is_equal
+			else
+				l_c_function_name := c_ge_real_64_ieee_is_equal
+			end
+			include_runtime_header_file ("ge_real.h", False, header_file)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_real_n_ieee_is_greater_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_N.ieee_is_greater'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_c_function_name: STRING
+		do
+			if a_target_type = current_dynamic_system.real_32_type then
+				l_c_function_name := c_ge_real_32_ieee_is_greater
+			else
+				l_c_function_name := c_ge_real_64_ieee_is_greater
+			end
+			include_runtime_header_file ("ge_real.h", False, header_file)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_real_n_ieee_is_greater_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_N.ieee_is_greater_equal'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_c_function_name: STRING
+		do
+			if a_target_type = current_dynamic_system.real_32_type then
+				l_c_function_name := c_ge_real_32_ieee_is_greater_equal
+			else
+				l_c_function_name := c_ge_real_64_ieee_is_greater_equal
+			end
+			include_runtime_header_file ("ge_real.h", False, header_file)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_real_n_ieee_is_less_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_N.ieee_is_less'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_c_function_name: STRING
+		do
+			if a_target_type = current_dynamic_system.real_32_type then
+				l_c_function_name := c_ge_real_32_ieee_is_less
+			else
+				l_c_function_name := c_ge_real_64_ieee_is_less
+			end
+			include_runtime_header_file ("ge_real.h", False, header_file)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_real_n_ieee_is_less_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_N.ieee_is_less_equal'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_c_function_name: STRING
+		do
+			if a_target_type = current_dynamic_system.real_32_type then
+				l_c_function_name := c_ge_real_32_ieee_is_less_equal
+			else
+				l_c_function_name := c_ge_real_64_ieee_is_less_equal
+			end
+			include_runtime_header_file ("ge_real.h", False, header_file)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_real_n_ieee_maximum_number_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_N.ieee_maximum_number'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_c_function_name: STRING
+		do
+			if a_target_type = current_dynamic_system.real_32_type then
+				l_c_function_name := c_ge_real_32_ieee_maximum_number
+			else
+				l_c_function_name := c_ge_real_64_ieee_maximum_number
+			end
+			include_runtime_header_file ("ge_real.h", False, header_file)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_real_n_ieee_minimum_number_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'REAL_N.ieee_minimum_number'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_c_function_name: STRING
+		do
+			if a_target_type = current_dynamic_system.real_32_type then
+				l_c_function_name := c_ge_real_32_ieee_minimum_number
+			else
+				l_c_function_name := c_ge_real_64_ieee_minimum_number
+			end
+			include_runtime_header_file ("ge_real.h", False, header_file)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_real_n_is_less_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -36118,6 +36328,13 @@ feature {NONE} -- Constants
 	c_ge_register_dispose: STRING = "GE_register_dispose"
 	c_ge_real_32_field: STRING = "GE_real_32_field"
 	c_ge_real_32_field_at: STRING = "GE_real_32_field_at"
+	c_ge_real_32_ieee_is_equal: STRING = "GE_real_32_ieee_is_equal"
+	c_ge_real_32_ieee_is_greater: STRING = "GE_real_32_ieee_is_greater"
+	c_ge_real_32_ieee_is_greater_equal: STRING = "GE_real_32_ieee_is_greater_equal"
+	c_ge_real_32_ieee_is_less: STRING = "GE_real_32_ieee_is_less"
+	c_ge_real_32_ieee_is_less_equal: STRING = "GE_real_32_ieee_is_less_equal"
+	c_ge_real_32_ieee_maximum_number: STRING = "GE_real_32_ieee_maximum_number"
+	c_ge_real_32_ieee_minimum_number: STRING = "GE_real_32_ieee_minimum_number"
 	c_ge_real_32_is_equal: STRING = "GE_real_32_is_equal"
 	c_ge_real_32_is_less: STRING = "GE_real_32_is_less"
 	c_ge_real_32_is_nan: STRING = "GE_real_32_is_nan"
@@ -36128,6 +36345,13 @@ feature {NONE} -- Constants
 	c_ge_real_32_positive_infinity: STRING = "GE_real_32_positive_infinity"
 	c_ge_real_64_field: STRING = "GE_real_64_field"
 	c_ge_real_64_field_at: STRING = "GE_real_64_field_at"
+	c_ge_real_64_ieee_is_equal: STRING = "GE_real_64_ieee_is_equal"
+	c_ge_real_64_ieee_is_greater: STRING = "GE_real_64_ieee_is_greater"
+	c_ge_real_64_ieee_is_greater_equal: STRING = "GE_real_64_ieee_is_greater_equal"
+	c_ge_real_64_ieee_is_less: STRING = "GE_real_64_ieee_is_less"
+	c_ge_real_64_ieee_is_less_equal: STRING = "GE_real_64_ieee_is_less_equal"
+	c_ge_real_64_ieee_maximum_number: STRING = "GE_real_64_ieee_maximum_number"
+	c_ge_real_64_ieee_minimum_number: STRING = "GE_real_64_ieee_minimum_number"
 	c_ge_real_64_is_equal: STRING = "GE_real_64_is_equal"
 	c_ge_real_64_is_less: STRING = "GE_real_64_is_less"
 	c_ge_real_64_is_nan: STRING = "GE_real_64_is_nan"

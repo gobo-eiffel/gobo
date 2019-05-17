@@ -6,6 +6,7 @@
 
 * Added support for `total_order_on_reals` so that the assertions inherited from
   `COMPARABLE` do not get violated with NaNs in classes `REAL_32` and `REAL_64`.
+* Implemented `ieee_*` built-in routines in classes `REAL_32` and `REAL_64`.
 
 ### Gobo Eiffel Tools Library
 
