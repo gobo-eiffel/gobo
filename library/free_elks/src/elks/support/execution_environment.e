@@ -211,6 +211,33 @@ feature -- Access
 			instance_free: class
 		end
 
+	temporary_directory_path: detachable PATH
+			-- Temporary directory name.
+			-- On Windows:  %SystemDrive%\Users\%USERNAME%\AppData\Local\Temp (%USERPROFILE%\AppData\Local\Temp).
+			-- On Unix: /tmp and /var/tmp.
+			-- On VMS: /sys$scratch	
+			-- Otherwise Void	
+		note
+			EIS: "name=temporary path", "src=https://en.wikipedia.org/wiki/Temporary_folder", "protocol=Uri"
+		local
+			l_count, l_nbytes: INTEGER
+			ns: NATIVE_STRING
+		once
+			l_count := 10
+			create ns.make_empty (l_count)
+			l_nbytes := eif_temporary_directory_name_ptr (ns.item, l_count)
+			if l_nbytes > l_count then
+				l_count := l_nbytes
+				create ns.make_empty (l_count)
+				l_nbytes := eif_temporary_directory_name_ptr (ns.item, l_count)
+			end
+			if l_nbytes > 0 and l_nbytes <= l_count then
+				create Result.make_from_string (ns.string)
+			end
+		ensure
+			instance_free: class
+		end
+
 	home_directory_name: detachable STRING
 			-- Directory name corresponding to the home directory.
 		obsolete
@@ -635,6 +662,15 @@ feature {NONE} -- External
 			"C signature (EIF_FILENAME, EIF_INTEGER): EIF_INTEGER use %"eif_path_name.h%""
 		end
 
+	eif_temporary_directory_name_ptr (a_ptr: POINTER; a_count: INTEGER): INTEGER
+			-- Stored directory name corresponding to the temporary directory in `a_ptr' with `a_count' bytes.
+			-- If there is a need for more bytes than `a_count', or if `a_ptr' is the default_pointer,
+			-- nothing is done with `a_ptr'.
+			-- We always return the number of bytes required including the null-terminating character.
+		external
+			"C signature (EIF_FILENAME, EIF_INTEGER): EIF_INTEGER use %"eif_path_name.h%""
+		end
+
 	eif_sleep (nanoseconds: INTEGER_64)
 			-- Suspend thread execution for interval specified in
 			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
@@ -647,7 +683,7 @@ feature {NONE} -- External
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

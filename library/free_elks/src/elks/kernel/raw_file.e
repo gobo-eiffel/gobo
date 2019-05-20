@@ -20,7 +20,8 @@ create
 	make, make_with_name, make_with_path,
 	make_open_read, make_open_write, make_open_append,
 	make_open_read_write, make_create_read_write,
-	make_open_read_append
+	make_open_read_append,
+	make_open_temporary, make_open_temporary_with_prefix
 
 feature -- Status report
 
@@ -333,7 +334,7 @@ invariant
 	not_plain_text: not is_plain_text
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

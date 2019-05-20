@@ -234,7 +234,6 @@ feature {NATIVE_STRING_HANDLER} -- Access
 		do
 			create l_managed.share_from_pointer (a_ptr, pointer_length_in_bytes (a_ptr))
 			if {PLATFORM}.is_windows then
-				Result := u.utf_16_0_pointer_to_string_32 (l_managed)
 				Result := u.utf_16_0_pointer_to_escaped_string_32 (l_managed)
 			else
 				Result := u.utf_8_0_pointer_to_escaped_string_32 (l_managed)
@@ -621,7 +620,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

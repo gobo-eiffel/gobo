@@ -39,6 +39,7 @@ feature -- Initialization
 			make_filled_area (False, n)
 		ensure
 			correct_allocation: count = n
+			all_false: across 1 |..| n as i all not item (i.item) end
 		end
 
 feature -- Access
@@ -105,12 +106,16 @@ feature -- Element change
 			-- Set all booleans to true.
 		do
 			area.fill_with (True, 0, count - 1)
+		ensure
+			all_true: across 1 |..| count as i all item (i.item) end
 		end
 
 	all_false
 			-- Set all booleans to false.
 		do
 			area.fill_with (False, 0, count - 1)
+		ensure
+			all_false: across 1 |..| count as i all not item (i.item) end
 		end
 
 feature -- Basic operations
@@ -216,7 +221,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

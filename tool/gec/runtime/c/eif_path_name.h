@@ -4,7 +4,7 @@
 		"C functions used to implement class PATH_NAME"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,7 @@ extern EIF_BOOLEAN eif_case_sensitive_path_names(void);
 extern EIF_REFERENCE eif_current_dir_representation(void);
 extern EIF_REFERENCE eif_root_directory_name(void);
 extern EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count);
+extern EIF_INTEGER eif_temporary_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count);
 extern EIF_INTEGER eif_user_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count);
 
 #ifdef __cplusplus

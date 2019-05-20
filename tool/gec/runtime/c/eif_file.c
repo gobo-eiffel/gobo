@@ -4,7 +4,7 @@
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1884,6 +1884,53 @@ EIF_INTEGER eif_file_date(EIF_FILENAME name)
 EIF_INTEGER eif_file_access_date(EIF_FILENAME name)
 {
 	return eif_file_date_for(name, 0);
+}
+
+/*
+ * Generate a temporary file with a name based on a template and
+ * return a file descriptor to the file.
+ * The template is overwritten with the name of the new file.
+ * Return a non-zero file descriptor for the temporary file upon success, -1 otherwise.
+ * `template'is the template to use for creating the temporary file.
+ * It must match the rules for mk[s]temp (i.e. end in "XXXXXX").
+ * On exit, it is updated with the new name.
+ * `is_text_mode', if non-zero, then the temporary file is created
+ * in text mode, otherwise in binary mode.<param>
+ * Note: Code was inspired from https://github.com/mirror/mingw-w64/blob/master/mingw-w64-crt/misc/mkstemp.c
+ */
+EIF_INTEGER eif_file_mkstemp(EIF_FILENAME template, EIF_BOOLEAN is_text_mode)
+{
+	int fd;
+#ifdef EIF_WINDOWS
+	{
+		size_t len = wcslen(template);
+		size_t j, index;
+		int32_t i, l_max;
+
+		/* These are the (62) characters used in temporary filenames. */
+		static const wchar_t letters[] = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+		/* User may supply more than six trailing Xs */
+		for (index = len - 6; index > 0 && template[index - 1] == L'X'; index--);
+
+		/* Like OpenBSD, mkstemp() will try at least 2 ** 31 combinations before * giving up. */
+		l_max = GE_max_int32;
+		for (i = 0; i < l_max; i++) {
+			for (j = index; j < len; j++) {
+				template[j] = letters[rand() % 62];
+			}
+			fd = _wsopen( template, _O_CREAT | _O_EXCL | _O_RDWR | (is_text_mode ? _O_TEXT : _O_BINARY) | _O_NOINHERIT,_SH_DENYRW, _S_IREAD | _S_IWRITE);
+			/* Success, if the file descriptor is valid or if there is a creation error that is not due to a file already existing. */
+			if ((fd != -1) || (fd == -1 && errno != EEXIST)) {
+				break;
+			}
+		}
+	}
+#else
+	fd = mkstemp(template);
+#endif
+
+	return (EIF_INTEGER) fd;
 }
 
 #ifdef __cplusplus

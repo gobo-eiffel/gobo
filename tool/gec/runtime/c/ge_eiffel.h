@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -218,6 +218,7 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #else
 #define GE_min_int32 GE_int32(-2147483648)
 #endif
+#define GE_max_int32 GE_int32(2147483647)
 #if defined(__LCC__) || defined(__GNUC__) || defined(__MINGW32__)
 /* lcc-win32 reports a constant overflow for -9223372036854775808. */
 /* gcc and mingw-win64 warn that integer constant is so large that it is unsigned. */

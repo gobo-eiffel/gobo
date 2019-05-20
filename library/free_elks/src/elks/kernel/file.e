@@ -171,6 +171,35 @@ feature -- Initialization
 			open_append: is_open_append
 		end
 
+	make_open_temporary
+			-- Create a file object with a unique temporary file name,
+			-- with read/write mode.
+		do
+			make_open_temporary_with_prefix ("eiftmp")
+		ensure
+			exists: exists
+			open_read: is_open_read
+			open_write: is_open_write
+		end
+
+	make_open_temporary_with_prefix (a_prefix: READABLE_STRING_GENERAL)
+			-- Create a file object with a unique temporary file name with prefix `a_prefix`,
+			-- with read/write mode.
+		note
+			EIS:"name=mkstemp", "src=http://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
+		local
+			l_fd: INTEGER
+		do
+			set_name (a_prefix + "XXXXXX")
+			l_fd := eif_temp_file (internal_name_pointer.item, is_plain_text)
+			make_with_name (buffered_file_info.pointer_to_file_name_32 (internal_name_pointer.item))
+			fd_open_read_write (l_fd)
+		ensure
+			exists: exists
+			open_read: is_open_read
+			open_write: is_open_write
+		end
+
 feature -- Access
 
 	path: PATH
@@ -311,6 +340,35 @@ feature -- Access
 		do
 			(create {MISMATCH_CORRECTOR}).mismatch_information.do_nothing
 			Result := c_retrieved (descriptor)
+		end
+
+	null_path: PATH
+			-- Null device path.
+		note
+			EIS: "name=Null Device", "src=https://en.wikipedia.org/wiki/Null_device", "protocol=uri"
+		do
+			create Result.make_from_string (null_name)
+		ensure
+			instance_free: class
+		end
+
+	null_name: STRING
+			-- Null device name.
+		note
+			EIS: "name=Null Device", "src=https://en.wikipedia.org/wiki/Null_device", "protocol=uri"
+		do
+			if {PLATFORM}.is_windows then
+				Result := "nul"
+			elseif {PLATFORM}.is_vms then
+				Result := "NL:"
+			elseif {PLATFORM}.is_vxworks  then
+				Result := "/null"
+			else
+					-- On Unix or Unix like systems.
+				Result := "/dev/null"
+			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Measurement
@@ -2093,6 +2151,17 @@ feature {NONE} -- Implementation
 			"eif_file_access_date"
 		end
 
+	eif_temp_file (a_name_template: POINTER; a_text_mode: BOOLEAN): INTEGER
+			-- Generate a temporary file and return an file descriptor to the file.
+			-- `a_name_template`: pattern used to create the temporary file.
+			-- `a_text_mode`:, if text mode is True, the temporary file is created in text mode,
+			-- otherwise in binary mode.
+		external
+			"C signature (EIF_FILENAME, EIF_BOOLEAN): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"eif_file_mkstemp"
+		end
+
 feature {NONE} -- Inapplicable
 
 	go_to (r: CURSOR)
@@ -2148,7 +2217,7 @@ invariant
 	name_not_empty: not internal_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

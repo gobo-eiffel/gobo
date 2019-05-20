@@ -8,11 +8,11 @@ note
 
 class OPERATING_ENVIRONMENT
 
-feature
+feature -- Access
 
 	Directory_separator: CHARACTER
 			-- Character used to separate subdirectories in a path name on this platform.
-			--| To build portable path names, use PATH_NAME and its descendants.
+			--| To build portable path names, use PATH.
 		once
 			Result := c_dir_separator
 		ensure
@@ -26,6 +26,8 @@ feature
 		ensure
 			is_class: class
 		end
+
+feature -- Status report		
 
 	home_directory_supported: BOOLEAN
 			-- Is the notion of home directory supported on this platform?
@@ -57,6 +59,7 @@ feature
 			is_class: class
 		end
 
+
 feature {NONE} -- Implementation
 
 	c_dir_separator: CHARACTER
@@ -76,7 +79,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
