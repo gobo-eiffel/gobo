@@ -1495,7 +1495,7 @@ feature {ET_AST_NODE} -- Processing
 			l_item: ET_FEATURE_NAME_ITEM
 			l_feature_name: ET_FEATURE_NAME
 		do
-			a_list.creation_keyword.process (Current)
+			a_list.create_keyword.process (Current)
 			if attached a_list.clients_clause as l_clients then
 				print_space
 				l_clients.process (Current)

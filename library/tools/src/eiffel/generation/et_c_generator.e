@@ -35232,7 +35232,7 @@ feature {NONE} -- Dynamic type sets
 		local
 			i, j: INTEGER
 		do
-			if an_operand = tokens.current_keyword then
+			if an_operand.is_current then
 				Result := current_type
 			else
 				i := an_operand.index
@@ -35261,7 +35261,7 @@ feature {NONE} -- Dynamic type sets
 			an_operand_not_void: an_operand /= Void
 			a_feature_not_void: a_feature /= Void
 		do
-			if an_operand = tokens.current_keyword then
+			if an_operand.is_current then
 				Result := a_feature.target_type
 			elseif attached a_feature.dynamic_type_set (an_operand) as l_dynamic_type_set then
 				Result := l_dynamic_type_set

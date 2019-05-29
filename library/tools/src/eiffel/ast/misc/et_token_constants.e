@@ -20,7 +20,7 @@ feature -- Class names
 
 	any_class_name: ET_CLASS_NAME
 			-- "ANY" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_any_name)
 		ensure
 			instance_free: class
@@ -29,7 +29,7 @@ feature -- Class names
 
 	arguments_32_class_name: ET_CLASS_NAME
 			-- "ARGUMENTS_32" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_arguments_32_name)
 		ensure
 			instance_free: class
@@ -38,7 +38,7 @@ feature -- Class names
 
 	array_class_name: ET_CLASS_NAME
 			-- "ARRAY" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_array_name)
 		ensure
 			instance_free: class
@@ -47,7 +47,7 @@ feature -- Class names
 
 	boolean_class_name: ET_CLASS_NAME
 			-- "BOOLEAN" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_boolean_name)
 		ensure
 			instance_free: class
@@ -56,7 +56,7 @@ feature -- Class names
 
 	character_class_name: ET_CLASS_NAME
 			-- "CHARACTER" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_character_name)
 		ensure
 			instance_free: class
@@ -65,7 +65,7 @@ feature -- Class names
 
 	character_8_class_name: ET_CLASS_NAME
 			-- "CHARACTER_8" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_character_8_name)
 		ensure
 			instance_free: class
@@ -74,7 +74,7 @@ feature -- Class names
 
 	character_32_class_name: ET_CLASS_NAME
 			-- "CHARACTER_32" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_character_32_name)
 		ensure
 			instance_free: class
@@ -83,7 +83,7 @@ feature -- Class names
 
 	com_failure_class_name: ET_CLASS_NAME
 			-- "COM_FAILURE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_com_failure_name)
 		ensure
 			instance_free: class
@@ -92,7 +92,7 @@ feature -- Class names
 
 	disposable_class_name: ET_CLASS_NAME
 			-- "DISPOSABLE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_disposable_name)
 		ensure
 			instance_free: class
@@ -101,7 +101,7 @@ feature -- Class names
 
 	double_class_name: ET_CLASS_NAME
 			-- "DOUBLE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_double_name)
 		ensure
 			instance_free: class
@@ -110,7 +110,7 @@ feature -- Class names
 
 	exception_class_name: ET_CLASS_NAME
 			-- "EXCEPTION" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_exception_name)
 		ensure
 			instance_free: class
@@ -119,7 +119,7 @@ feature -- Class names
 
 	exception_manager_class_name: ET_CLASS_NAME
 			-- "EXCEPTION_MANAGER" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_exception_manager_name)
 		ensure
 			instance_free: class
@@ -128,7 +128,7 @@ feature -- Class names
 
 	exception_manager_factory_class_name: ET_CLASS_NAME
 			-- "EXCEPTION_MANAGER_FACTORY" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_exception_manager_factory_name)
 		ensure
 			instance_free: class
@@ -137,7 +137,7 @@ feature -- Class names
 
 	function_class_name: ET_CLASS_NAME
 			-- "FUNCTION" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_function_name)
 		ensure
 			instance_free: class
@@ -146,7 +146,7 @@ feature -- Class names
 
 	identified_routines_class_name: ET_CLASS_NAME
 			-- "IDENTIFIED_ROUTINES" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_identified_routines_name)
 		ensure
 			instance_free: class
@@ -155,7 +155,7 @@ feature -- Class names
 
 	immutable_string_32_class_name: ET_CLASS_NAME
 			-- "IMMUTABLE_STRING_32" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_immutable_string_32_name)
 		ensure
 			instance_free: class
@@ -164,7 +164,7 @@ feature -- Class names
 
 	integer_class_name: ET_CLASS_NAME
 			-- "INTEGER" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_name)
 		ensure
 			instance_free: class
@@ -173,7 +173,7 @@ feature -- Class names
 
 	integer_8_class_name: ET_CLASS_NAME
 			-- "INTEGER_8" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_8_name)
 		ensure
 			instance_free: class
@@ -182,7 +182,7 @@ feature -- Class names
 
 	integer_16_class_name: ET_CLASS_NAME
 			-- "INTEGER_16" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_16_name)
 		ensure
 			instance_free: class
@@ -191,7 +191,7 @@ feature -- Class names
 
 	integer_32_class_name: ET_CLASS_NAME
 			-- "INTEGER_32" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_32_name)
 		ensure
 			instance_free: class
@@ -200,7 +200,7 @@ feature -- Class names
 
 	integer_64_class_name: ET_CLASS_NAME
 			-- "INTEGER_64" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_64_name)
 		ensure
 			instance_free: class
@@ -209,7 +209,7 @@ feature -- Class names
 
 	internal_class_name: ET_CLASS_NAME
 			-- "INTERNAL" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_internal_name)
 		ensure
 			instance_free: class
@@ -218,7 +218,7 @@ feature -- Class names
 
 	ise_exception_manager_class_name: ET_CLASS_NAME
 			-- "ISE_EXCEPTION_MANAGER" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_ise_exception_manager_name)
 		ensure
 			instance_free: class
@@ -227,7 +227,7 @@ feature -- Class names
 
 	ise_runtime_class_name: ET_CLASS_NAME
 			-- "ISE_RUNTIME" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_ise_runtime_name)
 		ensure
 			instance_free: class
@@ -236,7 +236,7 @@ feature -- Class names
 
 	iterable_class_name: ET_CLASS_NAME
 			-- "ITERABLE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_iterable_name)
 		ensure
 			instance_free: class
@@ -245,7 +245,7 @@ feature -- Class names
 
 	iteration_cursor_class_name: ET_CLASS_NAME
 			-- "ITERATION_CURSOR" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_iteration_cursor_name)
 		ensure
 			instance_free: class
@@ -254,7 +254,7 @@ feature -- Class names
 
 	memory_class_name: ET_CLASS_NAME
 			-- "MEMORY" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_memory_name)
 		ensure
 			instance_free: class
@@ -263,7 +263,7 @@ feature -- Class names
 
 	native_array_class_name: ET_CLASS_NAME
 			-- "NATIVE_ARRAY" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_native_array_name)
 		ensure
 			instance_free: class
@@ -272,7 +272,7 @@ feature -- Class names
 
 	natural_class_name: ET_CLASS_NAME
 			-- "NATURAL" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_name)
 		ensure
 			instance_free: class
@@ -281,7 +281,7 @@ feature -- Class names
 
 	natural_8_class_name: ET_CLASS_NAME
 			-- "NATURAL_8" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_8_name)
 		ensure
 			instance_free: class
@@ -290,7 +290,7 @@ feature -- Class names
 
 	natural_16_class_name: ET_CLASS_NAME
 			-- "NATURAL_16" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_16_name)
 		ensure
 			instance_free: class
@@ -299,7 +299,7 @@ feature -- Class names
 
 	natural_32_class_name: ET_CLASS_NAME
 			-- "NATURAL_32" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_32_name)
 		ensure
 			instance_free: class
@@ -308,7 +308,7 @@ feature -- Class names
 
 	natural_64_class_name: ET_CLASS_NAME
 			-- "NATURAL_64" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_64_name)
 		ensure
 			instance_free: class
@@ -317,7 +317,7 @@ feature -- Class names
 
 	none_class_name: ET_CLASS_NAME
 			-- "NONE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_none_name)
 		ensure
 			instance_free: class
@@ -326,7 +326,7 @@ feature -- Class names
 
 	platform_class_name: ET_CLASS_NAME
 			-- "PLATFORM" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_platform_name)
 		ensure
 			instance_free: class
@@ -335,7 +335,7 @@ feature -- Class names
 
 	pointer_class_name: ET_CLASS_NAME
 			-- "POINTER" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_pointer_name)
 		ensure
 			instance_free: class
@@ -344,7 +344,7 @@ feature -- Class names
 
 	predicate_class_name: ET_CLASS_NAME
 			-- "PREDICATE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_predicate_name)
 		ensure
 			instance_free: class
@@ -353,7 +353,7 @@ feature -- Class names
 
 	procedure_class_name: ET_CLASS_NAME
 			-- "PROCEDURE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_procedure_name)
 		ensure
 			instance_free: class
@@ -362,7 +362,7 @@ feature -- Class names
 
 	real_class_name: ET_CLASS_NAME
 			-- "REAL" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_real_name)
 		ensure
 			instance_free: class
@@ -371,7 +371,7 @@ feature -- Class names
 
 	real_32_class_name: ET_CLASS_NAME
 			-- "REAL_32" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_real_32_name)
 		ensure
 			instance_free: class
@@ -380,7 +380,7 @@ feature -- Class names
 
 	real_64_class_name: ET_CLASS_NAME
 			-- "REAL_64" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_real_64_name)
 		ensure
 			instance_free: class
@@ -389,7 +389,7 @@ feature -- Class names
 
 	routine_class_name: ET_CLASS_NAME
 			-- "ROUTINE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_routine_name)
 		ensure
 			instance_free: class
@@ -398,7 +398,7 @@ feature -- Class names
 
 	special_class_name: ET_CLASS_NAME
 			-- "SPECIAL" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_special_name)
 		ensure
 			instance_free: class
@@ -407,7 +407,7 @@ feature -- Class names
 
 	string_class_name: ET_CLASS_NAME
 			-- "STRING" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_string_name)
 		ensure
 			instance_free: class
@@ -416,7 +416,7 @@ feature -- Class names
 
 	string_8_class_name: ET_CLASS_NAME
 			-- "STRING_8" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_string_8_name)
 		ensure
 			instance_free: class
@@ -425,7 +425,7 @@ feature -- Class names
 
 	string_32_class_name: ET_CLASS_NAME
 			-- "STRING_32" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_string_32_name)
 		ensure
 			instance_free: class
@@ -434,7 +434,7 @@ feature -- Class names
 
 	system_object_class_name: ET_CLASS_NAME
 			-- "SYSTEM_OBJECT" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_system_object_name)
 		ensure
 			instance_free: class
@@ -443,7 +443,7 @@ feature -- Class names
 
 	system_string_class_name: ET_CLASS_NAME
 			-- "SYSTEM_STRING" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_system_string_name)
 		ensure
 			instance_free: class
@@ -452,7 +452,7 @@ feature -- Class names
 
 	tuple_class_name: ET_CLASS_NAME
 			-- "TUPLE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_tuple_name)
 		ensure
 			instance_free: class
@@ -461,7 +461,7 @@ feature -- Class names
 
 	type_class_name: ET_CLASS_NAME
 			-- "TYPE" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_type_name)
 		ensure
 			instance_free: class
@@ -470,7 +470,7 @@ feature -- Class names
 
 	typed_pointer_class_name: ET_CLASS_NAME
 			-- "TYPED_POINTER" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_typed_pointer_name)
 		ensure
 			instance_free: class
@@ -479,7 +479,7 @@ feature -- Class names
 
 	wide_character_class_name: ET_CLASS_NAME
 			-- "WIDE_CHARACTER" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_wide_character_name)
 		ensure
 			instance_free: class
@@ -488,7 +488,7 @@ feature -- Class names
 
 	unknown_class_name: ET_CLASS_NAME
 			-- "*UNKNOWN*" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_unknown_name)
 		ensure
 			instance_free: class
@@ -499,7 +499,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	boolean_ref_class_name: ET_CLASS_NAME
 			-- "BOOLEAN_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_boolean_ref_name)
 		ensure
 			instance_free: class
@@ -508,7 +508,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	character_ref_class_name: ET_CLASS_NAME
 			-- "CHARACTER_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_character_ref_name)
 		ensure
 			instance_free: class
@@ -517,7 +517,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	character_8_ref_class_name: ET_CLASS_NAME
 			-- "CHARACTER_8_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_character_8_ref_name)
 		ensure
 			instance_free: class
@@ -526,7 +526,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	character_32_ref_class_name: ET_CLASS_NAME
 			-- "CHARACTER_32_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_character_32_ref_name)
 		ensure
 			instance_free: class
@@ -535,7 +535,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	double_ref_class_name: ET_CLASS_NAME
 			-- "DOUBLE_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_double_ref_name)
 		ensure
 			instance_free: class
@@ -544,7 +544,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	integer_ref_class_name: ET_CLASS_NAME
 			-- "INTEGER_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_ref_name)
 		ensure
 			instance_free: class
@@ -553,7 +553,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	integer_8_ref_class_name: ET_CLASS_NAME
 			-- "INTEGER_8_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_8_ref_name)
 		ensure
 			instance_free: class
@@ -562,7 +562,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	integer_16_ref_class_name: ET_CLASS_NAME
 			-- "INTEGER_16_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_16_ref_name)
 		ensure
 			instance_free: class
@@ -571,7 +571,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	integer_32_ref_class_name: ET_CLASS_NAME
 			-- "INTEGER_32_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_32_ref_name)
 		ensure
 			instance_free: class
@@ -580,7 +580,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	integer_64_ref_class_name: ET_CLASS_NAME
 			-- "INTEGER_64_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_64_ref_name)
 		ensure
 			instance_free: class
@@ -589,7 +589,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	natural_ref_class_name: ET_CLASS_NAME
 			-- "NATURAL_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_ref_name)
 		ensure
 			instance_free: class
@@ -598,7 +598,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	natural_8_ref_class_name: ET_CLASS_NAME
 			-- "NATURAL_8_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_8_ref_name)
 		ensure
 			instance_free: class
@@ -607,7 +607,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	natural_16_ref_class_name: ET_CLASS_NAME
 			-- "NATURAL_16_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_16_ref_name)
 		ensure
 			instance_free: class
@@ -616,7 +616,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	natural_32_ref_class_name: ET_CLASS_NAME
 			-- "NATURAL_32_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_32_ref_name)
 		ensure
 			instance_free: class
@@ -625,7 +625,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	natural_64_ref_class_name: ET_CLASS_NAME
 			-- "NATURAL_64_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_64_ref_name)
 		ensure
 			instance_free: class
@@ -634,7 +634,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	pointer_ref_class_name: ET_CLASS_NAME
 			-- "POINTER_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_pointer_ref_name)
 		ensure
 			instance_free: class
@@ -643,7 +643,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	real_ref_class_name: ET_CLASS_NAME
 			-- "REAL_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_real_ref_name)
 		ensure
 			instance_free: class
@@ -652,7 +652,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	real_32_ref_class_name: ET_CLASS_NAME
 			-- "REAL_32_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_real_32_ref_name)
 		ensure
 			instance_free: class
@@ -661,7 +661,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	real_64_ref_class_name: ET_CLASS_NAME
 			-- "REAL_64_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_real_64_ref_name)
 		ensure
 			instance_free: class
@@ -670,7 +670,7 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 
 	wide_character_ref_class_name: ET_CLASS_NAME
 			-- "WIDE_CHARACTER_REF" class name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_wide_character_ref_name)
 		ensure
 			instance_free: class
@@ -681,7 +681,7 @@ feature -- Feature names
 
 	after_feature_name: ET_FEATURE_NAME
 			-- 'after' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (after_name)
 		ensure
 			instance_free: class
@@ -690,7 +690,7 @@ feature -- Feature names
 
 	aliased_resized_area_feature_name: ET_FEATURE_NAME
 			-- 'aliased_resized_area' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (aliased_resized_area_name)
 		ensure
 			instance_free: class
@@ -699,7 +699,7 @@ feature -- Feature names
 
 	area_feature_name: ET_FEATURE_NAME
 			-- 'area' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (area_name)
 		ensure
 			instance_free: class
@@ -708,7 +708,7 @@ feature -- Feature names
 
 	argument_count_feature_name: ET_FEATURE_NAME
 			-- 'argument_count' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (argument_count_name)
 		ensure
 			instance_free: class
@@ -717,7 +717,7 @@ feature -- Feature names
 
 	as_integer_8_feature_name: ET_FEATURE_NAME
 			-- 'as_integer_8' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (as_integer_8_name)
 		ensure
 			instance_free: class
@@ -726,7 +726,7 @@ feature -- Feature names
 
 	as_integer_16_feature_name: ET_FEATURE_NAME
 			-- 'as_integer_16' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (as_integer_16_name)
 		ensure
 			instance_free: class
@@ -735,7 +735,7 @@ feature -- Feature names
 
 	as_integer_32_feature_name: ET_FEATURE_NAME
 			-- 'as_integer_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (as_integer_32_name)
 		ensure
 			instance_free: class
@@ -744,7 +744,7 @@ feature -- Feature names
 
 	as_integer_64_feature_name: ET_FEATURE_NAME
 			-- 'as_integer_84' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (as_integer_64_name)
 		ensure
 			instance_free: class
@@ -753,7 +753,7 @@ feature -- Feature names
 
 	as_natural_8_feature_name: ET_FEATURE_NAME
 			-- 'as_natural_8' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (as_natural_8_name)
 		ensure
 			instance_free: class
@@ -762,7 +762,7 @@ feature -- Feature names
 
 	as_natural_16_feature_name: ET_FEATURE_NAME
 			-- 'as_natural_16' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (as_natural_16_name)
 		ensure
 			instance_free: class
@@ -771,7 +771,7 @@ feature -- Feature names
 
 	as_natural_32_feature_name: ET_FEATURE_NAME
 			-- 'as_natural_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (as_natural_32_name)
 		ensure
 			instance_free: class
@@ -780,7 +780,7 @@ feature -- Feature names
 
 	as_natural_64_feature_name: ET_FEATURE_NAME
 			-- 'as_natural_64' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (as_natural_64_name)
 		ensure
 			instance_free: class
@@ -789,7 +789,7 @@ feature -- Feature names
 
 	attached_type_feature_name: ET_FEATURE_NAME
 			-- 'attached_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (attached_type_name)
 		ensure
 			instance_free: class
@@ -798,7 +798,7 @@ feature -- Feature names
 
 	base_address_feature_name: ET_FEATURE_NAME
 			-- 'base_address' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (base_address_name)
 		ensure
 			instance_free: class
@@ -807,7 +807,7 @@ feature -- Feature names
 
 	base_class_name_feature_name: ET_FEATURE_NAME
 			-- 'base_class_name' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (base_class_name_name)
 		ensure
 			instance_free: class
@@ -816,7 +816,7 @@ feature -- Feature names
 
 	bit_and_feature_name: ET_FEATURE_NAME
 			-- 'bit_and' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (bit_and_name)
 		ensure
 			instance_free: class
@@ -825,7 +825,7 @@ feature -- Feature names
 
 	bit_not_feature_name: ET_FEATURE_NAME
 			-- 'bit_not' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (bit_not_name)
 		ensure
 			instance_free: class
@@ -834,7 +834,7 @@ feature -- Feature names
 
 	bit_or_feature_name: ET_FEATURE_NAME
 			-- 'bit_or' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (bit_or_name)
 		ensure
 			instance_free: class
@@ -843,7 +843,7 @@ feature -- Feature names
 
 	bit_shift_left_feature_name: ET_FEATURE_NAME
 			-- 'bit_shift_left' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (bit_shift_left_name)
 		ensure
 			instance_free: class
@@ -852,7 +852,7 @@ feature -- Feature names
 
 	bit_shift_right_feature_name: ET_FEATURE_NAME
 			-- 'bit_shift_right' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (bit_shift_right_name)
 		ensure
 			instance_free: class
@@ -861,7 +861,7 @@ feature -- Feature names
 
 	bit_xor_feature_name: ET_FEATURE_NAME
 			-- 'bit_xor' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (bit_xor_name)
 		ensure
 			instance_free: class
@@ -870,7 +870,7 @@ feature -- Feature names
 
 	boolean_bytes_feature_name: ET_FEATURE_NAME
 			-- 'boolean_bytes' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (boolean_bytes_name)
 		ensure
 			instance_free: class
@@ -879,7 +879,7 @@ feature -- Feature names
 
 	boolean_item_feature_name: ET_FEATURE_NAME
 			-- 'boolean_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (boolean_item_name)
 		ensure
 			instance_free: class
@@ -888,7 +888,7 @@ feature -- Feature names
 
 	boolean_field_feature_name: ET_FEATURE_NAME
 			-- 'boolean_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (boolean_field_name)
 		ensure
 			instance_free: class
@@ -897,7 +897,7 @@ feature -- Feature names
 
 	boolean_field_at_feature_name: ET_FEATURE_NAME
 			-- 'boolean_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (boolean_field_at_name)
 		ensure
 			instance_free: class
@@ -906,7 +906,7 @@ feature -- Feature names
 
 	c_strlen_feature_name: ET_FEATURE_NAME
 			-- 'c_strlen' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (c_strlen_name)
 		ensure
 			instance_free: class
@@ -915,7 +915,7 @@ feature -- Feature names
 
 	call_feature_name: ET_FEATURE_NAME
 			-- 'call' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (call_name)
 		ensure
 			instance_free: class
@@ -924,7 +924,7 @@ feature -- Feature names
 
 	capacity_feature_name: ET_FEATURE_NAME
 			-- 'capacity' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capacity_name)
 		ensure
 			instance_free: class
@@ -933,7 +933,7 @@ feature -- Feature names
 
 	catch_feature_name: ET_FEATURE_NAME
 			-- 'catch' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (catch_name)
 		ensure
 			instance_free: class
@@ -942,7 +942,7 @@ feature -- Feature names
 
 	ccom_hresult_feature_name: ET_FEATURE_NAME
 			-- 'ccom_hresult' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ccom_hresult_name)
 		ensure
 			instance_free: class
@@ -951,7 +951,7 @@ feature -- Feature names
 
 	ccom_hresult_code_feature_name: ET_FEATURE_NAME
 			-- 'ccom_hresult_code' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ccom_hresult_code_name)
 		ensure
 			instance_free: class
@@ -960,7 +960,7 @@ feature -- Feature names
 
 	ccom_hresult_facility_feature_name: ET_FEATURE_NAME
 			-- 'ccom_hresult_facility' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ccom_hresult_facility_name)
 		ensure
 			instance_free: class
@@ -969,7 +969,7 @@ feature -- Feature names
 
 	ceiling_real_32_feature_name: ET_FEATURE_NAME
 			-- 'ceiling_real_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ceiling_real_32_name)
 		ensure
 			instance_free: class
@@ -978,7 +978,7 @@ feature -- Feature names
 
 	ceiling_real_64_feature_name: ET_FEATURE_NAME
 			-- 'ceiling_real_64' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ceiling_real_64_name)
 		ensure
 			instance_free: class
@@ -987,7 +987,7 @@ feature -- Feature names
 
 	character_8_field_feature_name: ET_FEATURE_NAME
 			-- 'character_8_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (character_8_field_name)
 		ensure
 			instance_free: class
@@ -996,7 +996,7 @@ feature -- Feature names
 
 	character_8_field_at_feature_name: ET_FEATURE_NAME
 			-- 'character_8_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (character_8_field_at_name)
 		ensure
 			instance_free: class
@@ -1005,7 +1005,7 @@ feature -- Feature names
 
 	character_8_item_feature_name: ET_FEATURE_NAME
 			-- 'character_8_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (character_8_item_name)
 		ensure
 			instance_free: class
@@ -1014,7 +1014,7 @@ feature -- Feature names
 
 	character_32_field_feature_name: ET_FEATURE_NAME
 			-- 'character_32_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (character_32_field_name)
 		ensure
 			instance_free: class
@@ -1023,7 +1023,7 @@ feature -- Feature names
 
 	character_32_field_at_feature_name: ET_FEATURE_NAME
 			-- 'character_32_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (character_32_field_at_name)
 		ensure
 			instance_free: class
@@ -1032,7 +1032,7 @@ feature -- Feature names
 
 	character_32_item_feature_name: ET_FEATURE_NAME
 			-- 'character_32_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (character_32_item_name)
 		ensure
 			instance_free: class
@@ -1041,7 +1041,7 @@ feature -- Feature names
 
 	character_bytes_feature_name: ET_FEATURE_NAME
 			-- 'character_bytes' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (character_bytes_name)
 		ensure
 			instance_free: class
@@ -1050,7 +1050,7 @@ feature -- Feature names
 
 	character_size_feature_name: ET_FEATURE_NAME
 			-- 'character_size' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (character_size_name)
 		ensure
 			instance_free: class
@@ -1059,7 +1059,7 @@ feature -- Feature names
 
 	check_assert_feature_name: ET_FEATURE_NAME
 			-- 'check_assert' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (check_assert_name)
 		ensure
 			instance_free: class
@@ -1068,7 +1068,7 @@ feature -- Feature names
 
 	closed_operands_feature_name: ET_FEATURE_NAME
 			-- 'closed_operands' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (closed_operands_name)
 		ensure
 			instance_free: class
@@ -1077,7 +1077,7 @@ feature -- Feature names
 
 	code_feature_name: ET_FEATURE_NAME
 			-- 'code' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (code_name)
 		ensure
 			instance_free: class
@@ -1086,7 +1086,7 @@ feature -- Feature names
 
 	compiler_version_feature_name: ET_FEATURE_NAME
 			-- 'compiler_version' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (compiler_version_name)
 		ensure
 			instance_free: class
@@ -1095,7 +1095,7 @@ feature -- Feature names
 
 	conforms_to_feature_name: ET_FEATURE_NAME
 			-- 'conforms_to' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (conforms_to_name)
 		ensure
 			instance_free: class
@@ -1104,7 +1104,7 @@ feature -- Feature names
 
 	conjuncted_feature_name: ET_FEATURE_NAME
 			-- 'conjuncted' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (conjuncted_name)
 		ensure
 			instance_free: class
@@ -1113,7 +1113,7 @@ feature -- Feature names
 
 	conjuncted_semistrict_feature_name: ET_FEATURE_NAME
 			-- 'conjuncted_semistrict' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (conjuncted_semistrict_name)
 		ensure
 			instance_free: class
@@ -1122,7 +1122,7 @@ feature -- Feature names
 
 	copy_feature_name: ET_FEATURE_NAME
 			-- 'copy' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (copy_name)
 		ensure
 			instance_free: class
@@ -1131,7 +1131,7 @@ feature -- Feature names
 
 	count_feature_name: ET_FEATURE_NAME
 			-- 'count' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (count_name)
 		ensure
 			instance_free: class
@@ -1140,7 +1140,7 @@ feature -- Feature names
 
 	cwin_error_text_feature_name: ET_FEATURE_NAME
 			-- 'cwin_error_text' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (cwin_error_text_name)
 		ensure
 			instance_free: class
@@ -1149,7 +1149,7 @@ feature -- Feature names
 
 	cwin_local_free_feature_name: ET_FEATURE_NAME
 			-- 'cwin_local_free' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (cwin_local_free_name)
 		ensure
 			instance_free: class
@@ -1158,7 +1158,7 @@ feature -- Feature names
 
 	deep_twin_feature_name: ET_FEATURE_NAME
 			-- 'deep_twin' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (deep_twin_name)
 		ensure
 			instance_free: class
@@ -1167,7 +1167,7 @@ feature -- Feature names
 
 	default_feature_name: ET_FEATURE_NAME
 			-- 'default' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (default_name)
 		ensure
 			instance_free: class
@@ -1176,7 +1176,7 @@ feature -- Feature names
 
 	default_create_feature_name: ET_FEATURE_NAME
 			-- 'default_create' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (default_create_name)
 		ensure
 			instance_free: class
@@ -1185,7 +1185,7 @@ feature -- Feature names
 
 	detachable_type_feature_name: ET_FEATURE_NAME
 			-- 'detachable_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (detachable_type_name)
 		ensure
 			instance_free: class
@@ -1194,7 +1194,7 @@ feature -- Feature names
 
 	developer_raise_feature_name: ET_FEATURE_NAME
 			-- 'developer_raise' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (developer_raise_name)
 		ensure
 			instance_free: class
@@ -1203,7 +1203,7 @@ feature -- Feature names
 
 	disjuncted_feature_name: ET_FEATURE_NAME
 			-- 'disjuncted' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (disjuncted_name)
 		ensure
 			instance_free: class
@@ -1212,7 +1212,7 @@ feature -- Feature names
 
 	disjuncted_exclusive_feature_name: ET_FEATURE_NAME
 			-- 'disjuncted' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (disjuncted_exclusive_name)
 		ensure
 			instance_free: class
@@ -1221,7 +1221,7 @@ feature -- Feature names
 
 	disjuncted_semistrict_feature_name: ET_FEATURE_NAME
 			-- 'disjuncted_semistrict' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (disjuncted_semistrict_name)
 		ensure
 			instance_free: class
@@ -1230,7 +1230,7 @@ feature -- Feature names
 
 	dispose_feature_name: ET_FEATURE_NAME
 			-- 'dispose' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (dispose_name)
 		ensure
 			instance_free: class
@@ -1239,7 +1239,7 @@ feature -- Feature names
 
 	double_bytes_feature_name: ET_FEATURE_NAME
 			-- 'double_bytes' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (double_bytes_name)
 		ensure
 			instance_free: class
@@ -1248,7 +1248,7 @@ feature -- Feature names
 
 	dynamic_type_feature_name: ET_FEATURE_NAME
 			-- 'dynamic_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (dynamic_type_name)
 		ensure
 			instance_free: class
@@ -1257,7 +1257,7 @@ feature -- Feature names
 
 	dynamic_type_at_offset_feature_name: ET_FEATURE_NAME
 			-- 'dynamic_type_at_offset' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (dynamic_type_at_offset_name)
 		ensure
 			instance_free: class
@@ -1266,7 +1266,7 @@ feature -- Feature names
 
 	eif_gen_param_id_feature_name: ET_FEATURE_NAME
 			-- 'eif_gen_param_id' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (eif_gen_param_id_name)
 		ensure
 			instance_free: class
@@ -1275,7 +1275,7 @@ feature -- Feature names
 
 	eif_id_object_feature_name: ET_FEATURE_NAME
 			-- 'eif_id_object' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (eif_id_object_name)
 		ensure
 			instance_free: class
@@ -1284,7 +1284,7 @@ feature -- Feature names
 
 	eif_object_id_feature_name: ET_FEATURE_NAME
 			-- 'eif_object_id' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (eif_object_id_name)
 		ensure
 			instance_free: class
@@ -1293,7 +1293,7 @@ feature -- Feature names
 
 	eif_object_id_free_feature_name: ET_FEATURE_NAME
 			-- 'eif_object_id_free' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (eif_object_id_free_name)
 		ensure
 			instance_free: class
@@ -1302,7 +1302,7 @@ feature -- Feature names
 
 	element_size_feature_name: ET_FEATURE_NAME
 			-- 'element_size' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (element_size_name)
 		ensure
 			instance_free: class
@@ -1311,7 +1311,7 @@ feature -- Feature names
 
 	exception_from_code_feature_name: ET_FEATURE_NAME
 			-- 'exception_from_code' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (exception_from_code_name)
 		ensure
 			instance_free: class
@@ -1320,7 +1320,7 @@ feature -- Feature names
 
 	exception_manager_feature_name: ET_FEATURE_NAME
 			-- 'exception_manager' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (exception_manager_name)
 		ensure
 			instance_free: class
@@ -1329,7 +1329,7 @@ feature -- Feature names
 
 	extend_feature_name: ET_FEATURE_NAME
 			-- 'extend' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (extend_name)
 		ensure
 			instance_free: class
@@ -1338,7 +1338,7 @@ feature -- Feature names
 
 	fast_call_feature_name: ET_FEATURE_NAME
 			-- 'fast_call' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (fast_call_name)
 		ensure
 			instance_free: class
@@ -1347,7 +1347,7 @@ feature -- Feature names
 
 	fast_item_feature_name: ET_FEATURE_NAME
 			-- 'fast_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (fast_item_name)
 		ensure
 			instance_free: class
@@ -1356,7 +1356,7 @@ feature -- Feature names
 
 	field_feature_name: ET_FEATURE_NAME
 			-- 'field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_name)
 		ensure
 			instance_free: class
@@ -1365,7 +1365,7 @@ feature -- Feature names
 
 	field_count_feature_name: ET_FEATURE_NAME
 			-- 'field_count' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_count_name)
 		ensure
 			instance_free: class
@@ -1374,7 +1374,7 @@ feature -- Feature names
 
 	field_count_of_type_feature_name: ET_FEATURE_NAME
 			-- 'field_count_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_count_of_type_name)
 		ensure
 			instance_free: class
@@ -1383,7 +1383,7 @@ feature -- Feature names
 
 	field_name_feature_name: ET_FEATURE_NAME
 			-- 'field_name' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_name_name)
 		ensure
 			instance_free: class
@@ -1392,7 +1392,7 @@ feature -- Feature names
 
 	field_name_of_type_feature_name: ET_FEATURE_NAME
 			-- 'field_name_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_name_of_type_name)
 		ensure
 			instance_free: class
@@ -1401,7 +1401,7 @@ feature -- Feature names
 
 	field_offset_of_type_feature_name: ET_FEATURE_NAME
 			-- 'field_offset_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_offset_of_type_name)
 		ensure
 			instance_free: class
@@ -1410,7 +1410,7 @@ feature -- Feature names
 
 	field_static_type_feature_name: ET_FEATURE_NAME
 			-- 'field_static_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_static_type_name)
 		ensure
 			instance_free: class
@@ -1419,7 +1419,7 @@ feature -- Feature names
 
 	field_static_type_of_type_feature_name: ET_FEATURE_NAME
 			-- 'field_static_type_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_static_type_of_type_name)
 		ensure
 			instance_free: class
@@ -1428,7 +1428,7 @@ feature -- Feature names
 
 	field_type_feature_name: ET_FEATURE_NAME
 			-- 'field_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_type_name)
 		ensure
 			instance_free: class
@@ -1437,7 +1437,7 @@ feature -- Feature names
 
 	field_type_of_type_feature_name: ET_FEATURE_NAME
 			-- 'field_type_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (field_type_of_type_name)
 		ensure
 			instance_free: class
@@ -1446,7 +1446,7 @@ feature -- Feature names
 
 	find_referers_feature_name: ET_FEATURE_NAME
 			-- 'find_referers' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (find_referers_name)
 		ensure
 			instance_free: class
@@ -1455,7 +1455,7 @@ feature -- Feature names
 
 	floor_real_32_feature_name: ET_FEATURE_NAME
 			-- 'floor_real_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (floor_real_32_name)
 		ensure
 			instance_free: class
@@ -1464,7 +1464,7 @@ feature -- Feature names
 
 	floor_real_64_feature_name: ET_FEATURE_NAME
 			-- 'floor_real_64' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (floor_real_64_name)
 		ensure
 			instance_free: class
@@ -1473,7 +1473,7 @@ feature -- Feature names
 
 	forth_feature_name: ET_FEATURE_NAME
 			-- 'forth' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (forth_name)
 		ensure
 			instance_free: class
@@ -1482,7 +1482,7 @@ feature -- Feature names
 
 	free_feature_name: ET_FEATURE_NAME
 			-- 'free' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (free_name)
 		ensure
 			instance_free: class
@@ -1491,7 +1491,7 @@ feature -- Feature names
 
 	generating_type_feature_name: ET_FEATURE_NAME
 			-- 'generating_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (generating_type_name)
 		ensure
 			instance_free: class
@@ -1500,7 +1500,7 @@ feature -- Feature names
 
 	generating_type_of_type_feature_name: ET_FEATURE_NAME
 			-- 'generating_type_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (generating_type_of_type_name)
 		ensure
 			instance_free: class
@@ -1509,7 +1509,7 @@ feature -- Feature names
 
 	generator_feature_name: ET_FEATURE_NAME
 			-- 'generator' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (generator_name)
 		ensure
 			instance_free: class
@@ -1518,7 +1518,7 @@ feature -- Feature names
 
 	generator_of_type_feature_name: ET_FEATURE_NAME
 			-- 'generator_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (generator_of_type_name)
 		ensure
 			instance_free: class
@@ -1527,7 +1527,7 @@ feature -- Feature names
 
 	generic_parameter_count_feature_name: ET_FEATURE_NAME
 			-- 'generic_parameter_count' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (generic_parameter_count_name)
 		ensure
 			instance_free: class
@@ -1536,7 +1536,7 @@ feature -- Feature names
 
 	generic_parameter_type_feature_name: ET_FEATURE_NAME
 			-- 'generic_parameter_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (generic_parameter_type_name)
 		ensure
 			instance_free: class
@@ -1545,7 +1545,7 @@ feature -- Feature names
 
 	has_default_feature_name: ET_FEATURE_NAME
 			-- 'has_default' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (has_default_name)
 		ensure
 			instance_free: class
@@ -1554,7 +1554,7 @@ feature -- Feature names
 
 	hash_code_feature_name: ET_FEATURE_NAME
 			-- 'hash_code' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (hash_code_name)
 		ensure
 			instance_free: class
@@ -1563,7 +1563,7 @@ feature -- Feature names
 
 	i_th_argument_pointer_feature_name: ET_FEATURE_NAME
 			-- 'i_th_argument_pointer' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (i_th_argument_pointer_name)
 		ensure
 			instance_free: class
@@ -1572,7 +1572,7 @@ feature -- Feature names
 
 	i_th_argument_string_feature_name: ET_FEATURE_NAME
 			-- 'i_th_argument_string' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (i_th_argument_string_name)
 		ensure
 			instance_free: class
@@ -1581,7 +1581,7 @@ feature -- Feature names
 
 	identity_feature_name: ET_FEATURE_NAME
 			-- 'identity' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (identity_name)
 		ensure
 			instance_free: class
@@ -1590,7 +1590,7 @@ feature -- Feature names
 
 	ieee_is_equal_feature_name: ET_FEATURE_NAME
 			-- 'ieee_is_equal' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ieee_is_equal_name)
 		ensure
 			instance_free: class
@@ -1599,7 +1599,7 @@ feature -- Feature names
 
 	ieee_is_greater_feature_name: ET_FEATURE_NAME
 			-- 'ieee_is_greater' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ieee_is_greater_name)
 		ensure
 			instance_free: class
@@ -1608,7 +1608,7 @@ feature -- Feature names
 
 	ieee_is_greater_equal_feature_name: ET_FEATURE_NAME
 			-- 'ieee_is_greater_equal' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ieee_is_greater_equal_name)
 		ensure
 			instance_free: class
@@ -1617,7 +1617,7 @@ feature -- Feature names
 
 	ieee_is_less_feature_name: ET_FEATURE_NAME
 			-- 'ieee_is_less' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ieee_is_less_name)
 		ensure
 			instance_free: class
@@ -1626,7 +1626,7 @@ feature -- Feature names
 
 	ieee_is_less_equal_feature_name: ET_FEATURE_NAME
 			-- 'ieee_is_less_equal' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ieee_is_less_equal_name)
 		ensure
 			instance_free: class
@@ -1635,7 +1635,7 @@ feature -- Feature names
 
 	ieee_maximum_number_feature_name: ET_FEATURE_NAME
 			-- 'ieee_maximum_number' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ieee_maximum_number_name)
 		ensure
 			instance_free: class
@@ -1644,7 +1644,7 @@ feature -- Feature names
 
 	ieee_minimum_number_feature_name: ET_FEATURE_NAME
 			-- 'ieee_minimum_number' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ieee_minimum_number_name)
 		ensure
 			instance_free: class
@@ -1653,7 +1653,7 @@ feature -- Feature names
 
 	ignore_feature_name: ET_FEATURE_NAME
 			-- 'ignore' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (ignore_name)
 		ensure
 			instance_free: class
@@ -1662,7 +1662,7 @@ feature -- Feature names
 
 	implication_feature_name: ET_FEATURE_NAME
 			-- 'implication' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (implication_name)
 		ensure
 			instance_free: class
@@ -1671,7 +1671,7 @@ feature -- Feature names
 
 	in_assertion_feature_name: ET_FEATURE_NAME
 			-- 'in_assertion' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (in_assertion_name)
 		ensure
 			instance_free: class
@@ -1682,7 +1682,7 @@ feature -- Feature names
 			-- 'infix "and"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (and_keyword_name)
 			create {ET_INFIX_NAME} Result.make_and (l_string)
 		ensure
@@ -1694,7 +1694,7 @@ feature -- Feature names
 			-- 'infix "and then"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (and_then_keywords_name)
 			create {ET_INFIX_NAME} Result.make_and_then (l_string)
 		ensure
@@ -1706,7 +1706,7 @@ feature -- Feature names
 			-- 'infix "@"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (at_symbol_name)
 			create {ET_INFIX_FREE_NAME} Result.make (l_string)
 		ensure
@@ -1718,7 +1718,7 @@ feature -- Feature names
 			-- 'infix "//"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (div_symbol_name)
 			create {ET_INFIX_NAME} Result.make_div (l_string)
 		ensure
@@ -1730,7 +1730,7 @@ feature -- Feature names
 			-- 'infix "/"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (divide_symbol_name)
 			create {ET_INFIX_NAME} Result.make_divide (l_string)
 		ensure
@@ -1742,7 +1742,7 @@ feature -- Feature names
 			-- 'infix ">="' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (le_symbol_name)
 			create {ET_INFIX_NAME} Result.make_ge (l_string)
 		ensure
@@ -1754,7 +1754,7 @@ feature -- Feature names
 			-- 'infix ">"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (gt_symbol_name)
 			create {ET_INFIX_NAME} Result.make_gt (l_string)
 		ensure
@@ -1766,7 +1766,7 @@ feature -- Feature names
 			-- 'infix "implies"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (implies_keyword_name)
 			create {ET_INFIX_NAME} Result.make_implies (l_string)
 		ensure
@@ -1778,7 +1778,7 @@ feature -- Feature names
 			-- 'infix "<="' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (le_symbol_name)
 			create {ET_INFIX_NAME} Result.make_le (l_string)
 		ensure
@@ -1790,7 +1790,7 @@ feature -- Feature names
 			-- 'infix "<"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (lt_symbol_name)
 			create {ET_INFIX_NAME} Result.make_lt (l_string)
 		ensure
@@ -1802,7 +1802,7 @@ feature -- Feature names
 			-- 'infix "-"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (minus_symbol_name)
 			create {ET_INFIX_NAME} Result.make_minus (l_string)
 		ensure
@@ -1814,7 +1814,7 @@ feature -- Feature names
 			-- 'infix "\\"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (mod_symbol_name)
 			create {ET_INFIX_NAME} Result.make_mod (l_string)
 		ensure
@@ -1826,7 +1826,7 @@ feature -- Feature names
 			-- 'infix "or"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (or_keyword_name)
 			create {ET_INFIX_NAME} Result.make_or (l_string)
 		ensure
@@ -1838,7 +1838,7 @@ feature -- Feature names
 			-- 'infix "or else"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (or_else_keywords_name)
 			create {ET_INFIX_NAME} Result.make_or_else (l_string)
 		ensure
@@ -1850,7 +1850,7 @@ feature -- Feature names
 			-- 'infix "+"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (plus_symbol_name)
 			create {ET_INFIX_NAME} Result.make_plus (l_string)
 		ensure
@@ -1862,7 +1862,7 @@ feature -- Feature names
 			-- 'infix "^"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (power_symbol_name)
 			create {ET_INFIX_NAME} Result.make_power (l_string)
 		ensure
@@ -1874,7 +1874,7 @@ feature -- Feature names
 			-- 'infix "*"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (times_symbol_name)
 			create {ET_INFIX_NAME} Result.make_times (l_string)
 		ensure
@@ -1886,7 +1886,7 @@ feature -- Feature names
 			-- 'infix "xor"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (xor_keyword_name)
 			create {ET_INFIX_NAME} Result.make_xor (l_string)
 		ensure
@@ -1896,7 +1896,7 @@ feature -- Feature names
 
 	init_exception_manager_feature_name: ET_FEATURE_NAME
 			-- 'init_exception_manager' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (init_exception_manager_name)
 		ensure
 			instance_free: class
@@ -1905,7 +1905,7 @@ feature -- Feature names
 
 	integer_8_field_feature_name: ET_FEATURE_NAME
 			-- 'integer_8_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_8_field_name)
 		ensure
 			instance_free: class
@@ -1914,7 +1914,7 @@ feature -- Feature names
 
 	integer_8_field_at_feature_name: ET_FEATURE_NAME
 			-- 'integer_8_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_8_field_at_name)
 		ensure
 			instance_free: class
@@ -1923,7 +1923,7 @@ feature -- Feature names
 
 	integer_8_item_feature_name: ET_FEATURE_NAME
 			-- 'integer_8_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_8_item_name)
 		ensure
 			instance_free: class
@@ -1932,7 +1932,7 @@ feature -- Feature names
 
 	integer_16_field_feature_name: ET_FEATURE_NAME
 			-- 'integer_16_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_16_field_name)
 		ensure
 			instance_free: class
@@ -1941,7 +1941,7 @@ feature -- Feature names
 
 	integer_16_field_at_feature_name: ET_FEATURE_NAME
 			-- 'integer_16_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_16_field_at_name)
 		ensure
 			instance_free: class
@@ -1950,7 +1950,7 @@ feature -- Feature names
 
 	integer_16_item_feature_name: ET_FEATURE_NAME
 			-- 'integer_16_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_16_item_name)
 		ensure
 			instance_free: class
@@ -1959,7 +1959,7 @@ feature -- Feature names
 
 	integer_32_field_feature_name: ET_FEATURE_NAME
 			-- 'integer_32_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_32_field_name)
 		ensure
 			instance_free: class
@@ -1968,7 +1968,7 @@ feature -- Feature names
 
 	integer_32_field_at_feature_name: ET_FEATURE_NAME
 			-- 'integer_32_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_32_field_at_name)
 		ensure
 			instance_free: class
@@ -1977,7 +1977,7 @@ feature -- Feature names
 
 	integer_32_item_feature_name: ET_FEATURE_NAME
 			-- 'integer_32_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_32_item_name)
 		ensure
 			instance_free: class
@@ -1986,7 +1986,7 @@ feature -- Feature names
 
 	integer_64_field_feature_name: ET_FEATURE_NAME
 			-- 'integer_64_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_64_field_name)
 		ensure
 			instance_free: class
@@ -1995,7 +1995,7 @@ feature -- Feature names
 
 	integer_64_field_at_feature_name: ET_FEATURE_NAME
 			-- 'integer_64_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_64_field_at_name)
 		ensure
 			instance_free: class
@@ -2004,7 +2004,7 @@ feature -- Feature names
 
 	integer_64_item_feature_name: ET_FEATURE_NAME
 			-- 'integer_64_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_64_item_name)
 		ensure
 			instance_free: class
@@ -2013,7 +2013,7 @@ feature -- Feature names
 
 	integer_bytes_feature_name: ET_FEATURE_NAME
 			-- 'integer_bytes' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_bytes_name)
 		ensure
 			instance_free: class
@@ -2022,7 +2022,7 @@ feature -- Feature names
 
 	integer_quotient_feature_name: ET_FEATURE_NAME
 			-- 'integer_quotient' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_quotient_name)
 		ensure
 			instance_free: class
@@ -2031,7 +2031,7 @@ feature -- Feature names
 
 	integer_remainder_feature_name: ET_FEATURE_NAME
 			-- 'integer_remainder' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (integer_remainder_name)
 		ensure
 			instance_free: class
@@ -2040,7 +2040,7 @@ feature -- Feature names
 
 	invariant_feature_name: ET_FEATURE_NAME
 			-- Fictitious 'invariant' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (invariant_keyword_name)
 		ensure
 			instance_free: class
@@ -2049,7 +2049,7 @@ feature -- Feature names
 
 	is_64_bits_feature_name: ET_FEATURE_NAME
 			-- 'is_64_bits' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_64_bits_name)
 		ensure
 			instance_free: class
@@ -2058,7 +2058,7 @@ feature -- Feature names
 
 	is_attached_feature_name: ET_FEATURE_NAME
 			-- 'is_attached' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_attached_name)
 		ensure
 			instance_free: class
@@ -2067,7 +2067,7 @@ feature -- Feature names
 
 	is_attached_type_feature_name: ET_FEATURE_NAME
 			-- 'is_attached_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_attached_type_name)
 		ensure
 			instance_free: class
@@ -2076,7 +2076,7 @@ feature -- Feature names
 
 	is_caught_feature_name: ET_FEATURE_NAME
 			-- 'is_caught' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_caught_name)
 		ensure
 			instance_free: class
@@ -2085,7 +2085,7 @@ feature -- Feature names
 
 	is_copy_semantics_field_feature_name: ET_FEATURE_NAME
 			-- 'is_copy_semantics_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_copy_semantics_field_name)
 		ensure
 			instance_free: class
@@ -2094,7 +2094,7 @@ feature -- Feature names
 
 	is_deep_equal_feature_name: ET_FEATURE_NAME
 			-- 'is_deep_equal' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_deep_equal_name)
 		ensure
 			instance_free: class
@@ -2103,7 +2103,7 @@ feature -- Feature names
 
 	is_default_pointer_feature_name: ET_FEATURE_NAME
 			-- 'is_default_pointer' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_default_pointer_name)
 		ensure
 			instance_free: class
@@ -2112,7 +2112,7 @@ feature -- Feature names
 
 	is_deferred_feature_name: ET_FEATURE_NAME
 			-- 'is_deferred' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_deferred_name)
 		ensure
 			instance_free: class
@@ -2121,7 +2121,7 @@ feature -- Feature names
 
 	is_dotnet_feature_name: ET_FEATURE_NAME
 			-- 'is_dotnet' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_dotnet_name)
 		ensure
 			instance_free: class
@@ -2130,7 +2130,7 @@ feature -- Feature names
 
 	is_equal_feature_name: ET_FEATURE_NAME
 			-- 'is_equal' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_equal_name)
 		ensure
 			instance_free: class
@@ -2139,7 +2139,7 @@ feature -- Feature names
 
 	is_expanded_feature_name: ET_FEATURE_NAME
 			-- 'is_expanded' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_expanded_name)
 		ensure
 			instance_free: class
@@ -2148,7 +2148,7 @@ feature -- Feature names
 
 	is_field_expanded_of_type_feature_name: ET_FEATURE_NAME
 			-- 'is_field_expanded_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_field_expanded_of_type_name)
 		ensure
 			instance_free: class
@@ -2157,7 +2157,7 @@ feature -- Feature names
 
 	is_field_transient_of_type_feature_name: ET_FEATURE_NAME
 			-- 'is_field_transient_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_field_transient_of_type_name)
 		ensure
 			instance_free: class
@@ -2166,7 +2166,7 @@ feature -- Feature names
 
 	is_ignorable_feature_name: ET_FEATURE_NAME
 			-- 'is_ignorable' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_ignorable_name)
 		ensure
 			instance_free: class
@@ -2175,7 +2175,7 @@ feature -- Feature names
 
 	is_ignored_feature_name: ET_FEATURE_NAME
 			-- 'is_ignored' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_ignored_name)
 		ensure
 			instance_free: class
@@ -2184,7 +2184,7 @@ feature -- Feature names
 
 	is_less_feature_name: ET_FEATURE_NAME
 			-- 'is_less' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_less_name)
 		ensure
 			instance_free: class
@@ -2193,7 +2193,7 @@ feature -- Feature names
 
 	is_mac_feature_name: ET_FEATURE_NAME
 			-- 'is_mac' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_mac_name)
 		ensure
 			instance_free: class
@@ -2202,7 +2202,7 @@ feature -- Feature names
 
 	is_nan_feature_name: ET_FEATURE_NAME
 			-- 'is_nan' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_nan_name)
 		ensure
 			instance_free: class
@@ -2211,7 +2211,7 @@ feature -- Feature names
 
 	is_negative_infinity_feature_name: ET_FEATURE_NAME
 			-- 'is_negative_infinity' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_negative_infinity_name)
 		ensure
 			instance_free: class
@@ -2220,7 +2220,7 @@ feature -- Feature names
 
 	is_object_marked_feature_name: ET_FEATURE_NAME
 			-- 'is_object_marked' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_object_marked_name)
 		ensure
 			instance_free: class
@@ -2229,7 +2229,7 @@ feature -- Feature names
 
 	is_positive_infinity_feature_name: ET_FEATURE_NAME
 			-- 'is_positive_infinity' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_positive_infinity_name)
 		ensure
 			instance_free: class
@@ -2238,7 +2238,7 @@ feature -- Feature names
 
 	is_raisable_feature_name: ET_FEATURE_NAME
 			-- 'is_raisable' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_raisable_name)
 		ensure
 			instance_free: class
@@ -2247,7 +2247,7 @@ feature -- Feature names
 
 	is_scoop_capable_feature_name: ET_FEATURE_NAME
 			-- 'is_scoop_capable' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_scoop_capable_name)
 		ensure
 			instance_free: class
@@ -2256,7 +2256,7 @@ feature -- Feature names
 
 	is_special_feature_name: ET_FEATURE_NAME
 			-- 'is_special' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_special_name)
 		ensure
 			instance_free: class
@@ -2265,7 +2265,7 @@ feature -- Feature names
 
 	is_special_copy_semantics_item_feature_name: ET_FEATURE_NAME
 			-- 'is_special_copy_semantics_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_special_copy_semantics_item_name)
 		ensure
 			instance_free: class
@@ -2274,7 +2274,7 @@ feature -- Feature names
 
 	is_special_of_expanded_feature_name: ET_FEATURE_NAME
 			-- 'is_special_of_expanded' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_special_of_expanded_name)
 		ensure
 			instance_free: class
@@ -2283,7 +2283,7 @@ feature -- Feature names
 
 	is_special_of_reference_feature_name: ET_FEATURE_NAME
 			-- 'is_special_of_reference' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_special_of_reference_name)
 		ensure
 			instance_free: class
@@ -2292,7 +2292,7 @@ feature -- Feature names
 
 	is_special_of_reference_or_basic_type_feature_name: ET_FEATURE_NAME
 			-- 'is_special_of_reference_or_basic_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_special_of_reference_or_basic_type_name)
 		ensure
 			instance_free: class
@@ -2301,7 +2301,7 @@ feature -- Feature names
 
 	is_special_of_reference_type_feature_name: ET_FEATURE_NAME
 			-- 'is_special_of_reference_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_special_of_reference_type_name)
 		ensure
 			instance_free: class
@@ -2310,7 +2310,7 @@ feature -- Feature names
 
 	is_thread_capable_feature_name: ET_FEATURE_NAME
 			-- 'is_thread_capable' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_thread_capable_name)
 		ensure
 			instance_free: class
@@ -2319,7 +2319,7 @@ feature -- Feature names
 
 	is_tuple_feature_name: ET_FEATURE_NAME
 			-- 'is_tuple' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_tuple_name)
 		ensure
 			instance_free: class
@@ -2328,7 +2328,7 @@ feature -- Feature names
 
 	is_tuple_type_feature_name: ET_FEATURE_NAME
 			-- 'is_tuple_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_tuple_type_name)
 		ensure
 			instance_free: class
@@ -2337,7 +2337,7 @@ feature -- Feature names
 
 	is_unix_feature_name: ET_FEATURE_NAME
 			-- 'is_unix' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_unix_name)
 		ensure
 			instance_free: class
@@ -2346,7 +2346,7 @@ feature -- Feature names
 
 	is_vms_feature_name: ET_FEATURE_NAME
 			-- 'is_vms' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_vms_name)
 		ensure
 			instance_free: class
@@ -2355,7 +2355,7 @@ feature -- Feature names
 
 	is_vxworks_feature_name: ET_FEATURE_NAME
 			-- 'is_vxworks' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (is_vxworks_name)
 		ensure
 			instance_free: class
@@ -2363,8 +2363,8 @@ feature -- Feature names
 		end
 
 	is_windows_feature_name: ET_FEATURE_NAME
-			-- 'is_windowsvms' feature name
-		once ("PROCESS")
+			-- 'is_windows' feature name
+		once
 			create {ET_IDENTIFIER} Result.make (is_windows_name)
 		ensure
 			instance_free: class
@@ -2373,7 +2373,7 @@ feature -- Feature names
 
 	item_feature_name: ET_FEATURE_NAME
 			-- 'item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (item_name)
 		ensure
 			instance_free: class
@@ -2382,7 +2382,7 @@ feature -- Feature names
 
 	item_code_feature_name: ET_FEATURE_NAME
 			-- 'item_code' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (item_code_name)
 		ensure
 			instance_free: class
@@ -2391,7 +2391,7 @@ feature -- Feature names
 
 	last_exception_feature_name: ET_FEATURE_NAME
 			-- 'last_exception' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (last_exception_name)
 		ensure
 			instance_free: class
@@ -2400,7 +2400,7 @@ feature -- Feature names
 
 	last_result_feature_name: ET_FEATURE_NAME
 			-- 'last_result' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (last_result_name)
 		ensure
 			instance_free: class
@@ -2409,7 +2409,7 @@ feature -- Feature names
 
 	lock_marking_feature_name: ET_FEATURE_NAME
 			-- 'lock_marking' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (lock_marking_name)
 		ensure
 			instance_free: class
@@ -2418,7 +2418,7 @@ feature -- Feature names
 
 	lower_feature_name: ET_FEATURE_NAME
 			-- 'lower' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (lower_name)
 		ensure
 			instance_free: class
@@ -2427,7 +2427,7 @@ feature -- Feature names
 
 	make_feature_name: ET_FEATURE_NAME
 			-- 'make' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (make_name)
 		ensure
 			instance_free: class
@@ -2436,7 +2436,7 @@ feature -- Feature names
 
 	make_empty_feature_name: ET_FEATURE_NAME
 			-- 'make_empty' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (make_empty_name)
 		ensure
 			instance_free: class
@@ -2445,7 +2445,7 @@ feature -- Feature names
 
 	mark_object_feature_name: ET_FEATURE_NAME
 			-- 'mark_object' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (mark_object_name)
 		ensure
 			instance_free: class
@@ -2454,7 +2454,7 @@ feature -- Feature names
 
 	max_type_id_feature_name: ET_FEATURE_NAME
 			-- 'max_type_id' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (max_type_id_name)
 		ensure
 			instance_free: class
@@ -2463,7 +2463,7 @@ feature -- Feature names
 
 	minus_feature_name: ET_FEATURE_NAME
 			-- 'minus' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (minus_name)
 		ensure
 			instance_free: class
@@ -2472,7 +2472,7 @@ feature -- Feature names
 
 	name_feature_name: ET_FEATURE_NAME
 			-- 'name' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (name_name)
 		ensure
 			instance_free: class
@@ -2481,7 +2481,7 @@ feature -- Feature names
 
 	nan_feature_name: ET_FEATURE_NAME
 			-- 'nan' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (nan_name)
 		ensure
 			instance_free: class
@@ -2490,7 +2490,7 @@ feature -- Feature names
 
 	natural_8_field_feature_name: ET_FEATURE_NAME
 			-- 'natural_8_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_8_field_name)
 		ensure
 			instance_free: class
@@ -2499,7 +2499,7 @@ feature -- Feature names
 
 	natural_8_field_at_feature_name: ET_FEATURE_NAME
 			-- 'natural_8_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_8_field_at_name)
 		ensure
 			instance_free: class
@@ -2508,7 +2508,7 @@ feature -- Feature names
 
 	natural_8_item_feature_name: ET_FEATURE_NAME
 			-- 'natural_8_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_8_item_name)
 		ensure
 			instance_free: class
@@ -2517,7 +2517,7 @@ feature -- Feature names
 
 	natural_16_field_feature_name: ET_FEATURE_NAME
 			-- 'natural_16_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_16_field_name)
 		ensure
 			instance_free: class
@@ -2526,7 +2526,7 @@ feature -- Feature names
 
 	natural_16_field_at_feature_name: ET_FEATURE_NAME
 			-- 'natural_16_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_16_field_at_name)
 		ensure
 			instance_free: class
@@ -2535,7 +2535,7 @@ feature -- Feature names
 
 	natural_16_item_feature_name: ET_FEATURE_NAME
 			-- 'natural_16_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_16_item_name)
 		ensure
 			instance_free: class
@@ -2544,7 +2544,7 @@ feature -- Feature names
 
 	natural_32_code_feature_name: ET_FEATURE_NAME
 			-- 'natural_32_code' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_32_code_name)
 		ensure
 			instance_free: class
@@ -2553,7 +2553,7 @@ feature -- Feature names
 
 	natural_32_field_feature_name: ET_FEATURE_NAME
 			-- 'natural_32_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_32_field_name)
 		ensure
 			instance_free: class
@@ -2562,7 +2562,7 @@ feature -- Feature names
 
 	natural_32_field_at_feature_name: ET_FEATURE_NAME
 			-- 'natural_32_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_32_field_at_name)
 		ensure
 			instance_free: class
@@ -2571,7 +2571,7 @@ feature -- Feature names
 
 	natural_32_item_feature_name: ET_FEATURE_NAME
 			-- 'natural_32_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_32_item_name)
 		ensure
 			instance_free: class
@@ -2580,7 +2580,7 @@ feature -- Feature names
 
 	natural_64_field_feature_name: ET_FEATURE_NAME
 			-- 'natural_64_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_64_field_name)
 		ensure
 			instance_free: class
@@ -2589,7 +2589,7 @@ feature -- Feature names
 
 	natural_64_field_at_feature_name: ET_FEATURE_NAME
 			-- 'natural_64_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_64_field_at_name)
 		ensure
 			instance_free: class
@@ -2598,7 +2598,7 @@ feature -- Feature names
 
 	natural_64_item_feature_name: ET_FEATURE_NAME
 			-- 'natural_64_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (natural_64_item_name)
 		ensure
 			instance_free: class
@@ -2607,7 +2607,7 @@ feature -- Feature names
 
 	negated_feature_name: ET_FEATURE_NAME
 			-- 'negated' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (negated_name)
 		ensure
 			instance_free: class
@@ -2616,7 +2616,7 @@ feature -- Feature names
 
 	negative_infinity_feature_name: ET_FEATURE_NAME
 			-- 'negative_infinity' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (negative_infinity_name)
 		ensure
 			instance_free: class
@@ -2625,7 +2625,7 @@ feature -- Feature names
 
 	new_cursor_feature_name: ET_FEATURE_NAME
 			-- 'new_cursor' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (new_cursor_name)
 		ensure
 			instance_free: class
@@ -2634,7 +2634,7 @@ feature -- Feature names
 
 	new_instance_feature_name: ET_FEATURE_NAME
 			-- 'new_instance' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (new_instance_name)
 		ensure
 			instance_free: class
@@ -2643,7 +2643,7 @@ feature -- Feature names
 
 	new_instance_of_feature_name: ET_FEATURE_NAME
 			-- 'new_instance_of' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (new_instance_of_name)
 		ensure
 			instance_free: class
@@ -2652,7 +2652,7 @@ feature -- Feature names
 
 	new_special_any_instance_feature_name: ET_FEATURE_NAME
 			-- 'new_special_any_instance' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (new_special_any_instance_name)
 		ensure
 			instance_free: class
@@ -2661,7 +2661,7 @@ feature -- Feature names
 
 	new_special_of_reference_instance_of_feature_name: ET_FEATURE_NAME
 			-- 'new_special_of_reference_instance_of' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (new_special_of_reference_instance_of_name)
 		ensure
 			instance_free: class
@@ -2670,7 +2670,7 @@ feature -- Feature names
 
 	new_tuple_instance_of_feature_name: ET_FEATURE_NAME
 			-- 'new_tuple_instance_of' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (new_tuple_instance_of_name)
 		ensure
 			instance_free: class
@@ -2679,7 +2679,7 @@ feature -- Feature names
 
 	new_type_instance_of_feature_name: ET_FEATURE_NAME
 			-- 'new_type_instance_of' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (new_type_instance_of_name)
 		ensure
 			instance_free: class
@@ -2688,7 +2688,7 @@ feature -- Feature names
 
 	object_comparison_feature_name: ET_FEATURE_NAME
 			-- 'object_comparison' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (object_comparison_name)
 		ensure
 			instance_free: class
@@ -2697,7 +2697,7 @@ feature -- Feature names
 
 	object_size_feature_name: ET_FEATURE_NAME
 			-- 'object_size' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (object_size_name)
 		ensure
 			instance_free: class
@@ -2706,7 +2706,7 @@ feature -- Feature names
 
 	once_objects_feature_name: ET_FEATURE_NAME
 			-- 'once_objects' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (once_objects_name)
 		ensure
 			instance_free: class
@@ -2715,7 +2715,7 @@ feature -- Feature names
 
 	once_raise_feature_name: ET_FEATURE_NAME
 			-- 'once_raise' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (once_raise_name)
 		ensure
 			instance_free: class
@@ -2724,7 +2724,7 @@ feature -- Feature names
 
 	opposite_feature_name: ET_FEATURE_NAME
 			-- 'opposite' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (opposite_name)
 		ensure
 			instance_free: class
@@ -2733,7 +2733,7 @@ feature -- Feature names
 
 	out_feature_name: ET_FEATURE_NAME
 			-- 'out' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (out_name)
 		ensure
 			instance_free: class
@@ -2742,7 +2742,7 @@ feature -- Feature names
 
 	persistent_field_count_of_type_feature_name: ET_FEATURE_NAME
 			-- 'persistent_field_count_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (persistent_field_count_of_type_name)
 		ensure
 			instance_free: class
@@ -2751,7 +2751,7 @@ feature -- Feature names
 
 	plus_feature_name: ET_FEATURE_NAME
 			-- 'plus' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (plus_name)
 		ensure
 			instance_free: class
@@ -2760,7 +2760,7 @@ feature -- Feature names
 
 	pointer_bytes_feature_name: ET_FEATURE_NAME
 			-- 'pointer_bytes' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (pointer_bytes_name)
 		ensure
 			instance_free: class
@@ -2769,7 +2769,7 @@ feature -- Feature names
 
 	pointer_field_feature_name: ET_FEATURE_NAME
 			-- 'pointer_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (pointer_field_name)
 		ensure
 			instance_free: class
@@ -2778,7 +2778,7 @@ feature -- Feature names
 
 	pointer_field_at_feature_name: ET_FEATURE_NAME
 			-- 'pointer_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (pointer_field_at_name)
 		ensure
 			instance_free: class
@@ -2787,7 +2787,7 @@ feature -- Feature names
 
 	pointer_item_feature_name: ET_FEATURE_NAME
 			-- 'pointer_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (pointer_item_name)
 		ensure
 			instance_free: class
@@ -2796,7 +2796,7 @@ feature -- Feature names
 
 	positive_infinity_feature_name: ET_FEATURE_NAME
 			-- 'positive_infinity' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (positive_infinity_name)
 		ensure
 			instance_free: class
@@ -2805,7 +2805,7 @@ feature -- Feature names
 
 	power_feature_name: ET_FEATURE_NAME
 			-- 'power' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (power_name)
 		ensure
 			instance_free: class
@@ -2814,7 +2814,7 @@ feature -- Feature names
 
 	pre_ecma_mapping_status_feature_name: ET_FEATURE_NAME
 			-- 'pre_ecma_mapping_status' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (pre_ecma_mapping_status_name)
 		ensure
 			instance_free: class
@@ -2825,7 +2825,7 @@ feature -- Feature names
 			-- 'prefix "-"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (minus_symbol_name)
 			create {ET_PREFIX_NAME} Result.make_minus (l_string)
 		ensure
@@ -2837,7 +2837,7 @@ feature -- Feature names
 			-- 'prefix "not"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (not_keyword_name)
 			create {ET_PREFIX_NAME} Result.make_not (l_string)
 		ensure
@@ -2849,7 +2849,7 @@ feature -- Feature names
 			-- 'prefix "+"' feature name
 		local
 			l_string: ET_REGULAR_MANIFEST_STRING
-		once ("PROCESS")
+		once
 			create l_string.make (plus_symbol_name)
 			create {ET_PREFIX_NAME} Result.make_plus (l_string)
 		ensure
@@ -2859,7 +2859,7 @@ feature -- Feature names
 
 	product_feature_name: ET_FEATURE_NAME
 			-- 'product' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (product_name)
 		ensure
 			instance_free: class
@@ -2868,7 +2868,7 @@ feature -- Feature names
 
 	put_feature_name: ET_FEATURE_NAME
 			-- 'put' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_name)
 		ensure
 			instance_free: class
@@ -2877,7 +2877,7 @@ feature -- Feature names
 
 	put_boolean_feature_name: ET_FEATURE_NAME
 			-- 'put_boolean' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_boolean_name)
 		ensure
 			instance_free: class
@@ -2886,7 +2886,7 @@ feature -- Feature names
 
 	put_character_8_feature_name: ET_FEATURE_NAME
 			-- 'put_character_8' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_character_8_name)
 		ensure
 			instance_free: class
@@ -2895,7 +2895,7 @@ feature -- Feature names
 
 	put_character_32_feature_name: ET_FEATURE_NAME
 			-- 'put_character_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_character_32_name)
 		ensure
 			instance_free: class
@@ -2904,7 +2904,7 @@ feature -- Feature names
 
 	put_integer_8_feature_name: ET_FEATURE_NAME
 			-- 'put_integer_8' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_integer_8_name)
 		ensure
 			instance_free: class
@@ -2913,7 +2913,7 @@ feature -- Feature names
 
 	put_integer_16_feature_name: ET_FEATURE_NAME
 			-- 'put_integer_16' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_integer_16_name)
 		ensure
 			instance_free: class
@@ -2922,7 +2922,7 @@ feature -- Feature names
 
 	put_integer_32_feature_name: ET_FEATURE_NAME
 			-- 'put_integer_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_integer_32_name)
 		ensure
 			instance_free: class
@@ -2931,7 +2931,7 @@ feature -- Feature names
 
 	put_integer_64_feature_name: ET_FEATURE_NAME
 			-- 'put_integer_64' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_integer_64_name)
 		ensure
 			instance_free: class
@@ -2940,7 +2940,7 @@ feature -- Feature names
 
 	put_natural_8_feature_name: ET_FEATURE_NAME
 			-- 'put_natural_8' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_natural_8_name)
 		ensure
 			instance_free: class
@@ -2949,7 +2949,7 @@ feature -- Feature names
 
 	put_natural_16_feature_name: ET_FEATURE_NAME
 			-- 'put_natural_16' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_natural_16_name)
 		ensure
 			instance_free: class
@@ -2958,7 +2958,7 @@ feature -- Feature names
 
 	put_natural_32_feature_name: ET_FEATURE_NAME
 			-- 'put_natural_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_natural_32_name)
 		ensure
 			instance_free: class
@@ -2967,7 +2967,7 @@ feature -- Feature names
 
 	put_natural_64_feature_name: ET_FEATURE_NAME
 			-- 'put_natural_64' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_natural_64_name)
 		ensure
 			instance_free: class
@@ -2976,7 +2976,7 @@ feature -- Feature names
 
 	put_pointer_feature_name: ET_FEATURE_NAME
 			-- 'put_pointer' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_pointer_name)
 		ensure
 			instance_free: class
@@ -2985,7 +2985,7 @@ feature -- Feature names
 
 	put_real_32_feature_name: ET_FEATURE_NAME
 			-- 'put_real_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_real_32_name)
 		ensure
 			instance_free: class
@@ -2994,7 +2994,7 @@ feature -- Feature names
 
 	put_real_64_feature_name: ET_FEATURE_NAME
 			-- 'put_real_64' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_real_64_name)
 		ensure
 			instance_free: class
@@ -3003,7 +3003,7 @@ feature -- Feature names
 
 	put_reference_feature_name: ET_FEATURE_NAME
 			-- 'put_reference' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (put_reference_name)
 		ensure
 			instance_free: class
@@ -3012,7 +3012,7 @@ feature -- Feature names
 
 	quotient_feature_name: ET_FEATURE_NAME
 			-- 'quotient' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (quotient_name)
 		ensure
 			instance_free: class
@@ -3021,7 +3021,7 @@ feature -- Feature names
 
 	raise_feature_name: ET_FEATURE_NAME
 			-- 'raise' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (raise_name)
 		ensure
 			instance_free: class
@@ -3030,7 +3030,7 @@ feature -- Feature names
 
 	raw_reference_field_at_feature_name: ET_FEATURE_NAME
 			-- 'raw_reference_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (raw_reference_field_at_name)
 		ensure
 			instance_free: class
@@ -3039,7 +3039,7 @@ feature -- Feature names
 
 	raw_reference_field_at_offset_feature_name: ET_FEATURE_NAME
 			-- 'raw_reference_field_at_offset' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (raw_reference_field_at_offset_name)
 		ensure
 			instance_free: class
@@ -3048,7 +3048,7 @@ feature -- Feature names
 
 	real_32_field_feature_name: ET_FEATURE_NAME
 			-- 'real_32_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (real_32_field_name)
 		ensure
 			instance_free: class
@@ -3057,7 +3057,7 @@ feature -- Feature names
 
 	real_32_field_at_feature_name: ET_FEATURE_NAME
 			-- 'real_32_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (real_32_field_at_name)
 		ensure
 			instance_free: class
@@ -3066,7 +3066,7 @@ feature -- Feature names
 
 	real_32_item_feature_name: ET_FEATURE_NAME
 			-- 'real_32_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (real_32_item_name)
 		ensure
 			instance_free: class
@@ -3075,7 +3075,7 @@ feature -- Feature names
 
 	real_64_field_feature_name: ET_FEATURE_NAME
 			-- 'real_64_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (real_64_field_name)
 		ensure
 			instance_free: class
@@ -3084,7 +3084,7 @@ feature -- Feature names
 
 	real_64_field_at_feature_name: ET_FEATURE_NAME
 			-- 'real_64_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (real_64_field_at_name)
 		ensure
 			instance_free: class
@@ -3093,7 +3093,7 @@ feature -- Feature names
 
 	real_64_item_feature_name: ET_FEATURE_NAME
 			-- 'real_64_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (real_64_item_name)
 		ensure
 			instance_free: class
@@ -3102,7 +3102,7 @@ feature -- Feature names
 
 	real_bytes_feature_name: ET_FEATURE_NAME
 			-- 'real_bytes' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (real_bytes_name)
 		ensure
 			instance_free: class
@@ -3111,7 +3111,7 @@ feature -- Feature names
 
 	reference_field_feature_name: ET_FEATURE_NAME
 			-- 'reference_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (reference_field_name)
 		ensure
 			instance_free: class
@@ -3120,7 +3120,7 @@ feature -- Feature names
 
 	reference_field_at_feature_name: ET_FEATURE_NAME
 			-- 'reference_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (reference_field_at_name)
 		ensure
 			instance_free: class
@@ -3129,7 +3129,7 @@ feature -- Feature names
 
 	reference_field_at_offset_feature_name: ET_FEATURE_NAME
 			-- 'reference_field_at_offset' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (reference_field_at_offset_name)
 		ensure
 			instance_free: class
@@ -3138,7 +3138,7 @@ feature -- Feature names
 
 	reference_item_feature_name: ET_FEATURE_NAME
 			-- 'reference_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (reference_item_name)
 		ensure
 			instance_free: class
@@ -3147,7 +3147,7 @@ feature -- Feature names
 
 	rout_disp_feature_name: ET_FEATURE_NAME
 			-- 'rout_disp' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (rout_disp_name)
 		ensure
 			instance_free: class
@@ -3156,7 +3156,7 @@ feature -- Feature names
 
 	runtime_name_feature_name: ET_FEATURE_NAME
 			-- 'runtime_name' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (runtime_name_name)
 		ensure
 			instance_free: class
@@ -3165,7 +3165,7 @@ feature -- Feature names
 
 	same_type_feature_name: ET_FEATURE_NAME
 			-- 'same_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (same_type_name)
 		ensure
 			instance_free: class
@@ -3174,7 +3174,7 @@ feature -- Feature names
 
 	set_boolean_field_feature_name: ET_FEATURE_NAME
 			-- 'set_boolean_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_boolean_field_name)
 		ensure
 			instance_free: class
@@ -3183,7 +3183,7 @@ feature -- Feature names
 
 	set_boolean_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_boolean_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_boolean_field_at_name)
 		ensure
 			instance_free: class
@@ -3192,7 +3192,7 @@ feature -- Feature names
 
 	set_character_8_field_feature_name: ET_FEATURE_NAME
 			-- 'set_character_8_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_character_8_field_name)
 		ensure
 			instance_free: class
@@ -3201,7 +3201,7 @@ feature -- Feature names
 
 	set_character_8_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_character_8_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_character_8_field_at_name)
 		ensure
 			instance_free: class
@@ -3210,7 +3210,7 @@ feature -- Feature names
 
 	set_character_32_field_feature_name: ET_FEATURE_NAME
 			-- 'set_character_32_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_character_32_field_name)
 		ensure
 			instance_free: class
@@ -3219,7 +3219,7 @@ feature -- Feature names
 
 	set_character_32_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_character_32_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_character_32_field_at_name)
 		ensure
 			instance_free: class
@@ -3228,7 +3228,7 @@ feature -- Feature names
 
 	set_count_feature_name: ET_FEATURE_NAME
 			-- 'set_count' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_count_name)
 		ensure
 			instance_free: class
@@ -3237,7 +3237,7 @@ feature -- Feature names
 
 	set_exception_data_feature_name: ET_FEATURE_NAME
 			-- 'set_exception_data' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_exception_data_name)
 		ensure
 			instance_free: class
@@ -3246,7 +3246,7 @@ feature -- Feature names
 
 	set_integer_8_field_feature_name: ET_FEATURE_NAME
 			-- 'set_integer_8_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_integer_8_field_name)
 		ensure
 			instance_free: class
@@ -3255,7 +3255,7 @@ feature -- Feature names
 
 	set_integer_8_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_integer_8_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_integer_8_field_at_name)
 		ensure
 			instance_free: class
@@ -3264,7 +3264,7 @@ feature -- Feature names
 
 	set_integer_16_field_feature_name: ET_FEATURE_NAME
 			-- 'set_integer_16_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_integer_16_field_name)
 		ensure
 			instance_free: class
@@ -3273,7 +3273,7 @@ feature -- Feature names
 
 	set_integer_16_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_integer_16_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_integer_16_field_at_name)
 		ensure
 			instance_free: class
@@ -3282,7 +3282,7 @@ feature -- Feature names
 
 	set_integer_32_field_feature_name: ET_FEATURE_NAME
 			-- 'set_integer_32_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_integer_32_field_name)
 		ensure
 			instance_free: class
@@ -3291,7 +3291,7 @@ feature -- Feature names
 
 	set_integer_32_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_integer_32_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_integer_32_field_at_name)
 		ensure
 			instance_free: class
@@ -3300,7 +3300,7 @@ feature -- Feature names
 
 	set_integer_64_field_feature_name: ET_FEATURE_NAME
 			-- 'set_integer_64_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_integer_64_field_name)
 		ensure
 			instance_free: class
@@ -3309,7 +3309,7 @@ feature -- Feature names
 
 	set_integer_64_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_integer_64_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_integer_64_field_at_name)
 		ensure
 			instance_free: class
@@ -3318,7 +3318,7 @@ feature -- Feature names
 
 	set_is_ignored_feature_name: ET_FEATURE_NAME
 			-- 'set_is_ignored' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_is_ignored_name)
 		ensure
 			instance_free: class
@@ -3327,7 +3327,7 @@ feature -- Feature names
 
 	set_item_feature_name: ET_FEATURE_NAME
 			-- 'set_item' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_item_name)
 		ensure
 			instance_free: class
@@ -3336,7 +3336,7 @@ feature -- Feature names
 
 	set_natural_8_field_feature_name: ET_FEATURE_NAME
 			-- 'set_natural_8_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_natural_8_field_name)
 		ensure
 			instance_free: class
@@ -3345,7 +3345,7 @@ feature -- Feature names
 
 	set_natural_8_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_natural_8_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_natural_8_field_at_name)
 		ensure
 			instance_free: class
@@ -3354,7 +3354,7 @@ feature -- Feature names
 
 	set_natural_16_field_feature_name: ET_FEATURE_NAME
 			-- 'set_natural_16_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_natural_16_field_name)
 		ensure
 			instance_free: class
@@ -3363,7 +3363,7 @@ feature -- Feature names
 
 	set_natural_16_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_natural_16_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_natural_16_field_at_name)
 		ensure
 			instance_free: class
@@ -3372,7 +3372,7 @@ feature -- Feature names
 
 	set_natural_32_field_feature_name: ET_FEATURE_NAME
 			-- 'set_natural_32_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_natural_32_field_name)
 		ensure
 			instance_free: class
@@ -3381,7 +3381,7 @@ feature -- Feature names
 
 	set_natural_32_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_natural_32_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_natural_32_field_at_name)
 		ensure
 			instance_free: class
@@ -3390,7 +3390,7 @@ feature -- Feature names
 
 	set_natural_64_field_feature_name: ET_FEATURE_NAME
 			-- 'set_natural_64_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_natural_64_field_name)
 		ensure
 			instance_free: class
@@ -3399,7 +3399,7 @@ feature -- Feature names
 
 	set_natural_64_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_natural_64_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_natural_64_field_at_name)
 		ensure
 			instance_free: class
@@ -3408,7 +3408,7 @@ feature -- Feature names
 
 	set_object_comparison_feature_name: ET_FEATURE_NAME
 			-- 'set_object_comparison' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_object_comparison_name)
 		ensure
 			instance_free: class
@@ -3417,7 +3417,7 @@ feature -- Feature names
 
 	set_operands_feature_name: ET_FEATURE_NAME
 			-- 'set_operands' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_operands_name)
 		ensure
 			instance_free: class
@@ -3426,7 +3426,7 @@ feature -- Feature names
 
 	set_pointer_field_feature_name: ET_FEATURE_NAME
 			-- 'set_pointer_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_pointer_field_name)
 		ensure
 			instance_free: class
@@ -3435,7 +3435,7 @@ feature -- Feature names
 
 	set_pointer_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_pointer_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_pointer_field_at_name)
 		ensure
 			instance_free: class
@@ -3444,7 +3444,7 @@ feature -- Feature names
 
 	set_pre_ecma_mapping_feature_name: ET_FEATURE_NAME
 			-- 'set_pre_ecma_mapping' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_pre_ecma_mapping_name)
 		ensure
 			instance_free: class
@@ -3453,7 +3453,7 @@ feature -- Feature names
 
 	set_real_32_field_feature_name: ET_FEATURE_NAME
 			-- 'set_real_32_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_real_32_field_name)
 		ensure
 			instance_free: class
@@ -3462,7 +3462,7 @@ feature -- Feature names
 
 	set_real_32_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_real_32_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_real_32_field_at_name)
 		ensure
 			instance_free: class
@@ -3471,7 +3471,7 @@ feature -- Feature names
 
 	set_real_64_field_feature_name: ET_FEATURE_NAME
 			-- 'set_real_64_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_real_64_field_name)
 		ensure
 			instance_free: class
@@ -3480,7 +3480,7 @@ feature -- Feature names
 
 	set_real_64_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_real_64_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_real_64_field_at_name)
 		ensure
 			instance_free: class
@@ -3489,7 +3489,7 @@ feature -- Feature names
 
 	set_reference_field_feature_name: ET_FEATURE_NAME
 			-- 'set_reference_field' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_reference_field_name)
 		ensure
 			instance_free: class
@@ -3498,7 +3498,7 @@ feature -- Feature names
 
 	set_reference_field_at_feature_name: ET_FEATURE_NAME
 			-- 'set_reference_field_at' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_reference_field_at_name)
 		ensure
 			instance_free: class
@@ -3507,7 +3507,7 @@ feature -- Feature names
 
 	set_rout_disp_final_feature_name: ET_FEATURE_NAME
 			-- 'set_rout_disp_final' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (set_rout_disp_final_name)
 		ensure
 			instance_free: class
@@ -3516,7 +3516,7 @@ feature -- Feature names
 
 	standard_copy_feature_name: ET_FEATURE_NAME
 			-- 'standard_copy' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (standard_copy_name)
 		ensure
 			instance_free: class
@@ -3525,7 +3525,7 @@ feature -- Feature names
 
 	standard_is_equal_feature_name: ET_FEATURE_NAME
 			-- 'standard_is_equal' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (standard_is_equal_name)
 		ensure
 			instance_free: class
@@ -3534,7 +3534,7 @@ feature -- Feature names
 
 	standard_twin_feature_name: ET_FEATURE_NAME
 			-- 'standard_twin' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (standard_twin_name)
 		ensure
 			instance_free: class
@@ -3543,7 +3543,7 @@ feature -- Feature names
 
 	storable_version_of_type_feature_name: ET_FEATURE_NAME
 			-- 'storable_version_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (storable_version_of_type_name)
 		ensure
 			instance_free: class
@@ -3552,7 +3552,7 @@ feature -- Feature names
 
 	tagged_out_feature_name: ET_FEATURE_NAME
 			-- 'tagged_out' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (tagged_out_name)
 		ensure
 			instance_free: class
@@ -3561,7 +3561,7 @@ feature -- Feature names
 
 	to_character_feature_name: ET_FEATURE_NAME
 			-- 'to_character' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (to_character_name)
 		ensure
 			instance_free: class
@@ -3570,7 +3570,7 @@ feature -- Feature names
 
 	to_character_8_feature_name: ET_FEATURE_NAME
 			-- 'to_character_8' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (to_character_8_name)
 		ensure
 			instance_free: class
@@ -3579,7 +3579,7 @@ feature -- Feature names
 
 	to_character_32_feature_name: ET_FEATURE_NAME
 			-- 'to_character_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (to_character_32_name)
 		ensure
 			instance_free: class
@@ -3588,7 +3588,7 @@ feature -- Feature names
 
 	to_double_feature_name: ET_FEATURE_NAME
 			-- 'to_double' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (to_double_name)
 		ensure
 			instance_free: class
@@ -3597,7 +3597,7 @@ feature -- Feature names
 
 	to_integer_32_feature_name: ET_FEATURE_NAME
 			-- 'to_integer_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (to_integer_32_name)
 		ensure
 			instance_free: class
@@ -3606,7 +3606,7 @@ feature -- Feature names
 
 	to_real_feature_name: ET_FEATURE_NAME
 			-- 'to_real' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (to_real_name)
 		ensure
 			instance_free: class
@@ -3615,7 +3615,7 @@ feature -- Feature names
 
 	to_pointer_feature_name: ET_FEATURE_NAME
 			-- 'to_pointer' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (to_pointer_name)
 		ensure
 			instance_free: class
@@ -3624,7 +3624,7 @@ feature -- Feature names
 
 	to_real_32_feature_name: ET_FEATURE_NAME
 			-- 'to_real_32' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (to_real_32_name)
 		ensure
 			instance_free: class
@@ -3633,7 +3633,7 @@ feature -- Feature names
 
 	to_real_64_feature_name: ET_FEATURE_NAME
 			-- 'to_real_64' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (to_real_64_name)
 		ensure
 			instance_free: class
@@ -3642,7 +3642,7 @@ feature -- Feature names
 
 	truncated_to_integer_feature_name: ET_FEATURE_NAME
 			-- 'truncated_to_integer' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (truncated_to_integer_name)
 		ensure
 			instance_free: class
@@ -3651,7 +3651,7 @@ feature -- Feature names
 
 	truncated_to_integer_64_feature_name: ET_FEATURE_NAME
 			-- 'truncated_to_integer_64' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (truncated_to_integer_64_name)
 		ensure
 			instance_free: class
@@ -3660,7 +3660,7 @@ feature -- Feature names
 
 	truncated_to_real_feature_name: ET_FEATURE_NAME
 			-- 'truncated_to_real' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (truncated_to_real_name)
 		ensure
 			instance_free: class
@@ -3669,7 +3669,7 @@ feature -- Feature names
 
 	twin_feature_name: ET_FEATURE_NAME
 			-- 'twin' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (twin_name)
 		ensure
 			instance_free: class
@@ -3678,7 +3678,7 @@ feature -- Feature names
 
 	type_conforms_to_feature_name: ET_FEATURE_NAME
 			-- 'type_conforms_to' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (type_conforms_to_name)
 		ensure
 			instance_free: class
@@ -3687,7 +3687,7 @@ feature -- Feature names
 
 	type_id_feature_name: ET_FEATURE_NAME
 			-- 'type_id' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (type_id_name)
 		ensure
 			instance_free: class
@@ -3696,7 +3696,7 @@ feature -- Feature names
 
 	type_id_from_name_feature_name: ET_FEATURE_NAME
 			-- 'type_id_from_name' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (type_id_from_name_name)
 		ensure
 			instance_free: class
@@ -3705,7 +3705,7 @@ feature -- Feature names
 
 	type_of_code_feature_name: ET_FEATURE_NAME
 			-- 'type_of_code' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (type_of_code_name)
 		ensure
 			instance_free: class
@@ -3714,7 +3714,7 @@ feature -- Feature names
 
 	type_of_type_feature_name: ET_FEATURE_NAME
 			-- 'type_of_type' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (type_of_type_name)
 		ensure
 			instance_free: class
@@ -3723,7 +3723,7 @@ feature -- Feature names
 
 	unlock_marking_feature_name: ET_FEATURE_NAME
 			-- 'unlock_marking' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (unlock_marking_name)
 		ensure
 			instance_free: class
@@ -3732,7 +3732,7 @@ feature -- Feature names
 
 	unmark_object_feature_name: ET_FEATURE_NAME
 			-- 'unmark_object' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (unmark_object_name)
 		ensure
 			instance_free: class
@@ -3741,7 +3741,7 @@ feature -- Feature names
 
 	upper_feature_name: ET_FEATURE_NAME
 			-- 'upper' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (upper_name)
 		ensure
 			instance_free: class
@@ -3750,7 +3750,7 @@ feature -- Feature names
 
 	void_feature_name: ET_FEATURE_NAME
 			-- 'Void' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (capitalized_void_keyword_name)
 		ensure
 			instance_free: class
@@ -3759,7 +3759,7 @@ feature -- Feature names
 
 	wide_character_bytes_feature_name: ET_FEATURE_NAME
 			-- 'wide_charafter_bytes' feature name
-		once ("PROCESS")
+		once
 			create {ET_IDENTIFIER} Result.make (wide_character_bytes_name)
 		ensure
 			instance_free: class
@@ -3771,7 +3771,7 @@ feature -- Types
 	like_current: ET_LIKE_CURRENT
 			-- Type '[attached] like Current',
 			-- where '[attached]' is an implicit type mark
-		once ("PROCESS")
+		once
 			create Result.make (implicit_attached_type_mark)
 		ensure
 			instance_free: class
@@ -3780,7 +3780,7 @@ feature -- Types
 
 	attached_like_current: ET_LIKE_CURRENT
 			-- Type 'attached like Current'
-		once ("PROCESS")
+		once
 			create Result.make (attached_keyword)
 		ensure
 			instance_free: class
@@ -3789,7 +3789,7 @@ feature -- Types
 
 	detachable_like_current: ET_LIKE_CURRENT
 			-- Type 'detachable like Current'
-		once ("PROCESS")
+		once
 			create Result.make (detachable_keyword)
 		ensure
 			instance_free: class
@@ -3798,7 +3798,7 @@ feature -- Types
 
 	identity_type: ET_LIKE_CURRENT
 			-- Type 'like Current' with no type mark modifier
-		once ("PROCESS")
+		once
 			create Result.make (Void)
 		ensure
 			instance_free: class
@@ -3807,7 +3807,7 @@ feature -- Types
 
 	like_0: ET_LIKE_N
 			-- Type 'like 0' with no type mark modifier
-		once ("PROCESS")
+		once
 			create Result.make_zero (Void)
 		ensure
 			instance_free: class
@@ -3816,7 +3816,7 @@ feature -- Types
 
 	attached_separate_type_mark: ET_ATTACHMENT_MARK_SEPARATE_KEYWORD
 			-- 'attached separate' type mark
-		once ("PROCESS")
+		once
 			create Result.make (attached_keyword, separate_keyword)
 		ensure
 			instance_free: class
@@ -3825,7 +3825,7 @@ feature -- Types
 
 	detachable_separate_type_mark: ET_ATTACHMENT_MARK_SEPARATE_KEYWORD
 			-- 'detachable separate' type mark
-		once ("PROCESS")
+		once
 			create Result.make (detachable_keyword, separate_keyword)
 		ensure
 			instance_free: class
@@ -3834,7 +3834,7 @@ feature -- Types
 
 	implicit_attached_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'attached' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_attached_mark (True)
 		ensure
@@ -3844,7 +3844,7 @@ feature -- Types
 
 	implicit_attached_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'attached expanded' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_attached_mark (True)
 			Result.set_expanded_mark (True)
@@ -3855,7 +3855,7 @@ feature -- Types
 
 	implicit_attached_reference_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'attached reference' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_attached_mark (True)
 			Result.set_reference_mark (True)
@@ -3866,7 +3866,7 @@ feature -- Types
 
 	implicit_attached_separate_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'attached separate' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_attached_mark (True)
 			Result.set_separate_mark (True)
@@ -3877,7 +3877,7 @@ feature -- Types
 
 	implicit_attached_separate_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'attached separate expanded' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_attached_mark (True)
 			Result.set_separate_mark (True)
@@ -3889,7 +3889,7 @@ feature -- Types
 
 	implicit_attached_separate_reference_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'attached separate reference' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_attached_mark (True)
 			Result.set_separate_mark (True)
@@ -3901,7 +3901,7 @@ feature -- Types
 
 	implicit_detachable_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'detachable' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_detachable_mark (True)
 		ensure
@@ -3911,7 +3911,7 @@ feature -- Types
 
 	implicit_detachable_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'detachable expanded' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_detachable_mark (True)
 			Result.set_expanded_mark (True)
@@ -3922,7 +3922,7 @@ feature -- Types
 
 	implicit_detachable_reference_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'detachable reference' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_detachable_mark (True)
 			Result.set_reference_mark (True)
@@ -3933,7 +3933,7 @@ feature -- Types
 
 	implicit_detachable_separate_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'detachable separate' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_detachable_mark (True)
 			Result.set_separate_mark (True)
@@ -3944,7 +3944,7 @@ feature -- Types
 
 	implicit_detachable_separate_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'detachable separate expanded' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_detachable_mark (True)
 			Result.set_separate_mark (True)
@@ -3956,7 +3956,7 @@ feature -- Types
 
 	implicit_detachable_separate_reference_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'detachable separate reference' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_detachable_mark (True)
 			Result.set_separate_mark (True)
@@ -3968,7 +3968,7 @@ feature -- Types
 
 	implicit_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'expanded' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_expanded_mark (True)
 		ensure
@@ -3978,7 +3978,7 @@ feature -- Types
 
 	implicit_reference_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'reference' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_reference_mark (True)
 		ensure
@@ -3988,7 +3988,7 @@ feature -- Types
 
 	implicit_separate_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'separate' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_separate_mark (True)
 		ensure
@@ -3998,7 +3998,7 @@ feature -- Types
 
 	implicit_separate_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'separate expanded' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_separate_mark (True)
 			Result.set_expanded_mark (True)
@@ -4009,7 +4009,7 @@ feature -- Types
 
 	implicit_separate_reference_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'separate reference' type mark
-		once ("PROCESS")
+		once
 			create Result.make
 			Result.set_separate_mark (True)
 			Result.set_reference_mark (True)
@@ -4020,7 +4020,7 @@ feature -- Types
 
 	implicit_no_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit no type mark
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4089,7 +4089,7 @@ feature -- Leaf nodes
 
 	null_leaf: ET_AST_NULL_LEAF
 			-- Leaf with no characters
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4101,7 +4101,7 @@ feature -- Symbols
 
 	symbol: ET_SYMBOL
 			-- Dummy symbol
-		once ("PROCESS")
+		once
 			create Result.make_arrow
 		ensure
 			instance_free: class
@@ -4110,7 +4110,7 @@ feature -- Symbols
 
 	arrow_symbol: ET_SYMBOL
 			-- '->' symbol
-		once ("PROCESS")
+		once
 			create Result.make_arrow
 		ensure
 			instance_free: class
@@ -4119,7 +4119,7 @@ feature -- Symbols
 
 	assign_symbol: ET_SYMBOL
 			-- ':=' symbol
-		once ("PROCESS")
+		once
 			create Result.make_assign
 		ensure
 			instance_free: class
@@ -4128,7 +4128,7 @@ feature -- Symbols
 
 	assign_attempt_symbol: ET_SYMBOL
 			-- '?=' symbol
-		once ("PROCESS")
+		once
 			create Result.make_assign_attempt
 		ensure
 			instance_free: class
@@ -4137,7 +4137,7 @@ feature -- Symbols
 
 	bang_symbol: ET_SYMBOL
 			-- '!' symbol
-		once ("PROCESS")
+		once
 			create Result.make_bang
 		ensure
 			instance_free: class
@@ -4146,7 +4146,7 @@ feature -- Symbols
 
 	colon_symbol: ET_SYMBOL
 			-- ':' symbol
-		once ("PROCESS")
+		once
 			create Result.make_colon
 		ensure
 			instance_free: class
@@ -4155,7 +4155,7 @@ feature -- Symbols
 
 	comma_symbol: ET_SYMBOL
 			-- ',' symbol
-		once ("PROCESS")
+		once
 			create Result.make_comma
 		ensure
 			instance_free: class
@@ -4164,7 +4164,7 @@ feature -- Symbols
 
 	dollar_symbol: ET_SYMBOL
 			-- '$' symbol
-		once ("PROCESS")
+		once
 			create Result.make_dollar
 		ensure
 			instance_free: class
@@ -4173,7 +4173,7 @@ feature -- Symbols
 
 	dot_symbol: ET_SYMBOL
 			-- '.' symbol
-		once ("PROCESS")
+		once
 			create Result.make_dot
 		ensure
 			instance_free: class
@@ -4182,7 +4182,7 @@ feature -- Symbols
 
 	dotdot_symbol: ET_SYMBOL
 			-- '..' symbol
-		once ("PROCESS")
+		once
 			create Result.make_dotdot
 		ensure
 			instance_free: class
@@ -4191,7 +4191,7 @@ feature -- Symbols
 
 	equal_symbol: ET_SYMBOL
 			-- '=' symbol
-		once ("PROCESS")
+		once
 			create Result.make_equal
 		ensure
 			instance_free: class
@@ -4200,7 +4200,7 @@ feature -- Symbols
 
 	greater_than_symbol: ET_SYMBOL_OPERATOR
 			-- '>' symbol
-		once ("PROCESS")
+		once
 			create Result.make_gt
 		ensure
 			instance_free: class
@@ -4209,7 +4209,7 @@ feature -- Symbols
 
 	left_array_symbol: ET_SYMBOL
 			-- '<<' symbol
-		once ("PROCESS")
+		once
 			create Result.make_left_array
 		ensure
 			instance_free: class
@@ -4218,7 +4218,7 @@ feature -- Symbols
 
 	left_brace_symbol: ET_SYMBOL
 			-- '{' symbol
-		once ("PROCESS")
+		once
 			create Result.make_left_brace
 		ensure
 			instance_free: class
@@ -4227,7 +4227,7 @@ feature -- Symbols
 
 	left_bracket_symbol: ET_BRACKET_SYMBOL
 			-- '[' symbol
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4236,7 +4236,7 @@ feature -- Symbols
 
 	left_parenthesis_symbol: ET_SYMBOL
 			-- '(' symbol
-		once ("PROCESS")
+		once
 			create Result.make_left_parenthesis
 		ensure
 			instance_free: class
@@ -4245,7 +4245,7 @@ feature -- Symbols
 
 	less_than_symbol: ET_SYMBOL_OPERATOR
 			-- '<' symbol
-		once ("PROCESS")
+		once
 			create Result.make_lt
 		ensure
 			instance_free: class
@@ -4254,7 +4254,7 @@ feature -- Symbols
 
 	question_mark_symbol: ET_QUESTION_MARK_SYMBOL
 			-- '?' symbol
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4263,7 +4263,7 @@ feature -- Symbols
 
 	right_array_symbol: ET_SYMBOL
 			-- '>>' symbol
-		once ("PROCESS")
+		once
 			create Result.make_right_array
 		ensure
 			instance_free: class
@@ -4272,7 +4272,7 @@ feature -- Symbols
 
 	right_brace_symbol: ET_SYMBOL
 			-- '}' symbol
-		once ("PROCESS")
+		once
 			create Result.make_right_brace
 		ensure
 			instance_free: class
@@ -4281,7 +4281,7 @@ feature -- Symbols
 
 	right_bracket_symbol: ET_SYMBOL
 			-- ']' symbol
-		once ("PROCESS")
+		once
 			create Result.make_right_bracket
 		ensure
 			instance_free: class
@@ -4290,7 +4290,7 @@ feature -- Symbols
 
 	right_parenthesis_symbol: ET_SYMBOL
 			-- ')' symbol
-		once ("PROCESS")
+		once
 			create Result.make_right_parenthesis
 		ensure
 			instance_free: class
@@ -4299,7 +4299,7 @@ feature -- Symbols
 
 	semicolon_symbol: ET_SEMICOLON_SYMBOL
 			-- ';' symbol
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4308,7 +4308,7 @@ feature -- Symbols
 
 	tilde_symbol: ET_SYMBOL
 			-- '~' symbol
-		once ("PROCESS")
+		once
 			create Result.make_tilde
 		ensure
 			instance_free: class
@@ -4319,7 +4319,7 @@ feature -- Keywords
 
 	keyword: ET_KEYWORD
 			-- Dummy keyword
-		once ("PROCESS")
+		once
 			Result := strip_keyword
 		ensure
 			instance_free: class
@@ -4328,7 +4328,7 @@ feature -- Keywords
 
 	across_keyword: ET_KEYWORD
 			-- 'across' keyword
-		once ("PROCESS")
+		once
 			create Result.make_across
 		ensure
 			instance_free: class
@@ -4337,7 +4337,7 @@ feature -- Keywords
 
 	agent_keyword: ET_AGENT_KEYWORD
 			-- 'agent' keyword
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4346,7 +4346,7 @@ feature -- Keywords
 
 	and_keyword: ET_KEYWORD_OPERATOR
 			-- 'and' keyword
-		once ("PROCESS")
+		once
 			create Result.make_and
 		ensure
 			instance_free: class
@@ -4355,7 +4355,7 @@ feature -- Keywords
 
 	alias_keyword: ET_KEYWORD
 			-- 'alias' keyword
-		once ("PROCESS")
+		once
 			create Result.make_alias
 		ensure
 			instance_free: class
@@ -4364,7 +4364,7 @@ feature -- Keywords
 
 	all_keyword: ET_KEYWORD
 			-- 'all' keyword
-		once ("PROCESS")
+		once
 			create Result.make_all
 		ensure
 			instance_free: class
@@ -4373,7 +4373,7 @@ feature -- Keywords
 
 	as_keyword: ET_KEYWORD
 			-- 'as' keyword
-		once ("PROCESS")
+		once
 			create Result.make_as
 		ensure
 			instance_free: class
@@ -4382,7 +4382,7 @@ feature -- Keywords
 
 	assign_keyword: ET_KEYWORD
 			-- 'assign' keyword
-		once ("PROCESS")
+		once
 			create Result.make_assign
 		ensure
 			instance_free: class
@@ -4391,7 +4391,7 @@ feature -- Keywords
 
 	attached_keyword: ET_KEYWORD
 			-- 'attached' keyword
-		once ("PROCESS")
+		once
 			create Result.make_attached
 		ensure
 			instance_free: class
@@ -4400,7 +4400,7 @@ feature -- Keywords
 
 	attribute_keyword: ET_KEYWORD
 			-- 'attribute' keyword
-		once ("PROCESS")
+		once
 			create Result.make_attribute
 		ensure
 			instance_free: class
@@ -4409,7 +4409,7 @@ feature -- Keywords
 
 	check_keyword: ET_KEYWORD
 			-- 'check' keyword
-		once ("PROCESS")
+		once
 			create Result.make_check
 		ensure
 			instance_free: class
@@ -4418,7 +4418,7 @@ feature -- Keywords
 
 	class_keyword: ET_KEYWORD
 			-- 'class' keyword
-		once ("PROCESS")
+		once
 			create Result.make_class
 		ensure
 			instance_free: class
@@ -4427,7 +4427,7 @@ feature -- Keywords
 
 	convert_keyword: ET_KEYWORD
 			-- 'convert' keyword
-		once ("PROCESS")
+		once
 			create Result.make_convert
 		ensure
 			instance_free: class
@@ -4436,7 +4436,7 @@ feature -- Keywords
 
 	create_keyword: ET_KEYWORD
 			-- 'create' keyword
-		once ("PROCESS")
+		once
 			create Result.make_create
 		ensure
 			instance_free: class
@@ -4445,7 +4445,7 @@ feature -- Keywords
 
 	creation_keyword: ET_KEYWORD
 			-- 'creation' keyword
-		once ("PROCESS")
+		once
 			create Result.make_creation
 		ensure
 			instance_free: class
@@ -4454,7 +4454,7 @@ feature -- Keywords
 
 	current_keyword: ET_CURRENT
 			-- 'Current' keyword
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4463,7 +4463,7 @@ feature -- Keywords
 
 	debug_keyword: ET_KEYWORD
 			-- 'debug' keyword
-		once ("PROCESS")
+		once
 			create Result.make_debug
 		ensure
 			instance_free: class
@@ -4472,7 +4472,7 @@ feature -- Keywords
 
 	deferred_keyword: ET_KEYWORD
 			-- 'deferred' keyword
-		once ("PROCESS")
+		once
 			create Result.make_deferred
 		ensure
 			instance_free: class
@@ -4481,7 +4481,7 @@ feature -- Keywords
 
 	detachable_keyword: ET_KEYWORD
 			-- 'detachable' keyword
-		once ("PROCESS")
+		once
 			create Result.make_detachable
 		ensure
 			instance_free: class
@@ -4490,7 +4490,7 @@ feature -- Keywords
 
 	do_keyword: ET_KEYWORD
 			-- 'do' keyword
-		once ("PROCESS")
+		once
 			create Result.make_do
 		ensure
 			instance_free: class
@@ -4499,7 +4499,7 @@ feature -- Keywords
 
 	else_keyword: ET_KEYWORD
 			-- 'else' keyword
-		once ("PROCESS")
+		once
 			create Result.make_else
 		ensure
 			instance_free: class
@@ -4508,7 +4508,7 @@ feature -- Keywords
 
 	elseif_keyword: ET_KEYWORD
 			-- 'elseif' keyword
-		once ("PROCESS")
+		once
 			create Result.make_elseif
 		ensure
 			instance_free: class
@@ -4517,7 +4517,7 @@ feature -- Keywords
 
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
-		once ("PROCESS")
+		once
 			create Result.make_end
 		ensure
 			instance_free: class
@@ -4526,7 +4526,7 @@ feature -- Keywords
 
 	ensure_keyword: ET_KEYWORD
 			-- 'ensure' keyword
-		once ("PROCESS")
+		once
 			create Result.make_ensure
 		ensure
 			instance_free: class
@@ -4535,7 +4535,7 @@ feature -- Keywords
 
 	expanded_keyword: ET_KEYWORD
 			-- 'expanded' keyword
-		once ("PROCESS")
+		once
 			create Result.make_expanded
 		ensure
 			instance_free: class
@@ -4544,7 +4544,7 @@ feature -- Keywords
 
 	export_keyword: ET_KEYWORD
 			-- 'export' keyword
-		once ("PROCESS")
+		once
 			create Result.make_export
 		ensure
 			instance_free: class
@@ -4553,7 +4553,7 @@ feature -- Keywords
 
 	external_keyword: ET_KEYWORD
 			-- 'external' keyword
-		once ("PROCESS")
+		once
 			create Result.make_external
 		ensure
 			instance_free: class
@@ -4562,7 +4562,7 @@ feature -- Keywords
 
 	false_keyword: ET_FALSE_CONSTANT
 			-- 'False' keyword
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4571,7 +4571,7 @@ feature -- Keywords
 
 	feature_keyword: ET_KEYWORD
 			-- 'feature' keyword
-		once ("PROCESS")
+		once
 			create Result.make_feature
 		ensure
 			instance_free: class
@@ -4580,7 +4580,7 @@ feature -- Keywords
 
 	from_keyword: ET_KEYWORD
 			-- 'from' keyword
-		once ("PROCESS")
+		once
 			create Result.make_from
 		ensure
 			instance_free: class
@@ -4589,7 +4589,7 @@ feature -- Keywords
 
 	frozen_keyword: ET_KEYWORD
 			-- 'frozen' keyword
-		once ("PROCESS")
+		once
 			create Result.make_frozen
 		ensure
 			instance_free: class
@@ -4598,7 +4598,7 @@ feature -- Keywords
 
 	if_keyword: ET_KEYWORD
 			-- 'if' keyword
-		once ("PROCESS")
+		once
 			create Result.make_if
 		ensure
 			instance_free: class
@@ -4607,7 +4607,7 @@ feature -- Keywords
 
 	indexing_keyword: ET_KEYWORD
 			-- 'indexing' keyword
-		once ("PROCESS")
+		once
 			create Result.make_indexing
 		ensure
 			instance_free: class
@@ -4616,7 +4616,7 @@ feature -- Keywords
 
 	infix_keyword: ET_KEYWORD
 			-- 'infix' keyword
-		once ("PROCESS")
+		once
 			create Result.make_infix
 		ensure
 			instance_free: class
@@ -4625,7 +4625,7 @@ feature -- Keywords
 
 	inherit_keyword: ET_KEYWORD
 			-- 'inherit' keyword
-		once ("PROCESS")
+		once
 			create Result.make_inherit
 		ensure
 			instance_free: class
@@ -4634,7 +4634,7 @@ feature -- Keywords
 
 	inspect_keyword: ET_KEYWORD
 			-- 'inspect' keyword
-		once ("PROCESS")
+		once
 			create Result.make_inspect
 		ensure
 			instance_free: class
@@ -4643,7 +4643,7 @@ feature -- Keywords
 
 	invariant_keyword: ET_KEYWORD
 			-- 'invariant' keyword
-		once ("PROCESS")
+		once
 			create Result.make_invariant
 		ensure
 			instance_free: class
@@ -4652,7 +4652,7 @@ feature -- Keywords
 
 	is_keyword: ET_KEYWORD
 			-- 'is' keyword
-		once ("PROCESS")
+		once
 			create Result.make_is
 		ensure
 			instance_free: class
@@ -4661,7 +4661,7 @@ feature -- Keywords
 
 	like_keyword: ET_KEYWORD
 			-- 'like' keyword
-		once ("PROCESS")
+		once
 			create Result.make_like
 		ensure
 			instance_free: class
@@ -4670,7 +4670,7 @@ feature -- Keywords
 
 	local_keyword: ET_KEYWORD
 			-- 'local' keyword
-		once ("PROCESS")
+		once
 			create Result.make_local
 		ensure
 			instance_free: class
@@ -4679,7 +4679,7 @@ feature -- Keywords
 
 	loop_keyword: ET_KEYWORD
 			-- 'loop' keyword
-		once ("PROCESS")
+		once
 			create Result.make_loop
 		ensure
 			instance_free: class
@@ -4688,7 +4688,7 @@ feature -- Keywords
 
 	note_keyword: ET_KEYWORD
 			-- 'note' keyword
-		once ("PROCESS")
+		once
 			create Result.make_note
 		ensure
 			instance_free: class
@@ -4697,7 +4697,7 @@ feature -- Keywords
 
 	obsolete_keyword: ET_KEYWORD
 			-- 'obsolete' keyword
-		once ("PROCESS")
+		once
 			create Result.make_obsolete
 		ensure
 			instance_free: class
@@ -4706,7 +4706,7 @@ feature -- Keywords
 
 	old_keyword: ET_KEYWORD
 			-- 'old' keyword
-		once ("PROCESS")
+		once
 			create Result.make_old
 		ensure
 			instance_free: class
@@ -4715,7 +4715,7 @@ feature -- Keywords
 
 	once_keyword: ET_KEYWORD
 			-- 'once' keyword
-		once ("PROCESS")
+		once
 			create Result.make_once
 		ensure
 			instance_free: class
@@ -4724,7 +4724,7 @@ feature -- Keywords
 
 	or_keyword: ET_KEYWORD_OPERATOR
 			-- 'or' keyword
-		once ("PROCESS")
+		once
 			create Result.make_or
 		ensure
 			instance_free: class
@@ -4733,7 +4733,7 @@ feature -- Keywords
 
 	precursor_keyword: ET_PRECURSOR_KEYWORD
 			-- 'precursor' keyword
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4742,7 +4742,7 @@ feature -- Keywords
 
 	prefix_keyword: ET_KEYWORD
 			-- 'prefix' keyword
-		once ("PROCESS")
+		once
 			create Result.make_prefix
 		ensure
 			instance_free: class
@@ -4751,7 +4751,7 @@ feature -- Keywords
 
 	redefine_keyword: ET_KEYWORD
 			-- 'redefine' keyword
-		once ("PROCESS")
+		once
 			create Result.make_redefine
 		ensure
 			instance_free: class
@@ -4760,7 +4760,7 @@ feature -- Keywords
 
 	reference_keyword: ET_KEYWORD
 			-- 'reference' keyword
-		once ("PROCESS")
+		once
 			create Result.make_reference
 		ensure
 			instance_free: class
@@ -4769,7 +4769,7 @@ feature -- Keywords
 
 	rename_keyword: ET_KEYWORD
 			-- 'rename' keyword
-		once ("PROCESS")
+		once
 			create Result.make_rename
 		ensure
 			instance_free: class
@@ -4778,7 +4778,7 @@ feature -- Keywords
 
 	require_keyword: ET_KEYWORD
 			-- 'require' keyword
-		once ("PROCESS")
+		once
 			create Result.make_require
 		ensure
 			instance_free: class
@@ -4787,7 +4787,7 @@ feature -- Keywords
 
 	rescue_keyword: ET_KEYWORD
 			-- 'rescue' keyword
-		once ("PROCESS")
+		once
 			create Result.make_rescue
 		ensure
 			instance_free: class
@@ -4796,7 +4796,7 @@ feature -- Keywords
 
 	result_keyword: ET_RESULT
 			-- 'Result' keyword
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4805,7 +4805,7 @@ feature -- Keywords
 
 	retry_keyword: ET_RETRY_INSTRUCTION
 			-- 'retry' keyword
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4814,7 +4814,7 @@ feature -- Keywords
 
 	select_keyword: ET_KEYWORD
 			-- 'select' keyword
-		once ("PROCESS")
+		once
 			create Result.make_select
 		ensure
 			instance_free: class
@@ -4823,7 +4823,7 @@ feature -- Keywords
 
 	separate_keyword: ET_KEYWORD
 			-- 'separate' keyword
-		once ("PROCESS")
+		once
 			create Result.make_separate
 		ensure
 			instance_free: class
@@ -4832,7 +4832,7 @@ feature -- Keywords
 
 	some_keyword: ET_KEYWORD
 			-- 'some' keyword
-		once ("PROCESS")
+		once
 			create Result.make_some
 		ensure
 			instance_free: class
@@ -4841,7 +4841,7 @@ feature -- Keywords
 
 	strip_keyword: ET_KEYWORD
 			-- 'strip' keyword
-		once ("PROCESS")
+		once
 			create Result.make_strip
 		ensure
 			instance_free: class
@@ -4850,7 +4850,7 @@ feature -- Keywords
 
 	then_keyword: ET_KEYWORD
 			-- 'then' keyword
-		once ("PROCESS")
+		once
 			create Result.make_then
 		ensure
 			instance_free: class
@@ -4859,7 +4859,7 @@ feature -- Keywords
 
 	true_keyword: ET_TRUE_CONSTANT
 			-- 'True' keyword
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4868,7 +4868,7 @@ feature -- Keywords
 
 	tuple_keyword: ET_IDENTIFIER
 			-- 'TUPLE' keyword
-		once ("PROCESS")
+		once
 			create Result.make (capitalized_tuple_name)
 		ensure
 			instance_free: class
@@ -4877,7 +4877,7 @@ feature -- Keywords
 
 	undefine_keyword: ET_KEYWORD
 			-- 'undefine' keyword
-		once ("PROCESS")
+		once
 			create Result.make_undefine
 		ensure
 			instance_free: class
@@ -4886,7 +4886,7 @@ feature -- Keywords
 
 	unique_keyword: ET_KEYWORD
 			-- 'unique' keyword
-		once ("PROCESS")
+		once
 			create Result.make_unique
 		ensure
 			instance_free: class
@@ -4895,7 +4895,7 @@ feature -- Keywords
 
 	until_keyword: ET_KEYWORD
 			-- 'until' keyword
-		once ("PROCESS")
+		once
 			create Result.make_until
 		ensure
 			instance_free: class
@@ -4904,7 +4904,7 @@ feature -- Keywords
 
 	variant_keyword: ET_KEYWORD
 			-- 'variant' keyword
-		once ("PROCESS")
+		once
 			create Result.make_variant
 		ensure
 			instance_free: class
@@ -4913,7 +4913,7 @@ feature -- Keywords
 
 	void_keyword: ET_VOID
 			-- 'Void' keyword
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -4922,7 +4922,7 @@ feature -- Keywords
 
 	when_keyword: ET_KEYWORD
 			-- 'when' keyword
-		once ("PROCESS")
+		once
 			create Result.make_when
 		ensure
 			instance_free: class
@@ -6144,7 +6144,7 @@ feature -- Built-in
 
 	unknown_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Shared unknown convertion feature
-		once ("PROCESS")
+		once
 			create Result.make (unknown_class_type)
 		ensure
 			instance_free: class
@@ -6175,7 +6175,7 @@ feature -- Position
 
 	null_position: ET_POSITION
 			-- Null position
-		once ("PROCESS")
+		once
 			create {ET_COMPRESSED_POSITION} Result.make_default
 		ensure
 			instance_free: class
@@ -6187,7 +6187,7 @@ feature -- Ancestors
 
 	empty_ancestors: ET_BASE_TYPE_LIST
 			-- Shared empty ancestors
-		once ("PROCESS")
+		once
 			create Result.make_with_capacity (0)
 		ensure
 			instance_free: class
@@ -6197,7 +6197,7 @@ feature -- Ancestors
 
 	unknown_parent: ET_PARENT
 			-- Shared parent based on `unknown_class_type'
-		once ("PROCESS")
+		once
 			create Result.make (unknown_class_type, Void, Void, Void, Void, Void)
 		ensure
 			instance_free: class
@@ -6206,7 +6206,7 @@ feature -- Ancestors
 
 	unknown_parents: ET_PARENT_LIST
 			-- Shared parents only made up of `unknown_parent'
-		once ("PROCESS")
+		once
 			create Result.make_with_capacity (1)
 			Result.put_first (unknown_parent)
 		ensure
@@ -6218,7 +6218,7 @@ feature -- Features
 
 	empty_queries: ET_QUERY_LIST
 			-- Shared empty queries
-		once ("PROCESS")
+		once
 			create Result.make_with_capacity (0)
 		ensure
 			instance_free: class
@@ -6228,7 +6228,7 @@ feature -- Features
 
 	empty_procedures: ET_PROCEDURE_LIST
 			-- Shared empty procedures
-		once ("PROCESS")
+		once
 			create Result.make_with_capacity (0)
 		ensure
 			instance_free: class
@@ -6240,7 +6240,7 @@ feature -- Clients
 
 	empty_clients: ET_CLIENT_LIST
 			-- Shared empty clients
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -6255,7 +6255,7 @@ feature -- System
 			-- This class is equal to no other classes, not even itself;
 			-- it does conform to no type, not even itself, and no type
 			-- conforms to it
-		once ("PROCESS")
+		once
 			create Result.make_unknown
 			Result.set_group (unknown_group)
 			Result.set_syntax_error
@@ -6270,7 +6270,7 @@ feature -- System
 
 	unknown_class_type: ET_CLASS_TYPE
 			-- Shared class type whose base class is unknown
-		once ("PROCESS")
+		once
 			create Result.make (implicit_attached_type_mark, unknown_class.name, unknown_class)
 		ensure
 			instance_free: class
@@ -6281,7 +6281,7 @@ feature -- System
 			-- Shared generic class type whose base class is unknown
 		local
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
-		once ("PROCESS")
+		once
 			create l_parameters.make
 			create Result.make_generic (implicit_attached_type_mark, unknown_class.name, l_parameters, unknown_class)
 		ensure
@@ -6291,7 +6291,7 @@ feature -- System
 
 	unknown_tuple_type: ET_TUPLE_TYPE
 			-- Shared tuple type whose base class is unknown
-		once ("PROCESS")
+		once
 			create Result.make (implicit_attached_type_mark, Void, unknown_class)
 		ensure
 			instance_free: class
@@ -6300,7 +6300,7 @@ feature -- System
 
 	unknown_group: ET_UNKNOWN_GROUP
 			-- Shared unknown group
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -6309,7 +6309,7 @@ feature -- System
 
 	unknown_system: ET_SYSTEM
 			-- Shared unknown Eiffel system
-		once ("PROCESS")
+		once
 			create Result.make ("*unknown*")
 		ensure
 			instance_free: class
@@ -6318,7 +6318,7 @@ feature -- System
 
 	unknown_library: ET_LIBRARY
 			-- Shared unknown Eiffel class library
-		once ("PROCESS")
+		once
 			create Result.make ("*unknown*", unknown_system)
 		ensure
 			instance_free: class
@@ -6327,7 +6327,7 @@ feature -- System
 
 	unknown_dotnet_assembly: ET_DOTNET_ASSEMBLY
 			-- Shared unknown .NET assembly
-		once ("PROCESS")
+		once
 			create Result.make ("*unknown*", Void, unknown_system)
 		ensure
 			instance_free: class
@@ -6337,7 +6337,7 @@ feature -- System
 	standard_error_handler: ET_ERROR_HANDLER
 			-- Shared error handler where error messages
 			-- will be sent to standard files
-		once ("PROCESS")
+		once
 			create Result.make_standard
 		ensure
 			instance_free: class
@@ -6347,7 +6347,7 @@ feature -- System
 	null_error_handler: ET_NULL_ERROR_HANDLER
 			-- Shared error handler where no error message
 			-- will be displayed
-		once ("PROCESS")
+		once
 			create Result.make_null
 		ensure
 			instance_free: class
@@ -6356,7 +6356,7 @@ feature -- System
 
 	default_ast_factory: ET_AST_FACTORY
 			-- Shared default Eiffel AST factory
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -6365,7 +6365,7 @@ feature -- System
 
 	empty_actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			-- Empty actual generic parameter list "[]"
-		once ("PROCESS")
+		once
 			create Result.make_with_capacity (0)
 		ensure
 			instance_free: class
@@ -6375,7 +6375,7 @@ feature -- System
 
 	null_ast_processor: ET_AST_NULL_PROCESSOR
 			-- Null AST processor
-		once ("PROCESS")
+		once
 			create Result.make
 		ensure
 			instance_free: class
@@ -6384,7 +6384,7 @@ feature -- System
 
 	null_system_processor: ET_SYSTEM_PROCESSOR
 			-- Null system processor
-		once ("PROCESS")
+		once
 			create Result.make_null
 		ensure
 			instance_free: class
@@ -6395,7 +6395,7 @@ feature -- Empty lists
 
 	empty_classes: DS_ARRAYED_LIST [ET_CLASS]
 			-- Shared empty list of classes
-		once ("PROCESS")
+		once
 			create Result.make (0)
 		ensure
 			instance_free: class
@@ -6405,7 +6405,7 @@ feature -- Empty lists
 
 	empty_master_classes: DS_ARRAYED_LIST [ET_MASTER_CLASS]
 			-- Shared empty list of master classes
-		once ("PROCESS")
+		once
 			create Result.make (0)
 		ensure
 			instance_free: class

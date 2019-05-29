@@ -41,6 +41,12 @@ feature -- Status setting
 			Result := True
 		end
 
+	is_current: BOOLEAN
+			-- Is current operand the 'Current' entity (possibly parenthesized)?
+		do
+			-- Result := False
+		end
+
 feature -- Access
 
 	index: INTEGER

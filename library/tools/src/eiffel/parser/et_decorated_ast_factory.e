@@ -2288,13 +2288,13 @@ feature -- AST nodes
 			end
 		end
 
-	new_creator (a_creation: detachable ET_KEYWORD; a_clients: detachable ET_CLIENT_LIST; nb: INTEGER): detachable ET_CREATOR
+	new_creator (a_create: detachable ET_KEYWORD; a_clients: detachable ET_CLIENT_LIST; nb: INTEGER): detachable ET_CREATOR
 			-- New creation clause with given capacity
 		do
 			if a_clients /= Void then
 				create Result.make_with_capacity (a_clients, nb)
-				if a_creation /= Void then
-					Result.set_creation_keyword (a_creation)
+				if a_create /= Void then
+					Result.set_create_keyword (a_create)
 				end
 			end
 		end

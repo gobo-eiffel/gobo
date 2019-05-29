@@ -5,7 +5,7 @@ note
 		"Eiffel comma-separated lists of types surrounded by braces"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 	make_with_capacity (nb: INTEGER)
 			-- Create an empty list of types with capacity `nb'.
 		do
-			left_brace := tokens.left_bracket_symbol
-			right_brace := tokens.right_bracket_symbol
+			left_brace := tokens.left_brace_symbol
+			right_brace := tokens.right_brace_symbol
 			precursor (nb)
 		end
 

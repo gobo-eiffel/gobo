@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		require
 			a_clients_not_void: a_clients /= Void
 		do
-			creation_keyword := tokens.creation_keyword
+			create_keyword := tokens.create_keyword
 			clients := a_clients
 			make_feature_name_list
 		ensure
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			a_clients_not_void: a_clients /= Void
 			nb_positive: nb >= 0
 		do
-			creation_keyword := tokens.creation_keyword
+			create_keyword := tokens.create_keyword
 			clients := a_clients
 			make_feature_name_list_with_capacity (nb)
 		ensure
@@ -57,8 +57,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	creation_keyword: ET_KEYWORD
-			-- 'creation' keyword
+	create_keyword: ET_KEYWORD
+			-- 'create' keyword
 
 	clients: ET_CLIENT_LIST
 			-- Clients
@@ -75,7 +75,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := creation_keyword.position
+			Result := create_keyword.position
 			if Result.is_null then
 				if attached clients_clause as l_clients_clause then
 					Result := l_clients_clause.position
@@ -88,7 +88,7 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			Result := creation_keyword
+			Result := create_keyword
 		end
 
 	last_leaf: ET_AST_LEAF
@@ -98,7 +98,7 @@ feature -- Access
 				if attached clients_clause as l_clients_clause then
 					Result := l_clients_clause.last_leaf
 				else
-					Result := creation_keyword
+					Result := create_keyword
 				end
 			else
 				Result := last.last_leaf
@@ -144,14 +144,14 @@ feature -- Status report
 
 feature -- Setting
 
-	set_creation_keyword (a_creation: like creation_keyword)
-			-- Set `creation_keyword' to `a_creation'.
+	set_create_keyword (a_create: like create_keyword)
+			-- Set `create_keyword' to `a_create'.
 		require
-			a_creation_not_void: a_creation /= Void
+			a_create_not_void: a_create /= Void
 		do
-			creation_keyword := a_creation
+			create_keyword := a_create
 		ensure
-			creation_keyword_set: creation_keyword = a_creation
+			create_keyword_set: create_keyword = a_create
 		end
 
 feature -- Basic operations
@@ -205,7 +205,7 @@ feature -- Processing
 
 invariant
 
-	creation_keyword_not_void: creation_keyword /= Void
+	create_keyword_not_void: create_keyword /= Void
 	clients_not_void: clients /= Void
 
 end

@@ -2008,7 +2008,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_creator (a_creation: detachable ET_KEYWORD; a_clients: detachable ET_CLIENT_LIST; nb: INTEGER): detachable ET_CREATOR
+	new_creator (a_create: detachable ET_KEYWORD; a_clients: detachable ET_CLIENT_LIST; nb: INTEGER): detachable ET_CREATOR
 			-- New creation clause with given capacity
 		require
 			nb_positive: nb >= 0
@@ -2078,7 +2078,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_assigner (an_assigner)
@@ -2099,7 +2099,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_obsolete_message (an_obsolete)
@@ -2132,7 +2132,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_assigner (an_assigner)
@@ -2178,7 +2178,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_obsolete_message (an_obsolete)
@@ -2343,7 +2343,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_language, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_assigner (an_assigner)
@@ -2391,7 +2391,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_language, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_obsolete_message (an_obsolete)
@@ -3193,7 +3193,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_assigner (an_assigner)
@@ -3256,7 +3256,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_obsolete_message (an_obsolete)

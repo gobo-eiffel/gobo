@@ -538,8 +538,18 @@ feature -- Status report
 			Result := class_code = class_codes.typed_pointer_class_code
 		end
 
-	is_unknown: BOOLEAN
+	is_unknown_class: BOOLEAN
 			-- Is current class an "*UNKNOWN*" class?
+			-- This class does not conform to any other class,
+			-- not even itself.
+		do
+			Result := group.is_unknown and then name.same_class_name (tokens.unknown_class_name)
+		ensure
+			definition: Result = (group.is_unknown and then name.same_class_name (tokens.unknown_class_name))
+		end
+
+	is_unknown: BOOLEAN
+			-- Is current class unknown?
 			-- This class does not conform to any other class,
 			-- not even itself.
 		do
@@ -843,8 +853,8 @@ feature -- Preparsing
 			l_master_class := master_class_in_universe
 			if l_master_class.actual_class = Current then
 				Result := l_master_class.first_local_non_override_class
-				if Result = Current and then not l_master_class.other_local_non_override_classes.is_empty then
-					Result := l_master_class.other_local_non_override_classes.first
+				if Result = Current and then attached l_master_class.other_local_non_override_classes as l_other_local_non_override_classes and then not l_other_local_non_override_classes.is_empty then
+					Result := l_other_local_non_override_classes.first
 				end
 				if Result = Void then
 					if attached l_master_class.first_imported_class as l_imported_class then
