@@ -103,6 +103,7 @@ extern int utime(const char *, struct utimbuf *);
 #endif
 #include <io.h> /* for access, chmod */
 #include <direct.h> /* for (ch|mk|rm)dir */
+#include <share.h>  /* added for temporary file */
 #include <wchar.h>
 #else
 #include <utime.h>
@@ -1919,7 +1920,7 @@ EIF_INTEGER eif_file_mkstemp(EIF_FILENAME template, EIF_BOOLEAN is_text_mode)
 			for (j = index; j < len; j++) {
 				template[j] = letters[rand() % 62];
 			}
-			fd = _wsopen( template, _O_CREAT | _O_EXCL | _O_RDWR | (is_text_mode ? _O_TEXT : _O_BINARY) | _O_NOINHERIT,_SH_DENYRW, _S_IREAD | _S_IWRITE);
+			fd = _wsopen( template, _O_CREAT | _O_EXCL | _O_RDWR | (is_text_mode ? _O_TEXT : _O_BINARY) | _O_NOINHERIT, _SH_DENYRW, _S_IREAD | _S_IWRITE);
 			/* Success, if the file descriptor is valid or if there is a creation error that is not due to a file already existing. */
 			if ((fd != -1) || (fd == -1 && errno != EEXIST)) {
 				break;
