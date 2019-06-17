@@ -104,6 +104,7 @@ extern int utime(const char *, struct utimbuf *);
 #include <io.h> /* for access, chmod */
 #include <direct.h> /* for (ch|mk|rm)dir */
 #include <share.h>  /* added for temporary file */
+#include <fcntl.h>  /* added for temporary file */
 #include <wchar.h>
 #else
 #include <utime.h>
