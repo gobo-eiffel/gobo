@@ -5,7 +5,7 @@ note
 		"Eiffel class marks (e.g. 'attached', 'detachable', 'expanded', 'reference', 'separate', 'deferred', '!' or '?')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,10 +35,13 @@ feature -- Access
 
 	text: STRING
 			-- Textual representation
+			-- (using UTF-8 encoding)
 		deferred
 		ensure
 			text_not_void: Result /= Void
 			text_not_empty: not Result.is_empty
+			text_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
+			valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 		end
 
 end

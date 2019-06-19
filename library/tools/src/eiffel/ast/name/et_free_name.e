@@ -5,7 +5,7 @@ note
 		"Eiffel 'free-operator' feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,7 @@ feature -- Access
 
 	lower_name: STRING
 			-- Lower-name of feature call
+			-- (using UTF-8 encoding)
 			-- (May return the same object as `name' if already in lower case.)
 		local
 			i, nb: INTEGER
@@ -43,20 +44,26 @@ feature -- Access
 
 	operator_name: STRING
 			-- Name of operator
+			-- (using UTF-8 encoding)
 		deferred
 		ensure
 			operator_name_not_void: Result /= Void
 			operator_name_not_empty: Result.count > 0
+			operator_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
+			valid_utf8_operator_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 		end
 
 	operator_lower_name: STRING
 			-- Lower-name of operator
+			-- (using UTF-8 encoding)
 			-- (May return the same object as `operator_name' if already in lower case.)
 		do
 			Result := operator_name
 		ensure
 			operator_lower_name_not_void: Result /= Void
 			operator_lower_name_not_empty: Result.count > 0
+			operator_lower_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
+			valid_utf8_operator_lower_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 			definition: Result.is_equal (operator_name.as_lower)
 		end
 

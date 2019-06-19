@@ -5,7 +5,7 @@ note
 		"Unicode constants"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,20 @@ feature -- Access
 --			definition: Result = 0
 --		end
 
+	minimum_unicode_character_natural_32_code: NATURAL_32 = 0
+			-- Smallest code for unicode characters
+--		ensure
+--			definition: Result = 0
+--		end
+
 	maximum_unicode_character_code: INTEGER = 1114111
+			-- Largest code for unicode characters (10FFFF);
+			-- Includes final two non-characters.
+--		ensure
+--			definition: Result = 1114111
+--		end
+
+	maximum_unicode_character_natural_32_code: NATURAL_32 = 0x10FFFF
 			-- Largest code for unicode characters (10FFFF);
 			-- Includes final two non-characters.
 --		ensure
@@ -37,7 +50,19 @@ feature -- Access
 --			definition: Result = 55296
 --		end
 
+	minimum_unicode_surrogate_natural_32_code: NATURAL_32 = 0xD800
+			-- Lowest unicode surrogate code-point (0xD800)
+--		ensure
+--			definition: Result = 55296
+--		end
+
 	maximum_unicode_surrogate_code: INTEGER = 57343
+			-- Highest unicode surrogate code-point (0xDFFF)
+--		ensure
+--			definition: Result = 57343
+--		end
+
+	maximum_unicode_surrogate_natural_32_code: NATURAL_32 = 0xDFFF
 			-- Highest unicode surrogate code-point (0xDFFF)
 --		ensure
 --			definition: Result = 57343

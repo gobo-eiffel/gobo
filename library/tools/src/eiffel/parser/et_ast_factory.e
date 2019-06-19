@@ -980,9 +980,9 @@ feature -- AST leaves
 			-- New integer constant in binary format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (0[bB](_*[0-1]+_*)+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(0[bB][0-1]+(_+[0-1]+)*").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_binary_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -995,7 +995,7 @@ feature -- AST leaves
 			-- Result := Void
 		end
 
-	new_c1_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C1_CHARACTER_CONSTANT
+	new_c1_character_constant (a_value: CHARACTER_32; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C1_CHARACTER_CONSTANT
 			-- New character constant of the form 'A'
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -1008,6 +1008,7 @@ feature -- AST leaves
 			-- New character constant of the form '%A'
 		require
 			a_scanner_not_void: a_scanner /= Void
+			a_value_one_utf8_byte: {UC_UTF8_ROUTINES}.natural_32_code_byte_count (a_value.natural_32_code) = 1
 		do
 			create Result.make (a_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1017,7 +1018,7 @@ feature -- AST leaves
 			-- New character constant of the form '%/code/'
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ((0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(0x[0-9a-fA-F]{1,4})).recognizes (a_scanner.last_literal)
+			-- valid_literal: ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*).recognizes (a_scanner.last_literal)
 		do
 			Result := a_scanner.last_c3_character_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1046,9 +1047,9 @@ feature -- AST leaves
 			-- New integer constant in hexadecimal format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (0[xX](_*[0-9a-fA-F]+_*)+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[xX](_*[0-9a-fA-F]+_*)+").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_hexadecimal_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1066,9 +1067,9 @@ feature -- AST leaves
 			-- New integer constant in octal format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (0[cC](_*[0-7]+_*)+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[cC][0-7]+(_+[0-7]+)*").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_octal_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1076,9 +1077,9 @@ feature -- AST leaves
 			-- New integer constant with no underscore
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ([0-9]+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9]+").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_regular_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1086,7 +1087,7 @@ feature -- AST leaves
 			-- New manifest string with no special character
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ([^"%\n]*).recognizes (a_scanner.last_literal)
+			-- valid_literal: (([^"%\n\x80-\xFF}]|{NON_ASCII})*).recognizes (a_scanner.last_literal)
 		do
 			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1106,7 +1107,7 @@ feature -- AST leaves
 			-- New manifest string with special characters
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_scanner.last_literal)
+			-- valid_literal: (([^"%\n\x80-\xFF]|{NON_ASCII}|%([^\n\x08-\xFF]|\/([[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)\/|{HORIZONTAL_BREAK}*\n{BREAK}*%))*).recognizes (a_scanner.last_literal)
 		do
 			Result := a_scanner.last_special_manifest_string
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1116,9 +1117,9 @@ feature -- AST leaves
 			-- New integer constant with underscores
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ((_*[0-9]+_*)+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(_*[0-9]+_*)+").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_underscored_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 

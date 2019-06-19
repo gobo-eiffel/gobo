@@ -5,7 +5,7 @@ note
 		"Eiffel integer constants in hexadecimal format"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,17 +33,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal)
+	make (a_literal: like literal; a_value: NATURAL_64; a_has_overflow: BOOLEAN)
 			-- Create a new Integer constant.
 		require
 			a_literal_not_void: a_literal /= Void
---			valid_literal: (0[xX](_*[0-9a-fA-F]+_*)+).recognizes (a_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[xX](_*[0-9a-fA-F]+_*)+").recognizes (a_literal)
 		do
 			literal := a_literal
+			value := a_value
+			has_overflow := a_has_overflow
 			make_leaf
-			compute_value
 		ensure
 			literal_set: literal = a_literal
+			value_set: value = a_value
+			has_overflow_set: has_overflow = a_has_overflow
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -183,76 +186,8 @@ feature -- Processing
 			a_processor.process_hexadecimal_integer_constant (Current)
 		end
 
-feature {NONE} -- Implementation
-
-	compute_value
-			-- Compute value of current integer constant.
-			-- Make result available in `value' or set
-			-- `has_overflow' to true if an overflow
-			-- occurred during computation.
-		local
-			v, d: NATURAL_64
-			i, nb: INTEGER
-			l_n1: NATURAL_64
-			l_n2: NATURAL_64
-			c: CHARACTER
-		do
-			l_n1 := {NATURAL_64}.Max_value // 16
-			l_n2 := {NATURAL_64}.max_value \\ 16
-			has_overflow := False
-			nb := literal.count
-			from i := 3 until i > nb loop
-				c := literal.item (i)
-				if c /= '_' then
-					inspect c
-					when '0' then
-						d := 0
-					when '1' then
-						d := 1
-					when '2' then
-						d := 2
-					when '3' then
-						d := 3
-					when '4' then
-						d := 4
-					when '5' then
-						d := 5
-					when '6' then
-						d := 6
-					when '7' then
-						d := 7
-					when '8' then
-						d := 8
-					when '9' then
-						d := 9
-					when 'a', 'A' then
-						d := 10
-					when 'b', 'B' then
-						d := 11
-					when 'c', 'C' then
-						d := 12
-					when 'd', 'D' then
-						d := 13
-					when 'e','E' then
-						d := 14
-					when 'f', 'F' then
-						d := 15
-					end
-					if v < l_n1 or (v = l_n1 and d <= l_n2) then
-						v := 16 * v + d
-					else
-							-- Overflow.
-						has_overflow := True
-						i := nb + 1
-					end
-				end
-				i := i + 1
-			end
-			value := v
-		end
-
 invariant
 
---	valid_literal: (0[xX](_*[0-9a-fA-F]+_*)+).recognizes (literal)
+	valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[xX](_*[0-9a-fA-F]+_*)+").recognizes (literal)
 
 end

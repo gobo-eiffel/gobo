@@ -5,7 +5,7 @@ note
 		"Eiffel manifest strings with no special character"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,9 @@ feature {NONE} -- Initialization
 			-- Create a new manifest string.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: ([^"%\n]*).recognizes (a_literal)
+			a_literal_is_string: {KL_ANY_ROUTINES}.same_types (a_literal, "")
+			valid_utf8_literal: {UC_UTF8_ROUTINES}.valid_utf8 (a_literal)
+			-- valid_literal: (([^"%\n\x80-\xFF}]|{NON_ASCII})*).recognizes (a_literal)
 		do
 			value := a_literal
 			make_leaf
@@ -40,9 +42,11 @@ feature -- Access
 
 	value: STRING
 			-- String value
+			-- (using UTF-8 encoding)
 
 	literal: STRING
 			-- Literal value
+			-- (using UTF-8 encoding)
 		do
 			Result := value
 		end
@@ -63,6 +67,6 @@ feature -- Processing
 
 invariant
 
-	-- valid_literal: ([^"%\n]*).recognizes (literal)
+	-- valid_literal: (([^"%\n\x80-\xFF}]|{NON_ASCII})*).recognizes (literal)
 
 end

@@ -1053,6 +1053,7 @@ feature -- Preparsing status
 			group := tokens.unknown_group
 			time_stamp := no_time_stamp
 			is_interface := False
+			has_utf8_bom := False
 		ensure
 			not_preparsed: not is_preparsed
 		end
@@ -1135,6 +1136,7 @@ feature -- Parsing status
 			registered_inline_constant_count := 0
 			leading_break := Void
 			providers := Void
+			has_utf8_bom := False
 			status_mutex.unlock
 		ensure
 			not_parsed: not is_parsed
@@ -1155,6 +1157,20 @@ feature {NONE} -- Parsing status
 			-- Has a fatal syntax error been detected?
 			--
 			-- This is not protected by a mutex in case of multi-threading.
+
+feature -- Encoding
+
+	has_utf8_bom: BOOLEAN
+			-- Has the byte order mark (BOM) for UTF-8 been found at the
+			-- beginning of the class text?
+
+	set_has_utf8_bom (b: BOOLEAN)
+			-- Set `has_utf8_bom' to `b'.
+		do
+			has_utf8_bom := b
+		ensure
+			has_utf8_bom_set: has_utf8_bom = b
+		end
 
 feature -- Class header
 

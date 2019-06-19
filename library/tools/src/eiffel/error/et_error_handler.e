@@ -525,17 +525,6 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
-	report_SCAO_error (a_filename: STRING; p: ET_POSITION)
-			-- ASCII code too big in special character
-			-- specification %/code/ in character constant.
-			-- (SCAO: Syntax Character Ascii-code Overflow)
-		require
-			a_filename_not_void: a_filename /= Void
-			p_not_void: p /= Void
-		do
-			report_syntax_error (a_filename, p)
-		end
-
 	report_SCAS_error (a_filename: STRING; p: ET_POSITION)
 			-- Missing character / at end of special character
 			-- specification %/code/ in character constant.
@@ -5426,6 +5415,27 @@ feature -- Validity errors
 			end
 		end
 
+	report_vqmc2b_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_CHARACTER_CONSTANT)
+			-- Report VQMC-2 error: `a_attribute', declared in `a_class_impl', introduces
+			-- a character constant `a_constant' but its value is not representable as an instance
+			-- of its character type when viewed from one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA 367-2: p.100
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			integer_constant: a_attribute.constant = a_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc2_error (a_class) then
+				create an_error.make_vqmc2b (a_class, a_class_impl, a_attribute, a_constant)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vqmc3a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Report VQMC-3 error: `an_attribute', declared in `a_class_impl', introduces
 			-- an integer constant but its type is not "INTEGER" when viewed from one of its
@@ -5508,6 +5518,27 @@ feature -- Validity errors
 		do
 			if reportable_vqmc5_error (a_class) then
 				create an_error.make_vqmc5a (a_class, a_class_impl, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc5b_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_MANIFEST_STRING)
+			-- Report VQMC-5 error: `a_attribute', declared in `a_class_impl', introduces
+			-- a string constant `a_constant' but its value is not representable as an instance
+			-- of its string type when viewed from one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA 367-2: p.100
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			integer_constant: a_attribute.constant = a_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc5_error (a_class) then
+				create an_error.make_vqmc5b (a_class, a_class_impl, a_attribute, a_constant)
 				report_validity_error (an_error)
 			end
 		end
@@ -7915,6 +7946,48 @@ feature -- Validity errors
 		do
 			if reportable_gvwmc2_error (a_class) then
 				create an_error.make_gvwmc2a (a_class, a_class_impl, a_constant, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvwmc2b_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHARACTER_CONSTANT; a_type: ET_NAMED_TYPE)
+			-- Report GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is not
+			-- representable as an instance of the character type `a_type'.
+			--
+			-- Not in ECMA-367-2
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvwmc2_error (a_class) then
+				create an_error.make_gvwmc2b (a_class, a_class_impl, a_constant, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvwmc2c_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_MANIFEST_STRING; a_type: ET_NAMED_TYPE)
+			-- Report GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is not
+			-- representable as an instance of the string type `a_type'.
+			--
+			-- Not in ECMA-367-2
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvwmc2_error (a_class) then
+				create an_error.make_gvwmc2c (a_class, a_class_impl, a_constant, a_type)
 				report_validity_error (an_error)
 			end
 		end

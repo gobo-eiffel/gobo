@@ -33,7 +33,6 @@ inherit
 	ET_CLASS_PROCESSOR
 		rename
 			process_identifier as process_ast_identifier,
-			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		undefine
@@ -47,7 +46,6 @@ inherit
 		rename
 			make as make_ast_processor,
 			process_identifier as process_ast_identifier,
-			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		redefine
@@ -164,9 +162,12 @@ feature -- Parsing
 			eiffel_buffer.set_file (a_file)
 			yy_load_input_buffer
 			yyparse
-			if attached last_class as l_last_class and then l_last_class /= current_class then
-				l_last_class.processing_mutex.unlock
-				last_class := Void
+			if attached last_class as l_last_class then
+				l_last_class.set_has_utf8_bom (eiffel_buffer.has_utf8_bom)
+				if l_last_class /= current_class then
+					l_last_class.processing_mutex.unlock
+					last_class := Void
+				end
 			end
 			reset
 			group := old_group
@@ -2620,12 +2621,12 @@ feature {NONE} -- Counters
 
 feature {NONE} -- Input buffer
 
-	eiffel_buffer: YY_FILE_BUFFER
+	eiffel_buffer: ET_EIFFEL_FILE_BUFFER
 			-- Eiffel file input buffer
 
 feature {NONE} -- Constants
 
-	Initial_eiffel_buffer_size: INTEGER = 50000
+	Initial_eiffel_buffer_size: INTEGER = 100000
 			-- Initial size for `eiffel_buffer'
 
 	Initial_counters_capacity: INTEGER = 10

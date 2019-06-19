@@ -33,20 +33,26 @@ feature -- Access
 
 	name: STRING
 			-- Name of feature call
+			-- (using UTF-8 encoding)
 		deferred
 		ensure
 			name_not_void: Result /= Void
 			name_not_empty: Result.count > 0
+			name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
+			valid_utf8_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 		end
 
 	lower_name: STRING
 			-- Lower-name of feature call
+			-- (using UTF-8 encoding)
 			-- (May return the same object as `name' if already in lower case,
 			-- otherwise return a new object at each call.)
 		deferred
 		ensure
 			lower_name_not_void: Result /= Void
 			lower_name_not_empty: Result.count > 0
+			lower_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
+			valid_utf8_lower_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 			definition: Result.is_equal (name.as_lower)
 		end
 

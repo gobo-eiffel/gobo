@@ -1270,7 +1270,7 @@ feature -- AST leaves
 	new_binary_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_BINARY_INTEGER_CONSTANT
 			-- New integer constant in binary format
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_binary_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1281,7 +1281,7 @@ feature -- AST leaves
 			create Result.make (a_scanner.last_break)
 		end
 
-	new_c1_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C1_CHARACTER_CONSTANT
+	new_c1_character_constant (a_value: CHARACTER_32; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C1_CHARACTER_CONSTANT
 			-- New character constant of the form 'A'
 		do
 			create Result.make (a_value)
@@ -1322,7 +1322,7 @@ feature -- AST leaves
 	new_hexadecimal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_HEXADECIMAL_INTEGER_CONSTANT
 			-- New integer constant in hexadecimal format
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_hexadecimal_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1338,7 +1338,7 @@ feature -- AST leaves
 	new_octal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_OCTAL_INTEGER_CONSTANT
 			-- New integer constant in octal format
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_octal_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1346,7 +1346,7 @@ feature -- AST leaves
 	new_regular_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_REGULAR_INTEGER_CONSTANT
 			-- New integer constant with no underscore
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_regular_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end
@@ -1378,7 +1378,7 @@ feature -- AST leaves
 	new_underscored_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_UNDERSCORED_INTEGER_CONSTANT
 			-- New integer constant with underscores
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_underscored_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end

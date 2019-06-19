@@ -97,6 +97,7 @@ feature -- Access
 
 	name: STRING
 			-- Name of feature call
+			-- (using UTF-8 encoding)
 		do
 			inspect code
 			when infix_and_code then

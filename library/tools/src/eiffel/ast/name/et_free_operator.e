@@ -51,6 +51,11 @@ feature {NONE} -- Initialization
 
 	make_infix (a_free_op: like operator_name)
 			-- Create a new infix free operator.
+		require
+			a_free_op_not_void: a_free_op /= Void
+			a_free_op_not_empty: a_free_op.count > 0
+			a_free_op_is_string: {KL_ANY_ROUTINES}.same_types (a_free_op, "")
+			valid_utf8_free_op: {UC_UTF8_ROUTINES}.valid_utf8 (a_free_op)
 		do
 			code := tokens.infix_freeop_code
 			make_token (a_free_op)
@@ -61,6 +66,11 @@ feature {NONE} -- Initialization
 
 	make_prefix (a_free_op: like operator_name)
 			-- Create a new prefix free operator.
+		require
+			a_free_op_not_void: a_free_op /= Void
+			a_free_op_not_empty: a_free_op.count > 0
+			a_free_op_is_string: {KL_ANY_ROUTINES}.same_types (a_free_op, "")
+			valid_utf8_free_op: {UC_UTF8_ROUTINES}.valid_utf8 (a_free_op)
 		do
 			code := tokens.prefix_freeop_code
 			make_token (a_free_op)
@@ -99,6 +109,7 @@ feature -- Access
 
 	name: STRING
 			-- Name of feature
+			-- (using UTF-8 encoding)
 		do
 			create Result.make (operator_name.count + 8)
 			Result.append_string (alias_double_quote)

@@ -2,7 +2,12 @@ note
 
 	description:
 
-		"Eiffel AST pretty printers"
+	"[
+		Eiffel AST pretty printers.
+		Use UTF-8 encoding. Note that the byte order mark (BOM) for UTF-8 is not
+		printed unless it was found in the class file when parsing the class text
+		and `bom_enabled' is True, or it is explicitly printed by calling `print_bom'.
+	]"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
@@ -844,7 +849,9 @@ feature {ET_AST_NODE} -- Processing
 			a_constant_not_void: a_constant /= Void
 		do
 			print_character ('%'')
-			print_character (a_constant.literal)
+			buffer.wipe_out
+			{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (buffer, a_constant.literal.natural_32_code)
+			print_string (buffer)
 			print_character ('%'')
 			process_break (a_constant.break)
 		end
@@ -1000,6 +1007,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_obsolete_string: ET_MANIFEST_STRING
 		do
+			if bom_enabled and then a_class.has_utf8_bom then
+				print_bom
+			end
 			process_break (a_class.leading_break)
 			if not comment_list.is_empty then
 				process_comments

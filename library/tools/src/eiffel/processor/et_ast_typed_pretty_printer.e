@@ -4,10 +4,13 @@ note
 
 	"[
 		Eiffel AST pretty printers with some typing information to help generate hyper-text.
+		Use UTF-8 encoding. Note that the byte order mark (BOM) for UTF-8 is not
+		printed unless it was found in the class file when parsing the class text
+		and `bom_enabled' is True, or it is explicitly printed by calling `print_bom'.
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,6 +76,7 @@ feature {NONE} -- Initialization
 			create internal_type_context.make_with_capacity (current_class, 100)
 		ensure
 			file_set: file = a_file
+			bom_enabled: bom_enabled
 			system_processor_set: system_processor = a_system_processor
 		end
 
@@ -83,6 +87,7 @@ feature {NONE} -- Initialization
 			make (null_output_stream, a_system_processor)
 		ensure
 			file_set: file = null_output_stream
+			bom_enabled: bom_enabled
 			system_processor_set: system_processor = a_system_processor
 		end
 

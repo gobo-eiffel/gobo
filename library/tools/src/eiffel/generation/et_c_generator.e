@@ -11070,19 +11070,23 @@ feature {NONE} -- Expression generation
 			if not (l_atomic and in_operand) then
 				l_string := a_string.value
 				l_string_type := dynamic_type_set (a_string).static_type.primary_type
-				if current_system.string_8_type.same_named_type_with_type_marks (l_string_type.base_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
-					current_file.put_string (c_ge_ms8)
-				elseif current_system.string_32_type.same_named_type_with_type_marks (l_string_type.base_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
-					current_file.put_string (c_ge_ms32)
+				if current_system.string_32_type.same_named_type_with_type_marks (l_string_type.base_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
+					current_file.put_string (c_ge_ms32_from_utf32le)
+					current_file.put_character ('(')
+					print_utf8_as_escaped_string_32 (l_string)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_integer ({UC_UTF8_ROUTINES}.character_count (l_string))
+					current_file.put_character (')')
 				else
-					current_file.put_string (c_ge_ms)
+					current_file.put_string (c_ge_ms8)
+					current_file.put_character ('(')
+					print_utf8_as_escaped_string_8 (l_string)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_integer ({UC_UTF8_ROUTINES}.character_count (l_string))
+					current_file.put_character (')')
 				end
-				current_file.put_character ('(')
-				print_escaped_string (l_string)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_integer (l_string.count)
-				current_file.put_character (')')
 			end
 			if not l_atomic and in_operand then
 				current_file.put_character (')')
@@ -33648,7 +33652,7 @@ feature {NONE} -- String generation
 			--
 			-- Note: There was an attempt to make sure that two identical
 			-- C strings were not generated twice by creating one C constant
-			-- per string, and also by creating an C array of string constants.
+			-- per string, and also by creating a C array of string constants.
 			-- Both solutions resulted in a larger executable, and the execution
 			-- speed of the resulting executable was the same. So these solutions
 			-- have not been kept.
@@ -33721,6 +33725,229 @@ feature {NONE} -- String generation
 					INTEGER_FORMATTER_.put_octal_integer (current_file, l_code)
 				end
 				i := i + 1
+			end
+			current_file.put_character ('%"')
+			if l_splitted then
+				dedent
+			end
+		end
+
+	print_utf8_as_escaped_string_8 (a_utf8_string: STRING_8)
+			-- Print `a_utf8_string' as an escaped version of
+			-- its STRING_8 representation.
+		require
+			a_utf8_string_not_void: a_utf8_string /= Void
+			a_utf8_string_is_string: {KL_ANY_ROUTINES}.same_types (a_utf8_string, "")
+			valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (a_utf8_string)
+		local
+			i, j, nb: INTEGER
+			c1, c2: CHARACTER_8
+			l_code: NATURAL_32
+			l_splitted: BOOLEAN
+			l_split_size: INTEGER
+		do
+			l_split_size := 512
+			current_file.put_character ('%"')
+			nb := a_utf8_string.count
+			j := 1
+			from i := 1 until i > nb loop
+				if (j \\ l_split_size) = 1 and j /= 1 then
+						-- Some C compilers don't accept too big strings.
+						-- Split them in several smaller ones.
+					current_file.put_character ('%"')
+					if not l_splitted then
+						l_splitted := True
+						indent
+					end
+					current_file.put_new_line
+					print_indentation
+					current_file.put_character ('%"')
+				end
+				c1 := a_utf8_string.item (i)
+				inspect c1
+				when ' ', '!', '#', '$', '&', '('..'>', '@'..'[', ']'..'~' then
+					current_file.put_character (c1)
+				when '%N' then
+					current_file.put_character ('\')
+					current_file.put_character ('n')
+				when '%R' then
+					current_file.put_character ('\')
+					current_file.put_character ('r')
+				when '%T' then
+					current_file.put_character ('\')
+					current_file.put_character ('t')
+				when '%U' then
+					current_file.put_character ('\')
+					current_file.put_character ('0')
+					current_file.put_character ('0')
+					current_file.put_character ('0')
+				when '\' then
+					current_file.put_character ('\')
+					current_file.put_character ('\')
+				when '%'' then
+					current_file.put_character ('\')
+					current_file.put_character ('%'')
+				when '%"' then
+					current_file.put_character ('\')
+					current_file.put_character ('%"')
+				when '?' then
+						-- Make sure that ? is not recognized as
+						-- part of a trigraph sequence.
+					current_file.put_character ('\')
+					current_file.put_character ('?')
+				else
+					l_code := c1.natural_32_code
+					if {UC_UTF8_ROUTINES}.encoded_byte_count (c1) = 2 then
+							-- 110xxxxx 10xxxxxx
+						i := i + 1
+						c2 := a_utf8_string.item (i)
+						l_code := {UC_UTF8_ROUTINES}.two_byte_character_code (c1, c2)
+					end
+					current_file.put_character ('\')
+					if l_code < 8 then
+						current_file.put_character ('0')
+						current_file.put_character ('0')
+					elseif l_code < 64 then
+						current_file.put_character ('0')
+					end
+					INTEGER_FORMATTER_.put_octal_natural_32 (current_file, l_code)
+				end
+				i := i + 1
+				j := j + 1
+			end
+			current_file.put_character ('%"')
+			if l_splitted then
+				dedent
+			end
+		end
+
+	print_utf8_as_escaped_string_32 (a_utf8_string: STRING_8)
+			-- Print `a_utf8_string' as an escaped version of
+			-- its STRING_32 representation.
+		require
+			a_utf8_string_not_void: a_utf8_string /= Void
+			a_utf8_string_is_string: {KL_ANY_ROUTINES}.same_types (a_utf8_string, "")
+			valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (a_utf8_string)
+		local
+			i, j, nb: INTEGER
+			c1: CHARACTER_8
+			l_code, l_code2: NATURAL_32
+			l_splitted: BOOLEAN
+			l_split_size: INTEGER
+			l_byte_count: INTEGER
+		do
+			l_split_size := 512
+			current_file.put_character ('%"')
+			nb := a_utf8_string.count
+			j := 1
+			from i := 1 until i > nb loop
+				if (j \\ l_split_size) = 1 and j /= 1 then
+						-- Some C compilers don't accept too big strings.
+						-- Split them in several smaller ones.
+					current_file.put_character ('%"')
+					if not l_splitted then
+						l_splitted := True
+						indent
+					end
+					current_file.put_new_line
+					print_indentation
+					current_file.put_character ('%"')
+				end
+				c1 := a_utf8_string.item (i)
+				l_byte_count := {UC_UTF8_ROUTINES}.encoded_byte_count (c1)
+				inspect l_byte_count
+				when 1 then
+						-- 0xxxxxxx
+					l_code := c1.natural_32_code
+				when 2 then
+						-- 110xxxxx 10xxxxxx
+					l_code := {UC_UTF8_ROUTINES}.two_byte_character_code (c1, a_utf8_string.item (i + 1))
+				when 3 then
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					l_code := {UC_UTF8_ROUTINES}.three_byte_character_code (c1, a_utf8_string.item (i + 1), a_utf8_string.item (i + 2))
+				when 4 then
+						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+					l_code := {UC_UTF8_ROUTINES}.four_byte_character_code (c1, a_utf8_string.item (i + 1), a_utf8_string.item (i + 2), a_utf8_string.item (i + 3))
+				else
+						-- Should never happen.
+					l_code := 0
+					i := i + 1
+				end
+				c1 := (l_code & 0x000000FF).to_character_8
+				inspect c1
+				when ' ', '!', '#', '$', '&', '('..'>', '@'..'[', ']'..'~' then
+					current_file.put_character (c1)
+				when '%N' then
+					current_file.put_character ('\')
+					current_file.put_character ('n')
+				when '%R' then
+					current_file.put_character ('\')
+					current_file.put_character ('r')
+				when '%T' then
+					current_file.put_character ('\')
+					current_file.put_character ('t')
+				when '%U' then
+					current_file.put_character ('\')
+					current_file.put_character ('0')
+					current_file.put_character ('0')
+					current_file.put_character ('0')
+				when '\' then
+					current_file.put_character ('\')
+					current_file.put_character ('\')
+				when '%'' then
+					current_file.put_character ('\')
+					current_file.put_character ('%'')
+				when '%"' then
+					current_file.put_character ('\')
+					current_file.put_character ('%"')
+				when '?' then
+						-- Make sure that ? is not recognized as
+						-- part of a trigraph sequence.
+					current_file.put_character ('\')
+					current_file.put_character ('?')
+				else
+					l_code2 := c1.natural_32_code
+					current_file.put_character ('\')
+					if l_code2 < 8 then
+						current_file.put_character ('0')
+						current_file.put_character ('0')
+					elseif l_code2 < 64 then
+						current_file.put_character ('0')
+					end
+					INTEGER_FORMATTER_.put_octal_natural_32 (current_file, l_code2)
+				end
+				c1 := ((l_code & 0x0000FF00) |>> 8).to_character_8
+				l_code2 := c1.natural_32_code
+				current_file.put_character ('\')
+				if l_code2 < 8 then
+					current_file.put_character ('0')
+					current_file.put_character ('0')
+				elseif l_code2 < 64 then
+					current_file.put_character ('0')
+				end
+				INTEGER_FORMATTER_.put_octal_natural_32 (current_file, l_code2)
+				c1 := ((l_code & 0x00FF0000) |>> 16).to_character_8
+				l_code2 := c1.natural_32_code
+				current_file.put_character ('\')
+				if l_code2 < 8 then
+					current_file.put_character ('0')
+					current_file.put_character ('0')
+				elseif l_code2 < 64 then
+					current_file.put_character ('0')
+				end
+				INTEGER_FORMATTER_.put_octal_natural_32 (current_file, l_code2)
+				c1 := ((l_code & 0xFF000000) |>> 24).to_character_8
+				l_code2 := c1.natural_32_code
+				current_file.put_character ('\')
+				if l_code2 < 8 then
+					current_file.put_character ('0')
+					current_file.put_character ('0')
+				elseif l_code2 < 64 then
+					current_file.put_character ('0')
+				end
+				INTEGER_FORMATTER_.put_octal_natural_32 (current_file, l_code2)
+				i := i + l_byte_count
+				j := j + 1
 			end
 			current_file.put_character ('%"')
 			if l_splitted then
@@ -36282,6 +36509,7 @@ feature {NONE} -- Constants
 	c_ge_ms: STRING = "GE_ms"
 	c_ge_ms8: STRING = "GE_ms8"
 	c_ge_ms32: STRING = "GE_ms32"
+	c_ge_ms32_from_utf32le: STRING = "GE_ms32_from_utf32le"
 	c_ge_mt: STRING = "GE_mt"
 	c_ge_mutex_lock: STRING = "GE_mutex_lock"
 	c_ge_mutex_try_lock: STRING = "GE_mutex_try_lock"

@@ -75,8 +75,8 @@ feature -- Compilation
 
 	compile (a_pattern: STRING)
 			-- There are two different sets of meta-characters: those  that
-			-- are  recognized anywhere in the pattern except within square
-			-- brackets, and those that are recognized in square  brackets.
+			-- are recognized anywhere in the pattern except within square
+			-- brackets, and those that are recognized in square brackets.
 			-- Outside square brackets, the meta-characters are as follows:
 			--   \      general escape character with several uses
 			--   ^      assert start of subject (or line, in multiline mode)
@@ -93,8 +93,8 @@ feature -- Compilation
 			--   +      1 or more quantifier
 			--   {      start min/max quantifier
 			--
-			-- Part of a pattern that is in square  brackets  is  called  a
-			-- "character  class".  In  a  character  class  the only meta-
+			-- Part of a pattern that is in square brackets is called a
+			-- "character  class". In a character class the only meta-
 			-- characters are:
 			--   \      general escape character
 			--   ^      negate the class, but only if the first character

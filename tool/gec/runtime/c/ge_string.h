@@ -67,6 +67,13 @@ extern EIF_REFERENCE GE_str8(const char* s);
 extern EIF_REFERENCE GE_ms32(const char* s, EIF_INTEGER c);
 
 /*
+ * New Eiffel string of type "STRING_32" containing the
+ * first `c' 32-bit characters built from `s' by reading
+ * groups of four bytes with little-endian byte order.
+ */
+extern EIF_REFERENCE GE_ms32_from_utf32le(const char* s, EIF_INTEGER c);
+
+/*
  * New Eiffel string of type "STRING_32" containing all
  * characters found in the null-terminated ASCII string `s'.
  */

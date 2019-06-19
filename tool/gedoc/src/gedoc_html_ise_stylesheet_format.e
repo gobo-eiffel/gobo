@@ -9,7 +9,7 @@ note
 			ec -filter html-stylesheet -all -config project.ecf
 	]"
 
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -252,6 +252,8 @@ feature {NONE} -- Output
 					l_printer.set_class_mapping (a_class_mapping)
 					l_printer.set_feature_mapping (a_feature_mapping)
 					l_printer.set_root_path (a_root_path)
+					l_printer.set_bom_enabled (False)
+					l_printer.print_bom
 					l_title := concat (universe_lower_name (a_system), titla_suffix_documentation)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
@@ -339,6 +341,8 @@ feature {NONE} -- Output
 					l_printer.set_class_mapping (a_class_mapping)
 					l_printer.set_feature_mapping (a_feature_mapping)
 					l_printer.set_root_path (a_root_path)
+					l_printer.set_bom_enabled (False)
+					l_printer.print_bom
 					l_line_splitter := line_splitter
 					l_title := concat (universe_lower_name (a_system), title_suffix_class_dictionary)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
@@ -403,6 +407,8 @@ feature {NONE} -- Output
 					l_printer.reset
 					l_printer.set_file (l_file)
 					l_printer.set_root_path (a_root_path)
+					l_printer.set_bom_enabled (False)
+					l_printer.print_bom
 					l_title := concat (universe_lower_name (a_system), title_suffix_alphabetical_group_list)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
@@ -455,6 +461,8 @@ feature {NONE} -- Output
 					l_printer.reset
 					l_printer.set_file (l_file)
 					l_printer.set_root_path (a_root_path)
+					l_printer.set_bom_enabled (False)
+					l_printer.print_bom
 					l_title := concat (universe_lower_name (a_system), title_suffix_group_hierarchy)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
@@ -525,6 +533,8 @@ feature {NONE} -- Output
 					l_printer.set_class_mapping (a_class_mapping)
 					l_printer.set_feature_mapping (a_feature_mapping)
 					l_printer.set_root_path (a_root_path)
+					l_printer.set_bom_enabled (False)
+					l_printer.print_bom
 						-- Header.
 					print_header (a_universe.kind_capitalized_name + " " + l_universe_name, keyword_eiffel_group, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
@@ -1018,6 +1028,8 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							l_printer.set_feature_mapping (a_feature_mapping)
 							l_printer.set_root_path (a_root_path)
 							l_printer.set_current_class (a_class)
+							l_printer.set_bom_enabled (False)
+							l_printer.print_bom
 								-- Header.
 							l_title := concat (l_class_name, title_suffix_chart)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
@@ -1082,6 +1094,8 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							l_printer.set_feature_mapping (a_feature_mapping)
 							l_printer.set_root_path (a_root_path)
 							l_printer.set_current_class (a_class)
+							l_printer.set_bom_enabled (False)
+							l_printer.print_bom
 								-- Header.
 							l_title := concat (l_class_name, title_suffix_relations)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
@@ -1142,6 +1156,8 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							l_printer.set_feature_mapping (a_feature_mapping)
 							l_printer.set_root_path (a_root_path)
 							l_printer.set_current_class (a_class)
+							l_printer.set_bom_enabled (False)
+							l_printer.print_bom
 							l_title := concat (l_class_name, title_suffix_text)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
 							l_file.put_string (html_start_pre)
@@ -1392,7 +1408,7 @@ feature {NONE} -- Indexing clause
 					Result.append_string (l_identifier.name)
 				elseif attached {ET_C1_CHARACTER_CONSTANT} l_indexing_term as l_character_1 then
 					Result.append_character ('%'')
-					Result.append_character (l_character_1.literal)
+					{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (Result, l_character_1.literal.natural_32_code)
 					Result.append_character ('%'')
 				elseif attached {ET_C2_CHARACTER_CONSTANT} l_indexing_term as l_character_2 then
 					Result.append_character ('%'')

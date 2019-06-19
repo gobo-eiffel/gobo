@@ -2,7 +2,12 @@ note
 
 	description:
 
-		"Eiffel AST tokenizers"
+	"[
+		Eiffel AST tokenizers.
+		Use UTF-8 encoding. Note that the byte order mark (BOM) for UTF-8 is not
+		printed unless it was found in the class file when parsing the class text
+		and `bom_enabled' is True, or it is explicitly printed by calling `print_bom'.
+	]"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2018, Eric Bezault and others"
@@ -84,10 +89,10 @@ feature -- Status report
 
 	empty_formal_arguments_ignored: BOOLEAN
 			-- Should empty formal arguments be ignored?
-			
+
 	empty_invariants_ignored: BOOLEAN
 			-- Should empty invariants be ignored?
-			
+
 	empty_locals_ignored: BOOLEAN
 			-- Should empty locals be ignored?
 
@@ -142,7 +147,7 @@ feature -- Status setting
 		ensure
 			empty_formal_arguments_ignored_set: empty_formal_arguments_ignored = b
 		end
-		
+
 	set_empty_invariants_ignored (b: BOOLEAN)
 			-- Set `empty_invariants_ignored' to `b'.
 		do
@@ -150,7 +155,7 @@ feature -- Status setting
 		ensure
 			empty_invariants_ignored_set: empty_invariants_ignored = b
 		end
-		
+
 	set_empty_locals_ignored (b: BOOLEAN)
 			-- Set `empty_locals_ignored' to `b'.
 		do
@@ -287,7 +292,7 @@ feature {ET_AST_NODE} -- Processing
 				precursor (a_list)
 			end
 		end
-		
+
 	process_keyword (a_keyword: ET_KEYWORD)
 			-- <Precursor>
 		do
@@ -295,7 +300,7 @@ feature {ET_AST_NODE} -- Processing
 				precursor (a_keyword)
 			end
 		end
-		
+
 	process_invariants (a_list: ET_INVARIANTS)
 			-- <Precursor>
 		do
@@ -303,7 +308,7 @@ feature {ET_AST_NODE} -- Processing
 				precursor (a_list)
 			end
 		end
-		
+
 	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST)
 			-- <Precursor>
 		do
@@ -319,7 +324,7 @@ feature {ET_AST_NODE} -- Processing
 				precursor (a_list)
 			end
 		end
-		
+
 	process_parent (a_parent: ET_PARENT)
 			-- <Precursor>
 		local
@@ -354,7 +359,7 @@ feature {ET_AST_NODE} -- Processing
 				end
 			end
 		end
-		
+
 	process_postconditions (a_list: ET_POSTCONDITIONS)
 			-- <Precursor>
 		do

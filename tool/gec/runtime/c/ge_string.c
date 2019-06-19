@@ -4,7 +4,7 @@
 		"C functions used to manipulate strings"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -359,6 +359,45 @@ EIF_REFERENCE GE_ms32(const char* s, EIF_INTEGER c)
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
 	GE_str8_to_str32(s, l_area_base_address, c);
+#ifndef GE_alloc_atomic_cleared
+	*(l_area_base_address + c) = (EIF_CHARACTER_32)'\0';
+#endif
+	l_area->count = (c + 1);
+	l_string->count = c;
+	return (EIF_REFERENCE)l_string;
+}
+
+/*
+ * New Eiffel string of type "STRING_32" containing the
+ * first `c' 32-bit characters built from `s' by reading
+ * groups of four bytes with little-endian byte order.
+ */
+EIF_REFERENCE GE_ms32_from_utf32le(const char* s, EIF_INTEGER c)
+{
+	EIF_STRING* l_string;
+	EIF_SPECIAL* l_area;
+	EIF_CHARACTER_32* l_area_base_address;
+
+	l_string = (EIF_STRING*)GE_new_str32(c);
+	l_area = (EIF_SPECIAL*)(l_string->area);
+	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
+#if BYTEORDER == 0x1234
+	memcpy((EIF_CHARACTER_32*)l_area_base_address, s, c * 4);
+#else
+	{
+		int i;
+		EIF_CHARACTER_32 l_little, l_big;
+		for (i = 0; i < c ; i++) {
+			memcpy(&l_little, s + (i * 4), 4);
+				/* Convert our little endian to big endian. */
+			l_big = ((l_little >> 24) & 0xFF) |
+				((l_little >> 8) & 0xFF00) |
+			   	((l_little << 8) & 0xFF0000) |
+			   	((l_little << 24) & 0xFF000000);
+			l_area_base_address[i] = l_big;
+		}
+	}
+#endif
 #ifndef GE_alloc_atomic_cleared
 	*(l_area_base_address + c) = (EIF_CHARACTER_32)'\0';
 #endif

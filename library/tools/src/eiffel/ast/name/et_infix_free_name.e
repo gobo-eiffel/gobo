@@ -5,7 +5,7 @@ note
 		"Names of Eiffel infix 'free-operator' features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,6 +78,7 @@ feature -- Access
 
 	name: STRING
 			-- Name of feature
+			-- (using UTF-8 encoding)
 		do
 			create Result.make (operator_name.count + 8)
 			Result.append_string (infix_double_quote)

@@ -47,6 +47,8 @@
 #include <windows.h>
 #endif
 
+#define BYTEORDER 0x1234
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>

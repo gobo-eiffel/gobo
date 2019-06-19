@@ -5,7 +5,7 @@ note
 		"UTF-8 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,13 +16,7 @@ inherit
 
 	UC_IMPORTED_UNICODE_ROUTINES
 
-	KL_IMPORTED_STRING_ROUTINES
-
-	KL_IMPORTED_INTEGER_ROUTINES
-
 	KL_IMPORTED_ANY_ROUTINES
-
-	UC_STRING_HANDLER
 
 feature -- Status report
 
@@ -109,6 +103,52 @@ feature -- Status report
 			instance_free: class
 		end
 
+	is_string_8 (a_utf8: STRING): BOOLEAN
+			-- Is `a_utf8' representable as a STRING_8
+			-- (using ISO-8859-1 encoding)?
+		require
+			a_utf8_not_void: a_utf8 /= Void
+			a_utf8_is_string: ANY_.same_types (a_utf8, "")
+			a_utf8_valid: valid_utf8 (a_utf8)
+		local
+			i, nb: INTEGER
+			l_byte_count: INTEGER
+		do
+			Result := True
+			nb := a_utf8.count
+			from i := 1 until i > nb loop
+				l_byte_count := encoded_byte_count (a_utf8.item (i))
+				if l_byte_count = 1 then
+					-- OK.
+				elseif l_byte_count = 2 then
+					if two_byte_character_code (a_utf8.item (i), a_utf8.item (i + 1)) > code_255 then
+						Result := False
+							-- Jump out of the loop.
+						i := nb + 1
+					end
+				else
+					Result := False
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + l_byte_count
+			end
+		ensure
+			instance_free: class
+		end
+
+	is_string_32 (a_utf8: STRING): BOOLEAN
+			-- Is `a_utf8' representable as a STRING_32?
+		require
+			a_utf8_not_void: a_utf8 /= Void
+			a_utf8_is_string: ANY_.same_types (a_utf8, "")
+			a_utf8_valid: valid_utf8 (a_utf8)
+		do
+			Result := True
+		ensure
+			instance_free: class
+		end
+
 	is_encoded_first_byte (a_byte: CHARACTER): BOOLEAN
 			-- Is `a_byte' the first byte in UTF-8 encoding?
 		do
@@ -155,6 +195,7 @@ feature -- Status report
 		ensure
 			instance_free: class
 			result_start: Result implies is_endian_detection_character_start (a_first, a_second)
+			definition: a_first = utf8_bom.item (1) and a_second = utf8_bom.item (2) and a_third = utf8_bom.item (3)
 		end
 
 	is_endian_detection_character_start (a_first, a_second: CHARACTER): BOOLEAN
@@ -163,9 +204,17 @@ feature -- Status report
 			Result := a_first = byte_ef and a_second = byte_bb
 		ensure
 			instance_free: class
+			definition: a_first = utf8_bom.item (1) and a_second = utf8_bom.item (2)
 		end
 
 feature -- Access
+
+	max_bytes_of_iso_8859_1_to_utf8: INTEGER = 2
+			-- Maximum number of bytes of a UTF-8 character converted from ISO-8859-1 character
+
+	utf8_bom: STRING = "%/239/%/187/%/191/"
+			-- Byte order mark (BOM) for UTF-8 (0xEF,0xBB,0xBF)
+			-- See http://en.wikipedia.org/wiki/Byte_order_mark
 
 	encoded_first_value (a_byte: CHARACTER): INTEGER
 			-- Value encoded in first byte
@@ -202,6 +251,48 @@ feature -- Access
 			instance_free: class
 			value_positive: Result >= 0
 			value_small_enough: Result < 64
+		end
+
+	two_byte_character_code (a_byte1, a_byte2: CHARACTER): NATURAL_32
+			-- Character code corresponding to the two bytes `a_byte1' and `a_byte_2'
+			-- 110xxxxx 10xxxxxx
+		require
+			encoded_byte_count: encoded_byte_count (a_byte1) = 2
+			a_byte1_is_encoded_first_byte: is_encoded_first_byte (a_byte1)
+			a_byte2_is_encoded_next_byte: is_encoded_next_byte (a_byte2)
+		do
+			Result := ((a_byte1.natural_32_code & 0x1F) |<< 6) | (a_byte2.natural_32_code & 0x3F)
+		ensure
+			instance_free: class
+		end
+
+	three_byte_character_code (a_byte1, a_byte2, a_byte3: CHARACTER): NATURAL_32
+			-- Character code corresponding to the three bytes `a_byte1', `a_byte_2' and `a_byte_3'
+			-- 1110xxxx 10xxxxxx 10xxxxxx
+		require
+			encoded_byte_count: encoded_byte_count (a_byte1) = 3
+			a_byte1_is_encoded_first_byte: is_encoded_first_byte (a_byte1)
+			a_byte2_is_encoded_next_byte: is_encoded_next_byte (a_byte2)
+			a_byte3_is_encoded_next_byte: is_encoded_next_byte (a_byte3)
+		do
+			Result := ((a_byte1.natural_32_code & 0x0F) |<< 12) | ((a_byte2.natural_32_code & 0x3F) |<< 6) | (a_byte3.natural_32_code & 0x3F)
+		ensure
+			instance_free: class
+		end
+
+	four_byte_character_code (a_byte1, a_byte2, a_byte3, a_byte4: CHARACTER): NATURAL_32
+			-- Character code corresponding to the four bytes `a_byte1', `a_byte_2', `a_byte_3' and `a_byte_4'
+			-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+		require
+			encoded_byte_count: encoded_byte_count (a_byte1) = 4
+			a_byte1_is_encoded_first_byte: is_encoded_first_byte (a_byte1)
+			a_byte2_is_encoded_next_byte: is_encoded_next_byte (a_byte2)
+			a_byte3_is_encoded_next_byte: is_encoded_next_byte (a_byte3)
+			a_byte4_is_encoded_next_byte: is_encoded_next_byte (a_byte4)
+		do
+			Result := ((a_byte1.natural_32_code & 0x07) |<< 18) | ((a_byte3.natural_32_code & 0x3F) |<< 12) | ((a_byte3.natural_32_code & 0x3F) |<< 6) | (a_byte4.natural_32_code & 0x3F)
+		ensure
+			instance_free: class
 		end
 
 feature -- Measurement
@@ -332,6 +423,19 @@ feature -- Measurement
 		require
 			valid_code: unicode.valid_non_surrogate_code (a_code)
 		do
+			Result := natural_32_code_byte_count (a_code.to_natural_32)
+		ensure
+			instance_free: class
+			code_byte_count_large_enough: Result >= 1
+			code_byte_count_small_enough: Result <= 4
+		end
+
+	natural_32_code_byte_count (a_code: NATURAL_32): INTEGER
+			-- Number of bytes needed to encode unicode character
+			-- of code `a_code' with the UTF-8 encoding
+		require
+			valid_code: unicode.valid_non_surrogate_natural_32_code (a_code)
+		do
 			if a_code < 128 then
 					-- 2^7
 					-- 0xxxxxxx
@@ -386,6 +490,24 @@ feature -- Measurement
 			character_byte_count_small_enough: Result <= 4
 		end
 
+	character_count (a_utf8: STRING): INTEGER
+			-- Number of unicode characters encoded in `a_utf8'
+		require
+			a_utf8_not_void: a_utf8 /= Void
+			a_utf8_is_string: ANY_.same_types (a_utf8, "")
+			a_utf8_valid: valid_utf8 (a_utf8)
+		local
+			i, nb: INTEGER
+		do
+			nb := a_utf8.count
+			from i := 1 until i > nb loop
+				Result := Result + 1
+				i := i + encoded_byte_count (a_utf8.item (i))
+			end
+		ensure
+			instance_free: class
+		end
+
 feature -- Conversion
 
 	to_utf8 (a_string: STRING): STRING
@@ -427,41 +549,56 @@ feature -- Element change
 			a_utf8_is_string: ANY_.same_types (a_utf8, "")
 			a_utf8_valid: valid_utf8 (a_utf8)
 			valid_code: unicode.valid_non_surrogate_code (a_code)
+		do
+			append_natural_32_code_to_utf8 (a_utf8, a_code.to_natural_32)
+		ensure
+			instance_free: class
+			a_utf8_valid: valid_utf8 (a_utf8)
+		end
+
+	append_natural_32_code_to_utf8 (a_utf8: STRING; a_code: NATURAL_32)
+			-- Add UTF-8 encoded character of code `a_code'
+			-- at the end of `a_utf8'.
+		require
+			a_utf8_not_void: a_utf8 /= Void
+			a_utf8_is_string: ANY_.same_types (a_utf8, "")
+			a_utf8_valid: valid_utf8 (a_utf8)
+			valid_code: unicode.valid_non_surrogate_natural_32_code (a_code)
 		local
 			b2, b3, b4: CHARACTER
-			c: INTEGER
+			c: NATURAL_32
 		do
-			inspect code_byte_count (a_code)
+			inspect natural_32_code_byte_count (a_code)
 			when 1 then
 					-- 0xxxxxxx
-				a_utf8.append_character (INTEGER_.to_character (a_code))
+				a_utf8.append_character (a_code.to_character_8)
 			when 2 then
 				c := a_code
-				b2 := INTEGER_.to_character ((c \\ 64) + 128)
+				b2 := ((c \\ 64) + 128).to_character_8
 				c := c // 64
 					-- 110xxxxx
-				a_utf8.append_character (INTEGER_.to_character (c + 192))
+				a_utf8.append_character ((c + 192).to_character_8)
 				a_utf8.append_character (b2)
 			when 3 then
 				c := a_code
-				b3 := INTEGER_.to_character ((c \\ 64) + 128)
+				b3 := ((c \\ 64) + 128).to_character_8
 				c := c // 64
-				b2 := INTEGER_.to_character ((c \\ 64) + 128)
+				b2 := ((c \\ 64) + 128).to_character_8
 				c := c // 64
 					-- 1110xxxx
-				a_utf8.append_character (INTEGER_.to_character (c + 224))
+				a_utf8.append_character ((c + 224).to_character_8)
 				a_utf8.append_character (b2)
 				a_utf8.append_character (b3)
 			when 4 then
 				c := a_code
-				b4 := INTEGER_.to_character ((c \\ 64) + 128)
+				b4 := ((c \\ 64) + 128).to_character_8
 				c := c // 64
-				b3 := INTEGER_.to_character ((c \\ 64) + 128)
+				b3 := ((c \\ 64) + 128).to_character_8
 				c := c // 64
-				b2 := INTEGER_.to_character ((c \\ 64) + 128)
+				b2 := ((c \\ 64) + 128).to_character_8
 				c := c // 64
 					-- 11110xxx
-				a_utf8.append_character (INTEGER_.to_character (c + 240))
+				a_utf8.append_character ((c + 240).to_character_8)
 				a_utf8.append_character (b2)
 				a_utf8.append_character (b3)
 				a_utf8.append_character (b4)
@@ -542,6 +679,10 @@ feature {NONE} -- Constants
 			-- 11111101
 
 	byte_255: CHARACTER = '%/255/'
+			-- 11111111
+
+	code_255: NATURAL_32 = 255
+			-- 11111111
 
 	byte_ef: CHARACTER = '%/239/'
 			-- UTF-8 BOM first: EF

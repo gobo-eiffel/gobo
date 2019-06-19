@@ -6,7 +6,7 @@ note
 		"Scanners for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,22 +25,40 @@ create
 	make
 %}
 
-CHAR_CODE ((0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(0x[0-9a-fA-F]{1,4}))
+-- Following UTF-8 standard: http://tools.ietf.org/html/rfc3629
+-- NON_ASCII: Identical to all code points of Unicode excluding 0 - 127.
 
-UTF8_BOM (\xEF\xBB\xBF)
+UTF8_CHAR	({UTF8_1}|{UTF8_2}|{UTF8_3}|{UTF8_4})
+NON_ASCII	({UTF8_2}|{UTF8_3}|{UTF8_4})
+UTF8_1		[\x00-\x7F]
+UTF8_2		[\xC2-\xDF]{UTF8_TAIL}
+UTF8_3		((\xE0[\xA0-\xBF]{UTF8_TAIL})|([\xE1-\xEC]({UTF8_TAIL}{2}))|(\xED[\x80-\x9F]{UTF8_TAIL})|([\xEE-\xEF]({UTF8_TAIL}{2})))
+UTF8_4		((\xF0[\x90-\xBF]({UTF8_TAIL}{2}))|([\xF1-\xF3]({UTF8_TAIL}{3}))|(\xF4[\x80-\x8F]({UTF8_TAIL}{2})))
+UTF8_TAIL	[\x80-\xBF]
+
+SPACE ([ \t\x0B\f]|{U_no_break_space}|{U_ogham_space_mark}|{U_en_quad_U_hair_space}|{U_narrow_no_break_space}|{U_medium_mathematical_space}|{U_ideographic_space})
+U_no_break_space \xC2\xA0
+U_ogham_space_mark \xE1\x9A\x80
+U_en_quad_U_hair_space \xE2\x80[\x80-\x8A]
+U_narrow_no_break_space \xE2\x80\xAF
+U_medium_mathematical_space \xE2\x81\x9F
+U_ideographic_space \xE3\x80\x80
+
+HORIZONTAL_BREAK ({SPACE}|\r)
+BREAK	({HORIZONTAL_BREAK}|\n)
+UTF8_1_NO_NEWLINE [^\n\x80-\xFF]
+NO_NEWLINE ({UTF8_1_NO_NEWLINE}|{UTF8_2}|{UTF8_3}|{UTF8_4})
+UTF8_2_NO_SPACE	(\xC2[\x80-\x9F\xA1-\xBF]|[\xC3-\xDF]{UTF8_TAIL})
+UTF8_3_NO_SPACE	(\xE0[\xA0-\xBF]{UTF8_TAIL}|\xE1[\x80-\x99\x9B-\xBF]{UTF8_TAIL}|\xE1\x9A[\x81-\xBF]|\xE2[\x82-\xBF]{UTF8_TAIL}|\xE2\x80[\x8B-\xAE\xB0-\xBF]|\xE2\x81[\x80-\x9E\xA0-\xBF]|\xE3[\x81-\xBF]{UTF8_TAIL}|\xE3\x80[\x81-\xBF]|[\xE4-\xEC]({UTF8_TAIL}{2})|\xED[\x80-\x9F]{UTF8_TAIL}|[\xEE-\xEF]({UTF8_TAIL}{2}))
+UTF8_4_NO_SPACE {UTF8_4}
+NON_ASCII_NO_SPACE ({UTF8_2_NO_SPACE}|{UTF8_3_NO_SPACE}|{UTF8_4_NO_SPACE})
+
+CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)
 
 %x BREAK MS MSN VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
 %option nodefault line outfile="et_eiffel_scanner.e"
 
 %%
-
-----------/** BOM **/-----------------------------------------------------------
-
-{UTF8_BOM}	{
-				-- Ignore byte order mark (BOM).
-				-- See http://en.wikipedia.org/wiki/Byte_order_mark
-			}
-
 
 ----------/** Eiffel symbols **/------------------------------------------------
 
@@ -49,19 +67,19 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				process_one_char_symbol (text_item (1))
 			}
-[-+*/^=><.;,:!?(){}[\]$~][ \t\r\n]+	{
+[-+*/^=><.;,:!?(){}[\]$~]{BREAK}+	{
 				last_text_count := 1
 				last_break_end := text_count
 				last_comment_end := 0
 				process_one_char_symbol (text_item (1))
 			}
-[+*/^=><.;,:!?(){}[\]$~]([ \t\r\n]|"--".*)+	{
+[+*/^=><.;,:!?(){}[\]$~]({BREAK}|"--"{NO_NEWLINE}*)+	{
 				last_text_count := 1
 				last_break_end := 0
 				last_comment_end := text_count
 				process_one_char_symbol (text_item (1))
 			}
-"-"[ \t\r\n]([ \t\r\n]|"--".*)+	{
+"-"{BREAK}({BREAK}|"--"{NO_NEWLINE}*)+	{
 				last_text_count := 1
 				last_break_end := 0
 				last_comment_end := text_count
@@ -72,13 +90,13 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				process_two_char_symbol (text_item (1), text_item (2))
 			}
-("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")[ \t\r\n]+	{
+("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?="){BREAK}+	{
 				last_text_count := 2
 				last_break_end := text_count
 				last_comment_end := 0
 				process_two_char_symbol (text_item (1), text_item (2))
 			}
-("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")([ \t\r\n]|"--".*)+	{
+("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")({BREAK}|"--"{NO_NEWLINE}*)+	{
 				last_text_count := 2
 				last_break_end := 0
 				last_comment_end := text_count
@@ -126,7 +144,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
-[oO][nN][cC][eE][ \t\r\n]+/["{]	{
+[oO][nN][cC][eE]{BREAK}+/["{]	{
 				last_token := E_ONCE_STRING
 				last_literal_start := 1
 				last_literal_end := 4
@@ -135,7 +153,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
-[oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/["{]	{
+[oO][nN][cC][eE]({BREAK}|"--"{NO_NEWLINE}*\n)+/["{]	{
 				last_token := E_ONCE_STRING
 				last_literal_start := 1
 				last_literal_end := 4
@@ -153,7 +171,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				process_identifier (text_count)
 			}
-[a-zA-Z][a-zA-Z0-9_]*/([ \t\r\n]|"--")	{
+[a-zA-Z][a-zA-Z0-9_]*/({BREAK}|"--")	{
 				last_text_count := text_count
 				break_kind := identifier_break
 				more
@@ -166,13 +184,9 @@ UTF8_BOM (\xEF\xBB\xBF)
 		-- Note: Accepts non-printable characters as well,
 		-- provided that they are not break characters.
 
---[@#|&][^%" \t\r\n]*	{
--- Hack to make it work with SmartEiffel 1.1.
-"#" |
-"#"[-+*] |
-"#"[-+*][^a-zA-Z0-9_%" \t\r\n][^%" \t\r\n]* |
-"#"[^+\-*%" \t\r\n][^%" \t\r\n]* |
-[@|&][^%" \t\r\n]*	{
+-- Legacy: free operators which must start with [@#|&] is not in the standard anymore.
+-- Make sure that we don't have a subsequence of the form "--" (beginning of a comment).
+[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-? {
 				last_token := E_FREEOP
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -180,13 +194,30 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_free_operator_value := ast_factory.new_free_operator (Current)
 			}
---[@#|&][^%" \t\r\n]*/[ \t\r\n]	{
--- Hack to make it work with SmartEiffel 1.1.
-"#"/[ \t\r\n] |
-"#"[-+*]/[ \t\r\n] |
-"#"[-+*][^a-zA-Z0-9_%" \t\r\n][^%" \t\r\n]*/[ \t\r\n] |
-"#"[^+\-*%" \t\r\n][^%" \t\r\n]*/[ \t\r\n] |
-[@|&][^%" \t\r\n]*/[ \t\r\n]	{
+[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-/{BREAK} |
+[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*/({BREAK}|"--") {
+				last_text_count := text_count
+				last_literal_start := 1
+				last_literal_end := last_text_count
+				break_kind := freeop_break
+				more
+				set_start_condition (BREAK)
+			}
+			
+-- Make sure that we don't have a subsequence of the form "--", "->", "<<" or "<<" (which are special symbols).
+-- Do not allow breaks (spaces, newlines) either.
+([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+(([^\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})\-|([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})>|([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})<)? {
+				last_token := E_FREEOP
+				last_literal_start := 1
+				last_literal_end := text_count
+				last_break_end := 0
+				last_comment_end := 0
+				last_detachable_et_free_operator_value := ast_factory.new_free_operator (Current)
+			}
+([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+([^\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})\-/{BREAK} |
+([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})>/({BREAK}|"--") |
+([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})</({BREAK}|"--") |
+([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+/({BREAK}|"--") {
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -198,35 +229,86 @@ UTF8_BOM (\xEF\xBB\xBF)
 
 ----------/** Eiffel characters **/---------------------------------------------
 
-\'[^%\n]\'	{
+\'[^%\n\x80-\xFF]\'	{
 				last_break_end := 0
 				last_comment_end := 0
-				process_c1_character_constant (text_item (2))
+				process_c1_1byte_character_constant (text_item (2).to_character_32)
 			}
-\'[^%\n]\'[ \t\r\n]+	{
+\'[^%\n\x80-\xFF]\'{BREAK}+	{
 				last_text_count := 3
 				last_break_end := text_count
 				last_comment_end := 0
-				process_c1_character_constant (text_item (2))
+				process_c1_1byte_character_constant (text_item (2).to_character_32)
 			}
-\'[^%\n]\'([ \t\r\n]|"--".*)+	{
+\'[^%\n\x80-\xFF]\'({BREAK}|"--"{NO_NEWLINE}*)+	{
 				last_text_count := 3
 				last_break_end := 0
 				last_comment_end := text_count
-				process_c1_character_constant (text_item (2))
+				process_c1_1byte_character_constant (text_item (2).to_character_32)
 			}
-\'%.\'		{
+\'{UTF8_2}\'	{
+				last_break_end := 0
+				last_comment_end := 0
+				process_c1_2byte_character_constant ({UC_UTF8_ROUTINES}.two_byte_character_code (text_item (2), text_item (3)).to_character_32)
+			}
+\'{UTF8_2}\'{BREAK}+	{
+				last_text_count := 4
+				last_break_end := text_count
+				last_comment_end := 0
+				process_c1_2byte_character_constant ({UC_UTF8_ROUTINES}.two_byte_character_code (text_item (2), text_item (3)).to_character_32)
+			}
+\'{UTF8_2}\'({BREAK}|"--"{NO_NEWLINE}*)+	{
+				last_text_count := 4
+				last_break_end := 0
+				last_comment_end := text_count
+				process_c1_2byte_character_constant ({UC_UTF8_ROUTINES}.two_byte_character_code (text_item (2), text_item (3)).to_character_32)
+			}
+\'{UTF8_3}\'	{
+				last_break_end := 0
+				last_comment_end := 0
+				process_c1_3byte_character_constant ({UC_UTF8_ROUTINES}.three_byte_character_code (text_item (2), text_item (3), text_item (4)).to_character_32)
+			}
+\'{UTF8_3}\'{BREAK}+	{
+				last_text_count := 5
+				last_break_end := text_count
+				last_comment_end := 0
+				process_c1_3byte_character_constant ({UC_UTF8_ROUTINES}.three_byte_character_code (text_item (2), text_item (3), text_item (4)).to_character_32)
+			}
+\'{UTF8_3}\'({BREAK}|"--"{NO_NEWLINE}*)+	{
+				last_text_count := 5
+				last_break_end := 0
+				last_comment_end := text_count
+				process_c1_3byte_character_constant ({UC_UTF8_ROUTINES}.three_byte_character_code (text_item (2), text_item (3), text_item (4)).to_character_32)
+			}
+\'{UTF8_4}\'	{
+				last_break_end := 0
+				last_comment_end := 0
+				process_c1_4byte_character_constant ({UC_UTF8_ROUTINES}.four_byte_character_code (text_item (2), text_item (3), text_item (4), text_item (5)).to_character_32)
+			}
+\'{UTF8_4}\'{BREAK}+	{
+				last_text_count := 6
+				last_break_end := text_count
+				last_comment_end := 0
+				process_c1_4byte_character_constant ({UC_UTF8_ROUTINES}.four_byte_character_code (text_item (2), text_item (3), text_item (4), text_item (5)).to_character_32)
+			}
+\'{UTF8_4}\'({BREAK}|"--"{NO_NEWLINE}*)+	{
+				last_text_count := 6
+				last_break_end := 0
+				last_comment_end := text_count
+				process_c1_4byte_character_constant ({UC_UTF8_ROUTINES}.four_byte_character_code (text_item (2), text_item (3), text_item (4), text_item (5)).to_character_32)
+			}
+\'%{UTF8_1_NO_NEWLINE}\'		{
 				last_break_end := 0
 				last_comment_end := 0
 				process_c2_character_constant (text_item (3))
 			}
-\'%.\'[ \t\r\n]+	{
+\'%{UTF8_1_NO_NEWLINE}\'{BREAK}+	{
 				last_text_count := 4
 				last_break_end := text_count
 				last_comment_end := 0
 				process_c2_character_constant (text_item (3))
 			}
-\'%.\'([ \t\r\n]|"--".*)+	{
+\'%{UTF8_1_NO_NEWLINE}\'({BREAK}|"--"{NO_NEWLINE}*)+	{
 				last_text_count := 4
 				last_break_end := 0
 				last_comment_end := text_count
@@ -235,13 +317,14 @@ UTF8_BOM (\xEF\xBB\xBF)
 
 \'%\/{CHAR_CODE}\/\'	{
 				last_token := E_CHARACTER
+				last_text_count := text_count
 				last_literal_start := 4
-				last_literal_end := text_count - 2
+				last_literal_end := last_text_count - 2
 				last_break_end := 0
 				last_comment_end := 0
 				last_detachable_et_character_constant_value := ast_factory.new_c3_character_constant (Current)
 			}
-\'%\/{CHAR_CODE}\/\'/[ \t\r\n]	{
+\'%\/{CHAR_CODE}\/\'/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 4
 				last_literal_end := last_text_count - 2
@@ -249,18 +332,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				more
 				set_start_condition (BREAK)
 			}
-
-\'%\/[0-9]+\/\'	{
-					-- Syntax error: invalid character code (too big)
-					-- in special character specification %/code/.
-				column := column + text_count
-				set_syntax_error
-				error_handler.report_SCAO_error (filename, current_position)
-				last_detachable_et_position_value := current_position
-				column := column - text_count
-				last_token := E_CHARERR
-			}
-\'%\/[0-9]+	{
+\'%\/{CHAR_CODE}	{
 					-- Syntax error: missing character / at end
 					-- of special character specification %/code/.
 				column := column + text_count
@@ -271,7 +343,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_token := E_CHARERR
 			}
 \'%\/		{
-					-- Syntax error: missing ASCII code in
+					-- Syntax error: missing character code in
 					-- special character specification %/code/.
 				column := column + 3
 				set_syntax_error
@@ -289,7 +361,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				column := column - 1
 				last_token := E_CHARERR
 			}
-\'(.|%.|%\/[0-9]+\/)?	{
+\'([^%\n\x80-\xFF]|{NON_ASCII}|%{UTF8_1_NO_NEWLINE}|%\/{CHAR_CODE}\/)?	{
 					-- Syntax error: missing quote at
 					-- end of character constant.
 				column := column + text_count
@@ -303,7 +375,25 @@ UTF8_BOM (\xEF\xBB\xBF)
 
 ----------/** Eiffel strings **/------------------------------------------------
 
-\"[@#|&][^%" \t\r\n]*\"	{
+\"([-+*/^=><.;,:!?(){}[\]$~]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")\" {
+					-- Regular manifest string.
+					-- Special symbols, standard operators and predefined operators
+					-- which cannot be free operators.
+				last_break_end := 0
+				last_comment_end := 0
+				process_regular_manifest_string (text_count)
+			}
+\"([-+*/^=><.;,:!?(){}[\]$~]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")\"/({BREAK}|"--") {
+					-- Regular manifest string.
+					-- Special symbols, standard operators and predefined operators
+					-- which cannot be free operators.
+				last_text_count := text_count
+				break_kind := string_break
+				more
+				set_start_condition (BREAK)
+			}
+\"[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-?\" |
+\"([^%\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^%\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^%> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^%< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+(([^%\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})\-|([^%\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})>|([^%< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})<)?\" {
 				last_token := E_STRFREEOP
 				last_literal_start := 2
 				last_literal_end := text_count - 1
@@ -311,7 +401,8 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
 			}
-\"[@#|&][^%" \t\r\n]*\"/([ \t\r\n]|"--")	{
+\"[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-?\"/({BREAK}|"--") |
+\"([^%\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^%\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^%> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^%< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+(([^%\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})\-|([^%\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})>|([^%< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})<)?\"/({BREAK}|"--") {
 				last_text_count := text_count
 				last_literal_start := 2
 				last_literal_end := last_text_count - 1
@@ -319,14 +410,29 @@ UTF8_BOM (\xEF\xBB\xBF)
 				more
 				set_start_condition (BREAK)
 			}
-
-\"[^%\n"]*\"	{
+\"([^%\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE}))+(([^\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})\-|([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})>|([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})<)?\"/({BREAK}|"--") {
+				last_text_count := text_count
+				last_literal_start := 2
+				last_literal_end := last_text_count - 1
+				break_kind := str_special_freeop_break
+				more
+				set_start_condition (BREAK)
+			}
+\"([^%\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE}))+(([^\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})\-|([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})>|([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})<)?\" {
+				last_token := E_STRFREEOP
+				last_literal_start := 2
+				last_literal_end := text_count - 1
+				last_break_end := 0
+				last_comment_end := 0
+				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
+			}
+\"([^%\n"\x80-\xFF]|{NON_ASCII})*\"	{
 					-- Regular manifest string.
 				last_break_end := 0
 				last_comment_end := 0
 				process_regular_manifest_string (text_count)
 			}
-\"[^%\n"]*\"/([ \t\r\n]|"--")	{
+\"([^%\n"\x80-\xFF]|{NON_ASCII})*\"/({BREAK}|"--")	{
 					-- Regular manifest string.
 				last_text_count := text_count
 				break_kind := string_break
@@ -334,7 +440,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				set_start_condition (BREAK)
 			}
 
-\"[^\n"]*"{"/[ \t\r]*\n {
+\"([^\n\x80-\xFF"]|{NON_ASCII})*"{"/{HORIZONTAL_BREAK}*\n {
 					-- Verbatim string.
 				verbatim_marker := text_substring (2, text_count - 1)
 				set_start_condition (VS1)
@@ -342,7 +448,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 <VS1>{
 		-- Discard space characters at the
 		-- end of Verbatim_string_opener.
-	[ \t\r]*\n {
+	{HORIZONTAL_BREAK}*\n {
 				verbatim_open_white_characters := text
 				last_literal_start := 1
 				last_literal_end := 0
@@ -366,7 +472,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 <VS2>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	[ \t\r]*"}"[^\n"]*\" {
+	{HORIZONTAL_BREAK}*"}"([^\n"\x80-\xFF]|{NON_ASCII})*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					last_token := E_STRING
 					last_break_end := 0
@@ -381,7 +487,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 					set_start_condition (VS3)
 				end
 			}
-	[ \t\r]*"}"[^\n"]*\"/([ \t\r\n]|"--") {
+	{HORIZONTAL_BREAK}*"}"([^\n"\x80-\xFF]|{NON_ASCII})*\"/({BREAK}|"--") {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					verbatim_close_white_characters := text_substring (last_literal_end + 1, text_count - verbatim_marker.count - 2)
 					last_text_count := text_count
@@ -393,26 +499,26 @@ UTF8_BOM (\xEF\xBB\xBF)
 					set_start_condition (VS3)
 				end
 			}
-	[^"\n]*\" {
+	([^"\n\x80-\xFF]|{NON_ASCII})*\" {
 				more
 				set_start_condition (VS3)
 			}
-	[^"\n]*\r\n {
+	([^"\n\x80-\xFF]|{NON_ASCII})*\r\n {
 				more
 				last_literal_end := text_count - 2
 			}
-	[^"\n]*\n {
+	([^"\n\x80-\xFF]|{NON_ASCII})*\n {
 				more
 				last_literal_end := text_count - 1
 			}
-	[^"\n]* {
+	.		{
 					-- No final brace-double-quote.
 				last_token := E_STRERR
 				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
-	<<EOF>>	{
+	<<EOF>>		{
 					-- No final brace-double-quote.
 				last_token := E_STRERR
 				last_detachable_et_position_value := current_position
@@ -423,24 +529,24 @@ UTF8_BOM (\xEF\xBB\xBF)
 <VS3>{
 		-- Read remaining characters of a line
 		-- in verbatim string body.
-	.*\r\n	{
+	{NO_NEWLINE}*\r\n	{
 				more
 				last_literal_end := text_count - 2
 				set_start_condition (VS2)
 			}
-	.*\n	{
+	{NO_NEWLINE}*\n	{
 				more
 				last_literal_end := text_count - 1
 				set_start_condition (VS2)
 			}
-	.*		{
+	.		{
 					-- No final brace-double-quote.
 				last_token := E_STRERR
 				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
-	<<EOF>>	{
+	<<EOF>>		{
 					-- No final brace-double-quote.
 				last_token := E_STRERR
 				last_detachable_et_position_value := current_position
@@ -449,7 +555,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 			}
 }
 
-\"[^\n"]*\[/[ \t\r]*\n {
+\"([^\n"\x80-\xFF]|{NON_ASCII})*\[/{HORIZONTAL_BREAK}*\n {
 					-- Left-aligned verbatim string.
 				verbatim_marker := text_substring (2, text_count - 1)
 				set_start_condition (LAVS1)
@@ -457,7 +563,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 <LAVS1>{
 		-- Discard space characters at the
 		-- end of Verbatim_string_opener.
-	[ \t\r]*\n {
+	{HORIZONTAL_BREAK}*\n {
 				verbatim_open_white_characters := text
 				last_literal_start := 1
 				last_literal_end := 0
@@ -481,7 +587,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 <LAVS2>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	[ \t\r]*\][^\n"]*\" {
+	{HORIZONTAL_BREAK}*\]([^\n"\x80-\xFF]|{NON_ASCII})*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					last_token := E_STRING
 					last_break_end := 0
@@ -496,7 +602,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 					set_start_condition (LAVS3)
 				end
 			}
-	[ \t\r]*\][^\n"]*\"/([ \t\r\n]|"--") {
+	{HORIZONTAL_BREAK}*\]([^\n"\x80-\xFF]|{NON_ASCII})*\"/({BREAK}|"--") {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					verbatim_close_white_characters := text_substring (last_literal_end + 1, text_count - verbatim_marker.count - 2)
 					last_text_count := text_count
@@ -508,26 +614,26 @@ UTF8_BOM (\xEF\xBB\xBF)
 					set_start_condition (LAVS3)
 				end
 			}
-	[^"\n]*\" {
+	([^\n"\x80-\xFF]|{NON_ASCII})*\" {
 				more
 				set_start_condition (LAVS3)
 			}
-	[^"\n]*\r\n {
+	([^\n"\x80-\xFF]|{NON_ASCII})*\r\n {
 				more
 				last_literal_end := text_count - 2
 			}
-	[^"\n]*\n {
+	([^\n"\x80-\xFF]|{NON_ASCII})*\n {
 				more
 				last_literal_end := text_count - 1
 			}
-	[^"\n]* {
+	.		{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
 				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
-	<<EOF>>	{
+	<<EOF>>		{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
 				last_detachable_et_position_value := current_position
@@ -538,17 +644,17 @@ UTF8_BOM (\xEF\xBB\xBF)
 <LAVS3>{
 		-- Read remaining characters of a line
 		-- in verbatim string body.
-	.*\r\n	{
+	{NO_NEWLINE}*\r\n	{
 				more
 				last_literal_end := text_count - 2
 				set_start_condition (LAVS2)
 			}
-	.*\n	{
+	{NO_NEWLINE}*\n	{
 				more
 				last_literal_end := text_count - 1
 				set_start_condition (LAVS2)
 			}
-	.*		{
+	.		{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
 				last_detachable_et_position_value := current_position
@@ -564,7 +670,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 			}
 }
 
-\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
+\"([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
 					-- Manifest string with special characters.
 				last_token := E_STRING
 				last_literal_start := 2
@@ -573,7 +679,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 			}
-\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/([ \t\r\n]|"--")	{
+\"([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/({BREAK}|"--")	{
 					-- Manifest string with special characters.
 				last_text_count := text_count
 				last_literal_start := 2
@@ -582,7 +688,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				more
 				set_start_condition (BREAK)
 			}
-\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*	{
+\"([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*	{
 					-- Manifest string with special characters which may be made
 					-- up of several lines or may include invalid characters.
 					-- Keep track of current line and column.
@@ -593,7 +699,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 			}
 
 <MS>{
-	%[ \t\r]*\n	{
+	%{HORIZONTAL_BREAK}*\n	{
 					-- Multi-line manifest string.
 				more
 				set_start_condition (MSN)
@@ -601,20 +707,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 	%\/{CHAR_CODE}\/	{
 				more
 			}
-	%\/[0-9]+\/	{
-					-- Syntax error: invalid character code (too big) in special
-					-- character specification %/code/ in manifest string.
-				column := yy_column
-				line := yy_line
-				set_syntax_error
-				error_handler.report_SSAO_error (filename, current_position)
-				last_detachable_et_position_value := current_position
-				column := ms_column
-				line := ms_line
-				last_token := E_STRERR
-				set_start_condition (INITIAL)
-			}
-	%\/[0-9]+	{
+	%\/{CHAR_CODE}	{
 					-- Syntax error: missing character / at end of special
 					-- character specification %/code/ in manifest string.
 				column := yy_column
@@ -652,10 +745,10 @@ UTF8_BOM (\xEF\xBB\xBF)
 				line := ms_line
 				more
 			}
-	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))+	{
+	([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))+	{
 				more
 			}
-	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
+	([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
 				last_token := E_STRING
 				last_literal_start := 2
 				last_literal_end := text_count - 1
@@ -664,7 +757,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 				set_start_condition (INITIAL)
 			}
-	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/([ \t\r\n]|"--")	{
+	([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 2
 				last_literal_end := last_text_count - 1
@@ -708,7 +801,20 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			}
-	<<EOF>>	{
+	.		{
+					-- Syntax error: missing double quote at
+					-- end of manifest string.
+				column := yy_column
+				line := yy_line
+				set_syntax_error
+				error_handler.report_SSEQ_error (filename, current_position)
+				last_detachable_et_position_value := current_position
+				column := ms_column
+				line := ms_line
+				last_token := E_STRERR
+				set_start_condition (INITIAL)
+			}
+	<<EOF>>		{
 					-- Syntax error: missing double quote at
 					-- end of manifest string.
 				column := yy_column
@@ -724,11 +830,11 @@ UTF8_BOM (\xEF\xBB\xBF)
 }
 
 <MSN>{
-	[ \r\t]*%	{
+	{HORIZONTAL_BREAK}*%	{
 				more
 				set_start_condition (MS)
 			}
-	[ \r\t]*\n	{
+	{HORIZONTAL_BREAK}*\n	{
 					-- Syntax error: empty line in middle of
 					-- multi-line manifest string.
 				column := 1
@@ -752,7 +858,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			}
-	<<EOF>>	{
+	<<EOF>>		{
 					-- Syntax error: missing character % at beginning
 					-- of line in multi-line manifest string.
 				column := yy_column
@@ -778,7 +884,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_regular_integer_constant (Current)
 			}
-[0-9]+/([ \t\r\n]|"--")	{
+[0-9]+/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -794,7 +900,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
-[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
+[0-9]+(_+[0-9]+)+/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -814,7 +920,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
-(_+[0-9]+)+/([ \t\r\n]|"--")	{
+(_+[0-9]+)+/({BREAK}|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -838,7 +944,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
-([0-9]+_+)+/([ \t\r\n]|"--")	{
+([0-9]+_+)+/({BREAK}|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -858,7 +964,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
-0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)*/([ \t\r\n]|"--")	{
+0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)*/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -878,7 +984,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
-0[xX](_+[0-9a-fA-F]+)+/([ \t\r\n]|"--")	{
+0[xX](_+[0-9a-fA-F]+)+/({BREAK}|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -902,7 +1008,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
-0[xX]([0-9a-fA-F]+_+)+/([ \t\r\n]|"--")	{
+0[xX]([0-9a-fA-F]+_+)+/({BREAK}|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -922,7 +1028,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
 			}
-0[cC][0-7]+(_+[0-7]+)*/([ \t\r\n]|"--")	{
+0[cC][0-7]+(_+[0-7]+)*/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -942,7 +1048,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
 			}
-0[cC](_+[0-7]+)+/([ \t\r\n]|"--")	{
+0[cC](_+[0-7]+)+/({BREAK}|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -966,7 +1072,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
 			}
-0[cC]([0-7]+_+)+/([ \t\r\n]|"--")	{
+0[cC]([0-7]+_+)+/({BREAK}|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -986,7 +1092,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			}
-0[bB][0-1]+(_+[0-1]+)*/([ \t\r\n]|"--")	{
+0[bB][0-1]+(_+[0-1]+)*/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -1006,7 +1112,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			}
-0[bB](_+[0-1]+)+/([ \t\r\n]|"--")	{
+0[bB](_+[0-1]+)+/({BREAK}|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -1030,7 +1136,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			}
-0[bB]([0-1]+_+)+/([ \t\r\n]|"--")	{
+0[bB]([0-1]+_+)+/({BREAK}|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -1046,18 +1152,8 @@ UTF8_BOM (\xEF\xBB\xBF)
 
 ---------/** Eiffel reals **/---------------------------------------------------
 
-[0-9]+\./([ \t\r\n]|"--")	|
-[0-9]+\.[0-9]*[eE][+-]?[0-9]+/([ \t\r\n]|"--")	|
-[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?/([ \t\r\n]|"--")	{
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := real_break
-				more
-				set_start_condition (BREAK)
-			}
-[0-9]+\./[^.0-9]	|
-[0-9]+\.[0-9]*[eE][+-]?[0-9]+	|
+[0-9]+\./[^.0-9]					|
+[0-9]+\.[0-9]*[eE][+-]?[0-9]+		|
 [0-9]*\.[0-9]+([eE][+-]?[0-9]+)?	{
 		-- The first regexp of this group uses a trailing context
 		-- to make sure that an integer followed by two dots is
@@ -1069,13 +1165,13 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
 			}
-[0-9]+(_+[0-9]+)+\./([ \t\r\n]|"--")	|
-[0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*/([ \t\r\n]|"--")	|
-([0-9]+(_+[0-9]+)*)?\.[0-9]+(_+[0-9]+)*([eE][+-]?[0-9]+(_+[0-9]+)*)?/([ \t\r\n]|"--")	{
+[0-9]+\./({BREAK}|"--")	|
+[0-9]+\.[0-9]*[eE][+-]?[0-9]+/({BREAK}|"--")	|
+[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
-				break_kind := ureal_break
+				break_kind := real_break
 				more
 				set_start_condition (BREAK)
 			}
@@ -1092,11 +1188,21 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_comment_end := 0
 				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
 			}
+[0-9]+(_+[0-9]+)+\./({BREAK}|"--")	|
+[0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*/({BREAK}|"--")	|
+([0-9]+(_+[0-9]+)*)?\.[0-9]+(_+[0-9]+)*([eE][+-]?[0-9]+(_+[0-9]+)*)?/({BREAK}|"--")	{
+				last_text_count := text_count
+				last_literal_start := 1
+				last_literal_end := last_text_count
+				break_kind := ureal_break
+				more
+				set_start_condition (BREAK)
+			}
 
 
 ----------/** Separators **/----------------------------------------------------
 
-[ \t\r\n]+	{
+{BREAK}+	{
 				last_literal_start := 1
 				last_literal_end := 0
 				last_text_count := 0
@@ -1106,7 +1212,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_token := E_BREAK
 			}
 
-([ \t\r\n]|"--".*)+	{
+({BREAK}|"--"{NO_NEWLINE}*)+	{
 				last_literal_start := 1
 				last_literal_end := 0
 				last_text_count := 0
@@ -1117,13 +1223,13 @@ UTF8_BOM (\xEF\xBB\xBF)
 			}
 
 <BREAK>{
-	[ \t\r\n]+	{
+	{BREAK}+	{
 				last_break_end := text_count
 				last_comment_end := 0
 				process_break
 				set_start_condition (INITIAL)
 			}
-	([ \t\r\n]|"--".*)+	{
+	({BREAK}|"--"{NO_NEWLINE}*)+	{
 				last_break_end := 0
 				last_comment_end := text_count
 				process_break

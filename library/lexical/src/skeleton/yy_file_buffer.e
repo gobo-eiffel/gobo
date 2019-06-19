@@ -5,7 +5,7 @@ note
 		"Lexical analyzer input file buffers"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -165,7 +165,6 @@ feature -- Element change
 					-- and eventually resize `content' if necessary.
 				compact_left
 				buff := content
-				nb := capacity - count
 					-- Read in more data.
 				if interactive then
 					file.read_character
@@ -178,6 +177,7 @@ feature -- Element change
 						end_of_file := True
 					end
 				else
+					nb := capacity - count
 --					if nb > Read_buffer_capacity then
 --						nb := Read_buffer_capacity
 --					end

@@ -5,7 +5,7 @@ note
 		"Unicode routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,16 @@ feature -- Status report
 		do
 			Result := (a_code >= minimum_unicode_character_code and a_code < minimum_unicode_surrogate_code)
 				or (a_code > maximum_unicode_surrogate_code and a_code <= maximum_unicode_character_code)
+		ensure
+			instance_free: class
+		end
+
+	valid_non_surrogate_natural_32_code (a_code: NATURAL_32): BOOLEAN
+			-- Is `a_code' a valid non-surrogate unicode?
+			-- Include all non-characters.
+		do
+			Result := (a_code >= minimum_unicode_character_natural_32_code and a_code < minimum_unicode_surrogate_natural_32_code)
+				or (a_code > maximum_unicode_surrogate_natural_32_code and a_code <= maximum_unicode_character_natural_32_code)
 		ensure
 			instance_free: class
 		end

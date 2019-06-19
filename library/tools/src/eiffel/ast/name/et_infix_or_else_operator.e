@@ -45,6 +45,7 @@ feature -- Access
 
 	name: STRING
 			-- Name of feature call
+			-- (using UTF-8 encoding)
 		do
 			Result := tokens.alias_or_else_name
 		end

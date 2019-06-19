@@ -5,7 +5,7 @@ note
 		"Eiffel unique attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			is_keyword := tokens.is_keyword
 			unique_keyword := tokens.unique_keyword
 			clients := tokens.empty_clients
-			create constant.make ("1")
+			create constant.make ("1", 1, False)
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure

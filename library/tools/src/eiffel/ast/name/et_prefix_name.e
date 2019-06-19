@@ -5,7 +5,7 @@ note
 		"Names of Eiffel prefix features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -123,6 +123,7 @@ feature -- Access
 
 	name: STRING
 			-- Name of feature call
+			-- (using UTF-8 encoding)
 		do
 			inspect code
 			when prefix_minus_code then

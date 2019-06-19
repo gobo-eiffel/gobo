@@ -5,7 +5,7 @@ note
 		"Eiffel character constants of the form '%%A'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,9 @@ feature {NONE} -- Initialization
 	make (a_value: CHARACTER_32)
 			-- Create a new character constant.
 		require
+			valid_value: {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_value.natural_32_code)
 			a_value_is_character_8: a_value.is_character_8
+			a_value_one_utf8_byte: {UC_UTF8_ROUTINES}.natural_32_code_byte_count (a_value.natural_32_code) = 1
 		do
 			value := a_value
 			make_leaf
@@ -87,6 +89,8 @@ feature -- Access
 					-- Should never happen.
 				Result := value.to_character_8
 			end
+		ensure then
+			one_utf8_byte: {UC_UTF8_ROUTINES}.character_byte_count (Result) = 1
 		end
 
 	last_position: ET_POSITION
@@ -106,5 +110,6 @@ feature -- Processing
 invariant
 
 	value_is_character_8: value.is_character_8
+	value_one_utf8_byte: {UC_UTF8_ROUTINES}.natural_32_code_byte_count (value.natural_32_code) = 1
 
 end

@@ -5,7 +5,7 @@ note
 		"Eiffel manifest strings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,6 +78,30 @@ feature -- Initialization
 
 feature -- Status report
 
+	is_string_8: BOOLEAN
+			-- Is current manifest string representable as a STRING_8
+			-- (using ISO-8859-1 encoding)?
+		do
+			Result := not has_invalid_code and then {UC_UTF8_ROUTINES}.is_string_8 (value)
+		ensure
+			has_invalid_code: has_invalid_code implies not Result
+		end
+
+	is_string_32: BOOLEAN
+			-- Is current manifest string representable as a STRING_32?
+		do
+			Result := not has_invalid_code and then {UC_UTF8_ROUTINES}.is_string_32 (value)
+		ensure
+			has_invalid_code: has_invalid_code implies not Result
+		end
+
+	has_invalid_code: BOOLEAN
+			-- Does the manifest string contain a character code which corresponds
+			-- to an invalid or surrogate code point in the Unicode encoding?
+		do
+			Result := False
+		end
+
 	is_string_constant: BOOLEAN = True
 			-- Is current constant a STRING constant?
 
@@ -92,11 +116,13 @@ feature -- Access
 
 	value: STRING
 			-- String value
+			-- (using UTF-8 encoding)
 		deferred
 		end
 
 	literal: STRING
 			-- Literal value
+			-- (using UTF-8 encoding)
 		deferred
 		end
 
@@ -116,6 +142,15 @@ feature -- Access
 			else
 				Result := Current
 			end
+		end
+
+	value_position: ET_POSITION
+			-- Position of first character of current node in source code,
+			-- without taking into account the cast type
+		do
+			Result := Current
+		ensure
+			value_position_not_void: Result /= Void
 		end
 
 	first_leaf: ET_AST_LEAF
@@ -167,11 +202,14 @@ feature -- Type conversion
 			-- Void if no such feature or when not possible.
 		do
 			if cast_type = Void then
--- TODO: check that the value of `Current' can be represented in `a_target_type'.
 				if a_target_type.same_named_context_with_type_marks (tokens.implicit_attached_type_mark, a_universe.string_8_type, tokens.implicit_attached_type_mark) then
-					Result := a_universe.string_8_convert_feature
+					if is_string_8 then
+						Result := a_universe.string_8_convert_feature
+					end
 				elseif a_target_type.same_named_context_with_type_marks (tokens.implicit_attached_type_mark, a_universe.string_32_type, tokens.implicit_attached_type_mark) then
-					Result := a_universe.string_32_convert_feature
+					if is_string_32 then
+						Result := a_universe.string_32_convert_feature
+					end
 				end
 			end
 		end
@@ -179,6 +217,10 @@ feature -- Type conversion
 invariant
 
 	literal_not_void: literal /= Void
+	literal_is_string: {KL_ANY_ROUTINES}.same_types (literal, "")
+	valid_utf8_literal: {UC_UTF8_ROUTINES}.valid_utf8 (literal)
 	value_not_void: value /= Void
+	value_is_string: {KL_ANY_ROUTINES}.same_types (value, "")
+	valid_utf8_value: {UC_UTF8_ROUTINES}.valid_utf8 (value)
 
 end

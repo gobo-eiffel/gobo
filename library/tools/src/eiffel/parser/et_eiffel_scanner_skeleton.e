@@ -392,83 +392,103 @@ feature -- Tokens
 			last_identifier_not_void: Result /= Void
 		end
 
+	last_binary_integer_constant: ET_BINARY_INTEGER_CONSTANT
+			-- New integer constant in binary format
+		require
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(0[bB][0-1]+(_+[0-1]+)*").recognizes (last_literal)
+		local
+			l_literal: STRING
+		do
+			l_literal := last_literal
+			compute_natural_64_value (last_literal, 1, l_literal.count)
+			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
+		ensure
+			last_binary_integer_constant_not_void: Result /= Void
+		end
+
 	last_c3_character_constant: ET_C3_CHARACTER_CONSTANT
 			-- Last character constant scanned of the form '%/code/'
 		require
-			-- valid_literal: ((0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(0x[0-9a-fA-F]{1,4})).recognizes (last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*").recognizes (last_literal)
 		local
 			l_literal: STRING
 			l_value: CHARACTER_32
-			i, nb: INTEGER
-			c: CHARACTER
 			l_code: NATURAL_32
+			l_has_invalid_code: BOOLEAN
 		do
 			l_literal := last_literal
-			if l_literal.starts_with ("0x") then
-				nb := l_literal.count
-				from i := 3 until i > nb loop
-					c := l_literal.item (i)
-					l_code := l_code * 16
-					inspect c
-					when '0' then
-							-- Do nothing.
-					when '1' then
-						l_code := l_code + 1
-					when '2' then
-						l_code := l_code + 2
-					when '3' then
-						l_code := l_code + 3
-					when '4' then
-						l_code := l_code + 4
-					when '5' then
-						l_code := l_code + 5
-					when '6' then
-						l_code := l_code + 6
-					when '7' then
-						l_code := l_code + 7
-					when '8' then
-						l_code := l_code + 8
-					when '9' then
-						l_code := l_code + 9
-					when 'a', 'A' then
-						l_code := l_code + 10
-					when 'b', 'B' then
-						l_code := l_code + 11
-					when 'c', 'C' then
-						l_code := l_code + 12
-					when 'd', 'D' then
-						l_code := l_code + 13
-					when 'e', 'E' then
-						l_code := l_code + 14
-					when 'f', 'F' then
-						l_code := l_code + 15
-					end
-					i := i + 1
-				end
+			compute_natural_64_value (last_literal, 1, l_literal.count)
+			l_has_invalid_code := has_natural_64_overflow
+			if last_natural_64 <= {NATURAL_32}.max_value.to_natural_64 then
+				l_code := last_natural_64.to_natural_32
 			else
-				nb := l_literal.count
-				from i := 1 until i > nb loop
-					c := l_literal.item (i)
-					l_code := l_code * 10 + c.natural_32_code - Zero_code.to_natural_32
-					i := i + 1
-				end
-				l_value := l_code.to_character_32
+				l_code := 0
+				l_has_invalid_code := True
 			end
-			l_value := l_code.to_character_32
-			create Result.make (l_literal, l_value)
+			if {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (l_code) then
+				l_value := l_code.to_character_32
+			else
+				l_has_invalid_code := True
+				l_value := {CHARACTER_32} '%U'
+			end
+			create Result.make (l_literal, l_value, l_has_invalid_code)
 		ensure
 			last_c3_character_constant_not_void: Result /= Void
+		end
+
+	last_hexadecimal_integer_constant: ET_HEXADECIMAL_INTEGER_CONSTANT
+			-- Last integer constant in hexadecimal format
+		require
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[xX](_*[0-9a-fA-F]+_*)+").recognizes (last_literal)
+		local
+			l_literal: STRING
+		do
+			l_literal := last_literal
+			compute_natural_64_value (last_literal, 1, l_literal.count)
+			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
+		ensure
+			last_hexadecimal_integer_constant_not_void: Result /= Void
+		end
+
+	last_octal_integer_constant: ET_OCTAL_INTEGER_CONSTANT
+			-- Last integer constant in octal format
+		require
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[cC][0-7]+(_+[0-7]+)*").recognizes (last_literal)
+		local
+			l_literal: STRING
+		do
+			l_literal := last_literal
+			compute_natural_64_value (last_literal, 1, l_literal.count)
+			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
+		ensure
+			last_octal_integer_constant_not_void: Result /= Void
+		end
+
+	last_regular_integer_constant: ET_REGULAR_INTEGER_CONSTANT
+			-- Last integer constant with no underscore
+		require
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9]+").recognizes (last_literal)
+		local
+			l_literal: STRING
+		do
+			l_literal := last_literal
+			compute_natural_64_value (last_literal, 1, l_literal.count)
+			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
+		ensure
+			last_regular_integer_constant_not_void: Result /= Void
 		end
 
 	last_special_manifest_string: ET_SPECIAL_MANIFEST_STRING
 			-- Last special manifest string scanned
 		require
-			-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (last_literal)
+			-- valid_literal: (([^"%\n\x80-\xFF]|{NON_ASCII}|%([^\n\x08-\xFF]|\/([[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)\/|{HORIZONTAL_BREAK}*\n{BREAK}*%))*).recognizes (last_literal)
 		local
 			l_literal, l_value: STRING
 			i, nb: INTEGER
 			c: CHARACTER
-			l_code: INTEGER
+			l_start, l_end: INTEGER
+			l_code: NATURAL_32
+			l_has_invalid_code: BOOLEAN
 		do
 			l_literal := last_literal
 			nb := l_literal.count
@@ -524,17 +544,27 @@ feature -- Tokens
 					when '/' then
 						from
 							i := i + 1
-							c := l_literal.item (i)
-							l_code := 0
+							l_start := i
 						until
-							c = '/'
+							l_literal.item (i) = '/'
 						loop
-							l_code := l_code * 10 + c.code - Zero_code
 							i := i + 1
-							c := l_literal.item (i)
 						end
-						l_value.append_character (INTEGER_.to_character (l_code))
-					when '%N', '%R', ' ', '%T'  then
+						l_end := i - 1
+						compute_natural_64_value (l_literal, l_start, l_end)
+						l_has_invalid_code := l_has_invalid_code or has_natural_64_overflow
+						if last_natural_64 <= {NATURAL_32}.max_value.to_natural_64 then
+							l_code := last_natural_64.to_natural_32
+						else
+							l_code := 0
+							l_has_invalid_code := True
+						end
+						if not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (l_code) then
+							l_has_invalid_code := True
+							l_code := 0
+						end
+						{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (l_value, l_code)
+					when '%N', '%R', ' ', '%T', '%/128/'..'%/255/'  then
 						from
 							i := i + 1
 						until
@@ -579,9 +609,23 @@ feature -- Tokens
 					i := i + 1
 				end
 			end
-			create Result.make (l_literal, l_value)
+			create Result.make (l_literal, l_value, l_has_invalid_code)
 		ensure
 			last_special_manifest_string_not_void: Result /= Void
+		end
+
+	last_underscored_integer_constant: ET_UNDERSCORED_INTEGER_CONSTANT
+			-- Last integer constant with underscores
+		require
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(_*[0-9]+_*)+").recognizes (last_literal)
+		local
+			l_literal: STRING
+		do
+			l_literal := last_literal
+			compute_natural_64_value (last_literal, 1, l_literal.count)
+			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
+		ensure
+			last_underscored_integer_constant_not_void: Result /= Void
 		end
 
 	last_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN): ET_VERBATIM_STRING
@@ -735,6 +779,106 @@ feature -- Tokens
 				strings.force_new (-1, Result)
 			end
 		end
+
+feature {NONE} -- Integer values
+
+	compute_natural_64_value (a_string: STRING; a_start, a_end: INTEGER)
+			-- Compute NATURAL_64 value held in `a_string' between positions `a_start' and `a_end'.
+			-- Make the result available in `last_natural_64'.
+			-- Set `has_natural_64_overflow' is the number is too big.
+		require
+			a_string_not_void: a_string /= Void
+			a_start_valid: a_string.valid_index (a_start)
+			a_end_valid: a_string.valid_index (a_end)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*").recognizes (a_string.substring (a_start, a_end))
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+			l_value: NATURAL_64
+			l_base: NATURAL_64
+			l_digit: NATURAL_64
+			l_n1, l_n2: NATURAL_64
+		do
+			has_natural_64_overflow := False
+			nb := a_end - a_start + 1
+			if nb > 2 and then a_string.item (a_start) = '0' then
+				inspect a_string.item (a_start + 1)
+				when 'x', 'X' then
+					i := a_start + 2
+					l_base := 16
+				when 'c', 'C' then
+					i := a_start + 2
+					l_base := 8
+				when 'b', 'B' then
+					i := a_start + 2
+					l_base := 2
+				else
+					i := a_start
+					l_base := 10
+				end
+			else
+				i := a_start
+				l_base := 10
+			end
+			l_n1 := {NATURAL_64}.Max_value // l_base
+			l_n2 := {NATURAL_64}.max_value \\ l_base
+			from until i > a_end loop
+				c := a_string.item (i)
+				if c /= '_' then
+					inspect c
+					when '0' then
+						l_digit := 0
+					when '1' then
+						l_digit := 1
+					when '2' then
+						l_digit := 2
+					when '3' then
+						l_digit := 3
+					when '4' then
+						l_digit := 4
+					when '5' then
+						l_digit := 5
+					when '6' then
+						l_digit := 6
+					when '7' then
+						l_digit := 7
+					when '8' then
+						l_digit := 8
+					when '9' then
+						l_digit := 9
+					when 'a', 'A' then
+						l_digit := 10
+					when 'b', 'B' then
+						l_digit := 11
+					when 'c', 'C' then
+						l_digit := 12
+					when 'd', 'D' then
+						l_digit := 13
+					when 'e', 'E' then
+						l_digit := 14
+					when 'f', 'F' then
+						l_digit := 15
+					end
+					if l_value < l_n1 or (l_value = l_n1 and l_digit <= l_n2) then
+						l_value := l_base * l_value + l_digit
+					else
+							-- Overflow.
+						has_natural_64_overflow := True
+						l_value := 0
+							-- Jump out of the loop.
+						i := a_end + 1
+					end
+				end
+				i := i + 1
+			end
+			last_natural_64 := l_value
+		end
+
+	last_natural_64: NATURAL_64
+			-- Last value computed by `compute_natural_64_value'
+
+	has_natural_64_overflow: BOOLEAN
+			-- Did the last call to `compute_natural_64_value' detect an overflow?
 
 feature {NONE} -- Positions
 
@@ -1402,15 +1546,20 @@ feature {NONE} -- Breaks
 			-- follows a manifest string containing the
 			-- name of a freeop
 
-	str_special_break: INTEGER = 13
+	str_special_freeop_break: INTEGER = 13
+			-- Internal code corresponding to a break that
+			-- follows a manifest string containing the
+			-- name of a freeop with special characters
+
+	str_special_break: INTEGER = 14
 			-- Internal code corresponding to a break that
 			-- follows a manifest string with special characters
 
-	str_verbatim_break: INTEGER = 14
+	str_verbatim_break: INTEGER = 15
 			-- Internal code corresponding to a break that
 			-- follows a verbatim manifest string
 
-	str_left_aligned_verbatim_break: INTEGER = 15
+	str_left_aligned_verbatim_break: INTEGER = 16
 			-- Internal code corresponding to a break that
 			-- follows a left-aligned verbatim manifest string
 
@@ -3379,15 +3528,54 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_c1_character_constant (c: CHARACTER)
-			-- Process character constant of the form 'A'.
+	process_c1_1byte_character_constant (c: CHARACTER_32)
+			-- Process character constant of the form 'A', encoded with 1 byte in UTF-8.
 		require
-			c1_char: text_count >= 3
-			-- valid_string: (\'[^%\n]\').recognizes (text_substring (1, 3))
-			valid_c: text_item (2) = c
+			c1_char_1_byte: text_count >= 3
+			-- valid_string: (\'[^%\n\x80-\xFF]\').recognizes (text_substring (1, 3))
+			valid_c: text_item (2).to_character_32 = c
 		do
 			last_literal_start := 2
 			last_literal_end := 2
+			last_token := E_CHARACTER
+			last_detachable_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
+		end
+
+	process_c1_2byte_character_constant (c: CHARACTER_32)
+			-- Process character constant of the form 'A', encoded with 2 bytes in UTF-8.
+		require
+			c1_char_two_byte: text_count >= 4
+			-- valid_string: (\'{UTF8_2}\').recognizes (text_substring (1, 4))
+			valid_c: c.natural_32_code = {UC_UTF8_ROUTINES}.two_byte_character_code (text_item (2), text_item (3))
+		do
+			last_literal_start := 2
+			last_literal_end := 3
+			last_token := E_CHARACTER
+			last_detachable_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
+		end
+
+	process_c1_3byte_character_constant (c: CHARACTER_32)
+			-- Process character constant of the form 'A', encoded with 3 bytes in UTF-8.
+		require
+			c1_char_3_byte: text_count >= 5
+			-- valid_string: (\'{UTF8_3}\').recognizes (text_substring (1, 5))
+			valid_c: c.natural_32_code = {UC_UTF8_ROUTINES}.three_byte_character_code (text_item (2), text_item (3), text_item (4))
+		do
+			last_literal_start := 2
+			last_literal_end := 4
+			last_token := E_CHARACTER
+			last_detachable_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
+		end
+
+	process_c1_4byte_character_constant (c: CHARACTER_32)
+			-- Process character constant of the form 'A', encoded with 4 bytes in UTF-8.
+		require
+			c1_char_four_byte: text_count >= 6
+			-- valid_string: (\'{UTF8_4}\').recognizes (text_substring (1, 6))
+			valid_c: c.natural_32_code = {UC_UTF8_ROUTINES}.four_byte_character_code (text_item (2), text_item (3), text_item (4), text_item (5))
+		do
+			last_literal_start := 2
+			last_literal_end := 5
 			last_token := E_CHARACTER
 			last_detachable_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
 		end
@@ -3396,7 +3584,7 @@ feature {NONE} -- Processing
 			-- Process character constant of the form '%A'.
 		require
 			c2_char: text_count >= 4
-			-- valid_string: (\'%.\').recognizes (text_substring (1, 4))
+			-- valid_string: (\'%[^\n\x80-\xFF]\').recognizes (text_substring (1, 4))
 			valid_c: text_item (3) = c
 		local
 			a_value: CHARACTER
@@ -3591,7 +3779,7 @@ feature {NONE} -- Processing
 		require
 			nb_large_enough: nb >= 2
 			nb_small_enough: nb <= text_count
-			-- valid_string: (\"[^%\n"]*\").recognizes (text_substring (1, nb))
+			-- valid_string: (\"([^"%\n\x80-\xFF}]|{NON_ASCII})*\").recognizes (text_substring (1, nb))
 		do
 			last_token := E_STRING
 			inspect nb
@@ -3873,6 +4061,9 @@ feature {NONE} -- Processing
 			when str_freeop_break then
 				last_token := E_STRFREEOP
 				last_detachable_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
+			when str_special_freeop_break then
+				last_token := E_STRFREEOP
+				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 			when str_special_break then
 				last_token := E_STRING
 				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)

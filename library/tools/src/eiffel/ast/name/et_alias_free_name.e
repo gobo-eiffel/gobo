@@ -5,7 +5,7 @@ note
 		"Eiffel alias 'free-operator' feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -138,6 +138,7 @@ feature -- Access
 
 	alias_name: STRING
 			-- Name of alias
+			-- (using UTF-8 encoding)
 		do
 			create Result.make (operator_name.count + 8)
 			Result.append_string (alias_double_quote)
@@ -147,6 +148,7 @@ feature -- Access
 
 	alias_lower_name: STRING
 			-- Lower-name of alias
+			-- (using UTF-8 encoding)
 			-- (May return the same object as `alias_name' if already in lower case.)
 		local
 			i, nb: INTEGER
@@ -167,6 +169,7 @@ feature -- Access
 
 	operator_name: STRING
 			-- Name of free operator
+			-- (using UTF-8 encoding)
 		do
 			Result := alias_string.value
 		end

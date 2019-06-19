@@ -10,10 +10,14 @@ note
 		
 		Note that it is recommended that the code being printed has been successfully checked
 		through ET_IMPLEMENTATION_CHECKER in order to get better hyper-text results.
+		
+		Use UTF-8 encoding. Note that the byte order mark (BOM) for UTF-8 is not
+		printed unless it was found in the class file when parsing the class text
+		and `bom_enabled' is True, or it is explicitly printed by calling `print_bom'.
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

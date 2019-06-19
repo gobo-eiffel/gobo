@@ -233,10 +233,12 @@ create
 	make_vpir3b,
 	make_vqmc1a,
 	make_vqmc2a,
+	make_vqmc2b,
 	make_vqmc3a,
 	make_vqmc3b,
 	make_vqmc4a,
 	make_vqmc5a,
+	make_vqmc5b,
 	make_vqui0a,
 	make_vred0a,
 	make_vred0b,
@@ -353,7 +355,9 @@ create
 	make_gvuio0a,
 	make_gvuio0b,
 	make_gvuio0c,
-	make_gvwmc2a
+	make_gvwmc2a,
+	make_gvwmc2b,
+	make_gvwmc2c
 
 feature {NONE} -- Initialization
 
@@ -10128,6 +10132,69 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = type
 		end
 
+	make_vqmc2b (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_CHARACTER_CONSTANT)
+			-- Create a new VQMC-2 error: `a_attribute', declared in `a_class_impl', introduces
+			-- a character constant `a_constant' but its value is not representable as an instance
+			-- of its character type when viewed from one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA 367-2: p.100
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			integer_constant: a_attribute.constant = a_constant
+		local
+			l_literal: STRING
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.type.position
+			code := template_code (vqmc2b_template_code)
+			etl_code := vqmc2_etl_code
+			default_template := default_message_template (vqmc2b_default_template)
+			create l_literal.make (10)
+			l_literal.append_character ('%'')
+			if attached {ET_C3_CHARACTER_CONSTANT} a_constant as l_c3 then
+				l_literal.append_character ('%%')
+				l_literal.append_character ('/')
+				l_literal.append_string (l_c3.literal)
+				l_literal.append_character ('/')
+			elseif attached {ET_C2_CHARACTER_CONSTANT} a_constant as l_c2 then
+				l_literal.append_character ('%%')
+				l_literal.append_character (l_c2.literal)
+			else
+				{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (l_literal, a_constant.value.natural_32_code)
+			end
+			l_literal.append_character ('%'')
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			parameters.put (a_attribute.type.to_text, 8)
+			parameters.put (l_literal, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = character type
+			-- dollar9: $9 = character value
+		end
+
 	make_vqmc3a (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Create a new VQMC-3 error: `an_attribute', declared in `a_class_impl', introduces
 			-- an integer constant but its type is not "INTEGER" when viewed from one of its
@@ -10319,6 +10386,51 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
 			-- dollar8: $8 = type
+		end
+
+	make_vqmc5b (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_MANIFEST_STRING)
+			-- Create a new VQMC-5 error: `a_attribute', declared in `a_class_impl', introduces
+			-- a string constant `a_constant' but its value is not representable as an instance
+			-- of its string type when viewed from one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA 367-2: p.100
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			integer_constant: a_attribute.constant = a_constant
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.type.position
+			code := template_code (vqmc5b_template_code)
+			etl_code := vqmc5_etl_code
+			default_template := default_message_template (vqmc5b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			parameters.put (a_attribute.type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = string type
 		end
 
 	make_vqui0a (a_class, a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE)
@@ -15585,6 +15697,110 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = integer type
 		end
 
+	make_gvwmc2b (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHARACTER_CONSTANT; a_type: ET_NAMED_TYPE)
+			-- Create a new GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is not
+			-- representable as an instance of the character type `a_type'.
+			--
+			-- Not in ECMA-367-2
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
+		local
+			l_literal: STRING
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.value_position
+			code := template_code (gvwmc2b_template_code)
+			etl_code := gvwmc2_etl_code
+			default_template := default_message_template (gvwmc2b_default_template)
+			create l_literal.make (10)
+			l_literal.append_character ('%'')
+			if attached {ET_C3_CHARACTER_CONSTANT} a_constant as l_c3 then
+				l_literal.append_character ('%%')
+				l_literal.append_character ('/')
+				l_literal.append_string (l_c3.literal)
+				l_literal.append_character ('/')
+			elseif attached {ET_C2_CHARACTER_CONSTANT} a_constant as l_c2 then
+				l_literal.append_character ('%%')
+				l_literal.append_character (l_c2.literal)
+			else
+				{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (l_literal, a_constant.value.natural_32_code)
+			end
+			l_literal.append_character ('%'')
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (l_literal, 7)
+			parameters.put (a_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = constant value
+			-- dollar8: $8 = character type
+		end
+
+	make_gvwmc2c (a_class, a_class_impl: ET_CLASS; a_constant: ET_MANIFEST_STRING; a_type: ET_NAMED_TYPE)
+			-- Create a new GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is not
+			-- representable as an instance of the string type `a_type'.
+			--
+			-- Not in ECMA-367-2
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.value_position
+			code := template_code (gvwmc2c_template_code)
+			etl_code := gvwmc2_etl_code
+			default_template := default_message_template (gvwmc2c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = string type
+		end
+
 feature -- Access
 
 	current_class: ET_CLASS
@@ -15864,10 +16080,12 @@ feature {NONE} -- Implementation
 	vpir3b_default_template: STRING = "inline agents cannot be of the external form."
 	vqmc1a_default_template: STRING = "boolean constant attribute `$7' is not declared of type BOOLEAN."
 	vqmc2a_default_template: STRING = "character constant attribute `$7' is not declared of type CHARACTER."
+	vqmc2b_default_template: STRING = "character value $9 in constant attribute `$7' is not representable (too big or surrogate) as an instance of '$8'."
 	vqmc3a_default_template: STRING = "integer constant attribute `$7' is not declared of type INTEGER."
 	vqmc3b_default_template: STRING = "integer value '$9' in constant attribute `$7' is not representable as an instance of '$8'."
 	vqmc4a_default_template: STRING = "real constant attribute `$7' is not declared of type REAL or DOUBLE."
 	vqmc5a_default_template: STRING = "string constant attribute `$7' is not declared of type STRING."
+	vqmc5b_default_template: STRING = "string value in constant attribute `$7' is not representable (contains too big or surrogate characters) as an instance of '$8'."
 	vqui0a_default_template: STRING = "unique attribute `$7' is not declared of type INTEGER."
 	vred0a_default_template: STRING = "argument name '$7' appear twice in feature `$8'."
 	vred0b_default_template: STRING = "local variable name '$7' appear twice in feature `$8'."
@@ -15985,6 +16203,8 @@ feature {NONE} -- Implementation
 	gvuio0b_default_template: STRING = "`$7' is an object-test local of an inline agent and hence cannot be an instruction."
 	gvuio0c_default_template: STRING = "`$7' is an object-test local of an invariant and hence cannot be an instruction."
 	gvwmc2a_default_template: STRING = "integer constant '$7' is not representable as an instance of '$8'."
+	gvwmc2b_default_template: STRING = "character constant $7 is not representable (too big or surrogate) as an instance of '$8'."
+	gvwmc2c_default_template: STRING = "manifest string is not representable (contains too big or surrogate characters) as an instance of '$7'."
 	gvzzz0a_default_template: STRING = "validity error"
 			-- Default templates
 
@@ -16376,10 +16596,12 @@ feature {NONE} -- Implementation
 	vpir3b_template_code: STRING = "vpir3b"
 	vqmc1a_template_code: STRING = "vqmc1a"
 	vqmc2a_template_code: STRING = "vqmc2a"
+	vqmc2b_template_code: STRING = "vqmc2b"
 	vqmc3a_template_code: STRING = "vqmc3a"
 	vqmc3b_template_code: STRING = "vqmc3b"
 	vqmc4a_template_code: STRING = "vqmc4a"
 	vqmc5a_template_code: STRING = "vqmc5a"
+	vqmc5b_template_code: STRING = "vqmc5b"
 	vqui0a_template_code: STRING = "vqui0a"
 	vred0a_template_code: STRING = "vred0a"
 	vred0b_template_code: STRING = "vred0b"
@@ -16499,6 +16721,8 @@ feature {NONE} -- Implementation
 	gvuio0b_template_code: STRING = "gvuio0b"
 	gvuio0c_template_code: STRING = "gvuio0c"
 	gvwmc2a_template_code: STRING = "gvwmc2a"
+	gvwmc2b_template_code: STRING = "gvwmc2b"
+	gvwmc2c_template_code: STRING = "gvwmc2c"
 	gvzzz0a_template_code: STRING = "gvzzz0a"
 			-- Template error codes
 

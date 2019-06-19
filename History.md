@@ -21,6 +21,11 @@
   with a Tuple type was not at the last position. The routine was erroneously 
   considered as not being a single-tuple routine.
 * Added support for hidden clusters, as defined in ECF.
+* Added support for hexadecimal, octal and binary character codes in manifest
+  strings and character constants.
+* Added support for Unicode (UTF-8) when reading Eiffel class files. These files
+  are expected to be encoded in UTF-8 if they start with the corresponding BOM
+  (Byte Order Mark), or ISO 8859-1 otherwise.
 
 ## Version 19.03.21.1 - 21 March 2019
 

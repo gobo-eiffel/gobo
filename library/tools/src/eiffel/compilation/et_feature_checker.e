@@ -845,11 +845,27 @@ feature {NONE} -- Feature validity
 						set_fatal_error
 						error_handler.report_vqmc1a_error (current_class, current_class_impl, a_feature)
 					end
-				elseif l_constant.is_character_constant then
+				elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant then
+					if l_character_constant.cast_type /= Void then
+							-- Check that the cast type is valid, and that the manifest value
+							-- is representable as an instance of the cast type.
+						l_context := new_context (current_type)
+						check_character_constant_validity (l_character_constant, l_context)
+						had_error := had_error or has_fatal_error
+						free_context (l_context)
+					end
 					if current_universe_impl.character_8_type.same_named_type (l_type, current_type, current_class_impl) then
-						-- OK.
+						if not l_character_constant.is_character_8 then
+							set_fatal_error
+							error_handler.report_vqmc2b_error (current_class, current_class_impl, a_feature, l_character_constant)
+						end
+						l_character_constant.set_type (current_universe_impl.character_8_type)
 					elseif current_universe_impl.character_32_type.same_named_type (l_type, current_type, current_class_impl) then
-						-- OK.
+						if not l_character_constant.is_character_32 then
+							set_fatal_error
+							error_handler.report_vqmc2b_error (current_class, current_class_impl, a_feature, l_character_constant)
+						end
+						l_character_constant.set_type (current_universe_impl.character_32_type)
 					else
 						set_fatal_error
 						error_handler.report_vqmc2a_error (current_class, current_class_impl, a_feature)
@@ -926,13 +942,30 @@ feature {NONE} -- Feature validity
 						set_fatal_error
 						error_handler.report_vqmc4a_error (current_class, current_class_impl, a_feature)
 					end
-				elseif l_constant.is_string_constant then
+				elseif attached {ET_MANIFEST_STRING} l_constant as l_string_constant then
+					if l_string_constant.cast_type /= Void then
+							-- Check that the cast type is valid, and that the manifest value
+							-- is representable as an instance of the cast type.
+						l_context := new_context (current_type)
+						check_manifest_string_validity (l_string_constant, l_context)
+						had_error := had_error or has_fatal_error
+						free_context (l_context)
+					end
 					if current_universe_impl.string_8_type.same_named_type_with_type_marks (l_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_class_impl) then
-						-- OK.
+						if not l_string_constant.is_string_8 then
+							set_fatal_error
+							error_handler.report_vqmc5b_error (current_class, current_class_impl, a_feature, l_string_constant)
+						end
+						l_string_constant.set_type (current_universe_impl.string_8_type)
 					elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_class_impl) then
-						-- OK.
+						if not l_string_constant.is_string_32 then
+							set_fatal_error
+							error_handler.report_vqmc5b_error (current_class, current_class_impl, a_feature, l_string_constant)
+						end
+						l_string_constant.set_type (current_universe_impl.string_32_type)
 					elseif current_universe_impl.system_string_type.base_class.is_dotnet and then current_universe_impl.system_string_type.same_named_type_with_type_marks (l_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_class_impl) then
-						-- OK: this is an Eiffel for .NET extension.
+							-- OK: this is an Eiffel for .NET extension.
+						l_string_constant.set_type (current_universe_impl.system_string_type)
 					else
 						set_fatal_error
 						error_handler.report_vqmc5a_error (current_class, current_class_impl, a_feature)
@@ -5696,11 +5729,36 @@ feature {NONE} -- Expression validity
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- A character constant is of the form:
+			--    [manifest_type] manifest_value
+			-- where the manifest_type is optional.
+			-- We have to check that:
+			--  * if 'manifest_type' is provided:
+			--    * it is a valid type, and is one of the sized variants of "CHARACTER".
+			--    * 'manifest_value' is representable as an instance of 'manifest_type'.
+			--  * otherwise, try to determine whether 'manifest_value' is representable
+			--    as an instance of the type expected in the surrounding context.
+			--  * otherwise, the constant will be of type "CHARACTER_8" if 'manifest_value'
+			--    is representable as a CHARACTER_8, will be of type "CHARACTER_32" if it
+			--    is representable as a CHARACTER_32.
+			--  * otherwise, report an error.
+			--
+			-- Note that ECMA 367-2 says that the type of a manifest character constant
+			-- with no explicit 'manifest_type' is "CHARACTER" (see 8.29.6 "Definition:
+			-- Type of a manifest constant", page 143). So the third bullet above is
+			-- not quite compliant with ECMA. But this is the way it is implemented
+			-- in ISE (as of 19.05.10.3187) to be able to capture Unicode characters.
+			--
+			-- Note that the sized variants of "CHARACTER" include "CHARACTER" itself, as
+			-- indicated in ECMA 367-2, 8.30.1 "Definition: Basic types and their sized
+			-- variants", page 147.
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
 		local
 			l_type: detachable ET_CLASS_TYPE
+			l_cast_type: detachable ET_TARGET_TYPE
 			l_explicit_type: detachable ET_TYPE
 			l_expected_type: ET_TYPE
 			l_expected_type_context: ET_TYPE_CONTEXT
@@ -5708,7 +5766,8 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			l_expected_type := tokens.identity_type
 			l_expected_type_context := current_target_type
-			if attached a_constant.cast_type as l_cast_type then
+			l_cast_type := a_constant.cast_type
+			if l_cast_type /= Void then
 					-- Make sure that `l_cast_type' is a valid type.
 					-- For example 'CHARACTER_8 [ANY]' is not valid.
 				l_explicit_type := l_cast_type.type
@@ -5725,15 +5784,23 @@ feature {NONE} -- Expression validity
 				end
 			end
 			if has_fatal_error then
-				-- Do nothing.
+				-- Do nothing
 			elseif current_universe_impl.character_8_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
--- TODO: check that the value is representable as a "CHARACTER_8".
-				l_type := current_universe_impl.character_8_type
-				report_character_8_constant (a_constant, l_type)
+				if a_constant.is_character_8 then
+					l_type := current_universe_impl.character_8_type
+					report_character_8_constant (a_constant, l_type)
+				else
+					set_fatal_error
+					error_handler.report_gvwmc2b_error (current_class, current_class_impl, a_constant, current_universe_impl.character_8_type)
+				end
 			elseif current_universe_impl.character_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
--- TODO: check that the value is representable as a "CHARACTER_32".
-				l_type := current_universe_impl.character_32_type
-				report_character_32_constant (a_constant, l_type)
+				if a_constant.is_character_32 then
+					l_type := current_universe_impl.character_32_type
+					report_character_32_constant (a_constant, l_type)
+				else
+					set_fatal_error
+					error_handler.report_gvwmc2b_error (current_class, current_class_impl, a_constant, current_universe_impl.character_32_type)
+				end
 			end
 			if has_fatal_error then
 				-- Do nothing.
@@ -5743,10 +5810,15 @@ feature {NONE} -- Expression validity
 					-- Error: invalid cast type, it should be a sized variant of "CHARACTER".
 				set_fatal_error
 				error_handler.report_vwmq0c_error (current_class, current_class_impl, a_constant)
-			else
--- TODO: check what ISE does here.
+			elseif a_constant.is_character_8 then
 				l_type := current_universe_impl.character_8_type
 				report_character_8_constant (a_constant, l_type)
+			elseif a_constant.is_character_32 then
+				l_type := current_universe_impl.character_32_type
+				report_character_32_constant (a_constant, l_type)
+			else
+				set_fatal_error
+				error_handler.report_gvwmc2b_error (current_class, current_class_impl, a_constant, current_universe_impl.character_32_type)
 			end
 			if l_type /= Void then
 				a_constant.set_type (l_type)
@@ -7716,6 +7788,30 @@ feature {NONE} -- Expression validity
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- A manifest string is of the form:
+			--    [manifest_type] manifest_value
+			-- where the manifest_type is optional.
+			-- We have to check that:
+			--  * if 'manifest_type' is provided:
+			--    * it is a valid type, and is one of the sized variants of "STRING".
+			--    * 'manifest_value' is representable as an instance of 'manifest_type'.
+			--  * otherwise, try to determine whether 'manifest_value' is representable
+			--    as an instance of the type expected in the surrounding context.
+			--  * otherwise, the constant will be of type "STRING_8" if 'manifest_value'
+			--    is representable as a STRING_8, will be of type "STRING_32" if it
+			--    is representable as a STRING_32.
+			--  * otherwise, report an error.
+			--
+			-- Note that ECMA 367-2 says that the type of a manifest character constant
+			-- with no explicit 'manifest_type' is "STRING" (see 8.29.6 "Definition:
+			-- Type of a manifest constant", page 143). So the third bullet above is
+			-- not quite compliant with ECMA. But this is the way it is implemented
+			-- in ISE (as of 19.05.10.3187) to be able to capture Unicode characters.
+			--
+			-- Note that the sized variants of "STRING" include "STRING" itself, as
+			-- indicated in ECMA 367-2, 8.30.1 "Definition: Basic types and their sized
+			-- variants", page 147.
 		require
 			a_string_not_void: a_string /= Void
 			a_context_not_void: a_context /= Void
@@ -7747,13 +7843,21 @@ feature {NONE} -- Expression validity
 			if has_fatal_error then
 				-- Do nothing.
 			elseif current_universe_impl.string_8_type.same_named_type_with_type_marks (l_expected_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
--- TODO: check that the value is representable as a "STRING_8".
-				l_type := current_universe_impl.string_8_type
-				report_string_8_constant (a_string, l_type)
+				if a_string.is_string_8 then
+					l_type := current_universe_impl.string_8_type
+					report_string_8_constant (a_string, l_type)
+				else
+					set_fatal_error
+					error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.string_8_type)
+				end
 			elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_expected_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
--- TODO: check that the value is representable as a "STRING_32".
-				l_type := current_universe_impl.string_32_type
-				report_string_32_constant (a_string, l_type)
+				if a_string.is_string_32 then
+					l_type := current_universe_impl.string_32_type
+					report_string_32_constant (a_string, l_type)
+				else
+					set_fatal_error
+					error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.string_32_type)
+				end
 			end
 			if has_fatal_error then
 				-- Do nothing.
@@ -7763,10 +7867,15 @@ feature {NONE} -- Expression validity
 					-- Error: invalid cast type, it should be a sized variant of "STRING".
 				set_fatal_error
 				error_handler.report_vwmq0d_error (current_class, current_class_impl, a_string)
-			else
--- TODO: check what ISE does here.
+			elseif a_string.is_string_8 then
 				l_type := current_universe_impl.string_8_type
 				report_string_8_constant (a_string, l_type)
+			elseif a_string.is_string_32 then
+				l_type := current_universe_impl.string_32_type
+				report_string_32_constant (a_string, l_type)
+			else
+				set_fatal_error
+				error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.character_32_type)
 			end
 			if l_type /= Void then
 				a_string.set_type (l_type)
@@ -15452,7 +15561,7 @@ feature {NONE} -- Choice constants
 	character_choice_constant: ET_C1_CHARACTER_CONSTANT
 			-- Character constant
 		once
-			create Result.make ('a')
+			create Result.make ({CHARACTER_32} 'a')
 		ensure
 			character_choice_constant_not_void: Result /= Void
 		end
@@ -15460,7 +15569,7 @@ feature {NONE} -- Choice constants
 	integer_choice_constant: ET_REGULAR_INTEGER_CONSTANT
 			-- Integer constant
 		once
-			create Result.make ("1")
+			create Result.make ("1", 1, False)
 		ensure
 			integer_choice_constant_not_void: Result /= Void
 		end

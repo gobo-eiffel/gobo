@@ -5,7 +5,7 @@ note
 		"Eiffel tokens"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
+			a_text_is_string: {KL_ANY_ROUTINES}.same_types (a_text, "")
+			valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (a_text)
 		do
 			text := a_text
 			make_leaf
@@ -40,6 +42,7 @@ feature -- Access
 
 	text: STRING
 			-- Text of token
+			-- (using UTF-8 encoding)
 
 	last_position: ET_POSITION
 			-- Position of last character of current node in source code
@@ -54,6 +57,8 @@ feature -- Setting
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
+			a_text_is_string: {KL_ANY_ROUTINES}.same_types (a_text, "")
+			valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (a_text)
 		do
 			text := a_text
 		ensure
@@ -64,5 +69,7 @@ invariant
 
 	text_not_void: text /= Void
 	text_not_empty: text.count > 0
+	text_is_string: {KL_ANY_ROUTINES}.same_types (text, "")
+	valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (text)
 
 end
