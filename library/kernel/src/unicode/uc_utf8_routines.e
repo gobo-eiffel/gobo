@@ -195,7 +195,7 @@ feature -- Status report
 		ensure
 			instance_free: class
 			result_start: Result implies is_endian_detection_character_start (a_first, a_second)
-			definition: a_first = utf8_bom.item (1) and a_second = utf8_bom.item (2) and a_third = utf8_bom.item (3)
+			definition: Result = (a_first = utf8_bom.item (1) and a_second = utf8_bom.item (2) and a_third = utf8_bom.item (3))
 		end
 
 	is_endian_detection_character_start (a_first, a_second: CHARACTER): BOOLEAN
@@ -204,7 +204,7 @@ feature -- Status report
 			Result := a_first = byte_ef and a_second = byte_bb
 		ensure
 			instance_free: class
-			definition: a_first = utf8_bom.item (1) and a_second = utf8_bom.item (2)
+			definition: Result = (a_first = utf8_bom.item (1) and a_second = utf8_bom.item (2))
 		end
 
 feature -- Access
