@@ -5,7 +5,7 @@ note
 		"Equivalence classes of integer symbols"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -238,10 +238,11 @@ feature -- Element change
 			new_cell: DS_BILINKABLE [INTEGER]
 			i, j, k, nb: INTEGER
 			stop, next_ec: BOOLEAN
-			symbol: INTEGER
+			l_symbol: INTEGER
+			l_other_symbol: INTEGER
 			flags: ARRAY [BOOLEAN]
 		do
-				-- Note that it doesn't matter wether or not the
+				-- Note that it doesn't matter whether or not the
 				-- symbol class is negated. The same results will
 				-- be obtained in either case.
 			nb := symbol_class.count
@@ -251,72 +252,69 @@ feature -- Element change
 			until
 				k > nb
 			loop
-				cell := storage.item (symbol_class.item (k))
-				old_cell := cell.left
-				new_cell := cell
-				j := k + 1
-				from
-					right := cell.right
-				until
-					right = Void
-				loop
-						-- Look for the symbol in the
-						-- symbol class.
-					i := right.item
-					from
-						stop := False
-					until
-						stop or j > nb
-					loop
-						symbol := symbol_class.item (j)
-						if symbol > i then
-							stop := True
-						elseif symbol = i and not flags.item (i) then
-								-- We found an old companion of
-								-- `k'-th symbol in the symbol class.
-								-- Link it into the new equivalence
-								-- class and flag it as having been
-								-- processed.
-							new_cell.put_right (right)
-							new_cell := right
-								-- Set flag so we don't reprocess it.
-							flags.put (True, j)
-								-- Get next equivalence class member.
-							next_ec := True
-							stop := True
-						else
-							j := j + 1
-						end
-					end
-					if not next_ec then
-							-- Symbol is not in symbol class.
-							-- Put it in the old equivalence class.
-						if old_cell = Void then
-							right.forget_left
-						else
-							old_cell.put_right (right)
-						end
-						old_cell := right
-					else
-						next_ec := False
-					end
-					right := right.right
-				end
-				if cell.left /= Void or else old_cell /= cell.left then
-					cell.forget_left
-					if old_cell /= Void then
-						old_cell.forget_right
-					end
-				end
-				new_cell.forget_right
 					-- Find next symbol class member to process.
-				from
-					k := k + 1
-				until
-					k > nb or else not flags.item (k)
-				loop
-					k := k + 1
+				l_symbol := symbol_class.item (k)
+				if not flags.item (l_symbol) then
+					cell := storage.item (l_symbol)
+					old_cell := cell.left
+					new_cell := cell
+					j := k + 1
+					from
+						right := cell.right
+					until
+						right = Void
+					loop
+							-- Look for the symbol in the
+							-- symbol class.
+						i := right.item
+						from
+							stop := False
+						until
+							stop or j > nb
+						loop
+							l_other_symbol := symbol_class.item (j)
+							if l_other_symbol > i then
+								stop := True
+							elseif l_other_symbol = i and not flags.item (l_other_symbol) then
+									-- We found an old companion of
+									-- `k'-th symbol in the symbol class.
+									-- Link it into the new equivalence
+									-- class and flag it as having been
+									-- processed.
+								new_cell.put_right (right)
+								new_cell := right
+									-- Set flag so we don't reprocess it.
+								flags.put (True, l_other_symbol)
+									-- Get next equivalence class member.
+								next_ec := True
+								stop := True
+							else
+								j := j + 1
+							end
+						end
+						if not next_ec then
+								-- Symbol is not in symbol class.
+								-- Put it in the old equivalence class.
+							if old_cell = Void then
+								right.forget_left
+							else
+								old_cell.put_right (right)
+							end
+							old_cell := right
+						else
+							next_ec := False
+						end
+						right := right.right
+					end
+					if cell.left /= Void or else old_cell /= cell.left then
+						cell.forget_left
+						if old_cell /= Void then
+							old_cell.forget_right
+						end
+					end
+					new_cell.forget_right
 				end
+				k := k + 1
 			end
 		end
 

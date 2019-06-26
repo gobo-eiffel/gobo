@@ -1,5 +1,12 @@
 # Release History
 
+## Version ?? - ??
+
+### gelex
+
+* Fixed bug when computing equivalence classes. The generated arrays should be
+  slightly smaller.
+
 ## Version 19.06.21.1 - 21 June 2019
 
 ### gec
