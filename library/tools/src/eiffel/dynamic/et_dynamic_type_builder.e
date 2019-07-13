@@ -1134,7 +1134,9 @@ feature {NONE} -- Event handling
 			-- Report that a call to across cursor `a_name' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
-				a_name.set_index (a_across_component.cursor_name.index)
+				if a_name /= a_across_component.unfolded_cursor_name then
+					a_name.set_index (a_across_component.cursor_name.index)
+				end
 			end
 		end
 
@@ -1143,7 +1145,11 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Take care of the type of the across cursor.
-				a_name.set_index (a_across_component.new_cursor_expression.index)
+				if a_name = a_across_component.unfolded_cursor_name or not a_across_component.has_item_cursor then
+					a_name.set_index (a_across_component.new_cursor_expression.index)
+				else
+					a_name.set_index (a_across_component.cursor_item_expression.index)
+				end
 			end
 		end
 

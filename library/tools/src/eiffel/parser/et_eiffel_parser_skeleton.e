@@ -1275,6 +1275,9 @@ feature {NONE} -- AST factory
 				l_cursor_name := Result.cursor_name
 				l_cursor_name.set_across_cursor (False)
 				l_cursor_name.set_seed (l_last_across_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_across_cursor (True)
+				l_cursor_name.set_seed (l_last_across_components.count)
 			end
 		end
 
@@ -1320,6 +1323,9 @@ feature {NONE} -- AST factory
 					-- parsing within its scope.
 				l_cursor_name := Result.cursor_name
 				l_cursor_name.set_across_cursor (False)
+				l_cursor_name.set_seed (l_last_across_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_across_cursor (True)
 				l_cursor_name.set_seed (l_last_across_components.count)
 			end
 		end

@@ -7,6 +7,11 @@
 * Fixed bug when computing equivalence classes. The generated arrays should be
   slightly smaller.
 
+### Gobo Eiffel Tools Library
+
+* Added support for `across ... is ...`.
+
+
 ## Version 19.06.21.1 - 21 June 2019
 
 ### gec

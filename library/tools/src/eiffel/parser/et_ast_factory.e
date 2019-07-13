@@ -1157,6 +1157,9 @@ feature -- AST nodes
 				create Result.make_all (a_iterable_expression, a_cursor_name, an_until_conditional, a_all_conditional)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
 			end
 		end
 
@@ -1171,6 +1174,9 @@ feature -- AST nodes
 				create Result.make (a_iterable_expression, a_cursor_name, a_from_compound, an_until_conditional, a_loop_compound)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
 			end
 		end
 
@@ -1184,6 +1190,9 @@ feature -- AST nodes
 				create Result.make_some (a_iterable_expression, a_cursor_name, an_until_conditional, a_some_conditional)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
 			end
 		end
 

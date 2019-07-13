@@ -6758,7 +6758,7 @@ feature {NONE} -- Instruction generation
 			l_cursor_type_set: ET_DYNAMIC_TYPE_SET
 		do
 				-- Declaration of the across cursor.
-			l_cursor_name := an_instruction.cursor_name
+			l_cursor_name := an_instruction.unfolded_cursor_name
 			l_cursor_type_set := dynamic_type_set (l_cursor_name)
 			l_cursor_type := l_cursor_type_set.static_type
 			current_function_header_buffer.put_character ('%T')
@@ -8875,7 +8875,7 @@ feature {NONE} -- Expression generation
 		do
 			assignment_target := Void
 				-- Declaration of the across cursor.
-			l_cursor_name := an_expression.cursor_name
+			l_cursor_name := an_expression.unfolded_cursor_name
 			l_cursor_type_set := dynamic_type_set (l_cursor_name)
 			l_cursor_type := l_cursor_type_set.static_type
 			current_function_header_buffer.put_character ('%T')
@@ -9012,8 +9012,31 @@ feature {NONE} -- Expression generation
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_type: ET_DYNAMIC_TYPE
+			l_current_closure: ET_CLOSURE
+			l_across_component: ET_ACROSS_COMPONENT
+			l_seed: INTEGER
+			l_done: BOOLEAN
 		do
-			if in_operand then
+			if attached {ET_INLINE_AGENT} current_agent as l_inline_agent then
+				l_current_closure := l_inline_agent
+			else
+				l_current_closure := current_feature.static_feature
+			end
+			if attached l_current_closure.across_components as l_across_components then
+				l_seed := a_name.seed
+				if l_seed >= 1 and l_seed <= l_across_components.count then
+					l_across_component := l_across_components.across_component (l_seed)
+					if a_name /= l_across_component.unfolded_cursor_name and then l_across_component.has_item_cursor then
+							-- We are in the case 'across ... is ...'.
+							-- Print the unfolded form: 'unfolded_cursor_name.item'
+						print_qualified_call_expression (l_across_component.cursor_item_expression)
+						l_done := True
+					end
+				end
+			end
+			if l_done then
+				-- Already printed.
+			elseif in_operand then
 				operand_stack.force (a_name)
 			elseif attached call_target_type as l_call_target_type then
 				check in_target: in_target end

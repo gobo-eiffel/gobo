@@ -1814,6 +1814,18 @@ feature {NONE} -- Kernel feature validity
 					current_system.set_iterable_new_cursor_seed (0)
 				end
 			elseif l_class.is_iteration_cursor_class then
+					-- ITERATION_CUREOR.item.
+				named_features.search (tokens.item_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_iteration_cursor_item_seed (l_feature.first_seed)
+					else
+						current_system.set_iteration_cursor_item_seed (0)
+					end
+				else
+					current_system.set_iteration_cursor_item_seed (0)
+				end
 					-- ITERATION_CUREOR.after.
 				named_features.search (tokens.after_feature_name)
 				if named_features.found then

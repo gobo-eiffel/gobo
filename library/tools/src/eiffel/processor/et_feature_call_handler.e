@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/06 $"
 	revision: "$Revision: #12 $"
@@ -78,6 +78,7 @@ inherit
 			process_formal_argument,
 			process_formal_argument_list,
 			process_hexadecimal_integer_constant,
+			process_identifier,
 			process_if_expression,
 			process_if_instruction,
 			process_infix_cast_expression,
@@ -1657,6 +1658,40 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_integer_constant (a_constant)
+		end
+
+	process_identifier (a_identifier: ET_IDENTIFIER)
+			-- Process `a_identifier'.
+		local
+			l_seed: INTEGER
+			l_across_component: ET_ACROSS_COMPONENT
+		do
+			if a_identifier.is_across_cursor then
+				l_seed := a_identifier.seed
+				if not attached current_closure_impl.across_components as l_across_components then
+						-- Internal error.
+						-- This error should have already been reported when checking
+						-- `current_feature' (using ET_FEATURE_CHECKER for example).
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
+				elseif l_seed < 1 or l_seed > l_across_components.count then
+						-- Internal error.
+						-- This error should have already been reported when checking
+						-- `current_feature' (using ET_FEATURE_CHECKER for example).
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
+				else
+					l_across_component := l_across_components.across_component (l_seed)
+					if a_identifier /= l_across_component.unfolded_cursor_name and then l_across_component.has_item_cursor then
+							-- We are in the case 'across ... is ...'.
+						process_expression (l_across_component.cursor_item_expression)
+					end
+				end
+			end
 		end
 
 	process_if_expression (a_expression: ET_IF_EXPRESSION)

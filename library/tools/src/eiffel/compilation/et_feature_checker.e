@@ -2232,6 +2232,9 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 					l_name := l_across_component.cursor_name
 					l_name.set_across_cursor (True)
 					l_name.set_seed (i)
+					l_name := l_across_component.unfolded_cursor_name
+					l_name.set_across_cursor (True)
+					l_name.set_seed (i)
 					i := i + 1
 				end
 			end
@@ -2259,6 +2262,9 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 				from i := 1 until i > nb loop
 					l_across_component := a_across_components.across_component (i)
 					l_name := l_across_component.cursor_name
+					l_name.set_across_cursor (True)
+					l_name.set_seed (i)
+					l_name := l_across_component.unfolded_cursor_name
 					l_name.set_across_cursor (True)
 					l_name.set_seed (i)
 					i := i + 1
@@ -5322,6 +5328,7 @@ feature {NONE} -- Expression validity
 			l_had_iterable_error: BOOLEAN
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_conditional_context: ET_NESTED_TYPE_CONTEXT
+			l_item_context: ET_NESTED_TYPE_CONTEXT
 			l_cursor_name: ET_IDENTIFIER
 			i, j, nb: INTEGER
 			l_enclosing_agent: ET_INLINE_AGENT
@@ -5441,7 +5448,7 @@ feature {NONE} -- Expression validity
 					l_had_error := True
 					free_context (l_expression_context)
 				else
-					report_across_cursor_declaration (l_cursor_name, a_across_component)
+					report_across_cursor_declaration (a_across_component.unfolded_cursor_name, a_across_component)
 					current_across_cursor_types.force_last (l_expression_context, a_across_component)
 					current_across_cursor_scope.add_across_component (a_across_component)
 						-- Make sure that it is valid to call feature
@@ -5466,6 +5473,20 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						l_had_error := True
 					end
+						-- Make sure that it is valid to call feature
+						-- 'item' on the across cursor.
+					if a_across_component.has_item_cursor then
+						a_across_component.cursor_item_expression.name.set_seed (current_system.iteration_cursor_item_seed)
+						l_item_context := new_context (current_type)
+						check_expression_validity (a_across_component.cursor_item_expression, l_item_context, current_system.detachable_any_type)
+						if has_fatal_error then
+							l_had_error := True
+						end
+							-- From now on, the type of the item is the type of the iteration local name.
+						current_across_cursor_types.force_last (l_item_context, a_across_component)
+						free_context (l_expression_context)
+					end
+					report_across_cursor_declaration (l_cursor_name, a_across_component)
 					current_across_cursor_scope.remove_across_components (1)
 				end
 			end

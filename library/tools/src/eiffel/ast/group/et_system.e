@@ -133,6 +133,9 @@ feature -- Feature seeds
 	iterable_new_cursor_seed: INTEGER
 			-- Seed of feature 'new_cursor' in class "ITERABLE"
 
+	iteration_cursor_item_seed: INTEGER
+			-- Seed of feature 'item' in class "ITERATION_CURSOR"
+
 	iteration_cursor_after_seed: INTEGER
 			-- Seed of feature 'after' in class "ITERATION_CURSOR"
 
@@ -209,6 +212,16 @@ feature -- Feature seeds setting
 			iterable_new_cursor_seed := a_seed
 		ensure
 			iterable_new_cursor_seed_set: iterable_new_cursor_seed = a_seed
+		end
+
+	set_iteration_cursor_item_seed (a_seed: INTEGER)
+			-- Set `iteration_cursor_item_seed' to `a_seed'.
+		require
+			a_seed_not_negative: a_seed >= 0
+		do
+			iteration_cursor_item_seed := a_seed
+		ensure
+			iteration_cursor_item_seed_set: iteration_cursor_item_seed = a_seed
 		end
 
 	set_iteration_cursor_after_seed (a_seed: INTEGER)

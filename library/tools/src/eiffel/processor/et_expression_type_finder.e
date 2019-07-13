@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/10/25 $"
 	revision: "$Revision: #6 $"
@@ -464,7 +464,11 @@ feature {NONE} -- Expression processing
 				end
 			else
 				l_across_component := l_across_components.across_component (l_seed)
-				find_expression_type (l_across_component.new_cursor_expression, a_context, current_system.detachable_any_type)
+				if a_name = l_across_component.unfolded_cursor_name or not l_across_component.has_item_cursor then
+					find_expression_type (l_across_component.new_cursor_expression, a_context, current_system.detachable_any_type)
+				else
+					find_expression_type (l_across_component.cursor_item_expression, a_context, current_system.detachable_any_type)
+				end
 			end
 		end
 
@@ -740,8 +744,6 @@ feature {NONE} -- Expression processing
 			l_typed_pointer_type: ET_CLASS_TYPE
 			l_object_test: ET_NAMED_OBJECT_TEST
 			l_object_tests: detachable ET_OBJECT_TEST_LIST
-			l_across_component: ET_ACROSS_COMPONENT
-			l_across_components: detachable ET_ACROSS_COMPONENT_LIST
 			l_class_impl: ET_CLASS
 		do
 			reset_fatal_error (False)
@@ -898,40 +900,19 @@ feature {NONE} -- Expression processing
 					end
 				end
 			elseif l_name.is_across_cursor then
-				l_across_components := current_closure_impl.across_components
-				if l_across_components = Void then
-						-- Internal error.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				elseif l_seed < 1 or l_seed > l_across_components.count then
-						-- Internal error.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+				l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+				l_typed_pointer_class := l_typed_pointer_type.named_base_class
+				if l_typed_pointer_class.actual_class.is_preparsed then
+						-- Class TYPED_POINTER has been found in the universe.
+						-- Use ISE's implementation: the type of '$across_cursor' is
+						-- 'TYPED_POINTER [<type-of-across-cursor>]'.
+					find_across_cursor_type (l_name.across_cursor_name, a_context)
+					if not has_fatal_error then
+						a_context.force_last (l_typed_pointer_type)
 					end
 				else
-					l_across_component := l_across_components.across_component (l_seed)
-					check is_across_cursor: attached {ET_IDENTIFIER} l_name end
-					l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-					l_typed_pointer_class := l_typed_pointer_type.named_base_class
-					if l_typed_pointer_class.actual_class.is_preparsed then
-							-- Class TYPED_POINTER has been found in the universe.
-							-- Use ISE's implementation: the type of '$across_cursor' is
-							-- 'TYPED_POINTER [<type-of-across-cursor>]'.
-						find_expression_type (l_across_component.new_cursor_expression, a_context, current_system.detachable_any_type)
-						if not has_fatal_error then
-							a_context.force_last (l_typed_pointer_type)
-						end
-					else
-							-- Use the ETL2 implementation: the type of '$across_cursor' is POINTER.
-						a_context.force_last (current_universe_impl.pointer_type)
-					end
+						-- Use the ETL2 implementation: the type of '$across_cursor' is POINTER.
+					a_context.force_last (current_universe_impl.pointer_type)
 				end
 			else
 					-- This is of the form '$feature_name'.

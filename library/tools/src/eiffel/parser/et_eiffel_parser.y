@@ -3435,6 +3435,8 @@ Choice_constant: Integer_constant
 
 Across_instruction_header: E_ACROSS Expression E_AS Identifier
 		{ $$ := new_across_instruction_header ($1, $2, $3, $4) }
+	| E_ACROSS Expression E_IS Identifier
+		{ $$ := new_across_instruction_header ($1, $2, $3, $4) }
 	;
 	
 Until_expression_opt: -- Empty
@@ -4098,6 +4100,8 @@ Across_all_expression: Across_expression_header Loop_invariant_clause_opt Until_
 	;
 
 Across_expression_header: E_ACROSS Expression E_AS Identifier
+		{ $$ := new_across_expression_header ($1, $2, $3, $4) }
+	| E_ACROSS Expression E_IS Identifier
 		{ $$ := new_across_expression_header ($1, $2, $3, $4) }
 	;
 
