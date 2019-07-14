@@ -1900,12 +1900,12 @@ EIF_INTEGER eif_file_access_date(EIF_FILENAME name)
  * in text mode, otherwise in binary mode.<param>
  * Note: Code was inspired from https://github.com/mirror/mingw-w64/blob/master/mingw-w64-crt/misc/mkstemp.c
  */
-EIF_INTEGER eif_file_mkstemp(EIF_FILENAME template, EIF_BOOLEAN is_text_mode)
+EIF_INTEGER eif_file_mkstemp(EIF_FILENAME a_template, EIF_BOOLEAN is_text_mode)
 {
 	int fd;
 #ifdef EIF_WINDOWS
 	{
-		size_t len = wcslen(template);
+		size_t len = wcslen(a_template);
 		size_t j, index;
 		int32_t i, l_max;
 
@@ -1913,15 +1913,15 @@ EIF_INTEGER eif_file_mkstemp(EIF_FILENAME template, EIF_BOOLEAN is_text_mode)
 		static const wchar_t letters[] = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 		/* User may supply more than six trailing Xs */
-		for (index = len - 6; index > 0 && template[index - 1] == L'X'; index--);
+		for (index = len - 6; index > 0 && a_template[index - 1] == L'X'; index--);
 
 		/* Like OpenBSD, mkstemp() will try at least 2 ** 31 combinations before * giving up. */
 		l_max = GE_max_int32;
 		for (i = 0; i < l_max; i++) {
 			for (j = index; j < len; j++) {
-				template[j] = letters[rand() % 62];
+				a_template[j] = letters[rand() % 62];
 			}
-			fd = _wsopen( template, _O_CREAT | _O_EXCL | _O_RDWR | (is_text_mode ? _O_TEXT : _O_BINARY) | _O_NOINHERIT, _SH_DENYRW, _S_IREAD | _S_IWRITE);
+			fd = _wsopen(a_template, _O_CREAT | _O_EXCL | _O_RDWR | (is_text_mode ? _O_TEXT : _O_BINARY) | _O_NOINHERIT, _SH_DENYRW, _S_IREAD | _S_IWRITE);
 			/* Success, if the file descriptor is valid or if there is a creation error that is not due to a file already existing. */
 			if ((fd != -1) || (fd == -1 && errno != EEXIST)) {
 				break;
@@ -1929,7 +1929,7 @@ EIF_INTEGER eif_file_mkstemp(EIF_FILENAME template, EIF_BOOLEAN is_text_mode)
 		}
 	}
 #else
-	fd = mkstemp(template);
+	fd = mkstemp(a_template);
 #endif
 
 	return (EIF_INTEGER) fd;

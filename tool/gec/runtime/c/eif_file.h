@@ -381,7 +381,7 @@ extern EIF_INTEGER eif_file_access_date(EIF_FILENAME name);
  * in text mode, otherwise in binary mode.<param>
  * Note: Code was inspired from https://github.com/mirror/mingw-w64/blob/master/mingw-w64-crt/misc/mkstemp.c
  */
-extern EIF_INTEGER eif_file_mkstemp(EIF_FILENAME template, EIF_BOOLEAN is_text_mode);
+extern EIF_INTEGER eif_file_mkstemp(EIF_FILENAME a_template, EIF_BOOLEAN is_text_mode);
 
 #ifdef __cplusplus
 }
