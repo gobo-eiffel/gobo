@@ -1915,8 +1915,7 @@ feature -- Element change
 			end
 		end
 
-
-	put_string (a_string: STRING)
+	put_string (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		do
 			append (a_string)
@@ -1997,7 +1996,7 @@ feature -- Element change
 			end
 		end
 
-	gobo_append_substring (a_string: STRING; s, e: INTEGER)
+	gobo_append_substring (a_string: READABLE_STRING_8; s, e: INTEGER)
 			-- Append substring of `a_string' between indexes
 			-- `s' and `e' at end of current string.
 		require
@@ -2009,7 +2008,7 @@ feature -- Element change
 			a_substring_count: INTEGER
 			k, nb: INTEGER
 			new_byte_count: INTEGER
-			str: STRING
+			str: READABLE_STRING_8
 		do
 			a_substring_count := e - s + 1
 			if a_substring_count /= 0 then
@@ -2032,7 +2031,7 @@ feature -- Element change
 			appended: is_equal (old cloned_string + old a_string.substring (s, e))
 		end
 
-	put_substring (a_string: STRING; s, e: INTEGER)
+	put_substring (a_string: READABLE_STRING_8; s, e: INTEGER)
 			-- Write substring of `a_string' between indexes
 			-- `s' and `e' to output stream.
 		do
@@ -3452,7 +3451,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_substring_at_byte_index (a_string: STRING_GENERAL; start_index, end_index, b: INTEGER; i: INTEGER)
+	put_substring_at_byte_index (a_string: READABLE_STRING_GENERAL; start_index, end_index, b: INTEGER; i: INTEGER)
 			-- Put characters of `a_string' between `start_index'
 			-- and `end_index' at byte index `i'. `b' is the number
 			-- of bytes necessary to encode these characters.

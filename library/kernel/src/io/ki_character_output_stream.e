@@ -5,7 +5,7 @@ note
 		"Interface for character output streams"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class KI_CHARACTER_OUTPUT_STREAM
 
 inherit
 
-	KI_OUTPUT_STREAM [CHARACTER]
+	KI_OUTPUT_STREAM [CHARACTER_8]
 		rename
 			put as put_character
 		redefine
@@ -26,7 +26,7 @@ inherit
 
 feature -- Output
 
-	put_string (a_string: STRING)
+	put_string (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		require
 			is_open_write: is_open_write
@@ -34,7 +34,7 @@ feature -- Output
 		deferred
 		end
 
-	put_substring (a_string: STRING; s, e: INTEGER)
+	put_substring (a_string: READABLE_STRING_8; s, e: INTEGER)
 			-- Write substring of `a_string' between indexes
 			-- `s' and `e' to output stream.
 		require
@@ -271,7 +271,7 @@ feature -- Output
 			end
 		end
 
-	append (an_input_stream: KI_INPUT_STREAM [CHARACTER])
+	append (an_input_stream: KI_INPUT_STREAM [CHARACTER_8])
 			-- Read items of `an_input_stream' until the end
 			-- of input is reached, and write these items to
 			-- current output stream.
@@ -303,10 +303,10 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	True_constant: STRING = "True"
+	True_constant: STRING_8 = "True"
 			-- String representation of boolean value 'True'
 
-	False_constant: STRING = "False"
+	False_constant: STRING_8 = "False"
 			-- String representation of boolean value 'False'
 
 end

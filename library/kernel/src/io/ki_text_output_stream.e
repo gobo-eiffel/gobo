@@ -18,7 +18,7 @@ inherit
 
 feature -- Output
 
-	put_line (a_string: STRING)
+	put_line (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream
 			-- followed by a line separator.
 		require
@@ -39,7 +39,7 @@ feature -- Output
 
 feature -- Access
 
-	eol: STRING
+	eol: STRING_8
 			-- Line separator
 		deferred
 		ensure

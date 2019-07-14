@@ -10,7 +10,7 @@ note
 		whenever a STRING is expected.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1419,7 +1419,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	as_string (a_string: STRING): STRING
+	as_string (a_string: READABLE_STRING_8): STRING_8
 			-- String version of `a_string';
 			-- Return `a_string' if it is of dynamic type STRING,
 			-- return the UTF encoding version if it is a descendant
@@ -1439,8 +1439,8 @@ feature -- Conversion
 		ensure
 			instance_free: class
 			as_string_not_void: Result /= Void
-			string_type: ANY_.same_types (Result, "")
-			aliasing: ANY_.same_types (a_string, "") implies Result = a_string
+			string_type: ANY_.same_types (Result, {STRING_8} "")
+			aliasing: ANY_.same_types (a_string, {STRING_8} "") implies Result = a_string
 		end
 
 	hexadecimal_to_integer (a_string: STRING): INTEGER

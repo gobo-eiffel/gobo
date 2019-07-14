@@ -14,7 +14,7 @@ note
 		%Set both options to True for 100%% conformance to RFC 2045."
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2019, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Output
 
-	put_character (c: CHARACTER)
+	put_character (c: CHARACTER_8)
 			-- Write `c' to output stream.
 		do
 			if not is_normalizing then
@@ -96,7 +96,7 @@ feature -- Output
 			end
 		end
 
-	put_string (a_string: STRING)
+	put_string (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		local
 			i, nb: INTEGER
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 	line_count: INTEGER
 			-- Number of characters output in current line
 
-	triplet: STRING
+	triplet: STRING_8
 			-- Three characters to be encoded
 
 	triplet_count: INTEGER
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 	is_pending_line_break: BOOLEAN
 			-- Has the CR of a CRLF pair been written out?
 
-	buffer_character (c: CHARACTER)
+	buffer_character (c: CHARACTER_8)
 			-- Write `c' to `triplet'.
 		require
 			not_full: triplet_count < 3
@@ -216,7 +216,7 @@ feature -- Constants
 	padding: INTEGER = 64
 			-- Pad character ('=')
 
-	base64_alphabet: ARRAY [CHARACTER]
+	base64_alphabet: ARRAY [CHARACTER_8]
 			-- Base64 alphabet
 		once
 			create Result.make_filled ('%U', 0, 64)

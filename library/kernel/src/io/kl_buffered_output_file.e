@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,7 +113,7 @@ feature -- Initialization
 
 feature -- Output
 
-	put_character (c: CHARACTER)
+	put_character (c: CHARACTER_8)
 			-- Write `c' to output file, or to its buffer if not full yet.
 		local
 			l_buffer: like buffer
@@ -132,12 +132,12 @@ feature -- Output
 			end
 		end
 
-	put_string (a_string: STRING)
+	put_string (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output file, or to its buffer if not full yet.
 			-- Note: If `a_string' is a UC_STRING or descendant, then
 			-- write the bytes of its associated UTF unicode encoding.
 		local
-			l_string: STRING
+			l_string: STRING_8
 			l_buffer: like buffer
 			l_capacity: INTEGER
 			l_string_count: INTEGER
@@ -228,7 +228,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	buffer: STRING
+	buffer: STRING_8
 			-- Buffer
 
 	default_buffer_capacity: INTEGER = 10_000

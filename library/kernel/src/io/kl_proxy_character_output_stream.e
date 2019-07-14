@@ -11,7 +11,7 @@ note
 		what descendants will want.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2019, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,13 +44,13 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	put_character (c: CHARACTER)
+	put_character (c: CHARACTER_8)
 			-- Write `c' to output stream.
 		do
 			base_stream.put_character (c)
 		end
 
-	put_string (a_string: STRING)
+	put_string (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		do
 			base_stream.put_string (a_string)

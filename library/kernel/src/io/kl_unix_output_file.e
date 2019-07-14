@@ -6,7 +6,7 @@ note
 		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,7 @@ create
 
 feature -- Access
 
-	eol: STRING = "%N"
+	eol: STRING_8 = "%N"
 			-- Line separator
 
 end

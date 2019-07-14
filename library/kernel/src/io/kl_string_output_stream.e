@@ -5,7 +5,7 @@ note
 		"Character output streams based on strings"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: STRING)
+	make (a_string: STRING_8)
 			-- Create output to an existing string.
 		require
 			a_string_not_void: a_string /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	string: STRING
+	string: STRING_8
 			-- String into which the output is stored
 
 	name: STRING
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_string (a_string: STRING)
+	set_string (a_string: STRING_8)
 			-- Set `string' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -79,13 +79,13 @@ feature -- Status report
 
 feature -- Output
 
-	put_character (c: CHARACTER)
+	put_character (c: CHARACTER_8)
 			-- Write `c' to output stream.
 		do
 			string.append_character (c)
 		end
 
-	put_string (a_string: STRING)
+	put_string (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 			-- Note: If `a_string' is a UC_STRING or descendant, then
 			-- write the bytes of its associated UTF unicode encoding.

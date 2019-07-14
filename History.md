@@ -7,6 +7,13 @@
 * Fixed bug when computing equivalence classes. The generated arrays should be
   slightly smaller.
 
+### Gobo Eiffel Kernel Library
+
+* Changed the signature of features `put_string` and `put_substring` in class
+  `KI_CHARACTER_OUTPUT_STREAM` and its descendants so that the argument is
+  of type `READABLE_STRING_8` instead of `STRING_8`. This is to follow the
+  same change in class `IO_MEDIUM`.
+
 ### Gobo Eiffel Tools Library
 
 * Added support for `across ... is ...`.

@@ -5,7 +5,7 @@ note
 		"Text output streams which silently ignore characters"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,12 +34,12 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	put_character (c: CHARACTER)
+	put_character (c: CHARACTER_8)
 			-- Write `c' to output stream.
 		do
 		end
 
-	put_string (a_string: STRING)
+	put_string (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		do
 		end
@@ -54,7 +54,7 @@ feature -- Access
 	name: STRING
 			-- Name of output stream
 
-	eol: STRING = "%N"
+	eol: STRING_8 = "%N"
 			-- Line separator
 
 feature -- Basic operations
