@@ -1745,22 +1745,18 @@ end
 				set_start_condition (BREAK)
 			
 when 120 then
-	yy_end := yy_end - 1
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 --|#line 1155 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1155")
 end
 
-		-- The first regexp of this group uses a trailing context
-		-- to make sure that an integer followed by two dots is
-		-- not recognized as a real followed by a dot.
-				last_token := E_REAL
+				last_text_count := text_count
 				last_literal_start := 1
-				last_literal_end := text_count
-				last_break_end := 0
-				last_comment_end := 0
-				last_detachable_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
+				last_literal_end := last_text_count
+				break_kind := real_break
+				more
+				set_start_condition (BREAK)
 			
 when 121 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
@@ -1769,15 +1765,12 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1156")
 end
 
-		-- The first regexp of this group uses a trailing context
-		-- to make sure that an integer followed by two dots is
-		-- not recognized as a real followed by a dot.
-				last_token := E_REAL
+				last_text_count := text_count
 				last_literal_start := 1
-				last_literal_end := text_count
-				last_break_end := 0
-				last_comment_end := 0
-				last_detachable_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
+				last_literal_end := last_text_count
+				break_kind := real_break
+				more
+				set_start_condition (BREAK)
 			
 when 122 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
@@ -1786,6 +1779,21 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1157")
 end
 
+				last_text_count := text_count
+				last_literal_start := 1
+				last_literal_end := last_text_count
+				break_kind := real_break
+				more
+				set_start_condition (BREAK)
+			
+when 123 then
+	yy_end := yy_end - 1
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+--|#line 1165 "et_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1165")
+end
+
 		-- The first regexp of this group uses a trailing context
 		-- to make sure that an integer followed by two dots is
 		-- not recognized as a real followed by a dot.
@@ -1796,54 +1804,11 @@ end
 				last_comment_end := 0
 				last_detachable_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
 			
-when 123 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 1168 "et_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1168")
-end
-
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := real_break
-				more
-				set_start_condition (BREAK)
-			
 when 124 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 1169 "et_eiffel_scanner.l"
+--|#line 1166 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1169")
-end
-
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := real_break
-				more
-				set_start_condition (BREAK)
-			
-when 125 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 1170 "et_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1170")
-end
-
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := real_break
-				more
-				set_start_condition (BREAK)
-			
-when 126 then
-	yy_end := yy_end - 1
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 1178 "et_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1178")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1166")
 end
 
 		-- The first regexp of this group uses a trailing context
@@ -1854,7 +1819,38 @@ end
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
+				last_detachable_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
+			
+when 125 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+--|#line 1167 "et_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1167")
+end
+
+		-- The first regexp of this group uses a trailing context
+		-- to make sure that an integer followed by two dots is
+		-- not recognized as a real followed by a dot.
+				last_token := E_REAL
+				last_literal_start := 1
+				last_literal_end := text_count
+				last_break_end := 0
+				last_comment_end := 0
+				last_detachable_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
+			
+when 126 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+--|#line 1178 "et_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1178")
+end
+
+				last_text_count := text_count
+				last_literal_start := 1
+				last_literal_end := last_text_count
+				break_kind := ureal_break
+				more
+				set_start_condition (BREAK)
 			
 when 127 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
@@ -1863,15 +1859,12 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1179")
 end
 
-		-- The first regexp of this group uses a trailing context
-		-- to make sure that an integer followed by two dots is
-		-- not recognized as a real followed by a dot.
-				last_token := E_REAL
+				last_text_count := text_count
 				last_literal_start := 1
-				last_literal_end := text_count
-				last_break_end := 0
-				last_comment_end := 0
-				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
+				last_literal_end := last_text_count
+				break_kind := ureal_break
+				more
+				set_start_condition (BREAK)
 			
 when 128 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
@@ -1880,6 +1873,21 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1180")
 end
 
+				last_text_count := text_count
+				last_literal_start := 1
+				last_literal_end := last_text_count
+				break_kind := ureal_break
+				more
+				set_start_condition (BREAK)
+			
+when 129 then
+	yy_end := yy_end - 1
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+--|#line 1188 "et_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1188")
+end
+
 		-- The first regexp of this group uses a trailing context
 		-- to make sure that an integer followed by two dots is
 		-- not recognized as a real followed by a dot.
@@ -1890,47 +1898,39 @@ end
 				last_comment_end := 0
 				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
 			
-when 129 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 1191 "et_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1191")
-end
-
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := ureal_break
-				more
-				set_start_condition (BREAK)
-			
 when 130 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 1192 "et_eiffel_scanner.l"
+--|#line 1189 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1192")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1189")
 end
 
-				last_text_count := text_count
+		-- The first regexp of this group uses a trailing context
+		-- to make sure that an integer followed by two dots is
+		-- not recognized as a real followed by a dot.
+				last_token := E_REAL
 				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := ureal_break
-				more
-				set_start_condition (BREAK)
+				last_literal_end := text_count
+				last_break_end := 0
+				last_comment_end := 0
+				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
 			
 when 131 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 1193 "et_eiffel_scanner.l"
+--|#line 1190 "et_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1193")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1190")
 end
 
-				last_text_count := text_count
+		-- The first regexp of this group uses a trailing context
+		-- to make sure that an integer followed by two dots is
+		-- not recognized as a real followed by a dot.
+				last_token := E_REAL
 				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := ureal_break
-				more
-				set_start_condition (BREAK)
+				last_literal_end := text_count
+				last_break_end := 0
+				last_comment_end := 0
+				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
 			
 when 132 then
 yy_set_line_column
@@ -9110,8 +9110,8 @@ feature {NONE} -- Table templates
 			   78,   78,   78,   78,   78,   78,   78,   78,   78, -202,
 			   78,   78, -190,  -15,  -20,   13,   16, -153, -158,   13,
 			 -153,   13, -152,   13, -153,   13, -153,    2,    3,   41,
-			   40,   41,   16, -158,    2,  133,    5,  122,  128, -263,
-			 -269,    5,   16, -158,  -95, -261,   94, -233,  100, -239,
+			   40,   41,   16, -158,    2,  133,    5,  125,  131, -260,
+			 -266,    5,   16, -158,  -95, -258,   94, -233,  100, -239,
 			   16, -158,  -12,   11, -150,   11, -150,   98, -237,  134, yy_Dummy>>,
 			1, 200, 200)
 		end
@@ -9138,8 +9138,8 @@ feature {NONE} -- Table templates
 			   16, -153, -158,   13,   16, -153, -157, -158,   13,   16,
 			 -152, -155, -158,   13,   16, -153, -156, -158,    3,   21,
 			   41,   39,   41,   41,    2,    4,  133,  133,    6,    7,
-			 -125, -131,    6,    7,  -20,   16, -155,  120,  120, -123,
-			  120,  122,  128, -263, -269,  120,  120,  120,  120,  120,
+			 -122, -128,    6,    7,  -20,   16, -155,  123, -120,  123,
+			  123,  125,  131, -260, -266,  123,  123,  123,  123,  123,
 			  114, -253,  108, -247,  102, -241, -101,   96, -235,    3, yy_Dummy>>,
 			1, 200, 400)
 		end
@@ -9160,15 +9160,15 @@ feature {NONE} -- Table templates
 			 -155, -158,  -15,  -19,  -20,   13, -152,  -14,  -17,  -20,
 
 			  -15,  -15,  -18,  -20,   13, -152,   22,   23,   33,   38,
-			   38,   24,   41,    4,    7,  122,  128, -263, -269,  128,
-			 -269,    7,  -20, -123,  121,  127, -262, -268, -115,  118,
+			   38,   24,   41,    4,    7,  125,  131, -260, -266,  131,
+			 -266,    7,  -20, -120,  124,  130, -259, -265, -115,  118,
 			 -257,  116, -255, -109,  112, -251,  110, -249, -103,  106,
-			 -245,  104, -243,  -97, -267,    3,   16, -158,    3,  -20,
+			 -245,  104, -243,  -97, -264,    3,   16, -158,    3,  -20,
 			    3,   16, -157, -158,   11, -150,   80,   84,  -19,  -18,
 			   78,   78,   78,   49, -186,  -46,  -51,  -77,  -77,  -48,
 			  -77,   78,   78,  -48,   78,  -48,   78,  -15,  -19,  -15,
 			  -18,   23,   34,   35,   41,   25,   26,   27,   41,    4,
-			    4,    7,    7, -131,  121,  122,  127,  128, -262, -263, yy_Dummy>>,
+			    4,    7,    7, -128,  124,  125,  130,  131, -259, -260, yy_Dummy>>,
 			1, 200, 600)
 		end
 
@@ -9176,23 +9176,23 @@ feature {NONE} -- Table templates
 			-- Fill chunk #5 of template for `yy_acclist'.
 		do
 			yy_array_subcopy (an_array, <<
-			 -268, -269,  128, -269, -124, -130, -119,  114, -253, -117,
-			 -113,  108, -247, -111, -107,  102, -241, -105,  126,  126,
-			 -129,  126,  128, -269,  126,  126,  126,  126,  126,    3,
+			 -265, -266,  131, -266, -121, -127, -119,  114, -253, -117,
+			 -113,  108, -247, -111, -107,  102, -241, -105,  129, -126,
+			  129,  129,  131, -266,  129,  129,  129,  129,  129,    3,
 			   16, -158,    3,  -20,    3,    3,    3,    3,  -19,  -20,
 			    3,  -19,  -20,    3,  -12,    8,   81,   81,   81,   23,
 			   23,   35,   36, -175,   38,   38,   38,   26,   28,   29,
-			   30,  128, -269,  128, -269, -124, -125, -130, -131,  127,
-			 -268, -129,  127, -268,    3,   16, -155,    3,   16, -157,
+			   30,  131, -266,  131, -266, -121, -122, -127, -128,  130,
+			 -265, -126,  130, -265,    3,   16, -155,    3,   16, -157,
 			    3,   16, -156,    3,   16, -155, -158,    3,   16, -156,
 			 -158,    3,  -19,  -20,    9,   10,  -12,   35,   35,  -37,
 
-			   26,   26,   29,   31,   32,  127,  128, -268, -269,  127,
-			  128, -268, -269, -130,    3,  -17,    3,  -17,    3,  -19,
+			   26,   26,   29,   31,   32,  130,  131, -265, -266,  130,
+			  131, -265, -266, -127,    3,  -17,    3,  -17,    3,  -19,
 			    3,  -19,    3,   16, -155, -158,    3,  -18,    3,  -18,
 			    3,   16, -155, -158,    3,  -17,  -20,    3,  -17,  -20,
 			    3,  -18,  -20,    3,  -18,  -20,    3,   29,   29,   32,
-			 -130, -131,    3,  -19,    3,  -18,    3,  -18,  -20,   10,
+			 -127, -128,    3,  -19,    3,  -18,    3,  -18,  -20,   10,
 			   32,   32, yy_Dummy>>,
 			1, 162, 800)
 		end

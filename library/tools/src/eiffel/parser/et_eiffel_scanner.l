@@ -1152,6 +1152,16 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 
 ---------/** Eiffel reals **/---------------------------------------------------
 
+[0-9]+\./({BREAK}|"--")	|
+[0-9]+\.[0-9]*[eE][+-]?[0-9]+/({BREAK}|"--")	|
+[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?/({BREAK}|"--")	{
+				last_text_count := text_count
+				last_literal_start := 1
+				last_literal_end := last_text_count
+				break_kind := real_break
+				more
+				set_start_condition (BREAK)
+			}
 [0-9]+\./[^.0-9]					|
 [0-9]+\.[0-9]*[eE][+-]?[0-9]+		|
 [0-9]*\.[0-9]+([eE][+-]?[0-9]+)?	{
@@ -1165,13 +1175,13 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_comment_end := 0
 				last_detachable_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
 			}
-[0-9]+\./({BREAK}|"--")	|
-[0-9]+\.[0-9]*[eE][+-]?[0-9]+/({BREAK}|"--")	|
-[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?/({BREAK}|"--")	{
+[0-9]+(_+[0-9]+)+\./({BREAK}|"--")	|
+[0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*/({BREAK}|"--")	|
+([0-9]+(_+[0-9]+)*)?\.[0-9]+(_+[0-9]+)*([eE][+-]?[0-9]+(_+[0-9]+)*)?/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
-				break_kind := real_break
+				break_kind := ureal_break
 				more
 				set_start_condition (BREAK)
 			}
@@ -1187,16 +1197,6 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_break_end := 0
 				last_comment_end := 0
 				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
-			}
-[0-9]+(_+[0-9]+)+\./({BREAK}|"--")	|
-[0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*/({BREAK}|"--")	|
-([0-9]+(_+[0-9]+)*)?\.[0-9]+(_+[0-9]+)*([eE][+-]?[0-9]+(_+[0-9]+)*)?/({BREAK}|"--")	{
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := ureal_break
-				more
-				set_start_condition (BREAK)
 			}
 
 
