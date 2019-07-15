@@ -17,6 +17,7 @@
 ### Gobo Eiffel Tools Library
 
 * Added support for `across ... is ...`.
+* Fixed bug in ECF printer when converting files between different ECF versions.
 
 
 ## Version 19.06.21.1 - 21 June 2019

@@ -2026,18 +2026,18 @@ feature {NONE} -- Adaptation
 					-- Values of setting "dead_code_removal" have changed in ECF 1.20.0.
 				if attached a_target.settings.primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_value then
 					if STRING_.same_case_insensitive (l_value, {ET_ECF_SETTING_NAMES}.none_setting_value) then
-						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.false_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 					else
-						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.true_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 					end
 				elseif a_target.parent = Void then
 					if attached a_target.settings.value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_value then
 						if attached l_default_settings.value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_default_value then
 							if not STRING_.same_case_insensitive (l_value, l_default_value) then
 								if STRING_.same_case_insensitive (l_value, {ET_ECF_SETTING_NAMES}.none_setting_value) then
-									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.false_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 								else
-									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.true_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 								end
 							end
 						end
@@ -2071,14 +2071,14 @@ feature {NONE} -- Adaptation
 				end
 				if l_concurrency_value /= Void then
 					if ecf_version >= ecf_1_7_0 then
-						Result.set_primary_value (l_concurrency_value, {ET_ECF_SETTING_NAMES}.concurrency_setting_name)
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.concurrency_setting_name, l_concurrency_value)
 					else
 						if STRING_.same_case_insensitive (l_concurrency_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
 							l_multithreaded_value := {ET_ECF_SETTING_NAMES}.false_setting_value
 						else
 							l_multithreaded_value := {ET_ECF_SETTING_NAMES}.true_setting_value
 						end
-						Result.set_primary_value (l_multithreaded_value, {ET_ECF_SETTING_NAMES}.multithreaded_setting_name)
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.multithreaded_setting_name, l_multithreaded_value)
 					end
 				end
 			end
@@ -2087,13 +2087,13 @@ feature {NONE} -- Adaptation
 					-- by option "full_class_checking" in ECF 1.2.0.
 				Result.primary_settings.remove ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
 				if attached a_target.options.primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) as l_value then
-					Result.set_primary_value (l_value, {ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
+					Result.set_primary_value ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name, l_value)
 				elseif a_target.parent = Void then
 					l_default_options := default_options (ecf_version)
 					if attached a_target.options.value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) as l_value then
 						if attached l_default_options.value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) as l_default_value then
 							if not STRING_.same_case_insensitive (l_value, l_default_value) then
-								Result.set_primary_value (l_value, {ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
+								Result.set_primary_value ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name, l_value)
 							end
 						end
 					end
@@ -2262,14 +2262,14 @@ feature {NONE} -- Adaptation
 						end
 						if l_catcall_detection_value /= Void then
 							if ecf_version >= ecf_1_14_0 then
-								Result.set_primary_value (l_catcall_detection_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name, l_catcall_detection_value)
 							else
 								if STRING_.same_case_insensitive (l_catcall_detection_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
 									l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.false_option_value
 								else
 									l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
 								end
-								Result.set_primary_value (l_catcall_detection_boolean_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name, l_catcall_detection_boolean_value)
 							end
 						end
 					end
@@ -2305,23 +2305,23 @@ feature {NONE} -- Adaptation
 								else
 									l_void_safety_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
 								end
-								Result.set_primary_value (l_void_safety_boolean_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name, l_void_safety_boolean_value)
 							elseif ecf_version < ecf_1_11_0 then
 								if STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.all_capability_value) then
 									if ecf_version < ecf_1_9_0 then
-										Result.set_primary_value ({ET_ECF_OPTION_NAMES}.true_option_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+										Result.set_primary_value ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 									else
-										Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+										Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, l_void_safety_value)
 									end
 								elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value) then
-									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.all_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, {ET_ECF_OPTION_NAMES}.all_option_value)
 								elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
-									Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, l_void_safety_value)
 								else
-									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.initialization_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, {ET_ECF_OPTION_NAMES}.initialization_option_value)
 								end
 							else
-								Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, l_void_safety_value)
 							end
 						end
 					end
@@ -2444,11 +2444,11 @@ feature {NONE} -- Adaptation
 				a_options.primary_options.remove ({ET_ECF_OPTION_NAMES}.syntax_level_option_name)
 				if attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name) as l_value then
 					if STRING_.same_case_insensitive (l_value, {ET_ECF_OPTION_NAMES}.obsolete_option_value) then
-						a_options.set_primary_value ("0", {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name, "0")
 					elseif STRING_.same_case_insensitive (l_value, {ET_ECF_OPTION_NAMES}.transitional_option_value) then
-						a_options.set_primary_value ("1", {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name, "1")
 					else
-						a_options.set_primary_value ("2", {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name, "2")
 					end
 				end
 			end
