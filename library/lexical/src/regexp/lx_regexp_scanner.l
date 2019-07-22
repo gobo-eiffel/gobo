@@ -6,7 +6,7 @@ note
 		"Scanners for regular expressions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,8 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value
+			last_lx_symbol_class_value,
+			last_lx_unicode_character_class_value
 		end
 
 	LX_REGEXP_TOKENS
@@ -28,7 +29,8 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value
+			last_lx_symbol_class_value,
+			last_lx_unicode_character_class_value
 		end
 
 create
@@ -38,13 +40,15 @@ create
 
 %x NUM QUOTE FIRSTCCL CCL REGEXP
 
-%option ecs meta-ecs case-insensitive nodefault outfile="lx_regexp_scanner.e"
+%option unicode ecs meta-ecs case-insensitive nodefault outfile="lx_regexp_scanner.e"
 
 WS					[ \t\r]+
 NL					\n
-ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
-FIRST_CCL_CHAR		[^\\\n]|{ESC}
-CCL_CHAR			[^\\\n\]]|{ESC}
+BCHAR				\\([0-7]{1,3}|x[0-9a-f]{1,2})
+UCHAR				\\u[0-9a-f]{1,6}|\\u\{[0-9a-f]{1,6}\}
+ESC					\\.
+FIRST_CCL_CHAR		[^\\\n]|{BCHAR}|{UCHAR}|{ESC}
+CCL_CHAR			[^\\\n\]]|{BCHAR}|{UCHAR}|{ESC}
 
 %%
 
@@ -53,13 +57,19 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 					last_token := Caret_code
 					set_start_condition (REGEXP)
 				}
-	.			{
+	(b:.)		{
 					less (0)
 					set_start_condition (REGEXP)
 				}
 }
 
 <REGEXP>{
+	"(u:"		{
+					last_token := UNICODE_MODE_START
+				}
+	"(b:"		{
+					last_token := BYTE_MODE_START
+				}
 	\"			{
 					last_token := Double_quote_code
 					set_start_condition (QUOTE)
@@ -71,21 +81,33 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	"["{FIRST_CCL_CHAR}{CCL_CHAR}*"]"	{
 					check attached text as l_last_string then
-						if character_classes.has (l_last_string) then
-							last_token := CCL_OP
-							last_lx_symbol_class_value := character_classes.item (l_last_string)
+						if unicode_mode.item then
+							if unicode_character_classes.has (l_last_string) then
+								last_token := UCCL_OP
+								last_lx_unicode_character_class_value := unicode_character_classes.item (l_last_string)
+							else
+								last_token := UCCL_BRACKET
+								last_string_value := l_last_string
+								less (1)
+								set_start_condition (FIRSTCCL)
+							end
 						else
-							last_token := Left_bracket_code
-							last_string_value := l_last_string
-							less (1)
-							set_start_condition (FIRSTCCL)
+							if character_classes.has (l_last_string) then
+								last_token := CCL_OP
+								last_lx_symbol_class_value := character_classes.item (l_last_string)
+							else
+								last_token := CCL_BRACKET
+								last_string_value := l_last_string
+								less (1)
+								set_start_condition (FIRSTCCL)
+							end
 						end
 					end
 				}
 	[/|*+?.()]		last_token := text_item (1).code
 	.			{
 					last_token := CHAR
-					process_character (text_item (1).code)
+					process_utf8_character
 				}
 }
 
@@ -104,7 +126,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				}
-	.			{
+	(b:.)		{
 					report_bad_character_in_brackets_error
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
@@ -119,8 +141,8 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 
 <QUOTE>{
 	[^"\n]		{
-					process_character (text_item (1).code)
 					last_token := CHAR
+					process_utf8_character
 				}
 	\"			{
 					last_token := Double_quote_code
@@ -134,15 +156,37 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 }
 
-<QUOTE,REGEXP,CCL,FIRSTCCL>{ESC}	{
+<QUOTE,REGEXP,CCL>{
+	{ESC}		{
 					last_token := CHAR
 					process_escaped_character
-					if start_condition = FIRSTCCL then
-						set_start_condition (CCL)
-					end
 				}
+	{BCHAR}		{
+					last_token := BCHAR
+					process_byte_character
+				}
+	{UCHAR}		{
+					last_token := UCHAR
+					process_unicode_character
+				}
+}
 
 <FIRSTCCL>{
+	{ESC}		{
+					last_token := CHAR
+					process_escaped_character
+					set_start_condition (CCL)
+				}
+	{BCHAR}		{
+					last_token := BCHAR
+					process_byte_character
+					set_start_condition (CCL)
+				}
+	{UCHAR}		{
+					last_token := UCHAR
+					process_unicode_character
+					set_start_condition (CCL)
+				}
 	"^"/[^-\]]	{
 					set_start_condition (CCL)
 					last_token := Caret_code
@@ -150,7 +194,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	"^"/[-\]]		last_token := Caret_code
 	.			{
 					last_token := CHAR
-					process_character (text_item (1).code)
+					process_utf8_character
 					set_start_condition (CCL)
 				}
 	{NL}		{
@@ -165,7 +209,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	-/[^\]]			last_token := Minus_code
 	[^\]\n]		{
 					last_token := CHAR
-					process_character (text_item (1).code)
+					process_utf8_character
 				}
 	"]"			{
 					last_token := Right_bracket_code
@@ -179,14 +223,15 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 }
 
-<*>.|\n			{
-					if text_item (1) = '%N' then
-						report_bad_character_error ("%%N")
-						line_nb := line_nb + 1
-					else
-						report_bad_character_error (text)
-					end
+<*>{
+	(b:.)		{
+					report_bad_character_error (text)
 				}
+	\n			{
+					report_bad_character_error ("%%N")
+					line_nb := line_nb + 1
+				}
+}
 
 %%
 
@@ -200,5 +245,8 @@ feature {NONE} -- Access
 
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS
-			
+
+	last_lx_unicode_character_class_value: LX_UNICODE_CHARACTER_CLASS
+			-- Last semantic value of type LX_UNICODE_CHARACTER_CLASS
+
 end

@@ -5,7 +5,7 @@ note
 		"General lexical analyzers"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -397,17 +397,48 @@ feature -- Input
 		do
 			create Result.make (a_file)
 		ensure
-			new_buffer_not_void: Result /= Void
+			new_file_buffer_not_void: Result /= Void
+		end
+
+	new_unicode_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_UNICODE_FILE_BUFFER
+			-- New Unicode input buffer for `a_file'.
+			-- `a_file' is expected to be encoded in UTF-8
+			-- or ISO-8859-1.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		do
+			create Result.make (a_file)
+		ensure
+			new_unicode_file_buffer_not_void: Result /= Void
 		end
 
 	new_string_buffer (a_string: STRING): YY_BUFFER
-			-- New input buffer for `a_string'
+			-- New input buffer for `a_string'.
+			-- To be used in 8-bit character (byte) mode, or
+			-- in Unicode mode where `a_string' is expected
+			-- to be encoded in UTF-8.
 		require
 			a_string_not_void: a_string /= Void
 		do
 			create Result.make (a_string)
 		ensure
 			new_buffer_not_void: Result /= Void
+		end
+
+	new_unicode_string_buffer (a_string: READABLE_STRING_GENERAL): YY_UNICODE_BUFFER
+			-- New Unicode input buffer for `a_string'.
+			-- `a_string' is expected to contain valid
+			-- non-surrogate Unicode characters. Invalid
+			-- or surrogate Unicode characters are encoded
+			-- with one byte 0xFF (which is an invalid byte
+			-- in UTF-8).
+		require
+			a_string_not_void: a_string /= Void
+		do
+			create Result.make (a_string)
+		ensure
+			new_unicode_string_buffer_not_void: Result /= Void
 		end
 
 	Empty_buffer: YY_BUFFER

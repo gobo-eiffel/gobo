@@ -6,7 +6,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -203,8 +203,9 @@ feature -- Element change
 
 feature -- Traversal
 
-	add_nfa_to_all (a_nfa: LX_NFA)
-			-- Add `a_nfa' to `patterns' of all start
+	add_nfa_to_all (a_nfa: LX_NFA; a_bol: BOOLEAN)
+			-- Add `a_nfa' to `patterns' (or to `bol_patterns'
+			-- depending on the value of `a_bol') of all start
 			-- conditions in current list.
 		require
 			a_nfa_not_void: a_nfa /= Void
@@ -217,14 +218,15 @@ feature -- Traversal
 			until
 				i > nb
 			loop
-				item (i).put_nfa (a_nfa)
+				item (i).add_nfa (a_nfa, a_bol)
 				i := i + 1
 			end
 		end
 
-	add_nfa_to_non_exclusive (a_nfa: LX_NFA)
-			-- Add `a_nfa' to `patterns' of all non-exclusive
-			-- start conditions in current list.
+	add_nfa_to_non_exclusive (a_nfa: LX_NFA; a_bol: BOOLEAN)
+			-- Add `a_nfa' to `patterns' (or to `bol_patterns'
+			-- depending on the value of `a_bol') of all
+			-- non-exclusive start conditions in current list.
 		require
 			a_nfa_not_void: a_nfa /= Void
 		local
@@ -239,49 +241,7 @@ feature -- Traversal
 			loop
 				a_start_condition := item (i)
 				if not a_start_condition.is_exclusive then
-					a_start_condition.put_nfa (a_nfa)
-				end
-				i := i + 1
-			end
-		end
-
-	add_bol_nfa_to_all (a_nfa: LX_NFA)
-			-- Add `a_nfa' to `bol_patterns' of all start
-			-- conditions in current list.
-		require
-			a_nfa_not_void: a_nfa /= Void
-		local
-			i, nb: INTEGER
-		do
-			nb := count
-			from
-				i := 1
-			until
-				i > nb
-			loop
-				item (i).put_bol_nfa (a_nfa)
-				i := i + 1
-			end
-		end
-
-	add_bol_nfa_to_non_exclusive (a_nfa: LX_NFA)
-			-- Add `a_nfa' to `bol_patterns' of all non-exclusive
-			-- start conditions in current list.
-		require
-			a_nfa_not_void: a_nfa /= Void
-		local
-			i, nb: INTEGER
-			a_start_condition: LX_START_CONDITION
-		do
-			nb := count
-			from
-				i := 1
-			until
-				i > nb
-			loop
-				a_start_condition := item (i)
-				if not a_start_condition.is_exclusive then
-					a_start_condition.put_bol_nfa (a_nfa)
+					a_start_condition.add_nfa (a_nfa, a_bol)
 				end
 				i := i + 1
 			end

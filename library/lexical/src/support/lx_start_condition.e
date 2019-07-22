@@ -5,7 +5,7 @@ note
 		"Lexical analyzer start conditions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,6 +84,19 @@ feature -- Element change
 			a_nfa_not_void: a_nfa /= Void
 		do
 			bol_patterns.force_last (a_nfa)
+		end
+
+	add_nfa (a_nfa: LX_NFA; a_bol: BOOLEAN)
+			-- Add `a_nfa' to `patterns' or `bol_patterns'
+			-- depending on the value of `a_bol'
+		require
+			a_nfa_not_void: a_nfa /= Void
+		do
+			if a_bol then
+				put_bol_nfa (a_nfa)
+			else
+				put_nfa (a_nfa)
+			end
 		end
 
 invariant

@@ -1,8 +1,11 @@
 note
 
 	description:
-
-		"Wildcards used in filename pattern matching"
+	"[
+		Wildcards used in filename pattern matching.
+		See note clause in class LX_PATTERN_MATCHER
+		about Unicode vs. byte (8-bit character) modes.
+	]"
 
 	remark: "[
   		Pattern syntax:
@@ -15,8 +18,10 @@ note
 		           the ANSI-C interpretation of \X. Otherwise, a literal 'X'
 		           (used to escape operators such as '*').
 		\0         a null character (ASCII code 0).
-		\123       the character with octal value 123.
-		\x2a       the character with hexadecimal value 2a.
+		\123       the character (or byte in byte mode) with octal value 123.
+		\x2a       the character (or byte in byte mode) with hexadecimal value 2a.
+		\u03B2     the unicode character with hexadecimal code 03B2.
+		\u{03B2}   the unicode character with hexadecimal code 03B2.
 		[xyz]      a character class; in this case, the pattern matches
 		           either an 'x', a 'y' or a 'z'.
 		[abj-oZ]   a character class with a range in it; matches an 'a', a
@@ -36,7 +41,7 @@ note
 		                 patterns separated by a '|'.
 	]"
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

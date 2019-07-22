@@ -6,7 +6,7 @@ note
 		%analyzer generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,12 +39,17 @@ feature {NONE} -- Initialization
 			create description.make
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
-			create last_lx_symbol_class_value.make (0)
+			create last_lx_symbol_class_value.make_empty
+			create last_lx_unicode_character_class_value.make_empty
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
 			create character_classes.make_map (Initial_max_character_classes)
 			character_classes.set_key_equality_tester (string_equality_tester)
+			create unicode_character_classes.make_map (Initial_max_character_classes)
+			unicode_character_classes.set_key_equality_tester (string_equality_tester)
+			create unicode_mode.make (Initial_max_unicode_mode)
+			unicode_mode.force (description.unicode_mode)
 			successful := True
 			line_nb := 1
 		ensure
@@ -61,12 +66,17 @@ feature {NONE} -- Initialization
 			description := a_description
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
-			create last_lx_symbol_class_value.make (0)
+			create last_lx_symbol_class_value.make_empty
+			create last_lx_unicode_character_class_value.make_empty
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
 			create character_classes.make_map (Initial_max_character_classes)
 			character_classes.set_key_equality_tester (string_equality_tester)
+			create unicode_character_classes.make_map (Initial_max_character_classes)
+			unicode_character_classes.set_key_equality_tester (string_equality_tester)
+			create unicode_mode.make (Initial_max_unicode_mode)
+			unicode_mode.force (a_description.unicode_mode)
 			successful := True
 			line_nb := 1
 		ensure
@@ -81,10 +91,13 @@ feature -- Initialization
 		do
 			reset_compressed_scanner_skeleton
 			last_string_value := ""
-			create last_lx_symbol_class_value.make (0)
+			create last_lx_symbol_class_value.make_empty
 			description.reset
 			name_definitions.wipe_out
 			character_classes.wipe_out
+			unicode_character_classes.wipe_out
+			unicode_mode.wipe_out
+			unicode_mode.force (description.unicode_mode)
 			successful := True
 			line_nb := 1
 			nb_open_brackets := 0
@@ -127,8 +140,15 @@ feature {NONE} -- Access
 	character_classes: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
 			-- Character classes declared so far
 
+	unicode_character_classes: DS_HASH_TABLE [LX_UNICODE_CHARACTER_CLASS, STRING]
+			-- Unicode character classes declared so far
+
 	name_definitions: DS_HASH_TABLE [STRING, STRING]
 			-- Name definition table
+
+	unicode_mode: DS_ARRAYED_STACK [BOOLEAN]
+			-- Should the current processed regular expression be
+			-- assumed to handle Unicode characters?
 
 	nb_open_brackets: INTEGER
 			-- Number of characters { not-yet-balanced
@@ -145,6 +165,9 @@ feature {NONE} -- Access
 
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS
+
+	last_lx_unicode_character_class_value: LX_UNICODE_CHARACTER_CLASS
+			-- Last semantic value of type LX_UNICODE_CHARACTER_CLASS
 
 feature -- Setting
 
@@ -196,27 +219,52 @@ feature {NONE} -- Implementation
 
 	process_character (a_code: INTEGER)
 			-- Check whether `a_code' is a valid code for character
-			-- whose printable representation is held in `text'.
+			-- (either 8-bit character or Unicode character depending
+			-- on `unicode_mode') whose printable representation is
+			-- held in `text'.
 			-- Set `last_integer_value' accordingly.
 		do
-			if a_code < description.characters_count then
-				last_integer_value := a_code
+			if unicode_mode.item then
+				if {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) then
+					last_integer_value := a_code
+				else
+					report_invalid_unicode_character_error (text)
+					last_integer_value := 0
+				end
 			else
-				report_character_out_of_range_error (text)
-				last_integer_value := 0
+				if a_code < description.symbol_count then
+					last_integer_value := a_code
+				else
+					report_character_out_of_range_error (text)
+					last_integer_value := 0
+				end
+			end
+		end
+
+	process_utf8_character
+		do
+			inspect text_count
+			when 1 then
+				process_character (text_item (1).code)
+			when 2 then
+				process_character ({UC_UTF8_ROUTINES}.two_byte_character_code (text_item (1), text_item (2)).to_integer_32)
+			when 3 then
+				process_character ({UC_UTF8_ROUTINES}.three_byte_character_code (text_item (1), text_item (2), text_item (3)).to_integer_32)
+			else
+				process_character ({UC_UTF8_ROUTINES}.four_byte_character_code (text_item (1), text_item (2), text_item (3), text_item (4)).to_integer_32)
 			end
 		end
 
 	process_escaped_character
 			-- Process escaped character whose printable representation
-			-- is held in `text'. Check whether the corresponding
-			-- character is not out of range. Set `last_integer_value' accordingly.
+			-- is held in `text'.
+			-- Check whether the corresponding character is not out of range.
+			-- Set `last_integer_value' accordingly.
 		require
---			valid_text: `text' recognized by \\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
+--			valid_text: `text' recognized by \\.
 		local
 			c: CHARACTER
 			a_code: INTEGER
-			i, nb: INTEGER
 		do
 			c := text_item (2)
 			inspect c
@@ -234,6 +282,26 @@ feature {NONE} -- Implementation
 				a_code := 7
 			when 'v' then
 				a_code := 13
+			else
+				a_code := c.code
+			end
+			process_character (a_code)
+		end
+
+	process_byte_character
+			-- Process 8-bit escaped character whose printable representation
+			-- is held in `text'.
+			-- Check whether the corresponding byte is not out of range.
+			-- Set `last_integer_value' accordingly.
+		require
+--			valid_text: `text' recognized by \\([0-7]{1,3}|x[0-9a-f]{1,2})
+		local
+			c: CHARACTER
+			a_code: INTEGER
+			i, nb: INTEGER
+		do
+			c := text_item (2)
+			inspect c
 			when '0' .. '7' then
 					-- Octal.
 				nb := text_count
@@ -247,34 +315,76 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			when 'x', 'X' then
+					-- Hexadecimal.
 				nb := text_count
-				if nb = 2 then
-					a_code := c.code
-				else
-						-- Hexadecimal.
-					a_code := 0
-					from
-						i := 3
-					until
-						i > nb
-					loop
-						a_code := a_code * 16
-						c := text_item (i)
-						inspect c
-						when '0' .. '9' then
-							a_code := a_code + c.code - Zero_code
-						when 'a' .. 'z' then
-							a_code := a_code + c.code - Lower_a_code + 10
-						when 'A' .. 'Z' then
-							a_code := a_code + c.code - Upper_a_code + 10
-						end
-						i := i + 1
+				a_code := 0
+				from
+					i := 3
+				until
+					i > nb
+				loop
+					a_code := a_code * 16
+					c := text_item (i)
+					inspect c
+					when '0' .. '9' then
+						a_code := a_code + c.code - Zero_code
+					when 'a' .. 'f' then
+						a_code := a_code + c.code - Lower_a_code + 10
+					when 'A' .. 'F' then
+						a_code := a_code + c.code - Upper_a_code + 10
 					end
+					i := i + 1
 				end
-			else
-				a_code := c.code
 			end
-			process_character (a_code)
+			if a_code < description.symbol_count then
+				last_integer_value := a_code
+			else
+				report_character_out_of_range_error (text)
+				last_integer_value := 0
+			end
+		end
+
+	process_unicode_character
+			-- Process Unicode character whose printable representation
+			-- is held in `text'.
+			-- Check whether the corresponding Unicode character is valid.
+			-- Set `last_natural_32_value' accordingly.
+		require
+--			valid_text: `text' recognized by \\u[0-9a-f]{1-6}|\\u\{[0-9a-f]{1-6}\}
+		local
+			c: CHARACTER
+			a_code: INTEGER
+			i, nb: INTEGER
+		do
+			nb := text_count
+			a_code := 0
+			from
+				i := 3
+				if text_item (i) = '{' then
+					i := i + 1
+					nb := nb - 1
+				end
+			until
+				i > nb
+			loop
+				a_code := a_code * 16
+				c := text_item (i)
+				inspect c
+				when '0' .. '9' then
+					a_code := a_code + c.code - Zero_code
+				when 'a' .. 'f' then
+					a_code := a_code + c.code - Lower_a_code + 10
+				when 'A' .. 'F' then
+					a_code := a_code + c.code - Upper_a_code + 10
+				end
+				i := i + 1
+			end
+			if {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) then
+				last_integer_value := a_code
+			else
+				report_invalid_unicode_character_error (text)
+				last_integer_value := 0
+			end
 		end
 
 	process_name_definition (a_name, a_definition: STRING)
@@ -380,6 +490,20 @@ feature {NONE} -- Error handling
 
 	report_character_out_of_range_error (a_char: STRING)
 			-- Report that character `a_char' is out of range.
+		require
+			a_char_not_void: a_char /= Void
+		local
+			an_error: LX_CHARACTER_OUT_OF_RANGE_ERROR
+		do
+			create an_error.make (filename, line_nb, a_char)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_invalid_unicode_character_error (a_char: STRING)
+			-- Report that character `a_char' is not a valid Unicode character.
 		require
 			a_char_not_void: a_char /= Void
 		local
@@ -541,6 +665,9 @@ feature {NONE} -- Constants
 	Initial_max_character_classes: INTEGER = 101
 			-- Maximum number of character classes
 
+	Initial_max_unicode_mode: INTEGER = 10
+			-- Initial maximum number of modes in `unicode_mode'
+
 invariant
 
 	description_not_void: description /= Void
@@ -549,5 +676,9 @@ invariant
 	no_void_name_definition: not name_definitions.has_void_item
 	character_classes_not_void: character_classes /= Void
 	no_void_character_class: not character_classes.has_void_item
+	unicode_character_classes_not_void: unicode_character_classes /= Void
+	no_void_unicode_character_class: not unicode_character_classes.has_void_item
+	unicode_mode_not_void: unicode_mode /= Void
+	unicode_modenot_empty: not unicode_mode.is_empty
 
 end

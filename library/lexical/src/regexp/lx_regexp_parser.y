@@ -6,7 +6,7 @@ note
 		"Parsers for regular expressions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,8 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value
+			last_lx_symbol_class_value,
+			last_lx_unicode_character_class_value
 		end
 
 	LX_REGEXP_SCANNER
@@ -30,7 +31,8 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value
+			last_lx_symbol_class_value,
+			last_lx_unicode_character_class_value
 		end
 
 create
@@ -39,14 +41,20 @@ create
 
 %}
 
-%token <INTEGER> CHAR NUMBER
-%token <LX_SYMBOL_CLASS> CCL_OP
-%token <STRING> '['
+%token UNICODE_MODE_START BYTE_MODE_START
 
+%token <STRING> CCL_BRACKET UCCL_BRACKET
+%token <INTEGER> CHAR BCHAR UCHAR NUMBER
+%token <LX_SYMBOL_CLASS> CCL_OP
+%token <LX_UNICODE_CHARACTER_CLASS> UCCL_OP
+
+%type <INTEGER> CCl_char UCCl_char
 %type <LX_NFA> Rule Regular_expression Regular_expression2 Series Series_singleton Singleton String
 %type <LX_SYMBOL_CLASS> CCl Full_CCl
+%type <LX_UNICODE_CHARACTER_CLASS> UCCl Full_UCCl
 
 %start Regexp
+%expect 2
 
 %%
 
@@ -72,10 +80,12 @@ Init_pattern: -- Empty
 
 Pattern: '^' Rule
 		{
-			process_bol_rule ($2)
+			has_bol_context := True
+			process_rule ($2)
 		}
 	| Rule
 		{
+			has_bol_context := False
 			process_rule ($1)
 		}
 	| error
@@ -84,11 +94,14 @@ Pattern: '^' Rule
 		}
 	;
 
-Rule: Regular_expression2 Regular_expression
+Rule: Regular_expression
 		{
-			has_trail_context := True
-			trail_count := regexp_count
-			$$ := append_trail_context_to_regexp ($2, $1)
+			$$ := $1
+			has_trail_context := False
+			head_count := regexp_count
+			head_line := regexp_line
+			head_column := regexp_column
+			trail_count := 0
 		}
 	| Regular_expression '$'
 		{
@@ -99,14 +112,11 @@ Rule: Regular_expression2 Regular_expression
 			trail_count := 1
 			$$ := append_eol_to_regexp ($1)
 		}
-	| Regular_expression
+	| Regular_expression2 Regular_expression
 		{
-			$$ := $1
-			has_trail_context := False
-			head_count := regexp_count
-			head_line := regexp_line
-			head_column := regexp_column
-			trail_count := 0
+			has_trail_context := True
+			trail_count := regexp_count
+			$$ := append_trail_context_to_regexp ($2, $1)
 		}
 	| Regular_expression2 Regular_expression2
 		{
@@ -199,8 +209,42 @@ Series_singleton: Singleton
 
 Singleton: CHAR
 		{
+			if unicode_mode.item and $1 > {CHARACTER_8}.max_ascii_value then
+				$$ := new_epsilon_nfa
+				process_singleton_empty_string
+				buffer.wipe_out
+				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $1)
+				from i_ := 1 until i_ > buffer.count loop
+					$$ := append_character_to_string (buffer.item_code (i_), $$)
+					process_singleton_string (buffer.item_code (i_))
+					i_ := i_ + 1
+				end
+			else
+				$$ := new_nfa_from_character ($1)
+				process_singleton_char ($1)
+			end
+		}
+	| BCHAR
+		{
 			$$ := new_nfa_from_character ($1)
 			process_singleton_char ($1)
+		}
+	| UCHAR
+		{
+			if $1 <= {CHARACTER_8}.max_ascii_value then
+				$$ := new_nfa_from_character ($1)
+				process_singleton_char ($1)
+			else
+				$$ := new_epsilon_nfa
+				process_singleton_empty_string
+				buffer.wipe_out
+				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $1)
+				from i_ := 1 until i_ > buffer.count loop
+					$$ := append_character_to_string (buffer.item_code (i_), $$)
+					process_singleton_string (buffer.item_code (i_))
+					i_ := i_ + 1
+				end
+			end
 		}
 	| Singleton '*'
 		{
@@ -237,7 +281,11 @@ Singleton: CHAR
 		}
 	| '.'
 		{
-			$$ := new_symbol_class_nfa (dot_character_class)
+			if unicode_mode.item then
+				$$ := new_nfa_from_unicode_character_class (dot_unicode_character_class)
+			else
+				$$ := new_symbol_class_nfa (dot_character_class)
+			end
 			process_singleton_dot
 		}
 	| CCL_OP
@@ -250,6 +298,16 @@ Singleton: CHAR
 			$$ := new_nfa_from_character_class ($1)
 			process_singleton_symbol_class ($1)
 		}
+	| UCCL_OP
+		{
+			$$ := new_nfa_from_unicode_character_class ($1)
+			process_singleton_unicode_character_class ($1)
+		}
+	| Full_UCCl
+		{
+			$$ := new_nfa_from_unicode_character_class ($1)
+			process_singleton_unicode_character_class ($1)
+		}
 	| '"' String '"'
 		{
 			$$ := $2
@@ -261,14 +319,42 @@ Singleton: CHAR
 			singleton_line := regexp_line
 			singleton_column := regexp_column
 		}
+	| Start_unicode_mode Regular_expression ')'
+		{
+			$$ := $2
+			singleton_count := regexp_count
+			singleton_line := regexp_line
+			singleton_column := regexp_column
+			unicode_mode.remove
+		}
+	| Start_byte_mode Regular_expression ')'
+		{
+			$$ := $2
+			singleton_count := regexp_count
+			singleton_line := regexp_line
+			singleton_column := regexp_column
+			unicode_mode.remove
+		}
 	;
 
-Full_CCl: '[' CCl ']'
+Start_unicode_mode: UNICODE_MODE_START
+		{
+			unicode_mode.force (True)
+		}
+	;
+
+Start_byte_mode: BYTE_MODE_START
+		{
+			unicode_mode.force (False)
+		}
+	;
+
+Full_CCl: CCL_BRACKET CCl ']'
 		{
 			$$ := $2
 			character_classes.force ($$, $1)
 		}
-	| '[' '^' CCl  ']'
+	| CCL_BRACKET '^' CCl ']'
 		{
 			$$ := $3
 			$$.set_negated (True)
@@ -276,25 +362,75 @@ Full_CCl: '[' CCl ']'
 		}
 	;
 
-CCl: CHAR
+Full_UCCl: UCCL_BRACKET UCCl ']'
+		{
+			$$ := $2
+			unicode_character_classes.force ($$, $1)
+		}
+	| UCCL_BRACKET '^' UCCl ']'
+		{
+			$$ := $3
+			$$.set_negated (True)
+			unicode_character_classes.force ($$, $1)
+		}
+	;
+	
+CCl: CCl_char
 		{
 			$$ := append_character_to_character_class ($1, new_character_class)
 		}
-	| CCl CHAR
+	| CCl CCl_char
 		{
 			$$ := append_character_to_character_class ($2, $1)
 		}
-	| CHAR '-' CHAR
+	| CCl_char '-' CCl_char
 		{
-			$$ := append_character_set_to_character_class
-				($1, $3, new_character_class)
+			$$ := append_character_set_to_character_class ($1, $3, new_character_class)
 		}
-	| CCl CHAR '-' CHAR
+	| CCl CCl_char '-' CCl_char
 		{
 			$$ := append_character_set_to_character_class ($2, $4, $1)
 		}
 	;
+
+CCl_char: CHAR
+		{
+			$$ := $1
+		}
+	| BCHAR
+		{
+			$$ := $1
+		}
+	;
 	
+UCCl: UCCl_char
+		{
+			$$ := append_character_to_unicode_character_class ($1, new_unicode_character_class)
+		}
+	| UCCl UCCl_char
+		{
+			$$ := append_character_to_unicode_character_class ($2, $1)
+		}
+	| UCCl_char '-' UCCl_char
+		{
+			$$ := append_character_set_to_unicode_character_class ($1, $3, new_unicode_character_class)
+		}
+	| UCCl UCCl_char '-' UCCl_char
+		{
+			$$ := append_character_set_to_unicode_character_class ($2, $4, $1)
+		}
+	;
+
+UCCl_char: CHAR
+		{
+			$$ := $1
+		}
+	| UCHAR
+		{
+			$$ := $1
+		}
+	;
+
 String: -- Empty
 		{
 			$$ := new_epsilon_nfa
@@ -302,8 +438,40 @@ String: -- Empty
 		}
 	| String CHAR
 		{
+			if unicode_mode.item and $2 > {CHARACTER_8}.max_ascii_value then
+				$$ := $1
+				buffer.wipe_out
+				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $2)
+				from i_ := 1 until i_ > buffer.count loop
+					$$ := append_character_to_string (buffer.item_code (i_), $$)
+					process_singleton_string (buffer.item_code (i_))
+					i_ := i_ + 1
+				end
+			else
+				$$ := append_character_to_string ($2, $1)
+				process_singleton_string ($2)
+			end
+		}
+	| String BCHAR
+		{
 			$$ := append_character_to_string ($2, $1)
 			process_singleton_string ($2)
+		}
+	| String UCHAR
+		{
+			if $2 <= {CHARACTER_8}.max_ascii_value then
+				$$ := append_character_to_string ($2, $1)
+				process_singleton_string ($2)
+			else
+				$$ := $1
+				buffer.wipe_out
+				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $2)
+				from i_ := 1 until i_ > buffer.count loop
+					$$ := append_character_to_string (buffer.item_code (i_), $$)
+					process_singleton_string (buffer.item_code (i_))
+					i_ := i_ + 1
+				end
+			end
 		}
 	;
 
@@ -319,5 +487,8 @@ feature {NONE} -- Access
 
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS
+
+	last_lx_unicode_character_class_value: LX_UNICODE_CHARACTER_CLASS
+			-- Last semantic value of type LX_UNICODE_CHARACTER_CLASS
 
 end

@@ -5,7 +5,7 @@ note
 		"Tester for features of PCRE regexps"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002-2018, Harald Erdbrügger and others"
+	copyright: "Copyright (c) 2002-2019, Harald Erdbrügger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -493,7 +493,7 @@ feature {NONE} -- Output
 			an_output_file.put_new_line
 		end
 
-	print_substring (a_string: STRING; a_from, a_to: INTEGER; a_stop_at_binary_null: BOOLEAN; an_output_file: KI_TEXT_OUTPUT_STREAM)
+	print_substring (a_string: READABLE_STRING_GENERAL; a_from, a_to: INTEGER; a_stop_at_binary_null: BOOLEAN; an_output_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print substring of `a_str' between positions `a_from'
 			-- and `a_to' to `a_file'.
 		require
@@ -508,13 +508,13 @@ feature {NONE} -- Output
 			s: STRING
 		do
 			from i := a_from until i > a_to loop
-				if a_string.item (i) >= '%/32/' and a_string.item (i) <= '%/126/' then
-					an_output_file.put_character (a_string.item (i))
-				elseif a_stop_at_binary_null and then a_string.item (i) = '%/0/' then
+				if a_string.code (i) >= 32 and a_string.code (i) <= 126 then
+					an_output_file.put_character (a_string.item (i).to_character_8)
+				elseif a_stop_at_binary_null and then a_string.code (i) = 0 then
 						-- Jump out of the loop.
 					i := a_to
 				else
-					s := INTEGER_.to_hexadecimal (a_string.item_code (i), False)
+					s := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (a_string.code (i), False)
 					if s.count = 1 then
 						an_output_file.put_string ("\x0")
 					else

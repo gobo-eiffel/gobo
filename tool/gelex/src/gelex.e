@@ -58,7 +58,7 @@ feature -- Processing
 				create a_file.make (filename)
 				a_file.open_read
 				if a_file.is_open_read then
-					parser.parse_file (a_file)
+					parser.parse_unicode_file (a_file)
 					a_file.close
 				else
 					create cannot_read.make (filename)
@@ -66,7 +66,7 @@ feature -- Processing
 					Exceptions.die (1)
 				end
 			else
-				parser.parse_file (std.input)
+				parser.parse_unicode_file (std.input)
 			end
 			if not parser.successful then
 				Exceptions.die (1)

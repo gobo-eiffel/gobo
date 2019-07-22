@@ -2,131 +2,175 @@ note
 
 	description:
 
-		"Classes of integer symbols, kept in increasing order"
+		"Classes of symbols"
 
-	storable_version: "20130823"
+	storable_version: "20190721"
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class LX_SYMBOL_CLASS
 
-inherit
-
-	DS_ARRAYED_LIST [INTEGER]
-		rename
-			sort as arrayed_sort,
-			has as arrayed_has,
-			put as arrayed_put
-		export
-			{NONE}
-				arrayed_put,
-				put_first,
-				put_last,
-				put_left,
-				put_right,
-				force,
-				force_first,
-				force_last,
-				force_left,
-				force_right,
-				extend,
-				extend_first,
-				extend_last,
-				extend_left,
-				extend_right,
-				append,
-				append_first,
-				append_last,
-				append_left,
-				append_right,
-				replace,
-				swap
-		end
-
 create
 
-	make
+	make_empty
+
+feature {NONE} -- Initialization
+
+	make_empty
+			-- Create an empty symbol class.
+		do
+			is_empty := True
+		ensure
+			is_empty: is_empty
+			not_negated: not is_negated
+		end
 
 feature -- Status report
 
-	negated: BOOLEAN
-			-- Is the symbol class negated?
+	is_empty: BOOLEAN
+			-- Is symbol class empty?
+			-- Do not take into account negated status.
 
-	sort_needed: BOOLEAN
-			-- Should the symbol class be sorted?
+	is_negated: BOOLEAN
+			-- Is character set negated?
 
-	valid_symbols (min, max: INTEGER): BOOLEAN
-			-- Are symbols in current class within
-			-- bounds `min' and `max'?
+	has (a_symbol: INTEGER): BOOLEAN
+			-- Is `a_symbol' included in symbol class?
+			-- Take into account the negated status.
 		require
-			valid_bounds: min <= max
-			sorted: not sort_needed
+			a_symbol_valid: a_symbol >= 1 and a_symbol <= {CHARACTER_8}.max_value + 1
+		local
+			l_symbol: INTEGER
 		do
+			l_symbol := a_symbol \\ ({CHARACTER_8}.max_value + 1)
 			if is_empty then
-				Result := True
+				Result := is_negated
+			elseif l_symbol < 64 then
+				Result := (first_set & masks.item (l_symbol) /= 0) /= is_negated
+			elseif l_symbol < 128 then
+				Result := (second_set & masks.item (l_symbol \\ 64) /= 0) /= is_negated
+			elseif l_symbol < 192 then
+				Result := (third_set & masks.item (l_symbol \\ 64) /= 0) /= is_negated
 			else
-				Result := first >= min and last <= max
+				Result := (fourth_set & masks.item (l_symbol \\ 64) /= 0) /= is_negated
+			end
+		ensure
+			definition: Result = (added (a_symbol) /= is_negated)
+		end
+
+	added (a_symbol: INTEGER): BOOLEAN
+			-- Has `a_symbol' been added to the symbol class?
+			-- Do not take into account the negated status.
+		require
+			a_symbol_valid: a_symbol >= 1 and a_symbol <= {CHARACTER_8}.max_value + 1
+		local
+			l_symbol: INTEGER
+		do
+			l_symbol := a_symbol \\ ({CHARACTER_8}.max_value + 1)
+			if is_empty then
+				Result := False
+			elseif l_symbol < 64 then
+				Result := first_set & masks.item (l_symbol) /= 0
+			elseif l_symbol < 128 then
+				Result := second_set & masks.item (l_symbol \\ 64) /= 0
+			elseif l_symbol < 192 then
+				Result := third_set & masks.item (l_symbol \\ 64) /= 0
+			else
+				Result := fourth_set & masks.item (l_symbol \\ 64) /= 0
 			end
 		end
 
-	has (symbol: INTEGER): BOOLEAN
-			-- Does current class include `symbol'?
-			-- (Does not take into account `negated'.)
-		local
-			i: INTEGER
-			stop: BOOLEAN
+	same_symbol_class (a_other: LX_SYMBOL_CLASS): BOOLEAN
+			-- Are `a_other' and `Current' considered to be the same symbol class?
+		require
+			a_other_not_void: a_other /= Void
 		do
-			if sort_needed then
-				Result := arrayed_has (symbol)
-			elseif not is_empty then
-				if last = symbol then
-					Result := True
-				elseif last > symbol then
-					from
-						i := 1
-					until
-						Result or stop
-					loop
-						if item (i) = symbol then
-							Result := True
-						elseif item (i) > symbol then
-							stop := True
-						else
-							i := i + 1
-						end
-					end
-				end
+			if is_negated /= a_other.is_negated then
+				Result := False
+			else
+				Result := first_set = a_other.first_set and second_set = a_other.second_set and third_set = a_other.third_set and fourth_set = a_other.fourth_set
 			end
-		ensure
-			definition: Result = arrayed_has (symbol)
 		end
 
 feature -- Status setting
 
 	set_negated (b: BOOLEAN)
-			-- Set `negated' to `b'.
+			-- Set `is_negated' to `b'.
 		do
-			negated := b
+			is_negated := b
 		ensure
-			negated_set: negated = b
+			negated_set: is_negated = b
 		end
 
-feature -- Element change
+feature -- Element Change
 
-	put (symbol: INTEGER)
-			-- Add `symbol' to symbol class.
+	add_character (a_symbol: INTEGER)
+			-- Add `a_symbol' to symbol class.
+			-- Do not take into account the negated status.
+		require
+			a_symbol_valid: 1 <= a_symbol and a_symbol <= {CHARACTER_8}.max_value + 1
+		local
+			l_symbol: INTEGER
 		do
-			if not has (symbol) then
-				if not is_empty and then last > symbol then
-					sort_needed := True
-				end
-				force_last (symbol)
+			l_symbol := a_symbol \\ ({CHARACTER_8}.max_value + 1)
+			if l_symbol < 64 then
+				first_set := first_set | masks.item (l_symbol)
+			elseif l_symbol < 128 then
+				second_set := second_set | masks.item (l_symbol \\ 64)
+			elseif l_symbol < 192 then
+				third_set := third_set | masks.item (l_symbol \\ 64)
+			else
+				fourth_set := fourth_set | masks.item (l_symbol \\ 64)
 			end
+			is_empty := False
 		ensure
-			inserted: has (symbol)
+			not_empty: not is_empty
+			added: added (a_symbol)
+		end
+
+	add_set (other: like Current)
+			-- Add symbols of `other' to current symbol class.
+			-- Do not take into account negated status of `Current' and `other'.
+		require
+			other_not_void: other /= Void
+		do
+			first_set := first_set | other.first_set
+			second_set := second_set | other.second_set
+			third_set := third_set | other.third_set
+			fourth_set := fourth_set | other.fourth_set
+			is_empty := is_empty and other.is_empty
+		end
+
+	add_negated_set (other: like Current)
+			-- Add symbols which are not in `other' to current symbol class.
+			-- Do not take into account negated status of `Current' and `other'.
+		require
+			other_not_void: other /= Void
+		do
+			first_set := first_set | other.first_set.bit_not
+			second_set := second_set | other.second_set.bit_not
+			third_set := third_set | other.third_set.bit_not
+			fourth_set := fourth_set | other.fourth_set.bit_not
+			is_empty := first_set = 0 and second_set = 0 and third_set = 0 and fourth_set = 0
+		end
+
+feature -- Removal
+
+	wipe_out
+			-- Remove all symbols.
+		do
+			first_set := 0
+			second_set := 0
+			third_set := 0
+			fourth_set := 0
+			is_empty := True
+			is_negated := False
+		ensure
+			is_empty: is_empty
+			not_negated: not is_negated
 		end
 
 feature -- Convertion
@@ -139,51 +183,82 @@ feature -- Convertion
 			classes_built: classes.built
 			valid_symbols: classes.valid_symbol_class (Current)
 		local
-			i, j, nb: INTEGER
-			symbol: INTEGER
+			l_code: INTEGER
+			l_old_first_set: NATURAL_64
+			l_old_second_set: NATURAL_64
+			l_old_third_set: NATURAL_64
+			l_old_fourth_set: NATURAL_64
+			l_old_added: BOOLEAN
 		do
-			nb := count
+			l_old_first_set := first_set
+			l_old_second_set := second_set
+			l_old_third_set := third_set
+			l_old_fourth_set := fourth_set
+			first_set := 0
+			second_set := 0
+			third_set := 0
+			fourth_set := 0
+			is_empty := True
 			from
+				l_code := {CHARACTER_8}.max_value + 1
+				if l_old_first_set & masks.item (0) /= 0 and then classes.is_representative (l_code) then
+					add_character (classes.equivalence_class (l_code))
+				end
+				l_code := 1
+			until
+				l_code > {CHARACTER_8}.max_value
+			loop
+				if l_code < 64 then
+					l_old_added := l_old_first_set & masks.item (l_code) /= 0
+				elseif l_code < 128 then
+					l_old_added := l_old_second_set & masks.item (l_code \\ 64) /= 0
+				elseif l_code < 192 then
+					l_old_added := l_old_third_set & masks.item (l_code \\ 64) /= 0
+				else
+					l_old_added := l_old_fourth_set & masks.item (l_code \\ 64) /= 0
+				end
+				if l_old_added and then classes.is_representative (l_code) then
+					add_character (classes.equivalence_class (l_code))
+				end
+				l_code := l_code + 1
+			end
+		end
+
+feature {LX_SYMBOL_CLASS} -- Implementation
+
+	first_set: NATURAL_64
+			-- First set of bits
+
+	second_set: NATURAL_64
+			-- Second set of bits
+
+	third_set: NATURAL_64
+			-- Third set of bits
+
+	fourth_set: NATURAL_64
+			-- Fourth set of bits
+
+	masks: SPECIAL [NATURAL_64]
+			-- Bit masks
+		local
+			i: INTEGER
+			v: NATURAL_64
+		once
+			create Result.make_filled (0, 64)
+			from
+				v := 1
+				Result.put (v, 0)
 				i := 1
 			until
-				i > nb
+				i = 64
 			loop
-				symbol := item (i)
-				if classes.is_representative (symbol) then
-					j := j + 1
-					replace (classes.equivalence_class (symbol), j)
-				end
+				v := v |<< 1
+				Result.put (v, i)
 				i := i + 1
 			end
-			count := j
-		end
-
-feature -- Sort
-
-	sort
-			-- Sort symbols in class.
-			-- Use a shell sort since the list
-			-- of symbols could be large.
-		do
-			arrayed_sort (sorter)
-			sort_needed := False
 		ensure
-			sorted: not sort_needed
+			masks_not_void: Result /= Void
+			count_64: Result.count = 64
 		end
-
-	sorter: DS_SHELL_SORTER [INTEGER]
-			-- Shell sorter
-		local
-			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
-		once
-			create a_comparator.make
-			create Result.make (a_comparator)
-		ensure
-			sorter_not_void: Result /= Void
-		end
-
-invariant
-
-	sorted: not sort_needed implies sorted (sorter)
 
 end

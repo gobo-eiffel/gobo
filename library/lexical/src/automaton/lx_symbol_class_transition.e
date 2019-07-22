@@ -5,7 +5,7 @@ note
 		"Symbol class transitions to automaton states"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 		require
 			state_not_void: state /= Void
 			symbols_not_void: symbols /= Void
-			symbols_sorted: not symbols.sort_needed
 		do
 			label := symbols
 			target := state
@@ -55,7 +54,6 @@ feature -- Setting
 			-- Set `label' to `symbols'.
 		require
 			symbols_not_void: symbols /= Void
-			symbols_sorted: not symbols.sort_needed
 		do
 			label := symbols
 		ensure
@@ -67,11 +65,7 @@ feature -- Status report
 	labeled (symbol: INTEGER): BOOLEAN
 			-- Is current transition labeled `symbol'?
 		do
-			if label.negated then
-				Result := not label.has (symbol)
-			else
-				Result := label.has (symbol)
-			end
+			Result := label.has (symbol)
 		end
 
 feature -- Equivalence classes
@@ -92,6 +86,5 @@ feature -- Equivalence classes
 invariant
 
 	label_not_void: label /= Void
-	label_sorted: not label.sort_needed
 
 end

@@ -1,10 +1,9 @@
-note
+﻿note
 
 	description:
 
 		"Test features of class RX_PCRE_REGULAR_EXPRESSION"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Regexp Library"
 	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
@@ -345,6 +344,178 @@ feature -- Test replacement
 			a_regexp.match ("foo")
 			a_replacement := a_regexp.replace_all ("AA")
 			assert_equal ("relacement2", "AAfAAoAAoAA", a_replacement)
+		end
+
+feature -- Test Unicode
+
+	test_unicode_character
+			-- Test regexps with unicode characters.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ({STRING_32} "[a-z]+: ∀")
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({STRING_32} "forall: ∀"))
+		end
+
+	test_invalid_unicode_character
+			-- Test regexps with invalid unicode characters.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_code (0x200000)
+			l_regexp.compile (l_pattern)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+			assert_strings_equal ("invalid", {RX_PCRE_ERROR_CONSTANTS}.err_msg_61, l_regexp.error_message)
+		end
+
+	test_surrogate_unicode_character
+			-- Test regexps with surrogate unicode characters.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_code (0xDDDD)
+			l_regexp.compile (l_pattern)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+			assert_strings_equal ("surrogate", {RX_PCRE_ERROR_CONSTANTS}.err_msg_61, l_regexp.error_message)
+		end
+
+	test_escaped_unicode_character
+			-- Test regexps with escaped unicode characters.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("d\u{00E9}j\u{00E0} vu: \u{2200}")
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({STRING_32} "déjà vu: ∀"))
+		end
+
+	test_escaped_invalid_unicode_character
+			-- Test regexps with escaped invalid unicode characters.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("\u{200000}")
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+			assert_strings_equal ("invalid", {RX_PCRE_ERROR_CONSTANTS}.err_msg_61, l_regexp.error_message)
+		end
+
+	test_escaped_surrogate_unicode_character
+			-- Test regexps with escaped surrogate unicode characters.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("\u{DDDD}")
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+			assert_strings_equal ("surrogate", {RX_PCRE_ERROR_CONSTANTS}.err_msg_61, l_regexp.error_message)
+		end
+
+	test_unicode_character_set
+			-- Test regexps with unicode character set.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ({STRING_32} "[a-z∀: ]+")
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({STRING_32} "forall: ∀"))
+		end
+
+	test_unicode_character_set_with_range
+			-- Test regexps with unicode character set with a range.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ({STRING_32} "[∀-∃]")
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({STRING_32} "∀"))
+		end
+
+	test_unicode_character_set_with_invalid_range
+			-- Test regexps with unicode character set with an invalid range.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ({STRING_32} "[∃-∀]")
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+			assert_strings_equal ("invalid_range", {RX_PCRE_ERROR_CONSTANTS}.err_msg_8, l_regexp.error_message)
+		end
+
+	test_unicode_character_set_with_invalid_character
+			-- Test regexps with unicode character set with an invalid unicode character.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_character ({CHARACTER_32} '[')
+			l_pattern.append_code (0x200000)
+			l_pattern.append_character ({CHARACTER_32} ']')
+			l_regexp.compile (l_pattern)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+			assert_strings_equal ("invalid", {RX_PCRE_ERROR_CONSTANTS}.err_msg_61, l_regexp.error_message)
+		end
+
+	test_unicode_character_set_with_surrogate_character
+			-- Test regexps with unicode character set with a surrogate unicode character.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_character ({CHARACTER_32} '[')
+			l_pattern.append_code (0xDDDD)
+			l_pattern.append_character ({CHARACTER_32} ']')
+			l_regexp.compile (l_pattern)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+			assert_strings_equal ("surrogate", {RX_PCRE_ERROR_CONSTANTS}.err_msg_61, l_regexp.error_message)
+		end
+
+	test_unicode_character_set_with_escaped_character
+			-- Test regexps with unicode character set with escaped unicode characters.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("[\u{2200}]")
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({STRING_32} "∀"))
+		end
+
+	test_unicode_character_set_with_escaped_invalid_character
+			-- Test regexps with unicode character set with escaped invalid unicode characters.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("[\u{200000}]")
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+			assert_strings_equal ("invalid", {RX_PCRE_ERROR_CONSTANTS}.err_msg_61, l_regexp.error_message)
+		end
+
+	test_unicode_character_set_with_escaped_surrogate_character
+			-- Test regexps with unicode character set with escaped surrogate unicode characters.
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("[\u{DDDD}]")
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+			assert_strings_equal ("surrogate", {RX_PCRE_ERROR_CONSTANTS}.err_msg_61, l_regexp.error_message)
 		end
 
 end

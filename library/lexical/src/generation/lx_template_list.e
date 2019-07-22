@@ -19,7 +19,7 @@ note
 		%transition symbol, and therefore cost only one difference"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -136,7 +136,7 @@ feature -- Element change
 			min_symbol := transitions.lower
 			max_symbol := transitions.upper
 			create template.make (min_symbol, max_symbol)
-			create symbol_class.make (transitions.capacity)
+			create symbol_class.make_empty
 			from
 				i := min_symbol
 			until
@@ -144,7 +144,7 @@ feature -- Element change
 			loop
 				if transitions.target (i) /= Void then
 					template.set_target (common_state, i)
-					symbol_class.put (i)
+					symbol_class.add_character (i)
 				end
 				i := i + 1
 			end

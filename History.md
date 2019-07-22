@@ -6,6 +6,8 @@
 
 * Fixed bug when computing equivalence classes. The generated arrays should be
   slightly smaller.
+* Added support for Unicode See *Lexical Library* below. Regular expressions
+  and embedded Eiffel code in the `.l` input file can contain Unicode characters.
 
 ### Gobo Eiffel Kernel Library
 
@@ -14,11 +16,31 @@
   of type `READABLE_STRING_8` instead of `STRING_8`. This is to follow the
   same change in class `IO_MEDIUM`.
 
+### Gobo Eiffel Lexical Library
+
+* Added support for Unicode. Does not support properties yet (e.g. `\p{L}`).
+  Unicode strings are internally converted to UTF-8. Unicode characters can
+  be entered verbatim in the input file or input string (`STRING_32`) or with
+  their escaped form (e.g. `\u03B2` or `\u{03B2}` where `03B2` is the
+  hexadecimal code for Greek character beta). Invalid and surrogate Unicode
+  characters are internally handled as the single byte `\xFF`, which is not
+  valid in UTF-8, and hence produce a regular expression syntax error.  
+
+### Gobo Eiffel Regexp Library
+
+* Added support for Unicode. Does not support properties yet (e.g. `\p{L}`).
+  POSIX character set names (e.g `[:alpha:]`) recognize only ASCII characters
+  (code less than 128). Unicode is supported natively, there is no internal
+  conversion to UTF-8. Unicode characters can be entered verbatim in the
+  string (`STRING_32`) or with their escaped form (e.g. `\u{03B2}` or 
+  `\x{03B2}` where `03B2` is the hexadecimal code for Greek character beta).
+  Invalid and surrogate Unicode characters produce a regular expression
+  syntax error.  
+
 ### Gobo Eiffel Tools Library
 
 * Added support for `across ... is ...`.
 * Fixed bug in ECF printer when converting files between different ECF versions.
-
 
 ## Version 19.06.21.1 - 21 June 2019
 

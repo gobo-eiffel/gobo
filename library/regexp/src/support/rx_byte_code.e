@@ -5,7 +5,7 @@ note
 		"Byte codes"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,10 +32,8 @@ feature {NONE} -- Initialization
 		do
 			count := 0
 			capacity := nb
-			byte_code := SPECIAL_INTEGER_.make_filled (0, nb)
-			character_sets_count := 0
-			character_sets_capacity := nb
-			character_sets := SPECIAL_BOOLEAN_.make_filled (False, nb)
+			byte_code := SPECIAL_NATURAL_32_.make_filled (0, nb)
+			create character_sets.make (nb)
 		ensure
 			is_empty: count = 0
 			capacity_set: capacity = nb
@@ -43,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	opcode_item (i: INTEGER): INTEGER
+	opcode_item (i: INTEGER): NATURAL_32
 			-- Code at position `i'
 		require
 			i_large_enough: i >= 0
@@ -54,7 +52,7 @@ feature -- Access
 			opcode_positive: Result >= 0
 		end
 
-	character_item (i: INTEGER): INTEGER
+	character_item (i: INTEGER): NATURAL_32
 			-- Character code at position `i'
 		require
 			i_large_enough: i >= 0
@@ -65,7 +63,7 @@ feature -- Access
 			character_code_positive: Result >= 0
 		end
 
-	integer_item (i: INTEGER): INTEGER
+	integer_item (i: INTEGER): NATURAL_32
 			-- Integer item at position `i'
 		require
 			i_large_enough: i >= 0
@@ -81,29 +79,27 @@ feature -- Status report
 	is_empty: BOOLEAN
 			-- Is current byte code empty?
 		do
-			Result := (count = 0 and character_sets_count = 0)
+			Result := (count = 0 and character_sets.count = 0)
 		ensure
 			byte_code_empty: Result implies count = 0
-			character_sets_empty: Result implies character_sets_count = 0
+			character_sets_empty: Result implies character_sets.count = 0
 		end
 
-	character_set_has (a_set: INTEGER; a_code: INTEGER): BOOLEAN
+	character_set_has (a_set: INTEGER; a_code: NATURAL_32): BOOLEAN
 			-- Is character with code `a_code' included in the character set `a_set'?
 		require
 			valid_set: valid_character_set (a_set)
 			a_cod_positive: a_code >= 0
 		do
-			if a_code < 256 then
-				Result := character_sets.item (a_set + a_code)
-			end
+			Result := character_sets.item (a_set).has (a_code)
 		end
 
 	valid_character_set (a_set: INTEGER): BOOLEAN
 			-- Is `a_set' a valid character set?
 		do
-			Result := a_set >= 0 and (a_set + 256) <= character_sets_count
+			Result := a_set >= 1 and a_set <= character_sets.count
 		ensure
-			definition: Result = (a_set >= 0 and (a_set + 256) <= character_sets_count)
+			definition: Result = (a_set >= 1 and a_set <= character_sets.count)
 		end
 
 feature -- Measurement
@@ -129,7 +125,7 @@ feature -- Setting
 
 feature -- Element Change
 
-	put_opcode (a_op: INTEGER; i: INTEGER)
+	put_opcode (a_op: NATURAL_32; i: INTEGER)
 			-- Put `a_op' at position `i'.
 		require
 			i_large_enough: i >= 0
@@ -141,7 +137,7 @@ feature -- Element Change
 			code_set: opcode_item (i) = a_op
 		end
 
-	put_character (a_code: INTEGER; i: INTEGER)
+	put_character (a_code: NATURAL_32; i: INTEGER)
 			-- Put character with code `a_code' at position `i'.
 		require
 			i_large_enough: i >= 0
@@ -153,7 +149,7 @@ feature -- Element Change
 			character_set: character_item (i) = a_code
 		end
 
-	put_integer (v: INTEGER; i: INTEGER)
+	put_integer (v: NATURAL_32; i: INTEGER)
 			-- Put `v' at position `i'.
 		require
 			i_large_enough: i >= 0
@@ -165,7 +161,7 @@ feature -- Element Change
 			integer_set: integer_item (i) = v
 		end
 
-	append_opcode (a_op: INTEGER)
+	append_opcode (a_op: NATURAL_32)
 			-- Append `a_op' to current byte code.
 		require
 			a_op_positive: a_op >= 0
@@ -182,7 +178,7 @@ feature -- Element Change
 			appended: opcode_item (old count) = a_op
 		end
 
-	append_character (a_code: INTEGER)
+	append_character (a_code: NATURAL_32)
 			-- Append character with code `a_code' to current byte code.
 		require
 			a_code_positive: a_code >= 0
@@ -199,7 +195,7 @@ feature -- Element Change
 			appended: character_item (old count) = a_code
 		end
 
-	append_integer (v: INTEGER)
+	append_integer (v: NATURAL_32)
 			-- Append `v' to current byte code.
 		require
 			v_positive: v >= 0
@@ -216,44 +212,16 @@ feature -- Element Change
 			appended: integer_item (old count) = v
 		end
 
-	append_character_set (a_set: RX_CHARACTER_SET; a_negate: BOOLEAN)
+	append_character_set (a_set: RX_CHARACTER_SET)
 			-- Append `a_set' to current byte code.
 		require
 			a_set_not_void: a_set /= Void
-		local
-			i, j, nb: INTEGER
-			a_booleans: SPECIAL [BOOLEAN]
 		do
-			i := character_sets_count
-			append_integer (i)
-			nb := i + 256
-			resize_character_sets (nb)
-			character_sets_count := nb
-			a_booleans := a_set.set
-			if a_negate then
-				from
-					j := 0
-				until
-					j > 255
-				loop
-					character_sets.put (not a_booleans.item (j), i)
-					i := i + 1
-					j := j + 1
-				end
-			else
-				from
-					j := 0
-				until
-					j > 255
-				loop
-					character_sets.put (a_booleans.item (j), i)
-					i := i + 1
-					j := j + 1
-				end
-			end
+			character_sets.force_last (a_set)
+			append_integer (character_sets.count.to_natural_32)
 		ensure
 			count_set: count = old count + 1
-			valid_character_set: valid_character_set (integer_item (old count))
+			valid_character_set: valid_character_set (integer_item (old count).to_integer_32)
 		end
 
 	append_subcopy (a_position: INTEGER; nb: INTEGER)
@@ -314,7 +282,7 @@ feature -- Removal
 			-- Remove all bytes.
 		do
 			count := 0
-			character_sets_count := 0
+			character_sets.wipe_out
 		ensure
 			is_empty: is_empty
 		end
@@ -328,49 +296,28 @@ feature {NONE} -- Resizing
 		do
 			if capacity < nb then
 				new_capacity := 2 * nb
-				byte_code := SPECIAL_INTEGER_.aliased_resized_area_with_default (byte_code, 0, new_capacity)
+				byte_code := SPECIAL_NATURAL_32_.aliased_resized_area_with_default (byte_code, 0, new_capacity)
 				capacity := new_capacity
 			end
 		ensure
 			capacity_set: capacity >= nb
 		end
 
-	resize_character_sets (nb: INTEGER)
-			-- Resize `character_sets' to accommodate at least `nb' booleans.
-		local
-			new_capacity: INTEGER
-		do
-			if character_sets_capacity < nb then
-				new_capacity := 2 * nb
-				character_sets := SPECIAL_BOOLEAN_.aliased_resized_area_with_default (character_sets, False, new_capacity)
-				character_sets_capacity := new_capacity
-			end
-		ensure
-			character_sets_capacity_set: character_sets_capacity >= nb
-		end
-
 feature {NONE} -- Implementation
 
-	byte_code: SPECIAL [INTEGER]
+	byte_code: SPECIAL [NATURAL_32]
 			-- Byte codes
 
-	character_sets: SPECIAL [BOOLEAN]
+	character_sets: DS_ARRAYED_LIST [RX_CHARACTER_SET]
 			-- Character sets
-
-	character_sets_count: INTEGER
-			-- Number of booleans in `character_sets'
-
-	character_sets_capacity: INTEGER
-			-- Maximum number of booleans in `character_sets'
 
 invariant
 
 	byte_code_not_void: byte_code /= Void
 	count_positive: count >= 0
 	count_small_enough: count <= capacity
---	bytes_positive: forall i in 0 .. count - 1, byte_code.item (i) >= 0
+	bytes_positive: across 0 |..| (count - 1) as i all byte_code.item (i.item) >= 0 end
 	character_sets_not_void: character_sets /= Void
-	character_sets_count_positive: character_sets_count >= 0
-	character_sets_count_small_enough: character_sets_count <= character_sets_capacity
+	no_void_character_set: not character_sets.has_void
 
 end

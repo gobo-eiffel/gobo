@@ -209,8 +209,11 @@ feature -- Status report
 
 feature -- Access
 
+	max_bytes: INTEGER = 4
+			-- Maximum number of bytes to encode a Unicode character to UTF-8
+
 	max_bytes_of_iso_8859_1_to_utf8: INTEGER = 2
-			-- Maximum number of bytes of a UTF-8 character converted from ISO-8859-1 character
+			-- Maximum number of bytes to encode a ISO-8859-1 character to UTF-8
 
 	utf8_bom: STRING = "%/239/%/187/%/191/"
 			-- Byte order mark (BOM) for UTF-8 (0xEF,0xBB,0xBF)
@@ -322,8 +325,20 @@ feature -- Measurement
 			encoded_byte_code_small_enough: Result <= 4
 		end
 
+	string_byte_count (a_string: READABLE_STRING_GENERAL): INTEGER
+			-- Number of bytes needed to encode characters of
+			-- `a_string' with the UTF-8 encoding
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := substring_byte_count (a_string, 1, a_string.count)
+		ensure
+			instance_free: class
+			substring_byte_count_positive: Result >= 0
+		end
+
 	substring_byte_count (a_string: READABLE_STRING_GENERAL; start_index, end_index: INTEGER): INTEGER
-			-- Number of bytes needed to encode characters  of
+			-- Number of bytes needed to encode characters of
 			-- `a_string' between `start_index' and `end_index'
 			-- inclusive with the UTF-8 encoding
 		require
@@ -336,6 +351,7 @@ feature -- Measurement
 			i: INTEGER
 			even_end_index: INTEGER
 			c: CHARACTER
+			l_code: NATURAL_32
 		do
 			if start_index <= end_index then
 				if ANY_.same_types (a_string, dummy_string) and then attached {STRING_8} a_string as l_string_8 then
@@ -407,7 +423,13 @@ feature -- Measurement
 					until
 						i > end_index
 					loop
-						Result := Result + code_byte_count (a_string.code (i).to_integer_32)
+						l_code := a_string.code (i)
+						if unicode.valid_non_surrogate_natural_32_code (l_code) then
+							Result := Result + natural_32_code_byte_count (l_code)
+						else
+								-- Invalid character.
+							Result := Result + 1
+						end
 						i := i + 1
 					end
 				end
@@ -606,6 +628,46 @@ feature -- Element change
 		ensure
 			instance_free: class
 			a_utf8_valid: valid_utf8 (a_utf8)
+		end
+
+	natural_32_code_to_utf8 (a_code: NATURAL_32): NATURAL_32
+			-- UTF-8 encoded version of `a_code'
+			-- (e.g. 0xb1000000 or 0xb1b20000 or 0xb1b2b300 or 0xb1b2b3b4)
+		require
+			valid_code: unicode.valid_non_surrogate_natural_32_code (a_code)
+		local
+			b1, b2, b3, b4, c: NATURAL_32
+		do
+			inspect natural_32_code_byte_count (a_code)
+			when 1 then
+					-- 0xxxxxxx
+				Result := a_code |<< (3 * {PLATFORM}.natural_8_bits)
+			when 2 then
+				b2 := a_code \\ 64 + 128
+					-- 110xxxxx
+				b1 := a_code // 64 + 192
+				Result := (b1 |<< (3 * {PLATFORM}.natural_8_bits)) | (b2 |<< (2 * {PLATFORM}.natural_8_bits))
+			when 3 then
+				c := a_code
+				b3 := c \\ 64 + 128
+				c := c // 64
+				b2 := c \\ 64 + 128
+					-- 1110xxxx
+				b1 := c // 64 + 224
+				Result := (b1 |<< (3 * {PLATFORM}.natural_8_bits)) | (b2 |<< (2 * {PLATFORM}.natural_8_bits)) | (b3 |<< {PLATFORM}.natural_8_bits)
+			when 4 then
+				c := a_code
+				b4 := c \\ 64 + 128
+				c := c // 64
+				b3 := c \\ 64 + 128
+				c := c // 64
+				b2 := c \\ 64 + 128
+					-- 11110xxx
+				b1 := c // 64 + 240
+				Result := (b1 |<< (3 * {PLATFORM}.natural_8_bits)) | (b2 |<< (2 * {PLATFORM}.natural_8_bits)) | (b3 |<< {PLATFORM}.natural_8_bits) | b4
+			end
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Constants

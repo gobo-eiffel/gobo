@@ -474,7 +474,7 @@ feature {NONE} -- Processing
 	build_input_classes (a_system: ET_SYSTEM)
 			-- Build `input_classes' using `class_filters' if not done yet.
 		local
-			l_last_wildcard: detachable STRING
+			l_last_wildcard: detachable READABLE_STRING_GENERAL
 			l_input_classes: DS_HASH_SET [ET_CLASS]
 		do
 			if not input_classes.is_empty then
@@ -794,7 +794,7 @@ feature -- Error handling
 			has_error: has_error
 		end
 
-	report_no_class_matching_wildcard_error (a_wildcard: STRING)
+	report_no_class_matching_wildcard_error (a_wildcard: READABLE_STRING_GENERAL)
 			-- Report that no class matches `a_wildcard'.
 		require
 			a_wildcard_not_void: a_wildcard /= Void

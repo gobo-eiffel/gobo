@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -240,6 +240,89 @@ feature -- Test replacement
 			a_regexp.match ("foo")
 			a_replacement := a_regexp.replace_all ("AA")
 			assert_equal ("relacement2", "AAfAAoAAoAA", a_replacement)
+		end
+
+feature -- Test Unicode
+
+	test_unicode_character
+			-- Test regexps with unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile_unicode ({STRING_32} "[a-z]+: ∀")
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("unicode_recognizes1", l_regexp.unicode_recognizes ({STRING_32} "forall: ∀"))
+		end
+
+	test_invalid_unicode_character
+			-- Test regexps with invalid unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_code (0x200000)
+			l_regexp.compile_unicode (l_pattern)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_surrogate_unicode_character
+			-- Test regexps with surrogate unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_code (0xDDDD)
+			l_regexp.compile_unicode (l_pattern)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_escaped_unicode_character
+			-- Test regexps with escaped unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("d\u00E9j\u00E0 vu", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({UC_UTF8_ROUTINES}.to_utf8 ("déjà vu")))
+			assert ("unicode_recognizes1", l_regexp.unicode_recognizes ("déjà vu"))
+		end
+
+	test_unicode_character_set
+			-- Test regexps with unicode character set.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("(u:[a-z \u00E9\u00E0]+)", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({UC_UTF8_ROUTINES}.to_utf8 ("déjà vu")))
+			assert ("unicode_recognizes1", l_regexp.unicode_recognizes ("déjà vu"))
+			assert ("unicode_recognizes2", l_regexp.unicode_recognizes ({STRING_32} "déjà vu"))
+			assert_false ("not_recognizes1", l_regexp.recognizes ("déjà vu"))
+			create l_regexp.make
+			l_regexp.compile_unicode ({STRING_32} "[a-z é\u00E0∀]+")
+			assert ("compiled2", l_regexp.is_compiled)
+			assert ("unicode_recognizes3", l_regexp.unicode_recognizes ({STRING_32} "∀ déjà vu ∀"))
+			create l_regexp.make
+			l_regexp.compile_unicode ("déjà vu")
+			assert ("compiled3", l_regexp.is_compiled)
+			assert_false ("not_recognizes3", l_regexp.recognizes ("déjà vu"))
+			assert ("unicode_recognizes4", l_regexp.unicode_recognizes ("déjà vu"))
+			assert ("unicode_recognizes5", l_regexp.unicode_recognizes ({STRING_32} "déjà vu"))
+				-- Cannot have Unicode characters in a 8-bit character set.
+			create l_regexp.make
+			l_regexp.compile ("[a-z \u00E9\u00E0]+", False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+				-- Cannot have Unicode characters in a 8-bit character set.
+			create l_regexp.make
+			l_regexp.compile ({STRING_32} "[∀]+", False)
+			assert_false ("not_compiled2", l_regexp.is_compiled)
 		end
 
 end

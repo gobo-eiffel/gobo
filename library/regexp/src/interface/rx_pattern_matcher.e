@@ -5,7 +5,7 @@ note
 		"Pattern matchers"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,9 +35,9 @@ feature {NONE} -- Initialization
 
 feature -- Compilation
 
-	compile (a_pattern: STRING)
-			-- Compile `a_pattern'. Set `is_compiled'
-			-- to True after successful compilation.
+	compile (a_pattern: READABLE_STRING_GENERAL)
+			-- Compile `a_pattern'.
+			-- Set `is_compiled' to True after successful compilation.
 		require
 			a_pattern_not_void: a_pattern /= Void
 		deferred
@@ -119,7 +119,7 @@ feature -- Status report
 			Result := captured_start_position (n) > captured_end_position (n)
 		end
 
-	matches (a_subject: STRING): BOOLEAN
+	matches (a_subject: like subject): BOOLEAN
 			-- Does `a_subject' include a token of the language
 			-- described by current pattern?
 		require
@@ -135,7 +135,7 @@ feature -- Status report
 			subject_end_set: subject_end = a_subject.count
 		end
 
-	recognizes (a_subject: STRING): BOOLEAN
+	recognizes (a_subject: like subject): BOOLEAN
 			-- Is `a_subject' a token of the language
 			-- described by current pattern?
 		require
@@ -156,12 +156,12 @@ feature -- Status report
 
 feature -- Access
 
-	pattern: detachable STRING
+	pattern: detachable READABLE_STRING_GENERAL
 			-- Pattern being matched
 		deferred
 		end
 
-	subject: STRING
+	subject: READABLE_STRING_GENERAL
 			-- Last input string passed to the matcher
 
 	subject_start: INTEGER
@@ -229,6 +229,36 @@ feature -- Access
 	captured_substring (n: INTEGER): STRING
 			-- `n'-th captured substring;
 			-- 'n = 0' represents the whole matched string.
+			--
+			-- This is the case where `subject' is a STRING
+			-- and you want the result to be STRING as well.
+			-- Use `unicode_captured_substring' otherwise.
+		require
+			has_matched: has_matched
+			subject_is_string: attached {STRING} subject
+			n_large_enough: n >= 0
+			n_small_enough: n < match_count
+		local
+			i, nb: INTEGER
+		do
+			check precodition: attached {STRING} subject as l_subject_string then
+				i := captured_start_position (n)
+				nb := captured_end_position (n)
+				if i >= 1 and nb >= i then
+					Result := l_subject_string.substring (i, nb)
+				else
+					Result := l_subject_string.substring (1, 0)
+				end
+			end
+		ensure
+			captured_substring_not_void: Result /= Void
+			same_type: ANY_.same_types (Result, subject)
+			definition: Result.is_equal (subject.substring (captured_start_position (n), captured_end_position (n)).to_string_8)
+		end
+
+	unicode_captured_substring (n: INTEGER): STRING_32
+			-- `n'-th captured substring;
+			-- 'n = 0' represents the whole matched string.
 		require
 			has_matched: has_matched
 			n_large_enough: n >= 0
@@ -238,19 +268,20 @@ feature -- Access
 		do
 			i := captured_start_position (n)
 			nb := captured_end_position (n)
-			if i >= 1 and nb <= subject.count then
-				Result := subject.substring (i, nb)
+			if i >= 1 and nb >= i then
+				create Result.make (nb - i + 1)
+				STRING_.append_substring_to_string (Result, subject, i, nb)
 			else
-				Result := subject.substring (1, 0)
+				create Result.make_empty
 			end
 		ensure
-			captured_substring_not_void: Result /= Void
-			same_type: ANY_.same_types (Result, subject)
+			unicode_captured_substring_not_void: Result /= Void
+			definition: Result.is_equal (subject.substring (captured_start_position (n), captured_end_position (n)).to_string_32)
 		end
 
 feature -- Element change
 
-	append_captured_substring_to_string (a_string: STRING; n: INTEGER)
+	append_captured_substring_to_string (a_string: STRING_GENERAL; n: INTEGER)
 			-- Append `n'-th captured substring to `a_string';
 			-- 'n = 0' represents the whole matched string.
 		require
@@ -258,20 +289,20 @@ feature -- Element change
 			n_large_enough: n >= 0
 			n_small_enough: n < match_count
 			a_string_not_void: a_string /= Void
-			same_type: ANY_.same_types (a_string, subject)
+			valid_codes: across captured_start_position (n) |..| captured_end_position (n) as i all a_string.valid_code (subject.code (i.item)) end
 		local
-			i, nb: INTEGER
+			j, nb: INTEGER
 		do
-			i := captured_start_position (n)
+			j := captured_start_position (n)
 			nb := captured_end_position (n)
-			if i >= 1 and nb <= subject.count then
-				STRING_.append_substring_to_string (a_string, subject, i, nb)
+			if j >= 1 and nb <= subject.count then
+				STRING_.append_substring_to_string (a_string, subject, j, nb)
 			end
 		end
 
 feature -- Matching
 
-	match (a_subject: STRING)
+	match (a_subject: like subject)
 			-- Try to match `a_subject' with the current pattern.
 			-- Make result available in `has_matched' and the various
 			-- `*_captured_*' features.
@@ -287,7 +318,7 @@ feature -- Matching
 			subject_end_set: subject_end = a_subject.count
 		end
 
-	match_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -306,7 +337,7 @@ feature -- Matching
 			subject_end_set: subject_end = a_to
 		end
 
-	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_unbounded_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -330,7 +361,7 @@ feature -- Matching
 
 feature -- Multiple matching
 
-	match_strings (an_input: DS_LINEAR [STRING]; an_output: DS_EXTENDIBLE [STRING])
+	match_strings (an_input: DS_LINEAR [like subject]; an_output: DS_EXTENDIBLE [like subject])
 			-- Put in `an_output' all strings of `an_input' that include
 			-- a token of the language described by current pattern.
 			-- (Strings are inserted in `an_output' in the same order
@@ -342,8 +373,8 @@ feature -- Multiple matching
 			no_void_input: not an_input.has_void
 			an_output_not_void: an_output /= Void
 		local
-			a_cursor: DS_LINEAR_CURSOR [STRING]
-			a_string: STRING
+			a_cursor: DS_LINEAR_CURSOR [like subject]
+			a_string: like subject
 		do
 			a_cursor := an_input.new_cursor
 			from
@@ -359,7 +390,7 @@ feature -- Multiple matching
 			end
 		end
 
-	recognize_strings (an_input: DS_LINEAR [STRING]; an_output: DS_EXTENDIBLE [STRING])
+	recognize_strings (an_input: DS_LINEAR [like subject]; an_output: DS_EXTENDIBLE [like subject])
 			-- Put in `an_output' all strings of `an_input' that are
 			-- tokens of the language described by current pattern.
 			-- (Strings are inserted in `an_output' in the same order
@@ -371,8 +402,8 @@ feature -- Multiple matching
 			no_void_input: not an_input.has_void
 			an_output_not_void: an_output /= Void
 		local
-			a_cursor: DS_LINEAR_CURSOR [STRING]
-			a_string: STRING
+			a_cursor: DS_LINEAR_CURSOR [like subject]
+			a_string: like subject
 		do
 			a_cursor := an_input.new_cursor
 			from
@@ -386,6 +417,18 @@ feature -- Multiple matching
 				end
 				a_cursor.forth
 			end
+		end
+
+feature {NONE} -- Setting
+
+	set_subject (a_subject: like subject)
+			-- Set `subject' to `a_subject'.
+		require
+			a_subject_not_void: a_subject /= Void
+		do
+			subject := a_subject
+		ensure
+			subject_set: subject = a_subject
 		end
 
 feature {NONE} -- Implementation

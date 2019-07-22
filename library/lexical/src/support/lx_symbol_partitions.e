@@ -6,7 +6,7 @@ note
 		%possibly belonging to none of the equivalence classes"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,48 +84,21 @@ feature -- Element change
 			-- and record `symbol_class''s symbols as members
 			-- of a partition.
 		local
-			i, j, nb, max, symbol: INTEGER
+			i, nb: INTEGER
 			symbol_table: ARRAY [BOOLEAN]
 		do
 			precursor (symbol_class)
-			nb := symbol_class.count
 			symbol_table := symbols
-			if symbol_class.negated then
-				j := lower - 1
-				max := upper
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					symbol := symbol_class.item (i)
-					from
-						j := j + 1
-					until
-						j >= symbol
-					loop
-						symbol_table.put (True, j)
-						j := j + 1
-					end
-					i := i + 1
+			from
+				i := lower
+				nb := upper
+			until
+				i > nb
+			loop
+				if symbol_class.has (i) then
+					symbol_table.put (True, i)
 				end
-				from
-					j := j + 1
-				until
-					j > max
-				loop
-					symbol_table.put (True, j)
-					j := j + 1
-				end
-			else
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					symbol_table.put (True, symbol_class.item (i))
-					i := i + 1
-				end
+				i := i + 1
 			end
 		end
 

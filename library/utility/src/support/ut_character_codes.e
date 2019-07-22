@@ -9,7 +9,7 @@ note
 		"Character codes are declared as integer constants such as %
 		% Lower_a_code: INTEGER = 97 %
 		%rather than once functions such as %
-		% Lower_a_code once Result := ('a').code end %
+		% Lower_a_code: INTEGER once Result := ('a').code end %
 		%This is due to the fact that these character codes need to be %
 		%integer constants in order to appear in multi-branch instructions."
 

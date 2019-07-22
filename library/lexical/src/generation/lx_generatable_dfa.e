@@ -5,7 +5,7 @@ note
 		"DFA equipped with lexical analyzer generator"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,7 +51,6 @@ feature {NONE} -- Initialization
 			else
 				input_filename := Default_input_filename
 			end
-			characters_count := a_description.characters_count
 			array_size := a_description.array_size
 			inspect_used := a_description.inspect_used
 			actions_separated := a_description.actions_separated
@@ -66,7 +65,7 @@ feature {NONE} -- Initialization
 			yy_start_conditions := a_description.start_conditions.names
 			build_rules (a_description.rules)
 			build_eof_rules (a_description.eof_rules, 0, yy_start_conditions.count - 1)
-			max := characters_count
+			max := a_description.symbol_count
 			equiv_classes := a_description.equiv_classes
 			if equiv_classes /= Void and then equiv_classes.built then
 				l_yy_ec := equiv_classes.to_array (0, max)
@@ -847,7 +846,7 @@ feature {NONE} -- Generation
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			has_transition: ARRAY [BOOLEAN]
 		do
-			nb := characters_count
+			nb := maximum_symbol - minimum_symbol + 1
 			transitions := a_state.transitions
 			create has_transition.make_filled (False, 0, nb - 1)
 			if attached yy_ec as l_yy_ec then
@@ -1086,11 +1085,6 @@ feature {NONE} -- Access
 	line_pragma: BOOLEAN
 			-- Should line pragma be generated?
 
-	characters_count: INTEGER
-			-- Number of characters in character set
-			-- handled by the generated scanners
-			-- (The character set is always assumed to start from 0.)
-
 	array_size: INTEGER
 			-- Maximum size supported for manifest arrays
 
@@ -1124,7 +1118,6 @@ invariant
 
 	minimum_symbol: minimum_symbol = 1
 	no_void_eiffel_header: eiffel_header /= Void implies not eiffel_header.has_void
-	characters_count_positive: characters_count > 0
 	array_size_positive: array_size >= 0
 	input_filename_not_void: input_filename /= Void
 

@@ -5,7 +5,7 @@ note
 		"PCRE regexp compilers"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2008, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2019, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,9 +35,6 @@ inherit
 				default_word_set
 			{NONE} all
 		end
-
-	UT_CHARACTER_CODES
-		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -91,6 +88,8 @@ feature -- Status report
 			-- Do letters in the pattern match both upper- and lower-case letters?
 			-- This option cannot be changed after compilation.
 			-- (It is equivalent to Perl's /i option.)
+			-- Note that, unless overridden with `set_character_case_mapping',
+			-- only ASCII characters (with code less than 128) are taken into account.
 		do
 			Result := is_caseless
 		ensure
@@ -101,6 +100,8 @@ feature -- Status report
 			-- Do letters in the pattern match both upper- and lower-case letters?
 			-- This option cannot be changed after compilation.
 			-- (It is equivalent to Perl's /i option.)
+			-- Note that, unless overridden with `set_character_case_mapping',
+			-- only ASCII characters (with code less than 128) are taken into account.
 
 	is_extended: BOOLEAN
 			-- Are whitespace data characters in the pattern totally ignored
@@ -202,7 +203,7 @@ feature -- Status report
 
 feature -- Access
 
-	pattern: detachable STRING
+	pattern: detachable READABLE_STRING_GENERAL
 			-- Pattern being compiled
 
 	byte_code: RX_BYTE_CODE
@@ -354,7 +355,7 @@ feature -- Status setting
 
 feature {RX_PCRE_MATCHER} -- Status setting
 
-	set_ims_options (an_option: INTEGER)
+	set_ims_options (an_option: NATURAL_32)
 			-- Set `is_caseless', `is_multiline' and `is_dotall'
 			-- from values encoded in `an_option'.
 		do
@@ -394,7 +395,7 @@ feature -- Setting
 
 feature -- Compilation
 
-	compile (a_pattern: STRING)
+	compile (a_pattern: READABLE_STRING_GENERAL)
 			-- Compile regular expression `a_pattern'.
 			-- The compilation is driven by the various option flags.
 			-- Set `is_compiled' to true if the pattern has been
@@ -403,11 +404,14 @@ feature -- Compilation
 		require
 			a_pattern_not_void: a_pattern /= Void
 		local
-			an_option: INTEGER
+			an_option: NATURAL_32
+			l_hex: STRING
+			c: NATURAL_32
 		do
 			pattern := a_pattern
-			pattern_buffer := a_pattern.twin
-			pattern_buffer.append_character ('%U')
+			create {STRING_32} pattern_buffer.make (a_pattern.count + 1)
+			pattern_buffer.append (a_pattern)
+			pattern_buffer.append_code (0)
 			pattern_count := a_pattern.count
 			pattern_position := 1
 			code_index := 0
@@ -423,7 +427,11 @@ feature -- Compilation
 			set_error (err_msg_99, 99, pattern_position)
 			debug ("REGEXP")
 				std.output.put_string ("COMPILING PATTERN: ")
-				std.output.put_line (a_pattern)
+				if a_pattern.is_valid_as_string_8 then
+					std.output.put_line (a_pattern.to_string_8)
+				else
+					std.output.put_line ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_pattern))
+				end
 				print_options (std.output)
 			end
 				-- Enclose the whole pattern in a bracket.
@@ -474,14 +482,27 @@ feature -- Compilation
 				end
 			end
 			debug ("REGEXP")
-				if (not is_compiled) then
+				if not is_compiled then
 					std.output.put_string ("COMPILER ERROR: ")
 					std.output.put_string (error_message)
 					std.output.put_string (" at ")
 					std.output.put_integer (error_position)
 					std.output.put_string (" character: ")
 					if 1 <= error_position and error_position <= pattern_count then
-						std.output.put_character (pattern_buffer.item (error_position))
+						c := pattern_buffer.code (error_position)
+						if c <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (c) then
+							std.output.put_character (c.to_character_8)
+						else
+							std.output.put_string ("\x")
+							l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (c, False)
+							if l_hex.count > 2 then
+								std.output.put_character ('{')
+								std.output.put_string (l_hex)
+								std.output.put_character ('}')
+							else
+								STRING_FORMATTER_.put_left_padded_string (std.output, l_hex, 2, '0')
+							end
+						end
 					end
 				end
 				print_compiled_pattern_code (std.output, False)
@@ -544,8 +565,8 @@ feature -- Reset
 			-- Do not change the options (see `set_default_options' for the list of options).
 		do
 			set_error (err_msg_99, 99, 0)
-			STRING_.wipe_out (pattern_buffer)
-			pattern_buffer.append_character ('%U')
+			pattern_buffer.wipe_out
+			pattern_buffer.append_code (0)
 			pattern_count := 0
 			pattern := Void
 		ensure
@@ -606,8 +627,9 @@ feature -- Debugging
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			i, j: INTEGER
+			i, j: NATURAL_32
 			l_start_bits: like start_bits
+			l_hex: STRING
 		do
 			l_start_bits := start_bits
 			if l_start_bits = Void then
@@ -618,7 +640,7 @@ feature -- Debugging
 					i := 0
 					j := 24
 				until
-					i > 255
+					i > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code
 				loop
 					if l_start_bits.has (i) then
 						if j > 75 then
@@ -626,12 +648,19 @@ feature -- Debugging
 							a_file.put_string ("  ")
 							j := 2
 						end
-						if print_set.has (i) and then i /= Space_code then
-							a_file.put_character (INTEGER_.to_character (i))
+						if i <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (i) and then i /= Space_code then
+							a_file.put_character (i.to_character_8)
 							j := j + 2
 						else
 							a_file.put_string ("\x")
-							STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (i, False), 2, '0')
+							l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (i, False)
+							if l_hex.count > 2 then
+								a_file.put_character ('{')
+								a_file.put_string (l_hex)
+								a_file.put_character ('}')
+							else
+								STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+							end
 							j := j + 5
 						end
 						a_file.put_character (' ')
@@ -649,14 +678,15 @@ feature -- Debugging
 			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
-			j, k: INTEGER
+			j, k: NATURAL_32
 			len: INTEGER
-			an_op: INTEGER
-			a_code: INTEGER
-			a_min, a_max: INTEGER
+			an_op: NATURAL_32
+			a_code: NATURAL_32
+			a_min, a_max: NATURAL_32
 			a_set: INTEGER
 			a_position: INTEGER
 			a_position_map: detachable like new_position_map
+			l_hex: STRING
 		do
 			if not a_native_code then
 				a_position_map := new_position_map
@@ -685,13 +715,13 @@ feature -- Debugging
 				if an_op >= op_bra then
 					if i + 1 <= nb then
 						if a_native_code then
-							a_position := byte_code.integer_item (i + 1)
+							a_position := byte_code.integer_item (i + 1).to_integer_32
 						else
 							check
 									-- `a_position_map' has been set when `a_native_code' is False.
 								a_position_map_not_void: a_position_map /= Void
 							then
-								a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
+								a_position := map_position (i + byte_code.integer_item (i + 1).to_integer_32, a_position_map) - map_position (i, a_position_map)
 							end
 						end
 						STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
@@ -699,20 +729,20 @@ feature -- Debugging
 						a_file.put_string ("end-of-byte-code")
 					end
 					a_file.put_string (" Bra ")
-					a_file.put_integer (an_op - op_bra)
+					a_file.put_natural_32 (an_op - op_bra)
 					i := i + 1
 				else
 					inspect an_op
 					when op_alt then
 						if i + 1 <= nb then
 							if a_native_code then
-								a_position := byte_code.integer_item (i + 1)
+								a_position := byte_code.integer_item (i + 1).to_integer_32
 							else
 								check
 										-- `a_position_map' has been set when `a_native_code' is False.
 									a_position_map_not_void: a_position_map /= Void
 								then
-									a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
+									a_position := map_position (i + byte_code.integer_item (i + 1).to_integer_32, a_position_map) - map_position (i, a_position_map)
 								end
 							end
 							STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
@@ -725,13 +755,13 @@ feature -- Debugging
 					when op_ket then
 						if i + 1 <= nb then
 							if a_native_code then
-								a_position := byte_code.integer_item (i + 1)
+								a_position := byte_code.integer_item (i + 1).to_integer_32
 							else
 								check
 										-- `a_position_map' has been set when `a_native_code' is False.
 									a_position_map_not_void: a_position_map /= Void
 								then
-									a_position := map_position (i, a_position_map) - map_position (i - byte_code.integer_item (i + 1), a_position_map)
+									a_position := map_position (i, a_position_map) - map_position (i - byte_code.integer_item (i + 1).to_integer_32, a_position_map)
 								end
 							end
 							STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
@@ -744,7 +774,7 @@ feature -- Debugging
 					when op_opt then
 						if i + 1 <= nb then
 							a_file.put_character (' ')
-							STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (byte_code.integer_item (i + 1), False), 2, '0')
+							STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (byte_code.integer_item (i + 1).to_integer_32, False), 2, '0')
 						else
 							a_file.put_string ("end-of-byte-code")
 						end
@@ -765,7 +795,7 @@ feature -- Debugging
 						i := i + 1
 					when op_chars then
 						if i + 1 <= nb then
-							len := byte_code.integer_item (i + 1)
+							len := byte_code.integer_item (i + 1).to_integer_32
 							STRING_FORMATTER_.put_left_padded_string (a_file, len.out, 3, ' ')
 							a_file.put_character (' ')
 							i := i + 1
@@ -776,11 +806,18 @@ feature -- Debugging
 									len <= 0
 								loop
 									a_code := byte_code.character_item (i)
-									if a_code < 256 and then print_set.has (a_code) then
-										a_file.put_character (INTEGER_.to_character (a_code))
+									if a_code <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (a_code) then
+										a_file.put_character (a_code.to_character_8)
 									else
 										a_file.put_string ("\x")
-										STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
+										l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (a_code, False)
+										if l_hex.count > 2 then
+											a_file.put_character ('{')
+											a_file.put_string (l_hex)
+											a_file.put_character ('}')
+										else
+											STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+										end
 									end
 									i := i + 1
 									len := len - 1
@@ -795,11 +832,18 @@ feature -- Debugging
 					when op_star, op_minstar, op_plus, op_minplus, op_query, op_minquery then
 						if i + 1 <= nb then
 							a_code := byte_code.character_item (i + 1)
-							if a_code < 256 and then print_set.has (a_code) then
-								a_file.put_character (INTEGER_.to_character (a_code))
+							if a_code <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (a_code) then
+								a_file.put_character (a_code.to_character_8)
 							else
 								a_file.put_string ("\x")
-								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
+								l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (a_code, False)
+								if l_hex.count > 2 then
+									a_file.put_character ('{')
+									a_file.put_string (l_hex)
+									a_file.put_character ('}')
+								else
+									STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+								end
 							end
 						else
 							a_file.put_string ("end-of-byte-code")
@@ -819,11 +863,18 @@ feature -- Debugging
 					when op_exact, op_upto, op_minupto then
 						if i + 2 <= nb then
 							a_code := byte_code.character_item (i + 2)
-							if a_code < 256 and then print_set.has (a_code) then
-								a_file.put_character (INTEGER_.to_character (a_code))
+							if a_code <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (a_code) then
+								a_file.put_character (a_code.to_character_8)
 							else
 								a_file.put_string ("\x")
-								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
+								l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (a_code, False)
+								if l_hex.count > 2 then
+									a_file.put_character ('{')
+									a_file.put_string (l_hex)
+									a_file.put_character ('}')
+								else
+									STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+								end
 							end
 							a_file.put_character ('{')
 							if an_op /= op_exact then
@@ -862,11 +913,18 @@ feature -- Debugging
 						a_file.put_string ("[^")
 						if i + 1 <= nb then
 							a_code := byte_code.character_item (i + 1)
-							if a_code < 256 and then print_set.has (a_code) then
-								a_file.put_character (INTEGER_.to_character (a_code))
+							if a_code <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (a_code) then
+								a_file.put_character (a_code.to_character_8)
 							else
 								a_file.put_string ("\x")
-								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
+								l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (a_code, False)
+								if l_hex.count > 2 then
+									a_file.put_character ('{')
+									a_file.put_string (l_hex)
+									a_file.put_character ('}')
+								else
+									STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+								end
 							end
 						else
 							a_file.put_string ("end-of-byte-code")
@@ -877,11 +935,18 @@ feature -- Debugging
 						a_file.put_string ("[^")
 						if i + 1 <= nb then
 							a_code := byte_code.character_item (i + 1)
-							if a_code < 256 and then print_set.has (a_code) then
-								a_file.put_character (INTEGER_.to_character (a_code))
+							if a_code <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (a_code) then
+								a_file.put_character (a_code.to_character_8)
 							else
 								a_file.put_string ("\x")
-								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
+								l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (a_code, False)
+								if l_hex.count > 2 then
+									a_file.put_character ('{')
+									a_file.put_string (l_hex)
+									a_file.put_character ('}')
+								else
+									STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+								end
 							end
 						else
 							a_file.put_string ("end-of-byte-code")
@@ -893,11 +958,18 @@ feature -- Debugging
 						a_file.put_string ("[^")
 						if i + 2 <= nb then
 							a_code := byte_code.character_item (i + 2)
-							if a_code < 256 and then print_set.has (a_code) then
-								a_file.put_character (INTEGER_.to_character (a_code))
+							if a_code <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (a_code) then
+								a_file.put_character (a_code.to_character_8)
 							else
 								a_file.put_string ("\x")
-								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
+								l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (a_code, False)
+								if l_hex.count > 2 then
+									a_file.put_character ('{')
+									a_file.put_string (l_hex)
+									a_file.put_character ('}')
+								else
+									STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+								end
 							end
 							a_file.put_string ("](")
 							if an_op /= op_notexact then
@@ -925,35 +997,49 @@ feature -- Debugging
 							end
 							a_file.put_string ("    [")
 							if i + 1 <= nb then
-								a_set := byte_code.integer_item (i + 1)
+								a_set := byte_code.integer_item (i + 1).to_integer_32
 								if byte_code.valid_character_set (a_set) then
 									from
 										j := 0
 									until
-										j > 255
+										j > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code
 									loop
 										if byte_code.character_set_has (a_set, j) then
 											from
 												k := j + 1
 											until
-												k > 255 or else not byte_code.character_set_has (a_set, k)
+												k > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code or else not byte_code.character_set_has (a_set, k)
 											loop
 												k := k + 1
 											end
-											if print_set.has (j) then
-												a_file.put_character (INTEGER_.to_character (j))
+											if j <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (j) then
+												a_file.put_character (j.to_character_8)
 											else
 												a_file.put_string ("\x")
-												STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (j, False), 2, '0')
+												l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (j, False)
+												if l_hex.count > 2 then
+													a_file.put_character ('{')
+													a_file.put_string (l_hex)
+													a_file.put_character ('}')
+												else
+													STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+												end
 											end
 											k := k - 1
 											if k > j then
 												a_file.put_character ('-')
-												if print_set.has (k) then
-													a_file.put_character (INTEGER_.to_character (k))
+												if k <= {CHARACTER_8}.max_value.to_natural_32 and then print_set.has (k) then
+													a_file.put_character (k.to_character_8)
 												else
 													a_file.put_string ("\x")
-													STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (k, False), 2, '0')
+													l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (k, False)
+													if l_hex.count > 2 then
+														a_file.put_character ('{')
+														a_file.put_string (l_hex)
+														a_file.put_character ('}')
+													else
+														STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+													end
 												end
 											end
 											j := k
@@ -1013,6 +1099,8 @@ feature -- Debugging
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
+		local
+			l_hex: STRING
 		do
 			a_file.put_string ("Capturing subpattern count = ")
 			a_file.put_integer (subexpression_count)
@@ -1025,15 +1113,22 @@ feature -- Debugging
 			print_options (a_file)
 			if first_character >= 0 then
 				a_file.put_string ("First char = ")
-				if first_character < 256 and then print_set.has (first_character) then
+				if first_character <= {CHARACTER_8}.max_value and then print_set.has (first_character.to_natural_32) then
 					a_file.put_character ('%'')
-					a_file.put_character (INTEGER_.to_character (first_character))
+					a_file.put_character (first_character.to_character_8)
 					a_file.put_character ('%'')
 				elseif first_character < 32 then
-					a_file.put_integer (first_character)
+					a_file.put_integer_64 (first_character)
 				else
 					a_file.put_string ("\x")
-					STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (first_character, False), 2, '0')
+					l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (first_character.to_natural_32, False)
+					if l_hex.count > 2 then
+						a_file.put_character ('{')
+						a_file.put_string (l_hex)
+						a_file.put_character ('}')
+					else
+						STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+					end
 				end
 				a_file.put_new_line
 			elseif is_startline then
@@ -1043,15 +1138,22 @@ feature -- Debugging
 			end
 			if required_character >= 0 then
 				a_file.put_string ("Need char = ")
-				if required_character < 256 and then print_set.has (required_character) then
+				if required_character <= {CHARACTER_8}.max_value and then print_set.has (required_character.to_natural_32) then
 					a_file.put_character ('%'')
-					a_file.put_character (INTEGER_.to_character (required_character))
+					a_file.put_character (required_character.to_character_8)
 					a_file.put_character ('%'')
 				elseif required_character < 32 then
-					a_file.put_integer (required_character)
+					a_file.put_integer_64 (required_character)
 				else
 					a_file.put_string ("\x")
-					STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (required_character, False), 2, '0')
+					l_hex := {KL_NATURAL_32_ROUTINES}.to_hexadecimal (required_character.to_natural_32, False)
+					if l_hex.count > 2 then
+						a_file.put_character ('{')
+						a_file.put_string (l_hex)
+						a_file.put_character ('}')
+					else
+						STRING_FORMATTER_.put_left_padded_string (a_file, l_hex, 2, '0')
+					end
 				end
 				a_file.put_new_line
 			else
@@ -1087,7 +1189,7 @@ feature {NONE} -- Debug helpers
 		local
 			i, nb: INTEGER
 			len: INTEGER
-			an_op: INTEGER
+			an_op: NATURAL_32
 			byte_offset: INTEGER
 		do
 			nb := byte_code.count - 1
@@ -1113,7 +1215,7 @@ feature {NONE} -- Debug helpers
 						byte_offset := byte_offset + 2
 						i := i + 1
 					when op_chars then
-						len := byte_code.integer_item (i + 1)
+						len := byte_code.integer_item (i + 1).to_integer_32
 						byte_offset := byte_offset + len + 2
 						i := i + len + 1
 					when op_ketrmax, op_ketrmin, op_alt, op_ket, op_assert, op_assert_not,
@@ -1192,9 +1294,9 @@ feature {NONE} -- Status report
 
 	is_ichanged: BOOLEAN
 
-	optchanged: INTEGER
+	optchanged: NATURAL_32
 
-	ims_options: INTEGER
+	ims_options: NATURAL_32
 			-- Encoded options containing `is_caseless',
 			-- `is_multiline' and `is_dotall'
 		do
@@ -1243,7 +1345,7 @@ feature {NONE} -- Access
 	code_index: INTEGER
 			-- Position in byte code
 
-	pattern_buffer: STRING
+	pattern_buffer: STRING_GENERAL
 			-- Buffer containing the regular expression pattern being compiled
 
 	pattern_position: INTEGER
@@ -1264,11 +1366,11 @@ feature {NONE} -- Access
 	start_bits: detachable RX_CHARACTER_SET
 			-- A set of starting characters. This will be filled in by the optimizer
 
-	first_character: INTEGER
+	first_character: INTEGER_64
 			-- First character in regular expression
-			-- if any; -1 otherwise
+			-- if any, -1 otherwise
 
-	required_character: INTEGER
+	required_character: INTEGER_64
 			-- Required character in regular expression
 			-- if any, -1 or -2 otherwise
 
@@ -1284,7 +1386,8 @@ feature {NONE} -- Access
 			a_position_large_enough: a_position >= 0
 			a_position_small_enough: a_position < byte_code.count - 2
 		local
-			cc, d, op: INTEGER
+			cc, d: INTEGER
+			op: NATURAL_32
 			branchlength: INTEGER
 			stop: BOOLEAN
 		do
@@ -1311,11 +1414,11 @@ feature {NONE} -- Access
 					else
 						branchlength := branchlength + d
 						from
-							cc := cc + byte_code.integer_item (cc + 1)
+							cc := cc + byte_code.integer_item (cc + 1).to_integer_32
 						until
 							byte_code.opcode_item (cc) /= op_alt
 						loop
-							cc := cc + byte_code.integer_item (cc + 1)
+							cc := cc + byte_code.integer_item (cc + 1).to_integer_32
 						end
 							-- Skip the opcode and the length of the
 							-- branch stored in the byte code.
@@ -1344,11 +1447,11 @@ feature {NONE} -- Access
 				when op_assert, op_assert_not, op_assertback, op_assertback_not then
 						-- Skip over assertive subpatterns.
 					from
-						cc := cc + byte_code.integer_item (cc + 1)
+						cc := cc + byte_code.integer_item (cc + 1).to_integer_32
 					until
 						byte_code.opcode_item (cc) /= op_alt
 					loop
-						cc := cc + byte_code.integer_item (cc + 1)
+						cc := cc + byte_code.integer_item (cc + 1).to_integer_32
 					end
 						-- Skip the opcode and the length of the
 						-- branch stored in the byte code.
@@ -1365,12 +1468,12 @@ feature {NONE} -- Access
 				when op_chars then
 						-- Handle char strings.
 					cc := cc + 1
-					d := byte_code.integer_item (cc)
+					d := byte_code.integer_item (cc).to_integer_32
 					branchlength := branchlength + d
 					cc := cc + d + 1
 				when op_exact, op_typeexact then
 						-- Handle exact repetitions.
-					branchlength := branchlength + byte_code.integer_item (cc + 1)
+					branchlength := branchlength + byte_code.integer_item (cc + 1).to_integer_32
 						-- Skip the opcode, the number of matches and the
 						-- repeated opcode stored in the byte code.
 					cc := cc + 3
@@ -1389,8 +1492,8 @@ feature {NONE} -- Access
 						Result := -1
 						stop := True
 					when op_crrange, op_crminrange then
-						d := byte_code.integer_item (cc + 1)
-						if d /= byte_code.integer_item (cc + 2) then
+						d := byte_code.integer_item (cc + 1).to_integer_32
+						if d /= byte_code.integer_item (cc + 2).to_integer_32 then
 							Result := -1
 							stop := True
 						else
@@ -1410,7 +1513,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Compilation
 
-	compile_regexp (a_changed_options: INTEGER; a_in_group, a_lookbehind: BOOLEAN; a_condref: INTEGER)
+	compile_regexp (a_changed_options: NATURAL_32; a_in_group, a_lookbehind: BOOLEAN; a_condref: INTEGER_64)
 			-- On entry, `pattern_position' is pointing past the bracket character, but on
 			-- return it points to the closing bracket, or vertical bar, or end of string.
 			-- The `op_bra' opcode has already been appended to the byte code, but the following
@@ -1425,10 +1528,11 @@ feature {NONE} -- Compilation
 			last_branch: INTEGER
 			start_bracket: INTEGER
 			reverse_count: INTEGER
-			saved_reqchar, saved_countlits: INTEGER
+			saved_reqchar: INTEGER_64
+			saved_countlits: INTEGER
 			length: INTEGER
-			changed_options: INTEGER
-			old_options: INTEGER
+			changed_options: NATURAL_32
+			old_options: NATURAL_32
 			stop: BOOLEAN
 		do
 			changed_options := a_changed_options
@@ -1443,7 +1547,7 @@ feature {NONE} -- Compilation
 				-- insert the reference number as an `op_cref' item.
 			if a_condref >= 0 then
 				byte_code.append_opcode (op_cref)
-				byte_code.append_integer (a_condref)
+				byte_code.append_integer (a_condref.to_natural_32)
 			end
 				-- Loop for each alternative branch.
 			from
@@ -1473,7 +1577,7 @@ feature {NONE} -- Compilation
 				if error_message = err_msg_99 then
 						-- Fill in the length of the last branch.
 					length := byte_code.count - last_branch
-					byte_code.put_integer (length, last_branch + 1)
+					byte_code.put_integer (length.to_natural_32, last_branch + 1)
 						-- Save the last required character if all branches have
 						-- the same; a current value of -1 means unset, while -2
 						-- means "previous branch had no last required char".
@@ -1504,17 +1608,17 @@ feature {NONE} -- Compilation
 						if length < 0 then
 							set_error (err_msg_25, 25, pattern_position)
 						else
-							byte_code.put_integer (length, reverse_count)
+							byte_code.put_integer (length.to_natural_32, reverse_count)
 						end
 					end
 						-- Reached end of expression, either ')' or end of pattern. Insert a
 						-- terminating ket and the length of the whole bracketed item, and return,
 						-- leaving the pointer at the terminating char. If any of the ims options
 						-- were changed inside the group, compile a resetting opcode following.
-					if pattern_buffer.item_code (pattern_position) /= Bar_code then
+					if pattern_buffer.code (pattern_position) /= Bar_code then
 						length := byte_code.count - start_bracket
 						byte_code.append_opcode (op_ket)
-						byte_code.append_integer (length)
+						byte_code.append_integer (length.to_natural_32)
 						if a_in_group and then not is_option_undef (changed_options) then
 							byte_code.append_opcode (op_opt)
 							byte_code.append_integer (old_options)
@@ -1536,18 +1640,21 @@ feature {NONE} -- Compilation
 	compile_branch (a_in_group: BOOLEAN)
 			-- Scan the pattern, compiling it into the byte code.
 		local
-			bravalue, length, val: INTEGER
+			bravalue: NATURAL_32
+			l_bravalue_set: BOOLEAN
+			length: INTEGER
+			val: INTEGER_64
 			condcount: INTEGER
 			previous: INTEGER
 			tempcode, tc: INTEGER
-			condref: INTEGER
-			sub_countlits, sub_reqchar: INTEGER
-			prevreqchar: INTEGER
-			saved_countlits, saved_reqchar: INTEGER
-			newoptions, opt: INTEGER
-			old_options: INTEGER
+			condref: INTEGER_64
+			sub_countlits: INTEGER
+			sub_reqchar, prevreqchar, saved_reqchar: INTEGER_64
+			saved_countlits: INTEGER
+			newoptions, opt: NATURAL_32
+			old_options: NATURAL_32
 			old_extended, old_greedy: BOOLEAN
-			c: INTEGER
+			c: NATURAL_32
 			stop, flag: BOOLEAN
 		do
 				-- Initialize no required char, and count of literals.
@@ -1565,7 +1672,7 @@ feature {NONE} -- Compilation
 			until
 				stop or else pattern_position > pattern_count or else error_message /= err_msg_99
 			loop
-				c := pattern_buffer.item_code (pattern_position)
+				c := pattern_buffer.code (pattern_position)
 				if c = Left_brace_code and then compile_counted_repeats (previous, prevreqchar, sub_countlits) then
 					previous := 0
 				else
@@ -1609,27 +1716,27 @@ feature {NONE} -- Compilation
 						opt := ims_options
 						newoptions := opt
 						condref := -1
-						bravalue := -1
+						l_bravalue_set := False
 						pattern_position := pattern_position + 1
 						check
 								-- The last character read was '(', and there is at
 								-- least the character '%U' at the end of `pattern_buffer'.
 							valid_position: pattern_position <= pattern_buffer.count
 						end
-						if pattern_buffer.item_code (pattern_position) = Question_mark_code then
+						if pattern_buffer.code (pattern_position) = Question_mark_code then
 							pattern_position := pattern_position + 1
 							check
 									-- The last character read was '?', and there is at
 									-- least the character '%U' at the end of `pattern_buffer'.
 								valid_position: pattern_position <= pattern_buffer.count
 							end
-							inspect pattern_buffer.item_code (pattern_position)
+							inspect pattern_buffer.code (pattern_position)
 							when Pound_code then
 									-- Comment skip to ket.
 								from
 									tc := pattern_position + 1
 								until
-									tc > pattern_count or else pattern_buffer.item_code (tc) = Right_parenthesis_code
+									tc > pattern_count or else pattern_buffer.code (tc) = Right_parenthesis_code
 								loop
 									tc := tc + 1
 								end
@@ -1643,26 +1750,28 @@ feature {NONE} -- Compilation
 							when Colon_code then
 									-- Non-extracting bracket.
 								bravalue := op_bra
+								l_bravalue_set := True
 								pattern_position := pattern_position + 1
 							when Left_parenthesis_code then
 									-- Conditional group.
 								bravalue := op_cond
+								l_bravalue_set := True
 								pattern_position := pattern_position + 1
 								check
 										-- The last character read was '(', and there is at
 										-- least the character '%U' at the end of `pattern_buffer'.
 									valid_position: pattern_position <= pattern_buffer.count
 								end
-								inspect pattern_buffer.item_code (pattern_position)
+								inspect pattern_buffer.code (pattern_position)
 								when Zero_code .. Nine_code then
-									condref := scan_decimal_number (10)
+									condref := scan_decimal_number (10).to_integer_32
 									check
 											-- `scan_decimal_number' put `pattern_position' at the
 											-- first position that was not a digit, and there is at
 											-- least the character '%U' at the end of `pattern_buffer'.
 										valid_position: pattern_position <= pattern_buffer.count
 									end
-									if pattern_buffer.item_code (pattern_position) /= Right_parenthesis_code then
+									if pattern_buffer.code (pattern_position) /= Right_parenthesis_code then
 										set_error (err_msg_26, 26, pattern_position)
 									end
 									if condref = 0 then
@@ -1672,7 +1781,7 @@ feature {NONE} -- Compilation
 									end
 								else
 									tc := pattern_position
-									if pattern_buffer.item_code (tc) /= Question_mark_code then
+									if pattern_buffer.code (tc) /= Question_mark_code then
 										set_error (err_msg_28, 28, pattern_position)
 									else
 										check
@@ -1680,7 +1789,7 @@ feature {NONE} -- Compilation
 												-- least the character '%U' at the end of `pattern_buffer'.
 											valid_position: pattern_position <= pattern_buffer.count
 										end
-										inspect pattern_buffer.item_code (tc + 1)
+										inspect pattern_buffer.code (tc + 1)
 										when Equal_code, Exclamation_code, Less_than_code then
 												-- Do nothing.
 										else
@@ -1692,10 +1801,12 @@ feature {NONE} -- Compilation
 							when Equal_code then
 									-- Positive lookahead.
 								bravalue := op_assert
+								l_bravalue_set := True
 								pattern_position := pattern_position + 1
 							when Exclamation_code then
 									-- Negative lookahead.
 								bravalue := op_assert_not
+								l_bravalue_set := True
 								pattern_position := pattern_position + 1
 							when Less_than_code then
 									-- Lookbehinds.
@@ -1705,14 +1816,16 @@ feature {NONE} -- Compilation
 										-- least the character '%U' at the end of `pattern_buffer'.
 									valid_position: pattern_position <= pattern_buffer.count
 								end
-								inspect pattern_buffer.item_code (pattern_position)
+								inspect pattern_buffer.code (pattern_position)
 								when Equal_code then
 										-- Positive lookbehind.
 									bravalue := op_assertback
+									l_bravalue_set := True
 									pattern_position := pattern_position + 1
 								when Exclamation_code then
 										-- Negative lookbehind.
 									bravalue := op_assertback_not
+									l_bravalue_set := True
 									pattern_position := pattern_position + 1
 								else
 										-- Syntax error.
@@ -1721,6 +1834,7 @@ feature {NONE} -- Compilation
 							when Greater_than_code then
 									-- One-time brackets.
 								bravalue := op_once
+								l_bravalue_set := True
 								pattern_position := pattern_position + 1
 							when Upper_r_code then
 									-- Pattern recursion.
@@ -1729,7 +1843,7 @@ feature {NONE} -- Compilation
 							else
 									-- Option setting.
 								from
-									c := pattern_buffer.item_code (pattern_position)
+									c := pattern_buffer.code (pattern_position)
 									flag := True
 								until
 									c = Right_parenthesis_code or else c = Colon_code or else error_message /= err_msg_99
@@ -1774,7 +1888,7 @@ feature {NONE} -- Compilation
 												-- least the character '%U' at the end of `pattern_buffer'.
 											valid_position: pattern_position <= pattern_buffer.count
 										end
-										c := pattern_buffer.item_code (pattern_position)
+										c := pattern_buffer.code (pattern_position)
 									end
 								end
 								if c = Right_parenthesis_code then
@@ -1816,6 +1930,7 @@ feature {NONE} -- Compilation
 										-- not assertions of any kind. All we need to do is skip over the ':'
 										-- the newoptions value is handled below.
 									bravalue := op_bra
+									l_bravalue_set := True
 									pattern_position := pattern_position + 1
 									if is_caseless /= is_option_caseless (newoptions) then
 										set_ichanged (True)
@@ -1828,10 +1943,11 @@ feature {NONE} -- Compilation
 							if subexpression_count > extract_max then
 								set_error (err_msg_13, 13, pattern_position)
 							else
-								bravalue := op_bra + subexpression_count
+								bravalue := op_bra + subexpression_count.to_natural_32
+								l_bravalue_set := True
 							end
 						end
-						if bravalue >= 0 then
+						if l_bravalue_set then
 								-- Process nested bracketed re. Assertions may not be repeated, but other
 								-- kinds can be. We copy code into a non-register variable in order to be able
 								-- to pass its address because some compilers complain otherwise. Pass in a
@@ -1877,12 +1993,12 @@ feature {NONE} -- Compilation
 										-- two branches in the group.
 									from
 										condcount := 1
-										tc := tempcode + byte_code.integer_item (tempcode + 1)
+										tc := tempcode + byte_code.integer_item (tempcode + 1).to_integer_32
 									until
 										byte_code.opcode_item (tc) = op_ket
 									loop
 										condcount := condcount + 1
-										tc := tc + byte_code.integer_item (tc + 1)
+										tc := tc + byte_code.integer_item (tc + 1).to_integer_32
 									end
 									if condcount > 2 then
 										set_error (err_msg_27, 27, pattern_position)
@@ -1908,7 +2024,7 @@ feature {NONE} -- Compilation
 										regexp_countlits := regexp_countlits + sub_countlits
 									end
 								end
-								if pattern_buffer.item_code (pattern_position) /= Right_parenthesis_code then
+								if pattern_buffer.code (pattern_position) /= Right_parenthesis_code then
 										-- Error if hit end of pattern.
 									set_error (err_msg_14, 14, pattern_position)
 								end
@@ -1926,7 +2042,7 @@ feature {NONE} -- Compilation
 							-- Save space to store number of characters.
 						byte_code.append_integer (0)
 						length := 0
-						c := pattern_buffer.item_code (pattern_position)
+						c := pattern_buffer.code (pattern_position)
 						from
 							flag := False
 						until
@@ -1955,24 +2071,29 @@ feature {NONE} -- Compilation
 									end
 									if -val >= esc_ref then
 										byte_code.append_opcode (op_ref)
-										byte_code.append_integer (-val - esc_ref)
+										byte_code.append_integer ((-val - esc_ref).to_natural_32)
 									else
 										if -val <= esc_lcb or else -val >= esc_ucz then
 											previous := 0
 										end
-										byte_code.append_opcode (-val)
+										byte_code.append_opcode ((-val).to_natural_32)
 									end
 									pattern_position := pattern_position + 1
 									flag := True
 								else
-									c := val
+									c := val.to_natural_32
 									byte_code.append_character (c)
 									length := length + 1
 									flag := (error_message /= err_msg_99)
 								end
 							else
-								byte_code.append_character (c)
-								length := length + 1
+								if {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+									byte_code.append_character (c)
+									length := length + 1
+								else
+									set_error (err_msg_61, 61, pattern_position)
+									flag := True
+								end
 							end
 							if not flag then
 								pattern_position := pattern_position + 1
@@ -1982,7 +2103,7 @@ feature {NONE} -- Compilation
 								if pattern_position > pattern_count or length >= maxlit then
 									flag := True
 								else
-									c := pattern_buffer.item_code (pattern_position)
+									c := pattern_buffer.code (pattern_position)
 									flag := meta_set.has (c)
 								end
 							end
@@ -1990,7 +2111,7 @@ feature {NONE} -- Compilation
 						if length > 0 then
 								-- Update the last character and the count of literals.
 							if length > 1 then
-								prevreqchar := byte_code.character_item (tempcode + length - 1)
+								prevreqchar := byte_code.character_item (tempcode + length - 1).to_integer_64
 							else
 								prevreqchar := required_character
 							end
@@ -1998,7 +2119,7 @@ feature {NONE} -- Compilation
 							regexp_countlits := regexp_countlits + length
 								-- Compute the length and set it in the byte code,
 								-- and advance to the next state.
-							byte_code.put_integer (length, tempcode)
+							byte_code.put_integer (length.to_natural_32, tempcode)
 						end
 						if length <= maxlit then
 							pattern_position := pattern_position - 1
@@ -2019,29 +2140,27 @@ feature {NONE} -- Compilation
 			-- Compile character class.
 		require
 			pattern_position_small_enough: pattern_position <= pattern_count
-			is_character_class: pattern_buffer.item_code (pattern_position) = Left_bracket_code
+			is_character_class: pattern_buffer.code (pattern_position) = Left_bracket_code
 		local
-				-- We have to build a temporary character-map in case the
-				-- class contains only 1 character, because in that
-				-- case the compiled code doesn't use a character class.
 			class_set: RX_CHARACTER_SET
 			tmp_pat_index: INTEGER
-			posix_class, val: INTEGER
-			class_charcount: INTEGER
-			class_lastchar: INTEGER
-			c, range_end: INTEGER
+			posix_class: INTEGER
+			val: INTEGER_64
+			class_charcount: NATURAL_32
+			class_lastchar: INTEGER_64
+			c: NATURAL_32
+			range_end: NATURAL_32
 			negate_class: BOOLEAN
 			local_negate: BOOLEAN
 		do
-			class_set := actual_set
-			class_set.wipe_out
+			create class_set.make_empty
 			pattern_position := pattern_position + 1
 			check
 					-- The last character read was '[', and there is at
 					-- least the character '%U' at the end of `pattern_buffer'.
 				valid_position: pattern_position <= pattern_buffer.count
 			end
-			c := pattern_buffer.item_code (pattern_position)
+			c := pattern_buffer.code (pattern_position)
 			if c = Caret_code then
 					-- If the first character is '^', set the negation flag and skip it.
 				negate_class := True
@@ -2051,7 +2170,7 @@ feature {NONE} -- Compilation
 						-- least the character '%U' at the end of `pattern_buffer'.
 					valid_position: pattern_position <= pattern_buffer.count
 				end
-				c := pattern_buffer.item_code (pattern_position)
+				c := pattern_buffer.code (pattern_position)
 			end
 			from
 					-- Keep a count of chars so that we can optimize
@@ -2072,7 +2191,7 @@ feature {NONE} -- Compilation
 								-- least the character '%U' at the end of `pattern_buffer'.
 							valid_position: pattern_position <= pattern_buffer.count
 						end
-						inspect pattern_buffer.item_code (pattern_position + 1)
+						inspect pattern_buffer.code (pattern_position + 1)
 						when Colon_code, Dot_code, Equal_code then
 							tmp_pat_index := check_posix_syntax (pattern_position)
 						else
@@ -2086,11 +2205,11 @@ feature {NONE} -- Compilation
 							-- [.ch.] and [=ch=] ("collating elements") and fault them, as Perl
 							-- 5.6 does.
 						local_negate := False
-						if pattern_buffer.item_code (pattern_position + 1) /= Colon_code then
+						if pattern_buffer.code (pattern_position + 1) /= Colon_code then
 							set_error (err_msg_31, 31, pattern_position)
 						else
 							pattern_position := pattern_position + 2
-							if pattern_buffer.item_code (pattern_position) = Caret_code then
+							if pattern_buffer.code (pattern_position) = Caret_code then
 								pattern_position := pattern_position + 1
 								local_negate := True
 							end
@@ -2128,7 +2247,7 @@ feature {NONE} -- Compilation
 							val := scan_escape (subexpression_count, True)
 							if -val = esc_lcb then
 								c := Back_space_code
-								val := c
+								val := c.to_integer_64
 							elseif val < 0 then
 								class_charcount := class_charcount + 1
 								class_lastchar := val
@@ -2149,11 +2268,14 @@ feature {NONE} -- Compilation
 									set_error (err_msg_7, 7, pattern_position)
 								end
 							else
-								c := val
+								c := val.to_natural_32
 							end
+						elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+							set_error (err_msg_61, 61, pattern_position)
+							c := 0
 						end
 						if val >= 0 then
-							if pattern_buffer.item_code (pattern_position + 1) = Minus_code and then pattern_buffer.item_code (pattern_position + 2) /= Right_bracket_code then
+							if pattern_buffer.code (pattern_position + 1) = Minus_code and then pattern_buffer.code (pattern_position + 2) /= Right_bracket_code then
 									-- A single character may be followed by '-' to form a range. However,
 									-- Perl does not permit ']' to be the end of the range. A '-' character
 									-- here is treated as a literal.
@@ -2161,7 +2283,7 @@ feature {NONE} -- Compilation
 								if pattern_position > pattern_count then
 									set_error (err_msg_6, 6, pattern_position)
 								else
-									range_end := pattern_buffer.item_code (pattern_position)
+									range_end := pattern_buffer.code (pattern_position)
 									tmp_pat_index := pattern_position
 									if range_end = Backslash_code then
 											-- The second part of a range can be a single-character escape, but
@@ -2169,7 +2291,7 @@ feature {NONE} -- Compilation
 											-- in such circumstances.
 										val := scan_escape (subexpression_count, True)
 										if val < 0 then
-												-- \b is backslash; any other special means the '-' was literal.
+												-- \b is backspace; any other special means the '-' was literal.
 											if val = -esc_lcb then
 												range_end := Back_space_code
 											else
@@ -2177,28 +2299,33 @@ feature {NONE} -- Compilation
 												range_end := c
 											end
 										else
-											range_end := val
+											range_end := val.to_natural_32
 										end
+									elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (range_end) then
+										set_error (err_msg_61, 61, pattern_position)
+										range_end := c
 									end
 									if range_end < c then
 										set_error (err_msg_8, 8, pattern_position)
 									else
 										from
-												-- To make it for the `range_end' avoids endless loop.
-											class_set.add_character (range_end)
-											if is_caseless then
-												class_set.add_character (character_case_mapping.flip_case (range_end))
-											end
 												-- In case a one-char range.
 											class_charcount := class_charcount + range_end - c + 1
-											class_lastchar := range_end
+											class_lastchar := range_end.to_integer_64
 										until
-											c >= range_end
+											c > range_end
 										loop
-											class_set.add_character (c)
-											if is_caseless then
-												class_set.add_character (character_case_mapping.flip_case (c))
+											if {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+													-- Do not add surrogate characters included
+													-- within the range.
+												class_set.add_character (c)
+												if is_caseless then
+													class_set.add_character (character_case_mapping.flip_case (c))
+												end
 											end
+												-- Note that `range_end' is less than {NATURAL_32}.max_value
+												-- (otherwise it would not be a valid Unicode character).
+												-- So there is not risk of overflow below when increasing `c'.
 											c := c + 1
 										end
 									end
@@ -2211,26 +2338,26 @@ feature {NONE} -- Compilation
 									class_set.add_character (character_case_mapping.flip_case (c))
 								end
 								class_charcount := class_charcount + 1
-								class_lastchar := c
+								class_lastchar := c.to_integer_64
 							end
 						end
 					end
 				end
 				if error_message = err_msg_99 then
 					pattern_position := pattern_position + 1
-					c := pattern_buffer.item_code (pattern_position)
+					c := pattern_buffer.code (pattern_position)
 				end
 			end
 			if class_charcount = 1 then
 				if class_lastchar < 0 then
 					if negate_class then
 						if (-class_lastchar) \\ 2 = 0 then
-							byte_code.append_opcode (-class_lastchar + 1)
+							byte_code.append_opcode ((-class_lastchar + 1).to_natural_32)
 						else
-							byte_code.append_opcode (-class_lastchar - 1)
+							byte_code.append_opcode ((-class_lastchar - 1).to_natural_32)
 						end
 					else
-						byte_code.append_opcode (-class_lastchar)
+						byte_code.append_opcode ((-class_lastchar).to_natural_32)
 					end
 				else
 						-- If `class_charcount' is 1 and `class_lastchar' is not negative, we saw
@@ -2243,25 +2370,31 @@ feature {NONE} -- Compilation
 						byte_code.append_opcode (op_chars)
 						byte_code.append_integer (1)
 					end
-					byte_code.append_character (class_lastchar)
+					byte_code.append_character (class_lastchar.to_natural_32)
 				end
 			else
 					-- Otherwise, negate the character map if necessary, and copy it into
 					-- the byte code.
+				class_set.set_negated (negate_class)
 				byte_code.append_opcode (op_class)
-				byte_code.append_character_set (class_set, negate_class)
+				byte_code.append_character_set (class_set)
 			end
 		end
 
-	compile_repeats (a_min, a_max, a_previous, a_prevreqchar, a_subcountlits: INTEGER)
+	compile_repeats (a_min, a_max: INTEGER_32; a_previous: INTEGER; a_prevreqchar: INTEGER_64; a_subcountlits: INTEGER)
+		require
+			a_min_not_negative: a_min >= 0
+			a_max_not_negative_or_minus_one: a_max >= -1
 		local
-			repeat_type, op_type: INTEGER
-			repeat_min, repeat_max: INTEGER
-			op, i, len: INTEGER
+			repeat_type: NATURAL_32
+			op_type: NATURAL_32
+			repeat_min, repeat_max: INTEGER_32
+			op: NATURAL_32
+			i, len: INTEGER
 			previous, ketoffset: INTEGER
 			offset, oldlinkoffset: INTEGER
 			bralink: INTEGER
-			c: INTEGER
+			c: NATURAL_32
 			greedy_default, greedy_non_default: BOOLEAN
 		do
 				-- Set up the default and non-default settings for greediness.
@@ -2276,7 +2409,7 @@ feature {NONE} -- Compilation
 					-- If the next character is '?' this is a minimizing repeat, by default,
 					-- but if PCRE_UNGREEDY is set, it works the other way round. Advance to the
 					-- next character.
-				if pattern_buffer.item_code (pattern_position + 1) = Question_mark_code then
+				if pattern_buffer.code (pattern_position + 1) = Question_mark_code then
 					if greedy_non_default then
 						repeat_type := 1
 					else
@@ -2297,7 +2430,7 @@ feature {NONE} -- Compilation
 					-- adjust the countlits value.
 				op := byte_code.opcode_item (previous)
 				if op = op_chars then
-					len := byte_code.integer_item (previous + 1)
+					len := byte_code.integer_item (previous + 1).to_integer_32
 					if repeat_min = 0 then
 						required_character := a_prevreqchar
 					end
@@ -2351,12 +2484,12 @@ feature {NONE} -- Compilation
 							byte_code.append_opcode (op_crquery + repeat_type)
 						else
 							byte_code.append_opcode (op_crrange + repeat_type)
-							byte_code.append_integer (repeat_min)
+							byte_code.append_integer (repeat_min.to_natural_32)
 							if repeat_max = -1 then
 								repeat_max := 0
 								byte_code.append_integer (0)
 							else
-								byte_code.append_integer (repeat_max)
+								byte_code.append_integer (repeat_max.to_natural_32)
 							end
 						end
 					end
@@ -2375,7 +2508,7 @@ feature {NONE} -- Compilation
 						until
 							op = op_ket
 						loop
-							i := i + byte_code.integer_item (i + 1)
+							i := i + byte_code.integer_item (i + 1).to_integer_32
 							op := byte_code.opcode_item (i)
 						end
 						ketoffset := byte_code.count - i
@@ -2420,7 +2553,7 @@ feature {NONE} -- Compilation
 								if bralink = 0 then
 									byte_code.put_integer (0, previous)
 								else
-									byte_code.put_integer (previous - bralink, previous)
+									byte_code.put_integer ((previous - bralink).to_natural_32, previous)
 								end
 								bralink := previous
 								previous := previous + 1
@@ -2465,7 +2598,7 @@ feature {NONE} -- Compilation
 								else
 									offset := byte_code.count - bralink
 									bralink := byte_code.count
-									byte_code.append_integer (offset)
+									byte_code.append_integer (offset.to_natural_32)
 								end
 							end
 							byte_code.append_subcopy (previous, len)
@@ -2482,15 +2615,15 @@ feature {NONE} -- Compilation
 							check
 								op_bra: byte_code.opcode_item (i - 1) = op_bra
 							end
-							oldlinkoffset := byte_code.integer_item (i)
+							oldlinkoffset := byte_code.integer_item (i).to_integer_32
 							if oldlinkoffset = 0 then
 								bralink := 0
 							else
 								bralink := bralink - oldlinkoffset
 							end
 							byte_code.append_opcode (op_ket)
-							byte_code.append_integer (offset)
-							byte_code.put_integer (offset, i)
+							byte_code.append_integer (offset.to_natural_32)
+							byte_code.put_integer (offset.to_natural_32, i)
 						end
 					else
 							-- If the maximum is unlimited, set a repeater in the final copy. We
@@ -2506,9 +2639,12 @@ feature {NONE} -- Compilation
 			end
 		end
 
-	compile_single_repeat (a_ch: INTEGER; a_previous, a_min, a_max, a_op_type, a_repeat_type: INTEGER)
+	compile_single_repeat (a_ch: NATURAL_32; a_previous: INTEGER; a_min, a_max: INTEGER_32; a_op_type, a_repeat_type: NATURAL_32)
+		require
+			a_min_not_negative: a_min >= 0
+			a_max_not_negative_or_minus_one: a_max >= -1
 		local
-			repeat_type: INTEGER
+			repeat_type: NATURAL_32
 			byte_code_count: INTEGER
 		do
 				-- Combine the op_type with the `repeat_type'.
@@ -2522,7 +2658,7 @@ feature {NONE} -- Compilation
 					byte_code.append_opcode (op_query + repeat_type)
 				else
 					byte_code.append_opcode (op_upto + repeat_type)
-					byte_code.append_integer (a_max)
+					byte_code.append_integer (a_max.to_natural_32)
 				end
 			elseif a_min = 1 and then a_max = -1 then
 					-- The case {1,} is handled as the special case +.
@@ -2533,7 +2669,7 @@ feature {NONE} -- Compilation
 				if a_min /= 1 then
 						-- NB EXACT doesn't have `repeat_type'.
 					byte_code.append_opcode (op_exact + a_op_type)
-					byte_code.append_integer (a_min)
+					byte_code.append_integer (a_min.to_natural_32)
 				else
 					byte_code_count := byte_code.count
 					byte_code.set_count (a_previous + 1)
@@ -2567,37 +2703,37 @@ feature {NONE} -- Compilation
 						-- Else insert an UPTO if the max is greater than the min.
 					byte_code.append_character (a_ch)
 					byte_code.append_opcode (op_upto + repeat_type)
-					byte_code.append_integer (a_max - a_min)
+					byte_code.append_integer ((a_max - a_min).to_natural_32)
 				end
 			end
 			byte_code.append_character (a_ch)
 		end
 
-	compile_counted_repeats (a_previous, a_prevreqchar, a_subcountlits: INTEGER): BOOLEAN
+	compile_counted_repeats (a_previous: INTEGER; a_prevreqchar: INTEGER_64; a_subcountlits: INTEGER): BOOLEAN
 			-- Read an item of the form {n,m}. This is called only after is_counted_repeat() has
 			-- confirmed that a repeat-count quantifier exists, so the syntax is guaranteed to be
 			-- correct, but we need to check the values and then call `compile_repeats' feature.
 		local
-			min: INTEGER
-			max: INTEGER
+			min: INTEGER_32
+			max: INTEGER_32
 			i: INTEGER
-			c: INTEGER
+			c: NATURAL_32
 		do
 			min := 0
 				-- Unlimited.
 			max := -1
 			from
 				i := pattern_position + 1
-				c := pattern_buffer.item_code (i)
+				c := pattern_buffer.code (i)
 			until
-				c < Zero_code or c > Nine_code
+				c < Zero_code or c > Nine_code or min > {NATURAL_16}.max_value
 			loop
-				min := min * 10 + c - Zero_code
+				min := min * 10 + (c - Zero_code).to_integer_32
 				i := i + 1
-				c := pattern_buffer.item_code (i)
+				c := pattern_buffer.code (i)
 			end
-			if min > 65535 then
---	TODO: no such limitation anymore.
+			if min > {NATURAL_16}.max_value then
+					-- Limitation tested in PCRE test suite.
 				set_error (err_msg_5, 5, i)
 			elseif i - pattern_position > 1 then
 					-- One or more digits seen.
@@ -2606,21 +2742,21 @@ feature {NONE} -- Compilation
 					Result := True
 				elseif c = Comma_code then
 					i := i + 1
-					c := pattern_buffer.item_code (i)
+					c := pattern_buffer.code (i)
 					if c /= Right_brace_code then
 						from
 							max := 0
 						until
-							c < Zero_code or c > Nine_code
+							c < Zero_code or c > Nine_code or max > {NATURAL_16}.max_value
 						loop
-							max := max * 10 + c - Zero_code
+							max := max * 10 + (c - Zero_code).to_integer_32
 							i := i + 1
-							c := pattern_buffer.item_code (i)
+							c := pattern_buffer.code (i)
 						end
 					end
 					if c = Right_brace_code then
-						if max > 65535 then
---	TODO: no such limitation anymore.
+						if max > {NATURAL_16}.max_value then
+								-- Limitation tested in PCRE test suite.
 							set_error (err_msg_5, 5, i)
 						elseif max >= 0 and then min > max then
 							set_error (err_msg_4, 4, i)
@@ -2646,23 +2782,23 @@ feature {NONE} -- Posix character classes
 		local
 			set: RX_CHARACTER_SET
 			i: INTEGER
-			terminator: INTEGER
+			terminator: NATURAL_32
 		do
 			from
 				set := alpha_set
 				i := a_pattern_position
-				terminator := pattern_buffer.item_code (i + 1)
-				if pattern_buffer.item_code (i + 2) = Caret_code then
+				terminator := pattern_buffer.code (i + 1)
+				if pattern_buffer.code (i + 2) = Caret_code then
 					i := i + 3
 				else
 					i := i + 2
 				end
 			until
-				not set.has (pattern_buffer.item_code (i))
+				not set.has (pattern_buffer.code (i))
 			loop
 				i := i + 1
 			end
-			if pattern_buffer.item_code (i) = terminator and then pattern_buffer.item_code (i + 1) = Right_bracket_code then
+			if pattern_buffer.code (i) = terminator and then pattern_buffer.code (i + 1) = Right_bracket_code then
 				Result := i
 			else
 				Result := -1
@@ -2697,7 +2833,7 @@ feature {NONE} -- Posix character classes
 					until
 						j > a_len
 					loop
-						if a_name.item_code (j) /= pattern_buffer.item_code (k) then
+						if a_name.code (j) /= pattern_buffer.code (k) then
 							Result := -1
 								-- Jump out of the loop.
 							j := a_len + 1
@@ -2720,57 +2856,66 @@ feature {NONE} -- Posix character classes
 
 feature {NONE} -- Pattern scanning
 
-	scan_decimal_number (a_max_len: INTEGER): INTEGER
+	scan_decimal_number (a_max_len: INTEGER): NATURAL_32
 			-- The actual pattern-character is the one after the digit sequence
 		local
-			c: INTEGER
+			c: NATURAL_32
 			stop: INTEGER
+			l_max_value: NATURAL_32
 		do
 			stop := pattern_position + a_max_len
+			l_max_value := {INTEGER_32}.max_value.to_natural_32
 			from
-				c := pattern_buffer.item_code (pattern_position)
+				c := pattern_buffer.code (pattern_position)
 			until
-				c > Nine_code or else c < Zero_code or else pattern_position >= stop
+				c > Nine_code or else c < Zero_code or else pattern_position >= stop or else Result > l_max_value
 			loop
 				Result := Result * 10 + c - Zero_code
 				pattern_position := pattern_position + 1
-				c := pattern_buffer.item_code (pattern_position)
+				c := pattern_buffer.code (pattern_position)
+			end
+			if Result > l_max_value then
+				set_error (err_msg_65, 65, pattern_position)
+				Result := l_max_value
 			end
 		ensure
-			decimal_positive: Result >= 0
+			decimal_is_integer_32: Result <= {INTEGER_32}.max_value.to_natural_32
 			new_pattern_position: pattern_position <= old pattern_position + a_max_len
 		end
 
-	scan_octal_number (a_max_len: INTEGER): INTEGER
+	scan_octal_number (a_max_len: INTEGER): NATURAL_32
 			-- The actual pattern-character is the one after the digit sequence
+		require
+			a_max_len_smal_enough: a_max_len <= 3
 		local
-			c: INTEGER
+			c: NATURAL_32
 			stop: INTEGER
 		do
 			stop := pattern_position + a_max_len
 			from
-				c := pattern_buffer.item_code (pattern_position)
+				c := pattern_buffer.code (pattern_position)
 			until
 				c > Seven_code or else c < Zero_code or else pattern_position >= stop
 			loop
 				Result := Result * 8 + c - Zero_code
 				pattern_position := pattern_position + 1
-				c := pattern_buffer.item_code (pattern_position)
+				c := pattern_buffer.code (pattern_position)
 			end
 		ensure
-			octal_positive: Result >= 0
 			new_pattern_position: pattern_position <= old pattern_position + a_max_len
 		end
 
-	scan_hex_number (a_max_len: INTEGER): INTEGER
+	scan_hex_number (a_max_len: INTEGER): NATURAL_32
 			-- The actual pattern-character is the one after the digit sequence.
+		require
+			a_max_len_smal_enough: a_max_len <= 6
 		local
-			c: INTEGER
+			c: NATURAL_32
 			stop: INTEGER
 		do
 			stop := pattern_position + a_max_len
 			from
-				c := pattern_buffer.item_code (pattern_position)
+				c := pattern_buffer.code (pattern_position)
 			until
 				not xdigit_set.has (c) or else pattern_position >= stop
 			loop
@@ -2782,10 +2927,9 @@ feature {NONE} -- Pattern scanning
 					Result := Result * 16 + c - Lower_a_code + 10
 				end
 				pattern_position := pattern_position + 1
-				c := pattern_buffer.item_code (pattern_position)
+				c := pattern_buffer.code (pattern_position)
 			end
 		ensure
-			hex_number_positive: Result >= 0
 			new_pattern_position: pattern_position <= old pattern_position + a_max_len
 		end
 
@@ -2803,15 +2947,15 @@ feature {NONE} -- Pattern scanning
 				i := j
 				from
 				until
-					not space_set.has (pattern_buffer.item_code (j))
+					not space_set.has (pattern_buffer.code (j))
 				loop
 					j := j + 1
 				end
-				if pattern_buffer.item_code (j) = Pound_code then
+				if pattern_buffer.code (j) = Pound_code then
 					from
 						j := j + 1
 					until
-						j > pattern_count or else pattern_buffer.item_code (j) = New_line_code
+						j > pattern_count or else pattern_buffer.code (j) = New_line_code
 					loop
 						j := j + 1
 					end
@@ -2820,7 +2964,7 @@ feature {NONE} -- Pattern scanning
 			pattern_position := j
 		end
 
-	scan_escape (a_bra_count: INTEGER; a_isclass: BOOLEAN): INTEGER
+	scan_escape (a_bra_count: INTEGER; a_isclass: BOOLEAN): INTEGER_64
 			-- This function is called when a \ has been encountered. It either returns a
 			-- positive value for a simple escape such as \n, or a negative value which
 			-- encodes one of the more complicated things such as \d. When unicode is enabled,
@@ -2833,7 +2977,8 @@ feature {NONE} -- Pattern scanning
 			-- escape sequence. On error, `error_message' is set.
 		local
 			old_pattern_index: INTEGER
-			c: INTEGER
+			c: NATURAL_32
+			l_escape_character: INTEGER_64
 		do
 			pattern_position := pattern_position + 1
 			check
@@ -2841,19 +2986,31 @@ feature {NONE} -- Pattern scanning
 					-- least the character '%U' at the end of `pattern_buffer'.
 				valid_position: pattern_position <= pattern_buffer.count
 			end
-			c := pattern_buffer.item_code (pattern_position)
+			c := pattern_buffer.code (pattern_position)
 			if pattern_position > pattern_count then
 					-- If backslash is at the end of the pattern, it's an error.
 				set_error (err_msg_1, 1, pattern_position)
 			elseif c < Zero_code or c > Lower_z_code then
 					-- Digits or letters may have special meaning;
 					-- all others are literals.
-				Result := c
+				if {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+					Result := c.to_integer_64
+				else
+					set_error (err_msg_61, 61, pattern_position)
+				end
 			else
 					-- Do an initial lookup in a table. A non-zero result is something that can be
 					-- returned immediately. Otherwise further processing may be required.
-				Result := escape_character (c)
-				if Result = 0 then
+				l_escape_character := escape_character (c)
+				if l_escape_character > 0 then
+					if {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (l_escape_character.to_natural_32) then
+						Result := l_escape_character
+					else
+						set_error (err_msg_61, 61, pattern_position)
+					end
+				elseif l_escape_character < 0 then
+					Result := l_escape_character
+				else
 						-- Escapes that need further processing, or are illegal.
 					inspect c
 					when One_code .. Nine_code then
@@ -2869,10 +3026,10 @@ feature {NONE} -- Pattern scanning
 								-- value is greater than 377, the least significant 8 bits are taken. Inside a
 								-- character class, \ followed by a digit is always an octal number.
 							old_pattern_index := pattern_position
-							Result := scan_decimal_number (10)
+							Result := scan_decimal_number (10).to_integer_64
 							if Result < 10 or else Result <= a_bra_count then
 								if Result > maxbackrefs then
-									maxbackrefs := Result
+									maxbackrefs := Result.to_integer_32
 								end
 								Result := -(esc_ref + Result)
 							else
@@ -2881,7 +3038,7 @@ feature {NONE} -- Pattern scanning
 								if c >= Eight_code then
 									Result := 0
 								else
-									Result := scan_octal_number (3) \\ 256
+									Result := (scan_octal_number (3) \\ 256).to_integer_64
 								end
 							end
 						elseif c >= Eight_code then
@@ -2890,26 +3047,66 @@ feature {NONE} -- Pattern scanning
 								-- Thus we have to pull back the pointer by one.
 							Result := 0
 						else
-							Result := scan_octal_number (3) \\ 256
+							Result := (scan_octal_number (3) \\ 256).to_integer_64
 						end
 						pattern_position := pattern_position - 1
 					when Zero_code then
-						Result := scan_octal_number (3) \\ 256
+						Result := (scan_octal_number (3) \\ 256).to_integer_64
 						pattern_position := pattern_position - 1
 					when Lower_x_code then
-							-- Read just a single hex char.
+							-- Read just a hex char.
 						pattern_position := pattern_position + 1
-						Result := scan_hex_number (2)
-						pattern_position := pattern_position - 1
+						if pattern_buffer.code (pattern_position) = Left_brace_code then
+							pattern_position := pattern_position + 1
+							c := scan_hex_number (6)
+							if pattern_buffer.code (pattern_position) /= Right_brace_code then
+								set_error (err_msg_63, 63, pattern_position)
+							elseif {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+								Result := c.to_integer_64
+							else
+								set_error (err_msg_61, 61, pattern_position)
+							end
+						else
+							c := scan_hex_number (2)
+							pattern_position := pattern_position - 1
+							if {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+								Result := c.to_integer_64
+							else
+								set_error (err_msg_61, 61, pattern_position)
+							end
+						end
+					when Lower_u_code then
+							-- Read just a hex char.
+						pattern_position := pattern_position + 1
+						if pattern_buffer.code (pattern_position) = Left_brace_code then
+							pattern_position := pattern_position + 1
+							c := scan_hex_number (6)
+							if pattern_buffer.code (pattern_position) /= Right_brace_code then
+								set_error (err_msg_64, 64, pattern_position)
+							elseif {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+								Result := c.to_integer_64
+							else
+								set_error (err_msg_61, 61, pattern_position)
+							end
+						else
+							pattern_position := pattern_position - 1
+							if is_strict then
+								set_error (err_msg_3, 3, pattern_position)
+							elseif {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+								Result := c.to_integer_64
+							else
+								set_error (err_msg_61, 61, pattern_position)
+							end
+						end
 					when Lower_c_code then
-							-- Make following character an control-character.
+							-- Make following character a control-character.
 						pattern_position := pattern_position + 1
 						check
 								-- The last character read was 'c', and there is at
 								-- least the character '%U' at the end of `pattern_buffer'.
 							valid_position: pattern_position <= pattern_buffer.count
 						end
-						c := pattern_buffer.item_code (pattern_position)
+						c := pattern_buffer.code (pattern_position)
 						if pattern_position > pattern_count then
 							set_error (err_msg_2, 2, pattern_position)
 							Result := 0
@@ -2918,28 +3115,31 @@ feature {NONE} -- Pattern scanning
 								c := character_case_mapping.flip_case (c)
 							end
 							if c < At_code then
-								Result := c + At_code
+								Result := (c + At_code).to_integer_64
 							elseif c <= 127 then
-								Result := c - At_code
+								Result := (c - At_code).to_integer_64
 							else
---	TODO: invalid control character.
---								error_message := ...
-								Result := c
+								set_error (err_msg_62, 62, pattern_position)
 							end
 						end
 					else
 						if is_strict then
 							set_error (err_msg_3, 3, pattern_position)
+						elseif {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+							Result := c.to_integer_64
+						else
+							set_error (err_msg_61, 61, pattern_position)
 						end
-						Result := c
 					end
 				end
 			end
+		ensure
+			valid_non_surrogate_unicode_if_positive: Result >= 0 implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (Result.to_natural_32)
 		end
 
 feature {NONE} -- Implementation
 
-	first_significant_code (a_options, a_optbit: INTEGER; a_optstop: BOOLEAN): INTEGER
+	first_significant_code (a_options, a_optbit: NATURAL_32; a_optstop: BOOLEAN): NATURAL_32
 			-- This is called by several functions that scan a compiled expression looking
 			-- for a fixed first character, or an anchoring opcode etc. It skips over things
 			-- that do not influence this. For one application, a change of caseless option is
@@ -2953,9 +3153,10 @@ feature {NONE} -- Implementation
 			code_index_large_enough: code_index >= 0
 			code_index_small_enough: code_index < byte_code.count
 		local
-			icode, op: INTEGER
+			icode: INTEGER
+			op: NATURAL_32
 			stop: BOOLEAN
-			an_opt: INTEGER
+			an_opt: NATURAL_32
 		do
 			from
 				Result := a_options
@@ -3009,7 +3210,7 @@ feature {NONE} -- Implementation
 					until
 						op /= op_alt
 					loop
-						icode := icode + byte_code.integer_item (icode + 1)
+						icode := icode + byte_code.integer_item (icode + 1).to_integer_32
 						op := byte_code.opcode_item (icode)
 					end
 						-- Skip the opcode and the length of the branch.
@@ -3024,12 +3225,12 @@ feature {NONE} -- Implementation
 			code_index_small_enough: code_index < byte_code.count
 		end
 
-	find_firstchar (a_options: INTEGER): INTEGER
+	find_firstchar (a_options: NATURAL_32): NATURAL_32
 			-- Try to find out if there is a fixed first character. This is called for
 			-- unanchored expressions, as it speeds up their processing quite considerably.
 			-- Consider each alternative branch. If they all start with the same char, or with
 			-- a bracket all of whose alternatives start with the same char (recurse ad lib),
-			-- then we set first_character to that char, otherwise to -1.
+			-- then we set first_character to that char, otherwise to `has_first_character' to False.
 			-- `a_options' are used to check casing changes. Return options.
 			-- Side-effect: `code_index' is the position in the byte code where to start
 			-- scanning, and is left on the last opcode read on exit.
@@ -3038,7 +3239,8 @@ feature {NONE} -- Implementation
 			code_index_small_enough: code_index < byte_code.count + 2
 		local
 			icode: INTEGER
-			op, c: INTEGER
+			op: NATURAL_32
+			c: INTEGER_64
 			stop: BOOLEAN
 		do
 			from
@@ -3075,8 +3277,8 @@ feature {NONE} -- Implementation
 						code_index := code_index + 1
 					end
 					if first_character < 0 then
-						first_character := byte_code.character_item (code_index + 1)
-					elseif first_character /= byte_code.character_item (code_index + 1) then
+						first_character := byte_code.character_item (code_index + 1).to_integer_64
+					elseif first_character.to_natural_32 /= byte_code.character_item (code_index + 1) then
 						first_character := -1
 						stop := True
 					end
@@ -3085,13 +3287,13 @@ feature {NONE} -- Implementation
 					stop := True
 				end
 				if not stop then
-					icode := icode + byte_code.integer_item (icode + 1)
+					icode := icode + byte_code.integer_item (icode + 1).to_integer_32
 					op := byte_code.opcode_item (icode)
 				end
 			end
 		end
 
-	can_anchored (a_options: INTEGER): BOOLEAN
+	can_anchored (a_options: NATURAL_32): BOOLEAN
 			-- Try to find out if this is an anchored regular expression. Consider each
 			-- alternative branch. If they all start with `op_sod' or `op_circ', or with a bracket
 			-- all of whose alternatives start with `op_sod' or `op_circ' (recurse ad lib), then
@@ -3107,8 +3309,8 @@ feature {NONE} -- Implementation
 			code_index_small_enough: code_index < byte_code.count + 2
 		local
 			icode: INTEGER
-			op: INTEGER
-			opt: INTEGER
+			op: NATURAL_32
+			opt: NATURAL_32
 		do
 			from
 				opt := a_options
@@ -3130,7 +3332,7 @@ feature {NONE} -- Implementation
 					Result := op = op_sod or else (op = op_circ and then not is_option_multiline (opt))
 				end
 				if Result then
-					icode := icode + byte_code.integer_item (icode + 1)
+					icode := icode + byte_code.integer_item (icode + 1).to_integer_32
 					op := byte_code.opcode_item (icode)
 				end
 			end
@@ -3148,8 +3350,8 @@ feature {NONE} -- Implementation
 			code_index_small_enough: code_index < byte_code.count + 2
 		local
 			icode: INTEGER
-			op: INTEGER
-			opt: INTEGER
+			op: NATURAL_32
+			opt: NATURAL_32
 		do
 			from
 				icode := code_index
@@ -3170,7 +3372,7 @@ feature {NONE} -- Implementation
 					Result := op = op_circ
 				end
 				if Result then
-					icode := icode + byte_code.integer_item (icode + 1)
+					icode := icode + byte_code.integer_item (icode + 1).to_integer_32
 					op := byte_code.opcode_item (icode)
 				end
 			end
@@ -3184,11 +3386,12 @@ feature {NONE} -- Implementation
 			-- `a_code_index' points to an expression and `a_caseless'
 			-- is the current state of the caseless flag.
 		local
-			i, nb: INTEGER
+			i: NATURAL_32
+			nb: INTEGER
 			icode: INTEGER
 			tcode: INTEGER
-			op: INTEGER
-			ch: INTEGER
+			op: NATURAL_32
+			ch: NATURAL_32
 			set: INTEGER
 			stop: BOOLEAN
 			caseless: BOOLEAN
@@ -3234,7 +3437,7 @@ feature {NONE} -- Implementation
 							until
 								op /= op_alt
 							loop
-								tcode := tcode + byte_code.integer_item (tcode + 1)
+								tcode := tcode + byte_code.integer_item (tcode + 1).to_integer_32
 								op := byte_code.integer_item (tcode)
 							end
 							tcode := tcode + 2
@@ -3260,7 +3463,7 @@ feature {NONE} -- Implementation
 								until
 									op /= op_alt
 								loop
-									tcode := tcode + byte_code.integer_item (tcode + 1)
+									tcode := tcode + byte_code.integer_item (tcode + 1).to_integer_32
 									op := byte_code.integer_item (tcode)
 								end
 								tcode := tcode + 2
@@ -3406,7 +3609,7 @@ feature {NONE} -- Implementation
 						when op_class then
 								-- Character class: set the bits and either carry on or not,
 								-- according to the repeat count.
-							set := byte_code.integer_item (tcode + 1)
+							set := byte_code.integer_item (tcode + 1).to_integer_32
 							from
 								i := 0
 							until
@@ -3449,7 +3652,7 @@ feature {NONE} -- Implementation
 				end
 				if success then
 						-- Advance to next branch.
-					icode := icode + byte_code.integer_item (icode + 1)
+					icode := icode + byte_code.integer_item (icode + 1).to_integer_32
 					op := byte_code.opcode_item (icode)
 				end
 			end
@@ -3471,14 +3674,6 @@ feature {NONE} -- Constants
 			empty_pattern_buffer_not_void: Result /= Void
 			empty_pattern_buffer_not_empty: Result.count > 0
 			end_of_pattern_buffer: Result.item (Result.count) = '%U'
-		end
-
-	actual_set: RX_CHARACTER_SET
-			-- Shared buffer for charater set
-		once
-			create Result.make_empty
-		ensure
-			actual_set_not_void: Result /= Void
 		end
 
 	infinity: INTEGER

@@ -5,7 +5,7 @@ note
 		"PCRE regexp matchers"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2012, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2019, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,7 +73,7 @@ feature -- Resetting
 
 feature -- Compilation
 
-	compile (a_pattern: STRING)
+	compile (a_pattern: READABLE_STRING_GENERAL)
 			-- There are two different sets of meta-characters: those  that
 			-- are recognized anywhere in the pattern except within square
 			-- brackets, and those that are recognized in square brackets.
@@ -129,7 +129,7 @@ feature -- Access
 
 feature -- Matching
 
-	match_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -139,7 +139,7 @@ feature -- Matching
 			match_it (a_subject, a_from, a_to)
 		end
 
-	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_unbounded_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -248,7 +248,7 @@ feature {NONE} -- Setting
 
 feature {NONE} -- Matching
 
-	match_it (a_subject: STRING; a_start, a_end: INTEGER)
+	match_it (a_subject: like subject; a_start, a_end: INTEGER)
 			-- This function applies a compiled regexp to a subject string and picks out
 			-- portions of the string if it matches. Two elements in the 'offset_vector'
 			-- are set for each substring: the offsets to the start and end of the
@@ -257,15 +257,15 @@ feature {NONE} -- Matching
 			compiled: is_compiled
 			a_subject_not_void: a_subject /= Void
 		local
-			first_char: INTEGER
-			req_char: INTEGER
-			req_char2: INTEGER
+			first_char: INTEGER_64
+			req_char: INTEGER_64
+			req_char2: INTEGER_64
 			req_char_ptr: INTEGER
 			p: INTEGER
 			stop: BOOLEAN
 			l_start_bits: like start_bits
 		do
-			subject := a_subject
+			set_subject (a_subject)
 			subject_next_start := a_start
 			subject_end := a_end
 			match_count := 0
@@ -282,7 +282,7 @@ feature {NONE} -- Matching
 			if not is_anchored then
 				if first_character >= 0 then
 					if is_caseless then
-						first_char := character_case_mapping.to_lower (first_character)
+						first_char := character_case_mapping.to_lower (first_character.to_natural_32)
 					else
 						first_char := first_character
 					end
@@ -298,7 +298,7 @@ feature {NONE} -- Matching
 			if required_character >= 0 then
 				req_char := required_character
 				if is_caseless or else is_ichanged then
-					req_char2 := character_case_mapping.flip_case (req_char)
+					req_char2 := character_case_mapping.flip_case (req_char.to_natural_32)
 				else
 					req_char2 := req_char
 				end
@@ -324,7 +324,7 @@ feature {NONE} -- Matching
 						from
 						until
 							first_matched_index > a_end or else
-							character_case_mapping.to_lower (subject.item_code (first_matched_index)) = first_char
+							character_case_mapping.to_lower (subject.code (first_matched_index)) = first_char
 						loop
 							first_matched_index := first_matched_index + 1
 						end
@@ -332,7 +332,7 @@ feature {NONE} -- Matching
 						from
 						until
 							first_matched_index > a_end or else
-							subject.item_code (first_matched_index) = first_char
+							subject.code (first_matched_index) = first_char
 						loop
 							first_matched_index := first_matched_index + 1
 						end
@@ -343,7 +343,7 @@ feature {NONE} -- Matching
 						from
 						until
 							first_matched_index > a_end or else
-							subject.item_code (first_matched_index - 1) = New_line_code
+							subject.code (first_matched_index - 1) = New_line_code
 						loop
 							first_matched_index := first_matched_index + 1
 						end
@@ -355,7 +355,7 @@ feature {NONE} -- Matching
 						from
 						until
 							first_matched_index > a_end or else
-							l_start_bits.has (subject.item_code (first_matched_index))
+							l_start_bits.has (subject.code (first_matched_index))
 						loop
 							first_matched_index := first_matched_index + 1
 						end
@@ -384,7 +384,7 @@ feature {NONE} -- Matching
 								-- Do a single test if no case difference is set up.
 							from
 							until
-								p > a_end or else subject.item_code (p) = req_char
+								p > a_end or else subject.code (p) = req_char
 							loop
 								p := p + 1
 							end
@@ -393,8 +393,8 @@ feature {NONE} -- Matching
 							from
 							until
 								p > a_end or else
-								subject.item_code (p) = req_char
-								or else subject.item_code (p) = req_char2
+								subject.code (p) = req_char
+								or else subject.code (p) = req_char2
 							loop
 								p := p + 1
 							end
@@ -484,11 +484,11 @@ feature {NONE} -- Matching
 	match_internal (a_ec: INTEGER; a_isgroup, a_iscondassert: BOOLEAN): INTEGER
 			-- The real matching work is mainly done in this routine.
 		local
-			op: INTEGER
+			op: NATURAL_32
 			ec: INTEGER
 			n, off: INTEGER
 			tmp, tmpptr: INTEGER
-			opts: INTEGER
+			opts: NATURAL_32
 			i, j, nb: INTEGER
 			old_brastart_lower: INTEGER
 			old_eptr_lower: INTEGER
@@ -517,7 +517,7 @@ feature {NONE} -- Matching
 			loop
 				op := byte_code.opcode_item (ec)
 				if op > op_bra then
-					Result := match_additional_bracket (ec, op - op_bra)
+					Result := match_additional_bracket (ec, (op - op_bra).to_integer_32)
 					ec := code_index
 				else
 						-- Other types of node can be handled by a switch.
@@ -535,26 +535,26 @@ feature {NONE} -- Matching
 							-- exactly what going to the ket would do.
 						if byte_code.opcode_item (ec + 2) = op_cref then
 								-- Condition is extraction test.
-							tmp := byte_code.integer_item (ec + 3) * 2
+							tmp := (byte_code.integer_item (ec + 3) * 2).to_integer_32
 							if tmp < offset_top and then offset_vector.item (tmp) > 0 then
 								Result := match_recursive (ec + 4, True, False)
 							else
-								Result := match_recursive (ec + 2 + byte_code.integer_item (ec + 1), True, False)
+								Result := match_recursive (ec + 2 + byte_code.integer_item (ec + 1).to_integer_32, True, False)
 							end
 						else
 								-- The condition is an assertion. Call `match_recursive' to evaluate it - setting
 								-- the final argument True causes it to stop at the end of an assertion.
 							Result := match_recursive (ec + 2, True, True)
 							if Result = return_true then
-								ec := ec + 2 + byte_code.integer_item (ec + 3)
+								ec := ec + 2 + byte_code.integer_item (ec + 3).to_integer_32
 								from
 								until
 									byte_code.opcode_item (ec) /= op_alt
 								loop
-									ec := ec + byte_code.integer_item (ec + 1)
+									ec := ec + byte_code.integer_item (ec + 1).to_integer_32
 								end
 							else
-								ec := ec + byte_code.integer_item (ec + 1)
+								ec := ec + byte_code.integer_item (ec + 1).to_integer_32
 							end
 							Result := match_recursive (ec + 2, True, False)
 						end
@@ -608,7 +608,7 @@ feature {NONE} -- Matching
 							until
 								op /= op_alt
 							loop
-								ec := ec + byte_code.integer_item (ec + 1)
+								ec := ec + byte_code.integer_item (ec + 1).to_integer_32
 								op := byte_code.opcode_item (ec)
 							end
 							ec := ec + 2
@@ -628,7 +628,7 @@ feature {NONE} -- Matching
 							-- each branch of a lookbehind assertion. If we are too close to the start to
 							-- move back, this match function fails. When working with UTF-8 we move
 							-- back a number of characters, not bytes.
-						eptr := eptr - byte_code.integer_item (ec + 1)
+						eptr := eptr - byte_code.integer_item (ec + 1).to_integer_32
 						if eptr < subject_start then
 							Result := return_false
 						else
@@ -700,7 +700,7 @@ feature {NONE} -- Matching
 							until
 								op /= op_alt
 							loop
-								ec := ec + byte_code.integer_item (ec + 1)
+								ec := ec + byte_code.integer_item (ec + 1).to_integer_32
 								op := byte_code.opcode_item (ec)
 							end
 							offset_top := match_count
@@ -743,7 +743,7 @@ feature {NONE} -- Matching
 						until
 							op /= op_alt
 						loop
-							ec := ec + byte_code.integer_item (ec + 1)
+							ec := ec + byte_code.integer_item (ec + 1).to_integer_32
 							op := byte_code.opcode_item (ec)
 						end
 					when op_brazero then
@@ -761,7 +761,7 @@ feature {NONE} -- Matching
 							until
 								op /= op_alt
 							loop
-								tmpptr := tmpptr + byte_code.integer_item (tmpptr + 1)
+								tmpptr := tmpptr + byte_code.integer_item (tmpptr + 1).to_integer_32
 								op := byte_code.opcode_item (tmpptr)
 							end
 							ec := tmpptr + 2
@@ -773,7 +773,7 @@ feature {NONE} -- Matching
 						until
 							op /= op_alt
 						loop
-							tmpptr := tmpptr + byte_code.integer_item (tmpptr + 1)
+							tmpptr := tmpptr + byte_code.integer_item (tmpptr + 1).to_integer_32
 							op := byte_code.opcode_item (tmpptr)
 						end
 						if match_recursive (tmpptr + 2, True, False) = return_true then
@@ -786,7 +786,7 @@ feature {NONE} -- Matching
 							-- an assertion "group", stop matching and return True, but record the
 							-- current high water mark for use by positive assertions. Do this also
 							-- for the "once" (not-backup up) groups.
-						tmp := ec - byte_code.integer_item (ec + 1)
+						tmp := ec - byte_code.integer_item (ec + 1).to_integer_32
 							-- Back up the stack of bracket start pointers.
 						check
 							can_backup: eptr_upper >= 0
@@ -810,7 +810,7 @@ feature {NONE} -- Matching
 								check
 									branch: op >= op_bra
 								end
-								n := op - op_bra
+								n := (op - op_bra).to_integer_32
 								off := n * 2
 								if n > 0 then
 									offset_vector.put (brastart_vector.item (brastart_lower + off), off)
@@ -856,7 +856,7 @@ feature {NONE} -- Matching
 						if not is_bol and then eptr = subject_start then
 							Result := return_false
 						elseif is_matching_multiline then
-							if eptr > subject_start and then subject.item_code (eptr - 1) /= New_line_code then
+							if eptr > subject_start and then subject.code (eptr - 1) /= New_line_code then
 								Result := return_false
 							else
 								ec := ec + 1
@@ -878,7 +878,7 @@ feature {NONE} -- Matching
 							-- newline unless endonly is set, else end of subject unless noteol is set.
 						if is_matching_multiline then
 							if eptr <= subject_end then
-								if subject.item_code (eptr) /= New_line_code then
+								if subject.code (eptr) /= New_line_code then
 									Result := return_false
 								else
 									ec := ec + 1
@@ -893,7 +893,7 @@ feature {NONE} -- Matching
 						elseif not is_dollar_endonly then
 							if
 								eptr < subject_end or else
-								(eptr = subject_end and then subject.item_code (eptr) /= New_line_code)
+								(eptr = subject_end and then subject.code (eptr) /= New_line_code)
 							then
 								Result := return_false
 							else
@@ -915,7 +915,7 @@ feature {NONE} -- Matching
 							-- End of subject or ending \n assertion (\Z).
 						if
 							eptr < subject_end or else
-							(eptr = subject_end and then subject.item_code (eptr) /= New_line_code)
+							(eptr = subject_end and then subject.code (eptr) /= New_line_code)
 						then
 							Result := return_false
 						else
@@ -924,8 +924,8 @@ feature {NONE} -- Matching
 					when op_not_word_boundary then
 							-- No word boundary assertion.
 						if
-							(eptr > subject_start and then word_set.has (subject.item_code (eptr - 1))) /=
-							(eptr <= subject_end and then word_set.has (subject.item_code (eptr)))
+							(eptr > subject_start and then word_set.has (subject.code (eptr - 1))) /=
+							(eptr <= subject_end and then word_set.has (subject.code (eptr)))
 						then
 							Result := return_false
 						else
@@ -934,8 +934,8 @@ feature {NONE} -- Matching
 					when op_word_boundary then
 							-- Word boundary assertions.
 						if
-							(eptr > subject_start and then word_set.has (subject.item_code (eptr - 1))) =
-							(eptr <= subject_end and then word_set.has (subject.item_code (eptr)))
+							(eptr > subject_start and then word_set.has (subject.code (eptr - 1))) =
+							(eptr <= subject_end and then word_set.has (subject.code (eptr)))
 						then
 							Result := return_false
 						else
@@ -943,51 +943,65 @@ feature {NONE} -- Matching
 						end
 					when op_any then
 							-- Match a single character type; inline for speed.
-						if not is_matching_dotall and then eptr <= subject_end and then subject.item_code (eptr) = New_line_code then
+						if eptr > subject_end then
 							Result := return_false
-						elseif eptr > subject_end then
+						elseif not is_matching_dotall and then subject.code (eptr) = New_line_code then
+							Result := return_false
+						elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_not_digit then
-						if eptr > subject_end or else digit_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end then
+							Result := return_false
+						elseif digit_set.has (subject.code (eptr)) then
+							Result := return_false
+						elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_digit then
-						if eptr > subject_end or else not digit_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end or else not digit_set.has (subject.code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_not_whitespace then
-						if eptr > subject_end or else space_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end then
+							Result := return_false
+						elseif space_set.has (subject.code (eptr)) then
+							Result := return_false
+						elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_whitespace then
-						if eptr > subject_end or else not space_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end or else not space_set.has (subject.code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_not_wordchar then
-						if eptr > subject_end or else word_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end then
+							Result := return_false
+						elseif word_set.has (subject.code (eptr)) then
+							Result := return_false
+						elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
 							ec := ec + 1
 						end
 					when op_wordchar then
-						if eptr > subject_end or else not word_set.has (subject.item_code (eptr)) then
+						if eptr > subject_end or else not word_set.has (subject.code (eptr)) then
 							Result := return_false
 						else
 							eptr := eptr + 1
@@ -1001,7 +1015,7 @@ feature {NONE} -- Matching
 						ec := code_index
 					when op_chars then
 							-- Match a run of characters.
-						n := byte_code.integer_item (ec + 1)
+						n := byte_code.integer_item (ec + 1).to_integer_32
 						ec := ec + 2
 						if eptr + n - 1 > subject_end then
 							Result := return_false
@@ -1012,7 +1026,7 @@ feature {NONE} -- Matching
 							loop
 								if
 									character_case_mapping.to_lower (byte_code.character_item (ec)) /=
-									character_case_mapping.to_lower (subject.item_code (eptr))
+									character_case_mapping.to_lower (subject.code (eptr))
 								then
 									Result := return_false
 									n := 0
@@ -1027,7 +1041,7 @@ feature {NONE} -- Matching
 							until
 								n <= 0
 							loop
-								if byte_code.character_item (ec) /= subject.item_code (eptr) then
+								if byte_code.character_item (ec) /= subject.code (eptr) then
 									Result := return_false
 									n := 0
 								else
@@ -1039,11 +1053,11 @@ feature {NONE} -- Matching
 						end
 							-- Match a single character repeatedly.
 					when op_exact then
-						tmp := byte_code.integer_item (ec + 1)
+						tmp := byte_code.integer_item (ec + 1).to_integer_32
 						ec := ec + 3
 						Result := match_repeated_characters (ec, tmp, tmp, False)
 					when op_upto, op_minupto then
-						tmp := byte_code.integer_item (ec + 1)
+						tmp := byte_code.integer_item (ec + 1).to_integer_32
 						ec := ec + 3
 						Result := match_repeated_characters (ec, 0, tmp, op = op_minupto)
 					when op_star, op_minstar then
@@ -1061,15 +1075,17 @@ feature {NONE} -- Matching
 							Result := return_false
 						else
 							ec := ec + 1
-							if is_matching_caseless then
+							if not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
+								Result := return_false
+							elseif is_matching_caseless then
 								if
 									character_case_mapping.to_lower (byte_code.character_item (ec)) =
-									character_case_mapping.to_lower (subject.item_code (eptr))
+									character_case_mapping.to_lower (subject.code (eptr))
 								then
 									Result := return_false
 								end
 							else
-								if byte_code.character_item (ec) = subject.item_code (eptr) then
+								if byte_code.character_item (ec) = subject.code (eptr) then
 									Result := return_false
 								end
 							end
@@ -1084,11 +1100,11 @@ feature {NONE} -- Matching
 							-- option for each character match. Maybe that wouldn't add very much to the
 							-- time taken, but character matching *is* what this is all about...
 					when op_notexact then
-						tmp := byte_code.integer_item (ec + 1)
+						tmp := byte_code.integer_item (ec + 1).to_integer_32
 						ec := ec + 3
 						Result := match_not_repeated_characters (ec, tmp, tmp, False)
 					when op_notupto, op_notminupto then
-						tmp := byte_code.integer_item (ec + 1)
+						tmp := byte_code.integer_item (ec + 1).to_integer_32
 						ec := ec + 3
 						Result := match_not_repeated_characters (ec, 0, tmp, op = op_notminupto)
 					when op_notstar, op_notminstar then
@@ -1104,11 +1120,11 @@ feature {NONE} -- Matching
 							-- share code. This is very similar to the code for single characters, but we
 							-- repeat it in the interests of efficiency.
 					when op_typeexact then
-						tmp := byte_code.integer_item (ec + 1)
+						tmp := byte_code.integer_item (ec + 1).to_integer_32
 						ec := ec + 3
 						Result := match_repeated_type (ec, tmp, tmp, True)
 					when op_typeupto, op_typeminupto then
-						tmp := byte_code.integer_item (ec + 1)
+						tmp := byte_code.integer_item (ec + 1).to_integer_32
 						ec := ec + 3
 						Result := match_repeated_type (ec, 0, tmp, op = op_typeminupto)
 					when op_typestar, op_typeminstar then
@@ -1164,7 +1180,8 @@ feature {NONE} -- Matching
 
 	next_matching_alternate (a_ec: INTEGER): INTEGER
 		local
-			op, res: INTEGER
+			op: NATURAL_32
+			res: INTEGER
 		do
 			code_index := a_ec
 			from
@@ -1178,7 +1195,7 @@ feature {NONE} -- Matching
 					op := op_end
 					Result := return_true
 				else
-					code_index := code_index + byte_code.integer_item (code_index + 1)
+					code_index := code_index + byte_code.integer_item (code_index + 1).to_integer_32
 					op := byte_code.opcode_item (code_index)
 				end
 			end
@@ -1209,8 +1226,8 @@ feature {NONE} -- Matching
 						p >= ep
 					loop
 						if
-							character_case_mapping.to_lower (subject.item_code (p)) =
-							character_case_mapping.to_lower (subject.item_code (sp))
+							character_case_mapping.to_lower (subject.code (p)) =
+							character_case_mapping.to_lower (subject.code (sp))
 						then
 							p := p + 1
 							sp := sp + 1
@@ -1224,7 +1241,7 @@ feature {NONE} -- Matching
 					until
 						p >= ep
 					loop
-						if subject.item_code (p) = subject.item_code (sp) then
+						if subject.code (p) = subject.code (sp) then
 							p := p + 1
 							sp := sp + 1
 						else
@@ -1252,7 +1269,7 @@ feature {NONE} -- Matching
 			minimize: BOOLEAN
 		do
 			ec := a_ec
-			off := byte_code.integer_item (ec + 1) * 2
+			off := (byte_code.integer_item (ec + 1) * 2).to_integer_32
 				-- Advance past the item.
 			ec := ec + 2
 				-- If the reference is unset, set the length to be longer than the amount
@@ -1298,8 +1315,8 @@ feature {NONE} -- Matching
 				max := 1
 			when op_crrange, op_crminrange then
 				minimize := byte_code.opcode_item (ec) = op_crminrange
-				min := byte_code.integer_item (ec + 1)
-				max := byte_code.integer_item (ec + 2)
+				min := byte_code.integer_item (ec + 1).to_integer_32
+				max := byte_code.integer_item (ec + 2).to_integer_32
 				if max = 0 then
 					max := infinity
 				end
@@ -1394,12 +1411,12 @@ feature {NONE} -- Matching
 		local
 			ec, i, data, pp: INTEGER
 			min, max: INTEGER
-			c: INTEGER
+			c: NATURAL_32
 			minimize: BOOLEAN
 			a_set: INTEGER
 		do
 			data := a_ec + 1
-			a_set := byte_code.integer_item (data)
+			a_set := byte_code.integer_item (data).to_integer_32
 			ec := a_ec + 2
 			inspect byte_code.opcode_item (ec)
 			when op_crstar then
@@ -1434,8 +1451,8 @@ feature {NONE} -- Matching
 				max := 1
 			when op_crrange, op_crminrange then
 				minimize := byte_code.opcode_item (ec) = op_crminrange
-				min := byte_code.integer_item (ec + 1)
-				max := byte_code.integer_item (ec + 2)
+				min := byte_code.integer_item (ec + 1).to_integer_32
+				max := byte_code.integer_item (ec + 2).to_integer_32
 				if max = 0 then
 					max := infinity
 				end
@@ -1455,7 +1472,7 @@ feature {NONE} -- Matching
 					Result := return_false
 					i := min + 1
 				else
-					c := subject.item_code (eptr)
+					c := subject.code (eptr)
 					eptr := eptr + 1
 					if byte_code.character_set_has (a_set, c) then
 						i := i + 1
@@ -1481,7 +1498,7 @@ feature {NONE} -- Matching
 						elseif i >= max or else eptr > subject_end then
 							Result := return_false
 						else
-							c := subject.item_code (eptr)
+							c := subject.code (eptr)
 							eptr := eptr + 1
 							if byte_code.character_set_has (a_set, c) then
 								i := i + 1
@@ -1498,7 +1515,7 @@ feature {NONE} -- Matching
 					until
 						i >= max or else eptr > subject_end
 					loop
-						c := subject.item_code (eptr)
+						c := subject.code (eptr)
 						if byte_code.character_set_has (a_set, c) then
 							eptr := eptr + 1
 							i := i + 1
@@ -1530,7 +1547,7 @@ feature {NONE} -- Matching
 	match_repeated_characters (a_ec, a_min, a_max: INTEGER; a_minimize: BOOLEAN): INTEGER
 		local
 			i, tmpptr: INTEGER
-			c: INTEGER
+			c: NATURAL_32
 		do
 			if a_min > subject_end - eptr + 1 then
 				Result := return_false
@@ -1550,7 +1567,7 @@ feature {NONE} -- Matching
 					until
 						i > a_min
 					loop
-						if c /= character_case_mapping.to_lower (subject.item_code (eptr)) then
+						if c /= character_case_mapping.to_lower (subject.code (eptr)) then
 							Result := return_false
 							i := a_min + 1
 						else
@@ -1569,7 +1586,7 @@ feature {NONE} -- Matching
 									Result := return_true
 								elseif i >= a_max or else eptr > subject_end then
 									Result := return_false
-								elseif c /= character_case_mapping.to_lower (subject.item_code (eptr)) then
+								elseif c /= character_case_mapping.to_lower (subject.code (eptr)) then
 									eptr := eptr + 1
 									Result := return_false
 								else
@@ -1586,7 +1603,7 @@ feature {NONE} -- Matching
 							loop
 								if
 									eptr > subject_end or else
-									c /= character_case_mapping.to_lower (subject.item_code (eptr))
+									c /= character_case_mapping.to_lower (subject.code (eptr))
 								then
 									i := a_max
 								else
@@ -1617,7 +1634,7 @@ feature {NONE} -- Matching
 					until
 						i > a_min
 					loop
-						if c /= subject.item_code (eptr) then
+						if c /= subject.code (eptr) then
 							Result := return_false
 							i := a_min + 1
 						else
@@ -1636,7 +1653,7 @@ feature {NONE} -- Matching
 									Result := return_true
 								elseif i >= a_max or else eptr > subject_end then
 									Result := return_false
-								elseif c /= subject.item_code (eptr) then
+								elseif c /= subject.code (eptr) then
 									eptr := eptr + 1
 									Result := return_false
 								else
@@ -1651,7 +1668,7 @@ feature {NONE} -- Matching
 							until
 								i >= a_max
 							loop
-								if eptr > subject_end or else c /= subject.item_code (eptr) then
+								if eptr > subject_end or else c /= subject.code (eptr) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1683,7 +1700,7 @@ feature {NONE} -- Matching
 	match_not_repeated_characters (a_ec, a_min, a_max: INTEGER; a_minimize: BOOLEAN): INTEGER
 		local
 			i, tmpptr: INTEGER
-			c: INTEGER
+			c: NATURAL_32
 		do
 			if a_min > subject_end - eptr + 1 then
 				Result := return_false
@@ -1703,7 +1720,7 @@ feature {NONE} -- Matching
 					until
 						i > a_min
 					loop
-						if c = character_case_mapping.to_lower (subject.item_code (eptr)) then
+						if c = character_case_mapping.to_lower (subject.code (eptr)) then
 							Result := return_false
 							i := a_min + 1
 						else
@@ -1722,7 +1739,7 @@ feature {NONE} -- Matching
 									Result := return_true
 								elseif i >= a_max or else eptr > subject_end then
 									Result := return_false
-								elseif c /= character_case_mapping.to_lower (subject.item_code (eptr)) then
+								elseif c /= character_case_mapping.to_lower (subject.code (eptr)) then
 									eptr := eptr + 1
 									Result := return_false
 								else
@@ -1739,7 +1756,7 @@ feature {NONE} -- Matching
 							loop
 								if
 									eptr > subject_end or else
-									c = character_case_mapping.to_lower (subject.item_code (eptr))
+									c = character_case_mapping.to_lower (subject.code (eptr))
 								then
 									i := a_max
 								else
@@ -1769,7 +1786,7 @@ feature {NONE} -- Matching
 					until
 						i > a_min
 					loop
-						if c = subject.item_code (eptr) then
+						if c = subject.code (eptr) then
 							Result := return_false
 							i := a_min + 1
 						else
@@ -1788,7 +1805,7 @@ feature {NONE} -- Matching
 									Result := return_true
 								elseif i >= a_max or else eptr > subject_end then
 									Result := return_false
-								elseif c = subject.item_code (eptr) then
+								elseif c = subject.code (eptr) then
 									eptr := eptr + 1
 									Result := return_false
 								else
@@ -1803,7 +1820,7 @@ feature {NONE} -- Matching
 							until
 								i >= a_max
 							loop
-								if eptr > subject_end or else c = subject.item_code (eptr) then
+								if eptr > subject_end or else c = subject.code (eptr) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -1835,16 +1852,16 @@ feature {NONE} -- Matching
 	match_repeated_type (a_ec, a_min, a_max: INTEGER; a_minimize: BOOLEAN): INTEGER
 		local
 			i, pp: INTEGER
-			ctype: INTEGER
-			c: INTEGER
+			ctype: NATURAL_32
+			c: NATURAL_32
 		do
 				-- Code for the character type.
 			ctype := byte_code.integer_item (a_ec - 1)
 				-- First, ensure the minimum number of matches are present. Use inline
 				-- code for maximizing the speed, and do the type test once at the start
 				-- (i.e. keep it out of the loop). Also we can test that there are at least
-				-- the minimum number of bytes before we start, except when doing '.' in
-				-- UTF8 mode. Leave the test in in all cases; in the special case we have
+				-- the minimum number of bytes before we start.
+				-- Leave the test in in all cases; in the special case we have
 				-- to test after each character.
 			if a_min > subject_end - eptr + 1 then
 				Result := return_false
@@ -1852,22 +1869,24 @@ feature {NONE} -- Matching
 				if a_min > 0 then
 					inspect ctype
 					when op_any then
-						if is_matching_dotall then
-							eptr := eptr + a_min
-						else
-							from
-								i := 1
-							until
-								i > a_min
-							loop
-								if subject.item_code (eptr) = New_line_code then
-									Result := return_false
-									i := a_min + 1
-								else
-									i := i + 1
-								end
-								eptr := eptr + 1
+						from
+							i := 1
+						until
+							i > a_min
+						loop
+							if eptr > subject_end then
+								Result := return_false
+								i := a_min + 1
+							elseif not is_matching_dotall and then subject.code (eptr) = New_line_code then
+								Result := return_false
+								i := a_min + 1
+							elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
+								Result := return_false
+								i := a_min + 1
+							else
+								i := i + 1
 							end
+							eptr := eptr + 1
 						end
 					when op_not_digit then
 						from
@@ -1875,7 +1894,13 @@ feature {NONE} -- Matching
 						until
 							i > a_min
 						loop
-							if eptr > subject_end or else digit_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end then
+								Result := return_false
+								i := a_min + 1
+							elseif digit_set.has (subject.code (eptr)) then
+								Result := return_false
+								i := a_min + 1
+							elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1889,7 +1914,7 @@ feature {NONE} -- Matching
 						until
 							i > a_min
 						loop
-							if eptr > subject_end or else not digit_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end or else not digit_set.has (subject.code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1903,7 +1928,13 @@ feature {NONE} -- Matching
 						until
 							i > a_min
 						loop
-							if eptr > subject_end or else space_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end then
+								Result := return_false
+								i := a_min + 1
+							elseif space_set.has (subject.code (eptr)) then
+								Result := return_false
+								i := a_min + 1
+							elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1917,7 +1948,7 @@ feature {NONE} -- Matching
 						until
 							i > a_min
 						loop
-							if eptr > subject_end or else not space_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end or else not space_set.has (subject.code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1931,7 +1962,13 @@ feature {NONE} -- Matching
 						until
 							i > a_min
 						loop
-							if eptr > subject_end or else word_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end then
+								Result := return_false
+								i := a_min + 1
+							elseif word_set.has (subject.code (eptr)) then
+								Result := return_false
+								i := a_min + 1
+							elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1945,7 +1982,7 @@ feature {NONE} -- Matching
 						until
 							i > a_min
 						loop
-							if eptr > subject_end or else not word_set.has (subject.item_code (eptr)) then
+							if eptr > subject_end or else not word_set.has (subject.code (eptr)) then
 								Result := return_false
 								i := a_min + 1
 							else
@@ -1970,35 +2007,43 @@ feature {NONE} -- Matching
 							elseif i >= a_max or else eptr > subject_end then
 								Result := return_false
 							else
-								c := subject.item_code (eptr)
+								c := subject.code (eptr)
 								eptr := eptr + 1
 								inspect ctype
 								when op_any then
 									if not is_matching_dotall and then c = New_line_code then
 										Result := return_false
+									elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (c) then
+										Result := return_false
 									end
 								when op_not_digit then
-									if digit_set.has (subject.item_code (eptr)) then
+									if digit_set.has (subject.code (eptr)) then
+										Result := return_false
+									elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 										Result := return_false
 									end
 								when op_digit then
-									if not digit_set.has (subject.item_code (eptr)) then
+									if not digit_set.has (subject.code (eptr)) then
 										Result := return_false
 									end
 								when op_not_whitespace then
-									if space_set.has (subject.item_code (eptr)) then
+									if space_set.has (subject.code (eptr)) then
+										Result := return_false
+									elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 										Result := return_false
 									end
 								when op_whitespace then
-									if not space_set.has (subject.item_code (eptr)) then
+									if not space_set.has (subject.code (eptr)) then
 										Result := return_false
 									end
 								when op_not_wordchar then
-									if word_set.has (subject.item_code (eptr)) then
+									if word_set.has (subject.code (eptr)) then
+										Result := return_false
+									elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 										Result := return_false
 									end
 								when op_wordchar then
-									if not word_set.has (subject.item_code (eptr)) then
+									if not word_set.has (subject.code (eptr)) then
 										Result := return_false
 									end
 								end
@@ -2023,7 +2068,11 @@ feature {NONE} -- Matching
 								until
 									i >= a_max
 								loop
-									if eptr > subject_end or else subject.item_code (eptr) = New_line_code then
+									if eptr > subject_end then
+										i := a_max
+									elseif not is_matching_dotall and then subject.code (eptr) = New_line_code then
+										i := a_max
+									elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 										i := a_max
 									else
 										eptr := eptr + 1
@@ -2037,7 +2086,11 @@ feature {NONE} -- Matching
 							until
 								i >= a_max
 							loop
-								if eptr > subject_end or else digit_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end then
+									i := a_max
+								elseif digit_set.has (subject.code (eptr)) then
+									i := a_max
+								elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -2050,7 +2103,7 @@ feature {NONE} -- Matching
 							until
 								i >= a_max
 							loop
-								if eptr > subject_end or else not digit_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end or else not digit_set.has (subject.code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -2063,7 +2116,11 @@ feature {NONE} -- Matching
 							until
 								i >= a_max
 							loop
-								if eptr > subject_end or else space_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end then
+									i := a_max
+								elseif space_set.has (subject.code (eptr)) then
+									i := a_max
+								elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -2076,7 +2133,7 @@ feature {NONE} -- Matching
 							until
 								i >= a_max
 							loop
-								if eptr > subject_end or else not space_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end or else not space_set.has (subject.code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -2089,7 +2146,11 @@ feature {NONE} -- Matching
 							until
 								i >= a_max
 							loop
-								if eptr > subject_end or else word_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end then
+									i := a_max
+								elseif word_set.has (subject.code (eptr)) then
+									i := a_max
+								elseif not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (subject.code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1
@@ -2102,7 +2163,7 @@ feature {NONE} -- Matching
 							until
 								i >= a_max
 							loop
-								if eptr > subject_end or else not word_set.has (subject.item_code (eptr)) then
+								if eptr > subject_end or else not word_set.has (subject.code (eptr)) then
 									i := a_max
 								else
 									eptr := eptr + 1

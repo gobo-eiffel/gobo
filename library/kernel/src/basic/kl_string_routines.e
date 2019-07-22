@@ -1311,34 +1311,34 @@ feature -- Element change
 			replaced: same_string (Result, old (appended_string (appended_string (a_string.substring (1, start_index - 1), other), a_string.substring (end_index + 1, a_string.count))))
 		end
 
-	append_substring_to_string (a_string: STRING; other: STRING; s, e: INTEGER)
+	append_substring_to_string (a_string: STRING_GENERAL; other: READABLE_STRING_GENERAL; s, e: INTEGER)
 			-- Append substring of `other' between indexes
 			-- `s' and `e' at end of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
-			same_type: ANY_.same_types (other, a_string)
+			valid_codes: across s |..| e as i all a_string.valid_code (other.code (i.item)) end
 			s_large_enough: s >= 1
 			e_small_enough: e <= other.count
 			valid_interval: s <= e + 1
 		local
-			i: INTEGER
+			j: INTEGER
 		do
-			if attached {UC_STRING} a_string as uc_string then
-				uc_string.gobo_append_substring (other, s, e)
+			if attached {UC_STRING} a_string as uc_string and then attached {STRING} other as l_other_string then
+				uc_string.gobo_append_substring (l_other_string, s, e)
 			else
 				from
-					i := s
+					j := s
 				until
-					i > e
+					j > e
 				loop
-					a_string.append_character (other.item (i))
-					i := i + 1
+					a_string.append_code (other.code (j))
+					j := j + 1
 				end
 			end
 		ensure
 			instance_free: class
-			appended: a_string.is_equal (old cloned_string (a_string) + old other.substring (s, e))
+			appended: a_string.to_string_32.is_equal (old a_string.twin.to_string_32 + old other.substring (s, e).to_string_32)
 		end
 
 	replaced_all_substrings (a_text, a_old, a_new: STRING): STRING

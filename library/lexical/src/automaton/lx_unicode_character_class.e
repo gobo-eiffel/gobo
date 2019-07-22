@@ -2,19 +2,18 @@ note
 
 	description:
 
-		"Character sets"
+		"Classes of Unicode characters"
 
-	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2019, Harald Erdbruegger and others"
+	library: "Gobo Eiffel Lexical Library"
+	copyright: "Copyright (c) 2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class RX_CHARACTER_SET
+class LX_UNICODE_CHARACTER_CLASS
 
 create
 
-	make,
 	make_empty
 
 feature {NONE} -- Initialization
@@ -28,20 +27,6 @@ feature {NONE} -- Initialization
 			not_negated: not is_negated
 		end
 
-	make (a_string: READABLE_STRING_GENERAL)
-			-- Create new character set and add characters
-			-- included in `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-			a_string_valid: across 1 |..| a_string.count as c all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_string.code (c.item)) end
-		do
-			make_empty
-			add_string (a_string)
-		ensure
-			not_empty: a_string.count > 0 implies not is_empty
-			not_negated: not is_negated
-		end
-
 feature -- Status report
 
 	is_empty: BOOLEAN
@@ -51,63 +36,63 @@ feature -- Status report
 	is_negated: BOOLEAN
 			-- Is character set negated?
 
-	has (a_code: NATURAL_32): BOOLEAN
+	has (a_code: INTEGER): BOOLEAN
 			-- Is character with code `a_code' included in character set?
 			-- Take into account the negated status.
 		local
-			l_set_id: NATURAL_32
+			l_set_id: INTEGER
 		do
 			if is_empty then
-				Result := is_negated and then {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_code)
+				Result := is_negated and then {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code)
 			elseif a_code < 64 then
-				Result := (first_set & masks.item (a_code.to_integer_32) /= 0) /= is_negated
+				Result := (first_set & masks.item (a_code) /= 0) /= is_negated
 			elseif a_code < 128 then
-				Result := (second_set & masks.item ((a_code \\ 64).to_integer_32) /= 0) /= is_negated
+				Result := (second_set & masks.item (a_code \\ 64) /= 0) /= is_negated
 			elseif a_code < 192 then
-				Result := (third_set & masks.item ((a_code \\ 64).to_integer_32) /= 0) /= is_negated
+				Result := (third_set & masks.item (a_code \\ 64) /= 0) /= is_negated
 			elseif a_code < 256 then
-				Result := (fourth_set & masks.item ((a_code \\ 64).to_integer_32) /= 0) /= is_negated
+				Result := (fourth_set & masks.item (a_code \\ 64) /= 0) /= is_negated
 			else
 				l_set_id := a_code // 64
 				if attached other_sets as l_other_sets and then l_other_sets.has (l_set_id) then
-					Result := ((l_other_sets.item (l_set_id) & masks.item ((a_code \\ 64).to_integer_32)) /= 0) /= is_negated
+					Result := ((l_other_sets.item (l_set_id) & masks.item ((a_code \\ 64))) /= 0) /= is_negated
 				else
-					 Result := (is_reverted /= is_negated) and then {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_code)
+					 Result := (is_reverted /= is_negated) and then {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code)
 				end
 			end
 		ensure
-			valid_code: Result implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_code)
-			not_valid_code: not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_code) implies not Result
-			definition: {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_code) implies Result = (added (a_code) /= is_negated)
+			valid_code: Result implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code)
+			not_valid_code: not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) implies not Result
+			definition: {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) implies Result = (added (a_code) /= is_negated)
 		end
 
-	added (a_code: NATURAL_32): BOOLEAN
+	added (a_code: INTEGER): BOOLEAN
 			-- Has character with code `a_code' been added to the character set?
 			-- Do not take into account the negated status.
 		local
-			l_set_id: NATURAL_32
+			l_set_id: INTEGER
 		do
 			if is_empty then
 				Result := False
 			elseif a_code < 64 then
-				Result := first_set & masks.item (a_code.to_integer_32) /= 0
+				Result := first_set & masks.item (a_code) /= 0
 			elseif a_code < 128 then
-				Result := second_set & masks.item ((a_code \\ 64).to_integer_32) /= 0
+				Result := second_set & masks.item (a_code \\ 64) /= 0
 			elseif a_code < 192 then
-				Result := third_set & masks.item ((a_code \\ 64).to_integer_32) /= 0
+				Result := third_set & masks.item (a_code \\ 64) /= 0
 			elseif a_code < 256 then
-				Result := fourth_set & masks.item ((a_code \\ 64).to_integer_32) /= 0
+				Result := fourth_set & masks.item (a_code \\ 64) /= 0
 			else
 				l_set_id := a_code // 64
 				if attached other_sets as l_other_sets and then l_other_sets.has (l_set_id) then
-					Result := (l_other_sets.item (l_set_id) & masks.item ((a_code \\ 64).to_integer_32)) /= 0
+					Result := (l_other_sets.item (l_set_id) & masks.item ((a_code \\ 64))) /= 0
 				else
-					 Result := is_reverted and then {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_code)
+					 Result := is_reverted and then {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code)
 				end
 			end
 		ensure
-			valid_code: Result implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_code)
-			not_valid_code: not {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_code) implies not Result
+			valid_code: Result implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code)
+			not_valid_code: not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) implies not Result
 		end
 
 feature -- Status setting
@@ -120,44 +105,48 @@ feature -- Status setting
 			negated_set: is_negated = b
 		end
 
-feature -- Element Change
+feature -- Access
 
-	add_string (a_string: READABLE_STRING_GENERAL)
-			-- Add all characters of `a_string' to character set.
-			-- Do not take into account the negated status.
+	symbol_classes: detachable DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]
+			-- Unions (outer list) of the concatenations (inner lists) of symbol (bytes) classes
+			-- corresponding to the current Unicode character set when the characters are encoded
+			-- in UTF-8.
+			-- Void if not determined yet.
+
+feature -- Setting
+
+	set_symbol_classes (a_symbol_classes: like symbol_classes)
+			-- Set `symbol_classes' to `a_symbol_classes'.
 		require
-			a_string_not_void: a_string /= Void
-			a_string_valid: across 1 |..| a_string.count as c all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_string.code (c.item)) end
-		local
-			i, nb: INTEGER
+			symbol_classes_not_empty: a_symbol_classes /= Void implies not a_symbol_classes.is_empty
+			no_void_symbol_class_concanetation: a_symbol_classes /= Void implies not a_symbol_classes.has_void
+			no_empty_symbol_class_concatenation: a_symbol_classes /= Void implies not a_symbol_classes.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.is_empty)
+			no_void_symbol_class: a_symbol_classes /= Void implies not a_symbol_classes.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.has_void)
 		do
-			nb := a_string.count
-			from i := 1 until i > nb loop
-				add_character (a_string.code (i))
-				i := i + 1
-			end
+			symbol_classes := a_symbol_classes
 		ensure
-			not_empty: a_string.count > 0 implies not is_empty
-			added: across 1 |..| a_string.count as c all added (a_string.code (c.item)) end
+			symbol_classes_set: symbol_classes = a_symbol_classes
 		end
 
-	add_character (a_code: NATURAL_32)
+feature -- Element Change
+
+	add_character (a_code: INTEGER)
 			-- Add character with code `a_code' to character set.
 			-- Do not take into account the negated status.
 		require
-			a_code_valid: {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_code)
+			a_code_valid: {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code)
 		local
 			l_other_sets: like other_sets
-			l_set_id: NATURAL_32
+			l_set_id: INTEGER
 		do
 			if a_code < 64 then
-				first_set := first_set | masks.item (a_code.to_integer_32)
+				first_set := first_set | masks.item (a_code)
 			elseif a_code < 128 then
-				second_set := second_set | masks.item ((a_code \\ 64).to_integer_32)
+				second_set := second_set | masks.item (a_code \\ 64)
 			elseif a_code < 192 then
-				third_set := third_set | masks.item ((a_code \\ 64).to_integer_32)
+				third_set := third_set | masks.item (a_code \\ 64)
 			elseif a_code < 256 then
-				fourth_set := fourth_set | masks.item ((a_code \\ 64).to_integer_32)
+				fourth_set := fourth_set | masks.item (a_code \\ 64)
 			else
 				l_set_id := a_code // 64
 				l_other_sets := other_sets
@@ -170,7 +159,7 @@ feature -- Element Change
 					l_other_sets := Void
 				end
 				if l_other_sets /= Void then
-					l_other_sets.force (l_other_sets.value (l_set_id) | masks.item ((a_code \\ 64).to_integer_32), l_set_id)
+					l_other_sets.force (l_other_sets.value (l_set_id) | masks.item (a_code \\ 64), l_set_id)
 				end
 			end
 			is_empty := False
@@ -351,7 +340,7 @@ feature -- Removal
 			not_negated: not is_negated
 		end
 
-feature {RX_CHARACTER_SET} -- Implementation
+feature {LX_UNICODE_CHARACTER_CLASS} -- Implementation
 
 	first_set: NATURAL_64
 			-- First set of bits
@@ -365,7 +354,7 @@ feature {RX_CHARACTER_SET} -- Implementation
 	fourth_set: NATURAL_64
 			-- Fourth set of bits
 
-	other_sets: detachable DS_HASH_TABLE [NATURAL_64, NATURAL_32]
+	other_sets: detachable DS_HASH_TABLE [NATURAL_64, INTEGER]
 			-- Other sets of bits.
 			-- Valid keys as multiples of 64 in the ranges [4-863] and [896-17,407].
 			-- That's a total of 17,372 valid keys.
@@ -400,5 +389,12 @@ feature {RX_CHARACTER_SET} -- Implementation
 			masks_not_void: Result /= Void
 			count_64: Result.count = 64
 		end
+
+invariant
+
+	symbol_classes_not_empty: attached symbol_classes as l_symbol_classes implies not l_symbol_classes.is_empty
+	no_void_symbol_class_concanetation: attached symbol_classes as l_symbol_classes implies not l_symbol_classes.has_void
+	no_empty_symbol_class_concatenation: attached symbol_classes as l_symbol_classes implies not l_symbol_classes.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.is_empty)
+	no_void_symbol_class: attached symbol_classes as l_symbol_classes implies not l_symbol_classes.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.has_void)
 
 end

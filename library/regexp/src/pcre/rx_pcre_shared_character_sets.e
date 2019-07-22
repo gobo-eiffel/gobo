@@ -11,7 +11,7 @@ note
 		changes will be shared by all regexp compilers.
 		]"
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2018, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2019, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,8 @@ class RX_PCRE_SHARED_CHARACTER_SETS
 feature -- Defaults
 
 	default_character_case_mapping: RX_CASE_MAPPING
-			-- Default character lower- and upper-case mapping
+			-- Default character lower- and upper-case mapping.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
 		ensure
@@ -30,7 +31,8 @@ feature -- Defaults
 		end
 
 	default_word_set: RX_CHARACTER_SET
-			-- Set of characters making up words
+			-- Set of characters making up words.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 		ensure
@@ -42,7 +44,8 @@ feature -- Defaults
 feature -- Character sets
 
 	upper_set: RX_CHARACTER_SET
-			-- Upper character set
+			-- Upper character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 		ensure
@@ -52,7 +55,8 @@ feature -- Character sets
 		end
 
 	lower_set: RX_CHARACTER_SET
-			-- Lower character set
+			-- Lower character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("abcdefghijklmnopqrstuvwxyz")
 		ensure
@@ -62,7 +66,8 @@ feature -- Character sets
 		end
 
 	alpha_set: RX_CHARACTER_SET
-			-- Alphabetical character set
+			-- Alphabetical character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make_empty
 			Result.add_set (lower_set)
@@ -74,7 +79,8 @@ feature -- Character sets
 		end
 
 	digit_set: RX_CHARACTER_SET
-			-- Digit character set
+			-- Digit character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("0123456789")
 		ensure
@@ -84,7 +90,8 @@ feature -- Character sets
 		end
 
 	alnum_set: RX_CHARACTER_SET
-			-- Alphanumeric character set
+			-- Alphanumeric character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make_empty
 			Result.add_set (alpha_set)
@@ -96,7 +103,8 @@ feature -- Character sets
 		end
 
 	xdigit_set: RX_CHARACTER_SET
-			-- Hexadecimal digit character set
+			-- Hexadecimal digit character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("0123456789abcdefABCDEF")
 		ensure
@@ -106,9 +114,10 @@ feature -- Character sets
 		end
 
 	cntrl_set: RX_CHARACTER_SET
-			-- Control character set
+			-- Control character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		local
-			i: INTEGER
+			i: NATURAL_32
 		once
 			create Result.make_empty
 			from
@@ -127,7 +136,8 @@ feature -- Character sets
 		end
 
 	graph_set: RX_CHARACTER_SET
-			-- Graph character set
+			-- Graph character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("!%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 		ensure
@@ -137,7 +147,8 @@ feature -- Character sets
 		end
 
 	print_set: RX_CHARACTER_SET
-			-- Printable character set
+			-- Printable character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make (" !%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 		ensure
@@ -147,7 +158,8 @@ feature -- Character sets
 		end
 
 	punct_set: RX_CHARACTER_SET
-			-- Punctuation character set
+			-- Punctuation character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("!%"#$%%&%'()*+,-./:;<=>?@[\]^_`{|}~")
 		ensure
@@ -157,9 +169,9 @@ feature -- Character sets
 		end
 
 	ascii_set: RX_CHARACTER_SET
-			-- Ascii character set
+			-- Ascii character set.
 		local
-			i: INTEGER
+			i: NATURAL_32
 		once
 			create Result.make_empty
 			from
@@ -177,7 +189,8 @@ feature -- Character sets
 		end
 
 	space_set: RX_CHARACTER_SET
-			-- Space character set
+			-- Space character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("%T%N%F%R%/11/ ")
 		ensure
@@ -187,7 +200,8 @@ feature -- Character sets
 		end
 
 	meta_set: RX_CHARACTER_SET
-			-- Meta character set
+			-- Meta character set.
+			-- This is only taking in account ASCII characters (with code <= 127).
 		once
 			create Result.make ("*+?{^.$|()[")
 		ensure
@@ -214,7 +228,6 @@ feature {NONE} -- Implementation
 			-- Must correspond to the list `class_names' above
 		once
 			Result := <<alpha_set, lower_set, upper_set, alnum_set, ascii_set, cntrl_set,
---				digit_set, graph_set, print_set, punct_set, space_set, word_set, xdigit_set>>
 				digit_set, graph_set, print_set, punct_set, space_set, default_word_set, xdigit_set>>
 		ensure
 			instance_free: class
