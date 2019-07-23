@@ -323,7 +323,7 @@ feature -- Splitting
 			is_matching: is_matching
 			subject_is_string: attached {STRING} subject
 			an_array_not_void: an_array /= Void
-			valid_array_type: subject.generating_type.conforms_to (an_array.generating_type.generic_parameter_type (1))
+			valid_array_type: {REFLECTOR}.type_of_type ({REFLECTOR}.attached_type (subject.generating_type.type_id)).conforms_to (an_array.generating_type.generic_parameter_type (1))
 		local
 			i, j, k, nb: INTEGER
 			l_last_char_matched: INTEGER
@@ -400,7 +400,7 @@ feature -- Splitting
 		require
 			is_matching: is_matching
 			an_array_not_void: an_array /= Void
-			valid_array_type: subject.generating_type.conforms_to (an_array.generating_type.generic_parameter_type (1))
+			valid_array_type: {REFLECTOR}.type_of_type ({REFLECTOR}.attached_type (subject.generating_type.type_id)).conforms_to (an_array.generating_type.generic_parameter_type (1))
 		local
 			i, j, k, nb: INTEGER
 			l_last_char_matched: INTEGER
