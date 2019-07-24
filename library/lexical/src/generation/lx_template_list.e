@@ -88,17 +88,11 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			target: detachable LX_DFA_STATE
-			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 		do
 			if not attached meta_equiv_classes as l_meta_equiv_classes then
 				Result := template
 			else
-					-- TODO: Bug in ISE 3.3.9 in final mode code generation.
-					-- Create `transitions' (not declared as "like anchor")
-					-- first and assign it to `Result'.
---				create Result.make (l_meta_equiv_classes.lower, l_meta_equiv_classes.upper)
-				create transitions.make (l_meta_equiv_classes.lower, l_meta_equiv_classes.upper)
-				Result := transitions
+				create Result.make (l_meta_equiv_classes.lower, l_meta_equiv_classes.upper)
 				nb := template.upper
 				from
 					i := template.lower
