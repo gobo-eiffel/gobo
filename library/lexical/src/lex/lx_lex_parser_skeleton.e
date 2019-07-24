@@ -621,13 +621,9 @@ feature {NONE} -- Factory
 						character_classes.force_new (a_character_class, a_name)
 						Result := new_symbol_class_nfa (a_character_class)
 					end
-				when 0 then
-					Result := new_symbol_nfa (description.symbol_count)
 				else
 					Result := new_symbol_nfa (a_char)
 				end
-			elseif a_char = 0 then
-				Result := new_symbol_nfa (description.symbol_count)
 			else
 				Result := new_symbol_nfa (a_char)
 			end
@@ -680,11 +676,7 @@ feature {NONE} -- Factory
 					i > nb
 				loop
 					if a_unicode_character_class.has (i) then
-						if i = 0 then
-							l_symbol_class.add_character (description.symbol_count)
-						else
-							l_symbol_class.add_character (i)
-						end
+						l_symbol_class.add_character (i)
 					end
 					i := i + 1
 				end
@@ -737,7 +729,7 @@ feature {NONE} -- Factory
 						{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, i)
 						l_integer_set := l_array_n.item (buffer.item_code (1))
 						if l_integer_set = Void then
-							create l_integer_set.make (description.symbol_count)
+							create l_integer_set.make (description.maximum_symbol)
 							l_array_n.put (l_integer_set, buffer.item_code (1))
 						end
 						l_encoded_bytes := (buffer.item_code (3) |<< {PLATFORM}.character_8_bits) | buffer.item_code (2)
@@ -762,7 +754,7 @@ feature {NONE} -- Factory
 						{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, i)
 						l_integer_set := l_array_n.item (buffer.item_code (1))
 						if l_integer_set = Void then
-							create l_integer_set.make (description.symbol_count)
+							create l_integer_set.make (description.maximum_symbol)
 							l_array_n.put (l_integer_set, buffer.item_code (1))
 						end
 						l_encoded_bytes := (((buffer.item_code (4) |<< {PLATFORM}.character_8_bits) | buffer.item_code (3)) |<< {PLATFORM}.character_8_bits) | buffer.item_code (2)
@@ -1075,16 +1067,10 @@ feature {NONE} -- Implementation
 						Result := a_string
 						Result.build_concatenation (new_symbol_class_nfa (a_character_class))
 					end
-				when 0 then
-					Result := a_string
-					Result.build_concatenation (new_symbol_nfa (description.symbol_count))
 				else
 					Result := a_string
 					Result.build_concatenation (new_symbol_nfa (a_char))
 				end
-			elseif a_char = 0 then
-				Result := a_string
-				Result.build_concatenation (new_symbol_nfa (description.symbol_count))
 			else
 				Result := a_string
 				Result.build_concatenation (new_symbol_nfa (a_char))
@@ -1106,13 +1092,9 @@ feature {NONE} -- Implementation
 				when Lower_a_code .. Lower_z_code then
 					a_character_class.add_character (a_char - Case_diff)
 					a_character_class.add_character (a_char)
-				when 0 then
-					a_character_class.add_character (description.symbol_count)
 				else
 					a_character_class.add_character (a_char)
 				end
-			elseif a_char = 0 then
-				a_character_class.add_character (description.symbol_count)
 			else
 				a_character_class.add_character (a_char)
 			end
@@ -1143,8 +1125,6 @@ feature {NONE} -- Implementation
 					when Lower_a_code .. Lower_z_code then
 						a_character_class.add_character (a_char - Case_diff)
 						a_character_class.add_character (a_char)
-					when 0 then
-						a_character_class.add_character (description.symbol_count)
 					else
 						a_character_class.add_character (a_char)
 					end
@@ -1156,11 +1136,7 @@ feature {NONE} -- Implementation
 				until
 					a_char > char2
 				loop
-					if a_char = 0 then
-						a_character_class.add_character (description.symbol_count)
-					else
-						a_character_class.add_character (a_char)
-					end
+					a_character_class.add_character (a_char)
 					a_char := a_char + 1
 				end
 			end
@@ -1337,7 +1313,7 @@ feature {NONE} -- Implementation
 							l_byte_1 := l_bytes.item & 0xFF
 							l_next_symbols_n_minus_1 := l_array_n_minus_1.item (l_byte_1)
 							if l_next_symbols_n_minus_1 = Void then
-								create l_next_symbols_n_minus_1.make (description.symbol_count)
+								create l_next_symbols_n_minus_1.make (description.maximum_symbol)
 								l_array_n_minus_1.put (l_next_symbols_n_minus_1, l_byte_1)
 							end
 							l_next_symbols_n_minus_1.force (l_bytes.item |>> {PLATFORM}.character_8_bits)

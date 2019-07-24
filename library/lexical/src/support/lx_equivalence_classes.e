@@ -30,7 +30,8 @@ feature {NONE} -- Initialization
 			-- set of equivalence classes for symbols
 			-- within bounds `min'..`max'.
 		require
-			valid_bounds: min <= max
+			min_large_enough: min >= 0
+			max_large_enough: max >= min
 		local
 			l_cell: DS_BILINKABLE [INTEGER]
 			i: INTEGER
@@ -122,12 +123,16 @@ feature -- Access
 			-- Smallest allowed symbol
 		do
 			Result := storage.lower
+		ensure
+			lower_large_enough: Result >= 0
 		end
 
 	upper: INTEGER
 			-- Largest allowed symbol
 		do
 			Result := storage.upper
+		ensure
+			upper_large_enough: Result >= lower
 		end
 
 feature -- Status report
@@ -154,7 +159,7 @@ feature -- Status report
 		require
 			symbol_class_not_void: symbol_class /= Void
 		do
-			Result := lower <= 1 and upper >= {CHARACTER_8}.max_value + 1
+			Result := lower <= 0 and upper >= {CHARACTER_8}.max_value
 		end
 
 	built: BOOLEAN
@@ -175,13 +180,13 @@ feature -- Element change
 			nb := upper
 			from
 				i := lower
+				j := lower
 			until
 				i > nb
 			loop
 				cell := storage.item (i)
 				if cell.left = Void then
 					from
-						j := j + 1
 						cell.put (j)
 						l_right := cell.right
 					until
@@ -190,10 +195,11 @@ feature -- Element change
 						l_right.put (j)
 						l_right := l_right.right
 					end
+					j := j + 1
 				end
 				i := i + 1
 			end
-			count := j
+			count := j - lower
 		ensure
 			built: built
 		end

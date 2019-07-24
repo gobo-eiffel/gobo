@@ -5,7 +5,7 @@ note
 		"DFA which can generate scanners implemented with compressed tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -339,7 +339,7 @@ feature {NONE} -- Building
 			i, nb: INTEGER
 		do
 				-- `yy_base' and `yy_def' are indexed
-				-- from 1 to `count'+`templates_count'.
+				-- from 1 to `states.count'+`templates_count'.
 			nb := states.count + templates_count
 			create yy_base_.make_filled (0, 0, nb)
 			create yy_def_.make_filled (0, 0, nb)
@@ -510,7 +510,7 @@ feature {NONE} -- Compression
 			trans_nb := transitions.count
 			symb_nb := transitions.capacity
 			if trans_nb * 100 < symb_nb * Proto_size_percentage then
-				put_entry (state.id, Jam_id, transitions)
+				put_entry (state.id, Jam_id, transitions, maximum_symbol)
 			else
 				check protos_not_void: attached protos as l_protos then
 						-- Search for the state which the most frequently targeted
@@ -518,9 +518,9 @@ feature {NONE} -- Compression
 					create common_states.make (trans_nb)
 					create frequencies.make (trans_nb)
 					st_cursor := common_states.new_cursor
-					nb := maximum_symbol
 					from
 						i := minimum_symbol
+						nb := maximum_symbol
 					until
 						i > nb
 					loop
@@ -541,9 +541,9 @@ feature {NONE} -- Compression
 						-- Release cursor to GC.
 					st_cursor.go_after
 					common_state := null_state
-					nb := common_states.count
 					from
 						i := 1
+						nb := common_states.count
 					until
 						i > nb
 					loop
@@ -627,16 +627,16 @@ feature {NONE} -- Compression
 								template := l_templates.last
 								default_id := -l_templates.count
 								l_protos.put (default_id, template, common_state)
-								put_entry (state.id, default_id, transitions.difference (template, null_state))
+								put_entry (state.id, default_id, transitions.difference (template, null_state), maximum_symbol)
 							end
 						else
 							l_protos.put (state.id, transitions.cloned_object, common_state)
-							put_entry (state.id, Jam_id, transitions)
+							put_entry (state.id, Jam_id, transitions, maximum_symbol)
 						end
 					else
 							-- Use the proto.
 						check proto /= Void and difference /= Void then
-							put_entry (state.id, proto.state_id, difference)
+							put_entry (state.id, proto.state_id, difference, maximum_symbol)
 								-- Move `proto' to the front of the proto queue.
 							l_protos.move_to_front (proto_cursor)
 								-- If this state was sufficiently different from
@@ -652,9 +652,11 @@ feature {NONE} -- Compression
 			end
 		end
 
-	put_entry (state_id, default_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE])
+	put_entry (state_id, default_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]; a_maximum_symbol: INTEGER)
 			-- Create base/default and next/check entries for
 			-- `transitions' out of state `state_id'.
+			-- `a_maximum_symbol' takes into account whether the symbols are coming from the
+			-- equivalence classes or the meta equivalence classes.
 		require
 			valid_state_id: yy_base.valid_index (state_id)
 			transitions_not_void: transitions /= Void
@@ -665,6 +667,7 @@ feature {NONE} -- Compression
 			base_addr, table_base, table_last: INTEGER
 			yy_chk_, yy_nxt_: ARRAY [INTEGER]
 			singleton: LX_SINGLETON
+			l_symbol: INTEGER
 		do
 			check transitions_not_void: attached transitions as l_transitions then
 				inspect transitions.count
@@ -680,9 +683,14 @@ feature {NONE} -- Compression
 					check singletons_not_void: attached singletons as l_singletons then
 							-- There is only one out-transition.
 							-- Save it for later to fill in holes in tables.
-						min_label := l_transitions.minimum_label
-						check attached l_transitions.target (min_label) as l_target then
-							create singleton.make (state_id, default_id, min_label, l_target.id)
+						l_symbol := l_transitions.minimum_label
+						check attached l_transitions.target (l_symbol) as l_target then
+							if l_symbol = 0 then
+									-- 	. end-of-buffer           -> 0
+									--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+								l_symbol := a_maximum_symbol + 1
+							end
+							create singleton.make (state_id, default_id, l_symbol, l_target.id)
 							if not l_singletons.is_full then
 								l_singletons.put_last (singleton)
 							else
@@ -703,7 +711,14 @@ feature {NONE} -- Compression
 						-- Find the first transition of `state' that we
 						-- need to worry about.
 					min_label := l_transitions.minimum_label
-					max_label := l_transitions.maximum_label
+					if min_label = 0 then
+							-- 	. end-of-buffer           -> 0
+							--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+						min_label := l_transitions.second_minimum_label
+						max_label := a_maximum_symbol + 1
+					else
+						max_label := l_transitions.maximum_label
+					end
 					trans_nb := l_transitions.count
 					symb_nb := l_transitions.capacity
 					if trans_nb * 100 <= symb_nb * Interior_fit_percentage then
@@ -735,7 +750,13 @@ feature {NONE} -- Compression
 						until
 							i > max_label
 						loop
-							if l_transitions.target (i) /= Void and yy_chk_.item (base_addr + i - min_label) /= 0 then
+							l_symbol := i
+							if l_symbol = max_label and then max_label = a_maximum_symbol + 1 then
+									-- 	. end-of-buffer           -> 0
+									--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+								l_symbol := 0
+							end
+							if l_transitions.target (l_symbol) /= Void and yy_chk_.item (base_addr + i - min_label) /= 0 then
 									-- `base_addr' unsuitable. Find another.
 								from
 									base_addr := base_addr + 1
@@ -778,7 +799,13 @@ feature {NONE} -- Compression
 					until
 						i > max_label
 					loop
-						if attached l_transitions.target (i) as l_target then
+						l_symbol := i
+						if l_symbol = max_label and then max_label = a_maximum_symbol + 1 then
+								-- 	. end-of-buffer           -> 0
+								--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+							l_symbol := 0
+						end
+						if attached l_transitions.target (l_symbol) as l_target then
 							yy_nxt_.put (l_target.id, table_base + i)
 							yy_chk_.put (state_id, table_base + i)
 						end
@@ -853,13 +880,35 @@ feature {NONE} -- Compression
 		local
 			cursor: DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]]
 			template: LX_TRANSITION_TABLE [LX_DFA_STATE]
-			i, max_index: INTEGER
+			i, nb, max_index: INTEGER
+			l_yy_meta: like yy_meta
+			l_max: INTEGER
 		do
 			yyTemplate_mark := states.count + 2
 			if attached meta_equiv_classes as l_meta_equiv_classes then
 				l_meta_equiv_classes.build
-				yy_meta := l_meta_equiv_classes.to_array (0, maximum_symbol)
+					-- 	. end-of-buffer           -> 0
+					--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+				l_yy_meta := l_meta_equiv_classes.to_array (0, maximum_symbol + 1)
+				l_max := l_meta_equiv_classes.count + l_meta_equiv_classes.lower - 1
+				if minimum_symbol = 0 then
+					from
+						i := minimum_symbol
+						nb := maximum_symbol
+					until
+						i > nb
+					loop
+						if l_yy_meta.item (i) = 0 then
+							l_yy_meta.put (l_max + 1, i)
+						end
+						i := i + 1
+					end
+					l_yy_meta.put (l_yy_meta.item (0), nb + 1)
+					l_yy_meta.put (0, 0)
+				end
+				yy_meta := l_yy_meta
 			else
+				l_max := maximum_symbol
 				yy_meta := Void
 			end
 			check templates_not_void: attached templates as l_templates then
@@ -883,7 +932,7 @@ feature {NONE} -- Compression
 						-- templates is the jam template, i.e. templates never
 						-- default to other non-jam table entries (e.g. another
 						-- template).
-					put_entry (i, Jam_id, template)
+					put_entry (i, Jam_id, template, l_max)
 					i := i + 1
 					cursor.forth
 				end

@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 					last_integer_value := 0
 				end
 			else
-				if a_code < description.symbol_count then
+				if a_code <= description.maximum_symbol then
 					last_integer_value := a_code
 				else
 					report_character_out_of_range_error (text)
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			end
-			if a_code < description.symbol_count then
+			if a_code <= description.maximum_symbol then
 				last_integer_value := a_code
 			else
 				report_character_out_of_range_error (text)

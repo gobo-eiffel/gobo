@@ -96,8 +96,8 @@ feature -- Access
 					-- TODO: Bug in ISE 3.3.9 in final mode code generation.
 					-- Create `transitions' (not declared as "like anchor")
 					-- first and assign it to `Result'.
---				create Result.make (1, meta_equiv_classes.capacity)
-				create transitions.make (1, l_meta_equiv_classes.capacity)
+--				create Result.make (l_meta_equiv_classes.lower, l_meta_equiv_classes.upper)
+				create transitions.make (l_meta_equiv_classes.lower, l_meta_equiv_classes.upper)
 				Result := transitions
 				nb := template.upper
 				from

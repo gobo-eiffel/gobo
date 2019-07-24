@@ -167,19 +167,25 @@ feature {NONE} -- Building
 			-- Build `yy_nxt' table.
 		local
 			yy_nxt_: ARRAY [INTEGER]
-			i, j, k, nb: INTEGER
+			i, j, k: INTEGER
 			a_state: LX_DFA_STATE
 			target: detachable LX_DFA_STATE
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			eob_state_id: INTEGER
+			l_minimum_symbol, l_maximum_symbol: INTEGER
 		do
 				-- Take into account the fact null transition entries
 				-- will be included in the transition table.
-				-- Build it from 0 to `maximum_symbol'.
-			yyNb_rows := maximum_symbol + 1
+				-- 	. end-of-buffer           -> 0
+				--  . minumum symbol (if 0)   -> `maximum_symbol' + 1
+			l_minimum_symbol := minimum_symbol
+			l_maximum_symbol := maximum_symbol
+			yyNb_rows := l_maximum_symbol + 1
+			if l_minimum_symbol = 0 then
+				yyNb_rows := yyNb_rows + 1
+			end
 			create yy_nxt_.make_filled (0, 0, yyNb_rows * (states.count + 1) - 1)
 			eob_state_id := start_states_count + 1
-			nb := yyNb_rows - 1
 				-- `0' entries for state #0.
 			j := yyNb_rows
 			from
@@ -195,22 +201,34 @@ feature {NONE} -- Building
 					else
 						yy_nxt_.put (eob_state_id, j)
 					end
-					nb := nb + yyNb_rows
 					k := 1
 					j := j + 1
 				until
-					j > nb
+					k > l_maximum_symbol
 				loop
-					target := transitions.target (k)
+					if k >= l_minimum_symbol then
+						target := transitions.target (k)
+						if target /= Void then
+							yy_nxt_.put (target.id, j)
+						else
+								-- Jams are marked by negative of state number.
+							yy_nxt_.put (-a_state.id, j)
+						end
+					end
+					k := k + 1
+					j := j + 1
+				end
+				if l_minimum_symbol = 0 then
+						-- Add entry for `minimum_symbol' (if 0).
+					target := transitions.target (l_minimum_symbol)
 					if target /= Void then
 						yy_nxt_.put (target.id, j)
 					else
 							-- Jams are marked by negative of state number.
 						yy_nxt_.put (-a_state.id, j)
 					end
-					k := k + 1
-					j := j + 1
 				end
+				j := j + 1
 				i := i + 1
 			end
 			yy_nxt := yy_nxt_

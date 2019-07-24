@@ -41,21 +41,18 @@ feature -- Status report
 			-- Is `a_symbol' included in symbol class?
 			-- Take into account the negated status.
 		require
-			a_symbol_valid: a_symbol >= 1 and a_symbol <= {CHARACTER_8}.max_value + 1
-		local
-			l_symbol: INTEGER
+			a_symbol_valid: a_symbol >= 0 and a_symbol <= {CHARACTER_8}.max_value
 		do
-			l_symbol := a_symbol \\ ({CHARACTER_8}.max_value + 1)
 			if is_empty then
 				Result := is_negated
-			elseif l_symbol < 64 then
-				Result := (first_set & masks.item (l_symbol) /= 0) /= is_negated
-			elseif l_symbol < 128 then
-				Result := (second_set & masks.item (l_symbol \\ 64) /= 0) /= is_negated
-			elseif l_symbol < 192 then
-				Result := (third_set & masks.item (l_symbol \\ 64) /= 0) /= is_negated
+			elseif a_symbol < 64 then
+				Result := (first_set & masks.item (a_symbol) /= 0) /= is_negated
+			elseif a_symbol < 128 then
+				Result := (second_set & masks.item (a_symbol \\ 64) /= 0) /= is_negated
+			elseif a_symbol < 192 then
+				Result := (third_set & masks.item (a_symbol \\ 64) /= 0) /= is_negated
 			else
-				Result := (fourth_set & masks.item (l_symbol \\ 64) /= 0) /= is_negated
+				Result := (fourth_set & masks.item (a_symbol \\ 64) /= 0) /= is_negated
 			end
 		ensure
 			definition: Result = (added (a_symbol) /= is_negated)
@@ -65,21 +62,18 @@ feature -- Status report
 			-- Has `a_symbol' been added to the symbol class?
 			-- Do not take into account the negated status.
 		require
-			a_symbol_valid: a_symbol >= 1 and a_symbol <= {CHARACTER_8}.max_value + 1
-		local
-			l_symbol: INTEGER
+			a_symbol_valid: a_symbol >= 0 and a_symbol <= {CHARACTER_8}.max_value
 		do
-			l_symbol := a_symbol \\ ({CHARACTER_8}.max_value + 1)
 			if is_empty then
 				Result := False
-			elseif l_symbol < 64 then
-				Result := first_set & masks.item (l_symbol) /= 0
-			elseif l_symbol < 128 then
-				Result := second_set & masks.item (l_symbol \\ 64) /= 0
-			elseif l_symbol < 192 then
-				Result := third_set & masks.item (l_symbol \\ 64) /= 0
+			elseif a_symbol < 64 then
+				Result := first_set & masks.item (a_symbol) /= 0
+			elseif a_symbol < 128 then
+				Result := second_set & masks.item (a_symbol \\ 64) /= 0
+			elseif a_symbol < 192 then
+				Result := third_set & masks.item (a_symbol \\ 64) /= 0
 			else
-				Result := fourth_set & masks.item (l_symbol \\ 64) /= 0
+				Result := fourth_set & masks.item (a_symbol \\ 64) /= 0
 			end
 		end
 
@@ -111,19 +105,16 @@ feature -- Element Change
 			-- Add `a_symbol' to symbol class.
 			-- Do not take into account the negated status.
 		require
-			a_symbol_valid: 1 <= a_symbol and a_symbol <= {CHARACTER_8}.max_value + 1
-		local
-			l_symbol: INTEGER
+			a_symbol_valid: a_symbol >= 0 and a_symbol <= {CHARACTER_8}.max_value
 		do
-			l_symbol := a_symbol \\ ({CHARACTER_8}.max_value + 1)
-			if l_symbol < 64 then
-				first_set := first_set | masks.item (l_symbol)
-			elseif l_symbol < 128 then
-				second_set := second_set | masks.item (l_symbol \\ 64)
-			elseif l_symbol < 192 then
-				third_set := third_set | masks.item (l_symbol \\ 64)
+			if a_symbol < 64 then
+				first_set := first_set | masks.item (a_symbol)
+			elseif a_symbol < 128 then
+				second_set := second_set | masks.item (a_symbol \\ 64)
+			elseif a_symbol < 192 then
+				third_set := third_set | masks.item (a_symbol \\ 64)
 			else
-				fourth_set := fourth_set | masks.item (l_symbol \\ 64)
+				fourth_set := fourth_set | masks.item (a_symbol \\ 64)
 			end
 			is_empty := False
 		ensure
@@ -200,11 +191,7 @@ feature -- Convertion
 			fourth_set := 0
 			is_empty := True
 			from
-				l_code := {CHARACTER_8}.max_value + 1
-				if l_old_first_set & masks.item (0) /= 0 and then classes.is_representative (l_code) then
-					add_character (classes.equivalence_class (l_code))
-				end
-				l_code := 1
+				l_code := 0
 			until
 				l_code > {CHARACTER_8}.max_value
 			loop

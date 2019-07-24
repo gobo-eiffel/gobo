@@ -42,9 +42,10 @@ feature {NONE} -- Initialization
 		require
 			a_description_not_void: a_description /= Void
 		local
-			max: INTEGER
+			min, max: INTEGER
 			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 			l_yy_ec: ARRAY [INTEGER]
+			i, nb: INTEGER
 		do
 			if attached a_description.input_filename as l_input_filename then
 				input_filename := l_input_filename
@@ -65,23 +66,37 @@ feature {NONE} -- Initialization
 			yy_start_conditions := a_description.start_conditions.names
 			build_rules (a_description.rules)
 			build_eof_rules (a_description.eof_rules, 0, yy_start_conditions.count - 1)
-			max := a_description.symbol_count
+			min := a_description.minimum_symbol
+			max := a_description.maximum_symbol
 			equiv_classes := a_description.equiv_classes
 			if equiv_classes /= Void and then equiv_classes.built then
-				l_yy_ec := equiv_classes.to_array (0, max)
+					-- 	. end-of-buffer           -> 0
+					--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+				l_yy_ec := equiv_classes.to_array (0, max + 1)
+				from
+					i := min
+					nb := max
+					max := equiv_classes.count + equiv_classes.lower - 1
+				until
+					i > nb
+				loop
+					if l_yy_ec.item (i) = 0 then
+						l_yy_ec.put (max + 1, i)
+					end
+					i := i + 1
+				end
+				yyNull_equiv_class := l_yy_ec.item (0)
+				l_yy_ec.put (yyNull_equiv_class, nb + 1)
+				l_yy_ec.put (0, 0)
 				yy_ec := l_yy_ec
-				yyNull_equiv_class := l_yy_ec.item (max)
-				max := equiv_classes.count
 			else
-				yyNull_equiv_class := max
+				yyNull_equiv_class := max + 1
 			end
 			yyNb_rules := yy_rules.upper
 			yyEnd_of_buffer := yyNb_rules + 1
 			yyLine_used := a_description.line_used
 			yyPosition_used := a_description.position_used
-				-- Symbols start at 1 and NULL transitions
-				-- are indexed by `maximum_symbol'.
-			initialize_dfa (a_description.start_conditions, 1, max)
+			initialize_dfa (a_description.start_conditions, min, max)
 		end
 
 	put_eob_state
@@ -442,7 +457,7 @@ feature {NONE} -- Generation
 						a_file.put_integer (column_count)
 						a_file.put_character ('%N')
 					elseif column_count /= 0 then
-							-- yy_column := yy_column + text_count
+							-- The next line means: "yy_column := yy_column + text_count"
 						a_file.put_string ("%Tyy_column := yy_column + yy_end - yy_start - yy_more_len%N")
 					end
 				elseif line_count > 0 then
@@ -842,52 +857,70 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			i, j, nb: INTEGER
+			i, j: INTEGER
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			has_transition: ARRAY [BOOLEAN]
+			l_minimum_symbol, l_maximum_symbol: INTEGER
 		do
-			nb := maximum_symbol - minimum_symbol + 1
 			transitions := a_state.transitions
-			create has_transition.make_filled (False, 0, nb - 1)
 			if attached yy_ec as l_yy_ec then
 					-- Equivalence classes are used.
+					--
+					-- Following are the minimum and maximum symbols
+					-- before applying the equivalence classes
+					-- (`minimum_symbol' and `maximum_symbol' being
+					-- the values after applying the equivalence classes).
+				l_minimum_symbol := minimum_symbol
+				l_maximum_symbol := l_yy_ec.upper - 1
+				create has_transition.make_filled (False, l_minimum_symbol, l_maximum_symbol)
 				from
 					i := 1
 				until
-					i >= nb
+					i > l_maximum_symbol
 				loop
 					j := l_yy_ec.item (i)
+					if j = maximum_symbol + 1 then
+							-- 	. end-of-buffer           -> 0
+							--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+						j := 0
+					end
 					if transitions.valid_label (j) then
 						has_transition.put (transitions.target (j) /= Void, i)
 					end
 					i := i + 1
 				end
 					-- Null transition.
-				j := l_yy_ec.item (nb)
-				if transitions.valid_label (j) then
-					has_transition.put (transitions.target (j) /= Void, 0)
+				if l_minimum_symbol = 0 then
+					j := l_yy_ec.item (l_maximum_symbol + 1)
+					if j = maximum_symbol + 1 then
+							-- 	. end-of-buffer           -> 0
+							--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+						j := 0
+					end
+					if transitions.valid_label (j) then
+						has_transition.put (transitions.target (j) /= Void, l_minimum_symbol)
+					end
 				end
 			else
+				l_minimum_symbol := minimum_symbol
+				l_maximum_symbol := maximum_symbol
+				create has_transition.make_filled (False, l_minimum_symbol, l_maximum_symbol)
 				from
-					i := 1
+					i := l_minimum_symbol
 				until
-					i >= nb
+					i > l_maximum_symbol
 				loop
 					if transitions.valid_label (i) then
 						has_transition.put (transitions.target (i) /= Void, i)
 					end
 					i := i + 1
 				end
-					-- Null transition.
-				if transitions.valid_label (i) then
-					has_transition.put (transitions.target (nb) /= Void, 0)
-				end
 			end
 			a_file.put_string (" out-transitions: [")
 			from
-				i := 0
+				i := l_minimum_symbol
 			until
-				i >= nb
+				i > l_maximum_symbol
 			loop
 				if has_transition.item (i) then
 					a_file.put_character (' ')
@@ -896,7 +929,7 @@ feature {NONE} -- Generation
 						j := i
 						i := i + 1
 					until
-						i >= nb or not has_transition.item (i)
+						i > l_maximum_symbol or else not has_transition.item (i)
 					loop
 						i := i + 1
 					end
@@ -911,9 +944,9 @@ feature {NONE} -- Generation
 			end
 			a_file.put_string ("]%N jam-transitions: EOF [")
 			from
-				i := 0
+				i := l_minimum_symbol
 			until
-				i >= nb
+				i > l_maximum_symbol
 			loop
 				if not has_transition.item (i) then
 					a_file.put_character (' ')
@@ -922,7 +955,7 @@ feature {NONE} -- Generation
 						j := i
 						i := i + 1
 					until
-						i >= nb or has_transition.item (i)
+						i > l_maximum_symbol or else has_transition.item (i)
 					loop
 						i := i + 1
 					end
@@ -1116,7 +1149,6 @@ feature {NONE} -- Constants
 
 invariant
 
-	minimum_symbol: minimum_symbol = 1
 	no_void_eiffel_header: eiffel_header /= Void implies not eiffel_header.has_void
 	array_size_positive: array_size >= 0
 	input_filename_not_void: input_filename /= Void

@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 	make (min, max: INTEGER)
 			-- Create a new transition table for labels
 			-- between `min' and `max'.
+		require
+			min_large_enough: min >= 0
+			max_large_enough: max >= min
 		do
 			create storage.make_filled (Void, min, max)
 			create array_routines
@@ -52,6 +55,8 @@ feature -- Status report
 			-- Is `a_label' a valid label?
 		do
 			Result := storage.valid_index (a_label)
+		ensure
+			definition: Result = (a_label >= lower and a_label <= upper)
 		end
 
 feature -- Access
@@ -123,6 +128,28 @@ feature -- Access
 --				target (i) = Void or else target (i) = target (i).default
 		end
 
+	second_minimum_label: INTEGER
+			-- Second smallest label with an out-transition
+		require
+			at_least_two: count >= 2
+		local
+			state: like target
+		do
+			from
+				Result := minimum_label + 1
+				state := target (Result)
+			until
+				state /= Void and then state /= state.default
+			loop
+				Result := Result + 1
+				state := target (Result)
+			end
+		ensure
+			valid_label: valid_label (Result)
+--			second_smallest: forall i in (minimum_label + 1) .. (Result - 1),
+--				target (i) = Void or else target (i) = target (i).default
+		end
+
 	maximum_label: INTEGER
 			-- Largest label with an out-transition
 		require
@@ -149,12 +176,16 @@ feature -- Access
 			-- Smallest label allowed
 		do
 			Result := storage.lower
+		ensure
+			lower_large_enough: Result >= 0
 		end
 
 	upper: INTEGER
 			-- Largest label allowed
 		do
 			Result := storage.upper
+		ensure
+			upper_large_enough: Result >= lower
 		end
 
 feature -- Measurement

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		do
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
-			symbol_count := {CHARACTER_8}.max_value + 1
+			maximum_symbol := {CHARACTER_8}.max_value
 			array_size := default_array_size
 			line_pragma := True
 			inspect_used := True
@@ -40,7 +40,7 @@ feature -- Initialization
 		do
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
-			symbol_count := {CHARACTER_8}.max_value + 1
+			maximum_symbol := {CHARACTER_8}.max_value
 			array_size := default_array_size
 			rules.wipe_out
 			eof_rules.wipe_out
@@ -90,14 +90,15 @@ feature -- User-defined options
 			-- Note that only ASCII characters (with code less than 128)
 			-- are taken into account.
 
-	symbol_count: INTEGER
-			-- Number of symbols handled by the generated scanners.
-			-- In byte mode, this corresponds to the number of characters in
-			-- the character set (e.g. ASCII: 128, ISO-8859-1: 256).
-			-- In Unicode mode, this corresponds to the set of bytes
-			-- used to encode character in UTF-8 (i.e. 256).
-			--
-			-- (The symbols are between 0 and `symbol_count' - 1.)
+	minimum_symbol: INTEGER = 0
+			-- Minimum symbol handled by the generated scanners
+
+	maximum_symbol: INTEGER
+			-- Maximum symbol handled by the generated scanners.
+			-- In byte mode, this corresponds to the maximum character
+			-- in the character set (e.g. ASCII: 127, ISO-8859-1: 255).
+			-- In Unicode mode, this corresponds to the bytes used
+			-- to encode characters in UTF-8 (i.e. 255).
 
 	unicode_mode: BOOLEAN
 			-- Should the scanner use Unicode mode by default?
@@ -214,22 +215,22 @@ feature -- Option setting
 			case_insensitive_set: case_insensitive = b
 		end
 
-	set_symbol_count (nb: INTEGER)
-			-- Set `symbol_count' to `nb'.
+	set_maximum_symbol (nb: INTEGER)
+			-- Set `maximum_symbol' to `nb'.
 		require
-			nb_not_negative: symbol_count > 0
-			nb_small_enough: symbol_count <= {CHARACTER_8}.max_value + 1
-			unicode: unicode_mode implies nb >= {CHARACTER_8}.max_value + 1
+			nb_not_negative: nb > 0
+			nb_small_enough: nb <= {CHARACTER_8}.max_value
+			unicode: unicode_mode implies nb >= {CHARACTER_8}.max_value
 		do
-			symbol_count := nb
+			maximum_symbol := nb
 		ensure
-			symbol_count_set: symbol_count = nb
+			maximum_symbol_set: maximum_symbol = nb
 		end
 
 	set_unicode_mode (b: BOOLEAN)
 			-- Set `unicode_mode' to `b'.
 		require
-			symbol_count_large_enough: b implies symbol_count >= {CHARACTER_8}.max_value + 1
+			symbol_count_large_enough: b implies maximum_symbol >= {CHARACTER_8}.max_value
 		do
 			unicode_mode := b
 		ensure
@@ -463,11 +464,11 @@ feature -- Setting
 		require
 			equiv_classes_used: equiv_classes_used
 		do
-			create equiv_classes.make (1, symbol_count)
+			create equiv_classes.make (minimum_symbol, maximum_symbol)
 		ensure
 			equiv_classes_created: attached equiv_classes as l_equiv_classes
-			lower_set: l_equiv_classes.lower = 1
-			upper_set: l_equiv_classes.upper = symbol_count
+			lower_set: l_equiv_classes.lower = minimum_symbol
+			upper_set: l_equiv_classes.upper = maximum_symbol
 		end
 
 	set_bol_needed (b: like bol_needed)
@@ -512,9 +513,9 @@ invariant
 	eof_rules_not_void: eof_rules /= Void
 	no_void_eof_rule: not eof_rules.has_void
 	start_conditions_not_void: start_conditions /= Void
-	symbol_count_not_negative: symbol_count > 0
-	symbol_count_small_enough: symbol_count <= {CHARACTER_8}.max_value + 1
-	unicode: unicode_mode implies symbol_count >= {CHARACTER_8}.max_value + 1
+	maximum_symbol_positive: maximum_symbol > 0
+	maximum_symbol_small_enough: maximum_symbol <= {CHARACTER_8}.max_value
+	unicode: unicode_mode implies maximum_symbol >= {CHARACTER_8}.max_value
 	eiffel_header_not_void: eiffel_header /= Void
 	no_void_eiffel_header: not eiffel_header.has_void
 	array_size_positive: array_size >= 0
