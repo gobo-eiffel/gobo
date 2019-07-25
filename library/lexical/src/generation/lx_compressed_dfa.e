@@ -837,32 +837,44 @@ feature {NONE} -- Compression
 			state_id: INTEGER
 			max_index: INTEGER
 			yy_chk_: ARRAY [INTEGER]
+			l_index: INTEGER
 		do
 			symbol := singleton.symbol
 			state_id := singleton.state_id
-			if first_free < symbol then
-				first_free := symbol
+			l_index := first_free
+			if l_index < symbol then
+				l_index := symbol
 			end
 			from
 				yy_chk_ := yy_chk
 				max_index := yy_nxt.upper
 			until
-				first_free > max_index or else yy_chk_.item (first_free) = 0
+				l_index > max_index or else yy_chk_.item (l_index) = 0
 			loop
-				first_free := first_free + 1
+				l_index := l_index + 1
 			end
-			if first_free > max_index then
+			if l_index > max_index then
 				max_index := max_index + Max_xpairs_increment
 				INTEGER_ARRAY_.resize_with_default (yy_nxt, 0, 0, max_index)
 				INTEGER_ARRAY_.resize_with_default (yy_chk_, 0, 0, max_index)
 			end
-			yy_base.put (first_free - symbol, state_id)
+			yy_base.put (l_index - symbol, state_id)
 			yy_def.put (singleton.default_id, state_id)
-			yy_chk_.put (state_id, first_free)
-			yy_nxt.put (singleton.target_id, first_free)
-			if first_free > table_end then
-				table_end := first_free
-				first_free := first_free + 1
+			yy_chk_.put (state_id, l_index)
+			yy_nxt.put (singleton.target_id, l_index)
+			if l_index > table_end then
+				table_end := l_index
+			end
+			if l_index = first_free then
+					-- Find next free slot in tables.
+				from
+					l_index := l_index + 1
+				until
+					yy_chk_.item (l_index) = 0
+				loop
+					l_index := l_index + 1
+				end
+				first_free := l_index
 				max_index := yy_nxt.upper
 				if first_free > max_index then
 					max_index := max_index + Max_xpairs_increment
