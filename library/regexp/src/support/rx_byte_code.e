@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			count := 0
 			capacity := nb
 			byte_code := SPECIAL_NATURAL_32_.make_filled (0, nb)
-			create character_sets.make (nb)
+			create character_sets.make (50)
 		ensure
 			is_empty: count = 0
 			capacity_set: capacity = nb
@@ -316,7 +316,6 @@ invariant
 	byte_code_not_void: byte_code /= Void
 	count_positive: count >= 0
 	count_small_enough: count <= capacity
-	bytes_positive: across 0 |..| (count - 1) as i all byte_code.item (i.item) >= 0 end
 	character_sets_not_void: character_sets /= Void
 	no_void_character_set: not character_sets.has_void
 
