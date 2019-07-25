@@ -69,9 +69,12 @@ feature -- Element change
 				yy_nxt := a_full_tables.yy_nxt
 				yy_accept := a_full_tables.yy_accept
 				yyNb_rows := a_full_tables.yyNb_rows
+				yyNull_equiv_class := a_full_tables.yyNull_equiv_class
 			else
 				yy_nxt := Void
 				yy_accept := Void
+				yyNb_rows := 0
+				yyNull_equiv_class := 0
 			end
 		end
 

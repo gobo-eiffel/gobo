@@ -253,6 +253,7 @@ feature -- Resetting
 			yy_nxt := Void
 			yy_accept := Void
 			yyNb_rows := 0
+			yyNull_equiv_class := 0
 		end
 
 feature {NONE} -- Matching
@@ -291,6 +292,9 @@ feature {NONE} -- Matching
 					Result /= -1 or i > nb
 				loop
 					a_symbol := a_string.item (i).code
+					if a_symbol = 0 then
+						a_symbol := yyNull_equiv_class
+					end
 					a_state := l_yy_nxt.item (a_state * yyNb_rows + a_symbol)
 					if a_state > 0 then
 						if l_yy_accept.item (a_state) /= 0 then
@@ -335,6 +339,9 @@ feature {NONE} -- Matching
 					i > nb
 				loop
 					a_symbol := a_string.item (i).code
+					if a_symbol = 0 then
+						a_symbol := yyNull_equiv_class
+					end
 					a_state := l_yy_nxt.item (a_state * yyNb_rows + a_symbol)
 					if a_state > 0 then
 						if l_yy_accept.item (a_state) /= 0 then
@@ -389,6 +396,9 @@ feature {NONE} -- Matching
 					l_b2 := ((l_bytes & 0x00FF0000) |>> (2 * {PLATFORM}.natural_8_bits)).to_integer_32
 					l_b3 := ((l_bytes & 0x0000FF00) |>> {PLATFORM}.natural_8_bits).to_integer_32
 					l_b4 := (l_bytes & 0x000000FF).to_integer_32
+					if l_b1 = 0 then
+						l_b1 := yyNull_equiv_class
+					end
 					a_state := l_yy_nxt.item (a_state * yyNb_rows + l_b1)
 					if a_state > 0 then
 						if l_yy_accept.item (a_state) /= 0 then
@@ -492,6 +502,9 @@ feature {NONE} -- Matching
 					l_b2 := ((l_bytes & 0x00FF0000) |>> (2 * {PLATFORM}.natural_8_bits)).to_integer_32
 					l_b3 := ((l_bytes & 0x0000FF00) |>> {PLATFORM}.natural_8_bits).to_integer_32
 					l_b4 := (l_bytes & 0x000000FF).to_integer_32
+					if l_b1 = 0 then
+						l_b1 := yyNull_equiv_class
+					end
 					a_state := l_yy_nxt.item (a_state * yyNb_rows + l_b1)
 					if a_state > 0 then
 						if l_yy_accept.item (a_state) /= 0 then
@@ -569,5 +582,8 @@ feature {NONE} -- Engine Data
 
 	yyNb_rows: INTEGER
 			-- Number of rows in `yy_nxt'
+
+	yyNull_equiv_class: INTEGER
+			-- Equivalence code for NULL character
 
 end

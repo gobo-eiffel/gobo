@@ -186,6 +186,17 @@ feature -- Test
 			assert ("matched1", a_regexp.has_matched)
 		end
 
+	test_null_character
+			-- Test with a null character.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("a%Ub", False)
+			assert ("is_compiled", l_regexp.is_compiled)
+			assert ("recognizes", l_regexp.recognizes ("a%Ub"))
+		end
+
 feature -- Test Input 1
 
 	test_input1_regexp1

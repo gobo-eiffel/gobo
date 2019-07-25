@@ -25,6 +25,8 @@
   hexadecimal code for Greek character beta). Invalid and surrogate Unicode
   characters are internally handled as the single byte `\xFF`, which is not
   valid in UTF-8, and hence produce a regular expression syntax error.  
+* Fixed bug in `LX_DFA_REGULAR_EXPRESSION` and `LX_DFA_WILDCARD` when the
+  string to be matched contains a null character.
 
 ### Gobo Eiffel Regexp Library
 
