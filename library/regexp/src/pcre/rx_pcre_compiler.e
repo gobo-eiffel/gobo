@@ -409,8 +409,8 @@ feature -- Compilation
 			c: NATURAL_32
 		do
 			pattern := a_pattern
-			create {STRING_32} pattern_buffer.make (a_pattern.count + 1)
-			pattern_buffer.append (a_pattern)
+			create pattern_buffer.make (a_pattern.count + 1)
+			pattern_buffer.append_string_general (a_pattern)
 			pattern_buffer.append_code (0)
 			pattern_count := a_pattern.count
 			pattern_position := 1
@@ -1345,7 +1345,7 @@ feature {NONE} -- Access
 	code_index: INTEGER
 			-- Position in byte code
 
-	pattern_buffer: STRING_GENERAL
+	pattern_buffer: STRING_32
 			-- Buffer containing the regular expression pattern being compiled
 
 	pattern_position: INTEGER
@@ -3665,15 +3665,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	empty_pattern_buffer: STRING
+	empty_pattern_buffer: STRING_32
 			-- Dummy empty pattern buffer
 		once
-			Result := "T"
-			Result.put ('%U', 1)
+			Result := {STRING_32} "%U"
 		ensure
 			empty_pattern_buffer_not_void: Result /= Void
 			empty_pattern_buffer_not_empty: Result.count > 0
-			end_of_pattern_buffer: Result.item (Result.count) = '%U'
+			end_of_pattern_buffer: Result.item (Result.count) = {CHARACTER_32} '%U'
 		end
 
 	infinity: INTEGER
@@ -3700,7 +3699,7 @@ invariant
 	pattern_buffer_not_void: pattern_buffer /= Void
 	pattern_count_definition: pattern_count = pattern_buffer.count - 1
 	pattern_count_positive: pattern_count >= 0
-	end_of_pattern: pattern_buffer.item (pattern_buffer.count) = '%U'
+	end_of_pattern: pattern_buffer.item (pattern_buffer.count) = {CHARACTER_32} '%U'
 	valid_first_character: -1 <= first_character
 	valid_required_character: -2 <= required_character
 	internal_start_bits_not_void: internal_start_bits /= Void
