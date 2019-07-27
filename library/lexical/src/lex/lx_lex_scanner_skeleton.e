@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			create description.make
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
-			create last_lx_symbol_class_value.make_empty
+			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
 			create last_lx_unicode_character_class_value.make_empty
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			description := a_description
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
-			create last_lx_symbol_class_value.make_empty
+			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
 			create last_lx_unicode_character_class_value.make_empty
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
@@ -91,7 +91,7 @@ feature -- Initialization
 		do
 			reset_compressed_scanner_skeleton
 			last_string_value := ""
-			create last_lx_symbol_class_value.make_empty
+			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
 			description.reset
 			name_definitions.wipe_out
 			character_classes.wipe_out

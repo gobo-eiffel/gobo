@@ -530,7 +530,7 @@ feature {NONE} -- Factory
 				if character_classes.found then
 					Result := new_symbol_class_nfa (character_classes.found_item)
 				else
-					create a_character_class.make_empty
+					create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 					a_character_class.add_character (symbol)
 					equiv_classes.add (a_character_class)
 					character_classes.force_new (a_character_class, a_name)
@@ -565,7 +565,7 @@ feature {NONE} -- Factory
 	new_character_class: LX_SYMBOL_CLASS
 			-- New empty character class
 		do
-			create Result.make_empty
+			create Result.make (description.minimum_symbol, description.maximum_symbol)
 		ensure
 			character_class_not_void: Result /= Void
 		end
@@ -597,7 +597,7 @@ feature {NONE} -- Factory
 					if character_classes.found then
 						Result := new_symbol_class_nfa (character_classes.found_item)
 					else
-						create a_character_class.make_empty
+						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 						a_character_class.add_character (a_char)
 						a_character_class.add_character (lower_char)
 						if equiv_classes /= Void then
@@ -612,7 +612,7 @@ feature {NONE} -- Factory
 					if character_classes.found then
 						Result := new_symbol_class_nfa (character_classes.found_item)
 					else
-						create a_character_class.make_empty
+						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 						a_character_class.add_character (a_char - Case_diff)
 						a_character_class.add_character (a_char)
 						if equiv_classes /= Void then
@@ -668,7 +668,7 @@ feature {NONE} -- Factory
 			if l_list = Void then
 				create l_list.make (20)
 					-- 0xxxxxxx
-				create l_symbol_class.make_empty
+				create l_symbol_class.make (description.minimum_symbol, description.maximum_symbol)
 				from
 					i := 0
 					nb := 0x7F
@@ -703,7 +703,7 @@ feature {NONE} -- Factory
 						{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, i)
 						l_symbol_class := l_array_2.item (buffer.item_code (1))
 						if l_symbol_class = Void then
-							create l_symbol_class.make_empty
+							create l_symbol_class.make (description.minimum_symbol, description.maximum_symbol)
 							l_array_2.put (l_symbol_class, buffer.item_code (1))
 						end
 						l_symbol_class.add_character (buffer.item_code (2))
@@ -996,7 +996,7 @@ feature {NONE} -- Implementation
 			a_nfa: LX_NFA
 		do
 			check precondition: attached rule as l_rule then
-				create a_character_class.make_empty
+				create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 				a_character_class.set_negated (True)
 				a_nfa := new_symbol_class_nfa (a_character_class)
 				a_nfa.set_accepted_rule (l_rule)
@@ -1040,7 +1040,7 @@ feature {NONE} -- Implementation
 						Result := a_string
 						Result.build_concatenation (new_symbol_class_nfa (character_classes.found_item))
 					else
-						create a_character_class.make_empty
+						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 						a_character_class.add_character (a_char)
 						a_character_class.add_character (lower_char)
 						if equiv_classes /= Void then
@@ -1057,7 +1057,7 @@ feature {NONE} -- Implementation
 						Result := a_string
 						Result.build_concatenation (new_symbol_class_nfa (character_classes.found_item))
 					else
-						create a_character_class.make_empty
+						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 						a_character_class.add_character (a_char - Case_diff)
 						a_character_class.add_character (a_char)
 						if equiv_classes /= Void then
@@ -1202,7 +1202,7 @@ feature {NONE} -- Implementation
 						l_done := False
 						if l_symbol_class_2 = Void or l_symbol_class_1 = Void then
 							l_symbol_class_2 := l_other_symbol_class
-							create l_symbol_class_1.make_empty
+							create l_symbol_class_1.make (description.minimum_symbol, description.maximum_symbol)
 							l_symbol_class_1.add_character (i)
 							a_symbol_classes.put (Void, i)
 						elseif l_symbol_class_2.same_symbol_class (l_other_symbol_class) then
@@ -1279,7 +1279,7 @@ feature {NONE} -- Implementation
 						l_done := False
 						if l_next_symbols_2 = Void or l_symbol_class_1 = Void then
 							l_next_symbols_2 := l_other_symbols
-							create l_symbol_class_1.make_empty
+							create l_symbol_class_1.make (description.minimum_symbol, description.maximum_symbol)
 							l_symbol_class_1.add_character (i)
 							a_symbol_classes.put (Void, i)
 						elseif l_next_symbols_2.is_equal (l_other_symbols) then
@@ -1300,7 +1300,7 @@ feature {NONE} -- Implementation
 							l_byte_1 := l_bytes.item & 0xFF
 							l_symbol_class_2 := l_array_2.item (l_byte_1)
 							if l_symbol_class_2 = Void then
-								create l_symbol_class_2.make_empty
+								create l_symbol_class_2.make (description.minimum_symbol, description.maximum_symbol)
 								l_array_2.put (l_symbol_class_2, l_byte_1)
 							end
 							l_symbol_class_2.add_character (l_bytes.item |>> {PLATFORM}.character_8_bits)
@@ -1419,7 +1419,7 @@ feature {NONE} -- Implementation
 			if character_classes.found then
 				Result := character_classes.found_item
 			else
-				create Result.make_empty
+				create Result.make (description.minimum_symbol, description.maximum_symbol)
 				Result.add_character (New_line_code)
 				Result.set_negated (True)
 				equiv_classes := description.equiv_classes

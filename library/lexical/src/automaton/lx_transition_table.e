@@ -47,6 +47,9 @@ feature {NONE} -- Initialization
 		do
 			create storage.make_filled (Void, min, max)
 			create array_routines
+		ensure
+			lower_set: lower = min
+			upper_set: upper = max
 		end
 
 feature -- Status report

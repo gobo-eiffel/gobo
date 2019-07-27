@@ -78,7 +78,7 @@ feature -- Initialization
 				cell.put (i)
 				i := i + 1
 			end
-			count := 0
+			new_upper := new_lower - 1
 		ensure
 			not_built: not built
 		end
@@ -92,6 +92,10 @@ feature -- Access
 			built: built
 		do
 			Result := storage.item (symbol).item
+		ensure
+			equivalence_class_large_enough: Result >= new_lower
+			equivalence_class_small_enough: Result <= new_upper
+			smaller_symbol: Result <= symbol
 		end
 
 	previous_symbol (symbol: INTEGER): INTEGER
@@ -135,6 +139,17 @@ feature -- Access
 			upper_large_enough: Result >= lower
 		end
 
+	new_lower: INTEGER
+			-- Smallest equivalence class
+		do
+			Result := lower
+		ensure
+			same_lower: Result = lower
+		end
+
+	new_upper: INTEGER
+			-- Largest equivalence class
+
 feature -- Status report
 
 	is_representative (symbol: INTEGER): BOOLEAN
@@ -159,13 +174,15 @@ feature -- Status report
 		require
 			symbol_class_not_void: symbol_class /= Void
 		do
-			Result := lower <= 0 and upper >= {CHARACTER_8}.max_value
+			Result := lower <= symbol_class.lower and upper >= symbol_class.upper
 		end
 
 	built: BOOLEAN
 			-- Have the equivalence classes been numbered?
 		do
-			Result := count /= 0
+			Result := new_upper >= new_lower
+		ensure
+			definition: Result = (new_upper >= new_lower)
 		end
 
 feature -- Element change
@@ -199,7 +216,7 @@ feature -- Element change
 				end
 				i := i + 1
 			end
-			count := j - lower
+			new_upper := j - 1
 		ensure
 			built: built
 		end
@@ -251,16 +268,22 @@ feature -- Element change
 				-- symbol class is negated. The same results will
 				-- be obtained in either case.
 			if not symbol_class.is_empty then
-				l_min := lower
-				l_max := upper
-				create flags.make_filled (False, lower, upper)
+				l_min := symbol_class.lower
+				l_max := symbol_class.upper
+				create flags.make_filled (False, l_min, l_max)
 				from
 					l_symbol := l_min
 				until
 					l_symbol > l_max
 				loop
 						-- Find next symbol class member to process.
-					if symbol_class.added (l_symbol) and then not flags.item (l_symbol) then
+					if symbol_class.is_unicode and then not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (l_symbol) then
+						if l_symbol <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code then
+							l_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code + 1
+						else
+							l_symbol := l_max + 1
+						end
+					elseif symbol_class.added (l_symbol) and then not flags.item (l_symbol) then
 						cell := storage.item (l_symbol)
 						old_cell := cell.left
 						new_cell := cell
@@ -278,7 +301,13 @@ feature -- Element change
 							until
 								stop or l_other_symbol > l_max
 							loop
-								if not symbol_class.added (l_other_symbol) then
+								if symbol_class.is_unicode and then not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (l_other_symbol) then
+									if l_other_symbol <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code then
+										l_other_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code + 1
+									else
+										l_other_symbol := l_max + 1
+									end
+								elseif not symbol_class.added (l_other_symbol) then
 									l_other_symbol := l_other_symbol + 1
 								elseif l_other_symbol > i then
 									stop := True
@@ -320,8 +349,10 @@ feature -- Element change
 							end
 						end
 						new_cell.forget_right
+						l_symbol := l_symbol + 1
+					else
+						l_symbol := l_symbol + 1
 					end
-					l_symbol := l_symbol + 1
 				end
 			end
 		end
@@ -389,7 +420,6 @@ invariant
 	storage_not_void: storage /= Void
 	no_void_cell: not ANY_ARRAY_.has_void (storage)
 	valid_bounds: lower <= upper
-	positive_count: count >= 0
-	built_definition: built = (count /= 0)
+	new_upper_small_enough: new_upper <= upper
 
 end

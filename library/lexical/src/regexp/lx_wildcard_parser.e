@@ -1334,7 +1334,7 @@ feature {NONE} -- Implementation
 			if character_classes.found then
 				Result := character_classes.found_item
 			else
-				create Result.make_empty
+				create Result.make (description.minimum_symbol, description.maximum_symbol)
 				Result.add_character (Slash_code)
 				Result.set_negated (True)
 				equiv_classes := description.equiv_classes

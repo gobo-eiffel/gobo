@@ -95,10 +95,18 @@ feature -- Element change
 			until
 				i > nb
 			loop
-				if symbol_class.has (i) then
+				if symbol_class.is_unicode and then not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (i) then
+					if i <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code then
+						i := {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code + 1
+					else
+						i := nb + 1
+					end
+				elseif symbol_class.has (i) then
 					symbol_table.put (True, i)
+					i := i + 1
+				else
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 

@@ -125,12 +125,16 @@ feature -- Element change
 			template: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			i, min_symbol, max_symbol: INTEGER
 			symbol_class: LX_SYMBOL_CLASS
+			l_meta_equiv_classes: like meta_equiv_classes
 		do
 			transitions := state.transitions
 			min_symbol := transitions.lower
 			max_symbol := transitions.upper
 			create template.make (min_symbol, max_symbol)
-			create symbol_class.make_empty
+			l_meta_equiv_classes := meta_equiv_classes
+			if l_meta_equiv_classes /= Void then
+				create symbol_class.make (min_symbol, max_symbol)
+			end
 			from
 				i := min_symbol
 			until
@@ -138,12 +142,14 @@ feature -- Element change
 			loop
 				if transitions.target (i) /= Void then
 					template.set_target (common_state, i)
-					symbol_class.add_character (i)
+					if symbol_class /= Void then
+						symbol_class.add_character (i)
+					end
 				end
 				i := i + 1
 			end
 			put_last (template)
-			if attached meta_equiv_classes as l_meta_equiv_classes then
+			if l_meta_equiv_classes /= Void and symbol_class /= Void then
 				l_meta_equiv_classes.add (symbol_class)
 			end
 		end

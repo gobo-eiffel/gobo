@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 				from
 					i := min
 					nb := max
-					max := equiv_classes.count + equiv_classes.lower - 1
+					max := equiv_classes.new_upper
 				until
 					i > nb
 				loop

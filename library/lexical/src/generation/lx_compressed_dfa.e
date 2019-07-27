@@ -902,7 +902,7 @@ feature {NONE} -- Compression
 					-- 	. end-of-buffer           -> 0
 					--  . minumum_symbol (if 0)   -> maximum_symbol + 1
 				l_yy_meta := l_meta_equiv_classes.to_array (0, maximum_symbol + 1)
-				l_max := l_meta_equiv_classes.count + l_meta_equiv_classes.lower - 1
+				l_max := l_meta_equiv_classes.new_upper
 				if minimum_symbol = 0 then
 					from
 						i := minimum_symbol
