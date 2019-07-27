@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 				Result := character_classes.found_item
 			else
 				create Result.make (description.minimum_symbol, description.maximum_symbol)
-				Result.add_character (Slash_code)
+				Result.add_symbol (Slash_code)
 				Result.set_negated (True)
 				equiv_classes := description.equiv_classes
 				if equiv_classes /= Void then
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 				Result := unicode_character_classes.found_item
 			else
 				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
-				Result.add_character (Slash_code)
+				Result.add_symbol (Slash_code)
 				Result.set_negated (True)
 				unicode_character_classes.force_new (Result, question_string)
 			end

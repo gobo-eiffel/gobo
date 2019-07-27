@@ -143,7 +143,7 @@ feature -- Element change
 				if transitions.target (i) /= Void then
 					template.set_target (common_state, i)
 					if symbol_class /= Void then
-						symbol_class.add_character (i)
+						symbol_class.add_symbol (i)
 					end
 				end
 				i := i + 1

@@ -241,7 +241,7 @@ end
 				build_equiv_classes
 			end
 			check_options
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -259,7 +259,7 @@ end
 				-- Initialize for a parse of one pattern.
 			in_trail_context := False
 			create rule.make_default (1)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -279,7 +279,7 @@ debug ("GEYACC")
 end
 
 			process_rule (yyvs6.item (yyvsp6))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -300,7 +300,7 @@ debug ("GEYACC")
 end
 
 			report_unrecognized_rule_error
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
@@ -317,7 +317,7 @@ end
 			head_line := Zero_or_more
 			head_column := Zero_or_more
 			trail_count := 0
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
@@ -329,7 +329,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
@@ -342,7 +342,7 @@ end
 
 			yyval6 := yyvs6.item (yyvsp6 - 1)
 			yyval6.build_union (yyvs6.item (yyvsp6))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 -1
@@ -356,7 +356,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
@@ -369,7 +369,7 @@ end
 
 			yyval6 := yyvs6.item (yyvsp6 - 1)
 			yyval6.build_concatenation (yyvs6.item (yyvsp6))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 -1
@@ -392,7 +392,7 @@ end
 			else
 				yyval6 := new_nfa_from_character (yyvs3.item (yyvsp3))
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -413,7 +413,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_nfa_from_character (yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -445,7 +445,7 @@ end
 					i_ := i_ + 1
 				end
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -467,7 +467,7 @@ end
 
 			yyval6 := yyvs6.item (yyvsp6)
 			yyval6.build_closure
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -481,7 +481,7 @@ end
 
 			yyval6 := yyvs6.item (yyvsp6)
 			yyval6.build_positive_closure
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -3
@@ -495,7 +495,7 @@ end
 
 			yyval6 := yyvs6.item (yyvsp6)
 			yyval6.build_optional
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -3
@@ -508,7 +508,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -3
@@ -526,7 +526,7 @@ end
 				yyval6 := new_symbol_class_nfa (question_character_class)
 			end
 			yyval6.build_closure
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -551,7 +551,7 @@ end
 			else
 				yyval6 := new_symbol_class_nfa (question_character_class)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -579,7 +579,7 @@ end
 			yyval6.build_positive_closure
 			yyval6.build_concatenation (new_nfa_from_character (Slash_code))
 			yyval6.build_closure
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -600,7 +600,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_symbol_class_nfa (yyvs4.item (yyvsp4))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -621,7 +621,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_nfa_from_character_class (yyvs4.item (yyvsp4))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -642,7 +642,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_nfa_from_unicode_character_class (yyvs5.item (yyvsp5))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -663,7 +663,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_nfa_from_unicode_character_class (yyvs5.item (yyvsp5))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -684,7 +684,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -698,7 +698,7 @@ end
 
 			yyval4 := yyvs4.item (yyvsp4)
 			character_classes.force (yyval4, yyvs2.item (yyvsp2))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp2 := yyvsp2 -1
@@ -714,7 +714,7 @@ end
 			yyval4 := yyvs4.item (yyvsp4)
 			yyval4.set_negated (True)
 			character_classes.force (yyval4, yyvs2.item (yyvsp2))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp2 := yyvsp2 -1
@@ -729,7 +729,7 @@ end
 
 			yyval5 := yyvs5.item (yyvsp5)
 			unicode_character_classes.force (yyval5, yyvs2.item (yyvsp2))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp2 := yyvsp2 -1
@@ -745,7 +745,7 @@ end
 			yyval5 := yyvs5.item (yyvsp5)
 			yyval5.set_negated (True)
 			unicode_character_classes.force (yyval5, yyvs2.item (yyvsp2))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp2 := yyvsp2 -1
@@ -759,7 +759,7 @@ debug ("GEYACC")
 end
 
 			yyval4 := append_character_to_character_class (yyvs3.item (yyvsp3), new_character_class)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
@@ -780,7 +780,7 @@ debug ("GEYACC")
 end
 
 			yyval4 := append_character_to_character_class (yyvs3.item (yyvsp3), yyvs4.item (yyvsp4))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -793,7 +793,7 @@ debug ("GEYACC")
 end
 
 			yyval4 := append_character_set_to_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), new_character_class)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp4 := yyvsp4 + 1
@@ -815,7 +815,7 @@ debug ("GEYACC")
 end
 
 			yyval4 := append_character_set_to_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), yyvs4.item (yyvsp4))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp3 := yyvsp3 -2
@@ -829,7 +829,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -841,7 +841,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -853,7 +853,7 @@ debug ("GEYACC")
 end
 
 			yyval5 := append_character_to_unicode_character_class (yyvs3.item (yyvsp3), new_unicode_character_class)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -874,7 +874,7 @@ debug ("GEYACC")
 end
 
 			yyval5 := append_character_to_unicode_character_class (yyvs3.item (yyvsp3), yyvs5.item (yyvsp5))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -887,7 +887,7 @@ debug ("GEYACC")
 end
 
 			yyval5 := append_character_set_to_unicode_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), new_unicode_character_class)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp5 := yyvsp5 + 1
@@ -909,7 +909,7 @@ debug ("GEYACC")
 end
 
 			yyval5 := append_character_set_to_unicode_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), yyvs5.item (yyvsp5))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp3 := yyvsp3 -2
@@ -923,7 +923,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -935,7 +935,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -947,7 +947,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_epsilon_nfa
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp6 := yyvsp6 + 1
@@ -977,7 +977,7 @@ end
 			else
 				yyval6 := append_character_to_string (yyvs3.item (yyvsp3), yyvs6.item (yyvsp6))
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -990,7 +990,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := append_character_to_string (yyvs3.item (yyvsp3), yyvs6.item (yyvsp6))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -1013,7 +1013,7 @@ end
 					i_ := i_ + 1
 				end
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -1335,7 +1335,7 @@ feature {NONE} -- Implementation
 				Result := character_classes.found_item
 			else
 				create Result.make (description.minimum_symbol, description.maximum_symbol)
-				Result.add_character (Slash_code)
+				Result.add_symbol (Slash_code)
 				Result.set_negated (True)
 				equiv_classes := description.equiv_classes
 				if equiv_classes /= Void then
@@ -1358,12 +1358,12 @@ feature {NONE} -- Implementation
 				Result := unicode_character_classes.found_item
 			else
 				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
-				Result.add_character (Slash_code)
+				Result.add_symbol (Slash_code)
 				Result.set_negated (True)
 				unicode_character_classes.force_new (Result, question_string)
 			end
 		ensure
 			question_unicode_character_class_not_void: Result /= Void
 		end
-		
+
 end

@@ -531,7 +531,7 @@ feature {NONE} -- Factory
 					Result := new_symbol_class_nfa (character_classes.found_item)
 				else
 					create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
-					a_character_class.add_character (symbol)
+					a_character_class.add_symbol (symbol)
 					equiv_classes.add (a_character_class)
 					character_classes.force_new (a_character_class, a_name)
 					Result := new_symbol_class_nfa (a_character_class)
@@ -598,8 +598,8 @@ feature {NONE} -- Factory
 						Result := new_symbol_class_nfa (character_classes.found_item)
 					else
 						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
-						a_character_class.add_character (a_char)
-						a_character_class.add_character (lower_char)
+						a_character_class.add_symbol (a_char)
+						a_character_class.add_symbol (lower_char)
 						if equiv_classes /= Void then
 							equiv_classes.add (a_character_class)
 						end
@@ -613,8 +613,8 @@ feature {NONE} -- Factory
 						Result := new_symbol_class_nfa (character_classes.found_item)
 					else
 						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
-						a_character_class.add_character (a_char - Case_diff)
-						a_character_class.add_character (a_char)
+						a_character_class.add_symbol (a_char - Case_diff)
+						a_character_class.add_symbol (a_char)
 						if equiv_classes /= Void then
 							equiv_classes.add (a_character_class)
 						end
@@ -676,7 +676,7 @@ feature {NONE} -- Factory
 					i > nb
 				loop
 					if a_unicode_character_class.has (i) then
-						l_symbol_class.add_character (i)
+						l_symbol_class.add_symbol (i)
 					end
 					i := i + 1
 				end
@@ -706,7 +706,7 @@ feature {NONE} -- Factory
 							create l_symbol_class.make (description.minimum_symbol, description.maximum_symbol)
 							l_array_2.put (l_symbol_class, buffer.item_code (1))
 						end
-						l_symbol_class.add_character (buffer.item_code (2))
+						l_symbol_class.add_symbol (buffer.item_code (2))
 					end
 					i := i + 1
 				end
@@ -1041,8 +1041,8 @@ feature {NONE} -- Implementation
 						Result.build_concatenation (new_symbol_class_nfa (character_classes.found_item))
 					else
 						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
-						a_character_class.add_character (a_char)
-						a_character_class.add_character (lower_char)
+						a_character_class.add_symbol (a_char)
+						a_character_class.add_symbol (lower_char)
 						if equiv_classes /= Void then
 							equiv_classes.add (a_character_class)
 						end
@@ -1058,8 +1058,8 @@ feature {NONE} -- Implementation
 						Result.build_concatenation (new_symbol_class_nfa (character_classes.found_item))
 					else
 						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
-						a_character_class.add_character (a_char - Case_diff)
-						a_character_class.add_character (a_char)
+						a_character_class.add_symbol (a_char - Case_diff)
+						a_character_class.add_symbol (a_char)
 						if equiv_classes /= Void then
 							equiv_classes.add (a_character_class)
 						end
@@ -1087,16 +1087,16 @@ feature {NONE} -- Implementation
 			if description.case_insensitive then
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
-					a_character_class.add_character (a_char)
-					a_character_class.add_character (a_char + Case_diff)
+					a_character_class.add_symbol (a_char)
+					a_character_class.add_symbol (a_char + Case_diff)
 				when Lower_a_code .. Lower_z_code then
-					a_character_class.add_character (a_char - Case_diff)
-					a_character_class.add_character (a_char)
+					a_character_class.add_symbol (a_char - Case_diff)
+					a_character_class.add_symbol (a_char)
 				else
-					a_character_class.add_character (a_char)
+					a_character_class.add_symbol (a_char)
 				end
 			else
-				a_character_class.add_character (a_char)
+				a_character_class.add_symbol (a_char)
 			end
 			Result := a_character_class
 		ensure
@@ -1120,13 +1120,13 @@ feature {NONE} -- Implementation
 				loop
 					inspect a_char
 					when Upper_a_code .. Upper_z_code then
-						a_character_class.add_character (a_char)
-						a_character_class.add_character (a_char + Case_diff)
+						a_character_class.add_symbol (a_char)
+						a_character_class.add_symbol (a_char + Case_diff)
 					when Lower_a_code .. Lower_z_code then
-						a_character_class.add_character (a_char - Case_diff)
-						a_character_class.add_character (a_char)
+						a_character_class.add_symbol (a_char - Case_diff)
+						a_character_class.add_symbol (a_char)
 					else
-						a_character_class.add_character (a_char)
+						a_character_class.add_symbol (a_char)
 					end
 					a_char := a_char + 1
 				end
@@ -1136,7 +1136,7 @@ feature {NONE} -- Implementation
 				until
 					a_char > char2
 				loop
-					a_character_class.add_character (a_char)
+					a_character_class.add_symbol (a_char)
 					a_char := a_char + 1
 				end
 			end
@@ -1153,16 +1153,16 @@ feature {NONE} -- Implementation
 			if description.case_insensitive then
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
-					a_character_class.add_character (a_char)
-					a_character_class.add_character (a_char + Case_diff)
+					a_character_class.add_symbol (a_char)
+					a_character_class.add_symbol (a_char + Case_diff)
 				when Lower_a_code .. Lower_z_code then
-					a_character_class.add_character (a_char - Case_diff)
-					a_character_class.add_character (a_char)
+					a_character_class.add_symbol (a_char - Case_diff)
+					a_character_class.add_symbol (a_char)
 				else
-					a_character_class.add_character (a_char)
+					a_character_class.add_symbol (a_char)
 				end
 			else
-				a_character_class.add_character (a_char)
+				a_character_class.add_symbol (a_char)
 			end
 			Result := a_character_class
 		ensure
@@ -1203,10 +1203,10 @@ feature {NONE} -- Implementation
 						if l_symbol_class_2 = Void or l_symbol_class_1 = Void then
 							l_symbol_class_2 := l_other_symbol_class
 							create l_symbol_class_1.make (description.minimum_symbol, description.maximum_symbol)
-							l_symbol_class_1.add_character (i)
+							l_symbol_class_1.add_symbol (i)
 							a_symbol_classes.put (Void, i)
 						elseif l_symbol_class_2.same_symbol_class (l_other_symbol_class) then
-							l_symbol_class_1.add_character (i)
+							l_symbol_class_1.add_symbol (i)
 							a_symbol_classes.put (Void, i)
 						end
 					end
@@ -1280,10 +1280,10 @@ feature {NONE} -- Implementation
 						if l_next_symbols_2 = Void or l_symbol_class_1 = Void then
 							l_next_symbols_2 := l_other_symbols
 							create l_symbol_class_1.make (description.minimum_symbol, description.maximum_symbol)
-							l_symbol_class_1.add_character (i)
+							l_symbol_class_1.add_symbol (i)
 							a_symbol_classes.put (Void, i)
 						elseif l_next_symbols_2.is_equal (l_other_symbols) then
-							l_symbol_class_1.add_character (i)
+							l_symbol_class_1.add_symbol (i)
 							a_symbol_classes.put (Void, i)
 						end
 					end
@@ -1303,7 +1303,7 @@ feature {NONE} -- Implementation
 								create l_symbol_class_2.make (description.minimum_symbol, description.maximum_symbol)
 								l_array_2.put (l_symbol_class_2, l_byte_1)
 							end
-							l_symbol_class_2.add_character (l_bytes.item |>> {PLATFORM}.character_8_bits)
+							l_symbol_class_2.add_symbol (l_bytes.item |>> {PLATFORM}.character_8_bits)
 						end
 						l_symbol_class_2 := Void
 						append_concatenations_of_symbol_classes_from_unicode_utf8_2_byte_character_class (l_array_2, a_preceding, l_symbol_class_1, a_list)
@@ -1347,13 +1347,13 @@ feature {NONE} -- Implementation
 				loop
 					inspect a_char
 					when Upper_a_code .. Upper_z_code then
-						a_character_class.add_character (a_char)
-						a_character_class.add_character (a_char + Case_diff)
+						a_character_class.add_symbol (a_char)
+						a_character_class.add_symbol (a_char + Case_diff)
 					when Lower_a_code .. Lower_z_code then
-						a_character_class.add_character (a_char - Case_diff)
-						a_character_class.add_character (a_char)
+						a_character_class.add_symbol (a_char - Case_diff)
+						a_character_class.add_symbol (a_char)
 					else
-						a_character_class.add_character (a_char)
+						a_character_class.add_symbol (a_char)
 					end
 					a_char := a_char + 1
 				end
@@ -1363,7 +1363,7 @@ feature {NONE} -- Implementation
 				until
 					a_char > char2
 				loop
-					a_character_class.add_character (a_char)
+					a_character_class.add_symbol (a_char)
 					a_char := a_char + 1
 				end
 			end
@@ -1420,7 +1420,7 @@ feature {NONE} -- Implementation
 				Result := character_classes.found_item
 			else
 				create Result.make (description.minimum_symbol, description.maximum_symbol)
-				Result.add_character (New_line_code)
+				Result.add_symbol (New_line_code)
 				Result.set_negated (True)
 				equiv_classes := description.equiv_classes
 				if equiv_classes /= Void then
@@ -1443,7 +1443,7 @@ feature {NONE} -- Implementation
 				Result := unicode_character_classes.found_item
 			else
 				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
-				Result.add_character (New_line_code)
+				Result.add_symbol (New_line_code)
 				Result.set_negated (True)
 				unicode_character_classes.force_new (Result, dot_string)
 			end

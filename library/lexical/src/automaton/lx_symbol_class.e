@@ -143,7 +143,7 @@ feature -- Status setting
 
 feature -- Element Change
 
-	add_character (a_symbol: INTEGER)
+	add_symbol (a_symbol: INTEGER)
 			-- Add `a_symbol' to symbol class.
 			-- Do not take into account the negated status.
 		require
@@ -416,7 +416,7 @@ feature -- Convertion
 					l_old_added := l_old_fourth_set & masks.item (l_symbol \\ 64) /= 0
 				end
 				if l_old_added and then classes.is_representative (l_symbol) then
-					add_character (classes.equivalence_class (l_symbol))
+					add_symbol (classes.equivalence_class (l_symbol))
 				end
 				l_symbol := l_symbol + 1
 			end
@@ -444,7 +444,7 @@ feature -- Convertion
 							l_symbol > nb
 						loop
 							if classes.is_representative (l_symbol) then
-								add_character (classes.equivalence_class (l_symbol))
+								add_symbol (classes.equivalence_class (l_symbol))
 							end
 							l_symbol := l_symbol + 1
 						end
@@ -480,7 +480,7 @@ feature -- Convertion
 											l_symbol > nb or i > 64
 										loop
 											if classes.is_representative (l_symbol) then
-												add_character (classes.equivalence_class (l_symbol))
+												add_symbol (classes.equivalence_class (l_symbol))
 											end
 											l_symbol := l_symbol + 1
 											i := i + 1
@@ -498,7 +498,7 @@ feature -- Convertion
 							if l_symbol <= nb then
 								l_old_added := l_old_set & masks.item (l_symbol \\ 64) /= 0
 								if l_old_added and then classes.is_representative (l_symbol) then
-									add_character (classes.equivalence_class (l_symbol))
+									add_symbol (classes.equivalence_class (l_symbol))
 								end
 								l_symbol := l_symbol + 1
 								i := i + 1
