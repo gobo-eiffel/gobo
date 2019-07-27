@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
 			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
-			create last_lx_unicode_character_class_value.make_empty
+			create last_lx_unicode_character_class_value.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
 			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
-			create last_lx_unicode_character_class_value.make_empty
+			create last_lx_unicode_character_class_value.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)

@@ -15,24 +15,42 @@ class LX_SYMBOL_CLASS
 
 create
 
-	make
+	make,
+	make_unicode
 
 feature {NONE} -- Initialization
 
-	make (l_min, l_max: INTEGER)
+	make (a_min, a_max: INTEGER)
 			-- Create an empty symbol class.
 		require
-			l_min_large_enough: l_min >= 0
-			l_max_large_enough: l_max >= l_min
+			a_min_large_enough: a_min >= 0
+			a_max_large_enough: a_max >= a_min
 		do
 			is_empty := True
-			lower := l_min
-			upper := l_max
+			lower := a_min
+			upper := a_max
 		ensure
-			lower_set: lower = l_min
-			upper_set: upper = l_max
+			lower_set: lower = a_min
+			upper_set: upper = a_max
 			is_empty: is_empty
 			not_negated: not is_negated
+			not_unicode: not is_unicode
+		end
+
+	make_unicode (a_min, a_max: INTEGER)
+			-- Create an empty Unicode symbol class.
+		require
+			a_min_large_enough: a_min >= 0
+			a_max_large_enough: a_max >= a_min
+		do
+			make (a_min, a_max)
+			is_unicode := True
+		ensure
+			lower_set: lower = a_min
+			upper_set: upper = a_max
+			is_empty: is_empty
+			not_negated: not is_negated
+			is_unicode: is_unicode
 		end
 
 feature -- Access

@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 			if unicode_character_classes.found then
 				Result := unicode_character_classes.found_item
 			else
-				create Result.make_empty
+				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
 				Result.add_character (Slash_code)
 				Result.set_negated (True)
 				unicode_character_classes.force_new (Result, question_string)

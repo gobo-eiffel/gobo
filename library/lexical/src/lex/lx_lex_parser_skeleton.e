@@ -573,7 +573,7 @@ feature {NONE} -- Factory
 	new_unicode_character_class: LX_UNICODE_CHARACTER_CLASS
 			-- New empty unicode character class
 		do
-			create Result.make_empty
+			create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
 		ensure
 			unicode_character_class_not_void: Result /= Void
 		end
@@ -723,7 +723,7 @@ feature {NONE} -- Factory
 				until
 					i > nb
 				loop
-					if a_unicode_character_class.has (i) then
+					if {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (i) and then a_unicode_character_class.has (i) then
 						l_found := True
 						buffer.wipe_out
 						{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, i)
@@ -1442,7 +1442,7 @@ feature {NONE} -- Implementation
 			if unicode_character_classes.found then
 				Result := unicode_character_classes.found_item
 			else
-				create Result.make_empty
+				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
 				Result.add_character (New_line_code)
 				Result.set_negated (True)
 				unicode_character_classes.force_new (Result, dot_string)
