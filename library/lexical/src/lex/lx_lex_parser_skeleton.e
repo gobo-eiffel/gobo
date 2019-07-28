@@ -558,16 +558,12 @@ feature {NONE} -- Factory
 	new_symbol_class_nfa (symbols: LX_SYMBOL_CLASS): LX_NFA
 			-- New NFA made of two states and a symbol
 			-- class transition labeled `symbols'
-			-- (Register to `description.equiv_classes' if needed.)
+			-- (Register to be added to `description.equiv_classes' if needed.)
 		require
 			symbols_not_void: symbols /= Void
-		local
-			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
-			equiv_classes := description.equiv_classes
-			if equiv_classes /= Void and then not equiv_character_classes.has (symbols) then
-				equiv_classes.add (symbols)
-				equiv_character_classes.force_new (symbols)
+			if description.equiv_classes /= Void then
+				equiv_character_classes.force (symbols)
 			end
 			create Result.make_symbol_class (symbols, in_trail_context)
 		ensure
@@ -1464,13 +1460,13 @@ feature {NONE} -- Implementation
 			cursor: DS_HASH_SET_CURSOR [LX_SYMBOL_CLASS]
 		do
 			check equiv_classes_not_void: attached description.equiv_classes as l_equiv_classes then
-				l_equiv_classes.build
 				cursor := equiv_character_classes.new_cursor
-				from
-					cursor.start
-				until
-					cursor.after
-				loop
+				from cursor.start until cursor.after loop
+					l_equiv_classes.add (cursor.item)
+					cursor.forth
+				end
+				l_equiv_classes.build
+				from cursor.start until cursor.after loop
 					cursor.item.convert_to_equivalence (l_equiv_classes)
 					cursor.forth
 				end
