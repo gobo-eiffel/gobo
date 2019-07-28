@@ -59,6 +59,10 @@ feature -- Access
 				Result := "CCL_OP"
 			when UCCL_OP then
 				Result := "UCCL_OP"
+			when CCL_PLUS then
+				Result := "CCL_PLUS"
+			when CCL_MINUS then
+				Result := "CCL_MINUS"
 			else
 				Result := yy_character_token_name (a_token)
 			end
@@ -82,5 +86,7 @@ feature -- Token codes
 	NUMBER: INTEGER = 271
 	CCL_OP: INTEGER = 272
 	UCCL_OP: INTEGER = 273
+	CCL_PLUS: INTEGER = 274
+	CCL_MINUS: INTEGER = 275
 
 end

@@ -92,9 +92,9 @@ CCL_CHAR			[^\\\n\]]|{BCHAR}|{UCHAR}|{ESC}
 								set_start_condition (FIRSTCCL)
 							end
 						else
-							if character_classes.has (l_last_string) then
+							if character_classes_by_name.has (l_last_string) then
 								last_token := CCL_OP
-								last_lx_symbol_class_value := character_classes.item (l_last_string)
+								last_lx_symbol_class_value := character_classes_by_name.item (l_last_string)
 							else
 								last_token := CCL_BRACKET
 								last_string_value := l_last_string

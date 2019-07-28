@@ -513,29 +513,33 @@ feature {NONE} -- Factory
 	new_symbol_nfa (symbol: INTEGER): LX_NFA
 			-- New NFA made of two states and a
 			-- symbol transition labeled `symbol'
+			-- (Register to `description.equiv_classes' if needed.)
 		local
 			a_name: STRING
 			a_character_class: LX_SYMBOL_CLASS
-			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
-			equiv_classes := description.equiv_classes
-			if equiv_classes /= Void then
+			if description.equiv_classes /= Void then
 					-- Use a transition with a character class
 					-- containing only `symbol' instead of a
 					-- simple symbol transition labeled `symbol'.
 					-- This is to allow later symbol renumbering
 					-- using equivalence classes.
 				a_name := symbol.out
-				character_classes.search (a_name)
-				if character_classes.found then
-					Result := new_symbol_class_nfa (character_classes.found_item)
+				character_classes_by_name.search (a_name)
+				if character_classes_by_name.found then
+					a_character_class := character_classes_by_name.found_item
 				else
 					create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 					a_character_class.add_symbol (symbol)
-					equiv_classes.add (a_character_class)
-					character_classes.force_new (a_character_class, a_name)
-					Result := new_symbol_class_nfa (a_character_class)
+					character_classes.search (a_character_class)
+					if character_classes.found then
+						a_character_class := character_classes.found_item
+					else
+						character_classes.force_new (a_character_class)
+					end
+					character_classes_by_name.force_new (a_character_class, a_name)
 				end
+				Result := new_symbol_class_nfa (a_character_class)
 			else
 				create Result.make_symbol (symbol, in_trail_context)
 			end
@@ -554,9 +558,17 @@ feature {NONE} -- Factory
 	new_symbol_class_nfa (symbols: LX_SYMBOL_CLASS): LX_NFA
 			-- New NFA made of two states and a symbol
 			-- class transition labeled `symbols'
+			-- (Register to `description.equiv_classes' if needed.)
 		require
 			symbols_not_void: symbols /= Void
+		local
+			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
+			equiv_classes := description.equiv_classes
+			if equiv_classes /= Void and then not equiv_character_classes.has (symbols) then
+				equiv_classes.add (symbols)
+				equiv_character_classes.force_new (symbols)
+			end
 			create Result.make_symbol_class (symbols, in_trail_context)
 		ensure
 			nfa_not_void: Result /= Void
@@ -593,57 +605,42 @@ feature {NONE} -- Factory
 				when Upper_a_code .. Upper_z_code then
 					lower_char := a_char + Case_diff
 					a_name := lower_char.out
-					character_classes.search (a_name)
-					if character_classes.found then
-						Result := new_symbol_class_nfa (character_classes.found_item)
+					character_classes_by_name.search (a_name)
+					if character_classes_by_name.found then
+						a_character_class := character_classes_by_name.found_item
 					else
 						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 						a_character_class.add_symbol (a_char)
 						a_character_class.add_symbol (lower_char)
-						if equiv_classes /= Void then
-							equiv_classes.add (a_character_class)
+						character_classes.search (a_character_class)
+						if character_classes.found then
+							a_character_class := character_classes.found_item
 						end
-						character_classes.force_new (a_character_class, a_name)
-						Result := new_symbol_class_nfa (a_character_class)
+						character_classes_by_name.force_new (a_character_class, a_name)
 					end
+					Result := new_symbol_class_nfa (a_character_class)
 				when Lower_a_code .. Lower_z_code then
 					a_name := a_char.out
-					character_classes.search (a_name)
-					if character_classes.found then
-						Result := new_symbol_class_nfa (character_classes.found_item)
+					character_classes_by_name.search (a_name)
+					if character_classes_by_name.found then
+						a_character_class := character_classes_by_name.found_item
 					else
 						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 						a_character_class.add_symbol (a_char - Case_diff)
 						a_character_class.add_symbol (a_char)
-						if equiv_classes /= Void then
-							equiv_classes.add (a_character_class)
+						character_classes.search (a_character_class)
+						if character_classes.found then
+							a_character_class := character_classes.found_item
 						end
-						character_classes.force_new (a_character_class, a_name)
-						Result := new_symbol_class_nfa (a_character_class)
+						character_classes_by_name.force_new (a_character_class, a_name)
 					end
+					Result := new_symbol_class_nfa (a_character_class)
 				else
 					Result := new_symbol_nfa (a_char)
 				end
 			else
 				Result := new_symbol_nfa (a_char)
 			end
-		ensure
-			nfa_not_void: Result /= Void
-		end
-
-	new_nfa_from_character_class (a_character_class: LX_SYMBOL_CLASS): LX_NFA
-			-- New NFA with a transition labeled with `a_character_class'
-			-- (Eventually register to `description.equiv_classes'.)
-		require
-			a_character_class_not_void: a_character_class /= Void
-		local
-			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
-		do
-			equiv_classes := description.equiv_classes
-			if equiv_classes /= Void then
-				equiv_classes.add (a_character_class)
-			end
-			Result := new_symbol_class_nfa (a_character_class)
 		ensure
 			nfa_not_void: Result /= Void
 		end
@@ -681,10 +678,6 @@ feature {NONE} -- Factory
 					i := i + 1
 				end
 				if not l_symbol_class.is_empty then
-					character_classes.force (l_symbol_class, "_" + character_classes.count.out)
-					if attached description.equiv_classes as l_equiv_classes then
-						l_equiv_classes.add (l_symbol_class)
-					end
 					create l_concatenation.make (1)
 					l_concatenation.put_last (l_symbol_class)
 					l_list.force_last (l_concatenation)
@@ -1027,52 +1020,51 @@ feature {NONE} -- Implementation
 			a_name: STRING
 			lower_char: INTEGER
 			a_character_class: LX_SYMBOL_CLASS
-			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
+			Result := a_string
 			if description.case_insensitive then
-				equiv_classes := description.equiv_classes
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
 					lower_char := a_char + Case_diff
 					a_name := lower_char.out
-					character_classes.search (a_name)
-					if character_classes.found then
-						Result := a_string
-						Result.build_concatenation (new_symbol_class_nfa (character_classes.found_item))
+					character_classes_by_name.search (a_name)
+					if character_classes_by_name.found then
+						a_character_class := character_classes_by_name.found_item
 					else
 						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 						a_character_class.add_symbol (a_char)
 						a_character_class.add_symbol (lower_char)
-						if equiv_classes /= Void then
-							equiv_classes.add (a_character_class)
+						character_classes.search (a_character_class)
+						if character_classes.found then
+							a_character_class := character_classes.found_item
+						else
+							character_classes.force_new (a_character_class)
 						end
-						character_classes.force_new (a_character_class, a_name)
-						Result := a_string
-						Result.build_concatenation (new_symbol_class_nfa (a_character_class))
+						character_classes_by_name.force_new (a_character_class, a_name)
 					end
+					Result.build_concatenation (new_symbol_class_nfa (a_character_class))
 				when Lower_a_code .. Lower_z_code then
 					a_name := a_char.out
-					character_classes.search (a_name)
-					if character_classes.found then
-						Result := a_string
-						Result.build_concatenation (new_symbol_class_nfa (character_classes.found_item))
+					character_classes_by_name.search (a_name)
+					if character_classes_by_name.found then
+						a_character_class := character_classes_by_name.found_item
 					else
 						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
 						a_character_class.add_symbol (a_char - Case_diff)
 						a_character_class.add_symbol (a_char)
-						if equiv_classes /= Void then
-							equiv_classes.add (a_character_class)
+						character_classes.search (a_character_class)
+						if character_classes.found then
+							a_character_class := character_classes.found_item
+						else
+							character_classes.force_new (a_character_class)
 						end
-						character_classes.force_new (a_character_class, a_name)
-						Result := a_string
-						Result.build_concatenation (new_symbol_class_nfa (a_character_class))
+						character_classes_by_name.force_new (a_character_class, a_name)
 					end
+					Result.build_concatenation (new_symbol_class_nfa (a_character_class))
 				else
-					Result := a_string
 					Result.build_concatenation (new_symbol_nfa (a_char))
 				end
 			else
-				Result := a_string
 				Result.build_concatenation (new_symbol_nfa (a_char))
 			end
 		ensure
@@ -1213,12 +1205,6 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				if l_symbol_class_1 /= Void and l_symbol_class_2 /= Void then
-					character_classes.force (l_symbol_class_1, "_" + character_classes.count.out)
-					character_classes.force (l_symbol_class_2, "_" + character_classes.count.out)
-					if attached description.equiv_classes as l_equiv_classes then
-						l_equiv_classes.add (l_symbol_class_1)
-						l_equiv_classes.add (l_symbol_class_2)
-					end
 					create l_concatenation.make (4)
 					if a_preceding_1 /= Void then
 						l_concatenation.put_last (a_preceding_1)
@@ -1290,10 +1276,6 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				if l_symbol_class_1 /= Void and l_next_symbols_2 /= Void then
-					character_classes.force (l_symbol_class_1, "_" + character_classes.count.out)
-					if attached description.equiv_classes as l_equiv_classes then
-						l_equiv_classes.add (l_symbol_class_1)
-					end
 					if a_byte_count = 3 then
 						create l_array_2.make_filled (Void, {CHARACTER_8}.min_value, {CHARACTER_8}.max_value)
 						across l_next_symbols_2 as l_bytes loop
@@ -1412,21 +1394,22 @@ feature {NONE} -- Implementation
 			-- "." character class (i.e. all characters except new_line)
 		local
 			dot_string: STRING
-			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
 			dot_string := "."
-			character_classes.search (dot_string)
-			if character_classes.found then
-				Result := character_classes.found_item
+			character_classes_by_name.search (dot_string)
+			if character_classes_by_name.found then
+				Result := character_classes_by_name.found_item
 			else
 				create Result.make (description.minimum_symbol, description.maximum_symbol)
 				Result.add_symbol (New_line_code)
 				Result.set_negated (True)
-				equiv_classes := description.equiv_classes
-				if equiv_classes /= Void then
-					equiv_classes.add (Result)
+				character_classes.search (Result)
+				if character_classes.found then
+					Result := character_classes.found_item
+				else
+					character_classes.force_new (Result)
 				end
-				character_classes.force_new (Result, dot_string)
+				character_classes_by_name.force_new (Result, dot_string)
 			end
 		ensure
 			dot_character_class_not_void: Result /= Void
@@ -1478,11 +1461,11 @@ feature {NONE} -- Implementation
 		require
 			equiv_classes_not_void: description.equiv_classes /= Void
 		local
-			cursor: DS_HASH_TABLE_CURSOR [LX_SYMBOL_CLASS, STRING]
+			cursor: DS_HASH_SET_CURSOR [LX_SYMBOL_CLASS]
 		do
 			check equiv_classes_not_void: attached description.equiv_classes as l_equiv_classes then
 				l_equiv_classes.build
-				cursor := character_classes.new_cursor
+				cursor := equiv_character_classes.new_cursor
 				from
 					cursor.start
 				until

@@ -13,6 +13,14 @@ note
 
 class LX_SYMBOL_CLASS
 
+inherit
+
+	HASHABLE
+		redefine
+			is_equal,
+			copy
+		end
+
 create
 
 	make,
@@ -60,6 +68,45 @@ feature -- Access
 
 	upper: INTEGER
 			-- Largest symbol allowed
+
+	hash_code: INTEGER
+			-- Hash code value
+		local
+			l_code: NATURAL_64
+			l_chunk_index: INTEGER
+			l_chunk_upper: INTEGER
+			i: INTEGER
+		do
+			l_code := first_set + second_set + third_set + fourth_set
+			if upper >= 256 and then attached other_sets as l_other_sets then
+				from
+					l_chunk_index := 0
+					l_chunk_upper := chunk_count - 2
+				until
+					l_chunk_index > l_chunk_upper or else
+						(attached l_other_sets.item (l_chunk_index) as l_chunk and then
+							l_chunk.count > 0 and then
+								not (l_chunk.filled_with (0, 0, chunk_size - 1) or
+									l_chunk.filled_with (1, 0, chunk_size - 1)))
+				loop
+					l_chunk_index := l_chunk_index + 1
+				end
+				if l_chunk_index <= l_chunk_upper and then attached l_other_sets.item (l_chunk_index) as l_chunk then
+					from
+						i := 0
+					until
+						i >= chunk_size
+					loop
+						l_code := l_code + l_chunk.item (i)
+						i := i + 1
+					end
+				end
+			end
+			Result := (l_code & 0x0000FFFF).to_integer_32 + ((l_code & 0xFFFF0000) |>> 32).to_integer_32
+			if Result < 0 then
+				Result := -(Result + 1)
+			end
+		end
 
 feature -- Status report
 
@@ -123,12 +170,96 @@ feature -- Status report
 			-- Are `a_other' and `Current' considered to be the same symbol class?
 		require
 			a_other_not_void: a_other /= Void
+		local
+			l_chunk_upper: INTEGER
+			l_chunk_index: INTEGER
+			l_chunk: like chunk
+			l_other_chunk: like chunk
 		do
+			Result := True
 			if is_negated /= a_other.is_negated then
 				Result := False
-			else
-				Result := first_set = a_other.first_set and second_set = a_other.second_set and third_set = a_other.third_set and fourth_set = a_other.fourth_set
+			elseif is_unicode /= a_other.is_unicode then
+				Result := False
+			elseif lower /= a_other.lower then
+				Result := False
+			elseif upper /= a_other.upper then
+				Result := False
+			elseif is_empty then
+				Result := a_other.is_empty
+			elseif a_other.is_empty then
+				Result := False
+			elseif first_set /= a_other.first_set then
+				Result := False
+			elseif second_set /= a_other.second_set then
+				Result := False
+			elseif third_set /= a_other.third_set then
+				Result := False
+			elseif fourth_set /= a_other.fourth_set then
+				Result := False
+			elseif upper >= 256 then
+				if attached other_sets as l_current_other_sets then
+					if attached a_other.other_sets as l_other_other_sets then
+						from
+							l_chunk_index := 0
+							l_chunk_upper := chunk_count - 1
+						until
+							not Result or l_chunk_index > l_chunk_upper
+						loop
+							l_chunk := l_current_other_sets.item (l_chunk_index)
+							l_other_chunk := l_other_other_sets.item (l_chunk_index)
+							if l_chunk = Void then
+								if l_other_chunk /= Void then
+									Result := l_other_chunk.count > 0 and then l_other_chunk.filled_with (0, 0, chunk_size - 1)
+								end
+							elseif l_chunk.count = 0 then
+								Result := l_other_chunk /= Void and then (l_other_chunk.count = 0 or else l_other_chunk.filled_with (1, 0, chunk_size - 1))
+							elseif l_other_chunk = Void then
+								Result := l_chunk.filled_with (0, 0, chunk_size - 1)
+							elseif l_other_chunk.count = 0 then
+								Result := l_chunk.filled_with (1, 0, chunk_size - 1)
+							else
+								Result := l_chunk.same_items (l_other_chunk, 0, 0, chunk_size)
+							end
+							l_chunk_index := l_chunk_index + 1
+						end
+					else
+						from
+							l_chunk_index := 0
+							l_chunk_upper := chunk_count - 1
+						until
+							not Result or l_chunk_index > l_chunk_upper
+						loop
+							l_chunk := l_current_other_sets.item (l_chunk_index)
+							if l_chunk /= Void then
+								Result := l_chunk.count > 0 and then l_chunk.filled_with (0, 0, chunk_size - 1)
+							end
+							l_chunk_index := l_chunk_index + 1
+						end
+					end
+				elseif attached a_other.other_sets as l_other_other_sets then
+					from
+						l_chunk_index := 0
+						l_chunk_upper := chunk_count - 1
+					until
+						not Result or l_chunk_index > l_chunk_upper
+					loop
+						l_other_chunk := l_other_other_sets.item (l_chunk_index)
+						if l_other_chunk /= Void then
+							Result := l_other_chunk.count > 0 and then l_other_chunk.filled_with (0, 0, chunk_size - 1)
+						end
+						l_chunk_index := l_chunk_index + 1
+					end
+				else
+					Result := True
+				end
 			end
+		end
+
+	is_equal (other: like Current): BOOLEAN
+			-- Are `a_other' and `Current' considered to be the same symbol class?
+		do
+			Result := same_symbol_class (other)
 		end
 
 feature -- Status setting
@@ -175,7 +306,7 @@ feature -- Element Change
 			added: added (a_symbol)
 		end
 
-	add_symbol_class (other: like Current)
+	add_symbol_class (other: LX_SYMBOL_CLASS)
 			-- Add symbols of `other' to current symbol class.
 			-- Do not take into account negated status of `Current' and `other'.
 		require
@@ -237,7 +368,7 @@ feature -- Element Change
 			is_empty := is_empty and other.is_empty
 		end
 
-	add_negated_symbol_class (other: like Current)
+	add_negated_symbol_class (other: LX_SYMBOL_CLASS)
 			-- Add symbols which are not in `other' to current symbol class.
 			-- Do not take into account negated status of `Current' and `other'.
 		require
@@ -520,6 +651,38 @@ feature -- Convertion
 				loop
 					l_other_sets.put (Void, l_chunk_index)
 					l_chunk_index := l_chunk_index + 1
+				end
+			end
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+			-- Copy `other' symbol class to `Current'.
+		local
+			l_chunk_count: INTEGER
+			i, l_chunk_upper: INTEGER
+			l_other_sets: like other_sets
+		do
+			standard_copy (other)
+			if attached other_sets as l_other_other_sets then
+				l_chunk_count := chunk_count
+				create l_other_sets.make_filled (Void, l_chunk_count)
+				other_sets := l_other_sets
+				from
+					i := 0
+					l_chunk_upper := l_chunk_count - 1
+				until
+					i > l_chunk_upper
+				loop
+					if attached l_other_other_sets.item (i) as l_chunk then
+						if l_chunk.count = 0 then
+							l_other_sets.put (chunk_of_ones, i)
+						else
+							l_other_sets.put (l_chunk.twin, i)
+						end
+					end
+					i := i + 1
 				end
 			end
 		end

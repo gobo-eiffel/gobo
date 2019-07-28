@@ -206,7 +206,7 @@ Singleton: CHAR
 		}
 	| Full_CCl
 		{
-			$$ := new_nfa_from_character_class ($1)
+			$$ := new_symbol_class_nfa ($1)
 		}
 	| UCCL_OP
 		{
@@ -225,13 +225,25 @@ Singleton: CHAR
 Full_CCl: CCL_BRACKET CCl ']'
 		{
 			$$ := $2
-			character_classes.force ($$, $1)
+			character_classes.search ($$)
+			if character_classes.found then
+				$$ := character_classes.found_item
+			else
+				character_classes.force_new ($$)
+			end
+			character_classes_by_name.force ($$, $1)
 		}
 	| CCL_BRACKET '^' CCl ']'
 		{
 			$$ := $3
 			$$.set_negated (True)
-			character_classes.force ($$, $1)
+			character_classes.search ($$)
+			if character_classes.found then
+				$$ := character_classes.found_item
+			else
+				character_classes.force_new ($$)
+			end
+			character_classes_by_name.force ($$, $1)
 		}
 	;
 
@@ -364,21 +376,16 @@ feature {NONE} -- Implementation
 			-- "?" character class (i.e. all characters except /)
 		local
 			question_string: STRING
-			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
 			question_string := "?"
-			character_classes.search (question_string)
-			if character_classes.found then
-				Result := character_classes.found_item
+			character_classes_by_name.search (question_string)
+			if character_classes_by_name.found then
+				Result := character_classes_by_name.found_item
 			else
 				create Result.make (description.minimum_symbol, description.maximum_symbol)
 				Result.add_symbol (Slash_code)
 				Result.set_negated (True)
-				equiv_classes := description.equiv_classes
-				if equiv_classes /= Void then
-					equiv_classes.add (Result)
-				end
-				character_classes.force_new (Result, question_string)
+				character_classes_by_name.force_new (Result, question_string)
 			end
 		ensure
 			question_character_class_not_void: Result /= Void

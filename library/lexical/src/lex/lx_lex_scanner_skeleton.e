@@ -44,8 +44,10 @@ feature {NONE} -- Initialization
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
-			create character_classes.make_map (Initial_max_character_classes)
-			character_classes.set_key_equality_tester (string_equality_tester)
+			create character_classes.make_equal (Initial_max_character_classes)
+			create character_classes_by_name.make_map (Initial_max_character_classes)
+			character_classes_by_name.set_key_equality_tester (string_equality_tester)
+			create equiv_character_classes.make (Initial_max_character_classes)
 			create unicode_character_classes.make_map (Initial_max_character_classes)
 			unicode_character_classes.set_key_equality_tester (string_equality_tester)
 			create unicode_mode.make (Initial_max_unicode_mode)
@@ -71,8 +73,10 @@ feature {NONE} -- Initialization
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
-			create character_classes.make_map (Initial_max_character_classes)
-			character_classes.set_key_equality_tester (string_equality_tester)
+			create character_classes.make_equal (Initial_max_character_classes)
+			create character_classes_by_name.make_map (Initial_max_character_classes)
+			character_classes_by_name.set_key_equality_tester (string_equality_tester)
+			create equiv_character_classes.make (Initial_max_character_classes)
 			create unicode_character_classes.make_map (Initial_max_character_classes)
 			unicode_character_classes.set_key_equality_tester (string_equality_tester)
 			create unicode_mode.make (Initial_max_unicode_mode)
@@ -95,6 +99,8 @@ feature -- Initialization
 			description.reset
 			name_definitions.wipe_out
 			character_classes.wipe_out
+			character_classes_by_name.wipe_out
+			equiv_character_classes.wipe_out
 			unicode_character_classes.wipe_out
 			unicode_mode.wipe_out
 			unicode_mode.force (description.unicode_mode)
@@ -137,8 +143,14 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	character_classes: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
-			-- Character classes declared so far
+	character_classes: DS_HASH_SET [LX_SYMBOL_CLASS]
+			-- Character classes built so far
+
+	character_classes_by_name: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
+			-- Character classes indexed by names
+
+	equiv_character_classes: DS_HASH_SET [LX_SYMBOL_CLASS]
+			-- Character classes already added to `description.equiv_classes'
 
 	unicode_character_classes: DS_HASH_TABLE [LX_UNICODE_CHARACTER_CLASS, STRING]
 			-- Unicode character classes declared so far
@@ -675,7 +687,11 @@ invariant
 	name_definitions_not_void: name_definitions /= Void
 	no_void_name_definition: not name_definitions.has_void_item
 	character_classes_not_void: character_classes /= Void
-	no_void_character_class: not character_classes.has_void_item
+	no_void_character_class: not character_classes.has_void
+	character_classes_by_name_not_void: character_classes_by_name /= Void
+	no_void_named_character_class: not character_classes_by_name.has_void_item
+	equiv_character_classes_not_void: equiv_character_classes /= Void
+	no_void_equiv_character_class: not equiv_character_classes.has_void
 	unicode_character_classes_not_void: unicode_character_classes /= Void
 	no_void_unicode_character_class: not unicode_character_classes.has_void_item
 	unicode_mode_not_void: unicode_mode /= Void

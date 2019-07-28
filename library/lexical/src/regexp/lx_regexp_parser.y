@@ -295,7 +295,7 @@ Singleton: CHAR
 		}
 	| Full_CCl
 		{
-			$$ := new_nfa_from_character_class ($1)
+			$$ := new_symbol_class_nfa ($1)
 			process_singleton_symbol_class ($1)
 		}
 	| UCCL_OP
@@ -352,13 +352,25 @@ Start_byte_mode: BYTE_MODE_START
 Full_CCl: CCL_BRACKET CCl ']'
 		{
 			$$ := $2
-			character_classes.force ($$, $1)
+			character_classes.search ($$)
+			if character_classes.found then
+				$$ := character_classes.found_item
+			else
+				character_classes.force_new ($$)
+			end
+			character_classes_by_name.force ($$, $1)
 		}
 	| CCL_BRACKET '^' CCl ']'
 		{
 			$$ := $3
 			$$.set_negated (True)
-			character_classes.force ($$, $1)
+			character_classes.search ($$)
+			if character_classes.found then
+				$$ := character_classes.found_item
+			else
+				character_classes.force_new ($$)
+			end
+			character_classes_by_name.force ($$, $1)
 		}
 	;
 
