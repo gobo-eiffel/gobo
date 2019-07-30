@@ -308,174 +308,6 @@ feature -- Element Change
 
 	add_symbol_class (other: LX_SYMBOL_CLASS)
 			-- Add symbols of `other' to current symbol class.
-			-- Do not take into account negated status of `Current' and `other'.
-		require
-			other_not_void: other /= Void
-			same_unicode: is_unicode = other.is_unicode
-			same_lower: lower = other.lower
-			same_upper: upper = other.upper
-		local
-			l_chunk_upper: INTEGER
-			l_chunk_index: INTEGER
-			l_chunk: like chunk
-			l_other_chunk: like chunk
-			l_current_other_sets: like other_sets
-			l_index_in_chunk: INTEGER
-		do
-			first_set := first_set | other.first_set
-			second_set := second_set | other.second_set
-			third_set := third_set | other.third_set
-			fourth_set := fourth_set | other.fourth_set
-			if attached other.other_sets as l_other_other_sets then
-				from
-					l_chunk_upper := chunk_count - 1
-				until
-					l_chunk_index > l_chunk_upper
-				loop
-					l_other_chunk := l_other_other_sets.item (l_chunk_index)
-					if l_other_chunk = Void then
-						-- Do nothing
-					elseif l_other_chunk.count = 0 then
-							-- Chunk considered full of ones.
-						if l_current_other_sets = Void then
-							l_current_other_sets := attached_other_sets
-						end
-						l_current_other_sets.put (chunk_of_ones, l_chunk_index)
-					else
-						if l_current_other_sets = Void then
-							l_current_other_sets := attached_other_sets
-						end
-						l_chunk := l_current_other_sets.item (l_chunk_index)
-						if l_chunk = Void then
-							l_current_other_sets.put (l_other_chunk.twin, l_chunk_index)
-						elseif l_chunk.count = 0 then
-							-- Chunk considered full of ones.
-							-- Do nothing.
-						else
-							from
-								l_index_in_chunk := 0
-							until
-								l_index_in_chunk >= chunk_size
-							loop
-								l_chunk [l_index_in_chunk] := l_chunk [l_index_in_chunk] | l_other_chunk [l_index_in_chunk]
-								l_index_in_chunk := l_index_in_chunk + 1
-							end
-						end
-					end
-					l_chunk_index := l_chunk_index + 1
-				end
-			end
-			is_empty := is_empty and other.is_empty
-		end
-
-	add_negated_symbol_class (other: LX_SYMBOL_CLASS)
-			-- Add symbols which are not in `other' to current symbol class.
-			-- Do not take into account negated status of `Current' and `other'.
-		require
-			other_not_void: other /= Void
-			same_unicode: is_unicode = other.is_unicode
-			same_lower: lower = other.lower
-			same_upper: upper = other.upper
-		local
-			l_chunk_upper: INTEGER
-			l_chunk_index: INTEGER
-			l_chunk: like chunk
-			l_other_chunk: like chunk
-			l_current_other_sets: like other_sets
-			l_index_in_chunk: INTEGER
-			l_index_in_chunk_of_upper: INTEGER
-			i: INTEGER
-			l_set: NATURAL_64
-		do
-			first_set := first_set | other.first_set.bit_not
-			second_set := second_set | other.second_set.bit_not
-			third_set := third_set | other.third_set.bit_not
-			fourth_set := fourth_set | other.fourth_set.bit_not
-			if is_empty then
-				is_empty := first_set = 0 and second_set = 0 and third_set = 0 and fourth_set = 0
-			end
-			if attached other.other_sets as l_other_other_sets then
-				from
-					l_chunk_upper := chunk_count - 1
-				until
-					l_chunk_index > l_chunk_upper
-				loop
-					l_other_chunk := l_other_other_sets.item (l_chunk_index)
-					if l_other_chunk = Void then
-						if l_current_other_sets = Void then
-							l_current_other_sets := attached_other_sets
-						end
-						l_current_other_sets.put (chunk_of_ones, l_chunk_index)
-						is_empty := False
-					elseif l_other_chunk.count = 0 then
-						-- Chunk considered full of ones.
-						-- Do nothing.
-					else
-						if l_current_other_sets = Void then
-							l_current_other_sets := attached_other_sets
-						end
-						l_chunk := l_current_other_sets.item (l_chunk_index)
-						if l_chunk = Void then
-							create l_chunk.make_empty (chunk_size)
-							l_current_other_sets.put (l_chunk, l_chunk_index)
-						end
-						if l_chunk.count = 0 then
-							-- Chunk considered full of ones.
-							-- Do nothing.
-						else
-							from
-								l_index_in_chunk := 0
-								l_index_in_chunk_of_upper := -1
-							until
-								l_index_in_chunk >= chunk_size
-							loop
-								l_set := l_other_chunk [l_index_in_chunk].bit_not
-								if l_set /= 0 then
-									if l_chunk_index = l_chunk_upper then
-										if l_index_in_chunk_of_upper < 0 then
-											l_index_in_chunk_of_upper := index_in_chunk (upper)
-										end
-										if l_index_in_chunk = l_index_in_chunk_of_upper then
-											from
-												i := upper \\ 64 + 1
-											until
-												i >= 64
-											loop
-												l_set := l_set & masks.item (i).bit_not
-												i := i + 1
-											end
-										elseif l_index_in_chunk > l_index_in_chunk_of_upper then
-											l_set := 0
-										end
-									end
-								end
-								if l_set /= 0 then
-									l_chunk [l_index_in_chunk] := l_chunk [l_index_in_chunk] | l_set
-									is_empty := False
-								end
-								l_index_in_chunk := l_index_in_chunk + 1
-							end
-						end
-					end
-					l_chunk_index := l_chunk_index + 1
-				end
-			else
-				l_current_other_sets := attached_other_sets
-				from
-					l_chunk_upper := chunk_count - 1
-				until
-					l_chunk_index > l_chunk_upper
-				loop
-					l_current_other_sets.put (chunk_of_ones, l_chunk_index)
-				end
-				if is_empty then
-					is_empty := l_chunk_upper >= 0
-				end
-			end
-		end
-
-	remove_symbol_class (other: LX_SYMBOL_CLASS)
-			-- Remove symbols of `other' from current symbol class.
 			-- Take into account negated status of `Current' and `other'.
 		require
 			other_not_void: other /= Void
@@ -494,22 +326,10 @@ feature -- Element Change
 		do
 			l_negated := is_negated
 			l_other_negated := other.is_negated
-			if l_negated and l_other_negated then
-				is_negated := False
+			if not l_negated and l_other_negated then
+				is_negated := True
 			end
 			if l_negated then
-				if l_other_negated then
-					first_set := first_set.bit_not & other.first_set
-					second_set := second_set.bit_not & other.second_set
-					third_set := third_set.bit_not & other.third_set
-					fourth_set := fourth_set.bit_not & other.fourth_set
-				else
-					first_set := first_set | other.first_set
-					second_set := second_set | other.second_set
-					third_set := third_set | other.third_set
-					fourth_set := fourth_set | other.fourth_set
-				end
-			else
 				if l_other_negated then
 					first_set := first_set & other.first_set
 					second_set := second_set & other.second_set
@@ -521,6 +341,18 @@ feature -- Element Change
 					third_set := third_set & other.third_set.bit_not
 					fourth_set := fourth_set & other.fourth_set.bit_not
 				end
+			else
+				if l_other_negated then
+					first_set := first_set.bit_not & other.first_set
+					second_set := second_set.bit_not & other.second_set
+					third_set := third_set.bit_not & other.third_set
+					fourth_set := fourth_set.bit_not & other.fourth_set
+				else
+					first_set := first_set | other.first_set
+					second_set := second_set | other.second_set
+					third_set := third_set | other.third_set
+					fourth_set := fourth_set | other.fourth_set
+				end
 			end
 			l_is_empty := True
 			if not is_empty and not other.is_empty then
@@ -530,7 +362,7 @@ feature -- Element Change
 			if upper < 256 then
 				-- Done.
 			elseif l_current_other_sets = Void then
-				if l_negated and attached other.other_sets as l_other_other_sets then
+				if not l_negated and attached other.other_sets as l_other_other_sets then
 					from
 						l_chunk_upper := chunk_count - 1
 					until
@@ -585,7 +417,7 @@ feature -- Element Change
 					l_current_chunk := l_current_other_sets.item (l_chunk_index)
 					l_other_chunk := l_other_other_sets.item (l_chunk_index)
 					if l_current_chunk = Void then
-						if l_negated and l_other_chunk /= Void then
+						if not l_negated and l_other_chunk /= Void then
 							if l_other_chunk.count = 0 then
 									-- Chunk considered full of ones.
 								l_current_other_sets.put (chunk_of_ones, l_chunk_index)
@@ -613,12 +445,6 @@ feature -- Element Change
 					elseif l_current_chunk.count = 0 then
 							-- Chunk considered full of ones.
 						if l_negated then
-							if l_other_negated then
-								l_current_other_sets.put (Void, l_chunk_index)
-							else
-								l_is_empty := False
-							end
-						else
 							if l_other_negated then
 								if l_other_chunk.count > 0 then
 									l_current_other_sets.put (l_other_chunk.twin, l_chunk_index)
@@ -648,10 +474,24 @@ feature -- Element Change
 									end
 								end
 							end
+						else
+							if l_other_negated then
+								l_current_other_sets.put (Void, l_chunk_index)
+							else
+								l_is_empty := False
+							end
 						end
 					elseif l_other_chunk.count = 0 then
 							-- Chunk considered full of ones.
 						if l_negated then
+							if l_other_negated then
+								if l_is_empty then
+									l_is_empty := l_current_chunk.filled_with (0, 0, chunk_size - 1)
+								end
+							else
+								l_current_other_sets.put (Void, l_chunk_index)
+							end
+						else
 							if l_other_negated then
 								from
 									l_index_in_chunk := 0
@@ -668,14 +508,6 @@ feature -- Element Change
 								l_current_other_sets.put (chunk_of_ones, l_chunk_index)
 								l_is_empty := False
 							end
-						else
-							if l_other_negated then
-								if l_is_empty then
-									l_is_empty := l_current_chunk.filled_with (0, 0, chunk_size - 1)
-								end
-							else
-								l_current_other_sets.put (Void, l_chunk_index)
-							end
 						end
 					else
 						from
@@ -685,15 +517,15 @@ feature -- Element Change
 						loop
 							if l_negated then
 								if l_other_negated then
-									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk].bit_not & l_other_chunk [l_index_in_chunk]
-								else
-									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk] | l_other_chunk [l_index_in_chunk]
-								end
-							else
-								if l_other_negated then
 									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk] & l_other_chunk [l_index_in_chunk]
 								else
 									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk] & l_other_chunk [l_index_in_chunk].bit_not
+								end
+							else
+								if l_other_negated then
+									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk].bit_not & l_other_chunk [l_index_in_chunk]
+								else
+									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk] | l_other_chunk [l_index_in_chunk]
 								end
 							end
 							if l_is_empty then
@@ -708,6 +540,20 @@ feature -- Element Change
 			if not is_empty and not other.is_empty then
 				is_empty := l_is_empty
 			end
+		end
+
+	remove_symbol_class (other: LX_SYMBOL_CLASS)
+			-- Remove symbols of `other' from current symbol class.
+			-- Take into account negated status of `Current' and `other'.
+		require
+			other_not_void: other /= Void
+			same_unicode: is_unicode = other.is_unicode
+			same_lower: lower = other.lower
+			same_upper: upper = other.upper
+		do
+			is_negated := not is_negated
+			add_symbol_class (other)
+			is_negated := not is_negated
 		end
 
 feature -- Removal
