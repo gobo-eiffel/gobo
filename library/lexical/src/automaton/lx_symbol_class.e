@@ -474,6 +474,242 @@ feature -- Element Change
 			end
 		end
 
+	remove_symbol_class (other: LX_SYMBOL_CLASS)
+			-- Remove symbols of `other' from current symbol class.
+			-- Take into account negated status of `Current' and `other'.
+		require
+			other_not_void: other /= Void
+			same_unicode: is_unicode = other.is_unicode
+			same_lower: lower = other.lower
+			same_upper: upper = other.upper
+		local
+			l_chunk_upper: INTEGER
+			l_chunk_index: INTEGER
+			l_current_chunk: like chunk
+			l_other_chunk: like chunk
+			l_current_other_sets: like other_sets
+			l_index_in_chunk: INTEGER
+			l_negated, l_other_negated: BOOLEAN
+			l_is_empty: BOOLEAN
+		do
+			l_negated := is_negated
+			l_other_negated := other.is_negated
+			if l_negated and l_other_negated then
+				is_negated := False
+			end
+			if l_negated then
+				if l_other_negated then
+					first_set := first_set.bit_not & other.first_set
+					second_set := second_set.bit_not & other.second_set
+					third_set := third_set.bit_not & other.third_set
+					fourth_set := fourth_set.bit_not & other.fourth_set
+				else
+					first_set := first_set | other.first_set
+					second_set := second_set | other.second_set
+					third_set := third_set | other.third_set
+					fourth_set := fourth_set | other.fourth_set
+				end
+			else
+				if l_other_negated then
+					first_set := first_set & other.first_set
+					second_set := second_set & other.second_set
+					third_set := third_set & other.third_set
+					fourth_set := fourth_set & other.fourth_set
+				else
+					first_set := first_set & other.first_set.bit_not
+					second_set := second_set & other.second_set.bit_not
+					third_set := third_set & other.third_set.bit_not
+					fourth_set := fourth_set & other.fourth_set.bit_not
+				end
+			end
+			l_is_empty := True
+			if not is_empty and not other.is_empty then
+				l_is_empty := first_set = 0 and second_set = 0 and third_set = 0 and fourth_set = 0
+			end
+			l_current_other_sets := other_sets
+			if upper < 256 then
+				-- Done.
+			elseif l_current_other_sets = Void then
+				if l_negated and attached other.other_sets as l_other_other_sets then
+					from
+						l_chunk_upper := chunk_count - 1
+					until
+						l_chunk_index > l_chunk_upper
+					loop
+						if attached l_other_other_sets.item (l_chunk_index) as l_chunk then
+							if l_current_other_sets = Void then
+								l_current_other_sets := attached_other_sets
+							end
+							if l_chunk.count = 0 then
+									-- Chunk considered full of ones.
+								l_current_other_sets.put (chunk_of_ones, l_chunk_index)
+								l_is_empty := False
+							else
+								l_current_other_sets.put (l_chunk.twin, l_chunk_index)
+								if l_is_empty then
+									l_is_empty := l_chunk.filled_with (0, 0, chunk_size - 1)
+								end
+							end
+						end
+						l_chunk_index := l_chunk_index + 1
+					end
+				end
+			elseif not attached other.other_sets as l_other_other_sets then
+				if l_other_negated then
+					l_current_other_sets.fill_with (Void, 0, chunk_count - 1)
+				else
+					if l_is_empty then
+						from
+							l_chunk_upper := chunk_count - 1
+						until
+							not l_is_empty or l_chunk_index > l_chunk_upper
+						loop
+							if attached l_current_other_sets.item (l_chunk_index) as l_chunk then
+								if l_chunk.count = 0 then
+										-- Chunk considered full of ones.
+									l_is_empty := False
+								else
+									l_is_empty := l_chunk.filled_with (0, 0, chunk_size - 1)
+								end
+							end
+							l_chunk_index := l_chunk_index + 1
+						end
+					end
+				end
+			else
+				from
+					l_chunk_upper := chunk_count - 1
+				until
+					l_chunk_index > l_chunk_upper
+				loop
+					l_current_chunk := l_current_other_sets.item (l_chunk_index)
+					l_other_chunk := l_other_other_sets.item (l_chunk_index)
+					if l_current_chunk = Void then
+						if l_negated and l_other_chunk /= Void then
+							if l_other_chunk.count = 0 then
+									-- Chunk considered full of ones.
+								l_current_other_sets.put (chunk_of_ones, l_chunk_index)
+								l_is_empty := False
+							else
+								l_current_other_sets.put (l_other_chunk.twin, l_chunk_index)
+								if l_is_empty then
+									l_is_empty := l_other_chunk.filled_with (0, 0, chunk_size - 1)
+								end
+							end
+						end
+					elseif l_other_chunk = Void then
+						if l_other_negated then
+							l_current_chunk.fill_with (0, 0, chunk_size - 1)
+						else
+							if l_is_empty then
+								if l_current_chunk.count = 0 then
+										-- Chunk considered full of ones.
+									l_is_empty := False
+								else
+									l_is_empty := l_current_chunk.filled_with (0, 0, chunk_size - 1)
+								end
+							end
+						end
+					elseif l_current_chunk.count = 0 then
+							-- Chunk considered full of ones.
+						if l_negated then
+							if l_other_negated then
+								l_current_other_sets.put (Void, l_chunk_index)
+							else
+								l_is_empty := False
+							end
+						else
+							if l_other_negated then
+								if l_other_chunk.count > 0 then
+									l_current_other_sets.put (l_other_chunk.twin, l_chunk_index)
+									if l_is_empty then
+										l_is_empty := l_other_chunk.filled_with (0, 0, chunk_size - 1)
+									end
+								else
+									l_is_empty := False
+								end
+							else
+								if l_other_chunk.count = 0 then
+										-- Chunk considered full of ones.
+									l_current_other_sets.put (Void, l_chunk_index)
+								else
+									l_current_chunk := l_other_chunk.twin
+									l_current_other_sets.put (l_current_chunk, l_chunk_index)
+									from
+										l_index_in_chunk := 0
+									until
+										l_index_in_chunk >= chunk_size
+									loop
+										l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk].bit_not
+										l_index_in_chunk := l_index_in_chunk + 1
+									end
+									if l_is_empty then
+										l_is_empty := l_current_chunk.filled_with (0, 0, chunk_size - 1)
+									end
+								end
+							end
+						end
+					elseif l_other_chunk.count = 0 then
+							-- Chunk considered full of ones.
+						if l_negated then
+							if l_other_negated then
+								from
+									l_index_in_chunk := 0
+								until
+									l_index_in_chunk >= chunk_size
+								loop
+									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk].bit_not
+									l_index_in_chunk := l_index_in_chunk + 1
+								end
+								if l_is_empty then
+									l_is_empty := l_current_chunk.filled_with (0, 0, chunk_size - 1)
+								end
+							else
+								l_current_other_sets.put (chunk_of_ones, l_chunk_index)
+								l_is_empty := False
+							end
+						else
+							if l_other_negated then
+								if l_is_empty then
+									l_is_empty := l_current_chunk.filled_with (0, 0, chunk_size - 1)
+								end
+							else
+								l_current_other_sets.put (Void, l_chunk_index)
+							end
+						end
+					else
+						from
+							l_index_in_chunk := 0
+						until
+							l_index_in_chunk >= chunk_size
+						loop
+							if l_negated then
+								if l_other_negated then
+									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk].bit_not & l_other_chunk [l_index_in_chunk]
+								else
+									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk] | l_other_chunk [l_index_in_chunk]
+								end
+							else
+								if l_other_negated then
+									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk] & l_other_chunk [l_index_in_chunk]
+								else
+									l_current_chunk [l_index_in_chunk] := l_current_chunk [l_index_in_chunk] & l_other_chunk [l_index_in_chunk].bit_not
+								end
+							end
+							if l_is_empty then
+								l_is_empty := l_current_chunk [l_index_in_chunk] = 0
+							end
+							l_index_in_chunk := l_index_in_chunk + 1
+						end
+					end
+					l_chunk_index := l_chunk_index + 1
+				end
+			end
+			if not is_empty and not other.is_empty then
+				is_empty := l_is_empty
+			end
+		end
+
 feature -- Removal
 
 	wipe_out

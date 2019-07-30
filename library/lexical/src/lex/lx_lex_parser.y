@@ -541,10 +541,12 @@ CCl_char: CHAR
 CCl_expression: CCl_left_operand CCL_PLUS CCl_right_operand
 		{
 			$$ := $1
+			$$.add_symbol_class ($3)
 		}
 	| CCl_left_operand CCL_MINUS CCl_right_operand
 		{
 			$$ := $1
+			$$.remove_symbol_class ($3)
 		}
 	;
 

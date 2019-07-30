@@ -285,6 +285,12 @@ CCL_CHAR			[^\\\n\]]|{BCHAR}|{UCHAR}|{ESC}
 					last_token := Left_brace_code
 					set_start_condition (NUM)
 				}
+	"{+}"		{
+					last_token := CCL_PLUS
+				}
+	"{-}"		{
+					last_token := CCL_MINUS
+				}
 	"["{FIRST_CCL_CHAR}{CCL_CHAR}*"]"	{
 					check attached text as l_last_string then
 						if unicode_mode.item then
