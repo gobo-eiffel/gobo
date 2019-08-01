@@ -117,6 +117,13 @@ feature -- Status report
 			-- Is symbol class empty?
 			-- Do not take into account negated status.
 
+	is_256_full: BOOLEAN
+			-- Does symbol class contain the 256 first symbols (from 0 to 255)?
+			-- Do not take into account negated status.
+		do
+			Result := first_set = 0xFFFFFFFF and second_set = 0xFFFFFFFF and third_set = 0xFFFFFFFF and fourth_set = 0xFFFFFFFF
+		end
+
 	is_negated: BOOLEAN
 			-- Is character set negated?
 

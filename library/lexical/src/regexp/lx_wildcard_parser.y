@@ -19,8 +19,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value,
-			last_lx_unicode_character_class_value
+			last_lx_symbol_class_value
 		end
 
 	LX_WILDCARD_SCANNER
@@ -31,8 +30,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value,
-			last_lx_unicode_character_class_value
+			last_lx_symbol_class_value
 		end
 
 create
@@ -43,17 +41,17 @@ create
 
 %token STAR_STAR_SLASH STAR_PAREN
 
-%token <STRING> CCL_BRACKET UCCL_BRACKET
-%token <INTEGER> CHAR BCHAR UCHAR
+%token <STRING> CCL_BRACKET
+%token <INTEGER> CHAR
 %token <LX_SYMBOL_CLASS> CCL_OP
-%token <LX_UNICODE_CHARACTER_CLASS> UCCL_OP
+%left CCL_PLUS CCL_MINUS
 
-%type <INTEGER> CCl_char UCCl_char
 %type <LX_NFA> Rule Pattern_list Series Singleton String
-%type <LX_SYMBOL_CLASS> CCl Full_CCl
-%type <LX_UNICODE_CHARACTER_CLASS> UCCl Full_UCCl
+%type <LX_SYMBOL_CLASS> CCl CCl_single Full_CCl CCl_content 
+%type <LX_SYMBOL_CLASS> CCl_expression CCl_parenthesized_expression CCl_left_operand CCl_right_operand
 
 %start Wildcard
+%expect 1
 
 %%
 
@@ -134,25 +132,6 @@ Singleton: CHAR
 				$$ := new_nfa_from_character ($1)
 			end
 		}
-	| BCHAR
-		{
-			$$ := new_nfa_from_character ($1)
-		}
-	| UCHAR
-		{
-			if $1 <= {CHARACTER_8}.max_ascii_value then
-				$$ := new_nfa_from_character ($1)
-			else
-				$$ := new_epsilon_nfa
-				process_singleton_empty_string
-				buffer.wipe_out
-				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $1)
-				from i_ := 1 until i_ > buffer.count loop
-					$$ := append_character_to_string (buffer.item_code (i_), $$)
-					i_ := i_ + 1
-				end
-			end
-		}
 	| STAR_PAREN Pattern_list ')'
 		{
 			$$ := $2
@@ -174,47 +153,23 @@ Singleton: CHAR
 		}
 	| '*'
 		{
-			if unicode_mode.item then
-				$$ := new_nfa_from_unicode_character_class (question_unicode_character_class)
-			else
-				$$ := new_symbol_class_nfa (question_character_class)
-			end
+			$$ := new_nfa_from_character_class (question_character_class)
 			$$.build_closure
 		}
 	| '?'
 		{
-			if unicode_mode.item then
-				$$ := new_nfa_from_unicode_character_class (question_unicode_character_class)
-			else
-				$$ := new_symbol_class_nfa (question_character_class)
-			end
+			$$ := new_nfa_from_character_class (question_character_class)
 		}
 	| STAR_STAR_SLASH
 		{
-			if unicode_mode.item then
-				$$ := new_nfa_from_unicode_character_class (question_unicode_character_class)
-			else
-				$$ := new_symbol_class_nfa (question_character_class)
-			end
+			$$ := new_nfa_from_character_class (question_character_class)
 			$$.build_positive_closure
 			$$.build_concatenation (new_nfa_from_character (Slash_code))
 			$$.build_closure
 		}
-	| CCL_OP
+	| CCl
 		{
-			$$ := new_symbol_class_nfa ($1)
-		}
-	| Full_CCl
-		{
-			$$ := new_symbol_class_nfa ($1)
-		}
-	| UCCL_OP
-		{
-			$$ := new_nfa_from_unicode_character_class ($1)
-		}
-	| Full_UCCl
-		{
-			$$ := new_nfa_from_unicode_character_class ($1)
+			$$ := new_nfa_from_character_class ($1)
 		}
 	| '"' String '"'
 		{
@@ -222,98 +177,95 @@ Singleton: CHAR
 		}
 	;
 
-Full_CCl: CCL_BRACKET CCl ']'
-		{
-			$$ := $2
-			character_classes.search ($$)
-			if character_classes.found then
-				$$ := character_classes.found_item
-			else
-				character_classes.force_new ($$)
-			end
-			character_classes_by_name.force ($$, $1)
-		}
-	| CCL_BRACKET '^' CCl ']'
-		{
-			$$ := $3
-			$$.set_negated (True)
-			character_classes.search ($$)
-			if character_classes.found then
-				$$ := character_classes.found_item
-			else
-				character_classes.force_new ($$)
-			end
-			character_classes_by_name.force ($$, $1)
-		}
+CCl: CCl_single
+		{ $$ := $1 }
+	| CCl_expression
+		{ $$ := $1 }
+	| CCl_parenthesized_expression
+		{ $$ := $1 }
 	;
 
-Full_UCCl: UCCL_BRACKET UCCl ']'
+CCl_single: CCL_OP
+		{ $$ := $1 }
+	| Full_CCl
+		{ $$ := $1 }
+	| '(' CCl_single ')'
+		{ $$ := $2 }
+	;
+	
+Full_CCl: CCL_BRACKET CCl_content ']'
 		{
 			$$ := $2
-			unicode_character_classes.force ($$, $1)
+			character_classes.search ($$)
+			if character_classes.found then
+				$$ := character_classes.found_item
+			else
+				character_classes.force_new ($$)
+			end
+			character_classes_by_name.force ($$, $1)
 		}
-	| UCCL_BRACKET '^' UCCl ']'
+	| CCL_BRACKET '^' CCl_content ']'
 		{
 			$$ := $3
 			$$.set_negated (True)
-			unicode_character_classes.force ($$, $1)
+			character_classes.search ($$)
+			if character_classes.found then
+				$$ := character_classes.found_item
+			else
+				character_classes.force_new ($$)
+			end
+			character_classes_by_name.force ($$, $1)
 		}
 	;
 	
-CCl: CCl_char
+CCl_content: CHAR
 		{
 			$$ := append_character_to_character_class ($1, new_character_class)
 		}
-	| CCl CCl_char
+	| CCl_content CHAR
 		{
 			$$ := append_character_to_character_class ($2, $1)
 		}
-	| CCl_char '-' CCl_char
+	| CHAR '-' CHAR
 		{
 			$$ := append_character_set_to_character_class ($1, $3, new_character_class)
 		}
-	| CCl CCl_char '-' CCl_char
+	| CCl_content CHAR '-' CHAR
 		{
 			$$ := append_character_set_to_character_class ($2, $4, $1)
 		}
 	;
 
-CCl_char: CHAR
+CCl_expression: CCl_left_operand CCL_PLUS CCl_right_operand
 		{
 			$$ := $1
+			$$.add_symbol_class ($3)
 		}
-	| BCHAR
+	| CCl_left_operand CCL_MINUS CCl_right_operand
 		{
 			$$ := $1
-		}
-	;
-	
-UCCl: UCCl_char
-		{
-			$$ := append_character_to_unicode_character_class ($1, new_unicode_character_class)
-		}
-	| UCCl UCCl_char
-		{
-			$$ := append_character_to_unicode_character_class ($2, $1)
-		}
-	| UCCl_char '-' UCCl_char
-		{
-			$$ := append_character_set_to_unicode_character_class ($1, $3, new_unicode_character_class)
-		}
-	| UCCl UCCl_char '-' UCCl_char
-		{
-			$$ := append_character_set_to_unicode_character_class ($2, $4, $1)
+			$$.remove_symbol_class ($3)
 		}
 	;
 
-UCCl_char: CHAR
-		{
-			$$ := $1
-		}
-	| UCHAR
-		{
-			$$ := $1
-		}
+CCl_parenthesized_expression: '(' CCl_expression ')'
+		{ $$ := $2 }
+	| '(' CCl_parenthesized_expression ')'
+		{ $$ := $2 }
+	;
+
+CCl_left_operand: CCl_single
+		{ $$ := $1.twin }
+	| CCl_expression
+		{ $$ := $1 }
+	| CCl_parenthesized_expression
+		{ $$ := $1 }
+	;
+
+CCl_right_operand: CCl_single
+		{ $$ := $1 }
+	| CCl_parenthesized_expression
+		{ $$ := $1 }
 	;
 
 String: -- Empty
@@ -334,24 +286,6 @@ String: -- Empty
 				$$ := append_character_to_string ($2, $1)
 			end
 		}
-	| String BCHAR
-		{
-			$$ := append_character_to_string ($2, $1)
-		}
-	| String UCHAR
-		{
-			if $2 <= {CHARACTER_8}.max_ascii_value then
-				$$ := append_character_to_string ($2, $1)
-			else
-				$$ := $1
-				buffer.wipe_out
-				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $2)
-				from i_ := 1 until i_ > buffer.count loop
-					$$ := append_character_to_string (buffer.item_code (i_), $$)
-					i_ := i_ + 1
-				end
-			end
-		}
 	;
 
 %%
@@ -367,47 +301,37 @@ feature {NONE} -- Access
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS
 
-	last_lx_unicode_character_class_value: LX_UNICODE_CHARACTER_CLASS
-			-- Last semantic value of type LX_UNICODE_CHARACTER_CLASS
-
 feature {NONE} -- Implementation
 
 	question_character_class: LX_SYMBOL_CLASS
 			-- "?" character class (i.e. all characters except /)
 		local
 			question_string: STRING
+			l_character_classes_by_name: like character_classes_by_name
 		do
 			question_string := "?"
-			character_classes_by_name.search (question_string)
-			if character_classes_by_name.found then
-				Result := character_classes_by_name.found_item
+			if unicode_mode.item then
+				l_character_classes_by_name := unicode_character_classes_by_name
 			else
-				create Result.make (description.minimum_symbol, description.maximum_symbol)
+				l_character_classes_by_name := character_classes_by_name
+			end
+			l_character_classes_by_name.search (question_string)
+			if l_character_classes_by_name.found then
+				Result := l_character_classes_by_name.found_item
+			else
+				Result := new_character_class 
 				Result.add_symbol (Slash_code)
 				Result.set_negated (True)
-				character_classes_by_name.force_new (Result, question_string)
+				character_classes.search (Result)
+				if character_classes.found then
+					Result := character_classes.found_item
+				else
+					character_classes.force_new (Result)
+				end
+				l_character_classes_by_name.force_new (Result, question_string)
 			end
 		ensure
 			question_character_class_not_void: Result /= Void
-		end
-
-	question_unicode_character_class: LX_UNICODE_CHARACTER_CLASS
-			-- "?" Unicode character class (i.e. all Unicode characters except /)
-		local
-			question_string: STRING
-		do
-			question_string := "?"
-			unicode_character_classes.search (question_string)
-			if unicode_character_classes.found then
-				Result := unicode_character_classes.found_item
-			else
-				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
-				Result.add_symbol (Slash_code)
-				Result.set_negated (True)
-				unicode_character_classes.force_new (Result, question_string)
-			end
-		ensure
-			question_unicode_character_class_not_void: Result /= Void
 		end
 		
 end

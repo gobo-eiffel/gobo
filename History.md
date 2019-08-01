@@ -6,7 +6,7 @@
 
 * Fixed bug when computing equivalence classes. The generated arrays should be
   slightly smaller.
-* Added support for Unicode See *Lexical Library* below. Regular expressions
+* Added support for Unicode. See *Lexical Library* below. Regular expressions
   and embedded Eiffel code in the `.l` input file can contain Unicode characters.
 
 ### Gobo Eiffel Kernel Library
@@ -27,6 +27,7 @@
   valid in UTF-8, and hence produce a regular expression syntax error.  
 * Fixed bug in `LX_DFA_REGULAR_EXPRESSION` and `LX_DFA_WILDCARD` when the
   string to be matched contains a null character.
+* Added support for addition and subtraction of character classes.
 
 ### Gobo Eiffel Regexp Library
 

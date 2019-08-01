@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
 			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
-			create last_lx_unicode_character_class_value.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
@@ -48,8 +47,8 @@ feature {NONE} -- Initialization
 			create character_classes_by_name.make_map (Initial_max_character_classes)
 			character_classes_by_name.set_key_equality_tester (string_equality_tester)
 			create equiv_character_classes.make (Initial_max_character_classes)
-			create unicode_character_classes.make_map (Initial_max_character_classes)
-			unicode_character_classes.set_key_equality_tester (string_equality_tester)
+			create unicode_character_classes_by_name.make_map (Initial_max_character_classes)
+			unicode_character_classes_by_name.set_key_equality_tester (string_equality_tester)
 			create unicode_mode.make (Initial_max_unicode_mode)
 			unicode_mode.force (description.unicode_mode)
 			successful := True
@@ -69,7 +68,6 @@ feature {NONE} -- Initialization
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
 			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
-			create last_lx_unicode_character_class_value.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
@@ -77,8 +75,8 @@ feature {NONE} -- Initialization
 			create character_classes_by_name.make_map (Initial_max_character_classes)
 			character_classes_by_name.set_key_equality_tester (string_equality_tester)
 			create equiv_character_classes.make (Initial_max_character_classes)
-			create unicode_character_classes.make_map (Initial_max_character_classes)
-			unicode_character_classes.set_key_equality_tester (string_equality_tester)
+			create unicode_character_classes_by_name.make_map (Initial_max_character_classes)
+			unicode_character_classes_by_name.set_key_equality_tester (string_equality_tester)
 			create unicode_mode.make (Initial_max_unicode_mode)
 			unicode_mode.force (a_description.unicode_mode)
 			successful := True
@@ -101,7 +99,7 @@ feature -- Initialization
 			character_classes.wipe_out
 			character_classes_by_name.wipe_out
 			equiv_character_classes.wipe_out
-			unicode_character_classes.wipe_out
+			unicode_character_classes_by_name.wipe_out
 			unicode_mode.wipe_out
 			unicode_mode.force (description.unicode_mode)
 			successful := True
@@ -152,9 +150,29 @@ feature {NONE} -- Access
 	equiv_character_classes: DS_HASH_SET [LX_SYMBOL_CLASS]
 			-- Character classes already added to `description.equiv_classes'
 
-	unicode_character_classes: DS_HASH_TABLE [LX_UNICODE_CHARACTER_CLASS, STRING]
-			-- Unicode character classes declared so far
+	unicode_character_classes_by_name: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
+			-- Unicode character classes indexed by names
+			-- (each to be converted to unions of concatenations of UTF-8 byte symbol classes)
 
+	character_class_with_name (a_name: STRING): detachable LX_SYMBOL_CLASS
+			-- Character class (or Unicode character class if in unicode mode)
+			-- with name `a_name' if already parsed, Void otherwise
+		require
+--			valid_text: `a_name' recognized by "["{FIRST_CCL_CHAR}{CCL_CHAR}*"]"
+		local
+			l_character_classes_by_name: like character_classes_by_name
+		do
+			if unicode_mode.item then
+				l_character_classes_by_name := unicode_character_classes_by_name
+			else
+				l_character_classes_by_name := character_classes_by_name
+			end
+			l_character_classes_by_name.search (a_name)
+			if l_character_classes_by_name.found then
+				Result := l_character_classes_by_name.found_item
+			end
+		end
+		
 	name_definitions: DS_HASH_TABLE [STRING, STRING]
 			-- Name definition table
 
@@ -177,9 +195,6 @@ feature {NONE} -- Access
 
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS
-
-	last_lx_unicode_character_class_value: LX_UNICODE_CHARACTER_CLASS
-			-- Last semantic value of type LX_UNICODE_CHARACTER_CLASS
 
 feature -- Setting
 
@@ -254,6 +269,9 @@ feature {NONE} -- Implementation
 		end
 
 	process_utf8_character
+			-- Process UTF-8 Unicode character whose bytes are held in `text'.
+			-- Check whether the corresponding character is not out of range.
+			-- Set `last_integer_value' accordingly.
 		do
 			inspect text_count
 			when 1 then
@@ -300,69 +318,38 @@ feature {NONE} -- Implementation
 			process_character (a_code)
 		end
 
-	process_byte_character
-			-- Process 8-bit escaped character whose printable representation
+	process_octal_character
+			-- Process octal escaped character whose printable representation
 			-- is held in `text'.
 			-- Check whether the corresponding byte is not out of range.
 			-- Set `last_integer_value' accordingly.
 		require
---			valid_text: `text' recognized by \\([0-7]{1,3}|x[0-9a-f]{1,2})
+--			valid_text: `text' recognized by \\[0-7]{1,3}
 		local
-			c: CHARACTER
 			a_code: INTEGER
 			i, nb: INTEGER
 		do
-			c := text_item (2)
-			inspect c
-			when '0' .. '7' then
-					-- Octal.
-				nb := text_count
-				a_code := 0
-				from
-					i := 2
-				until
-					i > nb
-				loop
-					a_code := a_code * 8 + text_item (i).code - Zero_code
-					i := i + 1
-				end
-			when 'x', 'X' then
-					-- Hexadecimal.
-				nb := text_count
-				a_code := 0
-				from
-					i := 3
-				until
-					i > nb
-				loop
-					a_code := a_code * 16
-					c := text_item (i)
-					inspect c
-					when '0' .. '9' then
-						a_code := a_code + c.code - Zero_code
-					when 'a' .. 'f' then
-						a_code := a_code + c.code - Lower_a_code + 10
-					when 'A' .. 'F' then
-						a_code := a_code + c.code - Upper_a_code + 10
-					end
-					i := i + 1
-				end
+
+			nb := text_count
+			a_code := 0
+			from
+				i := 2
+			until
+				i > nb
+			loop
+				a_code := a_code * 8 + text_item (i).code - Zero_code
+				i := i + 1
 			end
-			if a_code <= description.maximum_symbol then
-				last_integer_value := a_code
-			else
-				report_character_out_of_range_error (text)
-				last_integer_value := 0
-			end
+			process_character (a_code)
 		end
 
-	process_unicode_character
-			-- Process Unicode character whose printable representation
+	process_hexadecimal_character
+			-- Process hexadecimal escaped character whose printable representation
 			-- is held in `text'.
-			-- Check whether the corresponding Unicode character is valid.
-			-- Set `last_natural_32_value' accordingly.
+			-- Check whether the corresponding byte is not out of range.
+			-- Set `last_integer_value' accordingly.
 		require
---			valid_text: `text' recognized by \\u[0-9a-f]{1-6}|\\u\{[0-9a-f]{1-6}\}
+--			valid_text: `text' recognized by \\x[0-9a-f]{1,2}|\\x\{[0-9a-f]{1,6}\}
 		local
 			c: CHARACTER
 			a_code: INTEGER
@@ -391,12 +378,45 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
-			if {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) then
-				last_integer_value := a_code
-			else
-				report_invalid_unicode_character_error (text)
-				last_integer_value := 0
+			process_character (a_code)
+		end
+
+	process_unicode_character
+			-- Process escaped Unicode character whose printable representation
+			-- is held in `text'.
+			-- Check whether the corresponding Unicode character is valid.
+			-- Set `last_integer_value' accordingly.
+		require
+--			valid_text: `text' recognized by \\u[0-9a-f]{1,4}|\\u\{[0-9a-f]{1,6}\}
+		local
+			c: CHARACTER
+			a_code: INTEGER
+			i, nb: INTEGER
+		do
+			nb := text_count
+			a_code := 0
+			from
+				i := 3
+				if text_item (i) = '{' then
+					i := i + 1
+					nb := nb - 1
+				end
+			until
+				i > nb
+			loop
+				a_code := a_code * 16
+				c := text_item (i)
+				inspect c
+				when '0' .. '9' then
+					a_code := a_code + c.code - Zero_code
+				when 'a' .. 'f' then
+					a_code := a_code + c.code - Lower_a_code + 10
+				when 'A' .. 'F' then
+					a_code := a_code + c.code - Upper_a_code + 10
+				end
+				i := i + 1
 			end
+			process_character (a_code)
 		end
 
 	process_name_definition (a_name, a_definition: STRING)
@@ -692,8 +712,8 @@ invariant
 	no_void_named_character_class: not character_classes_by_name.has_void_item
 	equiv_character_classes_not_void: equiv_character_classes /= Void
 	no_void_equiv_character_class: not equiv_character_classes.has_void
-	unicode_character_classes_not_void: unicode_character_classes /= Void
-	no_void_unicode_character_class: not unicode_character_classes.has_void_item
+	unicode_character_classes_by_name_not_void: unicode_character_classes_by_name /= Void
+	no_void_named_unicode_character_class: not unicode_character_classes_by_name.has_void_item
 	unicode_mode_not_void: unicode_mode /= Void
 	unicode_modenot_empty: not unicode_mode.is_empty
 

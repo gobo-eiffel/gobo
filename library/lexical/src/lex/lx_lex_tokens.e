@@ -15,7 +15,6 @@ feature -- Last values
 	last_string_value: STRING
 	last_integer_value: INTEGER
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
-	last_lx_unicode_character_class_value: LX_UNICODE_CHARACTER_CLASS
 
 feature -- Access
 
@@ -45,20 +44,12 @@ feature -- Access
 				Result := "NAME"
 			when CCL_BRACKET then
 				Result := "CCL_BRACKET"
-			when UCCL_BRACKET then
-				Result := "UCCL_BRACKET"
 			when CHAR then
 				Result := "CHAR"
-			when BCHAR then
-				Result := "BCHAR"
-			when UCHAR then
-				Result := "UCHAR"
 			when NUMBER then
 				Result := "NUMBER"
 			when CCL_OP then
 				Result := "CCL_OP"
-			when UCCL_OP then
-				Result := "UCCL_OP"
 			when CCL_PLUS then
 				Result := "CCL_PLUS"
 			when CCL_MINUS then
@@ -79,14 +70,10 @@ feature -- Token codes
 	EIF_CODE: INTEGER = 264
 	NAME: INTEGER = 265
 	CCL_BRACKET: INTEGER = 266
-	UCCL_BRACKET: INTEGER = 267
-	CHAR: INTEGER = 268
-	BCHAR: INTEGER = 269
-	UCHAR: INTEGER = 270
-	NUMBER: INTEGER = 271
-	CCL_OP: INTEGER = 272
-	UCCL_OP: INTEGER = 273
-	CCL_PLUS: INTEGER = 274
-	CCL_MINUS: INTEGER = 275
+	CHAR: INTEGER = 267
+	NUMBER: INTEGER = 268
+	CCL_OP: INTEGER = 269
+	CCL_PLUS: INTEGER = 270
+	CCL_MINUS: INTEGER = 271
 
 end

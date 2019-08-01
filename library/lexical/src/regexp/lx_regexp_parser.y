@@ -19,8 +19,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value,
-			last_lx_unicode_character_class_value
+			last_lx_symbol_class_value
 		end
 
 	LX_REGEXP_SCANNER
@@ -31,8 +30,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value,
-			last_lx_unicode_character_class_value
+			last_lx_symbol_class_value
 		end
 
 create
@@ -43,15 +41,17 @@ create
 
 %token UNICODE_MODE_START BYTE_MODE_START
 
-%token <STRING> CCL_BRACKET UCCL_BRACKET
-%token <INTEGER> CHAR BCHAR UCHAR NUMBER
+%token <STRING> CCL_BRACKET
+%token <INTEGER> CHAR NUMBER
 %token <LX_SYMBOL_CLASS> CCL_OP
-%token <LX_UNICODE_CHARACTER_CLASS> UCCL_OP
+%left CCL_PLUS CCL_MINUS
 
-%type <INTEGER> CCl_char UCCl_char
-%type <LX_NFA> Rule Regular_expression Regular_expression2 Series Series_singleton Singleton String
-%type <LX_SYMBOL_CLASS> CCl Full_CCl
-%type <LX_UNICODE_CHARACTER_CLASS> UCCl Full_UCCl
+%type <LX_NFA> Rule Regular_expression Regular_expression_no_CCl Regular_expression2
+%type <LX_NFA> Union Series Series_no_CCl Series_two_or_more
+%type <LX_NFA> Series_singleton Series_singleton_no_CCl
+%type <LX_NFA> Singleton Singleton_no_CCL Singleton_CCL String
+%type <LX_SYMBOL_CLASS> CCl CCl_single Full_CCl CCl_content 
+%type <LX_SYMBOL_CLASS> CCl_expression CCl_parenthesized_expression CCl_left_operand CCl_right_operand
 
 %start Regexp
 %expect 2
@@ -141,7 +141,34 @@ Regular_expression: Series
 			regexp_line := series_line
 			regexp_column := series_column
 		}
-	| Regular_expression '|'
+	| Union
+		{ $$ := $1 }
+	;
+
+Regular_expression_no_CCl: Series_no_CCl
+		{
+			$$ := $1
+			regexp_count := series_count
+			regexp_line := series_line
+			regexp_column := series_column
+		}
+	| Union
+		{ $$ := $1 }
+	;
+
+Regular_expression2: Regular_expression '/'
+		{
+			$$ := $1
+				-- This rule is written separately so the reduction
+				-- will occur before the trailing series is parsed.
+			head_count := regexp_count
+			head_line := regexp_line
+			head_column := regexp_column
+			in_trail_context := True
+		}
+	;
+
+Union: Regular_expression '|'
 		{
 			$$ := $1
 			old_regexp_lines.force (regexp_line)
@@ -161,19 +188,7 @@ Regular_expression: Series
 			process_regexp_or_series
 		}
 	;
-
-Regular_expression2: Regular_expression '/'
-		{
-			$$ := $1
-				-- This rule is written separately so the reduction
-				-- will occur before the trailing series is parsed.
-			head_count := regexp_count
-			head_line := regexp_line
-			head_column := regexp_column
-			in_trail_context := True
-		}
-	;
-
+	
 Series: Series_singleton
 		{
 			old_singleton_lines.remove
@@ -184,7 +199,25 @@ Series: Series_singleton
 			series_line := singleton_line
 			series_column := singleton_column
 		}
-	| Series_singleton Series
+	| Series_two_or_more
+		{ $$ := $1 }
+	;
+
+Series_no_CCl: Series_singleton_no_CCl
+		{
+			old_singleton_lines.remove
+			old_singleton_columns.remove
+			old_singleton_counts.remove
+			$$ := $1
+			series_count := singleton_count
+			series_line := singleton_line
+			series_column := singleton_column
+		}
+	| Series_two_or_more
+		{ $$ := $1 }
+	;	
+
+Series_two_or_more: Series_singleton Series
 		{
 			singleton_line := old_singleton_lines.item
 			old_singleton_lines.remove
@@ -207,7 +240,22 @@ Series_singleton: Singleton
 		}
 	;
 
-Singleton: CHAR
+Series_singleton_no_CCl: Singleton_no_CCl
+		{
+			old_singleton_lines.force (singleton_line)
+			old_singleton_columns.force (singleton_column)
+			old_singleton_counts.force (singleton_count)
+			$$ := $1
+		}
+	;
+
+Singleton: Singleton_no_CCl
+		{ $$ := $1 }
+	| Singleton_CCl
+		{ $$ := $1 }
+	;
+
+Singleton_no_CCl: CHAR
 		{
 			if unicode_mode.item and $1 > {CHARACTER_8}.max_ascii_value then
 				$$ := new_epsilon_nfa
@@ -222,28 +270,6 @@ Singleton: CHAR
 			else
 				$$ := new_nfa_from_character ($1)
 				process_singleton_char ($1)
-			end
-		}
-	| BCHAR
-		{
-			$$ := new_nfa_from_character ($1)
-			process_singleton_char ($1)
-		}
-	| UCHAR
-		{
-			if $1 <= {CHARACTER_8}.max_ascii_value then
-				$$ := new_nfa_from_character ($1)
-				process_singleton_char ($1)
-			else
-				$$ := new_epsilon_nfa
-				process_singleton_empty_string
-				buffer.wipe_out
-				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $1)
-				from i_ := 1 until i_ > buffer.count loop
-					$$ := append_character_to_string (buffer.item_code (i_), $$)
-					process_singleton_string (buffer.item_code (i_))
-					i_ := i_ + 1
-				end
 			end
 		}
 	| Singleton '*'
@@ -281,38 +307,14 @@ Singleton: CHAR
 		}
 	| '.'
 		{
-			if unicode_mode.item then
-				$$ := new_nfa_from_unicode_character_class (dot_unicode_character_class)
-			else
-				$$ := new_symbol_class_nfa (dot_character_class)
-			end
+			$$ := new_nfa_from_character_class (dot_character_class)
 			process_singleton_dot
-		}
-	| CCL_OP
-		{
-			$$ := new_symbol_class_nfa ($1)
-			process_singleton_symbol_class ($1)
-		}
-	| Full_CCl
-		{
-			$$ := new_symbol_class_nfa ($1)
-			process_singleton_symbol_class ($1)
-		}
-	| UCCL_OP
-		{
-			$$ := new_nfa_from_unicode_character_class ($1)
-			process_singleton_unicode_character_class ($1)
-		}
-	| Full_UCCl
-		{
-			$$ := new_nfa_from_unicode_character_class ($1)
-			process_singleton_unicode_character_class ($1)
 		}
 	| '"' String '"'
 		{
 			$$ := $2
 		}
-	| '(' Regular_expression ')'
+	| '(' Regular_expression_no_CCl ')'
 		{
 			$$ := $2
 			singleton_count := regexp_count
@@ -337,6 +339,13 @@ Singleton: CHAR
 		}
 	;
 
+Singleton_CCl: CCl
+		{
+			$$ := new_nfa_from_character_class ($1)
+			process_singleton_symbol_class ($1)
+		}
+	;
+
 Start_unicode_mode: UNICODE_MODE_START
 		{
 			unicode_mode.force (True)
@@ -349,98 +358,95 @@ Start_byte_mode: BYTE_MODE_START
 		}
 	;
 
-Full_CCl: CCL_BRACKET CCl ']'
-		{
-			$$ := $2
-			character_classes.search ($$)
-			if character_classes.found then
-				$$ := character_classes.found_item
-			else
-				character_classes.force_new ($$)
-			end
-			character_classes_by_name.force ($$, $1)
-		}
-	| CCL_BRACKET '^' CCl ']'
-		{
-			$$ := $3
-			$$.set_negated (True)
-			character_classes.search ($$)
-			if character_classes.found then
-				$$ := character_classes.found_item
-			else
-				character_classes.force_new ($$)
-			end
-			character_classes_by_name.force ($$, $1)
-		}
+CCl: CCl_single
+		{ $$ := $1 }
+	| CCl_expression
+		{ $$ := $1 }
+	| CCl_parenthesized_expression
+		{ $$ := $1 }
 	;
 
-Full_UCCl: UCCL_BRACKET UCCl ']'
+CCl_single: CCL_OP
+		{ $$ := $1 }
+	| Full_CCl
+		{ $$ := $1 }
+	| '(' CCl_single ')'
+		{ $$ := $2 }
+	;
+	
+Full_CCl: CCL_BRACKET CCl_content ']'
 		{
 			$$ := $2
-			unicode_character_classes.force ($$, $1)
+			character_classes.search ($$)
+			if character_classes.found then
+				$$ := character_classes.found_item
+			else
+				character_classes.force_new ($$)
+			end
+			character_classes_by_name.force ($$, $1)
 		}
-	| UCCL_BRACKET '^' UCCl ']'
+	| CCL_BRACKET '^' CCl_content ']'
 		{
 			$$ := $3
 			$$.set_negated (True)
-			unicode_character_classes.force ($$, $1)
+			character_classes.search ($$)
+			if character_classes.found then
+				$$ := character_classes.found_item
+			else
+				character_classes.force_new ($$)
+			end
+			character_classes_by_name.force ($$, $1)
 		}
 	;
 	
-CCl: CCl_char
+CCl_content: CHAR
 		{
 			$$ := append_character_to_character_class ($1, new_character_class)
 		}
-	| CCl CCl_char
+	| CCl_content CHAR
 		{
 			$$ := append_character_to_character_class ($2, $1)
 		}
-	| CCl_char '-' CCl_char
+	| CHAR '-' CHAR
 		{
 			$$ := append_character_set_to_character_class ($1, $3, new_character_class)
 		}
-	| CCl CCl_char '-' CCl_char
+	| CCl_content CHAR '-' CHAR
 		{
 			$$ := append_character_set_to_character_class ($2, $4, $1)
 		}
 	;
 
-CCl_char: CHAR
+CCl_expression: CCl_left_operand CCL_PLUS CCl_right_operand
 		{
 			$$ := $1
+			$$.add_symbol_class ($3)
 		}
-	| BCHAR
+	| CCl_left_operand CCL_MINUS CCl_right_operand
 		{
 			$$ := $1
-		}
-	;
-	
-UCCl: UCCl_char
-		{
-			$$ := append_character_to_unicode_character_class ($1, new_unicode_character_class)
-		}
-	| UCCl UCCl_char
-		{
-			$$ := append_character_to_unicode_character_class ($2, $1)
-		}
-	| UCCl_char '-' UCCl_char
-		{
-			$$ := append_character_set_to_unicode_character_class ($1, $3, new_unicode_character_class)
-		}
-	| UCCl UCCl_char '-' UCCl_char
-		{
-			$$ := append_character_set_to_unicode_character_class ($2, $4, $1)
+			$$.remove_symbol_class ($3)
 		}
 	;
 
-UCCl_char: CHAR
-		{
-			$$ := $1
-		}
-	| UCHAR
-		{
-			$$ := $1
-		}
+CCl_parenthesized_expression: '(' CCl_expression ')'
+		{ $$ := $2 }
+	| '(' CCl_parenthesized_expression ')'
+		{ $$ := $2 }
+	;
+
+CCl_left_operand: CCl_single
+		{ $$ := $1.twin }
+	| CCl_expression
+		{ $$ := $1 }
+	| CCl_parenthesized_expression
+		{ $$ := $1 }
+	;
+
+CCl_right_operand: CCl_single
+		{ $$ := $1 }
+	| CCl_parenthesized_expression
+		{ $$ := $1 }
 	;
 
 String: -- Empty
@@ -464,27 +470,6 @@ String: -- Empty
 				process_singleton_string ($2)
 			end
 		}
-	| String BCHAR
-		{
-			$$ := append_character_to_string ($2, $1)
-			process_singleton_string ($2)
-		}
-	| String UCHAR
-		{
-			if $2 <= {CHARACTER_8}.max_ascii_value then
-				$$ := append_character_to_string ($2, $1)
-				process_singleton_string ($2)
-			else
-				$$ := $1
-				buffer.wipe_out
-				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $2)
-				from i_ := 1 until i_ > buffer.count loop
-					$$ := append_character_to_string (buffer.item_code (i_), $$)
-					process_singleton_string (buffer.item_code (i_))
-					i_ := i_ + 1
-				end
-			end
-		}
 	;
 
 %%
@@ -499,8 +484,5 @@ feature {NONE} -- Access
 
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS
-
-	last_lx_unicode_character_class_value: LX_UNICODE_CHARACTER_CLASS
-			-- Last semantic value of type LX_UNICODE_CHARACTER_CLASS
 
 end

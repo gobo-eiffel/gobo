@@ -15,7 +15,6 @@ feature -- Last values
 	last_string_value: STRING
 	last_integer_value: INTEGER
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
-	last_lx_unicode_character_class_value: LX_UNICODE_CHARACTER_CLASS
 
 feature -- Access
 
@@ -33,18 +32,14 @@ feature -- Access
 				Result := "STAR_PAREN"
 			when CCL_BRACKET then
 				Result := "CCL_BRACKET"
-			when UCCL_BRACKET then
-				Result := "UCCL_BRACKET"
 			when CHAR then
 				Result := "CHAR"
-			when BCHAR then
-				Result := "BCHAR"
-			when UCHAR then
-				Result := "UCHAR"
 			when CCL_OP then
 				Result := "CCL_OP"
-			when UCCL_OP then
-				Result := "UCCL_OP"
+			when CCL_PLUS then
+				Result := "CCL_PLUS"
+			when CCL_MINUS then
+				Result := "CCL_MINUS"
 			else
 				Result := yy_character_token_name (a_token)
 			end
@@ -55,11 +50,9 @@ feature -- Token codes
 	STAR_STAR_SLASH: INTEGER = 258
 	STAR_PAREN: INTEGER = 259
 	CCL_BRACKET: INTEGER = 260
-	UCCL_BRACKET: INTEGER = 261
-	CHAR: INTEGER = 262
-	BCHAR: INTEGER = 263
-	UCHAR: INTEGER = 264
-	CCL_OP: INTEGER = 265
-	UCCL_OP: INTEGER = 266
+	CHAR: INTEGER = 261
+	CCL_OP: INTEGER = 262
+	CCL_PLUS: INTEGER = 263
+	CCL_MINUS: INTEGER = 264
 
 end

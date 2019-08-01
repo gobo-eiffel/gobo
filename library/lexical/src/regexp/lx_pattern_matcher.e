@@ -10,25 +10,15 @@
 		The differences between Unicode mode and byte (8-bit character)
 		mode are as follows:
 		. In Unicode mode, characters are internally encoded in UTF-8.
-		  So the character 'é' (U+00E9) is handled as a sequence of two
-		  bytes \xC3\xA9.
+		  So the character 'é' (U+00E9) or its escaped forms (e.g. '\xE9')
+		  is handled as a sequence of two bytes \xC3\xA9.
 		  Invalid or surrogate Unicode characters are internally handled
 		  as the single byte \xFF, which is not valid in UTF-8. This
 		  will produce a syntax error when compiling the regular expression.
 		. In byte mode, 8-bit characters (even those with a code greater
 		  then 127 (e.g. 'é') are handled as a single byte (e.g. \xE9).
 		. In byte mode, Unicode characters with code greater than 255
-		  (e.g. '∀') are not accepted. However, escaped characters of
-		  the form \u2200 are accepted and handled as the UTF-8 byte
-		  sequence, except in character classes ('[a-z]') which can
-		  contain 8-bit characters only.
-		. In Unicode mode, octal and hexadecimal escaped characters
-		  (e.g. '\xE9') are handled as a single byte, even if they
-		  are invalid UTF-8 bytes. Remember that internally, the matcher
-		  handles bytes (form the UTF-8 encoding), not Unicode characters
-		  directly. However, octal and hexadecimal escaped characters are
-		  not accepted in character classes because character classes
-		  should only contain valid Unicode characters.
+		  (e.g. '∀', or its escaped form '\u2200') are not accepted.
 		. The character class '.', like any other character class,
 		  is only made up of 8-bit characters in byte mode (all
 		  8-bit characters except the newline character '\n'), and

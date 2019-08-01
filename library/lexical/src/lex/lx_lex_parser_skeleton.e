@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			create old_regexp_lines.make (Initial_old_positions)
 			create old_regexp_columns.make (Initial_old_positions)
 			create old_regexp_counts.make (Initial_old_positions)
+			create unions_of_concatenations_of_symbol_classes_by_unicode_character_class.make (Initial_max_character_classes)
 			create buffer.make (4)
 		ensure
 			error_handler_set: error_handler = handler
@@ -70,6 +71,7 @@ feature {NONE} -- Initialization
 			create old_regexp_lines.make (Initial_old_positions)
 			create old_regexp_columns.make (Initial_old_positions)
 			create old_regexp_counts.make (Initial_old_positions)
+			create unions_of_concatenations_of_symbol_classes_by_unicode_character_class.make (Initial_max_character_classes)
 			create buffer.make (4)
 		ensure
 			error_handler_set: error_handler = handler
@@ -353,31 +355,22 @@ feature {NONE} -- Measurement
 		require
 			a_symbol_class_not_void: a_symbol_class /= Void
 		do
-			singleton_count := 1
-			if a_symbol_class.has (New_line_code) then
-				singleton_line := Zero_or_more
-				singleton_column := Zero_or_more
-			else
-				singleton_line := 0
-				singleton_column := 1
-			end
-		end
-
-	process_singleton_unicode_character_class (a_character_class: LX_UNICODE_CHARACTER_CLASS)
-			-- Update `singleton_{line,column,count}'.
-			-- Singleton: UCCL_OP
-			-- Singleton: Full_UCCl
-		require
-			a_character_class_not_void: a_character_class /= Void
-		do
-			if a_character_class.is_negated then
-				singleton_count := Zero_or_more
-			elseif a_character_class.is_empty then
+			if a_symbol_class.is_negated then
+				if unicode_mode.item then
+					singleton_count := Zero_or_more
+				elseif a_symbol_class.is_256_full then
+					singleton_count := 0
+				else
+					singleton_count := 1
+				end
+			elseif a_symbol_class.is_empty then
 				singleton_count := 0
-			else
+			elseif unicode_mode.item then
 				singleton_count := One_or_more
+			else
+				singleton_count := 1
 			end
-			if a_character_class.has (New_line_code) then
+			if a_symbol_class.has (New_line_code) then
 				singleton_line := Zero_or_more
 				singleton_column := Zero_or_more
 			else
@@ -573,17 +566,13 @@ feature {NONE} -- Factory
 	new_character_class: LX_SYMBOL_CLASS
 			-- New empty character class
 		do
-			create Result.make (description.minimum_symbol, description.maximum_symbol)
+			if unicode_mode.item then
+				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
+			else
+				create Result.make (description.minimum_symbol, description.maximum_symbol)
+			end
 		ensure
 			character_class_not_void: Result /= Void
-		end
-
-	new_unicode_character_class: LX_UNICODE_CHARACTER_CLASS
-			-- New empty unicode character class
-		do
-			create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
-		ensure
-			unicode_character_class_not_void: Result /= Void
 		end
 
 	new_nfa_from_character (a_char: INTEGER): LX_NFA
@@ -641,11 +630,26 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-	new_nfa_from_unicode_character_class (a_unicode_character_class: LX_UNICODE_CHARACTER_CLASS): LX_NFA
+	new_nfa_from_character_class (a_character_class: LX_SYMBOL_CLASS): LX_NFA
+			-- New NFA corresponding to `a_character_class'
+		require
+			a_character_class_not_void: a_character_class /= Void
+		do
+			if unicode_mode.item and a_character_class.is_unicode then
+				Result := new_nfa_from_unicode_character_class (a_character_class)
+			else
+				Result := new_symbol_class_nfa (a_character_class)
+			end
+		ensure
+			nfa_not_void: Result /= Void
+		end
+
+	new_nfa_from_unicode_character_class (a_unicode_character_class: LX_SYMBOL_CLASS): LX_NFA
 			-- New NFA corresponding to a Unicode character set whose characters
 			-- will be encoded in UTF-8
 		require
 			a_unicode_character_class_not_void: a_unicode_character_class /= Void
+			a_unicode_character_class_is_unicode: a_unicode_character_class.is_unicode
 		local
 			i, nb: INTEGER
 			l_symbol_class: detachable LX_SYMBOL_CLASS
@@ -657,8 +661,10 @@ feature {NONE} -- Factory
 			l_list: detachable DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]
 			l_concatenation: DS_ARRAYED_LIST [LX_SYMBOL_CLASS]
 		do
-			l_list := a_unicode_character_class.symbol_classes
-			if l_list = Void then
+			unions_of_concatenations_of_symbol_classes_by_unicode_character_class.search (a_unicode_character_class)
+			if unions_of_concatenations_of_symbol_classes_by_unicode_character_class.found then
+				l_list := unions_of_concatenations_of_symbol_classes_by_unicode_character_class.found_item
+			else
 				create l_list.make (20)
 					-- 0xxxxxxx
 				create l_symbol_class.make (description.minimum_symbol, description.maximum_symbol)
@@ -755,14 +761,14 @@ feature {NONE} -- Factory
 				if l_found then
 					append_concatenations_of_symbol_classes_from_unicode_utf8_n_byte_character_class (l_array_n, 4, Void, l_list)
 				end
-				a_unicode_character_class.set_symbol_classes (l_list)
+				unions_of_concatenations_of_symbol_classes_by_unicode_character_class.force_new (l_list, a_unicode_character_class)
 			end
 			Result := new_nfa_from_unions_of_concatenations_of_symbol_classes (l_list)
 		ensure
 			nfa_not_void: Result /= Void
 		end
 
-	new_nfa_from_unions_of_concatenations_of_symbol_classes (a_list: DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]): LX_NFA
+	new_nfa_from_unions_of_concatenations_of_symbol_classes (a_list: like unions_of_concatenations_of_symbol_classes): LX_NFA
 			-- New NFA corresponding to the unions (outer list) of
 			-- the concatenations (inner lists) of symbol classes
 		require
@@ -1133,29 +1139,15 @@ feature {NONE} -- Implementation
 			character_class_set: Result = a_character_class
 		end
 
-	append_character_to_unicode_character_class (a_char: INTEGER; a_character_class: LX_UNICODE_CHARACTER_CLASS): LX_UNICODE_CHARACTER_CLASS
-			-- Append character `a_char' to `a_character_class'.
-		require
-			a_character_class_not_void: a_character_class /= Void
-		do
-			if description.case_insensitive then
-				inspect a_char
-				when Upper_a_code .. Upper_z_code then
-					a_character_class.add_symbol (a_char)
-					a_character_class.add_symbol (a_char + Case_diff)
-				when Lower_a_code .. Lower_z_code then
-					a_character_class.add_symbol (a_char - Case_diff)
-					a_character_class.add_symbol (a_char)
-				else
-					a_character_class.add_symbol (a_char)
-				end
-			else
-				a_character_class.add_symbol (a_char)
+	unions_of_concatenations_of_symbol_classes_by_unicode_character_class: DS_HASH_TABLE [like unions_of_concatenations_of_symbol_classes, LX_SYMBOL_CLASS]
+				-- Unions (outer list) of the concatenations (inner lists) of symbol classes,
+				-- indexed by Unicode character classes from which they are the conversion
+
+	unions_of_concatenations_of_symbol_classes: DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]
+				-- Type anchor
+			do
+				check anchor: False then end
 			end
-			Result := a_character_class
-		ensure
-			character_class_set: Result = a_character_class
-		end
 
 	append_concatenations_of_symbol_classes_from_unicode_utf8_2_byte_character_class (a_symbol_classes: ARRAY [detachable LX_SYMBOL_CLASS]; a_preceding_1, a_preceding_2: detachable LX_SYMBOL_CLASS; a_list: DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]])
 			-- Append to `a_list' the concatenations of symbol (bytes) classes corresponding
@@ -1308,48 +1300,6 @@ feature {NONE} -- Implementation
 			wiped_out: across a_symbol_classes as l_classes all l_classes.item = Void end
 		end
 
-	append_character_set_to_unicode_character_class (char1, char2: INTEGER; a_character_class: LX_UNICODE_CHARACTER_CLASS): LX_UNICODE_CHARACTER_CLASS
-			-- Append character set `char1'-`char2' to `a_character_class'.
-		require
-			a_character_class_not_void: a_character_class /= Void
-		local
-			a_char: INTEGER
-		do
-			if char1 > char2 then
-				report_negative_range_in_character_class_error
-			elseif description.case_insensitive then
-				from
-					a_char := char1
-				until
-					a_char > char2
-				loop
-					inspect a_char
-					when Upper_a_code .. Upper_z_code then
-						a_character_class.add_symbol (a_char)
-						a_character_class.add_symbol (a_char + Case_diff)
-					when Lower_a_code .. Lower_z_code then
-						a_character_class.add_symbol (a_char - Case_diff)
-						a_character_class.add_symbol (a_char)
-					else
-						a_character_class.add_symbol (a_char)
-					end
-					a_char := a_char + 1
-				end
-			else
-				from
-					a_char := char1
-				until
-					a_char > char2
-				loop
-					a_character_class.add_symbol (a_char)
-					a_char := a_char + 1
-				end
-			end
-			Result := a_character_class
-		ensure
-			character_class_set: Result = a_character_class
-		end
-
 	append_trail_context_to_regexp (a_trail, a_regexp: LX_NFA): LX_NFA
 			-- Append trailing context `a_trail'
 			-- to regular expression `a_regexp'.
@@ -1390,13 +1340,19 @@ feature {NONE} -- Implementation
 			-- "." character class (i.e. all characters except new_line)
 		local
 			dot_string: STRING
+			l_character_classes_by_name: like character_classes_by_name
 		do
 			dot_string := "."
-			character_classes_by_name.search (dot_string)
-			if character_classes_by_name.found then
-				Result := character_classes_by_name.found_item
+			if unicode_mode.item then
+				l_character_classes_by_name := unicode_character_classes_by_name
 			else
-				create Result.make (description.minimum_symbol, description.maximum_symbol)
+				l_character_classes_by_name := character_classes_by_name
+			end
+			l_character_classes_by_name.search (dot_string)
+			if l_character_classes_by_name.found then
+				Result := l_character_classes_by_name.found_item
+			else
+				Result := new_character_class
 				Result.add_symbol (New_line_code)
 				Result.set_negated (True)
 				character_classes.search (Result)
@@ -1405,29 +1361,10 @@ feature {NONE} -- Implementation
 				else
 					character_classes.force_new (Result)
 				end
-				character_classes_by_name.force_new (Result, dot_string)
+				l_character_classes_by_name.force_new (Result, dot_string)
 			end
 		ensure
 			dot_character_class_not_void: Result /= Void
-		end
-
-	dot_unicode_character_class: LX_UNICODE_CHARACTER_CLASS
-			-- "." Unicode character class (i.e. all Unicode characters except new_line)
-		local
-			dot_string: STRING
-		do
-			dot_string := "."
-			unicode_character_classes.search (dot_string)
-			if unicode_character_classes.found then
-				Result := unicode_character_classes.found_item
-			else
-				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
-				Result.add_symbol (New_line_code)
-				Result.set_negated (True)
-				unicode_character_classes.force_new (Result, dot_string)
-			end
-		ensure
-			dot_unicode_character_class_not_void: Result /= Void
 		end
 
 	set_action (a_text: STRING)
@@ -1711,6 +1648,12 @@ invariant
 	old_regexp_lines_not_void: old_regexp_lines /= Void
 	old_regexp_columns_not_void: old_regexp_columns /= Void
 	old_regexp_counts_not_void: old_regexp_counts /= Void
+	unions_of_concatenations_of_symbol_classes_by_unicode_character_class_not_void: unions_of_concatenations_of_symbol_classes_by_unicode_character_class /= Void
+	no_void_union_of_concatenations_of_symbol_classes_by_unicode_character_class: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.has_void_item
+	no_empty_union_of_concatenations_of_symbol_classes_by_unicode_character_class: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.is_empty)
+	no_void_concanetation: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.has_void)
+	no_empty_concatenation: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.is_empty))
+	no_void_symbol_class: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.has_void))
 	buffer_not_void: buffer /= Void
 
 end

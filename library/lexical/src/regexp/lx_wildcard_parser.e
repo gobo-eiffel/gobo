@@ -18,8 +18,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value,
-			last_lx_unicode_character_class_value
+			last_lx_symbol_class_value
 		end
 
 	LX_WILDCARD_SCANNER
@@ -30,8 +29,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
-			last_lx_symbol_class_value,
-			last_lx_unicode_character_class_value
+			last_lx_symbol_class_value
 		end
 
 create
@@ -74,9 +72,6 @@ feature {NONE} -- Implementation
 			create yyspecial_routines5
 			yyvsc5 := yyInitial_yyvs_size
 			yyvs5 := yyspecial_routines5.make (yyvsc5)
-			create yyspecial_routines6
-			yyvsc6 := yyInitial_yyvs_size
-			yyvs6 := yyspecial_routines6.make (yyvsc6)
 		end
 
 	yy_init_value_stacks
@@ -87,7 +82,6 @@ feature {NONE} -- Implementation
 			yyvsp3 := -1
 			yyvsp4 := -1
 			yyvsp5 := -1
-			yyvsp6 := -1
 		end
 
 	yy_clear_value_stacks
@@ -99,7 +93,6 @@ feature {NONE} -- Implementation
 			yyvs3.keep_head (0)
 			yyvs4.keep_head (0)
 			yyvs5.keep_head (0)
-			yyvs6.keep_head (0)
 		end
 
 	yy_push_last_value (yychar1: INTEGER)
@@ -148,16 +141,6 @@ feature {NONE} -- Implementation
 					yyvs4 := yyspecial_routines4.aliased_resized_area (yyvs4, yyvsc4)
 				end
 				yyspecial_routines4.force (yyvs4, last_lx_symbol_class_value, yyvsp4)
-			when 5 then
-				yyvsp5 := yyvsp5 + 1
-				if yyvsp5 >= yyvsc5 then
-					debug ("GEYACC")
-						std.error.put_line ("Resize yyvs5")
-					end
-					yyvsc5 := yyvsc5 + yyInitial_yyvs_size
-					yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
-				end
-				yyspecial_routines5.force (yyvs5, last_lx_unicode_character_class_value, yyvsp5)
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: not a token type: ")
@@ -202,8 +185,6 @@ feature {NONE} -- Implementation
 				yyvsp4 := yyvsp4 - 1
 			when 5 then
 				yyvsp5 := yyvsp5 - 1
-			when 6 then
-				yyvsp6 := yyvsp6 - 1
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: unknown type id: ")
@@ -225,16 +206,14 @@ feature {NONE} -- Semantic actions
 			-- Execute semantic action.
 		local
 			yyval1: detachable ANY
-			yyval6: LX_NFA
+			yyval5: LX_NFA
 			yyval4: LX_SYMBOL_CLASS
-			yyval5: LX_UNICODE_CHARACTER_CLASS
-			yyval3: INTEGER
 		do
 				inspect yy_act
 when 1 then
---|#line 60 "lx_wildcard_parser.y"
+--|#line 58 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 60")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 58")
 end
 
 			if description.equiv_classes /= Void then
@@ -248,9 +227,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 69 "lx_wildcard_parser.y"
+--|#line 67 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 69")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 67")
 end
 
 			if description.equiv_classes_used then
@@ -273,17 +252,17 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
---|#line 80 "lx_wildcard_parser.y"
+--|#line 78 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 80")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 78")
 end
 
-			process_rule (yyvs6.item (yyvsp6))
+			process_rule (yyvs5.item (yyvsp5))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
-	yyvsp6 := yyvsp6 -1
+	yyvsp5 := yyvsp5 -1
 	if yyvsp1 >= yyvsc1 then
 		debug ("GEYACC")
 			std.error.put_line ("Resize yyvs1")
@@ -294,9 +273,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
---|#line 84 "lx_wildcard_parser.y"
+--|#line 82 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 84")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 82")
 end
 
 			report_unrecognized_rule_error
@@ -306,12 +285,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
---|#line 90 "lx_wildcard_parser.y"
+--|#line 88 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 90")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 88")
 end
 
-			yyval6 := yyvs6.item (yyvsp6)
+			yyval5 := yyvs5.item (yyvsp5)
 			has_trail_context := False
 			head_count := Zero_or_more
 			head_line := Zero_or_more
@@ -320,380 +299,319 @@ end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 6 then
---|#line 101 "lx_wildcard_parser.y"
+--|#line 99 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 101")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 99")
 end
 
-			yyval6 := yyvs6.item (yyvsp6)
+			yyval5 := yyvs5.item (yyvsp5)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 7 then
---|#line 105 "lx_wildcard_parser.y"
+--|#line 103 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 105")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 103")
 end
 
-			yyval6 := yyvs6.item (yyvsp6 - 1)
-			yyval6.build_union (yyvs6.item (yyvsp6))
+			yyval5 := yyvs5.item (yyvsp5 - 1)
+			yyval5.build_union (yyvs5.item (yyvsp5))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
-	yyvsp6 := yyvsp6 -1
+	yyvsp5 := yyvsp5 -1
 	yyvsp1 := yyvsp1 -1
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 8 then
---|#line 112 "lx_wildcard_parser.y"
+--|#line 110 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 112")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 110")
 end
 
-			yyval6 := yyvs6.item (yyvsp6)
+			yyval5 := yyvs5.item (yyvsp5)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 9 then
---|#line 116 "lx_wildcard_parser.y"
+--|#line 114 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 116")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 114")
 end
 
-			yyval6 := yyvs6.item (yyvsp6 - 1)
-			yyval6.build_concatenation (yyvs6.item (yyvsp6))
+			yyval5 := yyvs5.item (yyvsp5 - 1)
+			yyval5.build_concatenation (yyvs5.item (yyvsp5))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
-	yyvsp6 := yyvsp6 -1
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyvsp5 := yyvsp5 -1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 10 then
---|#line 123 "lx_wildcard_parser.y"
+--|#line 121 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 123")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 121")
 end
 
 			if unicode_mode.item and yyvs3.item (yyvsp3) > {CHARACTER_8}.max_ascii_value then
-				yyval6 := new_epsilon_nfa
+				yyval5 := new_epsilon_nfa
 				buffer.wipe_out
 				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, yyvs3.item (yyvsp3))
 				from i_ := 1 until i_ > buffer.count loop
-					yyval6 := append_character_to_string (buffer.item_code (i_), yyval6)
+					yyval5 := append_character_to_string (buffer.item_code (i_), yyval5)
 					i_ := i_ + 1
 				end
 			else
-				yyval6 := new_nfa_from_character (yyvs3.item (yyvsp3))
+				yyval5 := new_nfa_from_character (yyvs3.item (yyvsp3))
 			end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
+	yyvsp5 := yyvsp5 + 1
 	yyvsp3 := yyvsp3 -1
-	if yyvsp6 >= yyvsc6 then
+	if yyvsp5 >= yyvsc5 then
 		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
+			std.error.put_line ("Resize yyvs5")
 		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
+		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
 	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 11 then
---|#line 137 "lx_wildcard_parser.y"
+--|#line 135 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 137")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 135")
 end
 
-			yyval6 := new_nfa_from_character (yyvs3.item (yyvsp3))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
-	yyvsp3 := yyvsp3 -1
-	if yyvsp6 >= yyvsc6 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
-		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
-	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 12 then
---|#line 141 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 141")
-end
-
-			if yyvs3.item (yyvsp3) <= {CHARACTER_8}.max_ascii_value then
-				yyval6 := new_nfa_from_character (yyvs3.item (yyvsp3))
-			else
-				yyval6 := new_epsilon_nfa
-				process_singleton_empty_string
-				buffer.wipe_out
-				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, yyvs3.item (yyvsp3))
-				from i_ := 1 until i_ > buffer.count loop
-					yyval6 := append_character_to_string (buffer.item_code (i_), yyval6)
-					i_ := i_ + 1
-				end
-			end
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
-	yyvsp3 := yyvsp3 -1
-	if yyvsp6 >= yyvsc6 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
-		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
-	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 13 then
---|#line 156 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 156")
-end
-
-			yyval6 := yyvs6.item (yyvsp6)
-			yyval6.build_closure
+			yyval5 := yyvs5.item (yyvsp5)
+			yyval5.build_closure
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 12 then
+--|#line 140 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 140")
+end
+
+			yyval5 := yyvs5.item (yyvsp5)
+			yyval5.build_positive_closure
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 4
+	yyvsp1 := yyvsp1 -3
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 13 then
+--|#line 145 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 145")
+end
+
+			yyval5 := yyvs5.item (yyvsp5)
+			yyval5.build_optional
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 4
+	yyvsp1 := yyvsp1 -3
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 14 then
---|#line 161 "lx_wildcard_parser.y"
+--|#line 150 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 161")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 150")
 end
 
-			yyval6 := yyvs6.item (yyvsp6)
-			yyval6.build_positive_closure
+			yyval5 := yyvs5.item (yyvsp5)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -3
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 15 then
---|#line 166 "lx_wildcard_parser.y"
+--|#line 154 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 166")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 154")
 end
 
-			yyval6 := yyvs6.item (yyvsp6)
-			yyval6.build_optional
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 4
-	yyvsp1 := yyvsp1 -3
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 16 then
---|#line 171 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 171")
-end
-
-			yyval6 := yyvs6.item (yyvsp6)
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 4
-	yyvsp1 := yyvsp1 -3
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 17 then
---|#line 175 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 175")
-end
-
-			if unicode_mode.item then
-				yyval6 := new_nfa_from_unicode_character_class (question_unicode_character_class)
-			else
-				yyval6 := new_symbol_class_nfa (question_character_class)
-			end
-			yyval6.build_closure
+			yyval5 := new_nfa_from_character_class (question_character_class)
+			yyval5.build_closure
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
+	yyvsp5 := yyvsp5 + 1
 	yyvsp1 := yyvsp1 -1
-	if yyvsp6 >= yyvsc6 then
+	if yyvsp5 >= yyvsc5 then
 		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
+			std.error.put_line ("Resize yyvs5")
 		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
+		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
 	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 16 then
+--|#line 159 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 159")
+end
+
+			yyval5 := new_nfa_from_character_class (question_character_class)
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyvsp5 := yyvsp5 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp5 >= yyvsc5 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs5")
+		end
+		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
+	end
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 17 then
+--|#line 163 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 163")
+end
+
+			yyval5 := new_nfa_from_character_class (question_character_class)
+			yyval5.build_positive_closure
+			yyval5.build_concatenation (new_nfa_from_character (Slash_code))
+			yyval5.build_closure
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyvsp5 := yyvsp5 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp5 >= yyvsc5 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs5")
+		end
+		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
+	end
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 18 then
+--|#line 170 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 170")
+end
+
+			yyval5 := new_nfa_from_character_class (yyvs4.item (yyvsp4))
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyvsp5 := yyvsp5 + 1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp5 >= yyvsc5 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs5")
+		end
+		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
+	end
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 19 then
+--|#line 174 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 174")
+end
+
+			yyval5 := yyvs5.item (yyvsp5)
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 20 then
+--|#line 180 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 180")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 21 then
+--|#line 182 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 182")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 22 then
 --|#line 184 "lx_wildcard_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 184")
 end
 
-			if unicode_mode.item then
-				yyval6 := new_nfa_from_unicode_character_class (question_unicode_character_class)
-			else
-				yyval6 := new_symbol_class_nfa (question_character_class)
-			end
-		
+yyval4 := yyvs4.item (yyvsp4) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
-	yyvsp1 := yyvsp1 -1
-	if yyvsp6 >= yyvsc6 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
-		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
-	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 19 then
+when 23 then
+--|#line 188 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 188")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 24 then
+--|#line 190 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 190")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 25 then
 --|#line 192 "lx_wildcard_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 192")
 end
 
-			if unicode_mode.item then
-				yyval6 := new_nfa_from_unicode_character_class (question_unicode_character_class)
-			else
-				yyval6 := new_symbol_class_nfa (question_character_class)
-			end
-			yyval6.build_positive_closure
-			yyval6.build_concatenation (new_nfa_from_character (Slash_code))
-			yyval6.build_closure
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
-	yyvsp1 := yyvsp1 -1
-	if yyvsp6 >= yyvsc6 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
-		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
-	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 20 then
---|#line 203 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 203")
-end
-
-			yyval6 := new_symbol_class_nfa (yyvs4.item (yyvsp4))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
-	yyvsp4 := yyvsp4 -1
-	if yyvsp6 >= yyvsc6 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
-		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
-	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 21 then
---|#line 207 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 207")
-end
-
-			yyval6 := new_symbol_class_nfa (yyvs4.item (yyvsp4))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
-	yyvsp4 := yyvsp4 -1
-	if yyvsp6 >= yyvsc6 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
-		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
-	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 22 then
---|#line 211 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 211")
-end
-
-			yyval6 := new_nfa_from_unicode_character_class (yyvs5.item (yyvsp5))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
-	yyvsp5 := yyvsp5 -1
-	if yyvsp6 >= yyvsc6 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
-		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
-	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 23 then
---|#line 215 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 215")
-end
-
-			yyval6 := new_nfa_from_unicode_character_class (yyvs5.item (yyvsp5))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp6 := yyvsp6 + 1
-	yyvsp5 := yyvsp5 -1
-	if yyvsp6 >= yyvsc6 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
-		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
-	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 24 then
---|#line 219 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 219")
-end
-
-			yyval6 := yyvs6.item (yyvsp6)
-		
+yyval4 := yyvs4.item (yyvsp4) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 25 then
---|#line 225 "lx_wildcard_parser.y"
+when 26 then
+--|#line 196 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 225")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 196")
 end
 
 			yyval4 := yyvs4.item (yyvsp4)
@@ -711,10 +629,10 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 26 then
---|#line 236 "lx_wildcard_parser.y"
+when 27 then
+--|#line 207 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 236")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 207")
 end
 
 			yyval4 := yyvs4.item (yyvsp4)
@@ -733,41 +651,10 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 27 then
---|#line 250 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 250")
-end
-
-			yyval5 := yyvs5.item (yyvsp5)
-			unicode_character_classes.force (yyval5, yyvs2.item (yyvsp2))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 3
-	yyvsp2 := yyvsp2 -1
-	yyvsp1 := yyvsp1 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
-end
 when 28 then
---|#line 255 "lx_wildcard_parser.y"
+--|#line 221 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 255")
-end
-
-			yyval5 := yyvs5.item (yyvsp5)
-			yyval5.set_negated (True)
-			unicode_character_classes.force (yyval5, yyvs2.item (yyvsp2))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 4
-	yyvsp2 := yyvsp2 -1
-	yyvsp1 := yyvsp1 -2
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
-end
-when 29 then
---|#line 263 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 263")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 221")
 end
 
 			yyval4 := append_character_to_character_class (yyvs3.item (yyvsp3), new_character_class)
@@ -785,10 +672,10 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 30 then
---|#line 267 "lx_wildcard_parser.y"
+when 29 then
+--|#line 225 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 267")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 225")
 end
 
 			yyval4 := append_character_to_character_class (yyvs3.item (yyvsp3), yyvs4.item (yyvsp4))
@@ -798,10 +685,10 @@ if yy_parsing_status >= yyContinue then
 	yyvsp3 := yyvsp3 -1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 31 then
---|#line 271 "lx_wildcard_parser.y"
+when 30 then
+--|#line 229 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 271")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 229")
 end
 
 			yyval4 := append_character_set_to_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), new_character_class)
@@ -820,10 +707,10 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 32 then
---|#line 275 "lx_wildcard_parser.y"
+when 31 then
+--|#line 233 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 275")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 233")
 end
 
 			yyval4 := append_character_set_to_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), yyvs4.item (yyvsp4))
@@ -834,77 +721,126 @@ if yy_parsing_status >= yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 33 then
---|#line 281 "lx_wildcard_parser.y"
+when 32 then
+--|#line 239 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 281")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 239")
 end
 
-			yyval3 := yyvs3.item (yyvsp3)
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
-end
-when 34 then
---|#line 285 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 285")
-end
-
-			yyval3 := yyvs3.item (yyvsp3)
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
-end
-when 35 then
---|#line 291 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 291")
-end
-
-			yyval5 := append_character_to_unicode_character_class (yyvs3.item (yyvsp3), new_unicode_character_class)
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp5 := yyvsp5 + 1
-	yyvsp3 := yyvsp3 -1
-	if yyvsp5 >= yyvsc5 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs5")
-		end
-		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
-		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
-	end
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
-end
-when 36 then
---|#line 295 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 295")
-end
-
-			yyval5 := append_character_to_unicode_character_class (yyvs3.item (yyvsp3), yyvs5.item (yyvsp5))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp3 := yyvsp3 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
-end
-when 37 then
---|#line 299 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 299")
-end
-
-			yyval5 := append_character_set_to_unicode_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), new_unicode_character_class)
+			yyval4 := yyvs4.item (yyvsp4 - 1)
+			yyval4.add_symbol_class (yyvs4.item (yyvsp4))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
-	yyvsp5 := yyvsp5 + 1
-	yyvsp3 := yyvsp3 -2
+	yyvsp4 := yyvsp4 -1
 	yyvsp1 := yyvsp1 -1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 33 then
+--|#line 244 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 244")
+end
+
+			yyval4 := yyvs4.item (yyvsp4 - 1)
+			yyval4.remove_symbol_class (yyvs4.item (yyvsp4))
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp4 := yyvsp4 -1
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 34 then
+--|#line 251 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 251")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 35 then
+--|#line 253 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 253")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 36 then
+--|#line 257 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 257")
+end
+
+yyval4 := yyvs4.item (yyvsp4).twin 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 37 then
+--|#line 259 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 259")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 38 then
+--|#line 261 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 261")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 39 then
+--|#line 265 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 265")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 40 then
+--|#line 267 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 267")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 41 then
+--|#line 271 "lx_wildcard_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 271")
+end
+
+			yyval5 := new_epsilon_nfa
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 0
+	yyvsp5 := yyvsp5 + 1
 	if yyvsp5 >= yyvsc5 then
 		debug ("GEYACC")
 			std.error.put_line ("Resize yyvs5")
@@ -914,122 +850,28 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
-when 38 then
---|#line 303 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 303")
-end
-
-			yyval5 := append_character_set_to_unicode_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), yyvs5.item (yyvsp5))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 4
-	yyvsp3 := yyvsp3 -2
-	yyvsp1 := yyvsp1 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
-end
-when 39 then
---|#line 309 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 309")
-end
-
-			yyval3 := yyvs3.item (yyvsp3)
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
-end
-when 40 then
---|#line 313 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 313")
-end
-
-			yyval3 := yyvs3.item (yyvsp3)
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
-end
-when 41 then
---|#line 319 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 319")
-end
-
-			yyval6 := new_epsilon_nfa
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 0
-	yyvsp6 := yyvsp6 + 1
-	if yyvsp6 >= yyvsc6 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs6")
-		end
-		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
-		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
-	end
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
 when 42 then
---|#line 323 "lx_wildcard_parser.y"
+--|#line 275 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 323")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 275")
 end
 
 			if unicode_mode.item and yyvs3.item (yyvsp3) > {CHARACTER_8}.max_ascii_value then
-				yyval6 := yyvs6.item (yyvsp6)
+				yyval5 := yyvs5.item (yyvsp5)
 				buffer.wipe_out
 				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, yyvs3.item (yyvsp3))
 				from i_ := 1 until i_ > buffer.count loop
-					yyval6 := append_character_to_string (buffer.item_code (i_), yyval6)
+					yyval5 := append_character_to_string (buffer.item_code (i_), yyval5)
 					i_ := i_ + 1
 				end
 			else
-				yyval6 := append_character_to_string (yyvs3.item (yyvsp3), yyvs6.item (yyvsp6))
+				yyval5 := append_character_to_string (yyvs3.item (yyvsp3), yyvs5.item (yyvsp5))
 			end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 43 then
---|#line 337 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 337")
-end
-
-			yyval6 := append_character_to_string (yyvs3.item (yyvsp3), yyvs6.item (yyvsp6))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp3 := yyvsp3 -1
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
-end
-when 44 then
---|#line 341 "lx_wildcard_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 341")
-end
-
-			if yyvs3.item (yyvsp3) <= {CHARACTER_8}.max_ascii_value then
-				yyval6 := append_character_to_string (yyvs3.item (yyvsp3), yyvs6.item (yyvsp6))
-			else
-				yyval6 := yyvs6.item (yyvsp6)
-				buffer.wipe_out
-				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, yyvs3.item (yyvsp3))
-				from i_ := 1 until i_ > buffer.count loop
-					yyval6 := append_character_to_string (buffer.item_code (i_), yyval6)
-					i_ := i_ + 1
-				end
-			end
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp3 := yyvsp3 -1
-	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 				else
 					debug ("GEYACC")
@@ -1045,7 +887,7 @@ end
 			-- Execute error action.
 		do
 			inspect yy_act
-			when 69 then
+			when 65 then
 					-- End-of-file expected action.
 				report_eof_expected_error
 			else
@@ -1061,7 +903,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 266)
+			create an_array.make_filled (0, 0, 264)
 			yytranslate_template_1 (an_array)
 			yytranslate_template_2 (an_array)
 			Result := yyfixed_array (an_array)
@@ -1074,17 +916,17 @@ feature {NONE} -- Table templates
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,    2,   19,    2,    2,    2,    2,    2,
-			   15,   13,   18,   14,    2,   22,    2,    2,    2,    2,
+			    2,    2,    2,    2,   17,    2,    2,    2,    2,    2,
+			   13,   11,   16,   12,    2,   20,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,   16,   17,    2,    2,    2,    2,    2,
+			    2,    2,    2,   14,   15,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,   20,   21,    2,    2,    2,    2,    2,
+			    2,    2,    2,   18,   19,    2,    2,    2,    2,    2,
 
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,    2,   12,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,   10,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -1105,118 +947,121 @@ feature {NONE} -- Table templates
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    1,    2,    3,    4,
-			    5,    6,    7,    8,    9,   10,   11, yyDummy>>,
-			1, 67, 200)
+			    5,    6,    7,    8,    9, yyDummy>>,
+			1, 65, 200)
 		end
 
 	yyr1_template: SPECIAL [INTEGER]
 			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
-			    0,   34,   35,   36,   36,   25,   26,   26,   27,   27,
-			   28,   28,   28,   28,   28,   28,   28,   28,   28,   28,
-			   28,   28,   28,   28,   28,   31,   31,   33,   33,   30,
-			   30,   30,   30,   23,   23,   32,   32,   32,   32,   24,
-			   24,   29,   29,   29,   29, yyDummy>>)
+			    0,   34,   35,   36,   36,   21,   22,   22,   23,   23,
+			   24,   24,   24,   24,   24,   24,   24,   24,   24,   24,
+			   26,   26,   26,   27,   27,   27,   28,   28,   29,   29,
+			   29,   29,   30,   30,   31,   31,   32,   32,   32,   33,
+			   33,   25,   25, yyDummy>>)
 		end
 
 	yytypes1_template: SPECIAL [INTEGER]
 			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
-			    1,    1,    1,    1,    1,    1,    1,    5,    4,    3,
-			    3,    3,    2,    2,    1,    1,    1,    6,    6,    6,
-			    4,    5,    1,    6,    1,    1,    1,    1,    3,    3,
-			    3,    5,    1,    3,    3,    3,    4,    6,    6,    6,
-			    1,    3,    3,    3,    6,    6,    6,    5,    1,    1,
-			    3,    4,    1,    1,    3,    1,    1,    1,    1,    1,
-			    1,    3,    1,    1,    3,    1,    6,    3,    3,    1,
-			    1,    1, yyDummy>>)
+			    1,    1,    1,    1,    1,    1,    1,    1,    4,    3,
+			    2,    1,    1,    1,    5,    5,    5,    4,    4,    4,
+			    4,    4,    4,    1,    5,    1,    1,    4,    4,    4,
+			    1,    1,    3,    4,    5,    5,    5,    1,    1,    1,
+			    3,    5,    5,    1,    1,    1,    5,    4,    1,    1,
+			    3,    1,    1,    4,    4,    4,    4,    1,    1,    1,
+			    1,    3,    1,    5,    3,    1,    1,    1, yyDummy>>)
 		end
 
 	yytypes2_template: SPECIAL [INTEGER]
 			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
-			    1,    1,    1,    1,    1,    2,    2,    3,    3,    3,
-			    4,    5,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1, yyDummy>>)
+			    1,    1,    1,    1,    1,    2,    3,    4,    1,    1,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1, yyDummy>>)
 		end
 
 	yydefact_template: SPECIAL [INTEGER]
 			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
-			    2,    0,   41,   17,    0,   18,    0,   22,   20,   12,
-			   11,   10,    0,    0,    0,   19,    4,    3,    5,    8,
-			   21,   23,    1,    0,    0,    0,    0,    0,   40,   39,
-			   35,    0,    0,   34,   33,   29,    0,    0,    6,    9,
-			   24,   44,   43,   42,    0,    0,    0,    0,    0,   27,
-			   36,    0,    0,   25,   30,   13,    0,   16,   15,   14,
-			   28,   37,    0,   26,   31,    0,    7,   38,   32,    0,
-			    0,    0, yyDummy>>)
+			    2,    0,   41,   15,    0,   16,    0,    0,   23,   10,
+			    0,    0,   17,    4,    3,    5,    8,   18,   36,   24,
+			   37,   38,    0,    1,    0,    0,    0,   36,   37,   38,
+			    0,    0,   28,    0,    0,    6,    9,    0,    0,   19,
+			   42,    0,    0,   25,   34,   35,    0,    0,    0,   26,
+			   29,   11,    0,   39,   40,   33,   32,   14,   13,   12,
+			   27,   30,    0,    7,   31,    0,    0,    0, yyDummy>>)
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER]
 			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
-			   35,   30,   17,   37,   38,   19,   23,   36,   20,   31,
-			   21,   69,    1,   22, yyDummy>>)
+			   14,   34,   35,   16,   24,   17,   18,   19,   33,   20,
+			   21,   22,   55,   65,    1,   23, yyDummy>>)
 		end
 
 	yypact_template: SPECIAL [INTEGER]
 			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
-			 -32768,   53, -32768, -32768,   51,   50,   11, -32768, -32768, -32768,
-			 -32768, -32768,    4,   -4,   70, -32768, -32768, -32768,   70, -32768,
-			 -32768, -32768, -32768,   27,   70,   70,   70,   31, -32768, -32768,
-			   20,   23,   37, -32768, -32768,   17,   21,   78,   70, -32768,
-			 -32768, -32768, -32768, -32768,   40,   38,   35,    7,   31, -32768,
-			    9,    2,   37, -32768,   -2, -32768,   70, -32768, -32768, -32768,
-			 -32768, -32768,   31, -32768, -32768,   37,   70, -32768, -32768,   15,
-			   12, -32768, yyDummy>>)
+			 -32768,   25, -32768, -32768,  102,  101,   96,   98, -32768, -32768,
+			    5,   83, -32768, -32768, -32768,   83, -32768, -32768,   68, -32768,
+			   50,    3,   85, -32768,    6,   83,   83,   99,   97,   91,
+			   83,  100,   32,   41,   94,   83, -32768,   96,   96, -32768,
+			 -32768,   81,   66, -32768, -32768, -32768,   59,   40,   39, -32768,
+			  -15, -32768,   83, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768, -32768,   19,   83, -32768,   27,   22, -32768, yyDummy>>)
 		end
 
 	yypgoto_template: SPECIAL [INTEGER]
 			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
-			  -28,  -29, -32768,  -19,   -1,  -17, -32768,   60, -32768,   41,
-			 -32768, -32768, -32768, -32768, yyDummy>>)
+			 -32768,   18,   -1,  -14, -32768, -32768,   -2, -32768,   82,  106,
+			   -4, -32768,   69, -32768, -32768, -32768, yyDummy>>)
 		end
 
 	yytable_template: SPECIAL [INTEGER]
 			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
-			   18,   39,   50,   34,   33,   44,   45,   46,   54,   34,
-			   33,   29,   71,   28,   29,   70,   28,   32,   50,   61,
-			   65,   39,   63,   54,   64,   27,   26,   60,   34,   33,
-			   29,   62,   28,   67,   43,   42,   41,   68,   29,   52,
-			   28,   53,   48,   49,   34,   33,   40,   56,   59,   39,
-			   56,   58,   56,   57,   16,   66,   15,   14,   13,   12,
-			   11,   10,    9,    8,    7,   25,   24,    6,   47,    5,
-			    4,    3,    2,   15,   14,   13,   12,   11,   10,    9,
-			    8,    7,    0,    0,    6,    0,    5,    4,    3,    2,
-			   56,   55,   51, yyDummy>>)
+			   15,   36,   29,  -22,   27,   62,  -22,  -22,  -22,  -22,
+			  -22,   32,   40,  -22,  -22,  -22,  -22,  -22,  -22,  -22,
+			  -22,   36,   67,   39,   31,   64,   13,   66,   12,   11,
+			   10,    9,    8,   54,   54,   53,   53,    7,    6,    5,
+			    4,    3,    2,   41,   42,   61,   50,   50,   46,   36,
+			  -21,   63,   48,  -21,  -21,  -21,  -21,  -21,   60,   49,
+			  -21,  -21,  -21,  -21,  -21,  -21,  -21,  -21,  -20,   52,
+			   59,  -20,  -20,  -20,  -20,  -20,   52,   58,  -20,  -20,
+			  -20,  -20,  -20,  -20,  -20,  -20,   12,   11,   10,    9,
+			    8,   52,   57,   38,   37,    7,    6,    5,    4,    3,
+
+			    2,   10,   45,    8,   52,   51,   32,   56,   44,    6,
+			   43,   30,   28,   47,   26,   25, yyDummy>>)
 		end
 
 	yycheck_template: SPECIAL [INTEGER]
 			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
-			    1,   18,   31,    7,    8,   24,   25,   26,   36,    7,
-			    8,    7,    0,    9,    7,    0,    9,   21,   47,   48,
-			   22,   38,   20,   51,   52,   21,   15,   20,    7,    8,
-			    7,   22,    9,   62,    7,    8,    9,   65,    7,   22,
-			    9,   20,   22,   20,    7,    8,   19,   12,   13,   66,
-			   12,   13,   12,   13,    1,   56,    3,    4,    5,    6,
-			    7,    8,    9,   10,   11,   15,   15,   14,   27,   16,
-			   17,   18,   19,    3,    4,    5,    6,    7,    8,    9,
-			   10,   11,   -1,   -1,   14,   -1,   16,   17,   18,   19,
-			   12,   13,   32, yyDummy>>)
+			    1,   15,    6,    0,    6,   20,    3,    4,    5,    6,
+			    7,    6,    6,   10,   11,   12,   13,   14,   15,   16,
+			   17,   35,    0,   17,   19,    6,    1,    0,    3,    4,
+			    5,    6,    7,   37,   38,   37,   38,   12,   13,   14,
+			   15,   16,   17,   25,   26,    6,    6,    6,   30,   63,
+			    0,   52,   20,    3,    4,    5,    6,    7,   18,   18,
+			   10,   11,   12,   13,   14,   15,   16,   17,    0,   10,
+			   11,    3,    4,    5,    6,    7,   10,   11,   10,   11,
+			   12,   13,   14,   15,   16,   17,    3,    4,    5,    6,
+			    7,   10,   11,    8,    9,   12,   13,   14,   15,   16,
+
+			   17,    5,   11,    7,   10,   11,    6,   38,   11,   13,
+			   11,   13,    6,   31,   13,   13, yyDummy>>)
 		end
 
 feature {NONE} -- Semantic value stacks
@@ -1269,8 +1114,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines4: KL_SPECIAL_ROUTINES [LX_SYMBOL_CLASS]
 			-- Routines that ought to be in SPECIAL [LX_SYMBOL_CLASS]
 
-	yyvs5: SPECIAL [LX_UNICODE_CHARACTER_CLASS]
-			-- Stack for semantic values of type LX_UNICODE_CHARACTER_CLASS
+	yyvs5: SPECIAL [LX_NFA]
+			-- Stack for semantic values of type LX_NFA
 
 	yyvsc5: INTEGER
 			-- Capacity of semantic value stack `yyvs5'
@@ -1278,36 +1123,24 @@ feature {NONE} -- Semantic value stacks
 	yyvsp5: INTEGER
 			-- Top of semantic value stack `yyvs5'
 
-	yyspecial_routines5: KL_SPECIAL_ROUTINES [LX_UNICODE_CHARACTER_CLASS]
-			-- Routines that ought to be in SPECIAL [LX_UNICODE_CHARACTER_CLASS]
-
-	yyvs6: SPECIAL [LX_NFA]
-			-- Stack for semantic values of type LX_NFA
-
-	yyvsc6: INTEGER
-			-- Capacity of semantic value stack `yyvs6'
-
-	yyvsp6: INTEGER
-			-- Top of semantic value stack `yyvs6'
-
-	yyspecial_routines6: KL_SPECIAL_ROUTINES [LX_NFA]
+	yyspecial_routines5: KL_SPECIAL_ROUTINES [LX_NFA]
 			-- Routines that ought to be in SPECIAL [LX_NFA]
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER = 71
+	yyFinal: INTEGER = 67
 			-- Termination state id
 
 	yyFlag: INTEGER = -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER = 23
+	yyNtbase: INTEGER = 21
 			-- Number of tokens
 
-	yyLast: INTEGER = 92
+	yyLast: INTEGER = 115
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER = 266
+	yyMax_token: INTEGER = 264
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
@@ -1330,47 +1163,37 @@ feature {NONE} -- Access
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS
 
-	last_lx_unicode_character_class_value: LX_UNICODE_CHARACTER_CLASS
-			-- Last semantic value of type LX_UNICODE_CHARACTER_CLASS
-
 feature {NONE} -- Implementation
 
 	question_character_class: LX_SYMBOL_CLASS
 			-- "?" character class (i.e. all characters except /)
 		local
 			question_string: STRING
+			l_character_classes_by_name: like character_classes_by_name
 		do
 			question_string := "?"
-			character_classes_by_name.search (question_string)
-			if character_classes_by_name.found then
-				Result := character_classes_by_name.found_item
+			if unicode_mode.item then
+				l_character_classes_by_name := unicode_character_classes_by_name
 			else
-				create Result.make (description.minimum_symbol, description.maximum_symbol)
+				l_character_classes_by_name := character_classes_by_name
+			end
+			l_character_classes_by_name.search (question_string)
+			if l_character_classes_by_name.found then
+				Result := l_character_classes_by_name.found_item
+			else
+				Result := new_character_class 
 				Result.add_symbol (Slash_code)
 				Result.set_negated (True)
-				character_classes_by_name.force_new (Result, question_string)
+				character_classes.search (Result)
+				if character_classes.found then
+					Result := character_classes.found_item
+				else
+					character_classes.force_new (Result)
+				end
+				l_character_classes_by_name.force_new (Result, question_string)
 			end
 		ensure
 			question_character_class_not_void: Result /= Void
-		end
-
-	question_unicode_character_class: LX_UNICODE_CHARACTER_CLASS
-			-- "?" Unicode character class (i.e. all Unicode characters except /)
-		local
-			question_string: STRING
-		do
-			question_string := "?"
-			unicode_character_classes.search (question_string)
-			if unicode_character_classes.found then
-				Result := unicode_character_classes.found_item
-			else
-				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
-				Result.add_symbol (Slash_code)
-				Result.set_negated (True)
-				unicode_character_classes.force_new (Result, question_string)
-			end
-		ensure
-			question_unicode_character_class_not_void: Result /= Void
 		end
 		
 end
