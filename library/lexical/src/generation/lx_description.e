@@ -459,18 +459,6 @@ feature -- Setting
 			equiv_classes_set: equiv_classes = ec
 		end
 
-	create_equiv_classes
-			-- Create `equiv_classes'.
-		require
-			equiv_classes_used: equiv_classes_used
-		do
-			create equiv_classes.make (minimum_symbol, maximum_symbol)
-		ensure
-			equiv_classes_created: attached equiv_classes as l_equiv_classes
-			lower_set: l_equiv_classes.lower = minimum_symbol
-			upper_set: l_equiv_classes.upper = maximum_symbol
-		end
-
 	set_bol_needed (b: like bol_needed)
 			-- Set `bol_needed' to `b'.
 		do

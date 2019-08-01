@@ -511,7 +511,7 @@ feature {NONE} -- Factory
 			a_name: STRING
 			a_character_class: LX_SYMBOL_CLASS
 		do
-			if description.equiv_classes /= Void then
+			if description.equiv_classes_used then
 					-- Use a transition with a character class
 					-- containing only `symbol' instead of a
 					-- simple symbol transition labeled `symbol'.
@@ -555,7 +555,7 @@ feature {NONE} -- Factory
 		require
 			symbols_not_void: symbols /= Void
 		do
-			if description.equiv_classes /= Void then
+			if description.equiv_classes_used then
 				equiv_character_classes.force (symbols)
 			end
 			create Result.make_symbol_class (symbols, in_trail_context)
@@ -582,10 +582,8 @@ feature {NONE} -- Factory
 			lower_char: INTEGER
 			a_name: STRING
 			a_character_class: LX_SYMBOL_CLASS
-			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 		do
 			if description.case_insensitive then
-				equiv_classes := description.equiv_classes
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
 					lower_char := a_char + Case_diff
@@ -1392,22 +1390,23 @@ feature {NONE} -- Implementation
 			-- Build equivalence classes and renumber
 			-- symbol and character class transitions.
 		require
-			equiv_classes_not_void: description.equiv_classes /= Void
+			equiv_classes_used: description.equiv_classes_used
 		local
 			cursor: DS_HASH_SET_CURSOR [LX_SYMBOL_CLASS]
+			l_equivalence_classes: LX_EQUIVALENCE_CLASSES
 		do
-			check equiv_classes_not_void: attached description.equiv_classes as l_equiv_classes then
-				cursor := equiv_character_classes.new_cursor
-				from cursor.start until cursor.after loop
-					l_equiv_classes.add (cursor.item)
-					cursor.forth
-				end
-				l_equiv_classes.build
-				from cursor.start until cursor.after loop
-					cursor.item.convert_to_equivalence (l_equiv_classes)
-					cursor.forth
-				end
+			create l_equivalence_classes.make (description.minimum_symbol, description.maximum_symbol)
+			cursor := equiv_character_classes.new_cursor
+			from cursor.start until cursor.after loop
+				l_equivalence_classes.add (cursor.item)
+				cursor.forth
 			end
+			l_equivalence_classes.build
+			from cursor.start until cursor.after loop
+				cursor.item.convert_to_equivalence (l_equivalence_classes)
+				cursor.forth
+			end
+			description.set_equiv_classes (l_equivalence_classes)
 		ensure
 			built: attached description.equiv_classes as l_equiv_classes and then l_equiv_classes.built
 		end

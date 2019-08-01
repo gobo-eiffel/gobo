@@ -63,7 +63,7 @@ create
 Scanner_description: Section1 Section2 Init_rule Section3
 		{
 			process_default_rule
-			if description.equiv_classes /= Void then
+			if description.equiv_classes_used then
 				build_equiv_classes
 			end
 			check_options
@@ -73,9 +73,6 @@ Scanner_description: Section1 Section2 Init_rule Section3
 Section1: ENDSECT
 		{
 			override_options
-			if description.equiv_classes_used then
-				description.create_equiv_classes
-			end
 			unicode_mode.force (description.unicode_mode)
 		}
 	;

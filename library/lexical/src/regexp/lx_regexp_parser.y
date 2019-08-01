@@ -60,7 +60,7 @@ create
 
 Regexp: Init_pattern Pattern
 		{
-			if description.equiv_classes /= Void then
+			if description.equiv_classes_used then
 				build_equiv_classes
 			end
 			check_options
@@ -69,9 +69,6 @@ Regexp: Init_pattern Pattern
 
 Init_pattern: -- Empty
 		{
-			if description.equiv_classes_used then
-				description.create_equiv_classes
-			end
 				-- Initialize for a parse of one pattern.
 			in_trail_context := False
 			create rule.make_default (1)
