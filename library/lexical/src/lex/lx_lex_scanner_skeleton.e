@@ -172,7 +172,7 @@ feature {NONE} -- Access
 				Result := l_character_classes_by_name.found_item
 			end
 		end
-		
+
 	name_definitions: DS_HASH_TABLE [STRING, STRING]
 			-- Name definition table
 
@@ -250,8 +250,17 @@ feature {NONE} -- Implementation
 			-- on `unicode_mode') whose printable representation is
 			-- held in `text'.
 			-- Set `last_integer_value' accordingly.
+		require
+			a_code_not_negative: a_code >= 0
 		do
-			if unicode_mode.item then
+			if description.unicode2_mode then
+				if {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) and then a_code <= description.maximum_symbol then
+					last_integer_value := a_code
+				else
+					report_invalid_unicode_character_error (text)
+					last_integer_value := 0
+				end
+			elseif unicode_mode.item then
 				if {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) then
 					last_integer_value := a_code
 				else

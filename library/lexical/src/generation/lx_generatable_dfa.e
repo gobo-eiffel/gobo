@@ -701,9 +701,12 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			i, j, k, nb: INTEGER
-			a_table_upper: INTEGER
+			i, j, nb: INTEGER
+			l_table_lower, l_table_upper: INTEGER
+			l_index, l_upper, l_value: INTEGER
 		do
+			l_table_lower := a_table.lower
+			l_table_upper := a_table.upper
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
 			a_file.put_string (": SPECIAL [INTEGER]%N")
@@ -733,58 +736,118 @@ feature {NONE} -- Generation
 			else
 				a_file.put_string ("%T%Tlocal%N%T%T%Tan_array: ARRAY [INTEGER]%N%
 					%%T%Tonce%N%T%T%Tcreate an_array.make_filled (0, ")
-				a_file.put_integer (a_table.lower)
+				a_file.put_integer (l_table_lower)
 				a_file.put_string (", ")
-				a_file.put_integer (a_table.upper)
+				a_file.put_integer (l_table_upper)
 				a_file.put_string (")%N")
 				from
 					j := 1
+					i := l_table_lower
 				until
-					j > nb
+					i > l_table_upper
 				loop
-					a_file.put_string (Indentation)
-					a_file.put_string (a_name)
-					a_file.put_character ('_')
-					a_file.put_integer (j)
-					a_file.put_string (" (an_array)%N")
-					j := j + 1
+					from
+						l_index := i
+						l_upper := (i + array_size - 1).min (l_table_upper)
+						l_value := a_table.item (l_index)
+						l_index := l_index + 1
+					until
+						l_index > l_upper
+					loop
+						if a_table.item (l_index) = l_value then
+							l_index := l_index + 1
+						else
+							l_value := -1
+							l_index := l_upper + 1
+						end
+					end
+					if l_value >= 0 then
+						from
+							l_upper := l_upper + 1
+						until
+							l_upper > l_table_upper or else a_table.item (l_upper) /= l_value
+						loop
+							l_upper := l_upper + 1
+						end
+						l_upper := l_upper - 1
+						a_file.put_string (Indentation)
+						a_file.put_string ("an_array.area.fill_with (")
+						a_file.put_integer (l_value)
+						a_file.put_string (", ")
+						a_file.put_integer (i - l_table_lower)
+						a_file.put_string (", ")
+						a_file.put_integer (l_upper - l_table_lower)
+						a_file.put_string (")%N")
+					else
+						a_file.put_string (Indentation)
+						a_file.put_string (a_name)
+						a_file.put_character ('_')
+						a_file.put_integer (j)
+						a_file.put_string (" (an_array)%N")
+						j := j + 1
+					end
+					i := l_upper + 1
 				end
 				a_file.put_string ("%T%T%TResult := yy_fixed_array (an_array)%N%T%Tend%N")
 				from
 					j := 1
-					i := a_table.lower
-					a_table_upper := a_table.upper
+					i := l_table_lower
 				until
-					j > nb
+					i > l_table_upper
 				loop
-					a_file.put_string ("%N%T")
-					a_file.put_string (a_name)
-					a_file.put_character ('_')
-					a_file.put_integer (j)
-					a_file.put_string (" (an_array: ARRAY [INTEGER])%N")
-					a_file.put_string ("%T%T%T-- Fill chunk #")
-					a_file.put_integer (j)
-					a_file.put_string (" of ")
-					if a_name.ends_with ("_template") then
-						a_file.put_string ("template for `")
-						a_file.put_string (a_name.substring (1, a_name.count - 9))
-					else
-						a_file.put_character ('`')
-						a_file.put_string (a_name)
+					from
+						l_index := i
+						l_upper := (i + array_size - 1).min (l_table_upper)
+						l_value := a_table.item (l_index)
+						l_index := l_index + 1
+					until
+						l_index > l_upper
+					loop
+						if a_table.item (l_index) = l_value then
+							l_index := l_index + 1
+						else
+							l_value := -1
+							l_index := l_upper + 1
+						end
 					end
-					a_file.put_string ("%'.%N")
-					a_file.put_string ("%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
-					k := a_table_upper.min (i + array_size - 1)
-					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
-					a_file.put_string (", yy_Dummy>>,%N%T%T%T")
-					a_file.put_integer (1)
-					a_file.put_string (", ")
-					a_file.put_integer (k - i + 1)
-					a_file.put_string (", ")
-					a_file.put_integer (i)
-					a_file.put_string (")%N%T%Tend%N")
-					i := k + 1
-					j := j + 1
+					if l_value >= 0 then
+						from
+							l_upper := l_upper + 1
+						until
+							l_upper > l_table_upper or else a_table.item (l_upper) /= l_value
+						loop
+							l_upper := l_upper + 1
+						end
+						l_upper := l_upper - 1
+					else
+						a_file.put_string ("%N%T")
+						a_file.put_string (a_name)
+						a_file.put_character ('_')
+						a_file.put_integer (j)
+						a_file.put_string (" (an_array: ARRAY [INTEGER])%N")
+						a_file.put_string ("%T%T%T-- Fill chunk #")
+						a_file.put_integer (j)
+						a_file.put_string (" of ")
+						if a_name.ends_with ("_template") then
+							a_file.put_string ("template for `")
+							a_file.put_string (a_name.substring (1, a_name.count - 9))
+						else
+							a_file.put_character ('`')
+							a_file.put_string (a_name)
+						end
+						a_file.put_string ("%'.%N")
+						a_file.put_string ("%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
+						ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, l_upper)
+						a_file.put_string (", yy_Dummy>>,%N%T%T%T")
+						a_file.put_integer (1)
+						a_file.put_string (", ")
+						a_file.put_integer (l_upper - i + 1)
+						a_file.put_string (", ")
+						a_file.put_integer (i)
+						a_file.put_string (")%N%T%Tend%N")
+						j := j + 1
+					end
+					i := l_upper + 1
 				end
 			end
 		end

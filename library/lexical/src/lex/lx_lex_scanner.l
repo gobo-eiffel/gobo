@@ -154,6 +154,9 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	unicode		{
 					description.set_unicode_mode (True)
 				}
+	unicode2		{
+					description.set_unicode2_mode (True)
+				}
 	warn		{
 					description.set_no_warning (False)
 				}

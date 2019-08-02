@@ -104,6 +104,8 @@ feature -- User-defined options
 			-- Should the scanner use Unicode mode by default?
 			-- (Can be overridden by "(b:regrexp)".)
 
+	unicode2_mode: BOOLEAN
+
 	debug_mode: BOOLEAN
 			-- Should a debug-mode scanner be generated?
 			-- ("-d" option)
@@ -235,6 +237,17 @@ feature -- Option setting
 			unicode_mode := b
 		ensure
 			unicode_mode_set: unicode_mode = b
+		end
+
+	set_unicode2_mode (b: BOOLEAN)
+			-- Set `unicode2_mode' to `b'.
+		do
+			unicode2_mode := b
+			if b then
+				maximum_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code
+			end
+		ensure
+			unicode2_mode_set: unicode2_mode = b
 		end
 
 	set_debug_mode (b: BOOLEAN)

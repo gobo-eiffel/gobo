@@ -566,7 +566,9 @@ feature {NONE} -- Factory
 	new_character_class: LX_SYMBOL_CLASS
 			-- New empty character class
 		do
-			if unicode_mode.item then
+			if description.unicode2_mode then
+				create Result.make_unicode (description.minimum_symbol, description.maximum_symbol)
+			elseif unicode_mode.item then
 				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
 			else
 				create Result.make (description.minimum_symbol, description.maximum_symbol)
