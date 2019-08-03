@@ -8217,7 +8217,7 @@ feature {NONE} -- Table templates
 			yy_def_template_11 (an_array)
 			yy_def_template_12 (an_array)
 			yy_def_template_13 (an_array)
-			yy_def_template_14 (an_array)
+			an_array.area.fill_with (2597, 2600, 2644)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -8583,18 +8583,6 @@ feature {NONE} -- Table templates
 			 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597,
 			 2597, 2597, 2597, 2597, 2597, 2597, 2597,    0, 2597, 2597, yy_Dummy>>,
 			1, 200, 2400)
-		end
-
-	yy_def_template_14 (an_array: ARRAY [INTEGER])
-			-- Fill chunk #14 of template for `yy_def'.
-		do
-			yy_array_subcopy (an_array, <<
-			 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597,
-			 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597,
-			 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597,
-			 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597, 2597,
-			 2597, 2597, 2597, 2597, 2597, yy_Dummy>>,
-			1, 45, 2600)
 		end
 
 	yy_ec_template: SPECIAL [INTEGER]

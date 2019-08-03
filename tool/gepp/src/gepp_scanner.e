@@ -380,7 +380,7 @@ feature {NONE} -- Table templates
 		once
 			create an_array.make_filled (0, 0, 256)
 			yy_ec_template_1 (an_array)
-			yy_ec_template_2 (an_array)
+			an_array.area.fill_with (17, 200, 256)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -410,19 +410,6 @@ feature {NONE} -- Table templates
 			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
 			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17, yy_Dummy>>,
 			1, 200, 0)
-		end
-
-	yy_ec_template_2 (an_array: ARRAY [INTEGER])
-			-- Fill chunk #2 of template for `yy_ec'.
-		do
-			yy_array_subcopy (an_array, <<
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17, yy_Dummy>>,
-			1, 57, 200)
 		end
 
 	yy_meta_template: SPECIAL [INTEGER]
