@@ -761,6 +761,12 @@ feature {NONE} -- Factory
 				if l_found then
 					append_concatenations_of_symbol_classes_from_unicode_utf8_n_byte_character_class (l_array_n, 4, Void, l_list)
 				end
+				if l_list.is_empty then
+					create l_symbol_class.make (description.minimum_symbol, description.maximum_symbol)
+					create l_concatenation.make (1)
+					l_concatenation.put_last (l_symbol_class)
+					l_list.force_last (l_concatenation)
+				end
 				unions_of_concatenations_of_symbol_classes_by_unicode_character_class.force_new (l_list, a_unicode_character_class)
 			end
 			Result := new_nfa_from_unions_of_concatenations_of_symbol_classes (l_list)
