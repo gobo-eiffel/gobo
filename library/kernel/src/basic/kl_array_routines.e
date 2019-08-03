@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class ARRAY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -92,14 +92,14 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			if attached {ARRAY [detachable G]} a_array as l_array then
+			if not ({G}).is_attached then
 				from
-					i := l_array.lower
-					nb := l_array.upper
+					i := a_array.lower
+					nb := a_array.upper
 				until
 					i > nb
 				loop
-					if l_array.item (i) = Void then
+					if a_array.item (i) = Void then
 						Result := True
 							-- Jump out of the loop.
 						i := nb + 1
