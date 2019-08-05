@@ -86,27 +86,22 @@ feature -- Access
 			template_not_void: template /= Void
 			meta_equiv_classes_built: attached meta_equiv_classes as l_meta_equiv_classes implies l_meta_equiv_classes.built
 		local
-			i, j, nb: INTEGER
+			l_label: INTEGER
 			target: detachable LX_DFA_STATE
+			l_cursor: DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER]
 		do
 			if not attached meta_equiv_classes as l_meta_equiv_classes then
 				Result := template
 			else
 				create Result.make (l_meta_equiv_classes.lower, l_meta_equiv_classes.upper)
-				nb := template.upper
-				from
-					i := template.lower
-				until
-					i > nb
-				loop
-					if l_meta_equiv_classes.is_representative (i) then
-						target := template.target (i)
-						if target /= Void then
-							j := l_meta_equiv_classes.equivalence_class (i)
-							Result.set_target (target, j)
-						end
+				l_cursor := template.transitions.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_label := l_cursor.key
+					if l_meta_equiv_classes.is_representative (l_label) then
+						l_label := l_meta_equiv_classes.equivalence_class (l_label)
+						Result.set_target (l_cursor.item, l_label)
 					end
-					i := i + 1
+					l_cursor.forth
 				end
 			end
 		end
@@ -123,9 +118,10 @@ feature -- Element change
 		local
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			template: LX_TRANSITION_TABLE [LX_DFA_STATE]
-			i, min_symbol, max_symbol: INTEGER
+			l_label, min_symbol, max_symbol: INTEGER
 			symbol_class: LX_SYMBOL_CLASS
 			l_meta_equiv_classes: like meta_equiv_classes
+			l_cursor: DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER]
 		do
 			transitions := state.transitions
 			min_symbol := transitions.lower
@@ -135,18 +131,14 @@ feature -- Element change
 			if l_meta_equiv_classes /= Void then
 				create symbol_class.make (min_symbol, max_symbol)
 			end
-			from
-				i := min_symbol
-			until
-				i > max_symbol
-			loop
-				if transitions.target (i) /= Void then
-					template.set_target (common_state, i)
-					if symbol_class /= Void then
-						symbol_class.add_symbol (i)
-					end
+			l_cursor := transitions.transitions.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_label := l_cursor.key
+				template.set_target (common_state, l_label)
+				if symbol_class /= Void then
+					symbol_class.add_symbol (l_label)
 				end
-				i := i + 1
+				l_cursor.forth
 			end
 			put_last (template)
 			if l_meta_equiv_classes /= Void and symbol_class /= Void then

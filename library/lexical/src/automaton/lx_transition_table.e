@@ -5,12 +5,12 @@ note
 		"Transition tables, indexed by transition labels"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class LX_TRANSITION_TABLE [reference G -> detachable LX_STATE]
+class LX_TRANSITION_TABLE [G -> LX_STATE]
 
 inherit
 
@@ -21,12 +21,6 @@ inherit
 		end
 
 	KL_CLONABLE
-		undefine
-			copy,
-			is_equal
-		end
-
-	KL_IMPORTED_ANY_ROUTINES
 		undefine
 			copy,
 			is_equal
@@ -45,8 +39,12 @@ feature {NONE} -- Initialization
 			min_large_enough: min >= 0
 			max_large_enough: max >= min
 		do
-			create storage.make_filled (Void, min, max)
-			create array_routines
+			lower := min
+			upper := max
+			minimum_label := max + 1
+			second_minimum_label := max + 1
+			maximum_label := min - 1
+			create transitions.make_map ((max - min + 1).min (256))
 		ensure
 			lower_set: lower = min
 			upper_set: upper = max
@@ -57,12 +55,15 @@ feature -- Status report
 	valid_label (a_label: INTEGER): BOOLEAN
 			-- Is `a_label' a valid label?
 		do
-			Result := storage.valid_index (a_label)
+			Result := a_label >= lower and a_label <= upper
 		ensure
 			definition: Result = (a_label >= lower and a_label <= upper)
 		end
 
 feature -- Access
+
+	transitions: DS_HASH_TABLE [G, INTEGER]
+			-- Transitions indexed by labels
 
 	target (a_label: INTEGER): detachable G
 			-- Target reached through transition `a_label';
@@ -70,38 +71,44 @@ feature -- Access
 		require
 			valid_label: valid_label (a_label)
 		do
-			Result := storage.item (a_label)
+			Result := transitions.value (a_label)
 		end
 
-	difference (other: like Current; null: like target): like Current
+	difference (other: like Current; null: G): like Current
 			-- Difference between current transitions and `other';
 			-- Differences are either marked with current's target,
 			-- if it exists, or `null' otherwise. Common targets are
 			-- marked with a void target
 		require
 			other_not_void: other /= Void
+			null_not_void: null /= Void
 			same_lower: lower = other.lower
 			same_upper: upper = other.upper
 		local
-			i, nb: INTEGER
-			state: like target
+			l_state: G
+			l_label: INTEGER
+			l_cursor: DS_HASH_TABLE_CURSOR [G, INTEGER]
+			l_transitions: like transitions
 		do
 			create Result.make (lower, upper)
-			nb := upper
-			from
-				i := lower
-			until
-				i > nb
-			loop
-				state := target (i)
-				if state /= other.target (i) then
-					if state = Void or else state = state.default then
-						Result.set_target (null, i)
-					else
-						Result.set_target (state, i)
-					end
+			l_transitions := transitions
+			l_cursor := l_transitions.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_state := l_cursor.item
+				l_label := l_cursor.key
+				if l_state /= other.target (l_label) then
+					Result.set_target (l_state, l_label)
 				end
-				i := i + 1
+				l_cursor.forth
+			end
+			l_cursor := other.transitions.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_state := l_cursor.item
+				l_label := l_cursor.key
+				if not l_transitions.has (l_label) then
+					Result.set_target (null, l_label)
+				end
+				l_cursor.forth
 			end
 		ensure
 			difference_not_void: Result /= Void
@@ -111,111 +118,80 @@ feature -- Access
 
 	minimum_label: INTEGER
 			-- Smallest label with an out-transition
-		require
-			not_empty: count > 0
-		local
-			state: like target
-		do
-			from
-				Result := lower
-				state := target (Result)
-			until
-				state /= Void and then state /= state.default
-			loop
-				Result := Result + 1
-				state := target (Result)
-			end
-		ensure
-			valid_label: valid_label (Result)
+--		require
+--			not_empty: count > 0
+--		ensure
+--			valid_label: valid_label (Result)
 --			smallest: forall i in lower .. (Result - 1),
---				target (i) = Void or else target (i) = target (i).default
-		end
+--				target (i) = Void
 
 	second_minimum_label: INTEGER
 			-- Second smallest label with an out-transition
-		require
-			at_least_two: count >= 2
-		local
-			state: like target
-		do
-			from
-				Result := minimum_label + 1
-				state := target (Result)
-			until
-				state /= Void and then state /= state.default
-			loop
-				Result := Result + 1
-				state := target (Result)
-			end
-		ensure
-			valid_label: valid_label (Result)
+--		require
+--			at_least_two: count >= 2
+--		ensure
+--			valid_label: valid_label (Result)
 --			second_smallest: forall i in (minimum_label + 1) .. (Result - 1),
---				target (i) = Void or else target (i) = target (i).default
-		end
+--				target (i) = Void
 
 	maximum_label: INTEGER
 			-- Largest label with an out-transition
-		require
-			not_empty: count > 0
-		local
-			state: like target
-		do
-			from
-				Result := upper
-				state := target (Result)
-			until
-				state /= Void and then state /= state.default
-			loop
-				Result := Result - 1
-				state := target (Result)
-			end
-		ensure
-			valid_label: valid_label (Result)
+--		require
+--			not_empty: count > 0
+--		ensure
+--			valid_label: valid_label (Result)
 --			largest: forall i in (Result + 1) .. upper,
---				target (i) = Void or else target (i) = target (i).default
-		end
+--				target (i) = Void
 
 	lower: INTEGER
 			-- Smallest label allowed
-		do
-			Result := storage.lower
-		ensure
-			lower_large_enough: Result >= 0
-		end
 
 	upper: INTEGER
 			-- Largest label allowed
-		do
-			Result := storage.upper
-		ensure
-			upper_large_enough: Result >= lower
-		end
 
 feature -- Measurement
 
 	count: INTEGER
 			-- Number of transitions in table
+		do
+			Result := transitions.count
+		ensure
+			positive_not_negative: Result >= 0
+			count_small_enough: Result <= capacity
+		end
 
 	capacity: INTEGER
 			-- Maximum number of transitions
 		do
-			Result := storage.count
+			Result := upper - lower + 1
+		ensure
+			capacity_not_negative: Result >= 0
 		end
 
 feature -- Element change
 
-	set_target (state: like target; label: INTEGER)
+	set_target (state: G; label: INTEGER)
 			-- Add a transition labeled `label' to `state'.
 		require
 			valid_label: valid_label (label)
-			state_not_void: state /= Void and then state /= state.default
+			state_not_void: state /= Void
 		local
-			void_state: like target
+			l_transitions: like transitions
 		do
-			if target (label) = void_state then
-				count := count + 1
+			l_transitions := transitions
+			l_transitions.search (label)
+			if l_transitions.found then
+				l_transitions.replace_found_item (state)
+			else
+				l_transitions.force_new (state, label)
+				if label < minimum_label then
+					second_minimum_label := minimum_label
+					minimum_label := label
+				elseif label < second_minimum_label then
+					second_minimum_label := label
+				end
+				maximum_label := maximum_label.max (label)
 			end
-			storage.put (state, label)
 		ensure
 			one_more: count >= old count
 			target_set: target (label) = state
@@ -223,27 +199,13 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (label: INTEGER)
-			-- Remove transition labeled `label'.
-		require
-			valid_label: valid_label (label)
-		local
-			void_state: like target
-		do
-			if target (label) /= void_state then
-				storage.put (void_state, label)
-				count := count - 1
-			end
-		ensure
-			one_less: count <= old count
-			removed: not attached target (label) as l_target or else l_target = l_target.default
-		end
-
 	clear_all
 			-- Remove all transitions.
 		do
-			count := 0
-			storage.clear_all
+			minimum_label := upper + 1
+			second_minimum_label := upper + 1
+			maximum_label := lower - 1
+			transitions.wipe_out
 		ensure
 			empty: count = 0
 		end
@@ -254,7 +216,7 @@ feature -- Duplication
 			-- Copy `other' to current transition table.
 		do
 			standard_copy (other)
-			storage := array_routines.cloned_array (storage)
+			transitions := transitions.twin
 		end
 
 feature -- Comparison
@@ -262,32 +224,22 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is current transition table equal to `other'?
 		local
-			old_storage: like storage
+			old_transitions: like transitions
 		do
 			if ANY_.same_types (Current, other) then
-				old_storage := storage
-				storage := other.storage
+				old_transitions := transitions
+				transitions := other.transitions
 				if standard_is_equal (other) then
-					Result := old_storage.is_equal (storage)
+					Result := old_transitions.is_equal (transitions)
 				end
-				storage := old_storage
+				transitions := old_transitions
 			end
 		end
 
-feature {LX_TRANSITION_TABLE} -- Implementation
-
-	storage: ARRAY [detachable G]
-			-- Transitions indexed by labels
-
-feature {NONE} -- Implementation
-
-	array_routines: KL_ARRAY_ROUTINES [detachable G]
-			-- Routines that ought to be in class ARRAY
-
 invariant
 
-	storage_not_void: storage /= Void
-	positive_count: count >= 0
-	array_routines_not_void: array_routines /= Void
+	transitions_not_void: transitions /= Void
+	lower_large_enough: lower >= 0
+	upper_large_enough: upper >= lower
 
 end

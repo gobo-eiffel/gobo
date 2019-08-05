@@ -494,13 +494,14 @@ feature {NONE} -- Compression
 			singletons_not_void: singletons /= Void
 		local
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
+			l_transitions_cursor: DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER]
 			template: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			trans_nb, symb_nb: INTEGER
 			i, j, nb: INTEGER
 			common_states: DS_ARRAYED_LIST [LX_DFA_STATE]
 			frequencies: DS_ARRAYED_LIST [INTEGER]
 			st_cursor: DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE]
-			common_state: detachable LX_DFA_STATE
+			common_state: LX_DFA_STATE
 			common_freq: INTEGER
 			proto: detachable LX_PROTO
 			new_proto: LX_PROTO
@@ -522,25 +523,19 @@ feature {NONE} -- Compression
 					create common_states.make (trans_nb)
 					create frequencies.make (trans_nb)
 					st_cursor := common_states.new_cursor
-					from
-						i := minimum_symbol
-						nb := maximum_symbol
-					until
-						i > nb
-					loop
-						common_state := transitions.target (i)
-						if common_state /= Void then
-							st_cursor.start
-							st_cursor.search_forth (common_state)
-							if not st_cursor.after then
-								j := st_cursor.index
-								frequencies.replace (frequencies.item (j) + 1, j)
-							else
-								common_states.put_last (common_state)
-								frequencies.put_last (1)
-							end
+					l_transitions_cursor := transitions.transitions.new_cursor
+					from l_transitions_cursor.start until l_transitions_cursor.after loop
+						common_state := l_transitions_cursor.item
+						st_cursor.start
+						st_cursor.search_forth (common_state)
+						if not st_cursor.after then
+							j := st_cursor.index
+							frequencies.replace (frequencies.item (j) + 1, j)
+						else
+							common_states.put_last (common_state)
+							frequencies.put_last (1)
 						end
-						i := i + 1
+						l_transitions_cursor.forth
 					end
 						-- Release cursor to GC.
 					st_cursor.go_after
@@ -672,6 +667,7 @@ feature {NONE} -- Compression
 			yy_chk_, yy_nxt_: ARRAY [INTEGER]
 			singleton: LX_SINGLETON
 			l_symbol: INTEGER
+			l_cursor: DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER]
 		do
 			check transitions_not_void: attached transitions as l_transitions then
 				inspect transitions.count
@@ -688,18 +684,16 @@ feature {NONE} -- Compression
 							-- There is only one out-transition.
 							-- Save it for later to fill in holes in tables.
 						l_symbol := l_transitions.minimum_label
-						check attached l_transitions.target (l_symbol) as l_target then
-							if l_symbol = 0 then
-									-- 	. end-of-buffer           -> 0
-									--  . minumum_symbol (if 0)   -> maximum_symbol + 1
-								l_symbol := a_maximum_symbol + 1
-							end
-							create singleton.make (state_id, default_id, l_symbol, l_target.id)
-							if not l_singletons.is_full then
-								l_singletons.put_last (singleton)
-							else
-								put_singleton (singleton)
-							end
+						if l_symbol = 0 then
+								-- 	. end-of-buffer           -> 0
+								--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+							l_symbol := a_maximum_symbol + 1
+						end
+						create singleton.make (state_id, default_id, l_symbol, l_transitions.transitions.first.id)
+						if not l_singletons.is_full then
+							l_singletons.put_last (singleton)
+						else
+							put_singleton (singleton)
 						end
 					end
 				else
@@ -723,6 +717,7 @@ feature {NONE} -- Compression
 					else
 						max_label := l_transitions.maximum_label
 					end
+					l_cursor := l_transitions.transitions.new_cursor
 					trans_nb := l_transitions.count
 					symb_nb := l_transitions.capacity
 					if trans_nb * 100 <= symb_nb * Interior_fit_percentage then
@@ -749,18 +744,14 @@ feature {NONE} -- Compression
 							INTEGER_ARRAY_.resize_with_default (yy_nxt_, 0, 0, max_index)
 							INTEGER_ARRAY_.resize_with_default (yy_chk_, 0, 0, max_index)
 						end
-						from
-							i := min_label
-						until
-							i > max_label
-						loop
-							l_symbol := i
-							if l_symbol = max_label and then max_label = a_maximum_symbol + 1 then
+						from l_cursor.start until l_cursor.after loop
+							l_symbol := l_cursor.key
+							if l_symbol = 0 then
 									-- 	. end-of-buffer           -> 0
 									--  . minumum_symbol (if 0)   -> maximum_symbol + 1
-								l_symbol := 0
+								l_symbol := max_label
 							end
-							if l_transitions.target (l_symbol) /= Void and yy_chk_.item (base_addr + i - min_label) /= 0 then
+							if yy_chk_.item (base_addr + l_symbol - min_label) /= 0 then
 									-- `base_addr' unsuitable. Find another.
 								from
 									base_addr := base_addr + 1
@@ -778,9 +769,9 @@ feature {NONE} -- Compression
 								end
 									-- Reset the loop counter so we'll start
 									-- all over again.
-								i := min_label
+								l_cursor.start
 							else
-								i := i + 1
+								l_cursor.forth
 							end
 						end
 					else
@@ -798,22 +789,16 @@ feature {NONE} -- Compression
 					end
 					yy_base.put (table_base, state_id)
 					yy_def.put (default_id, state_id)
-					from
-						i := min_label
-					until
-						i > max_label
-					loop
-						l_symbol := i
-						if l_symbol = max_label and then max_label = a_maximum_symbol + 1 then
+					from l_cursor.start until l_cursor.after loop
+						l_symbol := l_cursor.key
+						if l_symbol = 0 then
 								-- 	. end-of-buffer           -> 0
 								--  . minumum_symbol (if 0)   -> maximum_symbol + 1
-							l_symbol := 0
+							l_symbol := max_label
 						end
-						if attached l_transitions.target (l_symbol) as l_target then
-							yy_nxt_.put (l_target.id, table_base + i)
-							yy_chk_.put (state_id, table_base + i)
-						end
-						i := i + 1
+						yy_nxt_.put (l_cursor.item.id, table_base + l_symbol)
+						yy_chk_.put (state_id, table_base + l_symbol)
+						l_cursor.forth
 					end
 					if base_addr = first_free then
 							-- Find next free slot in tables.
