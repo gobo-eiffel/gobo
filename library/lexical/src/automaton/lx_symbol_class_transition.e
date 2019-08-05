@@ -65,9 +65,7 @@ feature -- Status report
 	labeled (symbol: INTEGER): BOOLEAN
 			-- Is current transition labeled `symbol'?
 		do
-			if not label.is_unicode or else {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (symbol) then
-				Result := label.has (symbol)
-			end
+			Result := label.has (symbol)
 		end
 
 feature -- Equivalence classes

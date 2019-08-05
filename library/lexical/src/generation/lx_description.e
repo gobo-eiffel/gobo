@@ -501,7 +501,8 @@ invariant
 	eof_rules_not_void: eof_rules /= Void
 	no_void_eof_rule: not eof_rules.has_void
 	start_conditions_not_void: start_conditions /= Void
-	maximum_symbol_positive: maximum_symbol > 0
+	minimum_symbol_large_enough: minimum_symbol >= 0
+	maximum_symbol_large_enough: maximum_symbol >= minimum_symbol
 	utf8_mode: utf8_mode implies maximum_symbol >= {CHARACTER_8}.max_value
 	eiffel_header_not_void: eiffel_header /= Void
 	no_void_eiffel_header: not eiffel_header.has_void

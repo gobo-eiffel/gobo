@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			previous: INTEGER
 			dfa_state: LX_DFA_STATE
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
-			symbols: ARRAY [BOOLEAN]
+			symbols: DS_HASH_SET [INTEGER]
 		do
 			check paritions_not_void: attached partitions as l_partitions then
 				nb := l_partitions.capacity
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 				until
 					i > maximum_symbol
 				loop
-					if symbols.item (i) then
+					if symbols.has (i) then
 							-- There is a transition labeled `i'
 							-- leaving `new_state'.
 						if l_partitions.is_representative (i) then

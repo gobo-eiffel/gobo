@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Make structure to allow creation of a set of partitions
 			-- for symbols within bounds `min'..`max'.
 		do
-			create symbols.make_filled (False, min, max)
+			create symbols.make ((max - min + 1).min (512))
 			precursor (min, max)
 		end
 
@@ -47,15 +47,13 @@ feature -- Initialization
 			-- as it was after `make' creation procedure call.]
 		do
 			precursor
-			symbols.clear_all
+			symbols.wipe_out
 		end
 
 feature -- Access
 
-	symbols: ARRAY [BOOLEAN]
-			-- Set of symbols that belong to one of the partitions;
-			-- The entry at index `i' is False if symbol `i' belongs
-			-- to none of the partitions
+	symbols: DS_HASH_SET [INTEGER]
+			-- Set of symbols that belong to one of the partitions
 
 feature -- Status report
 
@@ -64,7 +62,7 @@ feature -- Status report
 		require
 			valid_symbol: valid_symbol (symbol)
 		do
-			Result := symbols.item (symbol)
+			Result := symbols.has (symbol)
 		end
 
 feature -- Element change
@@ -73,7 +71,7 @@ feature -- Element change
 			-- Create equivalence class for single `symbol'
 			-- and record `symbol' as member of a partition.
 		do
-			symbols.put (True, symbol)
+			symbols.force (symbol)
 			precursor (symbol)
 		ensure then
 			has_symbol: has (symbol)
@@ -85,7 +83,7 @@ feature -- Element change
 			-- of a partition.
 		local
 			i, nb: INTEGER
-			symbol_table: ARRAY [BOOLEAN]
+			symbol_table: like symbols
 		do
 			precursor (symbol_class)
 			symbol_table := symbols
@@ -95,25 +93,15 @@ feature -- Element change
 			until
 				i > nb
 			loop
-				if symbol_class.is_unicode and then not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (i) then
-					if i <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code then
-						i := {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code + 1
-					else
-						i := nb + 1
-					end
-				elseif symbol_class.has (i) then
-					symbol_table.put (True, i)
-					i := i + 1
-				else
-					i := i + 1
+				if symbol_class.has (i) then
+					symbol_table.force (i)
 				end
+				i := i + 1
 			end
 		end
 
 invariant
 
 	symbols_not_void: symbols /= Void
-	symbols_lower: symbols.lower = lower
-	symbols_upper: symbols.upper = upper
 
 end

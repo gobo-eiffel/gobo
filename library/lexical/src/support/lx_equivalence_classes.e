@@ -255,7 +255,7 @@ feature -- Element change
 			stop, next_ec: BOOLEAN
 			l_symbol: INTEGER
 			l_other_symbol: INTEGER
-			flags: ARRAY [BOOLEAN]
+			flags: DS_HASH_SET [INTEGER]
 		do
 				-- Note that it doesn't matter whether or not the
 				-- symbol class is negated. The same results will
@@ -263,20 +263,14 @@ feature -- Element change
 			if not symbol_class.is_empty then
 				l_min := symbol_class.lower
 				l_max := symbol_class.upper
-				create flags.make_filled (False, l_min, l_max)
+				create flags.make ((l_max - l_min + 1).min (512))
 				from
 					l_symbol := l_min
 				until
 					l_symbol > l_max
 				loop
 						-- Find next symbol class member to process.
-					if symbol_class.is_unicode and then not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (l_symbol) then
-						if l_symbol <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code then
-							l_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code + 1
-						else
-							l_symbol := l_max + 1
-						end
-					elseif symbol_class.added (l_symbol) and then not flags.item (l_symbol) then
+					if symbol_class.added (l_symbol) and then not flags.has (l_symbol) then
 						cell := storage.item (l_symbol)
 						old_cell := cell.left
 						new_cell := cell
@@ -294,17 +288,11 @@ feature -- Element change
 							until
 								stop or l_other_symbol > l_max
 							loop
-								if symbol_class.is_unicode and then not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (l_other_symbol) then
-									if l_other_symbol <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code then
-										l_other_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code + 1
-									else
-										l_other_symbol := l_max + 1
-									end
-								elseif not symbol_class.added (l_other_symbol) then
+								if not symbol_class.added (l_other_symbol) then
 									l_other_symbol := l_other_symbol + 1
 								elseif l_other_symbol > i then
 									stop := True
-								elseif l_other_symbol = i and not flags.item (l_other_symbol) then
+								elseif l_other_symbol = i and not flags.has (l_other_symbol) then
 										-- We found an old companion of
 										-- `k'-th symbol in the symbol class.
 										-- Link it into the new equivalence
@@ -313,7 +301,7 @@ feature -- Element change
 									new_cell.put_right (right)
 									new_cell := right
 										-- Set flag so we don't reprocess it.
-									flags.put (True, l_other_symbol)
+									flags.force (l_other_symbol)
 										-- Get next equivalence class member.
 									next_ec := True
 									stop := True

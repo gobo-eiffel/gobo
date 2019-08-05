@@ -23,8 +23,7 @@ inherit
 
 create
 
-	make,
-	make_unicode
+	make
 
 feature {NONE} -- Initialization
 
@@ -42,24 +41,6 @@ feature {NONE} -- Initialization
 			upper_set: upper = a_max
 			is_empty: is_empty
 			not_negated: not is_negated
-			not_unicode: not is_unicode
-		end
-
-	make_unicode (a_min, a_max: INTEGER)
-			-- Create an empty Unicode symbol class.
-		require
-			a_min_large_enough: a_min >= 0
-			a_max_large_enough: a_max >= a_min
-			valid_max: {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_max)
-		do
-			make (a_min, a_max)
-			is_unicode := True
-		ensure
-			lower_set: lower = a_min
-			upper_set: upper = a_max
-			is_empty: is_empty
-			not_negated: not is_negated
-			is_unicode: is_unicode
 		end
 
 feature -- Access
@@ -82,13 +63,13 @@ feature -- Access
 			if upper >= 256 and then attached other_sets as l_other_sets then
 				from
 					l_chunk_index := 0
-					l_chunk_upper := chunk_count - 2
+					l_chunk_upper := chunk_index (upper) - 1
 				until
 					l_chunk_index > l_chunk_upper or else
 						(attached l_other_sets.item (l_chunk_index) as l_chunk and then
 							l_chunk.count > 0 and then
 								not (l_chunk.filled_with (0, 0, chunk_size - 1) or
-									l_chunk.filled_with (1, 0, chunk_size - 1)))
+									l_chunk.filled_with (0xFFFFFFFF, 0, chunk_size - 1)))
 				loop
 					l_chunk_index := l_chunk_index + 1
 				end
@@ -111,18 +92,163 @@ feature -- Access
 
 feature -- Status report
 
-	is_unicode: BOOLEAN
-			-- Does the current symbol class contains Unicode charatcters?
-
 	is_empty: BOOLEAN
 			-- Is symbol class empty?
 			-- Do not take into account negated status.
 
-	is_256_full: BOOLEAN
-			-- Does symbol class contain the 256 first symbols (from 0 to 255)?
+	is_full: BOOLEAN
+			-- Does symbol class contain all symbols between `lower' and `upper'?
 			-- Do not take into account negated status.
+		local
+			l_symbol, nb: INTEGER
+			l_chunk_index, l_chunk_upper, l_chunk_lower: INTEGER
+			l_index_lower_in_chunk, l_index_upper_in_chunk: INTEGER
+			l_set: NATURAL_64
 		do
-			Result := first_set = 0xFFFFFFFF and second_set = 0xFFFFFFFF and third_set = 0xFFFFFFFF and fourth_set = 0xFFFFFFFF
+			Result := True
+			if first_set /= 0xFFFFFFFF then
+				if lower = 0 and upper >= 63 then
+					Result := False
+				else
+					from
+						l_symbol := lower
+						nb := upper.min (63)
+					until
+						not Result or l_symbol > nb
+					loop
+						Result := first_set & masks.item (l_symbol) /= 0
+						l_symbol := l_symbol + 1
+					end
+				end
+			end
+			if Result and second_set /= 0xFFFFFFFF then
+				if lower <= 64 and upper >= 127 then
+					Result := False
+				else
+					from
+						l_symbol := lower.max (64)
+						nb := upper.min (127)
+					until
+						not Result or l_symbol > nb
+					loop
+						Result := second_set & masks.item (l_symbol \\ 64) /= 0
+						l_symbol := l_symbol + 1
+					end
+				end
+			end
+			if Result and third_set /= 0xFFFFFFFF then
+				if lower <= 128 and upper >= 191 then
+					Result := False
+				else
+					from
+						l_symbol := lower.max (128)
+						nb := upper.min (191)
+					until
+						not Result or l_symbol > nb
+					loop
+						Result := third_set & masks.item (l_symbol \\ 64) /= 0
+						l_symbol := l_symbol + 1
+					end
+				end
+			end
+			if Result and fourth_set /= 0xFFFFFFFF then
+				if lower <= 192 and upper >= 255 then
+					Result := False
+				else
+					from
+						l_symbol := lower.max (192)
+						nb := upper.min (255)
+					until
+						not Result or l_symbol > nb
+					loop
+						Result := fourth_set & masks.item (l_symbol \\ 64) /= 0
+						l_symbol := l_symbol + 1
+					end
+				end
+			end
+			if Result and upper >= 256 then
+				if attached other_sets as l_other_sets then
+					from
+						l_chunk_upper := chunk_index (upper)
+						if lower > 256 then
+							l_chunk_lower := chunk_index (lower)
+							l_chunk_index := l_chunk_lower
+						else
+							l_chunk_lower := -1
+							l_chunk_index := 0
+						end
+					until
+						not Result or l_chunk_index > l_chunk_upper
+					loop
+						if not attached l_other_sets.item (l_chunk_index) as l_chunk then
+							Result := False
+						elseif l_chunk.count > 0 and then not l_chunk.filled_with (0xFFFFFFFF, 0, chunk_size - 1) then
+								-- Empty chunks are considered as full of ones.
+							if l_chunk_index = l_chunk_upper or l_chunk_index = l_chunk_lower then
+								if l_chunk_index = l_chunk_upper then
+									l_index_upper_in_chunk := index_in_chunk (upper)
+								else
+									l_index_upper_in_chunk := chunk_size
+								end
+								if l_chunk_index = l_chunk_lower then
+									l_index_lower_in_chunk := index_in_chunk (lower)
+								else
+									l_index_lower_in_chunk := -1
+								end
+								if not l_chunk.filled_with (0xFFFFFFFF, l_index_lower_in_chunk + 1, l_index_upper_in_chunk - 1) then
+									Result := False
+								elseif l_index_lower_in_chunk = l_index_upper_in_chunk then
+									l_set := l_chunk.item (l_index_upper_in_chunk)
+									if l_set /= 0xFFFFFFFF then
+										from
+											l_symbol := lower \\ 64
+											nb := upper \\ 64
+										until
+											not Result or l_symbol > nb
+										loop
+											Result := l_set & masks.item (l_symbol) /= 0
+											l_symbol := l_symbol + 1
+										end
+									end
+								else
+									if l_index_upper_in_chunk < chunk_size then
+										l_set := l_chunk.item (l_index_upper_in_chunk)
+										if l_set /= 0xFFFFFFFF then
+											from
+												l_symbol := 0
+												nb := upper \\ 64
+											until
+												not Result or l_symbol > nb
+											loop
+												Result := l_set & masks.item (l_symbol) /= 0
+												l_symbol := l_symbol + 1
+											end
+										end
+									end
+									if l_index_lower_in_chunk >= 0 then
+										l_set := l_chunk.item (l_index_lower_in_chunk)
+										if l_set /= 0xFFFFFFFF then
+											from
+												l_symbol := lower \\ 64
+												nb := 63
+											until
+												not Result or l_symbol > nb
+											loop
+												Result := l_set & masks.item (l_symbol) /= 0
+												l_symbol := l_symbol + 1
+											end
+										end
+									end
+								end
+							else
+								Result := False
+							end
+						end
+					end
+				else
+					Result := False
+				end
+			end
 		end
 
 	is_negated: BOOLEAN
@@ -133,7 +259,6 @@ feature -- Status report
 			-- Take into account the negated status.
 		require
 			a_symbol_valid: a_symbol >= lower and a_symbol <= upper
-			valid_unicode: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_symbol)
 		do
 			Result := added (a_symbol) /= is_negated
 		ensure
@@ -145,7 +270,6 @@ feature -- Status report
 			-- Do not take into account the negated status.
 		require
 			a_symbol_valid: a_symbol >= lower and a_symbol <= upper
-			valid_unicode: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_symbol)
 		local
 			l_index_in_chunk: INTEGER
 			l_chunk: like chunk
@@ -184,10 +308,9 @@ feature -- Status report
 			l_chunk: like chunk
 			l_other_chunk: like chunk
 		do
-			Result := True
-			if is_negated /= a_other.is_negated then
-				Result := False
-			elseif is_unicode /= a_other.is_unicode then
+			if a_other = Current then
+				Result := True
+			elseif is_negated /= a_other.is_negated then
 				Result := False
 			elseif lower /= a_other.lower then
 				Result := False
@@ -206,11 +329,12 @@ feature -- Status report
 			elseif fourth_set /= a_other.fourth_set then
 				Result := False
 			elseif upper >= 256 then
+				Result := True
 				if attached other_sets as l_current_other_sets then
 					if attached a_other.other_sets as l_other_other_sets then
 						from
 							l_chunk_index := 0
-							l_chunk_upper := chunk_count - 1
+							l_chunk_upper := chunk_index (upper)
 						until
 							not Result or l_chunk_index > l_chunk_upper
 						loop
@@ -221,11 +345,11 @@ feature -- Status report
 									Result := l_other_chunk.count > 0 and then l_other_chunk.filled_with (0, 0, chunk_size - 1)
 								end
 							elseif l_chunk.count = 0 then
-								Result := l_other_chunk /= Void and then (l_other_chunk.count = 0 or else l_other_chunk.filled_with (1, 0, chunk_size - 1))
+								Result := l_other_chunk /= Void and then (l_other_chunk.count = 0 or else l_other_chunk.filled_with (0xFFFFFFFF, 0, chunk_size - 1))
 							elseif l_other_chunk = Void then
 								Result := l_chunk.filled_with (0, 0, chunk_size - 1)
 							elseif l_other_chunk.count = 0 then
-								Result := l_chunk.filled_with (1, 0, chunk_size - 1)
+								Result := l_chunk.filled_with (0xFFFFFFFF, 0, chunk_size - 1)
 							else
 								Result := l_chunk.same_items (l_other_chunk, 0, 0, chunk_size)
 							end
@@ -234,7 +358,7 @@ feature -- Status report
 					else
 						from
 							l_chunk_index := 0
-							l_chunk_upper := chunk_count - 1
+							l_chunk_upper := chunk_index (upper)
 						until
 							not Result or l_chunk_index > l_chunk_upper
 						loop
@@ -248,7 +372,7 @@ feature -- Status report
 				elseif attached a_other.other_sets as l_other_other_sets then
 					from
 						l_chunk_index := 0
-						l_chunk_upper := chunk_count - 1
+						l_chunk_upper := chunk_index (upper)
 					until
 						not Result or l_chunk_index > l_chunk_upper
 					loop
@@ -258,9 +382,9 @@ feature -- Status report
 						end
 						l_chunk_index := l_chunk_index + 1
 					end
-				else
-					Result := True
 				end
+			else
+				Result := True
 			end
 		end
 
@@ -287,7 +411,6 @@ feature -- Element Change
 			-- Do not take into account the negated status.
 		require
 			a_symbol_valid: a_symbol >= lower and a_symbol <= upper
-			valid_unicode: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_symbol)
 		local
 			l_index_in_chunk: INTEGER
 			l_chunk: like chunk
@@ -319,7 +442,6 @@ feature -- Element Change
 			-- Take into account negated status of `Current' and `other'.
 		require
 			other_not_void: other /= Void
-			same_unicode: is_unicode = other.is_unicode
 			same_lower: lower = other.lower
 			same_upper: upper = other.upper
 		local
@@ -372,7 +494,7 @@ feature -- Element Change
 			elseif l_current_other_sets = Void then
 				if not l_negated and attached other.other_sets as l_other_other_sets then
 					from
-						l_chunk_upper := chunk_count - 1
+						l_chunk_upper := chunk_index (upper)
 					until
 						l_chunk_index > l_chunk_upper
 					loop
@@ -396,11 +518,11 @@ feature -- Element Change
 				end
 			elseif not attached other.other_sets as l_other_other_sets then
 				if l_other_negated then
-					l_current_other_sets.fill_with (Void, 0, chunk_count - 1)
+					l_current_other_sets.fill_with (Void, 0, chunk_index (upper))
 				else
 					if l_is_empty then
 						from
-							l_chunk_upper := chunk_count - 1
+							l_chunk_upper := chunk_index (upper)
 						until
 							not l_is_empty or l_chunk_index > l_chunk_upper
 						loop
@@ -418,7 +540,7 @@ feature -- Element Change
 				end
 			else
 				from
-					l_chunk_upper := chunk_count - 1
+					l_chunk_upper := chunk_index (upper)
 				until
 					l_chunk_index > l_chunk_upper
 				loop
@@ -555,7 +677,6 @@ feature -- Element Change
 			-- Take into account negated status of `Current' and `other'.
 		require
 			other_not_void: other /= Void
-			same_unicode: is_unicode = other.is_unicode
 			same_lower: lower = other.lower
 			same_upper: upper = other.upper
 		do
@@ -596,7 +717,6 @@ feature -- Convertion
 			l_symbol, i, nb: INTEGER
 			l_chunk_index: INTEGER
 			l_index_in_chunk: INTEGER
-			l_old_unicode: BOOLEAN
 			l_old_upper: INTEGER
 			l_old_first_set: NATURAL_64
 			l_old_second_set: NATURAL_64
@@ -607,7 +727,6 @@ feature -- Convertion
 			l_chunk: like chunk
 			l_new_chunk_upper: INTEGER
 		do
-			l_old_unicode := is_unicode
 			l_old_upper := upper
 			l_old_first_set := first_set
 			l_old_second_set := second_set
@@ -618,7 +737,6 @@ feature -- Convertion
 			third_set := 0
 			fourth_set := 0
 			is_empty := True
-			is_unicode := False
 			upper := classes.new_upper
 			from
 				l_symbol := lower
@@ -641,7 +759,11 @@ feature -- Convertion
 				l_symbol := l_symbol + 1
 			end
 			if attached other_sets as l_other_sets then
-				l_new_chunk_upper := chunk_count - 1
+				if upper >= 256 then
+					l_new_chunk_upper := chunk_index (upper)
+				else
+					l_new_chunk_upper := -1
+				end
 				from
 					l_symbol := 256
 					l_chunk_index := 0
@@ -708,20 +830,6 @@ feature -- Convertion
 							end
 						end
 					end
-					if l_old_unicode and then not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (l_symbol) then
-						if l_symbol <= l_old_upper then
-							l_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code + 1
-						end
-					end
-					l_chunk_index := l_chunk_index + 1
-				end
-					-- Remove unused chunks.
-				from
-					nb := l_other_sets.upper
-				until
-					l_chunk_index > nb
-				loop
-					l_other_sets.put (Void, l_chunk_index)
 					l_chunk_index := l_chunk_index + 1
 				end
 			end
@@ -732,9 +840,8 @@ feature -- Convertion
 			-- `a_max' will have the same equivalence class as `a_max'.
 		require
 			a_max_large_enough: a_max >= lower
-			valid_max: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_max)
 			a_max_in_other_sets: a_max >= 256
---			equivalence_class: a_max <= upper implies for all valid symbol s >= a_max, added (s) = added (a_max)
+--			equivalence_class: a_max <= upper implies for all symbol s >= a_max, added (s) = added (a_max)
 		local
 			l_chunk_index: INTEGER
 			l_index_in_chunk: INTEGER
@@ -771,6 +878,7 @@ feature -- Convertion
 			end
 		ensure
 			new_upper: upper = (old upper).min (a_max)
+			same_lower: lower = old lower
 		end
 
 feature -- Duplication
@@ -778,29 +886,29 @@ feature -- Duplication
 	copy (other: like Current)
 			-- Copy `other' symbol class to `Current'.
 		local
-			l_chunk_count: INTEGER
-			i, l_chunk_upper: INTEGER
+			l_chunk_index, l_chunk_upper: INTEGER
 			l_other_sets: like other_sets
 		do
 			standard_copy (other)
-			if attached other_sets as l_other_other_sets then
-				l_chunk_count := chunk_count
-				create l_other_sets.make_filled (Void, l_chunk_count)
+			if upper < 256 then
+				other_sets := Void
+			elseif attached other_sets as l_other_other_sets then
+				l_chunk_upper := chunk_index (upper)
+				create l_other_sets.make_filled (Void, l_chunk_upper + 1)
 				other_sets := l_other_sets
 				from
-					i := 0
-					l_chunk_upper := l_chunk_count - 1
+					l_chunk_index := 0
 				until
-					i > l_chunk_upper
+					l_chunk_index > l_chunk_upper
 				loop
-					if attached l_other_other_sets.item (i) as l_chunk then
+					if attached l_other_other_sets.item (l_chunk_index) as l_chunk then
 						if l_chunk.count = 0 then
-							l_other_sets.put (chunk_of_ones, i)
+							l_other_sets.put (chunk_of_ones, l_chunk_index)
 						else
-							l_other_sets.put (l_chunk.twin, i)
+							l_other_sets.put (l_chunk.twin, l_chunk_index)
 						end
 					end
-					i := i + 1
+					l_chunk_index := l_chunk_index + 1
 				end
 			end
 		end
@@ -822,10 +930,7 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 	other_sets: detachable SPECIAL [detachable SPECIAL [NATURAL_64]]
 			-- Other sets of bits.
 			-- Chunks of 172*64 bits.
-			-- The first chunk is just before the first surrogate in Unicode mode.
-			-- The second chunk is just after the last surrogate in Unicode mode.
-			-- The last chunk may be smaller.
-			-- 100 chunks needed to support Unicode.
+			-- 101 chunks needed to support Unicode.
 
 	masks: SPECIAL [NATURAL_64]
 			-- Bit masks
@@ -853,12 +958,14 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 	attached_other_sets: attached like other_sets
 			-- Attached version of `other_sets'.
 			-- Create it if needed.
+		require
+			a_upper_in_other_sets: upper >= 256
 		local
 			l_other_sets: like other_sets
 		do
 			l_other_sets := other_sets
 			if l_other_sets = Void then
-				create l_other_sets.make_filled (Void, chunk_count)
+				create l_other_sets.make_filled (Void, chunk_index (upper) + 1)
 				other_sets := l_other_sets
 			end
 			Result := l_other_sets
@@ -867,28 +974,11 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 			definition: Result = other_sets
 		end
 
-	chunk_count: INTEGER
-			-- Number of chunks needed to store up to `upper' symbols
-		do
-			if upper < 256 then
-				Result := 0
-			elseif is_unicode and then upper > 57343 then
-					-- Last surrogate: 57343
-					-- Number of surrogates: 2,048
-				Result := (upper - 2_048 - 256) // symbols_per_chunk + 1
-			else
-				Result := (upper - 256) // symbols_per_chunk + 1
-			end
-		ensure
-			chunk_count_not_negative: Result >= 0
-		end
-
 	chunk (a_symbol: INTEGER): detachable SPECIAL [NATURAL_64]
 			-- Chunk in `other_sets' associated with `a_symbol'.
 			-- Void if not created yet.
 		require
 			a_symbol_valid: a_symbol >= lower and a_symbol <= upper
-			valid_unicode: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_symbol)
 			a_symbol_in_other_sets: a_symbol >= 256
 		do
 			if attached other_sets as l_other_sets then
@@ -901,7 +991,6 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 			-- Create it if needed.
 		require
 			a_symbol_valid: a_symbol >= lower and a_symbol <= upper
-			valid_unicode: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_symbol)
 			a_symbol_in_other_sets: a_symbol >= 256
 		local
 			l_chunk_index: INTEGER
@@ -925,32 +1014,18 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 			-- Index of chunk in `other_sets' associated with `a_symbol'
 		require
 			a_symbol_valid: a_symbol >= lower and a_symbol <= upper
-			valid_unicode: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_symbol)
 			a_symbol_in_other_sets: a_symbol >= 256
 		do
-			if is_unicode and then a_symbol > 57343 then
-					-- Last surrogate: 57343
-					-- First surrogate: 55296
-					-- Number of chunks before the first surrogate: (55295 - 256) // 64 // chunk_size + 1 = 5
-				Result := (a_symbol - 57344) // symbols_per_chunk + 5
-			else
-				Result := (a_symbol - 256) // symbols_per_chunk
-			end
+			Result := (a_symbol - 256) // symbols_per_chunk
 		end
 
 	index_in_chunk (a_symbol: INTEGER): INTEGER
 			-- Index of `a_symbol' in its associated chunk
 		require
 			a_symbol_valid: a_symbol >= lower and a_symbol <= upper
-			valid_unicode: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_symbol)
 			a_symbol_in_other_sets: a_symbol >= 256
 		do
-			if is_unicode and then a_symbol > 57343 then
-					-- Last surrogate: 57343
-				Result := ((a_symbol - 57344) // 64) \\ chunk_size
-			else
-				Result := ((a_symbol - 256) // 64) \\ chunk_size
-			end
+			Result := ((a_symbol - 256) // 64) \\ chunk_size
 		ensure
 			valid_index_in_chunk: Result >= 0 and Result < chunk_size
 		end
@@ -960,6 +1035,8 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 
 	symbols_per_chunk: INTEGER = 11_008
 			-- `chunk_size' * 64
+--		ensure
+--			definition: Result = chunk_size * 64
 
 	chunk_of_ones: SPECIAL [NATURAL_64]
 			-- Dummy chunk which is supposed to represent
@@ -974,9 +1051,7 @@ invariant
 
 	lower_large_enough: lower >= 0
 	upper_large_enough: upper >= lower
-	valid_upper: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (upper)
-	chunk_count: (not is_unicode or upper <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code) implies (not attached other_sets as l_other_sets or else l_other_sets.count >= ((upper - 256) // (chunk_size * 64) + 1))
-	chunk_count_unicode: (is_unicode and upper > {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code) implies (not attached other_sets as l_other_sets or else l_other_sets.count >= ((upper - ({UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code - {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_code + 1) - 256) // (chunk_size * 64) + 1))
+	chunk_count: upper >= 256 implies not attached other_sets as l_other_sets or else l_other_sets.count >= ((upper - 256) // symbols_per_chunk + 1)
 	chunk_size: attached other_sets as l_other_sets implies across l_other_sets as l_chunks all attached l_chunks.item as l_chunk and then l_chunk.count /= 0 implies l_chunk.count = chunk_size end
 
 end

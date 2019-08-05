@@ -365,7 +365,7 @@ feature {NONE} -- Measurement
 			if a_symbol_class.is_negated then
 				if utf8_mode.item then
 					singleton_count := Zero_or_more
-				elseif a_symbol_class.is_256_full then
+				elseif a_symbol_class.is_full then
 					singleton_count := 0
 				else
 					singleton_count := 1
