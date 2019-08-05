@@ -205,6 +205,10 @@ feature {NONE} -- Generation
 				%%TyyNull_equiv_class: INTEGER = ")
 			a_file.put_integer (yyNull_equiv_class)
 			a_file.put_string ("%N%T%T%T-- Equivalence code for NULL character%
+				%%N%N%TyyMax_symbol_equiv_class: INTEGER = ")
+			a_file.put_integer (yyMax_symbol_equiv_class)
+			a_file.put_string ("%N%T%T%T-- All symbols greater than this symbol will have%
+				%%N%T%T%T-- the same equivalence class as this symbol%
 				%%N%N%TyyReject_used: BOOLEAN = ")
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyReject_used)
 			a_file.put_string ("%N%T%T%T-- Is `reject' called?%N%N%

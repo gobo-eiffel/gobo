@@ -3,8 +3,6 @@ note
 	description:
 	"[
 		Regular expressions implemented with DFA engines.
-		See note clause in class LX_PATTERN_MATCHER
-		about Unicode vs. byte (8-bit character) modes.
 		See note clause in class LX_REGULAR_EXPRESSION
 		about pattern syntax.
 	]"
@@ -21,21 +19,16 @@ inherit
 
 	LX_REGULAR_EXPRESSION
 		undefine
-			recognizes,
-			unicode_recognizes
+			recognizes
 		redefine
-			matches,
-			unicode_matches
+			matches
 		end
 
 	LX_DFA_PATTERN_MATCHER
 		redefine
 			matches,
 			match_substring,
-			match_unbounded_substring,
-			unicode_matches,
-			unicode_match_substring,
-			unicode_match_unbounded_substring
+			match_unbounded_substring
 		end
 
 create
@@ -43,16 +36,13 @@ create
 	make,
 	compile,
 	compile_case_insensitive,
-	compile_case_sensitive,
-	compile_unicode,
-	compile_with_options
+	compile_case_sensitive
 
 feature -- Element change
 
-	compile_with_options (a_regexp: READABLE_STRING_GENERAL; i, u: BOOLEAN)
+	compile (a_regexp: READABLE_STRING_GENERAL; i: BOOLEAN)
 			-- Compile `a_regexp'.
 			-- Make the matching engine case-insensitive if `i' is set.
-			-- Enable Unicode mode if `u' is set.
 			-- Set `compiled' to True after successful compilation.
 		local
 			a_parser: LX_REGEXP_PARSER
@@ -68,11 +58,10 @@ feature -- Element change
 			is_case_insensitive := i
 			create an_error_handler.make_null
 			create a_description.make
-			a_description.set_equiv_classes_used (False)
+			a_description.set_equiv_classes_used (True)
 			a_description.set_meta_equiv_classes_used (False)
 			a_description.set_full_table (True)
 			a_description.set_case_insensitive (i)
-			a_description.set_unicode_mode (u)
 			create a_parser.make_from_description (a_description, an_error_handler)
 			nb := a_regexp.count
 			if nb > 0 and then a_regexp.item (1) = '^' then
@@ -124,19 +113,23 @@ feature -- Element change
 				a_full_tables := a_dfa
 				yy_nxt := a_full_tables.yy_nxt
 				yy_accept := a_full_tables.yy_accept
+				yy_ec := a_full_tables.yy_ec
 				yyNb_rows := a_full_tables.yyNb_rows
 				yyNull_equiv_class := a_full_tables.yyNull_equiv_class
+				yyMax_symbol_equiv_class := a_full_tables.yyMax_symbol_equiv_class
 			else
 				yy_nxt := Void
 				yy_accept := Void
+				yy_ec := Void
 				yyNb_rows := 0
 				yyNull_equiv_class := 0
+				yyMax_symbol_equiv_class := 0
 			end
 		end
 
 feature -- Status report
 
-	matches (a_string: STRING): BOOLEAN
+	matches (a_string: like subject): BOOLEAN
 			-- Does `a_string' include a token of the language
 			-- described by current regular expression?
 		local
@@ -205,78 +198,9 @@ feature -- Status report
 			end
 		end
 
-	unicode_matches (a_string: like subject): BOOLEAN
-			-- Does `a_string' include a token of the language
-			-- described by current regular expression?
-		local
-			i, nb: INTEGER
-			e: INTEGER
-		do
-			nb := a_string.count
-			set_subject (a_string)
-			subject_start := 1
-			subject_end := nb
-			match_count := 0
-			if has_caret then
-				if has_dollar then
-					if unicode_longest_end_position (a_string, 1) = nb then
-						Result := True
-						match_count := 1
-						matched_start := 1
-						matched_end := nb
-					end
-				else
-					e := unicode_smallest_end_position (a_string, 1)
-					if e /= -1 then
-						Result := True
-						match_count := 1
-						matched_start := 1
-						matched_end := e
-					end
-				end
-			else
-				if has_dollar then
-					from
-						i := 1
-					until
-						i > nb
-					loop
-						if unicode_longest_end_position (a_string, i) = nb then
-							Result := True
-							match_count := 1
-							matched_start := i
-							matched_end := nb
-								-- Jump out of the loop.
-							i := nb + 1
-						else
-							i := i + 1
-						end
-					end
-				else
-					from
-						i := 1
-					until
-						i > nb
-					loop
-						e := unicode_smallest_end_position (a_string, i)
-						if e /= -1 then
-							Result := True
-							match_count := 1
-							matched_start := i
-							matched_end := e
-								-- Jump out of the loop.
-							i := nb + 1
-						else
-							i := i + 1
-						end
-					end
-				end
-			end
-		end
-
 feature -- Matching
 
-	match_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -342,73 +266,7 @@ feature -- Matching
 			end
 		end
 
-	unicode_match_substring (a_subject: like subject; a_from, a_to: INTEGER)
-			-- Try to match the substring of `a_subject' between
-			-- positions `a_from' and `a_to' with the current pattern.
-			-- Make result available in `has_matched' and the various
-			-- `*_captured_*' features.
-		local
-			i, e: INTEGER
-		do
-			match_count := 0
-			set_subject (a_subject)
-			subject_start := a_from
-			subject_end := a_to
-			if has_caret then
-				e := unicode_longest_end_position (a_subject, a_from)
-				if has_dollar then
-					if e = a_to then
-						match_count := 1
-						matched_start := 1
-						matched_end := e
-					end
-				else
-					if e /= -1 then
-						match_count := 1
-						matched_start := 1
-						matched_end := e
-					end
-				end
-			else
-				if has_dollar then
-					from
-						i := a_from
-					until
-						i > a_to + 1
-					loop
-						e := unicode_longest_end_position (a_subject, i)
-						if e = a_to then
-							match_count := 1
-							matched_start := i
-							matched_end := e
-								-- Jump out of the loop.
-							i := a_to + 2
-						else
-							i := i + 1
-						end
-					end
-				else
-					from
-						i := a_from
-					until
-						i > a_to + 1
-					loop
-						e := unicode_longest_end_position (a_subject, i)
-						if e /= -1 then
-							match_count := 1
-							matched_start := i
-							matched_end := e
-								-- Jump out of the loop.
-							i := a_to + 2
-						else
-							i := i + 1
-						end
-					end
-				end
-			end
-		end
-
-	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_unbounded_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -424,25 +282,6 @@ feature -- Matching
 				subject_end := a_to
 			else
 				match_substring (a_subject, a_from, a_to)
-			end
-		end
-
-	unicode_match_unbounded_substring (a_subject: like subject; a_from, a_to: INTEGER)
-			-- Try to match the substring of `a_subject' between
-			-- positions `a_from' and `a_to' with the current pattern.
-			-- Make result available in `has_matched' and the various
-			-- `*_captured_*' features.
-			--
-			-- Note that if `a_from' is not 1, then ^ will not match at position `a_from'.
-			-- And if `a_to' is not `a_subject.count' then $ will not match at position `a_to'.
-		do
-			if (has_caret and a_from /= 1) or (has_dollar and a_to /= a_subject.count) then
-				match_count := 0
-				set_subject (a_subject)
-				subject_start := a_from
-				subject_end := a_to
-			else
-				unicode_match_substring (a_subject, a_from, a_to)
 			end
 		end
 

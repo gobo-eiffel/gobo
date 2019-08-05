@@ -4,10 +4,16 @@
 
 ### gelex
 
-* Fixed bug when computing equivalence classes. The generated arrays should be
-  slightly smaller.
-* Added support for Unicode. See *Lexical Library* below. Regular expressions
-  and embedded Eiffel code in the `.l` input file can contain Unicode characters.
+* Fixed bug when computing equivalence classes. The generated arrays should
+  be slightly smaller.
+* Added support for Unicode. Regular expressions and embedded Eiffel code in
+  the `.l` input file can contain Unicode characters. Unicode is supported 
+  natively by default, with no increase in size and execution time when the
+  regular expressions only contain 8-bit characters. Alternatively, with the
+  option `utf8` Unicode characters are internally converted to their UTF-8
+  byte sequence in the generated scanner. This can be useful when the file
+  to scan is already encoded with UTF-8, although the generated scanner will
+  be larger.
 
 ### Gobo Eiffel Kernel Library
 
@@ -19,12 +25,11 @@
 ### Gobo Eiffel Lexical Library
 
 * Added support for Unicode. Does not support properties yet (e.g. `\p{L}`).
-  Unicode strings are internally converted to UTF-8. Unicode characters can
-  be entered verbatim in the input file or input string (`STRING_32`) or with
-  their escaped form (e.g. `\u03B2` or `\u{03B2}` where `03B2` is the
+  Unicode is supported natively, there is no internal conversion to UTF-8.
+  Unicode characters can be entered verbatim in the string (`STRING_32`) or
+  with their escaped form (e.g. `\u03B2` or `\x{03B2}` where `03B2` is the
   hexadecimal code for Greek character beta). Invalid and surrogate Unicode
-  characters are internally handled as the single byte `\xFF`, which is not
-  valid in UTF-8, and hence produce a regular expression syntax error.  
+  characters produce a regular expression syntax error.   
 * Fixed bug in `LX_DFA_REGULAR_EXPRESSION` and `LX_DFA_WILDCARD` when the
   string to be matched contains a null character.
 * Added support for addition and subtraction of character classes.

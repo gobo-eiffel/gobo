@@ -47,8 +47,9 @@ feature {NONE} -- Initialization
 			create old_regexp_lines.make (Initial_old_positions)
 			create old_regexp_columns.make (Initial_old_positions)
 			create old_regexp_counts.make (Initial_old_positions)
-			create unions_of_concatenations_of_symbol_classes_by_unicode_character_class.make (Initial_max_character_classes)
+			create unions_of_concatenations_of_symbol_classes_by_utf8_character_class.make (Initial_max_character_classes)
 			create buffer.make (4)
+			maximum_used_symbol := {CHARACTER_8}.max_value
 		ensure
 			error_handler_set: error_handler = handler
 		end
@@ -71,8 +72,9 @@ feature {NONE} -- Initialization
 			create old_regexp_lines.make (Initial_old_positions)
 			create old_regexp_columns.make (Initial_old_positions)
 			create old_regexp_counts.make (Initial_old_positions)
-			create unions_of_concatenations_of_symbol_classes_by_unicode_character_class.make (Initial_max_character_classes)
+			create unions_of_concatenations_of_symbol_classes_by_utf8_character_class.make (Initial_max_character_classes)
 			create buffer.make (4)
+			maximum_used_symbol := {CHARACTER_8}.max_value
 		ensure
 			error_handler_set: error_handler = handler
 			description_set: description = a_description
@@ -92,6 +94,7 @@ feature -- Initialization
 			old_regexp_lines.wipe_out
 			old_regexp_columns.wipe_out
 			old_regexp_counts.wipe_out
+			maximum_used_symbol := {CHARACTER_8}.max_value
 		end
 
 feature -- Parsing
@@ -161,6 +164,10 @@ feature -- Access
 
 	options_overrider: detachable LX_DESCRIPTION_OVERRIDER
 			-- Overrider of options specified in the input file
+
+	maximum_used_symbol: INTEGER
+			-- Maximum symbol used so far
+			-- (We consider that the first 256 symbols are used.)
 
 feature -- Setting
 
@@ -305,7 +312,7 @@ feature {NONE} -- Measurement
 			-- Singleton: '.'
 		do
 			singleton_line := 0
-			if unicode_mode.item then
+			if utf8_mode.item then
 				singleton_count := One_or_more
 				singleton_column := One_or_more
 			else
@@ -356,7 +363,7 @@ feature {NONE} -- Measurement
 			a_symbol_class_not_void: a_symbol_class /= Void
 		do
 			if a_symbol_class.is_negated then
-				if unicode_mode.item then
+				if utf8_mode.item then
 					singleton_count := Zero_or_more
 				elseif a_symbol_class.is_256_full then
 					singleton_count := 0
@@ -365,7 +372,7 @@ feature {NONE} -- Measurement
 				end
 			elseif a_symbol_class.is_empty then
 				singleton_count := 0
-			elseif unicode_mode.item then
+			elseif utf8_mode.item then
 				singleton_count := One_or_more
 			else
 				singleton_count := 1
@@ -522,7 +529,7 @@ feature {NONE} -- Factory
 				if character_classes_by_name.found then
 					a_character_class := character_classes_by_name.found_item
 				else
-					create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
+					a_character_class := new_character_class
 					a_character_class.add_symbol (symbol)
 					character_classes.search (a_character_class)
 					if character_classes.found then
@@ -551,13 +558,10 @@ feature {NONE} -- Factory
 	new_symbol_class_nfa (symbols: LX_SYMBOL_CLASS): LX_NFA
 			-- New NFA made of two states and a symbol
 			-- class transition labeled `symbols'
-			-- (Register to be added to `description.equiv_classes' if needed.)
 		require
 			symbols_not_void: symbols /= Void
 		do
-			if description.equiv_classes_used then
-				equiv_character_classes.force (symbols)
-			end
+			equiv_character_classes.force (symbols)
 			create Result.make_symbol_class (symbols, in_trail_context)
 		ensure
 			nfa_not_void: Result /= Void
@@ -566,13 +570,7 @@ feature {NONE} -- Factory
 	new_character_class: LX_SYMBOL_CLASS
 			-- New empty character class
 		do
-			if description.unicode2_mode then
-				create Result.make_unicode (description.minimum_symbol, description.maximum_symbol)
-			elseif unicode_mode.item then
-				create Result.make_unicode (0, {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code)
-			else
-				create Result.make (description.minimum_symbol, description.maximum_symbol)
-			end
+			create Result.make (description.minimum_symbol, description.maximum_symbol)
 		ensure
 			character_class_not_void: Result /= Void
 		end
@@ -594,7 +592,7 @@ feature {NONE} -- Factory
 					if character_classes_by_name.found then
 						a_character_class := character_classes_by_name.found_item
 					else
-						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
+						a_character_class := new_character_class
 						a_character_class.add_symbol (a_char)
 						a_character_class.add_symbol (lower_char)
 						character_classes.search (a_character_class)
@@ -610,7 +608,7 @@ feature {NONE} -- Factory
 					if character_classes_by_name.found then
 						a_character_class := character_classes_by_name.found_item
 					else
-						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
+						a_character_class := new_character_class
 						a_character_class.add_symbol (a_char - Case_diff)
 						a_character_class.add_symbol (a_char)
 						character_classes.search (a_character_class)
@@ -626,6 +624,7 @@ feature {NONE} -- Factory
 			else
 				Result := new_symbol_nfa (a_char)
 			end
+			maximum_used_symbol := maximum_used_symbol.max (a_char)
 		ensure
 			nfa_not_void: Result /= Void
 		end
@@ -635,8 +634,8 @@ feature {NONE} -- Factory
 		require
 			a_character_class_not_void: a_character_class /= Void
 		do
-			if unicode_mode.item and a_character_class.is_unicode then
-				Result := new_nfa_from_unicode_character_class (a_character_class)
+			if utf8_mode.item then
+				Result := new_nfa_from_utf8_character_class (a_character_class)
 			else
 				Result := new_symbol_class_nfa (a_character_class)
 			end
@@ -644,14 +643,14 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-	new_nfa_from_unicode_character_class (a_unicode_character_class: LX_SYMBOL_CLASS): LX_NFA
+	new_nfa_from_utf8_character_class (a_unicode_character_class: LX_SYMBOL_CLASS): LX_NFA
 			-- New NFA corresponding to a Unicode character set whose characters
 			-- will be encoded in UTF-8
 		require
 			a_unicode_character_class_not_void: a_unicode_character_class /= Void
-			a_unicode_character_class_is_unicode: a_unicode_character_class.is_unicode
 		local
 			i, nb: INTEGER
+			l_symbol: INTEGER
 			l_symbol_class: detachable LX_SYMBOL_CLASS
 			l_array_2: detachable ARRAY [detachable LX_SYMBOL_CLASS]
 			l_array_n: detachable ARRAY [detachable DS_HASH_SET [INTEGER]]
@@ -661,16 +660,16 @@ feature {NONE} -- Factory
 			l_list: detachable DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]
 			l_concatenation: DS_ARRAYED_LIST [LX_SYMBOL_CLASS]
 		do
-			unions_of_concatenations_of_symbol_classes_by_unicode_character_class.search (a_unicode_character_class)
-			if unions_of_concatenations_of_symbol_classes_by_unicode_character_class.found then
-				l_list := unions_of_concatenations_of_symbol_classes_by_unicode_character_class.found_item
+			unions_of_concatenations_of_symbol_classes_by_utf8_character_class.search (a_unicode_character_class)
+			if unions_of_concatenations_of_symbol_classes_by_utf8_character_class.found then
+				l_list := unions_of_concatenations_of_symbol_classes_by_utf8_character_class.found_item
 			else
 				create l_list.make (20)
 					-- 0xxxxxxx
-				create l_symbol_class.make (description.minimum_symbol, description.maximum_symbol)
+				l_symbol_class := new_character_class
 				from
 					i := 0
-					nb := 0x7F
+					nb := (0x7F).min (a_unicode_character_class.upper)
 				until
 					i > nb
 				loop
@@ -688,7 +687,7 @@ feature {NONE} -- Factory
 					-- 110xxxxx 10xxxxxx
 				create l_array_2.make_filled (Void, 0, {CHARACTER_8}.max_value)
 				from
-					nb := 0x07FF
+					nb := (0x07FF).min (a_unicode_character_class.upper)
 				until
 					i > nb
 				loop
@@ -698,7 +697,7 @@ feature {NONE} -- Factory
 						{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, i)
 						l_symbol_class := l_array_2.item (buffer.item_code (1))
 						if l_symbol_class = Void then
-							create l_symbol_class.make (description.minimum_symbol, description.maximum_symbol)
+							l_symbol_class := new_character_class
 							l_array_2.put (l_symbol_class, buffer.item_code (1))
 						end
 						l_symbol_class.add_symbol (buffer.item_code (2))
@@ -707,21 +706,41 @@ feature {NONE} -- Factory
 				end
 				l_symbol_class := Void
 				if l_found then
-					append_concatenations_of_symbol_classes_from_unicode_utf8_2_byte_character_class (l_array_2, Void, Void, l_list)
+					append_concatenations_of_symbol_classes_from_utf8_2_byte_character_class (l_array_2, Void, Void, l_list)
+					l_found := False
 				end
-				l_found := False
 				l_array_2 := Void
 					-- 1110xxxx 10xxxxxx 10xxxxxx
 				create l_array_n.make_filled (Void, 0, {CHARACTER_8}.max_value)
 				from
-					nb := 0xFFFF
+					nb := ({UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_code - 1).min (a_unicode_character_class.upper)
 				until
 					i > nb
 				loop
-					if {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (i) and then a_unicode_character_class.has (i) then
+					if a_unicode_character_class.has (i) then
 						l_found := True
 						buffer.wipe_out
 						{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, i)
+						l_integer_set := l_array_n.item (buffer.item_code (1))
+						if l_integer_set = Void then
+							create l_integer_set.make ({CHARACTER_8}.max_value)
+							l_array_n.put (l_integer_set, buffer.item_code (1))
+						end
+						l_encoded_bytes := (buffer.item_code (3) |<< {PLATFORM}.character_8_bits) | buffer.item_code (2)
+						l_integer_set.force (l_encoded_bytes)
+					end
+					i := i + 1
+				end
+				from
+					nb := (0xFFFF - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count).min (a_unicode_character_class.upper)
+				until
+					i > nb
+				loop
+					if a_unicode_character_class.has (i) then
+						l_symbol := i + {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
+						l_found := True
+						buffer.wipe_out
+						{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, l_symbol)
 						l_integer_set := l_array_n.item (buffer.item_code (1))
 						if l_integer_set = Void then
 							create l_integer_set.make (description.maximum_symbol)
@@ -734,22 +753,23 @@ feature {NONE} -- Factory
 				end
 				l_integer_set := Void
 				if l_found then
-					append_concatenations_of_symbol_classes_from_unicode_utf8_n_byte_character_class (l_array_n, 3, Void, l_list)
+					append_concatenations_of_symbol_classes_from_utf8_n_byte_character_class (l_array_n, 3, Void, l_list)
+					l_found := False
 				end
-				l_found := False
 					-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
 				from
-					nb := 0x10FFFF
+					nb := (0x10FFFF - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count).min (a_unicode_character_class.upper)
 				until
 					i > nb
 				loop
 					if a_unicode_character_class.has (i) then
+						l_symbol := i + {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
 						l_found := True
 						buffer.wipe_out
-						{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, i)
+						{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, l_symbol)
 						l_integer_set := l_array_n.item (buffer.item_code (1))
 						if l_integer_set = Void then
-							create l_integer_set.make (description.maximum_symbol)
+							create l_integer_set.make ({CHARACTER_8}.max_value)
 							l_array_n.put (l_integer_set, buffer.item_code (1))
 						end
 						l_encoded_bytes := (((buffer.item_code (4) |<< {PLATFORM}.character_8_bits) | buffer.item_code (3)) |<< {PLATFORM}.character_8_bits) | buffer.item_code (2)
@@ -759,15 +779,15 @@ feature {NONE} -- Factory
 				end
 				l_integer_set := Void
 				if l_found then
-					append_concatenations_of_symbol_classes_from_unicode_utf8_n_byte_character_class (l_array_n, 4, Void, l_list)
+					append_concatenations_of_symbol_classes_from_utf8_n_byte_character_class (l_array_n, 4, Void, l_list)
 				end
 				if l_list.is_empty then
-					create l_symbol_class.make (description.minimum_symbol, description.maximum_symbol)
+					l_symbol_class := new_character_class
 					create l_concatenation.make (1)
 					l_concatenation.put_last (l_symbol_class)
 					l_list.force_last (l_concatenation)
 				end
-				unions_of_concatenations_of_symbol_classes_by_unicode_character_class.force_new (l_list, a_unicode_character_class)
+				unions_of_concatenations_of_symbol_classes_by_utf8_character_class.force_new (l_list, a_unicode_character_class)
 			end
 			Result := new_nfa_from_unions_of_concatenations_of_symbol_classes (l_list)
 		ensure
@@ -997,7 +1017,7 @@ feature {NONE} -- Implementation
 			a_nfa: LX_NFA
 		do
 			check precondition: attached rule as l_rule then
-				create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
+				a_character_class := new_character_class
 				a_character_class.set_negated (True)
 				a_nfa := new_symbol_class_nfa (a_character_class)
 				a_nfa.set_accepted_rule (l_rule)
@@ -1039,7 +1059,7 @@ feature {NONE} -- Implementation
 					if character_classes_by_name.found then
 						a_character_class := character_classes_by_name.found_item
 					else
-						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
+						a_character_class := new_character_class
 						a_character_class.add_symbol (a_char)
 						a_character_class.add_symbol (lower_char)
 						character_classes.search (a_character_class)
@@ -1057,7 +1077,7 @@ feature {NONE} -- Implementation
 					if character_classes_by_name.found then
 						a_character_class := character_classes_by_name.found_item
 					else
-						create a_character_class.make (description.minimum_symbol, description.maximum_symbol)
+						a_character_class := new_character_class
 						a_character_class.add_symbol (a_char - Case_diff)
 						a_character_class.add_symbol (a_char)
 						character_classes.search (a_character_class)
@@ -1075,6 +1095,7 @@ feature {NONE} -- Implementation
 			else
 				Result.build_concatenation (new_symbol_nfa (a_char))
 			end
+			maximum_used_symbol := maximum_used_symbol.max (a_char)
 		ensure
 			string_set: Result = a_string
 		end
@@ -1084,6 +1105,7 @@ feature {NONE} -- Implementation
 		require
 			a_character_class_not_void: a_character_class /= Void
 		do
+			Result := a_character_class
 			if description.case_insensitive then
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
@@ -1098,7 +1120,7 @@ feature {NONE} -- Implementation
 			else
 				a_character_class.add_symbol (a_char)
 			end
-			Result := a_character_class
+			maximum_used_symbol := maximum_used_symbol.max (a_char)
 		ensure
 			character_class_set: Result = a_character_class
 		end
@@ -1110,6 +1132,7 @@ feature {NONE} -- Implementation
 		local
 			a_char: INTEGER
 		do
+			Result := a_character_class
 			if char1 > char2 then
 				report_negative_range_in_character_class_error
 			elseif description.case_insensitive then
@@ -1140,12 +1163,16 @@ feature {NONE} -- Implementation
 					a_char := a_char + 1
 				end
 			end
-			Result := a_character_class
+			if char2 >= description.maximum_symbol then
+				maximum_used_symbol := maximum_used_symbol.max (char1 - 1)
+			else
+				maximum_used_symbol := maximum_used_symbol.max (char2)
+			end
 		ensure
 			character_class_set: Result = a_character_class
 		end
 
-	unions_of_concatenations_of_symbol_classes_by_unicode_character_class: DS_HASH_TABLE [like unions_of_concatenations_of_symbol_classes, LX_SYMBOL_CLASS]
+	unions_of_concatenations_of_symbol_classes_by_utf8_character_class: DS_HASH_TABLE [like unions_of_concatenations_of_symbol_classes, LX_SYMBOL_CLASS]
 				-- Unions (outer list) of the concatenations (inner lists) of symbol classes,
 				-- indexed by Unicode character classes from which they are the conversion
 
@@ -1155,7 +1182,7 @@ feature {NONE} -- Implementation
 				check anchor: False then end
 			end
 
-	append_concatenations_of_symbol_classes_from_unicode_utf8_2_byte_character_class (a_symbol_classes: ARRAY [detachable LX_SYMBOL_CLASS]; a_preceding_1, a_preceding_2: detachable LX_SYMBOL_CLASS; a_list: DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]])
+	append_concatenations_of_symbol_classes_from_utf8_2_byte_character_class (a_symbol_classes: ARRAY [detachable LX_SYMBOL_CLASS]; a_preceding_1, a_preceding_2: detachable LX_SYMBOL_CLASS; a_list: DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]])
 			-- Append to `a_list' the concatenations of symbol (bytes) classes corresponding
 			-- to a Unicode character set whose characters can be encoded with 2 bytes in UTF-8.
 			-- The first byte is the index in the array, the second byte is one of
@@ -1188,7 +1215,7 @@ feature {NONE} -- Implementation
 						l_done := False
 						if l_symbol_class_2 = Void or l_symbol_class_1 = Void then
 							l_symbol_class_2 := l_other_symbol_class
-							create l_symbol_class_1.make (description.minimum_symbol, description.maximum_symbol)
+							l_symbol_class_1 := new_character_class
 							l_symbol_class_1.add_symbol (i)
 							a_symbol_classes.put (Void, i)
 						elseif l_symbol_class_2.same_symbol_class (l_other_symbol_class) then
@@ -1218,7 +1245,7 @@ feature {NONE} -- Implementation
 			wiped_out: across a_symbol_classes as l_classes all l_classes.item = Void end
 		end
 
-	append_concatenations_of_symbol_classes_from_unicode_utf8_n_byte_character_class (a_symbol_classes: ARRAY [detachable DS_HASH_SET [INTEGER]]; a_byte_count: INTEGER; a_preceding: detachable LX_SYMBOL_CLASS; a_list: DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]])
+	append_concatenations_of_symbol_classes_from_utf8_n_byte_character_class (a_symbol_classes: ARRAY [detachable DS_HASH_SET [INTEGER]]; a_byte_count: INTEGER; a_preceding: detachable LX_SYMBOL_CLASS; a_list: DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]])
 			-- Append to `a_list' the concatenations of symbol (bytes) classes corresponding
 			-- to a Unicode character set whose characters can be encoded with `a_byte_count'
 			--  bytes in UTF-8.
@@ -1259,7 +1286,7 @@ feature {NONE} -- Implementation
 						l_done := False
 						if l_next_symbols_2 = Void or l_symbol_class_1 = Void then
 							l_next_symbols_2 := l_other_symbols
-							create l_symbol_class_1.make (description.minimum_symbol, description.maximum_symbol)
+							l_symbol_class_1 := new_character_class
 							l_symbol_class_1.add_symbol (i)
 							a_symbol_classes.put (Void, i)
 						elseif l_next_symbols_2.is_equal (l_other_symbols) then
@@ -1276,26 +1303,26 @@ feature {NONE} -- Implementation
 							l_byte_1 := l_bytes.item & 0xFF
 							l_symbol_class_2 := l_array_2.item (l_byte_1)
 							if l_symbol_class_2 = Void then
-								create l_symbol_class_2.make (description.minimum_symbol, description.maximum_symbol)
+								l_symbol_class_2 := new_character_class
 								l_array_2.put (l_symbol_class_2, l_byte_1)
 							end
 							l_symbol_class_2.add_symbol (l_bytes.item |>> {PLATFORM}.character_8_bits)
 						end
 						l_symbol_class_2 := Void
-						append_concatenations_of_symbol_classes_from_unicode_utf8_2_byte_character_class (l_array_2, a_preceding, l_symbol_class_1, a_list)
+						append_concatenations_of_symbol_classes_from_utf8_2_byte_character_class (l_array_2, a_preceding, l_symbol_class_1, a_list)
 					else
 						create l_array_n_minus_1.make_filled (Void, {CHARACTER_8}.min_value, {CHARACTER_8}.max_value)
 						across l_next_symbols_2 as l_bytes loop
 							l_byte_1 := l_bytes.item & 0xFF
 							l_next_symbols_n_minus_1 := l_array_n_minus_1.item (l_byte_1)
 							if l_next_symbols_n_minus_1 = Void then
-								create l_next_symbols_n_minus_1.make (description.maximum_symbol)
+								create l_next_symbols_n_minus_1.make ({CHARACTER_8}.max_value)
 								l_array_n_minus_1.put (l_next_symbols_n_minus_1, l_byte_1)
 							end
 							l_next_symbols_n_minus_1.force (l_bytes.item |>> {PLATFORM}.character_8_bits)
 						end
 						l_next_symbols_n_minus_1 := Void
-						append_concatenations_of_symbol_classes_from_unicode_utf8_n_byte_character_class (l_array_n_minus_1, a_byte_count - 1, l_symbol_class_1, a_list)
+						append_concatenations_of_symbol_classes_from_utf8_n_byte_character_class (l_array_n_minus_1, a_byte_count - 1, l_symbol_class_1, a_list)
 					end
 					l_symbol_class_1 := Void
 					l_next_symbols_2 := Void
@@ -1349,8 +1376,8 @@ feature {NONE} -- Implementation
 			l_character_classes_by_name: like character_classes_by_name
 		do
 			dot_string := "."
-			if unicode_mode.item then
-				l_character_classes_by_name := unicode_character_classes_by_name
+			if utf8_mode.item then
+				l_character_classes_by_name := utf8_character_classes_by_name
 			else
 				l_character_classes_by_name := character_classes_by_name
 			end
@@ -1392,6 +1419,27 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			pending_rules.wipe_out
+		end
+
+	set_maximum_symbol_equivalence_class
+			-- Take into account the fact that all symbols greater than
+			-- `maximum_used_symbol' will have the same equivalence class.
+			-- Set `description.maximum_symbol' to the next valid character
+			-- after `maximum_used_symbol' if any.
+			-- Update the character classes accordingly.
+		local
+			l_max: INTEGER
+			l_cursor: DS_HASH_SET_CURSOR [LX_SYMBOL_CLASS]
+		do
+			l_max := maximum_used_symbol + 1
+			if l_max < description.maximum_symbol then
+				description.set_maximum_symbol (l_max)
+				l_cursor := equiv_character_classes.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_cursor.item.set_maximum_symbol_equivalence_class (l_max)
+					l_cursor.forth
+				end
+			end
 		end
 
 	build_equiv_classes
@@ -1655,12 +1703,13 @@ invariant
 	old_regexp_lines_not_void: old_regexp_lines /= Void
 	old_regexp_columns_not_void: old_regexp_columns /= Void
 	old_regexp_counts_not_void: old_regexp_counts /= Void
-	unions_of_concatenations_of_symbol_classes_by_unicode_character_class_not_void: unions_of_concatenations_of_symbol_classes_by_unicode_character_class /= Void
-	no_void_union_of_concatenations_of_symbol_classes_by_unicode_character_class: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.has_void_item
-	no_empty_union_of_concatenations_of_symbol_classes_by_unicode_character_class: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.is_empty)
-	no_void_concanetation: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.has_void)
-	no_empty_concatenation: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.is_empty))
-	no_void_symbol_class: not unions_of_concatenations_of_symbol_classes_by_unicode_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.has_void))
+	unions_of_concatenations_of_symbol_classes_by_utf8_character_class_not_void: unions_of_concatenations_of_symbol_classes_by_utf8_character_class /= Void
+	no_void_union_of_concatenations_of_symbol_classes_by_utf8_character_class: not unions_of_concatenations_of_symbol_classes_by_utf8_character_class.has_void_item
+	no_empty_union_of_concatenations_of_symbol_classes_by_utf8_character_class: not unions_of_concatenations_of_symbol_classes_by_utf8_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.is_empty)
+	no_void_concanetation: not unions_of_concatenations_of_symbol_classes_by_utf8_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.has_void)
+	no_empty_concatenation: not unions_of_concatenations_of_symbol_classes_by_utf8_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.is_empty))
+	no_void_symbol_class: not unions_of_concatenations_of_symbol_classes_by_utf8_character_class.there_exists (agent {DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]}.there_exists (agent {DS_ARRAYED_LIST [LX_SYMBOL_CLASS]}.has_void))
 	buffer_not_void: buffer /= Void
+	maximum_used_symbol_large_enough: maximum_used_symbol >= {CHARACTER_8}.max_value
 
 end

@@ -40,7 +40,7 @@ create
 %x SCOND ACTION_TEXT DEFINITION FIRSTCCL CCL OUTFILE
 %x REGEXP EIFFEL_BLOCK2
 
-%option unicode ecs meta-ecs case-insensitive nodefault
+%option utf8 ecs meta-ecs case-insensitive nodefault
 %option outfile="lx_lex_scanner.e"
 
 C					"--".*
@@ -151,11 +151,8 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	nopre-eof-action	description.set_pre_eof_action_used (False)
 	post-eof-action		description.set_post_eof_action_used (True)
 	nopost-eof-action	description.set_post_eof_action_used (False)
-	unicode		{
-					description.set_unicode_mode (True)
-				}
-	unicode2		{
-					description.set_unicode2_mode (True)
+	utf8		{
+					description.set_utf8_mode (True)
 				}
 	warn		{
 					description.set_no_warning (False)

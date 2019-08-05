@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 		require
 			a_min_large_enough: a_min >= 0
 			a_max_large_enough: a_max >= a_min
+			valid_max: {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_max)
 		do
 			make (a_min, a_max)
 			is_unicode := True
@@ -604,7 +605,6 @@ feature -- Convertion
 			l_old_set: NATURAL_64
 			l_old_added: BOOLEAN
 			l_chunk: like chunk
-			l_done: BOOLEAN
 			l_new_chunk_upper: INTEGER
 		do
 			l_old_unicode := is_unicode
@@ -677,45 +677,28 @@ feature -- Convertion
 							l_symbol > nb
 						loop
 							if i > 64 then
-								from
-									l_done := False
-								until
-									l_symbol > nb or l_done
-								loop
-									l_done := True
+								l_index_in_chunk := l_index_in_chunk + 1
+								if l_chunk [l_index_in_chunk] = 0 then
+									l_symbol := l_symbol + 64
+								elseif l_chunk [l_index_in_chunk] = 0xFFFFFFFF then
+									l_chunk [l_index_in_chunk] := 0
 									from
-										l_index_in_chunk := l_index_in_chunk + 1
+										i := 1
 									until
-										l_symbol > nb or else l_chunk [l_index_in_chunk] /= 0
+										l_symbol > nb or i > 64
 									loop
-										l_index_in_chunk := l_index_in_chunk + 1
-										l_symbol := l_symbol + 64
-										l_done := False
-									end
-									if l_symbol <= nb and then l_chunk [l_index_in_chunk] = 0xFFFFFFFF then
-										l_chunk [l_index_in_chunk] := 0
-										from
-											i := 1
-										until
-											l_symbol > nb or i > 64
-										loop
-											if classes.is_representative (l_symbol) then
-												add_symbol (classes.equivalence_class (l_symbol))
-											end
-											l_symbol := l_symbol + 1
-											i := i + 1
+										if classes.is_representative (l_symbol) then
+											add_symbol (classes.equivalence_class (l_symbol))
 										end
-										l_index_in_chunk := l_index_in_chunk + 1
-										l_done := False
+										l_symbol := l_symbol + 1
+										i := i + 1
 									end
-									i := 1
-								end
-								if l_symbol <= nb then
+								else
 									l_old_set := l_chunk [l_index_in_chunk]
 									l_chunk [l_index_in_chunk] := 0
+									i := 1
 								end
-							end
-							if l_symbol <= nb then
+							else
 								l_old_added := l_old_set & masks.item (l_symbol \\ 64) /= 0
 								if l_old_added and then classes.is_representative (l_symbol) then
 									add_symbol (classes.equivalence_class (l_symbol))
@@ -734,7 +717,7 @@ feature -- Convertion
 				end
 					-- Remove unused chunks.
 				from
-					nb := l_other_sets.count - 1
+					nb := l_other_sets.upper
 				until
 					l_chunk_index > nb
 				loop
@@ -742,6 +725,52 @@ feature -- Convertion
 					l_chunk_index := l_chunk_index + 1
 				end
 			end
+		end
+
+	set_maximum_symbol_equivalence_class (a_max: INTEGER)
+			-- Take into account the fact that all symbols greater than
+			-- `a_max' will have the same equivalence class as `a_max'.
+		require
+			a_max_large_enough: a_max >= lower
+			valid_max: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_max)
+			a_max_in_other_sets: a_max >= 256
+--			equivalence_class: a_max <= upper implies for all valid symbol s >= a_max, added (s) = added (a_max)
+		local
+			l_chunk_index: INTEGER
+			l_index_in_chunk: INTEGER
+			l_set: NATURAL_64
+			i: INTEGER
+			l_chunk: like chunk
+		do
+			if a_max < upper then
+				if attached other_sets as l_other_sets then
+					l_chunk_index := chunk_index (a_max)
+					if attached l_other_sets.item (l_chunk_index) as l_current_chunk then
+						l_chunk := l_current_chunk
+						if l_chunk.count = 0 then
+								-- It is considered as full of ones.
+							create l_chunk.make_filled (1, chunk_size)
+							l_other_sets.put (l_chunk, l_chunk_index)
+						end
+						l_index_in_chunk := index_in_chunk (a_max)
+						l_set := l_chunk.item (l_index_in_chunk)
+						from
+							i := a_max \\ 64 + 1
+						until
+							i > 63
+						loop
+							l_set := l_set & masks.item (i).bit_not
+							i := i + 1
+						end
+						l_chunk.put (l_set, l_index_in_chunk)
+						l_chunk.fill_with (0, l_index_in_chunk + 1, chunk_size - 1)
+					end
+					l_other_sets.fill_with (Void, l_chunk_index + 1, l_other_sets.upper)
+				end
+				upper := a_max
+			end
+		ensure
+			new_upper: upper = (old upper).min (a_max)
 		end
 
 feature -- Duplication
@@ -851,7 +880,7 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 				Result := (upper - 256) // symbols_per_chunk + 1
 			end
 		ensure
-			chunk_count_not_negative: Result > 0
+			chunk_count_not_negative: Result >= 0
 		end
 
 	chunk (a_symbol: INTEGER): detachable SPECIAL [NATURAL_64]
@@ -861,19 +890,9 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 			a_symbol_valid: a_symbol >= lower and a_symbol <= upper
 			valid_unicode: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_symbol)
 			a_symbol_in_other_sets: a_symbol >= 256
-		local
-			l_chunk_index: INTEGER
 		do
 			if attached other_sets as l_other_sets then
-				if is_unicode and then a_symbol > 57343 then
-						-- Last surrogate: 57343
-						-- First surrogate: 55296
-						-- Number of chunks before the first surrogate: (55295 - 256) // 64 // chunk_size + 1 = 5
-					l_chunk_index := (a_symbol - 57344) // symbols_per_chunk + 5
-				else
-					l_chunk_index := (a_symbol - 256) // symbols_per_chunk
-				end
-				Result := l_other_sets.item (l_chunk_index)
+				Result := l_other_sets.item (chunk_index (a_symbol))
 			end
 		end
 
@@ -889,14 +908,7 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 			l_chunk: like chunk
 			l_other_sets: like other_sets
 		do
-			if is_unicode and then a_symbol > 57343 then
-					-- Last surrogate: 57343
-					-- First surrogate: 55296
-					-- Number of chunks before the first surrogate: (55295 - 256) // 64 // chunk_size + 1 = 5
-				l_chunk_index := (a_symbol - 57344) // symbols_per_chunk + 5
-			else
-				l_chunk_index := (a_symbol - 256) // symbols_per_chunk
-			end
+			l_chunk_index := chunk_index (a_symbol)
 			l_other_sets := attached_other_sets
 			l_chunk := l_other_sets.item (l_chunk_index)
 			if l_chunk = Void then
@@ -907,6 +919,23 @@ feature {LX_SYMBOL_CLASS} -- Implementation
 		ensure
 			attached_chunk_not_void: Result /= Void
 			definition: Result = chunk (a_symbol)
+		end
+
+	chunk_index (a_symbol: INTEGER): INTEGER
+			-- Index of chunk in `other_sets' associated with `a_symbol'
+		require
+			a_symbol_valid: a_symbol >= lower and a_symbol <= upper
+			valid_unicode: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_symbol)
+			a_symbol_in_other_sets: a_symbol >= 256
+		do
+			if is_unicode and then a_symbol > 57343 then
+					-- Last surrogate: 57343
+					-- First surrogate: 55296
+					-- Number of chunks before the first surrogate: (55295 - 256) // 64 // chunk_size + 1 = 5
+				Result := (a_symbol - 57344) // symbols_per_chunk + 5
+			else
+				Result := (a_symbol - 256) // symbols_per_chunk
+			end
 		end
 
 	index_in_chunk (a_symbol: INTEGER): INTEGER
@@ -945,8 +974,9 @@ invariant
 
 	lower_large_enough: lower >= 0
 	upper_large_enough: upper >= lower
-	chunk_count: (not is_unicode or upper <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code) implies (not attached other_sets as l_other_sets or else l_other_sets.count = ((upper - 256) // (chunk_size * 64) + 1))
-	chunk_count_unicode: (is_unicode and upper > {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code) implies (not attached other_sets as l_other_sets or else l_other_sets.count = ((upper - ({UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code - {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_code + 1) - 256) // (chunk_size * 64) + 1))
+	valid_upper: is_unicode implies {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (upper)
+	chunk_count: (not is_unicode or upper <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code) implies (not attached other_sets as l_other_sets or else l_other_sets.count >= ((upper - 256) // (chunk_size * 64) + 1))
+	chunk_count_unicode: (is_unicode and upper > {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code) implies (not attached other_sets as l_other_sets or else l_other_sets.count >= ((upper - ({UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code - {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_code + 1) - 256) // (chunk_size * 64) + 1))
 	chunk_size: attached other_sets as l_other_sets implies across l_other_sets as l_chunks all attached l_chunks.item as l_chunk and then l_chunk.count /= 0 implies l_chunk.count = chunk_size end
 
 end

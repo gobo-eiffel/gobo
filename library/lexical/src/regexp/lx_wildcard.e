@@ -1,11 +1,8 @@
 note
 
 	description:
-	"[
-		Wildcards used in filename pattern matching.
-		See note clause in class LX_PATTERN_MATCHER
-		about Unicode vs. byte (8-bit character) modes.
-	]"
+
+		"Wildcards used in filename pattern matching"
 
 	remark: "[
   		Pattern syntax:

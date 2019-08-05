@@ -57,6 +57,7 @@ create
 
 Wildcard: Init_pattern Pattern
 		{
+			set_maximum_symbol_equivalence_class
 			if description.equiv_classes_used then
 				build_equiv_classes
 			end
@@ -117,7 +118,7 @@ Series: Singleton
 
 Singleton: CHAR
 		{
-			if unicode_mode.item and $1 > {CHARACTER_8}.max_ascii_value then
+			if utf8_mode.item and $1 > {CHARACTER_8}.max_ascii_value then
 				$$ := new_epsilon_nfa
 				buffer.wipe_out
 				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $1)
@@ -271,7 +272,7 @@ String: -- Empty
 		}
 	| String CHAR
 		{
-			if unicode_mode.item and $2 > {CHARACTER_8}.max_ascii_value then
+			if utf8_mode.item and $2 > {CHARACTER_8}.max_ascii_value then
 				$$ := $1
 				buffer.wipe_out
 				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $2)
@@ -307,8 +308,8 @@ feature {NONE} -- Implementation
 			l_character_classes_by_name: like character_classes_by_name
 		do
 			question_string := "?"
-			if unicode_mode.item then
-				l_character_classes_by_name := unicode_character_classes_by_name
+			if utf8_mode.item then
+				l_character_classes_by_name := utf8_character_classes_by_name
 			else
 				l_character_classes_by_name := character_classes_by_name
 			end

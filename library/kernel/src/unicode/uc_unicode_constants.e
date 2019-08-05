@@ -68,6 +68,12 @@ feature -- Access
 --			definition: Result = 57343
 --		end
 
+	unicode_surrogate_count: INTEGER = 2048
+			-- Number of unicode surrogate code-points
+--		ensure
+--			definition: Result = maximum_unicode_surrogate_code - minimum_unicode_surrogate_code + 1
+--		end
+
 	maximum_bmp_character_code: INTEGER = 65535
 			-- Largest code for unicode characters in Basic Multi-lingual Plane (FFFF);
 --		ensure

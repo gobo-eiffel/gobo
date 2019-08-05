@@ -90,8 +90,8 @@ feature -- Element change
 			precursor (symbol_class)
 			symbol_table := symbols
 			from
-				i := lower
-				nb := upper
+				i := symbol_class.lower
+				nb := symbol_class.upper
 			until
 				i > nb
 			loop

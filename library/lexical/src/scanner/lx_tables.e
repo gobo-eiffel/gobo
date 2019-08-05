@@ -60,6 +60,10 @@ feature -- Constants
 	yyNull_equiv_class: INTEGER
 			-- Equivalence code for NULL character
 
+	yyMax_symbol_equiv_class: INTEGER
+			-- All symbols greater than this symbol will have
+			-- the same equivalence class as this symbol
+
 	yyLine_used: BOOLEAN
 			-- Are line and column numbers used?
 

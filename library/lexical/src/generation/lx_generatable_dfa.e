@@ -68,6 +68,7 @@ feature {NONE} -- Initialization
 			build_eof_rules (a_description.eof_rules, 0, yy_start_conditions.count - 1)
 			min := a_description.minimum_symbol
 			max := a_description.maximum_symbol
+			yyMax_symbol_equiv_class := max
 			equiv_classes := a_description.equiv_classes
 			if equiv_classes /= Void and then equiv_classes.built then
 					-- 	. end-of-buffer           -> 0

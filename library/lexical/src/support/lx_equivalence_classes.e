@@ -12,13 +12,6 @@ note
 
 class LX_EQUIVALENCE_CLASSES
 
-inherit
-
-	ANY
-
-	KL_IMPORTED_ARRAY_ROUTINES
-		export {NONE} all end
-
 create
 
 	make
@@ -418,7 +411,7 @@ feature {NONE} -- Implementation
 invariant
 
 	storage_not_void: storage /= Void
-	no_void_cell: not ANY_ARRAY_.has_void (storage)
+	no_void_cell: not {KL_ARRAY_ROUTINES [DS_BILINKABLE [INTEGER]]}.has_void (storage)
 	valid_bounds: lower <= upper
 	new_upper_small_enough: new_upper <= upper
 

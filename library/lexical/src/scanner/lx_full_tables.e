@@ -5,7 +5,7 @@ note
 		"Full tables for scanners"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,6 +47,7 @@ feature -- Conversion
 			yy_eof_rules := other.yy_eof_rules
 			yy_start_conditions := other.yy_start_conditions
 			yyNull_equiv_class := other.yyNull_equiv_class
+			yyMax_symbol_equiv_class := other.yyMax_symbol_equiv_class
 			yyNb_rules := other.yyNb_rules
 			yyEnd_of_buffer := other.yyEnd_of_buffer
 			yyNb_rows := other.yyNb_rows

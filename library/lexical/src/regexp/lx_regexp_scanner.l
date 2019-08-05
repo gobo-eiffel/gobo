@@ -38,7 +38,7 @@ create
 
 %x NUM QUOTE FIRSTCCL CCL REGEXP
 
-%option unicode ecs meta-ecs case-insensitive nodefault outfile="lx_regexp_scanner.e"
+%option utf8 ecs meta-ecs case-insensitive nodefault outfile="lx_regexp_scanner.e"
 
 WS					[ \t\r]+
 NL					\n

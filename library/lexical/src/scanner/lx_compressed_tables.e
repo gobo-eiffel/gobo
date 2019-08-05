@@ -5,7 +5,7 @@ note
 		"Compressed tables for scanners"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,6 +83,7 @@ feature -- Conversion
 			yyJam_base := other.yyJam_base
 			yyTemplate_mark := other.yyTemplate_mark
 			yyNull_equiv_class := other.yyNull_equiv_class
+			yyMax_symbol_equiv_class := other.yyMax_symbol_equiv_class
 			yyReject_used := other.yyReject_used
 			yyVariable_trail_context := other.yyVariable_trail_context
 			yyNb_rules := other.yyNb_rules

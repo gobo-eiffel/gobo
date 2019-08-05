@@ -60,6 +60,7 @@ create
 
 Regexp: Init_pattern Pattern
 		{
+			set_maximum_symbol_equivalence_class
 			if description.equiv_classes_used then
 				build_equiv_classes
 			end
@@ -254,7 +255,7 @@ Singleton: Singleton_no_CCl
 
 Singleton_no_CCl: CHAR
 		{
-			if unicode_mode.item and $1 > {CHARACTER_8}.max_ascii_value then
+			if utf8_mode.item and $1 > {CHARACTER_8}.max_ascii_value then
 				$$ := new_epsilon_nfa
 				process_singleton_empty_string
 				buffer.wipe_out
@@ -324,7 +325,9 @@ Singleton_no_CCl: CHAR
 			singleton_count := regexp_count
 			singleton_line := regexp_line
 			singleton_column := regexp_column
-			unicode_mode.remove
+			if description.utf8_mode then
+				utf8_mode.remove
+			end
 		}
 	| Start_byte_mode Regular_expression ')'
 		{
@@ -332,7 +335,9 @@ Singleton_no_CCl: CHAR
 			singleton_count := regexp_count
 			singleton_line := regexp_line
 			singleton_column := regexp_column
-			unicode_mode.remove
+			if description.utf8_mode then
+				utf8_mode.remove
+			end
 		}
 	;
 
@@ -345,13 +350,17 @@ Singleton_CCl: CCl
 
 Start_unicode_mode: UNICODE_MODE_START
 		{
-			unicode_mode.force (True)
+			if description.utf8_mode then
+				utf8_mode.force (True)
+			end
 		}
 	;
 
 Start_byte_mode: BYTE_MODE_START
 		{
-			unicode_mode.force (False)
+			if description.utf8_mode then
+				utf8_mode.force (False)
+			end
 		}
 	;
 
@@ -453,7 +462,7 @@ String: -- Empty
 		}
 	| String CHAR
 		{
-			if unicode_mode.item and $2 > {CHARACTER_8}.max_ascii_value then
+			if utf8_mode.item and $2 > {CHARACTER_8}.max_ascii_value then
 				$$ := $1
 				buffer.wipe_out
 				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, $2)

@@ -38,7 +38,7 @@ create
 
 %x QUOTE FIRSTCCL CCL
 
-%option unicode ecs meta-ecs case-insensitive nodefault outfile="lx_wildcard_scanner.e"
+%option utf8 ecs meta-ecs case-insensitive nodefault outfile="lx_wildcard_scanner.e"
 
 WS					[ \t\r]+
 NL					\n

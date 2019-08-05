@@ -3,8 +3,6 @@ note
 	description:
 	"[
 		Wildcards implemented with DFA engines.
-		See note clause in class LX_PATTERN_MATCHER
-		about Unicode vs. byte (8-bit character) modes.
 		See note clause in class LX_WILDCARD about
 		pattern syntax.
 	]"
@@ -22,9 +20,7 @@ inherit
 	LX_WILDCARD
 		undefine
 			matches,
-			recognizes,
-			unicode_matches,
-			unicode_recognizes
+			recognizes
 		end
 
 	LX_DFA_PATTERN_MATCHER
@@ -34,16 +30,13 @@ create
 	make,
 	compile,
 	compile_case_insensitive,
-	compile_case_sensitive,
-	compile_unicode,
-	compile_with_options
+	compile_case_sensitive
 
 feature -- Element change
 
-	compile_with_options (a_pattern: READABLE_STRING_GENERAL; i, u: BOOLEAN)
+	compile (a_pattern: READABLE_STRING_GENERAL; i: BOOLEAN)
 			-- Compile `a_pattern'.
 			-- Make the matching engine case-insensitive if `i' is set.
-			-- Enable Unicode mode if `u' is set.
 			-- Set `compiled' to True after successful compilation.
 		local
 			a_parser: LX_WILDCARD_PARSER
@@ -57,7 +50,7 @@ feature -- Element change
 			is_case_insensitive := i
 			create an_error_handler.make_null
 			create a_description.make
-			a_description.set_equiv_classes_used (False)
+			a_description.set_equiv_classes_used (True)
 			a_description.set_meta_equiv_classes_used (False)
 			a_description.set_full_table (True)
 			a_description.set_case_insensitive (i)
@@ -68,13 +61,17 @@ feature -- Element change
 				a_full_tables := a_dfa
 				yy_nxt := a_full_tables.yy_nxt
 				yy_accept := a_full_tables.yy_accept
+				yy_ec := a_full_tables.yy_ec
 				yyNb_rows := a_full_tables.yyNb_rows
 				yyNull_equiv_class := a_full_tables.yyNull_equiv_class
+				yyMax_symbol_equiv_class := a_full_tables.yyMax_symbol_equiv_class
 			else
 				yy_nxt := Void
 				yy_accept := Void
+				yy_ec := Void
 				yyNb_rows := 0
 				yyNull_equiv_class := 0
+				yyMax_symbol_equiv_class := 0
 			end
 		end
 

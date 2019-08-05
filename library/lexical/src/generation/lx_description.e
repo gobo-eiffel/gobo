@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		do
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
-			maximum_symbol := {CHARACTER_8}.max_value
+			maximum_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
 			array_size := default_array_size
 			line_pragma := True
 			inspect_used := True
@@ -40,7 +40,7 @@ feature -- Initialization
 		do
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
-			maximum_symbol := {CHARACTER_8}.max_value
+			maximum_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
 			array_size := default_array_size
 			rules.wipe_out
 			eof_rules.wipe_out
@@ -95,16 +95,15 @@ feature -- User-defined options
 
 	maximum_symbol: INTEGER
 			-- Maximum symbol handled by the generated scanners.
-			-- In byte mode, this corresponds to the maximum character
-			-- in the character set (e.g. ASCII: 127, ISO-8859-1: 255).
-			-- In Unicode mode, this corresponds to the bytes used
-			-- to encode characters in UTF-8 (i.e. 255).
+			-- (Note that when dealing with Unicode chjaracters,
+			-- symbols for characters greater than the maximum
+			-- surrogate code are shifted to the left by the number
+			-- of surrogates.)
 
-	unicode_mode: BOOLEAN
-			-- Should the scanner use Unicode mode by default?
-			-- (Can be overridden by "(b:regrexp)".)
-
-	unicode2_mode: BOOLEAN
+	utf8_mode: BOOLEAN
+			-- Should characters be handled as their sequence of UTF-8 byes?
+			-- (One can then use "(b:regrexp)" and "(u:regrexp)" to
+			-- switch between byte mode and UTF-8 mode.)
 
 	debug_mode: BOOLEAN
 			-- Should a debug-mode scanner be generated?
@@ -221,33 +220,21 @@ feature -- Option setting
 			-- Set `maximum_symbol' to `nb'.
 		require
 			nb_not_negative: nb > 0
-			nb_small_enough: nb <= {CHARACTER_8}.max_value
-			unicode: unicode_mode implies nb >= {CHARACTER_8}.max_value
+			unicode: utf8_mode implies nb >= {CHARACTER_8}.max_value
 		do
 			maximum_symbol := nb
 		ensure
 			maximum_symbol_set: maximum_symbol = nb
 		end
 
-	set_unicode_mode (b: BOOLEAN)
-			-- Set `unicode_mode' to `b'.
+	set_utf8_mode (b: BOOLEAN)
+			-- Set `utf8_mode' to `b'.
 		require
 			symbol_count_large_enough: b implies maximum_symbol >= {CHARACTER_8}.max_value
 		do
-			unicode_mode := b
+			utf8_mode := b
 		ensure
-			unicode_mode_set: unicode_mode = b
-		end
-
-	set_unicode2_mode (b: BOOLEAN)
-			-- Set `unicode2_mode' to `b'.
-		do
-			unicode2_mode := b
-			if b then
-				maximum_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code
-			end
-		ensure
-			unicode2_mode_set: unicode2_mode = b
+			utf8_mode_set: utf8_mode = b
 		end
 
 	set_debug_mode (b: BOOLEAN)
@@ -515,8 +502,7 @@ invariant
 	no_void_eof_rule: not eof_rules.has_void
 	start_conditions_not_void: start_conditions /= Void
 	maximum_symbol_positive: maximum_symbol > 0
-	maximum_symbol_small_enough: maximum_symbol <= {CHARACTER_8}.max_value
-	unicode: unicode_mode implies maximum_symbol >= {CHARACTER_8}.max_value
+	utf8_mode: utf8_mode implies maximum_symbol >= {CHARACTER_8}.max_value
 	eiffel_header_not_void: eiffel_header /= Void
 	no_void_eiffel_header: not eiffel_header.has_void
 	array_size_positive: array_size >= 0

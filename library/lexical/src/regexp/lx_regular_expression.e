@@ -1,11 +1,8 @@
 note
 
 	description:
-	"[
-		Regular expressions.
-		See note clause in class LX_PATTERN_MATCHER
-		about Unicode vs. byte (8-bit character) modes.
-	]"
+
+		"Regular expressions"
 
 	remark: "[
 		Pattern syntax:
@@ -38,8 +35,6 @@ note
 		r{4}       exactly four r's.
 		"[xyz]\"foo"     the literal string: '[xyz]"foo'.
 		(r)        match an r; parentheses are used to override precedence.
-		(u:r)      match an r in Unicode mode.
-		(b:r)      match an r in byte (8-bit character) mode.
 		rs         the regular expression r followed by the regular
 		           expression s; called concatenation.
 		--------------------------------------------------------------------
@@ -81,14 +76,7 @@ inherit
 
 	RX_REGULAR_EXPRESSION
 		rename
-			compile as compile_case_sensitive,
-			matches as unicode_matches,
-			recognizes as unicode_recognizes,
-			match as unicode_match,
-			match_substring as unicode_match_substring,
-			match_unbounded_substring as unicode_match_unbounded_substring,
-			match_strings as unicode_match_strings,
-			recognize_strings as unicode_recognize_strings
+			compile as compile_case_sensitive
 		end
 
 	LX_PATTERN_MATCHER

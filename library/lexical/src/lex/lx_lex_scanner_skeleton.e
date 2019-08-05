@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 			create character_classes_by_name.make_map (Initial_max_character_classes)
 			character_classes_by_name.set_key_equality_tester (string_equality_tester)
 			create equiv_character_classes.make (Initial_max_character_classes)
-			create unicode_character_classes_by_name.make_map (Initial_max_character_classes)
-			unicode_character_classes_by_name.set_key_equality_tester (string_equality_tester)
-			create unicode_mode.make (Initial_max_unicode_mode)
-			unicode_mode.force (description.unicode_mode)
+			create utf8_character_classes_by_name.make_map (Initial_max_character_classes)
+			utf8_character_classes_by_name.set_key_equality_tester (string_equality_tester)
+			create utf8_mode.make (Initial_max_utf8_mode)
+			utf8_mode.force (description.utf8_mode)
 			successful := True
 			line_nb := 1
 		ensure
@@ -75,10 +75,10 @@ feature {NONE} -- Initialization
 			create character_classes_by_name.make_map (Initial_max_character_classes)
 			character_classes_by_name.set_key_equality_tester (string_equality_tester)
 			create equiv_character_classes.make (Initial_max_character_classes)
-			create unicode_character_classes_by_name.make_map (Initial_max_character_classes)
-			unicode_character_classes_by_name.set_key_equality_tester (string_equality_tester)
-			create unicode_mode.make (Initial_max_unicode_mode)
-			unicode_mode.force (a_description.unicode_mode)
+			create utf8_character_classes_by_name.make_map (Initial_max_character_classes)
+			utf8_character_classes_by_name.set_key_equality_tester (string_equality_tester)
+			create utf8_mode.make (Initial_max_utf8_mode)
+			utf8_mode.force (a_description.utf8_mode)
 			successful := True
 			line_nb := 1
 		ensure
@@ -99,9 +99,9 @@ feature -- Initialization
 			character_classes.wipe_out
 			character_classes_by_name.wipe_out
 			equiv_character_classes.wipe_out
-			unicode_character_classes_by_name.wipe_out
-			unicode_mode.wipe_out
-			unicode_mode.force (description.unicode_mode)
+			utf8_character_classes_by_name.wipe_out
+			utf8_mode.wipe_out
+			utf8_mode.force (description.utf8_mode)
 			successful := True
 			line_nb := 1
 			nb_open_brackets := 0
@@ -150,20 +150,21 @@ feature {NONE} -- Access
 	equiv_character_classes: DS_HASH_SET [LX_SYMBOL_CLASS]
 			-- Character classes already added to `description.equiv_classes'
 
-	unicode_character_classes_by_name: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
-			-- Unicode character classes indexed by names
+	utf8_character_classes_by_name: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
+			-- Character classes to be converted to UTF-8, indexed by names
 			-- (each to be converted to unions of concatenations of UTF-8 byte symbol classes)
 
 	character_class_with_name (a_name: STRING): detachable LX_SYMBOL_CLASS
-			-- Character class (or Unicode character class if in unicode mode)
-			-- with name `a_name' if already parsed, Void otherwise
+			-- Character class (or character class to be converted to UTF-8
+			-- if in UTF-8 mode) with name `a_name' if already parsed.
+			-- Void otherwise.
 		require
 --			valid_text: `a_name' recognized by "["{FIRST_CCL_CHAR}{CCL_CHAR}*"]"
 		local
 			l_character_classes_by_name: like character_classes_by_name
 		do
-			if unicode_mode.item then
-				l_character_classes_by_name := unicode_character_classes_by_name
+			if utf8_mode.item then
+				l_character_classes_by_name := utf8_character_classes_by_name
 			else
 				l_character_classes_by_name := character_classes_by_name
 			end
@@ -176,9 +177,9 @@ feature {NONE} -- Access
 	name_definitions: DS_HASH_TABLE [STRING, STRING]
 			-- Name definition table
 
-	unicode_mode: DS_ARRAYED_STACK [BOOLEAN]
-			-- Should the current processed regular expression be
-			-- assumed to handle Unicode characters?
+	utf8_mode: DS_ARRAYED_STACK [BOOLEAN]
+			-- Should characters in the currently processed regular expression
+			-- be handled as their sequence of UTF-8 bytes?
 
 	nb_open_brackets: INTEGER
 			-- Number of characters { not-yet-balanced
@@ -246,31 +247,32 @@ feature {NONE} -- Implementation
 
 	process_character (a_code: INTEGER)
 			-- Check whether `a_code' is a valid code for character
-			-- (either 8-bit character or Unicode character depending
-			-- on `unicode_mode') whose printable representation is
-			-- held in `text'.
+			-- whose printable representation is held in `text'.
 			-- Set `last_integer_value' accordingly.
 		require
 			a_code_not_negative: a_code >= 0
 		do
-			if description.unicode2_mode then
-				if {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) and then a_code <= description.maximum_symbol then
+			if description.utf8_mode and then not utf8_mode.item then
+					-- Byte mode.
+				if a_code <= {CHARACTER_8}.max_value then
 					last_integer_value := a_code
 				else
-					report_invalid_unicode_character_error (text)
-					last_integer_value := 0
-				end
-			elseif unicode_mode.item then
-				if {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) then
-					last_integer_value := a_code
-				else
-					report_invalid_unicode_character_error (text)
+					report_character_out_of_range_error (text)
 					last_integer_value := 0
 				end
 			else
-				if a_code <= description.maximum_symbol then
+				if a_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_code then
 					last_integer_value := a_code
+				elseif a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code then
+					report_invalid_unicode_character_error (text)
+					last_integer_value := 0
+				elseif a_code > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code then
+					report_invalid_unicode_character_error (text)
+					last_integer_value := 0
 				else
+					last_integer_value := a_code - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
+				end
+				if last_integer_value > description.maximum_symbol then
 					report_character_out_of_range_error (text)
 					last_integer_value := 0
 				end
@@ -706,8 +708,8 @@ feature {NONE} -- Constants
 	Initial_max_character_classes: INTEGER = 101
 			-- Maximum number of character classes
 
-	Initial_max_unicode_mode: INTEGER = 10
-			-- Initial maximum number of modes in `unicode_mode'
+	Initial_max_utf8_mode: INTEGER = 10
+			-- Initial maximum number of modes in `utf8_mode'
 
 invariant
 
@@ -721,9 +723,9 @@ invariant
 	no_void_named_character_class: not character_classes_by_name.has_void_item
 	equiv_character_classes_not_void: equiv_character_classes /= Void
 	no_void_equiv_character_class: not equiv_character_classes.has_void
-	unicode_character_classes_by_name_not_void: unicode_character_classes_by_name /= Void
-	no_void_named_unicode_character_class: not unicode_character_classes_by_name.has_void_item
-	unicode_mode_not_void: unicode_mode /= Void
-	unicode_modenot_empty: not unicode_mode.is_empty
+	utf8_character_classes_by_name_not_void: utf8_character_classes_by_name /= Void
+	no_void_named_utf8_character_class: not utf8_character_classes_by_name.has_void_item
+	utf8_mode_not_void: utf8_mode /= Void
+	utf8_mode_not_empty: not utf8_mode.is_empty
 
 end

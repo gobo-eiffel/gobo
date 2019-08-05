@@ -5,7 +5,7 @@ note
 		"DFA which can generate scanners implemented with full tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -109,6 +109,10 @@ feature {NONE} -- Generation
 			a_file.put_string ("%TyyNull_equiv_class: INTEGER = ")
 			a_file.put_integer (yyNull_equiv_class)
 			a_file.put_string ("%N%T%T%T-- Equivalence code for NULL character%
+				%%N%N%TyyMax_symbol_equiv_class: INTEGER = ")
+			a_file.put_integer (yyMax_symbol_equiv_class)
+			a_file.put_string ("%N%T%T%T-- All symbols greater than this symbol will have%
+				%%N%T%T%T-- the same equivalence class as this symbol%
 				%%N%N%TyyNb_rows: INTEGER = ")
 			a_file.put_integer (yyNb_rows)
 			a_file.put_string ("%N%T%T%T-- Number of rows in `yy_nxt'%N%N%
