@@ -3223,7 +3223,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 256)
+			create an_array.make_filled (0, 0, 257)
 			yy_ec_template_1 (an_array)
 			yy_ec_template_2 (an_array)
 			Result := yy_fixed_array (an_array)
@@ -3266,8 +3266,8 @@ feature {NONE} -- Table templates
 			   84,   84,   84,   84,   85,   86,   86,   86,   86,   86,
 			   86,   86,   86,   86,   86,   86,   86,   86,   86,   86,
 			   87,   88,   88,   88,   88,   88,   88,   88,   89,   89,
-			   89,   89,   89,   89,   89,   89,   89, yy_Dummy>>,
-			1, 57, 200)
+			   89,   89,   89,   89,   89,   89,   89,   89, yy_Dummy>>,
+			1, 58, 200)
 		end
 
 	yy_meta_template: SPECIAL [INTEGER]
@@ -3436,6 +3436,10 @@ feature {NONE} -- Constants
 
 	yyNull_equiv_class: INTEGER = 89
 			-- Equivalence code for NULL character
+
+	yyMax_symbol_equiv_class: INTEGER = 256
+			-- All symbols greater than this symbol will have
+			-- the same equivalence class as this symbol
 
 	yyReject_used: BOOLEAN = false
 			-- Is `reject' called?

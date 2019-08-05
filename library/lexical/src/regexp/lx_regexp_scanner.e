@@ -1060,7 +1060,9 @@ feature {NONE} -- Constants
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER = 34
-			-- Equivalence code for NULL character	yyMax_symbol_equiv_class: INTEGER = 256
+			-- Equivalence code for NULL character
+
+	yyMax_symbol_equiv_class: INTEGER = 256
 			-- All symbols greater than this symbol will have
 			-- the same equivalence class as this symbol
 
