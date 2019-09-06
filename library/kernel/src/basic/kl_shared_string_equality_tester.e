@@ -5,7 +5,7 @@ note
 		"Shared equality testers between strings that can be polymorphically unicode strings"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,4 +32,13 @@ feature -- Access
 			case_insensitive_string_equality_tester_not_void: Result /= Void
 		end
 
+	string_32_equality_tester: KL_EQUALITY_TESTER [STRING_32]
+			-- String_32 equality tester
+		once
+			create Result
+		ensure
+			instance_free: class
+			string_32_equality_tester_not_void: Result /= Void
+		end
+		
 end

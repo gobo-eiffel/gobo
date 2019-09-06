@@ -19,6 +19,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
+			last_string_32_value,
 			last_lx_symbol_class_value
 		end
 
@@ -28,6 +29,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
+			last_string_32_value,
 			last_lx_symbol_class_value
 		end
 
@@ -38,7 +40,7 @@ create
 
 %x NUM QUOTE FIRSTCCL CCL REGEXP
 
-%option utf8 ecs meta-ecs case-insensitive nodefault outfile="lx_regexp_scanner.e"
+%option ecs meta-ecs case-insensitive nodefault outfile="lx_regexp_scanner.e"
 
 WS					[ \t\r]+
 NL					\n
@@ -56,7 +58,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					last_token := Caret_code
 					set_start_condition (REGEXP)
 				}
-	(b:.)		{
+	.			{
 					less (0)
 					set_start_condition (REGEXP)
 				}
@@ -85,8 +87,8 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					last_token := CCL_MINUS
 				}
 	"["{FIRST_CCL_CHAR}{CCL_CHAR}*"]"	{
-					last_string_value := text
-					if attached character_class_with_name (last_string_value) as l_character_class then
+					last_string_32_value := unicode_text
+					if attached character_class_with_name (last_string_32_value) as l_character_class then
 						last_token := CCL_OP
 						last_lx_symbol_class_value := l_character_class
 					else
@@ -95,19 +97,20 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 						set_start_condition (FIRSTCCL)
 					end
 				}
-	[/|*+?.()]		last_token := text_item (1).code
+	[/|*+?.()]		last_token := unicode_text_item (1).natural_32_code.to_integer_32
 	.			{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 				}
 }
 
 <NUM>{
 	{WS}			-- Separator.
 	[0-9]+		{
-					if text.is_integer then
+					last_string_32_value := unicode_text
+					if last_string_32_value.is_integer then
 						last_token := NUMBER
-						last_integer_value := text.to_integer
+						last_integer_value := last_string_32_value.to_integer
 					else
 						report_integer_too_large_error (text)
 					end
@@ -117,7 +120,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				}
-	(b:.)		{
+	.			{
 					report_bad_character_in_brackets_error
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
@@ -133,7 +136,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 <QUOTE>{
 	[^"\n]		{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 				}
 	\"			{
 					last_token := Double_quote_code
@@ -194,7 +197,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	"^"/[-\]]		last_token := Caret_code
 	.			{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 					set_start_condition (CCL)
 				}
 	{NL}		{
@@ -209,7 +212,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	-/[^\]]			last_token := Minus_code
 	[^\]\n]		{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 				}
 	"]"			{
 					last_token := Right_bracket_code
@@ -224,12 +227,13 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 }
 
 <*>{
-	(b:.)		{
-					report_bad_character_error (text)
-				}
-	\n			{
-					report_bad_character_error ("%%N")
-					line_nb := line_nb + 1
+	.|\n		{
+					if text_item (1) = '%N' then
+						report_bad_character_error ("%%N")
+						line_nb := line_nb + 1
+					else
+						report_bad_character_error (character_text)
+					end
 				}
 }
 
@@ -243,6 +247,9 @@ feature {NONE} -- Access
 	last_string_value: STRING
 			-- Last semantic value of type STRING
 
+	last_string_32_value: STRING_32
+			-- Last semantic value of type STRING_32
+			
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS
 

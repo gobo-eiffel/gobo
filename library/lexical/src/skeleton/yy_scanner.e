@@ -80,7 +80,7 @@ feature -- Initialization
 			set_input_buffer (l_input_buffer)
  		end
 
-	reset_with_string (a_string: STRING)
+	reset_with_string (a_string: STRING_8)
 			-- Reset scanner before scanning next input source.
 			-- Then reuse `input_buffer' and set it to `a_string'
 			-- if it was not `Empty_buffer', create a new input buffer
@@ -117,16 +117,30 @@ feature -- Access
 			-- non-positive values mean that an error occurred
 			-- (see header-comment of `scanning_error'.))
 
-	text: STRING
+	text: STRING_8
 			-- Text of last token read
 			-- (Create a new string at each call.)
+			--
+			-- Note that if `input_buffer' contains Unicode characters
+			-- which cannot be represented as 8-bit characters, they
+			-- will be replaced by a replacement character specified
+			-- in the buffer.
 		deferred
 		ensure
 			text_not_void: Result /= Void
 			correct_count: Result.count = text_count
 		end
 
-	text_item (i: INTEGER): CHARACTER
+	unicode_text: STRING_32
+			-- Unicode text of last token read
+			-- (Create a new string at each call.)
+		deferred
+		ensure
+			unicode_text_not_void: Result /= Void
+			correct_count: Result.count = text_count
+		end
+
+	text_item (i: INTEGER): CHARACTER_8
 			-- `i'-th character of last token read
 		require
 			i_large_enough: i >= 1
@@ -136,7 +150,17 @@ feature -- Access
 			definition: Result = text.item (i)
 		end
 
-	text_substring (s, e: INTEGER): STRING
+	unicode_text_item (i: INTEGER): CHARACTER_32
+			-- `i'-th Unicode character of last token read
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= text_count
+		deferred
+		ensure
+			definition: Result = unicode_text.item (i)
+		end
+
+	text_substring (s, e: INTEGER): STRING_8
 			-- Substring of last token read
 			-- (Create a new string at each call.)
 			-- (For efficiency reason, this function can bypass the
@@ -151,6 +175,23 @@ feature -- Access
 			text_substring_not_void: Result /= Void
 			text_substring_empty: (s > e) implies (Result.count = 0)
 			definition: s <= e implies Result.is_equal (text.substring (s, e))
+		end
+
+	unicode_text_substring (s, e: INTEGER): STRING_32
+			-- Unicode substring of last token read
+			-- (Create a new string at each call.)
+			-- (For efficiency reason, this function can bypass the
+			-- call to `unicode_text' and create the substring directly from
+			-- the input buffer.)
+		require
+			meaningful_start: 1 <= s
+			meaningful_interval: s <= e + 1
+			meaningful_end: e <= text_count
+		deferred
+		ensure
+			unicode_text_substring_not_void: Result /= Void
+			unicode_text_substring_empty: (s > e) implies (Result.count = 0)
+			definition: s <= e implies Result.is_equal (unicode_text.substring (s, e))
 		end
 
 	start_condition: INTEGER
@@ -287,7 +328,7 @@ feature -- Scanning
 
 feature -- Element change
 
-	append_text_to_string (a_string: STRING)
+	append_text_to_string (a_string: STRING_8)
 			-- Append `text' at end of `a_string'.
 			-- (For efficiency reason, this feature can bypass the
 			-- call to `text' and directly copy the characters from
@@ -300,7 +341,20 @@ feature -- Element change
 			count_set: a_string.count = old (a_string.count) + text_count
 		end
 
-	append_text_substring_to_string (s, e: INTEGER; a_string: STRING)
+	append_unicode_text_to_string (a_string: STRING_32)
+			-- Append `unicode_text' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass the
+			-- call to `unicode_text' and directly copy the characters from
+			-- the input buffer.)
+		require
+			a_string_not_void: a_string /= Void
+		do
+			a_string.append_string (unicode_text)
+		ensure
+			count_set: a_string.count = old (a_string.count) + text_count
+		end
+
+	append_text_substring_to_string (s, e: INTEGER; a_string: STRING_8)
 			-- Append `text_substring' at end of `a_string'.
 			-- (For efficiency reason, this feature can bypass
 			-- the call to `text_substring' and directly copy
@@ -312,6 +366,22 @@ feature -- Element change
 			e_small_enough: e <= text_count
 		do
 			a_string.append_string (text_substring (s, e))
+		ensure
+			count_set: a_string.count = old (a_string.count) + (e - s + 1)
+		end
+
+	append_unicode_text_substring_to_string (s, e: INTEGER; a_string: STRING_32)
+			-- Append `unicode_text_substring' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass
+			-- the call to `unicode_text_substring' and directly copy
+			-- the characters from the input buffer.)
+		require
+			a_string_not_void: a_string /= Void
+			s_large_enough: 1 <= s
+			valid_interval: s <= e + 1
+			e_small_enough: e <= text_count
+		do
+			a_string.append_string (unicode_text_substring (s, e))
 		ensure
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
 		end
@@ -350,7 +420,7 @@ feature -- Element change
 			text_count_set: text_count = n
 		end
 
-	unread_character (c: CHARACTER)
+	unread_character (c: CHARACTER_8)
 			-- Put `c' back to `input_buffer'. This will alter both
 			-- `text' and the content of `input_buffer'.
 		deferred
@@ -358,12 +428,20 @@ feature -- Element change
 
 	read_character
 			-- Read a character from `input_buffer'.
-			-- Make result available in `last_character'.
+			-- Make result available in `last_character' and `last_unicode_character'.
+			--
+			-- Note that if `input_buffer' contains Unicode characters
+			-- which cannot be represented as 8-bit characters, they
+			-- will be replaced by a replacement character specified
+			-- in the buffer.
 		deferred
 		end
 
-	last_character: CHARACTER
+	last_character: CHARACTER_8
 			-- Last character read by `read_character'
+
+	last_unicode_character: CHARACTER_32
+			-- Last Unicode character read by `read_character'
 
 feature -- Input
 
@@ -400,8 +478,8 @@ feature -- Input
 			new_file_buffer_not_void: Result /= Void
 		end
 
-	new_unicode_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_UNICODE_FILE_BUFFER
-			-- New Unicode input buffer for `a_file'.
+	new_utf8_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_UTF8_FILE_BUFFER
+			-- New UTF-8 input buffer for `a_file'.
 			-- `a_file' is expected to be encoded in UTF-8
 			-- or ISO-8859-1.
 		require
@@ -410,7 +488,7 @@ feature -- Input
 		do
 			create Result.make (a_file)
 		ensure
-			new_unicode_file_buffer_not_void: Result /= Void
+			new_utf8_file_buffer_not_void: Result /= Void
 		end
 
 	new_string_buffer (a_string: STRING): YY_BUFFER
@@ -427,7 +505,17 @@ feature -- Input
 		end
 
 	new_unicode_string_buffer (a_string: READABLE_STRING_GENERAL): YY_UNICODE_BUFFER
-			-- New Unicode input buffer for `a_string'.
+			-- New Uniocde input buffer for `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			create Result.make (a_string)
+		ensure
+			new_unicode_string_buffer_not_void: Result /= Void
+		end
+
+	new_utf8_string_buffer (a_string: READABLE_STRING_GENERAL): YY_UTF8_BUFFER
+			-- New UTF-8 input buffer for `a_string'.
 			-- `a_string' is expected to contain valid
 			-- non-surrogate Unicode characters. Invalid
 			-- or surrogate Unicode characters are encoded
@@ -438,7 +526,7 @@ feature -- Input
 		do
 			create Result.make (a_string)
 		ensure
-			new_unicode_string_buffer_not_void: Result /= Void
+			new_utf8_string_buffer_not_void: Result /= Void
 		end
 
 	Empty_buffer: YY_BUFFER
@@ -521,6 +609,16 @@ feature -- Error handling
 			std.error.put_character ('%N')
 		end
 
+	report_invalid_unicode_character (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read and caused the scanner
+			-- to fail.
+		do
+			std.error.put_string ("Surrogate or invalid Unicode character '\u{")
+			std.error.put_string (a_code.to_hex_string)
+			std.error.put_string ("'}%N")
+		end
+
 feature -- Debugging
 
 	print_last_token
@@ -542,6 +640,9 @@ feature {NONE} -- Constants
 
 	yyUnknown_token: INTEGER = -2
 			-- Predefined Unknown token code
+
+	yyInvalid_character_token: INTEGER = -3
+			-- Predefined invalid character error token code
 
 invariant
 

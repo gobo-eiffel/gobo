@@ -13,6 +13,7 @@ feature -- Last values
 
 	last_detachable_any_value: detachable ANY
 	last_string_value: STRING
+	last_string_32_value: STRING_32
 	last_integer_value: INTEGER
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 
@@ -30,6 +31,8 @@ feature -- Access
 				Result := "UNICODE_MODE_START"
 			when BYTE_MODE_START then
 				Result := "BYTE_MODE_START"
+			when dummy then
+				Result := "dummy"
 			when CCL_BRACKET then
 				Result := "CCL_BRACKET"
 			when CHAR then
@@ -51,11 +54,12 @@ feature -- Token codes
 
 	UNICODE_MODE_START: INTEGER = 258
 	BYTE_MODE_START: INTEGER = 259
-	CCL_BRACKET: INTEGER = 260
-	CHAR: INTEGER = 261
-	NUMBER: INTEGER = 262
-	CCL_OP: INTEGER = 263
-	CCL_PLUS: INTEGER = 264
-	CCL_MINUS: INTEGER = 265
+	dummy: INTEGER = 260
+	CCL_BRACKET: INTEGER = 261
+	CHAR: INTEGER = 262
+	NUMBER: INTEGER = 263
+	CCL_OP: INTEGER = 264
+	CCL_PLUS: INTEGER = 265
+	CCL_MINUS: INTEGER = 266
 
 end

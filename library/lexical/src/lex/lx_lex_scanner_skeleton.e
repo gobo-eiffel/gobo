@@ -20,6 +20,8 @@ inherit
 			make as make_compressed_scanner_skeleton,
 			reset as reset_compressed_scanner_skeleton,
 			push_start_condition as lex_push_start_condition
+		redefine
+			report_invalid_unicode_character
 		end
 
 	UT_CHARACTER_CODES
@@ -39,16 +41,17 @@ feature {NONE} -- Initialization
 			create description.make
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
+			create last_string_32_value.make (0)
 			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
 			create character_classes.make_equal (Initial_max_character_classes)
 			create character_classes_by_name.make_map (Initial_max_character_classes)
-			character_classes_by_name.set_key_equality_tester (string_equality_tester)
+			character_classes_by_name.set_key_equality_tester (string_32_equality_tester)
 			create equiv_character_classes.make (Initial_max_character_classes)
 			create utf8_character_classes_by_name.make_map (Initial_max_character_classes)
-			utf8_character_classes_by_name.set_key_equality_tester (string_equality_tester)
+			utf8_character_classes_by_name.set_key_equality_tester (string_32_equality_tester)
 			create utf8_mode.make (Initial_max_utf8_mode)
 			utf8_mode.force (description.utf8_mode)
 			successful := True
@@ -67,16 +70,17 @@ feature {NONE} -- Initialization
 			description := a_description
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
+			create last_string_32_value.make (0)
 			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
 			error_handler := handler
 			create name_definitions.make_map (Initial_max_nb_names)
 			name_definitions.set_key_equality_tester (string_equality_tester)
 			create character_classes.make_equal (Initial_max_character_classes)
 			create character_classes_by_name.make_map (Initial_max_character_classes)
-			character_classes_by_name.set_key_equality_tester (string_equality_tester)
+			character_classes_by_name.set_key_equality_tester (string_32_equality_tester)
 			create equiv_character_classes.make (Initial_max_character_classes)
 			create utf8_character_classes_by_name.make_map (Initial_max_character_classes)
-			utf8_character_classes_by_name.set_key_equality_tester (string_equality_tester)
+			utf8_character_classes_by_name.set_key_equality_tester (string_32_equality_tester)
 			create utf8_mode.make (Initial_max_utf8_mode)
 			utf8_mode.force (a_description.utf8_mode)
 			successful := True
@@ -93,6 +97,7 @@ feature -- Initialization
 		do
 			reset_compressed_scanner_skeleton
 			last_string_value := ""
+			create last_string_32_value.make (0)
 			create last_lx_symbol_class_value.make (description.minimum_symbol, description.maximum_symbol)
 			description.reset
 			name_definitions.wipe_out
@@ -144,17 +149,17 @@ feature {NONE} -- Access
 	character_classes: DS_HASH_SET [LX_SYMBOL_CLASS]
 			-- Character classes built so far
 
-	character_classes_by_name: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
+	character_classes_by_name: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_32]
 			-- Character classes indexed by names
 
 	equiv_character_classes: DS_HASH_SET [LX_SYMBOL_CLASS]
 			-- Character classes already added to `description.equiv_classes'
 
-	utf8_character_classes_by_name: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
+	utf8_character_classes_by_name: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_32]
 			-- Character classes to be converted to UTF-8, indexed by names
 			-- (each to be converted to unions of concatenations of UTF-8 byte symbol classes)
 
-	character_class_with_name (a_name: STRING): detachable LX_SYMBOL_CLASS
+	character_class_with_name (a_name: STRING_32): detachable LX_SYMBOL_CLASS
 			-- Character class (or character class to be converted to UTF-8
 			-- if in UTF-8 mode) with name `a_name' if already parsed.
 			-- Void otherwise.
@@ -193,6 +198,9 @@ feature {NONE} -- Access
 
 	last_string_value: STRING
 			-- Last semantic value of type STRING
+
+	last_string_32_value: STRING_32
+			-- Last semantic value of type STRING_32
 
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS
@@ -257,23 +265,23 @@ feature {NONE} -- Implementation
 				if a_code <= {CHARACTER_8}.max_value then
 					last_integer_value := a_code
 				else
-					report_character_out_of_range_error (text)
+					report_character_out_of_range_error (character_text)
 					last_integer_value := 0
 				end
 			else
 				if a_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_code then
 					last_integer_value := a_code
 				elseif a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code then
-					report_invalid_unicode_character_error (text)
+					report_invalid_unicode_character_error (character_text)
 					last_integer_value := 0
 				elseif a_code > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code then
-					report_invalid_unicode_character_error (text)
+					report_invalid_unicode_character_error (character_text)
 					last_integer_value := 0
 				else
 					last_integer_value := a_code - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
 				end
 				if last_integer_value > description.maximum_symbol then
-					report_character_out_of_range_error (text)
+					report_character_out_of_range_error (character_text)
 					last_integer_value := 0
 				end
 			end
@@ -430,6 +438,25 @@ feature {NONE} -- Implementation
 			process_character (a_code)
 		end
 
+	process_single_character
+			-- Process Unicode character whose printable representation
+			-- is held in `unicode_text'.
+			-- Check whether the corresponding Unicode character is valid.
+			-- Set `last_integer_value' accordingly.
+		require
+			single_character: text_count = 1
+		local
+			l_code: NATURAL_32
+		do
+			l_code := unicode_text_item (1).natural_32_code
+			if l_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code then
+				process_character (l_code.to_integer_32)
+			else
+				report_invalid_unicode_character_error (character_text)
+				last_integer_value := 0
+			end
+		end
+
 	process_name_definition (a_name, a_definition: STRING)
 			-- Keep track of name definition.
 			-- Trailing spaces are removed from `a_definition'
@@ -477,7 +504,35 @@ feature {NONE} -- Implementation
 			name_definitions.force (parenthesised_definition, bracketed_name)
 		end
 
+	character_text: STRING
+			-- Textual representation of the character corresponding to
+			-- `unicode_text'
+		local
+			l_character: CHARACTER_32
+		do
+			if text_count = 1 then
+				Result := text
+			else
+				l_character := unicode_text_item (1)
+				if l_character.is_character_8 then
+					Result := text
+				else
+					Result := "\x{" + l_character.natural_32_code.to_hex_string + "}"
+				end
+			end
+		ensure
+			character_text_not_void: Result /= Void
+		end
+
 feature {NONE} -- Error handling
+
+	report_invalid_unicode_character (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read and caused the scanner
+			-- to fail.
+		do
+			report_invalid_unicode_character_error ("\u{" + a_code.to_hex_string + "}%N")
+		end
 
 	report_bad_character_error (a_char: STRING)
 			-- Report the presence of a bad character `a_char'.
@@ -550,7 +605,7 @@ feature {NONE} -- Error handling
 		require
 			a_char_not_void: a_char /= Void
 		local
-			an_error: LX_CHARACTER_OUT_OF_RANGE_ERROR
+			an_error: LX_INVALID_UNICODE_CHARACTER_ERROR
 		do
 			create an_error.make (filename, line_nb, a_char)
 			error_handler.report_error (an_error)

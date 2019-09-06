@@ -120,15 +120,12 @@ feature -- Parsing
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		do
-			set_input_buffer (new_unicode_file_buffer (a_file))
+			set_input_buffer (new_utf8_file_buffer (a_file))
 			parse
 		end
 
 	parse_string (a_string: STRING)
 			-- Parse scanner description from `a_string'.
-			-- To be used in 8-bit character (byte) mode, or
-			-- in Unicode mode where `a_string' is expected
-			-- to be encoded in UTF-8.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -139,10 +136,7 @@ feature -- Parsing
 	parse_unicode_string (a_string: READABLE_STRING_GENERAL)
 			-- Parse scanner description from `a_string'.
 			-- `a_string' is expected to contain valid
-			-- non-surrogate Unicode characters. Invalid
-			-- or surrogate Unicode characters are encoded
-			-- with one byte 0xFF (which is an invalid byte
-			-- in UTF-8).
+			-- non-surrogate Unicode characters.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -580,14 +574,14 @@ feature {NONE} -- Factory
 			-- (Take case-sensitiveness into account.)
 		local
 			lower_char: INTEGER
-			a_name: STRING
+			a_name: STRING_32
 			a_character_class: LX_SYMBOL_CLASS
 		do
 			if description.case_insensitive then
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
-					lower_char := a_char + Case_diff
-					a_name := lower_char.out
+					create a_name.make (2)
+					a_name.append_integer (lower_char)
 					character_classes_by_name.search (a_name)
 					if character_classes_by_name.found then
 						a_character_class := character_classes_by_name.found_item
@@ -603,7 +597,8 @@ feature {NONE} -- Factory
 					end
 					Result := new_symbol_class_nfa (a_character_class)
 				when Lower_a_code .. Lower_z_code then
-					a_name := a_char.out
+					create a_name.make (2)
+					a_name.append_integer (a_char)
 					character_classes_by_name.search (a_name)
 					if character_classes_by_name.found then
 						a_character_class := character_classes_by_name.found_item
@@ -1045,7 +1040,7 @@ feature {NONE} -- Implementation
 		require
 			a_string_not_void: a_string /= Void
 		local
-			a_name: STRING
+			a_name: STRING_32
 			lower_char: INTEGER
 			a_character_class: LX_SYMBOL_CLASS
 		do
@@ -1054,7 +1049,8 @@ feature {NONE} -- Implementation
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
 					lower_char := a_char + Case_diff
-					a_name := lower_char.out
+					create a_name.make (2)
+					a_name.append_integer (lower_char)
 					character_classes_by_name.search (a_name)
 					if character_classes_by_name.found then
 						a_character_class := character_classes_by_name.found_item
@@ -1072,7 +1068,8 @@ feature {NONE} -- Implementation
 					end
 					Result.build_concatenation (new_symbol_class_nfa (a_character_class))
 				when Lower_a_code .. Lower_z_code then
-					a_name := a_char.out
+					create a_name.make (2)
+					a_name.append_integer (a_char)
 					character_classes_by_name.search (a_name)
 					if character_classes_by_name.found then
 						a_character_class := character_classes_by_name.found_item
@@ -1372,10 +1369,11 @@ feature {NONE} -- Implementation
 	dot_character_class: LX_SYMBOL_CLASS
 			-- "." character class (i.e. all characters except new_line)
 		local
-			dot_string: STRING
+			dot_string: STRING_32
 			l_character_classes_by_name: like character_classes_by_name
 		do
-			dot_string := "."
+			create dot_string.make (1)
+			dot_string.append_character ({CHARACTER_32} '.')
 			if utf8_mode.item then
 				l_character_classes_by_name := utf8_character_classes_by_name
 			else

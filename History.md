@@ -28,7 +28,7 @@
   Unicode is supported natively, there is no internal conversion to UTF-8.
   Unicode characters can be entered verbatim in the string (`STRING_32`) or
   with their escaped form (e.g. `\u03B2` or `\x{03B2}` where `03B2` is the
-  hexadecimal code for Greek character beta). Invalid and surrogate Unicode
+  hexadecimal code for Greek character beta). Surrogate and invalid  Unicode
   characters produce a regular expression syntax error.   
 * Fixed bug in `LX_DFA_REGULAR_EXPRESSION` and `LX_DFA_WILDCARD` when the
   string to be matched contains a null character.
@@ -42,7 +42,7 @@
   conversion to UTF-8. Unicode characters can be entered verbatim in the
   string (`STRING_32`) or with their escaped form (e.g. `\u{03B2}` or 
   `\x{03B2}` where `03B2` is the hexadecimal code for Greek character beta).
-  Invalid and surrogate Unicode characters produce a regular expression
+  Surrogate and invalid Unicode characters produce a regular expression
   syntax error.  
 
 ### Gobo Eiffel Tools Library

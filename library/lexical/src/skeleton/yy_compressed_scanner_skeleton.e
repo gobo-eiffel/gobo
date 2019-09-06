@@ -5,7 +5,7 @@ note
 		"Skeletons of scanners implemented with compressed tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,12 +66,14 @@ feature -- Scanning
 			yy_act: INTEGER
 			yy_goto: INTEGER
 			yy_c: INTEGER
+			yy_code: NATURAL_32
 			yy_found: BOOLEAN
 			yy_rejected_line: INTEGER
 			yy_rejected_column: INTEGER
 			yy_rejected_position: INTEGER
 			yy_done: BOOLEAN
 			l_content_area: like yy_content_area
+			l_unicode_content_area: like yy_unicode_content_area
 		do
 				-- This routine is implemented with a loop whose body
 				-- is a big inspect instruction. This is a mere
@@ -126,24 +128,12 @@ feature -- Scanning
 				when yyMatch then
 						-- Find the next match.
 					l_content_area := yy_content_area
+					l_unicode_content_area := yy_unicode_content_area
 					from
 						yy_done := False
 					until
 						yy_done
 					loop
-						if attached yy_ec as l_yy_ec then
-							if l_content_area /= Void then
-								yy_c := l_yy_ec.item (l_content_area.item (yy_cp).code)
-							else
-								yy_c := l_yy_ec.item (yy_content.item (yy_cp).code)
-							end
-						else
-							if l_content_area /= Void then
-								yy_c := l_content_area.item (yy_cp).code
-							else
-								yy_c := yy_content.item (yy_cp).code
-							end
-						end
 						if not yyReject_or_variable_trail_context and then yy_accept.item (yy_current_state) /= 0 then
 								-- Save the backing-up info before computing
 								-- the next state because we always compute one
@@ -152,23 +142,58 @@ feature -- Scanning
 							yy_last_accepting_state := yy_current_state
 							yy_last_accepting_cpos := yy_cp
 						end
-						from
-						until
-							yy_chk.item (yy_base.item (yy_current_state) + yy_c) = yy_current_state
-						loop
-							yy_current_state := yy_def.item (yy_current_state)
-							if attached yy_meta as l_yy_meta and then yy_current_state >= yyTemplate_mark then
-									-- We've arranged it so that templates are
-									-- never chained to one another. This means
-									-- we can afford to make a very simple test
-									-- to see if we need to convert to `yy_c''s
-									-- meta-equivalence class without worrying
-									-- about erroneously looking up the meta
-									-- equivalence class twice.
-								yy_c := l_yy_meta.item (yy_c)
+						if l_content_area /= Void then
+							yy_c := l_content_area.item (yy_cp).code
+						else
+							if l_unicode_content_area /= Void then
+								yy_code := l_unicode_content_area.item (yy_cp).natural_32_code
+							else
+								yy_code := yy_content.item_code (yy_cp)
+							end
+							if yy_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_natural_32_code then
+								yy_c := yy_code.to_integer_32
+							elseif yy_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_natural_32_code then
+									-- Surrogate.
+								yy_c := -1
+							elseif yy_code > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code then
+									-- Invalid Unicode character.
+								yy_c := -1
+							else
+								yy_c := yy_code.to_integer_32
+								yy_c := yy_c - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
+							end
+							if yy_c > yyMax_symbol_equiv_class then
+								yy_c := yyMax_symbol_equiv_class
 							end
 						end
-						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
+						if yy_c >= 0 then
+							if attached yy_ec as l_yy_ec then
+								yy_c := l_yy_ec.item (yy_c)
+							end
+							from
+							until
+								yy_chk.item (yy_base.item (yy_current_state) + yy_c) = yy_current_state
+							loop
+								yy_current_state := yy_def.item (yy_current_state)
+								if attached yy_meta as l_yy_meta and then yy_current_state >= yyTemplate_mark then
+										-- We've arranged it so that templates are
+										-- never chained to one another. This means
+										-- we can afford to make a very simple test
+										-- to see if we need to convert to `yy_c''s
+										-- meta-equivalence class without worrying
+										-- about erroneously looking up the meta
+										-- equivalence class twice.
+									yy_c := l_yy_meta.item (yy_c)
+								end
+							end
+							yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
+						else
+							yy_current_state := yyJam_state
+							report_invalid_unicode_character (yy_code)
+							if last_token = yyUnknown_token then
+								last_token := yyInvalid_character_token
+							end
+						end
 						if yyReject_or_variable_trail_context then
 							SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
@@ -429,6 +454,7 @@ feature {NONE} -- Implementation
 		do
 			yy_content := a_content
 			yy_content_area := a_content.as_special
+			yy_unicode_content_area := a_content.as_unicode_special
 			if yyReject_or_variable_trail_context then
 				nb := a_content.count + 1
 				if yy_state_stack.capacity < nb then
@@ -453,7 +479,9 @@ feature {NONE} -- Implementation
 		local
 			yy_cp, yy_nb: INTEGER
 			yy_c: INTEGER
+			yy_code: NATURAL_32
 			l_content_area: like yy_content_area
+			l_unicode_content_area: like yy_unicode_content_area
 		do
 				-- Find the start state.
 --	START INLINING
@@ -470,6 +498,7 @@ feature {NONE} -- Implementation
 				yy_state_count := 1
 			end
 			l_content_area := yy_content_area
+			l_unicode_content_area := yy_unicode_content_area
 			from
 				yy_cp := yy_start + yy_more_len
 				yy_nb := yy_end
@@ -480,7 +509,20 @@ feature {NONE} -- Implementation
 				if l_content_area /= Void then
 					yy_c := l_content_area.item (yy_cp).code
 				else
-					yy_c := yy_content.item (yy_cp).code
+					if l_unicode_content_area /= Void then
+						yy_code := l_unicode_content_area.item (yy_cp).natural_32_code
+					else
+						yy_code := yy_content.item_code (yy_cp)
+					end
+					if yy_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_natural_32_code then
+						yy_c := yy_code.to_integer_32
+					else
+						yy_c := yy_code.to_integer_32
+						yy_c := yy_c - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
+					end
+					if yy_c > yyMax_symbol_equiv_class then
+						yy_c := yyMax_symbol_equiv_class
+					end
 				end
 				if yy_c = 0 then
 					yy_c := yyNull_equiv_class

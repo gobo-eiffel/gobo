@@ -5,7 +5,7 @@ note
 		"Lexical analyzer input buffers"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,11 +28,11 @@ feature {NONE} -- Initialization
 			buff: like content
 			nb: INTEGER
 		do
-			nb := str.count + 2
-			buff := new_default_buffer (nb)
+			nb := str.count
+			buff := new_default_buffer (nb + 2)
 			buff.fill_from_string (str, 1)
-			buff.put (End_of_buffer_character, nb - 1)
-			buff.put (End_of_buffer_character, nb)
+			buff.put (End_of_buffer_character, nb + 1)
+			buff.put (End_of_buffer_character, nb + 2)
 			make_from_buffer (buff)
 		ensure
 			capacity_set: capacity = str.count

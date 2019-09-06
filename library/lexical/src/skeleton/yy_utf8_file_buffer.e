@@ -13,7 +13,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class YY_UNICODE_FILE_BUFFER
+class YY_UTF8_FILE_BUFFER
 
 inherit
 
@@ -27,7 +27,7 @@ inherit
 			compact_left
 		end
 
-	YY_UNICODE_BUFFER
+	YY_UTF8_BUFFER
 		rename
 			make as make_from_string
 		undefine

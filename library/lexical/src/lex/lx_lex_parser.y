@@ -19,6 +19,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
+			last_string_32_value,
 			last_lx_symbol_class_value
 		end
 
@@ -30,6 +31,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
+			last_string_32_value,
 			last_lx_symbol_class_value
 		end
 
@@ -42,6 +44,7 @@ create
 %token ENDSECT EOF_OP PIPED EMPTY
 %token UNICODE_MODE_START BYTE_MODE_START
 
+%token <STRING_32> dummy
 %token <STRING> EIF_CODE NAME CCL_BRACKET
 %token <INTEGER> CHAR NUMBER
 %token <LX_SYMBOL_CLASS> CCL_OP
@@ -565,6 +568,9 @@ feature {NONE} -- Access
 
 	last_string_value: STRING
 			-- Last semantic value of type STRING
+
+	last_string_32_value: STRING_32
+			-- Last semantic value of type STRING_32
 
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS

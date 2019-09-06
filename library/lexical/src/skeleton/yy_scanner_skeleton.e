@@ -5,7 +5,7 @@ note
 		"Skeletons of scanners implemented with tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,9 @@ inherit
 	YY_SCANNER
 		redefine
 			append_text_to_string,
+			append_unicode_text_to_string,
 			append_text_substring_to_string,
+			append_unicode_text_substring_to_string,
 			make_with_buffer,
 			set_input_buffer,
 			flush_input_buffer
@@ -90,12 +92,28 @@ feature -- Initialization
 
 feature -- Access
 
-	text: STRING
+	text: STRING_8
 			-- Text of last token read
 			-- (Create a new string at each call.)
+			--
+			-- Note that if `input_buffer' contains Unicode characters
+			-- which cannot be represented as 8-bit characters, they
+			-- will be replaced by a replacement character specified
+			-- in the buffer.
 		do
 			if yy_start < yy_end then
 				Result := yy_content.substring (yy_start, yy_end - 1)
+			else
+				create Result.make (0)
+			end
+		end
+
+	unicode_text: STRING_32
+			-- Unicode text of last token read
+			-- (Create a new string at each call.)
+		do
+			if yy_start < yy_end then
+				Result := yy_content.unicode_substring (yy_start, yy_end - 1)
 			else
 				create Result.make (0)
 			end
@@ -114,7 +132,20 @@ feature -- Access
 			end
 		end
 
-	text_substring (s, e: INTEGER): STRING
+	unicode_text_item (i: INTEGER): CHARACTER_32
+			-- `i'-th Unicode character of last token read
+		local
+			l_content_area: like yy_unicode_content_area
+		do
+			l_content_area := yy_unicode_content_area
+			if l_content_area /= Void then
+				Result := l_content_area.item (yy_start + i - 1)
+			else
+				Result := yy_content.unicode_item (yy_start + i - 1)
+			end
+		end
+
+	text_substring (s, e: INTEGER): STRING_8
 			-- Substring of last token read
 			-- (Create a new string at each call.)
 			-- (For efficiency reason, this function bypasses the
@@ -125,6 +156,20 @@ feature -- Access
 				create Result.make (0)
 			else
 				Result := yy_content.substring (yy_start + s - 1, yy_start + e - 1)
+			end
+		end
+
+	unicode_text_substring (s, e: INTEGER): STRING_32
+			-- Unicode substring of last token read
+			-- (Create a new string at each call.)
+			-- (For efficiency reason, this function can bypass the
+			-- call to `unicode_text' and create the substring directly from
+			-- the input buffer.)
+		do
+			if e < s then
+				create Result.make (0)
+			else
+				Result := yy_content.unicode_substring (yy_start + s - 1, yy_start + e - 1)
 			end
 		end
 
@@ -188,7 +233,7 @@ feature -- Setting
 
 feature -- Element change
 
-	append_text_to_string (a_string: STRING)
+	append_text_to_string (a_string: STRING_8)
 			-- Append `text' at end of `a_string'.
 			-- (For efficiency reason, this feature bypasses the
 			-- call to `text' and directly copies the characters
@@ -199,7 +244,18 @@ feature -- Element change
 			end
 		end
 
-	append_text_substring_to_string (s, e: INTEGER; a_string: STRING)
+	append_unicode_text_to_string (a_string: STRING_32)
+			-- Append `unicode_text' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass the
+			-- call to `unicode_text' and directly copy the characters from
+			-- the input buffer.)
+		do
+			if yy_start < yy_end then
+				yy_content.append_substring_to_unicode_string (yy_start, yy_end - 1, a_string)
+			end
+		end
+
+	append_text_substring_to_string (s, e: INTEGER; a_string: STRING_8)
 			-- Append `text_substring' at end of `a_string'.
 			-- (For efficiency reason, this feature bypasses
 			-- the call to `text_substring' and directly copies
@@ -207,6 +263,17 @@ feature -- Element change
 		do
 			if s <= e then
 				yy_content.append_substring_to_string (yy_start + s - 1, yy_start + e - 1, a_string)
+			end
+		end
+
+	append_unicode_text_substring_to_string (s, e: INTEGER; a_string: STRING_32)
+			-- Append `unicode_text_substring' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass
+			-- the call to `unicode_text_substring' and directly copy
+			-- the characters from the input buffer.)
+		do
+			if s <= e then
+				yy_content.append_substring_to_unicode_string (yy_start + s - 1, yy_start + e - 1, a_string)
 			end
 		end
 
@@ -248,7 +315,7 @@ feature -- Element change
 			yy_position := position + n
 		end
 
-	unread_character (c: CHARACTER)
+	unread_character (c: CHARACTER_8)
 			-- Put `c' back to `input_buffer'. This will alter both
 			-- `text' and the content of `input_buffer'.
 		do
@@ -270,19 +337,28 @@ feature -- Element change
 
 	read_character
 			-- Read a character from `input_buffer'.
-			-- Make result available in `last_character'.
+			-- Make result available in `last_character' and `last_unicode_character'.
+			--
+			-- Note that if `input_buffer' contains Unicode characters
+			-- which cannot be represented as 8-bit characters, they
+			-- will be replaced by a replacement character specified
+			-- in the buffer.
 		local
 			found: BOOLEAN
-			c: CHARACTER
+			c: CHARACTER_32
 			l_content_area: like yy_content_area
+			l_unicode_content_area: like yy_unicode_content_area
 		do
 			l_content_area := yy_content_area
+			l_unicode_content_area := yy_unicode_content_area
 			if l_content_area /= Void then
-				c := l_content_area.item (yy_end)
+				c := l_content_area.item (yy_end).to_character_32
+			elseif l_unicode_content_area /= Void then
+				c := l_unicode_content_area.item (yy_end)
 			else
-				c := yy_content.item (yy_end)
+				c := yy_content.unicode_item (yy_end)
 			end
-			if c = yyEnd_of_buffer_character then
+			if c = yyEnd_of_buffer_unicode_character then
 					-- `yy_end' now points to the character we want
 					-- to return. If this occurs before the EOB characters,
 					-- then it's a valid NULL; if not, then we've hit the
@@ -296,6 +372,7 @@ feature -- Element change
 						if wrap then
 								-- EOF character.
 							last_character := yyEnd_of_file_character
+							last_unicode_character := yyEnd_of_file_unicode_character
 						else
 								-- A new input buffer should have been set.
 								-- Read character from it.
@@ -307,14 +384,25 @@ feature -- Element change
 			end
 			if not found then
 				l_content_area := yy_content_area
+				l_unicode_content_area := yy_unicode_content_area
 				if l_content_area /= Void then
 					last_character := l_content_area.item (yy_end)
+					last_unicode_character := last_character.to_character_32
 				else
-					last_character := yy_content.item (yy_end)
+					if l_unicode_content_area /= Void then
+						last_unicode_character := l_unicode_content_area.item (yy_end)
+					else
+						last_unicode_character := yy_content.unicode_item (yy_end)
+					end
+					if last_unicode_character.is_character_8 then
+						last_character := last_unicode_character.to_character_8
+					else
+						last_character := yy_content.item (yy_end)
+					end
 				end
 				yy_end := yy_end + 1
 				yy_position := yy_position + 1
-				if last_character = yyNew_line_character then
+				if last_unicode_character = yyNew_line_unicode_character then
 					yy_line := yy_line + 1
 					yy_column := 1
 					input_buffer.set_beginning_of_line (True)
@@ -434,6 +522,7 @@ feature {NONE} -- Implementation
 		do
 			yy_content := a_content
 			yy_content_area := a_content.as_special
+			yy_unicode_content_area := a_content.as_unicode_special
 		ensure
 			yy_content_set: yy_content = a_content
 		end
@@ -495,13 +584,12 @@ feature {NONE} -- Implementation
 	yy_set_beginning_of_line
 			-- Set `yy_at_beginning_of_line' according
 			-- to the current position in input source.
-		local
-			l_content_area: like yy_content_area
 		do
 			if yy_end > yy_start then
-				l_content_area := yy_content_area
-				if l_content_area /= Void then
+				if attached yy_content_area as l_content_area then
 					input_buffer.set_beginning_of_line (l_content_area.item (yy_end - 1) = yyNew_line_character)
+				elseif attached yy_unicode_content_area as l_content_area then
+					input_buffer.set_beginning_of_line (l_content_area.item (yy_end - 1) = yyNew_line_unicode_character)
 				else
 					input_buffer.set_beginning_of_line (yy_content.item (yy_end - 1) = yyNew_line_character)
 				end
@@ -518,10 +606,12 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			a_line: INTEGER
-			c: CHARACTER
+			c: CHARACTER_32
 			l_content_area: like yy_content_area
+			l_unicode_content_area: like yy_unicode_content_area
 		do
 			l_content_area := yy_content_area
+			l_unicode_content_area := yy_unicode_content_area
 			from
 				i := yy_end - a_column - 1
 				nb := yy_start + yy_more_len
@@ -529,11 +619,13 @@ feature {NONE} -- Implementation
 				i < nb
 			loop
 				if l_content_area /= Void then
-					c := l_content_area.item (i)
+					c := l_content_area.item (i).to_character_32
+				elseif l_unicode_content_area /= Void then
+					c := l_unicode_content_area.item (i)
 				else
-					c := yy_content.item (i)
+					c := yy_content.unicode_item (i)
 				end
-				if c = yyNew_line_character then
+				if c = yyNew_line_unicode_character then
 					a_line := a_line + 1
 				end
 				i := i - 1
@@ -554,10 +646,12 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			a_column: INTEGER
-			c: CHARACTER
+			c: CHARACTER_32
 			l_content_area: like yy_content_area
+			l_unicode_content_area: like yy_unicode_content_area
 		do
 			l_content_area := yy_content_area
+			l_unicode_content_area := yy_unicode_content_area
 			from
 				i := yy_end - 1
 				nb := yy_start + yy_more_len
@@ -565,11 +659,13 @@ feature {NONE} -- Implementation
 				i < nb
 			loop
 				if l_content_area /= Void then
-					c := l_content_area.item (i)
+					c := l_content_area.item (i).to_character_32
+				elseif l_unicode_content_area /= Void then
+					c := l_unicode_content_area.item (i)
 				else
-					c := yy_content.item (i)
+					c := yy_content.unicode_item (i)
 				end
-				if c /= yyNew_line_character then
+				if c /= yyNew_line_unicode_character then
 					a_column := a_column + 1
 					i := i - 1
 				else
@@ -587,10 +683,12 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			a_line, a_column: INTEGER
 			new_line_found: BOOLEAN
-			c: CHARACTER
+			c: CHARACTER_32
 			l_content_area: like yy_content_area
+			l_unicode_content_area: like yy_unicode_content_area
 		do
 			l_content_area := yy_content_area
+			l_unicode_content_area := yy_unicode_content_area
 			from
 				i := yy_end - 1
 				nb := yy_start + yy_more_len
@@ -598,11 +696,13 @@ feature {NONE} -- Implementation
 				i < nb or new_line_found
 			loop
 				if l_content_area /= Void then
-					c := l_content_area.item (i)
+					c := l_content_area.item (i).to_character_32
+				elseif l_unicode_content_area /= Void then
+					c := l_unicode_content_area.item (i)
 				else
-					c := yy_content.item (i)
+					c := yy_content.unicode_item (i)
 				end
-				if c = yyNew_line_character then
+				if c = yyNew_line_unicode_character then
 					a_line := a_line + 1
 					new_line_found := True
 				else
@@ -615,11 +715,13 @@ feature {NONE} -- Implementation
 				i < nb
 			loop
 				if l_content_area /= Void then
-					c := l_content_area.item (i)
+					c := l_content_area.item (i).to_character_32
+				elseif l_unicode_content_area /= Void then
+					c := l_unicode_content_area.item (i)
 				else
-					c := yy_content.item (i)
+					c := yy_content.unicode_item (i)
 				end
-				if c = yyNew_line_character then
+				if c = yyNew_line_unicode_character then
 					a_line := a_line + 1
 				end
 				i := i - 1
@@ -649,8 +751,13 @@ feature {NONE} -- Implementation
 	yy_content: KI_CHARACTER_BUFFER
 			-- Characters in `input_buffer'
 
-	yy_content_area: detachable SPECIAL [CHARACTER]
+	yy_content_area: detachable SPECIAL [CHARACTER_8]
 			-- Characters in `input_buffer';
+			-- More efficient than `yy_content' when not void;
+			-- Characters are indexed starting at 1
+
+	yy_unicode_content_area: detachable SPECIAL [CHARACTER_32]
+			-- Unicode characters in `input_buffer';
 			-- More efficient than `yy_content' when not void;
 			-- Characters are indexed starting at 1
 
@@ -690,13 +797,22 @@ feature {NONE} -- Constants
 	yyBuffer_capacity: INTEGER = 16384
 			-- Capacity of default input buffer
 
-	yyEnd_of_buffer_character: CHARACTER = '%U'
+	yyEnd_of_buffer_character: CHARACTER_8 = '%U'
 			-- End of buffer character
 
-	yyEnd_of_file_character: CHARACTER = '%/255/'
+	yyEnd_of_buffer_unicode_character: CHARACTER_32 = '%U'
+			-- End of buffer character
+
+	yyEnd_of_file_character: CHARACTER_8 = '%/255/'
 			-- End of file character
 
-	yyNew_line_character: CHARACTER = '%N'
+	yyEnd_of_file_unicode_character: CHARACTER_32 = '%/255/'
+			-- End of file character
+
+	yyNew_line_character: CHARACTER_8 = '%N'
+			-- New line character
+
+	yyNew_line_unicode_character: CHARACTER_32 = '%N'
 			-- New line character
 
 	yyEnd_of_buffer: INTEGER
@@ -722,6 +838,12 @@ feature {NONE} -- Constants
 
 	yyNull_equiv_class: INTEGER
 			-- Equivalence code for NULL character
+		deferred
+		end
+
+	yyMax_symbol_equiv_class: INTEGER
+			-- All symbols greater than this symbol will have
+			-- the same equivalence class as this symbol
 		deferred
 		end
 

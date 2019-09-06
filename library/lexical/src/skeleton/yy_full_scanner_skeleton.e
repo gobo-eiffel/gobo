@@ -5,7 +5,7 @@ note
 		"Skeletons of scanners implemented with full tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,10 @@ feature -- Scanning
 			yy_act: INTEGER
 			yy_goto: INTEGER
 			yy_c: INTEGER
+			yy_code: NATURAL_32
+			yy_done: BOOLEAN
 			l_content_area: like yy_content_area
+			l_unicode_content_area: like yy_unicode_content_area
 		do
 				-- This routine is implemented with a loop whose body
 				-- is a big inspect instruction. This is a mere
@@ -75,43 +78,56 @@ feature -- Scanning
 				when yyMatch then
 						-- Find the next match.
 					l_content_area := yy_content_area
+					l_unicode_content_area := yy_unicode_content_area
 					from
-						if attached yy_ec as l_yy_ec then
-							if l_content_area /= Void then
-								yy_c := l_yy_ec.item (l_content_area.item (yy_cp).code)
-							else
-								yy_c := l_yy_ec.item (yy_content.item (yy_cp).code)
-							end
-						else
-							if l_content_area /= Void then
-								yy_c := l_content_area.item (yy_cp).code
-							else
-								yy_c := yy_content.item (yy_cp).code
-							end
-						end
-						yy_current_state := yy_nxt.item (yy_current_state * yyNb_rows + yy_c)
+						yy_done := False
 					until
-						yy_current_state <= 0
+						yy_done
 					loop
-						if yyBacking_up and then yy_accept.item (yy_current_state) /= 0 then
-							yy_last_accepting_state := yy_current_state
-							yy_last_accepting_cpos := yy_cp
-						end
-						yy_cp := yy_cp + 1
-						if attached yy_ec as l_yy_ec then
-							if l_content_area /= Void then
-								yy_c := l_yy_ec.item (l_content_area.item (yy_cp).code)
-							else
-								yy_c := l_yy_ec.item (yy_content.item (yy_cp).code)
-							end
+						if l_content_area /= Void then
+							yy_c := l_content_area.item (yy_cp).code
 						else
-							if l_content_area /= Void then
-								yy_c := l_content_area.item (yy_cp).code
+							if l_unicode_content_area /= Void then
+								yy_code := l_unicode_content_area.item (yy_cp).natural_32_code
 							else
-								yy_c := yy_content.item (yy_cp).code
+								yy_code := yy_content.item_code (yy_cp)
+							end
+							if yy_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_natural_32_code then
+								yy_c := yy_code.to_integer_32
+							elseif yy_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_natural_32_code then
+									-- Surrogate.
+								yy_c := -1
+							elseif yy_code > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code then
+									-- Invalid Unicode character.
+								yy_c := -1
+							else
+								yy_c := yy_code.to_integer_32
+								yy_c := yy_c - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
+							end
+							if yy_c > yyMax_symbol_equiv_class then
+								yy_c := yyMax_symbol_equiv_class
 							end
 						end
-						yy_current_state := yy_nxt.item (yy_current_state * yyNb_rows + yy_c)
+						if yy_c >= 0 then
+							if attached yy_ec as l_yy_ec then
+								yy_c := l_yy_ec.item (yy_c)
+							end
+							yy_current_state := yy_nxt.item (yy_current_state * yyNb_rows + yy_c)
+						else
+							yy_current_state := 0
+							report_invalid_unicode_character (yy_code)
+							if last_token = yyUnknown_token then
+								last_token := yyInvalid_character_token
+							end
+						end
+						yy_done := yy_current_state <= 0
+						if not yy_done then
+							if yyBacking_up and then yy_accept.item (yy_current_state) /= 0 then
+								yy_last_accepting_state := yy_current_state
+								yy_last_accepting_cpos := yy_cp
+							end
+							yy_cp := yy_cp + 1
+						end
 					end
 					yy_current_state := -yy_current_state
 					yy_goto := yyFind_action
@@ -236,11 +252,14 @@ feature {NONE} -- Implementation
 		local
 			yy_cp, yy_nb: INTEGER
 			yy_c: INTEGER
+			yy_code: NATURAL_32
 			l_content_area: like yy_content_area
+			l_unicode_content_area: like yy_unicode_content_area
 		do
 				-- Find the start state.
 			Result := yy_start_state + yy_at_beginning_of_line
 			l_content_area := yy_content_area
+			l_unicode_content_area := yy_unicode_content_area
 			from
 				yy_cp := yy_start + yy_more_len
 				yy_nb := yy_end
@@ -251,7 +270,20 @@ feature {NONE} -- Implementation
 				if l_content_area /= Void then
 					yy_c := l_content_area.item (yy_cp).code
 				else
-					yy_c := yy_content.item (yy_cp).code
+					if l_unicode_content_area /= Void then
+						yy_code := l_unicode_content_area.item (yy_cp).natural_32_code
+					else
+						yy_code := yy_content.item_code (yy_cp)
+					end
+					if yy_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_natural_32_code then
+						yy_c := yy_code.to_integer_32
+					else
+						yy_c := yy_code.to_integer_32
+						yy_c := yy_c - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
+					end
+					if yy_c > yyMax_symbol_equiv_class then
+						yy_c := yyMax_symbol_equiv_class
+					end
 				end
 				if yy_c = 0 then
 					yy_c := yyNull_equiv_class

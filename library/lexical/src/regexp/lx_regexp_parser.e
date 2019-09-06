@@ -18,6 +18,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
+			last_string_32_value,
 			last_lx_symbol_class_value
 		end
 
@@ -29,6 +30,7 @@ inherit
 		redefine
 			last_integer_value,
 			last_string_value,
+			last_string_32_value,
 			last_lx_symbol_class_value
 		end
 
@@ -72,6 +74,9 @@ feature {NONE} -- Implementation
 			create yyspecial_routines5
 			yyvsc5 := yyInitial_yyvs_size
 			yyvs5 := yyspecial_routines5.make (yyvsc5)
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
 		end
 
 	yy_init_value_stacks
@@ -82,6 +87,7 @@ feature {NONE} -- Implementation
 			yyvsp3 := -1
 			yyvsp4 := -1
 			yyvsp5 := -1
+			yyvsp6 := -1
 		end
 
 	yy_clear_value_stacks
@@ -93,6 +99,7 @@ feature {NONE} -- Implementation
 			yyvs3.keep_head (0)
 			yyvs4.keep_head (0)
 			yyvs5.keep_head (0)
+			yyvs6.keep_head (0)
 		end
 
 	yy_push_last_value (yychar1: INTEGER)
@@ -130,7 +137,7 @@ feature {NONE} -- Implementation
 					yyvsc3 := yyvsc3 + yyInitial_yyvs_size
 					yyvs3 := yyspecial_routines3.aliased_resized_area (yyvs3, yyvsc3)
 				end
-				yyspecial_routines3.force (yyvs3, last_integer_value, yyvsp3)
+				yyspecial_routines3.force (yyvs3, last_string_32_value, yyvsp3)
 			when 4 then
 				yyvsp4 := yyvsp4 + 1
 				if yyvsp4 >= yyvsc4 then
@@ -140,7 +147,17 @@ feature {NONE} -- Implementation
 					yyvsc4 := yyvsc4 + yyInitial_yyvs_size
 					yyvs4 := yyspecial_routines4.aliased_resized_area (yyvs4, yyvsc4)
 				end
-				yyspecial_routines4.force (yyvs4, last_lx_symbol_class_value, yyvsp4)
+				yyspecial_routines4.force (yyvs4, last_integer_value, yyvsp4)
+			when 5 then
+				yyvsp5 := yyvsp5 + 1
+				if yyvsp5 >= yyvsc5 then
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs5")
+					end
+					yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+					yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
+				end
+				yyspecial_routines5.force (yyvs5, last_lx_symbol_class_value, yyvsp5)
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: not a token type: ")
@@ -185,6 +202,8 @@ feature {NONE} -- Implementation
 				yyvsp4 := yyvsp4 - 1
 			when 5 then
 				yyvsp5 := yyvsp5 - 1
+			when 6 then
+				yyvsp6 := yyvsp6 - 1
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: unknown type id: ")
@@ -206,14 +225,14 @@ feature {NONE} -- Semantic actions
 			-- Execute semantic action.
 		local
 			yyval1: detachable ANY
-			yyval5: LX_NFA
-			yyval4: LX_SYMBOL_CLASS
+			yyval6: LX_NFA
+			yyval5: LX_SYMBOL_CLASS
 		do
 				inspect yy_act
 when 1 then
---|#line 61 "lx_regexp_parser.y"
+--|#line 64 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 61")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 64")
 end
 
 			set_maximum_symbol_equivalence_class
@@ -228,9 +247,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 71 "lx_regexp_parser.y"
+--|#line 74 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 71")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 74")
 end
 
 				-- Initialize for a parse of one pattern.
@@ -250,32 +269,32 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
---|#line 79 "lx_regexp_parser.y"
+--|#line 82 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 79")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 82")
 end
 
 			has_bol_context := True
-			process_rule (yyvs5.item (yyvsp5))
+			process_rule (yyvs6.item (yyvsp6))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
-	yyvsp5 := yyvsp5 -1
+	yyvsp6 := yyvsp6 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
---|#line 84 "lx_regexp_parser.y"
+--|#line 87 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 84")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 87")
 end
 
 			has_bol_context := False
-			process_rule (yyvs5.item (yyvsp5))
+			process_rule (yyvs6.item (yyvsp6))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
-	yyvsp5 := yyvsp5 -1
+	yyvsp6 := yyvsp6 -1
 	if yyvsp1 >= yyvsc1 then
 		debug ("GEYACC")
 			std.error.put_line ("Resize yyvs1")
@@ -286,9 +305,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
---|#line 89 "lx_regexp_parser.y"
+--|#line 92 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 89")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 92")
 end
 
 			report_unrecognized_rule_error
@@ -298,12 +317,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
---|#line 95 "lx_regexp_parser.y"
+--|#line 98 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 95")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 98")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 			has_trail_context := False
 			head_count := regexp_count
 			head_line := regexp_line
@@ -312,12 +331,12 @@ end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 7 then
---|#line 104 "lx_regexp_parser.y"
+--|#line 107 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 104")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 107")
 end
 
 			has_trail_context := True
@@ -325,120 +344,120 @@ end
 			head_line := regexp_line
 			head_column := regexp_column
 			trail_count := 1
-			yyval5 := append_eol_to_regexp (yyvs5.item (yyvsp5))
+			yyval6 := append_eol_to_regexp (yyvs6.item (yyvsp6))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 8 then
---|#line 113 "lx_regexp_parser.y"
+--|#line 116 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 113")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 116")
 end
 
 			has_trail_context := True
 			trail_count := regexp_count
-			yyval5 := append_trail_context_to_regexp (yyvs5.item (yyvsp5), yyvs5.item (yyvsp5 - 1))
+			yyval6 := append_trail_context_to_regexp (yyvs6.item (yyvsp6), yyvs6.item (yyvsp6 - 1))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
-	yyvsp5 := yyvsp5 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyvsp6 := yyvsp6 -1
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 9 then
---|#line 119 "lx_regexp_parser.y"
+--|#line 122 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 119")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 122")
 end
 
 			report_trailing_context_used_twice_error
 			has_trail_context := True
 			trail_count := regexp_count
-			yyval5 := new_epsilon_nfa
+			yyval6 := new_epsilon_nfa
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
-	yyvsp5 := yyvsp5 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyvsp6 := yyvsp6 -1
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 10 then
---|#line 126 "lx_regexp_parser.y"
+--|#line 129 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 126")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 129")
 end
 
 			report_trailing_context_used_twice_error
 			has_trail_context := True
 			trail_count := regexp_count
-			yyval5 := new_epsilon_nfa
+			yyval6 := new_epsilon_nfa
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
-	yyvsp5 := yyvsp5 -1
+	yyvsp6 := yyvsp6 -1
 	yyvsp1 := yyvsp1 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 11 then
---|#line 135 "lx_regexp_parser.y"
+--|#line 138 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 135")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 138")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 			regexp_count := series_count
 			regexp_line := series_line
 			regexp_column := series_column
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 12 then
---|#line 142 "lx_regexp_parser.y"
+--|#line 145 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 142")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 145")
 end
 
-yyval5 := yyvs5.item (yyvsp5) 
+yyval6 := yyvs6.item (yyvsp6) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 13 then
---|#line 146 "lx_regexp_parser.y"
+--|#line 149 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 146")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 149")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 			regexp_count := series_count
 			regexp_line := series_line
 			regexp_column := series_column
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 14 then
---|#line 153 "lx_regexp_parser.y"
+--|#line 156 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 153")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 156")
 end
 
-yyval5 := yyvs5.item (yyvsp5) 
+yyval6 := yyvs6.item (yyvsp6) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 15 then
---|#line 157 "lx_regexp_parser.y"
+--|#line 160 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 157")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 160")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 				-- This rule is written separately so the reduction
 				-- will occur before the trailing series is parsed.
 			head_count := regexp_count
@@ -449,12 +468,12 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 16 then
---|#line 169 "lx_regexp_parser.y"
+--|#line 172 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 169")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 172")
 end
 
 			regexp_line := old_regexp_lines.item
@@ -463,101 +482,101 @@ end
 			old_regexp_columns.remove
 			regexp_count := old_regexp_counts.item
 			old_regexp_counts.remove
-			yyval5 := yyvs5.item (yyvsp5 - 2)
-			yyval5.build_union (yyvs5.item (yyvsp5))
+			yyval6 := yyvs6.item (yyvsp6 - 2)
+			yyval6.build_union (yyvs6.item (yyvsp6))
 			process_regexp_or_series
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
-	yyvsp5 := yyvsp5 -2
+	yyvsp6 := yyvsp6 -2
 	yyvsp1 := yyvsp1 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 17 then
---|#line 169 "lx_regexp_parser.y"
+--|#line 172 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 169")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 172")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 			old_regexp_lines.force (regexp_line)
 			old_regexp_columns.force (regexp_column)
 			old_regexp_counts.force (regexp_count)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
-	yyvsp5 := yyvsp5 + 1
-	if yyvsp5 >= yyvsc5 then
+	yyvsp6 := yyvsp6 + 1
+	if yyvsp6 >= yyvsc6 then
 		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs5")
+			std.error.put_line ("Resize yyvs6")
 		end
-		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
-		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
+		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
 	end
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 18 then
---|#line 190 "lx_regexp_parser.y"
+--|#line 193 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 190")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 193")
 end
 
 			old_singleton_lines.remove
 			old_singleton_columns.remove
 			old_singleton_counts.remove
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 			series_count := singleton_count
 			series_line := singleton_line
 			series_column := singleton_column
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 19 then
---|#line 200 "lx_regexp_parser.y"
+--|#line 203 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 200")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 203")
 end
 
-yyval5 := yyvs5.item (yyvsp5) 
+yyval6 := yyvs6.item (yyvsp6) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 20 then
---|#line 204 "lx_regexp_parser.y"
+--|#line 207 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 204")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 207")
 end
 
 			old_singleton_lines.remove
 			old_singleton_columns.remove
 			old_singleton_counts.remove
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 			series_count := singleton_count
 			series_line := singleton_line
 			series_column := singleton_column
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 21 then
---|#line 214 "lx_regexp_parser.y"
+--|#line 217 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 214")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 217")
 end
 
-yyval5 := yyvs5.item (yyvsp5) 
+yyval6 := yyvs6.item (yyvsp6) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 22 then
---|#line 218 "lx_regexp_parser.y"
+--|#line 221 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 218")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 221")
 end
 
 			singleton_line := old_singleton_lines.item
@@ -566,233 +585,233 @@ end
 			old_singleton_columns.remove
 			singleton_count := old_singleton_counts.item
 			old_singleton_counts.remove
-			yyval5 := yyvs5.item (yyvsp5 - 1)
-			yyval5.build_concatenation (yyvs5.item (yyvsp5))
+			yyval6 := yyvs6.item (yyvsp6 - 1)
+			yyval6.build_concatenation (yyvs6.item (yyvsp6))
 			process_singleton_series
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
-	yyvsp5 := yyvsp5 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyvsp6 := yyvsp6 -1
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 23 then
---|#line 232 "lx_regexp_parser.y"
+--|#line 235 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 232")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 235")
 end
 
 			old_singleton_lines.force (singleton_line)
 			old_singleton_columns.force (singleton_column)
 			old_singleton_counts.force (singleton_count)
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 24 then
---|#line 241 "lx_regexp_parser.y"
+--|#line 244 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 241")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 244")
 end
 
 			old_singleton_lines.force (singleton_line)
 			old_singleton_columns.force (singleton_column)
 			old_singleton_counts.force (singleton_count)
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 25 then
---|#line 250 "lx_regexp_parser.y"
+--|#line 253 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 250")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 253")
 end
 
-yyval5 := yyvs5.item (yyvsp5) 
+yyval6 := yyvs6.item (yyvsp6) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 26 then
---|#line 252 "lx_regexp_parser.y"
+--|#line 255 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 252")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 255")
 end
 
-yyval5 := yyvs5.item (yyvsp5) 
+yyval6 := yyvs6.item (yyvsp6) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 27 then
---|#line 256 "lx_regexp_parser.y"
+--|#line 259 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 256")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 259")
 end
 
-			if utf8_mode.item and yyvs3.item (yyvsp3) > {CHARACTER_8}.max_ascii_value then
-				yyval5 := new_epsilon_nfa
+			if utf8_mode.item and yyvs4.item (yyvsp4) > {CHARACTER_8}.max_ascii_value then
+				yyval6 := new_epsilon_nfa
 				process_singleton_empty_string
 				buffer.wipe_out
-				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, yyvs3.item (yyvsp3))
+				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, yyvs4.item (yyvsp4))
 				from i_ := 1 until i_ > buffer.count loop
-					yyval5 := append_character_to_string (buffer.item_code (i_), yyval5)
+					yyval6 := append_character_to_string (buffer.item_code (i_), yyval6)
 					process_singleton_string (buffer.item_code (i_))
 					i_ := i_ + 1
 				end
 			else
-				yyval5 := new_nfa_from_character (yyvs3.item (yyvsp3))
-				process_singleton_char (yyvs3.item (yyvsp3))
+				yyval6 := new_nfa_from_character (yyvs4.item (yyvsp4))
+				process_singleton_char (yyvs4.item (yyvsp4))
 			end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvsp5 := yyvsp5 + 1
-	yyvsp3 := yyvsp3 -1
-	if yyvsp5 >= yyvsc5 then
+	yyvsp6 := yyvsp6 + 1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp6 >= yyvsc6 then
 		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs5")
+			std.error.put_line ("Resize yyvs6")
 		end
-		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
-		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
+		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
 	end
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 28 then
---|#line 273 "lx_regexp_parser.y"
+--|#line 276 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 273")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 276")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
-			yyval5.build_closure
+			yyval6 := yyvs6.item (yyvsp6)
+			yyval6.build_closure
 			process_singleton_star
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 29 then
---|#line 279 "lx_regexp_parser.y"
+--|#line 282 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 279")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 282")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
-			yyval5.build_positive_closure
+			yyval6 := yyvs6.item (yyvsp6)
+			yyval6.build_positive_closure
 			process_singleton_plus
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 30 then
---|#line 285 "lx_regexp_parser.y"
+--|#line 288 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 285")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 288")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
-			yyval5.build_optional
+			yyval6 := yyvs6.item (yyvsp6)
+			yyval6.build_optional
 			process_singleton_optional
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 31 then
---|#line 291 "lx_regexp_parser.y"
+--|#line 294 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 291")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 294")
 end
 
-			yyval5 := new_bounded_iteration_nfa (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3))
-			process_singleton_bounded_iteration (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3))
+			yyval6 := new_bounded_iteration_nfa (yyvs6.item (yyvsp6), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+			process_singleton_bounded_iteration (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp1 := yyvsp1 -3
-	yyvsp3 := yyvsp3 -2
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyvsp4 := yyvsp4 -2
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 32 then
---|#line 296 "lx_regexp_parser.y"
+--|#line 299 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 296")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 299")
 end
 
-			yyval5 := new_unbounded_iteration_nfa (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-			process_singleton_unbounded_iteration (yyvs3.item (yyvsp3))
+			yyval6 := new_unbounded_iteration_nfa (yyvs6.item (yyvsp6), yyvs4.item (yyvsp4))
+			process_singleton_unbounded_iteration (yyvs4.item (yyvsp4))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp1 := yyvsp1 -3
-	yyvsp3 := yyvsp3 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyvsp4 := yyvsp4 -1
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 33 then
---|#line 301 "lx_regexp_parser.y"
+--|#line 304 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 301")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 304")
 end
 
-			yyval5 := new_iteration_nfa (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-			process_singleton_fixed_iteration (yyvs3.item (yyvsp3))
+			yyval6 := new_iteration_nfa (yyvs6.item (yyvsp6), yyvs4.item (yyvsp4))
+			process_singleton_fixed_iteration (yyvs4.item (yyvsp4))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
-	yyvsp3 := yyvsp3 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyvsp4 := yyvsp4 -1
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 34 then
---|#line 306 "lx_regexp_parser.y"
+--|#line 309 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 306")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 309")
 end
 
-			yyval5 := new_nfa_from_character_class (dot_character_class)
+			yyval6 := new_nfa_from_character_class (dot_character_class)
 			process_singleton_dot
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvsp5 := yyvsp5 + 1
+	yyvsp6 := yyvsp6 + 1
 	yyvsp1 := yyvsp1 -1
-	if yyvsp5 >= yyvsc5 then
+	if yyvsp6 >= yyvsc6 then
 		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs5")
+			std.error.put_line ("Resize yyvs6")
 		end
-		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
-		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
+		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
 	end
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 35 then
---|#line 311 "lx_regexp_parser.y"
+--|#line 314 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 311")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 314")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 36 then
---|#line 315 "lx_regexp_parser.y"
+--|#line 318 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 315")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 318")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 			singleton_count := regexp_count
 			singleton_line := regexp_line
 			singleton_column := regexp_column
@@ -800,15 +819,15 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 37 then
---|#line 322 "lx_regexp_parser.y"
+--|#line 325 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 322")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 325")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 			singleton_count := regexp_count
 			singleton_line := regexp_line
 			singleton_column := regexp_column
@@ -819,15 +838,15 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 38 then
---|#line 332 "lx_regexp_parser.y"
+--|#line 335 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 332")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 335")
 end
 
-			yyval5 := yyvs5.item (yyvsp5)
+			yyval6 := yyvs6.item (yyvsp6)
 			singleton_count := regexp_count
 			singleton_line := regexp_line
 			singleton_column := regexp_column
@@ -838,34 +857,34 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 39 then
---|#line 344 "lx_regexp_parser.y"
+--|#line 347 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 344")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 347")
 end
 
-			yyval5 := new_nfa_from_character_class (yyvs4.item (yyvsp4))
-			process_singleton_symbol_class (yyvs4.item (yyvsp4))
+			yyval6 := new_nfa_from_character_class (yyvs5.item (yyvsp5))
+			process_singleton_symbol_class (yyvs5.item (yyvsp5))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvsp5 := yyvsp5 + 1
-	yyvsp4 := yyvsp4 -1
-	if yyvsp5 >= yyvsc5 then
+	yyvsp6 := yyvsp6 + 1
+	yyvsp5 := yyvsp5 -1
+	if yyvsp6 >= yyvsc6 then
 		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs5")
+			std.error.put_line ("Resize yyvs6")
 		end
-		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
-		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
+		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
 	end
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 40 then
---|#line 351 "lx_regexp_parser.y"
+--|#line 354 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 351")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 354")
 end
 
 			if description.utf8_mode then
@@ -877,9 +896,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 41 then
---|#line 359 "lx_regexp_parser.y"
+--|#line 362 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 359")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 362")
 end
 
 			if description.utf8_mode then
@@ -891,306 +910,127 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 42 then
---|#line 367 "lx_regexp_parser.y"
+--|#line 370 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 367")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 370")
 end
 
-yyval4 := yyvs4.item (yyvsp4) 
+yyval5 := yyvs5.item (yyvsp5) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 43 then
---|#line 369 "lx_regexp_parser.y"
+--|#line 372 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 369")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 372")
 end
 
-yyval4 := yyvs4.item (yyvsp4) 
+yyval5 := yyvs5.item (yyvsp5) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 44 then
---|#line 371 "lx_regexp_parser.y"
+--|#line 374 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 371")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 374")
 end
 
-yyval4 := yyvs4.item (yyvsp4) 
+yyval5 := yyvs5.item (yyvsp5) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 45 then
---|#line 375 "lx_regexp_parser.y"
+--|#line 378 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 375")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 378")
 end
 
-yyval4 := yyvs4.item (yyvsp4) 
+yyval5 := yyvs5.item (yyvsp5) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 46 then
---|#line 377 "lx_regexp_parser.y"
+--|#line 380 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 377")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 380")
 end
 
-yyval4 := yyvs4.item (yyvsp4) 
+yyval5 := yyvs5.item (yyvsp5) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 47 then
---|#line 379 "lx_regexp_parser.y"
+--|#line 382 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 379")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 382")
 end
 
-yyval4 := yyvs4.item (yyvsp4) 
+yyval5 := yyvs5.item (yyvsp5) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 48 then
---|#line 383 "lx_regexp_parser.y"
+--|#line 386 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 383")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 386")
 end
 
-			yyval4 := yyvs4.item (yyvsp4)
-			character_classes.search (yyval4)
+			yyval5 := yyvs5.item (yyvsp5)
+			character_classes.search (yyval5)
 			if character_classes.found then
-				yyval4 := character_classes.found_item
+				yyval5 := character_classes.found_item
 			else
-				character_classes.force_new (yyval4)
+				character_classes.force_new (yyval5)
 			end
-			character_classes_by_name.force (yyval4, yyvs2.item (yyvsp2))
+			character_classes_by_name.force (yyval5, yyvs3.item (yyvsp3))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
-	yyvsp2 := yyvsp2 -1
+	yyvsp3 := yyvsp3 -1
 	yyvsp1 := yyvsp1 -1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 49 then
---|#line 394 "lx_regexp_parser.y"
+--|#line 397 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 394")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 397")
 end
 
-			yyval4 := yyvs4.item (yyvsp4)
-			yyval4.set_negated (True)
-			character_classes.search (yyval4)
+			yyval5 := yyvs5.item (yyvsp5)
+			yyval5.set_negated (True)
+			character_classes.search (yyval5)
 			if character_classes.found then
-				yyval4 := character_classes.found_item
+				yyval5 := character_classes.found_item
 			else
-				character_classes.force_new (yyval4)
+				character_classes.force_new (yyval5)
 			end
-			character_classes_by_name.force (yyval4, yyvs2.item (yyvsp2))
+			character_classes_by_name.force (yyval5, yyvs3.item (yyvsp3))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
-	yyvsp2 := yyvsp2 -1
+	yyvsp3 := yyvsp3 -1
 	yyvsp1 := yyvsp1 -2
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 50 then
---|#line 408 "lx_regexp_parser.y"
+--|#line 411 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 408")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 411")
 end
 
-			yyval4 := append_character_to_character_class (yyvs3.item (yyvsp3), new_character_class)
+			yyval5 := append_character_to_character_class (yyvs4.item (yyvsp4), new_character_class)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvsp4 := yyvsp4 + 1
-	yyvsp3 := yyvsp3 -1
-	if yyvsp4 >= yyvsc4 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs4")
-		end
-		yyvsc4 := yyvsc4 + yyInitial_yyvs_size
-		yyvs4 := yyspecial_routines4.aliased_resized_area (yyvs4, yyvsc4)
-	end
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 51 then
---|#line 412 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 412")
-end
-
-			yyval4 := append_character_to_character_class (yyvs3.item (yyvsp3), yyvs4.item (yyvsp4))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp3 := yyvsp3 -1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 52 then
---|#line 416 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 416")
-end
-
-			yyval4 := append_character_set_to_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), new_character_class)
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 3
-	yyvsp4 := yyvsp4 + 1
-	yyvsp3 := yyvsp3 -2
-	yyvsp1 := yyvsp1 -1
-	if yyvsp4 >= yyvsc4 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs4")
-		end
-		yyvsc4 := yyvsc4 + yyInitial_yyvs_size
-		yyvs4 := yyspecial_routines4.aliased_resized_area (yyvs4, yyvsc4)
-	end
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 53 then
---|#line 420 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 420")
-end
-
-			yyval4 := append_character_set_to_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), yyvs4.item (yyvsp4))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 4
-	yyvsp3 := yyvsp3 -2
-	yyvsp1 := yyvsp1 -1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 54 then
---|#line 426 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 426")
-end
-
-			yyval4 := yyvs4.item (yyvsp4 - 1)
-			yyval4.add_symbol_class (yyvs4.item (yyvsp4))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 3
-	yyvsp4 := yyvsp4 -1
-	yyvsp1 := yyvsp1 -1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 55 then
---|#line 431 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 431")
-end
-
-			yyval4 := yyvs4.item (yyvsp4 - 1)
-			yyval4.remove_symbol_class (yyvs4.item (yyvsp4))
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 3
-	yyvsp4 := yyvsp4 -1
-	yyvsp1 := yyvsp1 -1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 56 then
---|#line 438 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 438")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 3
-	yyvsp1 := yyvsp1 -2
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 57 then
---|#line 440 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 440")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 3
-	yyvsp1 := yyvsp1 -2
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 58 then
---|#line 444 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 444")
-end
-
-yyval4 := yyvs4.item (yyvsp4).twin 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 59 then
---|#line 446 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 446")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 60 then
---|#line 448 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 448")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 61 then
---|#line 452 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 452")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 62 then
---|#line 454 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 454")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 63 then
---|#line 458 "lx_regexp_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 458")
-end
-
-			yyval5 := new_epsilon_nfa
-			process_singleton_empty_string
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 0
 	yyvsp5 := yyvsp5 + 1
+	yyvsp4 := yyvsp4 -1
 	if yyvsp5 >= yyvsc5 then
 		debug ("GEYACC")
 			std.error.put_line ("Resize yyvs5")
@@ -1200,30 +1040,209 @@ if yy_parsing_status >= yyContinue then
 	end
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
-when 64 then
---|#line 463 "lx_regexp_parser.y"
+when 51 then
+--|#line 415 "lx_regexp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 463")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 415")
 end
 
-			if utf8_mode.item and yyvs3.item (yyvsp3) > {CHARACTER_8}.max_ascii_value then
-				yyval5 := yyvs5.item (yyvsp5)
+			yyval5 := append_character_to_character_class (yyvs4.item (yyvsp4), yyvs5.item (yyvsp5))
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp4 := yyvsp4 -1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 52 then
+--|#line 419 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 419")
+end
+
+			yyval5 := append_character_set_to_character_class (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), new_character_class)
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp5 := yyvsp5 + 1
+	yyvsp4 := yyvsp4 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp5 >= yyvsc5 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs5")
+		end
+		yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+		yyvs5 := yyspecial_routines5.aliased_resized_area (yyvs5, yyvsc5)
+	end
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 53 then
+--|#line 423 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 423")
+end
+
+			yyval5 := append_character_set_to_character_class (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), yyvs5.item (yyvsp5))
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 4
+	yyvsp4 := yyvsp4 -2
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 54 then
+--|#line 429 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 429")
+end
+
+			yyval5 := yyvs5.item (yyvsp5 - 1)
+			yyval5.add_symbol_class (yyvs5.item (yyvsp5))
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp5 := yyvsp5 -1
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 55 then
+--|#line 434 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 434")
+end
+
+			yyval5 := yyvs5.item (yyvsp5 - 1)
+			yyval5.remove_symbol_class (yyvs5.item (yyvsp5))
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp5 := yyvsp5 -1
+	yyvsp1 := yyvsp1 -1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 56 then
+--|#line 441 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 441")
+end
+
+yyval5 := yyvs5.item (yyvsp5) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 57 then
+--|#line 443 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 443")
+end
+
+yyval5 := yyvs5.item (yyvsp5) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp1 := yyvsp1 -2
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 58 then
+--|#line 447 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 447")
+end
+
+yyval5 := yyvs5.item (yyvsp5).twin 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 59 then
+--|#line 449 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 449")
+end
+
+yyval5 := yyvs5.item (yyvsp5) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 60 then
+--|#line 451 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 451")
+end
+
+yyval5 := yyvs5.item (yyvsp5) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 61 then
+--|#line 455 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 455")
+end
+
+yyval5 := yyvs5.item (yyvsp5) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 62 then
+--|#line 457 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 457")
+end
+
+yyval5 := yyvs5.item (yyvsp5) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+end
+when 63 then
+--|#line 461 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 461")
+end
+
+			yyval6 := new_epsilon_nfa
+			process_singleton_empty_string
+		
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 0
+	yyvsp6 := yyvsp6 + 1
+	if yyvsp6 >= yyvsc6 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs6")
+		end
+		yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+		yyvs6 := yyspecial_routines6.aliased_resized_area (yyvs6, yyvsc6)
+	end
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
+end
+when 64 then
+--|#line 466 "lx_regexp_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lx_regexp_parser.y' at line 466")
+end
+
+			if utf8_mode.item and yyvs4.item (yyvsp4) > {CHARACTER_8}.max_ascii_value then
+				yyval6 := yyvs6.item (yyvsp6)
 				buffer.wipe_out
-				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, yyvs3.item (yyvsp3))
+				{UC_UTF8_ROUTINES}.append_code_to_utf8 (buffer, yyvs4.item (yyvsp4))
 				from i_ := 1 until i_ > buffer.count loop
-					yyval5 := append_character_to_string (buffer.item_code (i_), yyval5)
+					yyval6 := append_character_to_string (buffer.item_code (i_), yyval6)
 					process_singleton_string (buffer.item_code (i_))
 					i_ := i_ + 1
 				end
 			else
-				yyval5 := append_character_to_string (yyvs3.item (yyvsp3), yyvs5.item (yyvsp5))
-				process_singleton_string (yyvs3.item (yyvsp3))
+				yyval6 := append_character_to_string (yyvs4.item (yyvsp4), yyvs6.item (yyvsp6))
+				process_singleton_string (yyvs4.item (yyvsp4))
 			end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
-	yyvsp3 := yyvsp3 -1
-	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
+	yyvsp4 := yyvsp4 -1
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 				else
 					debug ("GEYACC")
@@ -1255,7 +1274,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 265)
+			create an_array.make_filled (0, 0, 266)
 			yytranslate_template_1 (an_array)
 			yytranslate_template_2 (an_array)
 			Result := yyfixed_array (an_array)
@@ -1268,17 +1287,17 @@ feature {NONE} -- Table templates
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,    2,   22,    2,   12,    2,    2,    2,
-			   23,   24,   15,   16,   19,   26,   21,   13,    2,    2,
+			    2,    2,    2,    2,   23,    2,   13,    2,    2,    2,
+			   24,   25,   16,   17,   20,   27,   22,   14,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,   17,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,   18,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,   25,   11,    2,    2,    2,    2,    2,
+			    2,    2,    2,   26,   12,    2,    2,    2,    2,    2,
 
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,   18,   14,   20,    2,    2,    2,    2,
+			    2,    2,    2,   19,   15,   21,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -1299,46 +1318,46 @@ feature {NONE} -- Table templates
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    1,    2,    3,    4,
-			    5,    6,    7,    8,    9,   10, yyDummy>>,
-			1, 66, 200)
+			    5,    6,    7,    8,    9,   10,   11, yyDummy>>,
+			1, 67, 200)
 		end
 
 	yyr1_template: SPECIAL [INTEGER]
 			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
-			    0,   49,   50,   51,   51,   51,   27,   27,   27,   27,
-			   27,   28,   28,   29,   29,   30,   31,   52,   32,   32,
-			   33,   33,   34,   35,   36,   37,   37,   38,   38,   38,
-			   38,   38,   38,   38,   38,   38,   38,   38,   38,   39,
-			   53,   54,   41,   41,   41,   42,   42,   42,   43,   43,
-			   44,   44,   44,   44,   45,   45,   46,   46,   47,   47,
-			   47,   48,   48,   40,   40, yyDummy>>)
+			    0,   50,   51,   52,   52,   52,   28,   28,   28,   28,
+			   28,   29,   29,   30,   30,   31,   32,   53,   33,   33,
+			   34,   34,   35,   36,   37,   38,   38,   39,   39,   39,
+			   39,   39,   39,   39,   39,   39,   39,   39,   39,   40,
+			   54,   55,   42,   42,   42,   43,   43,   43,   44,   44,
+			   45,   45,   45,   45,   46,   46,   47,   47,   48,   48,
+			   48,   49,   49,   41,   41, yyDummy>>)
 		end
 
 	yytypes1_template: SPECIAL [INTEGER]
 			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
-			    1,    1,    1,    1,    1,    1,    4,    3,    2,    1,
-			    1,    1,    5,    5,    5,    5,    5,    5,    5,    5,
-			    5,    5,    4,    4,    4,    4,    4,    4,    1,    1,
-			    1,    5,    5,    5,    5,    5,    5,    5,    4,    4,
-			    4,    5,    5,    1,    3,    4,    1,    1,    1,    5,
-			    5,    5,    1,    1,    1,    1,    1,    1,    5,    5,
-			    1,    1,    1,    1,    1,    3,    4,    1,    1,    3,
-			    5,    1,    3,    1,    4,    4,    4,    4,    1,    1,
-			    1,    3,    1,    5,    1,    1,    4,    4,    4,    3,
-			    1,    3,    1,    1,    1,    1, yyDummy>>)
+			    1,    1,    1,    1,    1,    1,    5,    4,    3,    1,
+			    1,    1,    6,    6,    6,    6,    6,    6,    6,    6,
+			    6,    6,    5,    5,    5,    5,    5,    5,    1,    1,
+			    1,    6,    6,    6,    6,    6,    6,    6,    5,    5,
+			    5,    6,    6,    1,    4,    5,    1,    1,    1,    6,
+			    6,    6,    1,    1,    1,    1,    1,    1,    6,    6,
+			    1,    1,    1,    1,    1,    4,    5,    1,    1,    4,
+			    6,    1,    4,    1,    5,    5,    5,    5,    1,    1,
+			    1,    4,    1,    6,    1,    1,    5,    5,    5,    4,
+			    1,    4,    1,    1,    1,    1, yyDummy>>)
 		end
 
 	yytypes2_template: SPECIAL [INTEGER]
 			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
-			    1,    1,    1,    1,    1,    2,    3,    3,    4,    1,
+			    1,    1,    1,    1,    1,    2,    3,    4,    4,    5,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1, yyDummy>>)
+			    1,    1,    1,    1,    1,    1,    1,    1, yyDummy>>)
 		end
 
 	yydefact_template: SPECIAL [INTEGER]
@@ -1370,77 +1389,79 @@ feature {NONE} -- Table templates
 			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
-			 -32768,   86,  162, -32768, -32768,  162, -32768, -32768,   58, -32768,
-			 -32768, -32768, -32768,  161,  162, -32768, -32768, -32768,  162,  112,
-			 -32768, -32768, -32768,   62, -32768,   29,    4,  106, -32768,  162,
-			  162,  133,  114,  123, -32768,  117, -32768,  101,  140,  118,
-			   96,   17, -32768,  100,   70,   57, -32768, -32768, -32768,  137,
-			 -32768, -32768,   98, -32768, -32768, -32768,  164,  164,   79,   74,
-			 -32768, -32768, -32768, -32768, -32768, -32768,   34,   89, -32768,   55,
-			  162, -32768,   -6,  164, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768, -32768,   18, -32768, -32768,   41,   36,   25,   14, -32768,
-			 -32768,   16, -32768,   11,    5, -32768, yyDummy>>)
+			 -32768,  112,   29, -32768, -32768,   29, -32768, -32768,    2, -32768,
+			 -32768, -32768, -32768,  165,   29, -32768, -32768, -32768,   29,  139,
+			 -32768, -32768, -32768,   87, -32768,   61,    4,   52, -32768,   29,
+			   29,  105,   89,  102, -32768,   93, -32768,   70,  168,  145,
+			  122,   27, -32768,   85,   62,   18, -32768, -32768, -32768,   84,
+			 -32768, -32768,   99, -32768, -32768, -32768,   36,   36,   24,   22,
+			 -32768, -32768, -32768, -32768, -32768, -32768,   17,   81, -32768,   55,
+			   29, -32768,   20,   36, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768, -32768,   74, -32768, -32768,   38,   44,   41,   23, -32768,
+			 -32768,   -5, -32768,   12,    5, -32768, yyDummy>>)
 		end
 
 	yypgoto_template: SPECIAL [INTEGER]
 			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
-			  171,    1, -32768,  163,  169,  -12, -32768,  158, -32768, -32768,
-			 -32768,  157, -32768, -32768, -32768,    0, -32768,  110,   -1,   -2,
-			 -32768,   95, -32768, -32768, -32768, -32768, -32768, -32768, yyDummy>>)
+			  137,    1, -32768,  119,  130,  -12, -32768,  128, -32768, -32768,
+			 -32768,  125, -32768, -32768, -32768,    0, -32768,   80,   -1,   -2,
+			 -32768,   65, -32768, -32768, -32768, -32768, -32768, -32768, yyDummy>>)
 		end
 
 	yytable_template: SPECIAL [INTEGER]
 			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
-			   40,   39,   38,   31,  -44,   95,   51,  -44,  -44,  -44,
-			  -44,   94,  -44,   85,   84,   49,  -44,  -44,  -44,  -44,
-			  -44,  -44,  -44,   65,   89,  -44,  -44,  -44,  -44,  -43,
-			   58,   59,  -43,  -43,  -43,  -43,   92,  -43,   63,   64,
-			   69,  -43,  -43,  -43,  -43,  -43,  -43,  -43,   91,   62,
-			  -43,  -43,  -43,  -43,   75,   75,   74,   74,   83,   80,
-			   61,   90,  -42,   69,   44,  -42,  -42,  -42,  -42,   43,
-			  -42,   88,   87,   86,  -42,  -42,  -42,  -42,  -42,  -42,
-			  -42,   82,   68,  -42,  -42,  -42,  -42,   11,   46,   10,
-			    9,    8,    7,   46,    6,   81,   67,    5,   79,  -44,
+			   40,   39,   38,   31,  -44,   95,   51,  -44,  -44,   44,
+			  -44,  -44,   94,  -44,   43,   49,   92,  -44,  -44,  -44,
+			  -44,  -44,  -44,  -44,   69,   69,  -44,  -44,  -44,  -44,
+			   58,   59,   10,    9,   65,    8,    7,   46,    6,   46,
+			   85,   84,    8,   80,   68,    6,   91,   79,   63,   78,
+			   64,    4,    3,    2,   75,   75,   74,   74,   83,   90,
+			   73,  -43,   57,   56,  -43,  -43,   62,  -43,  -43,   61,
+			  -43,   88,   87,   86,  -43,  -43,  -43,  -43,  -43,  -43,
+			  -43,   89,   82,  -43,  -43,  -43,  -43,  -42,   81,   67,
+			  -42,  -42,   44,  -42,  -42,  -24,  -42,   71,   47,   46,
 
-			  -44,  -44,  -44,   78,  -44,   72,   44,    4,    3,    2,
-			  -44,  -44,  -44,  -44,  -44,   57,   56,  -44,  -44,  -44,
-			   63,  -43,  -43,  -43,  -43,  -24,  -43,   55,   54,   53,
-			   52,  -19,  -43,  -43,  -43,  -43,  -43,  -12,   60,  -43,
-			  -43,  -43,   62,  -42,  -42,  -42,  -42,   46,  -42,   71,
-			   47,   46,   77,   66,  -42,  -42,  -42,  -42,  -42,   37,
-			   35,  -42,  -42,  -42,   61,   10,    9,    8,    7,    8,
-			    6,   33,    6,   48,   47,   46,   42,   50,    0,    0,
-			    0,    0,    0,    4,    3,    2,    0,   73, yyDummy>>)
+			  -42,  -42,  -42,  -42,  -42,  -42,  -42,   72,  -19,  -42,
+			  -42,  -42,  -42,   11,   60,   10,    9,  -12,    8,    7,
+			   46,    6,   77,   66,    5,  -44,  -44,   37,  -44,  -44,
+			   35,  -44,   33,   50,    4,    3,    2,  -44,  -44,  -44,
+			  -44,  -44,   42,    0,  -44,  -44,  -44,   63,  -43,  -43,
+			    0,  -43,  -43,    0,  -43,   55,   54,   53,   52,    0,
+			  -43,  -43,  -43,  -43,  -43,    0,    0,  -43,  -43,  -43,
+			   62,  -42,  -42,    0,  -42,  -42,    0,  -42,   48,   47,
+			   46,    0,    0,  -42,  -42,  -42,  -42,  -42,    0,    0,
+			  -42,  -42,  -42,   61, yyDummy>>)
 		end
 
 	yycheck_template: SPECIAL [INTEGER]
 			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
-			    2,    2,    2,    2,    0,    0,   18,    3,    4,    5,
-			    6,    0,    8,   19,   20,   14,   12,   13,   14,   15,
-			   16,   17,   18,    6,    6,   21,   22,   23,   24,    0,
-			   29,   30,    3,    4,    5,    6,   20,    8,   24,   22,
-			    6,   12,   13,   14,   15,   16,   17,   18,    7,   24,
-			   21,   22,   23,   24,   56,   57,   56,   57,   70,   25,
-			   24,   20,    0,    6,    6,    3,    4,    5,    6,   11,
-			    8,   73,   73,   73,   12,   13,   14,   15,   16,   17,
-			   18,   26,   25,   21,   22,   23,   24,    1,   14,    3,
-			    4,    5,    6,   14,    8,    6,   26,   11,   24,    3,
+			    2,    2,    2,    2,    0,    0,   18,    3,    4,    7,
+			    6,    7,    0,    9,   12,   14,   21,   13,   14,   15,
+			   16,   17,   18,   19,    7,    7,   22,   23,   24,   25,
+			   29,   30,    3,    4,    7,    6,    7,   15,    9,   15,
+			   20,   21,    6,   26,   26,    9,    8,   25,   25,   25,
+			   23,   22,   23,   24,   56,   57,   56,   57,   70,   21,
+			   24,    0,   10,   11,    3,    4,   25,    6,    7,   25,
+			    9,   73,   73,   73,   13,   14,   15,   16,   17,   18,
+			   19,    7,   27,   22,   23,   24,   25,    0,    7,   27,
+			    3,    4,    7,    6,    7,   25,    9,   13,   14,   15,
 
-			    4,    5,    6,   24,    8,    7,    6,   21,   22,   23,
-			   14,   15,   16,   17,   18,    9,   10,   21,   22,   23,
-			   24,    3,    4,    5,    6,   24,    8,   15,   16,   17,
-			   18,   14,   14,   15,   16,   17,   18,   14,   24,   21,
-			   22,   23,   24,    3,    4,    5,    6,   14,    8,   12,
-			   13,   14,   57,   43,   14,   15,   16,   17,   18,    2,
-			    2,   21,   22,   23,   24,    3,    4,    5,    6,    5,
-			    8,    2,    8,   12,   13,   14,    5,   14,   -1,   -1,
-			   -1,   -1,   -1,   21,   22,   23,   -1,   23, yyDummy>>)
+			   13,   14,   15,   16,   17,   18,   19,    8,   15,   22,
+			   23,   24,   25,    1,   25,    3,    4,   15,    6,    7,
+			   15,    9,   57,   43,   12,    3,    4,    2,    6,    7,
+			    2,    9,    2,   14,   22,   23,   24,   15,   16,   17,
+			   18,   19,    5,   -1,   22,   23,   24,   25,    3,    4,
+			   -1,    6,    7,   -1,    9,   16,   17,   18,   19,   -1,
+			   15,   16,   17,   18,   19,   -1,   -1,   22,   23,   24,
+			   25,    3,    4,   -1,    6,    7,   -1,    9,   13,   14,
+			   15,   -1,   -1,   15,   16,   17,   18,   19,   -1,   -1,
+			   22,   23,   24,   25, yyDummy>>)
 		end
 
 feature {NONE} -- Semantic value stacks
@@ -1469,8 +1490,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines2: KL_SPECIAL_ROUTINES [STRING]
 			-- Routines that ought to be in SPECIAL [STRING]
 
-	yyvs3: SPECIAL [INTEGER]
-			-- Stack for semantic values of type INTEGER
+	yyvs3: SPECIAL [STRING_32]
+			-- Stack for semantic values of type STRING_32
 
 	yyvsc3: INTEGER
 			-- Capacity of semantic value stack `yyvs3'
@@ -1478,11 +1499,11 @@ feature {NONE} -- Semantic value stacks
 	yyvsp3: INTEGER
 			-- Top of semantic value stack `yyvs3'
 
-	yyspecial_routines3: KL_SPECIAL_ROUTINES [INTEGER]
-			-- Routines that ought to be in SPECIAL [INTEGER]
+	yyspecial_routines3: KL_SPECIAL_ROUTINES [STRING_32]
+			-- Routines that ought to be in SPECIAL [STRING_32]
 
-	yyvs4: SPECIAL [LX_SYMBOL_CLASS]
-			-- Stack for semantic values of type LX_SYMBOL_CLASS
+	yyvs4: SPECIAL [INTEGER]
+			-- Stack for semantic values of type INTEGER
 
 	yyvsc4: INTEGER
 			-- Capacity of semantic value stack `yyvs4'
@@ -1490,11 +1511,11 @@ feature {NONE} -- Semantic value stacks
 	yyvsp4: INTEGER
 			-- Top of semantic value stack `yyvs4'
 
-	yyspecial_routines4: KL_SPECIAL_ROUTINES [LX_SYMBOL_CLASS]
-			-- Routines that ought to be in SPECIAL [LX_SYMBOL_CLASS]
+	yyspecial_routines4: KL_SPECIAL_ROUTINES [INTEGER]
+			-- Routines that ought to be in SPECIAL [INTEGER]
 
-	yyvs5: SPECIAL [LX_NFA]
-			-- Stack for semantic values of type LX_NFA
+	yyvs5: SPECIAL [LX_SYMBOL_CLASS]
+			-- Stack for semantic values of type LX_SYMBOL_CLASS
 
 	yyvsc5: INTEGER
 			-- Capacity of semantic value stack `yyvs5'
@@ -1502,7 +1523,19 @@ feature {NONE} -- Semantic value stacks
 	yyvsp5: INTEGER
 			-- Top of semantic value stack `yyvs5'
 
-	yyspecial_routines5: KL_SPECIAL_ROUTINES [LX_NFA]
+	yyspecial_routines5: KL_SPECIAL_ROUTINES [LX_SYMBOL_CLASS]
+			-- Routines that ought to be in SPECIAL [LX_SYMBOL_CLASS]
+
+	yyvs6: SPECIAL [LX_NFA]
+			-- Stack for semantic values of type LX_NFA
+
+	yyvsc6: INTEGER
+			-- Capacity of semantic value stack `yyvs6'
+
+	yyvsp6: INTEGER
+			-- Top of semantic value stack `yyvs6'
+
+	yyspecial_routines6: KL_SPECIAL_ROUTINES [LX_NFA]
 			-- Routines that ought to be in SPECIAL [LX_NFA]
 
 feature {NONE} -- Constants
@@ -1513,17 +1546,17 @@ feature {NONE} -- Constants
 	yyFlag: INTEGER = -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER = 27
+	yyNtbase: INTEGER = 28
 			-- Number of tokens
 
-	yyLast: INTEGER = 187
+	yyLast: INTEGER = 193
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER = 265
+	yyMax_token: INTEGER = 266
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER = 55
+	yyNsyms: INTEGER = 56
 			-- Number of symbols
 			-- (terminal and nonterminal)
 
@@ -1538,6 +1571,9 @@ feature {NONE} -- Access
 
 	last_string_value: STRING
 			-- Last semantic value of type STRING
+
+	last_string_32_value: STRING_32
+			-- Last semantic value of type STRING_32
 
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 			-- Last semantic value of type LX_SYMBOL_CLASS

@@ -12,6 +12,7 @@ inherit
 feature -- Last values
 
 	last_detachable_any_value: detachable ANY
+	last_string_32_value: STRING_32
 	last_string_value: STRING
 	last_integer_value: INTEGER
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
@@ -38,6 +39,8 @@ feature -- Access
 				Result := "UNICODE_MODE_START"
 			when BYTE_MODE_START then
 				Result := "BYTE_MODE_START"
+			when dummy then
+				Result := "dummy"
 			when EIF_CODE then
 				Result := "EIF_CODE"
 			when NAME then
@@ -67,13 +70,14 @@ feature -- Token codes
 	EMPTY: INTEGER = 261
 	UNICODE_MODE_START: INTEGER = 262
 	BYTE_MODE_START: INTEGER = 263
-	EIF_CODE: INTEGER = 264
-	NAME: INTEGER = 265
-	CCL_BRACKET: INTEGER = 266
-	CHAR: INTEGER = 267
-	NUMBER: INTEGER = 268
-	CCL_OP: INTEGER = 269
-	CCL_PLUS: INTEGER = 270
-	CCL_MINUS: INTEGER = 271
+	dummy: INTEGER = 264
+	EIF_CODE: INTEGER = 265
+	NAME: INTEGER = 266
+	CCL_BRACKET: INTEGER = 267
+	CHAR: INTEGER = 268
+	NUMBER: INTEGER = 269
+	CCL_OP: INTEGER = 270
+	CCL_PLUS: INTEGER = 271
+	CCL_MINUS: INTEGER = 272
 
 end
