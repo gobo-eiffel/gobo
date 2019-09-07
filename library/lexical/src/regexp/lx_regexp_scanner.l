@@ -66,10 +66,20 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 
 <REGEXP>{
 	"(u:"		{
-					last_token := UNICODE_MODE_START
+					if description.utf8_mode then
+						last_token := UNICODE_MODE_START
+					else
+						last_token := Left_parenthesis_code
+						less (1)
+					end
 				}
 	"(b:"		{
-					last_token := BYTE_MODE_START
+					if description.utf8_mode then
+						last_token := BYTE_MODE_START
+					else
+						last_token := Left_parenthesis_code
+						less (1)
+					end
 				}
 	\"			{
 					last_token := Double_quote_code
@@ -97,7 +107,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 						set_start_condition (FIRSTCCL)
 					end
 				}
-	[/|*+?.()]		last_token := unicode_text_item (1).natural_32_code.to_integer_32
+	[/|*+?.()]		last_token := text_item (1).code
 	.			{
 					last_token := CHAR
 					process_single_character
@@ -107,10 +117,9 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 <NUM>{
 	{WS}			-- Separator.
 	[0-9]+		{
-					last_string_32_value := unicode_text
-					if last_string_32_value.is_integer then
+					if attached text as l_text and then l_text.is_integer then
 						last_token := NUMBER
-						last_integer_value := last_string_32_value.to_integer
+						last_integer_value := l_text.to_integer
 					else
 						report_integer_too_large_error (text)
 					end

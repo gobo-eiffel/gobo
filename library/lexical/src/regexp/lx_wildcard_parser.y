@@ -310,10 +310,11 @@ feature {NONE} -- Implementation
 	question_character_class: LX_SYMBOL_CLASS
 			-- "?" character class (i.e. all characters except /)
 		local
-			question_string: STRING
+			question_string: STRING_32
 			l_character_classes_by_name: like character_classes_by_name
 		do
-			question_string := "?"
+			create question_string.make (1)
+			question_string.append_character ({CHARACTER_32} '?')
 			if utf8_mode.item then
 				l_character_classes_by_name := utf8_character_classes_by_name
 			else

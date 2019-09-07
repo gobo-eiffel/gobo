@@ -40,7 +40,7 @@ create
 
 %x QUOTE FIRSTCCL CCL
 
-%option utf8 ecs meta-ecs case-insensitive nodefault outfile="lx_wildcard_scanner.e"
+%option ecs meta-ecs case-insensitive nodefault outfile="lx_wildcard_scanner.e"
 
 WS					[ \t\r]+
 NL					\n
@@ -65,8 +65,8 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					last_token := CCL_MINUS
 				}
 	"["{FIRST_CCL_CHAR}{CCL_CHAR}*"]"	{
-					last_string_value := text
-					if attached character_class_with_name (last_string_value) as l_character_class then
+					last_string_32_value := unicode_text
+					if attached character_class_with_name (last_string_32_value) as l_character_class then
 						last_token := CCL_OP
 						last_lx_symbol_class_value := l_character_class
 					else
@@ -77,17 +77,17 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 				}
 	"*("			last_token := STAR_PAREN
 	"**/"			last_token := STAR_STAR_SLASH
-	[@|*+?()]	last_token := text_item (1).code
+	[@|*+?()]		last_token := text_item (1).code
 	.			{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 				}
 }
 
 <QUOTE>{
 	[^"\n]		{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 				}
 	\"			{
 					last_token := Double_quote_code
@@ -148,7 +148,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	"^"/[-\]]		last_token := Caret_code
 	.			{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 					set_start_condition (CCL)
 				}
 	{NL}		{
@@ -163,7 +163,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	-/[^\]]			last_token := Minus_code
 	[^\]\n]		{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 				}
 	"]"			{
 					last_token := Right_bracket_code
@@ -178,12 +178,13 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 }
 
 <*>{
-	(b:.)		{
-					report_bad_character_error (text)
-				}
-	\n			{
-					report_bad_character_error ("%%N")
-					line_nb := line_nb + 1
+	.|\n		{
+					if text_item (1) = '%N' then
+						report_bad_character_error ("%%N")
+						line_nb := line_nb + 1
+					else
+						report_bad_character_error (character_text)
+					end
 				}
 }
 
