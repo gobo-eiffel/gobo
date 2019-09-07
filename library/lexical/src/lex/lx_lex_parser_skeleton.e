@@ -509,7 +509,7 @@ feature {NONE} -- Factory
 			-- symbol transition labeled `symbol'
 			-- (Register to `description.equiv_classes' if needed.)
 		local
-			a_name: STRING
+			a_name: STRING_32
 			a_character_class: LX_SYMBOL_CLASS
 		do
 			if description.equiv_classes_used then
@@ -518,7 +518,8 @@ feature {NONE} -- Factory
 					-- simple symbol transition labeled `symbol'.
 					-- This is to allow later symbol renumbering
 					-- using equivalence classes.
-				a_name := symbol.out
+				create a_name.make (10)
+				a_name.append_integer (symbol)
 				character_classes_by_name.search (a_name)
 				if character_classes_by_name.found then
 					a_character_class := character_classes_by_name.found_item
@@ -580,6 +581,7 @@ feature {NONE} -- Factory
 			if description.case_insensitive then
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
+					lower_char := a_char + Case_diff
 					create a_name.make (2)
 					a_name.append_integer (lower_char)
 					character_classes_by_name.search (a_name)
