@@ -50,6 +50,8 @@ feature {NONE} -- Initialization
 		do
 			create unicode_area.make_filled ({CHARACTER_32} '%U', n + 1)
 			as_unicode_special := unicode_area.area
+			invalid_character := {CHARACTER_8}.max_value.to_character_8
+			invalid_unicode_character := {CHARACTER_32}.max_value.to_character_32
 		end
 
 	make_from_string (a_string: READABLE_STRING_GENERAL)
@@ -145,7 +147,8 @@ feature -- Access
 		end
 
 	invalid_character: CHARACTER_8
-			-- Character to the used in place of an invalid or surrogate Unicode character
+			-- Character to the used in place of a Unicode character which is
+			-- too large to fit into a CHARACTER_8
 
 	invalid_unicode_character: CHARACTER_32
 			-- Unicode character to the used in place of an invalid UTF-8 sequence
