@@ -18,6 +18,7 @@ inherit
 		rename
 			make_from_string as make_from_iso_8859_1_string,
 			fill_from_string as fill_from_iso_8859_1_string,
+			fill_from_substring as fill_from_iso_8859_1_substring,
 			fill_from_stream as fill_from_iso_8859_1_stream
 		redefine
 			unicode_item,
@@ -26,7 +27,7 @@ inherit
 			unicode_substring,
 			append_substring_to_string,
 			append_substring_to_unicode_string,
-			fill_from_iso_8859_1_string,
+			fill_from_iso_8859_1_substring,
 			fill_from_iso_8859_1_stream,
 			move_left,
 			move_right
@@ -38,9 +39,9 @@ inherit
 create
 
 	make,
+	make_from_string,
 	make_from_iso_8859_1_string,
-	make_from_utf8_string,
-	make_from_string
+	make_from_utf8_string
 
 feature {NONE} -- Initialization
 
@@ -78,6 +79,7 @@ feature {NONE} -- Initialization
 			-- may not share internal representation.)
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_string: a_string.same_type ({STRING_8} "")
 		local
 			nb: INTEGER
 		do
@@ -241,16 +243,36 @@ feature -- Element change
 			a_string_not_void: a_string /= Void
 			pos_large_enough: pos >= 1
 			enough_space: (pos + a_string.count - 1) <= count
+		do
+			fill_from_substring (a_string, 1, a_string.count, pos)
+		ensure
+			charaters_set: unicode_substring (pos, a_string.count + pos - 1).same_string_general (a_string)
+		end
+
+	fill_from_substring (a_string: READABLE_STRING_GENERAL; s, e, pos: INTEGER)
+			-- Copy characters of `a_string'  between indexes `s' and `e'
+			-- to buffer starting at position `pos'.
+		require
+			a_string_not_void: a_string /= Void
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
+			pos_large_enough: pos >= 1
+			enough_space: (pos + e - s) <= count
 		local
 			i, j, nb: INTEGER
 		do
-			nb := a_string.count
-			if nb > 0 then
+			if s <= e then
 				if attached {READABLE_STRING_32} a_string as l_string_32 then
-					unicode_area.subcopy (l_string_32, 1, nb, pos + 1)
+					unicode_area.subcopy (l_string_32, s, e, pos + 1)
 				else
 					j := pos + 1
-					from i := 1 until i > nb loop
+					from
+						i := s
+						nb := e
+					until
+						i > nb
+					loop
 						unicode_area.put (a_string.item (i), j)
 						j := j + 1
 						i := i + 1
@@ -258,23 +280,26 @@ feature -- Element change
 				end
 			end
 		ensure
-			charaters_set: unicode_substring (pos, a_string.count + pos - 1).same_string_general (a_string)
+			charaters_set: unicode_substring (pos, e - s + pos).same_string_general (a_string.substring (s, e))
 		end
 
-	fill_from_iso_8859_1_string (a_string: STRING_8; pos: INTEGER)
-			-- Copy characters of `a_string' to buffer
-			-- starting at position `pos'.
+	fill_from_iso_8859_1_substring (a_string: STRING_8; s, e, pos: INTEGER)
+			-- Copy characters of `a_string' between indexes `s' and `e'
+			-- to buffer starting at position `pos'.
 			-- `a_stream' is expected to be encoded with ISO 8859-1.
 		local
 			i, j, nb: INTEGER
 			l_area: SPECIAL [CHARACTER_8]
 		do
-			nb := a_string.count
-			if nb > 0 then
+			if s <= e then
 				j := pos + 1
 				l_area := a_string.area
-				nb := nb - 1
-				from i := 0 until i > nb loop
+				from
+					i := s - 1
+					nb := e - 1
+				until
+					i > nb
+				loop
 					unicode_area.put (l_area.item (i).to_character_32, j)
 					j := j + 1
 					i := i + 1
@@ -290,9 +315,10 @@ feature -- Element change
 			-- Return the number of items actually copied.
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_string: a_string.same_type ({STRING_8} "")
 			pos_large_enough: pos >= 1
 				-- The precondition below assumes the worse case
-				-- were all UTF-8 encoded characters are ASCII.
+				-- where all UTF-8 encoded characters are ASCII.
 			enough_space: (pos + a_string.count - 1) <= count
 		local
 			i, nb: INTEGER
@@ -391,7 +417,7 @@ feature -- Element change
 				l_area.set_count (count)
 			end
 			Result := a_stream.read_to_string (l_area, 1, nb)
-			fill_from_string (l_area, pos)
+			fill_from_iso_8859_1_substring (l_area, 1, Result, pos)
 		end
 
 	fill_from_utf8_stream (a_stream: KI_CHARACTER_INPUT_STREAM; pos, nb: INTEGER_32): INTEGER_32

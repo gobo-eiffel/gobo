@@ -3,7 +3,7 @@ note
 	description:
 	"[
 		Lexical analyzer buffers for Unicode input files.
-		The buffer contains the UTF-8 bytes, after possible
+		The buffer contains 32-bit characters, after possible
 		conversion if the input used a different encoding.
 		Supported encodings: UTF-8, ISO-8859-1.
 	]"
@@ -14,31 +14,37 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class YY_UTF8_FILE_BUFFER
+class YY_UNICODE_FILE_BUFFER
 
 inherit
 
-	YY_FILE_BUFFER
-		rename
-			make_from_string as make_from_utf8_string,
-			set_string as set_utf8_string
-		redefine
-			fill,
-			flush,
-			compact_left
-		end
-
-	YY_UTF8_BUFFER
+	YY_UNICODE_BUFFER
 		rename
 			make as make_from_string
 		undefine
 			name,
 			wipe_out,
-			set_utf8_string,
-			make_from_utf8_string
+			set_iso_8859_1_string,
+			make_from_iso_8859_1_string
 		redefine
+			content,
 			set_string,
+			set_utf8_string,
+			fill,
+			flush,
+			compact_left,
 			make_from_string,
+			make_from_utf8_string
+		end
+
+	YY_FILE_BUFFER
+		rename
+			make_from_string as make_from_iso_8859_1_string,
+			set_string as set_iso_8859_1_string
+		undefine
+			new_default_buffer
+		redefine
+			content,
 			fill,
 			flush,
 			compact_left
@@ -53,7 +59,16 @@ feature {NONE} -- Initialization
 
 	make_from_string (a_string: READABLE_STRING_GENERAL)
 			-- Create a new buffer with characters from `a_string'.
-			-- Invalid Unicode characters are encoded with one byte 0xFF.
+			-- Do not alter `a_string' during the scanning process.
+		do
+			end_of_file := True
+			file := null_input_stream
+			Precursor (a_string)
+			filled := False
+		end
+
+	make_from_utf8_string (a_string: STRING_8)
+			-- Create a new buffer with characters from `a_string'.
 			-- Do not alter `a_string' during the scanning process.
 		do
 			end_of_file := True
@@ -63,6 +78,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	content: KL_UNICODE_CHARACTER_BUFFER
+			-- Input buffer characters
 
 	default_encoding: INTEGER
 			-- Default encoding to be used
@@ -84,7 +102,19 @@ feature -- Setting
 
 	set_string (a_string: READABLE_STRING_GENERAL)
 			-- Reset buffer with characters from `a_string'.
-			-- Invalid Unicode characters are encoded with one byte 0xFF.
+			-- Resize buffer capacity if needed.
+			-- Do not alter `a_string' during the scanning process.
+		do
+			end_of_file := True
+			file := null_input_stream
+			Precursor (a_string)
+			filled := False
+		end
+
+	set_utf8_string (a_string: STRING_8)
+			-- Reset buffer with characters from `a_string'.
+			-- `a_string' is expected to be encoded with UTF-8.
+			-- Replace invalid UTF-8 sequence by `content.invalid_unicode_charater'.
 			-- Resize buffer capacity if needed.
 			-- Do not alter `a_string' during the scanning process.
 		do
@@ -105,16 +135,14 @@ feature -- Setting
 feature -- Element change
 
 	fill
-			-- Fill buffer with UTF-8 bytes from `file', after possible conversion.
-			-- Do not lose unprocessed bytes in buffer.
+			-- Fill buffer with characters from `file', after possible conversion.
+			-- Do not lose unprocessed characters in buffer.
 			-- Resize buffer if necessary. Set `filled' to True
-			-- if bytes have been added to buffer.
+			-- if characters have been added to buffer.
 		local
 			nb, nb2: INTEGER
 			buff: like content
-			i, j, k: INTEGER
-			c: CHARACTER_8
-			l_code: INTEGER
+			k: INTEGER
 		do
 				-- If the last call to `fill' failed to add
 				-- more characters, this means that the end of
@@ -129,101 +157,66 @@ feature -- Element change
 				if interactive then
 					if encoding = utf8_encoding then
 						nb := 1
-						nb2 := buff.fill_from_stream (file, count + 1, nb)
+						nb2 := buff.fill_from_utf8_stream (file, count + 1, nb)
 					elseif encoding = iso_8859_1_encoding then
-							-- In case of ISO 8859-1, first read the character far enough
-							-- on the right of the buffer so that we can later convert it
-							-- to the left (with one or two bytes).
 						nb := 1
-						k := count + 1 + nb
-						nb2 := buff.fill_from_stream (file, k, nb)
+						nb2 := buff.fill_from_iso_8859_1_stream (file, count + 1, nb)
 					elseif default_encoding = utf8_encoding then
 						encoding := utf8_encoding
 						nb := 1
-						nb2 := buff.fill_from_stream (file, count + 1, nb)
+						nb2 := buff.fill_from_utf8_stream (file, count + 1, nb)
 					else
 						encoding := iso_8859_1_encoding
-							-- In case of ISO 8859-1, first read the character far enough
-							-- on the right of the buffer so that we can later convert it
-							-- to the left (with one or two bytes).
 						nb := 1
-						k := count + 1 + nb
-						nb2 := buff.fill_from_stream (file, k, nb)
+						nb2 := buff.fill_from_iso_8859_1_stream (file, count + 1, nb)
 					end
 				elseif encoding = utf8_encoding then
 					nb := capacity - count
-					nb2 := buff.fill_from_stream (file, count + 1, nb)
+					nb2 := buff.fill_from_utf8_stream (file, count + 1, nb)
 				elseif encoding = iso_8859_1_encoding then
-						-- In case of ISO 8859-1, first read the characters (half of the
-						-- available number of bytes) far enough on the right of the buffer
-						-- so that we can later convert them to the left (with one or two
-						-- bytes for each character read).
-					nb := (capacity - count) // {UC_UTF8_ROUTINES}.max_bytes_of_iso_8859_1_to_utf8
-					k := count + 1 + nb
-					nb2 := buff.fill_from_stream (file, k, nb)
+					nb := capacity - count
+					nb2 := buff.fill_from_iso_8859_1_stream (file, count + 1, nb)
+				elseif default_encoding = utf8_encoding then
+					encoding := utf8_encoding
+					nb := 1
+					k := count + 1
+					nb2 := buff.fill_from_utf8_stream (file, k, nb)
+					if nb2 >= nb then
+						if buff.item (k) = {UC_UNICODE_CONSTANTS}.bom_character then
+								-- Discard BOM and fill the buffer with the following characters.
+							nb := capacity - count
+							nb2 := buff.fill_from_utf8_stream (file, count + 1, nb)
+						end
+					end
 				else
 						-- We need to determine whether the file starts with a UTF-8 BOM.
 						-- Make as if the characters read are not the BOM but regular
-						-- ISO 8859-1, so that we have enough room to convert them to
-						-- possibly one or two bytes each.
+						-- ISO 8859-1, so that we have enough room for them.
 					nb := {UC_UTF8_ROUTINES}.utf8_bom.count
-					k := count + 1 + nb
+					k := count + 1
 					from
-						nb2 := buff.fill_from_stream (file, k, nb)
+						nb2 := buff.fill_from_iso_8859_1_stream (file, k, nb)
 					until
 						nb2 >= nb or else file.end_of_input
 					loop
-						nb2 := nb2 + buff.fill_from_stream (file, k + nb2, nb - nb2)
+						nb2 := nb2 + buff.fill_from_iso_8859_1_stream (file, k + nb2, nb - nb2)
 					end
-					if nb2 >= nb and then {UC_UTF8_ROUTINES}.is_endian_detection_character (buff.item (k), buff.item (k + 1), buff.item (k + 2)) then
+					if nb2 >= nb and then {UC_UTF8_ROUTINES}.is_endian_detection_character (buff.item (k).to_character_8, buff.item (k + 1).to_character_8, buff.item (k + 2).to_character_8) then
 							-- We found the UTF-8 BOM.
-							-- Discard it and fill the buffer with the following UTF-8 characters.
+							-- Discard it and fill the buffer with the following characters.
 						encoding := utf8_encoding
 						nb := capacity - count
-						nb2 := buff.fill_from_stream (file, count + 1, nb)
+						nb2 := buff.fill_from_utf8_stream (file, count + 1, nb)
 					else
 							-- It's not the UTF-8 BOM.
-						if default_encoding = utf8_encoding then
-							encoding := utf8_encoding
-						else
-								-- So it's not a UTF-8 file.
-							encoding := iso_8859_1_encoding
-						end
+							-- So it's not a UTF-8 file.
+						encoding := iso_8859_1_encoding
 					end
 				end
 				if nb2 < nb then
 					end_of_file := file.end_of_input
 				end
-				if encoding = iso_8859_1_encoding then
-						-- Convert the ISO-8859-1 characters which have been read
-						-- on the right of the buffer to one or two bytes UTF-8
-						-- characters each on the left of the buffer.
-					from
-						i := 1
-						j := count
-					until
-						i > nb2
-					loop
-						c := buff.item (k)
-						l_code := c.code
-						if l_code <= 0x7F then
-							j := j + 1
-							buff.put (c, j)
-						else
-								-- 110xxxxx
-							j := j + 1
-							buff.put ({KL_INTEGER_ROUTINES}.to_character (l_code // 64 + 192), j)
-								-- 10xxxxxx
-							j := j + 1
-							buff.put ({KL_INTEGER_ROUTINES}.to_character (l_code \\ 64 + 128), j)
-						end
-						k := k + 1
-						i := i + 1
-					end
-					count := j
-				else
-					count := count + nb2
-				end
+				count := count + nb2
 				if nb2 > 0 then
 					filled := True
 				else
@@ -257,16 +250,12 @@ feature -- Element change
 			if encoding = utf8_encoding then
 				l_space_needed := 1
 			elseif encoding = iso_8859_1_encoding then
-					-- We need to consider the fact that a ISO-8859-1 character
-					-- can be converted to one or two bytes in UTF-8.
-				l_space_needed := {UC_UTF8_ROUTINES}.max_bytes_of_iso_8859_1_to_utf8
+				l_space_needed := 1
 			elseif interactive then
-					-- We need to consider the fact that a ISO-8859-1 character
-					-- can be converted to one or two bytes in UTF-8.
-				l_space_needed := {UC_UTF8_ROUTINES}.max_bytes_of_iso_8859_1_to_utf8
+				l_space_needed := 1
 			else
 					-- We need to have enough room to read the BOM if any.
-				l_space_needed := {UC_UTF8_ROUTINES}.utf8_bom.count * {UC_UTF8_ROUTINES}.max_bytes_of_iso_8859_1_to_utf8
+				l_space_needed := {UC_UTF8_ROUTINES}.utf8_bom.count
 			end
 			l_old_capacity := capacity
 			nb := count - index + 1
@@ -295,9 +284,9 @@ feature -- Element change
 			end
 		ensure then
 			not_full_utf8_encoding: encoding = utf8_encoding implies capacity >= count + 1
-			not_full_iso_8859_1_encoding: encoding = iso_8859_1_encoding implies capacity >= count + {UC_UTF8_ROUTINES}.max_bytes_of_iso_8859_1_to_utf8
-			not_full_interactive: interactive and encoding /= utf8_encoding and encoding /= iso_8859_1_encoding implies (default_encoding = utf8_encoding implies capacity >= count + 1) and (default_encoding /= utf8_encoding implies capacity >= count + {UC_UTF8_ROUTINES}.max_bytes_of_iso_8859_1_to_utf8)
-			not_full_unknown_encoding: not interactive and encoding /= utf8_encoding and encoding /= iso_8859_1_encoding implies capacity >= count + {UC_UTF8_ROUTINES}.utf8_bom.count * {UC_UTF8_ROUTINES}.max_bytes_of_iso_8859_1_to_utf8
+			not_full_iso_8859_1_encoding: encoding = iso_8859_1_encoding implies capacity >= count + 1
+			not_full_interactive: interactive implies capacity >= count + 1
+			not_full_unknown_encoding: not interactive and encoding /= utf8_encoding and encoding /= iso_8859_1_encoding implies capacity >= count + {UC_UTF8_ROUTINES}.utf8_bom.count
 		end
 
 end

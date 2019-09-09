@@ -176,15 +176,32 @@ feature -- Element change
 			a_string_is_string: a_string.same_type ({STRING_8} "")
 			pos_large_enough: pos >= 1
 			enough_space: (pos + a_string.count - 1) <= count
+		do
+			fill_from_substring (a_string, 1, a_string.count, pos)
+		ensure
+			charaters_set: substring (pos, a_string.count + pos - 1).is_equal (a_string)
+		end
+
+	fill_from_substring (a_string: STRING_8; s, e, pos: INTEGER)
+			-- Copy characters of `a_string' between indexes `s' and `e'
+			-- to buffer starting at position `pos'.
+		require
+			a_string_not_void: a_string /= Void
+			a_string_is_string: a_string.same_type ({STRING_8} "")
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
+			pos_large_enough: pos >= 1
+			enough_space: (pos + e - s) <= count
 		local
 			nb: INTEGER
 			i, j: INTEGER
 		do
-			nb := a_string.count
-			if nb > 0 then
+			if s <= e then
 				j := pos
 				from
-					i := 1
+					i := s
+					nb := e
 				until
 					i > nb
 				loop
@@ -194,7 +211,7 @@ feature -- Element change
 				end
 			end
 		ensure
-			charaters_set: substring (pos, a_string.count + pos - 1).is_equal (a_string)
+			charaters_set: substring (pos, e - s + pos).is_equal (a_string.substring (s, e))
 		end
 
 	fill_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; pos, nb: INTEGER): INTEGER

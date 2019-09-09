@@ -3,8 +3,9 @@ note
 	description:
 	"[
 		Lexical analyzer buffers for Unicode inputs.
-		The buffer contains the UTF-8 characters, after possible
+		The buffer contains the UTF-8 bytes, after possible
 		conversion if the input used a different encoding.
+		Supported encodings: UTF-8, ISO-8859-1.
 	]"
 
 	library: "Gobo Eiffel Lexical Library"
@@ -19,14 +20,14 @@ inherit
 
 	YY_BUFFER
 		rename
-			make as make_from_utf8,
-			set_string as set_utf8
+			make as make_from_utf8_string,
+			set_string as set_utf8_string
 		end
 
 create
 
 	make,
-	make_from_utf8,
+	make_from_utf8_string,
 	make_from_buffer
 
 feature {NONE} -- Initialization
@@ -136,7 +137,7 @@ feature -- Setting
 			count := j
 		ensure
 			count_set: count = {UC_UTF8_ROUTINES}.string_byte_count (a_string)
-			capacity_set: capacity = capacity.max (count)
+			capacity_set: capacity = (old capacity).max (count)
 			beginning_of_line: beginning_of_line
 		end
 

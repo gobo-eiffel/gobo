@@ -19,11 +19,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (str: STRING)
+	make (str: STRING_8)
 			-- Create a new buffer with characters from `str'.
 			-- Do not alter `str' during the scanning process.
 		require
 			str_not_void: str /= Void
+			str_is_string: str.same_type ({STRING_8} "")
 		local
 			buff: like content
 			nb: INTEGER
@@ -106,12 +107,13 @@ feature -- Access
 
 feature -- Setting
 
-	set_string (a_string: STRING)
+	set_string (a_string: STRING_8)
 			-- Reset buffer with characters from `a_string'.
 			-- Resize buffer capacity if needed.
 			-- Do not alter `a_string' during the scanning process.
 		require
 			a_string_not_void: a_string /= Void
+			str_is_string: a_string.same_type ({STRING_8} "")
 		local
 			nb: INTEGER
 		do
@@ -125,7 +127,7 @@ feature -- Setting
 			make_from_buffer (content)
 			count := nb
 		ensure
-			capacity_set: capacity = capacity.max (a_string.count)
+			capacity_set: capacity = (old capacity).max (a_string.count)
 			count_set: count = a_string.count
 			beginning_of_line: beginning_of_line
 		end

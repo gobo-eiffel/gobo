@@ -20,7 +20,7 @@ inherit
 			unicode_substring,
 			append_substring_to_string,
 			append_substring_to_unicode_string,
-			fill_from_string,
+			fill_from_substring,
 			fill_from_stream,
 			move_left,
 			move_right
@@ -118,15 +118,12 @@ feature -- Element change
 			end
 		end
 
-	fill_from_string (a_string: STRING_8; pos: INTEGER)
-			-- Copy characters of `a_string' to buffer
-			-- starting at position `pos'.
-		local
-			nb: INTEGER
+	fill_from_substring (a_string: STRING_8; s, e, pos: INTEGER)
+			-- Copy characters of `a_string' between indexes `s' and `e'
+			-- to buffer starting at position `pos'.
 		do
-			nb := a_string.count
-			if nb > 0 then
-				area.subcopy (a_string, 1, nb, pos + 1)
+			if s <= e then
+				area.subcopy (a_string, s, e, pos + 1)
 			end
 		end
 

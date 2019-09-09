@@ -18,6 +18,15 @@ inherit
 
 feature -- Access
 
+	bom_character: CHARACTER_32
+			-- Byte order mark (BOM) U+FEFF
+			-- See http://en.wikipedia.org/wiki/Byte_order_mark
+		once
+			Result := (0xFEFF).to_character_32
+		ensure
+			instance_free: class
+		end
+
 	minimum_unicode_character_code: INTEGER = 0
 			-- Smallest code for unicode characters
 --		ensure

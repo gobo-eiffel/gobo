@@ -478,6 +478,19 @@ feature -- Input
 			new_file_buffer_not_void: Result /= Void
 		end
 
+	new_unicode_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_UNICODE_FILE_BUFFER
+			-- New Unicode input buffer for `a_file'.
+			-- `a_file' is expected to be encoded in UTF-8
+			-- or ISO-8859-1.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		do
+			create Result.make (a_file)
+		ensure
+			new_unicode_file_buffer_not_void: Result /= Void
+		end
+
 	new_utf8_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_UTF8_FILE_BUFFER
 			-- New UTF-8 input buffer for `a_file'.
 			-- `a_file' is expected to be encoded in UTF-8
@@ -493,19 +506,17 @@ feature -- Input
 
 	new_string_buffer (a_string: STRING): YY_BUFFER
 			-- New input buffer for `a_string'.
-			-- To be used in 8-bit character (byte) mode, or
-			-- in Unicode mode where `a_string' is expected
-			-- to be encoded in UTF-8.
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_string: a_string.same_type ({STRING_8} "")
 		do
 			create Result.make (a_string)
 		ensure
-			new_buffer_not_void: Result /= Void
+			new_string_buffer_not_void: Result /= Void
 		end
 
 	new_unicode_string_buffer (a_string: READABLE_STRING_GENERAL): YY_UNICODE_BUFFER
-			-- New Uniocde input buffer for `a_string'.
+			-- New Unicode input buffer for `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		do

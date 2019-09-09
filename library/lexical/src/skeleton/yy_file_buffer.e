@@ -21,7 +21,8 @@ inherit
 			name,
 			fill,
 			wipe_out,
-			set_string
+			set_string,
+			make_from_string
 		end
 
 	KL_SHARED_STREAMS
@@ -65,6 +66,16 @@ feature {NONE} -- Initialization
 			count_set: count = 0
 			file_set: file = a_file
 			beginning_of_line: beginning_of_line
+		end
+
+	make_from_string (str: STRING_8)
+			-- Create a new buffer with characters from `str'.
+			-- Do not alter `str' during the scanning process.
+		do
+			end_of_file := True
+			file := null_input_stream
+			Precursor (str)
+			filled := False
 		end
 
 feature -- Access
@@ -118,13 +129,13 @@ feature -- Setting
 			end
 			file := a_file
 		ensure
-			capacity_set: capacity = capacity.max (a_size)
+			capacity_set: capacity = (old capacity).max (a_size)
 			count_set: count = 0
 			file_set: file = a_file
 			beginning_of_line: beginning_of_line
 		end
 
-	set_string (a_string: STRING)
+	set_string (a_string: STRING_8)
 			-- Reset buffer with characters from `a_string'.
 			-- Resize buffer capacity if needed.
 			-- Do not alter `a_string' during the scanning process.
@@ -178,9 +189,6 @@ feature -- Element change
 					end
 				else
 					nb := capacity - count
---					if nb > Read_buffer_capacity then
---						nb := Read_buffer_capacity
---					end
 					nb2 := buff.fill_from_stream (file, count + 1, nb)
 					if nb2 < nb then
 						end_of_file := file.end_of_input
@@ -208,12 +216,6 @@ feature -- Element change
 		ensure then
 			end_of_file: end_of_file
 		end
-
-feature {NONE} -- Constants
-
-	Read_buffer_capacity: INTEGER = 8192
-			-- Maximum number of characters to
-			-- be read at a time
 
 invariant
 
