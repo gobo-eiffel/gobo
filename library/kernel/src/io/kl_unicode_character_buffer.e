@@ -25,6 +25,7 @@ inherit
 			item_code,
 			as_unicode_special,
 			unicode_substring,
+			utf8_substring,
 			append_substring_to_string,
 			append_substring_to_unicode_string,
 			fill_from_iso_8859_1_substring,
@@ -145,6 +146,23 @@ feature -- Access
 				create Result.make (0)
 			else
 				Result := unicode_area.substring (s + 1, e + 1)
+			end
+		end
+
+	utf8_substring (s, e: INTEGER): STRING_8
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-8 representation of the characters held
+			-- in buffer between indexes `s' and `e'
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
+		do
+			if e < s then
+					-- Empty string
+				create Result.make (0)
+			else
+				Result := {UC_UTF8_ROUTINES}.substring_to_utf8 (unicode_area, s + 1, e + 1)
 			end
 		end
 

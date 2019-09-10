@@ -43,8 +43,7 @@ create
 
 %token STAR_STAR_SLASH STAR_PAREN
 
-%token <STRING_32> dummy
-%token <STRING> CCL_BRACKET
+%token <STRING_32> CCL_BRACKET
 %token <INTEGER> CHAR
 %token <LX_SYMBOL_CLASS> CCL_OP
 %left CCL_PLUS CCL_MINUS

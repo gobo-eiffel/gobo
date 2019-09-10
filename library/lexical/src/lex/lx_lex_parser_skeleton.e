@@ -120,7 +120,7 @@ feature -- Parsing
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		do
-			set_input_buffer (new_utf8_file_buffer (a_file))
+			set_input_buffer (new_unicode_file_buffer (a_file))
 			parse
 		end
 
@@ -900,7 +900,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation
 
-	push_start_condition (a_name: STRING; stack: LX_START_CONDITIONS)
+	push_start_condition (a_name: STRING_8; stack: LX_START_CONDITIONS)
 			-- Push start condition named `a_name' on top of `stack'.
 			-- Do nothing if that start condition is already in `stack'.
 		require

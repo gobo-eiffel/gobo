@@ -13,7 +13,6 @@ feature -- Last values
 
 	last_detachable_any_value: detachable ANY
 	last_string_32_value: STRING_32
-	last_string_value: STRING
 	last_integer_value: INTEGER
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
 
@@ -31,8 +30,6 @@ feature -- Access
 				Result := "STAR_STAR_SLASH"
 			when STAR_PAREN then
 				Result := "STAR_PAREN"
-			when dummy then
-				Result := "dummy"
 			when CCL_BRACKET then
 				Result := "CCL_BRACKET"
 			when CHAR then
@@ -52,11 +49,10 @@ feature -- Token codes
 
 	STAR_STAR_SLASH: INTEGER = 258
 	STAR_PAREN: INTEGER = 259
-	dummy: INTEGER = 260
-	CCL_BRACKET: INTEGER = 261
-	CHAR: INTEGER = 262
-	CCL_OP: INTEGER = 263
-	CCL_PLUS: INTEGER = 264
-	CCL_MINUS: INTEGER = 265
+	CCL_BRACKET: INTEGER = 260
+	CHAR: INTEGER = 261
+	CCL_OP: INTEGER = 262
+	CCL_PLUS: INTEGER = 263
+	CCL_MINUS: INTEGER = 264
 
 end

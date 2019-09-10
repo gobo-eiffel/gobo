@@ -43,7 +43,6 @@ create
 
 %token UNICODE_MODE_START BYTE_MODE_START
 
-%token <STRING> dummy
 %token <STRING_32> CCL_BRACKET
 %token <INTEGER> CHAR NUMBER
 %token <LX_SYMBOL_CLASS> CCL_OP

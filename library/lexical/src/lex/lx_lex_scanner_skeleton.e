@@ -179,7 +179,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	name_definitions: DS_HASH_TABLE [STRING, STRING]
+	name_definitions: DS_HASH_TABLE [STRING_32, STRING_8]
 			-- Name definition table
 
 	utf8_mode: DS_ARRAYED_STACK [BOOLEAN]
@@ -190,7 +190,7 @@ feature {NONE} -- Access
 			-- Number of characters { not-yet-balanced
 			-- in semantic actions
 
-	last_string: detachable STRING
+	last_string: detachable STRING_8
 			-- Last string which has been read
 
 	last_integer_value: INTEGER
@@ -219,7 +219,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	put_back_string (str: STRING)
+	put_back_string (str: STRING_32)
 			-- Put `str' back to buffer for the scanner
 			-- to analyze it again.
 		require
@@ -232,12 +232,12 @@ feature {NONE} -- Implementation
 			until
 				i < 1
 			loop
-				unread_character (str.item (i))
+				unread_unicode_character (str.item (i))
 				i := i - 1
 			end
 		end
 
-	add_new_start_condition (a_name: STRING; exclusive: BOOLEAN)
+	add_new_start_condition (a_name: STRING_8; exclusive: BOOLEAN)
 			-- Create a new start condition named `a_name' and
 			-- insert it at the end of `start_conditions'.
 		require
@@ -284,23 +284,6 @@ feature {NONE} -- Implementation
 					report_character_out_of_range_error (character_text)
 					last_integer_value := 0
 				end
-			end
-		end
-
-	process_utf8_character
-			-- Process UTF-8 Unicode character whose bytes are held in `text'.
-			-- Check whether the corresponding character is not out of range.
-			-- Set `last_integer_value' accordingly.
-		do
-			inspect text_count
-			when 1 then
-				process_character (text_item (1).code)
-			when 2 then
-				process_character ({UC_UTF8_ROUTINES}.two_byte_character_code (text_item (1), text_item (2)).to_integer_32)
-			when 3 then
-				process_character ({UC_UTF8_ROUTINES}.three_byte_character_code (text_item (1), text_item (2), text_item (3)).to_integer_32)
-			else
-				process_character ({UC_UTF8_ROUTINES}.four_byte_character_code (text_item (1), text_item (2), text_item (3), text_item (4)).to_integer_32)
 			end
 		end
 
@@ -457,7 +440,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_name_definition (a_name, a_definition: STRING)
+	process_name_definition (a_name: STRING_8; a_definition: STRING_32)
 			-- Keep track of name definition.
 			-- Trailing spaces are removed from `a_definition'
 			-- and parentheses are added around it.
@@ -465,8 +448,8 @@ feature {NONE} -- Implementation
 			a_name_not_void: a_name /= Void
 			a_definition_not_void: a_definition /= Void
 		local
-			bracketed_name: STRING
-			parenthesised_definition: STRING
+			bracketed_name: STRING_8
+			parenthesised_definition: STRING_32
 			i, nb: INTEGER
 			stop: BOOLEAN
 		do
@@ -504,7 +487,7 @@ feature {NONE} -- Implementation
 			name_definitions.force (parenthesised_definition, bracketed_name)
 		end
 
-	character_text: STRING
+	character_text: STRING_8
 			-- Textual representation of the character corresponding to
 			-- `unicode_text'
 		local

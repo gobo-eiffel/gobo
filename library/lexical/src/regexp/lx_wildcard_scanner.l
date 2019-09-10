@@ -18,7 +18,6 @@ inherit
 	LX_LEX_SCANNER_SKELETON
 		redefine
 			last_integer_value,
-			last_string_value,
 			last_string_32_value,
 			last_lx_symbol_class_value
 		end
@@ -28,7 +27,6 @@ inherit
 			{NONE} all
 		redefine
 			last_integer_value,
-			last_string_value,
 			last_string_32_value,
 			last_lx_symbol_class_value
 		end
@@ -194,9 +192,6 @@ feature {NONE} -- Access
 
 	last_integer_value: INTEGER
 			-- Last semantic value of type INTEGER
-
-	last_string_value: STRING
-			-- Last semantic value of type STRING
 
 	last_string_32_value: STRING_32
 			-- Last semantic value of type STRING_32

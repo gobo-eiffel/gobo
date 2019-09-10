@@ -111,9 +111,27 @@ feature -- Access
 	unicode_text: STRING_32
 			-- Unicode text of last token read
 			-- (Create a new string at each call.)
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters.
 		do
 			if yy_start < yy_end then
 				Result := yy_content.unicode_substring (yy_start, yy_end - 1)
+			else
+				create Result.make (0)
+			end
+		end
+
+	utf8_text: STRING_8
+			-- UTF-8 representation of last token read
+			-- (Create a new string at each call.)
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters, the the resulting
+			-- string is valid UTF-8.
+		do
+			if yy_start < yy_end then
+				Result := yy_content.utf8_substring (yy_start, yy_end - 1)
 			else
 				create Result.make (0)
 			end
@@ -134,6 +152,9 @@ feature -- Access
 
 	unicode_text_item (i: INTEGER): CHARACTER_32
 			-- `i'-th Unicode character of last token read
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters.
 		local
 			l_content_area: like yy_unicode_content_area
 		do
@@ -165,11 +186,32 @@ feature -- Access
 			-- (For efficiency reason, this function can bypass the
 			-- call to `unicode_text' and create the substring directly from
 			-- the input buffer.)
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters.
 		do
 			if e < s then
 				create Result.make (0)
 			else
 				Result := yy_content.unicode_substring (yy_start + s - 1, yy_start + e - 1)
+			end
+		end
+
+	utf8_text_substring (s, e: INTEGER): STRING_8
+			-- UTF-8 representation of substring of last token read
+			-- (Create a new string at each call.)
+			-- (For efficiency reason, this function can bypass the
+			-- call to `unicode_text' and create the substring directly from
+			-- the input buffer.)
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters, the the resulting
+			-- string is valid UTF-8.
+		do
+			if e < s then
+				create Result.make (0)
+			else
+				Result := yy_content.utf8_substring (yy_start + s - 1, yy_start + e - 1)
 			end
 		end
 
@@ -318,6 +360,7 @@ feature -- Element change
 	unread_character (c: CHARACTER_8)
 			-- Put `c' back to `input_buffer'. This will alter both
 			-- `text' and the content of `input_buffer'.
+			-- The behavior is undefined if `c' is too large to fit into `input_buffer'.
 		do
 			if yy_end <= 1 then
 					-- Need to shift characters up to make room.
@@ -331,6 +374,32 @@ feature -- Element change
 				yy_end := yy_end - 1
 			end
 			yy_content.put (c, yy_end)
+				-- Alter `yy_start' to keep `text_count' meaningful.
+			yy_start := yy_end
+		end
+
+	unread_unicode_character (c: CHARACTER_32)
+			-- Put `c' back to `input_buffer'. This will alter both
+			-- `text' and the content of `input_buffer'.
+		do
+			if yy_end <= 1 then
+					-- Need to shift characters up to make room.
+				input_buffer.set_index (yy_end)
+				input_buffer.compact_right
+					-- `input_buffer.content' may have been resized.
+					-- Therefore `content' has to be queried again.
+				yy_set_content (input_buffer.content)
+				yy_end := input_buffer.index - 1
+			else
+				yy_end := yy_end - 1
+			end
+			if attached {KL_UNICODE_CHARACTER_BUFFER} yy_content as l_unicode_content then
+				l_unicode_content.put_unicode (c, yy_end)
+			elseif c.is_character_8 then
+				yy_content.put (c.to_character_8, yy_end)
+			else
+				yy_content.put ('%/255/', yy_end)
+			end
 				-- Alter `yy_start' to keep `text_count' meaningful.
 			yy_start := yy_end
 		end

@@ -39,14 +39,12 @@ feature -- Access
 				Result := "UNICODE_MODE_START"
 			when BYTE_MODE_START then
 				Result := "BYTE_MODE_START"
-			when dummy then
-				Result := "dummy"
+			when CCL_BRACKET then
+				Result := "CCL_BRACKET"
 			when EIF_CODE then
 				Result := "EIF_CODE"
 			when NAME then
 				Result := "NAME"
-			when CCL_BRACKET then
-				Result := "CCL_BRACKET"
 			when CHAR then
 				Result := "CHAR"
 			when NUMBER then
@@ -70,14 +68,13 @@ feature -- Token codes
 	EMPTY: INTEGER = 261
 	UNICODE_MODE_START: INTEGER = 262
 	BYTE_MODE_START: INTEGER = 263
-	dummy: INTEGER = 264
+	CCL_BRACKET: INTEGER = 264
 	EIF_CODE: INTEGER = 265
 	NAME: INTEGER = 266
-	CCL_BRACKET: INTEGER = 267
-	CHAR: INTEGER = 268
-	NUMBER: INTEGER = 269
-	CCL_OP: INTEGER = 270
-	CCL_PLUS: INTEGER = 271
-	CCL_MINUS: INTEGER = 272
+	CHAR: INTEGER = 267
+	NUMBER: INTEGER = 268
+	CCL_OP: INTEGER = 269
+	CCL_PLUS: INTEGER = 270
+	CCL_MINUS: INTEGER = 271
 
 end

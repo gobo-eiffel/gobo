@@ -133,6 +133,7 @@ feature -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
+			print_bom (a_file)
 			print_eiffel_header (a_file)
 			a_file.put_string ("%Nfeature -- Status report%N%N")
 			print_status_report_routines (a_file)
@@ -182,6 +183,16 @@ feature -- Generation
 		end
 
 feature {NONE} -- Generation
+
+	print_bom (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print byte order mark (BOM) for UTF-8 (0xEF,0xBB,0xBF) to `a_file'.
+			-- See http://en.wikipedia.org/wiki/Byte_order_mark
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string ({UC_UTF8_ROUTINES}.utf8_bom)
+		end
 
 	print_eiffel_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print user-defined eiffel header to `a_file'.

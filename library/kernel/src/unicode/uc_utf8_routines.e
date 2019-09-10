@@ -24,7 +24,7 @@ feature -- Status report
 			-- Are the bytes in `a_string' a valid UTF-8 encoding?
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: ANY_.same_types (a_string, {STRING_8} "")
+			a_string_is_string: a_string.same_type ({STRING_8} "")
 		local
 			i, nb, nb2: INTEGER
 			bc, a_code: INTEGER
@@ -108,7 +108,7 @@ feature -- Status report
 			-- (using ISO-8859-1 encoding)?
 		require
 			a_utf8_not_void: a_utf8 /= Void
-			a_utf8_is_string: ANY_.same_types (a_utf8, {STRING_8} "")
+			a_utf8_is_string: a_utf8.same_type ({STRING_8} "")
 			a_utf8_valid: valid_utf8 (a_utf8)
 		local
 			i, nb: INTEGER
@@ -121,7 +121,7 @@ feature -- Status report
 				if l_byte_count = 1 then
 					-- OK.
 				elseif l_byte_count = 2 then
-					if two_byte_character_code (a_utf8.item (i), a_utf8.item (i + 1)) > code_255 then
+					if two_byte_character_code (a_utf8.item (i), a_utf8.item (i + 1)) > natural_32_code_255 then
 						Result := False
 							-- Jump out of the loop.
 						i := nb + 1
@@ -141,7 +141,7 @@ feature -- Status report
 			-- Is `a_utf8' representable as a STRING_32?
 		require
 			a_utf8_not_void: a_utf8 /= Void
-			a_utf8_is_string: ANY_.same_types (a_utf8, {STRING_8} "")
+			a_utf8_is_string: a_utf8.same_type ({STRING_8} "")
 			a_utf8_valid: valid_utf8 (a_utf8)
 		do
 			Result := True
@@ -199,7 +199,7 @@ feature -- Status report
 		end
 
 	is_endian_detection_character_start (a_first, a_second: CHARACTER_8): BOOLEAN
-			-- Are these characters the start of a UTF-8 encoded Byte Order Marker (BOM)?
+			-- Are these bytes the start of a UTF-8 encoded Byte Order Marker (BOM)?
 		do
 			Result := a_first = byte_ef and a_second = byte_bb
 		ensure
@@ -215,9 +215,14 @@ feature -- Access
 	max_bytes_of_iso_8859_1_to_utf8: INTEGER = 2
 			-- Maximum number of bytes to encode a ISO-8859-1 character to UTF-8
 
-	utf8_bom: STRING = "%/239/%/187/%/191/"
+	utf8_bom: STRING_8 = "%/239/%/187/%/191/"
 			-- Byte order mark (BOM) for UTF-8 (0xEF,0xBB,0xBF)
 			-- See http://en.wikipedia.org/wiki/Byte_order_mark
+
+	invalid_character_utf8_byte: CHARACTER_8 = '%/255/'
+			-- Byte to be used when converting a surrogate or invalid
+			-- Unicode character to UTF-8
+			-- (0xFF, which is an invalid byte in UTF-8)
 
 	encoded_first_value (a_byte: CHARACTER_8): INTEGER
 			-- Value encoded in first byte
@@ -298,11 +303,67 @@ feature -- Access
 			instance_free: class
 		end
 
+	natural_32_code_to_utf8 (a_code: NATURAL_32): NATURAL_32
+			-- UTF-8 encoded version of `a_code'
+			-- (e.g. 0xb1000000 or 0xb1b20000 or 0xb1b2b300 or 0xb1b2b3b4)
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
+		local
+			b1, b2, b3, b4, c: NATURAL_32
+		do
+			if a_code < natural_32_code_128 then
+					-- 2^7
+					-- 0xxxxxxx
+				Result := a_code |<< (3 * {PLATFORM}.natural_8_bits)
+			elseif a_code < natural_32_code_2048 then
+					-- 2^11
+					-- 110xxxxx 10xxxxxx
+				b2 := a_code \\ 64 + 128
+					-- 110xxxxx
+				b1 := a_code // 64 + 192
+				Result := (b1 |<< (3 * {PLATFORM}.natural_8_bits)) | (b2 |<< (2 * {PLATFORM}.natural_8_bits))
+			elseif a_code < natural_32_code_65536 then
+				if a_code >= {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_natural_32_code and a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_natural_32_code then
+						-- Surrogate.
+						-- Use invalid UTF-8 byte 0xFF instead.
+					Result := 0xFF000000
+				else
+						-- 2^16
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					c := a_code
+					b3 := c \\ 64 + 128
+					c := c // 64
+					b2 := c \\ 64 + 128
+						-- 1110xxxx
+					b1 := c // 64 + 224
+					Result := (b1 |<< (3 * {PLATFORM}.natural_8_bits)) | (b2 |<< (2 * {PLATFORM}.natural_8_bits)) | (b3 |<< {PLATFORM}.natural_8_bits)
+				end
+			elseif a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code then
+				c := a_code
+				b4 := c \\ 64 + 128
+				c := c // 64
+				b3 := c \\ 64 + 128
+				c := c // 64
+				b2 := c \\ 64 + 128
+					-- 11110xxx
+				b1 := c // 64 + 240
+				Result := (b1 |<< (3 * {PLATFORM}.natural_8_bits)) | (b2 |<< (2 * {PLATFORM}.natural_8_bits)) | (b3 |<< {PLATFORM}.natural_8_bits) | b4
+			else
+					-- Invalid Unicode character.
+					-- Use invalid UTF-8 byte 0xFF instead.
+				Result := 0xFF000000
+			end
+		ensure
+			instance_free: class
+		end
+
 feature -- Measurement
 
 	encoded_byte_count (a_byte: CHARACTER_8): INTEGER
 			-- Number of bytes which were necessary to encode
-			-- the unicode character whose first byte is `a_byte'
+			-- the Unicode character whose first byte is `a_byte'
 		require
 			is_encoded_first_byte: is_encoded_first_byte (a_byte)
 		do
@@ -328,19 +389,27 @@ feature -- Measurement
 	string_byte_count (a_string: READABLE_STRING_GENERAL): INTEGER
 			-- Number of bytes needed to encode characters of
 			-- `a_string' with the UTF-8 encoding
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
 		require
 			a_string_not_void: a_string /= Void
 		do
 			Result := substring_byte_count (a_string, 1, a_string.count)
 		ensure
 			instance_free: class
-			substring_byte_count_positive: Result >= 0
+			string_byte_count_not_negative: Result >= 0
 		end
 
 	substring_byte_count (a_string: READABLE_STRING_GENERAL; start_index, end_index: INTEGER): INTEGER
 			-- Number of bytes needed to encode characters of
 			-- `a_string' between `start_index' and `end_index'
 			-- inclusive with the UTF-8 encoding
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
 		require
 			a_string_not_void: a_string /= Void
 			valid_start_index: 1 <= start_index
@@ -349,49 +418,13 @@ feature -- Measurement
 		local
 			s, e: INTEGER
 			i: INTEGER
-			even_end_index: INTEGER
-			c: CHARACTER_8
-			l_code: NATURAL_32
 		do
 			if start_index <= end_index then
 				if ANY_.same_types (a_string, dummy_string) and then attached {STRING_8} a_string as l_string_8 then
 						-- This is the original code
---					from i := start_index until i > end_index loop
---						Result := Result + character_byte_count (l_string_8.item (i))
---						i := i + 1
---					end
-						-- This loop has been unrolled to get a more than
-						-- 50% improvement in performance (measured with ISE
-						-- Eiffel 5.5, Borland C, array optimisations and
-						-- inlining (4) enabled). It assumes that ASCII
-						-- characters are far more common in STRINGs than other
-						-- characters.
-					if end_index \\ 2 = 0 then
-						even_end_index := end_index
-					else
-						even_end_index := end_index - 1
-					end
-					from
-						i := start_index
-					until
-						i > even_end_index
-					loop
-						c := l_string_8.item (i)
-						if c <= byte_127 then
-							Result := Result + 1
-						else
-							Result := Result + character_byte_count (c)
-						end
-						c := l_string_8.item (i + 1)
-						if c <= byte_127 then
-							Result := Result + 1
-						else
-							Result := Result + character_byte_count (c)
-						end
-						i := i + 2
-					end
-					if even_end_index < end_index then
-						Result := Result + character_byte_count (l_string_8.item (end_index))
+					from i := start_index until i > end_index loop
+						Result := Result + character_8_byte_count (l_string_8.item (i))
+						i := i + 1
 					end
 				elseif ANY_.same_types (a_string, dummy_uc_string) and then attached {UC_STRING} a_string as a_uc_string then
 					if start_index = 1 and end_index = a_uc_string.count then
@@ -423,29 +456,75 @@ feature -- Measurement
 					until
 						i > end_index
 					loop
-						l_code := a_string.code (i)
-						if unicode.valid_non_surrogate_natural_32_code (l_code) then
-							Result := Result + natural_32_code_byte_count (l_code)
-						else
-								-- Invalid character.
-							Result := Result + 1
-						end
+						Result := Result + character_32_byte_count (a_string.item (i))
 						i := i + 1
 					end
 				end
 			end
 		ensure
 			instance_free: class
-			substring_byte_count_positive: Result >= 0
+			substring_byte_count_not_negative: Result >= 0
+		end
+
+	character_byte_count (c: CHARACTER_8): INTEGER
+			-- Number of bytes needed to encode character
+			-- `c' with the UTF-8 encoding
+		do
+			Result := character_8_byte_count (c)
+		ensure
+			instance_free: class
+			character_byte_count_large_enough: Result >= 1
+			character_byte_count_small_enough: Result <= 2
+		end
+
+	character_8_byte_count (c: CHARACTER_8): INTEGER
+			-- Number of bytes needed to encode character
+			-- `c' with the UTF-8 encoding
+		do
+			if c <= byte_127 then
+					-- 2^7
+					-- 0xxxxxxx
+				Result := 1
+			else
+					-- 110xxxxx 10xxxxxx
+				Result := 2
+			end
+		ensure
+			instance_free: class
+			character_8_byte_count_large_enough: Result >= 1
+			character_8_byte_count_small_enough: Result <= 2
+		end
+
+	character_32_byte_count (c: CHARACTER_32): INTEGER
+			-- Number of bytes needed to encode character
+			-- `c' with the UTF-8 encoding
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
+		do
+			Result := natural_32_code_byte_count (c.natural_32_code)
+		ensure
+			instance_free: class
+			character_32_byte_count_large_enough: Result >= 1
+			character_32_byte_count_small_enough: Result <= 4
 		end
 
 	code_byte_count (a_code: INTEGER): INTEGER
 			-- Number of bytes needed to encode unicode character
 			-- of code `a_code' with the UTF-8 encoding
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
 		require
-			valid_code: unicode.valid_non_surrogate_code (a_code)
+			a_code_not_negative: a_code >= 0
 		do
-			Result := natural_32_code_byte_count (a_code.to_natural_32)
+			if a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code then
+				Result := natural_32_code_byte_count (a_code.to_natural_32)
+			else
+				Result := 1
+			end
 		ensure
 			instance_free: class
 			code_byte_count_large_enough: Result >= 1
@@ -455,65 +534,46 @@ feature -- Measurement
 	natural_32_code_byte_count (a_code: NATURAL_32): INTEGER
 			-- Number of bytes needed to encode unicode character
 			-- of code `a_code' with the UTF-8 encoding
-		require
-			valid_code: unicode.valid_non_surrogate_natural_32_code (a_code)
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
 		do
-			if a_code < 128 then
+			if a_code < natural_32_code_128 then
 					-- 2^7
 					-- 0xxxxxxx
 				Result := 1
-			elseif a_code < 2048 then
+			elseif a_code < natural_32_code_2048 then
 					-- 2^11
 					-- 110xxxxx 10xxxxxx
 				Result := 2
-			elseif a_code < 65536 then
+			elseif a_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_natural_32_code then
 					-- 2^16
 					-- 1110xxxx 10xxxxxx 10xxxxxx
 				Result := 3
-			else
-				Result := 4
-			end
-		ensure
-			instance_free: class
-			code_byte_count_large_enough: Result >= 1
-			code_byte_count_small_enough: Result <= 4
-		end
-
-	character_byte_count (c: CHARACTER_8): INTEGER
-			-- Number of bytes needed to encode character
-			-- `c' with the UTF-8 encoding
-		local
-			a_code: INTEGER
-		do
-			if c <= byte_127 then
-					-- 2^7
-					-- 0xxxxxxx
+			elseif a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_natural_32_code then
+					-- Surrogate.
+					-- Use invalid UTF-8 byte 0xFF instead.
 				Result := 1
-			elseif c <= byte_255 then
-					-- 110xxxxx 10xxxxxx
-				Result := 2
+			elseif a_code < natural_32_code_65536 then
+					-- 2^16
+					-- 1110xxxx 10xxxxxx 10xxxxxx
+				Result := 3
+			elseif a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code then
+				Result := 4
 			else
-				a_code := c.code
-				if a_code < 2048 then
-						-- 2^11
-						-- 110xxxxx 10xxxxxx
-					Result := 2
-				elseif a_code < 65536 then
-						-- 2^16
-						-- 1110xxxx 10xxxxxx 10xxxxxx
-					Result := 3
-				else
-					Result := 4
-				end
+					-- Invalid Unicode character.
+					-- Use invalid UTF-8 byte 0xFF instead.
+				Result := 1
 			end
 		ensure
 			instance_free: class
-			character_byte_count_large_enough: Result >= 1
-			character_byte_count_small_enough: Result <= 4
+			natural_32_code_byte_count_large_enough: Result >= 1
+			natural_32_code_byte_count_small_enough: Result <= 4
 		end
 
-	character_count (a_utf8: STRING_8): INTEGER
-			-- Number of unicode characters encoded in `a_utf8'
+	unicode_character_count (a_utf8: STRING_8): INTEGER
+			-- Number of Unicode characters encoded in `a_utf8'
 		require
 			a_utf8_not_void: a_utf8 /= Void
 			a_utf8_is_string: ANY_.same_types (a_utf8, {STRING_8} "")
@@ -528,9 +588,53 @@ feature -- Measurement
 			end
 		ensure
 			instance_free: class
+			unicode_character_count_not_negative: Result >= 0
 		end
 
 feature -- Conversion
+
+	string_to_utf8 (a_string: READABLE_STRING_GENERAL): STRING_8
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-8 representation of `a_string'
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := substring_to_utf8 (a_string, 1, a_string.count)
+		ensure
+			instance_free: class
+			string_to_utf8_not_void: Result /= Void
+			string_to_utf8_is_string: Result.same_type ({STRING_8} "")
+			valid_utf8: across 1 |..| a_string.count as l_index all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_string.code (l_index.item)) end implies valid_utf8 (Result)
+			byte_count_set: Result.count = string_byte_count (a_string)
+		end
+
+	substring_to_utf8 (a_string: READABLE_STRING_GENERAL; s, e: INTEGER): STRING_8
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-8 representation of the characters of
+			-- `a_string' between indexes `s' and `e'
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
+		require
+			a_string_not_void: a_string /= Void
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
+		do
+			create Result.make (substring_byte_count (a_string, s, e))
+			append_substring_to_utf8 (Result, a_string, s, e)
+		ensure
+			instance_free: class
+			substring_to_utf8_not_void: Result /= Void
+			substring_to_utf8_is_string: Result.same_type ({STRING_8} "")
+			valid_utf8: across s |..| e as l_index all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_string.code (l_index.item)) end implies valid_utf8 (Result)
+			byte_count_set: Result.count = substring_byte_count (a_string, s, e)
+		end
 
 	to_utf8 (a_string: STRING_8): STRING
 			-- New STRING made up of bytes corresponding to
@@ -563,55 +667,124 @@ feature -- Conversion
 
 feature -- Element change
 
+	append_string_to_utf8 (a_utf8: STRING_8; a_string: READABLE_STRING_GENERAL)
+			-- Add UTF-8 encoded characters of `a_string' at the end of `a_utf8'.
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
+		require
+			a_utf8_not_void: a_utf8 /= Void
+			a_utf8_is_string: a_utf8.same_type ({STRING_8} "")
+			a_string_not_void: a_string /= Void
+		do
+			append_substring_to_utf8 (a_utf8, a_string, 1, a_string.count)
+		ensure
+			instance_free: class
+			a_utf8: old valid_utf8 (a_utf8) and across 1 |..| a_string.count as l_index all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_string.code (l_index.item)) end implies valid_utf8 (a_utf8)
+			byte_count_set: a_utf8.count = old a_utf8.count + string_byte_count (a_string)
+		end
+
+	append_substring_to_utf8 (a_utf8: STRING_8; a_string: READABLE_STRING_GENERAL; s, e: INTEGER)
+			-- Add UTF-8 encoded characters of `a_string' between
+			-- indexes `s' and `e' at the end of `a_utf8'.
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
+		require
+			a_utf8_not_void: a_utf8 /= Void
+			a_utf8_is_string: a_utf8.same_type ({STRING_8} "")
+			a_string_not_void: a_string /= Void
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
+		local
+			i, nb: INTEGER
+		do
+			if s <= e then
+				from
+					i := s
+					nb := e
+				until
+					i > nb
+				loop
+					append_natural_32_code_to_utf8 (a_utf8, a_string.code (i))
+					i := i + 1
+				end
+			end
+		ensure
+			instance_free: class
+			a_utf8: old valid_utf8 (a_utf8) and across s |..| e as l_index all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_string.code (l_index.item)) end implies valid_utf8 (a_utf8)
+			byte_count_set: a_utf8.count = old a_utf8.count + substring_byte_count (a_string, s, e)
+		end
+
 	append_code_to_utf8 (a_utf8: STRING_8; a_code: INTEGER)
 			-- Add UTF-8 encoded character of code `a_code'
 			-- at the end of `a_utf8'.
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
 		require
 			a_utf8_not_void: a_utf8 /= Void
-			a_utf8_is_string: ANY_.same_types (a_utf8, {STRING_8} "")
-			a_utf8_valid: valid_utf8 (a_utf8)
-			valid_code: unicode.valid_non_surrogate_code (a_code)
+			a_utf8_is_string: a_utf8.same_type ({STRING_8} "")
+			a_code_not_negative: a_code >= 0
 		do
 			append_natural_32_code_to_utf8 (a_utf8, a_code.to_natural_32)
 		ensure
 			instance_free: class
-			a_utf8_valid: valid_utf8 (a_utf8)
+			a_utf8_valid: old valid_utf8 (a_utf8) and unicode.valid_non_surrogate_code (a_code) implies valid_utf8 (a_utf8)
+			byte_count_set: a_utf8.count = old a_utf8.count + code_byte_count (a_code)
 		end
 
 	append_natural_32_code_to_utf8 (a_utf8: STRING_8; a_code: NATURAL_32)
 			-- Add UTF-8 encoded character of code `a_code'
 			-- at the end of `a_utf8'.
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
 		require
 			a_utf8_not_void: a_utf8 /= Void
-			a_utf8_is_string: ANY_.same_types (a_utf8, {STRING_8} "")
-			a_utf8_valid: valid_utf8 (a_utf8)
-			valid_code: unicode.valid_non_surrogate_natural_32_code (a_code)
+			a_utf8_is_string: a_utf8.same_type ({STRING_8} "")
 		local
 			b2, b3, b4: CHARACTER_8
 			c: NATURAL_32
 		do
-			inspect natural_32_code_byte_count (a_code)
-			when 1 then
+			if a_code < natural_32_code_128 then
+					-- 2^7
 					-- 0xxxxxxx
 				a_utf8.append_character (a_code.to_character_8)
-			when 2 then
+			elseif a_code < natural_32_code_2048 then
+					-- 2^11
+					-- 110xxxxx 10xxxxxx
 				c := a_code
 				b2 := ((c \\ 64) + 128).to_character_8
 				c := c // 64
 					-- 110xxxxx
 				a_utf8.append_character ((c + 192).to_character_8)
 				a_utf8.append_character (b2)
-			when 3 then
-				c := a_code
-				b3 := ((c \\ 64) + 128).to_character_8
-				c := c // 64
-				b2 := ((c \\ 64) + 128).to_character_8
-				c := c // 64
-					-- 1110xxxx
-				a_utf8.append_character ((c + 224).to_character_8)
-				a_utf8.append_character (b2)
-				a_utf8.append_character (b3)
-			when 4 then
+			elseif a_code < natural_32_code_65536 then
+				if a_code >= {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_natural_32_code and a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_natural_32_code then
+						-- Surrogate.
+						-- Use invalid UTF-8 byte 0xFF instead.
+					a_utf8.append_character (invalid_character_utf8_byte)
+				else
+						-- 2^16
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					c := a_code
+					b3 := ((c \\ 64) + 128).to_character_8
+					c := c // 64
+					b2 := ((c \\ 64) + 128).to_character_8
+					c := c // 64
+						-- 1110xxxx
+					a_utf8.append_character ((c + 224).to_character_8)
+					a_utf8.append_character (b2)
+					a_utf8.append_character (b3)
+				end
+			elseif a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code then
+					-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
 				c := a_code
 				b4 := ((c \\ 64) + 128).to_character_8
 				c := c // 64
@@ -624,59 +797,18 @@ feature -- Element change
 				a_utf8.append_character (b2)
 				a_utf8.append_character (b3)
 				a_utf8.append_character (b4)
+			else
+					-- Invalid Unicode character.
+					-- Use invalid UTF-8 byte 0xFF instead.
+				a_utf8.append_character (invalid_character_utf8_byte)
 			end
 		ensure
 			instance_free: class
-			a_utf8_valid: valid_utf8 (a_utf8)
-		end
-
-	natural_32_code_to_utf8 (a_code: NATURAL_32): NATURAL_32
-			-- UTF-8 encoded version of `a_code'
-			-- (e.g. 0xb1000000 or 0xb1b20000 or 0xb1b2b300 or 0xb1b2b3b4)
-		require
-			valid_code: unicode.valid_non_surrogate_natural_32_code (a_code)
-		local
-			b1, b2, b3, b4, c: NATURAL_32
-		do
-			inspect natural_32_code_byte_count (a_code)
-			when 1 then
-					-- 0xxxxxxx
-				Result := a_code |<< (3 * {PLATFORM}.natural_8_bits)
-			when 2 then
-				b2 := a_code \\ 64 + 128
-					-- 110xxxxx
-				b1 := a_code // 64 + 192
-				Result := (b1 |<< (3 * {PLATFORM}.natural_8_bits)) | (b2 |<< (2 * {PLATFORM}.natural_8_bits))
-			when 3 then
-				c := a_code
-				b3 := c \\ 64 + 128
-				c := c // 64
-				b2 := c \\ 64 + 128
-					-- 1110xxxx
-				b1 := c // 64 + 224
-				Result := (b1 |<< (3 * {PLATFORM}.natural_8_bits)) | (b2 |<< (2 * {PLATFORM}.natural_8_bits)) | (b3 |<< {PLATFORM}.natural_8_bits)
-			when 4 then
-				c := a_code
-				b4 := c \\ 64 + 128
-				c := c // 64
-				b3 := c \\ 64 + 128
-				c := c // 64
-				b2 := c \\ 64 + 128
-					-- 11110xxx
-				b1 := c // 64 + 240
-				Result := (b1 |<< (3 * {PLATFORM}.natural_8_bits)) | (b2 |<< (2 * {PLATFORM}.natural_8_bits)) | (b3 |<< {PLATFORM}.natural_8_bits) | b4
-			end
-		ensure
-			instance_free: class
+			a_utf8_valid: old valid_utf8 (a_utf8) and unicode.valid_non_surrogate_natural_32_code (a_code) implies valid_utf8 (a_utf8)
+			byte_count_set: a_utf8.count = old a_utf8.count + natural_32_code_byte_count (a_code)
 		end
 
 feature {NONE} -- Constants
-
-	code_3: INTEGER = 3
-			-- 111110xx (2^2 - 1 = 3)
-
-	code_7: INTEGER = 7
-			-- 11110xxx (2^3 - 1 = 7)
 
 	code_15: INTEGER = 15
 			-- 1110xxxx (2^4 - 1 = 15)
@@ -690,6 +822,8 @@ feature {NONE} -- Constants
 	code_127: INTEGER = 127
 			-- 01111111
 
+	natural_32_code_128: NATURAL_32 = 128
+
 	byte_143: CHARACTER_8 = '%/143/'
 
 	byte_159: CHARACTER_8 = '%/159/'
@@ -697,15 +831,9 @@ feature {NONE} -- Constants
 	byte_191: CHARACTER_8 = '%/191/'
 			-- 10111111
 
-	code_191: INTEGER = 191
-			-- 10111111
-
 	byte_194: CHARACTER_8 = '%/194/'
 
 	byte_223: CHARACTER_8 = '%/223/'
-			-- 11011111
-
-	code_223: INTEGER = 223
 			-- 11011111
 
 	byte_224: CHARACTER_8 = '%/224/'
@@ -715,35 +843,14 @@ feature {NONE} -- Constants
 	byte_239: CHARACTER_8 = '%/239/'
 			-- 11101111
 
-	code_239: INTEGER = 239
-			-- 11101111
-
 	byte_240: CHARACTER_8 = '%/240/'
 
 	byte_244: CHARACTER_8 = '%/244/'
 
-	byte_247: CHARACTER_8 = '%/247/'
-			-- 11110111
-
-	code_247: INTEGER = 247
-			-- 11110111
-
-	byte_251: CHARACTER_8 = '%/251/'
-			-- 11111011
-
-	code_251: INTEGER = 251
-			-- 11111011
-
 	byte_253: CHARACTER_8 = '%/253/'
 			-- 11111101
 
-	code_253: INTEGER = 253
-			-- 11111101
-
-	byte_255: CHARACTER_8 = '%/255/'
-			-- 11111111
-
-	code_255: NATURAL_32 = 255
+	natural_32_code_255: NATURAL_32 = 255
 			-- 11111111
 
 	byte_ef: CHARACTER_8 = '%/239/'
@@ -754,6 +861,10 @@ feature {NONE} -- Constants
 
 	byte_bf: CHARACTER_8 = '%/191/'
 			-- UTF-8 BOM third: BF
+
+	natural_32_code_2048: NATURAL_32 = 2048
+
+	natural_32_code_65536: NATURAL_32 = 65536
 
 feature {NONE} -- Implementation
 

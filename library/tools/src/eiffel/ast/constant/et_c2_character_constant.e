@@ -90,7 +90,7 @@ feature -- Access
 				Result := value.to_character_8
 			end
 		ensure then
-			one_utf8_byte: {UC_UTF8_ROUTINES}.character_byte_count (Result) = 1
+			one_utf8_byte: {UC_UTF8_ROUTINES}.character_8_byte_count (Result) = 1
 		end
 
 	last_position: ET_POSITION

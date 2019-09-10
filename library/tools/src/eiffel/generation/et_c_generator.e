@@ -11099,7 +11099,7 @@ feature {NONE} -- Expression generation
 					print_utf8_as_escaped_string_32 (l_string)
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					current_file.put_integer ({UC_UTF8_ROUTINES}.character_count (l_string))
+					current_file.put_integer ({UC_UTF8_ROUTINES}.unicode_character_count (l_string))
 					current_file.put_character (')')
 				else
 					current_file.put_string (c_ge_ms8)
@@ -11107,7 +11107,7 @@ feature {NONE} -- Expression generation
 					print_utf8_as_escaped_string_8 (l_string)
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					current_file.put_integer ({UC_UTF8_ROUTINES}.character_count (l_string))
+					current_file.put_integer ({UC_UTF8_ROUTINES}.unicode_character_count (l_string))
 					current_file.put_character (')')
 				end
 			end

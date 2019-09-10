@@ -42,7 +42,7 @@ create
 %x SCOND ACTION_TEXT DEFINITION FIRSTCCL CCL OUTFILE
 %x REGEXP EIFFEL_BLOCK2
 
-%option utf8 ecs meta-ecs case-insensitive nodefault
+%option ecs meta-ecs case-insensitive nodefault
 %option outfile="lx_lex_scanner.e"
 
 C					"--".*
@@ -85,7 +85,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					report_unrecognized_directive_error
 					set_start_condition (RECOVER1)
 				}
-	(b:.)		{
+	.			{
 					report_directive_expected_error
 					set_start_condition (RECOVER1)
 				}
@@ -98,7 +98,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	"--".*													more
 	\"|\'|%|-												more
 	^"%}"		{
-					check attached text_substring (1, text_count - 2) as l_last_string then
+					check attached utf8_text_substring (1, text_count - 2) as l_last_string then
 						line_nb := line_nb + l_last_string.occurrences ('%N')
 						description.eiffel_header.force_last (l_last_string)
 						set_start_condition (INITIAL)
@@ -162,33 +162,28 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	nowarn		{
 					description.set_no_warning (True)
 				}
-
 	outfile=		set_start_condition (OUTFILE)
-
--- Not implemented yet:
---	fast			fast_table := True
---	nofast			fast_table := False
---	perf-report					;
---	noperf-report				;
---	verbose						;
---	noverbose					;
 
 	{NL}		{
 					line_nb := line_nb + 1
 					set_start_condition (INITIAL)
 				}
-	[-a-z0-9]+|(b:.)	{
+	[-a-z0-9]+	{
 					report_unrecognized_option_error (text)
+					set_start_condition (RECOVER1)
+			}
+	.	{
+					report_unrecognized_option_error (character_text)
 					set_start_condition (RECOVER1)
 			}
 }
 
 <OUTFILE>{
-	\"[^"\n]*\"		{
+	\"([\x00-\xFF]{-}["\n])*\"		{
 					description.set_output_filename (text_substring (2, text_count - 1))
 					set_start_condition (OPTION)
 				}
-	(b:.)		{
+	.			{
 					description.set_output_filename (Void)
 					report_missing_quote_error
 					set_start_condition (RECOVER1)
@@ -199,7 +194,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	{WS}|{C}		-- Separates name and definition.
 	[^ \t\n\r][^\n\r]*	{
 					check last_string_not_void: attached last_string as l_last_string then
-						process_name_definition (l_last_string, text)
+						process_name_definition (l_last_string, unicode_text)
 						last_string := Void
 						set_start_condition (INITIAL)
 					end
@@ -212,11 +207,11 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 }
 
 <RECOVER1>{
-	(b:.)*			{
+	.*			{
 						-- Eat characters to end of line.
 					set_start_condition (INITIAL)
 				}
-	(b:.)*{NL}		{
+	.*{NL}		{
 						-- Eat characters to end of line.
 					line_nb := line_nb + 1
 					set_start_condition (INITIAL)
@@ -250,7 +245,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					last_token := Less_than_code
 					set_start_condition (SCOND)
 				}
-	"{"{NAME}"}"|"<<"|(b:.)		{
+	"{"{NAME}"}"|"<<"|.		{
 					less (0)
 						-- The line number is set when creating the rule,
 						-- but it often gets the wrong number because
@@ -263,10 +258,20 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 
 <REGEXP>{
 	"(u:"		{
-					last_token := UNICODE_MODE_START
+					if description.utf8_mode then
+						last_token := UNICODE_MODE_START
+					else
+						last_token := Left_parenthesis_code
+						less (1)
+					end
 				}
 	"(b:"		{
-					last_token := BYTE_MODE_START
+					if description.utf8_mode then
+						last_token := BYTE_MODE_START
+					else
+						last_token := Left_parenthesis_code
+						less (1)
+					end
 				}
 	\"			{
 					last_token := Double_quote_code
@@ -293,8 +298,8 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					last_token := CCL_MINUS
 				}
 	"["{FIRST_CCL_CHAR}{CCL_CHAR}*"]"	{
-					last_string_value := text
-					if attached character_class_with_name (last_string_value) as l_character_class then
+					last_string_32_value := unicode_text
+					if attached character_class_with_name (last_string_32_value) as l_character_class then
 						last_token := CCL_OP
 						last_lx_symbol_class_value := l_character_class
 					else
@@ -320,7 +325,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 				}
 	.			{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 				}
 }
 
@@ -337,17 +342,17 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					last_token := NAME
 					last_string_value := text
 				}
-	(b:.)		{
-					report_bad_start_condition_error (text)
+	.		{
+					report_bad_start_condition_error (character_text)
 				}
 }
 
 <NUM>{
 	{WS}			-- Separator.
 	[0-9]+		{
-					if text.is_integer then
+					if attached text as l_text and then l_text.is_integer then
 						last_token := NUMBER
-						last_integer_value := text.to_integer
+						last_integer_value := l_text.to_integer
 					else
 						report_integer_too_large_error (text)
 					end
@@ -357,7 +362,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				}
-	(b:.)		{
+	.			{
 					report_bad_character_in_brackets_error
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
@@ -373,7 +378,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 <QUOTE>{
 	[^"\n]		{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 				}
 	\"			{
 					last_token := Double_quote_code
@@ -434,7 +439,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	"^"/[-\]]		last_token := Caret_code
 	.			{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 					set_start_condition (CCL)
 				}
 	{NL}		{
@@ -449,7 +454,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	-/[^\]]			last_token := Minus_code
 	[^\]\n]		{
 					last_token := CHAR
-					process_utf8_character
+					process_single_character
 				}
 	"]"			{
 					last_token := Right_bracket_code
@@ -476,7 +481,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	"{"				set_start_condition (EIFFEL_BLOCK2)
 	[^{\n].*	{
 					last_token := EIF_CODE
-					last_string_value := text
+					last_string_value := utf8_text
 					set_start_condition (SECT2)
 				}
 }
@@ -493,7 +498,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 				}
 	"}"			{
 					if nb_open_brackets = 0 then
-						check attached text_substring (1, text_count - 1) as l_last_string then
+						check attached utf8_text_substring (1, text_count - 1) as l_last_string then
 							last_token := EIF_CODE
 							line_nb := line_nb + l_last_string.occurrences ('%N')
 							last_string_value := l_last_string
@@ -512,16 +517,17 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 
 <SECT3>(.|\n)+	{
 					last_token := EIF_CODE
-					last_string_value := text
+					last_string_value := utf8_text
 				}
 
 <*>{
-	(b:.)		{
-					report_bad_character_error (text)
-				}
-	\n			{
-					report_bad_character_error ("%%N")
-					line_nb := line_nb + 1
+	.|\n		{
+					if text_item (1) = '%N' then
+						report_bad_character_error ("%%N")
+						line_nb := line_nb + 1
+					else
+						report_bad_character_error (character_text)
+					end
 				}
 }
 

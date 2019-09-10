@@ -134,10 +134,29 @@ feature -- Access
 	unicode_text: STRING_32
 			-- Unicode text of last token read
 			-- (Create a new string at each call.)
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters.
 		deferred
 		ensure
 			unicode_text_not_void: Result /= Void
 			correct_count: Result.count = text_count
+		end
+
+	utf8_text: STRING_8
+			-- UTF-8 representation of last token read
+			-- (Create a new string at each call.)
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters, the the resulting
+			-- string is valid UTF-8.
+		deferred
+		ensure
+			utf8_text_not_void: Result /= Void
+			utf8_text_is_string_8: Result.same_type ({STRING_8} "")
+			valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
+			correct_count: Result.count = {UC_UTF8_ROUTINES}.string_byte_count (unicode_text)
+			definition: Result.is_equal ({UC_UTF8_ROUTINES}.string_to_utf8 (unicode_text))
 		end
 
 	text_item (i: INTEGER): CHARACTER_8
@@ -152,6 +171,9 @@ feature -- Access
 
 	unicode_text_item (i: INTEGER): CHARACTER_32
 			-- `i'-th Unicode character of last token read
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters.
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= text_count
@@ -174,7 +196,7 @@ feature -- Access
 		ensure
 			text_substring_not_void: Result /= Void
 			text_substring_empty: (s > e) implies (Result.count = 0)
-			definition: s <= e implies Result.is_equal (text.substring (s, e))
+			definition: Result.is_equal (text.substring (s, e))
 		end
 
 	unicode_text_substring (s, e: INTEGER): STRING_32
@@ -183,6 +205,9 @@ feature -- Access
 			-- (For efficiency reason, this function can bypass the
 			-- call to `unicode_text' and create the substring directly from
 			-- the input buffer.)
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters.
 		require
 			meaningful_start: 1 <= s
 			meaningful_interval: s <= e + 1
@@ -191,7 +216,31 @@ feature -- Access
 		ensure
 			unicode_text_substring_not_void: Result /= Void
 			unicode_text_substring_empty: (s > e) implies (Result.count = 0)
-			definition: s <= e implies Result.is_equal (unicode_text.substring (s, e))
+			definition: Result.is_equal (unicode_text.substring (s, e))
+		end
+
+	utf8_text_substring (s, e: INTEGER): STRING_8
+			-- UTF-8 representation of substring of last token read
+			-- (Create a new string at each call.)
+			-- (For efficiency reason, this function can bypass the
+			-- call to `unicode_text' and create the substring directly from
+			-- the input buffer.)
+			--
+			-- Note that `unicode_text' does not contain surrogate
+			-- or invalid Unicode characters, the the resulting
+			-- string is valid UTF-8.
+		require
+			meaningful_start: 1 <= s
+			meaningful_interval: s <= e + 1
+			meaningful_end: e <= text_count
+		deferred
+		ensure
+			utf8_text_not_void: Result /= Void
+			utf8_text_is_string_8: Result.same_type ({STRING_8} "")
+			valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
+			utf8_text_substring_empty: (s > e) implies (Result.count = 0)
+			definition: Result.is_equal ({UC_UTF8_ROUTINES}.string_to_utf8 (unicode_text.substring (s, e)))
+			correct_count: Result.count = {UC_UTF8_ROUTINES}.string_byte_count (unicode_text.substring (s, e))
 		end
 
 	start_condition: INTEGER
@@ -423,6 +472,13 @@ feature -- Element change
 	unread_character (c: CHARACTER_8)
 			-- Put `c' back to `input_buffer'. This will alter both
 			-- `text' and the content of `input_buffer'.
+		deferred
+		end
+
+	unread_unicode_character (c: CHARACTER_32)
+			-- Put `c' back to `input_buffer'. This will alter both
+			-- `text' and the content of `input_buffer'.
+			-- The behavior is undefined if `c' is too large to fit into `input_buffer'.
 		deferred
 		end
 
