@@ -189,7 +189,7 @@ feature -- Scanning
 							yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						else
 							yy_current_state := yyJam_state
-							report_invalid_unicode_character (yy_code)
+							report_invalid_unicode_character_error (yy_code)
 							if last_token = yyUnknown_token then
 								last_token := yyInvalid_character_token
 							end

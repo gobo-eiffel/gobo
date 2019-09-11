@@ -163,7 +163,7 @@ feature -- Scanning
 						else
 							yy_current_state := yyJam_state
 							yy_done := True
-							report_invalid_unicode_character (yy_code)
+							report_invalid_unicode_character_error (yy_code)
 							if last_token = yyUnknown_token then
 								last_token := yyInvalid_character_token
 							end

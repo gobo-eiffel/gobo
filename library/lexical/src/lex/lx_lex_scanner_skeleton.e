@@ -21,7 +21,7 @@ inherit
 			reset as reset_compressed_scanner_skeleton,
 			push_start_condition as lex_push_start_condition
 		redefine
-			report_invalid_unicode_character
+			report_invalid_unicode_character_error
 		end
 
 	UT_CHARACTER_CODES
@@ -272,10 +272,10 @@ feature {NONE} -- Implementation
 				if a_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_code then
 					last_integer_value := a_code
 				elseif a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_code then
-					report_invalid_unicode_character_error (character_text)
+					report_invalid_character_error (character_text)
 					last_integer_value := 0
 				elseif a_code > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code then
-					report_invalid_unicode_character_error (character_text)
+					report_invalid_character_error (character_text)
 					last_integer_value := 0
 				else
 					last_integer_value := a_code - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 			if l_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code then
 				process_character (l_code.to_integer_32)
 			else
-				report_invalid_unicode_character_error (character_text)
+				report_invalid_character_error (character_text)
 				last_integer_value := 0
 			end
 		end
@@ -509,12 +509,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Error handling
 
-	report_invalid_unicode_character (a_code: NATURAL_32)
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
 			-- Report that the surrogate or invalid Unicode character
 			-- with code `a_code' has been read and caused the scanner
 			-- to fail.
 		do
-			report_invalid_unicode_character_error ("\u{" + a_code.to_hex_string + "}%N")
+			report_invalid_character_error ("\u{" + a_code.to_hex_string + "}%N")
+		ensure then
+			not_successful: not successful
 		end
 
 	report_bad_character_error (a_char: STRING)
@@ -583,7 +585,7 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
-	report_invalid_unicode_character_error (a_char: STRING)
+	report_invalid_character_error (a_char: STRING)
 			-- Report that character `a_char' is not a valid Unicode character.
 		require
 			a_char_not_void: a_char /= Void

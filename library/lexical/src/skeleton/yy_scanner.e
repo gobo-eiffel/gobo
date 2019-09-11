@@ -676,7 +676,7 @@ feature -- Error handling
 			std.error.put_character ('%N')
 		end
 
-	report_invalid_unicode_character (a_code: NATURAL_32)
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
 			-- Report that the surrogate or invalid Unicode character
 			-- with code `a_code' has been read and caused the scanner
 			-- to fail.
