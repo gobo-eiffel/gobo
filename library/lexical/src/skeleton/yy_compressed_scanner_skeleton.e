@@ -111,14 +111,7 @@ feature -- Scanning
 						-- character of the current token.
 					yy_bp := yy_cp
 						-- Find the start state.
---	START INLINING 'yy_at_beginning_of_line'
---					yy_current_state := yy_start_state + yy_at_beginning_of_line
-					if input_buffer.beginning_of_line then
-						yy_current_state := yy_start_state + 1
-					else
-						yy_current_state := yy_start_state
-					end
---	END INLINING 'yy_at_beginning_of_line'
+					yy_current_state := yy_start_state + yy_at_beginning_of_line
 					if yyReject_or_variable_trail_context then
 							-- Set up for storing up states.
 						SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, 0)
@@ -484,14 +477,12 @@ feature {NONE} -- Implementation
 			l_unicode_content_area: like yy_unicode_content_area
 		do
 				-- Find the start state.
---	START INLINING
---			Result := yy_start_state + yy_at_beginning_of_line
+			Result := yy_start_state + yy_at_beginning_of_line
 			if input_buffer.beginning_of_line then
 				Result := yy_start_state + 1
 			else
 				Result := yy_start_state
 			end
---	END INLINING
 			if yyReject_or_variable_trail_context then
 					-- Set up for storing up states.
 				SPECIAL_INTEGER_.force (yy_state_stack, Result, 0)
