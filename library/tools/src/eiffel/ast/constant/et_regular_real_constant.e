@@ -5,7 +5,7 @@ note
 		"Eiffel real constants with no underscore"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new Real constant.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: (([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?).recognizes (a_literal)
+			valid_literal: {ET_REGULAR_REAL_CONSTANT}.valid_literal (a_literal)
 		do
 			literal := a_literal
 			make_leaf
@@ -44,8 +44,9 @@ feature -- Processing
 			a_processor.process_regular_real_constant (Current)
 		end
 
-invariant
+feature {NONE} -- Implementation
 
-	-- valid_literal: (([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?).recognizes (literal)
+	literal_regexp: STRING = "([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?"
+			-- Regular expression for `literal'
 
 end

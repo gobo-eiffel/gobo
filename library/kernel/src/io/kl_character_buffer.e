@@ -20,7 +20,8 @@ inherit
 			unicode_substring,
 			utf8_substring,
 			append_substring_to_string,
-			append_substring_to_unicode_string,
+			append_unicode_substring_to_string,
+			append_utf8_substring_to_string,
 			fill_from_substring,
 			fill_from_stream,
 			move_left,
@@ -74,7 +75,7 @@ feature -- Access
 				create Result.make (0)
 			else
 				create Result.make (e - s + 1)
-				append_substring_to_unicode_string (s, e, Result)
+				append_unicode_substring_to_string (s, e, Result)
 			end
 		end
 
@@ -127,12 +128,22 @@ feature -- Element change
 			end
 		end
 
-	append_substring_to_unicode_string (s, e: INTEGER; a_string: STRING_32)
+	append_unicode_substring_to_string (s, e: INTEGER; a_string: STRING_32)
 			-- Append string made up of characters held in buffer
 			-- between indexes `s' and `e' to `a_string'.
 		do
 			if s <= e then
 				a_string.append_substring_general (area, s + 1, e + 1)
+			end
+		end
+
+	append_utf8_substring_to_string (s, e: INTEGER; a_string: STRING_8)
+			-- Append bytes corresponding to the UTF-8 representation
+			-- of the characters held in buffer between indexes `s'
+			-- and `e' to `a_string'.
+		do
+			if s <= e then
+				{UC_UTF8_ROUTINES}.append_substring_to_utf8 (a_string, area, s + 1, e + 1)
 			end
 		end
 

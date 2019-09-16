@@ -388,6 +388,7 @@ feature -- Element change
 			a_string.append_string (text)
 		ensure
 			count_set: a_string.count = old (a_string.count) + text_count
+			definition: a_string.substring (old (a_string.count) + 1, a_string.count).same_string (text)
 		end
 
 	append_unicode_text_to_string (a_string: STRING_32)
@@ -401,6 +402,22 @@ feature -- Element change
 			a_string.append_string (unicode_text)
 		ensure
 			count_set: a_string.count = old (a_string.count) + text_count
+			definition: a_string.substring (old (a_string.count) + 1, a_string.count).same_string (unicode_text)
+		end
+
+	append_utf8_text_to_string (a_string: STRING_8)
+			-- Append `utf8_text' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass the
+			-- call to `utf8_text' and directly copy the characters from
+			-- the input buffer.)
+		require
+			a_string_not_void: a_string /= Void
+			a_string_is_string_8: a_string.same_type ({STRING_8} "")
+		do
+			a_string.append_string (utf8_text)
+		ensure
+			count_set: a_string.count = old (a_string.count) + utf8_text.count
+			definition: a_string.substring (old (a_string.count) + 1, a_string.count).same_string (utf8_text)
 		end
 
 	append_text_substring_to_string (s, e: INTEGER; a_string: STRING_8)
@@ -417,6 +434,7 @@ feature -- Element change
 			a_string.append_string (text_substring (s, e))
 		ensure
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
+			definition: a_string.substring (old (a_string.count) + 1, a_string.count).same_string (text_substring (s, e))
 		end
 
 	append_unicode_text_substring_to_string (s, e: INTEGER; a_string: STRING_32)
@@ -433,6 +451,25 @@ feature -- Element change
 			a_string.append_string (unicode_text_substring (s, e))
 		ensure
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
+			definition: a_string.substring (old (a_string.count) + 1, a_string.count).same_string (unicode_text_substring (s, e))
+		end
+
+	append_utf8_text_substring_to_string (s, e: INTEGER; a_string: STRING_8)
+			-- Append `utf8_text_substring' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass the
+			-- call to `utf8_text' and directly copy the characters from
+			-- the input buffer.)
+		require
+			a_string_not_void: a_string /= Void
+			a_string_is_string_8: a_string.same_type ({STRING_8} "")
+			s_large_enough: 1 <= s
+			valid_interval: s <= e + 1
+			e_small_enough: e <= text_count
+		do
+			a_string.append_string (utf8_text_substring (s, e))
+		ensure
+			count_set: a_string.count = old (a_string.count) + utf8_text_substring (s, e).count
+			definition: a_string.substring (old (a_string.count) + 1, a_string.count).same_string (utf8_text_substring (s, e))
 		end
 
 	terminate
@@ -666,7 +703,7 @@ feature -- Action
 
 feature -- Error handling
 
-	fatal_error (a_message: STRING)
+	fatal_error (a_message: STRING_8)
 			-- A fatal error occurred.
 			-- Print `a_message'.
 		require
@@ -683,7 +720,7 @@ feature -- Error handling
 		do
 			std.error.put_string ("Surrogate or invalid Unicode character '\u{")
 			std.error.put_string (a_code.to_hex_string)
-			std.error.put_string ("'}%N")
+			std.error.put_string ("}'%N")
 		end
 
 feature -- Debugging

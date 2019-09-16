@@ -26,19 +26,19 @@ feature {NONE} -- Initialization
 			-- Create a new verbatim string.
 		require
 			a_literal_not_void: a_literal /= Void
-			a_literal_is_string: {KL_ANY_ROUTINES}.same_types (a_literal, "")
+			a_literal_is_string_8: a_literal.same_type ({STRING_8} "")
 			valid_utf8_literal: {UC_UTF8_ROUTINES}.valid_utf8 (a_literal)
 			a_value_not_void: a_value /= Void
-			a_value_is_string: {KL_ANY_ROUTINES}.same_types (a_value, "")
+			a_value_is_string_8: a_value.same_type ({STRING_8} "")
 			valid_utf8_value: {UC_UTF8_ROUTINES}.valid_utf8 (a_value)
 			a_marker_not_void: a_marker /= Void
-			a_marker_is_string: {KL_ANY_ROUTINES}.same_types (a_marker, "")
+			a_marker_is_string_8: a_marker.same_type ({STRING_8} "")
 			valid_utf8_marker: {UC_UTF8_ROUTINES}.valid_utf8 (a_marker)
 			an_open_not_void: an_open /= Void
-			an_open_is_string: {KL_ANY_ROUTINES}.same_types (an_open, "")
+			an_open_is_string_8: an_open.same_type ({STRING_8} "")
 			valid_utf8_open: {UC_UTF8_ROUTINES}.valid_utf8 (an_open)
 			a_close_not_void: a_close /= Void
-			a_close_is_string: {KL_ANY_ROUTINES}.same_types (a_close, "")
+			a_close_is_string_8: a_close.same_type ({STRING_8} "")
 			valid_utf8_close: {UC_UTF8_ROUTINES}.valid_utf8 (a_close)
 		do
 			literal := a_literal
@@ -61,11 +61,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: STRING
+	value: STRING_8
 			-- String value
 			-- (using UTF-8 encoding)
 
-	literal: STRING
+	literal: STRING_8
 			-- Literal value
 			-- (using UTF-8 encoding)
 
@@ -73,19 +73,19 @@ feature -- Access
 			-- Is the verbatim string of the form "xyz[ ... ]xyz"?
 			-- (Otherwise it is of the form "xyz{ ... }xyz")
 
-	marker: STRING
+	marker: STRING_8
 			-- xyz in "xyz[ and ]xyz"
 			-- (using UTF-8 encoding)
 
-	open_white_characters: STRING
-	close_white_characters: STRING
+	open_white_characters: STRING_8
+	close_white_characters: STRING_8
 			-- White characters after "xyz[ and before ]xyz"
 			-- (using UTF-8 encoding)
 
 	last_position: ET_POSITION
 			-- Position of last character of current node in source code
 		do
-			create {ET_COMPRESSED_POSITION} Result.make (line + value.occurrences ('%N') + 1, close_white_characters.count + marker.count)
+			create {ET_COMPRESSED_POSITION} Result.make (line + value.occurrences ('%N') + 1, {UC_UTF8_ROUTINES}.unicode_character_count (close_white_characters) + {UC_UTF8_ROUTINES}.unicode_character_count (marker))
 		end
 
 feature -- Processing
@@ -99,13 +99,13 @@ feature -- Processing
 invariant
 
 	marker_not_void: marker /= Void
-	marker_is_string: {KL_ANY_ROUTINES}.same_types (marker, "")
+	marker_is_string_8: marker.same_type ({STRING_8} "")
 	valid_utf8_marker: {UC_UTF8_ROUTINES}.valid_utf8 (marker)
 	open_white_characters_not_void: open_white_characters /= Void
-	open_white_characters_is_string: {KL_ANY_ROUTINES}.same_types (open_white_characters, "")
+	open_white_characters_is_string_8: open_white_characters.same_type ({STRING_8} "")
 	valid_utf8_open_white_characters: {UC_UTF8_ROUTINES}.valid_utf8 (open_white_characters)
-	close_white_character_not_void: close_white_characters /= Void
-	close_white_characters_is_string: {KL_ANY_ROUTINES}.same_types (close_white_characters, "")
+	close_white_characters_not_void: close_white_characters /= Void
+	close_white_characters_is_string_8: close_white_characters.same_type ({STRING_8} "")
 	valid_utf8_close_white_characters: {UC_UTF8_ROUTINES}.valid_utf8 (close_white_characters)
 
 end

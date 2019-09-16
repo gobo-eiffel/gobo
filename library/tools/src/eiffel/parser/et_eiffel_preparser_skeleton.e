@@ -25,6 +25,7 @@ inherit
 		rename
 			make as make_ast_processor,
 			process_identifier as process_ast_identifier,
+			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		redefine

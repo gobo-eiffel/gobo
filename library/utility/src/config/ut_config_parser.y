@@ -5,7 +5,7 @@ note
 
 		"Parsers for config files made up of name/value pairs and preprocessor instructions"
 
-	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,8 @@ inherit
 			make as make_scanner,
 			reset as reset_scanner
 		redefine
-			fatal_error
+			fatal_error,
+			report_invalid_unicode_character_error
 		end
 
 	KL_SHARED_STRING_EQUALITY_TESTER
@@ -286,6 +287,18 @@ feature -- Error handling
 			has_error := True
 		end
 
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read and caused the scanner
+			-- to fail.
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make ("Surrogate or invalid Unicode character '\u{" + a_code.to_hex_string + "}'")
+			error_handler.report_error (l_error)
+			has_error := True
+		end
+		
 feature -- Status report
 
 	ignored: BOOLEAN

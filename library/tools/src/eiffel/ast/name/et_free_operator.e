@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 		require
 			a_free_op_not_void: a_free_op /= Void
 			a_free_op_not_empty: a_free_op.count > 0
-			a_free_op_is_string: {KL_ANY_ROUTINES}.same_types (a_free_op, "")
+			a_free_op_is_string_8: a_free_op.same_type ({STRING_8} "")
 			valid_utf8_free_op: {UC_UTF8_ROUTINES}.valid_utf8 (a_free_op)
 		do
 			code := tokens.infix_freeop_code
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 		require
 			a_free_op_not_void: a_free_op /= Void
 			a_free_op_not_empty: a_free_op.count > 0
-			a_free_op_is_string: {KL_ANY_ROUTINES}.same_types (a_free_op, "")
+			a_free_op_is_string_8: a_free_op.same_type ({STRING_8} "")
 			valid_utf8_free_op: {UC_UTF8_ROUTINES}.valid_utf8 (a_free_op)
 		do
 			code := tokens.prefix_freeop_code
@@ -107,7 +107,7 @@ feature -- Status report
 
 feature -- Access
 
-	name: STRING
+	name: STRING_8
 			-- Name of feature
 			-- (using UTF-8 encoding)
 		do

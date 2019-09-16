@@ -105,7 +105,7 @@ feature -- Status report
 	is_string_constant: BOOLEAN = True
 			-- Is current constant a STRING constant?
 
-	has_indexing_term_value (a_value: STRING): BOOLEAN
+	has_indexing_term_value (a_value: STRING_8): BOOLEAN
 			-- Does current indexing term have value `a_value'?
 			-- (case-insensitive comparison)
 		do
@@ -114,13 +114,13 @@ feature -- Status report
 
 feature -- Access
 
-	value: STRING
+	value: STRING_8
 			-- String value
 			-- (using UTF-8 encoding)
 		deferred
 		end
 
-	literal: STRING
+	literal: STRING_8
 			-- Literal value
 			-- (using UTF-8 encoding)
 		deferred
@@ -169,7 +169,7 @@ feature -- Access
 			Result := Current
 		end
 
-	indexing_term_value: STRING
+	indexing_term_value: STRING_8
 			-- Value of current indexing term
 		do
 			Result := value
@@ -217,10 +217,10 @@ feature -- Type conversion
 invariant
 
 	literal_not_void: literal /= Void
-	literal_is_string: {KL_ANY_ROUTINES}.same_types (literal, "")
+	literal_is_string_8: literal.same_type ({STRING_8} "")
 	valid_utf8_literal: {UC_UTF8_ROUTINES}.valid_utf8 (literal)
 	value_not_void: value /= Void
-	value_is_string: {KL_ANY_ROUTINES}.same_types (value, "")
+	value_is_string_8: value.same_type ({STRING_8} "")
 	valid_utf8_value: {UC_UTF8_ROUTINES}.valid_utf8 (value)
 
 end

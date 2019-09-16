@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
-			a_text_is_string: {KL_ANY_ROUTINES}.same_types (a_text, "")
+			a_text_is_string_8: a_text.same_type ({STRING_8} "")
 			valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (a_text)
 		do
 			text := a_text
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING
+	text: STRING_8
 			-- Text of token
 			-- (using UTF-8 encoding)
 
@@ -57,7 +57,7 @@ feature -- Setting
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
-			a_text_is_string: {KL_ANY_ROUTINES}.same_types (a_text, "")
+			a_text_is_string: a_text.same_type ({STRING_8} "")
 			valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (a_text)
 		do
 			text := a_text
@@ -69,7 +69,7 @@ invariant
 
 	text_not_void: text /= Void
 	text_not_empty: text.count > 0
-	text_is_string: {KL_ANY_ROUTINES}.same_types (text, "")
+	text_is_string: text.same_type ({STRING_8} "")
 	valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (text)
 
 end

@@ -14,7 +14,7 @@ class RX_PCRE_ROUTINES
 
 feature -- Access
 
-	regexp (a_pattern: STRING): RX_PCRE_REGULAR_EXPRESSION
+	regexp (a_pattern: READABLE_STRING_GENERAL): RX_PCRE_REGULAR_EXPRESSION
 			-- Regular expression corresponding to `a_pattern'.
 			--
 			-- There are two different sets of meta-characters: those  that

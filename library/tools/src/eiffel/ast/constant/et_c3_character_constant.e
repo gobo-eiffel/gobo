@@ -29,9 +29,7 @@ feature {NONE} -- Initialization
 			-- Create a new character constant.
 		require
 			a_literal_not_void: a_literal /= Void
-			a_literal_is_string: {KL_ANY_ROUTINES}.same_types (a_literal, "")
-			a_literal_valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (a_literal)
-			valid_literal: {ET_C3_CHARACTER_CONSTANT}.valid_literal (a_literal)
+			valid_literal: {ET_C3_CHARACTER_CONSTANT}.valid_literal ("'%%/" + a_literal + "/'")
 			valid_value: {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_value.natural_32_code)
 		do
 			literal := a_literal
@@ -48,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	literal: STRING
+	literal: STRING_8
 			-- Literal value of character code
 
 	last_position: ET_POSITION
@@ -63,13 +61,15 @@ feature -- Status report
 			-- Does the character code correspond to an invalid or surrogate
 			-- code point in the Unicode encoding?
 
-	valid_literal (a_literal: STRING): BOOLEAN
-			-- Is `a_literal' a valid value for `literal'?
+	valid_literal (a_literal: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_literal' a valid value for literal?
+		require
+			a_literal_not_void: a_literal /= Void
 		do
-			Result := {RX_PCRE_ROUTINES}.regexp ("[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*").recognizes (a_literal)
+			Result := {RX_PCRE_ROUTINES}.regexp (literal_regexp).recognizes (a_literal)
 		ensure
 			instance_free: class
-			definition: Result = {RX_PCRE_ROUTINES}.regexp ("[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*").recognizes (a_literal)
+			definition: Result = {RX_PCRE_ROUTINES}.regexp (literal_regexp).recognizes (a_literal)
 		end
 
 feature -- Processing
@@ -80,11 +80,14 @@ feature -- Processing
 			a_processor.process_c3_character_constant (Current)
 		end
 
+feature {NONE} -- Implementation
+
+	literal_regexp: STRING = "'%%/[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*/'"
+			-- Regular expression for `literal'
+
 invariant
 
 	literal_not_void: literal /= Void
-	literal_is_string: {KL_ANY_ROUTINES}.same_types (literal, "")
-	literal_valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (literal)
-	valid_literal: valid_literal (literal)
+	valid_literal: valid_literal ("'%%/" + literal + "/'")
 
 end

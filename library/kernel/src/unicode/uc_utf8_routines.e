@@ -25,15 +25,30 @@ feature -- Status report
 		require
 			a_string_not_void: a_string /= Void
 			a_string_is_string: a_string.same_type ({STRING_8} "")
+		do
+			Result := valid_utf8_substring (a_string, 1, a_string.count)
+		ensure
+			instance_free: class
+		end
+
+	valid_utf8_substring (a_string: STRING_8; s, e: INTEGER): BOOLEAN
+			-- Are the bytes in `a_string' between indexes `s' and `e'
+			-- a valid UTF-8 encoding?
+		require
+			a_string_not_void: a_string /= Void
+			a_string_is_string: a_string.same_type ({STRING_8} "")
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
 		local
 			i, nb, nb2: INTEGER
 			bc, a_code: INTEGER
 			a_byte, a_first_byte: CHARACTER_8
 		do
 			Result := True
-			nb := a_string.count
 			from
-				i := 1
+				i := s
+				nb := e
 			until
 				i > nb
 			loop
@@ -576,13 +591,30 @@ feature -- Measurement
 			-- Number of Unicode characters encoded in `a_utf8'
 		require
 			a_utf8_not_void: a_utf8 /= Void
-			a_utf8_is_string: ANY_.same_types (a_utf8, {STRING_8} "")
+			a_utf8_is_string_8: a_utf8.same_type( {STRING_8} "")
 			a_utf8_valid: valid_utf8 (a_utf8)
+		do
+			Result := unicode_substring_character_count (a_utf8, 1, a_utf8.count)
+		ensure
+			instance_free: class
+			unicode_character_count_not_negative: Result >= 0
+		end
+
+	unicode_substring_character_count (a_utf8: STRING_8; s, e: INTEGER): INTEGER
+			-- Number of Unicode characters encoded
+			-- in `a_utf8' between indexes `s' and `e'
+		require
+			a_utf8_not_void: a_utf8 /= Void
+			a_utf8_is_string_8: a_utf8.same_type( {STRING_8} "")
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_utf8.count
+			valid_interval: s <= e + 1
+			a_utf8_valid_substring: valid_utf8_substring (a_utf8, s, e)
 		local
 			i, nb: INTEGER
 		do
-			nb := a_utf8.count
-			from i := 1 until i > nb loop
+			nb := e
+			from i := s until i > nb loop
 				Result := Result + 1
 				i := i + encoded_byte_count (a_utf8.item (i))
 			end

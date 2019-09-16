@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Create a new break.
 		require
 			a_text_not_void: a_text /= Void
-			a_text_is_string: {KL_ANY_ROUTINES}.same_types (a_text, "")
+			a_text_is_string: a_text.same_type ({STRING_8} "")
 			valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (a_text)
 		do
 			text := a_text
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING
+	text: STRING_8
 			-- Text of break
 			-- (using UTF-8 encoding)
 
@@ -76,7 +76,7 @@ feature -- Status report
 					l_code := ('a').natural_32_code
 				end
 				inspect l_code
-				when 9, 10, 11, 13, 32, 45, 160, 5760, 8192..8202, 8239, 8287, 12288 then
+				when 9..13, 32, 45, 160, 5760, 8192..8202, 8239, 8287, 12288 then
 					i := i + l_byte_count
 				else
 					Result := True
@@ -89,7 +89,7 @@ feature -- Status report
 invariant
 
 	text_not_void: text /= Void
-	text_is_string: {KL_ANY_ROUTINES}.same_types (text, "")
+	text_is_string: text.same_type ({STRING_8} "")
 	valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (text)
 
 end

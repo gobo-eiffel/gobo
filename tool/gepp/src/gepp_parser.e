@@ -4,7 +4,7 @@ note
 
 		"Parsers for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,9 @@ inherit
 			make as make_gepp_scanner,
 			reset as reset_gepp_scanner
 		redefine
-			echo, fatal_error
+			echo, 
+			fatal_error,
+			report_invalid_unicode_character_error
 		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -174,9 +176,9 @@ feature {NONE} -- Semantic actions
 		do
 				inspect yy_act
 when 1 then
---|#line 55 "gepp_parser.y"
+--|#line 57 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 55")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 57")
 end
 
 
@@ -185,9 +187,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 58 "gepp_parser.y"
+--|#line 60 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 58")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 60")
 end
 
 
@@ -204,9 +206,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
---|#line 59 "gepp_parser.y"
+--|#line 61 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 59")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 61")
 end
 
 
@@ -215,9 +217,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
---|#line 60 "gepp_parser.y"
+--|#line 62 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 60")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 62")
 end
 
 
@@ -227,9 +229,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
---|#line 64 "gepp_parser.y"
+--|#line 66 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 64")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 66")
 end
 
 
@@ -239,9 +241,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
---|#line 65 "gepp_parser.y"
+--|#line 67 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 65")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 67")
 end
 
 
@@ -251,9 +253,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 7 then
---|#line 66 "gepp_parser.y"
+--|#line 68 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 66")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 68")
 end
 
 			if not ignored then
@@ -267,9 +269,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 8 then
---|#line 72 "gepp_parser.y"
+--|#line 74 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 72")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 74")
 end
 
 			if not ignored then
@@ -283,9 +285,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 9 then
---|#line 78 "gepp_parser.y"
+--|#line 80 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 78")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 80")
 end
 
 			if not ignored then
@@ -299,9 +301,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 10 then
---|#line 86 "gepp_parser.y"
+--|#line 88 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 86")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 88")
 end
 
 			if_level := if_level + 1
@@ -316,9 +318,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 11 then
---|#line 93 "gepp_parser.y"
+--|#line 95 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 93")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 95")
 end
 
 			if_level := if_level + 1
@@ -333,9 +335,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 12 then
---|#line 102 "gepp_parser.y"
+--|#line 104 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 102")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 104")
 end
 
 			yyval3 := is_defined (yyvs2.item (yyvsp2))
@@ -354,9 +356,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 13 then
---|#line 106 "gepp_parser.y"
+--|#line 108 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 106")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 108")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
@@ -367,9 +369,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 14 then
---|#line 110 "gepp_parser.y"
+--|#line 112 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 110")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 112")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) and yyvs3.item (yyvsp3)
@@ -381,9 +383,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 15 then
---|#line 114 "gepp_parser.y"
+--|#line 116 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 114")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 116")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) or yyvs3.item (yyvsp3)
@@ -395,9 +397,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 16 then
---|#line 118 "gepp_parser.y"
+--|#line 120 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 118")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 120")
 end
 
 			yyval3 := not yyvs3.item (yyvsp3)
@@ -408,9 +410,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 17 then
---|#line 124 "gepp_parser.y"
+--|#line 126 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 124")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 126")
 end
 
 			if ignored_level = if_level then
@@ -424,9 +426,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 18 then
---|#line 133 "gepp_parser.y"
+--|#line 135 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 133")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 135")
 end
 
 			if not ignored then
@@ -791,6 +793,17 @@ feature -- Error handling
 			error_handler.report_error (l_error)
 		end
 
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read and caused the scanner
+			-- to fail.
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make ("Surrogate or invalid Unicode character '\u{" + a_code.to_hex_string + "}'")
+			error_handler.report_error (l_error)
+		end
+		
 feature -- Status report
 
 	ignored: BOOLEAN

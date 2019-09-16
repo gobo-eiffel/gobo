@@ -22,35 +22,10 @@ create
 	make
 %}
 
--- Following UTF-8 standard: http://tools.ietf.org/html/rfc3629
--- NON_ASCII: Identical to all code points of Unicode excluding 0 - 127.
-
-UTF8_CHAR	({UTF8_1}|{UTF8_2}|{UTF8_3}|{UTF8_4})
-NON_ASCII	({UTF8_2}|{UTF8_3}|{UTF8_4})
-UTF8_1		[\x00-\x7F]
-UTF8_2		[\xC2-\xDF]{UTF8_TAIL}
-UTF8_3		((\xE0[\xA0-\xBF]{UTF8_TAIL})|([\xE1-\xEC]({UTF8_TAIL}{2}))|(\xED[\x80-\x9F]{UTF8_TAIL})|([\xEE-\xEF]({UTF8_TAIL}{2})))
-UTF8_4		((\xF0[\x90-\xBF]({UTF8_TAIL}{2}))|([\xF1-\xF3]({UTF8_TAIL}{3}))|(\xF4[\x80-\x8F]({UTF8_TAIL}{2})))
-UTF8_TAIL	[\x80-\xBF]
-
-SPACE ([ \t\x0B\f]|{U_no_break_space}|{U_ogham_space_mark}|{U_en_quad_U_hair_space}|{U_narrow_no_break_space}|{U_medium_mathematical_space}|{U_ideographic_space})
-U_no_break_space \xC2\xA0
-U_ogham_space_mark \xE1\x9A\x80
-U_en_quad_U_hair_space \xE2\x80[\x80-\x8A]
-U_narrow_no_break_space \xE2\x80\xAF
-U_medium_mathematical_space \xE2\x81\x9F
-U_ideographic_space \xE3\x80\x80
-
-HORIZONTAL_BREAK ({SPACE}|\r)
-BREAK	({HORIZONTAL_BREAK}|\n)
-UTF8_1_NO_NEWLINE [^\n\x80-\xFF]
-NO_NEWLINE ({UTF8_1_NO_NEWLINE}|{UTF8_2}|{UTF8_3}|{UTF8_4})
-UTF8_2_NO_SPACE	(\xC2[\x80-\x9F\xA1-\xBF]|[\xC3-\xDF]{UTF8_TAIL})
-UTF8_3_NO_SPACE	(\xE0[\xA0-\xBF]{UTF8_TAIL}|\xE1[\x80-\x99\x9B-\xBF]{UTF8_TAIL}|\xE1\x9A[\x81-\xBF]|\xE2[\x82-\xBF]{UTF8_TAIL}|\xE2\x80[\x8B-\xAE\xB0-\xBF]|\xE2\x81[\x80-\x9E\xA0-\xBF]|\xE3[\x81-\xBF]{UTF8_TAIL}|\xE3\x80[\x81-\xBF]|[\xE4-\xEC]({UTF8_TAIL}{2})|\xED[\x80-\x9F]{UTF8_TAIL}|[\xEE-\xEF]({UTF8_TAIL}{2}))
-UTF8_4_NO_SPACE {UTF8_4}
-NON_ASCII_NO_SPACE ({UTF8_2_NO_SPACE}|{UTF8_3_NO_SPACE}|{UTF8_4_NO_SPACE})
-
-CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)
+HORIZONTAL_BREAK	[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]
+BREAK				{HORIZONTAL_BREAK}{+}[\n]
+FREEOP_CHAR			[^a-zA-Z0-9_:;,?'"$.=()[\]{}]{-}{BREAK}
+CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*
 
 %x MS MSN MSN1 VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
 %option nodefault line outfile="et_eiffel_preparser.e"
@@ -59,7 +34,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 
 ----------/** Separators, Comments, Symbols **/----------------------------------------------------
 
-({BREAK}|"--"{NO_NEWLINE}*)+	|
+({BREAK}|"--".*)+	|
 [-+*/^=><.;,:!?(){}[\]$~]	|
 ("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")	{
 			}
@@ -219,16 +194,15 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 
 -- Make sure that we don't have a subsequence of the form "--", "->", "<<" or "<<" (which are special symbols).
 -- Do not allow breaks (spaces, newlines) either.
-([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+(([^\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})\-|([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})>|([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})<)? {
+({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+({FREEOP_CHAR}{-}[\-]\-|{FREEOP_CHAR}{-}[\->]>|{FREEOP_CHAR}{-}[<]<)? {
 			}
 
 ----------/** Eiffel characters **/---------------------------------------------
 
-\'([^%\n\x80-\xFF]|{NON_ASCII})\'	|
-\'%{UTF8_1_NO_NEWLINE}\'	|
+\'[^%\n]\'	|
+\'%[ABCDFHLNQRSTUV%'"()<>]\'	|
 \'%\/{CHAR_CODE}\/\'	{
 			}
-
 \'%\/{CHAR_CODE}	{
 					-- Syntax error: missing character / at end
 					-- of special character specification %/code/.
@@ -255,7 +229,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				column := column - 1
 				last_token := E_CHARERR
 			}
-\'([^%\n\x80-\xFF]|{NON_ASCII}|%{UTF8_1_NO_NEWLINE}|%\/{CHAR_CODE}\/)?	{
+\'([^%\n]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{CHAR_CODE}\/)?	{
 					-- Syntax error: missing quote at
 					-- end of character constant.
 				column := column + text_count
@@ -268,12 +242,13 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 
 ----------/** Eiffel strings **/------------------------------------------------
 
-\"([^%\n"\x80-\xFF]|{NON_ASCII})*\"	{
+\"[^%\n"]*\"	{
 			}
 
-\"([^\n\x80-\xFF"]|{NON_ASCII})*"{"/{HORIZONTAL_BREAK}*\n {
+\"[^\n"]*"{"/{HORIZONTAL_BREAK}*\n {
 					-- Verbatim string.
-				verbatim_marker := text_substring (2, text_count - 1)
+				verbatim_marker := utf8_text_substring (2, text_count - 1)
+				verbatim_marker_count := text_count - 2
 				set_start_condition (VS1)
 			}
 <VS1>{
@@ -300,24 +275,25 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 <VS2>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	{HORIZONTAL_BREAK}*"}"([^\n"\x80-\xFF]|{NON_ASCII})*\" {
+	{HORIZONTAL_BREAK}*"}"[^\n"]*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					verbatim_marker := no_verbatim_marker
+					verbatim_marker_count := 0
 					set_start_condition (INITIAL)
 				else
 					more
 					set_start_condition (VS3)
 				end
 			}
-	([^"\n\x80-\xFF]|{NON_ASCII})*\" {
+	[^"\n]*\" {
 				more
 				set_start_condition (VS3)
 			}
-	([^"\n\x80-\xFF]|{NON_ASCII})*\r\n {
+	[^"\n]*\r\n {
 				more
 				last_literal_end := text_count - 2
 			}
-	([^"\n\x80-\xFF]|{NON_ASCII})*\n {
+	[^"\n]*\n {
 				more
 				last_literal_end := text_count - 1
 			}
@@ -337,12 +313,12 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 <VS3>{
 		-- Read remaining characters of a line
 		-- in verbatim string body.
-	{NO_NEWLINE}*\r\n	{
+	.*\r\n	{
 				more
 				last_literal_end := text_count - 2
 				set_start_condition (VS2)
 			}
-	{NO_NEWLINE}*\n	{
+	.*\n	{
 				more
 				last_literal_end := text_count - 1
 				set_start_condition (VS2)
@@ -361,9 +337,10 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 			}
 }
 
-\"([^\n"\x80-\xFF]|{NON_ASCII})*\[/{HORIZONTAL_BREAK}*\n {
+\"[^\n"]*\[/{HORIZONTAL_BREAK}*\n {
 					-- Left-aligned verbatim string.
-				verbatim_marker := text_substring (2, text_count - 1)
+				verbatim_marker := utf8_text_substring (2, text_count - 1)
+				verbatim_marker_count := text_count - 2
 				set_start_condition (LAVS1)
 			}
 <LAVS1>{
@@ -390,24 +367,25 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 <LAVS2>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	{HORIZONTAL_BREAK}*\]([^\n"\x80-\xFF]|{NON_ASCII})*\" {
+	{HORIZONTAL_BREAK}*\][^\n"]*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					verbatim_marker := no_verbatim_marker
+					verbatim_marker_count := 0
 					set_start_condition (INITIAL)
 				else
 					more
 					set_start_condition (LAVS3)
 				end
 			}
-	([^\n"\x80-\xFF]|{NON_ASCII})*\" {
+	[^\n"]*\" {
 				more
 				set_start_condition (LAVS3)
 			}
-	([^\n"\x80-\xFF]|{NON_ASCII})*\r\n {
+	[^\n"]*\r\n {
 				more
 				last_literal_end := text_count - 2
 			}
-	([^\n"\x80-\xFF]|{NON_ASCII})*\n {
+	[^\n"]*\n {
 				more
 				last_literal_end := text_count - 1
 			}
@@ -427,12 +405,12 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 <LAVS3>{
 		-- Read remaining characters of a line
 		-- in verbatim string body.
-	{NO_NEWLINE}*\r\n	{
+	.*\r\n	{
 				more
 				last_literal_end := text_count - 2
 				set_start_condition (LAVS2)
 			}
-	{NO_NEWLINE}*\n	{
+	.*\n	{
 				more
 				last_literal_end := text_count - 1
 				set_start_condition (LAVS2)
@@ -451,10 +429,10 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 			}
 }
 
-\"([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
+\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
 					-- Manifest string with special characters.
 			}
-\"([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*	{
+\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*	{
 					-- Manifest string with special characters which may be made
 					-- up of several lines or may include invalid characters.
 					-- Keep track of current line and column.
@@ -482,6 +460,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 --				error_handler.report_SSAS_error (filename, current_position)
 				column := ms_column
 				line := ms_line
+--				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			}
 	%\/		{
@@ -493,24 +472,26 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 --				error_handler.report_SSAC_error (filename, current_position)
 				column := ms_column
 				line := ms_line
+--				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			}
 	%[abcdfhlnqrstuv]	{
 					-- Syntax error: special character specification
 					-- %l where l is a letter code should be in
 					-- upper-case in manifest strings.
-				column := yy_column - 1
+				column := yy_column
 				line := yy_line
 --				set_syntax_error
 --				error_handler.report_SSCU_error (filename, current_position)
 				column := ms_column
 				line := ms_line
+--				last_token := E_STRERR
+				set_start_condition (INITIAL)
+			}
+	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))+	{
 				more
 			}
-	([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))+	{
-				more
-			}
-	([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
+	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
 				set_start_condition (INITIAL)
 			}
 	%.		{
@@ -533,7 +514,6 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				error_handler.report_SSSC_error (filename, current_position)
 				column := ms_column
 				line := ms_line
-
 				last_token := E_STRERR
 				set_start_condition (INITIAL)
 			}
@@ -543,18 +523,6 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSNL_error (filename, current_position)
-				column := ms_column
-				line := ms_line
-				last_token := E_STRERR
-				set_start_condition (INITIAL)
-			}
-	.		{
-					-- Syntax error: missing double quote at
-					-- end of manifest string.
-				column := yy_column
-				line := yy_line
-				set_syntax_error
-				error_handler.report_SSEQ_error (filename, current_position)
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -708,11 +676,11 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 
 ---------/** Eiffel reals **/---------------------------------------------------
 
-[0-9]+\./[^.0-9]					|
+[0-9]+\./[^.0-9eE]					|
 [0-9]+\.[0-9]*[eE][+-]?[0-9]+		|
 [0-9]*\.[0-9]+([eE][+-]?[0-9]+)?	{
 			}
-[0-9]+(_+[0-9]+)+\./[^.0-9]	|
+[0-9]+(_+[0-9]+)+\./[^.0-9eE]	|
 [0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*	|
 ([0-9]+(_+[0-9]+)*)?\.[0-9]+(_+[0-9]+)*([eE][+-]?[0-9]+(_+[0-9]+)*)?	{
 			}

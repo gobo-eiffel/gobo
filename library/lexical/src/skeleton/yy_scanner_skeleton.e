@@ -18,8 +18,10 @@ inherit
 		redefine
 			append_text_to_string,
 			append_unicode_text_to_string,
+			append_utf8_text_to_string,
 			append_text_substring_to_string,
 			append_unicode_text_substring_to_string,
+			append_utf8_text_substring_to_string,
 			make_with_buffer,
 			set_input_buffer,
 			flush_input_buffer
@@ -293,7 +295,18 @@ feature -- Element change
 			-- the input buffer.)
 		do
 			if yy_start < yy_end then
-				yy_content.append_substring_to_unicode_string (yy_start, yy_end - 1, a_string)
+				yy_content.append_unicode_substring_to_string (yy_start, yy_end - 1, a_string)
+			end
+		end
+
+	append_utf8_text_to_string (a_string: STRING_8)
+			-- Append `utf8_text' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass the
+			-- call to `utf8_text' and directly copy the characters from
+			-- the input buffer.)
+		do
+			if yy_start < yy_end then
+				yy_content.append_utf8_substring_to_string (yy_start, yy_end - 1, a_string)
 			end
 		end
 
@@ -315,7 +328,18 @@ feature -- Element change
 			-- the characters from the input buffer.)
 		do
 			if s <= e then
-				yy_content.append_substring_to_unicode_string (yy_start + s - 1, yy_start + e - 1, a_string)
+				yy_content.append_unicode_substring_to_string (yy_start + s - 1, yy_start + e - 1, a_string)
+			end
+		end
+
+	append_utf8_text_substring_to_string (s, e: INTEGER; a_string: STRING_8)
+			-- Append `utf8_text_substring' at end of `a_string'.
+			-- (For efficiency reason, this feature can bypass the
+			-- call to `utf8_text' and directly copy the characters from
+			-- the input buffer.)
+		do
+			if s <= e then
+				yy_content.append_utf8_substring_to_string (yy_start + s - 1, yy_start + e - 1, a_string)
 			end
 		end
 

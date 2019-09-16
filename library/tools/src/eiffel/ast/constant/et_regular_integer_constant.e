@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new Integer constant.
 		require
 			a_literal_not_void: a_literal /= Void
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9]+").recognizes (a_literal)
+			valid_literal: {ET_REGULAR_INTEGER_CONSTANT}.valid_literal (a_literal)
 		do
 			literal := a_literal
 			value := a_value
@@ -62,8 +62,9 @@ feature -- Processing
 			a_processor.process_regular_integer_constant (Current)
 		end
 
-invariant
+feature {NONE} -- Implementation
 
-	valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9]+").recognizes (literal)
+	literal_regexp: STRING = "[0-9]+"
+			-- Regular expression for `literal'
 
 end

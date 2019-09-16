@@ -5,7 +5,7 @@ note
 
 		"Parsers for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,9 @@ inherit
 			make as make_gepp_scanner,
 			reset as reset_gepp_scanner
 		redefine
-			echo, fatal_error
+			echo, 
+			fatal_error,
+			report_invalid_unicode_character_error
 		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -264,6 +266,17 @@ feature -- Error handling
 			error_handler.report_error (l_error)
 		end
 
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read and caused the scanner
+			-- to fail.
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make ("Surrogate or invalid Unicode character '\u{" + a_code.to_hex_string + "}'")
+			error_handler.report_error (l_error)
+		end
+		
 feature -- Status report
 
 	ignored: BOOLEAN

@@ -4,7 +4,7 @@ note
 
 		"Parsers for config files made up of name/value pairs and preprocessor instructions"
 
-	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,8 @@ inherit
 			make as make_scanner,
 			reset as reset_scanner
 		redefine
-			fatal_error
+			fatal_error,
+			report_invalid_unicode_character_error
 		end
 
 	KL_SHARED_STRING_EQUALITY_TESTER
@@ -176,9 +177,9 @@ feature {NONE} -- Semantic actions
 		do
 				inspect yy_act
 when 1 then
---|#line 57 "ut_config_parser.y"
+--|#line 58 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 57")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 58")
 end
 
 
@@ -187,9 +188,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 60 "ut_config_parser.y"
+--|#line 61 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 60")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 61")
 end
 
 
@@ -206,9 +207,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
---|#line 61 "ut_config_parser.y"
+--|#line 62 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 61")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 62")
 end
 
 
@@ -217,9 +218,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
---|#line 62 "ut_config_parser.y"
+--|#line 63 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 62")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 63")
 end
 
 
@@ -229,9 +230,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
---|#line 66 "ut_config_parser.y"
+--|#line 67 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 66")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 67")
 end
 
 
@@ -241,9 +242,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
---|#line 67 "ut_config_parser.y"
+--|#line 68 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 67")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 68")
 end
 
 
@@ -253,9 +254,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 7 then
---|#line 68 "ut_config_parser.y"
+--|#line 69 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 68")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 69")
 end
 
 			if not ignored then
@@ -269,9 +270,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 8 then
---|#line 74 "ut_config_parser.y"
+--|#line 75 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 74")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 75")
 end
 
 			if not ignored then
@@ -285,9 +286,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 9 then
---|#line 80 "ut_config_parser.y"
+--|#line 81 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 80")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 81")
 end
 
 			if not ignored then
@@ -301,9 +302,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 10 then
---|#line 86 "ut_config_parser.y"
+--|#line 87 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 86")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 87")
 end
 
 			if not ignored then
@@ -317,9 +318,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 11 then
---|#line 92 "ut_config_parser.y"
+--|#line 93 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 92")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 93")
 end
 
 			if not ignored then
@@ -333,9 +334,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 12 then
---|#line 98 "ut_config_parser.y"
+--|#line 99 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 98")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 99")
 end
 
 			-- Empty lines are skipped.
@@ -345,9 +346,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 13 then
---|#line 104 "ut_config_parser.y"
+--|#line 105 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 104")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 105")
 end
 
 			if_level := if_level + 1
@@ -362,9 +363,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 14 then
---|#line 111 "ut_config_parser.y"
+--|#line 112 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 111")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 112")
 end
 
 			if_level := if_level + 1
@@ -379,9 +380,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 15 then
---|#line 120 "ut_config_parser.y"
+--|#line 121 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 120")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 121")
 end
 
 			yyval3 := is_defined (yyvs2.item (yyvsp2))
@@ -400,9 +401,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 16 then
---|#line 124 "ut_config_parser.y"
+--|#line 125 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 124")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 125")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
@@ -413,9 +414,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 17 then
---|#line 128 "ut_config_parser.y"
+--|#line 129 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 128")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 129")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) and yyvs3.item (yyvsp3)
@@ -427,9 +428,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 18 then
---|#line 132 "ut_config_parser.y"
+--|#line 133 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 132")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 133")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) or yyvs3.item (yyvsp3)
@@ -441,9 +442,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 19 then
---|#line 136 "ut_config_parser.y"
+--|#line 137 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 136")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 137")
 end
 
 			yyval3 := not yyvs3.item (yyvsp3)
@@ -454,9 +455,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 20 then
---|#line 142 "ut_config_parser.y"
+--|#line 143 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 142")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 143")
 end
 
 			if ignored_level = if_level then
@@ -470,9 +471,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 21 then
---|#line 151 "ut_config_parser.y"
+--|#line 152 "ut_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 151")
+	std.error.put_line ("Executing parser user-code from file 'ut_config_parser.y' at line 152")
 end
 
 			if not ignored then
@@ -845,6 +846,18 @@ feature -- Error handling
 			has_error := True
 		end
 
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read and caused the scanner
+			-- to fail.
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make ("Surrogate or invalid Unicode character '\u{" + a_code.to_hex_string + "}'")
+			error_handler.report_error (l_error)
+			has_error := True
+		end
+		
 feature -- Status report
 
 	ignored: BOOLEAN

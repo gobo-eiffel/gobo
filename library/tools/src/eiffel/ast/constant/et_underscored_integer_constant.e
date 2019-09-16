@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new Integer constant.
 		require
 			a_literal_not_void: a_literal /= Void
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(_*[0-9]+_*)+").recognizes (a_literal)
+			valid_literal: {ET_UNDERSCORED_INTEGER_CONSTANT}.valid_literal (a_literal)
 		do
 			literal := a_literal
 			value := a_value
@@ -48,8 +48,11 @@ feature -- Processing
 			a_processor.process_underscored_integer_constant (Current)
 		end
 
-invariant
+feature {NONE} -- Implementation
 
-	valid_literal: {RX_PCRE_ROUTINES}.regexp ("(_*[0-9]+_*)+").recognizes (literal)
+	literal_regexp: STRING = "_*[0-9]+(_+[0-9]+)*_*"
+			-- Regular expression for `literal'
+			-- (Note that the optional leading and trailing underscores
+			-- are not part of the Eiffel standard.)
 
 end

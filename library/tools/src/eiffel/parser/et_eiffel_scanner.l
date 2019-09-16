@@ -22,35 +22,10 @@ create
 	make
 %}
 
--- Following UTF-8 standard: http://tools.ietf.org/html/rfc3629
--- NON_ASCII: Identical to all code points of Unicode excluding 0 - 127.
-
-UTF8_CHAR	({UTF8_1}|{UTF8_2}|{UTF8_3}|{UTF8_4})
-NON_ASCII	({UTF8_2}|{UTF8_3}|{UTF8_4})
-UTF8_1		[\x00-\x7F]
-UTF8_2		[\xC2-\xDF]{UTF8_TAIL}
-UTF8_3		((\xE0[\xA0-\xBF]{UTF8_TAIL})|([\xE1-\xEC]({UTF8_TAIL}{2}))|(\xED[\x80-\x9F]{UTF8_TAIL})|([\xEE-\xEF]({UTF8_TAIL}{2})))
-UTF8_4		((\xF0[\x90-\xBF]({UTF8_TAIL}{2}))|([\xF1-\xF3]({UTF8_TAIL}{3}))|(\xF4[\x80-\x8F]({UTF8_TAIL}{2})))
-UTF8_TAIL	[\x80-\xBF]
-
-SPACE ([ \t\x0B\f]|{U_no_break_space}|{U_ogham_space_mark}|{U_en_quad_U_hair_space}|{U_narrow_no_break_space}|{U_medium_mathematical_space}|{U_ideographic_space})
-U_no_break_space \xC2\xA0
-U_ogham_space_mark \xE1\x9A\x80
-U_en_quad_U_hair_space \xE2\x80[\x80-\x8A]
-U_narrow_no_break_space \xE2\x80\xAF
-U_medium_mathematical_space \xE2\x81\x9F
-U_ideographic_space \xE3\x80\x80
-
-HORIZONTAL_BREAK ({SPACE}|\r)
-BREAK	({HORIZONTAL_BREAK}|\n)
-UTF8_1_NO_NEWLINE [^\n\x80-\xFF]
-NO_NEWLINE ({UTF8_1_NO_NEWLINE}|{UTF8_2}|{UTF8_3}|{UTF8_4})
-UTF8_2_NO_SPACE	(\xC2[\x80-\x9F\xA1-\xBF]|[\xC3-\xDF]{UTF8_TAIL})
-UTF8_3_NO_SPACE	(\xE0[\xA0-\xBF]{UTF8_TAIL}|\xE1[\x80-\x99\x9B-\xBF]{UTF8_TAIL}|\xE1\x9A[\x81-\xBF]|\xE2[\x82-\xBF]{UTF8_TAIL}|\xE2\x80[\x8B-\xAE\xB0-\xBF]|\xE2\x81[\x80-\x9E\xA0-\xBF]|\xE3[\x81-\xBF]{UTF8_TAIL}|\xE3\x80[\x81-\xBF]|[\xE4-\xEC]({UTF8_TAIL}{2})|\xED[\x80-\x9F]{UTF8_TAIL}|[\xEE-\xEF]({UTF8_TAIL}{2}))
-UTF8_4_NO_SPACE {UTF8_4}
-NON_ASCII_NO_SPACE ({UTF8_2_NO_SPACE}|{UTF8_3_NO_SPACE}|{UTF8_4_NO_SPACE})
-
-CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)
+HORIZONTAL_BREAK	[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]
+BREAK				{HORIZONTAL_BREAK}{+}[\n]
+FREEOP_CHAR			[^a-zA-Z0-9_:;,?'"$.=()[\]{}]{-}{BREAK}
+CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*
 
 %x BREAK MS MSN VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
 %option nodefault line outfile="et_eiffel_scanner.e"
@@ -70,13 +45,13 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_comment_end := 0
 				process_one_char_symbol (text_item (1))
 			}
-[+*/^=><.;,:!?(){}[\]$~]({BREAK}|"--"{NO_NEWLINE}*)+	{
+[+*/^=><.;,:!?(){}[\]$~]({BREAK}|"--".*)+	{
 				last_text_count := 1
 				last_break_end := 0
 				last_comment_end := text_count
 				process_one_char_symbol (text_item (1))
 			}
-"-"{BREAK}({BREAK}|"--"{NO_NEWLINE}*)+	{
+"-"{BREAK}({BREAK}|"--".*)+	{
 				last_text_count := 1
 				last_break_end := 0
 				last_comment_end := text_count
@@ -93,7 +68,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_comment_end := 0
 				process_two_char_symbol (text_item (1), text_item (2))
 			}
-("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")({BREAK}|"--"{NO_NEWLINE}*)+	{
+("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")({BREAK}|"--".*)+	{
 				last_text_count := 2
 				last_break_end := 0
 				last_comment_end := text_count
@@ -150,7 +125,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_comment_end := 0
 				last_detachable_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
-[oO][nN][cC][eE]({BREAK}|"--"{NO_NEWLINE}*\n)+/["{]	{
+[oO][nN][cC][eE]({BREAK}|"--".*\n)+/["{]	{
 				last_token := E_ONCE_STRING
 				last_literal_start := 1
 				last_literal_end := 4
@@ -203,7 +178,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 			
 -- Make sure that we don't have a subsequence of the form "--", "->", "<<" or "<<" (which are special symbols).
 -- Do not allow breaks (spaces, newlines) either.
-([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+(([^\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})\-|([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})>|([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})<)? {
+({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+({FREEOP_CHAR}{-}[\-]\-|{FREEOP_CHAR}{-}[\->]>|{FREEOP_CHAR}{-}[<]<)? {
 				last_token := E_FREEOP
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -211,10 +186,10 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_comment_end := 0
 				last_detachable_et_free_operator_value := ast_factory.new_free_operator (Current)
 			}
-([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+([^\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})\-/{BREAK} |
-([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})>/({BREAK}|"--") |
-([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})</({BREAK}|"--") |
-([^\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+/({BREAK}|"--") {
+({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+{FREEOP_CHAR}{-}[\-]\-/{BREAK} |
+({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+{FREEOP_CHAR}{-}[\->]>/({BREAK}|"--") |
+({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+{FREEOP_CHAR}{-}[<]</({BREAK}|"--") |
+({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+/({BREAK}|"--") {
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -226,86 +201,35 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 
 ----------/** Eiffel characters **/---------------------------------------------
 
-\'[^%\n\x80-\xFF]\'	{
+\'[^%\n]\'	{
 				last_break_end := 0
 				last_comment_end := 0
-				process_c1_1byte_character_constant (text_item (2).to_character_32)
+				process_c1_character_constant (unicode_text_item (2))
 			}
-\'[^%\n\x80-\xFF]\'{BREAK}+	{
+\'[^%\n]\'{BREAK}+	{
 				last_text_count := 3
 				last_break_end := text_count
 				last_comment_end := 0
-				process_c1_1byte_character_constant (text_item (2).to_character_32)
+				process_c1_character_constant (unicode_text_item (2))
 			}
-\'[^%\n\x80-\xFF]\'({BREAK}|"--"{NO_NEWLINE}*)+	{
+\'[^%\n]\'({BREAK}|"--".*)+	{
 				last_text_count := 3
 				last_break_end := 0
 				last_comment_end := text_count
-				process_c1_1byte_character_constant (text_item (2).to_character_32)
+				process_c1_character_constant (unicode_text_item (2))
 			}
-\'{UTF8_2}\'	{
-				last_break_end := 0
-				last_comment_end := 0
-				process_c1_2byte_character_constant ({UC_UTF8_ROUTINES}.two_byte_character_code (text_item (2), text_item (3)).to_character_32)
-			}
-\'{UTF8_2}\'{BREAK}+	{
-				last_text_count := 4
-				last_break_end := text_count
-				last_comment_end := 0
-				process_c1_2byte_character_constant ({UC_UTF8_ROUTINES}.two_byte_character_code (text_item (2), text_item (3)).to_character_32)
-			}
-\'{UTF8_2}\'({BREAK}|"--"{NO_NEWLINE}*)+	{
-				last_text_count := 4
-				last_break_end := 0
-				last_comment_end := text_count
-				process_c1_2byte_character_constant ({UC_UTF8_ROUTINES}.two_byte_character_code (text_item (2), text_item (3)).to_character_32)
-			}
-\'{UTF8_3}\'	{
-				last_break_end := 0
-				last_comment_end := 0
-				process_c1_3byte_character_constant ({UC_UTF8_ROUTINES}.three_byte_character_code (text_item (2), text_item (3), text_item (4)).to_character_32)
-			}
-\'{UTF8_3}\'{BREAK}+	{
-				last_text_count := 5
-				last_break_end := text_count
-				last_comment_end := 0
-				process_c1_3byte_character_constant ({UC_UTF8_ROUTINES}.three_byte_character_code (text_item (2), text_item (3), text_item (4)).to_character_32)
-			}
-\'{UTF8_3}\'({BREAK}|"--"{NO_NEWLINE}*)+	{
-				last_text_count := 5
-				last_break_end := 0
-				last_comment_end := text_count
-				process_c1_3byte_character_constant ({UC_UTF8_ROUTINES}.three_byte_character_code (text_item (2), text_item (3), text_item (4)).to_character_32)
-			}
-\'{UTF8_4}\'	{
-				last_break_end := 0
-				last_comment_end := 0
-				process_c1_4byte_character_constant ({UC_UTF8_ROUTINES}.four_byte_character_code (text_item (2), text_item (3), text_item (4), text_item (5)).to_character_32)
-			}
-\'{UTF8_4}\'{BREAK}+	{
-				last_text_count := 6
-				last_break_end := text_count
-				last_comment_end := 0
-				process_c1_4byte_character_constant ({UC_UTF8_ROUTINES}.four_byte_character_code (text_item (2), text_item (3), text_item (4), text_item (5)).to_character_32)
-			}
-\'{UTF8_4}\'({BREAK}|"--"{NO_NEWLINE}*)+	{
-				last_text_count := 6
-				last_break_end := 0
-				last_comment_end := text_count
-				process_c1_4byte_character_constant ({UC_UTF8_ROUTINES}.four_byte_character_code (text_item (2), text_item (3), text_item (4), text_item (5)).to_character_32)
-			}
-\'%{UTF8_1_NO_NEWLINE}\'		{
+\'%[ABCDFHLNQRSTUV%'"()<>]\'		{
 				last_break_end := 0
 				last_comment_end := 0
 				process_c2_character_constant (text_item (3))
 			}
-\'%{UTF8_1_NO_NEWLINE}\'{BREAK}+	{
+\'%[ABCDFHLNQRSTUV%'"()<>]\'{BREAK}+	{
 				last_text_count := 4
 				last_break_end := text_count
 				last_comment_end := 0
 				process_c2_character_constant (text_item (3))
 			}
-\'%{UTF8_1_NO_NEWLINE}\'({BREAK}|"--"{NO_NEWLINE}*)+	{
+\'%[ABCDFHLNQRSTUV%'"()<>]\'({BREAK}|"--".*)+	{
 				last_text_count := 4
 				last_break_end := 0
 				last_comment_end := text_count
@@ -358,7 +282,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				column := column - 1
 				last_token := E_CHARERR
 			}
-\'([^%\n\x80-\xFF]|{NON_ASCII}|%{UTF8_1_NO_NEWLINE}|%\/{CHAR_CODE}\/)?	{
+\'([^%\n]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{CHAR_CODE}\/)?	{
 					-- Syntax error: missing quote at
 					-- end of character constant.
 				column := column + text_count
@@ -390,7 +314,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				set_start_condition (BREAK)
 			}
 \"[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-?\" |
-\"([^%\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^%\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^%> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^%< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+(([^%\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})\-|([^%\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})>|([^%< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})<)?\" {
+\"({FREEOP_CHAR}{-}[\-<>%]|\-{FREEOP_CHAR}{-}[\->%]|>{FREEOP_CHAR}{-}[>%]|<{FREEOP_CHAR}{-}[<%])+({FREEOP_CHAR}{-}[\-%]\-|{FREEOP_CHAR}{-}[\->%]>|{FREEOP_CHAR}{-}[<%]<)?\" {
 				last_token := E_STRFREEOP
 				last_literal_start := 2
 				last_literal_end := text_count - 1
@@ -399,7 +323,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_detachable_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
 			}
 \"[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-?\"/({BREAK}|"--") |
-\"([^%\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}|\-([^%\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|>([^%> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})|<([^%< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE}))+(([^%\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})\-|([^%\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})>|([^%< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|{NON_ASCII_NO_SPACE})<)?\"/({BREAK}|"--") {
+\"({FREEOP_CHAR}{-}[\-<>%]|\-{FREEOP_CHAR}{-}[\->%]|>{FREEOP_CHAR}{-}[>%]|<{FREEOP_CHAR}{-}[<%])+({FREEOP_CHAR}{-}[\-%]\-|{FREEOP_CHAR}{-}[\->%]>|{FREEOP_CHAR}{-}[<%]<)?\"/({BREAK}|"--") {
 				last_text_count := text_count
 				last_literal_start := 2
 				last_literal_end := last_text_count - 1
@@ -407,15 +331,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				more
 				set_start_condition (BREAK)
 			}
-\"([^%\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE}))+(([^\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})\-|([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})>|([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})<)?\"/({BREAK}|"--") {
-				last_text_count := text_count
-				last_literal_start := 2
-				last_literal_end := last_text_count - 1
-				break_kind := str_special_freeop_break
-				more
-				set_start_condition (BREAK)
-			}
-\"([^%\-<> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE}|\-([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})|>([^> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})|<([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE}))+(([^\- \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})\-|([^\-> \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})>|([^< \t\x0B\f\r\na-zA-Z0-9_:;,?'"$.=()[\]{}\x80-\xFF]|%%|{NON_ASCII_NO_SPACE})<)?\" {
+\"({FREEOP_CHAR}{-}[\-<>%]|%%|\-({FREEOP_CHAR}{-}[\->%]|%%)|>({FREEOP_CHAR}{-}[>%]|%%)|<({FREEOP_CHAR}{-}[<%]|%%))+(({FREEOP_CHAR}{-}[\-%]|%%)\-|({FREEOP_CHAR}{-}[\->%]|%%)>|({FREEOP_CHAR}{-}[<%]|%%)<)?\" {
 				last_token := E_STRFREEOP
 				last_literal_start := 2
 				last_literal_end := text_count - 1
@@ -423,13 +339,21 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_comment_end := 0
 				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 			}
-\"([^%\n"\x80-\xFF]|{NON_ASCII})*\"	{
+\"({FREEOP_CHAR}{-}[\-<>%]|%%|\-({FREEOP_CHAR}{-}[\->%]|%%)|>({FREEOP_CHAR}{-}[>%]|%%)|<({FREEOP_CHAR}{-}[<%]|%%))+(({FREEOP_CHAR}{-}[\-%]|%%)\-|({FREEOP_CHAR}{-}[\->%]|%%)>|({FREEOP_CHAR}{-}[<%]|%%)<)?\"/({BREAK}|"--") {
+				last_text_count := text_count
+				last_literal_start := 2
+				last_literal_end := last_text_count - 1
+				break_kind := str_special_freeop_break
+				more
+				set_start_condition (BREAK)
+			}
+\"[^%\n"]*\"	{
 					-- Regular manifest string.
 				last_break_end := 0
 				last_comment_end := 0
 				process_regular_manifest_string (text_count)
 			}
-\"([^%\n"\x80-\xFF]|{NON_ASCII})*\"/({BREAK}|"--")	{
+\"[^%\n"]*\"/({BREAK}|"--")	{
 					-- Regular manifest string.
 				last_text_count := text_count
 				break_kind := string_break
@@ -437,16 +361,17 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				set_start_condition (BREAK)
 			}
 
-\"([^\n\x80-\xFF"]|{NON_ASCII})*"{"/{HORIZONTAL_BREAK}*\n {
+\"[^\n"]*"{"/{HORIZONTAL_BREAK}*\n {
 					-- Verbatim string.
-				verbatim_marker := text_substring (2, text_count - 1)
+				verbatim_marker := utf8_text_substring (2, text_count - 1)
+				verbatim_marker_count := text_count - 2
 				set_start_condition (VS1)
 			}
 <VS1>{
 		-- Discard space characters at the
 		-- end of Verbatim_string_opener.
 	{HORIZONTAL_BREAK}*\n {
-				verbatim_open_white_characters := text
+				verbatim_open_white_characters := utf8_text
 				last_literal_start := 1
 				last_literal_end := 0
 				set_start_condition (VS2)
@@ -469,14 +394,15 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 <VS2>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	{HORIZONTAL_BREAK}*"}"([^\n"\x80-\xFF]|{NON_ASCII})*\" {
+	{HORIZONTAL_BREAK}*"}"[^\n"]*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					last_token := E_STRING
 					last_break_end := 0
 					last_comment_end := 0
 					last_detachable_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker, verbatim_open_white_characters,
-						text_substring (last_literal_end + 1, text_count - verbatim_marker.count - 2), False, Current)
+						utf8_text_substring (last_literal_end + 1, text_count - verbatim_marker_count - 2), False, Current)
 					verbatim_marker := no_verbatim_marker
+					verbatim_marker_count := 0
 					verbatim_open_white_characters := no_verbatim_marker
 					set_start_condition (INITIAL)
 				else
@@ -484,9 +410,9 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 					set_start_condition (VS3)
 				end
 			}
-	{HORIZONTAL_BREAK}*"}"([^\n"\x80-\xFF]|{NON_ASCII})*\"/({BREAK}|"--") {
+	{HORIZONTAL_BREAK}*"}"[^\n"]*\"/({BREAK}|"--") {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
-					verbatim_close_white_characters := text_substring (last_literal_end + 1, text_count - verbatim_marker.count - 2)
+					verbatim_close_white_characters := utf8_text_substring (last_literal_end + 1, text_count - verbatim_marker_count - 2)
 					last_text_count := text_count
 					break_kind := str_verbatim_break
 					more
@@ -496,15 +422,15 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 					set_start_condition (VS3)
 				end
 			}
-	([^"\n\x80-\xFF]|{NON_ASCII})*\" {
+	[^"\n]*\" {
 				more
 				set_start_condition (VS3)
 			}
-	([^"\n\x80-\xFF]|{NON_ASCII})*\r\n {
+	[^"\n]*\r\n {
 				more
 				last_literal_end := text_count - 2
 			}
-	([^"\n\x80-\xFF]|{NON_ASCII})*\n {
+	[^"\n]*\n {
 				more
 				last_literal_end := text_count - 1
 			}
@@ -526,12 +452,12 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 <VS3>{
 		-- Read remaining characters of a line
 		-- in verbatim string body.
-	{NO_NEWLINE}*\r\n	{
+	.*\r\n	{
 				more
 				last_literal_end := text_count - 2
 				set_start_condition (VS2)
 			}
-	{NO_NEWLINE}*\n	{
+	.*\n	{
 				more
 				last_literal_end := text_count - 1
 				set_start_condition (VS2)
@@ -552,16 +478,17 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 			}
 }
 
-\"([^\n"\x80-\xFF]|{NON_ASCII})*\[/{HORIZONTAL_BREAK}*\n {
+\"[^\n"]*\[/{HORIZONTAL_BREAK}*\n {
 					-- Left-aligned verbatim string.
-				verbatim_marker := text_substring (2, text_count - 1)
+				verbatim_marker := utf8_text_substring (2, text_count - 1)
+				verbatim_marker_count := text_count - 2
 				set_start_condition (LAVS1)
 			}
 <LAVS1>{
 		-- Discard space characters at the
 		-- end of Verbatim_string_opener.
 	{HORIZONTAL_BREAK}*\n {
-				verbatim_open_white_characters := text
+				verbatim_open_white_characters := utf8_text
 				last_literal_start := 1
 				last_literal_end := 0
 				set_start_condition (LAVS2)
@@ -584,14 +511,15 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 <LAVS2>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	{HORIZONTAL_BREAK}*\]([^\n"\x80-\xFF]|{NON_ASCII})*\" {
+	{HORIZONTAL_BREAK}*\][^\n"]*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					last_token := E_STRING
 					last_break_end := 0
 					last_comment_end := 0
 					last_detachable_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker, verbatim_open_white_characters,
-						text_substring (last_literal_end + 1, text_count - verbatim_marker.count - 2), True, Current)
+						utf8_text_substring (last_literal_end + 1, text_count - verbatim_marker_count - 2), True, Current)
 					verbatim_marker := no_verbatim_marker
+					verbatim_marker_count := 0
 					verbatim_open_white_characters := no_verbatim_marker
 					set_start_condition (INITIAL)
 				else
@@ -599,9 +527,9 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 					set_start_condition (LAVS3)
 				end
 			}
-	{HORIZONTAL_BREAK}*\]([^\n"\x80-\xFF]|{NON_ASCII})*\"/({BREAK}|"--") {
+	{HORIZONTAL_BREAK}*\][^\n"]*\"/({BREAK}|"--") {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
-					verbatim_close_white_characters := text_substring (last_literal_end + 1, text_count - verbatim_marker.count - 2)
+					verbatim_close_white_characters := utf8_text_substring (last_literal_end + 1, text_count - verbatim_marker_count - 2)
 					last_text_count := text_count
 					break_kind := str_left_aligned_verbatim_break
 					more
@@ -611,15 +539,15 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 					set_start_condition (LAVS3)
 				end
 			}
-	([^\n"\x80-\xFF]|{NON_ASCII})*\" {
+	[^\n"]*\" {
 				more
 				set_start_condition (LAVS3)
 			}
-	([^\n"\x80-\xFF]|{NON_ASCII})*\r\n {
+	[^\n"]*\r\n {
 				more
 				last_literal_end := text_count - 2
 			}
-	([^\n"\x80-\xFF]|{NON_ASCII})*\n {
+	[^\n"]*\n {
 				more
 				last_literal_end := text_count - 1
 			}
@@ -641,12 +569,12 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 <LAVS3>{
 		-- Read remaining characters of a line
 		-- in verbatim string body.
-	{NO_NEWLINE}*\r\n	{
+	.*\r\n	{
 				more
 				last_literal_end := text_count - 2
 				set_start_condition (LAVS2)
 			}
-	{NO_NEWLINE}*\n	{
+	.*\n	{
 				more
 				last_literal_end := text_count - 1
 				set_start_condition (LAVS2)
@@ -667,7 +595,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 			}
 }
 
-\"([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
+\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
 					-- Manifest string with special characters.
 				last_token := E_STRING
 				last_literal_start := 2
@@ -676,7 +604,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_comment_end := 0
 				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 			}
-\"([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/({BREAK}|"--")	{
+\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/({BREAK}|"--")	{
 					-- Manifest string with special characters.
 				last_text_count := text_count
 				last_literal_start := 2
@@ -685,7 +613,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				more
 				set_start_condition (BREAK)
 			}
-\"([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*	{
+\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*	{
 					-- Manifest string with special characters which may be made
 					-- up of several lines or may include invalid characters.
 					-- Keep track of current line and column.
@@ -734,18 +662,19 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 					-- Syntax error: special character specification
 					-- %l where l is a letter code should be in
 					-- upper-case in manifest strings.
-				column := yy_column - 1
+				column := yy_column
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSCU_error (filename, current_position)
 				column := ms_column
 				line := ms_line
+				last_token := E_STRERR
+				set_start_condition (INITIAL)
+			}
+	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))+	{
 				more
 			}
-	([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))+	{
-				more
-			}
-	([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
+	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
 				last_token := E_STRING
 				last_literal_start := 2
 				last_literal_end := text_count - 1
@@ -754,7 +683,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 				set_start_condition (INITIAL)
 			}
-	([^%\n"\x80-\xFF]|{NON_ASCII}|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/({BREAK}|"--")	{
+	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/({BREAK}|"--")	{
 				last_text_count := text_count
 				last_literal_start := 2
 				last_literal_end := last_text_count - 1
@@ -792,19 +721,6 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSNL_error (filename, current_position)
-				last_detachable_et_position_value := current_position
-				column := ms_column
-				line := ms_line
-				last_token := E_STRERR
-				set_start_condition (INITIAL)
-			}
-	.		{
-					-- Syntax error: missing double quote at
-					-- end of manifest string.
-				column := yy_column
-				line := yy_line
-				set_syntax_error
-				error_handler.report_SSEQ_error (filename, current_position)
 				last_detachable_et_position_value := current_position
 				column := ms_column
 				line := ms_line
@@ -1159,7 +1075,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				more
 				set_start_condition (BREAK)
 			}
-[0-9]+\./[^.0-9]					|
+[0-9]+\./[^.0-9eE]					|
 [0-9]+\.[0-9]*[eE][+-]?[0-9]+		|
 [0-9]*\.[0-9]+([eE][+-]?[0-9]+)?	{
 		-- The first regexp of this group uses a trailing context
@@ -1182,7 +1098,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				more
 				set_start_condition (BREAK)
 			}
-[0-9]+(_+[0-9]+)+\./[^.0-9]	|
+[0-9]+(_+[0-9]+)+\./[^.0-9eE]	|
 [0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*	|
 ([0-9]+(_+[0-9]+)*)?\.[0-9]+(_+[0-9]+)*([eE][+-]?[0-9]+(_+[0-9]+)*)?	{
 		-- The first regexp of this group uses a trailing context
@@ -1209,7 +1125,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				last_token := E_BREAK
 			}
 
-({BREAK}|"--"{NO_NEWLINE}*)+	{
+({BREAK}|"--".*)+	{
 				last_literal_start := 1
 				last_literal_end := 0
 				last_text_count := 0
@@ -1226,7 +1142,7 @@ CHAR_CODE ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]
 				process_break
 				set_start_condition (INITIAL)
 			}
-	({BREAK}|"--"{NO_NEWLINE}*)+	{
+	({BREAK}|"--".*)+	{
 				last_break_end := 0
 				last_comment_end := text_count
 				process_break

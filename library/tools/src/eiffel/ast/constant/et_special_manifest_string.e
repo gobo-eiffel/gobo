@@ -29,11 +29,11 @@ feature {NONE} -- Initialization
 			-- Create a new manifest string.
 		require
 			a_literal_not_void: a_literal /= Void
-			a_literal_is_string: {KL_ANY_ROUTINES}.same_types (a_literal, "")
+			a_literal_is_string_8: a_literal.same_type ({STRING_8} "")
 			valid_utf8_literal: {UC_UTF8_ROUTINES}.valid_utf8 (a_literal)
-			-- valid_literal: (([^"%\n\x80-\xFF]|{NON_ASCII}|%([^\n\x08-\xFF]|\/([[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)\/|{HORIZONTAL_BREAK}*\n{BREAK}*%))*).recognizes (a_literal)
+			valid_literal: {ET_SPECIAL_MANIFEST_STRING}.valid_literal ({STRING_32} "%"" + {UTF_CONVERTER}.utf_8_string_8_to_string_32 (a_literal) + {STRING_32} "%"")
 			a_value_not_void: a_value /= Void
-			a_value_is_string: {KL_ANY_ROUTINES}.same_types (a_value, "")
+			a_value_is_string_8: a_value.same_type ({STRING_8} "")
 			valid_utf8_value: {UC_UTF8_ROUTINES}.valid_utf8 (a_value)
 		do
 			literal := a_literal
@@ -56,11 +56,11 @@ feature -- Status report
 
 feature -- Access
 
-	value: STRING
+	value: STRING_8
 			-- String value
 			-- (using UTF-8 encoding)
 
-	literal: STRING
+	literal: STRING_8
 			-- Literal value
 			-- (using UTF-8 encoding)
 
@@ -68,12 +68,11 @@ feature -- Access
 			-- Position of last character of current node in source code
 		local
 			l_newlines: INTEGER
-			l_column: INTEGER
 			i, nb: INTEGER
 		do
 			l_newlines := literal.occurrences ('%N')
 			if l_newlines = 0 then
-				create {ET_COMPRESSED_POSITION} Result.make (line, column + literal.count + 1)
+				create {ET_COMPRESSED_POSITION} Result.make (line, column + {UC_UTF8_ROUTINES}.unicode_character_count (literal) + 1)
 			else
 				from
 					nb := literal.count
@@ -83,9 +82,21 @@ feature -- Access
 				loop
 					i := i - 1
 				end
-				l_column := nb - i
-				create {ET_COMPRESSED_POSITION} Result.make (line + l_newlines, l_column)
+				create {ET_COMPRESSED_POSITION} Result.make (line + l_newlines, {UC_UTF8_ROUTINES}.unicode_substring_character_count (literal, i + 1, nb) + 1)
 			end
+		end
+
+feature -- Status report
+
+	valid_literal (a_literal: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_literal' a valid value for literal?
+		require
+			a_literal_not_void: a_literal /= Void
+		do
+			Result := {RX_PCRE_ROUTINES}.regexp (literal_regexp).recognizes (a_literal)
+		ensure
+			instance_free: class
+			definition: Result = {RX_PCRE_ROUTINES}.regexp (literal_regexp).recognizes (a_literal)
 		end
 
 feature -- Processing
@@ -96,8 +107,13 @@ feature -- Processing
 			a_processor.process_special_manifest_string (Current)
 		end
 
+feature {NONE} -- Implementation
+
+	literal_regexp: STRING = "\%"([^%"%%\n]|%%([ABCDFHLNQRSTUV%'%"()<>]|\/([[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)\/|[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*\n[ \t\x0B\f\r\n\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*%%))*\%""
+			-- Regular expression for literal
+
 invariant
 
-	-- valid_literal: (([^"%\n\x80-\xFF]|{NON_ASCII}|%([^\n\x08-\xFF]|\/([[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)\/|{HORIZONTAL_BREAK}*\n{BREAK}*%))*).recognizes (literal)
+	valid_literal: valid_literal ({STRING_32} "%"" + {UTF_CONVERTER}.utf_8_string_8_to_string_32 (literal) + {STRING_32} "%"")
 
 end

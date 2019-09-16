@@ -16,11 +16,15 @@ inherit
 
 	YY_COMPRESSED_SCANNER_SKELETON
 		rename
-			make as make_compressed_scanner_skeleton,
-			text as skeleton_text,
-			text_substring as skeleton_text_substring
+			make as make_compressed_scanner_skeleton
 		redefine
-			reset, fatal_error
+			text,
+			utf8_text,
+			text_substring,
+			utf8_text_substring,
+			reset,
+			fatal_error,
+			report_invalid_unicode_character_error
 		end
 
 	ET_EIFFEL_TOKENS
@@ -54,6 +58,7 @@ feature {NONE} -- Initialization
 			filename := a_filename
 			group := tokens.unknown_group
 			verbatim_marker := no_verbatim_marker
+			verbatim_marker_count := 0
 			verbatim_open_white_characters := no_verbatim_marker
 			verbatim_close_white_characters := no_verbatim_marker
 		ensure
@@ -69,6 +74,7 @@ feature -- Initialization
 			last_literal_start := 1
 			last_literal_end := 0
 			verbatim_marker := no_verbatim_marker
+			verbatim_marker_count := 0
 			verbatim_open_white_characters := no_verbatim_marker
 			verbatim_close_white_characters := no_verbatim_marker
 			precursor
@@ -173,9 +179,17 @@ feature -- Error handling
 			error_handler_not_void: Result /= Void
 		end
 
-	fatal_error (a_message: STRING)
+	fatal_error (a_message: STRING_8)
 			-- A fatal error occurred.
 			-- Print error message.
+		do
+			report_syntax_error (current_position)
+		end
+
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read and caused the scanner
+			-- to fail.
 		do
 			report_syntax_error (current_position)
 		end
@@ -344,7 +358,7 @@ feature -- Tokens
 		end
 
 	last_literal_count: INTEGER
-			-- Number of characters in `last_literal'
+			-- Number of characters in `last_literal' and `last_unicode_literal'
 		do
 			Result := last_literal_end - last_literal_start + 1
 		ensure
@@ -352,7 +366,7 @@ feature -- Tokens
 			definition: Result = last_literal.count
 		end
 
-	last_literal: STRING
+	last_literal: STRING_8
 			-- Last literal scanned
 		do
 			Result := text_substring (last_literal_start, last_literal_end)
@@ -360,13 +374,32 @@ feature -- Tokens
 			last_literal_not_void: Result /= Void
 		end
 
+	last_unicode_literal: STRING_32
+			-- Last literal scanned (Unicode version)
+		do
+			Result := unicode_text_substring (last_literal_start, last_literal_end)
+		ensure
+			last_unicode_literal_not_void: Result /= Void
+		end
+
+	last_utf8_literal: STRING_8
+			-- Last literal scanned (UTF-8 version)
+		do
+			Result := utf8_text_substring (last_literal_start, last_literal_end)
+		ensure
+			last_utf8_literal_not_void: Result /= Void
+			last_utf8_literal_is_string_8: Result.same_type ({STRING_8} "")
+			definition: Result.is_equal ({UC_UTF8_ROUTINES}.string_to_utf8 (last_unicode_literal))
+			valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
+		end
+
 	last_identifier: ET_IDENTIFIER
 			-- Last identifier scanned
 		require
-			last_literal_not_empty: last_literal_count > 0
+			valid_literal: {ET_IDENTIFIER}.valid_name (last_unicode_literal)
 		local
-			a_string: STRING
-			a_name: STRING
+			a_string: STRING_8
+			a_name: STRING_8
 			a_code: INTEGER
 		do
 			a_string := string_buffer
@@ -395,12 +428,12 @@ feature -- Tokens
 	last_binary_integer_constant: ET_BINARY_INTEGER_CONSTANT
 			-- New integer constant in binary format
 		require
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(0[bB][0-1]+(_+[0-1]+)*").recognizes (last_literal)
+			valid_literal: {ET_BINARY_INTEGER_CONSTANT}.valid_literal (last_unicode_literal)
 		local
-			l_literal: STRING
+			l_literal: STRING_8
 		do
 			l_literal := last_literal
-			compute_natural_64_value (last_literal, 1, l_literal.count)
+			compute_natural_64_value (l_literal, 1, l_literal.count)
 			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
 		ensure
 			last_binary_integer_constant_not_void: Result /= Void
@@ -409,15 +442,15 @@ feature -- Tokens
 	last_c3_character_constant: ET_C3_CHARACTER_CONSTANT
 			-- Last character constant scanned of the form '%/code/'
 		require
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*").recognizes (last_literal)
+			valid_literal: {ET_C3_CHARACTER_CONSTANT}.valid_literal ({STRING_32} "'%%/" + last_unicode_literal + {STRING_32} "/'")
 		local
-			l_literal: STRING
+			l_literal: STRING_8
 			l_value: CHARACTER_32
 			l_code: NATURAL_32
 			l_has_invalid_code: BOOLEAN
 		do
 			l_literal := last_literal
-			compute_natural_64_value (last_literal, 1, l_literal.count)
+			compute_natural_64_value (l_literal, 1, l_literal.count)
 			l_has_invalid_code := has_natural_64_overflow
 			if last_natural_64 <= {NATURAL_32}.max_value.to_natural_64 then
 				l_code := last_natural_64.to_natural_32
@@ -439,12 +472,12 @@ feature -- Tokens
 	last_hexadecimal_integer_constant: ET_HEXADECIMAL_INTEGER_CONSTANT
 			-- Last integer constant in hexadecimal format
 		require
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[xX](_*[0-9a-fA-F]+_*)+").recognizes (last_literal)
+			valid_literal: {ET_HEXADECIMAL_INTEGER_CONSTANT}.valid_literal (last_unicode_literal)
 		local
-			l_literal: STRING
+			l_literal: STRING_8
 		do
 			l_literal := last_literal
-			compute_natural_64_value (last_literal, 1, l_literal.count)
+			compute_natural_64_value (l_literal, 1, l_literal.count)
 			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
 		ensure
 			last_hexadecimal_integer_constant_not_void: Result /= Void
@@ -453,12 +486,12 @@ feature -- Tokens
 	last_octal_integer_constant: ET_OCTAL_INTEGER_CONSTANT
 			-- Last integer constant in octal format
 		require
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[cC][0-7]+(_+[0-7]+)*").recognizes (last_literal)
+			valid_literal: {ET_OCTAL_INTEGER_CONSTANT}.valid_literal (last_unicode_literal)
 		local
-			l_literal: STRING
+			l_literal: STRING_8
 		do
 			l_literal := last_literal
-			compute_natural_64_value (last_literal, 1, l_literal.count)
+			compute_natural_64_value (l_literal, 1, l_literal.count)
 			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
 		ensure
 			last_octal_integer_constant_not_void: Result /= Void
@@ -467,12 +500,12 @@ feature -- Tokens
 	last_regular_integer_constant: ET_REGULAR_INTEGER_CONSTANT
 			-- Last integer constant with no underscore
 		require
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9]+").recognizes (last_literal)
+			valid_literal: {ET_REGULAR_INTEGER_CONSTANT}.valid_literal (last_unicode_literal)
 		local
-			l_literal: STRING
+			l_literal: STRING_8
 		do
 			l_literal := last_literal
-			compute_natural_64_value (last_literal, 1, l_literal.count)
+			compute_natural_64_value (l_literal, 1, l_literal.count)
 			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
 		ensure
 			last_regular_integer_constant_not_void: Result /= Void
@@ -481,16 +514,16 @@ feature -- Tokens
 	last_special_manifest_string: ET_SPECIAL_MANIFEST_STRING
 			-- Last special manifest string scanned
 		require
-			-- valid_literal: (([^"%\n\x80-\xFF]|{NON_ASCII}|%([^\n\x08-\xFF]|\/([[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)\/|{HORIZONTAL_BREAK}*\n{BREAK}*%))*).recognizes (last_literal)
+			valid_literal: {ET_SPECIAL_MANIFEST_STRING}.valid_literal ({STRING_32} "%"" + last_unicode_literal + {STRING_32} "%"")
 		local
-			l_literal, l_value: STRING
+			l_literal, l_value: STRING_8
 			i, nb: INTEGER
-			c: CHARACTER
+			c: CHARACTER_8
 			l_start, l_end: INTEGER
 			l_code: NATURAL_32
 			l_has_invalid_code: BOOLEAN
 		do
-			l_literal := last_literal
+			l_literal := last_utf8_literal
 			nb := l_literal.count
 			create l_value.make (nb)
 			from i := 1 until i > nb loop
@@ -564,7 +597,9 @@ feature -- Tokens
 							l_code := 0
 						end
 						{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (l_value, l_code)
-					when '%N', '%R', ' ', '%T', '%/128/'..'%/255/'  then
+					else
+							-- Multi-line.
+							-- Skip the space and newline characters until the next %.
 						from
 							i := i + 1
 						until
@@ -572,36 +607,6 @@ feature -- Tokens
 						loop
 							i := i + 1
 						end
-					when 'n' then
-						l_value.append_character ('%N')
-					when 't' then
-						l_value.append_character ('%T')
-					when 'u' then
-						l_value.append_character ('%U')
-					when 'r' then
-						l_value.append_character ('%R')
-					when 'a' then
-						l_value.append_character ('%A')
-					when 'b' then
-						l_value.append_character ('%B')
-					when 'c' then
-						l_value.append_character ('%C')
-					when 'd' then
-						l_value.append_character ('%D')
-					when 'f' then
-						l_value.append_character ('%F')
-					when 'h' then
-						l_value.append_character ('%H')
-					when 'l' then
-						l_value.append_character ('%L')
-					when 'q' then
-						l_value.append_character ('%Q')
-					when 's' then
-						l_value.append_character ('%S')
-					when 'v' then
-						l_value.append_character ('%V')
-					else
-						l_value.append_character (c)
 					end
 					i := i + 1
 				else
@@ -617,33 +622,33 @@ feature -- Tokens
 	last_underscored_integer_constant: ET_UNDERSCORED_INTEGER_CONSTANT
 			-- Last integer constant with underscores
 		require
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(_*[0-9]+_*)+").recognizes (last_literal)
+			valid_literal: {ET_UNDERSCORED_INTEGER_CONSTANT}.valid_literal (last_unicode_literal)
 		local
-			l_literal: STRING
+			l_literal: STRING_8
 		do
 			l_literal := last_literal
-			compute_natural_64_value (last_literal, 1, l_literal.count)
+			compute_natural_64_value (l_literal, 1, l_literal.count)
 			create Result.make (l_literal, last_natural_64, has_natural_64_overflow)
 		ensure
 			last_underscored_integer_constant_not_void: Result /= Void
 		end
 
-	last_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN): ET_VERBATIM_STRING
+	last_verbatim_string (a_marker, an_open, a_close: STRING_8; a_left_aligned: BOOLEAN): ET_VERBATIM_STRING
 			-- Last verbatim string scanned
 		require
 			a_marker_not_void: a_marker /= Void
 			an_open_not_void: an_open /= Void
 			a_close_not_void: a_close /= Void
 		local
-			l_literal: STRING
-			l_value: STRING
+			l_literal: STRING_8
+			l_value: STRING_8
 			l_longest_break_prefix: INTEGER
 			l_nb_lines: INTEGER
-			c: CHARACTER
+			c: CHARACTER_8
 			i, j, nb: INTEGER
 			l_stop: BOOLEAN
 		do
-			l_literal := last_literal
+			l_literal := last_utf8_literal
 			if l_literal.is_empty then
 				l_value := l_literal
 			elseif a_left_aligned then
@@ -651,6 +656,7 @@ feature -- Tokens
 				l_longest_break_prefix := -1
 				from i := 1 until i > nb loop
 					c := l_literal.item (i)
+-- TODO: the current implementation does not use Unicode space characters.
 					if c = ' ' or c = '%T' then
 						if l_longest_break_prefix /= -1 then
 								-- Break prefix of second and subsequent lines.
@@ -725,7 +731,7 @@ feature -- Tokens
 		require
 			has_break: has_break
 		do
-			Result := text_substring (last_text_count + 1, last_break_end)
+			Result := utf8_text_substring (last_text_count + 1, last_break_end)
 		ensure
 			last_break_not_void: Result /= Void
 			last_break_not_empty: Result.count > 0
@@ -736,7 +742,7 @@ feature -- Tokens
 		require
 			has_comment: has_comment
 		do
-			Result := text_substring (last_text_count + 1, last_comment_end)
+			Result := utf8_text_substring (last_text_count + 1, last_comment_end)
 		ensure
 			last_comment_not_void: Result /= Void
 			last_comment_not_empty: Result.count > 0
@@ -751,6 +757,25 @@ feature -- Tokens
 			a_string := string_buffer
 			STRING_.wipe_out (a_string)
 			append_text_to_string (a_string)
+			strings.search (a_string)
+			if strings.found then
+				Result := strings.found_key
+			else
+				create Result.make (a_string.count)
+				Result.append_string (a_string)
+				strings.force_new (-1, Result)
+			end
+		end
+
+	utf8_text: STRING_8
+			-- UTF-8 representation of last token read
+			-- (Share strings when already scanned.)
+		local
+			a_string: STRING
+		do
+			a_string := string_buffer
+			STRING_.wipe_out (a_string)
+			append_utf8_text_to_string (a_string)
 			strings.search (a_string)
 			if strings.found then
 				Result := strings.found_key
@@ -780,9 +805,27 @@ feature -- Tokens
 			end
 		end
 
+	utf8_text_substring (s, e: INTEGER): STRING_8
+			-- UTF-8 representation of substring of last token read
+		local
+			a_string: STRING
+		do
+			a_string := string_buffer
+			STRING_.wipe_out (a_string)
+			append_utf8_text_substring_to_string (s, e, a_string)
+			strings.search (a_string)
+			if strings.found then
+				Result := strings.found_key
+			else
+				create Result.make (a_string.count)
+				Result.append_string (a_string)
+				strings.force_new (-1, Result)
+			end
+		end
+
 feature {NONE} -- Integer values
 
-	compute_natural_64_value (a_string: STRING; a_start, a_end: INTEGER)
+	compute_natural_64_value (a_string: STRING_8; a_start, a_end: INTEGER)
 			-- Compute NATURAL_64 value held in `a_string' between positions `a_start' and `a_end'.
 			-- Make the result available in `last_natural_64'.
 			-- Set `has_natural_64_overflow' is the number is too big.
@@ -793,7 +836,7 @@ feature {NONE} -- Integer values
 			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*").recognizes (a_string.substring (a_start, a_end))
 		local
 			i, nb: INTEGER
-			c: CHARACTER
+			c: CHARACTER_8
 			l_value: NATURAL_64
 			l_base: NATURAL_64
 			l_digit: NATURAL_64
@@ -899,7 +942,7 @@ feature {NONE} -- Positions
 
 feature {NONE} -- String handler
 
-	strings: DS_HASH_TABLE [INTEGER, STRING]
+	strings: DS_HASH_TABLE [INTEGER, STRING_8]
 			-- Strings known by the current scanner, and the associated
 			-- hash codes when they are used as identifier
 		once
@@ -1415,12 +1458,13 @@ feature {NONE} -- String handler
 			no_void_string: not Result.has_void
 		end
 
-	string_buffer: STRING
+	string_buffer: STRING_8
 			-- String buffer
 		once
 			create Result.make (30)
 		ensure
 			string_buffer_not_void: Result /= Void
+			string_buffer_is_string_8: Result.same_type ({STRING_8} "")
 		end
 
 feature {NONE} -- Multi-line manifest strings
@@ -1431,16 +1475,22 @@ feature {NONE} -- Multi-line manifest strings
 
 feature {NONE} -- Verbatim strings
 
-	verbatim_marker: STRING
+	verbatim_marker: STRING_8
 			-- Marker of verbatim string currently scanned
+			-- (using UTF-8 encoding)
 
-	verbatim_open_white_characters: STRING
+	verbatim_marker_count: INTEGER
+			-- Number of Unicode characters in verbatim marker
+
+	verbatim_open_white_characters: STRING_8
 			-- White characters after "xyz[
+			-- (using UTF-8 encoding)
 
-	verbatim_close_white_characters: STRING
+	verbatim_close_white_characters: STRING_8
 			-- White characters before ]xyz"
+			-- (using UTF-8 encoding)
 
-	no_verbatim_marker: STRING = ""
+	no_verbatim_marker: STRING_8 = ""
 			-- No verbatim marker
 
 	is_verbatim_string_closer (a_start, an_end: INTEGER): BOOLEAN
@@ -1450,35 +1500,56 @@ feature {NONE} -- Verbatim strings
 			verbatim_string_scanned: verbatim_marker /= no_verbatim_marker
 			a_start_large_enough: a_start >= 1
 			an_end_small_enough: an_end <= text_count
-			-- valid_string: (\n?[ \t\r]*[\]\}][^\n"]*).recognizes (text_substring (a_start, an_end))
+			valid_string: {RX_PCRE_ROUTINES}.regexp ("[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*[\]\}][^\n%"]*").recognizes (unicode_text_substring (a_start, an_end))
 		local
 			i, j, nb: INTEGER
 			l_marker_count: INTEGER
+			l_utf8_marker_count: INTEGER
 			l_text_count: INTEGER
-			c: CHARACTER
+			c: CHARACTER_32
+			l_code: NATURAL_32
+			l_byte_count: INTEGER
+			l_byte1: CHARACTER_8
 		do
-			l_marker_count := verbatim_marker.count
+			l_marker_count := verbatim_marker_count
 			l_text_count := an_end - a_start + 1
 			if l_text_count > l_marker_count then
 				nb := a_start + l_text_count - l_marker_count - 1
-				c := text_item (nb)
+				c := unicode_text_item (nb)
 				if c = ']' or c = '}' then
 					Result := True
 						-- Compare end marker with start marker.
 					j := nb + 1
-					from i := 1 until i > l_marker_count loop
-						if verbatim_marker.item (i) = text_item (j) then
-							i := i + 1
+					l_utf8_marker_count := verbatim_marker.count
+					from i := 1 until i > l_utf8_marker_count loop
+						l_byte1 := verbatim_marker.item (i)
+						l_byte_count := {UC_UTF8_ROUTINES}.encoded_byte_count (l_byte1)
+						inspect l_byte_count
+						when 1 then
+							l_code := l_byte1.natural_32_code
+						when 2 then
+							l_code := {UC_UTF8_ROUTINES}.two_byte_character_code (l_byte1, verbatim_marker.item (i + 1))
+						when 3 then
+							l_code := {UC_UTF8_ROUTINES}.three_byte_character_code (l_byte1, verbatim_marker.item (i + 1), verbatim_marker.item (i + 2))
+						when 4 then
+							l_code := {UC_UTF8_ROUTINES}.four_byte_character_code (l_byte1, verbatim_marker.item (i + 1), verbatim_marker.item (i + 2), verbatim_marker.item (i + 3))
+						else
+								-- Should never happen (`verbatim_marker' is a valid UTF-8 string).
+							l_code := {UT_CHARACTER_32_CODES}.New_line_code
+						end
+						if l_code = unicode_text_item (j).natural_32_code then
+							i := i + l_byte_count
 							j := j + 1
 						else
 							Result := False
-							i := l_marker_count + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := l_marker_count + 1
 						end
 					end
 					if Result then
 							-- Check that all leading characters are white characters.
 						from j := a_start until j = nb loop
-							inspect text_item (j)
+							inspect unicode_text_item (j)
 							when ' ', '%T', '%R', '%N' then
 								j := j + 1
 							else
@@ -1571,7 +1642,7 @@ feature {NONE} -- Processing
 		require
 			nb_large_enough: nb >= 1
 			nb_small_enough: nb <= text_count
-			-- valid_string: ([a-zA-Z][a-zA-Z0-9_]*).recognizes (text_substring (1, nb))
+			valid_text: {ET_IDENTIFIER}.valid_name (unicode_text_substring (1, nb))
 		do
 			last_token := E_IDENTIFIER
 			last_literal_start := 1
@@ -3368,12 +3439,12 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_one_char_symbol (c: CHARACTER)
+	process_one_char_symbol (c: CHARACTER_8)
 			-- Process Eiffel symbol with made up of only
 			-- one character `c'.
 		require
 			one_char: text_count >= 1
-			-- valid_string: ([-+*/^=><.;,:!?(){}[\]$]).recognizes (text_substring (1, 1))
+			valid_string: {RX_PCRE_ROUTINES}.regexp ("[-+*/^=><.;,:!?(){}[\]$~]").recognizes (unicode_text_substring (1, 1))
 			valid_c: text_item (1) = c
 		do
 			last_literal_start := 1
@@ -3451,12 +3522,12 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_two_char_symbol (c1, c2: CHARACTER)
+	process_two_char_symbol (c1, c2: CHARACTER_8)
 			-- Process Eiffel symbol with made up of exactly
 			-- two characters `c1' and `c2'.
 		require
 			two_chars: text_count >= 2
-			-- valid_string: ("//"|"\\\\"|"/="|"/~"|">="|"<="|"!!"|"->"|".."|"<<"|">>"|":="|"?=").recognizes (text_substring (1, 2))
+			valid_string: {RX_PCRE_ROUTINES}.regexp ("//|\\\\|/=|/~|>=|<=|\->|\.\.|<<|>>|:=|\?=").recognizes (unicode_text_substring (1, 2))
 			valid_c1: text_item (1) = c1
 			valid_c2: text_item (2) = c2
 		do
@@ -3528,12 +3599,12 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_c1_1byte_character_constant (c: CHARACTER_32)
-			-- Process character constant of the form 'A', encoded with 1 byte in UTF-8.
+	process_c1_character_constant (c: CHARACTER_32)
+			-- Process character constant of the form 'A'.
 		require
 			c1_char_1_byte: text_count >= 3
-			-- valid_string: (\'[^%\n\x80-\xFF]\').recognizes (text_substring (1, 3))
-			valid_c: text_item (2).to_character_32 = c
+			valid_string: {ET_C1_CHARACTER_CONSTANT}.valid_literal (unicode_text_substring (1, 3))
+			valid_c: unicode_text_item (2) = c
 		do
 			last_literal_start := 2
 			last_literal_end := 2
@@ -3541,53 +3612,14 @@ feature {NONE} -- Processing
 			last_detachable_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
 		end
 
-	process_c1_2byte_character_constant (c: CHARACTER_32)
-			-- Process character constant of the form 'A', encoded with 2 bytes in UTF-8.
-		require
-			c1_char_two_byte: text_count >= 4
-			-- valid_string: (\'{UTF8_2}\').recognizes (text_substring (1, 4))
-			valid_c: c.natural_32_code = {UC_UTF8_ROUTINES}.two_byte_character_code (text_item (2), text_item (3))
-		do
-			last_literal_start := 2
-			last_literal_end := 3
-			last_token := E_CHARACTER
-			last_detachable_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
-		end
-
-	process_c1_3byte_character_constant (c: CHARACTER_32)
-			-- Process character constant of the form 'A', encoded with 3 bytes in UTF-8.
-		require
-			c1_char_3_byte: text_count >= 5
-			-- valid_string: (\'{UTF8_3}\').recognizes (text_substring (1, 5))
-			valid_c: c.natural_32_code = {UC_UTF8_ROUTINES}.three_byte_character_code (text_item (2), text_item (3), text_item (4))
-		do
-			last_literal_start := 2
-			last_literal_end := 4
-			last_token := E_CHARACTER
-			last_detachable_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
-		end
-
-	process_c1_4byte_character_constant (c: CHARACTER_32)
-			-- Process character constant of the form 'A', encoded with 4 bytes in UTF-8.
-		require
-			c1_char_four_byte: text_count >= 6
-			-- valid_string: (\'{UTF8_4}\').recognizes (text_substring (1, 6))
-			valid_c: c.natural_32_code = {UC_UTF8_ROUTINES}.four_byte_character_code (text_item (2), text_item (3), text_item (4), text_item (5))
-		do
-			last_literal_start := 2
-			last_literal_end := 5
-			last_token := E_CHARACTER
-			last_detachable_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
-		end
-
-	process_c2_character_constant (c: CHARACTER)
+	process_c2_character_constant (c: CHARACTER_8)
 			-- Process character constant of the form '%A'.
 		require
 			c2_char: text_count >= 4
-			-- valid_string: (\'%[^\n\x80-\xFF]\').recognizes (text_substring (1, 4))
+			valid_string: {ET_C2_CHARACTER_CONSTANT}.valid_literal (unicode_text_substring (1, 4))
 			valid_c: text_item (3) = c
 		local
-			a_value: CHARACTER
+			a_value: CHARACTER_8
 		do
 			inspect c
 			when 'A' then
@@ -3779,12 +3811,12 @@ feature {NONE} -- Processing
 		require
 			nb_large_enough: nb >= 2
 			nb_small_enough: nb <= text_count
-			-- valid_string: (\"([^"%\n\x80-\xFF}]|{NON_ASCII})*\").recognizes (text_substring (1, nb))
+			valid_string: {ET_REGULAR_MANIFEST_STRING}.valid_literal (unicode_text_substring (1, nb))
 		do
 			last_token := E_STRING
 			inspect nb
 			when 3 then
-				inspect text_item (2)
+				inspect unicode_text_item (2)
 				when '+' then
 					last_token := E_STRPLUS
 				when '-' then
@@ -3803,58 +3835,58 @@ feature {NONE} -- Processing
 					-- Do nothing.
 				end
 			when 4 then
-				inspect text_item (2)
+				inspect unicode_text_item (2)
 				when '[' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when ']' then
 						last_token := E_STRBRACKET
 					else
 						-- Do nothing.
 					end
 				when '(' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when ')' then
 						last_token := E_STRPARENTHESIS
 					else
 						-- Do nothing.
 					end
 				when '.' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when '.' then
 						last_token := E_STRDOTDOT
 					else
 						-- Do nothing.
 					end
 				when '/' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when '/' then
 						last_token := E_STRDIV
 					else
 						-- Do nothing.
 					end
 				when '\' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when '\' then
 						last_token := E_STRMOD
 					else
 						-- Do nothing.
 					end
 				when '<' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when '=' then
 						last_token := E_STRLE
 					else
 						-- Do nothing.
 					end
 				when '>' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when '=' then
 						last_token := E_STRGE
 					else
 						-- Do nothing.
 					end
 				when 'o', 'O' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when 'r', 'R' then
 						last_token := E_STROR
 					else
@@ -3864,11 +3896,11 @@ feature {NONE} -- Processing
 					-- Do nothing.
 				end
 			when 5 then
-				inspect text_item (2)
+				inspect unicode_text_item (2)
 				when 'a', 'A' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when 'n', 'N' then
-						inspect text_item (4)
+						inspect unicode_text_item (4)
 						when 'd', 'D' then
 							last_token := E_STRAND
 						else
@@ -3878,9 +3910,9 @@ feature {NONE} -- Processing
 						-- Do nothing.
 					end
 				when 'n', 'N' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when 'o', 'O' then
-						inspect text_item (4)
+						inspect unicode_text_item (4)
 						when 't', 'T' then
 							last_token := E_STRNOT
 						else
@@ -3890,9 +3922,9 @@ feature {NONE} -- Processing
 						-- Do nothing.
 					end
 				when 'x', 'X' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when 'o', 'O' then
-						inspect text_item (4)
+						inspect unicode_text_item (4)
 						when 'r', 'R' then
 							last_token := E_STRXOR
 						else
@@ -3905,19 +3937,19 @@ feature {NONE} -- Processing
 					-- Do nothing.
 				end
 			when 9 then
-				inspect text_item (2)
+				inspect unicode_text_item (2)
 				when 'o', 'O' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when 'r', 'R' then
-						inspect text_item (4)
+						inspect unicode_text_item (4)
 						when ' ' then
-							inspect text_item (5)
+							inspect unicode_text_item (5)
 							when 'e', 'E' then
-								inspect text_item (6)
+								inspect unicode_text_item (6)
 								when 'l', 'L' then
-									inspect text_item (7)
+									inspect unicode_text_item (7)
 									when 's', 'S' then
-										inspect text_item (8)
+										inspect unicode_text_item (8)
 										when 'e', 'E' then
 											last_token := E_STRORELSE
 										else
@@ -3939,17 +3971,17 @@ feature {NONE} -- Processing
 						-- Do nothing.
 					end
 				when 'i', 'I' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when 'm', 'M' then
-						inspect text_item (4)
+						inspect unicode_text_item (4)
 						when 'p', 'P' then
-							inspect text_item (5)
+							inspect unicode_text_item (5)
 							when 'l', 'L' then
-								inspect text_item (6)
+								inspect unicode_text_item (6)
 								when 'i', 'I' then
-									inspect text_item (7)
+									inspect unicode_text_item (7)
 									when 'e', 'E' then
-										inspect text_item (8)
+										inspect unicode_text_item (8)
 										when 's', 'S' then
 											last_token := E_STRIMPLIES
 										else
@@ -3974,21 +4006,21 @@ feature {NONE} -- Processing
 					-- Do nothing.
 				end
 			when 10 then
-				inspect text_item (2)
+				inspect unicode_text_item (2)
 				when 'a', 'A' then
-					inspect text_item (3)
+					inspect unicode_text_item (3)
 					when 'n', 'N' then
-						inspect text_item (4)
+						inspect unicode_text_item (4)
 						when 'd', 'D' then
-							inspect text_item (5)
+							inspect unicode_text_item (5)
 							when ' ' then
-								inspect text_item (6)
+								inspect unicode_text_item (6)
 								when 't', 'T' then
-									inspect text_item (7)
+									inspect unicode_text_item (7)
 									when 'h', 'H' then
-										inspect text_item (8)
+										inspect unicode_text_item (8)
 										when 'e', 'E' then
-											inspect text_item (9)
+											inspect unicode_text_item (9)
 											when 'n', 'N' then
 												last_token := E_STRANDTHEN
 											else
@@ -4072,6 +4104,7 @@ feature {NONE} -- Processing
 				last_detachable_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker,
 					verbatim_open_white_characters, verbatim_close_white_characters, False, Current)
 				verbatim_marker := no_verbatim_marker
+				verbatim_marker_count := 0
 				verbatim_open_white_characters := no_verbatim_marker
 				verbatim_close_white_characters := no_verbatim_marker
 			when str_left_aligned_verbatim_break then
@@ -4079,6 +4112,7 @@ feature {NONE} -- Processing
 				last_detachable_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker,
 					verbatim_open_white_characters, verbatim_close_white_characters, True, Current)
 				verbatim_marker := no_verbatim_marker
+				verbatim_marker_count := 0
 				verbatim_open_white_characters := no_verbatim_marker
 				verbatim_close_white_characters := no_verbatim_marker
 			else
@@ -4132,6 +4166,15 @@ invariant
 	last_literal_start_large_enough: last_literal_start >= 1
 	last_literal_start_small_enough: last_literal_start <= last_literal_end + 1
 	last_literal_end_small_enough: last_literal_end <= text_count
+	verbatim_marker_not_void: verbatim_marker /= Void
+	verbatim_marker_is_string_8: verbatim_marker.same_type ({STRING_8} "")
+	valid_utf8_verbatim_marker: {UC_UTF8_ROUTINES}.valid_utf8 (verbatim_marker)
+	verbatim_open_white_characters_not_void: verbatim_open_white_characters /= Void
+	verbatim_open_white_characters_is_string_8: verbatim_open_white_characters.same_type ({STRING_8} "")
+	valid_utf8_verbatim_open_white_characters: {UC_UTF8_ROUTINES}.valid_utf8 (verbatim_open_white_characters)
+	verbatim_close_white_characters_not_void: verbatim_close_white_characters /= Void
+	verbatim_close_white_characters_is_string_8: verbatim_close_white_characters.same_type ({STRING_8} "")
+	valid_utf8_verbatim_close_white_characters: {UC_UTF8_ROUTINES}.valid_utf8 (verbatim_close_white_characters)
 	system_processor_not_void: system_processor /= Void
 
 end

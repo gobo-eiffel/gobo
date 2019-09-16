@@ -98,6 +98,12 @@ feature -- Access
 	iso_8859_1_encoding: INTEGER = 2
 			-- Code for ISO-8859-1 encoding
 
+feature -- Status report
+
+	has_utf8_bom: BOOLEAN
+			-- Has the byte order mark (BOM) for UTF-8 been found at the
+			-- beginning of the file?
+
 feature -- Setting
 
 	set_string (a_string: READABLE_STRING_GENERAL)
@@ -183,6 +189,7 @@ feature -- Element change
 					nb2 := buff.fill_from_utf8_stream (file, k, nb)
 					if nb2 >= nb then
 						if buff.item (k) = {UC_UNICODE_CONSTANTS}.bom_character then
+							has_utf8_bom := True
 								-- Discard BOM and fill the buffer with the following characters.
 							nb := capacity - count
 							nb2 := buff.fill_from_utf8_stream (file, count + 1, nb)
@@ -204,6 +211,7 @@ feature -- Element change
 					if nb2 >= nb and then {UC_UTF8_ROUTINES}.is_endian_detection_character (buff.item (k).to_character_8, buff.item (k + 1).to_character_8, buff.item (k + 2).to_character_8) then
 							-- We found the UTF-8 BOM.
 							-- Discard it and fill the buffer with the following characters.
+						has_utf8_bom := True
 						encoding := utf8_encoding
 						nb := capacity - count
 						nb2 := buff.fill_from_utf8_stream (file, count + 1, nb)
@@ -234,6 +242,7 @@ feature -- Element change
 		do
 			Precursor
 			encoding := unknown_encoding
+			has_utf8_bom := False
 		ensure then
 			unknown_encoding: encoding = unknown_encoding
 		end

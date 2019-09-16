@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for an XML parser"
 
 	library: "Gobo Eiffel XML library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,9 @@ inherit
 			make as make_scanner_stdin
 		redefine
 			set_input_buffer,
-			reset, fatal_error
+			reset,
+			fatal_error,
+			report_invalid_unicode_character_error
 		end
 
 	XM_EIFFEL_TOKENS
@@ -175,6 +177,14 @@ feature -- Error reporting
 			-- A fatal error occurred.
 		do
 			last_error := a_message
+		end
+
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read and caused the scanner
+			-- to fail.
+		do
+			last_error := "Surrogate or invalid Unicode character '\u{" + a_code.to_hex_string + "}'"
 		end
 
 	error_position: XM_DEFAULT_POSITION

@@ -33,7 +33,7 @@ feature -- Eiffel keywords
 			-- New 'across' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)across").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_across
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -43,7 +43,7 @@ feature -- Eiffel keywords
 			-- New 'agent' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)agent").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -53,7 +53,7 @@ feature -- Eiffel keywords
 			-- New 'alias' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)alias").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.alias_keyword
 		end
@@ -62,7 +62,7 @@ feature -- Eiffel keywords
 			-- New 'all' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)all").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_all
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -72,7 +72,7 @@ feature -- Eiffel keywords
 			-- New 'and' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)and").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_and
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -82,7 +82,7 @@ feature -- Eiffel keywords
 			-- New 'as' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)as").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.as_keyword
 		end
@@ -91,7 +91,7 @@ feature -- Eiffel keywords
 			-- New 'assign' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)assign").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.assign_keyword
 		end
@@ -100,7 +100,7 @@ feature -- Eiffel keywords
 			-- New 'attached' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)attached").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_attached
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -110,7 +110,7 @@ feature -- Eiffel keywords
 			-- New 'attribute' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)attribute").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.attribute_keyword
 		end
@@ -119,7 +119,7 @@ feature -- Eiffel keywords
 			-- New 'check' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)check").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.check_keyword
 		end
@@ -128,7 +128,7 @@ feature -- Eiffel keywords
 			-- New 'class' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)class").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_class
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -138,7 +138,7 @@ feature -- Eiffel keywords
 			-- New 'convert' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)convert").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.convert_keyword
 		end
@@ -147,7 +147,7 @@ feature -- Eiffel keywords
 			-- New 'create' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)create").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.create_keyword
 		end
@@ -156,7 +156,7 @@ feature -- Eiffel keywords
 			-- New 'creation' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)creation").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.creation_keyword
 		end
@@ -165,7 +165,7 @@ feature -- Eiffel keywords
 			-- New 'current' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)current").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -175,7 +175,7 @@ feature -- Eiffel keywords
 			-- New 'debug' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)debug").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.debug_keyword
 		end
@@ -184,7 +184,7 @@ feature -- Eiffel keywords
 			-- New 'deferred' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)deferred").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.deferred_keyword
 		end
@@ -193,7 +193,7 @@ feature -- Eiffel keywords
 			-- New 'detachable' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)detachable").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_detachable
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -203,7 +203,7 @@ feature -- Eiffel keywords
 			-- New 'do' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)do").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.do_keyword
 		end
@@ -212,7 +212,7 @@ feature -- Eiffel keywords
 			-- New 'else' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)else").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.else_keyword
 		end
@@ -221,7 +221,7 @@ feature -- Eiffel keywords
 			-- New 'elseif' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)elseif").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.elseif_keyword
 		end
@@ -230,7 +230,7 @@ feature -- Eiffel keywords
 			-- New 'end' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)end").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.end_keyword
 		end
@@ -239,7 +239,7 @@ feature -- Eiffel keywords
 			-- New 'ensure' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)ensure").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_ensure
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -249,7 +249,7 @@ feature -- Eiffel keywords
 			-- New 'expanded' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)expanded").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_expanded
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -259,7 +259,7 @@ feature -- Eiffel keywords
 			-- New 'export' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)export").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.export_keyword
 		end
@@ -268,7 +268,7 @@ feature -- Eiffel keywords
 			-- New 'external' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)external").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.external_keyword
 		end
@@ -277,7 +277,7 @@ feature -- Eiffel keywords
 			-- New 'false' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)false").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -287,7 +287,7 @@ feature -- Eiffel keywords
 			-- New 'feature' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)feature").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.feature_keyword
 		end
@@ -296,7 +296,7 @@ feature -- Eiffel keywords
 			-- New 'from' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)from").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.from_keyword
 		end
@@ -305,7 +305,7 @@ feature -- Eiffel keywords
 			-- New 'frozen' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)frozen").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_frozen
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -315,7 +315,7 @@ feature -- Eiffel keywords
 			-- New 'if' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)if").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.if_keyword
 		end
@@ -324,7 +324,7 @@ feature -- Eiffel keywords
 			-- New 'implies' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)implies").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_implies
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -334,7 +334,7 @@ feature -- Eiffel keywords
 			-- New 'indexing' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)indexing").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.indexing_keyword
 		end
@@ -343,7 +343,7 @@ feature -- Eiffel keywords
 			-- New 'infix' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)infix").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.infix_keyword
 		end
@@ -352,7 +352,7 @@ feature -- Eiffel keywords
 			-- New 'inherit' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)inherit").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.inherit_keyword
 		end
@@ -361,7 +361,7 @@ feature -- Eiffel keywords
 			-- New 'inspect' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)inspect").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.inspect_keyword
 		end
@@ -370,7 +370,7 @@ feature -- Eiffel keywords
 			-- New 'invariant' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)invariant").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.invariant_keyword
 		end
@@ -379,7 +379,7 @@ feature -- Eiffel keywords
 			-- New 'is' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)is").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.is_keyword
 		end
@@ -388,7 +388,7 @@ feature -- Eiffel keywords
 			-- New 'like' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)like").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_like
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -398,7 +398,7 @@ feature -- Eiffel keywords
 			-- New 'local' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)local").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.local_keyword
 		end
@@ -407,7 +407,7 @@ feature -- Eiffel keywords
 			-- New 'loop' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)loop").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.loop_keyword
 		end
@@ -416,7 +416,7 @@ feature -- Eiffel keywords
 			-- New 'not' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)not").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_not
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -426,7 +426,7 @@ feature -- Eiffel keywords
 			-- New 'note' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)note").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.note_keyword
 		end
@@ -435,7 +435,7 @@ feature -- Eiffel keywords
 			-- New 'obsolete' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)obsolete").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.obsolete_keyword
 		end
@@ -444,7 +444,7 @@ feature -- Eiffel keywords
 			-- New 'old' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)old").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_old
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -454,7 +454,7 @@ feature -- Eiffel keywords
 			-- New 'once' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)once").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_once
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -464,7 +464,7 @@ feature -- Eiffel keywords
 			-- New 'or' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)or").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_or
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -474,7 +474,7 @@ feature -- Eiffel keywords
 			-- New 'precursor' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)precursor").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -484,7 +484,7 @@ feature -- Eiffel keywords
 			-- New 'prefix' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)prefix").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.prefix_keyword
 		end
@@ -493,7 +493,7 @@ feature -- Eiffel keywords
 			-- New 'redefine' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)redefine").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.redefine_keyword
 		end
@@ -502,7 +502,7 @@ feature -- Eiffel keywords
 			-- New 'reference' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)reference").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_reference
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -512,7 +512,7 @@ feature -- Eiffel keywords
 			-- New 'rename' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)rename").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.rename_keyword
 		end
@@ -521,7 +521,7 @@ feature -- Eiffel keywords
 			-- New 'require' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)require").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_require
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -531,7 +531,7 @@ feature -- Eiffel keywords
 			-- New 'rescue' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)rescue").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.rescue_keyword
 		end
@@ -540,7 +540,7 @@ feature -- Eiffel keywords
 			-- New 'result' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)result").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -550,7 +550,7 @@ feature -- Eiffel keywords
 			-- New 'retry' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)retry").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -560,7 +560,7 @@ feature -- Eiffel keywords
 			-- New 'select' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)select").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.select_keyword
 		end
@@ -569,7 +569,7 @@ feature -- Eiffel keywords
 			-- New 'separate' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)separate").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_separate
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -579,7 +579,7 @@ feature -- Eiffel keywords
 			-- New 'some' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)some").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_some
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -589,7 +589,7 @@ feature -- Eiffel keywords
 			-- New 'strip' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)strip").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_strip
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -599,7 +599,7 @@ feature -- Eiffel keywords
 			-- New 'then' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)then").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.then_keyword
 		end
@@ -608,7 +608,7 @@ feature -- Eiffel keywords
 			-- New 'true' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)true").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -618,7 +618,7 @@ feature -- Eiffel keywords
 			-- New 'undefine' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)undefine").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.undefine_keyword
 		end
@@ -627,7 +627,7 @@ feature -- Eiffel keywords
 			-- New 'unique' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)unique").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_unique
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -637,7 +637,7 @@ feature -- Eiffel keywords
 			-- New 'until' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)until").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.until_keyword
 		end
@@ -646,7 +646,7 @@ feature -- Eiffel keywords
 			-- New 'variant' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)variant").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.variant_keyword
 		end
@@ -655,7 +655,7 @@ feature -- Eiffel keywords
 			-- New 'void' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)void").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -665,7 +665,7 @@ feature -- Eiffel keywords
 			-- New 'when' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)when").recognizes (a_scanner.last_unicode_literal)
 		do
 			Result := tokens.when_keyword
 		end
@@ -674,7 +674,7 @@ feature -- Eiffel keywords
 			-- New 'xor' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)xor").recognizes (a_scanner.last_unicode_literal)
 		do
 			create Result.make_xor
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -980,7 +980,7 @@ feature -- AST leaves
 			-- New integer constant in binary format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(0[bB][0-1]+(_+[0-1]+)*").recognizes (a_scanner.last_literal)
+			valid_literal: {ET_BINARY_INTEGER_CONSTANT}.valid_literal (a_scanner.last_unicode_literal)
 		do
 			Result := a_scanner.last_binary_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -999,16 +999,17 @@ feature -- AST leaves
 			-- New character constant of the form 'A'
 		require
 			a_scanner_not_void: a_scanner /= Void
+			valid_value: {ET_C1_CHARACTER_CONSTANT}.valid_value (a_value)
 		do
 			create Result.make (a_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
-	new_c2_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C2_CHARACTER_CONSTANT
+	new_c2_character_constant (a_value: CHARACTER_8; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C2_CHARACTER_CONSTANT
 			-- New character constant of the form '%A'
 		require
 			a_scanner_not_void: a_scanner /= Void
-			a_value_one_utf8_byte: {UC_UTF8_ROUTINES}.natural_32_code_byte_count (a_value.natural_32_code) = 1
+			a_value_valid: {ET_C2_CHARACTER_CONSTANT}.valid_value (a_value.to_character_32)
 		do
 			create Result.make (a_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1018,7 +1019,7 @@ feature -- AST leaves
 			-- New character constant of the form '%/code/'
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*).recognizes (a_scanner.last_literal)
+			valid_literal: {ET_C3_CHARACTER_CONSTANT}.valid_literal ({STRING_32} "'%%/" + a_scanner.last_unicode_literal + {STRING_32} "/'")
 		do
 			Result := a_scanner.last_c3_character_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1039,7 +1040,7 @@ feature -- AST leaves
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_prefix (a_scanner.last_literal)
+			create Result.make_prefix (a_scanner.last_utf8_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1047,7 +1048,7 @@ feature -- AST leaves
 			-- New integer constant in hexadecimal format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[xX](_*[0-9a-fA-F]+_*)+").recognizes (a_scanner.last_literal)
+			valid_literal: {ET_HEXADECIMAL_INTEGER_CONSTANT}.valid_literal (a_scanner.last_unicode_literal)
 		do
 			Result := a_scanner.last_hexadecimal_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1057,7 +1058,7 @@ feature -- AST leaves
 			-- New identifier
 		require
 			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
+			valid_literal: {ET_IDENTIFIER}.valid_name (a_scanner.last_unicode_literal)
 		do
 			Result := a_scanner.last_identifier
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1067,7 +1068,7 @@ feature -- AST leaves
 			-- New integer constant in octal format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[cC][0-7]+(_+[0-7]+)*").recognizes (a_scanner.last_literal)
+			valid_literal: {ET_OCTAL_INTEGER_CONSTANT}.valid_literal (a_scanner.last_unicode_literal)
 		do
 			Result := a_scanner.last_octal_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1077,7 +1078,7 @@ feature -- AST leaves
 			-- New integer constant with no underscore
 		require
 			a_scanner_not_void: a_scanner /= Void
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9]+").recognizes (a_scanner.last_literal)
+			valid_literal: {ET_REGULAR_INTEGER_CONSTANT}.valid_literal (a_scanner.last_unicode_literal)
 		do
 			Result := a_scanner.last_regular_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1087,9 +1088,9 @@ feature -- AST leaves
 			-- New manifest string with no special character
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (([^"%\n\x80-\xFF}]|{NON_ASCII})*).recognizes (a_scanner.last_literal)
+			valid_literal: {ET_REGULAR_MANIFEST_STRING}.valid_literal ({STRING_32} "%"" + a_scanner.last_unicode_literal + {STRING_32} "%"")
 		do
-			create Result.make (a_scanner.last_literal)
+			create Result.make (a_scanner.last_utf8_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1097,7 +1098,7 @@ feature -- AST leaves
 			-- New real constant with no underscore
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?).recognizes (a_scanner.last_literal)
+			valid_literal: {ET_REGULAR_REAL_CONSTANT}.valid_literal (a_scanner.last_literal)
 		do
 			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1107,7 +1108,7 @@ feature -- AST leaves
 			-- New manifest string with special characters
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (([^"%\n\x80-\xFF]|{NON_ASCII}|%([^\n\x08-\xFF]|\/([[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)\/|{HORIZONTAL_BREAK}*\n{BREAK}*%))*).recognizes (a_scanner.last_literal)
+			valid_literal: {ET_SPECIAL_MANIFEST_STRING}.valid_literal ({STRING_32} "%"" + a_scanner.last_unicode_literal + {STRING_32} "%"")
 		do
 			Result := a_scanner.last_special_manifest_string
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1117,7 +1118,7 @@ feature -- AST leaves
 			-- New integer constant with underscores
 		require
 			a_scanner_not_void: a_scanner /= Void
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(_*[0-9]+_*)+").recognizes (a_scanner.last_literal)
+			valid_literal: {ET_UNDERSCORED_INTEGER_CONSTANT}.valid_literal (a_scanner.last_unicode_literal)
 		do
 			Result := a_scanner.last_underscored_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1127,18 +1128,24 @@ feature -- AST leaves
 			-- New real constant with underscores
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (((_*[0-9]+_*)+\.(_*[0-9]_*)*|(_*[0-9]_*)*\.(_*[0-9]_*)+)([eE][+-]?(_*[0-9]_*)+)?).recognizes (a_scanner.last_literal)
+			valid_literal: {ET_UNDERSCORED_REAL_CONSTANT}.valid_literal (a_scanner.last_literal)
 		do
 			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
-	new_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_VERBATIM_STRING
+	new_verbatim_string (a_marker, an_open, a_close: STRING_8; a_left_aligned: BOOLEAN; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_VERBATIM_STRING
 			-- New verbatim string
 		require
 			a_marker_not_void: a_marker /= Void
+			a_marker_is_string_8: a_marker.same_type ({STRING_8} "")
+			valid_utf8_marker: {UC_UTF8_ROUTINES}.valid_utf8 (a_marker)
 			an_open_not_void: an_open /= Void
+			an_open_is_string_8: an_open.same_type ({STRING_8} "")
+			valid_utf8_open: {UC_UTF8_ROUTINES}.valid_utf8 (an_open)
 			a_close_not_void: a_close /= Void
+			a_close_is_string_8: a_close.same_type ({STRING_8} "")
+			valid_utf8_close: {UC_UTF8_ROUTINES}.valid_utf8 (a_close)
 			a_scanner_not_void: a_scanner /= Void
 		do
 			Result := a_scanner.last_verbatim_string (a_marker, an_open, a_close, a_left_aligned)

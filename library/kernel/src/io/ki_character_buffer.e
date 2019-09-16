@@ -172,7 +172,7 @@ feature -- Element change
 			characters_set: s <= e implies a_string.substring (old (a_string.count) + 1, a_string.count).same_string (substring (s, e))
 		end
 
-	append_substring_to_unicode_string (s, e: INTEGER; a_string: STRING_32)
+	append_unicode_substring_to_string (s, e: INTEGER; a_string: STRING_32)
 			-- Append string made up of characters held in buffer
 			-- between indexes `s' and `e' to `a_string'.
 		require
@@ -187,6 +187,25 @@ feature -- Element change
 		ensure
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
 			characters_set: s <= e implies a_string.substring (old (a_string.count) + 1, a_string.count).same_string (unicode_substring (s, e))
+		end
+
+	append_utf8_substring_to_string (s, e: INTEGER; a_string: STRING_8)
+			-- Append bytes corresponding to the UTF-8 representation
+			-- of the characters held in buffer between indexes `s'
+			-- and `e' to `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			a_string_is_string_8: a_string.same_type ({STRING_8} "")
+			s_large_enough: s >= 1
+			e_small_enough: e <= count
+			valid_interval: s <= e + 1
+		do
+			if s <= e then
+				a_string.append (utf8_substring (s, e))
+			end
+		ensure
+			count_set: a_string.count = old (a_string.count) + utf8_substring (s, e).count
+			characters_set: s <= e implies a_string.substring (old (a_string.count) + 1, a_string.count).same_string (utf8_substring (s, e))
 		end
 
 	fill_from_string (a_string: STRING_8; pos: INTEGER)

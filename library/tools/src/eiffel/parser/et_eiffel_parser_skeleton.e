@@ -33,6 +33,7 @@ inherit
 	ET_CLASS_PROCESSOR
 		rename
 			process_identifier as process_ast_identifier,
+			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		undefine
@@ -46,6 +47,7 @@ inherit
 		rename
 			make as make_ast_processor,
 			process_identifier as process_ast_identifier,
+			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		redefine
@@ -2627,12 +2629,12 @@ feature {NONE} -- Counters
 
 feature {NONE} -- Input buffer
 
-	eiffel_buffer: ET_EIFFEL_FILE_BUFFER
+	eiffel_buffer: YY_UNICODE_FILE_BUFFER
 			-- Eiffel file input buffer
 
 feature {NONE} -- Constants
 
-	Initial_eiffel_buffer_size: INTEGER = 100000
+	Initial_eiffel_buffer_size: INTEGER = 50000
 			-- Initial size for `eiffel_buffer'
 
 	Initial_counters_capacity: INTEGER = 10

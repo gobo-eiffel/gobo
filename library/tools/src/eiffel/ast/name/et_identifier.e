@@ -377,6 +377,17 @@ feature -- Status report
 			Result := STRING_.same_case_insensitive (name, a_value)
 		end
 
+	valid_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_name' a valid value for `name'?
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := {RX_PCRE_ROUTINES}.regexp (name_regexp).recognizes (a_name)
+		ensure
+			instance_free: class
+			definition: Result = {RX_PCRE_ROUTINES}.regexp (name_regexp).recognizes (a_name)
+		end
+
 feature -- Status setting
 
 	set_feature_name (b: BOOLEAN)
@@ -643,6 +654,10 @@ feature {NONE} -- Implementation
 		ensure
 			new_hash_code_not_negatige: Result >= 0
 		end
+
+
+	name_regexp: STRING = "[a-zA-Z][a-zA-Z0-9_]*"
+			-- Regular expression for `name'
 
 	status_code: CHARACTER
 	feature_name_code: CHARACTER = 'f'
