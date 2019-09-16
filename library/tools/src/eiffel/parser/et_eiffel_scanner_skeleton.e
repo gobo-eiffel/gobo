@@ -1500,7 +1500,7 @@ feature {NONE} -- Verbatim strings
 			verbatim_string_scanned: verbatim_marker /= no_verbatim_marker
 			a_start_large_enough: a_start >= 1
 			an_end_small_enough: an_end <= text_count
-			valid_string: {RX_PCRE_ROUTINES}.regexp ("[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*[\]\}][^\n%"]*").recognizes (unicode_text_substring (a_start, an_end))
+			valid_string: {RX_PCRE_ROUTINES}.regexp ("(\r?\n)?[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*[\]\}][^\n%"]*").recognizes (unicode_text_substring (a_start, an_end))
 		local
 			i, j, nb: INTEGER
 			l_marker_count: INTEGER
