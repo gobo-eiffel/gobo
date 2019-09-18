@@ -15,6 +15,13 @@
   to scan is already encoded with UTF-8, although the generated scanner will
   be larger.
 
+### geyacc
+
+* Added support for Unicode. Embedded Eiffel code in the `.y` input file
+  can contain Unicode characters. Characters in `%token` declarations can
+  also be Unicode characters or their escaped versions  (e.g `%token '\u03B2'`
+  where `03B2` is the hexadecimal code for Greek character beta).
+
 ### Gobo Eiffel Kernel Library
 
 * Changed the signature of features `put_string` and `put_substring` in class

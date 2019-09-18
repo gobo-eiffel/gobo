@@ -5,7 +5,7 @@ note
 		"Parser generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,6 +110,9 @@ feature -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
+			if machine.grammar.has_utf8_enconding then
+				print_bom (a_file)
+			end
 			print_eiffel_header (a_file)
 			if tokens_needed then
 				a_file.put_new_line
@@ -179,6 +182,16 @@ feature -- Generation
 		end
 
 feature {NONE} -- Generation
+
+	print_bom (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print byte order mark (BOM) for UTF-8 (0xEF,0xBB,0xBF) to `a_file'.
+			-- See http://en.wikipedia.org/wiki/Byte_order_mark
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string ({UC_UTF8_ROUTINES}.utf8_bom)
+		end
 
 	print_token_codes (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print token codes to `a_file'.

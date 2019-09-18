@@ -6,7 +6,7 @@ note
 		"Scanners for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ create
 C					"--".*
 WS					[ \t\r]+
 NL					\n
-ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
+ESC					\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\})
 
 %%
 
@@ -191,13 +191,13 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					}
 	\'([^'\\\n]|{ESC})\'	{
 						last_token := T_CHAR
-						last_string_value := text
+						last_string_32_value := unicode_text
 					}
 	\"[^"\n]*\"		{
 						last_token := T_STR
-						last_string_value := text
+						last_string_value := utf8_text
 						if text_count < 4 then
-							report_invalid_string_token_error (text)
+							report_invalid_string_token_error (utf8_text)
 						end
 					}
 }
@@ -234,7 +234,7 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 <SECTION3>{
 	(.|\n)+			{
 						last_token := T_USER_CODE
-						last_string_value := text
+						last_string_value := utf8_text
 					}
 }
 
@@ -270,13 +270,13 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 				}
 	"%}"		{
 					last_token := T_EIFFEL
-					last_string_value := text_substring (1, text_count - 2)
+					last_string_value := utf8_text_substring (1, text_count - 2)
 					set_start_condition (INITIAL)
 				}
 	<<EOF>>		{
 					report_missing_characters_error ("%%}")
 					last_token := T_EIFFEL
-					last_string_value := text_substring (1, text_count)
+					last_string_value := utf8_text_substring (1, text_count)
 					set_start_condition (INITIAL)
 				}
 }
@@ -287,7 +287,7 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'			|
 	"--".*											|
 	\"|\'|%|-|\$	{
-					action_buffer.append_string (text)
+					action_buffer.append_string (utf8_text)
 				}
 	\n+			{
 					line_nb := line_nb + text_count
@@ -360,7 +360,7 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 }
 
 <*>.|\n			{
-					last_token := text_item (1).code
+					last_token := unicode_text_item (1).code.to_integer_32
 				}
 
 %%

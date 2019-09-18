@@ -5,7 +5,7 @@ note
 		"Grammars for LALR(1) context-free languages."
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,6 +89,11 @@ feature -- User-defined Eiffel code
 			-- User-defined Eiffel header
 			-- (Appears in section 1 between %{})
 
+feature -- Status report
+
+	has_utf8_enconding: BOOLEAN
+			-- Has the input file describing the grammar been considered to be encoded with UTF-8?
+
 feature -- Setting
 
 	set_start_symbol (a_symbol: like start_symbol)
@@ -115,6 +120,16 @@ feature -- Setting
 			expected_conflicts := nb
 		ensure
 			expected_conflicts: expected_conflicts = nb
+		end
+
+feature -- Status setting
+
+	set_has_utf8_enconding (b: BOOLEAN)
+			-- Set `has_utf8_enconding' to `b.
+		do
+			has_utf8_enconding := b
+		ensure
+			has_utf8_enconding_set: has_utf8_enconding = b
 		end
 
 feature -- Element change

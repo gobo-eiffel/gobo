@@ -5,7 +5,7 @@ note
 		"Parser skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,20 +69,28 @@ feature -- Parsing
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse grammar description from `a_file'.
+			-- `a_file' is expected to be encoded in UTF-8
+			-- or ISO-8859-1.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+		local
+			l_input_buffer: like new_unicode_file_buffer
 		do
-			set_input_buffer (new_file_buffer (a_file))
+			l_input_buffer := new_unicode_file_buffer (a_file)
+			set_input_buffer (l_input_buffer)
 			parse
+			last_grammar.set_has_utf8_enconding (l_input_buffer.has_utf8_enconding)
 		end
 
-	parse_string (a_string: STRING)
+	parse_string (a_string: READABLE_STRING_GENERAL)
 			-- Parse grammar description from `a_string'.
+			-- `a_string' is expected to contain valid
+			-- non-surrogate Unicode characters.
 		require
 			a_string_not_void: a_string /= Void
 		do
-			set_input_buffer (new_string_buffer (a_string))
+			set_input_buffer (new_unicode_string_buffer (a_string))
 			parse
 		end
 
@@ -151,17 +159,17 @@ feature {NONE} -- Factory
 			type_set: Result.type = a_type
 		end
 
-	new_char_terminal (a_char: STRING; a_type: PR_TYPE): PR_TOKEN
+	new_char_terminal (a_char: STRING_32; a_type: PR_TYPE): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %token <a_type> a_char
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 			a_type_not_void: a_type /= Void
 		do
 			Result := new_char_token (a_char)
 			if Result.is_declared then
-				report_token_declared_twice_error (a_char)
+				report_token_declared_twice_error ({UC_UTF8_ROUTINES}.string_to_utf8 (a_char))
 			else
 				Result.set_declared
 			end
@@ -192,12 +200,12 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_left_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN
+	new_left_char_terminal (a_char: STRING_32; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %left a_char
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_left_associative
@@ -229,12 +237,12 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_right_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN
+	new_right_char_terminal (a_char: STRING_32; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %right a_char
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_right_associative
@@ -266,12 +274,12 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_nonassoc_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN
+	new_nonassoc_char_terminal (a_char: STRING_32; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %nonassoc a_char
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_non_associative
@@ -334,18 +342,18 @@ feature {NONE} -- Factory
 			token_not_void: Result /= Void
 		end
 
-	new_char_token (a_char: STRING): PR_TOKEN
+	new_char_token (a_char: STRING_32): PR_TOKEN
 			-- Terminal symbol associated with `a_char';
 			-- Create a new symbol if it does not exist
 			-- yet, and add it to the list of tokens of
 			-- `last_grammar'.
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 		local
 			a_code: INTEGER
 			a_key: STRING
-			c: CHARACTER
+			c: CHARACTER_32
 			i, nb: INTEGER
 			an_id: INTEGER
 		do
@@ -380,7 +388,7 @@ feature {NONE} -- Factory
 						a_code := a_code * 8 + a_char.item (i).code - Zero_code
 						i := i + 1
 					end
-				when 'x', 'X' then
+				when 'x', 'X', 'u', 'U' then
 					nb := a_char.count - 1
 					if nb = 3 then
 						a_code := c.code
@@ -389,6 +397,10 @@ feature {NONE} -- Factory
 						a_code := 0
 						from
 							i := 4
+							if a_char.item (i) = '{' then
+								i := i + 1
+								nb := nb - 1
+							end
 						until
 							i > nb
 						loop
@@ -397,9 +409,9 @@ feature {NONE} -- Factory
 							inspect c
 							when '0' .. '9' then
 								a_code := a_code + c.code - Zero_code
-							when 'a' .. 'z' then
+							when 'a' .. 'f' then
 								a_code := a_code + c.code - Lower_a_code + 10
-							when 'A' .. 'Z' then
+							when 'A' .. 'F' then
 								a_code := a_code + c.code - Upper_a_code + 10
 							end
 							i := i + 1
@@ -432,7 +444,7 @@ feature {NONE} -- Factory
 			-- with this string.
 		require
 			a_string_not_void: a_string /= Void
---			valid_string: (\"[^"\n]*\").recognizes (a_string)
+			valid_string: {RX_PCRE_ROUTINES}.regexp ("\%"[^%"\n]*\%"").recognizes (a_string)
 		local
 			an_id: INTEGER
 		do
@@ -1012,7 +1024,7 @@ feature {NONE} -- Implementation
 		require
 			a_token_not_void: a_token /= Void
 			a_string_not_void: a_string /= Void
---			valid_string: (\"[^"\n]*\").recognizes (a_string)
+			valid_string: {RX_PCRE_ROUTINES}.regexp ("\%"[^%"\n]*\%"").recognizes (a_string)
 		do
 			if attached a_token.literal_string as l_literal_string and then not l_literal_string.is_equal (a_string) then
 				report_two_strings_token_error (a_token.name, l_literal_string, a_string)

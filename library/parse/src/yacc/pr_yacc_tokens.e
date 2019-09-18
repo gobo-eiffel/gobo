@@ -12,6 +12,7 @@ inherit
 feature -- Last values
 
 	last_detachable_any_value: detachable ANY
+	last_string_32_value: STRING_32
 	last_string_value: STRING
 	last_integer_value: INTEGER
 
@@ -45,6 +46,8 @@ feature -- Access
 				Result := "T_2PERCENTS"
 			when T_UNKNOWN then
 				Result := "T_UNKNOWN"
+			when T_CHAR then
+				Result := "T_CHAR"
 			when T_EIFFEL then
 				Result := "T_EIFFEL"
 			when T_IDENTIFIER then
@@ -53,8 +56,6 @@ feature -- Access
 				Result := "T_ACTION"
 			when T_USER_CODE then
 				Result := "T_USER_CODE"
-			when T_CHAR then
-				Result := "T_CHAR"
 			when T_STR then
 				Result := "T_STR"
 			when T_BOOLEAN then
@@ -134,11 +135,11 @@ feature -- Token codes
 	T_TYPE: INTEGER = 265
 	T_2PERCENTS: INTEGER = 266
 	T_UNKNOWN: INTEGER = 267
-	T_EIFFEL: INTEGER = 268
-	T_IDENTIFIER: INTEGER = 269
-	T_ACTION: INTEGER = 270
-	T_USER_CODE: INTEGER = 271
-	T_CHAR: INTEGER = 272
+	T_CHAR: INTEGER = 268
+	T_EIFFEL: INTEGER = 269
+	T_IDENTIFIER: INTEGER = 270
+	T_ACTION: INTEGER = 271
+	T_USER_CODE: INTEGER = 272
 	T_STR: INTEGER = 273
 	T_BOOLEAN: INTEGER = 274
 	T_POINTER: INTEGER = 275

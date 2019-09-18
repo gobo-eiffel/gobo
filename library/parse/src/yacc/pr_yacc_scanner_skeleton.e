@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_buffer (Empty_buffer)
 			last_string_value := ""
+			last_string_32_value := {STRING_32} ""
 			error_handler := handler
 			create action_buffer.make (Init_buffer_size)
 			successful := True
@@ -52,6 +53,7 @@ feature -- Initialization
 		do
 			reset_compressed_scanner_skeleton
 			last_string_value := ""
+			last_string_32_value := {STRING_32} ""
 			successful := True
 			action_buffer.wipe_out
 			nb_open_brackets := 0
@@ -97,7 +99,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	action_buffer: STRING
+	action_buffer: STRING_8
 			-- Buffer for semanic action text
 
 	nb_open_brackets: INTEGER
