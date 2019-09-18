@@ -55,7 +55,7 @@ feature -- Element change
 			a_description.set_full_table (True)
 			a_description.set_case_insensitive (i)
 			create a_parser.make_from_description (a_description, an_error_handler)
-			a_parser.parse_unicode_string (a_pattern)
+			a_parser.parse_string (a_pattern)
 			if a_parser.successful then
 				create a_dfa.make (a_description)
 				a_full_tables := a_dfa

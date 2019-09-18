@@ -405,6 +405,9 @@ feature -- Access
 			-- head and trailing context?
 			-- (Back-up tables must be generated.)
 
+	has_utf8_enconding: BOOLEAN
+			-- Has the input file describing the scanner been considered to be encoded with UTF-8?
+
 feature -- User-defined Eiffel code
 
 	eiffel_code: detachable STRING
@@ -473,6 +476,14 @@ feature -- Setting
 			variable_trail_context := b
 		ensure
 			variable_trail_context_set: variable_trail_context = b
+		end
+
+	set_has_utf8_enconding (b: BOOLEAN)
+			-- Set `has_utf8_enconding' to `b.
+		do
+			has_utf8_enconding := b
+		ensure
+			has_utf8_enconding_set: has_utf8_enconding = b
 		end
 
 	set_eiffel_code (code: like eiffel_code)

@@ -101,39 +101,21 @@ feature -- Parsing
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse scanner description from `a_file'.
-			-- To be used in 8-bit character (byte) mode, or
-			-- in Unicode mode where `a_file' is expected
-			-- to be encoded in UTF-8.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-		do
-			set_input_buffer (new_file_buffer (a_file))
-			parse
-		end
-
-	parse_unicode_file (a_file: KI_CHARACTER_INPUT_STREAM)
-			-- Parse scanner description from `a_file'.
 			-- `a_file' is expected to be encoded in UTF-8
 			-- or ISO-8859-1.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+		local
+			l_input_buffer: like new_unicode_file_buffer
 		do
-			set_input_buffer (new_unicode_file_buffer (a_file))
+			l_input_buffer := new_unicode_file_buffer (a_file)
+			set_input_buffer (l_input_buffer)
 			parse
+			description.set_has_utf8_enconding (l_input_buffer.has_utf8_enconding)
 		end
 
-	parse_string (a_string: STRING)
-			-- Parse scanner description from `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-		do
-			set_input_buffer (new_string_buffer (a_string))
-			parse
-		end
-
-	parse_unicode_string (a_string: READABLE_STRING_GENERAL)
+	parse_string (a_string: READABLE_STRING_GENERAL)
 			-- Parse scanner description from `a_string'.
 			-- `a_string' is expected to contain valid
 			-- non-surrogate Unicode characters.

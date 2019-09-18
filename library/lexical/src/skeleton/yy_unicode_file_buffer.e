@@ -104,6 +104,14 @@ feature -- Status report
 			-- Has the byte order mark (BOM) for UTF-8 been found at the
 			-- beginning of the file?
 
+	has_utf8_enconding: BOOLEAN
+			-- Has the file been considered to be encoded with UTF-8?
+		do
+			Result := encoding = utf8_encoding
+		ensure
+			definition: Result = (encoding = utf8_encoding)
+		end
+
 feature -- Setting
 
 	set_string (a_string: READABLE_STRING_GENERAL)

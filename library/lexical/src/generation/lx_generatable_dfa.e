@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			else
 				input_filename := Default_input_filename
 			end
+			has_utf8_enconding := a_description.has_utf8_enconding
 			array_size := a_description.array_size
 			inspect_used := a_description.inspect_used
 			actions_separated := a_description.actions_separated
@@ -133,7 +134,9 @@ feature -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			print_bom (a_file)
+			if has_utf8_enconding then
+				print_bom (a_file)
+			end
 			print_eiffel_header (a_file)
 			a_file.put_string ("%Nfeature -- Status report%N%N")
 			print_status_report_routines (a_file)
@@ -1163,6 +1166,9 @@ feature {NONE} -- Access
 
 	input_filename: STRING
 			-- Input filename
+
+	has_utf8_enconding: BOOLEAN
+			-- Has the input file describing the scanner been considered to be encoded with UTF-8?
 
 	eiffel_code: detachable STRING
 			-- User-defined Eiffel code

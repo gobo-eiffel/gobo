@@ -107,7 +107,7 @@ feature -- Element change
 			else
 				a_string := a_regexp
 			end
-			a_parser.parse_unicode_string (a_string)
+			a_parser.parse_string (a_string)
 			if a_parser.successful then
 				create a_dfa.make (a_description)
 				a_full_tables := a_dfa
