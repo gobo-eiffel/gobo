@@ -20,6 +20,8 @@ inherit
 		rename
 			make as make_yacc_scanner,
 			reset as reset_yacc_scanner
+		undefine
+			report_invalid_unicode_character_error
 		end
 
 create
@@ -250,7 +252,7 @@ end
 				set_start_symbol
 				process_symbols
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp1 := yyvsp1 -4
@@ -263,7 +265,7 @@ debug ("GEYACC")
 end
 
 			initialize_grammar
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -283,7 +285,7 @@ debug ("GEYACC")
 end
 
 			precedence := 1
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -315,7 +317,7 @@ debug ("GEYACC")
 end
 
 			last_grammar.eiffel_header.force_last (yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -336,7 +338,7 @@ debug ("GEYACC")
 end
 
 			type := Void
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -349,7 +351,7 @@ debug ("GEYACC")
 end
 
 			type := Void
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -362,7 +364,7 @@ debug ("GEYACC")
 end
 
 			precedence := precedence + 1
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -375,7 +377,7 @@ debug ("GEYACC")
 end
 
 			precedence := precedence + 1
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -388,7 +390,7 @@ debug ("GEYACC")
 end
 
 			precedence := precedence + 1
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -405,7 +407,7 @@ end
 			else
 				create start_symbol.make (yyvs3.item (yyvsp3), line_nb)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -418,7 +420,7 @@ debug ("GEYACC")
 end
 
 			last_grammar.set_expected_conflicts (yyvs4.item (yyvsp4))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 -1
@@ -431,7 +433,7 @@ debug ("GEYACC")
 end
 
 			type := No_type
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -454,7 +456,7 @@ end
 				type := l_type
 				set_no_alias_name (l_type)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -471,7 +473,7 @@ end
 				type := l_type
 				set_alias_name (l_type, yyvs3.item (yyvsp3))
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp1 := yyvsp1 -1
@@ -486,7 +488,7 @@ debug ("GEYACC")
 end
 
 			type := No_type
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -506,7 +508,7 @@ debug ("GEYACC")
 end
 
 			type := yyvs7.item (yyvsp7)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -520,7 +522,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_type (Void, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp7 := yyvsp7 + 1
@@ -541,7 +543,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_basic_type (Void, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp7 := yyvsp7 + 1
@@ -562,7 +564,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_type (Void, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp7 := yyvsp7 + 1
@@ -582,7 +584,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 159")
 end
 
-yyval7 := yyvs7.item (yyvsp7) 
+yyval7 := yyvs7.item (yyvsp7)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
@@ -594,7 +596,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -616,7 +618,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_basic_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -638,7 +640,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp7 := yyvsp7 + 1
@@ -661,7 +663,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_type (Void, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -683,7 +685,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_generic_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3), yyvs8.item (yyvsp8))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -706,7 +708,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_generic_type (Void, yyvs3.item (yyvsp3), yyvs8.item (yyvsp8))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -728,7 +730,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -750,7 +752,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp7 := yyvsp7 + 1
@@ -773,7 +775,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_type (Void, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -795,7 +797,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_generic_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3), yyvs8.item (yyvsp8))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -818,7 +820,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_generic_type (Void, yyvs3.item (yyvsp3), yyvs8.item (yyvsp8))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -840,7 +842,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_labeled_tuple_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3), yyvs9.item (yyvsp9))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -863,7 +865,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_labeled_tuple_type (Void, yyvs3.item (yyvsp3), yyvs9.item (yyvsp9))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -885,7 +887,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_anchored_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -907,7 +909,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_like_current_type (yyvs5.item (yyvsp5))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -929,7 +931,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_anchored_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3 - 1) + yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp7 := yyvsp7 + 1
@@ -951,7 +953,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_anchored_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3 - 1) + yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp7 := yyvsp7 + 1
@@ -973,7 +975,7 @@ debug ("GEYACC")
 end
 
 			yyval7 := new_qualified_anchored_type (yyvs5.item (yyvsp5), yyvs7.item (yyvsp7), yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp5 := yyvsp5 -1
@@ -988,7 +990,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := "." + yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -1001,7 +1003,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) + "." + yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1014,7 +1016,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 247")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1025,7 +1027,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 249")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1036,7 +1038,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 251")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1047,7 +1049,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 253")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1058,7 +1060,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 255")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1069,7 +1071,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 257")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1080,7 +1082,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 259")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1091,7 +1093,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 261")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1102,7 +1104,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 263")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1113,7 +1115,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 265")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1124,7 +1126,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 267")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1135,7 +1137,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 269")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1146,7 +1148,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 271")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1157,7 +1159,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 273")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1168,7 +1170,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 275")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1179,7 +1181,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 277")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1190,7 +1192,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 279")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1201,7 +1203,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 281")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1212,7 +1214,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 283")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -1223,7 +1225,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 287")
 end
 
-yyval5 := yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1243,7 +1245,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 289")
 end
 
-yyval5 := yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1263,7 +1265,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 291")
 end
 
-yyval5 := yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1283,7 +1285,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 293")
 end
 
-yyval5 := yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1303,7 +1305,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 295")
 end
 
-yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1323,7 +1325,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 297")
 end
 
-yyval5 := yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1343,7 +1345,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 299")
 end
 
-yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1363,7 +1365,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 301")
 end
 
-yyval5 := "!" 
+yyval5 := "!"
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1383,7 +1385,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 303")
 end
 
-yyval5 := "! " + yyvs3.item (yyvsp3) 
+yyval5 := "! " + yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1404,7 +1406,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 305")
 end
 
-yyval5 := "?" 
+yyval5 := "?"
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1424,7 +1426,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 307")
 end
 
-yyval5 := "? " + yyvs3.item (yyvsp3) 
+yyval5 := "? " + yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1445,7 +1447,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 311")
 end
 
-yyval5 := yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1465,7 +1467,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 313")
 end
 
-yyval5 := yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1485,7 +1487,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 315")
 end
 
-yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1505,7 +1507,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 317")
 end
 
-yyval5 := yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1525,7 +1527,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 319")
 end
 
-yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3) 
+yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1545,7 +1547,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 321")
 end
 
-yyval5 := "!" 
+yyval5 := "!"
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1565,7 +1567,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 323")
 end
 
-yyval5 := "! " + yyvs3.item (yyvsp3) 
+yyval5 := "! " + yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1586,7 +1588,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 325")
 end
 
-yyval5 := "?" 
+yyval5 := "?"
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1606,7 +1608,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 327")
 end
 
-yyval5 := "? " + yyvs3.item (yyvsp3) 
+yyval5 := "? " + yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1627,7 +1629,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 331")
 end
 
-yyval5 := Void 
+yyval5 := Void
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp5 := yyvsp5 + 1
@@ -1646,7 +1648,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 333")
 end
 
-yyval5 := yyvs5.item (yyvsp5) 
+yyval5 := yyvs5.item (yyvsp5)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
@@ -1658,7 +1660,7 @@ debug ("GEYACC")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -1671,7 +1673,7 @@ debug ("GEYACC")
 end
 
 			in_generics := in_generics + 1
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
@@ -1683,7 +1685,7 @@ debug ("GEYACC")
 end
 
 			in_generics := in_generics - 1
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
@@ -1696,7 +1698,7 @@ end
 
 			create yyval8.make (5)
 			yyval8.force_last (yyvs7.item (yyvsp7))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp8 := yyvsp8 + 1
@@ -1718,7 +1720,7 @@ end
 
 			yyval8 := yyvs8.item (yyvsp8)
 			yyval8.force_first (yyvs7.item (yyvsp7))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 -1
@@ -1733,7 +1735,7 @@ end
 
 			yyval8 := yyvs8.item (yyvsp8)
 			yyval8.force_first (new_type (Void, yyvs3.item (yyvsp3)))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1748,7 +1750,7 @@ end
 
 			yyval8 := yyvs8.item (yyvsp8)
 			yyval8.force_first (new_basic_type (Void, yyvs3.item (yyvsp3)))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1763,7 +1765,7 @@ end
 
 			yyval8 := yyvs8.item (yyvsp8)
 			yyval8.force_first (new_type (Void, yyvs3.item (yyvsp3)))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1777,7 +1779,7 @@ debug ("GEYACC")
 end
 
 			yyval9 := yyvs9.item (yyvsp9)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -1791,7 +1793,7 @@ end
 
 			create yyval9.make (5)
 			yyval9.force_last (yyvs10.item (yyvsp10))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp9 := yyvsp9 + 1
@@ -1813,7 +1815,7 @@ end
 
 			yyval9 := yyvs9.item (yyvsp9)
 			yyval9.force_first (yyvs10.item (yyvsp10))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp10 := yyvsp10 -1
@@ -1828,7 +1830,7 @@ end
 
 			yyval9 := yyvs9.item (yyvsp9)
 			yyval9.first.labels.force_first (yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1843,7 +1845,7 @@ end
 
 			yyval9 := yyvs9.item (yyvsp9)
 			yyval9.first.labels.force_first (yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1858,7 +1860,7 @@ end
 
 			yyval9 := yyvs9.item (yyvsp9)
 			yyval9.first.labels.force_first (yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1872,7 +1874,7 @@ debug ("GEYACC")
 end
 
 			yyval10 := new_labeled_type (yyvs3.item (yyvsp3), yyvs7.item (yyvsp7))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp10 := yyvsp10 + 1
@@ -1941,7 +1943,7 @@ end
 			check type_not_void: attached type as l_type then
 				yyval6 := new_terminal (yyvs3.item (yyvsp3), l_type)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -1965,7 +1967,7 @@ end
 				yyval6 := new_terminal (yyvs3.item (yyvsp3), l_type)
 				set_token_id (yyval6, yyvs4.item (yyvsp4))
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -1990,7 +1992,7 @@ end
 				yyval6 := new_terminal (yyvs3.item (yyvsp3 - 1), l_type)
 				set_literal_string (yyval6, yyvs3.item (yyvsp3))
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2015,7 +2017,7 @@ end
 				set_token_id (yyval6, yyvs4.item (yyvsp4))
 				set_literal_string (yyval6, yyvs3.item (yyvsp3))
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 + 1
@@ -2039,7 +2041,7 @@ end
 			check type_not_void: attached type as l_type then
 				yyval6 := new_char_terminal (yyvs2.item (yyvsp2), l_type)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2104,7 +2106,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_left_terminal (yyvs3.item (yyvsp3), precedence)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2126,7 +2128,7 @@ end
 
 			yyval6 := new_left_terminal (yyvs3.item (yyvsp3), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2149,7 +2151,7 @@ end
 
 			yyval6 := new_left_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2172,7 +2174,7 @@ end
 			yyval6 := new_left_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 + 1
@@ -2194,7 +2196,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_left_char_terminal (yyvs2.item (yyvsp2), precedence)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2259,7 +2261,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_right_terminal (yyvs3.item (yyvsp3), precedence)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2281,7 +2283,7 @@ end
 
 			yyval6 := new_right_terminal (yyvs3.item (yyvsp3), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2304,7 +2306,7 @@ end
 
 			yyval6 := new_right_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2327,7 +2329,7 @@ end
 			yyval6 := new_right_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 + 1
@@ -2349,7 +2351,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_right_char_terminal (yyvs2.item (yyvsp2), precedence)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2414,7 +2416,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_nonassoc_terminal (yyvs3.item (yyvsp3), precedence)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2436,7 +2438,7 @@ end
 
 			yyval6 := new_nonassoc_terminal (yyvs3.item (yyvsp3), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2459,7 +2461,7 @@ end
 
 			yyval6 := new_nonassoc_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2482,7 +2484,7 @@ end
 			yyval6 := new_nonassoc_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 + 1
@@ -2504,7 +2506,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_nonassoc_char_terminal (yyvs2.item (yyvsp2), precedence)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2570,7 +2572,7 @@ end
 			check type_not_void: attached type as l_type then
 				yyval1 := new_nonterminal (yyvs3.item (yyvsp3), l_type)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -2591,7 +2593,7 @@ debug ("GEYACC")
 end
 
 			report_no_rules_error
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -2638,7 +2640,7 @@ end
 				rule := Void
 				precedence_token := Void
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -3
@@ -2666,7 +2668,7 @@ end
 				end
 			end
 			precedence_token := Void
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -2689,7 +2691,7 @@ end
 			check rule_not_void: attached rule as l_rule then
 				l_rule.set_line_nb (yyvs4.item (yyvsp4))
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -2750,7 +2752,7 @@ end
 					put_error_action (new_error_action (yyvs3.item (yyvsp3), yyvs4.item (yyvsp4 - 1)), yyvs4.item (yyvsp4), l_rule)
 				end
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp1 := yyvsp1 -2
@@ -2786,7 +2788,7 @@ end
 			check rule_not_void: attached rule as l_rule then
 				put_symbol (new_symbol (yyvs3.item (yyvsp3)), l_rule)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -2801,7 +2803,7 @@ end
 			check rule_not_void: attached rule as l_rule then
 				put_symbol (new_char_token (yyvs2.item (yyvsp2)), l_rule)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
@@ -2816,7 +2818,7 @@ end
 			check rule_not_void: attached rule as l_rule then
 				put_symbol (new_string_token (yyvs3.item (yyvsp3)), l_rule)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -2831,7 +2833,7 @@ end
 			check rule_not_void: attached rule as l_rule then
 				put_action (new_action (yyvs3.item (yyvsp3)), l_rule)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -2848,7 +2850,7 @@ end
 			else
 				precedence_token := yyvs6.item (yyvsp6)
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -2867,7 +2869,7 @@ end
 				report_prec_not_token_error (yyvs3.item (yyvsp3))
 				yyval6 := new_char_token ("'a'")
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2888,7 +2890,7 @@ debug ("GEYACC")
 end
 
 			yyval6 := new_char_token (yyvs2.item (yyvsp2))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2917,7 +2919,7 @@ end
 					put_rule (l_new_rule)
 				end
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -2968,7 +2970,7 @@ debug ("GEYACC")
 end
 
 			last_grammar.set_eiffel_code (yyvs3.item (yyvsp3))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
@@ -2980,7 +2982,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 704")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -2991,7 +2993,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 706")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -3002,7 +3004,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 708")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -3013,7 +3015,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 710")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -3024,7 +3026,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 712")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -3035,7 +3037,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 714")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -3046,7 +3048,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 716")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -3057,7 +3059,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 718")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -3068,7 +3070,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 720")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -3079,7 +3081,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 722")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
@@ -3090,7 +3092,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 724")
 end
 
-yyval3 := yyvs3.item (yyvsp3) 
+yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)

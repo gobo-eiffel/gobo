@@ -6,7 +6,7 @@ note
 		"Parsers for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,8 @@ inherit
 		rename
 			make as make_yacc_scanner,
 			reset as reset_yacc_scanner
+		redefine
+			report_invalid_unicode_character_error
 		end
 
 create

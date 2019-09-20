@@ -25,6 +25,8 @@ inherit
 		rename
 			make as make_yacc_scanner,
 			reset as reset_yacc_scanner
+		redefine
+			report_invalid_unicode_character_error
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
@@ -420,6 +422,9 @@ feature {NONE} -- Factory
 				else
 					a_code := c.code
 				end
+			end
+			if not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) then
+				report_invalid_character_error ({UC_UTF8_ROUTINES}.string_to_utf8 (a_char))
 			end
 			a_key := a_code.out
 			terminal_symbols.search (a_key)
@@ -823,10 +828,9 @@ feature {NONE} -- Implementation
 		do
 				-- Make sure ANY is the first type in grammar.
 			a_type := new_type ("detachable", "ANY")
-				-- Error token. The token id value 256
-				-- is specified by POSIX.
+				-- Error token.
 			a_token := new_token ("error")
-			a_token.set_token_id (256)
+			a_token.set_token_id ({UC_UNICODE_CONSTANTS}.maximum_unicode_character_code + 1)
 			a_token.set_useful (True)
 				-- Token that represents all undefined
 				-- literal tokens. It is always the
@@ -1090,7 +1094,7 @@ feature {NONE} -- Implementation
 			translate: ARRAY [detachable PR_TOKEN]
 		do
 			tokens := last_grammar.tokens
-			last_token_id := 256
+			last_token_id := {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code + 1
 			nb := tokens.count
 			from
 				i := 1
@@ -1204,6 +1208,16 @@ feature {NONE} -- Error handling
 			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
+		ensure then
+			not_successful: not successful
+		end
+
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read and caused the scanner
+			-- to fail.
+		do
+			report_invalid_character_error ("'\u{" + a_code.to_hex_string + "}'")
 		ensure then
 			not_successful: not successful
 		end
@@ -1548,6 +1562,21 @@ feature {NONE} -- Error handling
 		do
 			create an_error.make (filename, line_nb, a_token, id1, id2)
 			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_invalid_character_error (a_char: STRING)
+			-- Report that the character `a_char' is a
+			-- surrogate or invalid Unicode character.
+		require
+			a_char_not_void: a_char /= Void
+		local
+			l_error: PR_INVALID_UNICODE_CHARACTER_ERROR
+		do
+			create l_error.make (filename, line_nb, a_char)
+			error_handler.report_error (l_error)
 			successful := False
 		ensure
 			not_successful: not successful

@@ -514,7 +514,7 @@ feature {NONE} -- Error handling
 			-- with code `a_code' has been read and caused the scanner
 			-- to fail.
 		do
-			report_invalid_character_error ("\u{" + a_code.to_hex_string + "}%N")
+			report_invalid_character_error ("\u{" + a_code.to_hex_string + "}")
 		ensure then
 			not_successful: not successful
 		end
