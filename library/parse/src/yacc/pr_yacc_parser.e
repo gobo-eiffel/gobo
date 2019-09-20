@@ -5,7 +5,7 @@ note
 		"Parsers for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -243,29 +243,29 @@ feature {NONE} -- Semantic actions
 		do
 				inspect yy_act
 when 1 then
---|#line 59 "pr_yacc_parser.y"
+--|#line 61 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 59")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 61")
 end
 
 			if successful then
 				set_start_symbol
 				process_symbols
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp1 := yyvsp1 -4
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 59 "pr_yacc_parser.y"
+--|#line 61 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 59")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 61")
 end
 
 			initialize_grammar
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -279,13 +279,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
---|#line 72 "pr_yacc_parser.y"
+--|#line 74 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 72")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 74")
 end
 
 			precedence := 1
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -299,9 +299,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
---|#line 76 "pr_yacc_parser.y"
+--|#line 78 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 76")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 78")
 end
 
 
@@ -311,13 +311,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
---|#line 79 "pr_yacc_parser.y"
+--|#line 81 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 79")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 81")
 end
 
 			last_grammar.eiffel_header.force_last (yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -332,74 +332,74 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
---|#line 83 "pr_yacc_parser.y"
+--|#line 85 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 83")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 85")
 end
 
 			type := Void
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 7 then
---|#line 87 "pr_yacc_parser.y"
+--|#line 89 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 87")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 89")
 end
 
 			type := Void
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 8 then
---|#line 91 "pr_yacc_parser.y"
+--|#line 93 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 91")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 93")
 end
 
 			precedence := precedence + 1
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 9 then
---|#line 95 "pr_yacc_parser.y"
+--|#line 97 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 95")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 97")
 end
 
 			precedence := precedence + 1
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 10 then
---|#line 99 "pr_yacc_parser.y"
+--|#line 101 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 99")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 101")
 end
 
 			precedence := precedence + 1
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 11 then
---|#line 103 "pr_yacc_parser.y"
+--|#line 105 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 103")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 105")
 end
 
 			if start_symbol /= Void then
@@ -407,33 +407,33 @@ end
 			else
 				create start_symbol.make (yyvs3.item (yyvsp3), line_nb)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 12 then
---|#line 111 "pr_yacc_parser.y"
+--|#line 113 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 111")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 113")
 end
 
 			last_grammar.set_expected_conflicts (yyvs4.item (yyvsp4))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 13 then
---|#line 117 "pr_yacc_parser.y"
+--|#line 119 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 117")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 119")
 end
 
 			type := No_type
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -447,16 +447,16 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 14 then
---|#line 121 "pr_yacc_parser.y"
+--|#line 123 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 121")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 123")
 end
 
 			check attached yyvs7.item (yyvsp7) as l_type then
 				type := l_type
 				set_no_alias_name (l_type)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -464,16 +464,16 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 15 then
---|#line 128 "pr_yacc_parser.y"
+--|#line 130 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 128")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 130")
 end
 
 			check attached yyvs7.item (yyvsp7) as l_type then
 				type := l_type
 				set_alias_name (l_type, yyvs3.item (yyvsp3))
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp1 := yyvsp1 -1
@@ -482,13 +482,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 16 then
---|#line 137 "pr_yacc_parser.y"
+--|#line 139 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 137")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 139")
 end
 
 			type := No_type
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -502,13 +502,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 17 then
---|#line 141 "pr_yacc_parser.y"
+--|#line 143 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 141")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 143")
 end
 
 			type := yyvs7.item (yyvsp7)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -516,13 +516,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 18 then
---|#line 147 "pr_yacc_parser.y"
+--|#line 149 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 147")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 149")
 end
 
 			yyval7 := new_type (Void, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp7 := yyvsp7 + 1
@@ -537,13 +537,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 19 then
---|#line 151 "pr_yacc_parser.y"
+--|#line 153 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 151")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 153")
 end
 
 			yyval7 := new_basic_type (Void, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp7 := yyvsp7 + 1
@@ -558,13 +558,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 20 then
---|#line 155 "pr_yacc_parser.y"
+--|#line 157 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 155")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 157")
 end
 
 			yyval7 := new_type (Void, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp7 := yyvsp7 + 1
@@ -579,24 +579,24 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 21 then
---|#line 159 "pr_yacc_parser.y"
+--|#line 161 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 159")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 161")
 end
 
-yyval7 := yyvs7.item (yyvsp7)
+yyval7 := yyvs7.item (yyvsp7) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 22 then
---|#line 163 "pr_yacc_parser.y"
+--|#line 165 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 163")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 165")
 end
 
 			yyval7 := new_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -612,13 +612,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 23 then
---|#line 167 "pr_yacc_parser.y"
+--|#line 169 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 167")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 169")
 end
 
 			yyval7 := new_basic_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -634,13 +634,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 24 then
---|#line 171 "pr_yacc_parser.y"
+--|#line 173 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 171")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 173")
 end
 
 			yyval7 := new_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp7 := yyvsp7 + 1
@@ -657,13 +657,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 25 then
---|#line 175 "pr_yacc_parser.y"
+--|#line 177 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 175")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 177")
 end
 
 			yyval7 := new_type (Void, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -679,13 +679,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 26 then
---|#line 179 "pr_yacc_parser.y"
+--|#line 181 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 179")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 181")
 end
 
 			yyval7 := new_generic_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3), yyvs8.item (yyvsp8))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -702,13 +702,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 27 then
---|#line 183 "pr_yacc_parser.y"
+--|#line 185 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 183")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 185")
 end
 
 			yyval7 := new_generic_type (Void, yyvs3.item (yyvsp3), yyvs8.item (yyvsp8))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -724,13 +724,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 28 then
---|#line 187 "pr_yacc_parser.y"
+--|#line 189 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 187")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 189")
 end
 
 			yyval7 := new_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -746,13 +746,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 29 then
---|#line 191 "pr_yacc_parser.y"
+--|#line 193 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 191")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 193")
 end
 
 			yyval7 := new_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp7 := yyvsp7 + 1
@@ -769,13 +769,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 30 then
---|#line 195 "pr_yacc_parser.y"
+--|#line 197 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 195")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 197")
 end
 
 			yyval7 := new_type (Void, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -791,13 +791,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 31 then
---|#line 199 "pr_yacc_parser.y"
+--|#line 201 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 199")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 201")
 end
 
 			yyval7 := new_generic_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3), yyvs8.item (yyvsp8))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -814,13 +814,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 32 then
---|#line 203 "pr_yacc_parser.y"
+--|#line 205 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 203")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 205")
 end
 
 			yyval7 := new_generic_type (Void, yyvs3.item (yyvsp3), yyvs8.item (yyvsp8))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -836,13 +836,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 33 then
---|#line 207 "pr_yacc_parser.y"
+--|#line 209 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 207")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 209")
 end
 
 			yyval7 := new_labeled_tuple_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3), yyvs9.item (yyvsp9))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -859,13 +859,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 34 then
---|#line 211 "pr_yacc_parser.y"
+--|#line 213 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 211")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 213")
 end
 
 			yyval7 := new_labeled_tuple_type (Void, yyvs3.item (yyvsp3), yyvs9.item (yyvsp9))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp7 := yyvsp7 + 1
@@ -881,13 +881,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 35 then
---|#line 215 "pr_yacc_parser.y"
+--|#line 217 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 215")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 217")
 end
 
 			yyval7 := new_anchored_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -903,13 +903,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 36 then
---|#line 219 "pr_yacc_parser.y"
+--|#line 221 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 219")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 221")
 end
 
 			yyval7 := new_like_current_type (yyvs5.item (yyvsp5))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 + 1
@@ -925,13 +925,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 37 then
---|#line 223 "pr_yacc_parser.y"
+--|#line 225 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 223")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 225")
 end
 
 			yyval7 := new_anchored_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3 - 1) + yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp7 := yyvsp7 + 1
@@ -947,13 +947,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 38 then
---|#line 227 "pr_yacc_parser.y"
+--|#line 229 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 227")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 229")
 end
 
 			yyval7 := new_anchored_type (yyvs5.item (yyvsp5), yyvs3.item (yyvsp3 - 1) + yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp7 := yyvsp7 + 1
@@ -969,13 +969,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 39 then
---|#line 231 "pr_yacc_parser.y"
+--|#line 233 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 231")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 233")
 end
 
 			yyval7 := new_qualified_anchored_type (yyvs5.item (yyvsp5), yyvs7.item (yyvsp7), yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp5 := yyvsp5 -1
@@ -984,26 +984,26 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 40 then
---|#line 237 "pr_yacc_parser.y"
+--|#line 239 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 237")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 239")
 end
 
 			yyval3 := "." + yyvs3.item (yyvsp3)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 41 then
---|#line 241 "pr_yacc_parser.y"
+--|#line 243 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 241")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 243")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) + "." + yyvs3.item (yyvsp3)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1011,221 +1011,221 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 42 then
---|#line 247 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 247")
-end
-
-yyval3 := yyvs3.item (yyvsp3)
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
-end
-when 43 then
 --|#line 249 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 249")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 44 then
+when 43 then
 --|#line 251 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 251")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 45 then
+when 44 then
 --|#line 253 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 253")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 46 then
+when 45 then
 --|#line 255 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 255")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 47 then
+when 46 then
 --|#line 257 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 257")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 48 then
+when 47 then
 --|#line 259 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 259")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 49 then
+when 48 then
 --|#line 261 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 261")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 50 then
+when 49 then
 --|#line 263 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 263")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 51 then
+when 50 then
 --|#line 265 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 265")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 52 then
+when 51 then
 --|#line 267 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 267")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 53 then
+when 52 then
 --|#line 269 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 269")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 54 then
+when 53 then
 --|#line 271 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 271")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 55 then
+when 54 then
 --|#line 273 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 273")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 56 then
+when 55 then
 --|#line 275 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 275")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 57 then
+when 56 then
 --|#line 277 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 277")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 58 then
+when 57 then
 --|#line 279 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 279")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 59 then
+when 58 then
 --|#line 281 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 281")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 60 then
+when 59 then
 --|#line 283 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 283")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
+end
+when 60 then
+--|#line 285 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 285")
+end
+
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 61 then
---|#line 287 "pr_yacc_parser.y"
+--|#line 289 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 287")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 289")
 end
 
-yyval5 := yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1240,12 +1240,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 62 then
---|#line 289 "pr_yacc_parser.y"
+--|#line 291 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 289")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 291")
 end
 
-yyval5 := yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1260,12 +1260,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 63 then
---|#line 291 "pr_yacc_parser.y"
+--|#line 293 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 291")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 293")
 end
 
-yyval5 := yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1280,12 +1280,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 64 then
---|#line 293 "pr_yacc_parser.y"
+--|#line 295 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 293")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 295")
 end
 
-yyval5 := yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1300,12 +1300,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 65 then
---|#line 295 "pr_yacc_parser.y"
+--|#line 297 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 295")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 297")
 end
 
-yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1320,12 +1320,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 66 then
---|#line 297 "pr_yacc_parser.y"
+--|#line 299 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 297")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 299")
 end
 
-yyval5 := yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1340,12 +1340,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 67 then
---|#line 299 "pr_yacc_parser.y"
+--|#line 301 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 299")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 301")
 end
 
-yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1360,12 +1360,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 68 then
---|#line 301 "pr_yacc_parser.y"
+--|#line 303 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 301")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 303")
 end
 
-yyval5 := "!"
+yyval5 := "!" 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1380,12 +1380,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 69 then
---|#line 303 "pr_yacc_parser.y"
+--|#line 305 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 303")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 305")
 end
 
-yyval5 := "! " + yyvs3.item (yyvsp3)
+yyval5 := "! " + yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1401,12 +1401,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 70 then
---|#line 305 "pr_yacc_parser.y"
+--|#line 307 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 305")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 307")
 end
 
-yyval5 := "?"
+yyval5 := "?" 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1421,12 +1421,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 71 then
---|#line 307 "pr_yacc_parser.y"
+--|#line 309 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 307")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 309")
 end
 
-yyval5 := "? " + yyvs3.item (yyvsp3)
+yyval5 := "? " + yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1442,12 +1442,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 72 then
---|#line 311 "pr_yacc_parser.y"
+--|#line 313 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 311")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 313")
 end
 
-yyval5 := yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1462,12 +1462,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 73 then
---|#line 313 "pr_yacc_parser.y"
+--|#line 315 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 313")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 315")
 end
 
-yyval5 := yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1482,12 +1482,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 74 then
---|#line 315 "pr_yacc_parser.y"
+--|#line 317 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 315")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 317")
 end
 
-yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1502,12 +1502,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 75 then
---|#line 317 "pr_yacc_parser.y"
+--|#line 319 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 317")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 319")
 end
 
-yyval5 := yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1522,12 +1522,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 76 then
---|#line 319 "pr_yacc_parser.y"
+--|#line 321 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 319")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 321")
 end
 
-yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3)
+yyval5 := yyvs3.item (yyvsp3 - 1) + " " + yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1542,12 +1542,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 77 then
---|#line 321 "pr_yacc_parser.y"
+--|#line 323 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 321")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 323")
 end
 
-yyval5 := "!"
+yyval5 := "!" 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1562,12 +1562,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 78 then
---|#line 323 "pr_yacc_parser.y"
+--|#line 325 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 323")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 325")
 end
 
-yyval5 := "! " + yyvs3.item (yyvsp3)
+yyval5 := "! " + yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1583,12 +1583,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 79 then
---|#line 325 "pr_yacc_parser.y"
+--|#line 327 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 325")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 327")
 end
 
-yyval5 := "?"
+yyval5 := "?" 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
@@ -1603,12 +1603,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 80 then
---|#line 327 "pr_yacc_parser.y"
+--|#line 329 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 327")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 329")
 end
 
-yyval5 := "? " + yyvs3.item (yyvsp3)
+yyval5 := "? " + yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
@@ -1624,12 +1624,12 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 81 then
---|#line 331 "pr_yacc_parser.y"
+--|#line 333 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 331")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 333")
 end
 
-yyval5 := Void
+yyval5 := Void 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp5 := yyvsp5 + 1
@@ -1643,62 +1643,62 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 82 then
---|#line 333 "pr_yacc_parser.y"
+--|#line 335 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 333")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 335")
 end
 
-yyval5 := yyvs5.item (yyvsp5)
+yyval5 := yyvs5.item (yyvsp5) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 83 then
---|#line 337 "pr_yacc_parser.y"
+--|#line 339 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 337")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 339")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 84 then
---|#line 343 "pr_yacc_parser.y"
+--|#line 345 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 343")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 345")
 end
 
 			in_generics := in_generics + 1
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 85 then
---|#line 349 "pr_yacc_parser.y"
+--|#line 351 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 349")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 351")
 end
 
 			in_generics := in_generics - 1
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 86 then
---|#line 355 "pr_yacc_parser.y"
+--|#line 357 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 355")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 357")
 end
 
 			create yyval8.make (5)
 			yyval8.force_last (yyvs7.item (yyvsp7))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp8 := yyvsp8 + 1
@@ -1713,14 +1713,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 87 then
---|#line 360 "pr_yacc_parser.y"
+--|#line 362 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 360")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 362")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
 			yyval8.force_first (yyvs7.item (yyvsp7))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp7 := yyvsp7 -1
@@ -1728,14 +1728,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 88 then
---|#line 365 "pr_yacc_parser.y"
+--|#line 367 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 365")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 367")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
 			yyval8.force_first (new_type (Void, yyvs3.item (yyvsp3)))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1743,14 +1743,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 89 then
---|#line 370 "pr_yacc_parser.y"
+--|#line 372 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 370")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 372")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
 			yyval8.force_first (new_basic_type (Void, yyvs3.item (yyvsp3)))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1758,14 +1758,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 90 then
---|#line 375 "pr_yacc_parser.y"
+--|#line 377 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 375")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 377")
 end
 
 			yyval8 := yyvs8.item (yyvsp8)
 			yyval8.force_first (new_type (Void, yyvs3.item (yyvsp3)))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1773,27 +1773,27 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 91 then
---|#line 382 "pr_yacc_parser.y"
+--|#line 384 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 382")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 384")
 end
 
 			yyval9 := yyvs9.item (yyvsp9)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 92 then
---|#line 388 "pr_yacc_parser.y"
+--|#line 390 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 388")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 390")
 end
 
 			create yyval9.make (5)
 			yyval9.force_last (yyvs10.item (yyvsp10))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp9 := yyvsp9 + 1
@@ -1808,14 +1808,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 93 then
---|#line 393 "pr_yacc_parser.y"
+--|#line 395 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 393")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 395")
 end
 
 			yyval9 := yyvs9.item (yyvsp9)
 			yyval9.force_first (yyvs10.item (yyvsp10))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp10 := yyvsp10 -1
@@ -1823,14 +1823,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 94 then
---|#line 398 "pr_yacc_parser.y"
+--|#line 400 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 398")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 400")
 end
 
 			yyval9 := yyvs9.item (yyvsp9)
 			yyval9.first.labels.force_first (yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1838,14 +1838,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 95 then
---|#line 403 "pr_yacc_parser.y"
+--|#line 405 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 403")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 405")
 end
 
 			yyval9 := yyvs9.item (yyvsp9)
 			yyval9.first.labels.force_first (yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1853,14 +1853,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 96 then
---|#line 408 "pr_yacc_parser.y"
+--|#line 410 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 408")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 410")
 end
 
 			yyval9 := yyvs9.item (yyvsp9)
 			yyval9.first.labels.force_first (yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -1868,13 +1868,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 97 then
---|#line 415 "pr_yacc_parser.y"
+--|#line 417 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 415")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 417")
 end
 
 			yyval10 := new_labeled_type (yyvs3.item (yyvsp3), yyvs7.item (yyvsp7))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp10 := yyvsp10 + 1
@@ -1891,9 +1891,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
 when 98 then
---|#line 421 "pr_yacc_parser.y"
+--|#line 423 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 421")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 423")
 end
 
 
@@ -1910,9 +1910,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 99 then
---|#line 422 "pr_yacc_parser.y"
+--|#line 424 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 422")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 424")
 end
 
 
@@ -1922,9 +1922,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 100 then
---|#line 423 "pr_yacc_parser.y"
+--|#line 425 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 423")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 425")
 end
 
 
@@ -1935,15 +1935,15 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 101 then
---|#line 426 "pr_yacc_parser.y"
+--|#line 428 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 426")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 428")
 end
 
 			check type_not_void: attached type as l_type then
 				yyval6 := new_terminal (yyvs3.item (yyvsp3), l_type)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -1958,16 +1958,16 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 102 then
---|#line 432 "pr_yacc_parser.y"
+--|#line 434 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 432")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 434")
 end
 
 			check type_not_void: attached type as l_type then
 				yyval6 := new_terminal (yyvs3.item (yyvsp3), l_type)
 				set_token_id (yyval6, yyvs4.item (yyvsp4))
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -1983,16 +1983,16 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 103 then
---|#line 439 "pr_yacc_parser.y"
+--|#line 441 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 439")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 441")
 end
 
 			check type_not_void: attached type as l_type then
 				yyval6 := new_terminal (yyvs3.item (yyvsp3 - 1), l_type)
 				set_literal_string (yyval6, yyvs3.item (yyvsp3))
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2007,9 +2007,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 104 then
---|#line 446 "pr_yacc_parser.y"
+--|#line 448 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 446")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 448")
 end
 
 			check type_not_void: attached type as l_type then
@@ -2017,7 +2017,7 @@ end
 				set_token_id (yyval6, yyvs4.item (yyvsp4))
 				set_literal_string (yyval6, yyvs3.item (yyvsp3))
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 + 1
@@ -2033,15 +2033,15 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 105 then
---|#line 454 "pr_yacc_parser.y"
+--|#line 456 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 454")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 456")
 end
 
 			check type_not_void: attached type as l_type then
 				yyval6 := new_char_terminal (yyvs2.item (yyvsp2), l_type)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2056,9 +2056,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 106 then
---|#line 462 "pr_yacc_parser.y"
+--|#line 464 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 462")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 464")
 end
 
 
@@ -2075,9 +2075,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 107 then
---|#line 463 "pr_yacc_parser.y"
+--|#line 465 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 463")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 465")
 end
 
 
@@ -2087,9 +2087,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 108 then
---|#line 464 "pr_yacc_parser.y"
+--|#line 466 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 464")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 466")
 end
 
 
@@ -2100,13 +2100,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 109 then
---|#line 467 "pr_yacc_parser.y"
+--|#line 469 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 467")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 469")
 end
 
 			yyval6 := new_left_terminal (yyvs3.item (yyvsp3), precedence)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2121,14 +2121,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 110 then
---|#line 471 "pr_yacc_parser.y"
+--|#line 473 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 471")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 473")
 end
 
 			yyval6 := new_left_terminal (yyvs3.item (yyvsp3), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2144,14 +2144,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 111 then
---|#line 476 "pr_yacc_parser.y"
+--|#line 478 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 476")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 478")
 end
 
 			yyval6 := new_left_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2166,15 +2166,15 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 112 then
---|#line 481 "pr_yacc_parser.y"
+--|#line 483 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 481")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 483")
 end
 
 			yyval6 := new_left_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 + 1
@@ -2190,13 +2190,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 113 then
---|#line 487 "pr_yacc_parser.y"
+--|#line 489 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 487")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 489")
 end
 
 			yyval6 := new_left_char_terminal (yyvs2.item (yyvsp2), precedence)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2211,9 +2211,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 114 then
---|#line 493 "pr_yacc_parser.y"
+--|#line 495 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 493")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 495")
 end
 
 
@@ -2230,9 +2230,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 115 then
---|#line 494 "pr_yacc_parser.y"
+--|#line 496 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 494")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 496")
 end
 
 
@@ -2242,9 +2242,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 116 then
---|#line 495 "pr_yacc_parser.y"
+--|#line 497 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 495")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 497")
 end
 
 
@@ -2255,13 +2255,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 117 then
---|#line 498 "pr_yacc_parser.y"
+--|#line 500 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 498")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 500")
 end
 
 			yyval6 := new_right_terminal (yyvs3.item (yyvsp3), precedence)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2276,14 +2276,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 118 then
---|#line 502 "pr_yacc_parser.y"
+--|#line 504 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 502")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 504")
 end
 
 			yyval6 := new_right_terminal (yyvs3.item (yyvsp3), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2299,14 +2299,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 119 then
---|#line 507 "pr_yacc_parser.y"
+--|#line 509 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 507")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 509")
 end
 
 			yyval6 := new_right_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2321,15 +2321,15 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 120 then
---|#line 512 "pr_yacc_parser.y"
+--|#line 514 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 512")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 514")
 end
 
 			yyval6 := new_right_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 + 1
@@ -2345,13 +2345,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 121 then
---|#line 518 "pr_yacc_parser.y"
+--|#line 520 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 518")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 520")
 end
 
 			yyval6 := new_right_char_terminal (yyvs2.item (yyvsp2), precedence)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2366,9 +2366,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 122 then
---|#line 524 "pr_yacc_parser.y"
+--|#line 526 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 524")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 526")
 end
 
 
@@ -2385,9 +2385,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 123 then
---|#line 525 "pr_yacc_parser.y"
+--|#line 527 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 525")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 527")
 end
 
 
@@ -2397,9 +2397,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 124 then
---|#line 526 "pr_yacc_parser.y"
+--|#line 528 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 526")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 528")
 end
 
 
@@ -2410,13 +2410,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 125 then
---|#line 529 "pr_yacc_parser.y"
+--|#line 531 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 529")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 531")
 end
 
 			yyval6 := new_nonassoc_terminal (yyvs3.item (yyvsp3), precedence)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2431,14 +2431,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 126 then
---|#line 533 "pr_yacc_parser.y"
+--|#line 535 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 533")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 535")
 end
 
 			yyval6 := new_nonassoc_terminal (yyvs3.item (yyvsp3), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2454,14 +2454,14 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 127 then
---|#line 538 "pr_yacc_parser.y"
+--|#line 540 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 538")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 540")
 end
 
 			yyval6 := new_nonassoc_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 + 1
@@ -2476,15 +2476,15 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 128 then
---|#line 543 "pr_yacc_parser.y"
+--|#line 545 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 543")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 545")
 end
 
 			yyval6 := new_nonassoc_terminal (yyvs3.item (yyvsp3 - 1), precedence)
 			set_token_id (yyval6, yyvs4.item (yyvsp4))
 			set_literal_string (yyval6, yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 + 1
@@ -2500,13 +2500,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 129 then
---|#line 549 "pr_yacc_parser.y"
+--|#line 551 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 549")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 551")
 end
 
 			yyval6 := new_nonassoc_char_terminal (yyvs2.item (yyvsp2), precedence)
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2521,9 +2521,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 130 then
---|#line 555 "pr_yacc_parser.y"
+--|#line 557 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 555")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 557")
 end
 
 
@@ -2540,9 +2540,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 131 then
---|#line 556 "pr_yacc_parser.y"
+--|#line 558 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 556")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 558")
 end
 
 
@@ -2552,9 +2552,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 132 then
---|#line 557 "pr_yacc_parser.y"
+--|#line 559 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 557")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 559")
 end
 
 
@@ -2564,15 +2564,15 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 133 then
---|#line 560 "pr_yacc_parser.y"
+--|#line 562 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 560")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 562")
 end
 
 			check type_not_void: attached type as l_type then
 				yyval1 := new_nonterminal (yyvs3.item (yyvsp3), l_type)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -2587,13 +2587,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 134 then
---|#line 568 "pr_yacc_parser.y"
+--|#line 570 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 568")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 570")
 end
 
 			report_no_rules_error
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -2607,9 +2607,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 135 then
---|#line 572 "pr_yacc_parser.y"
+--|#line 574 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 572")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 574")
 end
 
 
@@ -2618,9 +2618,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 136 then
---|#line 573 "pr_yacc_parser.y"
+--|#line 575 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 573")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 575")
 end
 
 
@@ -2630,9 +2630,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 137 then
---|#line 576 "pr_yacc_parser.y"
+--|#line 578 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 576")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 578")
 end
 
 			check rule_not_void: attached rule as l_rule then
@@ -2640,16 +2640,16 @@ end
 				rule := Void
 				precedence_token := Void
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -3
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 138 then
---|#line 586 "pr_yacc_parser.y"
+--|#line 588 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 586")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 588")
 end
 
 			if is_terminal (yyvs3.item (yyvsp3)) then
@@ -2668,7 +2668,7 @@ end
 				end
 			end
 			precedence_token := Void
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -2683,15 +2683,15 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 139 then
---|#line 607 "pr_yacc_parser.y"
+--|#line 609 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 607")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 609")
 end
 
 			check rule_not_void: attached rule as l_rule then
 				l_rule.set_line_nb (yyvs4.item (yyvsp4))
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -2706,9 +2706,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 140 then
---|#line 615 "pr_yacc_parser.y"
+--|#line 617 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 615")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 617")
 end
 
 
@@ -2717,9 +2717,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 141 then
---|#line 616 "pr_yacc_parser.y"
+--|#line 618 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 616")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 618")
 end
 
 
@@ -2729,9 +2729,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 142 then
---|#line 619 "pr_yacc_parser.y"
+--|#line 621 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 619")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 621")
 end
 
 
@@ -2740,9 +2740,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 143 then
---|#line 620 "pr_yacc_parser.y"
+--|#line 622 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 620")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 622")
 end
 
 			check rule_not_void: attached rule as l_rule then
@@ -2752,7 +2752,7 @@ end
 					put_error_action (new_error_action (yyvs3.item (yyvsp3), yyvs4.item (yyvsp4 - 1)), yyvs4.item (yyvsp4), l_rule)
 				end
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp1 := yyvsp1 -2
@@ -2761,9 +2761,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 144 then
---|#line 632 "pr_yacc_parser.y"
+--|#line 634 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 632")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 634")
 end
 
 
@@ -2780,69 +2780,69 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 145 then
---|#line 633 "pr_yacc_parser.y"
+--|#line 635 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 633")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 635")
 end
 
 			check rule_not_void: attached rule as l_rule then
 				put_symbol (new_symbol (yyvs3.item (yyvsp3)), l_rule)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 146 then
---|#line 639 "pr_yacc_parser.y"
+--|#line 641 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 639")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 641")
 end
 
 			check rule_not_void: attached rule as l_rule then
 				put_symbol (new_char_token (yyvs2.item (yyvsp2)), l_rule)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 147 then
---|#line 645 "pr_yacc_parser.y"
+--|#line 647 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 645")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 647")
 end
 
 			check rule_not_void: attached rule as l_rule then
 				put_symbol (new_string_token (yyvs3.item (yyvsp3)), l_rule)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 148 then
---|#line 651 "pr_yacc_parser.y"
+--|#line 653 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 651")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 653")
 end
 
 			check rule_not_void: attached rule as l_rule then
 				put_action (new_action (yyvs3.item (yyvsp3)), l_rule)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 149 then
---|#line 657 "pr_yacc_parser.y"
+--|#line 659 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 657")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 659")
 end
 
 			if precedence_token /= Void then
@@ -2850,7 +2850,7 @@ end
 			else
 				precedence_token := yyvs6.item (yyvsp6)
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -2858,9 +2858,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 150 then
---|#line 667 "pr_yacc_parser.y"
+--|#line 669 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 667")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 669")
 end
 
 			if is_terminal (yyvs3.item (yyvsp3)) then
@@ -2869,7 +2869,7 @@ end
 				report_prec_not_token_error (yyvs3.item (yyvsp3))
 				yyval6 := new_char_token ("'a'")
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2884,13 +2884,13 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 151 then
---|#line 676 "pr_yacc_parser.y"
+--|#line 678 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 676")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 678")
 end
 
 			yyval6 := new_char_token (yyvs2.item (yyvsp2))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp6 := yyvsp6 + 1
@@ -2905,9 +2905,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 152 then
---|#line 682 "pr_yacc_parser.y"
+--|#line 684 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 682")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 684")
 end
 
 			check rule_not_void: attached rule as l_rule then
@@ -2919,7 +2919,7 @@ end
 					put_rule (l_new_rule)
 				end
 			end
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp1 := yyvsp1 + 1
@@ -2934,9 +2934,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 153 then
---|#line 696 "pr_yacc_parser.y"
+--|#line 698 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 696")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 698")
 end
 
 
@@ -2953,9 +2953,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 154 then
---|#line 697 "pr_yacc_parser.y"
+--|#line 699 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 697")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 699")
 end
 
 
@@ -2964,135 +2964,135 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 155 then
---|#line 698 "pr_yacc_parser.y"
+--|#line 700 "pr_yacc_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 698")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 700")
 end
 
 			last_grammar.set_eiffel_code (yyvs3.item (yyvsp3))
-
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 156 then
---|#line 704 "pr_yacc_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 704")
-end
-
-yyval3 := yyvs3.item (yyvsp3)
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
-end
-when 157 then
 --|#line 706 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 706")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 158 then
+when 157 then
 --|#line 708 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 708")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 159 then
+when 158 then
 --|#line 710 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 710")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 160 then
+when 159 then
 --|#line 712 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 712")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 161 then
+when 160 then
 --|#line 714 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 714")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 162 then
+when 161 then
 --|#line 716 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 716")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 163 then
+when 162 then
 --|#line 718 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 718")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 164 then
+when 163 then
 --|#line 720 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 720")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 165 then
+when 164 then
 --|#line 722 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 722")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
-when 166 then
+when 165 then
 --|#line 724 "pr_yacc_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 724")
 end
 
-yyval3 := yyvs3.item (yyvsp3)
+yyval3 := yyvs3.item (yyvsp3) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
+end
+when 166 then
+--|#line 726 "pr_yacc_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'pr_yacc_parser.y' at line 726")
+end
+
+yyval3 := yyvs3.item (yyvsp3) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
