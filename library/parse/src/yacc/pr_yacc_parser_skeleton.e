@@ -830,7 +830,6 @@ feature {NONE} -- Implementation
 			a_type := new_type ("detachable", "ANY")
 				-- Error token.
 			a_token := new_token ("error")
-			a_token.set_token_id ({UC_UNICODE_CONSTANTS}.maximum_unicode_character_code + 1)
 			a_token.set_useful (True)
 				-- Token that represents all undefined
 				-- literal tokens. It is always the
@@ -1091,11 +1090,24 @@ feature {NONE} -- Implementation
 			variables: DS_ARRAYED_LIST [PR_VARIABLE]
 			a_variable: PR_VARIABLE
 			max_token_id: INTEGER
+			l_used_token_ids: DS_HASH_SET [INTEGER]
 			translate: ARRAY [detachable PR_TOKEN]
 		do
 			tokens := last_grammar.tokens
-			last_token_id := {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code + 1
+			last_token_id := 255
 			nb := tokens.count
+			create l_used_token_ids.make (nb)
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				a_token := tokens.item (i)
+				if a_token.has_token_id then
+					l_used_token_ids.put (a_token.token_id)
+				end
+				i := i + 1
+			end
 			from
 				i := 1
 			until
@@ -1103,7 +1115,13 @@ feature {NONE} -- Implementation
 			loop
 				a_token := tokens.item (i)
 				if not a_token.has_token_id then
-					last_token_id := last_token_id + 1
+					from
+						last_token_id := last_token_id + 1
+					until
+						not l_used_token_ids.has (last_token_id)
+					loop
+						last_token_id := last_token_id + 1
+					end
 					a_token.set_token_id (last_token_id)
 				end
 				if a_token.token_id > max_token_id then

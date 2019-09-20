@@ -21,7 +21,7 @@ inherit
 		rename
 			make as make_yacc_scanner,
 			reset as reset_yacc_scanner
-		redefine
+		undefine
 			report_invalid_unicode_character_error
 		end
 
