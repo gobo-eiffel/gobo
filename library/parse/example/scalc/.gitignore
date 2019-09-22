@@ -1,9 +1,4 @@
-xparse_example
-Tcalc
-Teiffel_parser
-Tmcalc
-Trpcalc
-Tscalc
+scalc
 compile_*.*
 *.exe
 *.dll
@@ -19,4 +14,3 @@ compile_*.*
 *.wb
 *.log
 EIFGEN*
-TESTGEN

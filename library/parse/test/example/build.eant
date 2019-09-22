@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Parse Example Tester"
-		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -28,6 +28,7 @@
 		<delete directory="Teiffel_parser"/>
 		<delete directory="Tmcalc"/>
 		<delete directory="Trpcalc"/>
+		<delete directory="Tscalc"/>
 	</target>
 
 	<target name="init_system" export="NONE">

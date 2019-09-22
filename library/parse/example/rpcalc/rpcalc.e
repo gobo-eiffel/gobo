@@ -4,7 +4,7 @@ note
 
 		"Reverse polish notation calculator"
 
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,8 +14,6 @@ class RPCALC
 inherit
 
 	YY_PARSER_SKELETON
-
-	KL_IMPORTED_STRING_ROUTINES
 
 create
 
@@ -180,9 +178,9 @@ feature {NONE} -- Semantic actions
 		do
 				inspect yy_act
 when 1 then
---|#line 32 "rpcalc.y"
+--|#line 30 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 32")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 30")
 end
 
 
@@ -199,9 +197,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 33 "rpcalc.y"
+--|#line 31 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 33")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 31")
 end
 
 
@@ -211,9 +209,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
---|#line 36 "rpcalc.y"
+--|#line 34 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 36")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 34")
 end
 
 
@@ -222,21 +220,21 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
---|#line 37 "rpcalc.y"
+--|#line 35 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 37")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 35")
 end
 
-print (yyvs2.item (yyvsp2).out); print ("%N") 
+print (yyvs2.item (yyvsp2)); print ("%N") 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
---|#line 40 "rpcalc.y"
+--|#line 38 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 40")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 38")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
@@ -245,9 +243,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 6 then
---|#line 41 "rpcalc.y"
+--|#line 39 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 41")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 39")
 end
 
 yyval2 := yyvs2.item (yyvsp2 - 1) + yyvs2.item (yyvsp2) 
@@ -258,9 +256,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 7 then
---|#line 42 "rpcalc.y"
+--|#line 40 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 42")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 40")
 end
 
 yyval2 := yyvs2.item (yyvsp2 - 1) - yyvs2.item (yyvsp2) 
@@ -271,9 +269,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 8 then
---|#line 43 "rpcalc.y"
+--|#line 41 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 43")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 41")
 end
 
 yyval2 := yyvs2.item (yyvsp2 - 1) * yyvs2.item (yyvsp2) 
@@ -284,9 +282,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 9 then
---|#line 44 "rpcalc.y"
+--|#line 42 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 44")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 42")
 end
 
 yyval2 := yyvs2.item (yyvsp2 - 1) / yyvs2.item (yyvsp2) 
@@ -297,9 +295,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 10 then
---|#line 46 "rpcalc.y"
+--|#line 44 "rpcalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 46")
+	std.error.put_line ("Executing parser user-code from file 'rpcalc.y' at line 44")
 end
 
 yyval2 := -yyvs2.item (yyvsp2) 
@@ -519,7 +517,7 @@ feature {NONE} -- Scanner
 
 	read_token
 			-- Lexical analyzer returns a double floating point
-			-- number on the stack and the token NUM, or the ASCII
+			-- number on the stack and the token NUM, or the
 			-- character read if not a number. Skips all blanks
 			-- and tabs, returns 0 for EOF.
 		local

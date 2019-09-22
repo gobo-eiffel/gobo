@@ -4,7 +4,7 @@ note
 
 		"Program test cases"
 
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -161,6 +161,18 @@ feature {NONE} -- Implementation
 		ensure
 			geeraise_log_filename_not_void: Result /= Void
 			geeraise_log_filename_not_empty: Result.count > 0
+		end
+
+	input_text_filename: STRING = "input.txt"
+			-- Input filename
+
+	input_text: STRING
+			-- From where and how to redirect input logs
+		once
+			Result := " < " + input_text_filename
+		ensure
+			input_text_not_void: Result /= Void
+			input_text_not_empty: Result.count > 0
 		end
 
 end

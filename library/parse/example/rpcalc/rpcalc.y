@@ -5,7 +5,7 @@ note
 
 		"Reverse polish notation calculator"
 
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,8 +15,6 @@ class RPCALC
 inherit
 
 	YY_PARSER_SKELETON
-
-	KL_IMPORTED_STRING_ROUTINES
 
 create
 
@@ -34,7 +32,7 @@ input: -- Empty
 	;
 
 line: '\n'
-	| exp '\n' { print ($1.out); print ("%N") }
+	| exp '\n' { print ($1); print ("%N") }
 	;
 
 exp: NUM			{ $$ := $1 }
@@ -61,7 +59,7 @@ feature {NONE} -- Scanner
 
 	read_token
 			-- Lexical analyzer returns a double floating point
-			-- number on the stack and the token NUM, or the ASCII
+			-- number on the stack and the token NUM, or the
 			-- character read if not a number. Skips all blanks
 			-- and tabs, returns 0 for EOF.
 		local

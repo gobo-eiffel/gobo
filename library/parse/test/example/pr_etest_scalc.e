@@ -2,15 +2,15 @@ note
 
 	description:
 
-		"Test 'rpcalc' example"
+		"Test 'scalc' example"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class PR_ETEST_RPCALC
+class PR_ETEST_SCALC
 
 inherit
 
@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	program_name: STRING = "rpcalc"
+	program_name: STRING = "scalc"
 			-- Program name
 
 	library_name: STRING = "parse"
@@ -30,13 +30,13 @@ feature -- Access
 
 feature -- Test
 
-	test_rpcalc
-			-- Test 'rpcalc' example.
+	test_scalc
+			-- Test 'scalc' example.
 		do
 			compile_program
-			file_system.copy_file (rpcalc_input_filename, input_text_filename)
+			file_system.copy_file (scalc_input_filename, input_text_filename)
 			assert_execute (program_exe + input_text + output_log)
-			assert ("expected_output", file_system.same_text_files (rpcalc_output_filename, output_log_filename))
+			assert ("expected_output", file_system.same_text_files (scalc_output_filename, output_log_filename))
 		end
 
 feature {NONE} -- Implementation
@@ -51,22 +51,22 @@ feature {NONE} -- Implementation
 			data_dirname_not_empty: Result.count > 0
 		end
 
-	rpcalc_input_filename: STRING
+	scalc_input_filename: STRING
 			-- Name of calculator input file
 		once
-			Result := file_system.pathname (data_dirname, "rpcalc_input.txt")
+			Result := file_system.pathname (data_dirname, "scalc_input.txt")
 		ensure
-			rpcalc_input_filename_not_void: Result /= Void
-			rpcalc_input_filename_not_empty: Result.count > 0
+			scalc_input_filename_not_void: Result /= Void
+			scalc_input_filename_not_empty: Result.count > 0
 		end
 
-	rpcalc_output_filename: STRING
+	scalc_output_filename: STRING
 			-- Name of calculator input file
 		once
-			Result := file_system.pathname (data_dirname, "rpcalc_output.txt")
+			Result := file_system.pathname (data_dirname, "scalc_output.txt")
 		ensure
-			rpcalc_output_filename_not_void: Result /= Void
-			rpcalc_output_filename_not_empty: Result.count > 0
+			scalc_output_filename_not_void: Result /= Void
+			scalc_output_filename_not_empty: Result.count > 0
 		end
 
 end

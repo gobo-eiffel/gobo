@@ -1,16 +1,16 @@
-%{
+﻿%{
 note
 
 	description:
 
-		"Calculator with memory"
+		"Scientific calculator"
 
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class MCALC
+class SCALC
 
 inherit
 
@@ -26,14 +26,16 @@ create
 %}
 
 	-- geyacc declarations.
-%token <DOUBLE> NUM  -- Double precision number
-%token <STRING> VAR  -- Memory name
+%token <DOUBLE> NUM         -- Double precision number
+%token <DOUBLE> PI "pi: π"  -- 3.141592
+%token <STRING> VAR         -- Memory name
 %type <DOUBLE> exp
 
 %right ASSIGNMENT    -- Assignment sign `:='
 %left '-' '+'
 %left '*' '/'
 %left NEG            -- negation--unary minus
+%left '√'            -- square root
 %right '^'           -- exponentiation
 
 %%
@@ -48,6 +50,7 @@ line: '\n'
 	;
 
 exp: NUM					{ $$ := $1 }
+	| "pi: π"				{ $$ := {DOUBLE} 3.141592 }
 	| VAR					{ $$ := memory_value ($1) }
 	| VAR ASSIGNMENT exp	{ $$ := $3; set_memory_value ($$, $1) }
 	| exp '+' exp			{ $$ := $1 + $3 }
@@ -55,6 +58,7 @@ exp: NUM					{ $$ := $1 }
 	| exp '*' exp			{ $$ := $1 * $3 }
 	| exp '/' exp			{ $$ := $1 / $3 }
 	| '-' exp %prec NEG		{ $$ := -$2 }
+	| '√' exp			{ $$ := Current √ $2 }
 	| '(' exp ')'			{ $$ := $2 }
 	;
 
@@ -63,7 +67,7 @@ exp: NUM					{ $$ := $1 }
 feature {NONE} -- Initialization
 
 	make
-			-- Create a new calculator with memory.
+			-- Create a new scientific calculator.
 		do
 			make_parser_skeleton
 			last_string_value := ""
@@ -75,6 +79,19 @@ feature {NONE} -- Initialization
 		do
 			make
 			parse
+		end
+
+feature -- Operators
+
+	square_root alias "√" (d: DOUBLE): DOUBLE
+			-- Square root of `d', or 0.0 if negative.
+			-- Use the Unicode alias √.
+		do
+			if d >= 0.0 then
+				Result := {DOUBLE_MATH}.sqrt (d)
+			else
+				Result := 0.0
+			end
 		end
 
 feature -- Memory management
@@ -209,6 +226,54 @@ feature {NONE} -- Scanner
 					else
 							-- Return single character
 						last_token := (':').code 
+					end
+				when '%/207/' then
+					std.input.read_character
+					c := std.input.last_character
+					if not std.input.end_of_file then
+						if c = '%/128/' then
+								-- UTF-8 encoding for 'π'.
+							last_token := PI
+						else
+								-- Return single character
+							last_token := ('%/207/').code
+							pending_character := c
+							has_pending_character := True
+						end
+					else
+							-- Return single character
+						last_token := ('%/207/').code 
+					end
+				when '%/226/' then
+					std.input.read_character
+					c := std.input.last_character
+					if not std.input.end_of_file then
+						if c = '%/136/' then
+							std.input.read_character
+							c := std.input.last_character
+							if not std.input.end_of_file then
+								if c = '%/154/' then
+										-- UTF-8 encoding for '√'.
+									last_token := ({CHARACTER_32} '√').code
+								else
+										-- Unsupported Unicode character.
+									last_token := -1
+								end
+							else
+									-- Return single character
+								last_token := ('%/226/').code
+								pending_character := '%/136/'
+								has_pending_character := True
+							end
+						else
+								-- Return single character
+							last_token := ('%/226/').code
+							pending_character := c
+							has_pending_character := True
+						end
+					else
+							-- Return single character
+						last_token := ('%/226/').code 
 					end
 				else
 						-- Return single character

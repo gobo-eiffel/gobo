@@ -1,0 +1,5 @@
+pi := 3.141592
+2 * pi
+gobo := 2 + 3
+gobo := gobo * 4
+gobo

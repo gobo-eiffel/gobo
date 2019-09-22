@@ -51,6 +51,7 @@
 		</library>
 		<library name="parse_example_mcalc" location="${GOBO_LIBRARY}/library/parse/example/mcalc/system.ecf" readonly="false"/>
 		<library name="parse_example_rpcalc" location="${GOBO_LIBRARY}/library/parse/example/rpcalc/system.ecf" readonly="false"/>
+		<library name="parse_example_scalc" location="${GOBO_LIBRARY}/library/parse/example/scalc/system.ecf" readonly="false"/>
 		<library name="parse_test_example" location="${GOBO_LIBRARY}/library/parse/test/example/system.ecf" readonly="false"/>
 		<library name="pattern" location="${GOBO_LIBRARY}/library/pattern/library.ecf" readonly="false"/>
 		<library name="pattern_example_singleton_do_nothing" location="${GOBO_LIBRARY}/library/pattern/example/singleton/do_nothing/system.ecf" readonly="false"/>
