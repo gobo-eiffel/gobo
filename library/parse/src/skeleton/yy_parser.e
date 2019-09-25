@@ -5,7 +5,7 @@ note
 		"General parsers"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -93,8 +93,9 @@ feature {YY_PARSER_ACTION} -- Basic operations
 
 	raise_error
 			-- Raise a syntax error.
-			-- Report error using `report_error' and
-			-- perform normal error recovery if possible.
+			-- Report error using the error action %error associated
+			-- with current parsing state or `report_error' by default,
+			-- and perform normal error recovery if possible.
 		deferred
 		end
 
@@ -105,8 +106,9 @@ feature {YY_PARSER_ACTION} -- Basic operations
 
 	report_error (a_message: STRING)
 			-- Print error message.
-			-- (This routine is called by `parse' when it detects
-			-- a syntax error. It can be redefined in descendants.)
+			-- (This routine is called by default by `parse' when it
+			-- detects a syntax error and there is no error action
+			-- %error available. It can be redefined in descendants.)
 		require
 			a_message_not_void: a_message /= Void
 		deferred

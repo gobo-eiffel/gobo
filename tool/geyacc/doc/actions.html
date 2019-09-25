@@ -120,39 +120,9 @@ color="#008080"><tt>:=</tt></font><tt> </tt><font color="#0000FF"><tt>$1
 that <font color="#0000FF"><tt>$$</tt> </font>and <font
 color="#0000FF"><tt>$1</tt> </font>will have conforming types.</p>
 
-<p><font color="#0000FF"><tt>$N</tt></font> with <tt>N</tt> zero
-or negative is allowed for reference to tokens and groupings on
-the stack <em>before</em> those that match the current rule. This
-is a very risky practice (<em>geyacc</em> generates a warning in
-such cases), and to use it reliably you must be certain of the
-context in which the rule is applied. Here is a case in which you
-can use this reliably:</p>
-
-<blockquote>
-    <pre><font color="#800080">foo</font><font color="#0000FF">:</font> <font
-color="#800080">expr</font> <font color="#800080">bar</font> <font
-color="#FF0000">'+'</font> <font color="#800080">expr</font> <font
-color="#0000FF">{</font> <font color="#008080">...</font> <font
-color="#0000FF">}</font>
-    <font color="#0000FF">|</font> <font color="#800080">expr</font> <font
-color="#800080">bar</font> <font color="#FF0000">'-'</font> <font
-color="#800080">expr</font> <font color="#0000FF">{</font> <font
-color="#008080">...</font> <font color="#0000FF">}</font>
-    <font color="#0000FF">;</font>
-
-<font color="#800080">bar</font><font color="#0000FF">:</font> <font
-color="#008080">-- /* empty */</font>
-        <font color="#0000FF">{</font> <font color="#008080"><em>previous_expr</em> :=</font> <font
-color="#0000FF">$0 }</font>
-    <font color="#0000FF">;</font></pre>
-</blockquote>
-
-<p>As long as <font color="#800080"><tt>bar</tt></font> is used
-only in the fashion shown here,<font color="#0000FF" size="2"
-face="Courier New"> </font><font color="#0000FF"><tt>$0</tt></font>
-always refers to the <font color="#800080"><tt>expr</tt></font>
-which precedes <font color="#800080"><tt>bar</tt></font> in the
-definition of <font color="#800080"><tt>foo</tt></font>.</p>
+<p>Note that contrary to <em>yacc</em> and <em>Bison</em>,
+<font color="#0000FF"><tt>$N</tt></font> with <tt>N</tt> zero
+or negative is not allowed in <em>geyacc</em>.</p>
 
 <h2>Action Features</h2>
 
@@ -237,10 +207,12 @@ be used in actions:</p>
         can be discarded with <a href="#clear_token"><font
         color="#008080"><em><tt>clear_token</tt></em></font></a>
         when recovering from a syntax error.</dd>
-    <dt><a href="skeleton.html#last_value" name="last_value"><font
-        color="#008080"><em><tt>last_value</tt></em></font></a><font
-        color="#008080"><tt>:</tt><em><tt> G</tt></em></font></dt>
-    <dd>Semantic value of the last token read. This value is
+    <dt><a name="last_value"><font
+        color="#008080"><em><tt>last_&lt;type&gt;_value</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> &lt;TYPE&gt;</tt></em></font></dt>
+    <dd>Semantic value of the last token read of type <font
+        color="#008080"><em><tt>TYPE</tt></em></font>.
+        This value is
         updated whenever <a href="#read_token"><font
         color="#008080"><em><tt>read_token</tt></em></font></a><font
         color="#008080" size="2" face="Courier New"><em> </em></font>is
@@ -263,7 +235,7 @@ be used in actions:</p>
         color="#008080"><em><tt>last_token</tt></em></font></a>. <font
         color="#008080"><em><tt>read_token</tt></em></font> also
         updates the semantic value of the last token read in
-        feature <a href="#last_value"><font color="#008080"><em><tt>last_value</tt></em></font></a>.
+        feature <a href="#last_value"><font color="#008080"><em><tt>last_&lt;type&gt;_value</tt></em></font></a>.
         The routine <font color="#008080"><em><tt>read_token</tt></em></font>
         is called by <a href="skeleton.html#parse"><font
         color="#008080"><em><tt>parse</tt></em></font></a> when
@@ -328,8 +300,7 @@ be used in actions:</p>
 <p>In a simple program it may be sufficient to use the same
 Eiffel type for the semantic values of all constructs. This was
 true in the RPN and infix <a href="examples.html">calculator
-examples</a>. This Eiffel type is the actual generic parameter
-given to the generic skeleton class <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.
+examples</a>.
 However, in most programs, there will be a need for different
 Eiffel types for different kinds of tokens and groupings. For
 example, a numeric constant may need type <font color="#008080"><em><tt>INTEGER</tt></em></font>
@@ -337,34 +308,19 @@ or <font color="#008080"><em><tt>DOUBLE</tt></em></font>, while a
 string constant needs type <font color="#008080"><em><tt>STRING</tt></em></font>,
 and a list of identifiers might need type <font color="#008080"><em><tt>LINKED_LIST
 </tt></em><tt>[</tt><em><tt>STRING</tt></em><tt>]</tt></font>. To
-use more than one Eiffel type for semantic values in one parser, <em>geyacc</em>
-requires two things to be done:</p>
+use more than one Eiffel type for semantic values in one parser,
+choose the types for each symbol (terminal or
+nonterminal) for which semantic values are used. This is
+done for tokens with the <a
+href="declarations.html#token"><font color="#0000FF"><tt>%token</tt></font></a>
+<em>geyacc</em> declaration, and for groupings with the <a
+href="declarations.html#type"><font color="#0000FF"><tt>%type</tt></font></a>
+<em>geyacc</em> declaration. If the type of a semantic
+value has not been specified that way, it will by default
+be <font color="#008080"><em><tt>detachable ANY</tt></em></font>.
+</p>
 
-<ul>
-    <li>Specify as the actual generic parameter of class <font
-        color="#008080"><em><tt>YY_PARSER_SKELETON </tt></em></font>one
-        common ancestor of all possible types of semantic values.
-        Note that an obvious candidate is class <font
-        color="#008080"><em><tt>ANY </tt></em></font>since by
-        definition this class is an ancestor of all Eiffel
-        classes in a system.</li>
-    <li>Choose one of the types for each symbol (terminal or
-        nonterminal) for which semantic values are used. This is
-        done for tokens with the <a
-        href="declarations.html#token"><font color="#0000FF"><tt>%token</tt></font></a>
-        <em>geyacc</em> declaration, and for groupings with the <a
-        href="declarations.html#type"><font color="#0000FF"><tt>%type</tt></font></a>
-        <em>geyacc</em> declaration. If the type of a semantic
-        value has not been specified that way, it will by default
-        be the actual generic parameter that has been chosen for <font
-        color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.</li>
-</ul>
-
-<p>If a single Eiffel type has been chosen for semantic values,
-the <font color="#0000FF"><tt>$$</tt></font> and <font
-color="#0000FF"><tt>$N</tt></font> constructs always have that
-type. However, in case of multiple types for semantic values,
-each time <font color="#0000FF"><tt>$$</tt></font> or <font
+<p>Each time <font color="#0000FF"><tt>$$</tt></font> or <font
 color="#0000FF"><tt>$N </tt></font>is used, its Eiffel type is
 determined by which symbol it refers to in the rule. In this
 example:</p>
@@ -385,13 +341,6 @@ type declared for the nonterminal symbol <font color="#800080"><tt>exp</tt></fon
 If <font color="#0000FF"><tt>$2 </tt></font>were used, it would
 have the type declared for the terminal symbol <font
 color="#FF0000"><tt>'+'</tt></font>.</p>
-
-<p>Note that in case of multiple types for semantic values, <em>geyacc</em>
-does not support user-defined expanded types properly. Reference
-types, generic or not, and basic expanded types such as <font
-color="#008080"><em><tt>INTEGER</tt></em></font> or <font
-color="#008080"><em><tt>CHARACTER</tt></em></font> are properly
-handled though.</p>
 
 <h2><a name="midrule_actions">Actions in Mid-Rule</a></h2>
 
@@ -577,7 +526,7 @@ does to implement mid-rule actions.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999-2005</b></font><font
+            <font size="2"><b>Copyright © 1999-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -587,7 +536,7 @@ does to implement mid-rule actions.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <strong>Last Updated:</strong> 25 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

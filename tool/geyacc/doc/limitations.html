@@ -23,45 +23,14 @@ content="text/html; charset=iso-8859-1">
 
 <hr size="1">
 
-<h2>Expanded types and multiple types for semantic values</h2>
-
-<p>In case of <a href="actions.html#value_types">multiple types</a>
-for semantic values, <em>geyacc</em> does not generate valid
-Eiffel code when the type specified in the <font color="#0000FF"><tt>%token</tt></font>
-and <font color="#0000FF"><tt>%type</tt></font> declarations is a
-user-defined expanded type. This is due to the fact that <em>geyacc</em>
-uses assignment attempts for type conversion. Reference types,
-generic or not, and basic expanded types such as <font
-color="#008080"><em><tt>INTEGER</tt></em></font> or <font
-color="#008080"><em><tt>CHARACTER</tt></em></font> are properly
-handled though, as shown in the following examples:</p>
-
-<blockquote>
-    <pre><font color="#0000FF">%token &lt;</font><font
-color="#008080"><em>STRING</em></font><font color="#0000FF">&gt;</font> <font
-color="#FF0000">IDENTIFIER</font>
-<font color="#0000FF">%type &lt;</font><font color="#008080"><em>INTEGER</em></font><font
-color="#0000FF">&gt;</font> <font color="#800080">expression</font>
-<font color="#0000FF">%type &lt;</font><font color="#008080"><em>LIST</em> [<em>INTEGER</em>]</font><font
-color="#0000FF">&gt;</font> <font color="#800080">expression_list</font></pre>
-</blockquote>
-
-<h2>Formal generic parameters and multiple types for semantic
-values</h2>
-
-<p>In case of <a href="actions.html#value_types">multiple types</a>
-for semantic values, <em>geyacc</em> does not generate valid
-Eiffel code when the type specified in the <font color="#0000FF"><tt>%token</tt></font>
-and <font color="#0000FF"><tt>%type</tt></font> declarations is a
-formal generic parameter. This is due to the fact that <em>geyacc</em>
-uses assignment attempts for type conversion.</p>
+<p>There is no known limitation.</p>
 
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999-2001</b></font><font
+            <font size="2"><b>Copyright © 1999-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -71,7 +40,7 @@ uses assignment attempts for type conversion.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 25 September 2001</font><br>
+            <strong>Last Updated:</strong> 25 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

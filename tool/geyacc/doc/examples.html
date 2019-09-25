@@ -60,7 +60,7 @@ conventions and have no effect on the description's semantics.</p>
 
 </em><em><strong>inherit</strong></em><em>
 
-    YY_PARSER_SKELETON </em>[<em>DOUBLE</em>]<em>
+    YY_PARSER_SKELETON
 
 </em><em><strong>create</strong></em><em>
 
@@ -68,8 +68,10 @@ conventions and have no effect on the description's semantics.</p>
 </em></font><font color="#0000FF">
 %}
 
-%token </font><font color="#FF0000">NUM</font><font
-color="#0000FF">
+<font color="#0000FF">%token &lt;</font><font color="#008080"><em>DOUBLE</em></font><font
+color="#0000FF">&gt; </font><font color="#FF0000">NUM</font><font color="#0000FF">
+%type &lt;</font><font color="#008080"><em>DOUBLE</em></font><font
+color="#0000FF">&gt; </font><font color="#800080">exp</font>
 
 %% </font><font color="#008080">-- Grammar rules and actions follow.</font></pre>
 </blockquote>
@@ -77,22 +79,28 @@ color="#0000FF">
 <p>The Eiffel declarations subsection specifies the note,
 class header, inherit and creation clauses of the generated
 parser class. This class is called <font color="#008080"><em><tt>RPCALC</tt></em></font>
-and inherits its parsing engine from <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.
-Since the generic parameter of class <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font><font
-color="#008080" size="2" face="Courier New"><em> </em></font>is <font
-color="#008080"><em><tt>DOUBLE</tt></em></font>, the semantic
-values handled by the calculator are double precision real
-numbers.</p>
+and inherits its parsing engine from <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.</p>
 
 <p>The second subsection, <a href="declarations.html"><em>geyacc</em>
 declarations</a>, provides information to <em>geyacc</em> about
-the token types. Each terminal symbol that is not a
-single-character literal must be declared here. (Single-character
+the terminal and nonterminal symbols and their types. Each terminal symbol (token) that is
+not a single-character literal must be declared here. (Single-character
 literals normally don't need to be declared.) In this example,
 all the arithmetic operators are designated by single-character
 literals, so the only terminal symbol that needs to be declared
-is <font color="#FF0000"><tt>NUM</tt></font>, the token type for
-numeric constants.</p>
+with <font color="#0000FF"><tt>%token</tt></font> is
+<font color="#FF0000"><tt>NUM</tt></font>, the token type for
+numeric constants. The <em>geyacc</em> construct <font color="#0000FF"><tt>%type</tt></font>
+is used for declaring nonterminal symbols, just as <font
+color="#0000FF"><tt>%token</tt></font> is used for declaring
+tokens. We do not have to use <font color="#0000FF"><tt>%type</tt></font>
+because nonterminal symbols are normally declared
+implicitly by the rules that define them. But <font
+color="#800080"><tt>exp</tt></font> must be declared explicitly
+so we can specify its value type. The declarations of <font color="#FF0000"><tt>NUM</tt></font>
+and <font color="#800080"><tt>exp</tt></font> are
+augmented with information about their Eiffel type (placed
+between angle brackets).</p>
 
 <h3>Grammar Rules for <tt>rpcalc</tt></h3>
 
@@ -111,7 +119,7 @@ color="#FF0000">'\n'</font><font color="#0000FF">
     | </font><font color="#800080">exp</font><font
 color="#0000FF"> </font><font color="#FF0000">'\n'</font><font
 color="#0000FF"> { </font><font color="#008080"><em>print</em> (</font><font
-color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>'%N'</em>)</font><font
+color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>&quot;%N&quot;</em>)</font><font
 color="#0000FF"> }
     ;
 
@@ -222,7 +230,7 @@ color="#FF0000">'\n'</font><font color="#0000FF">
     | </font><font color="#800080">exp</font><font
 color="#0000FF"> </font><font color="#FF0000">'\n'</font><font
 color="#0000FF"> { </font><font color="#008080"><em>print</em> (</font><font
-color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>'%N'</em>)</font><font
+color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>&quot;%N&quot;</em>)</font><font
 color="#0000FF"> }
     ;</font></pre>
 </blockquote>
@@ -241,10 +249,13 @@ the result of the computation the user asked for.</p>
 <p>This action is unusual because it does not assign a value to <font
 color="#0000FF"><tt>$$</tt></font>. As a consequence, the
 semantic value associated with the <font color="#800080"><tt>line</tt></font>
-is initialized to its default value. This would be a bug if that
-value were ever used, but we don't use it: once <tt>rpcalc</tt>
-has printed the value of the user's input line, that value is no
-longer needed.</p>
+is initialized to its default value. Since
+<font color="#800080"><tt>line</tt></font> has not been given a type
+in the <font color="#0000FF"><tt>%type</tt></font> section, the default
+type is <font color="#008080"><em><tt>detachable ANY</tt></em></font>.
+And as a consequence the semantic value for <font
+color="#800080"><tt>line</tt></font> is <font
+color="#008080"><em><tt>Void</tt></em></font>.</p>
 
 <h4>Explanation of <tt>expr</tt></h4>
 
@@ -359,7 +370,7 @@ numeric code which represents a token type. The same text used in
 <em>geyacc</em> rules to stand for this token type is also an
 Eiffel expression for the numeric code for the type. This works
 in two ways. If the token type is a character literal, then its
-numeric code is the <font size="2">ASCII</font> code for that
+numeric code is the code for that
 character; the same character literal can be used in the lexical
 analyzer to express the number. If the token type is an
 identifier, that identifier is defined by <em>geyacc</em> as an
@@ -369,11 +380,15 @@ becomes an integer constant for <font color="#008080"><em><tt>read_token</tt></e
 to use.</p>
 
 <p>The semantic value of the token (if it has one) is made
-available in <font color="#008080"><em><tt>last_value</tt></em></font>,
-which is where the <em>geyacc</em> parser will look for it.</p>
+available in <font color="#008080"><em><tt>last_&lt;type&gt;_value</tt></em></font>,
+where <font color="#008080"><em><tt>&lt;type&gt;</tt></em></font> is the
+type of the token. This is where the <em>geyacc</em> parser will look for it.
+Sine the calculator handles <font color="#008080"><em><tt>DOUBLE</tt></em></font>
+values and expressions, <font color="#008080"><em><tt>last_double_value</tt></em></font>
+will be used.</p>
 
 <p>A token type code of zero is returned if the end-of-file is
-encountered. (<em>Geyacc</em> recognizes any nonpositive value as
+encountered. (<em>Geyacc</em> recognizes any negative value as
 indicating that an error occurred in the lexical analysis.)</p>
 
 <p>Here is the code for the lexical analyzer routine:</p>
@@ -381,7 +396,7 @@ indicating that an error occurred in the lexical analysis.)</p>
 <blockquote>
     <pre><font color="#008080"><em>read_token
         </em>-- Lexical analyzer returns a double floating point
-        -- number on the stack and the token NUM, or the ASCII
+        -- number on the stack and the token NUM, or the
         -- character read if not a number. Skips all blanks
         -- and tabs, returns 0 for EOF.<em>
     </em><em><strong>local</strong></em><em>
@@ -441,7 +456,7 @@ indicating that an error occurred in the lexical analysis.)</p>
                 pending_character </em>:=<em> c
                 has_pending_character </em>:=<em> True
             </em><em><strong>end</strong></em><em>
-            last_value </em>:=<em> buffer.to_double
+            last_double_value </em>:=<em> buffer.to_double
         </em><em><strong>else</strong></em><em>
                 </em>-- Return single character<em>
             last_token </em>:= <em>c.code
@@ -490,7 +505,7 @@ color="#800000"><tt>$GOBO/library/parse/example/calc</tt></font>).</p>
 
 </em><em><strong>inherit</strong></em><em>
 
-    YY_PARSER_SKELETON </em>[<em>DOUBLE</em>]<em>
+    YY_PARSER_SKELETON
 
 </em><em><strong>create</strong></em><em>
 
@@ -499,9 +514,9 @@ color="#800000"><tt>$GOBO/library/parse/example/calc</tt></font>).</p>
 %}</font>
 
     <font color="#008080">-- geyacc declarations.</font>
-<font color="#0000FF">%token </font><font color="#FF0000">NUM</font><font
-color="#0000FF">
-%left </font><font color="#FF0000">'-' '+'</font><font
+<font color="#0000FF">%token &lt;</font><font color="#008080"><em>DOUBLE</em></font><font
+color="#0000FF">&gt; </font><font color="#FF0000">NUM</font>
+<font color="#0000FF">%left </font><font color="#FF0000">'-' '+'</font><font
 color="#0000FF">
 %left </font><font color="#FF0000">'*' '/'</font><font
 color="#0000FF">
@@ -509,7 +524,10 @@ color="#0000FF">
 color="#0000FF">  </font><font color="#008080">-- negation--unary minus</font><font
 color="#0000FF">
 %right </font><font color="#FF0000">'^'</font><font
-color="#0000FF"> </font><font color="#008080">-- exponentiation</font><font
+color="#0000FF"> </font><font color="#008080">-- exponentiation</font>
+<font color="#0000FF">%type &lt;</font><font color="#008080"><em>DOUBLE</em></font><font
+color="#0000FF">&gt; </font><font color="#800080">exp</font>
+<font
 color="#0000FF">
 
     </font><font color="#008080">-- Grammar follows.</font><font
@@ -526,7 +544,7 @@ color="#FF0000">'\n'</font><font color="#0000FF">
     | </font><font color="#800080">exp</font><font
 color="#0000FF"> </font><font color="#FF0000">'\n'</font><font
 color="#0000FF"> { </font><font color="#008080"><em>print</em> (</font><font
-color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>'%N'</em>)</font><font
+color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>&quot;%N&quot;</em>)</font><font
 color="#0000FF"> }
     ;
 
@@ -706,7 +724,7 @@ calculator with memory.</p>
 
 </em><em><strong>inherit</strong></em><em>
 
-    YY_PARSER_SKELETON </em>[<em>ANY</em>]<em>
+    YY_PARSER_SKELETON
         </em><em><strong>rename</strong></em><em>
             make </em><em><strong>as</strong></em><em> make_parser_skeleton
         </em><em><strong>end</strong></em><em>
@@ -748,35 +766,12 @@ color="#0000FF">
 %%</font></pre>
 </blockquote>
 
-<p>The above grammar introduces only one new feature of the <em>geyacc</em>
-language. This feature allows semantic values to have various
-types.</p>
-
-<p>Instead of using <font color="#008080"><em><tt>DOUBLE</tt></em></font>
-as generic parameter of the skeleton class, we now use <font
-color="#008080"><em><tt>ANY</tt></em></font>, which is a common
-ancestor of all possible types. These allowable types are now <font
+<p>The above grammar allows semantic values to have various types.
+These allowable types are now <font
 color="#008080"><em><tt>DOUBLE</tt></em></font> (for <font
 color="#800080"><tt>exp</tt></font> and <font color="#FF0000"><tt>NUM</tt></font>)
 and <font color="#008080"><em><tt>STRING</tt></em></font> (for
 memory names <font color="#FF0000"><tt>VAR</tt></font>).</p>
-
-<p>Since values can now have various types, it is necessary to
-associate a type with each grammar symbol whose semantic value is
-used. These symbols are <font color="#FF0000"><tt>NUM</tt></font>,
-<font color="#FF0000"><tt>VAR</tt></font>, and <font
-color="#800080"><tt>exp</tt></font>. Their declarations are
-augmented with information about their Eiffel type (placed
-between angle brackets).</p>
-
-<p>The <em>geyacc</em> construct <font color="#0000FF"><tt>%type</tt></font>
-is used for declaring nonterminal symbols, just as <font
-color="#0000FF"><tt>%token</tt></font> is used for declaring
-tokens. We have not used <font color="#0000FF"><tt>%type</tt></font>
-before because nonterminal symbols are normally declared
-implicitly by the rules that define them. But <font
-color="#800080"><tt>exp</tt></font> must be declared explicitly
-so we can specify its value type. </p>
 
 <h3>Grammar Rules for <tt>mcalc</tt></h3>
 
@@ -796,7 +791,7 @@ color="#FF0000">'\n'</font><font color="#0000FF">
     | </font><font color="#800080">exp</font><font
 color="#0000FF"> </font><font color="#FF0000">'\n'</font><font
 color="#0000FF">   { </font><font color="#008080"><em>print</em> (</font><font
-color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>'%N'</em>)</font><font
+color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>&quot;%N&quot;</em>)</font><font
 color="#0000FF"> }
     | error </font><font color="#FF0000">'\n'</font><font
 color="#0000FF"> { </font><font color="#008080"><em>recover</em></font><font
@@ -864,7 +859,7 @@ character.</p>
     <pre><font color="#008080"><em>read_token </em><em><strong>is</strong></em><em>
         </em>-- Lexical analyzer returns a double floating point
         -- number on the stack and the token NUM, a STRING and
-        -- and the token VAR, a token ASSIGNMENT, or the ASCII
+        -- and the token VAR, a token ASSIGNMENT, or the
         -- character read if not a number. Skips all blanks
         -- and tabs, returns 0 for EOF.<em>
     </em><em><strong>local</strong></em><em>
@@ -926,7 +921,7 @@ character.</p>
                     pending_character </em>:=<em> c
                     has_pending_character </em>:=<em> True
                 </em><em><strong>end</strong></em><em>
-                last_value </em>:=<em> buffer.to_double
+                last_double_value </em>:=<em> buffer.to_double
             </em><em><strong>when</strong></em><em> 'a'..'z', 'A'..'Z' </em><em><strong>then</strong></em><em>
                     </em>-- Process variables.<em>
                 last_token </em>:=<em> VAR
@@ -949,7 +944,7 @@ character.</p>
                     pending_character </em>:=<em> c
                     has_pending_character </em>:=<em> True
                 </em><em><strong>end</strong></em><em>
-                last_value </em>:=<em> buffer
+                last_string_value </em>:=<em> buffer
             </em><em><strong>when </strong></em><em>':'</em><em><strong> then
                 </strong></em><em>io.read_character
                 c </em>:= <em>io.last_character
@@ -987,6 +982,7 @@ memory management of <tt>mcalc</tt>.</p>
             </em>-- Create a new calculator with memory.<em>
         </em><em><strong>do</strong></em><em>
             make_parser_skeleton
+            last_string_value := ""
             </em><em><strong>create</strong> memory_values.make </em>(<em>10</em>)<em>
         </em><em><strong>end
 
@@ -1032,7 +1028,7 @@ feature</strong></em><em> </em>-- Memory management<em>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999-2005</b></font><font
+            <font size="2"><b>Copyright © 1999-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -1042,7 +1038,7 @@ feature</strong></em><em> </em>-- Memory management<em>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <strong>Last Updated:</strong> 21 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

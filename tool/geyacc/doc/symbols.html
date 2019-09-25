@@ -80,7 +80,15 @@ grammar:</p>
         not use the null character as a character literal because
         its <font size="2">ASCII</font> code, zero, is the code <font
         color="#008080"><em><tt>read_token</tt></em></font>
-        returns for end-of-input.</li>
+        returns for end-of-input.<br>
+        <br>
+        Note that Unicode characters are supported. Just make sure
+        that the input file is using the UTF-8 encoding and starts with the
+		<a href="http://en.wikipedia.org/wiki/Byte_order_mark">BOM</a>
+		character. Alternatively this escaped forms
+		<font color="#FF0000"><tt>'\u03B2'</tt></font> or
+        <font color="#FF0000"><tt>'\u{03B2}'</tt></font>
+        can be used.</li>
 </ul>
 
 <ul>
@@ -107,7 +115,11 @@ grammar:</p>
         <br>
         Because literal string tokens have been introduced to
         make the grammar description more readable, no escape
-        sequences are allowed. Furthermore, a literal string
+        sequences are allowed. But they can contain Unicode
+        characters. Just make sure that the input file is
+        using the UTF-8 encoding and starts with the
+		<a href="http://en.wikipedia.org/wiki/Byte_order_mark">BOM</a>
+		character. Furthermore, a literal string
         token must contain at least two characters; for a token
         containing just one character, use a <a
         href="#character_token">character token</a>.</li>
@@ -121,8 +133,8 @@ rules.</p>
 is always one of the terminal symbols (or 0 for end-of-input).
 Whichever way you write the token type in the grammar rules, you
 write it the same way in the definition of <font color="#008080"><em><tt>read_token</tt></em></font>.
-The numeric code for a character token type is simply the <font
-size="2">ASCII</font> code for the character, so <font
+The numeric code for a character token type is simply the
+code for the character, so <font
 color="#008080"><em><tt>read_token</tt></em></font> can use the
 identical character constant to generate the requisite code. Each
 named token type becomes an integer constant feature in the
@@ -151,7 +163,7 @@ return this value.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -161,7 +173,7 @@ return this value.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 10 October 1999</font><br>
+            <strong>Last Updated:</strong> 25 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

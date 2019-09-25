@@ -86,9 +86,9 @@ not grammar.)</p>
 <p>Here is a simple Eiffel routine subdivided into tokens:</p>
 
 <blockquote>
-    <pre><font color="#008080"><em>square </em>(<em>x</em>:<em> INTEGER</em>)<em> </em><em><strong>is</strong></em></font>   -- identifier, open-paren,
+    <pre><font color="#008080"><em>square </em>(<em>x</em>:<em> INTEGER</em>)</font>      -- identifier, open-paren,
                          -- identifier, colon, identifier,
-                         -- close-paren, keyword `is'
+                         -- close-paren
     <font color="#008080"><em><strong>do</strong></em></font>                   -- keyword `do'
         <font color="#008080"><em>foo </em>:=<em> x </em>*<em> x </em></font>    -- identifier, assign-sign,
                          -- identifier, star-sign, identifier
@@ -173,7 +173,11 @@ href="error.html">error recovery</a>.</p>
 literal, just like a C character constant, between single quotes.
 You should do this whenever a token is just a single character
 (parenthesis, plus-sign, etc.): use that same character in a
-literal as the terminal symbol for that token.</p>
+literal as the terminal symbol for that token. Note that Unicode
+characters are supported. Just make sure that the input file is
+using the UTF-8 encoding and starts with the
+<a href="http://en.wikipedia.org/wiki/Byte_order_mark">BOM</a>
+character.</p>
 
 <p>The grammar rules also have an expression in <em>geyacc</em>
 syntax. For example, here is the <em>geyacc</em> rule for an
@@ -226,7 +230,7 @@ token might have the same token type <font color="#FF0000"><tt>NUMBER</tt></font
 but value <font color="#808000"><tt>3989</tt></font>. When a
 grammar rule says that <font color="#FF0000"><tt>NUMBER</tt></font>
 is allowed, either of these tokens is acceptable because each is
-an <font color="#FF0000"><tt>NUMBER</tt></font>. When the parser
+a <font color="#FF0000"><tt>NUMBER</tt></font>. When the parser
 accepts the token, it keeps track of the token's semantic value.</p>
 
 <p>Each grouping can also have a semantic value as well as its
@@ -299,7 +303,7 @@ does not depend on this.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1998-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -309,7 +313,7 @@ does not depend on this.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 8 August 1998</font><br>
+            <strong>Last Updated:</strong> 20 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

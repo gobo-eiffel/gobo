@@ -73,10 +73,12 @@ color="#FF0000">NUM</font> <font color="#008080">300</font></pre>
 <p>It is generally best, however, to let <em>geyacc</em> choose
 the numeric codes for all token types. <em>Geyacc</em> will
 automatically select codes that don't conflict with each other or
-with <font size="2">ASCII</font> characters.</p>
+with character codes.</p>
 
-<p>In the event of <a href="actions.html#value_types">multiple
-types</a> for semantic values, the syntax of <font
+<p>When the <a href="actions.html#value_types">type</a> of semantic values
+needs to be specified (when it's different from the default
+<font color="#008080"><em><tt>detachable ANY</tt></em></font>),
+the syntax of <font
 color="#0000FF"><tt>%token </tt></font>may be extended to include
 the Eiffel type alternative (possibly an anchored type) delimited
 by angle-brackets:</p>
@@ -117,7 +119,8 @@ color="#FF0000">&quot;:=&quot;</font></pre>
 </blockquote>
 
 <p>Once the literal string has been associated with the token
-name, you can use them interchangeably in the grammar rules.</p>
+name, you can use them interchangeably in the grammar rules.
+Note that literal strings may contain Unicode characters.</p>
 
 <h2><a name="precedence">Operator Precedence</a></h2>
 
@@ -166,9 +169,11 @@ specify the associativity and relative precedence for all the <tt>SYMBOLS</tt>:<
 
 <h2><a name="type">Nonterminal Symbols</a></h2>
 
-<p>When you want to specify <a href="actions.html#value_types">multiple
-value types</a>, you can declare the value type of each
-nonterminal symbol for which values are used. This is done with a
+<p>You can declare the <a href="actions.html#value_types">value type</a>
+of each nonterminal symbol for which values are used
+(when it's different from the default
+<font color="#008080"><em><tt>detachable ANY</tt></em></font>).
+This is done with a
 <font color="#0000FF"><tt>%type</tt></font> declaration, like
 this:</p>
 
@@ -277,7 +282,7 @@ declaration as follows:</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000-2005</b></font><font
+            <font size="2"><b>Copyright © 2000-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -287,7 +292,7 @@ declaration as follows:</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <strong>Last Updated:</strong> 23 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

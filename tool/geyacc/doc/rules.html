@@ -66,6 +66,11 @@ color="#0000FF">}</font></pre>
 <p>Usually there is only one action and it follows the
 components. </p>
 
+<p>Note that if the Eiffel code contains Unicode characters,
+the input file should use the UTF-8 encoding and start with the
+<a href="http://en.wikipedia.org/wiki/Byte_order_mark">BOM</a>
+character.</p>
+
 <h2>Multiple Rules</h2>
 
 <p>Multiple rules for the same <font color="#800080"><tt>RESULT</tt></font>
@@ -145,7 +150,7 @@ color="#FF0000">','</font> <font color="#800080">expseq1</font>
 </blockquote>
 
 <p>Any kind of sequence can be defined using either left
-recursion or right recursion, but <strong>you should always use
+recursion or right recursion, but <strong>it is recommended to use
 left recursion</strong>, because it can parse a sequence of any
 number of elements with bounded stack space. Right recursion uses
 up space on the <em>geyacc</em> stack in proportion to the number
@@ -182,7 +187,7 @@ to the other.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            <font size="2"><b>Copyright © 1998-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -192,7 +197,7 @@ to the other.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <strong>Last Updated:</strong> 25 Septembeer 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$
