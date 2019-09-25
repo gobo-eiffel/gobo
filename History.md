@@ -21,6 +21,7 @@
   can contain Unicode characters. Characters in `%token` declarations can
   also be Unicode characters or their escaped versions  (e.g `%token '\u03B2'`
   where `03B2` is the hexadecimal code for Greek character beta).
+* Removed command-line option `--new_typing`.
 
 ### Gobo Eiffel Kernel Library
 
@@ -41,6 +42,10 @@
   string to be matched contains a null character.
 * Added support for addition and subtraction of character classes.
 
+### Gobo Eiffel Parse Library
+
+* Removed obsolete class `YY_NEW_PARSER_SKELETON`.
+  
 ### Gobo Eiffel Regexp Library
 
 * Added support for Unicode. Does not support properties yet (e.g. `\p{L}`).

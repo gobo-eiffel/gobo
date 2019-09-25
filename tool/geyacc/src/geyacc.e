@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Yacc: syntactical analyzer generator"
 
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -242,8 +242,6 @@ feature -- Processing
 					actions_separated := True
 				elseif arg.count > 10 and then arg.substring (1, 10).is_equal ("--verbose=") then
 					verbose_filename := arg.substring (11, arg.count)
-				elseif arg.is_equal ("--new_typing") then
-					-- The default.
 				elseif arg.count > 6 and then arg.substring (1, 6).is_equal ("--doc=") then
 					l_doc_format := arg.substring (7, arg.count)
 					doc_format := l_doc_format

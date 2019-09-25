@@ -5,7 +5,7 @@ note
 		"Geyacc tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2019, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,10 +55,6 @@ feature {NONE} -- Initialization
 				if a_value.count > 0 then
 					command.set_verbose_filename (a_value)
 				end
-			end
-				-- new_typing:
-			if has_attribute (New_typing_attribute_name) then
-				-- The default.
 			end
 				-- tokens_classname:
 			if has_attribute (Tokens_classname_attribute_name) then
@@ -170,15 +166,6 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for input_filename
 		once
 			Result := "input"
-		ensure
-			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
-		end
-
-	New_typing_attribute_name: STRING
-			-- Name of xml attribute for 'new_typing'
-		once
-			Result := "new_typing"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
