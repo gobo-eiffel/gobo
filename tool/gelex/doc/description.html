@@ -179,6 +179,11 @@ can deal with interactive input such as input from the keyboard.</font></p>
 section, they are all copied to the generated scanner class in
 their order of appearance in the input file.</p>
 
+<p>Note that if the Eiffel code contains Unicode characters,
+the input file should use the UTF-8 encoding and start with the
+<a href="http://en.wikipedia.org/wiki/Byte_order_mark">BOM</a>
+character.</p>
+
 <h2><a name="rules">Rules section</a></h2>
 
 <p>The rules section of the <em>gelex</em> input contains a
@@ -207,6 +212,12 @@ skipped, too) but is highly recommended if only to specify the
 end of the generated scanner class and thus ensure that this
 class is syntactically correct.</p>
 
+<p>Note that if the Eiffel code in this user code section
+contains Unicode characters,
+the input file should use the UTF-8 encoding and start with the
+<a href="http://en.wikipedia.org/wiki/Byte_order_mark">BOM</a>
+character.</p>
+
 <p>Names of implementation features in inherited classes <font
 color="#008080"><em><tt>YY_*_SCANNER_SKELETON</tt></em></font>
 are prefixed by <font color="#008080"><em><tt>yy</tt></em></font>.
@@ -218,7 +229,7 @@ this prefix should be avoided. </p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997-2005</b></font><font
+            <font size="2"><b>Copyright © 1997-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -228,7 +239,7 @@ this prefix should be avoided. </p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 February 2005</font><br>
+            <strong>Last Updated:</strong> 25 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

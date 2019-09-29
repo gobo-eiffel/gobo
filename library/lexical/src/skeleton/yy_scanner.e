@@ -31,11 +31,27 @@ feature {NONE} -- Initialization
 	make_with_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Create a new scanner with
 			-- `a_file' as input file.
+			-- To be used when `a_file' contains ISO-8859-1 characters,
+			-- or when it is using the UTF-8 encoding and the scanner is
+			-- either using the "%option utf8" or has been manually written
+			-- to expect sequences of UTF-8 bytes.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		do
 			make_with_buffer (new_file_buffer (a_file))
+		end
+
+	make_with_unicode_file (a_file: KI_CHARACTER_INPUT_STREAM)
+			-- Create a new scanner with `a_file' as input file.
+			-- `a_file' is expected to be encoded in UTF-8
+			-- or ISO-8859-1, and the input buffer will handle
+			-- the corresponding Unicode characters.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		do
+			make_with_buffer (new_unicode_file_buffer (a_file))
 		end
 
 	make_with_buffer (a_buffer: like input_buffer)
@@ -135,6 +151,11 @@ feature -- Access
 			-- Unicode text of last token read
 			-- (Create a new string at each call.)
 			--
+			-- Note that if the scanner is written to receive sequences
+			-- of UTF-8 bytes, `unicode_text' will treat each single
+			-- byte as a character. It will not try to decode the UTF-8 bytes
+			-- into Unicode characters.
+			--
 			-- Note that `unicode_text' does not contain surrogate
 			-- or invalid Unicode characters.
 		deferred
@@ -148,7 +169,7 @@ feature -- Access
 			-- (Create a new string at each call.)
 			--
 			-- Note that `unicode_text' does not contain surrogate
-			-- or invalid Unicode characters, the the resulting
+			-- or invalid Unicode characters, therefore the resulting
 			-- string is valid UTF-8.
 		deferred
 		ensure
@@ -195,7 +216,7 @@ feature -- Access
 		deferred
 		ensure
 			text_substring_not_void: Result /= Void
-			text_substring_empty: (s > e) implies (Result.count = 0)
+			text_substring_empty: (s > e) implies Result.is_empty
 			definition: Result.is_equal (text.substring (s, e))
 		end
 
@@ -215,7 +236,7 @@ feature -- Access
 		deferred
 		ensure
 			unicode_text_substring_not_void: Result /= Void
-			unicode_text_substring_empty: (s > e) implies (Result.count = 0)
+			unicode_text_substring_empty: (s > e) implies Result.is_empty
 			definition: Result.is_equal (unicode_text.substring (s, e))
 		end
 
@@ -227,7 +248,7 @@ feature -- Access
 			-- the input buffer.)
 			--
 			-- Note that `unicode_text' does not contain surrogate
-			-- or invalid Unicode characters, the the resulting
+			-- or invalid Unicode characters, therefore the resulting
 			-- string is valid UTF-8.
 		require
 			meaningful_start: 1 <= s
@@ -238,7 +259,7 @@ feature -- Access
 			utf8_text_not_void: Result /= Void
 			utf8_text_is_string_8: Result.same_type ({STRING_8} "")
 			valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
-			utf8_text_substring_empty: (s > e) implies (Result.count = 0)
+			utf8_text_substring_empty: (s > e) implies Result.is_empty
 			definition: Result.is_equal ({UC_UTF8_ROUTINES}.string_to_utf8 (unicode_text.substring (s, e)))
 			correct_count: Result.count = {UC_UTF8_ROUTINES}.string_byte_count (unicode_text.substring (s, e))
 		end
@@ -254,7 +275,7 @@ feature -- Measurement
 			-- Number of characters in last token read
 		deferred
 		ensure
-			positive_count: Result >= 0
+			text_count_not_negative: Result >= 0
 		end
 
 	line: INTEGER
@@ -457,7 +478,7 @@ feature -- Element change
 	append_utf8_text_substring_to_string (s, e: INTEGER; a_string: STRING_8)
 			-- Append `utf8_text_substring' at end of `a_string'.
 			-- (For efficiency reason, this feature can bypass the
-			-- call to `utf8_text' and directly copy the characters from
+			-- call to `utf8_text_substring' and directly copy the characters from
 			-- the input buffer.)
 		require
 			a_string_not_void: a_string /= Void
@@ -514,7 +535,7 @@ feature -- Element change
 
 	unread_unicode_character (c: CHARACTER_32)
 			-- Put `c' back to `input_buffer'. This will alter both
-			-- `text' and the content of `input_buffer'.
+			-- `unicode_text' and the content of `input_buffer'.
 			-- The behavior is undefined if `c' is too large to fit into `input_buffer'.
 		deferred
 		end
@@ -561,7 +582,11 @@ feature -- Input
 		end
 
 	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_FILE_BUFFER
-			-- New input buffer for `a_file'
+			-- New input buffer for `a_file'.
+			-- To be used when `a_file' contains ISO-8859-1 characters,
+			-- or when it is using the UTF-8 encoding and the scanner is
+			-- either using the "%option utf8" or has been manually written
+			-- to expect sequences of UTF-8 bytes.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -575,6 +600,8 @@ feature -- Input
 			-- New Unicode input buffer for `a_file'.
 			-- `a_file' is expected to be encoded in UTF-8
 			-- or ISO-8859-1.
+			-- The scanner will receive Unicode characters,
+			-- not sequences of UTF-8 bytes.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -586,8 +613,11 @@ feature -- Input
 
 	new_utf8_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_UTF8_FILE_BUFFER
 			-- New UTF-8 input buffer for `a_file'.
-			-- `a_file' is expected to be encoded in UTF-8
-			-- or ISO-8859-1.
+			-- To be used when `a_file' contains ISO-8859-1 characters or when it
+			-- is using the UTF-8 encoding, and the scanner is either using the
+			-- "%option utf8" or has been manually written to expect sequences
+			-- of UTF-8 bytes.
+			-- The scanner will receive sequences of UTF-8 bytes.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -599,6 +629,10 @@ feature -- Input
 
 	new_string_buffer (a_string: STRING): YY_BUFFER
 			-- New input buffer for `a_string'.
+			-- To be used when `a_string' contains ISO-8859-1 characters,
+			-- or when it is using the UTF-8 encoding and the scanner is
+			-- either using the "%option utf8" or has been manually written
+			-- to expect sequences of UTF-8 bytes.
 		require
 			a_string_not_void: a_string /= Void
 			a_string_is_string: a_string.same_type ({STRING_8} "")
@@ -610,6 +644,8 @@ feature -- Input
 
 	new_unicode_string_buffer (a_string: READABLE_STRING_GENERAL): YY_UNICODE_BUFFER
 			-- New Unicode input buffer for `a_string'.
+			-- To be used when `a_string' contains ISO-8859-1 or Unicode characters.
+			-- The scanner will receive Unicode characters, not sequences of UTF-8 bytes.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -620,11 +656,13 @@ feature -- Input
 
 	new_utf8_string_buffer (a_string: READABLE_STRING_GENERAL): YY_UTF8_BUFFER
 			-- New UTF-8 input buffer for `a_string'.
-			-- `a_string' is expected to contain valid
-			-- non-surrogate Unicode characters. Invalid
-			-- or surrogate Unicode characters are encoded
-			-- with one byte 0xFF (which is an invalid byte
-			-- in UTF-8).
+			-- To be used when `a_string' contains ISO-8859-1 or Unicode characters,
+			-- and the scanner is either using the "%option utf8" or has been
+			-- manually written to expect sequences of UTF-8 bytes.
+			-- `a_string' is expected to contain valid non-surrogate Unicode
+			-- characters. Invalid or surrogate Unicode characters are encoded
+			-- with one byte 0xFF (which is an invalid byte in UTF-8).
+			-- The scanner will receive sequences of UTF-8 bytes.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -715,8 +753,8 @@ feature -- Error handling
 
 	report_invalid_unicode_character_error (a_code: NATURAL_32)
 			-- Report that the surrogate or invalid Unicode character
-			-- with code `a_code' has been read and caused the scanner
-			-- to fail.
+			-- with code `a_code' has been read from the input
+			-- buffer and caused the scanner to fail.
 		do
 			std.error.put_string ("Surrogate or invalid Unicode character '\u{")
 			std.error.put_string (a_code.to_hex_string)

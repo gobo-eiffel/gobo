@@ -27,7 +27,7 @@ content="text/html; charset=iso-8859-1">
 
     description</em>:<em> &quot;General lexical analyzers&quot;
     library</em>:<em> &quot;Gobo Eiffel Lexical Library&quot;
-    copyright</em>:<em> &quot;Copyright (c) 2001, Eric Bezault and others&quot;
+    copyright</em>:<em> &quot;Copyright (c) 2001-2019, Eric Bezault and others&quot;
     license</em>:<em> &quot;MIT License&quot;
 
 </em><em><strong>deferred</strong></em><em> </em><em><strong>class</strong></em><em> YY_SCANNER
@@ -39,14 +39,28 @@ content="text/html; charset=iso-8859-1">
             -- standard input as input file.<em>
 
     </em><a href="scanner.html#make_with_file"
-name="make_with_file"><em>make_with_file</em></a><em> </em>(<em>a_file</em>:<em> FILE</em>)<em>
+name="make_with_file"><em>make_with_file</em></a><em> </em>(<em>a_file</em>:<em> KI_CHARACTER_INPUT_STREAM</em>)<em>
             </em>-- Create a new scanner with<em>
-            </em>-- <em>a_file</em> as input file.<em>
-        </em><em><strong>require</strong></em><em>
+            </em>-- <em>a_file</em> as input file.
+            -- To be used when <em>a_file</em> contains ISO-8859-1 characters,
+            -- or when it is using the UTF-8 encoding and the scanner is
+            -- either using the &quot;%option utf8&quot; or has been manually written
+            -- to expect sequences of UTF-8 bytes.
+        <em><strong>require</strong></em><em>
             a_file_not_void</em>:<em> a_file </em>/= <em>Void
-            a_file_open_read</em>:<em> a_file.is_open_read
+            a_file_open_read</em>:<em> a_file.is_open_read</em>
 
-    </em><a href="scanner.html#make_with_buffer"
+    <a href="scanner.html#make_with_unicode_file"
+name="make_with_unicode_file"><em>make_with_unicode_file</em></a> (<em>a_file</em>: <em>KI_CHARACTER_INPUT_STREAM</em>)
+            -- Create a new scanner with <em>a_file</em> as input file.
+            -- <em>a_file</em> is expected to be encoded in UTF-8
+            -- or ISO-8859-1, and the input buffer will handle
+            -- the corresponding Unicode characters.
+        <em><strong>require</strong></em>
+            <em>a_file_not_void</em>:<em> a_file </em>/= <em>Void
+            a_file_open_read</em>:<em> a_file.is_open_read</em>
+
+    <a href="scanner.html#make_with_buffer"
 name="make_with_buffer"><em>make_with_buffer</em></a><em> </em>(<em>a_buffer</em>:<em> </em><em><strong>like</strong></em><em> input_buffer</em>)<em>
             </em>-- Create a new scanner with
             -- <em>a_buffer</em> as input buffer.<em>
@@ -60,7 +74,30 @@ name="make_with_buffer"><em>make_with_buffer</em></a><em> </em>(<em>a_buffer</em
     </em><a href="scanner.html#reset" name="reset"><em>reset</em></a><em>
             </em>-- Reset scanner before scanning next input source.
             -- (This routine can be called in <em>wrap</em> before scanning
-            -- another input buffer.)<em>
+            -- another input buffer.)
+
+    <em>reset_with_file</em> (<em>a_file</em>: <em>KI_CHARACTER_INPUT_STREAM</em>)
+            -- Reset scanner before scanning next input source.
+            -- Then reuse <em>input_buffer</em> and set it to <em>a_file</em>
+            -- if it was a file buffer, create a new file input buffer
+            -- with <em>a_file</em> otherwise.
+        <em><strong>require</strong></em>
+            <em>a_file_not_void</em>: <em>a_file</em> /= <em>Void</em>
+            <em>a_file_open_read</em>: <em>a_file</em>.<em>is_open_read</em>
+
+    <em>reset_with_string</em> (<em>a_string</em>: <em>STRING_8</em>)
+            -- Reset scanner before scanning next input source.
+            -- Then reuse <em>input_buffer</em> and set it to <em>a_string</em>
+            -- if it was not <em>Empty_buffer</em>, create a new input buffer
+            -- with <em>a_string</em> otherwise.
+        <em><strong>require</strong></em>
+            <em>a_string_not_void</em>: <em>a_string</em> /= <em>Void</em>
+
+    <em>reset_start_condition</em>
+            -- Clear pushed start conditions and set <em>start_condition</em>
+            -- to the "INITIAL" start condition.
+        <em><strong>ensure</strong></em>
+            <em>pushed_start_conditions_cleared</em>: <em>pushed_start_condition_count</em> = <em>0</em>
 
 </em><em><strong>feature</strong></em><em> </em>-- Access<em>
 
@@ -70,22 +107,67 @@ name="make_with_buffer"><em>make_with_buffer</em></a><em> </em>(<em>a_buffer</em
             -- non-positive values mean that an error occurred
             -- (see header-comment of <em>scanning_error</em>.))
 <em>
-    </em><a href="actions.html#text" name="text"><em>text</em></a>:<em> STRING
+    </em><a href="actions.html#text" name="text"><em>text</em></a>:<em> STRING_8
             </em>-- Text of last token read
-            -- (Create a new string at each call.)<em>
+            -- (Create a new string at each call.)
+            --
+            -- Note that if <em>input_buffer</em> contains Unicode characters
+            -- which cannot be represented as 8-bit characters, they
+            -- will be replaced by a replacement character specified
+            -- in the buffer.<em>
         </em><em><strong>ensure</strong></em><em>
             text_not_void</em>:<em> Result </em>/= <em>Void
-            correct_count</em>:<em> Result.count </em>=<em> text_count
+            correct_count</em>:<em> Result.count </em>=<em> text_count</em>
 
-    </em><a href="actions.html#text_item" name="text_item"><em>text_item</em></a><em> </em>(<em>i</em>:<em> INTEGER</em>):<em> CHARACTER
+    <a href="actions.html#unicode_text" name="unicode_text"><em>unicode_text</em></a>: <em>STRING_32</em>
+            -- Unicode text of last token read
+            -- (Create a new string at each call.)
+            --
+            -- Note that if the scanner is written to receive sequences
+            -- of UTF-8 bytes, <em>unicode_text</em> will treat each single
+            -- byte as a character. It will not try to decode the UTF-8 bytes
+            -- into Unicode characters.
+            --
+            -- Note that <em>unicode_text</em> does not contain surrogate
+            -- or invalid Unicode characters.
+        <em><strong>ensure</strong></em>
+            <em>unicode_text_not_void</em>: <em>Result</em> /= <em>Void</em>
+            <em>correct_count</em>: <em>Result</em>.<em>count</em> = <em>text_count</em>
+
+    <a href="actions.html#utf8_text" name="utf8_text"><em>utf8_text</em></a>: <em>STRING_8</em>
+            -- UTF-8 representation of last token read
+            -- (Create a new string at each call.)
+            --
+            -- Note that <em>unicode_text</em> does not contain surrogate
+            -- or invalid Unicode characters, therefore the resulting
+            -- string is valid UTF-8.
+        <em><strong>ensure</strong></em>
+            <em>utf8_text_not_void</em>: <em>Result</em> /= <em>Void</em>
+            <em>utf8_text_is_string_8</em>: <em>Result</em>.<em>same_type</em> ({<em>STRING_8</em>} "")
+            <em>valid_utf8</em>: {<em>UC_UTF8_ROUTINES</em>}.<em>valid_utf8</em> (<em>Result</em>)
+            <em>correct_count</em>: <em>Result</em>.<em>count</em> = {<em>UC_UTF8_ROUTINES</em>}.<em>string_byte_count</em> (<em>unicode_text</em>)
+            <em>definition</em>: <em>Result</em>.<em>is_equal</em> ({<em>UC_UTF8_ROUTINES</em>}.<em>string_to_utf8</em> (<em>unicode_text</em>))
+
+    <a href="actions.html#text_item" name="text_item"><em>text_item</em></a><em> </em>(<em>i</em>:<em> INTEGER</em>):<em> CHARACTER_8
             </em>-- <em>i</em>-th character of last token read<em>
         </em><em><strong>require</strong></em><em>
             i_large_enough</em>:<em> i </em>&gt;= <em>1
             i_small_enough</em>:<em> i </em>&lt;= <em>text_count
         </em><em><strong>ensure</strong></em><em>
-            definition</em>:<em> Result </em>=<em> text.item </em>(<em>i</em>)<em>
+            definition</em>:<em> Result </em>=<em> text.item </em>(<em>i</em>)
 
-    </em><a href="actions.html#text_substring"
+    <a href="actions.html#unicode_text_item" name="unicode_text_item"><em>unicode_text_item</em></a> (<em>i</em>: <em>INTEGER</em>): <em>CHARACTER_32</em>
+            -- <em>i</em>-th Unicode character of last token read
+            --
+            -- Note that <em>unicode_text</em> does not contain surrogate
+            -- or invalid Unicode characters.
+        <em><strong>require</strong></em>
+            <em>i_large_enough</em>: <em>i</em> &gt;= <em>1</em>
+            <em>i_small_enough</em>: <em>i</em> &lt;= <em>text_count</em>
+        <em><strong>ensure</strong></em>
+            <em>definition</em>: <em>Result</em> = <em>unicode_text</em>.<em>item</em> (<em>i</em>)
+
+    <a href="actions.html#text_substring"
 name="text_substring"><em>text_substring</em></a><em> </em>(<em>s</em>,<em> e</em>:<em> INTEGER</em>):<em> STRING
             </em>-- Substring of last token read
             -- (Create a new string at each call.)<em>
@@ -98,10 +180,52 @@ name="text_substring"><em>text_substring</em></a><em> </em>(<em>s</em>,<em> e</e
             meaningful_end</em>:<em> e </em>&lt;= <em>text_count
         </em><em><strong>ensure</strong></em><em>
             text_substring_not_void</em>:<em> Result </em>/=<em> Void
-            text_substring_empty</em>:<em> </em>(<em>s </em>&gt;<em> e</em>)<em> </em><em><strong>implies</strong></em><em> Result.empty
-            definition</em>:<em> s </em>&lt;=<em> e </em><em><strong>implies</strong></em><em> Result.is_equal </em>(<em>text.substring </em>(<em>s</em>,<em> e</em>))<em>
+            text_substring_empty</em>:<em> </em>(<em>s </em>&gt;<em> e</em>)<em> </em><em><strong>implies</strong></em><em> Result.is_empty
+            definition</em>:<em> Result.is_equal </em>(<em>text.substring </em>(<em>s</em>,<em> e</em>))
 
-    </em><a href="actions.html#start_condition"
+    <a href="actions.html#unicode_text_substring"
+name="unicode_text_substring"><em>unicode_text_substring</em></a> (<em>s</em>, <em>e</em>: <em>INTEGER</em>): <em>STRING_32</em>
+            -- Unicode substring of last token read
+            -- (Create a new string at each call.)
+            -- (For efficiency reason, this function can bypass the
+            -- call to <em>unicode_text</em> and create the substring directly from
+            -- the input buffer.)
+            --
+            -- Note that <em>unicode_text</em> does not contain surrogate
+            -- or invalid Unicode characters.
+        <em><strong>require</strong></em>
+            <em>meaningful_start</em>: <em>1</em> &lt;= <em>s</em>
+            <em>meaningful_interval</em>: <em>s</em> &lt;= <em>e</em> + <em>1</em>
+            <em>meaningful_end</em>: <em>e</em> &lt;= <em>text_count</em>
+        <em><strong>ensure</strong></em>
+            <em>unicode_text_substring_not_void</em>: <em>Result</em> /= <em>Void</em>
+            <em>unicode_text_substring_empty</em>: (<em>s</em> &gt; <em>e</em>) <em><strong>implies</strong></em> <em>Result</em>.<em>is_empty</em>
+            <em>definition</em>: <em>Result</em>.<em>is_equal</em> (<em>unicode_text</em>.<em>substring</em> (<em>s</em>, <em>e</em>))
+
+    <a href="actions.html#utf8_text_substring"
+name="utf8_text_substring"><em>utf8_text_substring</em></a> (<em>s</em>, <em>e</em>: <em>INTEGER</em>): <em>STRING_8</em>
+            -- UTF-8 representation of substring of last token read
+            -- (Create a new string at each call.)
+            -- (For efficiency reason, this function can bypass the
+            -- call to <em>unicode_text</em> and create the substring directly from
+            -- the input buffer.)
+            --
+            -- Note that <em>unicode_text</em> does not contain surrogate
+            -- or invalid Unicode characters, therefore the resulting
+            -- string is valid UTF-8.
+        <em><strong>require</strong></em>
+            <em>meaningful_start</em>: <em>1</em> &lt;= <em>s</em>
+            <em>meaningful_interval</em>: <em>s</em> &lt;= <em>e</em> + <em>1</em>
+            <em>meaningful_end</em>: <em>e</em> &lt;= <em>text_count</em>
+        <em><strong>ensure</strong></em>
+            <em>utf8_text_not_void</em>: <em>Result</em> /= <em>Void</em>
+            <em>utf8_text_is_string_8</em>: <em>Result</em>.<em>same_type</em> ({<em>STRING_8</em>} "")
+            <em>valid_utf8</em>: {<em>UC_UTF8_ROUTINES</em>}.<em>valid_utf8</em> (<em>Result</em>)
+            <em>utf8_text_substring_empty</em>: (<em>s</em> &gt; <em>e</em>) <em><strong>implies</strong></em> <em>Result</em>.<em>is_empty</em>
+            <em>definition</em>: <em>Result</em>.<em>is_equal</em> ({<em>UC_UTF8_ROUTINES</em>}.<em>string_to_utf8</em> (<em>unicode_text</em>.<em>substring</em> (<em>s</em>, <em>e</em>)))
+            <em>correct_count</em>: <em>Result</em>.<em>count</em> = {<em>UC_UTF8_ROUTINES</em>}.<em>string_byte_count</em> (<em>unicode_text</em>.<em>substring</em> (<em>s</em>, <em>e</em>))
+
+    <a href="actions.html#start_condition"
 name="start_condition"><em>start_condition</em></a>:<em> INTEGER
             </em>-- Start condition<em>
 
@@ -110,7 +234,7 @@ name="start_condition"><em>start_condition</em></a>:<em> INTEGER
     </em><a href="actions.html#text_count" name="text_count"><em>text_count</em></a>:<em> INTEGER
             </em>-- Length of last token read<em>
         </em><em><strong>ensure</strong></em><em>
-            positive_count</em>:<em> Result </em>&gt;=<em> 0
+            text_count_not_negative</em>:<em> Result </em>&gt;=<em> 0
 
     </em><a href="actions.html#line" name="line"><em>line</em></a>:<em> INTEGER
             </em>-- Line number of last token read when
@@ -129,9 +253,14 @@ name="start_condition"><em>start_condition</em></a>:<em> INTEGER
             -- characters from the start of the input source)
             -- when '<em>%option position</em>' has been specified<em>
         </em><em><strong>ensure</strong></em><em>
-            position_positive</em>:<em> Result </em>&gt;=<em> 1
+            position_positive</em>:<em> Result </em>&gt;=<em> 1</em>
 
-</em><em><strong>feature </strong></em>-- Status report<em>
+    <em>pushed_start_condition_count</em>: <em>INTEGER</em>
+            -- Number of start conditions already pushed (and not popped yet)
+        <em><strong>ensure</strong></em>
+            <em>pushed_start_condition_count_not_negative</em>: <em>Result</em> &gt;= <em>0</em>
+
+<em><strong>feature </strong></em>-- Status report<em>
 
     </em><a href="actions.html#end_of_file" name="end_of_file"><em>end_of_file</em></a>:<em> BOOLEAN
             </em>-- Has the end of input buffer been reached?<em>
@@ -163,12 +292,30 @@ name="set_start_condition"><em>set_start_condition</em></a><em> </em>(<em>a_star
         </em><em><strong>require</strong></em><em>
             valid_start_condition</em>:<em> valid_start_condition </em>(<em>a_start_condition</em>)<em>
         </em><em><strong>ensure</strong></em><em>
-            start_condition_set</em>:<em> start_condition </em>=<em> a_start_condition
+            start_condition_set</em>:<em> start_condition </em>=<em> a_start_condition</em>
 
-</em><em><strong>feature</strong></em><em> </em>-- Scanning<em>
+    <a href="actions.html#push_start_condition"
+name="push_start_condition"><em>push_start_condition</em></a> (<em>a_start_condition</em>: <em>INTEGER</em>)
+            -- Set start condition and add previous to stack.
+        <em><strong>require</strong></em>
+            <em>valid_start_condition</em>: <em>valid_start_condition</em> (<em>a_start_condition</em>)
+        <em><strong>ensure</strong></em>
+            <em>start_condition_set</em>: <em>start_condition</em> = <em>a_start_condition</em>
+            <em>one_more</em>: <em>pushed_start_condition_count</em> = <em><strong>old</strong></em> <em>pushed_start_condition_count</em> + <em>1</em>
+
+    <a href="actions.html#pop_start_condition"
+name="pop_start_condition"><em>pop_start_condition</em></a>
+            -- Restore previous start condition.
+        <em><strong>require</strong></em>
+            <em>has_pushed_start_conditions</em>: <em>pushed_start_condition_count</em> &gt; <em>0</em>
+        <em><strong>ensure</strong></em>
+            <em>one_less</em>: <em>pushed_start_condition_count</em> = <em><strong>old</strong></em> <em>pushed_start_condition_count</em> - <em>1</em>
+
+<em><strong>feature</strong></em><em> </em>-- Scanning<em>
 
     </em><a href="scanner.html#scan" name="scan"><em>scan</em></a><em>
-           </em> -- Scan <em>input_buffer</em> until end of file is found.<em>
+            </em>-- Scan <em>input_buffer</em> until end of file is found
+            -- or an error occurs.<em>
         </em><em><strong>ensure</strong></em><em>
             end_of_file</em>:<em> </em><em><strong>not</strong></em><em> scanning_error </em><em><strong>implies</strong></em><em> end_of_file
 
@@ -179,16 +326,44 @@ name="set_start_condition"><em>set_start_condition</em></a><em> </em>(<em>a_star
 </em><em><strong>feature</strong></em><em> </em>-- Element change<em>
 
     </em><a href="actions.html#append_text_to_string"
-name="append_text_to_string"><em>append_text_to_string</em></a><em> </em>(<em>a_string</em>:<em> STRING</em>)<em>
+name="append_text_to_string"><em>append_text_to_string</em></a><em> </em>(<em>a_string</em>:<em> STRING_8</em>)<em>
             </em>-- Append <em>text</em> at end of <em>a_string</em>.
             -- (For efficiency reason, this feature can bypass the
             -- call to <em>text</em> and directly copy the characters from
             -- the input buffer.)<em>
         </em><em><strong>require</strong></em><em>
             a_string_not_void</em>:<em> a_string </em>/= <em>Void
+        </em><em><strong>ensure</strong></em><em>
+            count_set</em>: <em>a_string</em>.<em>count</em> = <em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>text_count</em>
+            <em>definition</em>: <em>a_string</em>.<em>substring</em> (<em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>1</em>, <em>a_string</em>.<em>count</em>).<em>same_string</em> (<em>text</em>)
 
-    </em><a href="actions.html#append_text_substring_to_string"
-name="append_text_substring_to_string"><em>append_text_substring_to_string</em></a><em> </em>(<em>s</em>,<em> e</em>:<em> INTEGER</em>;<em> a_string</em>:<em> STRING</em>)<em>
+    <a href="actions.html#append_unicode_text_to_string"
+name="append_unicode_text_to_string"><em>append_unicode_text_to_string</em></a> (<em>a_string</em>: <em>STRING_32</em>)
+            -- Append <em>unicode_text</em> at end of <em>a_string</em>.
+            -- (For efficiency reason, this feature can bypass the
+            -- call to <em>unicode_text</em> and directly copy the characters from
+            -- the input buffer.)
+        <em><strong>require</strong></em>
+            <em>a_string_not_void</em>:<em> a_string </em>/= <em>Void</em>
+        <em><strong>ensure</strong></em>
+            <em>count_set</em>: <em>a_string</em>.<em>count</em> = <em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>text_count</em>
+            <em>definition</em>: <em>a_string</em>.<em>substring</em> (<em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>1</em>, <em>a_string</em>.<em>count</em>).<em>same_string</em> (<em>unicode_text</em>)
+
+    <a href="actions.html#append_utf8_text_to_string"
+name="append_utf8_text_to_string"><em>append_utf8_text_to_string</em></a> (<em>a_string</em>: <em>STRING_8</em>)
+            -- Append <em>utf8_text</em> at end of <em>a_string</em>.
+            -- (For efficiency reason, this feature can bypass the
+            -- call to <em>utf8_text</em> and directly copy the characters from
+            -- the input buffer.)
+        <em><strong>require</strong></em>
+            <em>a_string_not_void</em>:<em> a_string </em>/= <em>Void</em>
+            <em>a_string_is_string_8</em>: <em>a_string</em>.<em>same_type</em> ({<em>STRING_8</em>} "")
+        <em><strong>ensure</strong></em>
+            <em>count_set</em>: <em>a_string</em>.<em>count</em> = <em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>utf8_text</em>.<em>count</em>
+            <em>definition</em>: <em>a_string</em>.<em>substring</em> (<em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>1</em>, <em>a_string</em>.<em>count</em>).<em>same_string</em> (<em>utf8_text</em>)
+
+    <a href="actions.html#append_text_substring_to_string"
+name="append_text_substring_to_string"><em>append_text_substring_to_string</em></a><em> </em>(<em>s</em>,<em> e</em>:<em> INTEGER</em>;<em> a_string</em>:<em> STRING_8</em>)<em>
             </em>-- Append <em>text_substring</em> at end of <em>a_string</em>.
             -- (For efficiency reason, this feature can bypass
             -- the call to <em>text_substring</em> and directly copy
@@ -198,8 +373,42 @@ name="append_text_substring_to_string"><em>append_text_substring_to_string</em><
             s_large_enough</em>:<em> 1 </em>&lt;=<em> s
             valid_interval: s </em>&lt;=<em> e </em>+<em> 1
             e_small_enough</em>:<em> e </em>&lt;=<em> text_count
+        </em><em><strong>ensure</strong></em>
+            <em>count_set</em>: <em>a_string</em>.<em>count</em> = <em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + (<em>e</em> - <em>s</em> + <em>1</em>)
+            <em>definition</em>: <em>a_string</em>.<em>substring</em> (<em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>1</em>, <em>a_string</em>.<em>count</em>).<em>same_string</em> (<em>text_substring</em> (<em>s</em>, <em>e</em>))
 
-    </em><a href="actions.html#terminate" name="terminate"><em>terminate</em></a><em>
+    <a href="actions.html#append_unicode_text_substring_to_string"
+name="append_unicode_text_substring_to_string"><em>append_unicode_text_substring_to_string</em></a> (<em>s</em>, <em>e</em>: <em>INTEGER</em>; <em>a_string</em>: <em>STRING_32</em>)
+            -- Append <em>unicode_text_substring</em> at end of <em>a_string</em>.
+            -- (For efficiency reason, this feature can bypass
+            -- the call to <em>unicode_text_substring</em> and directly copy
+            -- the characters from the input buffer.)
+        <em><strong>require</strong></em>
+            <em>a_string_not_void</em>: <em>a_string</em> /= <em>Void</em>
+            <em>s_large_enough</em>: <em>1</em> &lt;= <em>s</em>
+            <em>valid_interval</em>: <em>s</em> &lt;= <em>e</em> + <em>1</em>
+            <em>e_small_enough</em>: <em>e</em> &lt;= <em>text_count</em>
+        <em><strong>ensure</strong></em>
+            <em>count_set</em>: <em>a_string</em>.<em>count</em> = <em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + (<em>e</em> - <em>s</em> + <em>1</em>)
+            <em>definition</em>: <em>a_string</em>.<em>substring</em> (<em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>1</em>, <em>a_string</em>.<em>count</em>).<em>same_string</em> (<em>unicode_text_substring</em> (<em>s</em>, <em>e</em>))
+
+    <a href="actions.html#append_utf8_text_substring_to_string"
+name="append_utf8_text_substring_to_string"><em>append_utf8_text_substring_to_string</em></a> (<em>s</em>, <em>e</em>: <em>INTEGER</em>; <em>a_string</em>: <em>STRING_8</em>)
+            -- Append <em>utf8_text_substring</em> at end of <em>a_string</em>.
+            -- (For efficiency reason, this feature can bypass the
+            -- call to <em>utf8_text_substring</em> and directly copy the characters from
+            -- the input buffer.)
+        <em><strong>require</strong></em>
+            <em>a_string_not_void</em>: <em>a_string</em> /= <em>Void</em>
+            <em>a_string_is_string_8</em>: <em>a_string</em>.<em>same_type</em> ({<em>STRING_8</em>} "")
+            <em>s_large_enough</em>: <em>1</em> &lt;= <em>s</em>
+            <em>valid_interval</em>: <em>s</em> &lt;= <em>e</em> + <em>1</em>
+            <em>e_small_enough</em>: <em>e</em> &lt;= <em>text_count</em>
+        <em><strong>ensure</strong></em>
+            <em>count_set</em>: <em>a_string</em>.<em>count</em> = <em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>utf8_text_substring</em> (<em>s</em>, <em>e</em>).<em>count</em>
+            <em>definition</em>: <em>a_string</em>.<em>substring</em> (<em><strong>old</strong></em> (<em>a_string</em>.<em>count</em>) + <em>1</em>, <em>a_string</em>.<em>count</em>).<em>same_string</em> (<em>utf8_text_substring</em> (<em>s</em>, <em>e</em>))
+
+    <a href="actions.html#terminate" name="terminate"><em>terminate</em></a><em>
             </em>-- Terminate scanner and set <em>last_token</em>
             -- to 0 indicating &quot;all done&quot;.<em>
 
@@ -224,20 +433,35 @@ name="append_text_substring_to_string"><em>append_text_substring_to_string</em><
             text_count_set</em>:<em> text_count</em> =<em> n
 
     </em><a href="actions.html#unread_character"
-name="unread_character"><em>unread_character</em></a><em> </em>(<em>c</em>:<em> CHARACTER</em>)<em>
+name="unread_character"><em>unread_character</em></a><em> </em>(<em>c</em>:<em> CHARACTER_8</em>)<em>
             </em>-- Put <em>c</em> back to <em>input_buffer</em>. This will alter both
-            -- <em>text</em> and the content of <em>input_buffer</em>.<em>
+            -- <em>text</em> and the content of <em>input_buffer</em>.
 
-    </em><a href="actions.html#read_character"
+    <a href="actions.html#unread_unicode_character"
+name="unread_unicode_character"><em>unread_unicode_character</em></a> (<em>c</em>: <em>CHARACTER_32</em>)
+            -- Put <em>c</em> back to <em>input_buffer</em>. This will alter both
+            -- <em>unicode_text</em> and the content of <em>input_buffer</em>.
+            -- The behavior is undefined if <em>c</em> is too large to fit into <em>input_buffer</em>.
+
+    <a href="actions.html#read_character"
 name="read_character"><em>read_character</em></a><em>
             </em>-- Read a character from <em>input_buffer</em>.
-            -- Make result available in <em>last_character</em>.<em>
+            -- Make result available in <em>last_character</em> and <em>last_unicode_character</em>.
+            --
+            -- Note that if <em>input_buffer</em> contains Unicode characters
+            -- which cannot be represented as 8-bit characters, they
+            -- will be replaced by a replacement character specified
+            -- in the buffer.
 
-    </em><a href="actions.html#last_character"
-name="last_character"><em>last_character</em></a>:<em> CHARACTER
-            </em>-- Last character read by <em>read_character
+    <a href="actions.html#last_character"
+name="last_character"><em>last_character</em></a>:<em> CHARACTER_8
+            </em>-- Last character read by <em>read_character</em>
 
-</em><em><strong>feature</strong></em><em> </em>-- Input<em>
+    <a href="actions.html#last_unicode_character"
+name="last_unicode_character"><em>last_unicode_character</em></a>: <em>CHARACTER_32</em>
+            -- Last Unicode character read by <em>read_character</em>
+
+<em><strong>feature</strong></em><em> </em>-- Input<em>
 
     </em><a href="actions.html#input_buffer" name="input_buffer"><em>input_buffer</em></a>:<em> YY_BUFFER
            </em> -- Input buffer<em>
@@ -258,23 +482,84 @@ name="flush_input_buffer"><em>flush_input_buffer</em></a><em>
             flushed</em>: <em>input_buffer.count </em>=<em> 0
 
     </em><a href="actions.html#new_file_buffer"
-name="new_file_buffer"><em>new_file_buffer</em></a><em> </em>(<em>a_file</em>:<em> FILE</em>):<em> YY_FILE_BUFFER
-            </em>-- New input buffer for <em>a_file
-        </em><em><strong>require</strong></em><em>
+name="new_file_buffer"><em>new_file_buffer</em></a><em> </em>(<em>a_file</em>:<em> KI_CHARACTER_INPUT_STREAM</em>):<em> YY_FILE_BUFFER
+            </em>-- New input buffer for <em>a_file</em>.
+            -- To be used when <em>a_file</em> contains ISO-8859-1 characters,
+            -- or when it is using the UTF-8 encoding and the scanner is
+            -- either using the &quot;%option utf8&quot; or has been manually written
+            -- to expect sequences of UTF-8 bytes.
+        <em><strong>require</strong></em><em>
             a_file_not_void</em>:<em> a_file </em>/= <em>Void
             a_file_open_read</em>:<em> a_file.is_open_read
         </em><em><strong>ensure</strong></em><em>
-            new_buffer_not_void</em>:<em> Result</em> /=<em> Void
+            new_buffer_not_void</em>:<em> Result</em> /=<em> Void</em>
 
-    </em><a href="actions.html#new_string_buffer"
-name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</em>:<em> STRING</em>):<em> YY_BUFFER
-            </em>-- New input buffer for <em>a_string
-        </em><em><strong>require</strong></em><em>
+    <a href="actions.html#new_unicode_file_buffer"
+name="new_unicode_file_buffer"><em>new_unicode_file_buffer</em></a> (<em>a_file</em>: <em>KI_CHARACTER_INPUT_STREAM</em>): <em>YY_UNICODE_FILE_BUFFER</em>
+            -- New Unicode input buffer for <em>a_file</em>.
+            -- <em>a_file</em> is expected to be encoded in UTF-8
+            -- or ISO-8859-1.
+            -- The scanner will receive Unicode characters,
+            -- not sequences of UTF-8 bytes.
+        <em><strong>require</strong></em>
+            <em>a_file_not_void</em>: <em>a_file</em> /= <em>Void</em>
+            <em>a_file_open_read</em>: <em>a_file</em>.<em>is_open_read</em>
+        <em><strong>ensure</strong></em>
+            <em>new_unicode_file_buffer_not_void</em>: <em>Result</em> /= <em>Void</em>
+
+    <a href="actions.html#new_utf8_file_buffer"
+name="new_utf8_file_buffer"><em>new_utf8_file_buffer</em></a> (<em>a_file</em>: <em>KI_CHARACTER_INPUT_STREAM</em>): <em>YY_UTF8_FILE_BUFFER</em>
+            -- New UTF-8 input buffer for <em>a_file</em>.
+            -- To be used when <em>a_file</em> contains ISO-8859-1 characters or when it
+            -- is using the UTF-8 encoding, and the scanner is either using the
+            -- &quot;%option utf8&quot; or has been manually written to expect sequences
+            -- of UTF-8 bytes.
+            -- The scanner will receive sequences of UTF-8 bytes.
+        <em><strong>require</strong></em>
+            <em>a_file_not_void</em>: <em>a_file</em> /= <em>Void</em>
+            <em>a_file_open_read</em>: <em>a_file</em>.<em>is_open_read</em>
+        <em><strong>ensure</strong></em>
+            <em>new_utf8_file_buffer_not_void</em>: <em>Result</em> /= <em>Void</em>
+
+    <a href="actions.html#new_string_buffer"
+name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</em>:<em> STRIN_8</em>):<em> YY_BUFFER
+            </em>-- New input buffer for <em>a_string</em>.
+            -- To be used when <em>a_string</em> contains ISO-8859-1 characters,
+            -- or when it is using the UTF-8 encoding and the scanner is
+            -- either using the &quot;%option utf8&quot; or has been manually written
+            -- to expect sequences of UTF-8 bytes.
+        <em><strong>require</strong></em><em>
             a_string_not_void</em>:<em> a_string </em>/=<em> Void
-        </em><em><strong>ensure</strong></em><em>
-            new_buffer_not_void</em>:<em> Result </em>/=<em> Void
+            a_string_is_string</em>: <em>a_string</em>.<em>same_type</em> ({<em>STRING_8</em>} "")
+        <em><strong>ensure</strong></em><em>
+            new_buffer_not_void</em>:<em> Result </em>/=<em> Void</em>
 
-    </em><a href="actions.html#Empty_buffer" name="Empty_buffer"><em>Empty_buffer</em></a>:<em> YY_BUFFER
+    <a href="actions.html#new_unicode_string_buffer"
+name="new_unicode_string_buffer"><em>new_unicode_string_buffer</em></a> (<em>a_string</em>: <em>READABLE_STRING_GENERAL</em>): <em>YY_UNICODE_BUFFER</em>
+            -- New Unicode input buffer for <em>a_string</em>.
+            -- To be used when <em>a_string</em> contains ISO-8859-1 or Unicode characters.
+            -- The scanner will receive Unicode characters, not sequences of UTF-8 bytes.
+        <em><strong>require</strong></em>
+            </em>a_string_not_void</em>:<em> a_string </em>/=<em> Void</em>
+        <em><strong>ensure</strong></em>
+            <em>new_unicode_string_buffer_not_void</em>: <em>Result</em> /= <em>Void</em>
+
+    <a href="actions.html#new_utf8_string_buffer"
+name="new_utf8_string_buffer"><em>new_utf8_string_buffer</em></a> (<em>a_string</em>: <em>READABLE_STRING_GENERAL</em>): <em>YY_UTF8_BUFFER</em>
+            -- New UTF-8 input buffer for <em>a_string</em>.
+            -- To be used when <em>a_string</em> contains ISO-8859-1 or Unicode characters,
+            -- and the scanner is either using the &quot;%option utf8&quot; or has been
+            -- manually written to expect sequences of UTF-8 bytes.
+            -- <em>a_string</em> is expected to contain valid non-surrogate Unicode
+            -- characters. Invalid or surrogate Unicode characters are encoded
+            -- with one byte 0xFF (which is an invalid byte in UTF-8).
+            -- The scanner will receive sequences of UTF-8 bytes.
+        <em><strong>require</strong></em>
+            </em>a_string_not_void</em>:<em> a_string </em>/=<em> Void</em>
+        <em><strong>ensure</strong></em>
+            <em>new_utf8_string_buffer_not_void</em>: <em>Result</em> /= <em>Void</em>
+
+    <a href="actions.html#Empty_buffer" name="Empty_buffer"><em>Empty_buffer</em></a>:<em> YY_BUFFER
            </em> -- Empty input buffer<em>
         </em><em><strong>ensure</strong></em><em>
             empty_buffer_not_void</em>:<em> Result </em>/=<em> Void
@@ -327,13 +612,18 @@ name="default_action"><em>default_action</em></a><em>
 
 </em><em><strong>feature</strong></em><em> </em>-- Error handling<em>
 
-    </em><a name="fatal_error"><em>fatal_error</em></a><em> </em>(<em>a_message</em>:<em> STRING</em>)<em>
+    </em><a name="fatal_error"><em>fatal_error</em></a><em> </em>(<em>a_message</em>:<em> STRING_8</em>)<em>
             </em>-- A fatal error occurred.
             -- Print <em>a_message</em>.<em>
         </em><em><strong>require</strong></em><em>
-            a_message_not_void</em>:<em> a_message</em> /=<em> Void
+            a_message_not_void</em>:<em> a_message</em> /=<em> Void</em>
 
-</em><em><strong>feature</strong></em><em> </em>-- Debugging<em>
+    <a name="report_invalid_unicode_character_error"><em>report_invalid_unicode_character_error</em></a> (<em>a_code</em>: <em>NATURAL_32</em>)
+            -- Report that the surrogate or invalid Unicode character
+            -- with code <em>a_code</em> has been read from the input
+            -- buffer and caused the scanner to fail.
+
+<em><strong>feature</strong></em><em> </em>-- Debugging<em>
 
     </em><a href="actions.html#print_last_token"
 name="print_last_token"><em>print_last_token</em></a><em>
@@ -355,7 +645,7 @@ name="print_last_token"><em>print_last_token</em></a><em>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2001-2005</b></font><font
+            <font size="2"><b>Copyright © 2001-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault and others</strong><br>
             <strong>mailto:</strong></font><a
@@ -364,7 +654,7 @@ name="print_last_token"><em>print_last_token</em></a><em>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 16 February 2005</font><br>
+            <strong>Last Updated:</strong> 28 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

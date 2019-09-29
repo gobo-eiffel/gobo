@@ -55,8 +55,10 @@ creation routines in descendant classes. These routines are <a
 href="skeleton.html#make" name="make"><font color="#008080"><em><tt>make</tt></em></font></a>
 which prepares the scanner for scanning from the standard input, <a
 href="skeleton.html#make_with_file" name="make_with_file"><font
-color="#008080"><em><tt>make_with_file</tt></em></font></a> for
-scanning from a given file, and <a
+color="#008080"><em><tt>make_with_file</tt></em></font></a> or
+<a href="skeleton.html#make_with_unicode_file" name="make_with_unicode_file"><font
+color="#008080"><em><tt>make_with_unicode_file</tt></em></font></a>
+for scanning from a given file, and <a
 href="skeleton.html#make_with_buffer" name="make_with_buffer"><font
 color="#008080"><em><tt>make_with_buffer</tt></em></font></a> for
 scanning from a given input buffer. Before scanning a new input
@@ -127,16 +129,6 @@ file:</p>
     YY_COMPRESSED_SCANNER_SKELETON
         </em><em><strong>redefine</strong></em><em>
             make, reset
-        </em><em><strong>select</strong></em><em>
-            make, reset
-        </em><em><strong>end</strong></em><em>
-
-    YY_COMPRESSED_SCANNER_SKELETON
-        </em><em><strong>rename</strong></em><em>
-            make <strong>as</strong> make_scanner_skeleton,
-            reset <strong>as</strong> reset_scanner_skeleton
-        </em><em><strong>export</strong></em><em>
-            </em>{<em>NONE</em>}<em> </em><em><strong>all</strong></em><em>
         </em><em><strong>end</strong></em><em>
 
 </em><em><strong>create</strong></em><em>
@@ -156,7 +148,7 @@ file:</p>
             </em>-- Create a new scanner with
             -- standard input as input file.<em>
         </em><em><strong>do</strong></em><em>
-            make_scanner_skeleton
+            Precursor
             </em><em><strong>create</strong> buffer.make </em>(<em>256</em>)<em>
         </em><em><strong>end</strong></em><em>
 
@@ -165,7 +157,7 @@ file:</p>
     reset
             </em>-- Reset scanner before scanning next input file.<em>
         </em><em><strong>do</strong></em><em>
-            reset_scanner_skeleton
+            Precursor
             buffer.wipe_out
         </em><em><strong>end</strong></em><em>
 
@@ -250,7 +242,7 @@ color="#008080"><em>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            <font size="2"><b>Copyright © 1998-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -260,7 +252,7 @@ color="#008080"><em>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 15 February 2005</font><br>
+            <strong>Last Updated:</strong> 25 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

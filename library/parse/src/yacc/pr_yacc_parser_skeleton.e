@@ -1232,8 +1232,8 @@ feature {NONE} -- Error handling
 
 	report_invalid_unicode_character_error (a_code: NATURAL_32)
 			-- Report that the surrogate or invalid Unicode character
-			-- with code `a_code' has been read and caused the scanner
-			-- to fail.
+			-- with code `a_code' has been read from the input
+			-- buffer and caused the scanner to fail.
 		do
 			report_invalid_character_error ("'\u{" + a_code.to_hex_string + "}'")
 		ensure then

@@ -66,8 +66,9 @@ generates an Eiffel integer constant attribute which can be used
 to refer to it. The name of the start conditions must therefore
 be different from other feature names in the generated class.</p>
 
-<p>A start condition is activated using feature <font
-color="#008080"><em><tt>set_start_condition</tt></em></font>.
+<p>A start condition is activated using feature
+<a href="actions.html#set_start_condition"><font
+color="#008080"><em><tt>set_start_condition</tt></em></font></a>.
 Until the next <font color="#008080"><em><tt>set_start_condition</tt></em></font>
 is called, rules with the given start condition will be active
 and rules with other start conditions will be inactive. If the
@@ -245,7 +246,8 @@ color="#008080"><em>set_start_condition</em> (<em>comment_caller</em>)</font>
 </blockquote>
 
 <p>Furthermore, you can access the current start condition using
-the integer function <font color="#008080"><em><tt>start_condition</tt></em></font>.
+the integer function <a href="actions.html#start_condition"><font
+color="#008080"><em><tt>start_condition</tt></em></font></a>.
 For example, the above assignments to <font color="#008080"><em><tt>comment_caller</tt></em></font>
 could instead have been written:</p>
 
@@ -255,8 +257,11 @@ could instead have been written:</p>
 
 <p>In case of nested start conditions, you could also keep track
 of previous start conditions by pushing them on an integer stack
+using <a href="actions.html#push_start_condition"><font
+color="#008080"><em><tt>push_start_condition</tt></em></font></a>
 and then popping them from the stack as you leave the current
-start condition.</p>
+start condition using <a href="actions.html#pop_start_condition"><font
+color="#008080"><em><tt>pop_start_condition</tt></em></font></a>.</p>
 
 <p>Finally, here's an example of how to match Eiffel-style quoted
 strings using exclusive start conditions, including expanded
@@ -268,7 +273,7 @@ escape sequences:</p>
 <font color="#FF0000">\&quot;</font>            <font
 color="#008080"><em>buffer</em>.<em>wipe_out</em>; <em>set_start_condition</em> (<em>str</em>)</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">[^%\n&quot;]+</font> <font
-color="#008080"><em>buffer</em>.<em>append_string</em> (<em>text</em>)</font>
+color="#008080"><em>buffer</em>.<em>append_string</em> (<em>unicode_text</em>)</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">%A </font>      <font
 color="#008080"><em>buffer</em>.<em>append_character</em> ('<em>%A</em>')</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">%B</font>       <font
@@ -327,7 +332,7 @@ color="#008080"><em>line_nb</em> := <em>line_nb</em> + <em>1</em></font>
 color="#0000FF">{</font>
                  <font color="#008080"><em>set_start_condition</em> (<em>INITIAL</em>)
                  -- Pass string value to parser.
-                 <em>last_value</em> := <em>cloned_string</em> (<em>buffer</em>)
+                 <em>last_value</em> := <em>buffer</em>.<em>twin</em>
                  <em>last_token</em> := <em>E_STRING</em></font>
             <font color="#0000FF">}</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">.|\n </font>               <font
@@ -367,10 +372,10 @@ initial <font color="#0000FF"><tt>{</tt></font>. So, for example,</p>
 <blockquote>
     <pre><font color="#800000">&lt;ESC&gt;</font><font
 color="#0000FF">{</font>
-   <font color="#FF0000">%N</font>    <font color="#008080"><em>last_token</em> := '<em>%N</em>'</font>
-   <font color="#FF0000">%T</font>    <font color="#008080"><em>last_token</em> := '<em>%T</em>'</font>
-   <font color="#FF0000">%B</font>    <font color="#008080"><em>last_token</em> := '<em>%B</em>'</font>
-   <font color="#FF0000">%U </font>   <font color="#008080"><em>last_token</em> := '<em>%U</em>'</font>
+   <font color="#FF0000">%N</font>    <font color="#008080"><em>last_token</em> := ('<em>%N</em>').<em>code</em></font>
+   <font color="#FF0000">%T</font>    <font color="#008080"><em>last_token</em> := ('<em>%T</em>').<em>code</em></font>
+   <font color="#FF0000">%B</font>    <font color="#008080"><em>last_token</em> := ('<em>%B</em>').<em>code</em></font>
+   <font color="#FF0000">%U </font>   <font color="#008080"><em>last_token</em> := ('<em>%U</em>').<em>code</em></font>
 <font color="#0000FF">}</font></pre>
 </blockquote>
 
@@ -378,13 +383,13 @@ color="#0000FF">{</font>
 
 <blockquote>
     <pre><font color="#800000">&lt;ESC&gt;</font><font
-color="#FF0000">%N</font>    <font color="#008080"><em>last_token</em> := '<em>%N</em>'</font>
+color="#FF0000">%N</font>    <font color="#008080"><em>last_token</em> := ('<em>%N</em>').<em>code</em></font>
 <font color="#800000">&lt;ESC&gt;</font><font color="#FF0000">%T</font>    <font
-color="#008080"><em>last_token</em> := '<em>%T</em>'</font>
+color="#008080"><em>last_token</em> := ('<em>%T</em>').<em>code</em></font>
 <font color="#800000">&lt;ESC&gt;</font><font color="#FF0000">%B</font>    <font
-color="#008080"><em>last_token</em> := '<em>%B</em>'</font>
+color="#008080"><em>last_token</em> := ('<em>%B</em>').<em>code</em></font>
 <font color="#800000">&lt;ESC&gt;</font><font color="#FF0000">%U</font>    <font
-color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
+color="#008080"><em>last_token</em> := ('<em>%U</em>').<em>code</em></font></pre>
 </blockquote>
 
 <p>Start condition scopes may be nested.</p>
@@ -394,7 +399,7 @@ color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000-2005</b></font><font
+            <font size="2"><b>Copyright © 2000-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -404,7 +409,7 @@ color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 29 May 2005</font><br>
+            <strong>Last Updated:</strong> 27 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

@@ -49,6 +49,19 @@ regular expressions. These are:</p>
         any character except an uppercase letter.</dd>
     <dt><font color="#FF0000"><tt>[^A-Z\n]</tt></font></dt>
     <dd>any character except an uppercase letter or a newline.</dd>
+    <dt><font color="#FF0000"><tt>[a-z]{+}[0-9]</tt></font></dt>
+    <dd>a <em><strong>union of character classes</strong></em>,
+        i.e., any character in either of those classes. In this case,
+        any lowercase letter or digit.</dd>
+    <dt><font color="#FF0000"><tt>[a-z]{-}[aeiouy]</tt></font></dt>
+    <dd>a <em><strong>subtraction of character classes</strong></em>,
+        i.e., any character in the first class which is not in the
+        second class. In this case,
+        any consonant lowercase letter.</dd>
+    <dt><font color="#FF0000"><tt>[^\n]{-}([a-z]{+}[0-9])</tt></font></dt>
+    <dd>any character except a newline, a lowercase letter or a digit.
+    Note the use of parentheses in character class operations. Without
+    parentheses, a digit could have been matched.</dd>
     <dt><font color="#FF0000"><tt>r*</tt></font></dt>
     <dd>zero or more <font color="#FF0000"><tt>r</tt></font>'s,
         where <font color="#FF0000"><tt>r</tt></font> is any
@@ -88,6 +101,15 @@ regular expressions. These are:</p>
     <dt><font color="#FF0000"><tt>\x2a</tt></font></dt>
     <dd>the character with hexadecimal value <font
         color="#808000"><tt>2a</tt></font>.</dd>
+    <dt><font color="#FF0000"><tt>\x{03B2}</tt></font></dt>
+    <dd>the Unicode character with hexadecimal value <font
+        color="#808000"><tt>03B2</tt></font>.</dd>
+    <dt><font color="#FF0000"><tt>\u03B2</tt></font></dt>
+    <dd>the Unicode character with hexadecimal value <font
+        color="#808000"><tt>03B2</tt></font>.</dd>
+    <dt><font color="#FF0000"><tt>\u{03B2}</tt></font></dt>
+    <dd>the Unicode character with hexadecimal value <font
+        color="#808000"><tt>03B2</tt></font>.</dd>
     <dt><font color="#FF0000"><tt>(r)</tt></font></dt>
     <dd>match an <font color="#FF0000"><tt>r</tt></font>;
         parentheses are used to override <a href="#precedence">precedence</a>.</dd>
@@ -95,6 +117,18 @@ regular expressions. These are:</p>
     <dd>the regular expression <font color="#FF0000"><tt>r</tt></font>
         followed by the regular expression <font color="#FF0000"><tt>s</tt></font>;
         called <em><strong>concatenation</strong></em>.</dd>
+    <dt><font color="#FF0000"><tt>(b:r)</tt></font></dt>
+    <dd>in <a href="options.html#utf8">utf8</a> mode, match an
+        <font color="#FF0000"><tt>r</tt></font> where characters
+        in <font color="#FF0000"><tt>r</tt></font>
+        are interpreted as bytes (and not Unicode characters).</dd>
+    <dt><font color="#FF0000"><tt>(u:r)</tt></font></dt>
+    <dd>in <a href="options.html#utf8">utf8</a> mode, match an
+        <font color="#FF0000"><tt>r</tt></font> where characters
+        in <font color="#FF0000"><tt>r</tt></font>
+        are interpreted as Unicode characters. Overrides
+        <font color="#FF0000"><tt>(b:s)</tt></font> when
+        it appears in <font color="#FF0000"><tt>s</tt></font>.</dd>
 </dl>
 
 <hr size="1" width="75%">
@@ -132,7 +166,7 @@ regular expressions. These are:</p>
         Equivalent to <font color="#FF0000"><tt>r/\n</tt></font>.</dd>
     <dd>Note that <em>gelex</em>'s notion of &quot;newline&quot;
         is exactly what is interpreted as <font color="#808000"><tt>%N</tt></font>
-        by the Eiffel compiler that was used to compiler <em>gelex</em>;
+        by the Eiffel compiler that was used to compile <em>gelex</em>;
         in particular, on some <font size="2">DOS</font> systems
         you must either filter out <font color="#FF0000"><tt>\r</tt></font>'s
         in the input yourself, or explicitly use <font
@@ -173,6 +207,23 @@ regular expressions. These are:</p>
 </dl>
 
 <h2>Some notes on patterns</h2>
+
+<p>Everywhere where a character is valid (by itself or inside a
+character class), a Unicode character can be used as well. Just
+make sure the input file uses the UTF-8 encoding and starts with the
+<a href="http://en.wikipedia.org/wiki/Byte_order_mark">BOM</a>
+character. The character set is the set of non-surrogate
+valid Unicode characters, except with
+<font color="#FF0000"><tt>(b:r)</tt></font> where it's the
+set of bytes (8-bit characters). As a consequence,
+<font color="#FF0000"><tt>.</tt></font> or
+<font color="#FF0000"><tt>[^\n]</tt></font>
+is any Unicode character
+except newline, and <font color="#FF0000"><tt>(b:.)</tt></font>
+or <font color="#FF0000"><tt>(b:[^\n])</tt></font>
+is any byte between <font color="#FF0000"><tt>\x00</tt></font>
+and <font color="#FF0000"><tt>\xFF</tt></font> except newline
+<font color="#FF0000"><tt>\x0A</tt></font>.</p>
 
 <p>Note that inside of a character class, all regular expression
 operators lose their special meaning except escape (<font
@@ -278,7 +329,7 @@ or a <font color="#808000"><tt>bar</tt></font>-at-the-beginning-of-a-line.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            <font size="2"><b>Copyright © 1998-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -288,7 +339,7 @@ or a <font color="#808000"><tt>bar</tt></font>-at-the-beginning-of-a-line.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 February 2005</font><br>
+            <strong>Last Updated:</strong> 27 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

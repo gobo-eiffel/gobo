@@ -58,8 +58,8 @@ program, proceed as follows:</p>
         class</a>.</li>
     <li>Add the following clusters to your ECF file
         depending on the Eiffel compiler you are using:<pre>    <font
-color="#800000">$GOBO/library/lexical/src/skeleton
-    $GOBO/library/kernel/src</font></pre>
+color="#800000">$GOBO/library/lexical/library_skl.ecf
+    $GOBO/library/kernel/library.ecf</font></pre>
         <dl>
             <dt>where <font color="#800000" face="Courier New"><tt>&lt;compiler&gt;</tt></font>
                 is either <font color="#800000"
@@ -84,12 +84,12 @@ color="#800000">&lt;debug name=&quot;GELEX&quot; enabled=&quot;true&quot;/&gt;</
 include in your system all libraries that come with <em>Gobo
 Eiffel</em> in order to take advantage of the facilities provided
 by <em>gelex</em>. During the design of the scanner skeleton,
-care has been taken to only use Kernel classes such as <font
+care has been taken to only use kernel classes such as <font
 color="#008080"><em><tt>ARRAY</tt></em></font> or <font
 color="#008080"><em><tt>STRING</tt></em></font>, and therefore
 avoiding the unnecessary overhead of other library classes. As a
-consequence, only the three clusters listed above are required:
-the scanner skeleton cluster and Kernel adaptation clusters
+consequence, only the two libraries listed above are required:
+the scanner skeleton library and kernel adaptation library
 allowing portability across various Eiffel compilers.</p>
 
 <hr size="1">
@@ -107,7 +107,7 @@ allowing portability across various Eiffel compilers.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 15 March 2019</font><br>
+            <strong>Last Updated:</strong> 25 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

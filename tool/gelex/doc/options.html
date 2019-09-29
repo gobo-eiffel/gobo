@@ -67,7 +67,7 @@ color="#800000">ecs meta-ecs case-insensitive nodefault</font>
         color="#800000"><tt><br>
         nocase-sensitive</tt></font></dt>
     <dd><font size="3">Generate a case-insensitive scanner. The
-        case of letters given in the <em>gelex</em> input
+        case of ASCII letters (letters <tt>a</tt> to <tt>z</tt>) given in the <em>gelex</em> input
         patterns will be ignored, and tokens in the generated
         scanner input will be matched regardless of case. The
         matched text given in </font><font color="#008080"><em><tt>text</tt></em></font><font
@@ -177,6 +177,18 @@ color="#800000">ecs meta-ecs case-insensitive nodefault</font>
         href="actions.html#reject"><font color="#008080" size="3"><em><tt>reject</tt></em></font></a><font
         size="3"> is used in semantic actions. [default: </font><font
         color="#800000"><tt>noreject</tt></font><font size="3">]</font></dd>
+    <dt><a name="utf8"><font color="#800000"><tt>utf8</tt></font></a></dt>
+    <dd><font size="3">Unicode characters appearing in patterns
+        other than <font color="#FF0000"><tt>(b:r)</tt></font>
+        are internally converted to their UTF-8 sequence of bytes.
+        Character classes are converted accordinly to the equivalent
+        patterns. This option is useful when the file to be scanned
+        is using the UTF-8 encoding. However it produces larger
+        scanners (size of generated tables and size of the resulting
+        executable), with no visible speed improvement (when measured
+        with the Eiffel parser of <em>gec</em> scanning 20,000 Eiffel
+        class text files) compared to the default mode which is also
+        capable of scanning Unicode characters.</dd>
     <dt><a name="nowarn"><font color="#800000"><tt>nowarn</tt></font></a></dt>
     <dd><font size="3">Suppress warning messages. [default: </font><font
         color="#800000"><tt>warn</tt></font><font size="3">]</font></dd>
@@ -192,7 +204,7 @@ Following is <em>gelex</em> command-line usage message:</p>
 color="#800000">--version</font>][<font color="#800000">--help</font>][<font
 color="#800000">-bcefhimsVwxz?</font>][<font color="#800000">-a size</font>][<font color="#800000">--array-size=size</font>][<font color="#800000">--backup</font>]
       [<font color="#800000">--ecs</font>][<font color="#800000">--[no]full</font>][<font color="#800000">--case-insensitive</font>][<font color="#800000">--inspect-actions[=(yes|no)]</font>][<font color="#800000">--meta-ecs</font>]
-      [<font color="#800000">--outfile=filename</font>][<fontcolor="#800000">-o filename</font>][<font color="#800000">--pragma=[no]line</font>][<font color="#800000">--nodefault</font>][<font color="#800000">--nowarn</font>]<font color="#800000"> filename</font>
+      [<font color="#800000">--outfile=filename</font>][<font color="#800000">-o filename</font>][<font color="#800000">--pragma=[no]line</font>][<font color="#800000">--nodefault</font>][<font color="#800000">--nowarn</font>]<font color="#800000"> filename</font>
 </pre>
 </blockquote>
 
@@ -297,7 +309,7 @@ the <font size="3">input file.</font></p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000-2016</b></font><font
+            <font size="2"><b>Copyright © 2000-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -307,7 +319,7 @@ the <font size="3">input file.</font></p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 April 2016</font><br>
+            <strong>Last Updated:</strong> 26 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

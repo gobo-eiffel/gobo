@@ -58,7 +58,13 @@ won't be fooled by braces found within them.</p>
 color="#0000FF"><tt>|</tt></font> means &quot;same as the action
 for the next rule&quot;. See below for an illustration.</p>
 
-<p>Actions can include arbitrary Eiffel code. There are a number
+<p>Actions can include arbitrary Eiffel code. Note that if
+the Eiffel code contains Unicode characters,
+the input file should use the UTF-8 encoding and start with the
+<a href="http://en.wikipedia.org/wiki/Byte_order_mark">BOM</a>
+character.</p>
+
+</p>There are a number
 of special features, inherited from class <a href="skeleton.html"><font
 color="#008080"><em><tt>YY_SCANNER</tt></em></font></a>, which
 can be used in actions:</p>
@@ -67,22 +73,62 @@ can be used in actions:</p>
     <dt><a href="skeleton.html#append_text_to_string"
         name="append_text_to_string"><font color="#008080"><em><tt>append_text_to_string</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
-        STRING</tt></em><tt>)</tt></font></dt>
+        STRING_8</tt></em><tt>)</tt></font></dt>
     <dd>Append <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
         at end of <font color="#008080"><em><tt>a_string</tt></em></font>.
         For efficiency reason, this feature can bypass the call
         to <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        and directly copy the characters from the input buffer.</dd>
+    <dt><a href="skeleton.html#append_unicode_text_to_string"
+        name="append_unicode_text_to_string"><font color="#008080"><em><tt>append_unicode_text_to_string</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
+        STRING_32</tt></em><tt>)</tt></font></dt>
+    <dd>Append <a href="#text"><font color="#008080"><em><tt>unicode_text</tt></em></font></a>
+        at end of <font color="#008080"><em><tt>a_string</tt></em></font>.
+        For efficiency reason, this feature can bypass the call
+        to <a href="#text"><font color="#008080"><em><tt>unicode_text</tt></em></font></a>
+        and directly copy the characters from the input buffer.</dd>
+    <dt><a href="skeleton.html#append_utf8_text_to_string"
+        name="append_utf8_text_to_string"><font color="#008080"><em><tt>append_utf8_text_to_string</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
+        STRING_8</tt></em><tt>)</tt></font></dt>
+    <dd>Append <a href="#text"><font color="#008080"><em><tt>utf8_text</tt></em></font></a>
+        at end of <font color="#008080"><em><tt>a_string</tt></em></font>.
+        For efficiency reason, this feature can bypass the call
+        to <a href="#text"><font color="#008080"><em><tt>utf8_text</tt></em></font></a>
         and directly copy the characters from the input buffer.</dd>
     <dt><a href="skeleton.html#append_text_substring_to_string"
         name="append_text_substring_to_string"><font
         color="#008080"><em><tt>append_text_substring_to_string</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
         e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>;</tt><em><tt>
-        a_string</tt></em><tt>:</tt><em><tt> STRING</tt></em><tt>)</tt></font></dt>
-    <dd>Append <a href="#text_substring"><font color="#008080"><em><tt>text_substring </tt></em></font></a>at
+        a_string</tt></em><tt>:</tt><em><tt> STRING_8</tt></em><tt>)</tt></font></dt>
+    <dd>Append <a href="#text_substring"><font color="#008080"><em><tt>text_substring</tt></em></font></a> at
         end of <font color="#008080"><em><tt>a_string</tt></em></font>.
         For efficiency reason, this feature can bypass the call
         to <a href="#text_substring"><font color="#008080"><em><tt>text_substring</tt></em></font></a>
+        and directly copy the characters from the input buffer.</dd>
+    <dt><a href="skeleton.html#append_unicode_text_substring_to_string"
+        name="append_unicode_text_substring_to_string"><font
+        color="#008080"><em><tt>append_unicode_text_substring_to_string</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
+        e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>;</tt><em><tt>
+        a_string</tt></em><tt>:</tt><em><tt> STRING_32</tt></em><tt>)</tt></font></dt>
+    <dd>Append <a href="#unicode_text_substring"><font color="#008080"><em><tt>unicode_text_substring</tt></em></font></a> at
+        end of <font color="#008080"><em><tt>a_string</tt></em></font>.
+        For efficiency reason, this feature can bypass the call
+        to <a href="#unicode_text_substring"><font color="#008080"><em><tt>unicode_text_substring</tt></em></font></a>
+        and directly copy the characters from the input buffer.</dd>
+    <dt><a href="skeleton.html#append_utf8_text_substring_to_string"
+        name="append_utf8_text_substring_to_string"><font
+        color="#008080"><em><tt>append_utf8_text_substring_to_string</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
+        e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>;</tt><em><tt>
+        a_string</tt></em><tt>:</tt><em><tt> STRING_8</tt></em><tt>)</tt></font></dt>
+    <dd>Append <a href="#utf8_text_substring"><font color="#008080"><em><tt>utf8_text_substring</tt></em></font></a> at
+        end of <font color="#008080"><em><tt>a_string</tt></em></font>.
+        For efficiency reason, this feature can bypass the call
+        to <a href="#utf8_text_substring"><font color="#008080"><em><tt>utf8_text_substring</tt></em></font></a>
         and directly copy the characters from the input buffer.</dd>
     <dt><a href="skeleton.html#column" name="column"><font
         color="#008080"><em><tt>column</tt></em></font></a><font
@@ -119,8 +165,13 @@ can be used in actions:</p>
         should be used to switch to other input buffers.</dd>
     <dt><a href="skeleton.html#last_character"
         name="last_character"><font color="#008080"><em><tt>last_character</tt></em></font></a><font
-        color="#008080"><tt>:</tt><em><tt> CHARACTER</tt></em></font></dt>
+        color="#008080"><tt>:</tt><em><tt> CHARACTER_8</tt></em></font></dt>
     <dd>Last character read by <a href="#read_character"><font
+        color="#008080"><em><tt>read_character</tt></em></font></a>.</dd>
+    <dt><a href="skeleton.html#last_unicode_character"
+        name="last_unicode_character"><font color="#008080"><em><tt>last_unicode_character</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> CHARACTER_32</tt></em></font></dt>
+    <dd>Last Unicode character read by <a href="#read_character"><font
         color="#008080"><em><tt>read_character</tt></em></font></a>.</dd>
     <dt><a href="skeleton.html#last_token" name="last_token"><font
         color="#008080"><em><tt>last_token</tt></em></font></a><font
@@ -135,7 +186,7 @@ can be used in actions:</p>
         last left off until either <font
         color="#008080"><em><tt>last_token</tt></em></font>
         is given a non-negative value again or the end of the
-        file is reached (yielding a null value). Non-positive
+        file is reached (yielding a null value). Negative
         values are reserved by <a href="skeleton.html#read_token"><font
         color="#008080"><em><tt>read_token</tt></em></font></a> to indicate internal errors which can
         occur when too many <a href="#reject"><font
@@ -207,17 +258,73 @@ can be used in actions:</p>
     <dt><a href="skeleton.html#new_file_buffer"
         name="new_file_buffer"><font color="#008080"><em><tt>new_file_buffer</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_file</tt></em><tt>:</tt><em><tt>
-        FILE</tt></em><tt>):</tt><em><tt> YY_FILE_BUFFER</tt></em></font></dt>
+        KI_CHARACTER_INPUT_STREAM</tt></em><tt>):</tt><em><tt> YY_FILE_BUFFER</tt></em></font></dt>
     <dd>Create an input buffer for <font color="#008080"><em><tt>a_file</tt></em></font>.
         This routine is convenient when used with <a href="#set_input_buffer"><font
-        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.</dd>
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.
+        To be used when <font color="#008080"><em><tt>a_file</tt></em></font> contains
+        ISO-8859-1 characters, or when it is using the UTF-8 encoding and the scanner is
+        either using the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#utf8"><font color="#800000"><tt>utf8</tt></font></a>
+        or has been manually written to expect sequences of UTF-8 bytes.</dd>
     <dt><a href="skeleton.html#new_string_buffer"
         name="new_string_buffer"><font color="#008080"><em><tt>new_string_buffer</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
-        STRING</tt></em><tt>):</tt><em><tt> YY_BUFFER</tt></em></font></dt>
+        STRING_8</tt></em><tt>):</tt><em><tt> YY_BUFFER</tt></em></font></dt>
     <dd>Create an input buffer for <font color="#008080"><em><tt>a_string</tt></em></font>.
         This routine is convenient when used with <a href="#set_input_buffer"><font
-        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.</dd>
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.
+        To be used when <font color="#008080"><em><tt>a_string</tt></em></font> contains
+        ISO-8859-1 characters, or when it is using the UTF-8 encoding and the scanner is
+        either using the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#utf8"><font color="#800000"><tt>utf8</tt></font></a>
+        or has been manually written to expect sequences of UTF-8 bytes.</dd>
+    <dt><a href="skeleton.html#new_unicode_file_buffer"
+        name="new_unicode_file_buffer"><font color="#008080"><em><tt>new_unicode_file_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_file</tt></em><tt>:</tt><em><tt>
+        KI_CHARACTER_INPUT_STREAM</tt></em><tt>):</tt><em><tt> YY_UNICODE_FILE_BUFFER</tt></em></font></dt>
+    <dd>Create a Unicode input buffer for <font color="#008080"><em><tt>a_file</tt></em></font>.
+        This routine is convenient when used with <a href="#set_input_buffer"><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.
+        To be used when <font color="#008080"><em><tt>a_file</tt></em></font> contains
+        ISO-8859-1 characters, or when it is using the UTF-8 encoding. The scanner will
+        receive Unicode characters, not sequences of UTF-8 bytes.</dd>
+    <dt><a href="skeleton.html#new_unicode_string_buffer"
+        name="new_unicode_string_buffer"><font color="#008080"><em><tt>new_unicode_string_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
+        READABLE_STRING_GENERAL</tt></em><tt>):</tt><em><tt> YY_UNICODE_BUFFER</tt></em></font></dt>
+    <dd>Create a Unicode input buffer for <font color="#008080"><em><tt>a_string</tt></em></font>.
+        This routine is convenient when used with <a href="#set_input_buffer"><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.
+        To be used when <font color="#008080"><em><tt>a_string</tt></em></font> contains
+        ISO-8859-1 or Unicode characters. The scanner will
+        receive Unicode characters, not sequences of UTF-8 bytes.</dd>
+    <dt><a href="skeleton.html#new_utf8_file_buffer"
+        name="new_utf8_file_buffer"><font color="#008080"><em><tt>new_utf8_file_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_file</tt></em><tt>:</tt><em><tt>
+        KI_CHARACTER_INPUT_STREAM</tt></em><tt>):</tt><em><tt> YY_UTF8_FILE_BUFFER</tt></em></font></dt>
+    <dd>Create a UTF-8 input buffer for <font color="#008080"><em><tt>a_file</tt></em></font>.
+        This routine is convenient when used with <a href="#set_input_buffer"><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.
+        To be used when <font color="#008080"><em><tt>a_file</tt></em></font> contains
+        ISO-8859-1 characters or when it is using the UTF-8 encoding, and the scanner is
+        either using the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#utf8"><font color="#800000"><tt>utf8</tt></font></a>
+        or has been manually written to expect sequences of UTF-8 bytes.
+        The scanner will receive sequences of UTF-8 bytes.</dd>
+    <dt><a href="skeleton.html#new_utf8_string_buffer"
+        name="new_utf8_string_buffer"><font color="#008080"><em><tt>new_utf8_string_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
+        READABLE_STRING_GENERAL</tt></em><tt>):</tt><em><tt> YY_UTF8_BUFFER</tt></em></font></dt>
+    <dd>Create a UTF-8 input buffer for <font color="#008080"><em><tt>a_string</tt></em></font>.
+        This routine is convenient when used with <a href="#set_input_buffer"><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.
+        To be used when <font color="#008080"><em><tt>a_string</tt></em></font> contains
+        ISO-8859-1 or Unicode characters, and the scanner is
+        either using the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#utf8"><font color="#800000"><tt>utf8</tt></font></a>
+        or has been manually written to expect sequences of UTF-8 bytes.
+        The scanner will receive sequences of UTF-8 bytes.</dd>
     <dt><a href="skeleton.html#output" name="output"><font
         color="#008080"><em><tt>output</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_text</tt></em><tt>:</tt><em><tt>
@@ -226,6 +333,11 @@ can be used in actions:</p>
     <dd>Write <font color="#008080"><em><tt>a_text </tt></em></font>to
         the standard output by default. This behavior can easily
         be modified through redefinition.</dd>
+    <dt><a href="skeleton.html#pop_start_condition"
+        name="pop_start_condition"><font color="#008080"><em><tt>pop_start_condition</tt></em></font></a></dt>
+    <dd>Restore previous start condition.
+        See discussion on <a href="start_conditions.html">start
+        conditions</a> for further details.</dd>
     <dt><a href="skeleton.html#position" name="position"><font
         color="#008080"><em><tt>position</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
@@ -245,10 +357,19 @@ can be used in actions:</p>
         particular, the routine <font color="#008080"><em><tt>token_name</tt></em></font>
         generated by <em>geyacc</em> can be used to make the
         debugging output more human-readable.</dd>
+    <dt><a href="skeleton.html#push_start_condition"
+        name="push_start_condition"><font color="#008080"><em><tt>push_start_condition</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_start_condition</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>)</tt></font></dt>
+    <dd>Add current start condition to a stack and put the scanner in the
+        corresponding new start condition <font color="#008080"><em><tt>a_start_condition</tt></em></font>.
+        See discussion on <a href="start_conditions.html">start
+        conditions</a> for further details.</dd>
     <dt><a href="skeleton.html#read_character"
         name="read_character"><font color="#008080"><em><tt>read_character</tt></em></font></a></dt>
     <dd>Read the next character from the input stream. Make the
-        result available in <a href="#last_character"><font color="#008080"><em><tt>last_character</tt></em></font></a>.
+        result available in <a href="#last_character"><font color="#008080"><em><tt>last_character</tt></em></font></a>
+        and <a href="#last_unicode_character"><font color="#008080"><em><tt>last_unicode_character</tt></em></font></a>.
         For example, the following is one way to eat up C
         comments:<dl>
             <dd><pre>
@@ -286,7 +407,13 @@ color="#0000FF">{</font>
         </dl>
     </dd>
     <dd>This feature should be used with care since it bypasses
-        the pattern-matching <font size="2">DFA</font> engine.</dd>
+        the pattern-matching <font size="2">DFA</font> engine.
+        Note that if <a href="#input_buffer"><font
+        color="#008080"><em><tt>input_buffer</tt></em></font></a>
+        contains Unicode characters
+		which cannot be represented as 8-bit characters, they
+		will be replaced by a replacement character specified
+        in the buffer.</dd>
     <dt><a name="reject"><font color="#008080"><em><tt>reject</tt></em></font></a></dt>
     <dd>Direct the scanner to proceed on to the &quot;second
         best&quot; rule which matched the input (or a prefix of
@@ -353,9 +480,17 @@ color="#0000FF">{</font>
         preprocessor instructions such as <tt>#include</tt>. It
         can eventually be given as argument the result of one of
         the functions <a href="skeleton.html#new_file_buffer"><font
-        color="#008080"><em><tt>new_file_buffer</tt></em></font></a>
-        or <a href="skeleton.html#new_string_buffer"><font
-        color="#008080"><em><tt>new_string_buffer</tt></em></font></a>.
+        color="#008080"><em><tt>new_file_buffer</tt></em></font></a>,
+        <a href="skeleton.html#new_unicode_file_buffer"><font
+        color="#008080"><em><tt>new_unicode_file_buffer</tt></em></font></a>,
+        <a href="skeleton.html#new_utf8_file_buffer"><font
+        color="#008080"><em><tt>new_utf8_file_buffer</tt></em></font></a>,
+        <a href="skeleton.html#new_string_buffer"><font
+        color="#008080"><em><tt>new_string_buffer</tt></em></font></a>,
+        <a href="skeleton.html#new_unicode_string_buffer"><font
+        color="#008080"><em><tt>new_unicode_string_buffer</tt></em></font></a>
+        or <a href="skeleton.html#new_utf8_string_buffer"><font
+        color="#008080"><em><tt>new_utf8_string_buffer</tt></em></font></a>.
         Note that switching input buffers does not change the
         start condition of the scanner.</dd>
     <dt><a href="skeleton.html#set_last_token"
@@ -376,6 +511,7 @@ color="#0000FF">{</font>
         color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
     <dd>Current start condition. This value can subsequently be
         used with <a href="#set_start_condition"><font color="#008080"><em><tt>set_start_condition</tt></em></font></a>
+        or <a href="#push_start_condition"><font color="#008080"><em><tt>push_start_condition</tt></em></font></a>
         to return to that start condition. See discussion on <a
         href="start_conditions.html">start conditions</a> for
         further details.</dd>
@@ -387,12 +523,16 @@ color="#0000FF">{</font>
         is also called when an end-of-file is encountered.</dd>
     <dt><a href="skeleton.html#text" name="text"><font
         color="#008080"><em><tt>text</tt></em></font></a><font
-        color="#008080"><tt>:</tt><em><tt> STRING</tt></em></font></dt>
+        color="#008080"><tt>:</tt><em><tt> STRING_8</tt></em></font></dt>
     <dd>Text of the last token read. This feature is a function
         which creates a new string each time it is called.
         Actions are hence free to alter the result of <font
         color="#008080"><em><tt>text</tt></em></font> without
-        damaging the input buffer.</dd>
+        damaging the input buffer.
+        Note that if input buffer contains Unicode characters
+		which cannot be represented as 8-bit characters, they
+		will be replaced by a replacement character specified
+        in the buffer.</dd>
     <dt><a href="skeleton.html#text_count" name="text_count"><font
         color="#008080"><em><tt>text_count</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
@@ -404,7 +544,7 @@ color="#0000FF">{</font>
     <dt><a href="skeleton.html#text_item" name="text_item"><font
         color="#008080"><em><tt>text_item</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>i</tt></em><tt>:</tt><em><tt>
-        INTEGER</tt></em><tt>):</tt><em><tt> CHARACTER</tt></em></font></dt>
+        INTEGER</tt></em><tt>):</tt><em><tt> CHARACTER_8</tt></em></font></dt>
     <dd>Character at a given index in <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>.
         For efficiency reason, this function bypasses the call to
         <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a> and
@@ -413,16 +553,50 @@ color="#0000FF">{</font>
         name="text_substring"><font color="#008080"><em><tt>text_substring</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
         e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>):</tt><em><tt>
-        STRING</tt></em></font></dt>
+        STRING_8</tt></em></font></dt>
     <dd>Substring of <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>.
         This function creates a new string each time it is
         called. For efficiency reason, this function bypasses the
         call to <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
         and creates the substring directly from the input buffer.</dd>
+    <dt><a href="skeleton.html#unicode_text" name="unicode_text"><font
+        color="#008080"><em><tt>unicode_text</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> STRING_32</tt></em></font></dt>
+    <dd>Text of the last token read. This feature is a function
+        which creates a new string each time it is called.
+        Actions are hence free to alter the result of <font
+        color="#008080"><em><tt>unicode_text</tt></em></font> without
+        damaging the input buffer.
+        Note that if the scanner is written to receive sequences
+        of UTF-8 bytes, <font
+        color="#008080"><em><tt>unicode_text</tt></em></font>
+        will treat each single
+        byte as a character. It will not try to decode the UTF-8 bytes
+        into Unicode characters. Also note that <font
+        color="#008080"><em><tt>unicode_text</tt></em></font>
+        does not contain surrogate or invalid Unicode characters.</dd>
+    <dt><a href="skeleton.html#unicode_text_item" name="unicode_text_item"><font
+        color="#008080"><em><tt>unicode_text_item</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>i</tt></em><tt>:</tt><em><tt>
+        INTEGER</tt></em><tt>):</tt><em><tt> CHARACTER_32</tt></em></font></dt>
+    <dd>Unicode character at a given index in <a href="#text"><font color="#008080"><em><tt>unicode_text</tt></em></font></a>.
+        For efficiency reason, this function bypasses the call to
+        <a href="#unicode_text"><font color="#008080"><em><tt>unicode_text</tt></em></font></a> and
+        reads the character directly from the input buffer.</dd>
+    <dt><a href="skeleton.html#unicode_text_substring"
+        name="unicode_text_substring"><font color="#008080"><em><tt>unicode_text_substring</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
+        e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>):</tt><em><tt>
+        STRING_32</tt></em></font></dt>
+    <dd>Substring of <a href="#unicode_text"><font color="#008080"><em><tt>unicode_text</tt></em></font></a>.
+        This function creates a new string each time it is
+        called. For efficiency reason, this function bypasses the
+        call to <a href="#unicode_text"><font color="#008080"><em><tt>unicode_text</tt></em></font></a>
+        and creates the substring directly from the input buffer.</dd>
     <dt><a href="skeleton.html#unread_character"
         name="unread_character"><font color="#008080"><em><tt>unread_character</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>c</tt></em><tt>:</tt><em><tt>
-        CHARACTER</tt></em><tt>)</tt></font></dt>
+        CHARACTER_8</tt></em><tt>)</tt></font></dt>
     <dd>Put the character <font color="#008080" size="2"
         face="Courier New"><em>c</em></font> back onto the input
         stream. It will be the next character scanned. The
@@ -453,6 +627,40 @@ color="#0000FF">{</font>
         elsewhere. Finally, note that you cannot put back <tt>EOF</tt>
         (i.e. '<tt>%/255/</tt>') to attempt to mark the input
         stream with an end-of-file.</dd>
+    <dt><a href="skeleton.html#unread_unicode_character"
+        name="unread_unicode_character"><font color="#008080"><em><tt>unread_unicode_character</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>c</tt></em><tt>:</tt><em><tt>
+        CHARACTER_32</tt></em><tt>)</tt></font></dt>
+    <dd>Put the character <font color="#008080" size="2"
+        face="Courier New"><em>c</em></font> back onto the input
+        stream. It will be the next character scanned.
+        The behavior is undefined if <font
+		color="#008080"><em><tt>c</tt></em></font> is too large to fit into
+		<a href="#input_buffer"><font color="#008080"><em><tt>input_buffer</tt></em></font></a>.
+        An important potential problem when using <font
+		color="#008080"><em><tt>unread_unicode_character</tt></em></font>
+		is that it alters the input stream. If you need the value
+		of <a href="#unicode_text"><font color="#008080"><em><tt>unicode_text</tt></em></font></a>
+		after a call to <font color="#008080"><em><tt>unread_unicode_character</tt></em></font>,
+		you must first save it elsewhere.</dd>
+    <dt><a href="skeleton.html#utf8_text" name="utf8_text"><font
+        color="#008080"><em><tt>utf8_text</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> STRING_8</tt></em></font></dt>
+    <dd>UTF-8 representation of <a href="#unicode_text"><font color="#008080"><em><tt>unicode_text</tt></em></font></a>.
+        This function creates a new string each time it is
+        called. For efficiency reason, this function bypasses the
+        call to <a href="#unicode_text"><font color="#008080"><em><tt>unicode_text</tt></em></font></a>
+        and creates the UTF-8 representation directly from the input buffer.</dd>
+    <dt><a href="skeleton.html#utf8_text_substring"
+        name="utf8_text_substring"><font color="#008080"><em><tt>utf8_text_substring</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
+        e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>):</tt><em><tt>
+        STRING_8</tt></em></font></dt>
+    <dd>UTF-8 representation of <a href="#unicode_text_substring"><font color="#008080"><em><tt>unicode_text_substring</tt></em></font></a>.
+        This function creates a new string each time it is
+        called. For efficiency reason, this function bypasses the
+        call to <a href="#unicode_text_substring"><font color="#008080"><em><tt>unicode_text_substring</tt></em></font></a>
+        and creates the UTF-8 representation directly from the input buffer.</dd>
 </dl>
 
 <p>In addition to the above routines which can be called in
@@ -472,7 +680,7 @@ returned:</p>
         color="#008080"><tt>:</tt><em><tt> BOOLEAN</tt></em></font></dt>
     <dd>Has an error occurred during scanning? This is the case
         when <a href="#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a> has
-        been given a non-positive value. It can occur when too
+        been given a negative value. It can occur when too
         many <font color="#008080"><em><tt>reject </tt></em></font>are
         called (and hence nothing can be matched anymore) or when
         the option <a href="options.html#nodefault"><font
@@ -522,7 +730,7 @@ generated scanner class.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000-2005</b></font><font
+            <font size="2"><b>Copyright © 2000-2019</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -532,7 +740,7 @@ generated scanner class.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <strong>Last Updated:</strong> 29 September 2019</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$
