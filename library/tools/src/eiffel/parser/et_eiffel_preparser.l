@@ -27,7 +27,7 @@ BREAK				{HORIZONTAL_BREAK}{+}[\n]
 FREEOP_CHAR			[^a-zA-Z0-9_:;,?'"$.=()[\]{}]{-}{BREAK}
 CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*
 
-%x MS MSN MSN1 VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
+%x MS MSN MSN1 VS1 VS2 VS3
 %option nodefault line outfile="et_eiffel_preparser.e"
 
 %%
@@ -245,10 +245,11 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 \"[^%\n"]*\"	{
 			}
 
-\"[^\n"]*"{"/{HORIZONTAL_BREAK}*\n {
+\"[^\n"]*[{\{]/{HORIZONTAL_BREAK}*\n {
 					-- Verbatim string.
 				verbatim_marker := utf8_text_substring (2, text_count - 1)
 				verbatim_marker_count := text_count - 2
+				verbatim_opening_character := unicode_text_item (text_count)
 				set_start_condition (VS1)
 			}
 <VS1>{
@@ -275,7 +276,7 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 <VS2>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	{HORIZONTAL_BREAK}*"}"[^\n"]*\" {
+	{HORIZONTAL_BREAK}*[}\]][^\n"]*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					verbatim_marker := no_verbatim_marker
 					verbatim_marker_count := 0
@@ -331,98 +332,6 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 			}
 	<<EOF>>		{
 					-- No final brace-double-quote.
-				last_token := E_STRERR
-				report_syntax_error (current_position)
-				set_start_condition (INITIAL)
-			}
-}
-
-\"[^\n"]*\[/{HORIZONTAL_BREAK}*\n {
-					-- Left-aligned verbatim string.
-				verbatim_marker := utf8_text_substring (2, text_count - 1)
-				verbatim_marker_count := text_count - 2
-				set_start_condition (LAVS1)
-			}
-<LAVS1>{
-		-- Discard space characters at the
-		-- end of Verbatim_string_opener.
-	{HORIZONTAL_BREAK}*\n {
-				last_literal_start := 1
-				last_literal_end := 0
-				set_start_condition (LAVS2)
-			}
-	.		{
-					-- No final bracket-double-quote.
-				last_token := E_STRERR
-				report_syntax_error (current_position)
-				set_start_condition (INITIAL)
-			}
-	<<EOF>>	{
-					-- No final bracket-double-quote.
-				last_token := E_STRERR
-				report_syntax_error (current_position)
-				set_start_condition (INITIAL)
-			}
-}
-<LAVS2>{
-		-- Read one line of a verbatim string body
-		-- from the beginning of line.
-	{HORIZONTAL_BREAK}*\][^\n"]*\" {
-				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
-					verbatim_marker := no_verbatim_marker
-					verbatim_marker_count := 0
-					set_start_condition (INITIAL)
-				else
-					more
-					set_start_condition (LAVS3)
-				end
-			}
-	[^\n"]*\" {
-				more
-				set_start_condition (LAVS3)
-			}
-	[^\n"]*\r\n {
-				more
-				last_literal_end := text_count - 2
-			}
-	[^\n"]*\n {
-				more
-				last_literal_end := text_count - 1
-			}
-	.		{
-					-- No final bracket-double-quote.
-				last_token := E_STRERR
-				report_syntax_error (current_position)
-				set_start_condition (INITIAL)
-			}
-	<<EOF>>		{
-					-- No final bracket-double-quote.
-				last_token := E_STRERR
-				report_syntax_error (current_position)
-				set_start_condition (INITIAL)
-			}
-}
-<LAVS3>{
-		-- Read remaining characters of a line
-		-- in verbatim string body.
-	.*\r\n	{
-				more
-				last_literal_end := text_count - 2
-				set_start_condition (LAVS2)
-			}
-	.*\n	{
-				more
-				last_literal_end := text_count - 1
-				set_start_condition (LAVS2)
-			}
-	.		{
-					-- No final bracket-double-quote.
-				last_token := E_STRERR
-				report_syntax_error (current_position)
-				set_start_condition (INITIAL)
-			}
-	<<EOF>>	{
-					-- No final bracket-double-quote.
 				last_token := E_STRERR
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)

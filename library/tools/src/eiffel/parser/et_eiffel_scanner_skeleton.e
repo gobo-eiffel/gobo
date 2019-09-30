@@ -1475,6 +1475,9 @@ feature {NONE} -- Multi-line manifest strings
 
 feature {NONE} -- Verbatim strings
 
+	verbatim_opening_character: CHARACTER_32
+			-- Verbatim string opening character [ or {
+
 	verbatim_marker: STRING_8
 			-- Marker of verbatim string currently scanned
 			-- (using UTF-8 encoding)
@@ -1514,9 +1517,9 @@ feature {NONE} -- Verbatim strings
 			l_marker_count := verbatim_marker_count
 			l_text_count := an_end - a_start + 1
 			if l_text_count > l_marker_count then
-				nb := a_start + l_text_count - l_marker_count - 1
+				nb := an_end - l_marker_count
 				c := unicode_text_item (nb)
-				if c = ']' or c = '}' then
+				if c = ']' or c = '}' and then c = verbatim_opening_character + 2 then
 					Result := True
 						-- Compare end marker with start marker.
 					j := nb + 1
@@ -1543,14 +1546,14 @@ feature {NONE} -- Verbatim strings
 						else
 							Result := False
 								-- Jump out of the loop.
-							i := l_marker_count + 1
+							i := l_utf8_marker_count + 1
 						end
 					end
 					if Result then
 							-- Check that all leading characters are white characters.
 						from j := a_start until j = nb loop
-							inspect unicode_text_item (j)
-							when ' ', '%T', '%R', '%N' then
+							inspect unicode_text_item (j).natural_32_code
+							when 9..13, 32, 160, 5760, 8192..8202, 8239, 8287, 12288 then
 								j := j + 1
 							else
 								Result := False
