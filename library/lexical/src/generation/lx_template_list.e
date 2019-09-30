@@ -87,7 +87,6 @@ feature -- Access
 			meta_equiv_classes_built: attached meta_equiv_classes as l_meta_equiv_classes implies l_meta_equiv_classes.built
 		local
 			l_label: INTEGER
-			target: detachable LX_DFA_STATE
 			l_cursor: DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER]
 		do
 			if not attached meta_equiv_classes as l_meta_equiv_classes then
