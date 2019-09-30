@@ -27,11 +27,14 @@ create
 
 %x SECTION2 SECTION3 EIFFEL_CODE EIFFEL_ACTION
 %x ERROR_SECTION ERROR_ACTION
+%x EIFFEL_MSN EIFFEL_VS1 EIFFEL_VS2 EIFFEL_VS3
 
 C					"--".*
 WS					[ \t\r]+
 NL					\n
 ESC					\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\})
+EIFFEL_CHAR_CODE	[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*
+EIFFEL_HORIZONTAL_BREAK	[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]
 
 %%
 
@@ -50,9 +53,11 @@ ESC					\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\})
 	"]"					last_token := Right_bracket_code
 	"%{"{WS}?{NL}	{
 						line_nb := line_nb + 1
+						eiffel_text_count := 0
 						set_start_condition (EIFFEL_CODE)
 					}
 	"%{"{WS}?		{
+						eiffel_text_count := 0
 						set_start_condition (EIFFEL_CODE)
 					}
 	"%%"			{
@@ -220,9 +225,11 @@ ESC					\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\})
 	";"					last_token := Semicolon_code
 	"{"{WS}?{NL}	{
 						line_nb := line_nb + 1
+						eiffel_text_count := 0
 						set_start_condition (EIFFEL_ACTION)
 					}
 	"{"{WS}?		{
+						eiffel_text_count := 0
 						set_start_condition (EIFFEL_ACTION)
 					}
 	"%%"			{
@@ -251,23 +258,22 @@ ESC					\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\})
 					}
 	"{"{WS}?{NL}	{
 						line_nb := line_nb + 1
+						eiffel_text_count := 0
 						set_start_condition (ERROR_ACTION)
 					}
 	"{"{WS}?		{
+						eiffel_text_count := 0
 						set_start_condition (ERROR_ACTION)
 					}
 }
 
 <EIFFEL_CODE>{
-	[^"'%\n-]*										more
-	["%]([^"%\n]|%([^/\n\r]|("/"[0-9]+"/")))*["%]	more
-	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'			more
-	"--".*											more
-	\"|\'|%|-										more
+	[^"'\-%\n]*		eiffel_more
 	\n			{
 					line_nb := line_nb + 1
-					more
+					eiffel_more
 				}
+	%				eiffel_more
 	"%}"		{
 					last_token := T_EIFFEL
 					last_string_value := utf8_text_substring (1, text_count - 2)
@@ -282,18 +288,16 @@ ESC					\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\})
 }
 
 <EIFFEL_ACTION,ERROR_ACTION>{
-	[^$"'%{}\n-]*									|
-	["%]([^"%\n]|%([^/\n\r]|("/"[0-9]+"/")))*["%]	|
-	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'			|
-	"--".*											|
-	\"|\'|%|-|\$	{
-					action_buffer.append_string (utf8_text)
+	[^"'\-{}$\n]*	eiffel_more
+	\n			{
+					line_nb := line_nb + 1
+					eiffel_more
 				}
-	\n+			{
-					line_nb := line_nb + text_count
-					action_buffer.append_string (text)
-				}
+	"$"				eiffel_more
+
 	"$$"		{
+					append_utf8_text_substring_to_string (1, eiffel_text_count, action_buffer)
+					eiffel_text_count := 0
 					if start_condition = ERROR_ACTION then
 						report_invalid_dollar_dollar_error
 						action_buffer.append_string ("$$")
@@ -304,58 +308,182 @@ ESC					\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\})
 					end
 				}
 	\$[0-9]+	{
-					if text_substring (2, text_count).is_integer then
-						if attached rule as l_rule then
-							if start_condition = ERROR_ACTION then
-								process_dollar_n (text_substring (2, text_count).to_integer, last_error - 1, l_rule)
+					if attached text_substring (eiffel_text_count + 2, text_count) as l_text_substring then
+						append_utf8_text_substring_to_string (1, eiffel_text_count, action_buffer)
+						eiffel_text_count := 0
+						if l_text_substring.is_integer then
+							if attached rule as l_rule then
+								if start_condition = ERROR_ACTION then
+									process_dollar_n (l_text_substring.to_integer, last_error - 1, l_rule)
+								else
+									process_dollar_n (l_text_substring.to_integer, l_rule.rhs.count, l_rule)
+								end
 							else
-								process_dollar_n (text_substring (2, text_count).to_integer, l_rule.rhs.count, l_rule)
+								eiffel_more
 							end
 						else
-							action_buffer.append_string (text)
+							report_integer_too_large_error (l_text_substring)
+							eiffel_more
 						end
 					else
-						report_integer_too_large_error (text_substring (2, text_count))
-						action_buffer.append_string (text)
+						eiffel_more
 					end
 				}
 	\$\-[0-9]+	{
-					if text_substring (3, text_count).is_integer then
-						if attached rule as l_rule then
-							if start_condition = ERROR_ACTION then
-								process_dollar_n (- text_substring (3, text_count).to_integer, last_error - 1, l_rule)
+					if attached text_substring (eiffel_text_count + 3, text_count) as l_text_substring then
+						append_utf8_text_substring_to_string (1, eiffel_text_count, action_buffer)
+						eiffel_text_count := 0
+						if l_text_substring.is_integer then
+							if attached rule as l_rule then
+								if start_condition = ERROR_ACTION then
+									process_dollar_n (- l_text_substring.to_integer, last_error - 1, l_rule)
+								else
+									process_dollar_n (- l_text_substring.to_integer, l_rule.rhs.count, l_rule)
+								end
 							else
-								process_dollar_n (- text_substring (3, text_count).to_integer, l_rule.rhs.count, l_rule)
+								eiffel_more
 							end
 						else
-							action_buffer.append_string (text)
+							report_integer_too_large_error (l_text_substring)
+							eiffel_more
 						end
 					else
-						report_integer_too_large_error (text_substring (3, text_count))
-						action_buffer.append_string (text)
+						eiffel_more
 					end
 				}
 	"{"			{
-					action_buffer.append_character ('{')
 					nb_open_brackets := nb_open_brackets + 1
+					eiffel_more
 				}
 	"}"			{
 					if nb_open_brackets = 0 then
 						last_token := T_ACTION
+						append_utf8_text_substring_to_string (1, eiffel_text_count, action_buffer)
+						eiffel_text_count := 0
 						last_string_value := cloned_string (action_buffer)
 						action_buffer.wipe_out
 						set_start_condition (SECTION2)
 					else
-						action_buffer.append_character ('}')
 						nb_open_brackets := nb_open_brackets - 1
+						eiffel_more
 					end
 				}
 	<<EOF>>		{
 					report_missing_characters_error ("}")
 					last_token := T_ACTION
+					append_utf8_text_substring_to_string (1, eiffel_text_count, action_buffer)
+					eiffel_text_count := 0
 					last_string_value := cloned_string (action_buffer)
 					action_buffer.wipe_out
 					set_start_condition (SECTION2)
+				}
+}
+
+<EIFFEL_CODE,EIFFEL_ACTION,ERROR_ACTION>{
+	["'\-]															eiffel_more
+	"--".*															eiffel_more
+	\'([^%\n]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)\'	eiffel_more
+	\"([^%\n"]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)*\"	eiffel_more
+	\"([^%\n"]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)*%{EIFFEL_HORIZONTAL_BREAK}*\n	{
+						-- Multi-line manifest string.
+					line_nb := line_nb + 1
+					push_start_condition (EIFFEL_MSN)
+					eiffel_more
+				}
+	\"[^\n"]*[{\[]/{EIFFEL_HORIZONTAL_BREAK}*\n {
+						-- Verbatim string.
+					eiffel_verbatim_marker := unicode_text_substring (eiffel_text_count + 2, text_count - 1)
+					eiffel_verbatim_opening_character := unicode_text_item (text_count)
+					push_start_condition (EIFFEL_VS1)
+					eiffel_more
+			}
+}
+
+<EIFFEL_MSN>{
+	{EIFFEL_HORIZONTAL_BREAK}*%([^%\n"]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)*\"	{
+					pop_start_condition
+					eiffel_more
+				}
+	{EIFFEL_HORIZONTAL_BREAK}*%([^%\n"]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)*%{EIFFEL_HORIZONTAL_BREAK}*\n	{
+					line_nb := line_nb + 1
+					eiffel_more
+				}
+	{EIFFEL_HORIZONTAL_BREAK}*\n	{
+						-- Syntax error: empty line in middle of
+						-- multi-line manifest string.
+					line_nb := line_nb + 1
+					eiffel_more
+				}
+	.			{
+						-- Syntax error: missing character % at beginning
+						-- of line in multi-line manifest string.
+					pop_start_condition
+					eiffel_more
+				}
+	<<EOF>>		{
+						-- Syntax error: missing character % at beginning
+						-- of line in multi-line manifest string.
+					pop_start_condition
+				}
+}
+
+<EIFFEL_VS1>{
+		-- Discard space characters at the
+		-- end of Verbatim_string_opener.
+	{EIFFEL_HORIZONTAL_BREAK}*\n {
+					line_nb := line_nb + 1
+					set_start_condition (EIFFEL_VS2)
+					eiffel_more
+				}
+	.			{
+						-- Syntax error.
+					pop_start_condition
+					eiffel_more
+				}
+	<<EOF>>		{
+						-- Syntax error.
+					pop_start_condition
+				}
+}
+
+<EIFFEL_VS2>{
+	{EIFFEL_HORIZONTAL_BREAK}*[}\]][^\n"]*\" {
+					if is_eiffel_verbatim_string_closer (eiffel_text_count + 1, text_count - 1) then
+						eiffel_verbatim_marker := eiffel_no_verbatim_marker
+						pop_start_condition
+					else
+						set_start_condition (EIFFEL_VS3)
+					end
+					eiffel_more
+				}
+	[^"\n]*\n	{
+					line_nb := line_nb + 1
+					eiffel_more
+				}
+	.			{
+					set_start_condition (EIFFEL_VS3)
+					eiffel_more
+				}
+	<<EOF>>		{
+						-- Syntax error.
+					pop_start_condition
+				}
+}
+
+<EIFFEL_VS3>{
+	.*\n		{
+					line_nb := line_nb + 1
+					set_start_condition (EIFFEL_VS2)
+					eiffel_more
+				}
+	.			{
+						-- Syntax error.
+					pop_start_condition
+					eiffel_more
+				}
+	<<EOF>>		{
+						-- Syntax error.
+					pop_start_condition
 				}
 }
 

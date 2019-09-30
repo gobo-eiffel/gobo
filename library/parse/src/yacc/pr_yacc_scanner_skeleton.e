@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			create action_buffer.make (Init_buffer_size)
 			successful := True
 			line_nb := 1
+			eiffel_verbatim_marker := eiffel_no_verbatim_marker
 		ensure
 			error_handler_set: error_handler = handler
 		end
@@ -95,6 +96,80 @@ feature -- Setting
 			error_handler := handler
 		ensure
 			error_handler_set: error_handler = handler
+		end
+
+feature {NONE} -- Eiffel code scanning
+
+	eiffel_text_count: INTEGER
+			-- Number of characters read so far in the Eiffel code block
+
+	eiffel_more
+			-- Update `eiffel_text_count', then
+			-- tell scanner to append the next matched token
+			-- to current value of `text' instead of
+			-- replacing it.
+		do
+			eiffel_text_count := text_count
+			more
+		end
+
+	eiffel_verbatim_marker: STRING_32
+			-- Marker of Eiffel verbatim string currently scanned
+
+	eiffel_verbatim_opening_character: CHARACTER_32
+			-- Eiffel verbatim string opening character [ or {
+
+	eiffel_no_verbatim_marker: STRING_32 = ""
+			-- No verbatim marker
+
+	is_eiffel_verbatim_string_closer (a_start, an_end: INTEGER): BOOLEAN
+			-- Is string between indexes `a_start' and `an_end' the
+			-- end marker of the Eiffel verbatim string currently scanned?
+		require
+			verbatim_string_scanned: eiffel_verbatim_marker /= eiffel_no_verbatim_marker
+			a_start_large_enough: a_start >= 1
+			an_end_small_enough: an_end <= text_count
+			valid_string: {RX_PCRE_ROUTINES}.regexp ("(\r?\n)?[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*[\]\}][^\n%"]*").recognizes (unicode_text_substring (a_start, an_end))
+		local
+			i, j, nb: INTEGER
+			l_marker_count: INTEGER
+			l_text_count: INTEGER
+			c: CHARACTER_32
+		do
+			l_marker_count := eiffel_verbatim_marker.count
+			l_text_count := an_end - a_start + 1
+			if l_text_count > l_marker_count then
+				nb := an_end - l_marker_count
+				c := unicode_text_item (nb)
+				if (c = ']' or c = '}') and then c = eiffel_verbatim_opening_character + 2 then
+					Result := True
+						-- Compare end marker with start marker.
+					j := nb + 1
+					from i := 1 until i > l_marker_count loop
+						c := eiffel_verbatim_marker.item (i)
+						if c = unicode_text_item (j) then
+							i := i + 1
+							j := j + 1
+						else
+							Result := False
+								-- Jump out of the loop.
+							i := l_marker_count + 1
+						end
+					end
+					if Result then
+							-- Check that all leading characters are white characters.
+						from j := a_start until j = nb loop
+							inspect unicode_text_item (j).natural_32_code
+							when 9..13, 32, 160, 5760, 8192..8202, 8239, 8287, 12288 then
+								j := j + 1
+							else
+								Result := False
+								j := nb -- Jump out of the loop.
+							end
+						end
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -247,5 +322,6 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	action_buffer_not_void: action_buffer /= Void
+	eiffel_verbatim_marker_not_void: eiffel_verbatim_marker /= Void
 
 end

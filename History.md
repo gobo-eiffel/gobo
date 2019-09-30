@@ -25,6 +25,9 @@
   also be Unicode characters or their escaped versions  (e.g `%token '\u03B2'`
   where `03B2` is the hexadecimal code for Greek character beta).
 * Removed command-line option `--new_typing`.
+* Fixed bug when an Eiffel verbatim string in a semantic action contains a
+  closing brace `}`, which was wrongly interpreted as the end of the
+  Eiffel code for this semantic action.
 
 ### Gobo Eiffel Kernel Library
 
