@@ -513,7 +513,7 @@ EIFFEL_HORIZONTAL_BREAK	[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{
 				}
 }
 
-<EIFFEL_BLOCK, EIFFEL_BLOCK2>{
+<EIFFEL_BLOCK,EIFFEL_BLOCK2>{
 	["'\-]															eiffel_more
 	"--".*															eiffel_more
 	\'([^%\n]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)\'	eiffel_more
