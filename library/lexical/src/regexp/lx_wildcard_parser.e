@@ -26,7 +26,8 @@ inherit
 		rename
 			make as make_lex_scanner,
 			make_from_description as make_lex_scanner_from_description,
-			reset as reset_lex_scanner
+			reset as reset_lex_scanner,
+			push_start_condition as lex_push_start_condition
 		redefine
 			last_integer_value,
 			last_string_value,
@@ -213,9 +214,9 @@ feature {NONE} -- Semantic actions
 		do
 				inspect yy_act
 when 1 then
---|#line 60 "lx_wildcard_parser.y"
+--|#line 61 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 60")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 61")
 end
 
 			set_maximum_symbol_equivalence_class
@@ -230,9 +231,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 70 "lx_wildcard_parser.y"
+--|#line 71 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 70")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 71")
 end
 
 				-- Initialize for a parse of one pattern.
@@ -252,9 +253,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
---|#line 78 "lx_wildcard_parser.y"
+--|#line 79 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 78")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 79")
 end
 
 			process_rule (yyvs5.item (yyvsp5))
@@ -273,9 +274,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
---|#line 82 "lx_wildcard_parser.y"
+--|#line 83 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 82")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 83")
 end
 
 			report_unrecognized_rule_error
@@ -285,9 +286,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
---|#line 88 "lx_wildcard_parser.y"
+--|#line 89 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 88")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 89")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -302,9 +303,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 6 then
---|#line 99 "lx_wildcard_parser.y"
+--|#line 100 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 99")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 100")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -314,9 +315,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 7 then
---|#line 103 "lx_wildcard_parser.y"
+--|#line 104 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 103")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 104")
 end
 
 			yyval5 := yyvs5.item (yyvsp5 - 1)
@@ -329,9 +330,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 8 then
---|#line 110 "lx_wildcard_parser.y"
+--|#line 111 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 110")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 111")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -341,9 +342,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 9 then
---|#line 114 "lx_wildcard_parser.y"
+--|#line 115 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 114")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 115")
 end
 
 			yyval5 := yyvs5.item (yyvsp5 - 1)
@@ -355,9 +356,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 10 then
---|#line 121 "lx_wildcard_parser.y"
+--|#line 122 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 121")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 122")
 end
 
 			if utf8_mode.item and yyvs3.item (yyvsp3) > {CHARACTER_8}.max_ascii_value then
@@ -386,9 +387,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 11 then
---|#line 135 "lx_wildcard_parser.y"
+--|#line 136 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 135")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 136")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -400,9 +401,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 12 then
---|#line 140 "lx_wildcard_parser.y"
+--|#line 141 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 140")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 141")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -414,9 +415,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 13 then
---|#line 145 "lx_wildcard_parser.y"
+--|#line 146 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 145")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 146")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -428,9 +429,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 14 then
---|#line 150 "lx_wildcard_parser.y"
+--|#line 151 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 150")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 151")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -441,9 +442,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 15 then
---|#line 154 "lx_wildcard_parser.y"
+--|#line 155 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 154")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 155")
 end
 
 			yyval5 := new_nfa_from_character_class (question_character_class)
@@ -463,9 +464,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 16 then
---|#line 159 "lx_wildcard_parser.y"
+--|#line 160 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 159")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 160")
 end
 
 			yyval5 := new_nfa_from_character_class (question_character_class)
@@ -484,9 +485,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 17 then
---|#line 163 "lx_wildcard_parser.y"
+--|#line 164 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 163")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 164")
 end
 
 			yyval5 := new_nfa_from_character_class (question_character_class)
@@ -508,9 +509,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 18 then
---|#line 170 "lx_wildcard_parser.y"
+--|#line 171 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 170")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 171")
 end
 
 			yyval5 := new_nfa_from_character_class (yyvs4.item (yyvsp4))
@@ -529,9 +530,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 19 then
---|#line 174 "lx_wildcard_parser.y"
+--|#line 175 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 174")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 175")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -542,9 +543,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 20 then
---|#line 180 "lx_wildcard_parser.y"
+--|#line 181 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 180")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 181")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -553,9 +554,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 21 then
---|#line 182 "lx_wildcard_parser.y"
+--|#line 183 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 182")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 183")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -564,9 +565,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 22 then
---|#line 184 "lx_wildcard_parser.y"
+--|#line 185 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 184")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 185")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -575,9 +576,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 23 then
---|#line 188 "lx_wildcard_parser.y"
+--|#line 189 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 188")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 189")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -586,9 +587,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 24 then
---|#line 190 "lx_wildcard_parser.y"
+--|#line 191 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 190")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 191")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -597,9 +598,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 25 then
---|#line 192 "lx_wildcard_parser.y"
+--|#line 193 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 192")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 193")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -609,9 +610,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 26 then
---|#line 196 "lx_wildcard_parser.y"
+--|#line 197 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 196")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 197")
 end
 
 			yyval4 := yyvs4.item (yyvsp4)
@@ -630,9 +631,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 27 then
---|#line 207 "lx_wildcard_parser.y"
+--|#line 208 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 207")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 208")
 end
 
 			yyval4 := yyvs4.item (yyvsp4)
@@ -652,9 +653,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 28 then
---|#line 221 "lx_wildcard_parser.y"
+--|#line 222 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 221")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 222")
 end
 
 			yyval4 := append_character_to_character_class (yyvs3.item (yyvsp3), new_character_class)
@@ -673,9 +674,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 29 then
---|#line 225 "lx_wildcard_parser.y"
+--|#line 226 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 225")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 226")
 end
 
 			yyval4 := append_character_to_character_class (yyvs3.item (yyvsp3), yyvs4.item (yyvsp4))
@@ -686,9 +687,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 30 then
---|#line 229 "lx_wildcard_parser.y"
+--|#line 230 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 229")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 230")
 end
 
 			yyval4 := append_character_set_to_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), new_character_class)
@@ -708,9 +709,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 31 then
---|#line 233 "lx_wildcard_parser.y"
+--|#line 234 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 233")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 234")
 end
 
 			yyval4 := append_character_set_to_character_class (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3), yyvs4.item (yyvsp4))
@@ -722,9 +723,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 32 then
---|#line 239 "lx_wildcard_parser.y"
+--|#line 240 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 239")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 240")
 end
 
 			yyval4 := yyvs4.item (yyvsp4 - 1)
@@ -737,9 +738,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 33 then
---|#line 244 "lx_wildcard_parser.y"
+--|#line 245 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 244")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 245")
 end
 
 			yyval4 := yyvs4.item (yyvsp4 - 1)
@@ -752,9 +753,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 34 then
---|#line 251 "lx_wildcard_parser.y"
+--|#line 252 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 251")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 252")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -764,9 +765,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 35 then
---|#line 253 "lx_wildcard_parser.y"
+--|#line 254 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 253")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 254")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -776,9 +777,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 36 then
---|#line 257 "lx_wildcard_parser.y"
+--|#line 258 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 257")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 258")
 end
 
 yyval4 := yyvs4.item (yyvsp4).twin 
@@ -787,9 +788,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 37 then
---|#line 259 "lx_wildcard_parser.y"
+--|#line 260 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 259")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 260")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -798,9 +799,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 38 then
---|#line 261 "lx_wildcard_parser.y"
+--|#line 262 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 261")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 262")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -809,9 +810,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 39 then
---|#line 265 "lx_wildcard_parser.y"
+--|#line 266 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 265")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 266")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -820,9 +821,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 40 then
---|#line 267 "lx_wildcard_parser.y"
+--|#line 268 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 267")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 268")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -831,9 +832,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 41 then
---|#line 271 "lx_wildcard_parser.y"
+--|#line 272 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 271")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 272")
 end
 
 			yyval5 := new_epsilon_nfa
@@ -851,9 +852,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 42 then
---|#line 275 "lx_wildcard_parser.y"
+--|#line 276 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 275")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 276")
 end
 
 			if utf8_mode.item and yyvs3.item (yyvsp3) > {CHARACTER_8}.max_ascii_value then

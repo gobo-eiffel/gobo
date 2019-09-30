@@ -14,6 +14,9 @@
   byte sequence in the generated scanner. This can be useful when the file
   to scan is already encoded with UTF-8, although the generated scanner will
   be larger.
+* Fixed bug when an Eiffel verbatim string in a semantic action contains a
+  closing brace `}`, which was wrongly interpreted as the end of the
+  Eiffel code for this semantic action.
 
 ### geyacc
 

@@ -41,6 +41,7 @@ create
 %x SECT2 SECT3 EIFFEL_BLOCK OPTION RECOVER1 SCNAME XSCNAME NUM QUOTE
 %x SCOND ACTION_TEXT DEFINITION FIRSTCCL CCL OUTFILE
 %x REGEXP EIFFEL_BLOCK2
+%x EIFFEL_MSN EIFFEL_VS1 EIFFEL_VS2 EIFFEL_VS3
 
 %option ecs meta-ecs case-insensitive nodefault
 %option outfile="lx_lex_scanner.e"
@@ -55,6 +56,8 @@ UCHAR				\\u[0-9a-f]{1,4}|\\u\{[0-9a-f]{1,6}\}
 ESC					\\.
 FIRST_CCL_CHAR		[^\\\n]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
+EIFFEL_CHAR_CODE	[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*
+EIFFEL_HORIZONTAL_BREAK	[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]
 
 %%
 
@@ -67,6 +70,7 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 	{NL}			line_nb := line_nb + 1
 	^"%{"{WS}?{C}?{NL}	{
 					line_nb := line_nb + 1
+					eiffel_text_count := 0
 					set_start_condition (EIFFEL_BLOCK)
 				}
 	^"%s"			set_start_condition (SCNAME)
@@ -92,17 +96,15 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 }
 
 <EIFFEL_BLOCK>{
-	[^"'%-]*												more
-	\"([^"%\n]|%([^/\n]|("/"[0-9]+"/")|(\n[ \t]%)))*\"		more
-	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'					more
-	"--".*													more
-	\"|\'|%|-												more
+	[^"'\-%\n]*		eiffel_more
+	\n			{
+					line_nb := line_nb + 1
+					eiffel_more
+				}
+	%				eiffel_more
 	^"%}"		{
-					check attached utf8_text_substring (1, text_count - 2) as l_last_string then
-						line_nb := line_nb + l_last_string.occurrences ('%N')
-						description.eiffel_header.force_last (l_last_string)
-						set_start_condition (INITIAL)
-					end
+					description.eiffel_header.force_last (utf8_text_substring (1, text_count - 2))
+					set_start_condition (INITIAL)
 				}
 }
 
@@ -478,7 +480,10 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 					line_nb := line_nb + 1
 					set_start_condition (SECT2)
 				}
-	"{"				set_start_condition (EIFFEL_BLOCK2)
+	"{"			{
+					eiffel_text_count := 0
+					set_start_condition (EIFFEL_BLOCK2)
+				}
 	[^{\n].*	{
 					last_token := EIF_CODE
 					last_string_value := utf8_text
@@ -487,27 +492,132 @@ CCL_CHAR			[^\\\n\]]|{OCHAR}|{HCHAR}|{UCHAR}|{ESC}
 }
 
 <EIFFEL_BLOCK2>{
-	[^"'{}-]*												more
-	\"([^"%\n]|%([^/\n]|("/"[0-9]+"/")|(\n[ \t]%)))*\"		more
-	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'					more
-	"--".*													more
-	\"|\'|-													more
+	[^"'\-{}\n]*	eiffel_more
+	\n			{
+					line_nb := line_nb + 1
+					eiffel_more
+				}
 	"{"			{
 					nb_open_brackets := nb_open_brackets + 1
-					more
+					eiffel_more
 				}
 	"}"			{
 					if nb_open_brackets = 0 then
-						check attached utf8_text_substring (1, text_count - 1) as l_last_string then
-							last_token := EIF_CODE
-							line_nb := line_nb + l_last_string.occurrences ('%N')
-							last_string_value := l_last_string
-							set_start_condition (SECT2)
-						end
+						last_token := EIF_CODE
+						last_string_value := utf8_text_substring (1, text_count - 1)
+						set_start_condition (SECT2)
 					else
 						nb_open_brackets := nb_open_brackets - 1
-						more
+						eiffel_more
 					end
+				}
+}
+
+<EIFFEL_BLOCK, EIFFEL_BLOCK2>{
+	["'\-]															eiffel_more
+	"--".*															eiffel_more
+	\'([^%\n]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)\'	eiffel_more
+	\"([^%\n"]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)*\"	eiffel_more
+	\"([^%\n"]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)*%{EIFFEL_HORIZONTAL_BREAK}*\n	{
+						-- Multi-line manifest string.
+					line_nb := line_nb + 1
+					push_start_condition (EIFFEL_MSN)
+					eiffel_more
+				}
+	\"[^\n"]*[{\[]/{EIFFEL_HORIZONTAL_BREAK}*\n {
+						-- Verbatim string.
+					eiffel_verbatim_marker := unicode_text_substring (eiffel_text_count + 2, text_count - 1)
+					eiffel_verbatim_opening_character := unicode_text_item (text_count)
+					push_start_condition (EIFFEL_VS1)
+					eiffel_more
+			}
+}
+
+<EIFFEL_MSN>{
+	{EIFFEL_HORIZONTAL_BREAK}*%([^%\n"]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)*\"	{
+					pop_start_condition
+					eiffel_more
+				}
+	{EIFFEL_HORIZONTAL_BREAK}*%([^%\n"]|%[ABCDFHLNQRSTUV%'"()<>]|%\/{EIFFEL_CHAR_CODE}\/)*%{EIFFEL_HORIZONTAL_BREAK}*\n	{
+					line_nb := line_nb + 1
+					eiffel_more
+				}
+	{EIFFEL_HORIZONTAL_BREAK}*\n	{
+						-- Syntax error: empty line in middle of
+						-- multi-line manifest string.
+					line_nb := line_nb + 1
+					eiffel_more
+				}
+	.			{
+						-- Syntax error: missing character % at beginning
+						-- of line in multi-line manifest string.
+					pop_start_condition
+					eiffel_more
+				}
+	<<EOF>>		{
+						-- Syntax error: missing character % at beginning
+						-- of line in multi-line manifest string.
+					pop_start_condition
+				}
+}
+
+<EIFFEL_VS1>{
+		-- Discard space characters at the
+		-- end of Verbatim_string_opener.
+	{EIFFEL_HORIZONTAL_BREAK}*\n {
+					line_nb := line_nb + 1
+					set_start_condition (EIFFEL_VS2)
+					eiffel_more
+				}
+	.			{
+						-- Syntax error.
+					pop_start_condition
+					eiffel_more
+				}
+	<<EOF>>		{
+						-- Syntax error.
+					pop_start_condition
+				}
+}
+
+<EIFFEL_VS2>{
+	{EIFFEL_HORIZONTAL_BREAK}*[}\]][^\n"]*\" {
+					if is_eiffel_verbatim_string_closer (eiffel_text_count + 1, text_count - 1) then
+						eiffel_verbatim_marker := eiffel_no_verbatim_marker
+						pop_start_condition
+					else
+						set_start_condition (EIFFEL_VS3)
+					end
+					eiffel_more
+				}
+	[^"\n]*\n	{
+					line_nb := line_nb + 1
+					eiffel_more
+				}
+	.			{
+					set_start_condition (EIFFEL_VS3)
+					eiffel_more
+				}
+	<<EOF>>		{
+						-- Syntax error.
+					pop_start_condition
+				}
+}
+
+<EIFFEL_VS3>{
+	.*\n		{
+					line_nb := line_nb + 1
+					set_start_condition (EIFFEL_VS2)
+					eiffel_more
+				}
+	.			{
+						-- Syntax error.
+					pop_start_condition
+					eiffel_more
+				}
+	<<EOF>>		{
+						-- Syntax error.
+					pop_start_condition
 				}
 }
 

@@ -27,7 +27,8 @@ inherit
 		rename
 			make as make_lex_scanner,
 			make_from_description as make_lex_scanner_from_description,
-			reset as reset_lex_scanner
+			reset as reset_lex_scanner,
+			push_start_condition as lex_push_start_condition
 		redefine
 			last_integer_value,
 			last_string_value,
