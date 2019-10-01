@@ -7,7 +7,7 @@ note
 	implements: "XML 1.0 (Second Edition) - W3C Recommendation 6 October 2000"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,9 +17,6 @@ class XM_EIFFEL_PARSER
 inherit
 
 	XM_EIFFEL_PARSER_SKELETON
-		redefine
-			parse
-		end
 
 create
 
@@ -230,9 +227,9 @@ feature {NONE} -- Semantic actions
 		do
 				inspect yy_act
 when 1 then
---|#line 124 "xm_eiffel_parser.y"
+--|#line 121 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 124")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 121")
 end
 
 
@@ -242,9 +239,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 134 "xm_eiffel_parser.y"
+--|#line 131 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 134")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 131")
 end
 
 			yyval2 := new_namespace_name
@@ -264,9 +261,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 3 then
---|#line 139 "xm_eiffel_parser.y"
+--|#line 136 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 139")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 136")
 end
 
 			yyval2 := new_namespace_name
@@ -287,9 +284,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 4 then
---|#line 145 "xm_eiffel_parser.y"
+--|#line 142 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 145")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 142")
 end
 
 			yyval2 := new_namespace_name
@@ -310,9 +307,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 5 then
---|#line 151 "xm_eiffel_parser.y"
+--|#line 148 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 151")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 148")
 end
 
 			yyval2 := yyvs2.item (yyvsp2)
@@ -324,9 +321,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 6 then
---|#line 156 "xm_eiffel_parser.y"
+--|#line 153 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 156")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 153")
 end
 
 			yyval2 := yyvs2.item (yyvsp2)
@@ -338,9 +335,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 7 then
---|#line 163 "xm_eiffel_parser.y"
+--|#line 160 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 163")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 160")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -349,9 +346,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 8 then
---|#line 164 "xm_eiffel_parser.y"
+--|#line 161 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 164")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 161")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -360,9 +357,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 9 then
---|#line 171 "xm_eiffel_parser.y"
+--|#line 168 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 171")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 168")
 end
 
 yyval4 := onstring_ascii (yyvs4.item (yyvsp4)) 
@@ -371,9 +368,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 10 then
---|#line 172 "xm_eiffel_parser.y"
+--|#line 169 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 172")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 169")
 end
 
 yyval4 := onstring_utf8 (yyvs4.item (yyvsp4)) 
@@ -382,9 +379,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 11 then
---|#line 175 "xm_eiffel_parser.y"
+--|#line 172 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 175")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 172")
 end
 
 yyval4 := onstring_ascii (yyvs4.item (yyvsp4)) 
@@ -393,9 +390,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 12 then
---|#line 176 "xm_eiffel_parser.y"
+--|#line 173 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 176")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 173")
 end
 
 yyval4 := onstring_utf8 (yyvs4.item (yyvsp4)) 
@@ -404,9 +401,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 13 then
---|#line 179 "xm_eiffel_parser.y"
+--|#line 176 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 179")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 176")
 end
 
 yyval4 := onstring_ascii (yyvs4.item (yyvsp4)) 
@@ -415,9 +412,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 14 then
---|#line 180 "xm_eiffel_parser.y"
+--|#line 177 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 180")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 177")
 end
 
 yyval4 := onstring_utf8 (yyvs4.item (yyvsp4)) 
@@ -426,9 +423,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 15 then
---|#line 183 "xm_eiffel_parser.y"
+--|#line 180 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 183")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 180")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -437,9 +434,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 16 then
---|#line 184 "xm_eiffel_parser.y"
+--|#line 181 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 184")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 181")
 end
 
 yyval4 := onstring_ascii (yyvs4.item (yyvsp4)) 
@@ -448,9 +445,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 17 then
---|#line 185 "xm_eiffel_parser.y"
+--|#line 182 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 185")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 182")
 end
 
 yyval4 := onstring_utf8 (yyvs4.item (yyvsp4)) 
@@ -459,9 +456,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 18 then
---|#line 188 "xm_eiffel_parser.y"
+--|#line 185 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 188")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 185")
 end
 
 yyval4 := onstring_ascii (yyvs4.item (yyvsp4)) 
@@ -470,9 +467,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 19 then
---|#line 189 "xm_eiffel_parser.y"
+--|#line 186 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 189")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 186")
 end
 
 yyval4 := onstring_utf8 (yyvs4.item (yyvsp4)) 
@@ -481,9 +478,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 20 then
---|#line 192 "xm_eiffel_parser.y"
+--|#line 189 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 192")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 189")
 end
 
 yyval4 := onstring_ascii (yyvs4.item (yyvsp4)) 
@@ -492,9 +489,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 21 then
---|#line 193 "xm_eiffel_parser.y"
+--|#line 190 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 193")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 190")
 end
 
 yyval4 := onstring_utf8 (yyvs4.item (yyvsp4)) 
@@ -503,9 +500,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 22 then
---|#line 196 "xm_eiffel_parser.y"
+--|#line 193 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 196")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 193")
 end
 
 yyval4 := onstring_ascii (yyvs4.item (yyvsp4)) 
@@ -514,9 +511,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 23 then
---|#line 197 "xm_eiffel_parser.y"
+--|#line 194 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 197")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 194")
 end
 
 yyval4 := onstring_utf8 (yyvs4.item (yyvsp4)) 
@@ -525,9 +522,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 24 then
---|#line 200 "xm_eiffel_parser.y"
+--|#line 197 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 200")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 197")
 end
 
 yyval4 := onstring_ascii (yyvs4.item (yyvsp4)) 
@@ -536,9 +533,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 25 then
---|#line 201 "xm_eiffel_parser.y"
+--|#line 198 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 201")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 198")
 end
 
 yyval4 := onstring_utf8 (yyvs4.item (yyvsp4)) 
@@ -547,9 +544,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 26 then
---|#line 204 "xm_eiffel_parser.y"
+--|#line 201 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 204")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 201")
 end
 
 yyval4 := onstring_ascii (yyvs4.item (yyvsp4)) 
@@ -558,9 +555,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 27 then
---|#line 205 "xm_eiffel_parser.y"
+--|#line 202 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 205")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 202")
 end
 
 yyval4 := onstring_utf8 (yyvs4.item (yyvsp4)) 
@@ -569,6 +566,39 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 28 then
+--|#line 209 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 209")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 29 then
+--|#line 210 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 210")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 30 then
+--|#line 211 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 211")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 31 then
 --|#line 212 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 212")
@@ -579,7 +609,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 29 then
+when 32 then
 --|#line 213 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 213")
@@ -590,7 +620,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 30 then
+when 33 then
 --|#line 214 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 214")
@@ -601,7 +631,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 31 then
+when 34 then
 --|#line 215 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 215")
@@ -612,7 +642,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 32 then
+when 35 then
 --|#line 216 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 216")
@@ -623,7 +653,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 33 then
+when 36 then
 --|#line 217 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 217")
@@ -634,7 +664,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 34 then
+when 37 then
 --|#line 218 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 218")
@@ -645,7 +675,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 35 then
+when 38 then
 --|#line 219 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 219")
@@ -656,7 +686,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 36 then
+when 39 then
 --|#line 220 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 220")
@@ -667,7 +697,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 37 then
+when 40 then
 --|#line 221 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 221")
@@ -678,7 +708,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 38 then
+when 41 then
 --|#line 222 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 222")
@@ -689,7 +719,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 39 then
+when 42 then
 --|#line 223 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 223")
@@ -700,43 +730,10 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 40 then
---|#line 224 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 224")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 41 then
---|#line 225 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 225")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 42 then
+when 43 then
 --|#line 226 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 226")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
-when 43 then
---|#line 229 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 229")
 end
 
 
@@ -753,6 +750,17 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 44 then
+--|#line 227 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 227")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 45 then
 --|#line 230 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 230")
@@ -763,21 +771,10 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 45 then
---|#line 233 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 233")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
 when 46 then
---|#line 234 "xm_eiffel_parser.y"
+--|#line 231 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 234")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 231")
 end
 
 
@@ -787,9 +784,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 47 then
---|#line 237 "xm_eiffel_parser.y"
+--|#line 234 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 237")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 234")
 end
 
 
@@ -807,9 +804,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 48 then
---|#line 238 "xm_eiffel_parser.y"
+--|#line 235 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 238")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 235")
 end
 
 				-- Really applies only in DTD, but token cannot appear in content
@@ -832,9 +829,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 49 then
---|#line 250 "xm_eiffel_parser.y"
+--|#line 247 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 250")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 247")
 end
 
 yyval4 := shared_empty_string 
@@ -844,9 +841,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 50 then
---|#line 252 "xm_eiffel_parser.y"
+--|#line 249 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 252")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 249")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -856,9 +853,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 51 then
---|#line 254 "xm_eiffel_parser.y"
+--|#line 251 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 254")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 251")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -868,9 +865,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 52 then
---|#line 258 "xm_eiffel_parser.y"
+--|#line 255 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 258")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 255")
 end
 
 yyval4 := STRING_.concat (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -880,9 +877,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 53 then
---|#line 260 "xm_eiffel_parser.y"
+--|#line 257 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 260")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 257")
 end
 
 yyval4 := STRING_.appended_string (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -892,9 +889,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 54 then
---|#line 264 "xm_eiffel_parser.y"
+--|#line 261 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 264")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 261")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -903,9 +900,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 55 then
---|#line 266 "xm_eiffel_parser.y"
+--|#line 263 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 266")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 263")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -914,9 +911,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 56 then
---|#line 270 "xm_eiffel_parser.y"
+--|#line 267 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 270")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 267")
 end
 
 yyval4 := entity_referenced_in_entity_value (yyvs4.item (yyvsp4)) 
@@ -925,9 +922,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 57 then
---|#line 276 "xm_eiffel_parser.y"
+--|#line 273 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 276")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 273")
 end
 
 yyval4 := shared_empty_string 
@@ -937,9 +934,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 58 then
---|#line 278 "xm_eiffel_parser.y"
+--|#line 275 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 278")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 275")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -949,9 +946,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 59 then
---|#line 280 "xm_eiffel_parser.y"
+--|#line 277 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 280")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 277")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -961,9 +958,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 60 then
---|#line 284 "xm_eiffel_parser.y"
+--|#line 281 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 284")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 281")
 end
 
 yyval4 := STRING_.concat (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -973,9 +970,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 61 then
---|#line 286 "xm_eiffel_parser.y"
+--|#line 283 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 286")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 283")
 end
 
 yyval4 := STRING_.appended_string (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -985,9 +982,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 62 then
---|#line 290 "xm_eiffel_parser.y"
+--|#line 287 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 290")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 287")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -996,9 +993,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 63 then
---|#line 291 "xm_eiffel_parser.y"
+--|#line 288 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 291")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 288")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1007,9 +1004,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 64 then
---|#line 292 "xm_eiffel_parser.y"
+--|#line 289 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 292")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 289")
 end
 
 			force_error (Error_lt_not_allowed_attribute_value)
@@ -1020,9 +1017,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 65 then
---|#line 299 "xm_eiffel_parser.y"
+--|#line 296 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 299")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 296")
 end
 
 yyval4 := shared_empty_string 
@@ -1031,9 +1028,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 66 then
---|#line 300 "xm_eiffel_parser.y"
+--|#line 297 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 300")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 297")
 end
 
 yyval4 := shared_empty_string 
@@ -1042,9 +1039,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 67 then
---|#line 305 "xm_eiffel_parser.y"
+--|#line 302 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 305")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 302")
 end
 
 on_comment (yyvs4.item (yyvsp4 - 1)) 
@@ -1062,9 +1059,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 68 then
---|#line 307 "xm_eiffel_parser.y"
+--|#line 304 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 307")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 304")
 end
 
 on_comment (shared_empty_string) 
@@ -1082,9 +1079,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 69 then
---|#line 311 "xm_eiffel_parser.y"
+--|#line 308 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 311")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 308")
 end
 
 on_dtd_comment (yyvs4.item (yyvsp4 - 1)) 
@@ -1102,9 +1099,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 70 then
---|#line 313 "xm_eiffel_parser.y"
+--|#line 310 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 313")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 310")
 end
 
 on_dtd_comment (shared_empty_string) 
@@ -1122,9 +1119,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 71 then
---|#line 317 "xm_eiffel_parser.y"
+--|#line 314 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 317")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 314")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1133,9 +1130,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 72 then
---|#line 319 "xm_eiffel_parser.y"
+--|#line 316 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 319")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 316")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1144,9 +1141,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 73 then
---|#line 323 "xm_eiffel_parser.y"
+--|#line 320 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 323")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 320")
 end
 
 yyval4 := STRING_.concat (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -1156,9 +1153,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 74 then
---|#line 325 "xm_eiffel_parser.y"
+--|#line 322 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 325")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 322")
 end
 
 yyval4 := STRING_.appended_string (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -1168,9 +1165,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 75 then
---|#line 329 "xm_eiffel_parser.y"
+--|#line 326 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 329")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 326")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1179,9 +1176,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 76 then
---|#line 330 "xm_eiffel_parser.y"
+--|#line 327 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 330")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 327")
 end
 
 			force_error (Error_no_dash_dash_in_comment)
@@ -1192,9 +1189,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 77 then
---|#line 339 "xm_eiffel_parser.y"
+--|#line 336 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 339")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 336")
 end
 
 on_processing_instruction (yyvs4.item (yyvsp4 - 2), yyvs4.item (yyvsp4 - 1)) 
@@ -1204,9 +1201,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 78 then
---|#line 341 "xm_eiffel_parser.y"
+--|#line 338 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 341")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 338")
 end
 
 on_processing_instruction (yyvs4.item (yyvsp4 - 1), shared_empty_string) 
@@ -1216,9 +1213,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 79 then
---|#line 343 "xm_eiffel_parser.y"
+--|#line 340 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 343")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 340")
 end
 
 force_error (Error_pi_xml_reserved) 
@@ -1236,9 +1233,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 80 then
---|#line 346 "xm_eiffel_parser.y"
+--|#line 343 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 346")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 343")
 end
 
 on_dtd_processing_instruction (yyvs4.item (yyvsp4 - 2), yyvs4.item (yyvsp4 - 1)) 
@@ -1248,9 +1245,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 81 then
---|#line 348 "xm_eiffel_parser.y"
+--|#line 345 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 348")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 345")
 end
 
 on_dtd_processing_instruction (yyvs4.item (yyvsp4 - 1), shared_empty_string) 
@@ -1260,9 +1257,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 82 then
---|#line 350 "xm_eiffel_parser.y"
+--|#line 347 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 350")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 347")
 end
 
 force_error (Error_pi_xml_reserved) 
@@ -1280,9 +1277,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 83 then
---|#line 353 "xm_eiffel_parser.y"
+--|#line 350 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 353")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 350")
 end
 
 yyval4 := STRING_.concat (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -1292,9 +1289,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 84 then
---|#line 355 "xm_eiffel_parser.y"
+--|#line 352 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 355")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 352")
 end
 
 yyval4 := STRING_.concat (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -1304,9 +1301,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 85 then
---|#line 357 "xm_eiffel_parser.y"
+--|#line 354 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 357")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 354")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1315,9 +1312,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 86 then
---|#line 361 "xm_eiffel_parser.y"
+--|#line 358 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 361")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 358")
 end
 
 yyval4 := STRING_.concat (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -1327,9 +1324,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 87 then
---|#line 363 "xm_eiffel_parser.y"
+--|#line 360 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 363")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 360")
 end
 
 yyval4 := STRING_.appended_string (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
@@ -1339,9 +1336,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 88 then
---|#line 367 "xm_eiffel_parser.y"
+--|#line 364 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 367")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 364")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1350,9 +1347,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 89 then
---|#line 368 "xm_eiffel_parser.y"
+--|#line 365 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 368")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 365")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1361,6 +1358,17 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 90 then
+--|#line 366 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 366")
+end
+
+yyval4 := yyvs4.item (yyvsp4) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
+end
+when 91 then
 --|#line 369 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 369")
@@ -1371,21 +1379,10 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
-when 91 then
---|#line 372 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 372")
-end
-
-yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
-end
 when 92 then
---|#line 373 "xm_eiffel_parser.y"
+--|#line 370 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 373")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 370")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1394,9 +1391,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 93 then
---|#line 378 "xm_eiffel_parser.y"
+--|#line 375 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 378")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 375")
 end
 
 
@@ -1414,9 +1411,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 94 then
---|#line 379 "xm_eiffel_parser.y"
+--|#line 376 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 379")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 376")
 end
 
 
@@ -1426,9 +1423,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 95 then
---|#line 382 "xm_eiffel_parser.y"
+--|#line 379 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 382")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 379")
 end
 
 
@@ -1437,9 +1434,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 96 then
---|#line 383 "xm_eiffel_parser.y"
+--|#line 380 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 383")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 380")
 end
 
 
@@ -1449,9 +1446,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 97 then
---|#line 386 "xm_eiffel_parser.y"
+--|#line 383 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 386")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 383")
 end
 
 on_content (yyvs4.item (yyvsp4)) 
@@ -1469,9 +1466,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 98 then
---|#line 392 "xm_eiffel_parser.y"
+--|#line 389 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 392")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 389")
 end
 
 			apply_encoding (yyvs11.item (yyvsp11).encoding)
@@ -1483,9 +1480,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 99 then
---|#line 399 "xm_eiffel_parser.y"
+--|#line 396 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 399")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 396")
 end
 
 create yyval11.make 
@@ -1503,9 +1500,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 100 then
---|#line 401 "xm_eiffel_parser.y"
+--|#line 398 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 401")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 398")
 end
 
 yyval11 := yyvs11.item (yyvsp11) 
@@ -1514,9 +1511,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 101 then
---|#line 403 "xm_eiffel_parser.y"
+--|#line 400 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 403")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 400")
 end
 
 yyval11 := yyvs11.item (yyvsp11) 
@@ -1526,9 +1523,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 102 then
---|#line 407 "xm_eiffel_parser.y"
+--|#line 404 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 407")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 404")
 end
 
 
@@ -1545,9 +1542,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 103 then
---|#line 408 "xm_eiffel_parser.y"
+--|#line 405 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 408")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 405")
 end
 
 
@@ -1556,9 +1553,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 104 then
---|#line 409 "xm_eiffel_parser.y"
+--|#line 406 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 409")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 406")
 end
 
 
@@ -1568,9 +1565,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 105 then
---|#line 412 "xm_eiffel_parser.y"
+--|#line 409 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 412")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 409")
 end
 
 
@@ -1587,6 +1584,17 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 106 then
+--|#line 410 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 410")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 107 then
 --|#line 413 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 413")
@@ -1597,21 +1605,10 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 107 then
---|#line 416 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 416")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
 when 108 then
---|#line 417 "xm_eiffel_parser.y"
+--|#line 414 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 417")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 414")
 end
 
 
@@ -1621,9 +1618,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 109 then
---|#line 420 "xm_eiffel_parser.y"
+--|#line 417 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 420")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 417")
 end
 
 			yyvs11.item (yyvsp11).set_version (yyvs4.item (yyvsp4 - 1))
@@ -1635,9 +1632,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 110 then
---|#line 425 "xm_eiffel_parser.y"
+--|#line 422 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 425")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 422")
 end
 
 			force_error (Error_xml_declaration)
@@ -1658,9 +1655,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 111 then
---|#line 432 "xm_eiffel_parser.y"
+--|#line 429 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 432")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 429")
 end
 
 create yyval11.make 
@@ -1678,9 +1675,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 112 then
---|#line 434 "xm_eiffel_parser.y"
+--|#line 431 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 434")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 431")
 end
 
 			create yyval11.make 
@@ -1701,9 +1698,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 113 then
---|#line 439 "xm_eiffel_parser.y"
+--|#line 436 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 439")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 436")
 end
 
 			create yyval11.make 
@@ -1725,9 +1722,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 114 then
---|#line 445 "xm_eiffel_parser.y"
+--|#line 442 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 445")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 442")
 end
 
 			create yyval11.make;
@@ -1751,9 +1748,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 when 115 then
---|#line 454 "xm_eiffel_parser.y"
+--|#line 451 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 454")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 451")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1762,9 +1759,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 116 then
---|#line 456 "xm_eiffel_parser.y"
+--|#line 453 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 456")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 453")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -1774,9 +1771,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 117 then
---|#line 458 "xm_eiffel_parser.y"
+--|#line 455 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 458")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 455")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -1786,9 +1783,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 118 then
---|#line 460 "xm_eiffel_parser.y"
+--|#line 457 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 460")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 457")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -1798,9 +1795,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 119 then
---|#line 464 "xm_eiffel_parser.y"
+--|#line 461 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 464")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 461")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -1810,9 +1807,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 120 then
---|#line 466 "xm_eiffel_parser.y"
+--|#line 463 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 466")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 463")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -1822,9 +1819,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 121 then
---|#line 470 "xm_eiffel_parser.y"
+--|#line 467 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 470")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 467")
 end
 
 
@@ -1833,9 +1830,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 122 then
---|#line 471 "xm_eiffel_parser.y"
+--|#line 468 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 471")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 468")
 end
 
 
@@ -1844,9 +1841,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 123 then
---|#line 472 "xm_eiffel_parser.y"
+--|#line 469 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 472")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 469")
 end
 
 
@@ -1864,9 +1861,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 124 then
---|#line 475 "xm_eiffel_parser.y"
+--|#line 472 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 475")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 472")
 end
 
 
@@ -1875,9 +1872,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 125 then
---|#line 476 "xm_eiffel_parser.y"
+--|#line 473 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 476")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 473")
 end
 
 
@@ -1887,9 +1884,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 126 then
---|#line 479 "xm_eiffel_parser.y"
+--|#line 476 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 479")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 476")
 end
 
 on_doctype (yyvs4.item (yyvsp4), Void, True) 
@@ -1899,9 +1896,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 127 then
---|#line 483 "xm_eiffel_parser.y"
+--|#line 480 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 483")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 480")
 end
 
 on_dtd_end 
@@ -1912,9 +1909,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 128 then
---|#line 487 "xm_eiffel_parser.y"
+--|#line 484 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 487")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 484")
 end
 
 			on_doctype (yyvs4.item (yyvsp4), yyvs5.item (yyvsp5), False) 
@@ -1927,9 +1924,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 129 then
---|#line 494 "xm_eiffel_parser.y"
+--|#line 491 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 494")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 491")
 end
 
 			debug ("xml_parser")
@@ -1947,9 +1944,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 130 then
---|#line 507 "xm_eiffel_parser.y"
+--|#line 504 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 507")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 504")
 end
 
 			if not in_external_dtd then
@@ -1967,9 +1964,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 131 then
---|#line 519 "xm_eiffel_parser.y"
+--|#line 516 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 519")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 516")
 end
 
 
@@ -1986,6 +1983,17 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 132 then
+--|#line 517 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 517")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 133 then
 --|#line 520 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 520")
@@ -1996,21 +2004,10 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 133 then
---|#line 523 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 523")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
 when 134 then
---|#line 524 "xm_eiffel_parser.y"
+--|#line 521 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 524")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 521")
 end
 
 
@@ -2020,9 +2017,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 135 then
---|#line 527 "xm_eiffel_parser.y"
+--|#line 524 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 527")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 524")
 end
 
 
@@ -2031,9 +2028,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 136 then
---|#line 528 "xm_eiffel_parser.y"
+--|#line 525 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 528")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 525")
 end
 
 
@@ -2042,9 +2039,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 137 then
---|#line 533 "xm_eiffel_parser.y"
+--|#line 530 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 533")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 530")
 end
 
 
@@ -2061,9 +2058,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 138 then
---|#line 534 "xm_eiffel_parser.y"
+--|#line 531 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 534")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 531")
 end
 
 
@@ -2073,9 +2070,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 139 then
---|#line 535 "xm_eiffel_parser.y"
+--|#line 532 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 535")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 532")
 end
 
 
@@ -2086,9 +2083,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 140 then
---|#line 538 "xm_eiffel_parser.y"
+--|#line 535 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 538")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 535")
 end
 
 
@@ -2097,9 +2094,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 141 then
---|#line 539 "xm_eiffel_parser.y"
+--|#line 536 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 539")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 536")
 end
 
 
@@ -2109,6 +2106,39 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 142 then
+--|#line 541 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 541")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 143 then
+--|#line 542 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 542")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 144 then
+--|#line 543 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 543")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 145 then
 --|#line 544 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 544")
@@ -2119,7 +2149,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 143 then
+when 146 then
 --|#line 545 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 545")
@@ -2130,7 +2160,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 144 then
+when 147 then
 --|#line 546 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 546")
@@ -2141,43 +2171,10 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 145 then
+when 148 then
 --|#line 547 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 547")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 146 then
---|#line 548 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 548")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 147 then
---|#line 549 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 549")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 148 then
---|#line 550 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 550")
 end
 
 
@@ -2195,9 +2192,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 149 then
---|#line 551 "xm_eiffel_parser.y"
+--|#line 548 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 551")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 548")
 end
 
 
@@ -2215,9 +2212,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 150 then
---|#line 556 "xm_eiffel_parser.y"
+--|#line 553 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 556")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 553")
 end
 
 yyval10 := True 
@@ -2235,9 +2232,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
 when 151 then
---|#line 557 "xm_eiffel_parser.y"
+--|#line 554 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 557")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 554")
 end
 
 yyval10 := True 
@@ -2255,9 +2252,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
 when 152 then
---|#line 558 "xm_eiffel_parser.y"
+--|#line 555 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 558")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 555")
 end
 
 yyval10 := False 
@@ -2275,9 +2272,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
 when 153 then
---|#line 559 "xm_eiffel_parser.y"
+--|#line 556 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 559")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 556")
 end
 
 yyval10 := False 
@@ -2295,9 +2292,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines10.force (yyvs10, yyval10, yyvsp10)
 end
 when 154 then
---|#line 564 "xm_eiffel_parser.y"
+--|#line 561 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 564")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 561")
 end
 
 
@@ -2306,9 +2303,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 155 then
---|#line 565 "xm_eiffel_parser.y"
+--|#line 562 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 565")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 562")
 end
 
 			if not yyvs2.item (yyvsp2 - 1).is_equal (yyvs2.item (yyvsp2)) then
@@ -2329,9 +2326,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 156 then
---|#line 571 "xm_eiffel_parser.y"
+--|#line 568 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 571")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 568")
 end
 
 			if not yyvs2.item (yyvsp2 - 1).is_equal (yyvs2.item (yyvsp2)) then
@@ -2344,9 +2341,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 157 then
---|#line 577 "xm_eiffel_parser.y"
+--|#line 574 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 577")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 574")
 end
 
 force_error (Error_element_end_tag) 
@@ -2357,9 +2354,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 158 then
---|#line 578 "xm_eiffel_parser.y"
+--|#line 575 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 578")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 575")
 end
 
 force_error (Error_element_content) 
@@ -2369,9 +2366,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 159 then
---|#line 584 "xm_eiffel_parser.y"
+--|#line 581 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 584")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 581")
 end
 
 			yyval2 := yyvs2.item (yyvsp2)
@@ -2383,9 +2380,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 160 then
---|#line 589 "xm_eiffel_parser.y"
+--|#line 586 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 589")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 586")
 end
 
 			yyval2 := yyvs2.item (yyvsp2)
@@ -2399,9 +2396,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 161 then
---|#line 594 "xm_eiffel_parser.y"
+--|#line 591 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 594")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 591")
 end
 
 			force_error (Error_start_tag)
@@ -2422,9 +2419,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 162 then
---|#line 601 "xm_eiffel_parser.y"
+--|#line 598 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 601")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 598")
 end
 
 			on_start_tag_finish -- makes empty attributes
@@ -2445,9 +2442,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 163 then
---|#line 606 "xm_eiffel_parser.y"
+--|#line 603 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 606")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 603")
 end
 
 			on_start_tag_finish
@@ -2461,9 +2458,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 164 then
---|#line 613 "xm_eiffel_parser.y"
+--|#line 610 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 613")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 610")
 end
 
 			yyval2 := yyvs2.item (yyvsp2)
@@ -2474,9 +2471,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 165 then
---|#line 620 "xm_eiffel_parser.y"
+--|#line 617 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 620")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 617")
 end
 
 			yyval3 := new_name_set
@@ -2496,9 +2493,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 166 then
---|#line 625 "xm_eiffel_parser.y"
+--|#line 622 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 625")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 622")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
@@ -2515,9 +2512,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 167 then
---|#line 636 "xm_eiffel_parser.y"
+--|#line 633 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 636")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 633")
 end
 
 			yyval2 := yyvs2.item (yyvsp2)
@@ -2529,9 +2526,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 168 then
---|#line 641 "xm_eiffel_parser.y"
+--|#line 638 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 641")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 638")
 end
 
 			force_error (Error_attribute)
@@ -2543,9 +2540,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 169 then
---|#line 648 "xm_eiffel_parser.y"
+--|#line 645 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 648")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 645")
 end
 
 			yyval2 := yyvs2.item (yyvsp2)
@@ -2557,9 +2554,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 170 then
---|#line 653 "xm_eiffel_parser.y"
+--|#line 650 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 653")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 650")
 end
 
 			force_error (Error_end_tag)
@@ -2580,9 +2577,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 171 then
---|#line 660 "xm_eiffel_parser.y"
+--|#line 657 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 660")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 657")
 end
 
 
@@ -2591,9 +2588,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 172 then
---|#line 661 "xm_eiffel_parser.y"
+--|#line 658 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 661")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 658")
 end
 
 
@@ -2603,9 +2600,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 173 then
---|#line 664 "xm_eiffel_parser.y"
+--|#line 661 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 664")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 661")
 end
 
 on_content (yyvs4.item (yyvsp4)) 
@@ -2623,6 +2620,39 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 174 then
+--|#line 662 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 662")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 175 then
+--|#line 663 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 663")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 176 then
+--|#line 664 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 664")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 177 then
 --|#line 665 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 665")
@@ -2633,43 +2663,10 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 175 then
+when 178 then
 --|#line 666 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 666")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 176 then
---|#line 667 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 667")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 177 then
---|#line 668 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 668")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 178 then
---|#line 669 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 669")
 end
 
 force_error (Error_no_cdata_end_in_content) 
@@ -2687,9 +2684,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 179 then
---|#line 670 "xm_eiffel_parser.y"
+--|#line 667 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 670")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 667")
 end
 
 
@@ -2698,9 +2695,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 180 then
---|#line 673 "xm_eiffel_parser.y"
+--|#line 670 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 673")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 670")
 end
 
 
@@ -2718,9 +2715,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 181 then
---|#line 674 "xm_eiffel_parser.y"
+--|#line 671 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 674")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 671")
 end
 
 
@@ -2738,9 +2735,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 182 then
---|#line 675 "xm_eiffel_parser.y"
+--|#line 672 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 675")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 672")
 end
 
 force_error (Error_entity_xml_declaration) 
@@ -2758,9 +2755,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 183 then
---|#line 678 "xm_eiffel_parser.y"
+--|#line 675 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 678")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 675")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -2769,9 +2766,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 184 then
---|#line 680 "xm_eiffel_parser.y"
+--|#line 677 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 680")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 677")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -2780,9 +2777,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 185 then
---|#line 686 "xm_eiffel_parser.y"
+--|#line 683 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 686")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 683")
 end
 
 on_element_declaration (yyvs4.item (yyvsp4 - 1),yyvs6.item (yyvsp6)) 
@@ -2794,9 +2791,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 186 then
---|#line 688 "xm_eiffel_parser.y"
+--|#line 685 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 688")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 685")
 end
 
 force_error (Error_doctype_element) 
@@ -2806,9 +2803,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 187 then
---|#line 691 "xm_eiffel_parser.y"
+--|#line 688 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 691")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 688")
 end
 
 create yyval6.make_empty 
@@ -2827,9 +2824,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 188 then
---|#line 693 "xm_eiffel_parser.y"
+--|#line 690 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 693")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 690")
 end
 
 create yyval6.make_any 
@@ -2848,9 +2845,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 189 then
---|#line 695 "xm_eiffel_parser.y"
+--|#line 692 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 695")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 692")
 end
 
 yyval6 := yyvs6.item (yyvsp6) 
@@ -2860,9 +2857,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 190 then
---|#line 697 "xm_eiffel_parser.y"
+--|#line 694 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 697")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 694")
 end
 
 yyval6 := yyvs6.item (yyvsp6) 
@@ -2871,9 +2868,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 191 then
---|#line 701 "xm_eiffel_parser.y"
+--|#line 698 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 701")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 698")
 end
 
 yyval6 := yyvs6.item (yyvsp6) 
@@ -2883,9 +2880,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 192 then
---|#line 703 "xm_eiffel_parser.y"
+--|#line 700 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 703")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 700")
 end
 
 yyval6 := yyvs6.item (yyvsp6); set_element_repetition (yyval6, yyvs4.item (yyvsp4)) 
@@ -2895,9 +2892,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 193 then
---|#line 705 "xm_eiffel_parser.y"
+--|#line 702 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 705")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 702")
 end
 
 yyval6 := yyvs6.item (yyvsp6) 
@@ -2907,9 +2904,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 194 then
---|#line 707 "xm_eiffel_parser.y"
+--|#line 704 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 707")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 704")
 end
 
 yyval6 := yyvs6.item (yyvsp6); set_element_repetition (yyval6, yyvs4.item (yyvsp4)) 
@@ -2919,9 +2916,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 195 then
---|#line 711 "xm_eiffel_parser.y"
+--|#line 708 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 711")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 708")
 end
 
 yyval6 := element_name (yyvs4.item (yyvsp4)) 
@@ -2939,9 +2936,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 196 then
---|#line 713 "xm_eiffel_parser.y"
+--|#line 710 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 713")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 710")
 end
 
 yyval6 := element_name (yyvs4.item (yyvsp4 - 1)); set_element_repetition (yyval6, yyvs4.item (yyvsp4)) 
@@ -2959,9 +2956,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 197 then
---|#line 715 "xm_eiffel_parser.y"
+--|#line 712 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 715")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 712")
 end
 
 yyval6 := yyvs6.item (yyvsp6) 
@@ -2971,9 +2968,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 198 then
---|#line 717 "xm_eiffel_parser.y"
+--|#line 714 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 717")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 714")
 end
 
 yyval6 := yyvs6.item (yyvsp6); set_element_repetition (yyval6, yyvs4.item (yyvsp4)) 
@@ -2983,9 +2980,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 199 then
---|#line 719 "xm_eiffel_parser.y"
+--|#line 716 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 719")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 716")
 end
 
 yyval6 := yyvs6.item (yyvsp6) 
@@ -2995,9 +2992,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 200 then
---|#line 721 "xm_eiffel_parser.y"
+--|#line 718 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 721")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 718")
 end
 
 yyval6 := yyvs6.item (yyvsp6); set_element_repetition (yyval6, yyvs4.item (yyvsp4)) 
@@ -3007,9 +3004,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 201 then
---|#line 725 "xm_eiffel_parser.y"
+--|#line 722 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 725")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 722")
 end
 
 yyval4 := Zero_or_more_repetition 
@@ -3019,9 +3016,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 202 then
---|#line 727 "xm_eiffel_parser.y"
+--|#line 724 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 727")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 724")
 end
 
 yyval4 := One_or_more_repetition 
@@ -3031,9 +3028,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 203 then
---|#line 729 "xm_eiffel_parser.y"
+--|#line 726 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 729")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 726")
 end
 
 yyval4 := Zero_or_one_repetition 
@@ -3043,9 +3040,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 204 then
---|#line 733 "xm_eiffel_parser.y"
+--|#line 730 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 733")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 730")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
@@ -3060,9 +3057,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 205 then
---|#line 742 "xm_eiffel_parser.y"
+--|#line 739 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 742")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 739")
 end
 
 			create yyval6.make_choice
@@ -3075,9 +3072,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 206 then
---|#line 749 "xm_eiffel_parser.y"
+--|#line 746 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 749")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 746")
 end
 
 			yyval6 := yyvs6.item (yyvsp6 - 1)
@@ -3092,9 +3089,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 207 then
---|#line 759 "xm_eiffel_parser.y"
+--|#line 756 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 759")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 756")
 end
 
 yyval6 := yyvs6.item (yyvsp6) 
@@ -3104,9 +3101,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 208 then
---|#line 763 "xm_eiffel_parser.y"
+--|#line 760 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 763")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 760")
 end
 
 			create yyval6.make_sequence
@@ -3119,9 +3116,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 209 then
---|#line 770 "xm_eiffel_parser.y"
+--|#line 767 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 770")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 767")
 end
 
 			yyval6 := yyvs6.item (yyvsp6 - 1)
@@ -3136,9 +3133,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 210 then
---|#line 779 "xm_eiffel_parser.y"
+--|#line 776 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 779")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 776")
 end
 
 create yyval6.make_mixed 
@@ -3156,9 +3153,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 211 then
---|#line 781 "xm_eiffel_parser.y"
+--|#line 778 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 781")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 778")
 end
 
 create yyval6.make_mixed; yyval6.set_zero_or_more 
@@ -3177,9 +3174,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 212 then
---|#line 783 "xm_eiffel_parser.y"
+--|#line 780 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 783")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 780")
 end
 
 yyval6 := yyvs6.item (yyvsp6); yyval6.set_zero_or_more 
@@ -3190,9 +3187,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 213 then
---|#line 787 "xm_eiffel_parser.y"
+--|#line 784 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 787")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 784")
 end
 
 			create yyval6.make_mixed
@@ -3214,9 +3211,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 214 then
---|#line 794 "xm_eiffel_parser.y"
+--|#line 791 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 794")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 791")
 end
 
 			yyval6 := yyvs6.item (yyvsp6)
@@ -3231,9 +3228,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 when 215 then
---|#line 805 "xm_eiffel_parser.y"
+--|#line 802 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 805")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 802")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -3243,6 +3240,18 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 216 then
+--|#line 806 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 806")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp4 := yyvsp4 -1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 217 then
 --|#line 809 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 809")
@@ -3254,7 +3263,7 @@ if yy_parsing_status >= yyContinue then
 	yyvsp4 := yyvsp4 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 217 then
+when 218 then
 --|#line 812 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 812")
@@ -3266,22 +3275,10 @@ if yy_parsing_status >= yyContinue then
 	yyvsp4 := yyvsp4 -1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 218 then
+when 219 then
 --|#line 815 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 815")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp4 := yyvsp4 -1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
-when 219 then
---|#line 818 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 818")
 end
 
 
@@ -3299,9 +3296,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 220 then
---|#line 821 "xm_eiffel_parser.y"
+--|#line 818 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 821")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 818")
 end
 
 
@@ -3311,9 +3308,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 221 then
---|#line 826 "xm_eiffel_parser.y"
+--|#line 823 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 826")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 823")
 end
 
 
@@ -3324,9 +3321,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 222 then
---|#line 828 "xm_eiffel_parser.y"
+--|#line 825 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 828")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 825")
 end
 
 on_attribute_declarations (yyvs4.item (yyvsp4 - 1), yyvs7.item (yyvsp7)) 
@@ -3338,9 +3335,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 223 then
---|#line 830 "xm_eiffel_parser.y"
+--|#line 827 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 830")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 827")
 end
 
 force_error (Error_doctype_attribute) 
@@ -3350,9 +3347,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 224 then
---|#line 834 "xm_eiffel_parser.y"
+--|#line 831 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 834")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 831")
 end
 
 yyval7 := new_dtd_attribute_content_list; yyval7.force_last (yyvs8.item (yyvsp8)) 
@@ -3370,9 +3367,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 225 then
---|#line 836 "xm_eiffel_parser.y"
+--|#line 833 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 836")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 833")
 end
 
 yyval7 := yyvs7.item (yyvsp7); yyval7.force_last (yyvs8.item (yyvsp8)) 
@@ -3382,9 +3379,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 when 226 then
---|#line 840 "xm_eiffel_parser.y"
+--|#line 837 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 840")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 837")
 end
 
 yyval8 := yyvs8.item (yyvsp8 - 1); yyval8.set_name (yyvs4.item (yyvsp4)); yyval8.copy_default (yyvs8.item (yyvsp8)) 
@@ -3396,9 +3393,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 227 then
---|#line 842 "xm_eiffel_parser.y"
+--|#line 839 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 842")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 839")
 end
 
 			force_error (Error_doctype_attribute_item)
@@ -3419,9 +3416,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 228 then
---|#line 849 "xm_eiffel_parser.y"
+--|#line 846 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 849")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 846")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_data 
@@ -3439,9 +3436,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 229 then
---|#line 851 "xm_eiffel_parser.y"
+--|#line 848 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 851")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 848")
 end
 
 yyval8 := yyvs8.item (yyvsp8) 
@@ -3450,9 +3447,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 230 then
---|#line 853 "xm_eiffel_parser.y"
+--|#line 850 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 853")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 850")
 end
 
 yyval8 := yyvs8.item (yyvsp8) 
@@ -3461,9 +3458,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 231 then
---|#line 857 "xm_eiffel_parser.y"
+--|#line 854 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 857")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 854")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_id 
@@ -3481,9 +3478,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 232 then
---|#line 859 "xm_eiffel_parser.y"
+--|#line 856 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 859")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 856")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_id_ref 
@@ -3501,9 +3498,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 233 then
---|#line 861 "xm_eiffel_parser.y"
+--|#line 858 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 861")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 858")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_id_ref; yyval8.set_list_type 
@@ -3521,9 +3518,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 234 then
---|#line 863 "xm_eiffel_parser.y"
+--|#line 860 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 863")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 860")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_entity 
@@ -3541,9 +3538,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 235 then
---|#line 865 "xm_eiffel_parser.y"
+--|#line 862 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 865")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 862")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_entity; yyval8.set_list_type 
@@ -3561,9 +3558,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 236 then
---|#line 867 "xm_eiffel_parser.y"
+--|#line 864 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 867")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 864")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_token 
@@ -3581,9 +3578,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 237 then
---|#line 869 "xm_eiffel_parser.y"
+--|#line 866 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 869")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 866")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_token; yyval8.set_list_type 
@@ -3601,9 +3598,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 238 then
---|#line 873 "xm_eiffel_parser.y"
+--|#line 870 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 873")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 870")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_notation 
@@ -3621,9 +3618,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 239 then
---|#line 875 "xm_eiffel_parser.y"
+--|#line 872 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 875")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 872")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_enumeration_list (yyvs9.item (yyvsp9)) 
@@ -3641,9 +3638,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 240 then
---|#line 879 "xm_eiffel_parser.y"
+--|#line 876 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 879")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 876")
 end
 
 
@@ -3654,9 +3651,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 241 then
---|#line 882 "xm_eiffel_parser.y"
+--|#line 879 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 882")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 879")
 end
 
 
@@ -3674,9 +3671,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 242 then
---|#line 883 "xm_eiffel_parser.y"
+--|#line 880 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 883")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 880")
 end
 
 
@@ -3687,9 +3684,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 243 then
---|#line 886 "xm_eiffel_parser.y"
+--|#line 883 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 886")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 883")
 end
 
 yyval9 := yyvs9.item (yyvsp9) 
@@ -3699,9 +3696,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 244 then
---|#line 890 "xm_eiffel_parser.y"
+--|#line 887 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 890")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 887")
 end
 
 yyval9 := new_string_bilinked_list; yyval9.force_last (yyvs4.item (yyvsp4)) 
@@ -3720,9 +3717,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 245 then
---|#line 892 "xm_eiffel_parser.y"
+--|#line 889 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 892")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 889")
 end
 
 yyval9 := yyvs9.item (yyvsp9); yyval9.force_last (yyvs4.item (yyvsp4)) 
@@ -3733,9 +3730,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 when 246 then
---|#line 896 "xm_eiffel_parser.y"
+--|#line 893 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 896")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 893")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_value_required 
@@ -3753,9 +3750,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 247 then
---|#line 898 "xm_eiffel_parser.y"
+--|#line 895 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 898")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 895")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_value_implied 
@@ -3773,9 +3770,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 248 then
---|#line 900 "xm_eiffel_parser.y"
+--|#line 897 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 900")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 897")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_value_fixed (yyvs4.item (yyvsp4)) 
@@ -3794,9 +3791,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 249 then
---|#line 902 "xm_eiffel_parser.y"
+--|#line 899 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 902")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 899")
 end
 
 yyval8 := new_dtd_attribute_content; yyval8.set_default_value (yyvs4.item (yyvsp4)) 
@@ -3814,9 +3811,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 when 250 then
---|#line 908 "xm_eiffel_parser.y"
+--|#line 905 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 908")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 905")
 end
 
 
@@ -3825,9 +3822,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 251 then
---|#line 909 "xm_eiffel_parser.y"
+--|#line 906 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 909")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 906")
 end
 
 
@@ -3836,9 +3833,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 252 then
---|#line 910 "xm_eiffel_parser.y"
+--|#line 907 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 910")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 907")
 end
 
 force_error (Error_doctype_conditional_section) 
@@ -3848,9 +3845,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 253 then
---|#line 913 "xm_eiffel_parser.y"
+--|#line 910 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 913")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 910")
 end
 
 
@@ -3860,9 +3857,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 254 then
---|#line 914 "xm_eiffel_parser.y"
+--|#line 911 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 914")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 911")
 end
 
 
@@ -3873,9 +3870,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 255 then
---|#line 917 "xm_eiffel_parser.y"
+--|#line 914 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 917")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 914")
 end
 
 
@@ -3886,9 +3883,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 256 then
---|#line 920 "xm_eiffel_parser.y"
+--|#line 917 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 920")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 917")
 end
 
 
@@ -3899,9 +3896,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 257 then
---|#line 923 "xm_eiffel_parser.y"
+--|#line 920 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 923")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 920")
 end
 
 scanner.push_start_condition_dtd_ignore 
@@ -3912,9 +3909,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 258 then
---|#line 927 "xm_eiffel_parser.y"
+--|#line 924 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 927")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 924")
 end
 
 
@@ -3931,6 +3928,17 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 259 then
+--|#line 925 "xm_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 925")
+end
+
+
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
+end
+when 260 then
 --|#line 928 "xm_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 928")
@@ -3941,21 +3949,10 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
-when 260 then
---|#line 931 "xm_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 931")
-end
-
-
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
-end
 when 261 then
---|#line 932 "xm_eiffel_parser.y"
+--|#line 929 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 932")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 929")
 end
 
 
@@ -3965,9 +3962,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 262 then
---|#line 935 "xm_eiffel_parser.y"
+--|#line 932 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 935")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 932")
 end
 
 
@@ -3985,9 +3982,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 263 then
---|#line 936 "xm_eiffel_parser.y"
+--|#line 933 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 936")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 933")
 end
 
 
@@ -3997,9 +3994,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 264 then
---|#line 945 "xm_eiffel_parser.y"
+--|#line 942 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 945")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 942")
 end
 
 
@@ -4008,9 +4005,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 265 then
---|#line 946 "xm_eiffel_parser.y"
+--|#line 943 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 946")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 943")
 end
 
 
@@ -4019,9 +4016,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 266 then
---|#line 947 "xm_eiffel_parser.y"
+--|#line 944 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 947")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 944")
 end
 
 force_error (Error_doctype_entity) 
@@ -4031,9 +4028,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 267 then
---|#line 950 "xm_eiffel_parser.y"
+--|#line 947 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 950")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 947")
 end
 
 				-- Internal entity.
@@ -4047,9 +4044,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 268 then
---|#line 956 "xm_eiffel_parser.y"
+--|#line 953 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 956")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 953")
 end
 
 				-- External entity.
@@ -4064,9 +4061,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 269 then
---|#line 962 "xm_eiffel_parser.y"
+--|#line 959 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 962")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 959")
 end
 
 				-- Unparsed NDATA entity.
@@ -4080,9 +4077,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 270 then
---|#line 969 "xm_eiffel_parser.y"
+--|#line 966 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 969")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 966")
 end
 
 				-- Internal PE entity.
@@ -4096,9 +4093,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 271 then
---|#line 975 "xm_eiffel_parser.y"
+--|#line 972 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 975")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 972")
 end
 
 				-- External PE entity.
@@ -4113,9 +4110,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 272 then
---|#line 983 "xm_eiffel_parser.y"
+--|#line 980 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 983")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 980")
 end
 
 yyval5 := new_dtd_external_id; yyval5.set_system (yyvs4.item (yyvsp4)) 
@@ -4133,9 +4130,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 273 then
---|#line 985 "xm_eiffel_parser.y"
+--|#line 982 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 985")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 982")
 end
 
 yyval5 := new_dtd_external_id; yyval5.set_public (yyvs4.item (yyvsp4 - 1)); yyval5.set_system (yyvs4.item (yyvsp4)) 
@@ -4153,9 +4150,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 274 then
---|#line 989 "xm_eiffel_parser.y"
+--|#line 986 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 989")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 986")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -4166,9 +4163,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 275 then
---|#line 995 "xm_eiffel_parser.y"
+--|#line 992 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 995")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 992")
 end
 
 
@@ -4185,9 +4182,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 276 then
---|#line 996 "xm_eiffel_parser.y"
+--|#line 993 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 996")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 993")
 end
 
 
@@ -4197,9 +4194,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 277 then
---|#line 997 "xm_eiffel_parser.y"
+--|#line 994 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 997")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 994")
 end
 
 
@@ -4210,9 +4207,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 278 then
---|#line 998 "xm_eiffel_parser.y"
+--|#line 995 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 998")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 995")
 end
 
 force_error (Error_xml_declaration) 
@@ -4222,9 +4219,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 279 then
---|#line 1001 "xm_eiffel_parser.y"
+--|#line 998 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1001")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 998")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -4234,9 +4231,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 280 then
---|#line 1003 "xm_eiffel_parser.y"
+--|#line 1000 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1003")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1000")
 end
 
 yyval4 := yyvs4.item (yyvsp4 - 1) 
@@ -4246,9 +4243,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 281 then
---|#line 1009 "xm_eiffel_parser.y"
+--|#line 1006 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1009")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1006")
 end
 
 on_notation_declaration (yyvs4.item (yyvsp4 - 1), yyvs5.item (yyvsp5)) 
@@ -4260,9 +4257,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 282 then
---|#line 1011 "xm_eiffel_parser.y"
+--|#line 1008 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1011")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1008")
 end
 
 on_notation_declaration (yyvs4.item (yyvsp4 - 1), yyvs5.item (yyvsp5)) 
@@ -4274,9 +4271,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 283 then
---|#line 1013 "xm_eiffel_parser.y"
+--|#line 1010 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1013")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1010")
 end
 
 force_error (Error_doctype_notation) 
@@ -4286,9 +4283,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 284 then
---|#line 1017 "xm_eiffel_parser.y"
+--|#line 1014 "xm_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1017")
+	std.error.put_line ("Executing parser user-code from file 'xm_eiffel_parser.y' at line 1014")
 end
 
 yyval5 := new_dtd_external_id; yyval5.set_system (yyvs4.item (yyvsp4)) 
@@ -5151,322 +5148,6 @@ feature {NONE} -- Constants
 
 feature -- User-defined features
 
-
-
-feature -- Parsing
-
-	parse
-			-- (NOTE: THIS IS THE COPY/PASTE VERSION OF THE CODE IN
-			-- THE YY_PARSER_SKELETON CLASS, FOR OPTIMISATION WITH
-			-- ISE EIFFEL (ALLOW INLINING NOT POSSIBLE IN
-			-- YY_PARSER_SKELETON).)
-
-			-- Parse input stream.
-			-- Set `syntax_error' to True if
-			-- parsing has not been successful.
-		local
-			yystacksize: INTEGER
-			yystate: INTEGER
-			yyn: INTEGER
-			yychar1: INTEGER
-			index, yyss_top: INTEGER
-			yy_goto: INTEGER
-		do
-				-- This routine is implemented with a loop whose body
-				-- is a big inspect instruction. This is a mere
-				-- translation of C gotos into Eiffel. Needless to
-				-- say that I'm not very proud of this piece of code.
-				-- However I performed some benchmarks and the results
-				-- were that this implementation runs amazingly faster
-				-- than an alternative implementation with no loop nor
-				-- inspect instructions and where every branch of the
-				-- old inspect instruction was written in a separate
-				-- routine. I think that the performance penalty is due
-				-- to the routine call overhead and the depth of the call
-				-- stack. Anyway, I prefer to provide you with a big and
-				-- ugly but fast parsing routine rather than a nice and
-				-- slow version. I hope you won't blame me for that! :-)
-			from
-				if yy_parsing_status = yySuspended then
-					yystacksize := yy_suspended_yystacksize
-					yystate := yy_suspended_yystate
-					yyn := yy_suspended_yyn
-					yychar1 := yy_suspended_yychar1
-					index := yy_suspended_index
-					yyss_top := yy_suspended_yyss_top
-					yy_goto := yy_suspended_yy_goto
-					yy_parsing_status := yyContinue
-					if yy_goto = yyReduce then
-							-- Now "shift" the result of the reduction.
-							-- Determine what state that goes to,
-							-- based on the state we popped back to
-							-- and the rule number reduced by.
-						yyn := yyr1.item (yyn)
-						yyss_top := yyss.item (yyssp)
-						index := yyn - yyNtbase
-						yystate := yypgoto.item (index) + yyss_top
-						if (yystate >= 0 and yystate <= yyLast) and then yycheck.item (yystate) = yyss_top then
-							yystate := yytable.item (yystate)
-						else
-							yystate := yydefgoto.item (index)
-						end
-						yy_goto := yyNewstate
-					end
-				else
-					error_count := 0
-					yy_lookahead_needed := True
-					yyerrstatus := 0
-					yy_init_value_stacks
-					yyssp := -1
-					yystacksize := yyss.count
-					yy_parsing_status := yyContinue
-					yy_goto := yyNewstate
-				end
-			until
-				yy_parsing_status /= yyContinue
-			loop
-				inspect yy_goto
-				when yyNewstate then
-					yyssp := yyssp + 1
-					if yyssp >= yystacksize then
-						yystacksize := yystacksize + yyInitial_stack_size
-						yyss := SPECIAL_INTEGER_.aliased_resized_area (yyss, yystacksize)
-						debug ("GEYACC")
-							std.error.put_string ("Stack (yyss) size increased to ")
-							std.error.put_integer (yystacksize)
-							std.error.put_character ('%N')
-						end
-					end
-					debug ("GEYACC")
-						std.error.put_string ("Entering state ")
-						std.error.put_integer (yystate)
-						std.error.put_character ('%N')
-					end
-					SPECIAL_INTEGER_.force (yyss, yystate, yyssp)
-						-- Do appropriate processing given the current state.
-						-- Read a lookahead token if one is needed.
-					yyn := yypact.item (yystate)
-						-- First try to decide what to do without reference
-						-- lookahead token.
-					if yyn = yyFlag then
-						yy_goto := yyDefault
-					else
-							-- Not known => get a lookahead token if don't
-							-- already have one.
-						if yy_lookahead_needed then
-							debug ("GEYACC")
-								std.error.put_string ("Reading a token%N")
-							end
-							read_token
-							yy_lookahead_needed := False
-						end
-							-- Convert token to internal form (in `yychar1')
-							-- for indexing tables.
-						if last_token > yyEof then
-							debug ("GEYACC")
-								std.error.put_string ("Next token is ")
-								std.error.put_integer (last_token)
-								std.error.put_character ('%N')
-							end
-								-- Translate lexical token `last_token' into
-								-- geyacc internal token code.
-							if last_token <= yyMax_token then
-								yychar1 := yytranslate.item (last_token)
-							else
-								yychar1 := yyNsyms
-							end
-							yyn := yyn + yychar1
-						elseif last_token = yyEof then
-								-- This means end of input.
-							debug ("GEYACC")
-								std.error.put_string ("Now at end of input.%N")
-							end
-							yychar1 := 0
-						else
-								-- An error occurred in the scanner.
-							debug ("GEYACC")
-								std.error.put_string ("Error in scanner.%N")
-							end
-							error_count := error_count + 1
-							yy_do_error_action (yystate)
-							abort
-								-- Skip next conditional instruction:
-							yyn := -1
-						end
-						if (yyn < 0 or yyn > yyLast) or else yycheck.item (yyn) /= yychar1 then
-							yy_goto := yyDefault
-						else
-							yyn := yytable.item (yyn)
-								-- `yyn' is what to do for this token type in
-								-- this state:
-								-- Negative => reduce, -`yyn' is rule number.
-								-- Positive => shift, `yyn' is new state.
-								-- New state is final state => don't bother to
-								-- shift, just return success.
-								-- 0, or most negative number => error.
-							if yyn < 0 then
-								if yyn = yyFlag then
-									yy_goto := yyErrlab
-								else
-									yyn := -yyn
-									yy_goto := yyReduce
-								end
-							elseif yyn = 0 then
-								yy_goto := yyErrlab
-							elseif yyn = yyFinal then
-								accept
-							else
-									-- Shift the lookahead token.
-								debug ("GEYACC")
-									std.error.put_string ("Shifting token ")
-									std.error.put_integer (last_token)
-									std.error.put_character ('%N')
-								end
-									-- Discard the token being shifted
-									-- unless it is eof.
-								if last_token > yyEof then
-									yy_lookahead_needed := True
-								end
-								yy_push_last_value (yychar1)
-									-- Count tokens shifted since error;
-									-- after three, turn off error status.
-								if yyerrstatus /= 0 then
-									yyerrstatus := yyerrstatus - 1
-								end
-								yystate := yyn
-								check
-									newstate: yy_goto = yyNewstate
-								end
-							end
-						end
-					end
-				when yyDefault then
-						-- Do the default action for the current state.
-					yyn := yydefact.item (yystate)
-					if yyn = 0 then
-						yy_goto := yyErrlab
-					else
-						yy_goto := yyReduce
-					end
-				when yyReduce then
-						-- Do a reduction. `yyn' is the number of a rule
-						-- to reduce with.
-					debug ("GEYACC")
-						std.error.put_string ("Reducing via rule #")
-						std.error.put_integer (yyn)
-						std.error.put_character ('%N')
-					end
-					yy_do_action (yyn)
-					inspect yy_parsing_status
-					when yyContinue then
-							-- Now "shift" the result of the reduction.
-							-- Determine what state that goes to,
-							-- based on the state we popped back to
-							-- and the rule number reduced by.
-						yyn := yyr1.item (yyn)
-						yyss_top := yyss.item (yyssp)
-						index := yyn - yyNtbase
-						yystate := yypgoto.item (index) + yyss_top
-						if (yystate >= 0 and yystate <= yyLast) and then yycheck.item (yystate) = yyss_top then
-							yystate := yytable.item (yystate)
-						else
-							yystate := yydefgoto.item (index)
-						end
-						yy_goto := yyNewstate
-					when yySuspended then
-						yy_suspended_yystacksize := yystacksize
-						yy_suspended_yystate := yystate
-						yy_suspended_yyn := yyn
-						yy_suspended_yychar1 := yychar1
-						yy_suspended_index := index
-						yy_suspended_yyss_top := yyss_top
-						yy_suspended_yy_goto := yy_goto
-					when yyError_raised then
-							-- Handle error raised explicitly by an action.
-						yy_parsing_status := yyContinue
-						yy_goto := yyErrlab
-					else
-							-- Accepted or aborted.
-					end
-				when yyErrlab then
-						-- Detect error.
-					if yyerrstatus = 3 then
-							-- If just tried and failed to reuse lookahead
-							-- token after an error, discard it. Return
-							-- failure if at end of input.
-						if last_token <= yyEof then
-							abort
-						else
-							debug ("GEYACC")
-								std.error.put_string ("Discarding token ")
-								std.error.put_integer (last_token)
-								std.error.put_character ('%N')
-							end
-							yy_lookahead_needed := True
-							yy_goto := yyErrhandle
-						end
-					else
-						if yyerrstatus = 0 then
-								-- If not already recovering from an error,
-								-- report this error.
-							error_count := error_count + 1
-							yy_do_error_action (yystate)
-						end
-						yyerrstatus := 3
-						yy_goto := yyErrhandle
-					end
-				when yyErrhandle then
-						-- Handle error.
-					yyn := yypact.item (yystate)
-					if yyn = yyFlag then
-						yy_goto := yyErrpop
-					else
-						yyn := yyn + yyTerror
-						if (yyn < 0 or yyn > yyLast) or else yycheck.item (yyn) /= yyTerror then
-							yy_goto := yyErrpop
-						else
-							yyn := yytable.item (yyn)
-							if yyn < 0 then
-								if yyn = yyFlag then
-									yy_goto := yyErrpop
-								else
-									yyn := -yyn
-									yy_goto := yyReduce
-								end
-							elseif yyn = 0 then
-								yy_goto := yyErrpop
-							elseif yyn = yyFinal then
-								accept
-							else
-								yy_push_error_value
-								yystate := yyn
-								yy_goto := yyNewstate
-							end
-						end
-					end
-				when yyErrpop then
-						-- Pop the current state because it cannot handle
-						-- the error token.
-					if yyssp = 0 then
-						abort
-					else
-						yy_pop_last_value (yystate)
-						yyssp := yyssp - 1
-						yystate := yyss.item (yyssp)
-						yy_goto := yyErrhandle
-					end
-				end
-			end
-			if yy_parsing_status /= yySuspended then
-				yy_clear_all
-			end
-		rescue
-			debug ("GEYACC")
-				std.error.put_line ("Entering rescue clause of parser")
-			end
-			abort
-			yy_clear_all
-		end
 
 
 end
