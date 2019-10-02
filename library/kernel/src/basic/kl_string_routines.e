@@ -1427,8 +1427,8 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 		do
-			if ANY_.same_types (a_string, dummy_string) then
-				Result := a_string
+			if attached {STRING_8} a_string as l_string_8 and then ANY_.same_types (a_string, dummy_string) then
+				Result := l_string_8
 			else
 				if attached {UC_STRING} a_string as uc_string then
 					Result := uc_string.as_string

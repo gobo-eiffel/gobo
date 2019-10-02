@@ -5,7 +5,7 @@ note
 		"Filesystem's directories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -641,7 +641,11 @@ feature {NONE} -- Implementation
 			-- File name as a STRING_8 instance. The value might be truncated
 			-- from the original name used to create the current FILE instance.
 		do
-			Result := internal_name.as_string_8
+			if internal_name.is_valid_as_string_8 then
+				Result := internal_name.to_string_8
+			else
+				Result := {UC_UTF8_ROUTINES}.string_to_utf8 (internal_name)
+			end
 		ensure
 			string_name_not_void: Result /= Void
 			string_name_not_empty: not Result.is_empty

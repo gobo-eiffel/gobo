@@ -12,7 +12,7 @@ note
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,11 @@ feature -- Access
 			-- be used to query its value to the environment.
 		do
 			if attached environment_impl.item (STRING_.as_string (a_variable)) as l_item then
-				Result := l_item.as_string_8
+				if l_item.is_valid_as_string_8 then
+					Result := l_item.to_string_8
+				else
+					Result := {UC_UTF8_ROUTINES}.string_to_utf8 (l_item)
+				end
 			end
 		ensure then
 			instance_free: class

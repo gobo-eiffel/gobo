@@ -1242,7 +1242,7 @@ feature {TS_TEST_HANDLER} -- Exception
 		do
 			assertions.add_assertion
 			if attached raised_exception (a_routine) as l_exception then
-				l_message := assert_strings_equal_message (a_tag, "No exception", l_exception.generating_type.name.as_string_8)
+				l_message := assert_strings_equal_message (a_tag, "No exception", {UC_UTF8_ROUTINES}.string_to_utf8 (l_exception.generating_type.name))
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			else
@@ -1277,19 +1277,23 @@ feature {TS_TEST_HANDLER} -- Exception
 		do
 			assertions.add_assertion
 			if not attached raised_exception (a_routine) as l_exception then
-				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name.as_string_8, "No exception")
+				l_message := assert_strings_equal_message (a_tag, {UC_UTF8_ROUTINES}.string_to_utf8 (({DEVELOPER_EXCEPTION}).name), "No exception")
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			elseif not attached {DEVELOPER_EXCEPTION} l_exception as l_developer_exception then
-				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name.as_string_8, l_exception.generating_type.name.as_string_8)
+				l_message := assert_strings_equal_message (a_tag, {UC_UTF8_ROUTINES}.string_to_utf8 (({DEVELOPER_EXCEPTION}).name), {UC_UTF8_ROUTINES}.string_to_utf8 (l_exception.generating_type.name_32))
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			elseif not attached l_developer_exception.description as l_description then
 				l_message := assert_strings_equal_message (a_tag, a_exception_name, "No exception name")
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
-			elseif l_description.as_string_8 /~ a_exception_name then
-				l_message := assert_strings_equal_message (a_tag, a_exception_name, l_description.as_string_8)
+			elseif not l_description.is_valid_as_string_8 then
+				l_message := assert_strings_equal_message (a_tag, a_exception_name, {UC_UTF8_ROUTINES}.string_to_utf8 (l_description))
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			elseif l_description.to_string_8 /~ a_exception_name then
+				l_message := assert_strings_equal_message (a_tag, a_exception_name, l_description.to_string_8)
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			else

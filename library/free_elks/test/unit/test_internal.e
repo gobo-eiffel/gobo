@@ -5,7 +5,7 @@ note
 		"Test features of class INTERNAL"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -233,6 +233,8 @@ feature -- Test
 
 	test_type_name
 			-- Test feature 'type_name'.
+		obsolete
+			"INTERNAL.typename is obsolete on ISE 19.08.10.3505 [2019-10-02]"
 		local
 			internal: INTERNAL
 			s: STRING_8

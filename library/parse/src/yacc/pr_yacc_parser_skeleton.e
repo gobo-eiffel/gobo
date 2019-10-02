@@ -434,7 +434,7 @@ feature {NONE} -- Factory
 					-- Tokens are indexed from 0, but token
 					-- of id 0 is reserved for EOF.
 				an_id := last_grammar.tokens.count + 1
-				create Result.make (an_id, a_char, Unknown_type)
+				create Result.make (an_id, a_char.to_string_8, Unknown_type)
 				Result.set_token_id (a_code)
 				terminal_symbols.force_new (Result, a_key)
 				last_grammar.put_token (Result)

@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 		do
 			create byte_code.make (1024)
 			create internal_start_bits.make_empty
-			pattern_buffer := STRING_.cloned_string (empty_pattern_buffer)
+			pattern_buffer := empty_pattern_buffer.twin
 			reset
 			set_character_case_mapping (default_character_case_mapping)
 			set_word_set (default_word_set)

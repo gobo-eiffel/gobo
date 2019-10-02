@@ -5,7 +5,7 @@ note
 		"Test features of class TYPE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -149,20 +149,20 @@ feature -- Test
 			-- Test feature 'name'.
 		do
 			if is_void_safe_mode then
-				assert_strings_equal ("attached_string_8_void_safe", "!STRING_8", ({attached STRING_8}).name)
-				assert_strings_equal ("attached_array_attached_any_void_safe", "!ARRAY [!ANY]", ({attached ARRAY [attached ANY]}).name)
-				assert_strings_equal ("attached_array_detachable_any_void_safe", "!ARRAY [ANY]", ({attached ARRAY [detachable ANY]}).name)
-				assert_strings_equal ("attached_none_void_safe", "!NONE", ({attached NONE}).name)
+				assert_strings_equal ("attached_string_8_void_safe", "!STRING_8", ({attached STRING_8}).name.to_string_8)
+				assert_strings_equal ("attached_array_attached_any_void_safe", "!ARRAY [!ANY]", ({attached ARRAY [attached ANY]}).name.to_string_8)
+				assert_strings_equal ("attached_array_detachable_any_void_safe", "!ARRAY [ANY]", ({attached ARRAY [detachable ANY]}).name.to_string_8)
+				assert_strings_equal ("attached_none_void_safe", "!NONE", ({attached NONE}).name.to_string_8)
 			else
-				assert_strings_equal ("attached_string_8_non_void_safe", "STRING_8", ({attached STRING_8}).name)
-				assert_strings_equal ("attached_array_attached_any_non_void_safe", "ARRAY [ANY]", ({attached ARRAY [attached ANY]}).name)
-				assert_strings_equal ("attached_array_detachable_any_non_void_safe", "ARRAY [ANY]", ({attached ARRAY [detachable ANY]}).name)
-				assert_strings_equal ("attached_none_non_void_safe", "NONE", ({attached NONE}).name)
+				assert_strings_equal ("attached_string_8_non_void_safe", "STRING_8", ({attached STRING_8}).name.to_string_8)
+				assert_strings_equal ("attached_array_attached_any_non_void_safe", "ARRAY [ANY]", ({attached ARRAY [attached ANY]}).name.to_string_8)
+				assert_strings_equal ("attached_array_detachable_any_non_void_safe", "ARRAY [ANY]", ({attached ARRAY [detachable ANY]}).name.to_string_8)
+				assert_strings_equal ("attached_none_non_void_safe", "NONE", ({attached NONE}).name.to_string_8)
 			end
-			assert_strings_equal ("detachable_string_8", "STRING_8", ({detachable STRING_8}).name)
-			assert_strings_equal ("detachable_array_detachable_any", "ARRAY [ANY]", ({detachable ARRAY [detachable ANY]}).name)
-			assert_strings_equal ("integer_16", "INTEGER_16", ({INTEGER_16}).name)
-			assert_strings_equal ("detachable_none", "NONE", ({detachable NONE}).name)
+			assert_strings_equal ("detachable_string_8", "STRING_8", ({detachable STRING_8}).name.to_string_8)
+			assert_strings_equal ("detachable_array_detachable_any", "ARRAY [ANY]", ({detachable ARRAY [detachable ANY]}).name.to_string_8)
+			assert_strings_equal ("integer_16", "INTEGER_16", ({INTEGER_16}).name.to_string_8)
+			assert_strings_equal ("detachable_none", "NONE", ({detachable NONE}).name.to_string_8)
 		end
 
 	test_twin
