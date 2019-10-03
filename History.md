@@ -1,6 +1,6 @@
 # Release History
 
-## Version ?? - ??
+## Version 19.10.03.1 - 03 October 2019
 
 ### gelex
 
@@ -13,10 +13,12 @@
   option `utf8` Unicode characters are internally converted to their UTF-8
   byte sequence in the generated scanner. This can be useful when the file
   to scan is already encoded with UTF-8, although the generated scanner will
-  be larger.
+  be larger and not necessarily faster.
+* Added support for addition and subtraction of character classes.
 * Fixed bug when an Eiffel verbatim string in a semantic action contains a
   closing brace `}`, which was wrongly interpreted as the end of the
   Eiffel code for this semantic action.
+* Updated the documentation.
 
 ### geyacc
 
@@ -28,6 +30,7 @@
 * Fixed bug when an Eiffel verbatim string in a semantic action contains a
   closing brace `}`, which was wrongly interpreted as the end of the
   Eiffel code for this semantic action.
+* Updated the documentation.
 
 ### Gobo Eiffel Kernel Library
 
@@ -61,7 +64,7 @@
   string (`STRING_32`) or with their escaped form (e.g. `\u{03B2}` or 
   `\x{03B2}` where `03B2` is the hexadecimal code for Greek character beta).
   Surrogate and invalid Unicode characters produce a regular expression
-  syntax error.  
+  syntax error.
 
 ### Gobo Eiffel Tools Library
 
