@@ -16685,7 +16685,7 @@ feature {NONE} -- Polymorphic call functions generation
 
 	print_polymorphic_call_function (a_first_call, a_last_call: ET_DYNAMIC_QUALIFIED_CALL; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Print to `current_file' dynamic binding code for the calls between `a_first_call'
-			-- and `a_last_call' whose target static type if `a_target_type'.
+			-- and `a_last_call' whose target static type is `a_target_type'.
 			-- The generated code uses either a switch-statment or binary search to find out
 			-- which feature to execute.
 		require
