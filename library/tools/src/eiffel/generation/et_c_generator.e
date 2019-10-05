@@ -1073,6 +1073,9 @@ feature {NONE} -- C code Generation
 				print_new_string_32_function
 				current_file.put_new_line
 				flush_to_c_file
+				print_new_immutable_string_8_function
+				current_file.put_new_line
+				flush_to_c_file
 				print_new_immutable_string_32_function
 				current_file.put_new_line
 				flush_to_c_file
@@ -11097,6 +11100,22 @@ feature {NONE} -- Expression generation
 					current_file.put_string (c_ge_ms32_from_utf32le)
 					current_file.put_character ('(')
 					print_utf8_as_escaped_string_32 (l_string)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_integer ({UC_UTF8_ROUTINES}.unicode_character_count (l_string))
+					current_file.put_character (')')
+				elseif current_system.immutable_string_32_type.same_named_type_with_type_marks (l_string_type.base_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
+					current_file.put_string (c_ge_ims32_from_utf32le)
+					current_file.put_character ('(')
+					print_utf8_as_escaped_string_32 (l_string)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_integer ({UC_UTF8_ROUTINES}.unicode_character_count (l_string))
+					current_file.put_character (')')
+				elseif current_system.immutable_string_8_type.same_named_type_with_type_marks (l_string_type.base_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
+					current_file.put_string (c_ge_ims8)
+					current_file.put_character ('(')
+					print_utf8_as_escaped_string_8 (l_string)
 					current_file.put_character (',')
 					current_file.put_character (' ')
 					current_file.put_integer ({UC_UTF8_ROUTINES}.unicode_character_count (l_string))
@@ -28713,9 +28732,179 @@ feature {NONE} -- C function generation
 			end
 		end
 
+	print_new_immutable_string_8_function
+			-- Print 'GE_new_istr8' function to `current_file' and its signature to `header_file'.
+			-- 'GE_new_istr8' creates an empty string which is then used to create manifest strings
+			-- of type "IMMUTABLE_STRING_8".
+		local
+			l_string_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_area_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_count_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_temp: ET_IDENTIFIER
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			old_file: KI_TEXT_OUTPUT_STREAM
+		do
+			l_string_type := current_dynamic_system.immutable_string_8_type
+			l_area_type := current_dynamic_system.special_character_8_type
+			if l_string_type.attribute_count < 2 then
+					-- Internal error: class "IMMUTABLE_STRING_8" should have at least the
+					-- features 'area' and 'count' as first features.
+					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not attached l_string_type.queries.item (2).result_type_set as l_dynamic_type_set then
+					-- Error in feature 'count', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_count_type := l_dynamic_type_set.static_type.primary_type
+					-- Print signature to `header_file' and `current_file'.
+				old_file := current_file
+				current_file := current_function_header_buffer
+				header_file.put_string (c_extern)
+				header_file.put_character (' ')
+				print_type_declaration (l_string_type, header_file)
+				print_type_declaration (l_string_type, current_file)
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				header_file.put_string (c_ge_new_istr8)
+				current_file.put_string (c_ge_new_istr8)
+				header_file.put_character ('(')
+				current_file.put_character ('(')
+				print_type_declaration (l_count_type, header_file)
+				print_type_declaration (l_count_type, current_file)
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				header_file.put_character ('c')
+				current_file.put_character ('c')
+				header_file.put_character (')')
+				current_file.put_character (')')
+				header_file.put_character (';')
+				header_file.put_new_line
+				current_file.put_new_line
+					-- Print body to `current_file'.
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_type_declaration (l_string_type, current_file)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file := current_function_body_buffer
+				if l_string_type.is_alive then
+					l_temp := new_temp_variable (l_area_type)
+						-- Create 'area'.
+					print_indentation
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ge_new)
+					current_file.put_integer (l_area_type.id)
+					current_file.put_character ('(')
+					current_file.put_character ('c')
+					current_file.put_character ('+')
+					current_file.put_character ('1')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_false)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+						-- Default initialization of header part of 'area'.
+					print_indentation
+					current_file.put_character ('*')
+					print_type_cast (l_area_type, current_file)
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_default_name (l_area_type, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+						-- Set 'capacity' of 'area'.
+					print_indentation
+					print_attribute_special_capacity_access (l_temp, l_area_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('c')
+					current_file.put_character ('+')
+					current_file.put_character ('1')
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+						-- Set 'count' of 'area'.
+					print_indentation
+					print_attribute_special_count_access (l_temp, l_area_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('0')
+					current_file.put_character (';')
+					current_file.put_new_line
+						-- Create string object.
+					print_indentation
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ge_new)
+					current_file.put_integer (l_string_type.id)
+					current_file.put_character ('(')
+					current_file.put_string (c_eif_true)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					if l_string_type.attribute_count < 2 then
+							-- Internal error: the "IMMUTABLE_STRING_8" type should have at least
+							-- the attributes 'area' and 'count' as first features.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_queries := l_string_type.queries
+							-- Set 'area'.
+						print_indentation
+						print_attribute_access (l_queries.first, tokens.result_keyword, l_string_type, False)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_temp_name (l_temp, current_file)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					mark_temp_variable_free (l_temp)
+				else
+					print_indentation
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+					-- Return the string.
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				current_file.put_character ('}')
+				current_file.put_new_line
+				current_file := old_file
+				reset_temp_variables
+			end
+		end
+
 	print_new_immutable_string_32_function
 			-- Print 'GE_new_istr32' function to `current_file' and its signature to `header_file'.
-			-- 'GE_new_istr32' create an empty string which is then used to create manifest strings
+			-- 'GE_new_istr32' creates an empty string which is then used to create manifest strings
 			-- of type "IMMUTABLE_STRING_32".
 		local
 			l_string_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -36486,6 +36675,8 @@ feature {NONE} -- Constants
 	c_ge_generic_parameter_of_encoded_type: STRING = "GE_generic_parameter_of_encoded_type"
 	c_ge_generic_parameter_count_of_encoded_type: STRING = "GE_generic_parameter_count_of_encoded_type"
 	c_ge_id_object: STRING = "GE_id_object"
+	c_ge_ims8: STRING = "GE_ims8"
+	c_ge_ims32_from_utf32le: STRING = "GE_ims32_from_utf32le"
 	c_ge_init_const: STRING = "GE_init_const"
 	c_ge_init_exception_manager: STRING = "GE_init_exception_manager"
 	c_ge_int8: STRING = "GE_int8"
@@ -36531,7 +36722,6 @@ feature {NONE} -- Constants
 	c_ge_min_int64: STRING = "GE_min_int64"
 	c_ge_ms: STRING = "GE_ms"
 	c_ge_ms8: STRING = "GE_ms8"
-	c_ge_ms32: STRING = "GE_ms32"
 	c_ge_ms32_from_utf32le: STRING = "GE_ms32_from_utf32le"
 	c_ge_mt: STRING = "GE_mt"
 	c_ge_mutex_lock: STRING = "GE_mutex_lock"
@@ -36552,6 +36742,7 @@ feature {NONE} -- Constants
 	c_ge_new: STRING = "GE_new"
 	c_ge_new_exception_manager: STRING = "GE_new_exception_manager"
 	c_ge_new_instance_of_encoded_type: STRING = "GE_new_instance_of_encoded_type"
+	c_ge_new_istr8: STRING = "GE_new_istr8"
 	c_ge_new_istr32: STRING = "GE_new_istr32"
 	c_ge_new_special_of_reference_instance_of_encoded_type: STRING = "GE_new_special_of_reference_instance_of_encoded_type"
 	c_ge_new_str8: STRING = "GE_new_str8"

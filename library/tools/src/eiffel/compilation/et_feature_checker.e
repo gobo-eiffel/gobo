@@ -957,12 +957,24 @@ feature {NONE} -- Feature validity
 							error_handler.report_vqmc5b_error (current_class, current_class_impl, a_feature, l_string_constant)
 						end
 						l_string_constant.set_type (current_universe_impl.string_8_type)
+					elseif current_universe_impl.immutable_string_8_type.same_named_type_with_type_marks (l_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_class_impl) then
+						if not l_string_constant.is_string_8 then
+							set_fatal_error
+							error_handler.report_vqmc5b_error (current_class, current_class_impl, a_feature, l_string_constant)
+						end
+						l_string_constant.set_type (current_universe_impl.immutable_string_8_type)
 					elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_class_impl) then
 						if not l_string_constant.is_string_32 then
 							set_fatal_error
 							error_handler.report_vqmc5b_error (current_class, current_class_impl, a_feature, l_string_constant)
 						end
 						l_string_constant.set_type (current_universe_impl.string_32_type)
+					elseif current_universe_impl.immutable_string_32_type.same_named_type_with_type_marks (l_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_class_impl) then
+						if not l_string_constant.is_string_32 then
+							set_fatal_error
+							error_handler.report_vqmc5b_error (current_class, current_class_impl, a_feature, l_string_constant)
+						end
+						l_string_constant.set_type (current_universe_impl.immutable_string_32_type)
 					elseif current_universe_impl.system_string_type.base_class.is_dotnet and then current_universe_impl.system_string_type.same_named_type_with_type_marks (l_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_class_impl) then
 							-- OK: this is an Eiffel for .NET extension.
 						l_string_constant.set_type (current_universe_impl.system_string_type)
@@ -7824,7 +7836,7 @@ feature {NONE} -- Expression validity
 			--    is representable as a STRING_32.
 			--  * otherwise, report an error.
 			--
-			-- Note that ECMA 367-2 says that the type of a manifest character constant
+			-- Note that ECMA 367-2 says that the type of a manifest string constant
 			-- with no explicit 'manifest_type' is "STRING" (see 8.29.6 "Definition:
 			-- Type of a manifest constant", page 143). So the third bullet above is
 			-- not quite compliant with ECMA. But this is the way it is implemented
@@ -7833,6 +7845,9 @@ feature {NONE} -- Expression validity
 			-- Note that the sized variants of "STRING" include "STRING" itself, as
 			-- indicated in ECMA 367-2, 8.30.1 "Definition: Basic types and their sized
 			-- variants", page 147.
+			--
+			-- Note that as of ISE 19.07.10.3368, "IMMUTABLE_STRING_8" and
+			-- "IMMUTABLE_STRING_32" are also considered as sized variants of "STRING".
 		require
 			a_string_not_void: a_string /= Void
 			a_context_not_void: a_context /= Void
@@ -7871,6 +7886,14 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 					error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.string_8_type)
 				end
+			elseif current_universe_impl.immutable_string_8_type.same_named_type_with_type_marks (l_expected_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
+				if a_string.is_string_8 then
+					l_type := current_universe_impl.immutable_string_8_type
+					report_immutable_string_8_constant (a_string, l_type)
+				else
+					set_fatal_error
+					error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.immutable_string_8_type)
+				end
 			elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_expected_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
 				if a_string.is_string_32 then
 					l_type := current_universe_impl.string_32_type
@@ -7878,6 +7901,14 @@ feature {NONE} -- Expression validity
 				else
 					set_fatal_error
 					error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.string_32_type)
+				end
+			elseif current_universe_impl.immutable_string_32_type.same_named_type_with_type_marks (l_expected_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
+				if a_string.is_string_32 then
+					l_type := current_universe_impl.string_32_type
+					report_immutable_string_32_constant (a_string, l_type)
+				else
+					set_fatal_error
+					error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.immutable_string_32_type)
 				end
 			end
 			if has_fatal_error then
@@ -7896,7 +7927,7 @@ feature {NONE} -- Expression validity
 				report_string_32_constant (a_string, l_type)
 			else
 				set_fatal_error
-				error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.character_32_type)
+				error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.string_32_type)
 			end
 			if l_type /= Void then
 				a_string.set_type (l_type)
@@ -13913,6 +13944,26 @@ feature {NONE} -- Event handling
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+		do
+		end
+
+	report_immutable_string_8_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE)
+			-- Report that an immutable string_8 of type `a_type' in the context
+			-- of `current_type' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_string_not_void: a_string /= Void
+			a_type_not_void: a_type /= Void
+		do
+		end
+
+	report_immutable_string_32_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE)
+			-- Report that an immutable string_32 of type `a_type' in the context
+			-- of `current_type' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_string_not_void: a_string /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 

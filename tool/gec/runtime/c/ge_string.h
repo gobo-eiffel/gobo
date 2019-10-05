@@ -4,7 +4,7 @@
 		"C functions used to manipulate strings"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,14 @@ extern "C" {
 extern EIF_REFERENCE GE_new_str8(EIF_INTEGER c);
 
 /*
+ * New Eiffel empty string of type "IMMUTABLE_STRING_8" with can
+ * contain `c' characters.
+ * Note: The implementation of this function is generated
+ * by the Eiffel compiler.
+ */
+extern EIF_REFERENCE GE_new_istr8(EIF_INTEGER c);
+
+/*
  * New Eiffel empty string of type "STRING_32" with can
  * contain `c' characters.
  * Note: The implementation of this function is generated
@@ -50,19 +58,25 @@ extern EIF_REFERENCE GE_new_istr32(EIF_INTEGER c);
 
 /*
  * New Eiffel string of type "STRING_8" containing the
- * first `c' characters found in ASCII string `s'.
+ * first `c' characters found in ISO 8859-1 string `s'.
  */
 extern EIF_REFERENCE GE_ms8(const char* s, EIF_INTEGER c);
 
 /*
  * New Eiffel string of type "STRING_8" containing all
- * characters found in the null-terminated ASCII string `s'.
+ * characters found in the null-terminated ISO 8859-1 string `s'.
  */
 extern EIF_REFERENCE GE_str8(const char* s);
 
 /*
+ * New Eiffel string of type "IMMUTABLE_STRING_8" containing the
+ * first `c' characters found in ISO 8859-1 string `s'.
+ */
+extern EIF_REFERENCE GE_ims8(const char* s, EIF_INTEGER c);
+
+/*
  * New Eiffel string of type "STRING_32" containing the
- * first `c' characters found in ASCII string `s'.
+ * first `c' characters found in ISO 8859-1 string `s'.
  */
 extern EIF_REFERENCE GE_ms32(const char* s, EIF_INTEGER c);
 
@@ -75,19 +89,26 @@ extern EIF_REFERENCE GE_ms32_from_utf32le(const char* s, EIF_INTEGER c);
 
 /*
  * New Eiffel string of type "STRING_32" containing all
- * characters found in the null-terminated ASCII string `s'.
+ * characters found in the null-terminated ISO 8859-1 string `s'.
  */
 extern EIF_REFERENCE GE_str32(const char* s);
 
 /*
  * New Eiffel string of type "IMMUTABLE_STRING_32" containing
- * the first `c' characters found in ASCII string `s'.
+ * the first `c' characters found in ISO 8859-1 string `s'.
  */
 extern EIF_REFERENCE GE_ims32(const char* s, EIF_INTEGER c);
 
 /*
+ * New Eiffel string of type "IMMUTABLE_STRING_32" containing the
+ * first `c' 32-bit characters built from `s' by reading
+ * groups of four bytes with little-endian byte order.
+ */
+extern EIF_REFERENCE GE_ms32_from_utf32le(const char* s, EIF_INTEGER c);
+
+/*
  * New Eiffel string of type "IMMUTABLE_STRING_32" containing all
- * characters found in the null-terminated ASCII string `s'.
+ * characters found in the null-terminated ISO 8859-1 string `s'.
  */
 extern EIF_REFERENCE GE_istr32(const char* s);
 
@@ -107,7 +128,7 @@ extern EIF_REFERENCE GE_istr32_from_nstr(EIF_NATIVE_CHAR* s);
 
 /*
  * New Eiffel string of type "STRING" containing all
- * characters found in the null-terminated ASCII string `s'
+ * characters found in the null-terminated ISO 8859-1 string `s'
  */
 extern EIF_REFERENCE GE_str(const char* s);
 

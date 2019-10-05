@@ -1,6 +1,15 @@
 # Release History
 
-## Version 19.10.03.1 - 03 October 2019
+## Version ?? - ??
+
+### Gobo Eiffel Tools Library
+
+* Added support for manifest immutable strings `{IMMUTABLE_STRING_8} "..."`
+  and `{IMMUTABLE_STRING_32} "..."`. More generally, `IMMUTABLE_STRING_8`
+  and `IMMUTABLE_STRING_32` are considered as as sized variants of `STRING`
+  (like `STRING_8` and `STRING_32`).
+
+## Version 19.10.03.1 - 3 October 2019
 
 ### gelex
 

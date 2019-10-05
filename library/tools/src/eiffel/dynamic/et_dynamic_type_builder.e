@@ -54,6 +54,8 @@ inherit
 			report_formal_argument_declaration,
 			report_function_address,
 			report_if_expression,
+			report_immutable_string_8_constant,
+			report_immutable_string_32_constant,
 			report_inline_agent_formal_argument_declaration,
 			report_inline_agent_local_variable_declaration,
 			report_inline_agent_result_declaration,
@@ -1506,6 +1508,20 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				end
 			end
+		end
+
+	report_immutable_string_8_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE)
+			-- Report that an immutable string_8 of type `a_type' in the context
+			-- of `current_type' has been processed.
+		do
+			report_string_constant (a_string, a_type)
+		end
+
+	report_immutable_string_32_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE)
+			-- Report that an immutable string_8 of type `a_type' in the context
+			-- of `current_type' has been processed.
+		do
+			report_string_constant (a_string, a_type)
 		end
 
 	report_inline_agent (an_expression: ET_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)

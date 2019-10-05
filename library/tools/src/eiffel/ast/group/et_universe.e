@@ -860,6 +860,10 @@ feature -- Kernel types
 			-- where '[attached]' is an implicit type mark,
 			-- and 'identity' is 'like Current' with no type mark modifier
 
+	immutable_string_8_type: ET_CLASS_TYPE
+			-- Class type "[attached] IMMUTABLE_STRING_8",
+			-- where '[attached]' is an implicit type mark
+
 	immutable_string_32_type: ET_CLASS_TYPE
 			-- Class type "[attached] IMMUTABLE_STRING_32",
 			-- where '[attached]' is an implicit type mark
@@ -1046,6 +1050,7 @@ feature -- Kernel types
 			set_exception_type
 			set_exception_manager_type
 			set_function_type
+			set_immutable_string_8_type
 			set_immutable_string_32_type
 			set_integer_type
 			set_integer_8_type
@@ -1233,6 +1238,18 @@ feature -- Kernel types
 			l_parameters.put_first (any_type)
 			l_parameters.put_first (tokens.identity_type)
 			create function_identity_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+		end
+
+	set_immutable_string_8_type
+			-- Set type "IMMUTABLE_STRING_8".
+		local
+			l_name: ET_CLASS_NAME
+			l_master_class: ET_MASTER_CLASS
+		do
+			l_name := tokens.immutable_string_8_class_name
+			l_master_class := master_class (l_name)
+			l_master_class.set_marked (True)
+			create immutable_string_8_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 		end
 
 	set_immutable_string_32_type
@@ -1747,6 +1764,7 @@ feature -- Kernel types
 			detachable_exception_type := tokens.unknown_class_type
 			exception_manager_type := tokens.unknown_class_type
 			function_identity_any_type := tokens.unknown_generic_class_type
+			immutable_string_8_type := tokens.unknown_class_type
 			immutable_string_32_type := tokens.unknown_class_type
 			integer_type := tokens.unknown_class_type
 			integer_8_type := tokens.unknown_class_type
@@ -2798,6 +2816,7 @@ invariant
 	detachable_exception_type_not_void: exception_type /= Void
 	exception_manager_type_not_void: exception_manager_type /= Void
 	function_identity_any_type_not_void: function_identity_any_type /= Void
+	immutable_string_8_type_not_void: immutable_string_8_type /= Void
 	immutable_string_32_type_not_void: immutable_string_32_type /= Void
 	integer_8_type_not_void: integer_8_type /= Void
 	integer_16_type_not_void: integer_16_type /= Void
