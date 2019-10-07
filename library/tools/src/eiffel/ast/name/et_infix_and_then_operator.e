@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_infix: BOOLEAN = True
-			-- Is current feature name of the form 'infix ...'?
+			-- Is current feature name of the form binary 'alias "..."'?
 
 	is_infix_and_then: BOOLEAN = True
-			-- Is current feature name of the form 'infix "and then"'?
+			-- Is current feature name of the form binary 'alias "and then"'?
 
 feature -- Access
 

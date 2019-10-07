@@ -24,11 +24,9 @@ inherit
 			make as make_ast_processor
 		end
 
-	ET_SHARED_CALL_NAME_TESTER
+	ET_SHARED_FEATURE_NAME_TESTER
 
 	ET_SHARED_CLASS_NAME_TESTER
-
-	ET_SHARED_ALIAS_NAME_TESTER
 
 create
 
@@ -41,17 +39,15 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_system_processor)
 			create rename_table.make_map (10)
-			rename_table.set_key_equality_tester (call_name_tester)
+			rename_table.set_key_equality_tester (feature_name_tester)
 			create export_table.make (10)
-			export_table.set_equality_tester (call_name_tester)
+			export_table.set_equality_tester (feature_name_tester)
 			create undefine_table.make_map (10)
-			undefine_table.set_key_equality_tester (call_name_tester)
+			undefine_table.set_key_equality_tester (feature_name_tester)
 			create redefine_table.make_map (10)
-			redefine_table.set_key_equality_tester (call_name_tester)
+			redefine_table.set_key_equality_tester (feature_name_tester)
 			create select_table.make_map (10)
-			select_table.set_key_equality_tester (call_name_tester)
-			create alias_mapping.make_map (50)
-			alias_mapping.set_key_equality_tester (alias_name_tester)
+			select_table.set_key_equality_tester (feature_name_tester)
 			create replicable_features.make_map (400)
 		end
 
@@ -88,7 +84,6 @@ feature -- Feature adaptation resolving
 			end
 			process_replication (a_features)
 				-- Clean up.
-			alias_mapping.wipe_out
 			free_parent_feature := parent_feature_list
 			free_inherited_feature := inherited_feature_list
 			free_redeclared_feature := redeclared_feature_list
@@ -141,14 +136,6 @@ feature {NONE} -- Feature recording
 						elseif l_query.is_prefixable then
 							if l_alias_name.is_prefixable then
 								l_alias_name.set_prefix
-							end
-						end
-						if current_system.alias_transition_mode then
-							if not alias_mapping.has (l_alias_name) then
-								alias_mapping.force_last_new (a_name, l_alias_name)
-							else
-								-- Error: there is already a feature with the same alias.
-								-- This error will be reported later in ET_FEATURE_FLATTENER.
 							end
 						end
 					end
@@ -244,11 +231,6 @@ feature {NONE} -- Feature recording
 				l_alias_name := l_query.alias_name
 				if has_rename then
 					rename_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not rename_table.found and then l_alias_name /= Void then
-							rename_table.search (l_alias_name)
-						end
-					end
 					if rename_table.found then
 						a_rename := rename_table.found_item
 						rename_table.remove_found_item
@@ -273,11 +255,6 @@ feature {NONE} -- Feature recording
 				end
 				if has_export then
 					export_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not export_table.found and then l_alias_name /= Void then
-							export_table.search (l_alias_name)
-						end
-					end
 					if export_table.found then
 						l_feature_name := export_table.found_item.feature_name
 						l_feature_name.set_seed (l_query.first_seed)
@@ -287,11 +264,6 @@ feature {NONE} -- Feature recording
 				end
 				if has_undefine then
 					undefine_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not undefine_table.found and then l_alias_name /= Void then
-							undefine_table.search (l_alias_name)
-						end
-					end
 					if undefine_table.found then
 						l_feature_name := undefine_table.found_key.feature_name
 						l_feature_name.set_seed (l_query.first_seed)
@@ -304,11 +276,6 @@ feature {NONE} -- Feature recording
 				end
 				if has_redefine then
 					redefine_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not redefine_table.found and then l_alias_name /= Void then
-							redefine_table.search (l_alias_name)
-						end
-					end
 					if redefine_table.found then
 						l_feature_name := redefine_table.found_key.feature_name
 						l_feature_name.set_seed (l_query.first_seed)
@@ -321,11 +288,6 @@ feature {NONE} -- Feature recording
 				end
 				if has_select then
 					select_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not select_table.found and then l_alias_name /= Void then
-							select_table.search (l_alias_name)
-						end
-					end
 					if select_table.found then
 						l_feature_name := select_table.found_key.feature_name
 						l_feature_name.set_seed (l_query.first_seed)
@@ -337,20 +299,6 @@ feature {NONE} -- Feature recording
 					end
 				end
 				a_features.search (a_name)
-				if current_system.alias_transition_mode then
-					if not a_features.found and then l_alias_name /= Void then
-						alias_mapping.search (l_alias_name)
-						if alias_mapping.found then
-							if {KL_ANY_ROUTINES}.same_objects (l_alias_name, a_name) = not {KL_ANY_ROUTINES}.same_objects (alias_mapping.found_key, alias_mapping.found_item) then
-									-- The test above is trying to express the following:
-									--     'infix "+"' matches 'f alias "+"'
-									--     'f alias "+"' matches 'infix "+"'
-									--     'f alias "+"' does not match 'g alias "+"'
-								a_features.search (alias_mapping.found_item)
-							end
-						end
-					end
-				end
 				if a_features.found then
 					a_named_feature := a_features.found_item
 					if a_named_feature.is_immediate then
@@ -362,16 +310,6 @@ feature {NONE} -- Feature recording
 				else
 					an_inherited_feature := new_inherited_feature (a_parent_feature)
 					a_features.put_last_new (an_inherited_feature, a_name)
-					if current_system.alias_transition_mode then
-						if l_alias_name /= Void then
-							if not alias_mapping.has (l_alias_name) then
-								alias_mapping.force_last_new (a_name, l_alias_name)
-							else
-								-- Error: there is already a feature with the same alias.
-								-- This error will be reported later in ET_FEATURE_FLATTENER.
-							end
-						end
-					end
 				end
 				i := i + 1
 			end
@@ -514,40 +452,20 @@ feature {NONE} -- Feature recording
 
 feature {NONE} -- Feature adaptation
 
-	rename_table: DS_HASH_TABLE [ET_RENAME, ET_CALL_NAME]
+	rename_table: DS_HASH_TABLE [ET_RENAME, ET_FEATURE_NAME]
 			-- Rename table
-			--
-			-- Note: use ET_CALL_NAME instead of ET_FEATURE_NAME in order
-			-- to make it work when in 'alias_transition_mode'. But all
-			-- objects are feature names anyway.
 
-	export_table: DS_HASH_SET [ET_CALL_NAME]
+	export_table: DS_HASH_SET [ET_FEATURE_NAME]
 			-- Export table
-			--
-			-- Note: use ET_CALL_NAME instead of ET_FEATURE_NAME in order
-			-- to make it work when in 'alias_transition_mode'. But all
-			-- objects are feature names anyway.
 
-	undefine_table: DS_HASH_TABLE [BOOLEAN, ET_CALL_NAME]
+	undefine_table: DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME]
 			-- Undefine table (the boolean indicates whether a feature with that name has been found)
-			--
-			-- Note: use ET_CALL_NAME instead of ET_FEATURE_NAME in order
-			-- to make it work when in 'alias_transition_mode'. But all
-			-- objects are feature names anyway.
 
-	redefine_table: DS_HASH_TABLE [BOOLEAN, ET_CALL_NAME]
+	redefine_table: DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME]
 			-- Redefine table (the boolean indicates whether a feature with that name has been found)
-			--
-			-- Note: use ET_CALL_NAME instead of ET_FEATURE_NAME in order
-			-- to make it work when in 'alias_transition_mode'. But all
-			-- objects are feature names anyway.
 
-	select_table: DS_HASH_TABLE [BOOLEAN, ET_CALL_NAME]
+	select_table: DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME]
 			-- Select table (the boolean indicates whether a feature with that name has been found)
-			--
-			-- Note: use ET_CALL_NAME instead of ET_FEATURE_NAME in order
-			-- to make it work when in 'alias_transition_mode'. But all
-			-- objects are feature names anyway.
 
 	fill_rename_table (a_parent: ET_PARENT)
 			-- Fill `rename_table' with rename pairs of `a_parent'
@@ -725,13 +643,6 @@ feature {NONE} -- Feature adaptation
 				end
 			end
 		end
-
-feature {NONE} -- Transition infix/prefix -> alias
-
-	alias_mapping: DS_HASH_TABLE [ET_FEATURE_NAME, ET_ALIAS_NAME]
-			-- Mapping between alias names and feature names
-			--
-			-- Used for the transition from infix/prefix to alias
 
 feature {NONE} -- Replication
 
@@ -966,23 +877,15 @@ invariant
 	rename_table_not_void: rename_table /= Void
 	no_void_rename: not rename_table.has_void_item
 	no_void_rename_old_name: not rename_table.has_void
-	renamed_feature_names: rename_table.keys.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	export_table_not_void: export_table /= Void
 	no_void_export: not export_table.has_void
-	exported_feature_names: export_table.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	undefine_table_not_void: undefine_table /= Void
 	no_void_undefine: not undefine_table.has_void
-	undefined_feature_names: undefine_table.keys.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	redefine_table_not_void: redefine_table /= Void
 	no_void_redefine: not redefine_table.has_void
-	redefined_feature_names: redefine_table.keys.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	select_table_not_void: select_table /= Void
 	no_void_select: not select_table.has_void
-	selected_feature_names: select_table.keys.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	replicable_features_not_void: replicable_features /= Void
 	no_void_replicable_feature: not replicable_features.has_void_item
-	alias_mapping_not_void: alias_mapping /= Void
-	no_void_mapped_alias: not alias_mapping.has_void
-	no_void_mapped_feature_name: not alias_mapping.has_void_item
 
 end

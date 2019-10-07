@@ -691,8 +691,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			end
 			if l_href /= Void then
 				process_feature_name_with_href (l_feature_name, l_href)
-				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
-						-- For infix and prefix features, do not repeat the name twice.
+				if attached l_extended_feature_name.alias_name as l_alias_name then
 					print_space
 					process_alias_name_with_href (l_alias_name, tokens.alias_keyword, l_href)
 				end
@@ -741,10 +740,6 @@ feature {ET_AST_PROCESSOR} -- Processing
 				print_string_lower_case (l_identifier.name)
 				process_break (l_identifier.break)
 				print_end_a
-			elseif attached {ET_INFIX_NAME} a_feature_name as l_infix_name then
-				process_alias_name_with_href (l_infix_name, tokens.infix_keyword, a_href)
-			elseif attached {ET_PREFIX_NAME} a_feature_name as l_prefix_name then
-				process_alias_name_with_href (l_prefix_name, tokens.prefix_keyword, a_href)
 			else
 				a_feature_name.process (Current)
 			end

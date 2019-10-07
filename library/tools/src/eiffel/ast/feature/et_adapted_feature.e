@@ -235,7 +235,7 @@ feature -- Element change
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_not_merged: a_feature.merged_feature = Void
-			same_name: (not is_dotnet and not a_feature.precursor_feature.implementation_class.current_system.alias_transition_mode) implies a_feature.name.same_feature_name (name)
+			same_name: not is_dotnet implies a_feature.name.same_feature_name (name)
 		local
 			l_parent_feature: detachable ET_PARENT_FEATURE
 			l_parent: ET_PARENT

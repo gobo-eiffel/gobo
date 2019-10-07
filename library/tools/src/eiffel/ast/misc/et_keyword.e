@@ -5,7 +5,7 @@ note
 		"Eiffel keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,7 +62,6 @@ create
 	make_frozen,
 	make_if,
 	make_indexing,
-	make_infix,
 	make_inherit,
 	make_inspect,
 	make_invariant,
@@ -74,7 +73,6 @@ create
 	make_obsolete,
 	make_old,
 	make_once,
-	make_prefix,
 	make_redefine,
 	make_reference,
 	make_rename,
@@ -456,17 +454,6 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
-	make_infix
-			-- Create a new 'infix' keyword.
-		do
-			code := tokens.infix_keyword_code
-			make_token (tokens.infix_keyword_name)
-		ensure
-			is_infix: is_infix
-			line_set: line = no_line
-			column_set: column = no_column
-		end
-
 	make_inherit
 			-- Create a new 'inherit' keyword.
 		do
@@ -617,17 +604,6 @@ feature {NONE} -- Initialization
 			make_token (tokens.precursor_keyword_name)
 		ensure
 			is_precursor: is_precursor
-			line_set: line = no_line
-			column_set: column = no_column
-		end
-
-	make_prefix
-			-- Create a new 'prefix' keyword.
-		do
-			code := tokens.prefix_keyword_code
-			make_token (tokens.prefix_keyword_name)
-		ensure
-			is_prefix: is_prefix
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -1052,12 +1028,6 @@ feature -- Status report
 			Result := (code = tokens.indexing_keyword_code)
 		end
 
-	is_infix: BOOLEAN
-			-- Is current keyword 'infix'?
-		do
-			Result := (code = tokens.infix_keyword_code)
-		end
-
 	is_inherit: BOOLEAN
 			-- Is current keyword 'inherit'?
 		do
@@ -1140,12 +1110,6 @@ feature -- Status report
 			-- Is current keyword 'precursor'?
 		do
 			Result := (code = tokens.precursor_keyword_code)
-		end
-
-	is_prefix: BOOLEAN
-			-- Is current keyword 'prefix'?
-		do
-			Result := (code = tokens.prefix_keyword_code)
 		end
 
 	is_redefine: BOOLEAN

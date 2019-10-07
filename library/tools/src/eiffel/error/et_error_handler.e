@@ -2717,46 +2717,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1i_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Report VFAV-1 error: `a_feature' has a prefix name but is
-			-- not a query with no argument.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_prefix: a_feature.name.is_prefix
-			a_feature_not_prefixable: not a_feature.is_prefixable
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1i (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vfav1j_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Report VFAV-1 error: `a_feature' has an infix name but is
-			-- not a query with exactly one argument.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_infix: a_feature.name.is_infix
-			a_feature_not_infixable: not a_feature.is_infixable
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1j (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vfav1k_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFAV-1 error: `a_feature' has an operator alias
 			-- which can be either unary or binary, but it is not a
@@ -2775,30 +2735,6 @@ feature -- Validity errors
 		do
 			if reportable_vfav1_error (a_class) then
 				create an_error.make_vfav1k (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vfav1l_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VFAV-1 error: the Rename_pair
-			-- `a_rename' has a new name of the Prefix form,
-			-- but the corresponding feature `f' is not a
-			-- query with no argument.
-			-- `a_type' is either the parent or generic constraint
-			-- where the rename clause appears.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1l (a_class, a_type, a_rename, f)
 				report_validity_error (an_error)
 			end
 		end
@@ -2853,29 +2789,6 @@ feature -- Validity errors
 		do
 			if reportable_vfav1_error (a_class) then
 				create an_error.make_vfav1n (a_class, a_type, a_rename, f)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vfav1o_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VFAV-1 error: the Rename_pair `a_rename' has
-			-- a new name of the Infix form, but the corresponding feature
-			-- `f' is not a function with one argument.
-			-- `a_type' is either the parent or generic constraint
-			-- where the rename clause appears.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1o (a_class, a_type, a_rename, f)
 				report_validity_error (an_error)
 			end
 		end

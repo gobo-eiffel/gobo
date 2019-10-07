@@ -16,8 +16,6 @@ inherit
 
 	ET_KEYWORD
 		rename
-			is_infix as is_infix_keyword,
-			is_prefix as is_prefix_keyword,
 			is_alias as is_alias_keyword,
 			is_local as is_local_keyword
 		undefine
@@ -52,43 +50,43 @@ create
 feature -- Status report
 
 	is_infix: BOOLEAN
-			-- Is current feature name of the form 'infix ...'?
+			-- Is current feature name of the form binary 'alias "..."'?
 		do
 			Result := (code >= tokens.min_infix_code and code <= tokens.max_infix_code)
 		end
 
 	is_infix_and: BOOLEAN
-			-- Is current feature name of the form 'infix "and"'?
+			-- Is current feature name of the form binary 'alias "and"'?
 		do
 			Result := (code = tokens.infix_and_code)
 		end
 
 	is_infix_implies: BOOLEAN
-			-- Is current feature name of the form 'infix "implies"'?
+			-- Is current feature name of the form binary 'alias "implies"'?
 		do
 			Result := (code = tokens.infix_implies_code)
 		end
 
 	is_infix_or: BOOLEAN
-			-- Is current feature name of the form 'infix "or"'?
+			-- Is current feature name of the form binary 'alias "or"'?
 		do
 			Result := (code = tokens.infix_or_code)
 		end
 
 	is_infix_xor: BOOLEAN
-			-- Is current feature name of the form 'infix "xor"'?
+			-- Is current feature name of the form binary 'alias "xor"'?
 		do
 			Result := (code = tokens.infix_xor_code)
 		end
 
 	is_prefix: BOOLEAN
-			-- Is current feature name of the form 'prefix ...'?
+			-- Is current feature name of the form unary 'alias "..."'?
 		do
 			Result := (code >= tokens.min_prefix_code and code <= tokens.max_prefix_code)
 		end
 
 	is_prefix_not: BOOLEAN
-			-- Is current feature name of the form 'prefix "not"'?
+			-- Is current feature name of the form unary 'alias "not"'?
 		do
 			Result := (code = tokens.prefix_not_code)
 		end

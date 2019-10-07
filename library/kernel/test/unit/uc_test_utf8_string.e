@@ -471,7 +471,7 @@ feature -- Test
 		end
 
 	test_infix_at1
-			-- Test feature `infix "@"'.
+			-- Test feature `at' with 'alias "@"'.
 		local
 			a_string: UC_UTF8_STRING
 		do
@@ -484,7 +484,7 @@ feature -- Test
 		end
 
 	test_infix_at2
-			-- Test feature `infix "@"'.
+			-- Test feature `at' with 'alias "@"'.
 		local
 			a_string: UC_STRING
 		do
@@ -497,7 +497,7 @@ feature -- Test
 		end
 
 	test_infix_at3
-			-- Test feature `infix "@"'.
+			-- Test feature `at' with 'alias "@"'.
 		local
 			a_string: STRING
 		do
@@ -1055,7 +1055,7 @@ feature -- Test
 		end
 
 	test_infix_plus1
-			-- Test feature `infix "+"'.
+			-- Test feature `is_plus' with 'alias "+"'.
 		local
 			a_string, a_string2: UC_UTF8_STRING
 			utf8: UC_UTF8_STRING
@@ -1085,7 +1085,7 @@ feature -- Test
 		end
 
 	test_infix_plus2
-			-- Test feature `infix "+"'.
+			-- Test feature `plus' with 'alias "+"'.
 		local
 			a_string, a_string2: UC_STRING
 			utf8: UC_UTF8_STRING
@@ -3444,7 +3444,7 @@ feature -- Test
 		end
 
 	test_infix_less1
-			-- Test feature `infix "<"'.
+			-- Test feature `is_less' with 'alias "<"'.
 		local
 			a_string, a_string2: UC_UTF8_STRING
 		do
@@ -3474,7 +3474,7 @@ feature -- Test
 		end
 
 	test_infix_less2
-			-- Test feature `infix "<"'.
+			-- Test feature `is_less' with 'alias "<"'.
 		local
 			a_string, a_string2: UC_STRING
 		do
@@ -3504,7 +3504,7 @@ feature -- Test
 		end
 
 	test_infix_less3
-			-- Test feature `infix "<"'.
+			-- Test feature `is_less' with 'alias "<"'.
 		local
 			a_string, a_string2: STRING
 		do
@@ -3542,7 +3542,7 @@ feature -- Test
 		end
 
 	test_infix_less_equal1
-			-- Test feature `infix "<="'.
+			-- Test feature `is_less_equal' with 'alias "<="'.
 		local
 			a_string, a_string2: UC_UTF8_STRING
 		do
@@ -3572,7 +3572,7 @@ feature -- Test
 		end
 
 	test_infix_less_equal2
-			-- Test feature `infix "<="'.
+			-- Test feature `is_less_equal' with 'alias "<="'.
 		local
 			a_string, a_string2: UC_STRING
 		do
@@ -3602,7 +3602,7 @@ feature -- Test
 		end
 
 	test_infix_less_equal3
-			-- Test feature `infix "<="'.
+			-- Test feature `is_less_equal' with 'alias "<="'.
 		local
 			a_string, a_string2: STRING
 		do
@@ -3640,7 +3640,7 @@ feature -- Test
 		end
 
 	test_infix_greater1
-			-- Test feature `infix ">"'.
+			-- Test feature `is_greater' with 'alias ">"'.
 		local
 			a_string, a_string2: UC_UTF8_STRING
 		do
@@ -3670,7 +3670,7 @@ feature -- Test
 		end
 
 	test_infix_greater2
-			-- Test feature `infix ">"'.
+			-- Test feature `is_greater' with 'alias ">"'.
 		local
 			a_string, a_string2: UC_STRING
 		do
@@ -3700,7 +3700,7 @@ feature -- Test
 		end
 
 	test_infix_greater3
-			-- Test feature `infix ">"'.
+			-- Test feature `is_greater' with 'alias ">"'.
 		local
 			a_string, a_string2: STRING
 		do
@@ -3738,7 +3738,7 @@ feature -- Test
 		end
 
 	test_infix_greater_equal1
-			-- Test feature `infix ">="'.
+			-- Test feature `is_greater_equal' with 'alias ">="'.
 		local
 			a_string, a_string2: UC_UTF8_STRING
 		do
@@ -3768,7 +3768,7 @@ feature -- Test
 		end
 
 	test_infix_greater_equal2
-			-- Test feature `infix ">="'.
+			-- Test feature `is_greater_equal' with 'alias ">="'.
 		local
 			a_string, a_string2: UC_STRING
 		do
@@ -3798,7 +3798,7 @@ feature -- Test
 		end
 
 	test_infix_greater_equal3
-			-- Test feature `infix ">="'.
+			-- Test feature `is_greater_equal' with 'alias ">="'.
 		local
 			a_string, a_string2: STRING
 		do

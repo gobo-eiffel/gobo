@@ -69,7 +69,6 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 [iI][fF]	|
 [iI][mM][pP][lL][iI][eE][sS]	|
 [iI][nN][dD][eE][xX][iI][nN][gG]	|
-[iI][nN][fF][iI][xX]	|
 [iI][nN][hH][eE][rR][iI][tT]	|
 [iI][nN][sS][pP][eE][cC][tT]	|
 [iI][nN][vV][aA][rR][iI][aA][nN][tT]	|
@@ -83,7 +82,6 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 [oO][nN][cC][eE]	|
 [oO][rR]	|
 [pP][rR][eE][cC][uU][rR][sS][oO][rR]	|
-[pP][rR][eE][fF][iI][xX]	|
 [rR][eE][dD][eE][fF][iI][nN][eE]	|
 [rR][eE][nN][aA][mM][eE]	|
 [rR][eE][qQ][uU][iI][rR][eE]	|

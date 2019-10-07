@@ -8,6 +8,8 @@
   and `{IMMUTABLE_STRING_32} "..."`. More generally, `IMMUTABLE_STRING_8`
   and `IMMUTABLE_STRING_32` are considered as as sized variants of `STRING`
   (like `STRING_8` and `STRING_32`).
+* Removed support for `infix "..."` and `prefix "..."` syntax notations.
+  We should use `alias "..."` instead, as described in the ECMA standard.
 
 ## Version 19.10.03.1 - 3 October 2019
 

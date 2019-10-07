@@ -29,6 +29,9 @@ inherit
 	ET_SHARED_CALL_NAME_TESTER
 		export {NONE} all end
 
+	ET_SHARED_FEATURE_NAME_TESTER
+		export {NONE} all end
+
 create
 
 	make
@@ -44,7 +47,7 @@ feature {NONE} -- Initialization
 			qualified_anchored_type_checker.set_classes_to_be_processed (classes_to_be_processed)
 			create unfolded_tuple_actual_parameters_resolver.make (a_system_processor)
 			create old_name_rename_table.make_map (20)
-			old_name_rename_table.set_key_equality_tester (call_name_tester)
+			old_name_rename_table.set_key_equality_tester (feature_name_tester)
 			create new_name_rename_table.make_map (40)
 			new_name_rename_table.set_key_equality_tester (call_name_tester)
 		end
@@ -335,7 +338,6 @@ feature {NONE} -- Constraint renaming validity
 			l_new_name: ET_FEATURE_NAME
 			l_alias_name: detachable ET_ALIAS_NAME
 			l_old_duplicated: BOOLEAN
-			l_has_new_name_error: BOOLEAN
 			l_has_new_alias_error: BOOLEAN
 			l_feature: detachable ET_FEATURE
 		do
@@ -356,7 +358,6 @@ feature {NONE} -- Constraint renaming validity
 				l_new_name := l_new_extended_name.feature_name
 				l_alias_name := l_new_extended_name.alias_name
 				l_old_duplicated := False
-				l_has_new_name_error := False
 				l_has_new_alias_error := False
 				l_feature := Void
 				old_name_rename_table.search (l_old_name)
@@ -382,18 +383,6 @@ feature {NONE} -- Constraint renaming validity
 							-- No need to report the same error again.
 						set_fatal_error (current_class)
 						error_handler.report_vggc2a_error (current_class, a_constraint, l_rename_pair, a_formal)
-					end
-				elseif l_new_name.is_infix then
-					if not l_feature.is_infixable then
-						l_has_new_name_error := True
-						set_fatal_error (current_class)
-						error_handler.report_vfav1o_error (current_class, a_constraint, l_rename_pair, l_feature)
-					end
-				elseif l_new_name.is_prefix then
-					if not l_feature.is_prefixable then
-						l_has_new_name_error := True
-						set_fatal_error (current_class)
-						error_handler.report_vfav1l_error (current_class, a_constraint, l_rename_pair, l_feature)
 					end
 				elseif l_alias_name = Void then
 					-- OK
@@ -465,32 +454,17 @@ feature {NONE} -- Constraint renaming validity
 					set_fatal_error (current_class)
 					error_handler.report_vfav4a_error (current_class, l_alias_name)
 				end
-				if not l_has_new_name_error then
-					new_name_rename_table.search (l_new_name)
-					if not new_name_rename_table.found then
-						new_name_rename_table.put_new (l_rename_pair, l_new_name)
-					elseif attached {ET_ALIAS_NAME} l_new_name as l_infix_or_prefix_name then
-							-- Alias name `l_infix_or_prefix_name' appears twice on the
-							-- right-hand-side of a Rename_pair in the Rename clause.
-						l_other_rename_pair := new_name_rename_table.found_item
-						set_fatal_error (current_class)
-						if l_infix_or_prefix_name.is_prefix then
-							error_handler.report_vfav1q_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_infix_or_prefix_name, a_formal)
-						elseif l_infix_or_prefix_name.is_infix then
-							error_handler.report_vfav1r_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_infix_or_prefix_name, a_formal)
-						else
-								-- Internal error: it has to be 'infix "..."' or 'prefix "..."'.
-							error_handler.report_giaaa_error
-						end
-					else
-							-- Feature name `l_new_name' appears twice on the
-							-- right-hand-side of a Rename_pair in the Rename
-							-- clause.
-						set_fatal_error (current_class)
-						error_handler.report_vggc2e_error (current_class, a_constraint, new_name_rename_table.found_item, l_rename_pair, a_formal)
-					end
+				new_name_rename_table.search (l_new_name)
+				if not new_name_rename_table.found then
+					new_name_rename_table.put_new (l_rename_pair, l_new_name)
+				else
+						-- Feature name `l_new_name' appears twice on the
+						-- right-hand-side of a Rename_pair in the Rename
+						-- clause.
+					set_fatal_error (current_class)
+					error_handler.report_vggc2e_error (current_class, a_constraint, new_name_rename_table.found_item, l_rename_pair, a_formal)
 				end
-				if l_alias_name /= Void and not {KL_ANY_ROUTINES}.same_objects (l_alias_name, l_new_name) and then not l_has_new_alias_error then
+				if l_alias_name /= Void and then not l_has_new_alias_error then
 					new_name_rename_table.search (l_alias_name)
 					if not new_name_rename_table.found then
 						new_name_rename_table.put_new (l_rename_pair, l_alias_name)
@@ -538,33 +512,16 @@ feature {NONE} -- Constraint renaming validity
 			from i := 1 until i > nb loop
 				l_feature := a_features.item (i)
 				l_name := l_feature.name
-				if not old_name_rename_table.has (l_name) and (attached l_feature.alias_name as l_alias_name implies not old_name_rename_table.has (l_alias_name)) then
+				if not old_name_rename_table.has (l_name) then
 					new_name_rename_table.search (l_name)
 					if new_name_rename_table.found then
-						if attached {ET_ALIAS_NAME} l_name as l_infix_or_prefix_name then
-								-- Alias name `l_infix_or_prefix_name' appearing on the right-hand-side
-								-- of a Rename_pair in the Rename clause is already the alias
-								-- name of a feature in `a_constraint'.
-							l_rename_pair := new_name_rename_table.found_item
-							l_new_alias_name := new_name_rename_table.found_key
-							set_fatal_error (current_class)
-							if l_infix_or_prefix_name.is_prefix then
-								error_handler.report_vfav1s_error (current_class, a_constraint, l_rename_pair, l_new_alias_name, l_feature, a_formal)
-							elseif l_infix_or_prefix_name.is_infix then
-								error_handler.report_vfav1t_error (current_class, a_constraint, l_rename_pair, l_new_alias_name, l_feature, a_formal)
-							else
-									-- Internal error: it has to be 'infix "..."' or 'prefix "..."'.
-								error_handler.report_giaaa_error
-							end
-						else
-								-- Feature name `l_name' appearing on the right-hand-side
-								-- of a Rename_pair in the Rename clause is already the name
-								-- of a feature in `a_constraint'.
-							set_fatal_error (current_class)
-							error_handler.report_vggc2f_error (current_class, a_constraint, new_name_rename_table.found_item, a_formal)
-						end
+							-- Feature name `l_name' appearing on the right-hand-side
+							-- of a Rename_pair in the Rename clause is already the name
+							-- of a feature in `a_constraint'.
+						set_fatal_error (current_class)
+						error_handler.report_vggc2f_error (current_class, a_constraint, new_name_rename_table.found_item, a_formal)
 					end
-					if attached l_feature.alias_name as l_alias_name and then not {KL_ANY_ROUTINES}.same_objects (l_alias_name, l_name) then
+					if attached l_feature.alias_name as l_alias_name then
 						new_name_rename_table.search (l_alias_name)
 						if new_name_rename_table.found then
 								-- Alias name `l_alias_name' appearing on the right-hand-side
@@ -592,12 +549,8 @@ feature {NONE} -- Constraint renaming validity
 			end
 		end
 
-	old_name_rename_table: DS_HASH_TABLE [ET_RENAME, ET_CALL_NAME]
+	old_name_rename_table: DS_HASH_TABLE [ET_RENAME, ET_FEATURE_NAME]
 			-- Rename pairs indexed by old names
-			--
-			-- Note: use ET_CALL_NAME instead of ET_FEATURE_NAME in order
-			-- to make it work when in 'alias_transition_mode'. But all
-			-- objects are feature names anyway.
 
 	new_name_rename_table: DS_HASH_TABLE [ET_RENAME, ET_CALL_NAME]
 			-- Rename pairs indexed by new names and aliases

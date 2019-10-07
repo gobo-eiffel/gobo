@@ -1742,19 +1742,6 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right.process (Current)
 		end
 
-	process_infix_free_name (a_name: ET_INFIX_FREE_NAME)
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_name (a_name: ET_INFIX_NAME)
-			-- Process `a_name'.
-		do
-			a_name.infix_keyword.process (Current)
-			a_name.operator_string.process (Current)
-		end
-
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
 			-- Process `an_operator'.
 		do
@@ -2443,19 +2430,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_expression.name.process (Current)
 			an_expression.expression.process (Current)
-		end
-
-	process_prefix_free_name (a_name: ET_PREFIX_FREE_NAME)
-			-- Process `a_name'.
-		do
-			process_prefix_name (a_name)
-		end
-
-	process_prefix_name (a_name: ET_PREFIX_NAME)
-			-- Process `a_name'.
-		do
-			a_name.prefix_keyword.process (Current)
-			a_name.operator_string.process (Current)
 		end
 
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)

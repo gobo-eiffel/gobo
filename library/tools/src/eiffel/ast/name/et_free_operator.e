@@ -82,25 +82,25 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_prefix: BOOLEAN
-			-- Is current feature name of the form 'prefix ...'?
+			-- Is current feature name of the form unary 'alias "..."'?
 		do
 			Result := (code = tokens.prefix_freeop_code)
 		end
 
 	is_infix: BOOLEAN
-			-- Is current feature name of the form 'infix ...'?
+			-- Is current feature name of the form binary 'alias "..."'?
 		do
 			Result := (code = tokens.infix_freeop_code)
 		end
 
 	is_prefix_freeop: BOOLEAN
-			-- Is current feature name of the form 'prefix "free-operator"'?
+			-- Is current feature name of the form unary 'alias "free-operator"'?
 		do
 			Result := (code = tokens.prefix_freeop_code)
 		end
 
 	is_infix_freeop: BOOLEAN
-			-- Is current feature name of the form 'infix "free-operator"'?
+			-- Is current feature name of the form binary 'alias "free-operator"'?
 		do
 			Result := (code = tokens.infix_freeop_code)
 		end

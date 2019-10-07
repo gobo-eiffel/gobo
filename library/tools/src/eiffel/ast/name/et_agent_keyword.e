@@ -20,8 +20,6 @@ inherit
 			text as name,
 			is_local as is_local_keyword,
 			is_precursor as is_precursor_keyword,
-			is_infix as is_infix_keyword,
-			is_prefix as is_prefix_keyword,
 			is_alias as is_alias_keyword
 		redefine
 			process,

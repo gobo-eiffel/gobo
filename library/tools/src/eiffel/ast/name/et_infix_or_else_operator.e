@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_infix: BOOLEAN = True
-			-- Is current feature name of the form 'infix ...'?
+			-- Is current feature name of the form binary 'alias "..."'?
 
 	is_infix_or_else: BOOLEAN = True
-			-- Is current feature name of the form 'infix "or else"'?
+			-- Is current feature name of the form binary 'alias "or else"'?
 
 feature -- Access
 

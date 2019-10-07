@@ -1650,34 +1650,6 @@ feature {NONE} -- AST factory
 			Result := new_alias_free_name (an_alias, a_string, a_convert)
 		end
 
-	new_invalid_infix_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME
-			-- New invalid infix feature name
-		do
--- ERROR
-			Result := new_infix_free_name (an_infix, an_operator)
-		end
-
-	new_invalid_prefix_name (a_prefix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_FREE_NAME
-			-- New invalid prefix feature name
-		do
--- ERROR
-			Result := new_prefix_free_name (a_prefix, an_operator)
-		end
-
-	new_infix_free_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME
-			-- New infix free feature name
-		do
-			if an_operator /= Void then
-				if an_operator.value.count > 0 then
-					Result := ast_factory.new_infix_free_name (an_infix, an_operator)
-				else
-					-- TODO: error.
-				end
-			else
-				Result := ast_factory.new_infix_free_name (an_infix, an_operator)
-			end
-		end
-
 	new_invariants (an_invariant: detachable ET_KEYWORD): detachable ET_INVARIANTS
 			-- New class invariants
 		local
@@ -1989,20 +1961,6 @@ feature {NONE} -- AST factory
 				assertion_kinds.remove_last
 			else
 				assertion_kind := assertion_kind_none
-			end
-		end
-
-	new_prefix_free_name (a_prefix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_FREE_NAME
-			-- New prefix free feature name
-		do
-			if an_operator /= Void then
-				if an_operator.value.count > 0 then
-					Result := ast_factory.new_prefix_free_name (a_prefix, an_operator)
-				else
-					-- TODO: error.
-				end
-			else
-				Result := ast_factory.new_prefix_free_name (a_prefix, an_operator)
 			end
 		end
 

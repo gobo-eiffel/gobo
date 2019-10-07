@@ -904,20 +904,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_infix_free_name (a_name: ET_INFIX_FREE_NAME)
-			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		deferred
-		end
-
-	process_infix_name (a_name: ET_INFIX_NAME)
-			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		deferred
-		end
-
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
 			-- Process `an_operator'.
 		require
@@ -1267,20 +1253,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-		deferred
-		end
-
-	process_prefix_free_name (a_name: ET_PREFIX_FREE_NAME)
-			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		deferred
-		end
-
-	process_prefix_name (a_name: ET_PREFIX_NAME)
-			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
 		deferred
 		end
 

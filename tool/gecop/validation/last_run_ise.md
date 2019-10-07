@@ -4,15 +4,17 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     158 tests
+    # Passed:     144 tests
     # FAILED:     49 tests
     # Aborted:    0 test
-    # Total:      207 tests
+    # Total:      193 tests
 
 Test Results:</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test11](validity/vape1/test11)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test13](validity/vape1/test13)\] test\_failed</br>
+FAIL:  \[[validity/vape1/test14](validity/vape1/test14)\] test\_failed</br>
+FAIL:  \[[validity/vape1/test15](validity/vape1/test15)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test16](validity/vape1/test16)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test17](validity/vape1/test17)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test18](validity/vape1/test18)\] test\_failed</br>
@@ -27,8 +29,6 @@ FAIL:  \[[validity/vape2/test3](validity/vape2/test3)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test4](validity/vape2/test4)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test5](validity/vape2/test5)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test6](validity/vape2/test6)\] test\_failed</br>
-FAIL:  \[[validity/vfav1/test12](validity/vfav1/test12)\] test\_failed</br>
-FAIL:  \[[validity/vfav1/test13](validity/vfav1/test13)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test8](validity/vfav1/test8)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test9](validity/vfav1/test9)\] test\_failed</br>
 FAIL:  \[[validity/vfav2/test11](validity/vfav2/test11)\] test\_failed</br>

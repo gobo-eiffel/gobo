@@ -117,151 +117,151 @@ feature -- Status report
 		end
 
 	is_infix: BOOLEAN
-			-- Is current call name of the form 'infix ...'?
+			-- Is current call name of the form binary 'alias "..."'?
 		do
 			-- Result := False
 		end
 
 	is_infix_and: BOOLEAN
-			-- Is current call name of the form 'infix "and"'?
+			-- Is current call name of the form binary 'alias "and"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_and_then: BOOLEAN
-			-- Is current call name of the form 'infix "and then"'?
+			-- Is current call name of the form binary 'alias "and then"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_div: BOOLEAN
-			-- Is current call name of the form 'infix "//"'?
+			-- Is current call name of the form binary 'alias "//"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_divide: BOOLEAN
-			-- Is current call name of the form 'infix "/"'?
+			-- Is current call name of the form binary 'alias "/"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_freeop: BOOLEAN
-			-- Is current call name of the form 'infix "free-operator"'?
+			-- Is current call name of the form binary 'alias "free-operator"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_ge: BOOLEAN
-			-- Is current call name of the form 'infix ">="'?
+			-- Is current call name of the form binary 'alias ">="'?
 		do
 			-- Result := False
 		end
 
 	is_infix_gt: BOOLEAN
-			-- Is current call name of the form 'infix ">"'?
+			-- Is current call name of the form binary 'alias ">"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_implies: BOOLEAN
-			-- Is current call name of the form 'infix "implies"'?
+			-- Is current call name of the form binary 'alias "implies"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_le: BOOLEAN
-			-- Is current call name of the form 'infix "<="'?
+			-- Is current call name of the form binary 'alias "<="'?
 		do
 			-- Result := False
 		end
 
 	is_infix_lt: BOOLEAN
-			-- Is current call name of the form 'infix "<"'?
+			-- Is current call name of the form binary 'alias "<"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_minus: BOOLEAN
-			-- Is current call name of the form 'infix "-"'?
+			-- Is current call name of the form binary 'alias "-"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_mod: BOOLEAN
-			-- Is current call name of the form 'infix "\\"'?
+			-- Is current call name of the form binary 'alias "\\"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_or: BOOLEAN
-			-- Is current call name of the form 'infix "or"'?
+			-- Is current call name of the form binary 'alias "or"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_or_else: BOOLEAN
-			-- Is current call name of the form 'infix "or else"'?
+			-- Is current call name of the form binary 'alias "or else"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_plus: BOOLEAN
-			-- Is current call name of the form 'infix "+"'?
+			-- Is current call name of the form binary 'alias "+"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_power: BOOLEAN
-			-- Is current call name of the form 'infix "^"'?
+			-- Is current call name of the form binary 'alias "^"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_times: BOOLEAN
-			-- Is current call name of the form 'infix "*"'?
+			-- Is current call name of the form binary 'alias "*"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_xor: BOOLEAN
-			-- Is current call name of the form 'infix "xor"'?
+			-- Is current call name of the form binary 'alias "xor"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_dotdot: BOOLEAN
-			-- Is current call name of the form 'infix ".."'?
+			-- Is current call name of the form binary 'alias ".."'?
 		do
 			-- Result := False
 		end
 
 	is_prefix: BOOLEAN
-			-- Is current call name of the form 'prefix ...'?
+			-- Is current call name of the form unary 'alias "..."'?
 		do
 			-- Result := False
 		end
 
 	is_prefix_minus: BOOLEAN
-			-- Is current call name of the form 'prefix "-"'?
+			-- Is current call name of the form unary 'alias "-"'?
 		do
 			-- Result := False
 		end
 
 	is_prefix_plus: BOOLEAN
-			-- Is current call name of the form 'prefix "+"'?
+			-- Is current call name of the form unary 'alias "+"'?
 		do
 			-- Result := False
 		end
 
 	is_prefix_freeop: BOOLEAN
-			-- Is current call name of the form 'prefix "free-operator"'?
+			-- Is current call name of the form unary 'alias "free-operator"'?
 		do
 			-- Result := False
 		end
 
 	is_prefix_not: BOOLEAN
-			-- Is current call name of the form 'prefix "not"'?
+			-- Is current call name of the form unary 'alias "not"'?
 		do
 			-- Result := False
 		end

@@ -1383,7 +1383,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.if_keyword_name)
 			Result.force_new (-1, tokens.implies_keyword_name)
 			Result.force_new (-1, tokens.indexing_keyword_name)
-			Result.force_new (-1, tokens.infix_keyword_name)
 			Result.force_new (-1, tokens.inherit_keyword_name)
 			Result.force_new (-1, tokens.inspect_keyword_name)
 			Result.force_new (-1, tokens.invariant_keyword_name)
@@ -1398,7 +1397,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.once_keyword_name)
 			Result.force_new (-1, tokens.or_keyword_name)
 			Result.force_new (-1, tokens.precursor_keyword_name)
-			Result.force_new (-1, tokens.prefix_keyword_name)
 			Result.force_new (-1, tokens.redefine_keyword_name)
 			Result.force_new (-1, tokens.reference_keyword_name)
 			Result.force_new (-1, tokens.rename_keyword_name)
@@ -1423,7 +1421,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.arrow_symbol_name)
 			Result.force_new (-1, tokens.assign_symbol_name)
 			Result.force_new (-1, tokens.assign_attempt_symbol_name)
-			Result.force_new (-1, tokens.at_symbol_name)
 			Result.force_new (-1, tokens.bang_symbol_name)
 			Result.force_new (-1, tokens.colon_symbol_name)
 			Result.force_new (-1, tokens.comma_symbol_name)
@@ -2103,29 +2100,6 @@ feature {NONE} -- Processing
 					else
 						-- Do nothing.
 					end
-				when 'i', 'I' then
-					inspect text_item (2)
-					when 'n', 'N' then
-						inspect text_item (3)
-						when 'f', 'F' then
-							inspect text_item (4)
-							when 'i', 'I' then
-								inspect text_item (5)
-								when 'x', 'X' then
-									last_token := E_INFIX
-									last_detachable_et_keyword_value := ast_factory.new_infix_keyword (Current)
-								else
-									-- Do nothing.
-								end
-							else
-								-- Do nothing.
-							end
-						else
-							-- Do nothing.
-						end
-					else
-						-- Do nothing.
-					end
 				when 'l', 'L' then
 					inspect text_item (2)
 					when 'o', 'O' then
@@ -2412,34 +2386,6 @@ feature {NONE} -- Processing
 									when 'n', 'N' then
 										last_token := E_FROZEN
 										last_detachable_et_keyword_value := ast_factory.new_frozen_keyword (Current)
-									else
-										-- Do nothing.
-									end
-								else
-									-- Do nothing.
-								end
-							else
-								-- Do nothing.
-							end
-						else
-							-- Do nothing.
-						end
-					else
-						-- Do nothing.
-					end
-				when 'p', 'P' then
-					inspect text_item (2)
-					when 'r', 'R' then
-						inspect text_item (3)
-						when 'e', 'E' then
-							inspect text_item (4)
-							when 'f', 'F' then
-								inspect text_item (5)
-								when 'i', 'I' then
-									inspect text_item (6)
-									when 'x', 'X' then
-										last_token := E_PREFIX
-										last_detachable_et_keyword_value := ast_factory.new_prefix_keyword (Current)
 									else
 										-- Do nothing.
 									end

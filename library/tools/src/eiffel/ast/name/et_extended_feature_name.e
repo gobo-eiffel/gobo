@@ -5,7 +5,7 @@ note
 		"Eiffel extended feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +15,6 @@ deferred class ET_EXTENDED_FEATURE_NAME
 inherit
 
 	ET_AST_NODE
-
-	KL_IMPORTED_ANY_ROUTINES
-		export {NONE} all end
 
 feature -- Initialization
 
@@ -54,12 +51,7 @@ feature -- Comparison
 				end
 			elseif attached other.alias_name as l_other_alias_name then
 				if feature_name.same_feature_name (other.feature_name) then
-					if ANY_.same_objects (l_alias_name, feature_name) then
-							-- This is a 'prefix "..."' or 'infix "..."'.
-						Result := True
-					elseif l_alias_name.same_alias_name (l_other_alias_name) then
-						Result := True
-					end
+					Result := l_alias_name.same_alias_name (l_other_alias_name)
 				end
 			end
 		end

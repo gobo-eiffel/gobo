@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	infix "@", item (i: INTEGER): G
+	item (i: INTEGER): G
 			-- Item at index `i'
 			-- (Performance: O(i).)
 		local

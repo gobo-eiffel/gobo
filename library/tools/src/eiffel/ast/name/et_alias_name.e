@@ -367,115 +367,115 @@ feature -- Status report
 		end
 
 	is_infix: BOOLEAN
-			-- Is current feature name of the form 'infix ...'?
+			-- Is current feature name of the form binary 'alias "..."'?
 		do
 			Result := (code >= tokens.min_infix_code and code <= tokens.max_infix_code)
 		end
 
 	is_infix_and: BOOLEAN
-			-- Is current feature name of the form 'infix "and"'?
+			-- Is current feature name of the form binary 'alias "and"'?
 		do
 			Result := (code = tokens.infix_and_code)
 		end
 
 	is_infix_and_then: BOOLEAN
-			-- Is current feature name of the form 'infix "and then"'?
+			-- Is current feature name of the form binary 'alias "and then"'?
 		do
 			Result := (code = tokens.infix_and_then_code)
 		end
 
 	is_infix_div: BOOLEAN
-			-- Is current feature name of the form 'infix "//"'?
+			-- Is current feature name of the form binary 'alias "//"'?
 		do
 			Result := (code = tokens.infix_div_code)
 		end
 
 	is_infix_divide: BOOLEAN
-			-- Is current feature name of the form 'infix "/"'?
+			-- Is current feature name of the form binary 'alias "/"'?
 		do
 			Result := (code = tokens.infix_divide_code)
 		end
 
 	is_infix_dotdot: BOOLEAN
-			-- Is current feature name of the form 'infix ".."'?
+			-- Is current feature name of the form binary 'alias ".."'?
 		do
 			Result := (code = tokens.infix_dotdot_code)
 		end
 
 	is_infix_ge: BOOLEAN
-			-- Is current feature name of the form 'infix ">="'?
+			-- Is current feature name of the form binary 'alias ">="'?
 		do
 			Result := (code = tokens.infix_ge_code)
 		end
 
 	is_infix_gt: BOOLEAN
-			-- Is current feature name of the form 'infix ">"'?
+			-- Is current feature name of the form binary 'alias ">"'?
 		do
 			Result := (code = tokens.infix_gt_code)
 		end
 
 	is_infix_implies: BOOLEAN
-			-- Is current feature name of the form 'infix "implies"'?
+			-- Is current feature name of the form binary 'alias "implies"'?
 		do
 			Result := (code = tokens.infix_implies_code)
 		end
 
 	is_infix_le: BOOLEAN
-			-- Is current feature name of the form 'infix "<="'?
+			-- Is current feature name of the form binary 'alias "<="'?
 		do
 			Result := (code = tokens.infix_le_code)
 		end
 
 	is_infix_lt: BOOLEAN
-			-- Is current feature name of the form 'infix "<"'?
+			-- Is current feature name of the form binary 'alias "<"'?
 		do
 			Result := (code = tokens.infix_lt_code)
 		end
 
 	is_infix_minus: BOOLEAN
-			-- Is current feature name of the form 'infix "-"'?
+			-- Is current feature name of the form binary 'alias "-"'?
 		do
 			Result := (code = tokens.infix_minus_code)
 		end
 
 	is_infix_mod: BOOLEAN
-			-- Is current feature name of the form 'infix "\\"'?
+			-- Is current feature name of the form binary 'alias "\\"'?
 		do
 			Result := (code = tokens.infix_mod_code)
 		end
 
 	is_infix_or: BOOLEAN
-			-- Is current feature name of the form 'infix "or"'?
+			-- Is current feature name of the form binary 'alias "or"'?
 		do
 			Result := (code = tokens.infix_or_code)
 		end
 
 	is_infix_or_else: BOOLEAN
-			-- Is current feature name of the form 'infix "or else"'?
+			-- Is current feature name of the form binary 'alias "or else"'?
 		do
 			Result := (code = tokens.infix_or_else_code)
 		end
 
 	is_infix_plus: BOOLEAN
-			-- Is current feature name of the form 'infix "+"'?
+			-- Is current feature name of the form binary 'alias "+"'?
 		do
 			Result := (code = tokens.infix_plus_code)
 		end
 
 	is_infix_power: BOOLEAN
-			-- Is current feature name of the form 'infix "^"'?
+			-- Is current feature name of the form binary 'alias "^"'?
 		do
 			Result := (code = tokens.infix_power_code)
 		end
 
 	is_infix_times: BOOLEAN
-			-- Is current feature name of the form 'infix "*"'?
+			-- Is current feature name of the form binary 'alias "*"'?
 		do
 			Result := (code = tokens.infix_times_code)
 		end
 
 	is_infix_xor: BOOLEAN
-			-- Is current feature name of the form 'infix "xor"'?
+			-- Is current feature name of the form binary 'alias "xor"'?
 		do
 			Result := (code = tokens.infix_xor_code)
 		end
@@ -487,43 +487,43 @@ feature -- Status report
 		end
 
 	is_prefix: BOOLEAN
-			-- Is current feature name of the form 'prefix ...'?
+			-- Is current feature name of the form unary 'alias "..."'?
 		do
 			Result := (code >= tokens.min_prefix_code and code <= tokens.max_prefix_code)
 		end
 
 	is_prefix_minus: BOOLEAN
-			-- Is current feature name of the form 'prefix "-"'?
+			-- Is current feature name of the form unary 'alias "-"'?
 		do
 			Result := (code = tokens.prefix_minus_code)
 		end
 
 	is_prefix_plus: BOOLEAN
-			-- Is current feature name of the form 'prefix "+"'?
+			-- Is current feature name of the form unary 'alias "+"'?
 		do
 			Result := (code = tokens.prefix_plus_code)
 		end
 
 	is_prefix_not: BOOLEAN
-			-- Is current feature name of the form 'prefix "not"'?
+			-- Is current feature name of the form unary 'alias "not"'?
 		do
 			Result := (code = tokens.prefix_not_code)
 		end
 
 	is_prefixable: BOOLEAN
-			-- Can current alias be used as the name of a prefix feature?
+			-- Can current alias be used as the name of a unary feature?
 		do
 			Result := is_prefix or is_infix_plus or is_infix_minus
 		ensure
-			is_prefix: is_prefix implies Result
+			is_prefixable: is_prefix implies Result
 		end
 
 	is_infixable: BOOLEAN
-			-- Can current alias be used as the name of an infix feature?
+			-- Can current alias be used as the name of a binary feature?
 		do
 			Result := is_infix or is_prefix_plus or is_prefix_minus
 		ensure
-			is_infix: is_infix implies Result
+			is_infixable: is_infix implies Result
 		end
 
 feature -- Access

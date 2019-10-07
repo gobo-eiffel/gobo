@@ -51,7 +51,6 @@ feature {NONE} -- Initialization
 			create external_cflags.make (20)
 			create external_linker_flags.make (20)
 			console_application_mode := True
-			alias_transition_mode := True
 			total_order_on_reals_mode := True
 			set_system_name (a_name)
 				-- First set the kernel types to some dummy types so that the attached attributes
@@ -339,10 +338,6 @@ feature -- Compilation options
 			-- The trace is displayed each time the execution enters or exits
 			-- from a feature.
 
-	alias_transition_mode: BOOLEAN
-			-- Should functions declared with the old infix/prefix syntax and
-			-- with the new alias syntax considered the same?
-
 	total_order_on_reals_mode: BOOLEAN
 			-- Should NaN values will be lower than any other real values,
 			-- and comparing NaN with another NaN will yield True and not False
@@ -423,14 +418,6 @@ feature -- Compilation options setting
 			trace_mode := b
 		ensure
 			trace_mode_set: trace_mode = b
-		end
-
-	set_alias_transition_mode (b: BOOLEAN)
-			-- Set `alias_transition_mode' to `b'.
-		do
-			alias_transition_mode := b
-		ensure
-			alias_transition_mode_set: alias_transition_mode = b
 		end
 
 	set_total_order_on_reals_mode (b: BOOLEAN)

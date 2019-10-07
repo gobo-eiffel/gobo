@@ -5,7 +5,7 @@ note
 		"Functions implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,14 +66,14 @@ feature -- status report
 
 	is_infixable: BOOLEAN
 			-- Can current feature have a name of
-			-- the form 'infix ...'?
+			-- the form binary 'alias "..."'?
 		do
 			Result := attached arguments as l_arguments and then (l_arguments.count = 1 or (is_static and l_arguments.count = 2))
 		end
 
 	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
-			-- the form 'prefix ...'?
+			-- the form unary 'alias "..."'?
 		do
 			Result := not attached arguments as l_arguments or else (l_arguments.count = 0 or (is_static and l_arguments.count = 1))
 		end

@@ -91,7 +91,7 @@ feature -- Status report
 
 	is_prefixable: BOOLEAN = True
 			-- Can current feature have a name of
-			-- the form 'prefix ...'?
+			-- the form unary 'alias "..."'?
 
 feature -- Access
 

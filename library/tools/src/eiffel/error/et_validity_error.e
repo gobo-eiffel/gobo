@@ -111,13 +111,9 @@ create
 	make_vfav1f,
 	make_vfav1g,
 	make_vfav1h,
-	make_vfav1i,
-	make_vfav1j,
 	make_vfav1k,
-	make_vfav1l,
 	make_vfav1m,
 	make_vfav1n,
-	make_vfav1o,
 	make_vfav1p,
 	make_vfav1q,
 	make_vfav1r,
@@ -4352,90 +4348,6 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second parent base class
 		end
 
-	make_vfav1i (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Create a new VFAV-1 error: `a_feature' has a prefix name but is
-			-- not a query with no argument.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_prefix: a_feature.name.is_prefix
-			a_feature_not_prefixable: not a_feature.is_prefixable
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			code := template_code (vfav1i_template_code)
-			etl_code := vfav1_etl_code
-			default_template := default_message_template (vfav1i_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_feature.lower_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name
-		end
-
-	make_vfav1j (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Create a new VFAV-1 error: `a_feature' has an infix name but is
-			-- not a function with exactly one argument.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_infix: a_feature.name.is_infix
-			a_feature_not_infixable: not a_feature.is_infixable
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			code := template_code (vfav1j_template_code)
-			etl_code := vfav1_etl_code
-			default_template := default_message_template (vfav1j_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_feature.lower_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name
-		end
-
 	make_vfav1k (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Create a new VFAV-1 error: `a_feature' has an operator alias
 			-- which can be either unary or binary, but it is not a
@@ -4480,56 +4392,6 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
 			-- dollar8: $8 = alias name
-		end
-
-	make_vfav1l (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VFAV-1 error: the Rename_pair
-			-- `a_rename' has a new name of the Prefix form,
-			-- but the corresponding feature `f' is not a
-			-- query with no argument.
-			-- `a_type' is either the parent or generic constraint
-			-- where the rename clause appears.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_rename.new_name.position
-			code := template_code (vfav1l_template_code)
-			etl_code := vfav1_etl_code
-			default_template := default_message_template (vfav1l_default_template)
-			create parameters.make_filled (empty_string, 1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (f.lower_name, 8)
-			parameters.put (a_type.upper_name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = new prefix name
-			-- dollar8: $8 = old feature name
-			-- dollar9: $9 = parent or generic constraint base class
 		end
 
 	make_vfav1m (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
@@ -4640,55 +4502,6 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = new alias name
 			-- dollar9: $9 = old feature name
 			-- dollar10: $10 = parent or generic constraint base class
-		end
-
-	make_vfav1o (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VFAV-1 error: the Rename_pair `a_rename' has
-			-- a new name of the Infix form, but the corresponding feature
-			-- `f' is not a function with one argument.
-			-- `a_type' is either the parent or generic constraint
-			-- where the rename clause appears.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_rename.new_name.position
-			code := template_code (vfav1o_template_code)
-			etl_code := vfav1_etl_code
-			default_template := default_message_template (vfav1o_default_template)
-			create parameters.make_filled (empty_string, 1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (f.lower_name, 8)
-			parameters.put (a_type.upper_name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = new infix name
-			-- dollar8: $8 = old feature name
-			-- dollar9: $9 = parent or generic constraint base class
 		end
 
 	make_vfav1p (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
@@ -15958,13 +15771,9 @@ feature {NONE} -- Implementation
 	vfav1f_default_template: STRING = "features `$7' and `$9' have both the same binary Operator alias `$8'."
 	vfav1g_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same binary Operator alias `$8'."
 	vfav1h_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same binary Operator alias `$8'."
-	vfav1i_default_template: STRING = "feature `$7' has a Prefix name but is not a query with no argument."
-	vfav1j_default_template: STRING = "feature `$7' has an Infix name but is not a query with exactly one argument."
 	vfav1k_default_template: STRING = "feature `$7' has an Operator alias `$8' which can be either unary or binary, but it is not a query with no argument or exactly one argument."
-	vfav1l_default_template: STRING = "`$7' is of the Prefix form but `$8' in $9 is not a query with no argument."
 	vfav1m_default_template: STRING = "`$7' has a binary Operator alias `$8' but `$9' in $10 is not a query with exactly one argument."
 	vfav1n_default_template: STRING = "`$7' has a unary Operator alias `$8' but `$9' in $10 is not a query with no argument."
-	vfav1o_default_template: STRING = "`$7' is of the Infix form but `$8' in $9 is not a query with one argument."
 	vfav1p_default_template: STRING = "`$7' has an Operator alias `$8' which can be either unary or binary, but `$9' in $10 is not a query with no argument or exactly one argument."
 	vfav1q_default_template: STRING = "unary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
 	vfav1r_default_template: STRING = "binary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
@@ -16471,13 +16280,9 @@ feature {NONE} -- Implementation
 	vfav1f_template_code: STRING = "vfav1f"
 	vfav1g_template_code: STRING = "vfav1g"
 	vfav1h_template_code: STRING = "vfav1h"
-	vfav1i_template_code: STRING = "vfav1i"
-	vfav1j_template_code: STRING = "vfav1j"
 	vfav1k_template_code: STRING = "vfav1k"
-	vfav1l_template_code: STRING = "vfav1l"
 	vfav1m_template_code: STRING = "vfav1m"
 	vfav1n_template_code: STRING = "vfav1n"
-	vfav1o_template_code: STRING = "vfav1o"
 	vfav1p_template_code: STRING = "vfav1p"
 	vfav1q_template_code: STRING = "vfav1q"
 	vfav1r_template_code: STRING = "vfav1r"

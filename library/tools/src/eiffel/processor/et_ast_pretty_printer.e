@@ -109,7 +109,6 @@ inherit
 			process_indexing_term_list,
 			process_infix_and_then_operator,
 			process_infix_expression,
-			process_infix_name,
 			process_infix_or_else_operator,
 			process_inspect_instruction,
 			process_invariants,
@@ -149,7 +148,6 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
-			process_prefix_name,
 			process_qualified_call,
 			process_qualified_call_expression,
 			process_qualified_call_instruction,
@@ -191,9 +189,6 @@ inherit
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
-		export {NONE} all end
-
-	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -2472,8 +2467,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			l_feature_name := a_extended_feature_name.feature_name
 			l_feature_name.process (Current)
-			if attached a_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
-					-- For infix and prefix features, do not repeat the name twice.
+			if attached a_extended_feature_name.alias_name as l_alias_name then
 				print_space
 				l_alias_name.process (Current)
 				comment_finder.add_excluded_node (l_alias_name)
@@ -2494,8 +2488,7 @@ feature {ET_AST_NODE} -- Processing
 			l_extended_feature_name := a_feature.extended_name
 			l_feature_name := l_extended_feature_name.feature_name
 			l_feature_name.process (Current)
-			if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
-					-- For infix and prefix features, do not repeat the name twice.
+			if attached l_extended_feature_name.alias_name as l_alias_name then
 				print_space
 				l_alias_name.process (Current)
 				comment_finder.add_excluded_node (l_alias_name)
@@ -3359,14 +3352,6 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.name.process (Current)
 			print_space
 			an_expression.right.process (Current)
-		end
-
-	process_infix_name (a_name: ET_INFIX_NAME)
-			-- Process `a_name'.
-		do
-			a_name.infix_keyword.process (Current)
-			print_space
-			a_name.operator_string.process (Current)
 		end
 
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
@@ -4698,14 +4683,6 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 			end
 			an_expression.expression.process (Current)
-		end
-
-	process_prefix_name (a_name: ET_PREFIX_NAME)
-			-- Process `a_name'.
-		do
-			a_name.prefix_keyword.process (Current)
-			print_space
-			a_name.operator_string.process (Current)
 		end
 
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)

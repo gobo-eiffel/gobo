@@ -51,7 +51,7 @@ inherit
 				-- reset the capacity to zero.
 			wipe_out as old_wipe_out,
 			empty as old_empty,
-				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- Note: The postcondition of `is_less alias "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
 			is_less as old_infix_less,
@@ -164,7 +164,7 @@ inherit
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from ANY instead.
 			is_equal as old_is_equal,
-				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- Note: The postcondition of `is_less alias "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
 			is_less as old_infix_less
@@ -239,7 +239,7 @@ inherit
 			copy,
 			out
 		select
-				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- Note: The postcondition of `is_less alias "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
 			is_less

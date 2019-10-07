@@ -39,7 +39,7 @@ create
 " "					output ("%T( ) show%N")
 "\t"				output ("%Tprinttab%N")
 ""				output ("%Tnewpage%N")
-[^ \t\n\r\\()]+	{
+[^ \t\n\r\f\\()]+	{
 					output ("%T(")
 					output (text)
 					output (") printword%N")

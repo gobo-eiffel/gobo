@@ -388,7 +388,7 @@ feature -- Status report
 
 	is_infixable: BOOLEAN
 			-- Can current feature have a name of
-			-- the form 'infix ...'?
+			-- the form binary 'alias "..."'?
 		do
 			-- Result := False
 		ensure
@@ -397,7 +397,7 @@ feature -- Status report
 
 	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
-			-- the form 'prefix ...'?
+			-- the form unary 'alias "..."'?
 		do
 			-- Result := False
 		ensure

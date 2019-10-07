@@ -41,9 +41,9 @@ create
 %token <detachable ET_KEYWORD> E_CLASS E_CREATE E_CREATION E_DEBUG
 %token <detachable ET_KEYWORD> E_DO E_ELSE E_ELSEIF E_END E_ENSURE
 %token <detachable ET_KEYWORD> E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
-%token <detachable ET_KEYWORD> E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
+%token <detachable ET_KEYWORD> E_IF E_INDEXING E_INHERIT E_INSPECT
 %token <detachable ET_KEYWORD> E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_NOTE E_OBSOLETE
-%token <detachable ET_KEYWORD> E_ONCE E_ONCE_STRING E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
+%token <detachable ET_KEYWORD> E_ONCE E_ONCE_STRING E_REDEFINE E_RENAME E_REQUIRE
 %token <detachable ET_KEYWORD> E_RESCUE E_SELECT E_STRIP E_WHEN
 %token <detachable ET_KEYWORD> E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
 %token <detachable ET_KEYWORD> E_DEFERRED E_EXPANDED E_REFERENCE E_SEPARATE
@@ -2083,87 +2083,6 @@ Feature_name: Identifier
 				$$ := l_identifier 
 			end
 		}
-	| E_PREFIX E_STRNOT
-		{ $$ := ast_factory.new_prefix_not_name ($1, $2) }
-	| E_PREFIX E_STRPLUS
-		{ $$ := ast_factory.new_prefix_plus_name ($1, $2) }
-	| E_PREFIX E_STRMINUS
-		{ $$ := ast_factory.new_prefix_minus_name ($1, $2) }
-	| E_PREFIX E_STRFREEOP
-		{ $$ := ast_factory.new_prefix_free_name ($1, $2) }
-	| E_INFIX E_STRPLUS
-		{ $$ := ast_factory.new_infix_plus_name ($1, $2) }
-	| E_INFIX E_STRMINUS
-		{ $$ := ast_factory.new_infix_minus_name ($1, $2) }
-	| E_INFIX E_STRSTAR
-		{ $$ := ast_factory.new_infix_times_name ($1, $2) }
-	| E_INFIX E_STRSLASH
-		{ $$ := ast_factory.new_infix_divide_name ($1, $2) }
-	| E_INFIX E_STRDIV
-		{ $$ := ast_factory.new_infix_div_name ($1, $2) }
-	| E_INFIX E_STRMOD
-		{ $$ := ast_factory.new_infix_mod_name ($1, $2) }
-	| E_INFIX E_STRPOWER
-		{ $$ := ast_factory.new_infix_power_name ($1, $2) }
-	| E_INFIX E_STRLT
-		{ $$ := ast_factory.new_infix_lt_name ($1, $2) }
-	| E_INFIX E_STRLE
-		{ $$ := ast_factory.new_infix_le_name ($1, $2) }
-	| E_INFIX E_STRGT
-		{ $$ := ast_factory.new_infix_gt_name ($1, $2) }
-	| E_INFIX E_STRGE
-		{ $$ := ast_factory.new_infix_ge_name ($1, $2) }
-	| E_INFIX E_STRAND
-		{ $$ := ast_factory.new_infix_and_name ($1, $2) }
-	| E_INFIX E_STRANDTHEN
-		{ $$ := ast_factory.new_infix_and_then_name ($1, $2) }
-	| E_INFIX E_STROR
-		{ $$ := ast_factory.new_infix_or_name ($1, $2) }
-	| E_INFIX E_STRORELSE
-		{ $$ := ast_factory.new_infix_or_else_name ($1, $2) }
-	| E_INFIX E_STRIMPLIES
-		{ $$ := ast_factory.new_infix_implies_name ($1, $2) }
-	| E_INFIX E_STRXOR
-		{ $$ := ast_factory.new_infix_xor_name ($1, $2) }
-	| E_INFIX E_STRFREEOP
-		{ $$ := ast_factory.new_infix_free_name ($1, $2) }
-
-	| E_PREFIX E_STRING
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRSTAR
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRSLASH
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRDIV
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRMOD
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRPOWER
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRLT
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRLE
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRGT
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRGE
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRAND
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STROR
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRXOR
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRANDTHEN
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRORELSE
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_PREFIX E_STRIMPLIES
-		{ $$ := new_invalid_prefix_name ($1, $2) }
-	| E_INFIX E_STRING
-		{ $$ := new_invalid_infix_name ($1, $2) }
-	| E_INFIX E_STRNOT
-		{ $$ := new_invalid_infix_name ($1, $2) }
 	;
 
 Extended_feature_name: Feature_name

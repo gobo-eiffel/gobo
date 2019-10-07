@@ -1240,7 +1240,7 @@ feature -- Basic operations
 		end
 
 	plus (ctx: MA_DECIMAL_CONTEXT): like Current
-			-- Prefix "+" with respect to the `ctx' context
+			-- Unary "+" with respect to the `ctx' context
 		require
 			ctx_not_void: ctx /= Void
 		local
@@ -1286,7 +1286,7 @@ feature -- Basic operations
 		end
 
 	minus (ctx: MA_DECIMAL_CONTEXT): like Current
-			-- Prefix "-" with respect to the `ctx' context
+			-- Unary "-" with respect to the `ctx' context
 		require
 			ctx_not_void: ctx /= Void
 		local

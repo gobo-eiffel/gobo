@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic TUPLE types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 		do
 			Result := precursor (a_query, a_system)
 			l_name := a_query.name
-			if not Result.is_builtin and then (l_name.same_feature_name (tokens.item_feature_name) or l_name.same_feature_name (tokens.infix_at_feature_name) or l_name.same_feature_name (tokens.reference_item_feature_name)) then
+			if not Result.is_builtin and then (l_name.same_feature_name (tokens.item_feature_name) or l_name.same_feature_name (tokens.reference_item_feature_name)) then
 				a_system.dynamic_type_set_builder.build_tuple_item (Current, Result)
 			end
 		end

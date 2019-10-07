@@ -9105,12 +9105,12 @@ feature {NONE} -- Expression generation
 			--    c2 := 2
 			--    c1 < c2
 			--
-			-- At run-time, INTEGER.infix "<" will be called. 'c2' is of static
+			-- At run-time, 'INTEGER.is_less alias "<"' will be called. 'c2' is of static
 			-- type COMPARABLE, which does not conform to the expected argument
 			-- type INTEGER. But according to the dynamic type set mechanism there
 			-- is no CAT-call in that case. So we will just need to unbox the
 			-- integer 2 (which had been previously boxed in the assignment to
-			-- 'c2') before passing it as argument of INTEGER.infix "<".
+			-- 'c2') before passing it as argument of 'INTEGER.is_less alias "<"'.
 		require
 			an_expression_not_void: an_expression /= Void
 			a_source_type_set_not_void: a_source_type_set /= Void
@@ -19532,7 +19532,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 
 	print_builtin_boolean_and_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'BOOLEAN.infix "and"'.
+			-- corresponding to built-in feature 'BOOLEAN.conjuncted alias "and"'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -19581,7 +19581,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 
 	print_builtin_boolean_and_then_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'BOOLEAN.infix "and then"'.
+			-- corresponding to built-in feature 'BOOLEAN.conjuncted_semistrict alias "and then"'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -19630,7 +19630,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 
 	print_builtin_boolean_implies_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'BOOLEAN.infix "implies"'.
+			-- corresponding to built-in feature 'BOOLEAN.implication alias "implies"'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -19682,7 +19682,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 
 	print_builtin_boolean_not_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'BOOLEAN.prefix "not"'.
+			-- corresponding to built-in feature 'BOOLEAN.negated alias "not"'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -19717,7 +19717,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 
 	print_builtin_boolean_or_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'BOOLEAN.infix "or"'.
+			-- corresponding to built-in feature 'BOOLEAN.disjuncted alias "or"'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -19766,7 +19766,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 
 	print_builtin_boolean_or_else_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'BOOLEAN.infix "or else"'.
+			-- corresponding to built-in feature 'BOOLEAN.disjuncted_semistrict alias "or else"'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -19815,7 +19815,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 
 	print_builtin_boolean_xor_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'BOOLEAN.infix "xor"'.
+			-- corresponding to built-in feature 'BOOLEAN.disjuncted_exclusive alias "xor"'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -24558,7 +24558,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 
 	print_builtin_pointer_plus_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'POINTER.infix "+"'.
+			-- corresponding to built-in feature 'POINTER.plus alias "+"'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.

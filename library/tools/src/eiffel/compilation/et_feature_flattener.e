@@ -323,25 +323,10 @@ feature {NONE} -- Feature flattening
 						set_fatal_error (current_class)
 						error_handler.report_vffd4a_error (current_class, l_query)
 					end
-						-- Check validity of 'infix "..."', 'prefix "..."'
-						-- and 'alias "..."' names.
+						-- Check validity of 'alias "..."' names.
 					l_feature_name := l_query.name
 					l_alias_name := l_query.alias_name
-					if l_feature_name.is_prefix then
-						if not l_query.is_prefixable then
-								-- A feature with a Prefix name should be either
-								-- an attribute or a function with no argument.
-							set_fatal_error (current_class)
-							error_handler.report_vfav1i_error (current_class, l_query)
-						end
-					elseif l_feature_name.is_infix then
-						if not l_query.is_infixable then
-								-- A feature with a Infix name should be
-								-- a function with exactly one argument.
-							set_fatal_error (current_class)
-							error_handler.report_vfav1j_error (current_class, l_query)
-						end
-					elseif l_alias_name = Void then
+					if l_alias_name = Void then
 						-- OK.
 					elseif l_alias_name.is_bracket then
 						if not l_query.is_bracketable then
@@ -433,21 +418,10 @@ feature {NONE} -- Feature flattening
 						set_fatal_error (current_class)
 						error_handler.report_vffd4a_error (current_class, l_procedure)
 					end
-						-- Check validity of 'infix "..."', 'prefix "..."'
-						-- and 'alias "..."' names.
+						-- Check validity of 'alias "..."' names.
 					l_feature_name := l_procedure.name
 					l_alias_name := l_procedure.alias_name
-					if l_feature_name.is_prefix then
-							-- A feature with a Prefix name should be
-							-- a query with no argument.
-						set_fatal_error (current_class)
-						error_handler.report_vfav1i_error (current_class, l_procedure)
-					elseif l_feature_name.is_infix then
-							-- A feature with a Infix name should be
-							-- a query with exactly one argument.
-						set_fatal_error (current_class)
-						error_handler.report_vfav1j_error (current_class, l_procedure)
-					elseif l_alias_name = Void then
+					if l_alias_name = Void then
 							-- OK.
 					elseif l_alias_name.is_bracket then
 							-- A feature with a Bracket alias should be
@@ -1380,17 +1354,7 @@ feature {NONE} -- Feature adaptation validity
 				l_extended_name := l_new_name.new_name
 				l_name := l_extended_name.feature_name
 				l_alias_name := l_extended_name.alias_name
-				if l_name.is_infix then
-					if not l_precursor_feature.is_infixable then
-						set_fatal_error (current_class)
-						error_handler.report_vfav1o_error (current_class, a_parent_feature.parent.type, l_new_name, l_precursor_feature)
-					end
-				elseif l_name.is_prefix then
-					if not l_precursor_feature.is_prefixable then
-						set_fatal_error (current_class)
-						error_handler.report_vfav1l_error (current_class, a_parent_feature.parent.type, l_new_name, l_precursor_feature)
-					end
-				elseif l_alias_name = Void then
+				if l_alias_name = Void then
 					-- OK.
 				elseif l_alias_name.is_bracket then
 					if not l_precursor_feature.is_bracketable then

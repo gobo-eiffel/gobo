@@ -49,7 +49,6 @@ inherit
 			new_if_keyword,
 			new_implies_keyword,
 			new_indexing_keyword,
-			new_infix_keyword,
 			new_inherit_keyword,
 			new_inspect_keyword,
 			new_invariant_keyword,
@@ -64,7 +63,6 @@ inherit
 			new_once_keyword,
 			new_or_keyword,
 			new_precursor_keyword,
-			new_prefix_keyword,
 			new_redefine_keyword,
 			new_reference_keyword,
 			new_rename_keyword,
@@ -240,26 +238,8 @@ inherit
 			new_if_instruction,
 			new_indexing_semicolon,
 			new_indexing_term_comma,
-			new_infix_and_name,
-			new_infix_and_then_name,
 			new_infix_and_then_operator,
-			new_infix_div_name,
-			new_infix_divide_name,
-			new_infix_free_name,
-			new_infix_ge_name,
-			new_infix_gt_name,
-			new_infix_implies_name,
-			new_infix_le_name,
-			new_infix_lt_name,
-			new_infix_minus_name,
-			new_infix_mod_name,
-			new_infix_or_name,
-			new_infix_or_else_name,
 			new_infix_or_else_operator,
-			new_infix_plus_name,
-			new_infix_power_name,
-			new_infix_times_name,
-			new_infix_xor_name,
 			new_inspect_instruction,
 			new_invariants,
 			new_keyword_feature_name_list,
@@ -302,10 +282,6 @@ inherit
 			new_precursor_class_name,
 			new_precursor_expression,
 			new_precursor_instruction,
-			new_prefix_free_name,
-			new_prefix_minus_name,
-			new_prefix_not_name,
-			new_prefix_plus_name,
 			new_qualified_like_braced_type,
 			new_rename,
 			new_rename_comma,
@@ -667,15 +643,6 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_infix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
-			-- New 'infix' keyword
-		do
-			create Result.make_infix
-			Result.set_text (a_scanner.last_literal)
-			Result.set_position (a_scanner.line, a_scanner.column)
-			Result.set_break (last_break (False, a_scanner))
-		end
-
 	new_inherit_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'inherit' keyword
 		do
@@ -797,15 +764,6 @@ feature -- Eiffel keywords
 			-- New 'precursor' keyword
 		do
 			create Result.make
-			Result.set_text (a_scanner.last_literal)
-			Result.set_position (a_scanner.line, a_scanner.column)
-			Result.set_break (last_break (False, a_scanner))
-		end
-
-	new_prefix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
-			-- New 'prefix' keyword
-		do
-			create Result.make_prefix
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -2903,30 +2861,6 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_and_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "and" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_and (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_and_then_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "and then" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_and_then (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
 	new_infix_and_then_operator (an_and: detachable ET_KEYWORD;
 		a_then: detachable ET_KEYWORD): detachable ET_INFIX_AND_THEN_OPERATOR
 			-- New binary "and then" operator
@@ -2940,152 +2874,6 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_div_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "//" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_div (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_divide_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "//" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_divide (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_free_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME
-			-- New infix free feature name
-		do
-			if an_operator /= Void then
-				if an_operator.value.count > 0 then
-					create Result.make (an_operator)
-					if an_infix /= Void then
-						Result.set_infix_keyword (an_infix)
-					end
-				end
-			end
-		end
-
-	new_infix_ge_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix ">=" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_ge (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_gt_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix ">" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_gt (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_implies_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "implies" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_implies (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_le_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "<=" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_le (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_lt_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "<" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_lt (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_minus_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "-" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_minus (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_mod_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "\\" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_mod (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_or_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "or" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_or (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_or_else_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "or else" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_or_else (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
 	new_infix_or_else_operator (an_or: detachable ET_KEYWORD;
 		an_else: detachable ET_KEYWORD): detachable ET_INFIX_OR_ELSE_OPERATOR
 			-- New binary "or else" operator
@@ -3096,54 +2884,6 @@ feature -- AST nodes
 			end
 			if an_else /= Void then
 				Result.set_else_keyword (an_else)
-			end
-		end
-
-	new_infix_plus_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "+" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_plus (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_power_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "^" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_power (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_times_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "*" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_times (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
-			end
-		end
-
-	new_infix_xor_name (an_infix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
-			-- New infix "xor" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_xor (an_operator)
-				if an_infix /= Void then
-					Result.set_infix_keyword (an_infix)
-				end
 			end
 		end
 
@@ -3723,56 +3463,6 @@ feature -- AST nodes
 				create Result.make (a_parent, args)
 				Result.set_parent_prefixed (is_parent_prefixed)
 				Result.set_precursor_keyword (a_precursor)
-			end
-		end
-
-	new_prefix_free_name (a_prefix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_FREE_NAME
-			-- New prefix free feature name
-		do
-			if an_operator /= Void then
-				if an_operator.value.count > 0 then
-					create Result.make (an_operator)
-					if a_prefix /= Void then
-						Result.set_prefix_keyword (a_prefix)
-					end
-				end
-			end
-		end
-
-	new_prefix_minus_name (a_prefix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_NAME
-			-- New prefix "-" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_minus (an_operator)
-				if a_prefix /= Void then
-					Result.set_prefix_keyword (a_prefix)
-				end
-			end
-		end
-
-	new_prefix_not_name (a_prefix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_NAME
-			-- New prefix "not" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_not (an_operator)
-				if a_prefix /= Void then
-					Result.set_prefix_keyword (a_prefix)
-				end
-			end
-		end
-
-	new_prefix_plus_name (a_prefix: detachable ET_KEYWORD;
-		an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_NAME
-			-- New prefix "+" feature name
-		do
-			if an_operator /= Void then
-				create Result.make_plus (an_operator)
-				if a_prefix /= Void then
-					Result.set_prefix_keyword (a_prefix)
-				end
 			end
 		end
 

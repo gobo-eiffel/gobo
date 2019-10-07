@@ -132,7 +132,6 @@ inherit
 			process_infix_cast_expression,
 			process_infix_and_then_operator,
 			process_infix_expression,
-			process_infix_name,
 			process_infix_or_else_operator,
 			process_inspect_instruction,
 			process_invariants,
@@ -178,7 +177,6 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
-			process_prefix_name,
 			process_qualified_call,
 			process_qualified_call_expression,
 			process_qualified_call_instruction,
@@ -1222,14 +1220,6 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_infix_name (a_name: ET_INFIX_NAME)
-			-- Process `a_name'.
-		do
-			if not excluded_nodes.has (a_name) then
-				precursor (a_name)
-			end
-		end
-
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
 			-- Process `an_operator'.
 		do
@@ -1598,14 +1588,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_expression) then
 				precursor (an_expression)
-			end
-		end
-
-	process_prefix_name (a_name: ET_PREFIX_NAME)
-			-- Process `a_name'.
-		do
-			if not excluded_nodes.has (a_name) then
-				precursor (a_name)
 			end
 		end
 
