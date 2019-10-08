@@ -30,6 +30,7 @@ inherit
 			process_agent_typed_open_argument,
 			process_alias_free_name,
 			process_alias_name,
+			process_alias_name_list,
 			process_aliased_feature_name,
 			process_all_export,
 			process_assign_feature_name,
@@ -560,12 +561,27 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_alias_name_list (a_list: ET_ALIAS_NAME_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				if i /= nb then
+					print_space
+				end
+				i := i + 1
+			end
+		end
+
 	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME)
 			-- Process `a_name'.
 		do
 			a_name.feature_name.process (Current)
 			print_space
-			a_name.alias_name.process (Current)
+			a_name.alias_names.process (Current)
 		end
 
 	process_all_export (an_export: ET_ALL_EXPORT)
@@ -2467,10 +2483,10 @@ feature {ET_AST_NODE} -- Processing
 		do
 			l_feature_name := a_extended_feature_name.feature_name
 			l_feature_name.process (Current)
-			if attached a_extended_feature_name.alias_name as l_alias_name then
+			if attached a_extended_feature_name.alias_names as l_alias_names and then not l_alias_names.is_empty then
 				print_space
-				l_alias_name.process (Current)
-				comment_finder.add_excluded_node (l_alias_name)
+				l_alias_names.process (Current)
+				comment_finder.add_excluded_node (l_alias_names)
 			end
 			comment_finder.add_excluded_node (l_feature_name)
 			comment_finder.find_comments (a_extended_feature_name, comment_list)
@@ -2488,10 +2504,10 @@ feature {ET_AST_NODE} -- Processing
 			l_extended_feature_name := a_feature.extended_name
 			l_feature_name := l_extended_feature_name.feature_name
 			l_feature_name.process (Current)
-			if attached l_extended_feature_name.alias_name as l_alias_name then
+			if attached l_extended_feature_name.alias_names as l_alias_names and then not l_alias_names.is_empty then
 				print_space
-				l_alias_name.process (Current)
-				comment_finder.add_excluded_node (l_alias_name)
+				l_alias_names.process (Current)
+				comment_finder.add_excluded_node (l_alias_names)
 			end
 			comment_finder.add_excluded_node (l_feature_name)
 			comment_finder.find_comments (l_extended_feature_name, comment_list)

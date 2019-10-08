@@ -29,6 +29,7 @@ inherit
 			process_agent_typed_open_argument,
 			process_alias_free_name,
 			process_alias_name,
+			process_alias_name_list,
 			process_aliased_feature_name,
 			process_all_export,
 			process_assertion_semicolon,
@@ -386,6 +387,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_name) then
 				precursor (a_name)
+			end
+		end
+
+	process_alias_name_list (a_list: ET_ALIAS_NAME_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
 			end
 		end
 

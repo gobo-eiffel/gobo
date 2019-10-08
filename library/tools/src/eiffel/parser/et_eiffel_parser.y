@@ -112,6 +112,7 @@ create
 %type <detachable ET_AGENT_ARGUMENT_OPERAND_LIST> Agent_actuals_opt Agent_actual_list
 %type <detachable ET_AGENT_TARGET> Agent_target
 %type <detachable ET_ALIAS_NAME> Alias_name
+%type <detachable ET_ALIAS_NAME_LIST> Alias_name_list
 %type <detachable ET_ASSIGNER> Assigner_opt
 %type <detachable ET_BOOLEAN_CONSTANT> Boolean_constant
 %type <detachable ET_BRACKET_EXPRESSION> Bracket_expression Typed_bracket_expression Untyped_bracket_expression
@@ -2087,17 +2088,44 @@ Feature_name: Identifier
 
 Extended_feature_name: Feature_name
 		{ $$ := $1 }
-	| Identifier Alias_name
+	| Identifier Add_counter Alias_name_list
 		{
 			if attached $1 as l_identifier then
 				l_identifier.set_feature_name (True)
-				$$ := ast_factory.new_aliased_feature_name (l_identifier, $2)
+				$$ := ast_factory.new_aliased_feature_name (l_identifier, $3)
 			else
-				$$ := ast_factory.new_aliased_feature_name (Void, $2)
+				$$ := ast_factory.new_aliased_feature_name (Void, $3)
 			end
+			remove_counter
 		}
 	;
 
+Alias_name_list: Alias_name
+		{
+			if attached $1 as l_alias_name then
+				$$ := ast_factory.new_alias_name_list (counter_value + 1)
+				if $$ /= Void then
+					$$.put_first (l_alias_name)
+				end
+			else
+				$$ := ast_factory.new_alias_name_list (counter_value)
+			end
+		}
+	| Alias_name
+		{
+			if $1 /= Void then
+				increment_counter
+			end
+		}
+	  Alias_name_list
+		{
+			$$ := $3
+			if $$ /= Void and attached $1 as l_alias_name then
+				$$.put_first (l_alias_name)
+			end
+		}
+	;
+	
 Alias_name: E_ALIAS E_STRNOT Alias_convert_opt
 		{ $$ := ast_factory.new_alias_not_name ($1, $2, $3) }
 	| E_ALIAS E_STRPLUS Alias_convert_opt

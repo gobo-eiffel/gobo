@@ -97,6 +97,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_alias_name_list (a_list: ET_ALIAS_NAME_LIST)
+			-- Process `a_list'.
+		do
+		end
+
 	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME)
 			-- Process `a_name'.
 		do

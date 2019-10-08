@@ -184,11 +184,23 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_alias_name_list (a_list: ET_ALIAS_NAME_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
 	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME)
 			-- Process `a_name'.
 		do
 			a_name.feature_name.process (Current)
-			a_name.alias_name.process (Current)
+			a_name.alias_names.process (Current)
 		end
 
 	process_all_export (an_export: ET_ALL_EXPORT)

@@ -5,7 +5,7 @@ note
 		"Eiffel extended feature names followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,10 +54,10 @@ feature -- Access
 			Result := extended_feature_name.feature_name
 		end
 
-	alias_name: detachable ET_ALIAS_NAME
-			-- Alias name, if any
+	alias_names: detachable ET_ALIAS_NAME_LIST
+			-- Alias names, if any
 		do
-			Result := extended_feature_name.alias_name
+			Result := extended_feature_name.alias_names
 		end
 
 	comma: ET_SYMBOL

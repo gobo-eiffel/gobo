@@ -109,10 +109,10 @@ feature -- Access
 			definition: Result.is_equal (name.name.as_lower)
 		end
 
-	alias_name: detachable ET_ALIAS_NAME
-			-- Alias name, if any
+	alias_names: detachable ET_ALIAS_NAME_LIST
+			-- Alias names, if any
 		do
-			Result := extended_name.alias_name
+			Result := extended_name.alias_names
 		end
 
 	extended_name: ET_EXTENDED_FEATURE_NAME
@@ -136,11 +136,11 @@ feature -- Access
 			overloaded_name_not_void: Result /= Void
 		end
 
-	overloaded_alias_name: detachable ET_ALIAS_NAME
-			-- Possibly overloaded Eiffel alias name, if any
+	overloaded_alias_names: detachable ET_ALIAS_NAME_LIST
+			-- Possibly overloaded Eiffel alias names, if any
 			-- (useful in .NET)
 		do
-			Result := overloaded_extended_name.alias_name
+			Result := overloaded_extended_name.alias_names
 		end
 
 	header_break: detachable ET_BREAK

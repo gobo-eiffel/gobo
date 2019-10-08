@@ -32,8 +32,8 @@ feature -- Access
 			feature_name_not_void: Result /= Void
 		end
 
-	alias_name: detachable ET_ALIAS_NAME
-			-- Alias name, if any
+	alias_names: detachable ET_ALIAS_NAME_LIST
+			-- Alias names, if any
 		deferred
 		end
 
@@ -45,13 +45,13 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			if not attached alias_name as l_alias_name then
-				if not attached other.alias_name then
+			if not attached alias_names as l_alias_names or else l_alias_names.is_empty then
+				if not attached other.alias_names as l_other_alias_names or else l_other_alias_names.is_empty then
 					Result := feature_name.same_feature_name (other.feature_name)
 				end
-			elseif attached other.alias_name as l_other_alias_name then
+			elseif attached other.alias_names as l_other_alias_names and then not l_other_alias_names.is_empty then
 				if feature_name.same_feature_name (other.feature_name) then
-					Result := l_alias_name.same_alias_name (l_other_alias_name)
+					Result := l_alias_names.same_alias_names (l_other_alias_names)
 				end
 			end
 		end

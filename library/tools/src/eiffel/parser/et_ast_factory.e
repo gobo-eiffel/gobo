@@ -1443,6 +1443,14 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_name_list (nb: INTEGER): detachable ET_ALIAS_NAME_LIST
+			-- New list of alias names with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			create Result.make_with_capacity (nb)
+		end
+
 	new_alias_not_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "not" feature name
 		do
@@ -1555,11 +1563,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_aliased_feature_name (a_name: detachable ET_IDENTIFIER; an_alias: detachable ET_ALIAS_NAME): detachable ET_ALIASED_FEATURE_NAME
+	new_aliased_feature_name (a_name: detachable ET_IDENTIFIER; an_alias_name_list: detachable ET_ALIAS_NAME_LIST): detachable ET_ALIASED_FEATURE_NAME
 			-- New aliased feature name
 		do
-			if a_name /= Void and an_alias /= Void then
-				create Result.make (a_name, an_alias)
+			if a_name /= Void and an_alias_name_list /= Void then
+				create Result.make (a_name, an_alias_name_list)
 			end
 		end
 

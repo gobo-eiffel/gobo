@@ -584,15 +584,13 @@ feature -- Printing
 
 feature {ET_AST_PROCESSOR} -- Processing
 
-	process_alias_name_with_href (a_alias_name: ET_ALIAS_NAME; a_keyword: ET_KEYWORD; a_href: STRING)
+	process_alias_name_with_href (a_alias_name: ET_ALIAS_NAME; a_href: STRING)
 			-- Process `a_alias_name' with `a_href'.
-			-- `a_keyword' can be either "alias", "infix" or "prefix".
 		require
 			a_alias_name_not_void: a_alias_name /= Void
-			a_keyword_not_void: a_keyword /= Void
 			a_href_not_void: a_href /= Void
 		do
-			a_keyword.process (Current)
+			a_alias_name.alias_keyword.process (Current)
 			print_space
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 			print_character ('"')
@@ -607,6 +605,10 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 			print_character ('"')
 			print_end_span
+			if attached a_alias_name.convert_keyword as l_convert_keyword then
+				print_space
+				l_convert_keyword.process (Current)
+			end
 			comment_finder.find_comments (a_alias_name, comment_list)
 		end
 
@@ -675,6 +677,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
 			l_href: detachable STRING
+			i, nb: INTEGER
 		do
 			l_extended_feature_name := a_feature.extended_name
 			l_feature_name := l_extended_feature_name.feature_name
@@ -691,9 +694,13 @@ feature {ET_AST_PROCESSOR} -- Processing
 			end
 			if l_href /= Void then
 				process_feature_name_with_href (l_feature_name, l_href)
-				if attached l_extended_feature_name.alias_name as l_alias_name then
-					print_space
-					process_alias_name_with_href (l_alias_name, tokens.alias_keyword, l_href)
+				if attached l_extended_feature_name.alias_names as l_alias_names and then not l_alias_names.is_empty then
+					nb := l_alias_names.count
+					from i := 1 until i > nb loop
+						print_space
+						process_alias_name_with_href (l_alias_names.item (i), l_href)
+						i := i + 1
+					end
 				end
 			else
 				l_extended_feature_name.process (Current)
@@ -845,6 +852,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
 			l_href: detachable STRING
+			i, nb: INTEGER
 		do
 			l_extended_feature_name := a_rename.new_name
 			l_feature_name := l_extended_feature_name.feature_name
@@ -855,9 +863,13 @@ feature {ET_AST_PROCESSOR} -- Processing
 			end
 			if l_href /= Void then
 				process_feature_name_with_href (l_feature_name, l_href)
-				if attached l_extended_feature_name.alias_name as l_alias_name then
-					print_space
-					process_alias_name_with_href (l_alias_name, tokens.alias_keyword, l_href)
+				if attached l_extended_feature_name.alias_names as l_alias_names and then not l_alias_names.is_empty then
+					nb := l_alias_names.count
+					from i := 1 until i > nb loop
+						print_space
+						process_alias_name_with_href (l_alias_names.item (i), l_href)
+						i := i + 1
+					end
 				end
 			else
 				l_extended_feature_name.process (Current)

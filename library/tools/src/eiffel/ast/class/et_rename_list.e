@@ -115,7 +115,7 @@ feature -- Access
 				end
 			else
 				from i := 0 until i > nb loop
-					if attached storage.item (i).rename_pair.new_name.alias_name as l_alias_name and then l_alias_name.same_call_name (a_new_name) then
+					if attached storage.item (i).rename_pair.new_name.alias_names as l_alias_names and then l_alias_names.has_call_name (a_new_name) then
 						Result := count - i
 						i := nb + 1 -- Jump out of the loop.
 					else

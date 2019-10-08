@@ -10,6 +10,7 @@
   (like `STRING_8` and `STRING_32`).
 * Removed support for `infix "..."` and `prefix "..."` syntax notations.
   We should use `alias "..."` instead, as described in the ECMA standard.
+* Added support for multiple aliases (e.g. `f alias "[]" alias "@" (i: INTEGER): T`).
 
 ## Version 19.10.03.1 - 3 October 2019
 

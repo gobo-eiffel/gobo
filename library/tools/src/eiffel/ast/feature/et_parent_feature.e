@@ -137,13 +137,13 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	alias_name: detachable ET_ALIAS_NAME
-			-- Alias name, if any
+	alias_names: detachable ET_ALIAS_NAME_LIST
+			-- Alias names, if any
 		do
 			if attached new_name as l_new_name then
-				Result := l_new_name.new_name.alias_name
+				Result := l_new_name.new_name.alias_names
 			else
-				Result := precursor_feature.alias_name
+				Result := precursor_feature.alias_names
 			end
 		end
 

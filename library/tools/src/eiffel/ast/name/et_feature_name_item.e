@@ -5,7 +5,7 @@ note
 		"Eiffel feature names which appear in a comma-separated list of feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,8 +18,8 @@ inherit
 
 feature -- Access
 
-	alias_name: detachable ET_ALIAS_NAME
-			-- Alias name, if any
+	alias_names: detachable ET_ALIAS_NAME_LIST
+			-- Alias names, if any
 		do
 		end
 

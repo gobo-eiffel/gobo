@@ -5,7 +5,7 @@ note
 		"Eiffel lists of features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/08/02 $"
 	revision: "$Revision: #15 $"
@@ -102,7 +102,7 @@ feature -- Access
 			else
 				from i := count - 1 until i < 0 loop
 					a_feature := storage.item (i)
-					if attached a_feature.alias_name as l_alias_name and then l_alias_name.same_call_name (a_name) then
+					if attached a_feature.alias_names as l_alias_names and then l_alias_names.has_call_name (a_name) then
 						Result := a_feature
 						i := -1 -- Jump out of the loop
 					else
@@ -146,7 +146,7 @@ feature -- Access
 				i := count - declared_count
 				from until i > nb loop
 					a_feature := storage.item (i)
-					if attached a_feature.alias_name as l_alias_name and then l_alias_name.same_call_name (a_name) then
+					if attached a_feature.alias_names as l_alias_names and then l_alias_names.has_call_name (a_name) then
 						Result := a_feature
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -325,10 +325,10 @@ feature -- Basic operations
 			else
 				from i := count - 1 until i < 0 loop
 					l_feature := storage.item (i)
-					if not l_found and then attached l_feature.alias_name as l_alias_name and then l_alias_name.same_call_name (a_name) then
+					if not l_found and then attached l_feature.alias_names as l_alias_names and then l_alias_names.has_call_name (a_name) then
 						a_list.force_last (l_feature)
 						l_found := True
-					elseif attached l_feature.overloaded_alias_name as l_overloaded_alias_name and then l_overloaded_alias_name.same_call_name (a_name) then
+					elseif attached l_feature.overloaded_alias_names as l_overloaded_alias_names and then l_overloaded_alias_names.has_call_name (a_name) then
 						a_list.force_last (l_feature)
 					end
 					i := i - 1

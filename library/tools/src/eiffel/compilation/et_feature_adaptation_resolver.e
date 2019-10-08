@@ -106,8 +106,9 @@ feature {NONE} -- Feature recording
 			l_procedures: ET_PROCEDURE_LIST
 			other_feature: ET_FLATTENED_FEATURE
 			a_name: ET_FEATURE_NAME
-			l_alias_name: detachable ET_ALIAS_NAME
+			l_alias_name: ET_ALIAS_NAME
 			i, nb, nb2, nb3: INTEGER
+			j, l_alias_names_count: INTEGER
 		do
 			l_queries := current_class.queries
 			l_procedures := current_class.procedures
@@ -127,16 +128,20 @@ feature {NONE} -- Feature recording
 					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_query)
 				else
 					a_features.put_last_new (l_query, a_name)
-					l_alias_name := l_query.alias_name
-					if l_alias_name /= Void then
-						if l_query.is_infixable then
-							if l_alias_name.is_infixable then
-								l_alias_name.set_infix
+					if attached l_query.alias_names as l_alias_names then
+						l_alias_names_count := l_alias_names.count
+						from j := 1 until j > l_alias_names_count loop
+							l_alias_name := l_alias_names.item (j)
+							if l_query.is_infixable then
+								if l_alias_name.is_infixable then
+									l_alias_name.set_infix
+								end
+							elseif l_query.is_prefixable then
+								if l_alias_name.is_prefixable then
+									l_alias_name.set_prefix
+								end
 							end
-						elseif l_query.is_prefixable then
-							if l_alias_name.is_prefixable then
-								l_alias_name.set_prefix
-							end
+							j := j + 1
 						end
 					end
 				end
@@ -189,7 +194,9 @@ feature {NONE} -- Feature recording
 			a_name: ET_FEATURE_NAME
 			a_rename: ET_RENAME
 			i, nb, nb2, nb3: INTEGER
-			l_alias_name: detachable ET_ALIAS_NAME
+			l_alias_names: detachable ET_ALIAS_NAME_LIST
+			l_alias_name: ET_ALIAS_NAME
+			j, l_alias_names_count: INTEGER
 			l_feature_name: ET_FEATURE_NAME
 		do
 			if a_parent.renames /= Void then
@@ -228,7 +235,6 @@ feature {NONE} -- Feature recording
 				l_query := l_queries.item (i)
 				a_parent_feature := new_parent_feature (l_query, a_parent)
 				a_name := l_query.name
-				l_alias_name := l_query.alias_name
 				if has_rename then
 					rename_table.search (a_name)
 					if rename_table.found then
@@ -239,16 +245,21 @@ feature {NONE} -- Feature recording
 						a_rename.old_name.set_seed (l_query.first_seed)
 						a_name := a_rename.new_name.feature_name
 						a_name.set_seed (l_query.first_seed)
-						l_alias_name := a_rename.new_name.alias_name
-						if l_alias_name /= Void then
-							if l_query.is_infixable then
-								if l_alias_name.is_infixable then
-									l_alias_name.set_infix
+						l_alias_names := a_rename.new_name.alias_names
+						if l_alias_names /= Void then
+							l_alias_names_count := l_alias_names.count
+							from j := 1 until j > l_alias_names_count loop
+								l_alias_name := l_alias_names.item (j)
+								if l_query.is_infixable then
+									if l_alias_name.is_infixable then
+										l_alias_name.set_infix
+									end
+								elseif l_query.is_prefixable then
+									if l_alias_name.is_prefixable then
+										l_alias_name.set_prefix
+									end
 								end
-							elseif l_query.is_prefixable then
-								if l_alias_name.is_prefixable then
-									l_alias_name.set_prefix
-								end
+								j := j + 1
 							end
 						end
 					end
