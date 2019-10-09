@@ -35,7 +35,7 @@
 			<file_rule>
 				<exclude>/time$</exclude>
 			</file_rule>
-			<cluster name="time" location="./time/" recursive="true" hidden="true">
+			<cluster name="ge_time" location="./time/" recursive="true" hidden="true">
 				<condition>
 					<custom name="GOBO_EIFFEL" value="ge"/>
 				</condition>
