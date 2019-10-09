@@ -249,7 +249,7 @@ feature -- Output
 			put_character ('%N')
 		end
 
-	put_string, putstring (s: STRING)
+	put_string, putstring (s: READABLE_STRING_8)
 			-- Write `s' to medium.
 		do
 		end
@@ -259,7 +259,7 @@ feature -- Output
 		do
 		end
 
-	put_real, putreal (r: REAL_32)
+	put_real, putreal, put_real_32 (r: REAL_32)
 			-- Write `r' to medium.
 		do
 		end
@@ -309,7 +309,7 @@ feature -- Output
 		do
 		end
 
-	put_double, putdouble (d: REAL_64)
+	put_double, putdouble, put_real_64 (d: REAL_64)
 			-- Write `d' to medium.
 		do
 		end
@@ -322,13 +322,13 @@ feature -- Output
 
 feature -- Input
 
-	read_real, readreal
+	read_real, readreal, read_real_32
 			-- Read a new real.
 			-- Make result available in `last_real'.
 		do
 		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 			-- Read a new double.
 			-- Make result available in `last_double'.
 		do
@@ -427,7 +427,7 @@ feature {NONE} -- Not exported
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

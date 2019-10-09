@@ -260,14 +260,16 @@ feature -- Output
 			console_pc (file_pointer, c)
 		end
 
-	put_string, putstring (s: STRING)
+	put_string, putstring (s: READABLE_STRING_8)
 			-- Write `s' at end of default output.
 		local
+			n: like {READABLE_STRING_8}.count
 			external_s: ANY
 		do
-			if s.count /= 0 then
+			n := s.count
+			if n > 0 then
 				external_s := s.area
-				console_ps (file_pointer, $external_s, s.count)
+				console_ps (file_pointer, $external_s, n)
 			end
 		end
 
@@ -466,7 +468,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

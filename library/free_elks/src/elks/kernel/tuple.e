@@ -112,7 +112,7 @@ feature -- Access
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_numeric: is_double_item (index)
+			is_numeric: is_real_64_item (index)
 		external
 			"built_in"
 		end
@@ -220,7 +220,7 @@ feature -- Access
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_real_or_integer: is_real_item (index)
+			is_real_or_integer: is_real_32_item (index)
 		external
 			"built_in"
 		end
@@ -684,14 +684,6 @@ feature -- Type queries
 			Result := item_code (index) = character_32_code
 		end
 
-	is_double_item (index: INTEGER): BOOLEAN
-			-- Is item at `index' a REAL_64?
-		require
-			valid_index: valid_index (index)
-		do
-			Result := item_code (index) = real_64_code
-		end
-
 	is_natural_8_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' an NATURAL_8?
 		require
@@ -764,12 +756,36 @@ feature -- Type queries
 			Result := item_code (index) = pointer_code
 		end
 
-	is_real_item (index: INTEGER): BOOLEAN
+	is_real_32_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a REAL_32?
 		require
 			valid_index: valid_index (index)
 		do
 			Result := item_code (index) = real_32_code
+		end
+
+	is_real_item (index: INTEGER): BOOLEAN
+			-- Is item at `index' a REAL_32?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := is_real_32_item (index)
+		end
+
+	is_real_64_item (index: INTEGER): BOOLEAN
+			-- Is item at `index' a REAL_64?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := item_code (index) = real_64_code
+		end
+
+	is_double_item (index: INTEGER): BOOLEAN
+			-- Is item at `index' a REAL_64?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := is_real_64_item (index)
 		end
 
 	is_reference_item (index: INTEGER): BOOLEAN
@@ -829,14 +845,6 @@ feature -- Type queries
 			-- Are all items of type CHARACTER_32?
 		do
 			Result := is_tuple_uniform (character_32_code)
-		ensure
-			yes_if_empty: (count = 0) implies Result
-		end
-
-	is_uniform_double: BOOLEAN
-			-- Are all items of type REAL_64?
-		do
-			Result := is_tuple_uniform (real_64_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -913,10 +921,34 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_real: BOOLEAN
+	is_uniform_real_32: BOOLEAN
 			-- Are all items of type REAL_32?
 		do
 			Result := is_tuple_uniform (real_32_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_real: BOOLEAN
+			-- Are all items of type REAL_32?
+		do
+			Result := is_uniform_real_32
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_real_64: BOOLEAN
+			-- Are all items of type REAL_64?
+		do
+			Result := is_tuple_uniform (real_64_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_double: BOOLEAN
+			-- Are all items of type REAL_64?
+		do
+			Result := is_uniform_real_64
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -1383,7 +1415,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

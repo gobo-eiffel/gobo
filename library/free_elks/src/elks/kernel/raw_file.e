@@ -95,13 +95,13 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL_32)
+	put_real, putreal, put_real_32 (r: REAL_32)
 			-- Write binary value of `r' at current position.
 		do
 			file_prb (file_pointer, r)
 		end
 
-	put_double, putdouble (d: REAL_64)
+	put_double, putdouble, put_real_64 (d: REAL_64)
 			-- Write binary value `d' at current position.
 		do
 			file_pdb (file_pointer, d)
@@ -185,14 +185,14 @@ feature -- Input
 			last_natural_64 := integer_buffer.read_natural_64 (0)
 		end
 
-	read_real, readreal
+	read_real, readreal, read_real_32
 			-- Read the binary representation of a new real
 			-- from file. Make result available in `last_real'.
 		do
 			last_real := file_grb (file_pointer)
 		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 			-- Read the binary representation of a new double
 			-- from file. Make result available in `last_double'.
 		do

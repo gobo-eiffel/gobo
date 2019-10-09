@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Ancestor of all exception classes.
 	]"
@@ -72,16 +72,15 @@ feature -- Access
 			end
 		end
 
-	description: detachable READABLE_STRING_GENERAL
+	description: detachable READABLE_STRING_32
 			-- Detailed description of current exception
 		local
-			u: UTF_CONVERTER
 			l_res: STRING_32
 		do
-			if attached c_description as l_m then
+			if attached c_description as d then
 					-- Description is encoded in UTF-8 by the runtime.
-				create l_res.make (l_m.count)
-				u.utf_8_0_subpointer_into_escaped_string_32 (l_m.managed_data, 0, l_m.count - 1, False, l_res)
+				create l_res.make (d.count)
+				{UTF_CONVERTER}.utf_8_0_subpointer_into_escaped_string_32 (d.managed_data, 0, d.count - 1, False, l_res)
 				Result := l_res
 			end
 		end
@@ -229,14 +228,11 @@ feature -- Output
 	out: STRING
 			-- New string containing terse printable representation
 			-- of current object
-		local
-			t: detachable STRING_32
 		do
-			Result := generating_type.name
-			t := trace
-			if t /= Void then
+			Result := generating_type.name.to_string_8
+			if attached trace as t then
 				Result.append_character ('%N')
-				Result.append_string (t.as_string_8)
+				Result.append_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (t))
 			end
 		end
 
@@ -299,7 +295,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			-- String representation of the exception trace
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

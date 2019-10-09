@@ -45,6 +45,19 @@ inherit
 			prepend_string_general
 		end
 
+	DYNAMIC_TABLE [CHARACTER_8, INTEGER]
+		rename
+			force as put,
+			valid_key as valid_index
+		undefine
+			copy,
+			is_equal,
+			out
+		redefine
+			prune_all,
+			changeable_comparison_criterion
+		end
+
 	INDEXABLE [CHARACTER_8, INTEGER]
 		rename
 			upper as count
@@ -87,6 +100,7 @@ create
 	make_from_c,
 	make_from_c_substring,
 	make_from_c_pointer,
+	make_from_c_byte_array,
 	make_from_cil,
 	make_from_separate
 
@@ -224,12 +238,6 @@ feature -- Status report
 
 	extendible: BOOLEAN = True
 			-- May new items be added? (Answer: yes.)
-
-	prunable: BOOLEAN
-			-- May items be removed? (Answer: yes.)
-		do
-			Result := True
-		end
 
 	changeable_comparison_criterion: BOOLEAN = False
 
@@ -1786,7 +1794,7 @@ invariant
 	compare_character: not object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

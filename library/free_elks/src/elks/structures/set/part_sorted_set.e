@@ -27,6 +27,7 @@ class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
 	PART_SORTED_TWO_WAY_LIST [G]
 		rename
 			extend as pstwl_extend,
+			has as has alias "∋",
 			prune as pstwl_prune,
 			put as pstwl_put,
 			merge as pstwl_merge
@@ -148,7 +149,7 @@ feature -- Duplication
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

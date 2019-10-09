@@ -40,7 +40,8 @@ class ARRAYED_LIST [G] inherit
 			put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search,
 			append, valid_index, is_equal, copy,
-			for_all, there_exists, do_all, do_if
+			for_all, there_exists, do_all, do_if,
+			remove_i_th
 		end
 
 	MISMATCH_CORRECTOR
@@ -103,12 +104,21 @@ feature {NONE} -- Initialization
 			-- Create a circular chain with all items obtained from `other`.
 		local
 			a: like area_v2
+			i, n: like area_v2.count
 		do
-			make (estimated_count_of (other))
+			n := estimated_count_of (other)
+			make (n)
 			a := area_v2
 			across
 				other as o
 			loop
+				i := i + 1
+				if i > n then
+						-- The estimation could be approximate, resize the storage if needed.
+					n := i
+					a := a.aliased_resized_area (n)
+					area_v2 := a
+				end
 				a.extend (o.item)
 			end
 		end
@@ -706,6 +716,19 @@ feature -- Removal
 			index: index = old index
 		end
 
+	remove_i_th (i: INTEGER)
+			-- <Precursor>
+		do
+			if i < count then
+				area_v2.move_data (i, i - 1, count - i)
+			end
+			area_v2.remove_tail (1)
+			if index > i then
+					-- Take into account that the old `i`-th element has been removed.
+				index := index - 1
+			end
+		end
+
 	prune_all (v: like item)
 			-- Remove all occurrences of `v'.
 			-- (Reference or object equality,
@@ -871,7 +894,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033: very large class"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

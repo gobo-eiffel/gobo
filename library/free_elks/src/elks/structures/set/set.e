@@ -1,18 +1,20 @@
-
+﻿
 note
 	description: "Collection, where each element must be unique."
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: set;
-	access: membership;
-	contents: generic;
+	names: set
+	access: membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class SET [G] inherit
 
 	COLLECTION [G]
+		rename
+			has as has alias "∋"
 		redefine
 			changeable_comparison_criterion
 		end
@@ -56,7 +58,7 @@ feature -- Removal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

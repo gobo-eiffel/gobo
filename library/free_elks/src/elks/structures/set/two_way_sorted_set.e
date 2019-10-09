@@ -41,6 +41,7 @@ class TWO_WAY_SORTED_SET [G -> COMPARABLE] inherit
 	SORTED_TWO_WAY_LIST [G]
 		rename
 			extend as stwl_extend,
+			has as has alias "∋",
 			put as stwl_put,
 			prune as stwl_prune,
 			merge as stwl_merge
@@ -275,7 +276,7 @@ feature {NONE} -- Inapplicable
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

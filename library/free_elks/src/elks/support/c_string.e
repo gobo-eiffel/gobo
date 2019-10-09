@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A low-level string class to solve some garbage %
 		%collector problems (mainly objects moving around) when %
 		%interfacing with C APIs."
@@ -285,6 +285,34 @@ feature -- Access
 			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]			
 		end
 
+	read_unicode_substring_into_character_32_area (a_area: SPECIAL [CHARACTER_32]; start_pos, end_pos: INTEGER)
+			-- Copy of Unicode substring containing all characters at indices
+			-- between `start_pos' and `end_pos' into `a_area'.
+		require
+			a_area_not_void: a_area /= Void
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_position_not_too_big: end_pos <= capacity
+			a_area_large_enough: a_area.count >= end_pos - start_pos + 1
+		local
+			l_data: like managed_data
+			i, j, nb: INTEGER
+			uc: NATURAL_32
+		do
+			from
+				i := start_pos - 1
+				nb := end_pos - start_pos
+				l_data := managed_data
+			until
+				i > nb
+			loop
+				uc := l_data.read_natural_32 (i)
+				a_area.put (uc.to_character_32, j)
+				i := i + 4
+				j := j + 1
+			end
+		end
+
 	item: POINTER
 			-- Get pointer to allocated area.
 		do
@@ -406,7 +434,7 @@ invariant
 	count_not_negative: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

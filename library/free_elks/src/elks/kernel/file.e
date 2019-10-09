@@ -1101,14 +1101,16 @@ feature -- Element change
 		deferred
 		end
 
-	put_string, putstring (s: STRING)
+	put_string, putstring (s: READABLE_STRING_8)
 			-- Write `s' at current position.
 		local
+			n: like {READABLE_STRING_8}.count
 			ext_s: ANY
 		do
-			if s.count /= 0 then
+			n := s.count
+			if n > 0 then
 				ext_s := s.area
-				file_ps (file_pointer, $ext_s, s.count)
+				file_ps (file_pointer, $ext_s, n)
 			end
 		end
 
@@ -1382,7 +1384,7 @@ feature -- Removal
 
 feature -- Input
 
-	read_real, readreal
+	read_real, readreal, read_real_32
 			-- Read a new real.
 			-- Make result available in `last_real'.
 		require else
@@ -1390,7 +1392,7 @@ feature -- Input
 		deferred
 		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 			-- Read a new double.
 			-- Make result available in `last_double'.
 		require else

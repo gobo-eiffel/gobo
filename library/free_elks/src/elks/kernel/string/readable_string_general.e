@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Common ancestors to all STRING classes. Read-only interface."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -798,8 +798,25 @@ feature -- Conversion
 			-- Convert `Current' as a STRING_8.
 		require
 			is_valid_as_string_8: is_valid_as_string_8
+		local
+			i, nb: INTEGER
 		do
-			Result := as_string_8
+			if attached {STRING_8} Current as s then
+				Result := s
+			else
+				nb := count
+				create Result.make (nb)
+				Result.set_count (nb)
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					check from_precondition: Result.valid_code (code (i)) end
+					Result.put_code (code (i), i)
+					i := i + 1
+				end
+			end
 		ensure
 			as_string_8_not_void: Result /= Void
 			identity: (conforms_to ("") and Result = Current) or (not conforms_to ("") and Result /= Current)
@@ -818,9 +835,11 @@ feature -- Conversion
 		end
 
 	as_readable_string_8: READABLE_STRING_8
-			--
+			-- Convert `Current` as a READABLE_STRING_8. If a code of `Current` is
+			-- not a valid code for a READABLE_STRING_8 it is replaced with the null
+			-- character.
 		obsolete
-			"Use explicit conversion `to_string_8' instead. [2017-05-31]"
+			"Use explicit conversion `to_string_8' with a test that the string is made of ASCII characters only. [2017-05-31]"
 		do
 			Result := as_string_8
 		end
@@ -829,6 +848,15 @@ feature -- Conversion
 			-- Convert `Current' as a STRING_8. If a code of `Current' is
 			-- not a valid code for a STRING_8 it is replaced with the null
 			-- character.
+		obsolete
+			"[
+				For 32-bit strings:
+					- use explicit conversion `to_string_8` with a test that the string is made of ASCII characters only.
+				For 8-bit strings:
+					- consider changing the type of reattachmanet target to READABLE_STRING_8 or
+					- use explicit conversion `to_string_8` to avoid implicit performance penalty.
+				[2019-11-30]
+			]"
 		local
 			i, nb: INTEGER
 			l_code: like code
@@ -1260,7 +1288,7 @@ feature -- Access: Cursor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

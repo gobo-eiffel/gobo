@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Sequences of immutable 32-bit characters, accessible through integer indices
 		in a contiguous range.
@@ -48,6 +48,7 @@ create
 	make_from_string_8,
 	make_from_string_32,
 	make_from_c,
+	make_from_c_byte_array,
 	make_from_cil,
 	make_from_separate
 
@@ -342,7 +343,7 @@ feature -- Transformation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

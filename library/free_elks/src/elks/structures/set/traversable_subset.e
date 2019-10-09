@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "Subsets that are traversable sequentially"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: traversable_subset, set, subset;
-	access: sequential;
-	contents: generic;
+	names: traversable_subset, set, subset
+	access: sequential
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -45,14 +45,14 @@ feature -- Comparison
 			end
 		end
 
-	is_subset (other: TRAVERSABLE_SUBSET [G]): BOOLEAN
+	is_subset alias "⊆" (other: TRAVERSABLE_SUBSET [G]): BOOLEAN
 			-- Is current set a subset of `other'?
 		do
 			if not other.is_empty and then count <= other.count then
 				from
 					start
 				until
-					off or else not other.has (item)
+					off or else not (other ∋ item)
 				loop
 					forth
 				end
@@ -158,7 +158,7 @@ feature -- Basic operations
 				until
 					off
 				loop
-					if other.has (item) then
+					if other ∋ item then
 						forth
 					else
 						remove
@@ -179,7 +179,7 @@ feature -- Basic operations
 				until
 					off
 				loop
-					if other.has (item) then
+					if other ∋ item then
 						remove
 					else
 						forth
@@ -222,8 +222,8 @@ invariant
 	count_range: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "Sets whose items may be compared according to a total order relation"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: comparable_set, comparable_struct;
-	access: membership, min, max;
-	contents: generic;
+	names: comparable_set, comparable_struct
+	access: membership, min, max
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,6 +18,7 @@ deferred class COMPARABLE_SET [G -> COMPARABLE] inherit
 
 	COMPARABLE_STRUCT [G]
 		rename
+			has as has alias "∋",
 			min as cs_min,
 			max as cs_max
 		export
@@ -50,7 +51,7 @@ feature -- Measurement
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

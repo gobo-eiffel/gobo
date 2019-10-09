@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Facilities for adapting the exception handling mechanism.
 			This class may be used as ancestor by classes needing its facilities.
@@ -21,8 +21,8 @@ feature -- Status report
 	meaning (except: INTEGER): detachable STRING
 			-- A message in English describing what `except' is
 		do
-			if attached exception_manager.exception_from_code (except) as l_exception then
-				Result := l_exception.tag.as_string_8
+			if attached exception_manager.exception_from_code (except) as e then
+				Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (e.tag)
 			end
 		ensure
 			instance_free: class
@@ -64,8 +64,8 @@ feature -- Status report
 		require
 			applicable: is_developer_exception
 		do
-			if attached exception_manager.last_exception as l_exception and then attached l_exception.original.description as l_des then
-				Result := l_des.as_string_8
+			if attached exception_manager.last_exception as e and then attached e.original.description as d then
+				Result := {UTF_CONVERTER}.escaped_utf_32_string_to_utf_8_string_8 (d)
 			end
 		ensure
 			instance_free: class
@@ -99,8 +99,8 @@ feature -- Status report
 	tag_name: detachable STRING
 			-- Tag of last violated assertion clause
 		do
-			if attached exception_manager.last_exception as l_exception and then attached l_exception.description as l_des then
-				Result := l_des.as_string_8
+			if attached exception_manager.last_exception as e and then attached e.description as d then
+				Result := {UTF_CONVERTER}.escaped_utf_32_string_to_utf_8_string_8 (d)
 			end
 		ensure
 			instance_free: class
@@ -141,8 +141,8 @@ feature -- Status report
 	exception_trace: detachable STRING
 			-- String representation of the exception trace
 		do
-			if attached exception_manager.last_exception as l_exception and then attached l_exception.original.trace as l_trace then
-				Result := l_trace.as_string_8
+			if attached exception_manager.last_exception as e and then attached e.original.trace as t then
+				Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (t)
 			end
 		ensure
 			instance_free: class
@@ -152,8 +152,8 @@ feature -- Status report
 			-- Assertion tag for original form of last
 			-- assertion violation.
 		do
-			if attached exception_manager.last_exception as l_exception and then attached l_exception.cause.original.description as l_des then
-				Result := l_des.as_string_8
+			if attached exception_manager.last_exception as e and then attached e.cause.original.description as d then
+				Result := {UTF_CONVERTER}.escaped_utf_32_string_to_utf_8_string_8 (d)
 			end
 		ensure
 			instance_free: class
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

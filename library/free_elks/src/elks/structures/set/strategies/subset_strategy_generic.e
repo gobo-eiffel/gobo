@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 		Strategies for calculating several features for subsets containing
@@ -33,11 +33,11 @@ feature -- Comparison
 				not Result or else (set1.after and set2.after)
 			loop
 				if not set1.after then
-					Result := not tmp_set.has (set1.item)
+					Result := not (tmp_set ∋ set1.item)
 					if Result then tmp_set.put (set1.item) end
 				end
 				if Result and then not set2.after then
-					Result := not tmp_set.has (set2.item)
+					Result := not (tmp_set ∋ set2.item)
 					if Result then tmp_set.put (set2.item) end
 				end
 				set1.forth
@@ -77,8 +77,8 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

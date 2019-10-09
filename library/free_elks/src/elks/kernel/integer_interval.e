@@ -11,6 +11,8 @@ class
 
 inherit
 	RESIZABLE [INTEGER]
+		rename
+			has as has alias "∋"
 		undefine
 			changeable_comparison_criterion
 		redefine
@@ -19,6 +21,7 @@ inherit
 
 	INDEXABLE [INTEGER, INTEGER]
 		rename
+			has as has alias "∋",
 			item as item alias "[]",
 			put as indexable_put
 		undefine
@@ -99,7 +102,7 @@ feature -- Access
 			Result := i
 		end
 
-	has, valid_index (v: INTEGER): BOOLEAN
+	has alias "∋", valid_index (v: INTEGER): BOOLEAN
 			-- Does `v' appear in interval?
 		do
 			Result :=
@@ -446,7 +449,7 @@ invariant
 	not_infinite: upper_defined and lower_defined
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

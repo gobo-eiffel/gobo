@@ -18,7 +18,7 @@ deferred class SUBSET [G] inherit
 
 feature -- Comparison
 
-	is_subset (other: SUBSET [G]): BOOLEAN
+	is_subset alias "⊆" (other: SUBSET [G]): BOOLEAN
 			-- Is current set a subset of `other'?
 		require
 			set_exists: other /= Void
@@ -26,13 +26,13 @@ feature -- Comparison
 		deferred
 		end
 
-	is_superset (other: SUBSET [G]): BOOLEAN
+	is_superset alias "⊇" (other: SUBSET [G]): BOOLEAN
 			-- Is current set a superset of `other'?
 		require
 			set_exists: other /= Void
 			same_rule: object_comparison = other.object_comparison
 		do
-			Result := other.is_subset (Current)
+			Result := other ⊆ Current
 		end
 
 	disjoint (other: SUBSET [G]): BOOLEAN
@@ -120,8 +120,8 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

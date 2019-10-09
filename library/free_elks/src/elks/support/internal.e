@@ -108,12 +108,24 @@ feature -- Access
 		end
 
 	type_name (object: ANY): STRING
-			-- Name of `object''s generating type (type of which `object'
-			-- is a direct instance).
+			-- Name of `object`'s generating type
+			-- (type of which `object` is a direct instance).
+		obsolete "Use `type_name_32` instead. [2019-11-30]"
 		require
 			object_not_void: object /= Void
 		do
-			Result := object.generating_type.name
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (type_name_32 (object))
+		ensure
+			instance_free: class
+		end
+
+	type_name_32 (object: ANY): READABLE_STRING_32
+			-- Name of `object`'s generating type
+			-- (type of which `object` is a direct instance).
+		require
+			object_not_void: object /= Void
+		do
+			Result := object.generating_type.name_32
 		ensure
 			instance_free: class
 		end
@@ -738,7 +750,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

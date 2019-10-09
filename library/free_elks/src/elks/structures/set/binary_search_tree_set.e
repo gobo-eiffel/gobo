@@ -100,7 +100,7 @@ feature -- Status report
 	before: BOOLEAN
 		-- Is there no valid cursor position to the left of cursor?
 
-	has (v: like item): BOOLEAN
+	has alias "∋" (v: like item): BOOLEAN
 			-- Is there a node with item `v' in tree?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -373,7 +373,7 @@ invariant
 				object_comparison = t.object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Files viewed as persistent sequences of ASCII characters"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -98,13 +98,13 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL_32)
+	put_real, putreal, put_real_32 (r: REAL_32)
 			-- Write ASCII value of `r' at current position.
 		do
 			file_pr (file_pointer, r)
 		end
 
-	put_double, putdouble (d: REAL_64)
+	put_double, putdouble, put_real_64 (d: REAL_64)
 			-- Write ASCII value `d' at current position.
 		do
 			file_pd (file_pointer, d)
@@ -113,7 +113,8 @@ feature -- Output
 feature -- Input
 
 	read_integer_64
-			--
+			-- Read the ASCII representation of a new 64-bit integer
+			-- from file. Make result available in `last_integer_64`.
 		do
 			read_integer_with_no_type
 			last_integer_64 := ctoi_convertor.parsed_integer_64
@@ -176,14 +177,14 @@ feature -- Input
 			last_natural_8 := ctoi_convertor.parsed_natural_8
 		end
 
-	read_real, readreal
+	read_real, readreal, read_real_32
 			-- Read the ASCII representation of a new real
 			-- from file. Make result available in `last_real'.
 		do
 			last_real := file_gr (file_pointer)
 		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 			-- Read the ASCII representation of a new double
 			-- from file. Make result available in `last_double'.
 		do
