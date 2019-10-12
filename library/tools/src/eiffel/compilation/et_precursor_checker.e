@@ -354,7 +354,7 @@ feature {ET_AST_NODE} -- Processing
 			if attached an_expression.until_conditional as a_conditional then
 				a_conditional.expression.process (Current)
 			end
-			an_expression.iteration_conditional.expression.process (Current)
+			an_expression.iteration_expression.process (Current)
 			if attached an_expression.variant_part as a_variant_part then
 				a_variant_part.expression.process (Current)
 			end

@@ -92,8 +92,8 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_across_cursor: BOOLEAN
-			-- Is current call name actually an across cursor name?
+	is_iteration_cursor: BOOLEAN
+			-- Is current call name actually an iteration cursor name?
 		do
 			-- Result := False
 		end
@@ -342,12 +342,12 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	across_cursor_name: ET_IDENTIFIER
-			-- Current name viewed as an across cursor name
+	iteration_cursor_name: ET_IDENTIFIER
+			-- Current name viewed as an iteration cursor name
 		require
-			is_across_cursor: is_across_cursor
+			is_iteration_cursor: is_iteration_cursor
 		do
-			check is_across_cursor: False then end
+			check is_iteration_cursor: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

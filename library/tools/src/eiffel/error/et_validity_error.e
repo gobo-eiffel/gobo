@@ -3386,14 +3386,14 @@ feature {NONE} -- Initialization
 	make_veen9a (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new VEEN-9 error: `an_identifier', appearing in `a_feature'
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- across cursor that is used outside of its scope.
+			-- iteration cursor that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_across_cursor: an_identifier.is_across_cursor
+			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
 			a_feature_not_void: a_feature /= Void
 		do
 			current_class := a_class
@@ -3424,21 +3424,21 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = across cursor
+			-- dollar7: $7 = iteration cursor
 			-- dollar8: $8 = feature name
 		end
 
 	make_veen9b (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER)
 			-- Create a new VEEN-9 error: `an_identifier', appearing in the invariant
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- across cursor that is used outside of its scope.
+			-- iteration cursor that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_across_cursor: an_identifier.is_across_cursor
+			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -3467,7 +3467,7 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = across cursor
+			-- dollar7: $7 = iteration cursor
 		end
 
 	make_vevi0a (a_class, a_class_impl: ET_CLASS; a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
@@ -8665,20 +8665,20 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = base type of across iterable expression
 		end
 
-	make_voit2a (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_feature: ET_FEATURE)
-			-- Create a new VOIT-2 error: The cursor of `a_across_component' has the same
+	make_voit2a (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_feature: ET_FEATURE)
+			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has the same
 			-- name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			a_feature_not_void: a_feature /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component.cursor_name.position
+			position := a_iteration_component.cursor_name.position
 			code := template_code (voit2a_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2a_default_template)
@@ -8688,7 +8688,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8701,11 +8701,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
-	make_voit2b (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; arg: ET_FORMAL_ARGUMENT)
-			-- Create a new VOIT-2 error: The cursor of `a_across_component' has
+	make_voit2b (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; arg: ET_FORMAL_ARGUMENT)
+			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has
 			-- the same name as argument `arg' of an enclosing feature or
 			-- inline agent.
 			--
@@ -8713,12 +8713,12 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			arg_not_void: arg /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component.cursor_name.position
+			position := a_iteration_component.cursor_name.position
 			code := template_code (voit2b_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2b_default_template)
@@ -8728,7 +8728,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8741,11 +8741,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
-	make_voit2c (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_local: ET_LOCAL_VARIABLE)
-			-- Create a new VOIT-2 error: The cursor of `a_across_component' has
+	make_voit2c (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_local: ET_LOCAL_VARIABLE)
+			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has
 			-- the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -8753,12 +8753,12 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			a_local_not_void: a_local /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component.cursor_name.position
+			position := a_iteration_component.cursor_name.position
 			code := template_code (voit2c_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2c_default_template)
@@ -8768,7 +8768,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8781,23 +8781,23 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
-	make_voit2d (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_object_test: ET_NAMED_OBJECT_TEST)
-			-- Create a new VOIT-2 error: `a_across_component' appears in the scope
+	make_voit2d (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_object_test: ET_NAMED_OBJECT_TEST)
+			-- Create a new VOIT-2 error: `a_iteration_component' appears in the scope
 			-- of the local of `a_object_test' with the same local name.
 			--
 			-- ECMA 367-2: p.127
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			a_object_test_not_void: a_object_test /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component.cursor_name.position
+			position := a_iteration_component.cursor_name.position
 			code := template_code (voit2d_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2d_default_template)
@@ -8807,7 +8807,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8820,23 +8820,23 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
-	make_voit2e (a_class: ET_CLASS; a_across_component1, a_across_component2: ET_ACROSS_COMPONENT)
-			-- Create a new VUOT-1 error: `a_across_component1' appears in the scope
-			-- of the cursor of `a_across_component2' with the same cursor name.
+	make_voit2e (a_class: ET_CLASS; a_iteration_component1, a_iteration_component2: ET_ITERATION_COMPONENT)
+			-- Create a new VUOT-1 error: `a_iteration_component1' appears in the scope
+			-- of the cursor of `a_iteration_component2' with the same cursor name.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component1_not_void: a_across_component1 /= Void
-			a_across_component2_not_void: a_across_component2 /= Void
+			a_iteration_component1_not_void: a_iteration_component1 /= Void
+			a_iteration_component2_not_void: a_iteration_component2 /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component1.cursor_name.position
+			position := a_iteration_component1.cursor_name.position
 			code := template_code (voit2e_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2e_default_template)
@@ -8846,7 +8846,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component1.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component1.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8859,7 +8859,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
 	make_vomb1a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
@@ -9727,9 +9727,9 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local name
 		end
 
-	make_vpir1g (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_across_component: ET_ACROSS_COMPONENT)
+	make_vpir1g (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_iteration_component: ET_ITERATION_COMPONENT)
 			-- Create a new VPIR-1 error: `arg' in inline agent `an_agent' has
-			-- the same name as the cursor of `a_across_component' of an enclosing
+			-- the same name as the cursor of `a_iteration_component' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
 			--
 			-- Not in ECMA.
@@ -9738,7 +9738,7 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			arg_not_void: arg /= Void
 			an_agent_not_void: an_agent /= Void
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -9770,9 +9770,9 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = argument name
 		end
 
-	make_vpir1h (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_across_component: ET_ACROSS_COMPONENT)
+	make_vpir1h (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_iteration_component: ET_ITERATION_COMPONENT)
 			-- Create a new VPIR-1 error: `a_local' in inline agent `an_agent' has
-			-- the same name as the cursor of `a_across_component' of an enclosing
+			-- the same name as the cursor of `a_iteration_component' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
 			--
 			-- Not in ECMA.
@@ -9781,7 +9781,7 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_local_not_void: a_local /= Void
 			an_agent_not_void: an_agent /= Void
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -12720,16 +12720,16 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot1e (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_across_component: ET_ACROSS_COMPONENT)
+	make_vuot1e (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_iteration_component: ET_ITERATION_COMPONENT)
 			-- Create a new VUOT-1 error: `a_object_test' appears in the scope
-			-- of the cursor of `a_across_component' with the same local name.
+			-- of the cursor of `a_iteration_component' with the same local name.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_object_test_not_void: a_object_test /= Void
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -15785,8 +15785,8 @@ feature {NONE} -- Implementation
 	veen2g_default_template: STRING = "entity 'Result' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure."
 	veen8a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	veen8b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
-	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an across cursor that is used outside of its scope."
-	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an across cursor that is used outside of its scope."
+	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an iteration cursor that is used outside of its scope."
+	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an iteration cursor that is used outside of its scope."
 	vevi0a_default_template: STRING = "local entity `$7' declared as attached is used before being initialized."
 	vevi0b_default_template: STRING = "entity 'Result' declared as attached is used before being initialized."
 	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of function `$7'."
@@ -15894,11 +15894,11 @@ feature {NONE} -- Implementation
 	vmss2a_default_template: STRING = "feature name `$7' appears twice in the Select subclause of parent $8."
 	vmss3a_default_template: STRING = "feature name `$7' appears in the Select subclause of parent $8 but is not replicated."
 	voit1a_default_template: STRING = "the type '$7' of the across iterable expression does not conform to any generic derivation of ITERABLE."
-	voit2a_default_template: STRING = "across cursor name '$6' is also the final name of a feature."
-	voit2b_default_template: STRING = "across cursor name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
-	voit2c_default_template: STRING = "across cursor name '$6' is also the name of a local variable of an enclosing feature or inline agent."
-	voit2d_default_template: STRING = "across with cursor name '$6' appears in the scope of an object-test local with the same name."
-	voit2e_default_template: STRING = "across with cursor name '$6' appears in the scope of another across cursor with the same name."
+	voit2a_default_template: STRING = "iteration cursor name '$6' is also the final name of a feature."
+	voit2b_default_template: STRING = "iteration cursor name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
+	voit2c_default_template: STRING = "iteration cursor name '$6' is also the name of a local variable of an enclosing feature or inline agent."
+	voit2d_default_template: STRING = "iteration with cursor name '$6' appears in the scope of an object-test local with the same name."
+	voit2e_default_template: STRING = "iteration with cursor name '$6' appears in the scope of another across cursor with the same name."
 	vomb1a_default_template: STRING = "inspect expression of type '$7' different from INTEGER or CHARACTER."
 	vomb2a_default_template: STRING = "inspect constant of type '$7' different from type '$8' of inspect expression."
 	vomb2b_default_template: STRING = "inspect choice `$7' is not a constant attribute."
@@ -15917,8 +15917,8 @@ feature {NONE} -- Implementation
 	vpir1d_default_template: STRING = "local variable name '$7' in inline agent is also the name of a local variable of an enclosing feature or inline agent."
 	vpir1e_default_template: STRING = "argument name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir1f_default_template: STRING = "local variable name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1g_default_template: STRING = "argument name '$7' in inline agent is also the name of an across cursor of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1h_default_template: STRING = "local variable name '$7' in inline agent is also the name of an across cursor of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1g_default_template: STRING = "argument name '$7' in inline agent is also the name of an iteration cursor of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1h_default_template: STRING = "local variable name '$7' in inline agent is also the name of an iteration cursor of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir3a_default_template: STRING = "inline agents cannot be of the once form."
 	vpir3b_default_template: STRING = "inline agents cannot be of the external form."
 	vqmc1a_default_template: STRING = "boolean constant attribute `$7' is not declared of type BOOLEAN."
@@ -15982,7 +15982,7 @@ feature {NONE} -- Implementation
 	vuot1b_default_template: STRING = "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING = "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	vuot1d_default_template: STRING = "object-test with local name '$6' appears in the scope of another object-test local with the same name."
-	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the scope of an across cursor with the same name."
+	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the scope of an iteration cursor with the same name."
 	vuot1f_default_template: STRING = "the scope of object-test with local name '$6' overlaps with the scope of another object-test with the same local name."
 	vuot3a_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the same feature `$7' or in the same inline agent."
 	vuot3b_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."

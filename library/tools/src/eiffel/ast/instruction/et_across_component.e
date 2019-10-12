@@ -14,9 +14,7 @@ deferred class ET_ACROSS_COMPONENT
 
 inherit
 
-	ET_AST_NODE
-
-	HASHABLE
+	ET_ITERATION_COMPONENT
 
 feature -- Status report
 
@@ -32,23 +30,42 @@ feature -- Access
 	across_keyword: ET_KEYWORD
 			-- 'across' keyword
 
-	iterable_expression: ET_EXPRESSION
-			-- Iterable expression
-
 	as_keyword: ET_KEYWORD
 			-- 'as' or 'is' keyword
 
-	cursor_name: ET_IDENTIFIER
-			-- Iteration local name;
-			-- It's either the name of the iteration cursor,
-			-- or a folded form for the calls to its 'item' feature
-			-- (when using the 'is' keyword instead of 'as', then
-			-- unfolded form `cursor_name' is the `unfolded_cursor_name'.item).
+	invariant_part: detachable ET_LOOP_INVARIANTS
+			-- Invariant part
 
-	hash_code: INTEGER
-			-- Hash value
+	variant_part: detachable ET_VARIANT
+			-- Variant part
+
+	until_conditional: detachable ET_CONDITIONAL
+			-- Until conditional
+
+	end_keyword: ET_KEYWORD
+			-- 'end' keyword
+
+	position: ET_POSITION
+			-- Position of first character of
+			-- current node in source code
 		do
-			Result := cursor_name.hash_code
+			if not across_keyword.position.is_null then
+				Result := across_keyword.position
+			else
+				Result := iterable_expression.position
+			end
+		end
+
+	first_leaf: ET_AST_LEAF
+			-- First leaf node in current node
+		do
+			Result := across_keyword
+		end
+
+	last_leaf: ET_AST_LEAF
+			-- Last leaf node in current node
+		do
+			Result := end_keyword
 		end
 
 feature -- Setting
@@ -73,65 +90,44 @@ feature -- Setting
 			as_keyword_set: as_keyword = a_as_keyword
 		end
 
-feature -- Unfolded form
-
-	unfolded_cursor_name: ET_IDENTIFIER
-			-- Name of the iteration cursor (even in the case of
-			-- 'across ... is ...'), to be used in unfolded form.
-
-	new_cursor_expression: ET_QUALIFIED_CALL_EXPRESSION
-			-- Expression corresponding to `iterable_expression'.new_cursor
-
-	cursor_item_expression: ET_QUALIFIED_CALL_EXPRESSION
-			-- Expression corresponding to `unfolded_cursor_name'.item,
-
-	cursor_after_expression: ET_QUALIFIED_CALL_EXPRESSION
-			-- Expression corresponding to `unfolded_cursor_name'.after
-
-	cursor_forth_instruction: ET_QUALIFIED_CALL_INSTRUCTION
-			-- Instruction corresponding to `unfolded_cursor_name'.forth
-
-	create_unfolded_form
-			-- Create the components of the unfolded form.
-		local
-			l_name: ET_IDENTIFIER
+	set_until_conditional (a_conditional: like until_conditional)
+			-- Set `until_conditional' to `a_conditional'.
 		do
-			create l_name.make (tokens.new_cursor_name)
-			l_name.set_position (cursor_name.line, cursor_name.column)
-			create new_cursor_expression.make (iterable_expression, l_name, Void)
-			create unfolded_cursor_name.make (cursor_name.name)
-			unfolded_cursor_name.set_position (cursor_name.line, cursor_name.column)
-			create l_name.make (tokens.item_name)
-			l_name.set_position (cursor_name.line, cursor_name.column)
-			create cursor_item_expression.make (unfolded_cursor_name, l_name, Void)
-			create l_name.make (tokens.after_name)
-			l_name.set_position (cursor_name.line, cursor_name.column)
-			create cursor_after_expression.make (unfolded_cursor_name, l_name, Void)
-			create l_name.make (tokens.forth_name)
-			l_name.set_position (cursor_name.line, cursor_name.column)
-			create cursor_forth_instruction.make (unfolded_cursor_name, l_name, Void)
+			until_conditional := a_conditional
+		ensure
+			until_conditional_set: until_conditional = a_conditional
 		end
 
-	reset_unfolded_form
-			-- Reset the components of the unfolded form as
-			-- they were just after it was last parsed.
+	set_invariant_part (an_invariant: like invariant_part)
+			-- Set `invariant_part' to `an_invariant'.
 		do
-			new_cursor_expression.name.reset
-			cursor_item_expression.name.reset
-			cursor_after_expression.name.reset
-			cursor_forth_instruction.name.reset
+			invariant_part := an_invariant
+		ensure
+			invariant_part_set: invariant_part = an_invariant
+		end
+
+	set_variant_part (a_variant: like variant_part)
+			-- Set `variant_part' to `a_variant'.
+		do
+			variant_part := a_variant
+		ensure
+			variant_part_set: variant_part = a_variant
+		end
+
+	set_end_keyword (an_end: like end_keyword)
+			-- Set `end_keyword' to `an_end'.
+		require
+			an_end_not_void: an_end /= Void
+		do
+			end_keyword := an_end
+		ensure
+			end_keyword_set: end_keyword = an_end
 		end
 
 invariant
 
 	across_keyword_not_void: across_keyword /= Void
-	iterable_expression_not_void: iterable_expression /= Void
 	as_keyword_not_void: as_keyword /= Void
-	cursor_name_not_void: cursor_name /= Void
-	unfolded_cursor_name_not_void: unfolded_cursor_name /= Void
-	new_cursor_expression_not_void: new_cursor_expression /= Void
-	cursor_item_expression_not_void: cursor_item_expression /= Void
-	cursor_after_expression_not_void: cursor_after_expression /= Void
-	cursor_forth_instruction_not_void: cursor_forth_instruction /= Void
+	end_keyword_not_void: end_keyword /= Void
 
 end

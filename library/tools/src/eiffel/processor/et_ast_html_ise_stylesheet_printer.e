@@ -769,7 +769,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 				an_identifier.is_argument or
 				an_identifier.is_local or
 				an_identifier.is_object_test_local or
-				an_identifier.is_across_cursor
+				an_identifier.is_iteration_cursor
 			then
 				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
 				print_string (an_identifier.name)

@@ -430,48 +430,6 @@ feature -- Status setting
 
 feature {NONE} -- Expression processing
 
-	find_across_cursor_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- `a_context' represents the type in which `a_name' appears.
-			-- It will be altered on exit to represent the type of `a_name'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_object_test_local: a_name.is_across_cursor
-			a_context_not_void: a_context /= Void
-		local
-			l_seed: INTEGER
-			l_across_component: ET_ACROSS_COMPONENT
-			l_across_components: detachable ET_ACROSS_COMPONENT_LIST
-		do
-			reset_fatal_error (False)
-			l_seed := a_name.seed
-			l_across_components := current_closure_impl.across_components
-			if l_across_components = Void then
-					-- Internal error.
-					-- This error should have already been reported when checking
-					-- `current_feature' (using ET_FEATURE_CHECKER for example).
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
-				end
-			elseif l_seed < 1 or l_seed > l_across_components.count then
-					-- Internal error.
-					-- This error should have already been reported when checking
-					-- `current_feature' (using ET_FEATURE_CHECKER for example).
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
-				end
-			else
-				l_across_component := l_across_components.across_component (l_seed)
-				if a_name = l_across_component.unfolded_cursor_name or not l_across_component.has_item_cursor then
-					find_expression_type (l_across_component.new_cursor_expression, a_context, current_system.detachable_any_type)
-				else
-					find_expression_type (l_across_component.cursor_item_expression, a_context, current_system.detachable_any_type)
-				end
-			end
-		end
-
 	find_across_expression_type (an_expression: ET_ACROSS_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -899,14 +857,14 @@ feature {NONE} -- Expression processing
 						a_context.force_last (current_universe_impl.pointer_type)
 					end
 				end
-			elseif l_name.is_across_cursor then
+			elseif l_name.is_iteration_cursor then
 				l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 				l_typed_pointer_class := l_typed_pointer_type.named_base_class
 				if l_typed_pointer_class.actual_class.is_preparsed then
 						-- Class TYPED_POINTER has been found in the universe.
-						-- Use ISE's implementation: the type of '$across_cursor' is
-						-- 'TYPED_POINTER [<type-of-across-cursor>]'.
-					find_across_cursor_type (l_name.across_cursor_name, a_context)
+						-- Use ISE's implementation: the type of '$iteration_cursor' is
+						-- 'TYPED_POINTER [<type-of-iteration-cursor>]'.
+					find_iteration_cursor_type (l_name.iteration_cursor_name, a_context)
 					if not has_fatal_error then
 						a_context.force_last (l_typed_pointer_type)
 					end
@@ -1240,6 +1198,48 @@ feature {NONE} -- Expression processing
 				l_type := current_universe_impl.integer_type
 			end
 			a_context.force_last (l_type)
+		end
+
+	find_iteration_cursor_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_name' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_object_test_local: a_name.is_iteration_cursor
+			a_context_not_void: a_context /= Void
+		local
+			l_seed: INTEGER
+			l_iteration_component: ET_ITERATION_COMPONENT
+			l_iteration_components: detachable ET_ITERATION_COMPONENT_LIST
+		do
+			reset_fatal_error (False)
+			l_seed := a_name.seed
+			l_iteration_components := current_closure_impl.iteration_components
+			if l_iteration_components = Void then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			elseif l_seed < 1 or l_seed > l_iteration_components.count then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			else
+				l_iteration_component := l_iteration_components.iteration_component (l_seed)
+				if a_name = l_iteration_component.unfolded_cursor_name or not l_iteration_component.has_item_cursor then
+					find_expression_type (l_iteration_component.new_cursor_expression, a_context, current_system.detachable_any_type)
+				else
+					find_expression_type (l_iteration_component.cursor_item_expression, a_context, current_system.detachable_any_type)
+				end
+			end
 		end
 
 	find_local_variable_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -3257,8 +3257,8 @@ feature {ET_AST_NODE} -- Processing
 				find_local_variable_type (an_identifier, current_context)
 			elseif an_identifier.is_object_test_local then
 				find_object_test_local_type (an_identifier, current_context)
-			elseif an_identifier.is_across_cursor then
-				find_across_cursor_type (an_identifier, current_context)
+			elseif an_identifier.is_iteration_cursor then
+				find_iteration_cursor_type (an_identifier, current_context)
 			elseif an_identifier.is_feature_name then
 				find_unqualified_call_expression_type (an_identifier, current_context)
 			else

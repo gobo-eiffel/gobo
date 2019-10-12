@@ -638,79 +638,15 @@ feature {ET_AST_NODE} -- Processing
 	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			had_error: BOOLEAN
 		do
-			reset_fatal_error (False)
-			process_expression (an_expression.iterable_expression)
-			had_error := has_fatal_error
-			if assertions_enabled then
-				if attached an_expression.invariant_part as l_invariant_part then
-					process_loop_invariants (l_invariant_part)
-					had_error := had_error or has_fatal_error
-				end
-			end
-			if attached an_expression.until_conditional as l_conditional then
-				process_expression (l_conditional.expression)
-			end
-			had_error := had_error or has_fatal_error
-			process_expression (an_expression.iteration_conditional.expression)
-			had_error := had_error or has_fatal_error
-			if assertions_enabled then
-				if attached an_expression.variant_part as l_variant_part then
-					process_variant (l_variant_part)
-					had_error := had_error or has_fatal_error
-				end
-			end
-			process_expression (an_expression.new_cursor_expression)
-			had_error := had_error or has_fatal_error
-			process_expression (an_expression.cursor_after_expression)
-			had_error := had_error or has_fatal_error
-			an_expression.cursor_forth_instruction.process (Current)
-			had_error := had_error or has_fatal_error
-			reset_fatal_error (had_error)
+			process_iteration_expression (an_expression)
 		end
 
 	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			had_error: BOOLEAN
 		do
-			reset_fatal_error (False)
-			process_expression (an_instruction.iterable_expression)
-			had_error := has_fatal_error
-			if attached an_instruction.from_compound as l_from_compound then
-				process_compound (l_from_compound)
-				had_error := had_error or has_fatal_error
-			end
-			if assertions_enabled then
-				if attached an_instruction.invariant_part as l_invariant_part then
-					process_loop_invariants (l_invariant_part)
-					had_error := had_error or has_fatal_error
-				end
-			end
-			if attached an_instruction.until_conditional as l_conditional then
-				process_expression (l_conditional.expression)
-			end
-			had_error := had_error or has_fatal_error
-			if attached an_instruction.loop_compound as l_loop_compound then
-				process_compound (l_loop_compound)
-				had_error := had_error or has_fatal_error
-			end
-			if assertions_enabled then
-				if attached an_instruction.variant_part as l_variant_part then
-					process_variant (l_variant_part)
-					had_error := had_error or has_fatal_error
-				end
-			end
-			process_expression (an_instruction.new_cursor_expression)
-			had_error := had_error or has_fatal_error
-			process_expression (an_instruction.cursor_after_expression)
-			had_error := had_error or has_fatal_error
-			an_instruction.cursor_forth_instruction.process (Current)
-			had_error := had_error or has_fatal_error
-			reset_fatal_error (had_error)
+			process_iteration_instruction (an_instruction)
 		end
 
 	process_actual_arguments (a_list: ET_ACTUAL_ARGUMENTS)
@@ -1600,7 +1536,7 @@ feature {ET_AST_NODE} -- Processing
 				-- Do nothing
 			elseif l_name.is_object_test_local then
 				-- Do nothing
-			elseif l_name.is_across_cursor then
+			elseif l_name.is_iteration_cursor then
 				-- Do nothing
 			elseif attached current_class.seeded_procedure (l_seed) as l_procedure then
 					-- This is of the form '$procedure_name'.
@@ -1664,11 +1600,11 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_identifier'.
 		local
 			l_seed: INTEGER
-			l_across_component: ET_ACROSS_COMPONENT
+			l_iteration_component: ET_ITERATION_COMPONENT
 		do
-			if a_identifier.is_across_cursor then
+			if a_identifier.is_iteration_cursor then
 				l_seed := a_identifier.seed
-				if not attached current_closure_impl.across_components as l_across_components then
+				if not attached current_closure_impl.iteration_components as l_iteration_components then
 						-- Internal error.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
@@ -1676,7 +1612,7 @@ feature {ET_AST_NODE} -- Processing
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
-				elseif l_seed < 1 or l_seed > l_across_components.count then
+				elseif l_seed < 1 or l_seed > l_iteration_components.count then
 						-- Internal error.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
@@ -1685,10 +1621,10 @@ feature {ET_AST_NODE} -- Processing
 						error_handler.report_giaaa_error
 					end
 				else
-					l_across_component := l_across_components.across_component (l_seed)
-					if a_identifier /= l_across_component.unfolded_cursor_name and then l_across_component.has_item_cursor then
-							-- We are in the case 'across ... is ...'.
-						process_expression (l_across_component.cursor_item_expression)
+					l_iteration_component := l_iteration_components.iteration_component (l_seed)
+					if a_identifier /= l_iteration_component.unfolded_cursor_name and then l_iteration_component.has_item_cursor then
+							-- We are in the case 'across ... is ...' or with quantifiers.
+						process_expression (l_iteration_component.cursor_item_expression)
 					end
 				end
 			end
@@ -1877,6 +1813,84 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_assertions (a_list)
+		end
+
+	process_iteration_expression (an_expression: ET_ITERATION_EXPRESSION)
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			process_expression (an_expression.iterable_expression)
+			had_error := has_fatal_error
+			if assertions_enabled then
+				if attached an_expression.invariant_part as l_invariant_part then
+					process_loop_invariants (l_invariant_part)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			if attached an_expression.until_conditional as l_conditional then
+				process_expression (l_conditional.expression)
+			end
+			had_error := had_error or has_fatal_error
+			process_expression (an_expression.iteration_expression)
+			had_error := had_error or has_fatal_error
+			if assertions_enabled then
+				if attached an_expression.variant_part as l_variant_part then
+					process_variant (l_variant_part)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			process_expression (an_expression.new_cursor_expression)
+			had_error := had_error or has_fatal_error
+			process_expression (an_expression.cursor_after_expression)
+			had_error := had_error or has_fatal_error
+			an_expression.cursor_forth_instruction.process (Current)
+			had_error := had_error or has_fatal_error
+			reset_fatal_error (had_error)
+		end
+
+	process_iteration_instruction (an_instruction: ET_ITERATION_INSTRUCTION)
+			-- Process `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			process_expression (an_instruction.iterable_expression)
+			had_error := has_fatal_error
+			if attached an_instruction.from_compound as l_from_compound then
+				process_compound (l_from_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if assertions_enabled then
+				if attached an_instruction.invariant_part as l_invariant_part then
+					process_loop_invariants (l_invariant_part)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			if attached an_instruction.until_conditional as l_conditional then
+				process_expression (l_conditional.expression)
+			end
+			had_error := had_error or has_fatal_error
+			if attached an_instruction.loop_compound as l_loop_compound then
+				process_compound (l_loop_compound)
+				had_error := had_error or has_fatal_error
+			end
+			if assertions_enabled then
+				if attached an_instruction.variant_part as l_variant_part then
+					process_variant (l_variant_part)
+					had_error := had_error or has_fatal_error
+				end
+			end
+			process_expression (an_instruction.new_cursor_expression)
+			had_error := had_error or has_fatal_error
+			process_expression (an_instruction.cursor_after_expression)
+			had_error := had_error or has_fatal_error
+			an_instruction.cursor_forth_instruction.process (Current)
+			had_error := had_error or has_fatal_error
+			reset_fatal_error (had_error)
 		end
 
 	process_like_feature (a_type: ET_LIKE_FEATURE)

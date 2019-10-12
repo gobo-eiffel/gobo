@@ -5,7 +5,7 @@ note
 		"Eiffel external-functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,7 +81,7 @@ feature -- Duplication
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
-			Result.set_across_components (across_components)
+			Result.set_iteration_components (iteration_components)
 			Result.set_synonym (Current)
 			if is_builtin then
 					-- Reset the built-in marker because they are
@@ -114,7 +114,7 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
-			Result.set_across_components (across_components)
+			Result.set_iteration_components (iteration_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 			Result.set_builtin_code (builtin_class_code, builtin_feature_code)

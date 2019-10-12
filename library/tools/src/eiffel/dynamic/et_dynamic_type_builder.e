@@ -35,9 +35,6 @@ inherit
 			check_debug_instruction_validity,
 			check_loop_invariant_validity,
 			check_loop_variant_validity,
-			report_across_cursor,
-			report_across_cursor_declaration,
-			report_across_expression,
 			report_assignment,
 			report_assignment_attempt,
 			report_attribute_address,
@@ -63,6 +60,9 @@ inherit
 			report_integer_16_constant,
 			report_integer_32_constant,
 			report_integer_64_constant,
+			report_iteration_cursor,
+			report_iteration_cursor_declaration,
+			report_iteration_expression,
 			report_local_assignment_target,
 			report_local_variable,
 			report_local_variable_declaration,
@@ -1132,35 +1132,6 @@ feature {NONE} -- Instruction validity
 
 feature {NONE} -- Event handling
 
-	report_across_cursor (a_name: ET_IDENTIFIER; a_across_component: ET_ACROSS_COMPONENT)
-			-- Report that a call to across cursor `a_name' has been processed.
-		do
-			if current_type = current_dynamic_type.base_type then
-				if a_name /= a_across_component.unfolded_cursor_name then
-					a_name.set_index (a_across_component.cursor_name.index)
-				end
-			end
-		end
-
-	report_across_cursor_declaration (a_name: ET_IDENTIFIER; a_across_component: ET_ACROSS_COMPONENT)
-			-- Report that the declaration of the across cursor `a_name' has been processed.
-		do
-			if current_type = current_dynamic_type.base_type then
-					-- Take care of the type of the across cursor.
-				if a_name = a_across_component.unfolded_cursor_name or not a_across_component.has_item_cursor then
-					a_name.set_index (a_across_component.new_cursor_expression.index)
-				else
-					a_name.set_index (a_across_component.cursor_item_expression.index)
-				end
-			end
-		end
-
-	report_across_expression (a_across_expression: ET_ACROSS_EXPRESSION)
-			-- Report that the across expression `a_across_expression' has been processed.
-		do
-			report_constant_expression (a_across_expression, current_universe_impl.boolean_type)
-		end
-
 	report_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Report that an assignment instruction has been processed.
 		do
@@ -1745,6 +1716,35 @@ feature {NONE} -- Event handling
 			-- of `current_type' has been processed.
 		do
 			report_constant_expression (a_constant, a_type)
+		end
+
+	report_iteration_cursor (a_name: ET_IDENTIFIER; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report that a call to iteration cursor `a_name' has been processed.
+		do
+			if current_type = current_dynamic_type.base_type then
+				if a_name /= a_iteration_component.unfolded_cursor_name then
+					a_name.set_index (a_iteration_component.cursor_name.index)
+				end
+			end
+		end
+
+	report_iteration_cursor_declaration (a_name: ET_IDENTIFIER; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report that the declaration of the iteration cursor `a_name' has been processed.
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Take care of the type of the across cursor.
+				if a_name = a_iteration_component.unfolded_cursor_name or not a_iteration_component.has_item_cursor then
+					a_name.set_index (a_iteration_component.new_cursor_expression.index)
+				else
+					a_name.set_index (a_iteration_component.cursor_item_expression.index)
+				end
+			end
+		end
+
+	report_iteration_expression (a_iteration_expression: ET_ITERATION_EXPRESSION)
+			-- Report that the iteration expression `a_iteration_expression' has been processed.
+		do
+			report_constant_expression (a_iteration_expression, current_universe_impl.boolean_type)
 		end
 
 	report_local_assignment_target (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
