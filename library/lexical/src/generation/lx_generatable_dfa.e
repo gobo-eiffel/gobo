@@ -719,7 +719,9 @@ feature {NONE} -- Generation
 			i, j, nb: INTEGER
 			l_table_lower, l_table_upper: INTEGER
 			l_index, l_upper, l_value: INTEGER
+			l_consecutive_chunk_size: INTEGER
 		do
+			l_consecutive_chunk_size := 25
 			l_table_lower := a_table.lower
 			l_table_upper := a_table.upper
 			a_file.put_character ('%T')
@@ -764,19 +766,13 @@ feature {NONE} -- Generation
 					from
 						l_index := i
 						l_upper := (i + array_size - 1).min (l_table_upper)
-						l_value := a_table.item (l_index)
-						l_index := l_index + 1
 					until
-						l_index > l_upper
+						l_index > l_upper or else l_table_upper - l_index + 1 >= l_consecutive_chunk_size and then a_table.area.filled_with (a_table.item (l_index), l_index - l_table_lower, l_index - l_table_lower + l_consecutive_chunk_size - 1)
 					loop
-						if a_table.item (l_index) = l_value then
-							l_index := l_index + 1
-						else
-							l_value := -1
-							l_index := l_upper + 1
-						end
+						l_index := l_index + 1
 					end
-					if l_value >= 0 then
+					if l_index = i then
+						l_value := a_table.item (i)
 						from
 							l_upper := l_upper + 1
 						until
@@ -794,12 +790,33 @@ feature {NONE} -- Generation
 						a_file.put_integer (l_upper - l_table_lower)
 						a_file.put_string (")%N")
 					else
-						a_file.put_string (Indentation)
-						a_file.put_string (a_name)
-						a_file.put_character ('_')
-						a_file.put_integer (j)
-						a_file.put_string (" (an_array)%N")
-						j := j + 1
+						if l_index <= l_upper then
+							l_upper := l_index - 1
+						end
+						if l_upper = i then
+							a_file.put_string (Indentation)
+							a_file.put_string ("an_array.put (")
+							a_file.put_integer (a_table.item (i))
+							a_file.put_string (", ")
+							a_file.put_integer (i)
+							a_file.put_string (")%N")
+						elseif a_table.area.filled_with (a_table.item (i), i - l_table_lower, l_upper - l_table_lower) then
+							a_file.put_string (Indentation)
+							a_file.put_string ("an_array.area.fill_with (")
+							a_file.put_integer (a_table.item (i))
+							a_file.put_string (", ")
+							a_file.put_integer (i - l_table_lower)
+							a_file.put_string (", ")
+							a_file.put_integer (l_upper - l_table_lower)
+							a_file.put_string (")%N")
+						else
+							a_file.put_string (Indentation)
+							a_file.put_string (a_name)
+							a_file.put_character ('_')
+							a_file.put_integer (j)
+							a_file.put_string (" (an_array)%N")
+							j := j + 1
+						end
 					end
 					i := l_upper + 1
 				end
@@ -813,19 +830,13 @@ feature {NONE} -- Generation
 					from
 						l_index := i
 						l_upper := (i + array_size - 1).min (l_table_upper)
-						l_value := a_table.item (l_index)
-						l_index := l_index + 1
 					until
-						l_index > l_upper
+						l_index > l_upper or else l_table_upper - l_index + 1 >= l_consecutive_chunk_size and then a_table.area.filled_with (a_table.item (l_index), l_index - l_table_lower, l_index - l_table_lower + l_consecutive_chunk_size - 1)
 					loop
-						if a_table.item (l_index) = l_value then
-							l_index := l_index + 1
-						else
-							l_value := -1
-							l_index := l_upper + 1
-						end
+						l_index := l_index + 1
 					end
-					if l_value >= 0 then
+					if l_index = i then
+						l_value := a_table.item (i)
 						from
 							l_upper := l_upper + 1
 						until
@@ -835,32 +846,37 @@ feature {NONE} -- Generation
 						end
 						l_upper := l_upper - 1
 					else
-						a_file.put_string ("%N%T")
-						a_file.put_string (a_name)
-						a_file.put_character ('_')
-						a_file.put_integer (j)
-						a_file.put_string (" (an_array: ARRAY [INTEGER])%N")
-						a_file.put_string ("%T%T%T-- Fill chunk #")
-						a_file.put_integer (j)
-						a_file.put_string (" of ")
-						if a_name.ends_with ("_template") then
-							a_file.put_string ("template for `")
-							a_file.put_string (a_name.substring (1, a_name.count - 9))
-						else
-							a_file.put_character ('`')
-							a_file.put_string (a_name)
+						if l_index <= l_upper then
+							l_upper := l_index - 1
 						end
-						a_file.put_string ("%'.%N")
-						a_file.put_string ("%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
-						ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, l_upper)
-						a_file.put_string (", yy_Dummy>>,%N%T%T%T")
-						a_file.put_integer (1)
-						a_file.put_string (", ")
-						a_file.put_integer (l_upper - i + 1)
-						a_file.put_string (", ")
-						a_file.put_integer (i)
-						a_file.put_string (")%N%T%Tend%N")
-						j := j + 1
+						if l_upper /= i and then not a_table.area.filled_with (a_table.item (i), i - l_table_lower, l_upper - l_table_lower) then
+							a_file.put_string ("%N%T")
+							a_file.put_string (a_name)
+							a_file.put_character ('_')
+							a_file.put_integer (j)
+							a_file.put_string (" (an_array: ARRAY [INTEGER])%N")
+							a_file.put_string ("%T%T%T-- Fill chunk #")
+							a_file.put_integer (j)
+							a_file.put_string (" of ")
+							if a_name.ends_with ("_template") then
+								a_file.put_string ("template for `")
+								a_file.put_string (a_name.substring (1, a_name.count - 9))
+							else
+								a_file.put_character ('`')
+								a_file.put_string (a_name)
+							end
+							a_file.put_string ("%'.%N")
+							a_file.put_string ("%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
+							ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, l_upper)
+							a_file.put_string (", yy_Dummy>>,%N%T%T%T")
+							a_file.put_integer (1)
+							a_file.put_string (", ")
+							a_file.put_integer (l_upper - i + 1)
+							a_file.put_string (", ")
+							a_file.put_integer (i)
+							a_file.put_string (")%N%T%Tend%N")
+							j := j + 1
+						end
 					end
 					i := l_upper + 1
 				end

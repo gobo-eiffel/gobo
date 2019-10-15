@@ -1102,7 +1102,11 @@ feature {NONE} -- Implementation
 			else
 				a_character_class.add_symbol (a_char)
 			end
-			maximum_used_symbol := maximum_used_symbol.max (a_char)
+			if description.utf8_mode then
+				maximum_used_symbol := maximum_used_symbol.max ({CHARACTER_8}.max_value)
+			else
+				maximum_used_symbol := maximum_used_symbol.max (a_char)
+			end
 		ensure
 			character_class_set: Result = a_character_class
 		end
@@ -1145,7 +1149,9 @@ feature {NONE} -- Implementation
 					a_char := a_char + 1
 				end
 			end
-			if char2 >= description.maximum_symbol then
+			if description.utf8_mode then
+				maximum_used_symbol := maximum_used_symbol.max ({CHARACTER_8}.max_value)
+			elseif char2 >= description.maximum_symbol then
 				maximum_used_symbol := maximum_used_symbol.max (char1 - 1)
 			else
 				maximum_used_symbol := maximum_used_symbol.max (char2)
@@ -1170,7 +1176,7 @@ feature {NONE} -- Implementation
 			-- The first byte is the index in the array, the second byte is one of
 			-- the symbols in the items of the array.
 			-- `a_preceding_1' and `a_preceding_2', if not Void, are the first symbol classes
-			-- in the concatenations to ba added.
+			-- in the concatenations to be added.
 		require
 			a_symbol_classes_not_void: a_symbol_classes /= Void
 			has_symbol_class: across a_symbol_classes as l_classes some l_classes.item /= Void end

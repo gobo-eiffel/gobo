@@ -95,14 +95,14 @@ feature -- User-defined options
 
 	maximum_symbol: INTEGER
 			-- Maximum symbol handled by the generated scanners.
-			-- (Note that when dealing with Unicode chjaracters,
+			-- (Note that when dealing with Unicode characters,
 			-- symbols for characters greater than the maximum
 			-- surrogate code are shifted to the left by the number
 			-- of surrogates.)
 
 	utf8_mode: BOOLEAN
 			-- Should characters be handled as their sequence of UTF-8 byes?
-			-- (One can then use "(b:regrexp)" and "(u:regrexp)" to
+			-- (One can then use "(b:regexp)" and "(u:regexp)" to
 			-- switch between byte mode and UTF-8 mode.)
 
 	debug_mode: BOOLEAN
