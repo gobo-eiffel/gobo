@@ -380,7 +380,7 @@ feature {NONE} -- Table templates
 		once
 			create an_array.make_filled (0, 0, 257)
 			yy_ec_template_1 (an_array)
-			an_array.area.fill_with (17, 200, 257)
+			an_array.area.fill_with (17, 125, 257)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -401,15 +401,8 @@ feature {NONE} -- Table templates
 
 			    8,    9,   10,    6,    6,   11,    6,    6,   12,    6,
 			   13,    6,    6,    6,    6,   14,    6,   15,    6,    6,
-			    6,    6,    6,   17,   16,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-			   17,   17,   17,   17,   17,   17,   17,   17,   17,   17, yy_Dummy>>,
-			1, 200, 0)
+			    6,    6,    6,   17,   16, yy_Dummy>>,
+			1, 125, 0)
 		end
 
 	yy_meta_template: SPECIAL [INTEGER]

@@ -656,7 +656,7 @@ feature {NONE} -- Table templates
 		once
 			create an_array.make_filled (0, 0, 205)
 			yy_def_template_1 (an_array)
-			an_array.area.fill_with (158, 200, 205)
+			an_array.area.fill_with (158, 159, 205)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -680,12 +680,8 @@ feature {NONE} -- Table templates
 			  197,   97,   97,   97,  169,   97,   97,  198,  199,  200,
 			  201,  169,   97,   97,   97,   97,  202,  203,  204,  205,
 			   97,   97,   97,   97,  158,  158,  158,  158,   97,   97,
-			   97,   97,   97,   97,  169,  169,  169,  169,    0,  158,
-			  158,  158,  158,  158,  158,  158,  158,  158,  158,  158,
-			  158,  158,  158,  158,  158,  158,  158,  158,  158,  158,
-			  158,  158,  158,  158,  158,  158,  158,  158,  158,  158,
-			  158,  158,  158,  158,  158,  158,  158,  158,  158,  158, yy_Dummy>>,
-			1, 200, 0)
+			   97,   97,   97,   97,  169,  169,  169,  169,    0, yy_Dummy>>,
+			1, 159, 0)
 		end
 
 	yy_ec_template: SPECIAL [INTEGER]
@@ -695,7 +691,7 @@ feature {NONE} -- Table templates
 		once
 			create an_array.make_filled (0, 0, 257)
 			yy_ec_template_1 (an_array)
-			an_array.area.fill_with (23, 200, 257)
+			an_array.area.fill_with (23, 126, 257)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -716,15 +712,8 @@ feature {NONE} -- Table templates
 
 			   13,   13,   13,   23,   23,   23,   23,   23,   23,   23,
 			   23,   23,   23,   23,   23,   23,   23,   15,   23,   23,
-			   16,   23,   23,   21,    6,   22,   23,   23,   23,   23,
-			   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,
-			   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,
-			   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,
-			   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,
-			   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,
-			   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,
-			   23,   23,   23,   23,   23,   23,   23,   23,   23,   23, yy_Dummy>>,
-			1, 200, 0)
+			   16,   23,   23,   21,    6,   22, yy_Dummy>>,
+			1, 126, 0)
 		end
 
 	yy_meta_template: SPECIAL [INTEGER]
