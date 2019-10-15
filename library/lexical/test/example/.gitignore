@@ -1,8 +1,11 @@
 xlexical_example
 Tascii2ps
+Tbyte_mode
 Tcalculator
 Teiffel_scanner
 Tgegrep
+Tunicode_mode
+Tutf8_mode
 compile_*.*
 *.exe
 *.dll

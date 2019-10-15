@@ -1,0 +1,10 @@
+﻿Token code: 262
+Token value: a
+Token code: 260
+Token value:  
+Token code: 261
+Token value: +
+Token code: 260
+Token value:  
+Token code: 262
+Token value: b

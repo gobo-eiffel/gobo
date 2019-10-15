@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<project name="unicode_mode" default="help">
+
+	<description>
+		system: "unicode mode scanner"
+		copyright: "Copyright (c) 2019, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
+			<redefine target="help"/>
+			<redefine target="other_install"/>
+			<redefine target="other_clobber"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant scanner"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ge"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ge"/>
+		<echo message="   geant compile_debug_ise"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="scanner" depend="init">
+		<description>
+			Generate scanner classes.
+		</description>
+
+		<geant target="unicode_mode"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="other_install" depend="init" export="NONE">
+		<description>
+			Install other items in ${system} directory.
+		</description>
+
+		<geant target="scanner"/>
+	</target>
+
+	<target name="other_clobber" depend="init" export="NONE">
+		<description>
+			Remove other generated files.
+		</description>
+
+		<delete file="unicode_mode.e"/>
+	</target>
+
+	<target name="unicode_mode" export="NONE">
+		<gelex input="unicode_mode.l"/>
+	</target>
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="unicode_mode"/>
+		<set name="library" value="lexical"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/example/unicode/${system}"/>
+	</target>
+
+</project>

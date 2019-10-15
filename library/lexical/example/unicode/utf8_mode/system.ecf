@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
+	name="utf8_mode"
+	uuid="E1FFE100-60B0-0013-2006-000000000001"
+	library_target="all_classes"
+>
+	<description>
+		system: "utf8 mode scanner"
+		copyright: "Copyright (c) 2019, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+	<target name="all_classes">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true"/>
+		<variable name="GOBO_LIBRARY" value="../../../../.."/>
+		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
+		<library name="lexical_skl" location="${GOBO_LIBRARY}/library/lexical/library_skl.ecf" readonly="true"/>
+		<cluster name="utf8_mode" location="./"/>
+	</target>
+	<target name="utf8_mode" extends="all_classes">
+		<root class="UTF8_MODE" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
+	</target>
+</system>

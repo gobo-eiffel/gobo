@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="lexical_unicode_example" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel Lexical Library examples with Unicode input"
+		copyright: "Copyright (c) 2019, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/do_all.eant"/>
+	</inherit>
+
+</project>

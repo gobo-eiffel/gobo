@@ -36,6 +36,9 @@
 		<library name="lexical_example_ascii2ps" location="${GOBO_LIBRARY}/library/lexical/example/ascii2ps/system.ecf" readonly="false"/>
 		<library name="lexical_example_eiffel_scanner" location="${GOBO_LIBRARY}/library/lexical/example/eiffel_scanner/system.ecf" readonly="false"/>
 		<library name="lexical_example_gegrep" location="${GOBO_LIBRARY}/library/lexical/example/gegrep/system.ecf" readonly="false"/>
+		<library name="lexical_example_unicode_byte_mode" location="${GOBO_LIBRARY}/library/lexical/example/unicode/byte_mode/system.ecf" readonly="false"/>
+		<library name="lexical_example_unicode_unicode_mode" location="${GOBO_LIBRARY}/library/lexical/example/unicode/unicode_mode/system.ecf" readonly="false"/>
+		<library name="lexical_example_utf8_byte_mode" location="${GOBO_LIBRARY}/library/lexical/example/unicode/utf8_mode/system.ecf" readonly="false"/>
 		<library name="lexical_test_example" location="${GOBO_LIBRARY}/library/lexical/test/example/system.ecf" readonly="false"/>
 		<library name="lexical_test_unit" location="${GOBO_LIBRARY}/library/lexical/test/unit/system.ecf" readonly="false"/>
 		<library name="math" location="${GOBO_LIBRARY}/library/math/library.ecf" readonly="false"/>

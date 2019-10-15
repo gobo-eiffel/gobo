@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Lexical Example Tester"
-		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -26,8 +26,11 @@
 		</description>
 
 		<delete directory="Tascii2ps"/>
+		<delete directory="Tbyte_mode"/>
 		<delete directory="Teiffel_scanner"/>
 		<delete directory="Tgegrep"/>
+		<delete directory="Tunicode_mode"/>
+		<delete directory="Tutf8_mode"/>
 	</target>
 
 	<target name="init_system" export="NONE">
