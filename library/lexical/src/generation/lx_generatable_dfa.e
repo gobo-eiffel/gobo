@@ -774,7 +774,7 @@ feature {NONE} -- Generation
 					if l_index = i then
 						l_value := a_table.item (i)
 						from
-							l_upper := l_upper + 1
+							l_upper := i + l_consecutive_chunk_size
 						until
 							l_upper > l_table_upper or else a_table.item (l_upper) /= l_value
 						loop
@@ -838,7 +838,7 @@ feature {NONE} -- Generation
 					if l_index = i then
 						l_value := a_table.item (i)
 						from
-							l_upper := l_upper + 1
+							l_upper := i + l_consecutive_chunk_size
 						until
 							l_upper > l_table_upper or else a_table.item (l_upper) /= l_value
 						loop
