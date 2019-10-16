@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -1422,6 +1422,8 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.assign_symbol_name)
 			Result.force_new (-1, tokens.assign_attempt_symbol_name)
 			Result.force_new (-1, tokens.bang_symbol_name)
+			Result.force_new (-1, tokens.bar_symbol_name)
+			Result.force_new (-1, tokens.close_repeat_symbol_name)
 			Result.force_new (-1, tokens.colon_symbol_name)
 			Result.force_new (-1, tokens.comma_symbol_name)
 			Result.force_new (-1, tokens.div_symbol_name)
@@ -1430,6 +1432,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.dot_symbol_name)
 			Result.force_new (-1, tokens.dotdot_symbol_name)
 			Result.force_new (-1, tokens.equal_symbol_name)
+			Result.force_new (-1, tokens.for_all_symbol_name)
 			Result.force_new (-1, tokens.ge_symbol_name)
 			Result.force_new (-1, tokens.gt_symbol_name)
 			Result.force_new (-1, tokens.le_symbol_name)
@@ -1441,6 +1444,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.minus_symbol_name)
 			Result.force_new (-1, tokens.mod_symbol_name)
 			Result.force_new (-1, tokens.not_equal_symbol_name)
+			Result.force_new (-1, tokens.open_repeat_symbol_name)
 			Result.force_new (-1, tokens.plus_symbol_name)
 			Result.force_new (-1, tokens.power_symbol_name)
 			Result.force_new (-1, tokens.question_mark_symbol_name)
@@ -1449,6 +1453,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.right_bracket_symbol_name)
 			Result.force_new (-1, tokens.right_parenthesis_symbol_name)
 			Result.force_new (-1, tokens.semicolon_symbol_name)
+			Result.force_new (-1, tokens.there_exists_symbol_name)
 			Result.force_new (-1, tokens.tilde_symbol_name)
 			Result.force_new (-1, tokens.times_symbol_name)
 		ensure
@@ -3389,13 +3394,13 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_one_char_symbol (c: CHARACTER_8)
+	process_one_char_symbol (c: CHARACTER_32)
 			-- Process Eiffel symbol with made up of only
 			-- one character `c'.
 		require
 			one_char: text_count >= 1
-			valid_string: {RX_PCRE_ROUTINES}.regexp ("[-+*/^=><.;,:!?(){}[\]$~]").recognizes (unicode_text_substring (1, 1))
-			valid_c: text_item (1) = c
+			valid_string: {RX_PCRE_ROUTINES}.regexp ({STRING_32} "[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]").recognizes (unicode_text_substring (1, 1))
+			valid_c: unicode_text_item (1) = c
 		do
 			last_literal_start := 1
 			last_literal_end := 1
@@ -3466,6 +3471,21 @@ feature {NONE} -- Processing
 			when '~' then
 				last_token := Tilde_code
 				last_detachable_et_symbol_value := ast_factory.new_tilde_symbol (Current)
+			when '∀' then
+				last_token := E_FOR_ALL
+				last_detachable_et_symbol_value := ast_factory.new_for_all_symbol (Current)
+			when '∃' then
+				last_token := E_THERE_EXISTS
+				last_detachable_et_symbol_value := ast_factory.new_there_exists_symbol (Current)
+			when '¦' then
+				last_token := E_BAR
+				last_detachable_et_symbol_value := ast_factory.new_bar_symbol (Current)
+			when '⟳' then
+				last_token := E_OPEN_REPEAT
+				last_detachable_et_symbol_value := ast_factory.new_open_repeat_symbol (Current)
+			when '⟲' then
+				last_token := E_CLOSE_REPEAT
+				last_detachable_et_symbol_value := ast_factory.new_close_repeat_symbol (Current)
 			else
 				last_token := E_UNKNOWN
 				last_detachable_et_position_value := current_position

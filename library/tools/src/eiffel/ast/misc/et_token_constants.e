@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -3901,6 +3901,24 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	bar_symbol: ET_SYMBOL
+			-- '¦' symbol
+		once
+			create Result.make_bar
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
+	close_repeat_symbol: ET_SYMBOL
+			-- '⟲' symbol
+		once
+			create Result.make_close_repeat
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
 	colon_symbol: ET_SYMBOL
 			-- ':' symbol
 		once
@@ -3950,6 +3968,15 @@ feature -- Symbols
 			-- '=' symbol
 		once
 			create Result.make_equal
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
+	for_all_symbol: ET_SYMBOL
+			-- '∀' symbol
+		once
+			create Result.make_for_all
 		ensure
 			instance_free: class
 			symbol_not_void: Result /= Void
@@ -4009,6 +4036,15 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	open_repeat_symbol: ET_SYMBOL
+			-- '⟳' symbol
+		once
+			create Result.make_open_repeat
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
 	question_mark_symbol: ET_QUESTION_MARK_SYMBOL
 			-- '?' symbol
 		once
@@ -4058,6 +4094,15 @@ feature -- Symbols
 			-- ';' symbol
 		once
 			create Result.make
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
+	there_exists_symbol: ET_SYMBOL
+			-- '∃' symbol
+		once
+			create Result.make_there_exists
 		ensure
 			instance_free: class
 			symbol_not_void: Result /= Void
@@ -5757,7 +5802,9 @@ feature -- Keyword and symbol names
 	assign_symbol_name: STRING = ":="
 	assign_attempt_symbol_name: STRING = "?="
 	bang_symbol_name: STRING = "!"
+	bar_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "¦") end
 	brackets_symbol_name: STRING = "[]"
+	close_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⟲") end
 	colon_symbol_name: STRING = ":"
 	comma_symbol_name: STRING = ","
 	div_symbol_name: STRING = "//"
@@ -5766,6 +5813,7 @@ feature -- Keyword and symbol names
 	dot_symbol_name: STRING = "."
 	dotdot_symbol_name: STRING = ".."
 	equal_symbol_name: STRING = "="
+	for_all_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∀") end
 	ge_symbol_name: STRING = ">="
 	gt_symbol_name: STRING = ">"
 	le_symbol_name: STRING = "<="
@@ -5778,6 +5826,7 @@ feature -- Keyword and symbol names
 	mod_symbol_name: STRING = "\\"
 	not_equal_symbol_name: STRING = "/="
 	not_tilde_symbol_name: STRING = "/~"
+	open_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⟳") end
 	parentheses_symbol_name: STRING = "()"
 	plus_symbol_name: STRING = "+"
 	power_symbol_name: STRING = "^"
@@ -5787,6 +5836,7 @@ feature -- Keyword and symbol names
 	right_bracket_symbol_name: STRING = "]"
 	right_parenthesis_symbol_name: STRING = ")"
 	semicolon_symbol_name: STRING = ";"
+	there_exists_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∃") end
 	tilde_symbol_name: STRING = "~"
 	times_symbol_name: STRING = "*"
 			-- Eiffel symbol names

@@ -269,6 +269,16 @@ feature -- Access
 				Result := "E_STRERR"
 			when E_OLD then
 				Result := "E_OLD"
+			when E_FOR_ALL then
+				Result := "E_FOR_ALL"
+			when E_THERE_EXISTS then
+				Result := "E_THERE_EXISTS"
+			when E_BAR then
+				Result := "E_BAR"
+			when E_OPEN_REPEAT then
+				Result := "E_OPEN_REPEAT"
+			when E_CLOSE_REPEAT then
+				Result := "E_CLOSE_REPEAT"
 			when E_NE then
 				Result := "E_NE"
 			when E_NOT_TILDE then
@@ -392,7 +402,12 @@ feature -- Token codes
 	E_CHARERR: INTEGER = 367
 	E_STRERR: INTEGER = 368
 	E_OLD: INTEGER = 369
-	E_NE: INTEGER = 370
-	E_NOT_TILDE: INTEGER = 371
+	E_FOR_ALL: INTEGER = 370
+	E_THERE_EXISTS: INTEGER = 371
+	E_BAR: INTEGER = 372
+	E_OPEN_REPEAT: INTEGER = 373
+	E_CLOSE_REPEAT: INTEGER = 374
+	E_NE: INTEGER = 375
+	E_NOT_TILDE: INTEGER = 376
 
 end

@@ -1,4 +1,4 @@
-%{
+﻿%{
 note
 
 	description:
@@ -24,7 +24,7 @@ create
 
 HORIZONTAL_BREAK	[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]
 BREAK				{HORIZONTAL_BREAK}{+}[\n]
-FREEOP_CHAR			[^a-zA-Z0-9_:;,?'"$.=()[\]{}]{-}{BREAK}
+FREEOP_CHAR			[^a-zA-Z0-9_:;,?'"$.=()[\]{}∀∃¦⟳⟲]{-}{BREAK}
 CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*
 
 %x BREAK MS MSN VS1 VS2 VS3
@@ -34,22 +34,22 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 
 ----------/** Eiffel symbols **/------------------------------------------------
 
-[-+*/^=><.;,:!?(){}[\]$~]	{
+[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]	{
 				last_break_end := 0
 				last_comment_end := 0
-				process_one_char_symbol (text_item (1))
+				process_one_char_symbol (unicode_text_item (1))
 			}
-[-+*/^=><.;,:!?(){}[\]$~]{BREAK}+	{
+[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]{BREAK}+	{
 				last_text_count := 1
 				last_break_end := text_count
 				last_comment_end := 0
-				process_one_char_symbol (text_item (1))
+				process_one_char_symbol (unicode_text_item (1))
 			}
-[+*/^=><.;,:!?(){}[\]$~]({BREAK}|"--".*)+	{
+[+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]({BREAK}|"--".*)+	{
 				last_text_count := 1
 				last_break_end := 0
 				last_comment_end := text_count
-				process_one_char_symbol (text_item (1))
+				process_one_char_symbol (unicode_text_item (1))
 			}
 "-"{BREAK}({BREAK}|"--".*)+	{
 				last_text_count := 1

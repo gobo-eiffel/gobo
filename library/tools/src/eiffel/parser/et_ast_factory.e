@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -35,8 +35,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)across").recognizes (a_scanner.last_unicode_literal)
 		do
-			create Result.make_across
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.across_keyword
 		end
 
 	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_AGENT_KEYWORD
@@ -563,8 +562,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)some").recognizes (a_scanner.last_unicode_literal)
 		do
-			create Result.make_some
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.some_keyword
 		end
 
 	new_strip_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
@@ -697,6 +695,22 @@ feature -- Eiffel symbols
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_bar_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '¦' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := tokens.bar_symbol
+		end
+
+	new_close_repeat_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '⟲' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := tokens.close_repeat_symbol
+		end
+
 	new_colon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New ':' symbol
 		require
@@ -763,6 +777,14 @@ feature -- Eiffel symbols
 		do
 			create Result.make_equal
 			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
+	new_for_all_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '∀' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := tokens.for_all_symbol
 		end
 
 	new_ge_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
@@ -871,6 +893,14 @@ feature -- Eiffel symbols
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_open_repeat_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '⟳' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := tokens.open_repeat_symbol
+		end
+
 	new_plus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '+' symbol
 		require
@@ -936,6 +966,14 @@ feature -- Eiffel symbols
 			a_scanner_not_void: a_scanner /= Void
 		do
 			Result := tokens.semicolon_symbol
+		end
+
+	new_there_exists_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '∃' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			Result := tokens.there_exists_symbol
 		end
 
 	new_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL

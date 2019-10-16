@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -32,21 +32,26 @@ create
 	make_assign,
 	make_assign_attempt,
 	make_bang,
+	make_bar,
+	make_close_repeat,
 	make_colon,
 	make_comma,
 	make_dollar,
 	make_dot,
 	make_dotdot,
 	make_equal,
+	make_for_all,
 	make_left_array,
 	make_left_brace,
 	make_left_parenthesis,
 	make_not_equal,
 	make_not_tilde,
+	make_open_repeat,
 	make_right_array,
 	make_right_brace,
 	make_right_bracket,
 	make_right_parenthesis,
+	make_there_exists,
 	make_tilde
 
 feature {NONE} -- Initialization
@@ -91,6 +96,28 @@ feature {NONE} -- Initialization
 			make_leaf
 		ensure
 			is_bang: is_bang
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_bar
+			-- Create a new '¦' symbol.
+		do
+			code := tokens.bar_symbol_code
+			make_leaf
+		ensure
+			is_bar: is_bar
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_close_repeat
+			-- Create a new '⟲' symbol.
+		do
+			code := tokens.close_repeat_symbol_code
+			make_leaf
+		ensure
+			is_close_repeat: is_close_repeat
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -179,6 +206,17 @@ feature {NONE} -- Initialization
 			make_leaf
 		ensure
 			is_equal_symbol: is_equal_symbol
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_for_all
+			-- Create a new '∀' symbol.
+		do
+			code := tokens.for_all_symbol_code
+			make_leaf
+		ensure
+			is_for_all: is_for_all
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -315,6 +353,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_open_repeat
+			-- Create a new '⟳' symbol.
+		do
+			code := tokens.open_repeat_symbol_code
+			make_leaf
+		ensure
+			is_open_repeat: is_open_repeat
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_plus
 			-- Create a new '+' symbol.
 		do
@@ -403,6 +452,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_there_exists
+			-- Create a new '∃' symbol.
+		do
+			code := tokens.there_exists_symbol_code
+			make_leaf
+		ensure
+			is_there_exists: is_there_exists
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_tilde
 			-- Create a new '~' symbol.
 		do
@@ -427,7 +487,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING
+	text: STRING_8
 			-- Textual representation of symbol
 			-- (using UTF-8 encoding)
 		do
@@ -440,6 +500,10 @@ feature -- Access
 				Result := tokens.assign_attempt_symbol_name
 			when bang_symbol_code then
 				Result := tokens.bang_symbol_name
+			when bar_symbol_code then
+				Result := tokens.bar_symbol_name
+			when close_repeat_symbol_code then
+				Result := tokens.close_repeat_symbol_name
 			when colon_symbol_code then
 				Result := tokens.colon_symbol_name
 			when comma_symbol_code then
@@ -456,6 +520,8 @@ feature -- Access
 				Result := tokens.dotdot_symbol_name
 			when equal_symbol_code then
 				Result := tokens.equal_symbol_name
+			when for_all_symbol_code then
+				Result := tokens.for_all_symbol_name
 			when infix_ge_code then
 				Result := tokens.ge_symbol_name
 			when infix_gt_code then
@@ -482,6 +548,8 @@ feature -- Access
 				Result := tokens.not_equal_symbol_name
 			when not_tilde_symbol_code then
 				Result := tokens.not_tilde_symbol_name
+			when open_repeat_symbol_code then
+				Result := tokens.open_repeat_symbol_name
 			when infix_plus_code then
 				Result := tokens.plus_symbol_name
 			when prefix_plus_code then
@@ -500,8 +568,10 @@ feature -- Access
 				Result := tokens.right_parenthesis_symbol_name
 			when semicolon_symbol_code then
 				Result := tokens.semicolon_symbol_name
-			when tilde_symbol_code then
+			when there_exists_symbol_code then
 				Result := tokens.tilde_symbol_name
+			when tilde_symbol_code then
+				Result := tokens.there_exists_symbol_name
 			when infix_times_code then
 				Result := tokens.times_symbol_name
 			else
@@ -513,7 +583,7 @@ feature -- Access
 	last_position: ET_POSITION
 			-- Position of last character of current node in source code
 		do
-			create {ET_COMPRESSED_POSITION} Result.make (line, column + text.count - 1)
+			create {ET_COMPRESSED_POSITION} Result.make (line, column + {UC_UTF8_ROUTINES}.unicode_character_count (text) - 1)
 		end
 
 feature -- Status report
@@ -540,6 +610,18 @@ feature -- Status report
 			-- Is current symbol '!'?
 		do
 			Result := (code = tokens.bang_symbol_code)
+		end
+
+	is_bar: BOOLEAN
+			-- Is current symbol '¦'?
+		do
+			Result := (code = tokens.bar_symbol_code)
+		end
+
+	is_close_repeat: BOOLEAN
+			-- Is current symbol '⟲'?
+		do
+			Result := (code = tokens.close_repeat_symbol_code)
 		end
 
 	is_colon: BOOLEAN
@@ -588,6 +670,12 @@ feature -- Status report
 			-- Is current symbol '='?
 		do
 			Result := (code = tokens.equal_symbol_code)
+		end
+
+	is_for_all: BOOLEAN
+			-- Is current symbol '∀'?
+		do
+			Result := (code = tokens.for_all_symbol_code)
 		end
 
 	is_ge: BOOLEAN
@@ -662,6 +750,12 @@ feature -- Status report
 			Result := (code = tokens.not_tilde_symbol_code)
 		end
 
+	is_open_repeat: BOOLEAN
+			-- Is current symbol '⟳'?
+		do
+			Result := (code = tokens.open_repeat_symbol_code)
+		end
+
 	is_plus: BOOLEAN
 			-- Is current symbol '+'?
 		do
@@ -708,6 +802,12 @@ feature -- Status report
 			-- Is current symbol ';'?
 		do
 			Result := (code = tokens.semicolon_symbol_code)
+		end
+
+	is_there_exists: BOOLEAN
+			-- Is current symbol '∃'?
+		do
+			Result := (code = tokens.there_exists_symbol_code)
 		end
 
 	is_tilde: BOOLEAN

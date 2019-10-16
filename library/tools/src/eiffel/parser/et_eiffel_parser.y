@@ -81,6 +81,7 @@ create
 %token <detachable ET_KEYWORD> E_OLD
 %token <detachable ET_SYMBOL> '{' '}'
 %token <detachable ET_SYMBOL> '(' ')' ':' ',' ']' '$' '.' '!'
+%token <detachable ET_SYMBOL> E_FOR_ALL E_THERE_EXISTS E_BAR E_OPEN_REPEAT E_CLOSE_REPEAT
 %token <detachable ET_SYMBOL_OPERATOR> '-'
 %token <detachable ET_SYMBOL_OPERATOR> '+'
 %token <detachable ET_SYMBOL> '=' '~'

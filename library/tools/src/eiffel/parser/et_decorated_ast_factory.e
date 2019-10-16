@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -87,6 +87,8 @@ inherit
 			new_assign_attempt_symbol,
 			new_assign_symbol,
 			new_bang_symbol,
+			new_bar_symbol,
+			new_close_repeat_symbol,
 			new_colon_symbol,
 			new_comma_symbol,
 			new_div_symbol,
@@ -95,6 +97,7 @@ inherit
 			new_dot_symbol,
 			new_dotdot_symbol,
 			new_equal_symbol,
+			new_for_all_symbol,
 			new_ge_symbol,
 			new_gt_symbol,
 			new_le_symbol,
@@ -107,6 +110,7 @@ inherit
 			new_mod_symbol,
 			new_not_equal_symbol,
 			new_not_tilde_symbol,
+			new_open_repeat_symbol,
 			new_plus_symbol,
 			new_power_symbol,
 			new_question_mark_symbol,
@@ -115,6 +119,7 @@ inherit
 			new_right_bracket_symbol,
 			new_right_parenthesis_symbol,
 			new_semicolon_symbol,
+			new_there_exists_symbol,
 			new_tilde_symbol,
 			new_times_symbol,
 			new_binary_integer_constant,
@@ -983,6 +988,22 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
+	new_bar_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '¦' symbol
+		do
+			create Result.make_bar
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_close_repeat_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '⟲' symbol
+		do
+			create Result.make_close_repeat
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
 	new_colon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New ':' symbol
 		do
@@ -1043,6 +1064,14 @@ feature -- Eiffel symbols
 			-- New '=' symbol
 		do
 			create Result.make_equal
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_for_all_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '∀' symbol
+		do
+			create Result.make_for_all
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1143,6 +1172,14 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
+	new_open_repeat_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '⟳' symbol
+		do
+			create Result.make_open_repeat
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
 	new_plus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '+' symbol
 		do
@@ -1205,6 +1242,14 @@ feature -- Eiffel symbols
 			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
+		end
+
+	new_there_exists_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '∃' symbol
+		do
+			create Result.make_there_exists
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
 		end
 
 	new_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
