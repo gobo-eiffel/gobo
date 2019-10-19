@@ -155,11 +155,13 @@ inherit
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
 			process_qualified_regular_feature_call,
+			process_quantifier_expression,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
 			process_rename,
 			process_rename_list,
+			process_repeat_instruction,
 			process_result,
 			process_result_address,
 			process_retry_instruction,
@@ -4824,6 +4826,21 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.quantifier_symbol.process (Current)
+			print_space
+			a_expression.cursor_name.process (Current)
+			a_expression.colon_symbol.process (Current)
+			print_space
+			a_expression.iterable_expression.process (Current)
+			print_space
+			a_expression.bar_symbol.process (Current)
+			print_space
+			a_expression.iteration_expression.process (Current)
+		end
+
 	process_real_constant (a_constant: ET_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -4916,6 +4933,35 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			dedent
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			a_instruction.open_repeat_symbol.process (Current)
+			print_space
+			a_instruction.cursor_name.process (Current)
+			a_instruction.colon_symbol.process (Current)
+			print_space
+			a_instruction.iterable_expression.process (Current)
+			print_space
+			a_instruction.bar_symbol.process (Current)
+			if not attached a_instruction.loop_compound as l_loop_compound or else l_loop_compound.is_empty then
+				print_space
+			elseif l_loop_compound.count = 1 then
+				print_space
+				l_loop_compound.first.process (Current)
+				print_space
+			else
+				print_new_line
+				process_comments
+				indent
+				process_instruction_list (l_loop_compound)
+				dedent
+				print_new_line
+				process_comments
+			end
+			a_instruction.close_repeat_symbol.process (Current)
 		end
 
 	process_result (an_expression: ET_RESULT)

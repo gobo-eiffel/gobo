@@ -2500,6 +2500,17 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.quantifier_symbol.process (Current)
+			a_expression.cursor_name.process (Current)
+			a_expression.colon_symbol.process (Current)
+			a_expression.iterable_expression.process (Current)
+			a_expression.bar_symbol.process (Current)
+			a_expression.iteration_expression.process (Current)
+		end
+
 	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL)
 			-- Process `a_symbol'.
 		do
@@ -2562,6 +2573,26 @@ feature {ET_AST_NODE} -- Processing
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		local
+			i, nb: INTEGER
+		do
+			a_instruction.open_repeat_symbol.process (Current)
+			a_instruction.cursor_name.process (Current)
+			a_instruction.colon_symbol.process (Current)
+			a_instruction.iterable_expression.process (Current)
+			a_instruction.bar_symbol.process (Current)
+			if attached a_instruction.loop_compound as l_loop_compound then
+				nb := l_loop_compound.count
+				from i := 1 until i > nb loop
+					l_loop_compound.item (i).process (Current)
+					i := i + 1
+				end
+			end
+			a_instruction.close_repeat_symbol.process (Current)
 		end
 
 	process_result (an_expression: ET_RESULT)

@@ -2,6 +2,10 @@
 
 ## Version ?? - ??
 
+### gelex
+
+* Improved `gelex` to generate smaller manifest arrays.
+
 ### Gobo Eiffel Tools Library
 
 * Added support for manifest immutable strings `{IMMUTABLE_STRING_8} "..."`
@@ -11,6 +15,12 @@
 * Removed support for `infix "..."` and `prefix "..."` syntax notations.
   We should use `alias "..."` instead, as described in the ECMA standard.
 * Added support for multiple aliases (e.g. `f alias "[]" alias "@" (i: INTEGER): T`).
+* Added support for quantifier expressions of the form `∀ x: list ¦ x > 0`
+  as syntactic sugar for `across list is x all x > 0 end`.
+* Added support for quantifier expressions of the form `∃ x: list ¦ x > 0`
+  as syntactic sugar for `across list is x some x > 0 end`.
+* Added support for repeat instructions of the form `⟳ x: list ¦ x.do_something ⟲`
+  as syntactic sugar for `across list is x loop x.do_something end`.
 
 ## Version 19.10.03.1 - 3 October 2019
 

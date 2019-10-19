@@ -86,9 +86,11 @@ inherit
 			process_prefix_expression,
 			process_qualified_call_expression,
 			process_qualified_call_instruction,
+			process_quantifier_expression,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
+			process_repeat_instruction,
 			process_result,
 			process_result_address,
 			process_retry_instruction,
@@ -7630,7 +7632,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			an_instruction.process (Current)
 		end
 
-	print_iteration_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+	print_iteration_instruction (an_instruction: ET_ITERATION_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
@@ -8099,6 +8101,14 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				l_manifest_tuple_operand.wipe_out
 			end
 			call_operands.wipe_out
+		end
+
+	print_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Print `a_instruction'.
+		require
+			a_instruction_not_void: a_instruction /= Void
+		do
+			print_iteration_instruction (a_instruction)
 		end
 
 	print_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION)
@@ -12380,6 +12390,14 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					-- because it could have still been used in `call_operands'.
 				l_temp.set_index (l_temp_index)
 			end
+		end
+
+	print_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Print `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			print_iteration_expression (a_expression)
 		end
 
 	print_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
@@ -35339,6 +35357,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			print_quantifier_expression (a_expression)
+		end
+
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -35355,6 +35379,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			print_regular_real_constant (a_constant)
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			print_repeat_instruction (a_instruction)
 		end
 
 	process_result (an_expression: ET_RESULT)

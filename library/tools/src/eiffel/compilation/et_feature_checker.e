@@ -95,9 +95,11 @@ inherit
 			process_prefix_expression,
 			process_qualified_call_expression,
 			process_qualified_call_instruction,
+			process_quantifier_expression,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
+			process_repeat_instruction,
 			process_result,
 			process_result_address,
 			process_retry_instruction,
@@ -4693,6 +4695,15 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
+	check_repeat_instruction_validity (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Check validity of `a_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_instruction_not_void: a_instruction /= Void
+		do
+			check_iteration_instruction_validity (a_instruction)
+		end
+
 	check_retry_instruction_validity (an_instruction: ET_RETRY_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -9125,6 +9136,18 @@ feature {NONE} -- Expression validity
 				report_tuple_label_expression (a_call, a_context)
 				a_context.force_last (l_type)
 			end
+		end
+
+	check_quantifier_expression_validity (a_expression: ET_QUANTIFIER_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check validity of `a_expression'.
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_context_not_void: a_context /= Void
+		do
+			check_iteration_expression_validity (a_expression, a_context)
 		end
 
 	check_query_call_type_validity (a_call: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -15179,6 +15202,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			check_quantifier_expression_validity (a_expression, current_context)
+		end
+
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -15195,6 +15224,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			check_regular_real_constant_validity (a_constant, current_context)
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			check_repeat_instruction_validity (a_instruction)
 		end
 
 	process_result (an_expression: ET_RESULT)

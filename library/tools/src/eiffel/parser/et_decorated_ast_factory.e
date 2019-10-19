@@ -234,6 +234,7 @@ inherit
 			new_feature_address,
 			new_feature_clause,
 			new_feature_name_comma,
+			new_for_all_quantifier_expression,
 			new_formal_argument_semicolon,
 			new_formal_arguments,
 			new_formal_parameter_comma,
@@ -291,6 +292,7 @@ inherit
 			new_rename,
 			new_rename_comma,
 			new_renames,
+			new_repeat_instruction,
 			new_rescue_compound,
 			new_result_address,
 			new_static_call_expression,
@@ -299,6 +301,7 @@ inherit
 			new_tag,
 			new_target_type,
 			new_then_compound,
+			new_there_exists_quantifier_expression,
 			new_type_comma,
 			new_type_constraint_comma,
 			new_type_constraint_list,
@@ -2792,6 +2795,26 @@ feature -- AST nodes
 			end
 		end
 
+	new_for_all_quantifier_expression (a_quantifier_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL;
+		a_iteration_expression: detachable ET_EXPRESSION): detachable ET_QUANTIFIER_EXPRESSION
+			-- New quantifier expression of the form '∀'
+		do
+			if a_cursor_name /= Void and a_iterable_expression /= Void and a_iteration_expression /= Void then
+				create Result.make_for_all (a_cursor_name, a_iterable_expression, a_iteration_expression)
+				if a_quantifier_symbol /= Void then
+					Result.set_quantifier_symbol (a_quantifier_symbol)
+				end
+				if a_colon_symbol /= Void then
+					Result.set_colon_symbol (a_colon_symbol)
+				end
+				if a_bar_symbol /= Void then
+					Result.set_bar_symbol (a_bar_symbol)
+				end
+			end
+		end
+
 	new_formal_argument_semicolon (an_argument: detachable ET_FORMAL_ARGUMENT;
 		a_semicolon: detachable ET_SYMBOL): detachable ET_FORMAL_ARGUMENT_ITEM
 			-- New formal_argument-semicolon
@@ -3572,6 +3595,30 @@ feature -- AST nodes
 			end
 		end
 
+	new_repeat_instruction (a_open_repeat_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION;
+		a_bar_symbol: detachable ET_SYMBOL; a_loop_compound: detachable ET_COMPOUND;
+		a_close_repeat_symbol: detachable ET_SYMBOL): detachable ET_REPEAT_INSTRUCTION
+			-- New repeat instruction of the form '⟳ ... ⟲'
+		do
+			if a_cursor_name /= Void and a_iterable_expression /= Void then
+				create Result.make (a_cursor_name, a_iterable_expression, a_loop_compound)
+				if a_open_repeat_symbol /= Void then
+					Result.set_open_repeat_symbol (a_open_repeat_symbol)
+				end
+				if a_colon_symbol /= Void then
+					Result.set_colon_symbol (a_colon_symbol)
+				end
+				if a_bar_symbol /= Void then
+					Result.set_bar_symbol (a_bar_symbol)
+				end
+				if a_close_repeat_symbol /= Void then
+					Result.set_close_repeat_symbol (a_close_repeat_symbol)
+				end
+			end
+		end
+
 	new_rescue_compound (a_rescue: detachable ET_KEYWORD;
 		a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'rescue' keyword
@@ -3674,6 +3721,26 @@ feature -- AST nodes
 					a_compound.set_keyword (tokens.then_keyword)
 				end
 				Result := a_compound
+			end
+		end
+
+	new_there_exists_quantifier_expression (a_quantifier_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL;
+		a_iteration_expression: detachable ET_EXPRESSION): detachable ET_QUANTIFIER_EXPRESSION
+			-- New quantifier expression of the form '∃'
+		do
+			if a_cursor_name /= Void and a_iterable_expression /= Void and a_iteration_expression /= Void then
+				create Result.make_there_exists (a_cursor_name, a_iterable_expression, a_iteration_expression)
+				if a_quantifier_symbol /= Void then
+					Result.set_quantifier_symbol (a_quantifier_symbol)
+				end
+				if a_colon_symbol /= Void then
+					Result.set_colon_symbol (a_colon_symbol)
+				end
+				if a_bar_symbol /= Void then
+					Result.set_bar_symbol (a_bar_symbol)
+				end
 			end
 		end
 

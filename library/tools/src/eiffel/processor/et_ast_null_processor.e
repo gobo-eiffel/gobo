@@ -927,6 +927,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+		end
+
 	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL)
 			-- Process `a_symbol'.
 		do
@@ -959,6 +964,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_rename_list (a_list: ET_RENAME_LIST)
 			-- Process `a_list'.
+		do
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
 		do
 		end
 

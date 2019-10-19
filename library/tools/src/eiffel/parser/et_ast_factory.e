@@ -2508,6 +2508,17 @@ feature -- AST nodes
 			Result := a_name
 		end
 
+	new_for_all_quantifier_expression (a_quantifier_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL;
+		a_iteration_expression: detachable ET_EXPRESSION): detachable ET_QUANTIFIER_EXPRESSION
+			-- New quantifier expression of the form '∀'
+		do
+			if a_cursor_name /= Void and a_iterable_expression /= Void and a_iteration_expression /= Void then
+				create Result.make_for_all (a_cursor_name, a_iterable_expression, a_iteration_expression)
+			end
+		end
+
 	new_formal_argument (a_name: detachable ET_ARGUMENT_NAME; a_type: detachable ET_DECLARED_TYPE): detachable ET_FORMAL_ARGUMENT
 			-- New formal argument
 		do
@@ -3352,6 +3363,18 @@ feature -- AST nodes
 			create Result.make_with_capacity (nb)
 		end
 
+	new_repeat_instruction (a_open_repeat_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION;
+		a_bar_symbol: detachable ET_SYMBOL; a_loop_compound: detachable ET_COMPOUND;
+		a_close_repeat_symbol: detachable ET_SYMBOL): detachable ET_REPEAT_INSTRUCTION
+			-- New repeat instruction of the form '⟳ ... ⟲'
+		do
+			if a_cursor_name /= Void and a_iterable_expression /= Void then
+				create Result.make (a_cursor_name, a_iterable_expression, a_loop_compound)
+			end
+		end
+
 	new_rescue_compound (a_rescue: detachable ET_KEYWORD; a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'rescue' keyword
 		do
@@ -3439,6 +3462,17 @@ feature -- AST nodes
 			if a_compound /= Void then
 				Result := a_compound
 				Result.set_keyword (tokens.then_keyword)
+			end
+		end
+
+	new_there_exists_quantifier_expression (a_quantifier_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL;
+		a_iteration_expression: detachable ET_EXPRESSION): detachable ET_QUANTIFIER_EXPRESSION
+			-- New quantifier expression of the form '∃'
+		do
+			if a_cursor_name /= Void and a_iterable_expression /= Void and a_iteration_expression /= Void then
+				create Result.make_there_exists (a_cursor_name, a_iterable_expression, a_iteration_expression)
 			end
 		end
 

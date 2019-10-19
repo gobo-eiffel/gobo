@@ -5,7 +5,7 @@ note
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,6 +77,8 @@ inherit
 			process_prefix_expression,
 			process_qualified_call_expression,
 			process_qualified_call_instruction,
+			process_quantifier_expression,
+			process_repeat_instruction,
 			process_static_call_expression,
 			process_static_call_instruction,
 			process_tagged_assertion,
@@ -846,6 +848,22 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.target.process (Current)
 			if attached an_instruction.arguments as an_arguments then
 				process_actual_argument_list (an_arguments)
+			end
+		end
+
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.iterable_expression.process (Current)
+			a_expression.iteration_expression.process (Current)
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			a_instruction.iterable_expression.process (Current)
+			if attached a_instruction.loop_compound as l_loop_compound then
+				process_compound (l_loop_compound)
 			end
 		end
 

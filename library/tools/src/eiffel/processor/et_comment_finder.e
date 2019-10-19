@@ -183,12 +183,14 @@ inherit
 			process_qualified_call_instruction,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
+			process_quantifier_expression,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
 			process_rename,
 			process_rename_comma,
 			process_rename_list,
+			process_repeat_instruction,
 			process_result_address,
 			process_special_manifest_string,
 			process_static_call_expression,
@@ -1640,6 +1642,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			if not excluded_nodes.has (a_expression) then
+				precursor (a_expression)
+			end
+		end
+
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -1688,6 +1698,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_list) then
 				precursor (a_list)
+			end
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			if not excluded_nodes.has (a_instruction) then
+				precursor (a_instruction)
 			end
 		end
 

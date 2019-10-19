@@ -214,10 +214,12 @@ create
 %type <detachable ET_PRECONDITIONS> Precondition_opt
 %type <detachable ET_PROCEDURE> Procedure_declaration Single_procedure_declaration
 %type <detachable ET_QUALIFIED_LIKE_IDENTIFIER> Qualified_anchored_type Qualified_anchored_type_with_no_type_mark
+%type <detachable ET_QUANTIFIER_EXPRESSION> Quantifier_expression_header Quantifier_expression
 %type <detachable ET_QUERY> Query_declaration Single_query_declaration
 %type <detachable ET_REAL_CONSTANT> Real_constant Typed_real_constant Untyped_real_constant Signed_real_constant
 %type <detachable ET_RENAME_ITEM> Rename Rename_comma
 %type <detachable ET_RENAME_LIST> Rename_clause Rename_list
+%type <detachable ET_REPEAT_INSTRUCTION> Repeat_instruction_header
 %type <detachable ET_SEMICOLON_SYMBOL> Semicolon_opt
 %type <detachable ET_STATIC_CALL_EXPRESSION> Static_call_expression
 %type <detachable ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
@@ -233,7 +235,7 @@ create
 %type <detachable ET_WHEN_PART_LIST> When_list When_list_opt
 %type <detachable ET_WRITABLE> Writable
 
-%expect 84
+%expect 104
 %start Class_declarations
 
 %%
@@ -3125,6 +3127,8 @@ Instruction: Creation_instruction
 --			}
 	| Across_instruction_header From_compound_opt Loop_invariant_clause_opt Until_expression_opt Loop_compound Variant_clause_opt E_END
 		{ $$ := new_across_instruction ($1, $2, $3, $4, $5, $6, $7) }
+	| Repeat_instruction_header Compound_opt E_CLOSE_REPEAT
+		{ $$ := new_repeat_instruction ($1, $2, $3) }
 	| Debug_instruction
 		{ $$ := $1 }
 	| Check_instruction
@@ -3384,6 +3388,10 @@ Across_instruction_header: E_ACROSS Expression E_AS Identifier
 		{ $$ := new_across_instruction_header ($1, $2, $3, $4) }
 	| E_ACROSS Expression E_IS Identifier
 		{ $$ := new_across_instruction_header ($1, $2, $3, $4) }
+	;
+
+Repeat_instruction_header: E_OPEN_REPEAT Identifier ':' Expression E_BAR
+		{ $$ := new_repeat_instruction_header ($1, $2, $3, $4, $5) }
 	;
 	
 Until_expression_opt: -- Empty
@@ -3678,6 +3686,8 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 	| Across_some_expression
 		{ $$ := $1 }
 	| Across_all_expression
+		{ $$ := $1 }
+	| Quantifier_expression
 		{ $$ := $1 }
 	| Conditional_expression
 		{ $$ := $1 }
@@ -4050,6 +4060,16 @@ Across_expression_header: E_ACROSS Expression E_AS Identifier
 		{ $$ := new_across_expression_header ($1, $2, $3, $4) }
 	| E_ACROSS Expression E_IS Identifier
 		{ $$ := new_across_expression_header ($1, $2, $3, $4) }
+	;
+
+Quantifier_expression: Quantifier_expression_header Expression
+		{ $$ := new_quantifier_expression ($1, $2) }
+	;
+	
+Quantifier_expression_header: E_FOR_ALL Identifier ':' Expression E_BAR
+		{ $$ := new_for_all_quantifier_expression_header ($1, $2, $3, $4, $5) }
+	| E_THERE_EXISTS Identifier ':' Expression E_BAR
+		{ $$ := new_there_exists_quantifier_expression_header ($1, $2, $3, $4, $5) }
 	;
 
 ------------------------------------------------------------------------------------

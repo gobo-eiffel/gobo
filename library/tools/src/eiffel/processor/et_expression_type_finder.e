@@ -66,6 +66,7 @@ inherit
 			process_precursor_expression,
 			process_prefix_expression,
 			process_qualified_call_expression,
+			process_quantifier_expression,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
@@ -1910,6 +1911,18 @@ feature {NONE} -- Expression processing
 			end
 		end
 
+	find_quantifier_expression_type (a_expression: ET_QUANTIFIER_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_context_not_void: a_context /= Void
+		do
+			reset_fatal_error (False)
+			a_context.force_last (current_universe_impl.boolean_type)
+		end
+
 	find_real_constant_type (a_constant: ET_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -3398,6 +3411,12 @@ feature {ET_AST_NODE} -- Processing
 			else
 				find_qualified_call_expression_type (an_expression, current_context)
 			end
+		end
+
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			find_quantifier_expression_type (a_expression, current_context)
 		end
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)

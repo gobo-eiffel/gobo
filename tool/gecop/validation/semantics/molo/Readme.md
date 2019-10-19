@@ -18,3 +18,4 @@ of executing the *Loop\_body* again in the resulting state.
 ## Notes
 
 * The definition of the unfolded form does not indicate what to do in case of an *Iteration* of the form `across ... is ...`.
+* The definition of the unfolded form does not indicate what to do in case of an *Iteration* of the form `∀ ...`, `∃ ...` or `⟳ ... ⟲`.

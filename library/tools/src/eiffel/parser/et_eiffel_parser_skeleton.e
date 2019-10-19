@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -528,7 +528,7 @@ feature {NONE} -- Basic operations
 				end
 			end
 				-- Reset local variables, formal arguments, object-tests
-				-- and across components before reading the next feature.
+				-- and iteration components before reading the next feature.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
@@ -561,7 +561,7 @@ feature {NONE} -- Basic operations
 				end
 			end
 				-- Reset local variables, formal arguments, object-tests
-				-- and across components before reading the next feature.
+				-- and iteration components before reading the next feature.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
@@ -927,7 +927,7 @@ feature {NONE} -- Basic operations
 			-- new closure (i.e. feature, invariant or inline agent).
 			-- Keep track of the values of `last_formal_arguments',
 			-- `last_local_variables', `last_object_tests' and
-			-- `last_across_components' for the enclosing closure.
+			-- `last_iteration_components' for the enclosing closure.
 			-- They will be restored when we reach the end of the
 			-- closure by `set_end_closure'.
 		do
@@ -945,7 +945,7 @@ feature {NONE} -- Basic operations
 			-- Indicate that the end of the closure (i.e. feature, invariant
 			-- or inline agent) being parsed has been reached. Restore
 			-- `last_formal_arguments', `last_local_variables',
-			-- `last_object_tests' and `last_across_components'
+			-- `last_object_tests' and `last_iteration_components'
 			-- for the enclosing closure if any.
 		do
 			if not last_formal_arguments_stack.is_empty then
@@ -1237,29 +1237,29 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 feature {NONE} -- AST factory
 
 	new_across_all_expression (a_across_header: detachable ET_ACROSS_EXPRESSION; an_invariant: detachable ET_LOOP_INVARIANTS;
-			an_until_conditional: detachable ET_CONDITIONAL; a_all_conditional: detachable ET_CONDITIONAL;
-			a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
-				-- New across all expression
-			do
-				if a_across_header /= Void and a_all_conditional /= Void then
-					Result := a_across_header
-					Result.set_until_conditional (an_until_conditional)
-					Result.set_iteration_conditional (a_all_conditional)
-					Result.set_all (True)
-					Result.set_invariant_part (an_invariant)
-					Result.set_variant_part (a_variant)
-					if an_end /= Void then
-						Result.set_end_keyword (an_end)
-					end
-						-- We set 'cursor_name.is_iteration_cursor' to False when
-						-- parsing within its scope.
-					Result.cursor_name.set_iteration_cursor (True)
+		an_until_conditional: detachable ET_CONDITIONAL; a_all_conditional: detachable ET_CONDITIONAL;
+		a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
+			-- New across all expression
+		do
+			if a_across_header /= Void and a_all_conditional /= Void then
+				Result := a_across_header
+				Result.set_until_conditional (an_until_conditional)
+				Result.set_iteration_conditional (a_all_conditional)
+				Result.set_all (True)
+				Result.set_invariant_part (an_invariant)
+				Result.set_variant_part (a_variant)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
 				end
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				Result.cursor_name.set_iteration_cursor (True)
 			end
+		end
 
 	new_across_expression_header (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
 		a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER): detachable ET_ACROSS_EXPRESSION
-				-- New across expression header
+			-- New across expression header
 		local
 			l_last_iteration_components: like last_iteration_components
 			l_cursor_name: ET_IDENTIFIER
@@ -1334,27 +1334,27 @@ feature {NONE} -- AST factory
 
 	new_across_some_expression (a_across_header: detachable ET_ACROSS_EXPRESSION;
 		an_invariant: detachable ET_LOOP_INVARIANTS;
-			an_until_conditional: detachable ET_CONDITIONAL;
-			a_some_conditional: detachable ET_CONDITIONAL;
-			a_variant: detachable ET_VARIANT;
-			an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
-				-- New across some expression
-			do
-				if a_across_header /= Void and a_some_conditional /= Void then
-					Result := a_across_header
-					Result.set_until_conditional (an_until_conditional)
-					Result.set_iteration_conditional (a_some_conditional)
-					Result.set_some (True)
-					Result.set_invariant_part (an_invariant)
-					Result.set_variant_part (a_variant)
-					if an_end /= Void then
-						Result.set_end_keyword (an_end)
-					end
-						-- We set 'cursor_name.is_iteration_cursor' to False when
-						-- parsing within its scope.
-					Result.cursor_name.set_iteration_cursor (True)
+		an_until_conditional: detachable ET_CONDITIONAL;
+		a_some_conditional: detachable ET_CONDITIONAL;
+		a_variant: detachable ET_VARIANT;
+		an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
+			-- New across some expression
+		do
+			if a_across_header /= Void and a_some_conditional /= Void then
+				Result := a_across_header
+				Result.set_until_conditional (an_until_conditional)
+				Result.set_iteration_conditional (a_some_conditional)
+				Result.set_some (True)
+				Result.set_invariant_part (an_invariant)
+				Result.set_variant_part (a_variant)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
 				end
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				Result.cursor_name.set_iteration_cursor (True)
 			end
+		end
 
 	new_agent_identifier_target (an_identifier: detachable ET_IDENTIFIER): detachable ET_EXPRESSION
 			-- New agent identifier target
@@ -1633,6 +1633,33 @@ feature {NONE} -- AST factory
 				end
 			end
 			Result := ast_factory.new_feature_address (d, a_name)
+		end
+
+	new_for_all_quantifier_expression_header (a_quantifier_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL): detachable ET_QUANTIFIER_EXPRESSION
+		 	-- New quantifier expression header of the form '∀'
+		local
+			l_last_iteration_components: like last_iteration_components
+			l_cursor_name: ET_IDENTIFIER
+		do
+			Result := ast_factory.new_for_all_quantifier_expression (a_quantifier_symbol, a_cursor_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, tokens.true_keyword)
+			if Result /= Void then
+				l_last_iteration_components := last_iteration_components
+				if l_last_iteration_components = Void then
+					l_last_iteration_components := new_iteration_component_list
+					last_iteration_components := l_last_iteration_components
+				end
+				l_last_iteration_components.force_last (Result)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				l_cursor_name := Result.cursor_name
+				l_cursor_name.set_iteration_cursor (False)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_iteration_cursor (True)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+			end
 		end
 
 	new_formal_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_FORMAL_ARGUMENT_LIST
@@ -2003,6 +2030,90 @@ feature {NONE} -- AST factory
 			end
 			if Result = Void then
 				Result := ast_factory.new_prefix_expression (ast_factory.new_prefix_plus_operator (a_sign), an_expression)
+			end
+		end
+
+	new_quantifier_expression (a_quantifier_expression_header: detachable ET_QUANTIFIER_EXPRESSION;
+		a_iteration_expression: detachable ET_EXPRESSION): detachable ET_QUANTIFIER_EXPRESSION
+			-- New quantifier expression of the form '∀' or '∃'
+		do
+			if a_quantifier_expression_header /= Void and a_iteration_expression /= Void then
+				Result := a_quantifier_expression_header
+				Result.set_iteration_expression (a_iteration_expression)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				Result.cursor_name.set_iteration_cursor (True)
+			end
+		end
+
+	new_repeat_instruction (a_repeat_instruction_header: detachable ET_REPEAT_INSTRUCTION;
+		a_loop_compound: detachable ET_COMPOUND; a_close_repeat_symbol: detachable ET_SYMBOL): detachable ET_REPEAT_INSTRUCTION
+			-- New repeat instruction of the form '⟳ ... ⟲'
+		do
+			if a_repeat_instruction_header /= Void then
+				Result := a_repeat_instruction_header
+				Result.set_loop_compound (a_loop_compound)
+				if a_close_repeat_symbol /= Void then
+					Result.set_close_repeat_symbol (a_close_repeat_symbol)
+				end
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				Result.cursor_name.set_iteration_cursor (True)
+			end
+		end
+
+	new_repeat_instruction_header (a_open_repeat_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION;
+		a_bar_symbol: detachable ET_SYMBOL): detachable ET_REPEAT_INSTRUCTION
+			-- New repeat instruction header of the form '⟳ ... ⟲'
+		local
+			l_last_iteration_components: like last_iteration_components
+			l_cursor_name: ET_IDENTIFIER
+		do
+			Result := ast_factory.new_repeat_instruction (a_open_repeat_symbol, a_cursor_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, Void, Void)
+			if Result /= Void then
+				l_last_iteration_components := last_iteration_components
+				if l_last_iteration_components = Void then
+					l_last_iteration_components := new_iteration_component_list
+					last_iteration_components := l_last_iteration_components
+				end
+				l_last_iteration_components.force_last (Result)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				l_cursor_name := Result.cursor_name
+				l_cursor_name.set_iteration_cursor (False)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_iteration_cursor (True)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+			end
+		end
+
+	new_there_exists_quantifier_expression_header (a_quantifier_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL): detachable ET_QUANTIFIER_EXPRESSION
+		 	-- New quantifier expression header of the form '∃'
+		local
+			l_last_iteration_components: like last_iteration_components
+			l_cursor_name: ET_IDENTIFIER
+		do
+			Result := ast_factory.new_there_exists_quantifier_expression (a_quantifier_symbol, a_cursor_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, tokens.true_keyword)
+			if Result /= Void then
+				l_last_iteration_components := last_iteration_components
+				if l_last_iteration_components = Void then
+					l_last_iteration_components := new_iteration_component_list
+					last_iteration_components := l_last_iteration_components
+				end
+				l_last_iteration_components.force_last (Result)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				l_cursor_name := Result.cursor_name
+				l_cursor_name.set_iteration_cursor (False)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_iteration_cursor (True)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
 			end
 		end
 

@@ -136,6 +136,5 @@ invariant
 
 	iteration_conditional_not_void: iteration_conditional /= Void
 	end_keyword_not_void: end_keyword /= Void
-	some_or_all: is_some xor is_all
 
 end

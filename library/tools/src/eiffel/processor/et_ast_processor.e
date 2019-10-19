@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-20189, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1298,6 +1298,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		deferred
+		end
+
 	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL)
 			-- Process `a_symbol'.
 		require
@@ -1344,6 +1351,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		require
+			a_instruction_not_void: a_instruction /= Void
 		deferred
 		end
 
