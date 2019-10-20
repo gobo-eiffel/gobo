@@ -154,8 +154,7 @@ feature {NONE} -- Processing
 				a_dynamic_system.compile (l_system_processor)
 			else
 				l_system_processor.set_providers_enabled (True)
-				l_system_processor.set_cluster_dependence_enabled (True)
-				l_system_processor.set_use_cluster_dependence_pathnames (True)
+				l_system_processor.set_cluster_dependence_enabled (False)
 				l_system_processor.compile (a_system)
 			end
 			l_system_processor.record_end_time (dt1, "Total Time")
