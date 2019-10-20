@@ -7992,6 +7992,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := all2.all_keyword.position
+			if position.is_null then
+				position := all2.position
+			end
 			code := template_code (vlel1a_template_code)
 			etl_code := vlel1_etl_code
 			default_template := default_message_template (vlel1a_default_template)
