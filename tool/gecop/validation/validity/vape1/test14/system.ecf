@@ -25,5 +25,6 @@
 		<variable name="GOBO_LIBRARY" value="../../../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library.ecf" readonly="true"/>
 		<cluster name="aa" location="./"/>
+		<override name="aa_override" location="./override"/>
 	</target>
 </system>

@@ -1,0 +1,3 @@
+class XX
+
+end

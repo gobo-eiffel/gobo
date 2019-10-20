@@ -750,6 +750,7 @@ feature {NONE} -- Feature processing
 			end
 			l_flattened_feature.set_first_precursor (l_first_precursor)
 			l_flattened_feature.set_other_precursors (l_other_precursors)
+			l_flattened_feature.set_clients (redeclared_clients (a_feature))
 			if not l_dotnet then
 				l_preconditions := l_flattened_feature.preconditions
 				if l_preconditions /= Void and then not l_preconditions.is_require_else then
@@ -1133,19 +1134,42 @@ feature {NONE} -- Clients
 			-- Clients inherited by the non-redeclared feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		do
+			add_inherited_clients_to_list (a_feature, clients_list)
+			Result := aggregated_clients (clients_list)
+			clients_list.wipe_out
+		ensure
+			inherited_clients_not_void: Result /= Void
+		end
+
+	redeclared_clients (a_feature: ET_REDECLARED_FEATURE): ET_CLIENT_LIST
+			-- Clients of redeclared feature `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			clients_list.force_last (a_feature.flattened_feature.clients)
+			add_inherited_clients_to_list (a_feature, clients_list)
+			Result := aggregated_clients (clients_list)
+			clients_list.wipe_out
+		ensure
+			redeclared_clients_not_void: Result /= Void
+		end
+
+	add_inherited_clients_to_list (a_feature: ET_ADAPTED_FEATURE; a_list: DS_ARRAYED_LIST [ET_CLIENT_LIST])
+			-- Add to `a_list' the clients inherited by feature `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_list_not_void: a_list /= Void
+			no_void_client_list: not a_list.has_void
 		local
 			l_parent_feature: detachable ET_PARENT_FEATURE
-			l_clients: ET_CLIENT_LIST
-			l_client: ET_CLIENT
 			l_parent: ET_PARENT
 			l_export: ET_EXPORT
 			l_name: ET_FEATURE_NAME
-			l_overridden: BOOLEAN
 			l_ise: BOOLEAN
 			l_has_all: BOOLEAN
+			l_has_feature_name: BOOLEAN
 			i, nb: INTEGER
-			j, nb2: INTEGER
-			l_largest_clients: detachable ET_CLIENT_LIST
 		do
 			l_ise := system_processor.is_ise
 			from
@@ -1153,7 +1177,7 @@ feature {NONE} -- Clients
 			until
 				l_parent_feature = Void
 			loop
-				l_overridden := False
+				clients_list.force_last (l_parent_feature.precursor_feature.clients)
 				l_name := l_parent_feature.name
 				l_parent := l_parent_feature.parent
 				if attached l_parent.exports as l_exports then
@@ -1162,6 +1186,8 @@ feature {NONE} -- Clients
 							-- The ISE semantics follows what is described in ETL2:
 							-- 'export {CLIENT} all' are not taken into account if
 							-- the feature name appears in another export clause.
+						l_has_feature_name := False
+						l_has_all := False
 						from i := 1 until i > nb loop
 							l_export := l_exports.item (i)
 							if l_export.is_all then
@@ -1169,17 +1195,16 @@ feature {NONE} -- Clients
 							else
 								if l_export.has_feature_name (l_name) then
 									clients_list.force_last (l_export.clients (l_name))
-									l_overridden := True
+									l_has_feature_name := True
 								end
 							end
 							i := i + 1
 						end
-						if not l_overridden and l_has_all then
+						if not l_has_feature_name and l_has_all then
 							from i := 1 until i > nb loop
 								l_export := l_exports.item (i)
 								if l_export.is_all then
 									clients_list.force_last (l_export.clients (l_name))
-									l_overridden := True
 								end
 								i := i + 1
 							end
@@ -1189,66 +1214,72 @@ feature {NONE} -- Clients
 							l_export := l_exports.item (i)
 							if l_export.has_feature_name (l_name) then
 								clients_list.force_last (l_export.clients (l_name))
-								l_overridden := True
 							end
 							i := i + 1
 						end
 					end
 				end
-				if not l_overridden then
-					clients_list.force_last (l_parent_feature.precursor_feature.clients)
-				end
 				l_parent_feature := l_parent_feature.merged_feature
 			end
-			Result := clients_list.first
-			nb := clients_list.count
-			from i := 1 until i > nb loop
-				l_clients := clients_list.item (i)
-				if l_clients.is_none then
-					clients_list.remove (i)
-					nb := nb - 1
-				else
-					nb2 := l_clients.count
-					from j := 1 until j > nb2 loop
-						l_client := l_clients.client (j)
-						client_classes.force (l_client, l_client.base_class)
-						j := j + 1
+		ensure
+			a_list_not_empty: not a_list.is_empty
+			no_void_client_list: not a_list.has_void
+		end
+
+	aggregated_clients (a_list: DS_ARRAYED_LIST [ET_CLIENT_LIST]): ET_CLIENT_LIST
+			-- Client list made up of all classes contained in `a_list'
+		require
+			a_list_not_void: a_list /= Void
+			a_list_not_empty: not a_list.is_empty
+			no_void_client_list: not a_list.has_void
+		local
+			l_clients: ET_CLIENT_LIST
+			l_client: ET_CLIENT
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_nb_not_none: INTEGER
+			l_largest_clients: detachable ET_CLIENT_LIST
+		do
+			nb := a_list.count
+			if nb = 1 then
+				Result := a_list.first
+			else
+				from i := 1 until i > nb loop
+					l_clients := a_list.item (i)
+					if not l_clients.is_none then
+						l_nb_not_none := l_nb_not_none + 1
+						nb2 := l_clients.count
+						from j := 1 until j > nb2 loop
+							l_client := l_clients.client (j)
+							client_classes.force (l_client, l_client.base_class)
+							j := j + 1
+						end
+							-- Find the largest client clause.
+						if l_largest_clients = Void or else l_largest_clients.count < nb2 then
+							l_largest_clients := l_clients
+						end
 					end
 					i := i + 1
 				end
-			end
-			if clients_list.is_empty then
-				-- Keep `Result'.
-			elseif clients_list.count = 1 then
-				Result := clients_list.first
-			else
-					-- Find the largest client clause which
-					-- contains all client classes if any.
-				nb2 := client_classes.count
-				nb := clients_list.count
-				from i := 1 until i > nb loop
-					l_clients := clients_list.item (i)
-					if l_clients.count >= nb2 then
-						l_largest_clients := l_clients
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-				if l_largest_clients /= Void and then client_classes.keys.for_all (agent l_largest_clients.has_class) then
+				if l_largest_clients = Void then
+						-- "{NONE}"
+					Result := a_list.first
+				elseif l_nb_not_none = 1 then
+					Result := l_largest_clients
+				elseif l_largest_clients.count >= client_classes.count and then client_classes.keys.for_all (agent l_largest_clients.has_class) then
+						-- The largest client clause contains all client classes.
 					Result := l_largest_clients
 				else
-					create Result.make_with_capacity (nb2)
+					create Result.make_with_capacity (client_classes.count)
 					from client_classes.finish until client_classes.before loop
 						Result.put_first (client_classes.item_for_iteration)
 						client_classes.back
 					end
 				end
+				client_classes.wipe_out
 			end
-			client_classes.wipe_out
-			clients_list.wipe_out
 		ensure
-			inherited_clients_not_void: Result /= Void
+			aggregated_clients_not_void: Result /= Void
 		end
 
 feature {NONE} -- Feature adaptation validity

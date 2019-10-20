@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: VAPE
+
+Error: some clients have access to routine but not to a feature used in
+  its precondition.
+What to do: make sure that all features used in the precondition
+  are exported to all the clients to which routine is available.
+
+Class: AA
+Feature: f
+Insufficiently exported feature: forth from ITERATION_CURSOR
+Line: 21
+      require
+->      across b as c all True end
+      do
+
+-------------------------------------------------------------------------------

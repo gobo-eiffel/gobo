@@ -13,7 +13,7 @@ feature {AA}
 			Result := Current
 		end
 
-feature
+feature {ANY}
 
 	item: detachable ANY
 		do

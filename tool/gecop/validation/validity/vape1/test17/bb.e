@@ -6,7 +6,7 @@ inherit
 	
 	ITERATION_CURSOR [detachable ANY]
 
-feature
+feature {ANY}
 
 	new_cursor: BB
 		do

@@ -21,6 +21,8 @@
   as syntactic sugar for `across list is x some x > 0 end`.
 * Added support for repeat instructions of the form `⟳ x: list ¦ x.do_something ⟲`
   as syntactic sugar for `across list is x loop x.do_something end`.
+* Relaxed the implementation of export status of inherited features
+  in order to be compliant with the ECMA standard.
 
 ## Version 19.10.03.1 - 3 October 2019
 

@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VUEX(2)
+
+Error: feature of qualified call is not available to client class.
+What to do: make sure feature after dot is exported to caller.
+
+Class: ZZ
+Feature: make
+Feature: f Class: CC Version from: BB
+Not exported to class ZZ
+Line: 11
+      do
+->      c.f ("ZZ%N")
+      end
+
+-------------------------------------------------------------------------------
