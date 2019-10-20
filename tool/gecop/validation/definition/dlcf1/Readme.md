@@ -1,3 +1,3 @@
-# Definition DLCF-2
+# Definition DLCF-1
 
-These [tests](.) are exercising the case 2 of the definition [DLCF](../dlcf/Readme.md).
+These [tests](.) are exercising the case 1 of the definition [DLCF](../dlcf/Readme.md).
