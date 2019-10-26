@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders that do nothing"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -108,12 +108,12 @@ feature {ET_DYNAMIC_PRIMARY_TYPE, ET_DYNAMIC_SYSTEM} -- Generation
 
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
-	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE)
+	build_tuple_reference_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of result type of `an_item_feature' from `a_tuple_type'.
 		do
 		end
 
-	build_tuple_put (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE)
+	build_tuple_put_reference (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of argument type of `a_put_feature' from `a_tuple_type'.
 		do
 		end

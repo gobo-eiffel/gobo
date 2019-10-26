@@ -18,8 +18,8 @@ inherit
 		redefine
 			new_dynamic_type_set,
 			build_dynamic_type_sets,
-			build_tuple_item,
-			build_tuple_put,
+			build_tuple_reference_item,
+			build_tuple_put_reference,
 			build_agent_call,
 			report_manifest_array,
 			report_manifest_tuple,
@@ -190,31 +190,36 @@ feature -- Generation
 
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
-	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE)
+	build_tuple_reference_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of result type of `an_item_feature' from `a_tuple_type'.
 		local
 			i, nb: INTEGER
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			l_result_type_set := an_item_feature.result_type_set
 			if l_result_type_set /= Void then
 				l_item_type_sets := a_tuple_type.item_type_sets
 				nb := l_item_type_sets.count
 				from i := 1 until i > nb loop
-					l_item_type_sets.item (i).put_target (l_result_type_set, current_dynamic_system)
+					l_item_type_set := l_item_type_sets.item (i)
+					if not l_item_type_set.static_type.is_basic then
+						l_item_type_set.put_target (l_result_type_set, current_dynamic_system)
+					end
 					i := i + 1
 				end
 			end
 		end
 
-	build_tuple_put (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE)
+	build_tuple_put_reference (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; a_put_feature: ET_DYNAMIC_FEATURE)
 			-- Build type set of argument type of `a_put_feature' from `a_tuple_type'.
 		local
 			i, nb: INTEGER
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			l_argument_type_sets := a_put_feature.dynamic_type_sets
 			if l_argument_type_sets.count > 1 then
@@ -222,7 +227,10 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 				l_item_type_sets := a_tuple_type.item_type_sets
 				nb := l_item_type_sets.count
 				from i := 1 until i > nb loop
-					l_argument_type_set.put_target (l_item_type_sets.item (i), current_dynamic_system)
+					l_item_type_set := l_item_type_sets.item (i)
+					if not l_item_type_set.static_type.is_basic then
+						l_argument_type_set.put_target (l_item_type_set, current_dynamic_system)
+					end
 					i := i + 1
 				end
 			end
