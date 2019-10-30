@@ -5,7 +5,7 @@ note
 		"ECF option names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -157,7 +157,10 @@ feature -- Names
 	warning_option_name: STRING = "warning"
 			-- Name of option "warning"
 			--
-			-- Values: true|false
+			-- Values: none|warning|error
+			-- Was: true|false until ECF 1.20.0 included,
+			--      where "false" had the meaning of "none"
+			--      and "true" has the meaning of "warning".
 
 	warning_export_class_missing_option_name: STRING = "export_class_missing"
 			-- Name of "warning" option "export_class_missing"
@@ -248,6 +251,11 @@ feature -- Values
 			--
 			-- Used in "cat_call_detection" and "void_safety".
 
+	error_option_value: STRING = "error"
+			-- Value "error"
+			--
+			-- Used in "warning".
+
 	false_option_value: STRING = "false"
 			-- Value "false"
 
@@ -269,7 +277,7 @@ feature -- Values
 	none_option_value: STRING = "none"
 			-- Value "none"
 			--
-			-- Used in "cat_call_detection" and "void_safety".
+			-- Used in "cat_call_detection", "void_safety" and "warning".
 
 	obsolete_option_value: STRING = "obsolete"
 			-- Value "obsolete"
@@ -293,5 +301,10 @@ feature -- Values
 
 	true_option_value: STRING = "true"
 			-- Value "true"
+
+	warning_option_value: STRING = "warning"
+			-- Value "warning"
+			--
+			-- Used in "warning".
 
 end

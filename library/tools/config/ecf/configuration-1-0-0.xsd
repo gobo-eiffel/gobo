@@ -1,0 +1,414 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" elementFormDefault="qualified">
+	
+	<xs:element name="system">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="description" type="xs:string" minOccurs="0"/>
+				<xs:element name="target" type="target" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="uuid" type="uuid" use="required"/>
+			<xs:attribute name="readonly" type="xs:boolean" use="optional"/>
+			<xs:attribute name="library_target" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:simpleType name="uuid">
+		<xs:restriction base="xs:string">
+			<xs:pattern
+				value="[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="location">
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="regexp">
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="target">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="root" type="root" minOccurs="0"/>
+			<xs:element name="version" type="version" minOccurs="0"/>
+			<xs:element name="file_rule" type="file_rule" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="option" type="option" minOccurs="0"/>
+			<xs:element name="setting" type="setting" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="mapping" type="mapping" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="external_include" type="external" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="external_object" type="external" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="external_library" type="external" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="external_resource" type="external" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="external_make" type="external" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="pre_compile_action" type="action" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="post_compile_action" type="action" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="variable" type="variable" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="precompile" type="precompile" minOccurs="0"
+				maxOccurs="1"/>
+			<xs:element name="library" type="library" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="assembly" type="assembly" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="cluster" type="cluster" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="override" type="override" minOccurs="0"
+				maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="extends" type="xs:string" use="optional"/>
+		<xs:attribute name="abstract" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	
+	<xs:complexType name="root">
+		<xs:attribute name="cluster" type="xs:string" use="optional"/>
+		<xs:attribute name="class" type="xs:string" use="required"/>
+		<xs:attribute name="feature" type="xs:string" use="optional"/>
+		<xs:attribute name="all_classes" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="version">
+		<xs:attribute name="major" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="minor" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="release" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="build" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="product" type="xs:string" use="optional"/>
+		<xs:attribute name="company" type="xs:string" use="optional"/>
+		<xs:attribute name="copyright" type="xs:string" use="optional"/>
+		<xs:attribute name="trademark" type="xs:string" use="optional"/>
+	</xs:complexType>
+	
+	<xs:complexType name="file_rule">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="exclude" type="regexp" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="include" type="regexp" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="option">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="debug" type="debug" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="assertions" type="assertions" minOccurs="0"/>
+			<xs:element name="warning" type="warning" minOccurs="0"
+				maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="trace" type="xs:boolean" use="optional"/>
+		<xs:attribute name="profile" type="xs:boolean" use="optional"/>
+		<xs:attribute name="optimize" type="xs:boolean" use="optional"/>
+		<xs:attribute name="debug" type="xs:boolean" use="optional"/>
+		<xs:attribute name="warning" type="xs:boolean" use="optional"/>
+		<xs:attribute name="namespace" type="xs:string" use="optional"/>
+		<xs:attribute name="msil_application_optimize" type="xs:boolean" use="optional" />
+	</xs:complexType>
+
+	<xs:complexType name="setting">
+		<xs:attribute name="name" type="available_settings" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="available_settings">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "address_expression"/>
+			  <xs:enumeration value = "array_optimization"/>
+			  <xs:enumeration value = "automatic_backup"/>
+			  <xs:enumeration value = "check_generic_creation_constraint"/>
+			  <xs:enumeration value = "check_vape"/>
+			  <xs:enumeration value = "console_application"/>
+			  <xs:enumeration value = "cls_compliant"/>
+			  <xs:enumeration value = "dead_code_removal"/>
+			  <xs:enumeration value = "dotnet_naming_convention"/>
+			  <xs:enumeration value = "dynamic_runtime"/>
+			  <xs:enumeration value = "enforce_unique_class_names"/>
+			  <xs:enumeration value = "exception_trace"/>
+			  <xs:enumeration value = "executable_name"/>
+			  <xs:enumeration value = "force_32bits"/>
+			  <xs:enumeration value = "full_type_checking"/>
+			  <xs:enumeration value = "il_verifiable"/>
+			  <xs:enumeration value = "inlining"/>
+			  <xs:enumeration value = "inlining_size"/>
+			  <xs:enumeration value = "java_generation"/>
+			  <xs:enumeration value = "library_root"/>
+			  <xs:enumeration value = "line_generation"/>
+			  <xs:enumeration value = "metadata_cache_path"/>
+			  <xs:enumeration value = "msil_assembly_compatibility"/>
+			  <xs:enumeration value = "msil_classes_per_module"/>
+			  <xs:enumeration value = "msil_clr_version"/>
+			  <xs:enumeration value = "msil_culture"/>
+			  <xs:enumeration value = "msil_generation"/>
+			  <xs:enumeration value = "msil_generation_type"/>
+			  <xs:enumeration value = "msil_key_file_name"/>
+			  <xs:enumeration value = "msil_use_optimized_precompile"/>
+			  <xs:enumeration value = "multithreaded"/>
+			  <xs:enumeration value = "old_verbatim_strings"/>
+			  <xs:enumeration value = "platform"/>
+			  <xs:enumeration value = "external_runtime"/>
+			  <xs:enumeration value = "shared_library_definition"/>
+			  <xs:enumeration value = "use_cluster_name_as_namespace"/>
+			  <xs:enumeration value = "use_all_cluster_name_as_namespace"/>
+	    </xs:restriction>
+	</xs:simpleType>		
+
+	<xs:complexType name="debug">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="enabled" type="xs:boolean" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="assertions">
+		<xs:attribute name="precondition" type="xs:boolean" use="optional"/>
+		<xs:attribute name="postcondition" type="xs:boolean" use="optional"/>
+		<xs:attribute name="check" type="xs:boolean" use="optional"/>
+		<xs:attribute name="invariant" type="xs:boolean" use="optional"/>
+		<xs:attribute name="loop" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	
+	<xs:complexType name="warning">
+		<xs:attribute name="name" type="available_warnings" use="required"/>
+		<xs:attribute name="enabled" type="xs:boolean" use="required"/>
+	</xs:complexType>
+	
+	<xs:simpleType name="available_warnings">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "unused_local"/>
+			  <xs:enumeration value = "obsolete_class"/>
+			  <xs:enumeration value = "obsolete_feature"/>
+			  <xs:enumeration value = "once_in_generic"/>
+			  <xs:enumeration value = "syntax"/>
+			  <xs:enumeration value = "old_verbatim_strings"/>
+			  <xs:enumeration value = "same_uuid"/>
+			  <xs:enumeration value = "export_class_missing"/>
+			  <xs:enumeration value = "vweq"/>
+			  <xs:enumeration value = "vjrv"/>
+			  <xs:enumeration value = "renaming_unknown_class"/>
+			  <xs:enumeration value = "option_unknown_class"/>
+	    </xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="variable">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="action">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="command" type="xs:string" use="required"/>
+		<xs:attribute name="working_directory" type="xs:string" use="optional"/>
+		<xs:attribute name="succeed" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	
+	<xs:complexType name="condition">
+		<xs:sequence>
+			<xs:element name="platform" type="platform" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="build" type="build" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="multithreaded" type="multithreaded" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="dotnet" type="dotnet" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="dynamic_runtime" type="dynamic_runtime" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="version" type="version_condition" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="custom" type="custom" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="platform">
+		<xs:attribute name="value" type="platform_list"/>
+		<xs:attribute name="excluded_value" type="platform_list"/>
+	</xs:complexType>
+
+	<xs:simpleType name="platform_list">
+		<xs:list itemType="available_platforms"/>
+	</xs:simpleType> 
+		
+	<xs:simpleType name="available_platforms">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "windows"/>
+			  <xs:enumeration value = "unix"/>
+			  <xs:enumeration value = "macintosh"/>
+			  <xs:enumeration value = "vxworks"/>
+	    </xs:restriction>
+	</xs:simpleType>	
+
+	<xs:complexType name="build">
+		<xs:attribute name="value" type="build_list"/>
+		<xs:attribute name="excluded_value" type="build_list"/>
+	</xs:complexType>
+
+	<xs:simpleType name="build_list">
+		<xs:list itemType="available_builds"/>
+	</xs:simpleType> 
+	
+	<xs:simpleType name="available_builds">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "workbench"/>
+			  <xs:enumeration value = "finalize"/>
+	    </xs:restriction>
+	</xs:simpleType>	
+		
+	<xs:complexType name="multithreaded">
+		<xs:attribute name="value" type="xs:boolean" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="dotnet">
+		<xs:attribute name="value" type="xs:boolean" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="dynamic_runtime">
+		<xs:attribute name="value" type="xs:boolean" use="required"/>
+	</xs:complexType>
+		
+	<xs:complexType name="version_condition">
+		<xs:attribute type="version_type" name="type"/>
+		<xs:attribute type="version_number" name="min" use="optional"/>
+		<xs:attribute type="version_number" name="max" use="optional"/>
+	</xs:complexType>
+
+	<xs:simpleType name="version_type">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "compiler"/>
+			  <xs:enumeration value = "msil_clr"/>
+	    </xs:restriction>
+	</xs:simpleType>	
+		
+	<xs:simpleType name="version_number">
+		<xs:restriction base="xs:string">
+			<xs:pattern
+				value="\d*(\.\d*){0,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="custom">
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="value" type="xs:string" use="optional"/>
+		<xs:attribute name="excluded_value" type="xs:string" use="optional"/>
+	</xs:complexType>
+	
+	<xs:complexType name="external">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="location" type="location"/>
+	</xs:complexType>
+
+	<xs:complexType name="renaming">
+		<xs:attribute name="old_name" type="xs:string"/>
+		<xs:attribute name="new_name" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="class_option">
+		<xs:complexContent>
+			<xs:extension base="option">
+				<xs:attribute name="class" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+			
+	<xs:complexType name="group">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="option" type="option" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="renaming" type="renaming" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="class_option" type="class_option" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="location" type="location" use="required"/>
+		<xs:attribute name="readonly" type="xs:boolean" use="optional"/>
+		<xs:attribute name="prefix" type="xs:string" use="optional"/>
+	</xs:complexType>
+	
+	<xs:complexType name="library">
+		<xs:complexContent>
+			<xs:extension base="group">
+				<xs:sequence>
+					<xs:element name="visible" type="visible" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="precompile">
+		<xs:complexContent>
+			<xs:extension base="library">
+				<xs:attribute name="eifgens_location" type="xs:string" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="assembly">
+		<xs:complexContent>
+			<xs:extension base="group">
+				<xs:attribute name="assembly_name" type="xs:string" use="optional"/>
+				<xs:attribute name="assembly_version" type="xs:string" use="optional"/>
+				<xs:attribute name="assembly_culture" type="xs:string" use="optional"/>
+				<xs:attribute name="assembly_key" type="xs:string" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="cluster">
+		<xs:complexContent>
+			<xs:extension base="group">
+				<xs:sequence>
+					<xs:element name="file_rule" type="file_rule" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="uses" type="uses" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="visible" type="visible" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="cluster" type="cluster" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="mapping" type="mapping" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="recursive" type="xs:boolean" use="optional"/>
+				<xs:attribute name="hidden" type="xs:boolean" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="mapping">
+		<xs:attribute name="old_name" type="xs:string" use="required"/>
+		<xs:attribute name="new_name" type="xs:string" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="uses">
+		<xs:attribute name="group" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="visible">
+		<xs:attribute name="class" type="xs:string" use="required"/>
+		<xs:attribute name="feature" type="xs:string" use="optional"/>
+		<xs:attribute name="class_rename" type="xs:string" use="optional"/>
+		<xs:attribute name="feature_rename" type="xs:string" use="optional"/>
+	</xs:complexType>
+	
+	<xs:complexType name="override">
+		<xs:complexContent>
+			<xs:extension base="cluster">
+				<xs:sequence>
+					<xs:element name="overrides" type="overrides" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="overrides">
+		<xs:attribute name="group" type="xs:string" use="required"/>
+	</xs:complexType>
+</xs:schema>

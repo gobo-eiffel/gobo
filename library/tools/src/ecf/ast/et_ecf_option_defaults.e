@@ -5,7 +5,7 @@ note
 		"ECF option default values"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,9 @@ feature -- Access
 		require
 			a_ecf_version_not_void: a_ecf_version /= Void
 		do
-			if a_ecf_version >= ecf_1_18_0 then
+			if a_ecf_version >= ecf_1_21_0 then
+				Result := default_options_1_21_0
+			elseif a_ecf_version >= ecf_1_18_0 then
 				Result := default_options_1_18_0
 			elseif a_ecf_version >= ecf_1_15_0 then
 				Result := default_options_1_15_0
@@ -48,6 +50,16 @@ feature -- Access
 		ensure
 			instance_free: class
 			default_options_not_void: Result /= Void
+		end
+
+	default_options_1_21_0: ET_ECF_OPTIONS
+			-- Default option values for ECF 1.21.0 and above
+		once
+			create Result.make
+			set_default_options_1_21_0 (Result)
+		ensure
+			instance_free: class
+			default_options_1_21_0_not_void: Result /= Void
 		end
 
 	default_options_1_18_0: ET_ECF_OPTIONS
@@ -183,7 +195,9 @@ feature -- Access
 		require
 			a_ecf_version_not_void: a_ecf_version /= Void
 		do
-			if a_ecf_version >= ecf_1_18_0 then
+			if a_ecf_version >= ecf_1_21_0 then
+				Result := valid_options_1_21_0
+			elseif a_ecf_version >= ecf_1_18_0 then
 				Result := valid_options_1_18_0
 			elseif a_ecf_version >= ecf_1_16_0 then
 				Result := valid_options_1_16_0
@@ -236,10 +250,22 @@ feature -- Access
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.profile_option_name)
 			Result.force_last (syntax_option_value_regexp, {ET_ECF_OPTION_NAMES}.syntax_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.trace_option_name)
-			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_option_name)
+			Result.force_last (warning_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_option_name)
 		ensure
 			instance_free: class
 			valid_options_latest_not_void: Result /= Void
+			no_void_option_name: not Result.has_void
+		end
+
+	valid_options_1_21_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+			-- Valid option values for ECF 1.21.0 and above
+			--
+			-- A void regexp means that there is no constraint on the option value.
+		once
+			Result := valid_options_latest
+		ensure
+			instance_free: class
+			valid_options_1_21_0_not_void: Result /= Void
 			no_void_option_name: not Result.has_void
 		end
 
@@ -248,7 +274,8 @@ feature -- Access
 			--
 			-- A void regexp means that there is no constraint on the option value.
 		once
-			Result := valid_options_latest
+			Result := valid_options_1_21_0.twin
+			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_option_name)
 		ensure
 			instance_free: class
 			valid_options_1_18_0_not_void: Result /= Void
@@ -260,7 +287,7 @@ feature -- Access
 			--
 			-- A void regexp means that there is no constraint on the option value.
 		once
-			Result := valid_options_1_18_0
+			Result := valid_options_1_18_0.twin
 			Result.remove ({ET_ECF_OPTION_NAMES}.manifest_array_type_option_name)
 		ensure
 			instance_free: class
@@ -524,7 +551,7 @@ feature -- Setting
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.profile_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.trace_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.none_option_value)
 			a_options.set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_invariant_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_loop_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
@@ -549,12 +576,23 @@ feature -- Setting
 			instance_free: class
 		end
 
+	set_default_options_1_21_0 (a_options: ET_ECF_OPTIONS)
+			-- Set in `a_options' the default values for ECF 1.21.0 and above.
+		require
+			a_options_not_void: a_options /= Void
+		do
+			set_default_options_latest (a_options)
+		ensure
+			instance_free: class
+		end
+
 	set_default_options_1_18_0 (a_options: ET_ECF_OPTIONS)
 			-- Set in `a_options' the default values for ECF 1.18.0 and above.
 		require
 			a_options_not_void: a_options /= Void
 		do
-			set_default_options_latest (a_options)
+			set_default_options_1_21_0 (a_options)
+			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 		ensure
 			instance_free: class
 		end
@@ -693,6 +731,17 @@ feature {NONE} -- Implementation
 			instance_free: class
 			void_safety_old_option_value_regexp_not_void: Result /= Void
 			void_safety_old_option_value_regexp_compiled: Result.is_compiled
+		end
+
+	warning_option_value_regexp: RX_REGULAR_EXPRESSION
+			-- Regular expression for validation of "warning" option values
+		once
+			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
+			Result.compile ("(?i)(" + {ET_ECF_OPTION_NAMES}.none_option_value + "|" + {ET_ECF_OPTION_NAMES}.warning_option_value + "|" + {ET_ECF_OPTION_NAMES}.error_option_value + ")")
+		ensure
+			instance_free: class
+			warning_option_value_regexp_not_void: Result /= Void
+			warning_option_value_regexp_compiled: Result.is_compiled
 		end
 
 end

@@ -23,6 +23,10 @@
   as syntactic sugar for `across list is x loop x.do_something end`.
 * Relaxed the implementation of export status of inherited features
   in order to be compliant with the ECMA standard.
+* Refined the way dynamic type sets for tuple items are computed.
+* Added support for new values `none|warning|error` for option `warning`
+  in ECF classes as introduced in ECF 1.21.0. Note that `gec` does not take
+  this option into account.
 
 ## Version 19.10.03.1 - 3 October 2019
 

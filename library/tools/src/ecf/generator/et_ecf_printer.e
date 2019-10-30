@@ -2030,18 +2030,6 @@ feature {NONE} -- Adaptation
 					else
 						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 					end
-				elseif a_target.parent = Void then
-					if attached a_target.settings.value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_value then
-						if attached l_default_settings.value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_default_value then
-							if not STRING_.same_case_insensitive (l_value, l_default_value) then
-								if STRING_.same_case_insensitive (l_value, {ET_ECF_SETTING_NAMES}.none_setting_value) then
-									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
-								else
-									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
-								end
-							end
-						end
-					end
 				end
 			end
 			if ecf_version < ecf_1_16_0 then
@@ -2215,7 +2203,7 @@ feature {NONE} -- Adaptation
 			l_default_options := default_options (ecf_version)
 			l_original_options := a_target.options
 			if a_target.parent /= Void or l_original_options.secondary_options = l_default_options then
-				if ecf_version >= ecf_1_18_0 then
+				if ecf_version >= ecf_1_21_0 then
 					Result := l_original_options
 				else
 					create Result.make
@@ -2235,7 +2223,7 @@ feature {NONE} -- Adaptation
 			else
 				Result := explicit_options (l_original_options, l_default_options)
 			end
-			if ecf_version < ecf_1_18_0 then
+			if ecf_version < ecf_1_21_0 then
 				if ecf_version < ecf_1_16_0 then
 						-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
 					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
@@ -2342,7 +2330,7 @@ feature {NONE} -- Adaptation
 			l_default_options: ET_ECF_OPTIONS
 		do
 			l_default_options := default_options (ecf_version)
-			if ecf_version >= ecf_1_18_0 then
+			if ecf_version >= ecf_1_21_0 then
 				Result := a_options
 			else
 				create Result.make
@@ -2359,7 +2347,7 @@ feature {NONE} -- Adaptation
 					Result.set_primary_warning_value (l_primary_warnings.key, l_primary_warnings.item)
 				end
 			end
-			if ecf_version < ecf_1_18_0 then
+			if ecf_version < ecf_1_21_0 then
 				if ecf_version < ecf_1_16_0 then
 						-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
 					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
@@ -2439,6 +2427,16 @@ feature {NONE} -- Adaptation
 		require
 			a_options_not_void: a_options /= Void
 		do
+			if ecf_version < ecf_1_21_0 then
+				if attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name) as l_value then
+						-- Values of option "warning" have changed in ECF 1.21.0.
+					if STRING_.same_case_insensitive (l_value, {ET_ECF_OPTION_NAMES}.none_option_value) then
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+					else
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+					end
+				end
+			end
 			if ecf_version >= ecf_1_4_0 and ecf_version < ecf_1_5_0 then
 					-- Option "syntax_level" has been superseded by option "syntax" in ECF 1.5.0.
 				a_options.primary_options.remove ({ET_ECF_OPTION_NAMES}.syntax_level_option_name)

@@ -2339,7 +2339,8 @@ feature {NONE} -- Element change
 			a_default_options_not_void: a_default_options /= Void
 			a_target_not_void: a_target /= Void
 		local
-			l_name: STRING
+			l_option_name: STRING
+			l_option_value: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			l_cursor := a_element.new_cursor
@@ -2357,11 +2358,20 @@ feature {NONE} -- Element change
 						end
 					end
 				elseif attached {XM_ATTRIBUTE} l_cursor.item as l_attribute then
-					l_name := l_attribute.name
-					if attached a_options.primary_value (l_name) then
+					l_option_name := l_attribute.name
+					if attached a_options.primary_value (l_option_name) then
 -- TODO: warning: several options with the same name! (not reported by ISE: use the last one.)
 					end
-					a_options.set_primary_value (l_name, l_attribute.value)
+					l_option_value := l_attribute.value
+					if STRING_.same_case_insensitive (l_option_name, {ET_ECF_OPTION_NAMES}.warning_option_name) then
+							-- Values of option "warning" have changed in ECF 1.21.0.
+						if STRING_.same_case_insensitive (l_option_value, {ET_ECF_OPTION_NAMES}.false_option_value) then
+							l_option_value := {ET_ECF_OPTION_NAMES}.none_option_value
+						elseif STRING_.same_case_insensitive (l_option_value, {ET_ECF_OPTION_NAMES}.true_option_value) then
+							l_option_value := {ET_ECF_OPTION_NAMES}.warning_option_value
+						end
+					end
+					a_options.set_primary_value (l_option_name, l_option_value)
 				end
 				l_cursor.forth
 			end
@@ -2425,6 +2435,7 @@ feature {NONE} -- Element change
 			is_setting: STRING_.same_case_insensitive (a_element.name, xml_setting)
 			a_target_not_void: a_target /= Void
 		local
+			l_setting_name: STRING
 			l_setting_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
@@ -2436,11 +2447,12 @@ feature {NONE} -- Element change
 			elseif l_value.value.is_empty then
 				error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
-				if attached a_settings.primary_value (l_name.value) then
+				l_setting_name := l_name.value
+				if attached a_settings.primary_value (l_setting_name) then
 -- TODO: warning: several settings with the same name! (not reported by ISE: use the last one.)
 				end
 				l_setting_value := l_value.value
-				if STRING_.same_case_insensitive (l_name.value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) then
+				if STRING_.same_case_insensitive (l_setting_name, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) then
 						-- Values of setting "dead_code_removal" have changed in ECF 1.20.0.
 					if STRING_.same_case_insensitive (l_setting_value, {ET_ECF_SETTING_NAMES}.false_setting_value) then
 						l_setting_value := {ET_ECF_SETTING_NAMES}.none_setting_value
@@ -2448,7 +2460,7 @@ feature {NONE} -- Element change
 						l_setting_value := {ET_ECF_SETTING_NAMES}.feature_setting_value
 					end
 				end
-				a_settings.set_primary_value (l_name.value, l_setting_value)
+				a_settings.set_primary_value (l_setting_name, l_setting_value)
 			end
 		end
 

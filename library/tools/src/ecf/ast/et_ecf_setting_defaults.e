@@ -169,7 +169,7 @@ feature -- Access
 			--
 			-- A void regexp means that there is no constraint on the setting value.
 		once
-			Result := valid_settings_1_20_0
+			Result := valid_settings_1_20_0.twin
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
 		ensure
 			instance_free: class
@@ -182,7 +182,7 @@ feature -- Access
 			--
 			-- A void regexp means that there is no constraint on the setting value.
 		once
-			Result := valid_settings_1_18_0
+			Result := valid_settings_1_18_0.twin
 			Result.remove ({ET_ECF_SETTING_NAMES}.manifest_array_type_setting_name)
 			Result.force_last (Void, {ET_ECF_SETTING_NAMES}.msil_assembly_compatibility_setting_name)
 		ensure
