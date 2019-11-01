@@ -1653,7 +1653,7 @@ feature -- Output
 						print_external_values (l_external_cflags, {ET_ECF_ELEMENT_NAMES}.xml_external_cflag, {ET_ECF_ELEMENT_NAMES}.xml_value)
 					else
 							-- <external_cflag> was introduced in ECF 1.10.0.
-						print_external_values (l_external_cflags, {ET_ECF_ELEMENT_NAMES}.xml_external_object, {ET_ECF_ELEMENT_NAMES}.xml_value)
+						print_external_values (l_external_cflags, {ET_ECF_ELEMENT_NAMES}.xml_external_object, {ET_ECF_ELEMENT_NAMES}.xml_location)
 					end
 				end
 				if attached a_target.external_objects as l_external_objects and then not l_external_objects.is_empty then
@@ -1667,7 +1667,7 @@ feature -- Output
 				end
 				if attached a_target.external_linker_flags as l_external_linker_flags and then not l_external_linker_flags.is_empty then
 					if ecf_version >= ecf_1_10_0 then
-						print_external_values (l_external_linker_flags, {ET_ECF_ELEMENT_NAMES}.xml_external_linker_flag, {ET_ECF_ELEMENT_NAMES}.xml_location)
+						print_external_values (l_external_linker_flags, {ET_ECF_ELEMENT_NAMES}.xml_external_linker_flag, {ET_ECF_ELEMENT_NAMES}.xml_value)
 					else
 							-- <external_linker_flag> was introduced in ECF 1.10.0.
 						print_external_values (l_external_linker_flags, {ET_ECF_ELEMENT_NAMES}.xml_external_library, {ET_ECF_ELEMENT_NAMES}.xml_location)

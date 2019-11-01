@@ -2,6 +2,11 @@
 
 ## Version ?? - ??
 
+### gedoc
+
+* Fixed ECF pretty-printer when printing `<external_linker>`. The attribute
+  name is `value` and not `location`.
+
 ### gelex
 
 * Improved `gelex` to generate smaller manifest arrays.
