@@ -1,7 +1,7 @@
 note
 
 	description: "Parser token codes"
-	generator: "geyacc version 19.10.03.1"
+	generator: "geyacc"
 
 deferred class GEPP_TOKENS
 
