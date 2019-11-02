@@ -10,7 +10,9 @@
 		revision: "$Revision$"
 	</description>
 
-	<target name="ge2e">
+<!-- Implementation -->
+
+	<target name="ge2e" export="NONE">
 		<argument name="spec_dir"/>
 		<argument name="gepp_dir"/>
 		<argument name="gepp_file"/>

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<project name="basic_all">
+
+	<description>
+		description: "Execute basic build targets in all subfolders"
+		copyright: "Copyright (c) 2019, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="basic.eant">
+			<redefine target="install"/>
+			<redefine target="clean"/>
+			<redefine target="clobber"/>
+		</parent>
+		<parent location="do_all.eant"/>
+	</inherit>
+
+	<target name="install" depend="init">
+		<description>
+			Install all subfolders.
+		</description>
+
+		<geant target="do_all" arguments="install,*" dir="${current.absdir}"/>
+	</target>
+	
+	<target name="clean" depend="init">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant target="do_all" arguments="clean,*" dir="${current.absdir}"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="do_all" arguments="clobber,*" dir="${current.absdir}"/>
+	</target>
+
+</project>

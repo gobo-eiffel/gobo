@@ -4,14 +4,14 @@
 
 	<description>
 		description: "Gobo Eiffel String Library tools"
-		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/do_all.eant"/>
+		<parent location="${GOBO}/library/common/config/basic_all.eant"/>
 	</inherit>
 
 </project>

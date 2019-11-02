@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
+<system
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
 	name="integration"
-	library_target="integration"
 	uuid="E1FFE100-60B0-0003-3003-000000000001"
+	library_target="integration"
 >
 	<description>
 		system: "Gobo Eiffel all classes integration"

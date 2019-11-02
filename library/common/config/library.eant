@@ -4,14 +4,26 @@
 
 	<description>
 		description: "Gobo Eiffel library"
-		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="package.eant"/>
+		<parent location="package.eant">
+			<redefine target="install"/>
+		</parent>
+		<parent location="ecf.eant"/>
 	</inherit>
 
+	<target name="install" depend="init">
+		<description>
+			Install library.
+		</description>
+
+		<precursor/>
+		<geant target="update_all_ecf"/>
+	</target>
+	
 </project>

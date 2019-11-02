@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
+<system
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
 	name="test_skl"
-	library_target="test_skl"
 	uuid="E1FFE100-60B0-0019-0002-000000000001"
+	library_target="test_skl"
 >
-
 	<description>
 		description: "ECF file for the Gobo Eiffel test harness"
 		library: "Gobo Eiffel Test Library"
 		copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-
 	<target name="test_skl">
 		<root all_classes="true"/>
 		<file_rule>
@@ -30,7 +28,6 @@
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
-		
 		<cluster name="harness" location="./harness/" recursive="true"/>
 	</target>
 </system>

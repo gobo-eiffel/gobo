@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<project name="ecf">
+
+	<description>
+		description: "Generate/update ECF files"
+		copyright: "Copyright (c) 2019, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+	
+<!-- Implementation -->
+
+	<target name="update_ecf">
+		<argument name="a_ecf_filename"/>
+		<description>
+			Regenerate ECF file ${a_ecf_filename}.
+		</description>
+
+		<exec executable="gedoc --silent --force --format=ecf_pretty_print --ecf=latest ${a_ecf_filename}"/>
+	</target>
+
+	<target name="update_all_ecf" export="NONE">
+		<description>
+			Regenerate all ECF files in current folder.
+		</description>
+
+		<geant target="do_one_ecf" arguments="update_ecf">
+			<fileset include="@(*.ecf)"/>
+		</geant>
+	</target>
+
+	<target name="do_one_ecf" export="NONE">
+		<description>
+			Call 'geant' with target ${target} (first argument)
+			with ECF file ${fs.filename} as argument.
+		</description>	
+		<argument name="target"/>
+		
+		<geant file="build.eant" target="${target}" arguments="${fs.filename}"/>
+	</target>
+
+	<target name="adapt_ecf" export="NONE">
+		<argument name="a_ecf_filename"/>
+		<argument name="a_library_root"/>
+		<description>
+			Regenerate ECF file ${a_ecf_filename}.
+			Override $DEBUG option if ${debug} is defined.
+			Override $GOBO_EIFFEL value.
+			Override $GOBO_OS value.
+			Override $GOBO_CC value if defined.
+			Override $GOBO_XML_EXPAT option if defined.
+			Override $GOBO_DOTNET option if defined.
+			Override $GOBO_COMPATIBLE option if defined.
+			Override $GOBO_VOID_UNSAFE option if defined.
+			Override $BOEHM_GC option if defined.
+			To be redefined in descendant if additional options are
+			necessary.
+		</description>
+
+		<set name="l_setting_options" value=""/>
+		<set name="l_capability_options" value=""/>
+		<set name="l_variable_options" value=""/>
+		<set name="l_setting_options" value="${l_setting_options} &quot;--setting=library_root=${a_library_root}&quot;" unless="${a_library_root}="/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=DEBUG=${debug}" if="${debug}"/>
+		<set name="l_setting_options" value="${l_setting_options} --setting=all_assertions=true --setting=exception_trace=true" if="${debug}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_EIFFEL=${eiffel}" unless="${a_library_root}="/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_OS=${GOBO_OS}" unless="${a_library_root}="/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_CC=${GOBO_CC}" if="${GOBO_CC}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_XML_EXPAT=true" if="${GOBO_XML_EXPAT}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_DOTNET=true" if="${GOBO_DOTNET}"/>
+		<set name="l_setting_options" value="${l_setting_options} --setting=msil_generation=true --setting=line_generation=true" if="${GOBO_DOTNET}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_COMPATIBLE=true" if="${GOBO_COMPATIBLE}"/>
+		<set name="l_variable_options" value="${l_variable_options} &quot;--variable=BOEHM_GC=${BOEHM_GC}&quot;" if="${BOEHM_GC}"/>
+		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_VOID_UNSAFE=true" if="${GOBO_VOID_UNSAFE}"/>
+		<set name="l_capability_options" value="${l_capability_options} --capability=void_safety=none" if="${GOBO_VOID_UNSAFE}"/>
+		<set name="l_variable_options" value="${l_variable_options} &quot;--variable=GOBO_TESTGEN=${GOBO_TESTGEN}&quot;" if="${GOBO_TESTGEN}"/>
+		<exec executable="gedoc --silent --force --format=ecf_pretty_print --ecf=latest ${l_setting_options} ${l_capability_options} ${l_variable_options} ${a_ecf_filename}"/>
+	</target>
+
+</project>

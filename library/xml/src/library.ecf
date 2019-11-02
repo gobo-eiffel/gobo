@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
+<system
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
 	name="xml"
 	uuid="E1FFE100-60B0-0015-0001-000000000001"
-	library_target="xml">
-
+	library_target="xml"
+>
 	<description>
 		description: "ECF file for the Gobo Eiffel XML core Library"
 		library: "Gobo Eiffel XML Library"
 		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-
 	<target name="xml">
 		<root all_classes="true"/>
 		<file_rule>
@@ -30,21 +29,6 @@
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<library name="string" location="${GOBO_LIBRARY}/library/string/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
-
-		<cluster name="xml" location="./" recursive="true">
-			<file_rule>
-				<exclude>/expat$</exclude>
-				<condition>
-					<custom name="GOBO_XML_EXPAT" excluded_value="true"/>
-				</condition>
-			</file_rule>
-			<file_rule>
-				<exclude>/no_expat$</exclude>
-				<condition>
-					<custom name="GOBO_XML_EXPAT" value="true"/>
-				</condition>
-			</file_rule>
-		</cluster>
 		<external_include location="${EXPAT}/Source/lib">
 			<condition>
 				<custom name="GOBO_XML_EXPAT" value="true"/>
@@ -77,5 +61,19 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_linker_flag>
+		<cluster name="xml" location="./" recursive="true">
+			<file_rule>
+				<exclude>/expat$</exclude>
+				<condition>
+					<custom name="GOBO_XML_EXPAT" excluded_value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/no_expat$</exclude>
+				<condition>
+					<custom name="GOBO_XML_EXPAT" value="true"/>
+				</condition>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

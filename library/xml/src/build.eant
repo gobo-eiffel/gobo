@@ -5,37 +5,33 @@
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel XML Library"
 		library: "Gobo Eiffel XML Library"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<target name="help">
-		<echo message="usage:"/>
-		<echo message="   geant install"/>
-		<echo message="   geant clean"/>
-		<echo message="   geant clobber"/>
-	</target>
-
-	<target name="install">
+	<inherit>
+		<parent location="${GOBO}/library/common/config/basic.eant">
+			<redefine target="install"/>
+			<redefine target="clobber"/>
+		</parent>
+		<parent location="${GOBO}/library/common/config/ecf.eant"/>
+	</inherit>
+	
+	<target name="install" depend="init">
 		<description>
 			Install the Gobo Eiffel XML Library.
 			Generate scanner and parser files.
+			Regenerate ECF files.
 		</description>
 
+		<geant target="update_all_ecf"/>
 		<geant target="xm_eiffel_scanner"/>
 		<geant target="xm_eiffel_parser"/>
 	</target>
 
-	<target name="clean">
-		<description>
-			Remove intermediary generated files.
-		</description>
-
-	</target>
-
-	<target name="clobber">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>

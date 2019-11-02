@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
+<system
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
 	name="xpath"
 	uuid="E1FFE100-60B0-0016-0001-000000000001"
-	library_target="xpath">
-
+	library_target="xpath"
+>
 	<description>
 		description: "ECF file for the Gobo Eiffel XML XPath Library"
 		library: "Gobo Eiffel XML XPath Library"
 		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-
 	<target name="xpath">
 		<root all_classes="true"/>
 		<file_rule>
@@ -32,7 +31,6 @@
 		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
 		<library name="xml" location="${GOBO_LIBRARY}/library/xml/library.ecf" readonly="true"/>
-
 		<cluster name="xpath" location="./" recursive="true"/>
 	</target>
 </system>

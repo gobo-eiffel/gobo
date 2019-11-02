@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
+<system
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
 	name="parse"
 	uuid="E1FFE100-60B0-0014-0001-000000000001"
-	library_target="parse">
-
+	library_target="parse"
+>
 	<description>
 		description: "ECF file for the Gobo Eiffel Parse Library"
 		library: "Gobo Eiffel Parse Library"
 		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-
 	<target name="parse">
 		<root all_classes="true"/>
 		<file_rule>
@@ -31,7 +30,6 @@
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
-
 		<cluster name="parse" location="./" recursive="true">
 			<file_rule>
 				<exclude>/skeleton$</exclude>

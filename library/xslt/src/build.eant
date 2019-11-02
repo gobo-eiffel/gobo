@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="xslt_src" default="help">
+
+	<description>
+		description: "Gobo Eiffel XSLT Library"
+		copyright: "Copyright (c) 2019, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/basic.eant">
+			<redefine target="install"/>
+		</parent>
+		<parent location="${GOBO}/library/common/config/ecf.eant"/>
+	</inherit>
+
+	<target name="install" depend="init">
+		<description>
+			Regenerate ECF files.
+		</description>
+
+		<geant target="update_all_ecf"/>
+	</target>
+	
+</project>

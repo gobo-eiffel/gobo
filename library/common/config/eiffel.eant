@@ -11,7 +11,14 @@
 	</description>
 
 	<inherit>
-		<parent location="ge2e.eant"/>
+		<parent location="basic.eant">
+			<redefine target="help"/>
+			<redefine target="install"/>
+			<redefine target="clean"/>
+			<redefine target="clobber"/>
+			<redefine target="init"/>
+		</parent>
+		<parent location="ecf.eant"/>
 	</inherit>
 
 	<target name="help">
@@ -32,10 +39,7 @@
 			Install ${system} directory.
 		</description>
 
-		<geant target="ecf">
-			<argument name="a_ecf_filename" value="${system_dir}/system.ecf"/>
-			<argument name="a_library_root" value=""/>
-		</geant>
+		<geant target="update_all_ecf"/>
 		<geant target="other_install"/>
 	</target>
 
@@ -60,7 +64,7 @@
 		<delete file="${ecf_filename}"/>
 		<set name="eiffel" value="ge"/>
 		<copy file="${system_dir}/system.ecf" to_file="${ecf_filename}"/>
-		<geant target="ecf">
+		<geant target="adapt_ecf">
 			<argument name="a_ecf_filename" value="${ecf_filename}"/>
 			<argument name="a_library_root" value="${system_dir}"/>
 		</geant>
@@ -90,7 +94,7 @@
 		<set name="eiffel" value="ise"/>
 		<setenv name="GOBO_EIFFEL" value="ise"/>
 		<copy file="${system_dir}/system.ecf" to_file="${ecf_filename}"/>
-		<geant target="ecf">
+		<geant target="adapt_ecf">
 			<argument name="a_ecf_filename" value="${ecf_filename}"/>
 			<argument name="a_library_root" value="${system_dir}"/>
 		</geant>
@@ -202,44 +206,6 @@
 	</target>
 
 <!-- Implementation -->
-
-	<target name="ecf" depend="init" export="NONE">
-		<argument name="a_ecf_filename"/>
-		<argument name="a_library_root"/>
-		<description>
-			Regenerate ECF file ${a_ecf_filename}.
-			Override $DEBUG option if ${debug} is defined.
-			Override $GOBO_EIFFEL value.
-			Override $GOBO_OS value.
-			Override $GOBO_CC value if defined.
-			Override $GOBO_XML_EXPAT option if defined.
-			Override $GOBO_DOTNET option if defined.
-			Override $GOBO_COMPATIBLE option if defined.
-			Override $GOBO_VOID_UNSAFE option if defined.
-			Override $BOEHM_GC option if defined.
-			To be redefined in descendant if additional options are
-			necessary.
-		</description>
-
-		<set name="l_setting_options" value=""/>
-		<set name="l_capability_options" value=""/>
-		<set name="l_variable_options" value=""/>
-		<set name="l_setting_options" value="${l_setting_options} &quot;--setting=library_root=${a_library_root}&quot;" unless="${a_library_root}="/>
-		<set name="l_variable_options" value="${l_variable_options} --variable=DEBUG=${debug}" if="${debug}"/>
-		<set name="l_setting_options" value="${l_setting_options} --setting=all_assertions=true --setting=exception_trace=true" if="${debug}"/>
-		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_EIFFEL=${eiffel}" unless="${a_library_root}="/>
-		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_OS=${GOBO_OS}" unless="${a_library_root}="/>
-		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_CC=${GOBO_CC}" if="${GOBO_CC}"/>
-		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_XML_EXPAT=true" if="${GOBO_XML_EXPAT}"/>
-		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_DOTNET=true" if="${GOBO_DOTNET}"/>
-		<set name="l_setting_options" value="${l_setting_options} --setting=msil_generation=true --setting=line_generation=true" if="${GOBO_DOTNET}"/>
-		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_COMPATIBLE=true" if="${GOBO_COMPATIBLE}"/>
-		<set name="l_variable_options" value="${l_variable_options} &quot;--variable=BOEHM_GC=${BOEHM_GC}&quot;" if="${BOEHM_GC}"/>
-		<set name="l_variable_options" value="${l_variable_options} --variable=GOBO_VOID_UNSAFE=true" if="${GOBO_VOID_UNSAFE}"/>
-		<set name="l_capability_options" value="${l_capability_options} --capability=void_safety=none" if="${GOBO_VOID_UNSAFE}"/>
-		<set name="l_variable_options" value="${l_variable_options} &quot;--variable=GOBO_TESTGEN=${GOBO_TESTGEN}&quot;" if="${GOBO_TESTGEN}"/>
-		<exec executable="gedoc --silent --force --format=ecf_pretty_print ${l_setting_options} ${l_capability_options} ${l_variable_options} ${a_ecf_filename}"/>
-	</target>
 
 	<target name="prepare_compile" depend="init" export="NONE">
 		<description>

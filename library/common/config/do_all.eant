@@ -4,55 +4,15 @@
 
 	<description>
 		description: "Execute geant builds in all subfolders"
-		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<target name="help">
-		<echo message="usage:"/>
-		<echo message="   geant install"/>
-		<geant target="other_help"/>
-		<echo message="   geant clean"/>
-		<echo message="   geant clobber"/>
-	</target>
-
-	<target name="install" depend="init">
-		<description>
-			Install all subfolders.
-		</description>
-
-		<geant target="do_all" arguments="install,*" dir="${current.absdir}"/>
-	</target>
-	
-	<target name="clean" depend="init">
-		<description>
-			Remove intermediary generated files.
-		</description>
-
-		<geant target="do_all" arguments="clean,*" dir="${current.absdir}"/>
-	</target>
-
-	<target name="clobber" depend="init">
-		<description>
-			Remove all generated files.
-		</description>
-
-		<geant target="do_all" arguments="clobber,*" dir="${current.absdir}"/>
-	</target>
-
 <!-- Implementation -->
-
-	<target name="init" export="NONE">
-		<!-- do nothing -->
-	</target>
-
-	<target name="other_help" export="NONE">
-		<!-- do nothing -->
-	</target>
 	
-	<target name="do_all" depend="init" export="NONE">
+	<target name="do_all" export="NONE">
 		<description>
 			Call 'geant' with the same target ${target} (first argument)
 			in all directories ${folders} (second argument).
@@ -67,7 +27,7 @@
 		</geant>
 	</target>
 
-	<target name="do_all_exclude" depend="init" export="NONE">
+	<target name="do_all_exclude" export="NONE">
 		<description>
 			Call 'geant' with the same target ${target} (first argument)
 			in all directories ${folders} (second argument) except
@@ -94,7 +54,7 @@
 		<geant file="build.eant" target="${target}" dir="${fs.mapped_filename}"/>
 	</target>
 	
-	<target name="do_all_2" depend="init" export="NONE">
+	<target name="do_all_2" export="NONE">
 		<description>
 			Call 'geant' with the same targets ${target1} (first argument)
 			and ${target2} (second argument) in all directories ${folders}
@@ -111,7 +71,7 @@
 		</geant>
 	</target>
 
-	<target name="do_all_exclude_2" depend="init" export="NONE">
+	<target name="do_all_exclude_2" export="NONE">
 		<description>
 			Call 'geant' with the same targets ${target1} (first argument)
 			and ${target2} (second argument) in all directories ${folders}
@@ -142,7 +102,7 @@
 		<geant file="build.eant" target="${target2}" dir="${fs.mapped_filename}"/>
 	</target>
 
-	<target name="do_in_subfolder" depend="init" export="NONE">
+	<target name="do_in_subfolder" export="NONE">
 		<description>
 			Call 'geant' with target ${target} (first argument)
 			in directory ${subfolders} (second argument) if there
@@ -155,7 +115,7 @@
 		<geant file="build.eant" target="${target}" dir="${subfolder}" if="${buildfile_available}=true"/>
 	</target>
 
-	<target name="do_in_subfolder_2" depend="init" export="NONE">
+	<target name="do_in_subfolder_2" export="NONE">
 		<description>
 			Call 'geant' with targets ${target1} (first argument)
 			and ${target2} (second argument) in directory 

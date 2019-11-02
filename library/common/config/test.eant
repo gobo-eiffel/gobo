@@ -3,7 +3,7 @@
 <project name="test" default="help">
 
 	<description>
-		system: "Gobo Eiffel Kernel Library Tester"
+		description: "Eiffel test"
 		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"

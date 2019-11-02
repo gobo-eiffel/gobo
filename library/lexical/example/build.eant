@@ -4,14 +4,14 @@
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel Lexical Library examples"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/do_all.eant"/>
+		<parent location="${GOBO}/library/common/config/basic_all.eant"/>
 	</inherit>
 
 </project>

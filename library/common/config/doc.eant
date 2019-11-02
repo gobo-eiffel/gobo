@@ -4,14 +4,14 @@
 
 	<description>
 		description: "Gobo Eiffel doc"
-		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="do_all.eant">
+		<parent location="basic_all.eant">
 			<redefine target="init"/>
 			<redefine target="install"/>
 			<redefine target="clobber"/>
