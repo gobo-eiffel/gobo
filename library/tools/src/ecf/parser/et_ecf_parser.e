@@ -5,7 +5,7 @@ note
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +54,22 @@ feature {NONE} -- Element change
 			a_result_not_void: a_result /= Void
 		do
 			a_result.put (new_system_config (a_element, a_position_table, a_filename, a_universe))
+		end
+
+	build_config (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE; a_result: DS_CELL [detachable ET_ECF_CONFIG])
+			-- Build system or redirection config from `a_element'.
+		require
+			a_element_not_void: a_element /= Void
+			is_system_or_redirection: STRING_.same_case_insensitive (a_element.name, xml_system) or STRING_.same_case_insensitive (a_element.name, xml_redirection)
+			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
+			a_result_not_void: a_result /= Void
+		do
+			if STRING_.same_case_insensitive (a_element.name, xml_system) then
+				a_result.put (new_system_config (a_element, a_position_table, a_filename, a_universe))
+			else
+				a_result.put (new_redirection_config (a_element, a_position_table, a_filename, a_universe))
+			end
 		end
 
 	build_system (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING; a_target_name: detachable STRING; a_override_target: detachable PROCEDURE [ET_ECF_TARGET]; a_result: DS_CELL [detachable ET_ECF_SYSTEM])
@@ -181,7 +197,7 @@ feature {NONE} -- Element change
 								l_has_error := True
 								error_handler.report_epfe_error (l_parent_location, l_filename, l_system_config)
 							else
-								parse_file_with_action (l_file, agent build_system_config (?, ?, ?, a_universe, l_result))
+								parse_file_with_action (l_file, True, agent build_system_config (?, ?, ?, a_universe, l_result))
 								if attached l_result.item as l_last_system_config then
 									l_parent_system_config := l_last_system_config
 									l_system_configs.force_last (l_parent_system_config, l_system_config_id)
@@ -379,7 +395,7 @@ feature {NONE} -- Element change
 					if not l_file.is_open_read then
 						error_handler.report_eabv_error (l_adapted_library.filename_id, l_filename, l_adapted_library.target.system_config)
 					else
-						parse_file_with_action (l_file, agent build_library (?, ?, ?, l_adapted_library, l_result))
+						parse_file_with_action (l_file, True, agent build_library (?, ?, ?, l_adapted_library, l_result))
 						l_file.close
 						l_library := l_result.item
 						if l_library = Void then
@@ -459,9 +475,11 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Implementation
 
-	parse_file_with_action (a_file: KI_CHARACTER_INPUT_STREAM; a_build_system_config: PROCEDURE [TUPLE [element: XM_ELEMENT; position_table: detachable XM_POSITION_TABLE; filename: STRING]])
+	parse_file_with_action (a_file: KI_CHARACTER_INPUT_STREAM; a_follow_redirection: BOOLEAN; a_build_system_config: PROCEDURE [TUPLE [element: XM_ELEMENT; position_table: detachable XM_POSITION_TABLE; filename: STRING]])
 			-- Parse ECF file `a_file'.
 			-- Use `a_build_system_config' to build the resulting system config.
+			-- If the ECF file is of the type <redirection> and `a_follow_redirection'
+			-- is True, then parse the ECF file being redirected to.
 			--
 			-- Note that when the ECF version of the file is old, the parsed
 			-- ECF system config will contain old options/settings/capabilities
@@ -502,7 +520,9 @@ feature {NONE} -- Implementation
 					if STRING_.same_case_insensitive (l_root_name, xml_system) then
 						a_build_system_config.call ([l_root_element, l_position_table, l_full_filename])
 					elseif STRING_.same_case_insensitive (l_root_name, xml_redirection) then
-						if not attached l_root_element.attribute_by_name (xml_location) as l_location_attribute then
+						if not a_follow_redirection then
+							a_build_system_config.call ([l_root_element, l_position_table, l_full_filename])
+						elseif not attached l_root_element.attribute_by_name (xml_location) as l_location_attribute then
 							l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
 							error_handler.report_eadg_error (element_name (l_root_element, l_position_table), l_unknown_universe)
 						elseif l_location_attribute.value.is_empty then
@@ -538,15 +558,15 @@ feature {NONE} -- Implementation
 								create l_file.make (l_filename)
 								l_file.open_read
 								if l_file.is_open_read then
-									parse_file_with_action (l_file, a_build_system_config)
+									parse_file_with_action (l_file, True, a_build_system_config)
 									l_file.close
 								else
 									l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
 									error_handler.report_eadf_error (attribute_name (l_location_attribute, l_position_table), l_filename, l_unknown_universe)
 								end
 							end
+							redirected_locations.wipe_out
 						end
-						redirected_locations.wipe_out
 					else
 						l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
 						error_handler.report_eabx_error (element_name (l_root_element, l_position_table), l_unknown_universe)

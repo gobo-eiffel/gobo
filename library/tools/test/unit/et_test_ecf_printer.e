@@ -34,10 +34,10 @@ feature -- Test
 	test_printer
 			-- Test ECF printer.
 		local
-			l_ecf_parser: ET_ECF_SYSTEM_CONFIG_PARSER
+			l_ecf_parser: ET_ECF_CONFIG_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
 			l_printer: ET_ECF_PRINTER
-			l_ecf_system_config: ET_ECF_SYSTEM_CONFIG
+			l_ecf_config: ET_ECF_CONFIG
 			l_input_file: KL_TEXT_INPUT_FILE
 			l_output_file: KL_TEXT_OUTPUT_FILE
 		do
@@ -48,18 +48,18 @@ feature -- Test
 			assert ("is_open_read", l_input_file.is_open_read)
 			l_ecf_parser.parse_file (l_input_file)
 			l_input_file.close
-			l_ecf_system_config := l_ecf_parser.last_system_config
+			l_ecf_config := l_ecf_parser.last_config
 			assert ("no_ecf_error", not l_ecf_error_handler.has_error)
-			assert ("ecf_system_config_not_void", l_ecf_system_config /= Void)
-			check asserted_above: l_ecf_system_config /= Void then end
+			assert ("ecf_system_config_not_void", l_ecf_config /= Void)
+			check asserted_above: l_ecf_config /= Void then end
 			create l_output_file.make ("gobo.txt")
 			l_output_file.open_write
 			assert ("is_open_write", l_output_file.is_open_write)
 			create l_printer.make (l_output_file)
-			if attached l_ecf_system_config.ecf_version as l_ecf_version then
+			if attached l_ecf_config.ecf_version as l_ecf_version then
 				l_printer.set_ecf_version (l_ecf_version)
 			end
-			l_printer.print_system (l_ecf_system_config)
+			l_ecf_config.process (l_printer)
 			l_printer.set_null_file
 			l_output_file.close
 			assert_files_equal ("ecf_diff", input_filename, "gobo.txt")

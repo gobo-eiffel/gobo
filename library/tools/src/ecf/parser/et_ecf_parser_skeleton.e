@@ -1613,6 +1613,34 @@ feature {NONE} -- AST factory
 			no_void_group: Result /= Void implies not Result.has_void
 		end
 
+	new_redirection_config (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_REDIRECTION_CONFIG
+			-- New redirection config built from `a_element'
+		require
+			a_element_not_void: a_element /= Void
+			is_redirection: STRING_.same_case_insensitive (a_element.name, xml_redirection)
+			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_unknown_system_config: ET_ECF_SYSTEM_CONFIG
+			l_namespace_uri: STRING
+		do
+			if not attached a_element.attribute_by_name (xml_location) as l_location then
+				l_unknown_system_config := ast_factory.new_system_config ("*unknown*", a_filename, a_universe)
+				error_handler.report_eatm_error (xml_location, element_name (a_element, a_position_table), l_unknown_system_config)
+			else
+				Result := ast_factory.new_redirection_config (l_location.value, a_filename, a_universe)
+				if attached a_element.attribute_by_name (xml_uuid) as l_uuid then
+					Result.set_uuid (l_uuid.value)
+				end
+				if attached a_element.attribute_by_name (xml_message) as l_message then
+					Result.set_message (l_message.value)
+				end
+				l_namespace_uri := a_element.namespace.uri
+				Result.set_ecf_namespace (l_namespace_uri)
+				Result.set_ecf_version (ecf_version (l_namespace_uri))
+			end
+		end
+
 	new_renamings (a_renamings: detachable DS_HASH_TABLE [STRING, STRING]; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable DS_HASH_TABLE [STRING, STRING]
 			-- New class renamings (or `a_renamings' if not Void) built from `a_element'
 		require

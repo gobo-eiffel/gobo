@@ -5,7 +5,7 @@ note
 		"ECF Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,7 +81,7 @@ feature -- Parsing
 		do
 			last_system := Void
 			create l_result.make (Void)
-			parse_file_with_action (a_file, agent build_system (?, ?, ?, a_target_name, agent override_target, l_result))
+			parse_file_with_action (a_file, True, agent build_system (?, ?, ?, a_target_name, agent override_target, l_result))
 			last_system := l_result.item
 		end
 

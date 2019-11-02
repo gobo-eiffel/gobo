@@ -4,16 +4,17 @@ note
 
 	"[
 		ECF file parsers.
-		Do not parse ECF files it depends on.
+		Do not parse ECF files it depends on,
+		nor ECF files being redirected to.
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_ECF_SYSTEM_CONFIG_PARSER
+class ET_ECF_CONFIG_PARSER
 
 inherit
 
@@ -25,8 +26,8 @@ create
 
 feature -- Access
 
-	last_system_config: detachable ET_ECF_SYSTEM_CONFIG
-			-- ECF system config being parsed
+	last_config: detachable ET_ECF_CONFIG
+			-- ECF config being parsed
 			--
 			-- Note that when the ECF version of the file is old, the parsed
 			-- ECF system config will contain old options/settings/capabilities
@@ -61,14 +62,14 @@ feature -- Parsing
 			a_file_open_read: a_file.is_open_read
 			a_universe_not_void: a_universe /= Void
 		local
-			l_result: DS_CELL [detachable ET_ECF_SYSTEM_CONFIG]
+			l_result: DS_CELL [detachable ET_ECF_CONFIG]
 		do
-			last_system_config := Void
+			last_config := Void
 			create l_result.make (Void)
-			parse_file_with_action (a_file, True, agent build_system_config (?, ?, ?, a_universe, l_result))
-			last_system_config := l_result.item
+			parse_file_with_action (a_file, False, agent build_config (?, ?, ?, a_universe, l_result))
+			last_config := l_result.item
 		ensure
-			universe_set: attached last_system_config as l_last_system_config implies l_last_system_config.universe = a_universe
+			universe_set: attached last_config as l_last_config implies l_last_config.universe = a_universe
 		end
 
 end

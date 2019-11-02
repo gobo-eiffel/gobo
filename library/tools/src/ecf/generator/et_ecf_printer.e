@@ -14,7 +14,11 @@ class ET_ECF_PRINTER
 
 inherit
 
-	ANY
+	ET_ECF_CONFIG_PROCESSOR
+		rename
+			process_redirection_config as print_redirection,
+			process_system_config as print_system
+		end
 
 	ET_ECF_SETTING_DEFAULTS
 		export {NONE} all end
@@ -1348,6 +1352,62 @@ feature -- Output
 			end
 		end
 
+	print_redirection (a_redirection: ET_ECF_REDIRECTION_CONFIG)
+			-- Print `a_redirection' to `file'.
+		do
+			print_indentation
+			file.put_line ("<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>")
+			print_indentation
+			file.put_character ('<')
+			file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_redirection)
+			file.put_new_line
+			indent
+			print_indentation
+			file.put_string ("xmlns=%"http://www.eiffel.com/developers/xml/configuration-")
+			print_ecf_version
+			file.put_character ('%"')
+			file.put_new_line
+			print_indentation
+			file.put_string ("xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
+			file.put_new_line
+			print_indentation
+			file.put_string ("xsi:schemaLocation=%"http://www.eiffel.com/developers/xml/configuration-")
+			print_ecf_version
+			file.put_string (" http://www.eiffel.com/developers/xml/configuration-")
+			print_ecf_version
+			file.put_string (".xsd%"")
+			file.put_new_line
+			print_indentation
+			file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_location)
+			file.put_character ('=')
+			print_quoted_string (a_redirection.location)
+			file.put_new_line
+			if attached a_redirection.uuid as l_uuid then
+				print_indentation
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_uuid)
+				file.put_character ('=')
+				print_quoted_string (l_uuid)
+				file.put_new_line
+			end
+			if attached a_redirection.message as l_message then
+				print_indentation
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_message)
+				file.put_character ('=')
+				print_quoted_string (l_message)
+				file.put_new_line
+			end
+			dedent
+			print_indentation
+			file.put_character ('>')
+			file.put_new_line
+			print_indentation
+			file.put_character ('<')
+			file.put_character ('/')
+			file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_redirection)
+			file.put_character ('>')
+			file.put_new_line
+		end
+
 	print_renamings (a_renamings: DS_HASH_TABLE [STRING, STRING])
 			-- Print `a_renamings' to `file'.
 		require
@@ -1447,8 +1507,6 @@ feature -- Output
 
 	print_system (a_system: ET_ECF_SYSTEM_CONFIG)
 			-- Print `a_system' to `file'.
-		require
-			a_system_not_void: a_system /= Void
 		do
 			print_indentation
 			file.put_line ("<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>")

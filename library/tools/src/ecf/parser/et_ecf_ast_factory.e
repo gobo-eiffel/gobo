@@ -5,7 +5,7 @@ note
 		"ECF Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -462,6 +462,18 @@ feature -- AST factory
 			create Result.make (10)
 		ensure
 			provider_groups_not_void: Result /= Void
+		end
+
+	new_redirection_config (a_location, a_filename: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_REDIRECTION_CONFIG
+			-- New redirection config
+		require
+			a_location_not_void: a_location /= Void
+			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			create Result.make (a_location, a_filename, a_universe)
+		ensure
+			redirection_config_not_void: Result /= Void
 		end
 
 	new_root_all_classes: ET_ECF_ROOT_ALL_CLASSES

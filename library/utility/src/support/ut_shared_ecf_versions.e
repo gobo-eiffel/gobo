@@ -226,8 +226,10 @@ feature -- Access
 
 	ecf_last_known: UT_VERSION
 			-- Last known ECF version
+			-- (Typically the most recent version of ECF supported
+			-- by the latest offical release of ISE EiffelStudio)
 		once
-			Result := ecf_1_18_0
+			Result := ecf_1_20_0
 		ensure
 			instance_free: class
 			ecf_last_known_not_void: Result /= Void

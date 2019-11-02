@@ -807,6 +807,19 @@ feature -- Error handling
 			has_error: has_error
 		end
 
+	report_target_not_found_error (a_target_name: STRING)
+			-- Report that no ECF target `a_target_name' was found.
+		require
+			a_target_name_not_void: a_target_name /= Void
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make ("Target '" + a_target_name + "' not found.")
+			report_error (l_error)
+		ensure
+			has_error: has_error
+		end
+
 feature {NONE} -- Concurrency
 
 	interactive_mutex: MUTEX

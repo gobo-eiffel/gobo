@@ -5,7 +5,7 @@ note
 		"ECF XML element names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -152,6 +152,9 @@ feature -- Constants
 	xml_library_target: STRING = "library_target"
 			-- "library_target" attribute name
 
+	xml_location: STRING = "location"
+			-- "location" attribute name
+
 	xml_major: STRING = "major"
 			-- "major" attribute name
 
@@ -163,6 +166,9 @@ feature -- Constants
 
 	xml_max: STRING = "max"
 			-- "max" attribute name
+
+	xml_message: STRING = "message"
+			-- "message" attribue name
 
 	xml_min: STRING = "min"
 			-- "min" attribute name
@@ -184,9 +190,6 @@ feature -- Constants
 
 	xml_note: STRING = "note"
 			-- "note" element name
-
-	xml_location: STRING = "location"
-			-- "location" attribute name
 
 	xml_old_name: STRING = "old_name"
 			-- "old_name" attribute name
@@ -267,7 +270,7 @@ feature -- Constants
 			-- "uses" element name
 
 	xml_uuid: STRING = "uuid"
-			-- "target" element name
+			-- "uuid" attribue name
 
 	xml_value: STRING = "value"
 			-- "value" attribute name
