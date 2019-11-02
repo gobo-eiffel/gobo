@@ -158,21 +158,17 @@ feature -- Generation
 			print_eiffel_code (a_file)
 		end
 
-	print_token_class (class_name, version: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
+	print_token_class (class_name: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print class text with token code constants to `a_file'.
-			-- `class_name' is the name of the generated class
-			-- and `version' is the verrsion number of geyacc.
+			-- `class_name' is the name of the generated class.
 		require
 			class_name_not_void: class_name /= Void
-			version_not_void: version /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("note%N%N%
 				%%Tdescription: %"Parser token codes%"%N%
-				%%Tgenerator: %"geyacc version ")
-			a_file.put_string (version)
-			a_file.put_string ("%"%N%Ndeferred class ")
+				%%Tgenerator: %"geyacc%"%N%Ndeferred class ")
 			a_file.put_string (class_name)
 			a_file.put_string ("%N%Ninherit%N%N%
 				%%TYY_PARSER_TOKENS%N")

@@ -100,7 +100,7 @@ feature -- Processing
 						create token_file.make (l_token_filename)
 						token_file.open_write
 						if token_file.is_open_write then
-							parser_generator.print_token_class (l_token_classname, Version_number, token_file)
+							parser_generator.print_token_class (l_token_classname, token_file)
 							token_file.close
 						else
 							create cannot_write.make (l_token_filename)
