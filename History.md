@@ -6,6 +6,8 @@
 
 * Fixed ECF pretty-printer when printing `<external_linker>`. The attribute
   name is `value` and not `location`.
+* Fixed ECF pretty-printer when processing files of the form `<redirection>`.
+  It was printing the file it was redirected to.
 
 ### gelex
 
