@@ -1,6 +1,6 @@
 # Release History
 
-## Version ?? - ??
+## Version 19.11.03.1 - 3 November 2019
 
 ### gedoc
 
