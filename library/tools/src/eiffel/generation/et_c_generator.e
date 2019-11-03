@@ -34441,7 +34441,10 @@ feature {NONE} -- Include files
 			a_file_open_write: a_file.is_open_write
 		do
 			if not included_header_filenames.has (a_filename) then
-				if a_filename.same_string ("%"eif_cecil.h%"") then
+				if included_cpp_header_filenames.has (a_filename) then
+					included_cpp_header_filenames.remove (a_filename)
+					included_header_filenames.force_last (a_filename)
+				elseif a_filename.same_string ("%"eif_cecil.h%"") then
 					include_runtime_header_file ("eif_cecil.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_console.h%"") then
 					include_runtime_header_file ("eif_console.h", False, a_file)
@@ -34508,7 +34511,7 @@ feature {NONE} -- Include files
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if not included_cpp_header_filenames.has (a_filename) then
+			if not included_cpp_header_filenames.has (a_filename) and not included_header_filenames.has (a_filename) then
 				if a_filename.same_string ("%"eif_cecil.h%"") then
 					include_runtime_header_file ("eif_cecil.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_console.h%"") then
