@@ -222,6 +222,8 @@ feature {NONE} -- Initialization
 			create called_static_features.make (1000)
 			create included_header_filenames.make (100)
 			included_header_filenames.set_equality_tester (string_equality_tester)
+			create included_cpp_header_filenames.make (50)
+			included_cpp_header_filenames.set_equality_tester (string_equality_tester)
 			create included_runtime_header_files.make (100)
 			included_runtime_header_files.set_key_equality_tester (string_equality_tester)
 			create included_runtime_c_files.make (100)
@@ -685,6 +687,8 @@ feature {NONE} -- Compilation script generation
 						l_replacement.append_string ("${\1\}")
 						l_pathname := Execution_environment.interpreted_string (an_env_regexp.replace_all (l_replacement))
 						if file_system.has_extension (l_pathname, res_file_extension) then
+							l_res_filename := l_pathname
+						elseif file_system.has_extension (l_pathname, resx_file_extension) then
 							l_res_filename := l_pathname
 						else
 							l_rc_filename := l_pathname
@@ -1193,6 +1197,20 @@ feature {NONE} -- C code Generation
 						include_runtime_file (included_runtime_header_files.key_for_iteration, header_file)
 					end
 					included_runtime_header_files.forth
+				end
+					-- Include C++ header files.
+				if not included_cpp_header_filenames.is_empty then
+					header_file.put_string (c_ifdef)
+					header_file.put_character (' ')
+					header_file.put_line (c_cplusplus)
+					from included_cpp_header_filenames.start until included_cpp_header_filenames.after loop
+						header_file.put_string (c_include)
+						header_file.put_character (' ')
+						header_file.put_string (included_cpp_header_filenames.item_for_iteration)
+						header_file.put_new_line
+						included_cpp_header_filenames.forth
+					end
+					header_file.put_line (c_endif)
 				end
 					-- Include header files.
 				from included_header_filenames.start until included_header_filenames.after loop
@@ -1974,7 +1992,7 @@ feature {NONE} -- Feature generation
 						-- Regexp: C++ [blocking] inline [use {<include> "," ...}+]
 						-- \3: include files
 					if external_cpp_inline_regexp.match_count > 3 and then external_cpp_inline_regexp.captured_substring_count (3) > 0 then
-						print_external_c_includes (external_cpp_inline_regexp.captured_substring (3))
+						print_external_cpp_includes (external_cpp_inline_regexp.captured_substring (3))
 					end
 				else
 						-- Regexp: C [blocking] inline [use {<include> "," ...}+]
@@ -2126,8 +2144,23 @@ feature {NONE} -- Feature generation
 				else
 -- TODO: syntax error
 				end
+			elseif external_cpp_macro_regexp.recognizes (l_language_string) then
+					-- Regexp: C++ [blocking] macro [signature ["(" {<type> "," ...}* ")"] [":" <type>]] use {<include> "," ...}+
+					-- \4: has signature arguments
+					-- \5: signature arguments
+					-- \10: signature result
+					-- \17: include files
+				l_is_cpp := True
+				print_external_cpp_includes (external_c_macro_regexp.captured_substring (17))
+				if external_cpp_macro_regexp.match_count > 4 and then external_cpp_macro_regexp.captured_substring_count (4) > 0 then
+					l_signature_arguments := external_cpp_macro_regexp.captured_substring (5)
+				end
+				if external_cpp_macro_regexp.match_count > 10 and then external_cpp_macro_regexp.captured_substring_count (10) > 0 then
+					l_signature_result := external_cpp_macro_regexp.captured_substring (10)
+				end
+				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, True)
 			elseif external_cpp_regexp.recognizes (l_language_string) then
-					-- Regexp: C [blocking] <class_type> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+					-- Regexp: C++ [blocking] <class_type> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
 					-- \2: class type
 					-- \5: has signature arguments
 					-- \6: signature arguments
@@ -2136,7 +2169,7 @@ feature {NONE} -- Feature generation
 				l_is_cpp := True
 				if external_cpp_regexp.match_count > 18 and then external_cpp_regexp.captured_substring_count (18) > 0 then
 					l_has_include_files := True
-					print_external_c_includes (external_cpp_regexp.captured_substring (18))
+					print_external_cpp_includes (external_cpp_regexp.captured_substring (18))
 				end
 				l_cpp_class_type := external_cpp_regexp.captured_substring (2)
 				if external_cpp_regexp.match_count > 5 and then external_cpp_regexp.captured_substring_count (5) > 0 then
@@ -2157,7 +2190,7 @@ feature {NONE} -- Feature generation
 					-- \9: field type
 					-- \16: include files
 				l_is_cpp := True
-				print_external_c_includes (external_cpp_struct_regexp.captured_substring (16))
+				print_external_cpp_includes (external_cpp_struct_regexp.captured_substring (16))
 				l_struct_type := external_cpp_struct_regexp.captured_substring (1)
 				l_struct_field_name := external_cpp_struct_regexp.captured_substring (6)
 				if external_cpp_struct_regexp.match_count > 9 and then external_cpp_struct_regexp.captured_substring_count (9) > 0 then
@@ -5234,7 +5267,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_c_includes (a_include_filenames: STRING)
 			-- Print C includes declarations to `header_file'.
-			-- `a_incluse_filenames' are the filenames (with the
+			-- `a_include_filenames' are the filenames (with the
 			-- < > or " " characters included) separated by
 			-- commas.
 		require
@@ -5451,6 +5484,31 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 			current_file.put_character (';')
 			current_file.put_new_line
+		end
+
+	print_external_cpp_includes (a_include_filenames: STRING)
+			-- Print C++ includes declarations to `header_file'.
+			-- `a_include_filenames' are the filenames (with the
+			-- < > or " " characters included) separated by
+			-- commas.
+		require
+			a_include_filenames_not_void: a_include_filenames /= Void
+		local
+			l_splitter: ST_SPLITTER
+			l_list: DS_LIST [STRING]
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_include_filename: STRING
+		do
+			create l_splitter.make_with_separators (",")
+			l_list := l_splitter.split (a_include_filenames)
+			l_cursor := l_list.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_include_filename := l_cursor.item
+				STRING_.left_adjust (l_include_filename)
+				STRING_.right_adjust (l_include_filename)
+				include_cpp_header_filename (l_include_filename, header_file)
+				l_cursor.forth
+			end
 		end
 
 	print_external_dllwin_body (a_feature_name: detachable ET_FEATURE_NAME;
@@ -34323,7 +34381,7 @@ feature {NONE} -- Convenience
 		do
 			a_file.put_line ("#ifdef __cplusplus")
 			a_file.put_line ("extern %"C%" {")
-			a_file.put_line ("#endif")
+			a_file.put_line (c_endif)
 			a_file.put_new_line
 		end
 
@@ -34336,7 +34394,7 @@ feature {NONE} -- Convenience
 			a_file.put_new_line
 			a_file.put_line ("#ifdef __cplusplus")
 			a_file.put_line ("}")
-			a_file.put_line ("#endif")
+			a_file.put_line (c_endif)
 		end
 
 feature {NONE} -- Include files
@@ -34439,6 +34497,74 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_time.h", False, a_file)
 				else
 					included_header_filenames.force_last (a_filename)
+				end
+			end
+		end
+
+	include_cpp_header_filename (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Include C++ header filename `a_filename' to `a_file'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if not included_cpp_header_filenames.has (a_filename) then
+				if a_filename.same_string ("%"eif_cecil.h%"") then
+					include_runtime_header_file ("eif_cecil.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_console.h%"") then
+					include_runtime_header_file ("eif_console.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_constants.h%"") then
+					include_runtime_header_file ("eif_constants.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_dir.h%"") then
+					include_runtime_header_file ("eif_dir.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_eiffel.h%"") then
+					include_runtime_header_file ("eif_eiffel.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_except.h%"") then
+					include_runtime_header_file ("eif_except.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_file.h%"") then
+					include_runtime_header_file ("eif_file.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_globals.h%"") then
+					include_runtime_header_file ("eif_globals.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_hector.h%"") then
+					include_runtime_header_file ("eif_hector.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_lmalloc.h%"") then
+					include_runtime_header_file ("eif_lmalloc.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_main.h%"") then
+					include_runtime_header_file ("eif_main.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_memory.h%"") then
+					include_runtime_header_file ("eif_memory.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_misc.h%"") then
+					include_runtime_header_file ("eif_misc.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_path_name.h%"") then
+					include_runtime_header_file ("eif_path_name.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_plug.h%"") then
+					include_runtime_header_file ("eif_plug.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_portable.h%"") then
+					include_runtime_header_file ("eif_portable.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_retrieve.h%"") then
+					include_runtime_header_file ("eif_retrieve.h", False, a_file)
+				elseif a_filename.same_string ("<eif_retrieve.h>") then
+						-- This notation is used in class MISMATCH_INFORMATION.
+					include_runtime_header_file ("eif_retrieve.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_sig.h%"") then
+					include_runtime_header_file ("eif_sig.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_store.h%"") then
+					include_runtime_header_file ("eif_store.h", False, a_file)
+				elseif a_filename.same_string ("<eif_system.h>") then
+					include_runtime_header_file ("eif_system.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_threads.h%"") then
+					include_runtime_header_file ("eif_threads.h", False, a_file)
+				elseif a_filename.same_string ("<eif_threads.h>") then
+						-- This notation is used in class THREAD_ENVIRONMENT.
+					include_runtime_header_file ("eif_threads.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_traverse.h%"") then
+					include_runtime_header_file ("eif_traverse.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_types.h%"") then
+					include_runtime_header_file ("eif_types.h", False, a_file)
+				elseif a_filename.same_string ("%"ge_time.h%"") then
+					include_runtime_header_file ("ge_time.h", False, a_file)
+				else
+					included_cpp_header_filenames.force_last (a_filename)
 				end
 			end
 		end
@@ -34696,6 +34822,9 @@ feature {NONE} -- Include files
 
 	included_header_filenames: DS_HASH_SET [STRING]
 			-- Name of header filenames already included
+
+	included_cpp_header_filenames: DS_HASH_SET [STRING]
+			-- Name of C++ header filenames already included
 
 	included_runtime_header_files: DS_HASH_TABLE [BOOLEAN, STRING]
 			-- Name of runtime header files already included;
@@ -36504,12 +36633,19 @@ feature {NONE} -- External regexp
 			-- \4: signature result
 
 	external_cpp_regexp: RX_PCRE_REGULAR_EXPRESSION
-			-- Regexp: C [blocking] <class_type> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
+			-- Regexp: C++ [blocking] <class_type> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
 			-- \2: class type
 			-- \5: has signature arguments
 			-- \6: signature arguments
 			-- \11: signature result
 			-- \18: include files
+
+	external_cpp_macro_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C++ [blocking] macro [signature ["(" {<type> "," ...}* ")"] [":" <type>]] use {<include> "," ...}+
+			-- \4: has signature arguments
+			-- \5: signature arguments
+			-- \10: signature result
+			-- \17: include files
 
 	external_cpp_struct_regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regexp: C++ struct <struct-type> (access|get) <field-name> [type <field-type>] use {<include> "," ...}+
@@ -36564,6 +36700,9 @@ feature {NONE} -- External regexp
 				-- Regexp: C++ [blocking] <class_type> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
 			create external_cpp_regexp.make
 			external_cpp_regexp.compile ("[ \t\r\n]*[Cc]\+\+[ \t\r\n]+(blocking[ \t\r\n]+)?([^ \t\r\n]+)([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))?[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
+				-- Regexp: C++ [blocking] macro [signature ["(" {<type> "," ...}* ")"] [":" <type>]] use {<include> "," ...}+
+			create external_cpp_macro_regexp.make
+			external_cpp_macro_regexp.compile ("[ \t\r\n]*[Cc]\+\+[ \t\r\n]+(blocking[ \t\r\n]+)?macro([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))?[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))")
 				-- Regexp: C++ struct <struct-type> (access|get) <field-name> [type <field-type>] use {<include> "," ...}+
 			create external_cpp_struct_regexp.make
 			external_cpp_struct_regexp.compile ("[ \t\r\n]*[Cc]\+\+[ \t\r\n]+struct[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+)*)(access|get)[ \t\r\n]+([^ \t\r\n]+)([ \t\r\n]+|$)(type[ \t\r\n]+((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?(use[ \t\r\n]*((.|\n)+))")
@@ -36613,6 +36752,7 @@ feature {NONE} -- Constants
 	c_case: STRING = "case"
 	c_char: STRING = "char"
 	c_const: STRING = "const"
+	c_cplusplus: STRING = "__cplusplus"
 	c_default: STRING = "default"
 	c_define: STRING = "#define"
 	c_double: STRING = "double"
@@ -36985,6 +37125,7 @@ feature {NONE} -- Constants
 	cpp_file_extension: STRING = ".cpp"
 	h_file_extension: STRING = ".h"
 	res_file_extension: STRING = ".res"
+	resx_file_extension: STRING = ".resx"
 	rc_file_extension: STRING = ".rc"
 	sh_file_extension: STRING = ".sh"
 	make_file_extension: STRING = ".make"
@@ -37121,9 +37262,11 @@ invariant
 	free_temp_variables_count: free_temp_variables.count = used_temp_variables.count
 	frozen_temp_variables_not_void: frozen_temp_variables /= Void
 	frozen_temp_variables_count: frozen_temp_variables.count = used_temp_variables.count
-		-- C files.
+		-- C/C++ files.
 	included_header_filenames_not_void: included_header_filenames /= Void
 	no_void_included_header_filename: not included_header_filenames.has_void
+	included_cpp_header_filenames_not_void: included_cpp_header_filenames /= Void
+	no_void_included_cpp_header_filename: not included_cpp_header_filenames.has_void
 	included_runtime_header_files_not_void: included_runtime_header_files /= Void
 	no_void_included_runtime_header_file: not included_runtime_header_files.has_void
 	included_runtime_c_files_not_void: included_runtime_c_files /= Void
@@ -37161,6 +37304,8 @@ invariant
 	old_external_c_struct_regexp_compiled: old_external_c_struct_regexp.is_compiled
 	external_cpp_regexp_not_void: external_cpp_regexp /= Void
 	external_cpp_regexp_compiled: external_cpp_regexp.is_compiled
+	external_cpp_macro_regexp_not_void: external_cpp_macro_regexp /= Void
+	external_cpp_macro_regexp_compiled: external_cpp_macro_regexp.is_compiled
 	external_cpp_struct_regexp_not_void: external_cpp_struct_regexp /= Void
 	external_cpp_struct_regexp_compiled: external_cpp_struct_regexp.is_compiled
 	external_cpp_inline_regexp_not_void: external_cpp_inline_regexp /= Void

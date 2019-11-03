@@ -25,6 +25,7 @@
 
 #ifdef EIF_WINDOWS
 #include <windows.h>
+#include <shlobj.h>
 #endif
 #include <string.h>
 #include <stdlib.h>

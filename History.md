@@ -1,5 +1,11 @@
 # Release History
 
+## Version ?? - ??
+
+### gec
+
+* Fixed bugs when generating code for `external "C++"` routines.
+
 ## Version 19.11.03.1 - 3 November 2019
 
 ### gedoc
