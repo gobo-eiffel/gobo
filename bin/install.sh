@@ -131,7 +131,7 @@ if [ "$EIF" = "ge" ]; then
 		$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gepp/src/system.ecf
 		$STRIP gepp${EXE}
 		if [ "$VERBOSE" = "-v" ]; then
-			echo "Compiling gexlt..."
+			echo "Compiling gexslt..."
 		fi
 		$BIN_DIR/gec$EXE --finalize --no-benchmark --cc=no $THREAD_OPTION $GOBO/tool/gexslt/src/system.ecf
 		$BIN_DIR/gecc$EXE $THREAD_OPTION gexslt.sh
