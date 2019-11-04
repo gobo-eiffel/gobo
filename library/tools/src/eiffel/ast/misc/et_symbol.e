@@ -569,9 +569,9 @@ feature -- Access
 			when semicolon_symbol_code then
 				Result := tokens.semicolon_symbol_name
 			when there_exists_symbol_code then
-				Result := tokens.tilde_symbol_name
-			when tilde_symbol_code then
 				Result := tokens.there_exists_symbol_name
+			when tilde_symbol_code then
+				Result := tokens.tilde_symbol_name
 			when infix_times_code then
 				Result := tokens.times_symbol_name
 			else

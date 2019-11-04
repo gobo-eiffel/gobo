@@ -6,6 +6,10 @@
 
 * Fixed bugs when generating code for `external "C++"` routines.
 
+### Gobo Eiffel Tools Library
+
+* Fixed bug in Eiffel pretty-printer. The symbol `∃` was printed instead of `~`.
+
 ## Version 19.11.03.1 - 3 November 2019
 
 ### gedoc
