@@ -5,6 +5,9 @@
 ### gec
 
 * Fixed bugs when generating code for `external "C++"` routines.
+* Do not take into account resource files with extension `.resx`
+  specified in ECF with `<external_resource>` when compiling in
+  non .NET.
 
 ### Gobo Eiffel Tools Library
 

@@ -609,7 +609,7 @@ feature {NONE} -- Compilation script generation
 			l_command_name: STRING
 			l_rc_template: STRING
 			l_rc_filename: STRING
-			l_res_filename: STRING
+			l_res_filename: detachable STRING
 			l_make_template: STRING
 			i, nb: INTEGER
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
@@ -686,9 +686,10 @@ feature {NONE} -- Compilation script generation
 						l_replacement := STRING_.new_empty_string (l_pathname, 6)
 						l_replacement.append_string ("${\1\}")
 						l_pathname := Execution_environment.interpreted_string (an_env_regexp.replace_all (l_replacement))
-						if file_system.has_extension (l_pathname, res_file_extension) then
-							l_res_filename := l_pathname
-						elseif file_system.has_extension (l_pathname, resx_file_extension) then
+						if file_system.has_extension (l_pathname, resx_file_extension) then
+								-- Skip .Net resource files.
+							l_res_filename := Void
+						elseif file_system.has_extension (l_pathname, res_file_extension) then
 							l_res_filename := l_pathname
 						else
 							l_rc_filename := l_pathname
@@ -705,13 +706,15 @@ feature {NONE} -- Compilation script generation
 							l_command_name := a_variables.expanded_string (l_rc_template, False)
 							l_file.put_line (l_command_name)
 						end
-						an_obj_filenames.append_character (' ')
-						if l_res_filename.starts_with ("%"") then
-							an_obj_filenames.append_string (l_res_filename)
-						else
-							an_obj_filenames.append_character ('%"')
-							an_obj_filenames.append_string (l_res_filename)
-							an_obj_filenames.append_character ('%"')
+						if l_res_filename /= Void then
+							an_obj_filenames.append_character (' ')
+							if l_res_filename.starts_with ("%"") then
+								an_obj_filenames.append_string (l_res_filename)
+							else
+								an_obj_filenames.append_character ('%"')
+								an_obj_filenames.append_string (l_res_filename)
+								an_obj_filenames.append_character ('%"')
+							end
 						end
 						i := i + 1
 					end
