@@ -34515,61 +34515,9 @@ feature {NONE} -- Include files
 			a_file_open_write: a_file.is_open_write
 		do
 			if not included_cpp_header_filenames.has (a_filename) and not included_header_filenames.has (a_filename) then
-				if a_filename.same_string ("%"eif_cecil.h%"") then
-					include_runtime_header_file ("eif_cecil.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_console.h%"") then
-					include_runtime_header_file ("eif_console.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_constants.h%"") then
-					include_runtime_header_file ("eif_constants.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_dir.h%"") then
-					include_runtime_header_file ("eif_dir.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_eiffel.h%"") then
-					include_runtime_header_file ("eif_eiffel.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_except.h%"") then
-					include_runtime_header_file ("eif_except.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_file.h%"") then
-					include_runtime_header_file ("eif_file.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_globals.h%"") then
-					include_runtime_header_file ("eif_globals.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_hector.h%"") then
-					include_runtime_header_file ("eif_hector.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_lmalloc.h%"") then
-					include_runtime_header_file ("eif_lmalloc.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_main.h%"") then
-					include_runtime_header_file ("eif_main.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_memory.h%"") then
-					include_runtime_header_file ("eif_memory.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_misc.h%"") then
-					include_runtime_header_file ("eif_misc.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_path_name.h%"") then
-					include_runtime_header_file ("eif_path_name.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_plug.h%"") then
-					include_runtime_header_file ("eif_plug.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_portable.h%"") then
-					include_runtime_header_file ("eif_portable.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_retrieve.h%"") then
-					include_runtime_header_file ("eif_retrieve.h", False, a_file)
-				elseif a_filename.same_string ("<eif_retrieve.h>") then
-						-- This notation is used in class MISMATCH_INFORMATION.
-					include_runtime_header_file ("eif_retrieve.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_sig.h%"") then
-					include_runtime_header_file ("eif_sig.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_store.h%"") then
-					include_runtime_header_file ("eif_store.h", False, a_file)
-				elseif a_filename.same_string ("<eif_system.h>") then
-					include_runtime_header_file ("eif_system.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_threads.h%"") then
-					include_runtime_header_file ("eif_threads.h", False, a_file)
-				elseif a_filename.same_string ("<eif_threads.h>") then
-						-- This notation is used in class THREAD_ENVIRONMENT.
-					include_runtime_header_file ("eif_threads.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_traverse.h%"") then
-					include_runtime_header_file ("eif_traverse.h", False, a_file)
-				elseif a_filename.same_string ("%"eif_types.h%"") then
-					include_runtime_header_file ("eif_types.h", False, a_file)
-				elseif a_filename.same_string ("%"ge_time.h%"") then
-					include_runtime_header_file ("ge_time.h", False, a_file)
-				else
+				include_header_filename (a_filename, a_file)
+				if included_header_filenames.has (a_filename) then
+					included_header_filenames.remove (a_filename)
 					included_cpp_header_filenames.force_last (a_filename)
 				end
 			end
