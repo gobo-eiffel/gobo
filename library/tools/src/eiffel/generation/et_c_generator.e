@@ -34486,6 +34486,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_retrieve.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_sig.h%"") then
 					include_runtime_header_file ("eif_sig.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_size.h%"") then
+					include_runtime_header_file ("eif_size.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_store.h%"") then
 					include_runtime_header_file ("eif_store.h", False, a_file)
 				elseif a_filename.same_string ("<eif_system.h>") then
@@ -34562,6 +34564,7 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_globals.h") then
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
 					include_runtime_header_file ("eif_threads.h", a_force, a_file)
+					include_runtime_header_file ("eif_size.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_main.h") then
 					l_c_filename := "eif_main.c"
 				elseif a_filename.same_string ("eif_memory.h") then
