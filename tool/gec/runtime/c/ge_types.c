@@ -294,6 +294,10 @@ EIF_BOOLEAN GE_encoded_type_conforms_to(EIF_ENCODED_TYPE a_type_1, EIF_ENCODED_T
 		return EIF_FALSE;
 	} else if (l_flags_1 & GE_TYPE_FLAG_NONE) {
 		return EIF_TEST(!(l_flags_2 & GE_TYPE_FLAG_EXPANDED));
+	} else if (l_type_index_1 == l_type_index_2) {
+		return EIF_TRUE;
+	} else if (l_type_index_1 < l_type_index_2) {
+		return EIF_FALSE;
 	} else {
 		l_ancestors = l_type_info_1.ancestors;
 		l_ancestor_count = l_type_info_1.ancestor_count;
