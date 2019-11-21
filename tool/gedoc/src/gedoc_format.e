@@ -401,7 +401,7 @@ feature {NONE} -- Eiffel config file parsing
 	parse_eiffel_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Eiffel file `a_file' and keep track of it in
 			-- newly created `last_system' if no error occurred.
-			-- If there is not class filters, then add classes found
+			-- If there is no class filters, then add classes found
 			-- in this file to `input_classes'.
 		require
 			a_file_not_void: a_file /= Void

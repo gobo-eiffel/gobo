@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://www.eiffel.com/developers/xml/configuration-1-20-0"
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" elementFormDefault="qualified">
+	targetNamespace="http://www.eiffel.com/developers/xml/configuration-1-21-0"
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" elementFormDefault="qualified">
 
 	<xs:element name="redirection">
 		<xs:complexType>
