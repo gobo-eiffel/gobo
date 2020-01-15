@@ -1,12 +1,10 @@
 ﻿note
-	description: "[
-		Ancestor of all exception classes.
-	]"
+	description: "Ancestor of all exception classes."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-01-15 15:24:22 +0100 (Wed, 15 Jan 2020) $"
+	revision: "$Revision: 103853 $"
 
 class
 	EXCEPTION
@@ -73,7 +71,7 @@ feature -- Access
 		end
 
 	description: detachable READABLE_STRING_32
-			-- Detailed description of current exception
+			-- Detailed description of current exception.
 		local
 			l_res: STRING_32
 		do
@@ -99,7 +97,7 @@ feature -- Access
 			u: UTF_CONVERTER
 		do
 			if attached internal_trace as l_trace then
-				Result := u.utf_8_string_8_to_string_32 (l_trace)
+				Result := u.utf_8_string_8_to_escaped_string_32 (l_trace)
 			end
 		end
 
@@ -229,10 +227,10 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := generating_type.name.to_string_8
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (generating_type.name_32)
 			if attached trace as t then
 				Result.append_character ('%N')
-				Result.append_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (t))
+				{UTF_CONVERTER}.escaped_utf_32_string_into_utf_8_string_8 (t, Result)
 			end
 		end
 
@@ -291,11 +289,11 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			internal_trace := a_trace
 		end
 
-	internal_trace: detachable STRING;
+	internal_trace: detachable STRING
 			-- String representation of the exception trace
 
-note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+;note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -304,5 +302,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

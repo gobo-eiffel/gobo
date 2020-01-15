@@ -1,20 +1,20 @@
-note
+﻿note
 	description: "Cursor trees implemented in two-way linked representation"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: two_way_cursor_tree, cursor_tree;
-	access: cursor, membership;
-	representation: recursive, linked;
-	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	names: two_way_cursor_tree, cursor_tree
+	access: cursor, membership
+	representation: recursive, linked
+	contents: generic
+	date: "$Date: 2019-12-19 09:34:30 +0000 (Thu, 19 Dec 2019) $"
+	revision: "$Revision: 103773 $"
 
 class TWO_WAY_CURSOR_TREE [G] inherit
 
 	RECURSIVE_CURSOR_TREE [G]
 		redefine
-			put_right, subtree,
+			subtree,
 			active, cursor, is_leaf
 		end
 
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			-- Current node
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

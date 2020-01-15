@@ -6,12 +6,13 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-01-15 15:24:22 +0100 (Wed, 15 Jan 2020) $"
+	revision: "$Revision: 103853 $"
 
 class EXCEPTIONS
 
 inherit
+
 	EXCEP_CONST
 
 	EXCEPTION_MANAGER_FACTORY
@@ -142,7 +143,7 @@ feature -- Status report
 			-- String representation of the exception trace
 		do
 			if attached exception_manager.last_exception as e and then attached e.original.trace as t then
-				Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (t)
+				Result := {UTF_CONVERTER}.escaped_utf_32_string_to_utf_8_string_8 (t)
 			end
 		ensure
 			instance_free: class
@@ -248,6 +249,7 @@ feature -- Status setting
 			"esdie"
 		ensure
 			False
+			instance_free: class
 		end
 
 	new_die (code: INTEGER) obsolete "Use `die'. [2017-05-31]"
@@ -259,6 +261,7 @@ feature -- Status setting
 			"esdie"
 		ensure
 			False
+			instance_free: class
 		end
 
 	message_on_failure
@@ -290,7 +293,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

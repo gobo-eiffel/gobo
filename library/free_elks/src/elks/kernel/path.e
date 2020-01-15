@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Objects representing a path, i.e. a way to identify a file or a directory for the
 			current underlying platform. A path is made of two components:
@@ -83,8 +83,8 @@ note
 
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-01-15 15:24:22 +0100 (Wed, 15 Jan 2020) $"
+	revision: "$Revision: 103853 $"
 
 class
 	PATH
@@ -896,7 +896,7 @@ feature -- Output
 		local
 			u: UTF_CONVERTER
 		do
-			Result := u.utf_32_string_to_utf_8_string_8 (name)
+			Result := u.escaped_utf_32_string_to_utf_8_string_8 (name)
 		end
 
 	name: IMMUTABLE_STRING_32
@@ -1449,7 +1449,7 @@ invariant
 	no_forward_slash_on_windows: {PLATFORM}.is_windows implies not storage.has_substring ("/%U")
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -110,7 +110,7 @@ feature -- Access
 	type_name (object: ANY): STRING
 			-- Name of `object`'s generating type
 			-- (type of which `object` is a direct instance).
-		obsolete "Use `type_name_32` instead. [2019-11-30]"
+		obsolete "Use `type_name_32` instead. [2020-05-31]"
 		require
 			object_not_void: object /= Void
 		do
