@@ -12,6 +12,9 @@
 ### Gobo Eiffel Tools Library
 
 * Fixed bug in Eiffel pretty-printer. The symbol `∃` was printed instead of `~`.
+* Added support for new values `none|current|error` for warning option 
+  `obsolete_feature` in ECF classes as introduced in ECF 1.21.0. 
+  Note that `gec` does not take this option into account.
 
 ## Version 19.11.03.1 - 3 November 2019
 
