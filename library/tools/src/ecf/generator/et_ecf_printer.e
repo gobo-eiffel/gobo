@@ -5,7 +5,7 @@ note
 		"ECF file printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2492,6 +2492,14 @@ feature {NONE} -- Adaptation
 						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 					else
 						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+					end
+				end
+				if attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name) as l_value then
+						-- Values of "warning" option "obsolete_feature" have changed in ECF 1.21.0.
+					if STRING_.same_case_insensitive (l_value, {ET_ECF_OPTION_NAMES}.none_option_value) then
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+					else
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 					end
 				end
 			end

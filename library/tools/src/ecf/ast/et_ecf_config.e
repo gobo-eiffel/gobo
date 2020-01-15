@@ -5,7 +5,7 @@ note
 		"ECF configurations"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,6 @@ feature -- Access
 			--
 			-- May be void if the ECF namespace has not been explicitly specified
 			-- in the ECF file or if it was not recognized
-
 
 	universe: ET_ECF_INTERNAL_UNIVERSE
 			-- Universe of current system config.

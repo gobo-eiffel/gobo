@@ -1,7 +1,11 @@
 <?xml version="1.0"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0"
+	xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://www.eiffel.com/developers/xml/configuration-1-21-0"
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" elementFormDefault="qualified">
+	elementFormDefault="qualified"
+	vc:minVersion="1.1">
 
 	<xs:element name="redirection">
 		<xs:complexType>
@@ -138,8 +142,10 @@
 			<xs:element name="debug" type="debug" minOccurs="0"
 				maxOccurs="unbounded"/>
 			<xs:element name="assertions" type="assertions" minOccurs="0"/>
-			<xs:element name="warning" type="warning" minOccurs="0"
-				maxOccurs="unbounded"/>
+			<xs:element name="warning" minOccurs="0" maxOccurs="unbounded">
+				<xs:alternative test="@name='obsolete_feature'" type="warning_with_term"/>
+				<xs:alternative type="warning_with_flag"/>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="trace" type="xs:boolean" use="optional"/>
 		<xs:attribute name="profile" type="xs:boolean" use="optional"/>
@@ -356,9 +362,8 @@
 		<xs:attribute name="supplier_precondition" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
-	<xs:complexType name="warning">
+	<xs:complexType name="warning" abstract="true">
 		<xs:attribute name="name" type="available_warnings" use="required"/>
-		<xs:attribute name="enabled" type="xs:boolean" use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="available_warnings">
@@ -377,6 +382,48 @@
 			  <xs:enumeration value = "vwab"/>
 			  <xs:enumeration value = "vweq"/>
 	    </xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="warning_with_flag">
+		<xs:annotation>
+			<xs:documentation>
+				A warning that can be enabled or disabled according to the attribute "enabled".
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="warning">
+				<xs:attribute name="enabled" type="xs:boolean" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="warning_with_term">
+		<xs:annotation>
+			<xs:documentation>
+				A warning that can be enabled or disabled by the associated attribute "value" taking current date into account.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="warning">
+				<xs:attribute name="value" type="warning_with_term_value" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:simpleType name="warning_with_term_value">
+		<xs:annotation>
+			<xs:documentation>
+				A value that controls when a warning is reported:
+				- none: the warning report is suppressed;
+				- current: the warning is reported only if it is relevant at the time of processing;
+				- all: the warning is reported regarless of the processing time.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base = "xs:string">
+			<xs:enumeration value = "none"/>
+			<xs:enumeration value = "current"/>
+			<xs:enumeration value = "all"/>
+		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:complexType name="variable">

@@ -5,7 +5,7 @@ note
 		"ECF option default values"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -466,7 +466,7 @@ feature -- Access
 			Result.set_hash_function (l_hash_function)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_export_class_missing_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_obsolete_class_option_name)
-			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name)
+			Result.force_last (warning_obsolete_feature_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_old_verbatim_strings_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_once_in_generic_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_option_unknown_class_option_name)
@@ -483,15 +483,28 @@ feature -- Access
 			no_void_warning_name: not Result.has_void
 		end
 
-	valid_warnings_1_18_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
-			-- Valid warning values for ECF 1.18.0 and above
+	valid_warnings_1_21_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+			-- Valid warning values for ECF 1.21.0 and above
 			--
 			-- A void regexp means that there is no constraint on the warning value.
 		once
 			Result := valid_warnings_latest
 		ensure
 			instance_free: class
-			valid_warnings_18_0_not_void: Result /= Void
+			valid_warnings_1_21_0_not_void: Result /= Void
+			no_void_warning_name: not Result.has_void
+		end
+
+	valid_warnings_1_18_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+			-- Valid warning values for ECF 1.18.0 and above
+			--
+			-- A void regexp means that there is no constraint on the warning value.
+		once
+			Result := valid_warnings_1_21_0.twin
+			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name)
+		ensure
+			instance_free: class
+			valid_warnings_1_18_0_not_void: Result /= Void
 			no_void_warning_name: not Result.has_void
 		end
 
@@ -500,11 +513,11 @@ feature -- Access
 			--
 			-- A void regexp means that there is no constraint on the warning value.
 		once
-			Result := valid_warnings_1_18_0
+			Result := valid_warnings_1_18_0.twin
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_manifest_array_type_name)
 		ensure
 			instance_free: class
-			valid_warnings_17_0_not_void: Result /= Void
+			valid_warnings_1_17_0_not_void: Result /= Void
 			no_void_warning_name: not Result.has_void
 		end
 
@@ -551,7 +564,7 @@ feature -- Setting
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.profile_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.trace_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
-			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.none_option_value)
+			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.warning_option_value)
 			a_options.set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_invariant_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_assertion_value ({ET_ECF_OPTION_NAMES}.assertions_loop_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
@@ -561,7 +574,7 @@ feature -- Setting
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_export_class_missing_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_manifest_array_type_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_obsolete_class_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
-			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name, {ET_ECF_OPTION_NAMES}.current_option_value)
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_old_verbatim_strings_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_once_in_generic_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 			a_options.set_primary_warning_value ({ET_ECF_OPTION_NAMES}.warning_option_unknown_class_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
@@ -593,6 +606,7 @@ feature -- Setting
 		do
 			set_default_options_1_21_0 (a_options)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 		ensure
 			instance_free: class
 		end
@@ -742,6 +756,17 @@ feature {NONE} -- Implementation
 			instance_free: class
 			warning_option_value_regexp_not_void: Result /= Void
 			warning_option_value_regexp_compiled: Result.is_compiled
+		end
+
+	warning_obsolete_feature_option_value_regexp: RX_REGULAR_EXPRESSION
+			-- Regular expression for validation of "warning" option "obsolete_feature" values
+		once
+			create {RX_PCRE_REGULAR_EXPRESSION} Result.make
+			Result.compile ("(?i)(" + {ET_ECF_OPTION_NAMES}.none_option_value + "|" + {ET_ECF_OPTION_NAMES}.current_option_value + "|" + {ET_ECF_OPTION_NAMES}.all_option_value + ")")
+		ensure
+			instance_free: class
+			warning_obsolete_feature_option_value_regexp_not_void: Result /= Void
+			warning_obsolete_feature_option_value_regexp_compiled: Result.is_compiled
 		end
 
 end

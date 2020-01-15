@@ -5,7 +5,7 @@ note
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2523,11 +2523,24 @@ feature {NONE} -- Element change
 			a_target_not_void: a_target /= Void
 		local
 			l_warning_name: STRING
+			l_warning_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
 				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
 				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+			elseif STRING_.same_case_insensitive (l_name.value, {ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name) and then (not attached a_target.system_config.ecf_version as l_ecf_version or else l_ecf_version >= ecf_1_21_0) then
+				if not attached a_element.attribute_by_name (xml_value) as l_value then
+					error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_target.system_config)
+				elseif l_value.value.is_empty then
+					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+				else
+					l_warning_name := l_name.value
+					if attached a_options.primary_warning_value (l_warning_name) then
+-- TODO: warning: several warnings with the same name! (not reported by ISE: use the last one.)
+					end
+					a_options.set_primary_warning_value (l_warning_name, l_value.value)
+				end
 			elseif not attached a_element.attribute_by_name (xml_enabled) as l_enabled then
 				error_handler.report_eatm_error (xml_enabled, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_enabled.value.is_empty then
@@ -2537,7 +2550,16 @@ feature {NONE} -- Element change
 				if attached a_options.primary_warning_value (l_warning_name) then
 -- TODO: warning: several warnings with the same name! (not reported by ISE: use the last one.)
 				end
-				a_options.set_primary_warning_value (l_warning_name, l_enabled.value)
+				l_warning_value := l_enabled.value
+				if STRING_.same_case_insensitive (l_warning_name, {ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name) then
+						-- Values of "warning" option "obsolete_feature" have changed in ECF 1.21.0.
+					if STRING_.same_case_insensitive (l_warning_value, {ET_ECF_OPTION_NAMES}.false_option_value) then
+						l_warning_value := {ET_ECF_OPTION_NAMES}.none_option_value
+					elseif STRING_.same_case_insensitive (l_warning_value, {ET_ECF_OPTION_NAMES}.true_option_value) then
+						l_warning_value := {ET_ECF_OPTION_NAMES}.current_option_value
+					end
+				end
+				a_options.set_primary_warning_value (l_warning_name, l_warning_value)
 			end
 		end
 
