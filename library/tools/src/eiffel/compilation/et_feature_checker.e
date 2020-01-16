@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2851,6 +2851,13 @@ feature {NONE} -- Instruction validity
 						elseif attached {ET_IDENTIFIER} l_target as l_identifier then
 							if not l_target_context.is_type_detachable then
 								current_initialization_scope.add_name (l_identifier)
+							elseif not l_source_context.is_type_attached then
+								if l_identifier.is_feature_name and then attached current_class.seeded_query (l_identifier.seed) as l_attribute and then l_attribute.is_stable_attribute then
+										-- The target entity of the assignment is a stable attribute
+										-- but the source expression is not guaranteed to be attached.
+									set_fatal_error
+									error_handler.report_vjar0b_error (current_class, current_class_impl, an_instruction, l_source_context.named_type, l_target_context.named_type)
+								end
 							end
 							if not l_target_context.is_type_attached then
 								if l_source_context.is_type_attached then
@@ -10281,6 +10288,15 @@ feature {NONE} -- Expression validity
 				l_had_error := has_fatal_error
 					-- Update `a_context' so that it represents the type of `a_call'.
 				check_query_call_type_validity (a_call, a_query, a_context)
+				if current_system.attachment_type_conformance_mode then
+					if not a_context.is_type_attached then
+						if attached {ET_IDENTIFIER} l_name as l_identifier and then a_query.is_stable_attribute and then current_attachment_scope.has_attribute (l_identifier) then
+								-- Even though this attribute has not been declared as attached,
+								-- we can guarantee that at this stage this entity is attached.
+							a_context.force_last (tokens.attached_like_current)
+						end
+					end
+				end
 				reset_fatal_error (l_had_error or has_fatal_error)
 			end
 		end

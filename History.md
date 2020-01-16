@@ -15,6 +15,7 @@
 * Added support for new values `none|current|error` for warning option 
   `obsolete_feature` in ECF classes as introduced in ECF 1.21.0. 
   Note that `gec` does not take this option into account.
+* Added support for stable attributes in void-safe mode.
 
 ## Version 19.11.03.1 - 3 November 2019
 

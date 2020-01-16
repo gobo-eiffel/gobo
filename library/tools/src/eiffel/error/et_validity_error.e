@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -177,6 +177,7 @@ create
 	make_vhrc1a,
 	make_vhrc2a,
 	make_vjar0a,
+	make_vjar0b,
 	make_vjaw0a,
 	make_vjaw0b,
 	make_vjaw0c,
@@ -7533,8 +7534,8 @@ feature {NONE} -- Initialization
 
 	make_vjar0a (a_class, a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE)
 			-- Create a new VJAR error: the source expression of `an_assignment' in `a_class_impl'
-			-- does not conform to its target entity when viewed from `one of its descendants
-			-- a_class' (possibly itself).
+			-- does not conform to its target entity when viewed from one of its descendants
+			-- `a_class' (possibly itself).
 			--
 			-- ETL2: p. 311
 		require
@@ -7553,6 +7554,54 @@ feature {NONE} -- Initialization
 			code := template_code (vjar0a_template_code)
 			etl_code := vjar_etl_code
 			default_template := default_message_template (vjar0a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_source_type.to_text, 7)
+			parameters.put (a_target_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = source type
+			-- dollar8: $8 = target type
+		end
+
+	make_vjar0b (a_class, a_class_impl: ET_CLASS; a_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE)
+			-- Create a new VJAR error: the target entity of `a_assignment' in `a_class_impl', and
+			-- viewed from one of its descendants `a_class' (possibly itself), is a stable
+			-- attribute but the source expression is not guaranteed to be attached.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_assignment_not_void: a_assignment /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_assignment.source.position
+			code := template_code (vjar0b_template_code)
+			etl_code := vjar_etl_code
+			default_template := default_message_template (vjar0b_default_template)
 			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -15874,6 +15923,7 @@ feature {NONE} -- Implementation
 	vhrc1a_default_template: STRING = "`$7' is not the final name of a feature in $8."
 	vhrc2a_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair."
 	vjar0a_default_template: STRING = "the source of the assignment (of type '$7') does not conform nor convert to its target entity (of type '$8')."
+	vjar0b_default_template: STRING = "the target entity of the assignment is a stable attribute but the source (of type '$7') is not attached."
 	vjaw0a_default_template: STRING = "feature `$7' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0b_default_template: STRING = "`$7' is the name of a formal argument of feature `$8'. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0c_default_template: STRING = "`$7' is the name of a formal argument of an inline agent. A Writable is either a local variable (including Result) or an attribute."
@@ -16386,6 +16436,7 @@ feature {NONE} -- Implementation
 	vhrc1a_template_code: STRING = "vhrc1a"
 	vhrc2a_template_code: STRING = "vhrc2a"
 	vjar0a_template_code: STRING = "vjar0a"
+	vjar0b_template_code: STRING = "vjar0b"
 	vjaw0a_template_code: STRING = "vjaw0a"
 	vjaw0b_template_code: STRING = "vjaw0b"
 	vjaw0c_template_code: STRING = "vjaw0c"

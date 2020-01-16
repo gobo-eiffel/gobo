@@ -5,7 +5,7 @@ note
 		"Eiffel attachment scope builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101,6 +101,13 @@ feature {ET_AST_NODE} -- Processing
 						if attached scope as l_scope then
 							l_scope.add_name (l_identifier)
 						end
+					elseif attached {ET_UNQUALIFIED_CALL_EXPRESSION} l_left as l_unqualified_call then
+						if l_unqualified_call.arguments = Void and then l_unqualified_call.parenthesis_call = Void and then attached {ET_IDENTIFIER} l_unqualified_call.name as l_identifier then
+								-- This might be a stable attribute.
+							if attached scope as l_scope then
+								l_scope.add_name (l_identifier)
+							end
+						end
 					end
 				elseif attached {ET_VOID} l_left then
 					if attached {ET_RESULT} l_right then
@@ -110,6 +117,13 @@ feature {ET_AST_NODE} -- Processing
 					elseif attached {ET_IDENTIFIER} l_right as l_identifier then
 						if attached scope as l_scope then
 							l_scope.add_name (l_identifier)
+						end
+					elseif attached {ET_UNQUALIFIED_CALL_EXPRESSION} l_left as l_unqualified_call then
+							-- This might be a stable attribute.
+						if l_unqualified_call.arguments = Void and then l_unqualified_call.parenthesis_call = Void and then attached {ET_IDENTIFIER} l_unqualified_call.name as l_identifier then
+							if attached scope as l_scope then
+								l_scope.add_name (l_identifier)
+							end
 						end
 					end
 				end
@@ -163,6 +177,13 @@ feature {ET_AST_NODE} -- Processing
 				elseif attached {ET_IDENTIFIER} l_expression as l_identifier then
 					if attached scope as l_scope then
 						l_scope.add_name (l_identifier)
+					end
+				elseif attached {ET_UNQUALIFIED_CALL_EXPRESSION} l_expression as l_unqualified_call then
+						-- This might be a stable attribute.
+					if l_unqualified_call.arguments = Void and then l_unqualified_call.parenthesis_call = Void and then attached {ET_IDENTIFIER} l_unqualified_call.name as l_identifier then
+						if attached scope as l_scope then
+							l_scope.add_name (l_identifier)
+						end
 					end
 				end
 			end

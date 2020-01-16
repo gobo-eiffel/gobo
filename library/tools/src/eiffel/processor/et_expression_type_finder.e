@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/10/25 $"
 	revision: "$Revision: #6 $"
@@ -2276,6 +2276,15 @@ feature {NONE} -- Expression processing
 						end
 					else
 						a_context.force_last (l_type)
+					end
+					if current_system.attachment_type_conformance_mode then
+						if not a_context.is_type_attached then
+							if attached {ET_IDENTIFIER} l_name as l_identifier and then l_query.is_stable_attribute and then current_attachment_scope.has_attribute (l_identifier) then
+									-- Even though this attribute has not been declared as attached,
+									-- we can guarantee that at this stage this entity is attached.
+								a_context.force_last (tokens.attached_like_current)
+							end
+						end
 					end
 				end
 			end

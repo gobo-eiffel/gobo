@@ -9,7 +9,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,12 +80,13 @@ feature -- Status report
 			-- or initialized (when declared as attached)?
 		require
 			a_name_not_void: a_name /= Void
+			valid_name: a_name.is_local or a_name.is_argument or a_name.is_feature_name
 		do
 			if a_name.is_local then
 				Result := locals_attached.has (a_name.seed)
 			elseif a_name.is_argument then
 				Result := arguments_attached.has (a_name.seed)
-			else
+			elseif a_name.is_feature_name then
 				Result := attributes_attached.has (a_name.seed)
 			end
 		end
@@ -206,6 +207,7 @@ feature -- Element change
 			-- (when declared as attached).
 		require
 			a_name_not_void: a_name /= Void
+			a_name_is_feature_name: a_name.is_feature_name
 		do
 			attributes_attached.force_last (a_name.seed)
 		ensure
@@ -228,12 +230,13 @@ feature -- Element change
 			-- (when declared as attached).
 		require
 			a_name_not_void: a_name /= Void
+			valid_name: a_name.is_local or a_name.is_argument or a_name.is_feature_name
 		do
 			if a_name.is_local then
 				add_local_variable (a_name)
 			elseif a_name.is_argument then
 				add_formal_argument (a_name)
-			else
+			elseif a_name.is_feature_name then
 				add_attribute (a_name)
 			end
 		ensure
@@ -272,6 +275,7 @@ feature -- Element change
 			-- (when declared as attached).
 		require
 			a_name_not_void: a_name /= Void
+			a_name_is_feature_name: a_name.is_feature_name
 		do
 			attributes_attached.remove (a_name.seed)
 		ensure
@@ -294,12 +298,13 @@ feature -- Element change
 			-- (when declared as attached).
 		require
 			a_name_not_void: a_name /= Void
+			valid_name: a_name.is_local or a_name.is_argument or a_name.is_feature_name
 		do
 			if a_name.is_local then
 				remove_local_variable (a_name)
 			elseif a_name.is_argument then
 				remove_formal_argument (a_name)
-			else
+			elseif a_name.is_feature_name then
 				remove_attribute (a_name)
 			end
 		ensure

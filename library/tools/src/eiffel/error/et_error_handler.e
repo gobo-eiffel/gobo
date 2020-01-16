@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/23 $"
 	revision: "$Revision: #35 $"
@@ -4238,8 +4238,8 @@ feature -- Validity errors
 
 	report_vjar0a_error (a_class, a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE)
 			-- Report VJAR error: the source expression of `an_assignment' in `a_class_impl'
-			-- does not conform to its target entity when viewed from `one of its descendants
-			-- a_class' (possibly itself).
+			-- does not conform to its target entity when viewed from one of its descendants
+			-- `a_class' (possibly itself).
 			--
 			-- ETL2: p. 311
 		require
@@ -4257,6 +4257,30 @@ feature -- Validity errors
 			if reportable_vjar_error (a_class) then
 				create an_error.make_vjar0a (a_class, a_class_impl, an_assignment, a_source_type, a_target_type)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_vjar0b_error (a_class, a_class_impl: ET_CLASS; a_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE)
+			-- Report VJAR error: the target entity of `a_assignment' in `a_class_impl', and
+			-- viewed from one of its descendants `a_class' (possibly itself), is a stable
+			-- attribute but the source expression is not guaranteed to be attached.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_assignment_not_void: a_assignment /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjar_error (a_class) then
+				create l_error.make_vjar0b (a_class, a_class_impl, a_assignment, a_source_type, a_target_type)
+				report_validity_error (l_error)
 			end
 		end
 
