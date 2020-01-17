@@ -5,7 +5,7 @@
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -2233,19 +2233,39 @@ feature {NONE} -- AST factory
 	new_writable (a_name: detachable ET_IDENTIFIER): detachable ET_WRITABLE
 			-- New writable
 		local
-			a_seed: INTEGER
+			l_seed: INTEGER
 		do
 			if a_name /= Void then
 				Result := a_name
 				if attached last_local_variables as l_last_local_variables then
-					a_seed := l_last_local_variables.index_of (a_name)
-					if a_seed /= 0 then
-						a_name.set_seed (a_seed)
+					l_seed := l_last_local_variables.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
 						a_name.set_local (True)
-						l_last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 then
+				if l_seed = 0 and then attached last_formal_arguments as l_last_formal_arguments then
+					l_seed := l_last_formal_arguments.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
+						a_name.set_argument (True)
+						l_last_formal_arguments.formal_argument (l_seed).set_used (True)
+					end
+				end
+				if l_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					l_seed := l_last_iteration_components.index_of_name (a_name)
+					if l_seed /= 0 then
+						a_name.set_iteration_cursor (True)
+					end
+				end
+				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					l_seed := l_last_object_tests.index_of_name (a_name)
+					if l_seed /= 0 then
+						a_name.set_object_test_local (True)
+					end
+				end
+				if l_seed = 0 then
 					a_name.set_feature_name (True)
 				end
 			end

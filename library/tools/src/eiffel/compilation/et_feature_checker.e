@@ -10403,6 +10403,26 @@ feature {NONE} -- Expression validity
 						end
 						report_local_assignment_target (l_identifier, l_local)
 					end
+				elseif l_identifier.is_argument then
+					set_fatal_error
+					if attached current_inline_agent as l_current_inline_agent then
+						error_handler.report_vjaw0c_error (current_class, l_identifier, l_current_inline_agent)
+					elseif current_feature_impl.is_feature then
+						error_handler.report_vjaw0b_error (current_class, l_identifier, current_feature_impl.as_feature)
+					else
+						-- Internal error: invariants don't have writables.
+						error_handler.report_giaaa_error
+					end
+				elseif not l_identifier.is_feature_name then
+					set_fatal_error
+					if attached current_inline_agent as l_current_inline_agent then
+						error_handler.report_veen0b_error (current_class, l_identifier, l_current_inline_agent)
+					elseif current_feature_impl.is_feature then
+						error_handler.report_veen0a_error (current_class, l_identifier, current_feature_impl.as_feature)
+					else
+							-- Internal error: invariants don't have writables.
+						error_handler.report_giaaa_error
+					end
 				elseif l_seed /= 0 then
 					if not attached current_class.seeded_query (l_seed) as l_attribute then
 							-- Internal error: if we got a seed, the
@@ -10468,28 +10488,14 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 						error_handler.report_vjaw0a_error (current_class, l_identifier, l_procedure)
 					else
-							-- There is no feature with that name.
-							-- Check whether this is an argument in order
-							-- to give a better error message.
 						set_fatal_error
-						if attached current_closure_impl.arguments as l_arguments and then l_arguments.index_of (l_identifier) /= 0 then
-							if attached current_inline_agent as l_current_inline_agent then
-								error_handler.report_vjaw0c_error (current_class, l_identifier, l_current_inline_agent)
-							elseif current_feature_impl.is_feature then
-								error_handler.report_vjaw0b_error (current_class, l_identifier, current_feature_impl.as_feature)
-							else
-								-- Internal error: invariants don't have writables.
-								error_handler.report_giaaa_error
-							end
+						if attached current_inline_agent as l_current_inline_agent then
+							error_handler.report_veen0b_error (current_class, l_identifier, l_current_inline_agent)
+						elseif current_feature_impl.is_feature then
+							error_handler.report_veen0a_error (current_class, l_identifier, current_feature_impl.as_feature)
 						else
-							if attached current_inline_agent as l_current_inline_agent then
-								error_handler.report_veen0b_error (current_class, l_identifier, l_current_inline_agent)
-							elseif current_feature_impl.is_feature then
-								error_handler.report_veen0a_error (current_class, l_identifier, current_feature_impl.as_feature)
-							else
-									-- Internal error: invariants don't have writables.
-								error_handler.report_giaaa_error
-							end
+								-- Internal error: invariants don't have writables.
+							error_handler.report_giaaa_error
 						end
 					end
 				end
