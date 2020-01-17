@@ -18,6 +18,9 @@
 * Added support for stable attributes in void-safe mode.
 * Reordered `VFAV` rules to match those of ISE Eiffel. Added a rule
   for multiple aliases with the same name.
+* Added class `ET_AGENT_ERROR_HANDLER` to be able to customize error reporting
+  with agents (i.e. display validity error messages on an EiffelVision window
+  instead of on the console).
 
 ## Version 19.11.03.1 - 3 November 2019
 

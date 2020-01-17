@@ -7,8 +7,8 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009/11/23 $"
-	revision: "$Revision: #35 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_ERROR_HANDLER
 
