@@ -1,2 +1,2 @@
-[VFAV-4] class CC (7,17): `alias "[]"' has a convert mark but it is not a binary operator alias.
+[VFAV-4] class BB (1,50): Parenthesis alias `alias "()"' appears more than once on the right-hand-side of the rename pair in generic constraint CC.
 ----

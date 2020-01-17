@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+
+Error code: VFAV(5)
+
+Error: convert mark is used for non-binary operator alias.
+What to do: remove the convert mark or make sure that it is applied to
+  a binary operator alias.
+
+Class: BB
+Feature name: f
+Line: 5
+  
+->  f alias "()" convert (i: INTEGER): INTEGER
+      do
+
+-------------------------------------------------------------------------------

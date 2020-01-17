@@ -1,2 +1,2 @@
-[VFAV-4] class BB (5,10): `alias "[]"' has a convert mark but it is not a binary operator alias.
+[VFAV-4] class AA (19,21): Parenthesis alias `alias "()"' appears more than once in the name of feature `f'.
 ----

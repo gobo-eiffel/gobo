@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -334,14 +334,22 @@ feature {NONE} -- Feature flattening
 						from j := 1 until j > l_alias_names_count loop
 							l_alias_name := l_alias_names.item (j)
 							if l_alias_name.is_bracket then
-								if not l_query.is_bracketable then
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_query'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4a_error (current_class, l_query, l_alias_name)
+								elseif not l_query.is_bracketable then
 										-- A feature with a Bracket alias should be
 										-- a function with one or more arguments.
 									set_fatal_error (current_class)
 									error_handler.report_vfav2a_error (current_class, l_query, l_alias_name)
 								end
 							elseif l_alias_name.is_parenthesis then
-								if not l_query.is_parenthesisable then
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_query'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4b_error (current_class, l_query, l_alias_name)
+								elseif not l_query.is_parenthesisable then
 										-- A feature with a Parenthesis alias should be
 										-- a feature with one or more arguments.
 									set_fatal_error (current_class)
@@ -350,7 +358,12 @@ feature {NONE} -- Feature flattening
 							elseif l_query.is_prefixable then
 								if l_alias_name.is_prefixable then
 									l_alias_name.set_prefix
-								else
+								end
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_query'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4c_error (current_class, l_query, l_alias_name)
+								elseif not l_alias_name.is_prefixable then
 										-- A feature with a binary Operator alias should be
 										-- a query with exactly one argument.
 									set_fatal_error (current_class)
@@ -359,28 +372,51 @@ feature {NONE} -- Feature flattening
 							elseif l_query.is_infixable then
 								if l_alias_name.is_infixable then
 									l_alias_name.set_infix
-								else
+								end
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_query'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4d_error (current_class, l_query, l_alias_name)
+								elseif not l_alias_name.is_infixable then
 										-- A feature with a unary Operator alias should be
 										-- a query with no argument.
 									set_fatal_error (current_class)
 									error_handler.report_vfav1b_error (current_class, l_query, l_alias_name)
 								end
 							elseif l_alias_name.is_infixable and l_alias_name.is_prefixable then
-									-- A feature with an Operator alias which can be either unary
-									-- or binary should be a query with no argument or exactly
-									-- one argument.
-								set_fatal_error (current_class)
-								error_handler.report_vfav1k_error (current_class, l_query, l_alias_name)
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_query'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4d_error (current_class, l_query, l_alias_name)
+								else
+										-- A feature with an Operator alias which can be either unary
+										-- or binary should be a query with no argument or exactly
+										-- one argument.
+									set_fatal_error (current_class)
+									error_handler.report_vfav1k_error (current_class, l_query, l_alias_name)
+								end
 							elseif l_alias_name.is_infix then
-									-- A feature with a binary Operator alias should be
-									-- a query with exactly one argument.
-								set_fatal_error (current_class)
-								error_handler.report_vfav1a_error (current_class, l_query, l_alias_name)
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_query'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4d_error (current_class, l_query, l_alias_name)
+								else
+										-- A feature with a binary Operator alias should be
+										-- a query with exactly one argument.
+									set_fatal_error (current_class)
+									error_handler.report_vfav1a_error (current_class, l_query, l_alias_name)
+								end
 							elseif l_alias_name.is_prefix then
-									-- A feature with a unary Operator alias should be
-									-- a query with no argument.
-								set_fatal_error (current_class)
-								error_handler.report_vfav1b_error (current_class, l_query, l_alias_name)
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_query'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4c_error (current_class, l_query, l_alias_name)
+								else
+										-- A feature with a unary Operator alias should be
+										-- a query with no argument.
+									set_fatal_error (current_class)
+									error_handler.report_vfav1b_error (current_class, l_query, l_alias_name)
+								end
 							else
 									-- Internal error: no other kind of alias name.
 								set_fatal_error (current_class)
@@ -390,7 +426,7 @@ feature {NONE} -- Feature flattening
 									-- When the 'convert' mark is specified, the alias
 									-- should be a binary operator alias.
 								set_fatal_error (current_class)
-								error_handler.report_vfav4a_error (current_class, l_alias_name)
+								error_handler.report_vfav5a_error (current_class, l_alias_name)
 							end
 							j := j + 1
 						end
@@ -434,33 +470,61 @@ feature {NONE} -- Feature flattening
 						from j := 1 until j > l_alias_names_count loop
 							l_alias_name := l_alias_names.item (j)
 							if l_alias_name.is_bracket then
-									-- A feature with a Bracket alias should be
-									-- a function with one or more arguments.
-								set_fatal_error (current_class)
-								error_handler.report_vfav2a_error (current_class, l_procedure, l_alias_name)
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_procedure'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4a_error (current_class, l_procedure, l_alias_name)
+								else
+										-- A feature with a Bracket alias should be
+										-- a function with one or more arguments.
+									set_fatal_error (current_class)
+									error_handler.report_vfav2a_error (current_class, l_procedure, l_alias_name)
+								end
 							elseif l_alias_name.is_parenthesis then
-								if not l_procedure.is_parenthesisable then
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_procedure'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4b_error (current_class, l_procedure, l_alias_name)
+								elseif not l_procedure.is_parenthesisable then
 										-- A feature with a Parenthesis alias should be
 										-- a feature with one or more arguments.
 									set_fatal_error (current_class)
 									error_handler.report_vfav3a_error (current_class, l_procedure, l_alias_name)
 								end
 							elseif l_alias_name.is_infixable and l_alias_name.is_prefixable then
-									-- A feature with an Operator alias which can be either unary
-									-- or binary should be a query with no argument or exactly
-									-- one argument.
-								set_fatal_error (current_class)
-								error_handler.report_vfav1k_error (current_class, l_procedure, l_alias_name)
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_procedure'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4d_error (current_class, l_procedure, l_alias_name)
+								else
+										-- A feature with an Operator alias which can be either unary
+										-- or binary should be a query with no argument or exactly
+										-- one argument.
+									set_fatal_error (current_class)
+									error_handler.report_vfav1k_error (current_class, l_procedure, l_alias_name)
+								end
 							elseif l_alias_name.is_infix then
-									-- A feature with a binary Operator alias should be
-									-- a function with exactly one argument.
-								set_fatal_error (current_class)
-								error_handler.report_vfav1a_error (current_class, l_procedure, l_alias_name)
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_procedure'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4d_error (current_class, l_procedure, l_alias_name)
+								else
+										-- A feature with a binary Operator alias should be
+										-- a function with exactly one argument.
+									set_fatal_error (current_class)
+									error_handler.report_vfav1a_error (current_class, l_procedure, l_alias_name)
+								end
 							elseif l_alias_name.is_prefix then
-									-- A feature with a unary Operator alias should be
-									-- a query with no argument.
-								set_fatal_error (current_class)
-								error_handler.report_vfav1b_error (current_class, l_procedure, l_alias_name)
+								if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+										-- Alias name `l_alias_name' appears twice in the name of `l_procedure'.
+									set_fatal_error (current_class)
+									error_handler.report_vfav4c_error (current_class, l_procedure, l_alias_name)
+								else
+										-- A feature with a unary Operator alias should be
+										-- a query with no argument.
+									set_fatal_error (current_class)
+									error_handler.report_vfav1b_error (current_class, l_procedure, l_alias_name)
+								end
 							else
 									-- Internal error: no other kind of alias name.
 								set_fatal_error (current_class)
@@ -470,7 +534,7 @@ feature {NONE} -- Feature flattening
 									-- When the 'convert' mark is specified, the alias
 									-- should be a binary operator alias.
 								set_fatal_error (current_class)
-								error_handler.report_vfav4a_error (current_class, l_alias_name)
+								error_handler.report_vfav5a_error (current_class, l_alias_name)
 							end
 							j := j + 1
 						end
@@ -490,7 +554,7 @@ feature {NONE} -- Feature flattening
 						from j := 1 until j > l_alias_names_count loop
 							l_alias_name := l_alias_names.item (j)
 							aliased_features.search (l_alias_name)
-							if aliased_features.found then
+							if aliased_features.found and then aliased_features.found_item /= a_named_feature then
 								set_fatal_error (current_class)
 								l_other_feature := aliased_features.found_item
 								l_other_alias_name := aliased_features.found_key
@@ -556,9 +620,8 @@ feature {NONE} -- Feature flattening
 										error_handler.report_giaaa_error
 									end
 								end
-							else
-								aliased_features.force_last_new (a_named_feature, l_alias_name)
 							end
+							aliased_features.force_last_new (a_named_feature, l_alias_name)
 							j := j + 1
 						end
 					end
@@ -1411,14 +1474,24 @@ feature {NONE} -- Feature adaptation validity
 					from i := 1 until i > nb loop
 						l_alias_name := l_alias_names.item (i)
 						if l_alias_name.is_bracket then
-							if not l_precursor_feature.is_bracketable then
+							if l_alias_names.head_has_alias_name (l_alias_name, i - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of the rename pair `l_new_name'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4e_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name)
+							elseif not l_precursor_feature.is_bracketable then
 									-- A feature with a Bracket alias should be
 									-- a function with one or more arguments.
 								set_fatal_error (current_class)
 								error_handler.report_vfav2e_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name, l_precursor_feature)
 							end
 						elseif l_alias_name.is_parenthesis then
-							if not l_precursor_feature.is_parenthesisable then
+							if l_alias_names.head_has_alias_name (l_alias_name, i - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of the rename pair `l_new_name'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4f_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name)
+							elseif not l_precursor_feature.is_parenthesisable then
 									-- A feature with a Parenthesis alias should be
 									-- a function with one or more arguments.
 								set_fatal_error (current_class)
@@ -1427,7 +1500,13 @@ feature {NONE} -- Feature adaptation validity
 						elseif l_precursor_feature.is_prefixable then
 							if l_alias_name.is_prefixable then
 								l_alias_name.set_prefix
-							else
+							end
+							if l_alias_names.head_has_alias_name (l_alias_name, i - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of the rename pair `l_new_name'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4g_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name)
+							elseif not l_alias_name.is_prefixable then
 									-- A feature with a binary Operator alias should be
 									-- a function with exactly one argument.
 								set_fatal_error (current_class)
@@ -1436,27 +1515,54 @@ feature {NONE} -- Feature adaptation validity
 						elseif l_precursor_feature.is_infixable then
 							if l_alias_name.is_infixable then
 								l_alias_name.set_infix
-							else
+							end
+							if l_alias_names.head_has_alias_name (l_alias_name, i - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of the rename pair `l_new_name'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4h_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name)
+							elseif not l_alias_name.is_infixable then
 									-- A feature with a unary Operator alias should be
 									-- a query with no argument.
 								set_fatal_error (current_class)
 								error_handler.report_vfav1n_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name, l_precursor_feature)
 							end
 						elseif l_alias_name.is_infixable and l_alias_name.is_prefixable then
-								-- A feature with an Operator alias which can be either unary or binary
-								-- should be a query with no argument or exactly one argument.
-							set_fatal_error (current_class)
-							error_handler.report_vfav1p_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name, l_precursor_feature)
+							if l_alias_names.head_has_alias_name (l_alias_name, i - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of `l_rename_pair'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4h_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name)
+							else
+									-- A feature with an Operator alias which can be either unary or binary
+									-- should be a query with no argument or exactly one argument.
+								set_fatal_error (current_class)
+								error_handler.report_vfav1p_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name, l_precursor_feature)
+							end
 						elseif l_alias_name.is_infix then
-								-- A feature with a binary Operator alias should be
-								-- a function with exactly one argument.
-							set_fatal_error (current_class)
-							error_handler.report_vfav1m_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name, l_precursor_feature)
+							if l_alias_names.head_has_alias_name (l_alias_name, i - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of the rename pair `l_new_name'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4h_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name)
+							else
+									-- A feature with a binary Operator alias should be
+									-- a function with exactly one argument.
+								set_fatal_error (current_class)
+								error_handler.report_vfav1m_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name, l_precursor_feature)
+							end
 						elseif l_alias_name.is_prefix then
-								-- A feature with a unary Operator alias should be
-								-- a query with no argument.
-							set_fatal_error (current_class)
-							error_handler.report_vfav1n_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name, l_precursor_feature)
+							if l_alias_names.head_has_alias_name (l_alias_name, i - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of the rename pair `l_new_name'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4g_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name)
+							else
+									-- A feature with a unary Operator alias should be
+									-- a query with no argument.
+								set_fatal_error (current_class)
+								error_handler.report_vfav1n_error (current_class, a_parent_feature.parent.type, l_new_name, l_alias_name, l_precursor_feature)
+							end
 						else
 								-- Internal error: no other kind of alias name.
 							set_fatal_error (current_class)
@@ -1466,7 +1572,7 @@ feature {NONE} -- Feature adaptation validity
 								-- When the 'convert' mark is specified, the alias
 								-- should be a binary operator alias.
 							set_fatal_error (current_class)
-							error_handler.report_vfav4a_error (current_class, l_alias_name)
+							error_handler.report_vfav5a_error (current_class, l_alias_name)
 						end
 						i := i + 1
 					end

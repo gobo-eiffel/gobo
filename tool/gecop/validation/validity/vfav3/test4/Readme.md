@@ -8,4 +8,4 @@ In this test, class `AA` has two features `f` and `g` (inherited from `BB`) with
 
 ### Notes
 
-* ISE Eiffel (as of 18.11.10.2592 and after) reports this validity rule violation using the code `VFAV-4`.
+* ISE Eiffel (as of 18.11.10.2592 and until 19.10.10.3641) reported this validity rule violation using the code `VFAV-4`.

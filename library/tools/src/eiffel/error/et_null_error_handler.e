@@ -5,7 +5,7 @@ note
 		"Null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,6 +71,7 @@ inherit
 			reportable_vfav2_error,
 			reportable_vfav3_error,
 			reportable_vfav4_error,
+			reportable_vfav5_error,
 			reportable_vffd4_error,
 			reportable_vffd7_error,
 			reportable_vgcc1_error,
@@ -588,6 +589,13 @@ feature -- Validity error status
 
 	reportable_vfav4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAV-4 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vfav5_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFAV-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

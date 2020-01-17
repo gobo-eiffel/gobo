@@ -8,14 +8,15 @@ feature
 
 	make
 		local
-			b: BB
-			c: CC
+			i: INTEGER
 		do
-			create b.make (2)
-			create c.make (4)
-			if b + c = 24 then
-				print ("Passed")
-			end
+			i := + Current
+			print ("Failed")
+		end
+
+	f alias "+" alias "+": INTEGER
+		do
+			Result := 15
 		end
 
 end

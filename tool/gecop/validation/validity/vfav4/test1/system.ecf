@@ -7,7 +7,7 @@
 >
 	<description>
 		system: "aa"
-		copyright: "Copyright (c) 2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2020, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="aa">

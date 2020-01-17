@@ -1,2 +1,2 @@
-[VGGC-2] class BB (1,39): feature name `h' appears on the right-hand-side of more than one rename pair in generic constraint CC.
+[VGGC-2] class BB (1,39): feature name `h' appears on the right-hand-side of more than once rename pair in generic constraint CC.
 ----

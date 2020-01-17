@@ -1,3 +1,3 @@
-class BB [G -> CC rename f as g alias "()" convert end]
+class BB [G -> CC rename f as g alias "+" alias "+" end]
 		
 end

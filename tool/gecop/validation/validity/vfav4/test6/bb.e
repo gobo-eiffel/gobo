@@ -1,12 +1,18 @@
-class BB [G -> CC rename f as g alias "+" convert end]
+class BB
+
+create
+
+	make
 
 feature
 
-	f (c: G)
+	make
 		do
-			if c + 3 = 5 then
-				print ("Passed")
-			end
 		end
-		
+
+	f (i: INTEGER): INTEGER
+		do
+			Result := i
+		end
+
 end

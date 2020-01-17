@@ -1,10 +1,14 @@
 class CC
 
-feature
+inherit
 
-	f (i: INTEGER): INTEGER
-		do
-			Result := i
+	BB
+		rename
+			f as g alias "()" alias "()"
 		end
+
+create
+
+	make
 
 end

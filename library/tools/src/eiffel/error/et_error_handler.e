@@ -3296,8 +3296,277 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav4a_error (a_class: ET_CLASS; a_alias_name: ET_ALIAS_NAME)
-			-- Report VFAV-4 error: `a_alias_name' has a convert mark
+	report_vfav4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-4 error: `a_feature' has more than once a bracket alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4a (a_class, a_feature, a_alias_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4b_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-4 error: `a_feature' has more than once a parenthesis alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4b (a_class, a_feature, a_alias_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4c_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-4 error: `a_feature' has more than once the same unary operator alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4c (a_class, a_feature, a_alias_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4d_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-4 error: `a_feature' has more than once the same binary operator alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_infix: a_alias_name.is_infix
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4d (a_class, a_feature, a_alias_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4e_error (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-4 error: a bracket alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4e (a_class, a_parent_type, a_rename, a_alias_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4f_error (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-4 error: a parenthesis alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4f (a_class, a_parent_type, a_rename, a_alias_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4g_error (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-4 error: a unary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4g (a_class, a_parent_type, a_rename, a_alias_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4h_error (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-4 error: a binary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_infix: a_alias_name.is_infix
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4h (a_class, a_parent_type, a_rename, a_alias_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4i_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-4 error: a bracket alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- constraint `a_constraint' of formal parameter `a_formal' in
+			-- `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4i (a_class, a_constraint, a_rename, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4j_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-4 error: a parenthesis alias name appears more than
+			-- once in the second element of the Rename_pair `a_rename' in the
+			-- constraint `a_constraint' of formal parameter `a_formal' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4j (a_class, a_constraint, a_rename, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4k_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-4 error: a unary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the constraint
+			-- `a_constraint' of formal parameter `a_formal' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4k (a_class, a_constraint, a_rename, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav4l_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Report VFAV-4 error: a binary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the constraint
+			-- `a_constraint' of formal parameter `a_formal' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_inefix: a_alias_name.is_infix
+			a_formal_not_void: a_formal /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav4_error (a_class) then
+				create l_error.make_vfav4l (a_class, a_constraint, a_rename, a_alias_name, a_formal)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vfav5a_error (a_class: ET_CLASS; a_alias_name: ET_ALIAS_NAME)
+			-- Report VFAV-5 error: `a_alias_name' has a convert mark
 			-- but it is not binary operator alias.
 			--
 			-- ECMA 367-2, 8.5.26 page 43.
@@ -3310,8 +3579,8 @@ feature -- Validity errors
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vfav4_error (a_class) then
-				create l_error.make_vfav4a (a_class, a_alias_name)
+			if reportable_vfav5_error (a_class) then
+				create l_error.make_vfav5a (a_class, a_alias_name)
 				report_validity_error (l_error)
 			end
 		end
@@ -8387,6 +8656,16 @@ feature -- Validity error status
 
 	reportable_vfav4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAV-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vfav5_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFAV-5 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

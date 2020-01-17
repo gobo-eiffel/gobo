@@ -8,9 +8,11 @@ feature
 
 	make
 		local
-			b: BB [CC]
+			i: INTEGER
+			c: CC
 		do
-			create b
+			create c.make
+			i := c [4]
 			print ("Failed")
 		end
 

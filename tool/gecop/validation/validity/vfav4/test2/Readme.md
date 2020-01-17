@@ -4,10 +4,4 @@ This [test](.) is exercising the condition [4](../Readme.md) of the validity rul
 
 ### Description
 
-In this test, feature `f` in class `BB` has an alias name `alias "+"` with no `convert` mark. Class `BB` also has a conversion routine to `CC`. Class `CC` also has a feature with the alias name `alias "+"`. The code `b + c` is class `AA` will be unfolded to `b.to_c + c` despite the fact that the alias name has no explicit `convert` mark. This is a relaxation of the rule `VFAV-4`.
-
-### Notes:
-
-* Both ISE Eiffel (as of 18.11.10.2592 and after) and Gobo Eiffel support target conversion without the explicit `convert` mark.
-
-
+In this test, feature `f` in class `AA` has two alias clauses with the same name `alias "+"`. This violates `VFAV-4`.

@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     162 tests
+    # Passed:     174 tests
     # FAILED:     52 tests
     # Aborted:    0 test
-    # Total:      214 tests
+    # Total:      226 tests
 
 Test Results:</br>
 FAIL:  \[[definition/dlcf3/test\_export\_all\_f\_repeated\_1](definition/dlcf3/test\_export\_all\_f\_repeated\_1)\] test\_failed</br>

@@ -8,12 +8,17 @@ feature
 
 	make
 		local
-			b: BB
 			i: INTEGER
+			a: AA
 		do
-			create b
-			i := b [5]
+			a := Current
+			i := a (3)
 			print ("Failed")
+		end
+
+	f alias "()" alias "()" (i: INTEGER): INTEGER
+		do
+			Result := i
 		end
 
 end

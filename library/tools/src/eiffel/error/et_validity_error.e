@@ -134,6 +134,18 @@ create
 	make_vfav3f,
 	make_vfav3g,
 	make_vfav4a,
+	make_vfav4b,
+	make_vfav4c,
+	make_vfav4d,
+	make_vfav4e,
+	make_vfav4f,
+	make_vfav4g,
+	make_vfav4h,
+	make_vfav4i,
+	make_vfav4j,
+	make_vfav4k,
+	make_vfav4l,
+	make_vfav5a,
 	make_vffd4a,
 	make_vffd7a,
 	make_vffd7b,
@@ -5520,8 +5532,573 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = constraint base class
 		end
 
-	make_vfav4a (a_class: ET_CLASS; a_alias_name: ET_ALIAS_NAME)
-			-- Create a new VFAV-4 error: `a_alias_name' has a convert mark
+	make_vfav4a (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_feature' has more than once a bracket alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4a_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav4b (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_feature' has more than once a parenthesis alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4b_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav4c (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_feature' has more than once the same unary operator alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4c_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4c_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav4d (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_feature' has more than once the same binary operator alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_infix: a_alias_name.is_infix
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4d_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4d_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav4e (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: a bracket alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4e_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4e_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			parameters.put (a_parent_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vfav4f (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: a parenthesis alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4f_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4f_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			parameters.put (a_parent_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vfav4g (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: a unary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4g_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4g_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			parameters.put (a_parent_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vfav4h (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: a binary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_infix: a_alias_name.is_infix
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4h_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4h_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			parameters.put (a_parent_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vfav4i (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-4 error: a bracket alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- constraint `a_constraint' of formal parameter `a_formal' in
+			-- `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4i_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4i_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav4j (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-4 error: a parenthesis alias name appears more than
+			-- once in the second element of the Rename_pair `a_rename' in the
+			-- constraint `a_constraint' of formal parameter `a_formal' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4j_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4j_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav4k (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-4 error: a unary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the constraint
+			-- `a_constraint' of formal parameter `a_formal' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4k_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4k_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav4l (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-4 error: a binary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the constraint
+			-- `a_constraint' of formal parameter `a_formal' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_inefix: a_alias_name.is_infix
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4l_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4l_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav5a (a_class: ET_CLASS; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-5 error: `a_alias_name' has a convert mark
 			-- but it is not binary operator alias.
 			--
 			-- ECMA 367-2, 8.5.26 page 43.
@@ -5535,9 +6112,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_alias_name.position
-			code := template_code (vfav4a_template_code)
-			etl_code := vfav4_etl_code
-			default_template := default_message_template (vfav4a_default_template)
+			code := template_code (vfav5a_template_code)
+			etl_code := vfav5_etl_code
+			default_template := default_message_template (vfav5a_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -15861,8 +16438,8 @@ feature {NONE} -- Implementation
 	vfav1m_default_template: STRING = "`$7' has a binary Operator alias `$8' but `$9' in $10 is not a query with exactly one argument."
 	vfav1n_default_template: STRING = "`$7' has a unary Operator alias `$8' but `$9' in $10 is not a query with no argument."
 	vfav1p_default_template: STRING = "`$7' has an Operator alias `$8' which can be either unary or binary, but `$9' in $10 is not a query with no argument or exactly one argument."
-	vfav1q_default_template: STRING = "unary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
-	vfav1r_default_template: STRING = "binary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav1q_default_template: STRING = "unary Operator alias `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
+	vfav1r_default_template: STRING = "binary Operator alias `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
 	vfav1s_default_template: STRING = "`$7' is already the unary Operator alias of feature `$8' in generic constraint $9."
 	vfav1t_default_template: STRING = "`$7' is already the binary Operator alias of feature `$8' in generic constraint $9."
 	vfav2a_default_template: STRING = "feature `$7' has a Bracket alias `$8' but is not a query with at least one argument."
@@ -15870,16 +16447,28 @@ feature {NONE} -- Implementation
 	vfav2c_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same Bracket alias `$8'."
 	vfav2d_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same Bracket alias `$8'."
 	vfav2e_default_template: STRING = "`$7' has a Bracket alias `$8' but `$9' in $10 is not a query with at least one argument."
-	vfav2f_default_template: STRING = "Bracket alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav2f_default_template: STRING = "Bracket alias `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
 	vfav2g_default_template: STRING = "`$7' is already the Bracket alias of feature `$8' in generic constraint $9."
 	vfav3a_default_template: STRING = "feature `$7' has a Parenthesis alias `$8' but is not a feature with at least one argument."
 	vfav3b_default_template: STRING = "features `$7' and `$9' have both the same Parenthesis alias `$8'."
 	vfav3c_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same Parenthesis alias `$8'."
 	vfav3d_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same Parenthesis alias `$8'."
 	vfav3e_default_template: STRING = "`$7' has a Parenthesis alias `$8' but `$9' in $10 is not a feature with at least one argument."
-	vfav3f_default_template: STRING = "Parenthesis alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav3f_default_template: STRING = "Parenthesis alias `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
 	vfav3g_default_template: STRING = "`$7' is already the Parenthesis alias of feature `$8' in generic constraint $9."
-	vfav4a_default_template: STRING = "`$7' has a convert mark but it is not a binary operator alias."
+	vfav4a_default_template: STRING = "Bracket alias `$8' appears more than once in the name of feature `$7'."
+	vfav4b_default_template: STRING = "Parenthesis alias `$8' appears more than once in the name of feature `$7'."
+	vfav4c_default_template: STRING = "unary Operator alias `$8' appears more than once in the name of feature `$7'."
+	vfav4d_default_template: STRING = "binary Operator alias `$8' appears more than once in the name of feature `$7'."
+	vfav4e_default_template: STRING = "Bracket alias `$8' appears more than once for feature `$7' in the Rename clause of parent $9."
+	vfav4f_default_template: STRING = "Parenthesis alias `$8' appears more than once for feature `$7' in the Rename clause of parent $9."
+	vfav4g_default_template: STRING = "unary Operator alias `$8' appears more than once for feature `$7' in the Rename clause of parent $9."
+	vfav4h_default_template: STRING = "binary Operator alias `$8' appears more than once for feature `$7' in the Rename clause of parent $9."
+	vfav4i_default_template: STRING = "Bracket alias `$7' appears more than once on the right-hand-side of the rename pair in generic constraint $8."
+	vfav4j_default_template: STRING = "Parenthesis alias `$7' appears more than once on the right-hand-side of the rename pair in generic constraint $8."
+	vfav4k_default_template: STRING = "unary Operator alias `$7' appears more than once on the right-hand-side of the rename pair in generic constraint $8."
+	vfav4l_default_template: STRING = "binary Operator alias `$7' appears more than once on the right-hand-side of the rename pair in generic constraint $8."
+	vfav5a_default_template: STRING = "`$7' has a convert mark but it is not a binary operator alias."
 	vffd4a_default_template: STRING = "deferred feature `$7' is marked as frozen."
 	vffd7a_default_template: STRING = "feature `$7' is a once funtion but its type contains an anchored type."
 	vffd7b_default_template: STRING = "feature `$7' is a once funtion but its type contains a formal generic parameter."
@@ -15901,8 +16490,8 @@ feature {NONE} -- Implementation
 	vggc2a_default_template: STRING = "`$7' is not the final name of a feature in generic constraint $8."
 	vggc2b_default_template: STRING = "generic constraint $7 is a formal generic parameter and therefore cannot have a rename clause."
 	vggc2c_default_template: STRING = "generic constraint $7 cannot have a rename clause."
-	vggc2d_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair in generic constraint $8."
-	vggc2e_default_template: STRING = "feature name `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vggc2d_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than once rename pair in generic constraint $8."
+	vggc2e_default_template: STRING = "feature name `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
 	vggc2f_default_template: STRING = "`$7' is already the final name of a feature in generic constraint $8."
 	vggc3a_default_template: STRING = "`$7' is not the final name of a procedure in generic constraint's base class $8."
 	vggc3b_default_template: STRING = "`$7' is not the final name of a procedure in the base class of any of generic constraints $8."
@@ -15921,7 +16510,7 @@ feature {NONE} -- Implementation
 	vhpr2a_default_template: STRING = "conforming inheritance from frozen class $7."
 	vhpr3a_default_template: STRING = "invalid type '$7' in parent clause."
 	vhrc1a_default_template: STRING = "`$7' is not the final name of a feature in $8."
-	vhrc2a_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair."
+	vhrc2a_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than once rename pair."
 	vjar0a_default_template: STRING = "the source of the assignment (of type '$7') does not conform nor convert to its target entity (of type '$8')."
 	vjar0b_default_template: STRING = "the target entity of the assignment is a stable attribute but the source (of type '$7') is not attached."
 	vjaw0a_default_template: STRING = "feature `$7' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
@@ -16148,6 +16737,7 @@ feature {NONE} -- Implementation
 	vfav2_etl_code: STRING = "VFAV-2"
 	vfav3_etl_code: STRING = "VFAV-3"
 	vfav4_etl_code: STRING = "VFAV-4"
+	vfav5_etl_code: STRING = "VFAV-5"
 	vffd4_etl_code: STRING = "VFFD-4"
 	vffd7_etl_code: STRING = "VFFD-7"
 	vhpr1_etl_code: STRING = "VHPR-1"
@@ -16390,6 +16980,18 @@ feature {NONE} -- Implementation
 	vfav3f_template_code: STRING = "vfav3f"
 	vfav3g_template_code: STRING = "vfav3g"
 	vfav4a_template_code: STRING = "vfav4a"
+	vfav4b_template_code: STRING = "vfav4b"
+	vfav4c_template_code: STRING = "vfav4c"
+	vfav4d_template_code: STRING = "vfav4d"
+	vfav4e_template_code: STRING = "vfav4e"
+	vfav4f_template_code: STRING = "vfav4f"
+	vfav4g_template_code: STRING = "vfav4g"
+	vfav4h_template_code: STRING = "vfav4h"
+	vfav4i_template_code: STRING = "vfav4i"
+	vfav4j_template_code: STRING = "vfav4j"
+	vfav4k_template_code: STRING = "vfav4k"
+	vfav4l_template_code: STRING = "vfav4l"
+	vfav5a_template_code: STRING = "vfav5a"
 	vffd4a_template_code: STRING = "vffd4a"
 	vffd5a_template_code: STRING = "vffd5a"
 	vffd6a_template_code: STRING = "vffd6a"

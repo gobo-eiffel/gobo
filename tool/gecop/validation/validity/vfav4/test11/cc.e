@@ -1,10 +1,10 @@
 class CC
 
-inherit
+feature
 
-	BB
-		rename
-			f as g alias "+" convert
+	f (i: INTEGER): INTEGER
+		do
+			Result := i
 		end
 
 end

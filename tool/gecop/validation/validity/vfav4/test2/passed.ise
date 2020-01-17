@@ -1,1 +1,15 @@
-Passed
+-------------------------------------------------------------------------------
+
+Error code: VFAV(4)
+
+Error: two alias clauses specify the same alias name.
+What to do: ensure that all aliases have different names.
+
+Class: AA
+Feature name: f
+Line: 17
+  
+->  f alias "+" alias "+" (i: INTEGER): INTEGER
+      do
+
+-------------------------------------------------------------------------------

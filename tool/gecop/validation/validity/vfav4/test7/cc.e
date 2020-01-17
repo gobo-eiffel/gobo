@@ -1,10 +1,14 @@
 class CC
 
-feature
+inherit
 
-	f: INTEGER
-		do
-			Result := 4
+	BB
+		rename
+			f as g alias "[]" alias "[]"
 		end
+
+create
+
+	make
 
 end

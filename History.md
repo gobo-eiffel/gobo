@@ -16,6 +16,8 @@
   `obsolete_feature` in ECF classes as introduced in ECF 1.21.0. 
   Note that `gec` does not take this option into account.
 * Added support for stable attributes in void-safe mode.
+* Reordered `VFAV` rules to match those of ISE Eiffel. Added a rule
+  for multiple aliases with the same name.
 
 ## Version 19.11.03.1 - 3 November 2019
 

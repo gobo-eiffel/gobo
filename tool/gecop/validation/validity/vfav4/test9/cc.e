@@ -2,9 +2,9 @@ class CC
 
 feature
 
-	f (i: INTEGER): INTEGER
+	f: INTEGER
 		do
-			Result := i
+			Result := 12
 		end
 
 end

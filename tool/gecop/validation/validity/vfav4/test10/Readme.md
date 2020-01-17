@@ -4,4 +4,4 @@ This [test](.) is exercising the condition [4](../Readme.md) of the validity rul
 
 ### Description
 
-In this test, feature `f` from class `BB` has been renamed with the alias name `alias "+"` and a `convert` mark in class `CC`. Class `CC` also has a conversion routine to `DD`. Class `DD` also has a feature with the alias name `alias "+"`. The code `c + d` is class `AA` will be unfolded to `c.to_d + d`. In this test `VFAV-4` is not violated.
+In this test, the constraint of the formal generic parameter of class `BB` has a rename clause with two alias clauses with the same name `alias "+"`. This violates `VFAV-4`.

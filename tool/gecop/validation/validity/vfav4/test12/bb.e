@@ -1,10 +1,3 @@
-class BB
-
-feature
-
-	f (i: INTEGER): INTEGER
-		do
-			Result := i
-		end
-
+class BB [G -> CC rename f as g alias "()" alias "()" end]
+		
 end

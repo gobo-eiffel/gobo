@@ -4,6 +4,5 @@ This [test](.) is exercising the condition [4](../Readme.md) of the validity rul
 
 ### Description
 
-In this test, the constraint of the formal generic parameter of class `BB` has a rename clause `f as g alias "+" convert`. The `convert` mark is useless because a formal generic parameter converts to no type. In this test `VFAV-4` is not violated.
-
+In this test, feature `f` from class `BB` has been renamed with two alias clauses with the same name `alias "+"` in class `CC`. This violates `VFAV-4`.
 

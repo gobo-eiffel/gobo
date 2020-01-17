@@ -8,12 +8,12 @@ feature
 
 	make
 		local
-			b: BB [CC]
+			i: INTEGER
 			c: CC
 		do
-			create c.make (2)
-			create b
-			b.f (c)
+			create c.make
+			i := c + 4
+			print ("Failed")
 		end
 
 end

@@ -5,7 +5,7 @@ note
 		"Eiffel lists of alias feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,14 +75,24 @@ feature -- Status report
 			-- Is `a_name' listed in current list?
 		require
 			a_name_not_void: a_name /= Void
-		local
-			i, nb: INTEGER
 		do
-			nb := count - 1
-			from i := 0 until i > nb loop
+			Result := head_has_alias_name (a_name, count)
+		end
+
+	head_has_alias_name (a_name: ET_ALIAS_NAME; nb: INTEGER): BOOLEAN
+			-- Is `a_name' listed in the first `nb' items of current list?
+		require
+			a_name_not_void: a_name /= Void
+			nb_large_enough: nb >= 0
+			nb_small_enough: nb <= count
+		local
+			i, nb2: INTEGER
+		do
+			nb2 := nb - 1
+			from i := 0 until i > nb2 loop
 				if a_name.same_alias_name (storage.item (i)) then
 					Result := True
-					i := nb + 1 -- Jump out of the loop.
+					i := nb2 + 1 -- Jump out of the loop.
 				else
 					i := i + 1
 				end

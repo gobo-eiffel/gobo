@@ -1,1 +1,2 @@
-Passed
+[VFAV-4] class BB (1,49): binary Operator alias `alias "+"' appears more than once on the right-hand-side of the rename pair in generic constraint CC.
+----

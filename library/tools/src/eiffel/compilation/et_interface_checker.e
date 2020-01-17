@@ -5,7 +5,7 @@ note
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -324,7 +324,7 @@ feature {NONE} -- Constraint renaming validity
 	check_constraint_renamed_names_validity (a_renames: ET_CONSTRAINT_RENAME_LIST; a_constraint: ET_BASE_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check the validity of names appearing in the rename clause `a_renames'
 			-- of the constraint `a_constraint' of `a_formal'.
-			-- Fill `old_name_rename_table' and `new_name_update_table'.
+			-- Fill `old_name_rename_table', `new_name_update_table' and `new_alias_name_rename_table'.
 			-- Do not take into account features from `a_constraint' which have not been
 			-- renamed (this is done in `check_constraint_not_renamed_names_validity')
 		require
@@ -343,7 +343,6 @@ feature {NONE} -- Constraint renaming validity
 			l_alias_name: ET_ALIAS_NAME
 			j, l_alias_names_count: INTEGER
 			l_old_duplicated: BOOLEAN
-			l_has_new_alias_error: BOOLEAN
 			l_feature: detachable ET_FEATURE
 		do
 			old_name_rename_table.wipe_out
@@ -367,7 +366,6 @@ feature {NONE} -- Constraint renaming validity
 				l_new_name := l_new_extended_name.feature_name
 				l_alias_names := l_new_extended_name.alias_names
 				l_old_duplicated := False
-				l_has_new_alias_error := False
 				l_feature := Void
 				old_name_rename_table.search (l_old_name)
 				if not old_name_rename_table.found then
@@ -398,64 +396,131 @@ feature {NONE} -- Constraint renaming validity
 					from j := 1 until j > l_alias_names_count loop
 						l_alias_name := l_alias_names.item (j)
 						if l_alias_name.is_bracket then
-							if not l_feature.is_bracketable then
+							if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of `l_rename_pair'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4i_error (current_class, a_constraint, l_rename_pair, l_alias_name, a_formal)
+							elseif not l_feature.is_bracketable then
 									-- A feature with a Bracket alias should be
 									-- a function with one or more arguments.
-								l_has_new_alias_error := True
 								set_fatal_error (current_class)
 								error_handler.report_vfav2e_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
+							elseif new_alias_name_rename_table.has (l_alias_name) then
+									-- Alias name `l_alias_name' appears on the right-hand-side
+									-- of two or more Rename_pairs in the Rename clause.
+								l_other_rename_pair := new_alias_name_rename_table.item (l_alias_name)
+								set_fatal_error (current_class)
+								error_handler.report_vfav2f_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_alias_name, a_formal)
+							else
+								new_alias_name_rename_table.put_new (l_rename_pair, l_alias_name)
 							end
 						elseif l_alias_name.is_parenthesis then
-							if not l_feature.is_parenthesisable then
+							if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of `l_rename_pair'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4j_error (current_class, a_constraint, l_rename_pair, l_alias_name, a_formal)
+							elseif not l_feature.is_parenthesisable then
 									-- A feature with a Parenthesis alias should be
 									-- a function with one or more arguments.
-								l_has_new_alias_error := True
 								set_fatal_error (current_class)
 								error_handler.report_vfav3e_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
+							elseif new_alias_name_rename_table.has (l_alias_name) then
+									-- Alias name `l_alias_name' appears on the right-hand-side
+									-- of two or more Rename_pairs in the Rename clause.
+								l_other_rename_pair := new_alias_name_rename_table.item (l_alias_name)
+								set_fatal_error (current_class)
+								error_handler.report_vfav3f_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_alias_name, a_formal)
+							else
+								new_alias_name_rename_table.put_new (l_rename_pair, l_alias_name)
 							end
 						elseif l_feature.is_prefixable then
 							if l_alias_name.is_prefixable then
 								l_alias_name.set_prefix
-							else
+							end
+							if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of `l_rename_pair'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4k_error (current_class, a_constraint, l_rename_pair, l_alias_name, a_formal)
+							elseif not l_alias_name.is_prefixable then
 									-- A feature with a binary Operator alias should be
 									-- a function with exactly one argument.
-								l_has_new_alias_error := True
 								set_fatal_error (current_class)
 								error_handler.report_vfav1m_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
+							elseif new_alias_name_rename_table.has (l_alias_name) then
+									-- Alias name `l_alias_name' appears on the right-hand-side
+									-- of two or more Rename_pairs in the Rename clause.
+								l_other_rename_pair := new_alias_name_rename_table.item (l_alias_name)
+								set_fatal_error (current_class)
+								error_handler.report_vfav1q_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_alias_name, a_formal)
+							else
+								new_alias_name_rename_table.put_new (l_rename_pair, l_alias_name)
 							end
 						elseif l_feature.is_infixable then
 							if l_alias_name.is_infixable then
 								l_alias_name.set_infix
+							end
+							if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of `l_rename_pair'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4l_error (current_class, a_constraint, l_rename_pair, l_alias_name, a_formal)
+							elseif not l_alias_name.is_infixable then
+									-- A feature with a unary Operator alias should be
+									-- a query with no argument.
+								set_fatal_error (current_class)
+								error_handler.report_vfav1n_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
+							elseif new_alias_name_rename_table.has (l_alias_name) then
+									-- Alias name `l_alias_name' appears on the right-hand-side
+									-- of two or more Rename_pairs in the Rename clause.
+								l_other_rename_pair := new_alias_name_rename_table.item (l_alias_name)
+								set_fatal_error (current_class)
+								error_handler.report_vfav1r_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_alias_name, a_formal)
+							else
+								new_alias_name_rename_table.put_new (l_rename_pair, l_alias_name)
+							end
+						elseif l_alias_name.is_infixable and l_alias_name.is_prefixable then
+							if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of `l_rename_pair'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4l_error (current_class, a_constraint, l_rename_pair, l_alias_name, a_formal)
+							else
+									-- This can be an alias for either a binary Operator (the feature
+									-- should be a function with exactly one argument) or for a
+									-- unary Operator (the feature should be a query with no argument).
+									-- Examples of such aliases are 'alias "+"' and 'alias "-"'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav1p_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
+							end
+						elseif l_alias_name.is_infix then
+							if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of `l_rename_pair'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4l_error (current_class, a_constraint, l_rename_pair, l_alias_name, a_formal)
+							else
+									-- A feature with a binary Operator alias should be
+									-- a function with exactly one argument.
+								set_fatal_error (current_class)
+								error_handler.report_vfav1m_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
+							end
+						elseif l_alias_name.is_prefix then
+							if l_alias_names.head_has_alias_name (l_alias_name, j - 1) then
+									-- Alias name `l_alias_name' appears twice on the
+									-- right-hand-side of `l_rename_pair'.
+								set_fatal_error (current_class)
+								error_handler.report_vfav4k_error (current_class, a_constraint, l_rename_pair, l_alias_name, a_formal)
 							else
 									-- A feature with a unary Operator alias should be
 									-- a query with no argument.
-								l_has_new_alias_error := True
 								set_fatal_error (current_class)
 								error_handler.report_vfav1n_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
 							end
-						elseif l_alias_name.is_infixable and l_alias_name.is_prefixable then
-								-- This can be an alias for either a binary Operator (the feature
-								-- should be a function with exactly one argument) or for a
-								-- unary Operator (the feature should be a query with no argument).
-								-- Examples of such aliases are 'alias "+"' and 'alias "-"'.
-							l_has_new_alias_error := True
-							set_fatal_error (current_class)
-							error_handler.report_vfav1p_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
-						elseif l_alias_name.is_infix then
-								-- A feature with a binary Operator alias should be
-								-- a function with exactly one argument.
-							l_has_new_alias_error := True
-							set_fatal_error (current_class)
-							error_handler.report_vfav1m_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
-						elseif l_alias_name.is_prefix then
-								-- A feature with a unary Operator alias should be
-								-- a query with no argument.
-							l_has_new_alias_error := True
-							set_fatal_error (current_class)
-							error_handler.report_vfav1n_error (current_class, a_constraint, l_rename_pair, l_alias_name, l_feature)
 						else
 								-- Internal error: no other kind of alias name.
-							l_has_new_alias_error := True
 							set_fatal_error (current_class)
 							error_handler.report_giaaa_error
 						end
@@ -463,7 +528,7 @@ feature {NONE} -- Constraint renaming validity
 								-- When the 'convert' mark is specified, the alias
 								-- should be a binary operator alias.
 							set_fatal_error (current_class)
-							error_handler.report_vfav4a_error (current_class, l_alias_name)
+							error_handler.report_vfav5a_error (current_class, l_alias_name)
 						end
 						j := j + 1
 					end
@@ -477,35 +542,6 @@ feature {NONE} -- Constraint renaming validity
 						-- clause.
 					set_fatal_error (current_class)
 					error_handler.report_vggc2e_error (current_class, a_constraint, new_name_rename_table.found_item, l_rename_pair, a_formal)
-				end
-				if l_alias_names /= Void and then not l_has_new_alias_error then
-					l_alias_names_count := l_alias_names.count
-					from j := 1 until j > l_alias_names_count loop
-						l_alias_name := l_alias_names.item (j)
-						new_alias_name_rename_table.search (l_alias_name)
-						if not new_alias_name_rename_table.found then
-							new_alias_name_rename_table.put_new (l_rename_pair, l_alias_name)
-						else
-								-- Alias name `l_alias_name' appears twice on the
-								-- right-hand-side of a Rename_pair in the Rename
-								-- clause.
-							l_other_rename_pair := new_alias_name_rename_table.found_item
-							set_fatal_error (current_class)
-							if l_alias_name.is_bracket then
-								error_handler.report_vfav2f_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_alias_name, a_formal)
-							elseif l_alias_name.is_parenthesis then
-								error_handler.report_vfav3f_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_alias_name, a_formal)
-							elseif l_alias_name.is_prefix then
-								error_handler.report_vfav1q_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_alias_name, a_formal)
-							elseif l_alias_name.is_infix then
-								error_handler.report_vfav1r_error (current_class, a_constraint, l_other_rename_pair, l_rename_pair, l_alias_name, a_formal)
-							else
-									-- Internal error: no other kind of alias name.
-								error_handler.report_giaaa_error
-							end
-						end
-						j := j + 1
-					end
 				end
 				i := i + 1
 			end

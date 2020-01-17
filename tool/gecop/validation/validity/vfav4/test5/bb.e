@@ -1,10 +1,18 @@
 class BB
 
+create
+
+	make
+
 feature
 
-	f alias "()" convert (i: INTEGER): INTEGER
+	make
 		do
-			Result := i
+		end
+
+	f: INTEGER
+		do
+			Result := 15
 		end
 
 end

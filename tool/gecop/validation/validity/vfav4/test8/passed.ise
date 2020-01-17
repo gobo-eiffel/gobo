@@ -1,0 +1,15 @@
+-------------------------------------------------------------------------------
+
+Error code: VFAV(4)
+
+Error: two alias clauses specify the same alias name.
+What to do: ensure that all aliases have different names.
+
+Class: CC
+Feature name: g
+Line: 7
+      rename
+->      f as g alias "()" alias "()"
+      end
+
+-------------------------------------------------------------------------------

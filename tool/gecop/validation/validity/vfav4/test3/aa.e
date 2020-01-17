@@ -8,12 +8,15 @@ feature
 
 	make
 		local
-			b: BB
 			i: INTEGER
 		do
-			create b.make (2)
-			i := + b
+			i := Current [3]
 			print ("Failed")
+		end
+
+	f alias "[]" alias "[]" (i: INTEGER): INTEGER
+		do
+			Result := i
 		end
 
 end
