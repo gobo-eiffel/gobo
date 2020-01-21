@@ -1,6 +1,6 @@
 # Release History
 
-## Version ?? - ??
+## Version 20.01.21.1 - 21 January 2020
 
 ### gec
 
