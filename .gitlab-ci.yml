@@ -1,0 +1,18 @@
+integration:
+  stage: integration
+  script:
+    - Write-Host "Just to define the 'integration' stage name"
+  except
+    refs:
+      - tags
+      - branches
+
+install_windows:
+  stage: integration
+  tags:
+    - windows
+  script:
+    - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v msc'
+
+stages:
+  - integration
