@@ -19,6 +19,10 @@ install_windows:
   script:
     - '& "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64'
     - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v msc'
+  except:
+    refs:
+      - tags
+      - branches
 
 install_linux:
   stage: integration
@@ -26,6 +30,9 @@ install_linux:
     - linux
   script:
     - $CI_PROJECT_DIR/bin/install.sh -v gcc
+    - export PATH=$PATH:$GOBO/bin
+    - echo `gec --version`
+    - geant test_debug_ge
 
 stages:
   - integration
