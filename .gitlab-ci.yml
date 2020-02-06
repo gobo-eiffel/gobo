@@ -1,3 +1,6 @@
+variables:
+  GOBO: '$CI_PROJECT_DIR'
+
 integration:
   stage: integration
   script:
