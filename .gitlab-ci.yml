@@ -13,9 +13,11 @@ integration:
 install_windows:
   stage: integration
   tags:
+    - shared-windows
     - windows
+    - windows-1809
   script:
-    - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v gcc'
+    - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v cl'
 
 install_linux:
   stage: integration
