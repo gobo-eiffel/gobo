@@ -2,7 +2,7 @@ integration:
   stage: integration
   script:
     - Write-Host "Just to define the 'integration' stage name"
-  except
+  except:
     refs:
       - tags
       - branches
