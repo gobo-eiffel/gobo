@@ -22,7 +22,7 @@ install_linux:
   tags:
     - linux
   script:
-    - "$CI_PROJECT_DIR/bin/install.sh" -v gcc
+    - $CI_PROJECT_DIR/bin/install.sh -v gcc
 
 stages:
   - integration
