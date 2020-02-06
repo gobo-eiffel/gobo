@@ -17,7 +17,8 @@ install_windows:
     - windows
     - windows-1809
   script:
-    - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v cl'
+    - "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
+    - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v msc'
 
 install_linux:
   stage: integration
