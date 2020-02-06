@@ -15,7 +15,14 @@ install_windows:
   tags:
     - windows
   script:
-    - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v msc'
+    - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v gcc'
+
+install_linux:
+  stage: integration
+  tags:
+    - linux
+  script:
+    - '& "$env:CI_PROJECT_DIR/bin/install.sh" -v gcc'
 
 stages:
   - integration
