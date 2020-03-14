@@ -5,7 +5,7 @@ note
 		"Eiffel built-in feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -489,11 +489,13 @@ feature {NONE} -- Built-in validity
 			if builtin_features.found then
 				l_builtin_features := builtin_features.found_item
 			else
-				create l_builtin_features.make_map (3)
+				create l_builtin_features.make_map (5)
 				l_builtin_features.set_key_equality_tester (feature_name_tester)
 				builtin_features.force_last (l_builtin_features, l_builtin_class_code)
 					-- Functions.
+				register_builtin_feature (tokens.eif_current_object_id_feature_name, Void, current_universe.integer_type, tokens.builtin_identified_routines_eif_current_object_id, l_builtin_features)
 				register_builtin_feature (tokens.eif_id_object_feature_name, <<current_universe.integer_type.type>>, current_universe.detachable_any_type, tokens.builtin_identified_routines_eif_id_object, l_builtin_features)
+				register_builtin_feature (tokens.eif_is_object_id_of_current_feature_name, <<current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_identified_routines_eif_is_object_id_of_current, l_builtin_features)
 				register_builtin_feature (tokens.eif_object_id_feature_name, <<current_universe.any_type.type>>, current_universe.integer_type, tokens.builtin_identified_routines_eif_object_id, l_builtin_features)
 					-- Procedures.
 				register_builtin_feature (tokens.eif_object_id_free_feature_name, <<current_universe.integer_type.type>>, Void, tokens.builtin_identified_routines_eif_object_id_free, l_builtin_features)

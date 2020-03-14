@@ -234,7 +234,7 @@ feature -- Test
 	test_type_name
 			-- Test feature 'type_name'.
 		obsolete
-			"INTERNAL.typename is obsolete on ISE 19.08.10.3505 [2019-10-02]"
+			"INTERNAL.typename is obsolete in ISE 19.08.10.3505 [2019-10-02]"
 		local
 			internal: INTERNAL
 			s: STRING_8

@@ -5,7 +5,7 @@
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2013/09/19 $"
 	revision: "$Revision: #1 $"
@@ -1094,8 +1094,10 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.double_bytes_name)
 			Result.force_new (-1, tokens.dynamic_type_name)
 			Result.force_new (-1, tokens.dynamic_type_at_offset_name)
+			Result.force_new (-1, tokens.eif_current_object_id_name)
 			Result.force_new (-1, tokens.eif_gen_param_id_name)
 			Result.force_new (-1, tokens.eif_id_object_name)
+			Result.force_new (-1, tokens.eif_is_object_id_of_current_name)
 			Result.force_new (-1, tokens.eif_object_id_name)
 			Result.force_new (-1, tokens.eif_object_id_free_name)
 			Result.force_new (-1, tokens.element_size_name)

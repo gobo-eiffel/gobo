@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -278,11 +278,13 @@ feature -- Built-in codes
 	builtin_function_item: NATURAL_8 = 2
 			-- Codes for built-in functions from class "FUNCTION"
 
-	builtin_identified_routines_eif_id_object: NATURAL_8 = 1
-	builtin_identified_routines_eif_object_id: NATURAL_8 = 2
+	builtin_identified_routines_eif_current_object_id: NATURAL_8 = 1
+	builtin_identified_routines_eif_id_object: NATURAL_8 = 2
+	builtin_identified_routines_eif_is_object_id_of_current: NATURAL_8 = 3
+	builtin_identified_routines_eif_object_id: NATURAL_8 = 4
 			-- Codes for built-in procedures from class "IDENTIFIED_ROUTINES"
 
-	builtin_identified_routines_eif_object_id_free: NATURAL_8 = 3
+	builtin_identified_routines_eif_object_id_free: NATURAL_8 = 5
 			-- Codes for built-in procedures from class "IDENTIFIED_ROUTINES"
 
 	builtin_integer_n_as_integer_8: NATURAL_8 = 1

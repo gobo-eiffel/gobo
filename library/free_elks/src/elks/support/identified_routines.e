@@ -30,6 +30,23 @@ feature -- Basic operations
 			inserted: eif_id_object (Result) = an_object
 		end
 
+	eif_current_object_id: INTEGER
+			-- New identifier for Current
+		external
+			"built_in"
+		ensure
+			eif_current_object_id: Result > 0
+			inserted: eif_is_object_id_of_current (Result)
+		end
+
+	eif_is_object_id_of_current (an_id: INTEGER): BOOLEAN
+			-- Is `an_id' the associated object ID of `Current'.
+		require
+			an_id_non_negative: an_id >= 0
+		external
+			"built_in"
+		end
+
 	eif_object_id_free (an_id: INTEGER)
 			-- Free the entry `an_id'
 		require

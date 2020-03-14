@@ -5,7 +5,7 @@
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1273,6 +1273,15 @@ feature -- Feature names
 			dynamic_type_at_offset_feature_name_not_void: Result /= Void
 		end
 
+	eif_current_object_id_feature_name: ET_FEATURE_NAME
+			-- 'eif_current_object_id' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (eif_current_object_id_name)
+		ensure
+			instance_free: class
+			eif_current_object_id_feature_name_not_void: Result /= Void
+		end
+
 	eif_gen_param_id_feature_name: ET_FEATURE_NAME
 			-- 'eif_gen_param_id' feature name
 		once
@@ -1289,6 +1298,15 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			eif_id_object_feature_name_not_void: Result /= Void
+		end
+
+	eif_is_object_id_of_current_feature_name: ET_FEATURE_NAME
+			-- 'eif_is_object_id_of_current' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (eif_is_object_id_of_current_name)
+		ensure
+			instance_free: class
+			eif_is_object_id_of_current_feature_name_not_void: Result /= Void
 		end
 
 	eif_object_id_feature_name: ET_FEATURE_NAME
@@ -4966,11 +4984,17 @@ feature -- Keyword and symbol names
 	dynamic_type_at_offset_name: STRING = "dynamic_type_at_offset"
 			-- Name of Eiffel feature 'dynamic_type_at_offset'
 
+	eif_current_object_id_name: STRING = "eif_current_object_id"
+			-- Name of Eiffel feature 'eif_current_object_id'
+
 	eif_gen_param_id_name: STRING = "eif_gen_param_id"
 			-- Name of Eiffel feature 'eif_gen_param_id'
 
 	eif_id_object_name: STRING = "eif_id_object"
 			-- Name of Eiffel feature 'eif_id_object'
+
+	eif_is_object_id_of_current_name: STRING = "eif_is_object_id_of_current"
+			-- Name of Eiffel feature 'eif_is_object_id_of_current'
 
 	eif_object_id_name: STRING = "eif_object_id"
 			-- Name of Eiffel feature 'eif_object_id'

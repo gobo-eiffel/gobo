@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -979,8 +979,12 @@ feature {NONE} -- Feature validity
 				end
 			when {ET_TOKEN_CODES}.builtin_identified_routines_class then
 				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_identified_routines_eif_current_object_id then
+					report_builtin_identified_routines_eif_current_object_id (a_feature)
 				when {ET_TOKEN_CODES}.builtin_identified_routines_eif_id_object then
 					report_builtin_identified_routines_eif_id_object (a_feature)
+				when {ET_TOKEN_CODES}.builtin_identified_routines_eif_is_object_id_of_current then
+					report_builtin_identified_routines_eif_is_object_id_of_current (a_feature)
 				when {ET_TOKEN_CODES}.builtin_identified_routines_eif_object_id then
 					report_builtin_identified_routines_eif_object_id (a_feature)
 				else
@@ -3454,8 +3458,28 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_identified_routines_eif_current_object_id (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'IDENTIFIED_ROUTINES.eif_current_object_id' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				propagate_builtin_dynamic_types (current_dynamic_type, object_id_dynamic_type_set)
+			end
+		end
+
 	report_builtin_identified_routines_eif_id_object (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'IDENTIFIED_ROUTINES.eif_id_object' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_identified_routines_eif_is_object_id_of_current (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'IDENTIFIED_ROUTINES.eif_is_object_id_of_current' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
@@ -3802,8 +3826,18 @@ feature {NONE} -- Implementation
 		require
 			a_source_type_set_not_void: a_source_type_set /= Void
 			a_callee_not_void: a_callee /= Void
+		local
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
-			-- Do nothing.
+			l_formal_type_set := a_callee.argument_type_set (a_formal)
+			if l_formal_type_set = Void then
+					-- Internal error: it has already been checked somewhere else
+					-- that there was the same number of actual and formal arguments.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				propagate_builtin_dynamic_types (a_source_type_set, l_formal_type_set)
+			end
 		end
 
 	propagate_builtin_formal_argument_dynamic_types (a_formal: INTEGER; a_target_type_set: ET_DYNAMIC_TYPE_SET)
@@ -3811,6 +3845,26 @@ feature {NONE} -- Implementation
 			-- at index `a_formal' in built-in feature `current_dynamic_feature'
 			-- to `a_target_type_set'.
 		require
+			a_target_type_set_not_void: a_target_type_set /= Void
+		local
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
+		do
+			l_formal_type_set := current_dynamic_feature.argument_type_set (a_formal)
+			if l_formal_type_set = Void then
+					-- Internal error: it has already been checked somewhere else
+					-- that the number of formal arguments was as expected.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				propagate_builtin_dynamic_types (l_formal_type_set, a_target_type_set)
+			end
+		end
+
+	propagate_builtin_dynamic_types (a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_source_type_set' to `a_target_type_set'
+			-- in built-in feature `current_dynamic_feature'.
+		require
+			a_source_type_set_not_void: a_source_type_set /= Void
 			a_target_type_set_not_void: a_target_type_set /= Void
 		do
 			-- Do nothing.
@@ -3822,8 +3876,17 @@ feature {NONE} -- Implementation
 		require
 			a_source_type_set_not_void: a_source_type_set /= Void
 			a_query_not_void: a_query /= Void
+		local
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
-			-- Do nothing.
+			l_result_type_set := a_query.result_type_set
+			if l_result_type_set = Void then
+					-- Internal error: it is expected that `a_query' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				propagate_builtin_dynamic_types (a_source_type_set, l_result_type_set)
+			end
 		end
 
 	propagate_call_agent_result_dynamic_types (an_agent: ET_CALL_AGENT; a_query: ET_DYNAMIC_FEATURE; a_result_type_set: ET_DYNAMIC_TYPE_SET)

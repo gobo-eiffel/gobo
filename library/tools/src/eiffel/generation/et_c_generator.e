@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2795,10 +2795,22 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			valid_feature: current_feature.static_feature = a_feature
 		do
 			inspect a_feature.builtin_feature_code
+			when {ET_TOKEN_CODES}.builtin_identified_routines_eif_current_object_id then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_identified_routines_eif_current_object_id_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when {ET_TOKEN_CODES}.builtin_identified_routines_eif_id_object then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_identified_routines_eif_id_object_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_identified_routines_eif_is_object_id_of_current then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_identified_routines_eif_is_object_id_of_current_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			when {ET_TOKEN_CODES}.builtin_identified_routines_eif_object_id then
@@ -14983,8 +14995,12 @@ feature {NONE} -- Query call generation
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			inspect a_feature.builtin_feature_code
+			when {ET_TOKEN_CODES}.builtin_identified_routines_eif_current_object_id then
+				print_builtin_identified_routines_eif_current_object_id_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_identified_routines_eif_id_object then
 				print_builtin_identified_routines_eif_id_object_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_identified_routines_eif_is_object_id_of_current then
+				print_builtin_identified_routines_eif_is_object_id_of_current_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_identified_routines_eif_object_id then
 				print_builtin_identified_routines_eif_object_id_call (a_feature, a_target_type, a_check_void_target)
 			else
@@ -21105,6 +21121,24 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
 		end
 
+	print_builtin_identified_routines_eif_current_object_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'IDENTIFIED_ROUTINES.eif_current_object_id'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			include_runtime_header_file ("ge_identified.h", False, header_file)
+			current_file.put_string (c_ge_object_id)
+			current_file.put_character ('(')
+			print_attachment_expression (call_operands.first, dynamic_type_set (call_operands.first), current_dynamic_system.any_type)
+			current_file.put_character (')')
+		end
+
 	print_builtin_identified_routines_eif_id_object_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'IDENTIFIED_ROUTINES.eif_id_object'.
@@ -21132,6 +21166,55 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				current_file.put_string (c_ge_id_object)
 				current_file.put_character ('(')
 				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_identified_routines_eif_is_object_id_of_current_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'IDENTIFIED_ROUTINES.eif_is_object_id_of_current'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not attached a_feature.result_type_set as l_result_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := call_operands.item (2)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				include_runtime_header_file ("ge_identified.h", False, header_file)
+				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_id_object)
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+				if a_target_type.is_expanded then
+-- TODO: `is_equal` comparison.
+					current_file.put_character (',')
+					current_file.put_string (c_eif_false)
+				else
+					current_file.put_character ('=')
+					current_file.put_character ('=')
+					current_file.put_character ('(')
+					print_attachment_expression (call_operands.first, dynamic_type_set (call_operands.first), current_dynamic_system.any_type)
+					current_file.put_character (')')
+				end
 				current_file.put_character (')')
 			end
 		end

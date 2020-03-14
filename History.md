@@ -1,5 +1,12 @@
 # Release History
 
+## Version ??
+
+### gec
+
+* Added support for new routines in class `IDENTIFIED_ROUTINES`:
+  `eif_current_object_id` and `eif_is_object_id_of_current`.
+
 ## Version 20.01.21.1 - 21 January 2020
 
 ### gec
