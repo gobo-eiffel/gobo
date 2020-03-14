@@ -9,7 +9,9 @@
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ARRAY [G] inherit
+class ARRAY [G]
+
+inherit
 
 	RESIZABLE [G]
 		redefine
@@ -162,7 +164,7 @@ feature -- Access
 
 	has (v: G): BOOLEAN
 			-- Does `v' appear in array?
- 			-- (Reference or object equality,
+			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
 			i, nb: INTEGER
@@ -281,8 +283,8 @@ feature -- Status report
 			end
 		ensure
 			definition: Result = (count = 0 or else
-				((not attached item (upper) as i or else i = ({G}).default) and
-				subarray (lower, upper - 1).all_default))
+						((not attached item (upper) as i or else i = ({G}).default) and
+							subarray (lower, upper - 1).all_default))
 		end
 
 	filled_with (v: G): BOOLEAN
@@ -291,7 +293,7 @@ feature -- Status report
 			Result := area.filled_with (v, 0, upper - lower)
 		ensure
 			definition: Result = (count = 0 or else
-				(item (upper) = v and subarray (lower, upper - 1).filled_with (v)))
+						(item (upper) = v and subarray (lower, upper - 1).filled_with (v)))
 		end
 
 	full: BOOLEAN
@@ -310,10 +312,11 @@ feature -- Status report
 				Result := area.same_items (other.area, 0, 0, count)
 			end
 		ensure
-			definition: Result = ((count = other.count) and then
-				(count = 0 or else (item (upper) = other.item (other.upper)
-				and subarray (lower, upper - 1).same_items
-				(other.subarray (other.lower, other.upper - 1)))))
+			definition: Result = (count = other.count and then
+				(count = 0 or else
+					(item (upper) = other.item (other.upper) and
+						subarray (lower, upper - 1).same_items
+							(other.subarray (other.lower, other.upper - 1)))))
 		end
 
 	valid_index (i: INTEGER): BOOLEAN
@@ -488,8 +491,8 @@ feature -- Element change
 			upper := new_upper
 		ensure
 			inserted: item (i) = v
-			filled_below_lower: across i |..| old lower as c all c.item < old lower implies item (c.item) = v end
-			filled_above_upper: across old upper |..| i as c all c.item > old upper implies item (c.item) = v end
+			filled_below_lower: ∀ c: i |..| old lower ¦ c < old lower implies item (c) = v
+			filled_above_upper: ∀ c: old upper |..| i ¦ c > old upper implies item (c) = v
 			higher_count: count >= old count
 			lower_set: lower = (old lower).min (i)
 			upper_set: upper = (old upper).max (i)
@@ -518,8 +521,8 @@ feature -- Element change
 		do
 			area.copy_data (other.area, start_pos - other.lower, index_pos - lower, end_pos - start_pos + 1)
 		ensure
-			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
-			--     item (index_pos + i) = other.item (start_pos + i)
+				-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
+				--     item (index_pos + i) = other.item (start_pos + i)
 		end
 
 feature -- Iteration
@@ -895,8 +898,8 @@ feature -- Duplication
 		ensure
 			lower: Result.lower = start_pos
 			upper: Result.upper = end_pos
-			-- copied: forall `i' in `start_pos' .. `end_pos',
-			--     Result.item (i) = item (i)
+				-- copied: forall `i' in `start_pos' .. `end_pos',
+				--     Result.item (i) = item (i)
 		end
 
 feature {NONE} -- Inapplicable
@@ -926,13 +929,13 @@ invariant
 	area_exists: area /= Void
 	consistent_size: capacity = upper - lower + 1
 	non_negative_count: count >= 0
--- Internal discussion haven't reached an agreement on this invariant
---	index_set_has_same_bounds: ((index_set.lower = lower) and
---				(index_set.upper = lower + count - 1))
+	-- Internal discussion haven't reached an agreement on this invariant
+	--	index_set_has_same_bounds: ((index_set.lower = lower) and
+	--				(index_set.upper = lower + count - 1))
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

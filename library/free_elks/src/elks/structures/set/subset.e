@@ -1,8 +1,8 @@
 ﻿note
 	description: "[
-			Subsets with the associated operations,
-			without commitment to a particular representation
-		]"
+		Subsets with the associated operations,
+		without commitment to a particular representation
+	]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,9 @@
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class SUBSET [G] inherit
+deferred class SUBSET [G]
+
+inherit
 
 	SET [G]
 
@@ -44,7 +46,7 @@ feature -- Comparison
 			set_exists: other /= Void
 			same_rule: object_comparison = other.object_comparison
 		do
-			Result := across other as o all not has (o.item) end
+			Result := ∀ o: other ¦ not has (o)
 		end
 
 feature -- Element change
@@ -53,7 +55,7 @@ feature -- Element change
 			-- Add all items of `other'.
 		require
 			set_exists: other /= Void
- 			same_rule: object_comparison = other.object_comparison
+			same_rule: object_comparison = other.object_comparison
 		deferred
 		end
 
@@ -120,7 +122,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
