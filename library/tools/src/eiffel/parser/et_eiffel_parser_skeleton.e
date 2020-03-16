@@ -1672,8 +1672,17 @@ feature {NONE} -- AST factory
 
 	new_invalid_alias_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_FREE_NAME
 			-- New invalid alias feature name
+		local
+			l_position: ET_POSITION
 		do
--- ERROR
+				-- Do not mark this error as a fatal error.
+				-- It will be a fatal error when using this free operator.
+			if a_string /= Void then
+				create {ET_FILE_POSITION} l_position.make (filename, a_string.position.line, a_string.position.column)
+			else
+				l_position := current_position
+			end
+			error_handler.report_syntax_error (filename, l_position)
 			Result := new_alias_free_name (an_alias, a_string, a_convert)
 		end
 

@@ -1,0 +1,6 @@
+Syntax error:
+line 14 column 10 in C:\DriveE\gobo\gobo.dev\tool\gecop\validation\definition\difo1\test_close_repeat_2\aa.e
+
+	f alias "⟲" (i: INTEGER): INTEGER
+	        ^
+		do

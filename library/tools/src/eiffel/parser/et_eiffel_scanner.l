@@ -6,7 +6,7 @@ note
 		"Scanners for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ create
 
 HORIZONTAL_BREAK	[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]
 BREAK				{HORIZONTAL_BREAK}{+}[\n]
-FREEOP_CHAR			[^a-zA-Z0-9_:;,?'"$.=()[\]{}∀∃¦⟳⟲]{-}{BREAK}
+FREEOP_CHAR			[^a-zA-Z0-9_:;,?'"$.=()[\]{}]{-}{BREAK}
 CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*
 
 %x BREAK MS MSN VS1 VS2 VS3
@@ -189,7 +189,8 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 ({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+{FREEOP_CHAR}{-}[\-]\-/{BREAK} |
 ({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+{FREEOP_CHAR}{-}[\->]>/({BREAK}|"--") |
 ({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+{FREEOP_CHAR}{-}[<]</({BREAK}|"--") |
-({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+/({BREAK}|"--") {
+({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])+/{BREAK} |
+({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[>]|<{FREEOP_CHAR}{-}[<])*({FREEOP_CHAR}{-}[\-<>]|\-{FREEOP_CHAR}{-}[\->]|>{FREEOP_CHAR}{-}[\->]|<{FREEOP_CHAR}{-}[\-<])/({BREAK}|"--") {
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -296,7 +297,7 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 
 ----------/** Eiffel strings **/------------------------------------------------
 
-\"([-+*/^=><.;,:!?(){}[\]$~]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")\" {
+\"([-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")\" {
 					-- Regular manifest string.
 					-- Special symbols, standard operators and predefined operators
 					-- which cannot be free operators.
@@ -304,7 +305,7 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 				last_comment_end := 0
 				process_regular_manifest_string (text_count)
 			}
-\"([-+*/^=><.;,:!?(){}[\]$~]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")\"/({BREAK}|"--") {
+\"([-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")\"/({BREAK}|"--") {
 					-- Regular manifest string.
 					-- Special symbols, standard operators and predefined operators
 					-- which cannot be free operators.

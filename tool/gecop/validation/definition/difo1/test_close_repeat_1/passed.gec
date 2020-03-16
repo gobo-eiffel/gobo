@@ -1,0 +1,6 @@
+Syntax error:
+line 15 column 11 in C:\DriveE\gobo\gobo.dev\tool\gecop\validation\definition\difo1\test_close_repeat_1\aa.e
+			a := Current
+			i := a ⟲ 2
+			       ^
+			print ("Failed")

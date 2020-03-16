@@ -7,6 +7,14 @@
 * Added support for new routines in class `IDENTIFIED_ROUTINES`:
   `eif_current_object_id` and `eif_is_object_id_of_current`.
 
+### Gobo Eiffel Tools Library
+
+* Made sure that alias names with invalid free operators are
+  rejected.
+* Accept the *special symbols* `∀`, `∃`, `⟳`, `⟲` and `¦` (used
+  in symbolic forms of *across loops*) in free operators made up
+  of two or more symbols.
+
 ## Version 20.01.21.1 - 21 January 2020
 
 ### gec
