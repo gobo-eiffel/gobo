@@ -827,6 +827,7 @@ feature {NONE} -- Output logs
 			done: BOOLEAN
 			l_pattern2: STRING
 			l_regexp2: RX_PCRE_REGULAR_EXPRESSION
+			l_first_line: BOOLEAN
 		do
 			if a_regexp1.recognizes (a_filename1) then
 					-- Compile regexp.
@@ -844,6 +845,7 @@ feature {NONE} -- Output logs
 					if l_file2.is_open_read then
 						Result := True
 						from
+							l_first_line := True
 						until
 							done
 						loop
@@ -863,6 +865,10 @@ feature {NONE} -- Output logs
 								done := True
 							elseif l_file1.last_string.same_string (l_file2.last_string) then
 								-- OK
+							elseif l_first_line and then l_file1.last_string.same_string ({UC_UTF8_ROUTINES}.utf8_bom + l_file2.last_string) then
+								-- OK
+							elseif l_first_line and then l_file2.last_string.same_string ({UC_UTF8_ROUTINES}.utf8_bom + l_file1.last_string) then
+								-- OK
 							elseif Execution_environment.interpreted_string (l_file1.last_string).same_string (l_file2.last_string) then
 								-- OK
 							elseif
@@ -877,6 +883,7 @@ feature {NONE} -- Output logs
 								l_file2.close
 								done := True
 							end
+							l_first_line := False
 						end
 					else
 						l_file1.close
