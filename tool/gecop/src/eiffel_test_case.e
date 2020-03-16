@@ -143,6 +143,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_pattern1, a_pattern2, a_pattern3: STRING
 			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
@@ -169,10 +170,14 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 				if in_file.is_open_read then
 					from
 						in_file.read_line
+						l_first_line := True
 					until
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
+						if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+							a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+						end
 						if a_line.is_empty then
 							l_empty_line := True
 						elseif a_regexp1.recognizes (a_line) then
@@ -195,6 +200,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						a_regexp2.wipe_out
 						a_regexp3.wipe_out
 						in_file.read_line
+						l_first_line := False
 					end
 					in_file.close
 					if l_empty_line then
@@ -250,6 +256,7 @@ feature {NONE} -- Test gelint
 			a_pattern1, a_pattern2: STRING
 			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
@@ -271,10 +278,14 @@ feature {NONE} -- Test gelint
 				if in_file.is_open_read then
 					from
 						in_file.read_line
+						l_first_line := True
 					until
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
+						if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+							a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+						end
 						if a_line.is_empty then
 							l_empty_line := True
 						elseif a_regexp1.recognizes (a_line) then
@@ -293,6 +304,7 @@ feature {NONE} -- Test gelint
 						a_regexp1.wipe_out
 						a_regexp2.wipe_out
 						in_file.read_line
+						l_first_line := False
 					end
 					in_file.close
 					if l_empty_line then
@@ -365,6 +377,7 @@ feature {NONE} -- Test ISE Eiffel
 			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7, a_pattern8, a_pattern9, a_pattern10: STRING
 			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7, a_regexp8, a_regexp9, a_regexp10: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
@@ -426,10 +439,14 @@ feature {NONE} -- Test ISE Eiffel
 				if in_file.is_open_read then
 					from
 						in_file.read_line
+						l_first_line := True
 					until
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
+						if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+							a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+						end
 						if a_line.is_empty then
 							l_empty_line := True
 						elseif a_regexp1.recognizes (a_line) then
@@ -484,6 +501,7 @@ feature {NONE} -- Test ISE Eiffel
 						a_regexp9.wipe_out
 						a_regexp10.wipe_out
 						in_file.read_line
+						l_first_line := False
 					end
 					in_file.close
 					if l_empty_line then
@@ -510,6 +528,7 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
 			done: BOOLEAN
 			has_empty_line: BOOLEAN
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
@@ -542,11 +561,15 @@ feature {NONE} -- Test ISE Eiffel
 						from
 							done := False
 							in_file.read_line
+							l_first_line := True
 						until
 							done or
 							in_file.end_of_file
 						loop
 							a_line := in_file.last_string
+							if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+								a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+							end
 							if a_regexp1.recognizes (a_line) then
 								done := True
 							elseif a_regexp2.matches (a_line) then
@@ -566,6 +589,7 @@ feature {NONE} -- Test ISE Eiffel
 								out_file.put_line (a_line)
 								in_file.read_line
 							end
+							l_first_line := False
 						end
 						if has_empty_line then
 							if not done then
@@ -740,6 +764,7 @@ feature {NONE} -- Output logs
 			a_pattern1, a_pattern2: STRING
 			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
 			l_input_filename: STRING
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "<[0-9A-F]{16}>(.*)"
@@ -766,10 +791,14 @@ feature {NONE} -- Output logs
 					if in_file.is_open_read then
 						from
 							in_file.read_line
+							l_first_line := True
 						until
 							in_file.end_of_file
 						loop
 							a_line := in_file.last_string
+							if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+								a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+							end
 							if a_regexp1.recognizes (a_line) then
 									-- These are object addresses in exception traces.
 								out_file.put_string ("<XXXXXXXXXXXXXXXX>")
@@ -784,6 +813,7 @@ feature {NONE} -- Output logs
 							a_regexp1.wipe_out
 							a_regexp2.wipe_out
 							in_file.read_line
+							l_first_line := False
 						end
 						in_file.close
 					else
@@ -803,9 +833,53 @@ feature {NONE} -- Output logs
 
 	concat_output3
 			-- Concat the logs of the cleaning to 'output.log'.
+		local
+			out_file: KL_TEXT_OUTPUT_FILE
+			in_file: KL_TEXT_INPUT_FILE
+			a_line: STRING
+			l_input_filename: STRING
+			l_first_line: BOOLEAN
 		do
-			file_system.concat_files (output_log_filename, output3_log_filename)
-			file_system.concat_files (output_log_filename, error3_log_filename)
+				-- Copy files.
+			create out_file.make (output_log_filename)
+			out_file.open_append
+			if out_file.is_open_write then
+				from
+					l_input_filename := output3_log_filename
+				until
+					l_input_filename = Void
+				loop
+					create in_file.make (l_input_filename)
+					in_file.open_read
+					if in_file.is_open_read then
+						from
+							in_file.read_line
+							l_first_line := True
+						until
+							in_file.end_of_file
+						loop
+							a_line := in_file.last_string
+							if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+								a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+							end
+							out_file.put_line (a_line)
+							in_file.read_line
+							l_first_line := False
+						end
+						in_file.close
+					else
+						assert ("cannot open file '" + l_input_filename + "'", False)
+					end
+					if l_input_filename = output3_log_filename then
+						l_input_filename := error3_log_filename
+					else
+						l_input_filename := Void
+					end
+				end
+				out_file.close
+			else
+				assert ("cannot open file '" + output_log_filename + "'", False)
+			end
 		end
 
 	output_recognized (a_filename1: STRING; a_directory1: KL_DIRECTORY; a_regexp1: RX_REGULAR_EXPRESSION; a_filename2: STRING): BOOLEAN
