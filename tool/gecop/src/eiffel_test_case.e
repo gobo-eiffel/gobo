@@ -653,15 +653,6 @@ feature {NONE} -- Directory and file names
 			program_name_not_empty: Result.count > 0
 		end
 
-	rule_dirname: STRING
-			-- Name of the directory containing the tests of the rule being tested
-		do
-Result := ""
-		ensure
-			rule_dirname_not_void: Result /= Void
-			rule_dirname_not_empty: Result.count > 0
-		end
-
 	program_dirname: STRING
 			-- Name of program source directory
 
@@ -952,6 +943,8 @@ feature {NONE} -- Output logs
 							then
 								-- OK
 							else
+								print ("line 1 (" + l_file1.last_string.count.out + "): " + l_file1.last_string + "%N")
+								print ("line 2 (" + l_file2.last_string.count.out + "): " + l_file2.last_string + "%N")
 								Result := False
 								l_file1.close
 								l_file2.close
