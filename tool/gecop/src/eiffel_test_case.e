@@ -140,8 +140,8 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3: STRING
-			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 			l_first_line: BOOLEAN
 		do
@@ -161,6 +161,11 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
 			a_regexp3.optimize
+			a_pattern4 := "(line [0-9]+ column [0-9]+ in )([^\\/]*[\\/])*([a-z][a-z0-9_]*\.e)"
+			create a_regexp4.make
+			a_regexp4.compile (a_pattern4)
+			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
+			a_regexp4.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -194,11 +199,16 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 								out_file.put_new_line
 								l_empty_line := False
 							end
-							out_file.put_line (a_line)
+							if a_regexp4.recognizes (a_line) then
+								out_file.put_line (a_regexp4.captured_substring (1) + a_regexp4.captured_substring (3))
+							else
+								out_file.put_line (a_line)
+							end
 						end
 						a_regexp1.wipe_out
 						a_regexp2.wipe_out
 						a_regexp3.wipe_out
+						a_regexp4.wipe_out
 						in_file.read_line
 						l_first_line := False
 					end
@@ -253,8 +263,8 @@ feature {NONE} -- Test gelint
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2: STRING
-			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3: STRING
+			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 			l_first_line: BOOLEAN
 		do
@@ -269,6 +279,11 @@ feature {NONE} -- Test gelint
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
+			a_pattern3 := "(line [0-9]+ column [0-9]+ in )([^\\/]*[\\/])*([a-z][a-z0-9_]*\.e)"
+			create a_regexp3.make
+			a_regexp3.compile (a_pattern3)
+			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
+			a_regexp3.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -299,10 +314,15 @@ feature {NONE} -- Test gelint
 								out_file.put_new_line
 								l_empty_line := False
 							end
-							out_file.put_line (a_line)
+							if a_regexp3.recognizes (a_line) then
+								out_file.put_line (a_regexp3.captured_substring (1) + a_regexp3.captured_substring (3))
+							else
+								out_file.put_line (a_line)
+							end
 						end
 						a_regexp1.wipe_out
 						a_regexp2.wipe_out
+						a_regexp3.wipe_out
 						in_file.read_line
 						l_first_line := False
 					end
@@ -943,8 +963,6 @@ feature {NONE} -- Output logs
 							then
 								-- OK
 							else
-								print ("line 1 (" + l_file1.last_string.count.out + "): " + l_file1.last_string + "%N")
-								print ("line 2 (" + l_file2.last_string.count.out + "): " + l_file2.last_string + "%N")
 								Result := False
 								l_file1.close
 								l_file2.close
