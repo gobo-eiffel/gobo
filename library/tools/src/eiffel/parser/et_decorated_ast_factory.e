@@ -5,7 +5,7 @@
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -246,6 +246,7 @@ inherit
 			new_indexing_term_comma,
 			new_infix_and_then_operator,
 			new_infix_or_else_operator,
+			new_inspect_expression,
 			new_inspect_instruction,
 			new_invariants,
 			new_keyword_feature_name_list,
@@ -306,7 +307,8 @@ inherit
 			new_type_constraint_comma,
 			new_type_constraint_list,
 			new_unique_attribute,
-			new_variant
+			new_variant,
+			new_when_expression
 		end
 
 create
@@ -2955,6 +2957,19 @@ feature -- AST nodes
 			end
 		end
 
+	new_inspect_expression (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_EXPRESSION_LIST;
+		an_else_part: detachable ET_CONDITIONAL; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_EXPRESSION
+			-- New inspect expression
+		do
+			if a_conditional /= Void then
+				create Result.make (a_conditional, a_when_parts)
+				Result.set_else_part (an_else_part)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
+			end
+		end
+
 	new_inspect_instruction (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_PART_LIST;
 		an_else_compound: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_INSTRUCTION
 			-- New inspect instruction
@@ -3806,6 +3821,18 @@ feature -- AST nodes
 				create Result.make (a_tag, an_expression)
 				if a_variant /= Void then
 					Result.set_variant_keyword (a_variant)
+				end
+			end
+		end
+
+	new_when_expression (a_choices: detachable ET_CHOICE_LIST;
+		a_then_keyword: detachable ET_KEYWORD; a_then_expression: detachable ET_EXPRESSION): detachable ET_WHEN_EXPRESSION
+			-- New 'elseif' part of 'if' expression
+		do
+			if a_choices /= Void and a_then_expression /= Void then
+				create Result.make (a_choices, a_then_expression)
+				if a_then_keyword /= Void then
+					Result.set_then_keyword (a_then_keyword)
 				end
 			end
 		end

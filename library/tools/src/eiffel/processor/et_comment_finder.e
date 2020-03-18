@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -134,6 +134,7 @@ inherit
 			process_infix_and_then_operator,
 			process_infix_expression,
 			process_infix_or_else_operator,
+			process_inspect_expression,
 			process_inspect_instruction,
 			process_invariants,
 			process_keyword_expression,
@@ -215,6 +216,8 @@ inherit
 			process_unqualified_call_instruction,
 			process_variant,
 			process_verbatim_string,
+			process_when_expression,
+			process_when_expression_list,
 			process_when_part,
 			process_when_part_list
 		end
@@ -1239,6 +1242,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			if not excluded_nodes.has (a_expression) then
+				precursor (a_expression)
+			end
+		end
+
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -1898,6 +1909,22 @@ feature {ET_AST_NODE} -- Processing
 			if not excluded_nodes.has (a_string) then
 				precursor (a_string)
 				process_break (a_string.break)
+			end
+		end
+
+	process_when_expression (a_when_part: ET_WHEN_EXPRESSION)
+			-- Process `a_when_part'.
+		do
+			if not excluded_nodes.has (a_when_part) then
+				precursor (a_when_part)
+			end
+		end
+
+	process_when_expression_list (a_list: ET_WHEN_EXPRESSION_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
 			end
 		end
 

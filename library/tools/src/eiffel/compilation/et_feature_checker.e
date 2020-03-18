@@ -71,6 +71,7 @@ inherit
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
+			process_inspect_expression,
 			process_inspect_instruction,
 			process_loop_instruction,
 			process_manifest_array,
@@ -3750,8 +3751,6 @@ feature {NONE} -- Instruction validity
 				error_handler.report_vomb1a_error (current_class, current_class_impl, l_expression, l_value_named_type)
 			end
 			had_value_error := had_error
-			l_old_initialization_scope := current_initialization_scope
-			l_old_attachment_scope := current_attachment_scope
 			if attached an_instruction.when_parts as l_when_parts then
 				l_choice_context := new_context (current_type)
 				l_value_type := tokens.identity_type
@@ -3954,13 +3953,11 @@ feature {NONE} -- Instruction validity
 				if current_system.attachment_type_conformance_mode then
 					free_attachment_scope (current_initialization_scope)
 					free_attachment_scope (current_attachment_scope)
+					current_initialization_scope := l_old_initialization_scope
+					current_attachment_scope := l_old_attachment_scope
 				end
 			else
 				free_context (l_value_context)
-			end
-			if current_system.attachment_type_conformance_mode then
-				current_initialization_scope := l_old_initialization_scope
-				current_attachment_scope := l_old_attachment_scope
 			end
 			l_else_compound := an_instruction.else_compound
 			if l_else_compound /= Void then
@@ -7097,6 +7094,285 @@ feature {NONE} -- Expression validity
 				a_constant.set_type (l_type)
 				a_context.force_last (l_type)
 			end
+		end
+
+	check_inspect_expression_validity (a_expression: ET_INSPECT_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check validity of `a_expression'.
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_expression: ET_EXPRESSION
+			l_when_part: ET_WHEN_EXPRESSION
+			i, nb: INTEGER
+			had_error: BOOLEAN
+			had_value_error: BOOLEAN
+			l_value_context: ET_NESTED_TYPE_CONTEXT
+			l_value_type: ET_TYPE
+			l_detachable_any_type: ET_CLASS_TYPE
+			l_value_named_type: ET_NAMED_TYPE
+			l_choices: ET_CHOICE_LIST
+			l_choice: ET_CHOICE
+			l_choice_constant: ET_CHOICE_CONSTANT
+			l_choice_context: ET_NESTED_TYPE_CONTEXT
+			l_choice_named_type: ET_NAMED_TYPE
+			j, nb2: INTEGER
+			l_constant: detachable ET_CONSTANT
+			l_cast_type: detachable ET_TARGET_TYPE
+			l_index: INTEGER
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
+			l_old_result_context_list_count: INTEGER
+		do
+			has_fatal_error := False
+			l_detachable_any_type := current_system.detachable_any_type
+			l_value_context := new_context (current_type)
+			l_expression := a_expression.conditional.expression
+			check_expression_validity (l_expression, l_value_context, l_detachable_any_type)
+			if has_fatal_error then
+				had_error := True
+			elseif l_value_context.same_named_type (current_universe_impl.integer_8_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif l_value_context.same_named_type (current_universe_impl.integer_16_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif l_value_context.same_named_type (current_universe_impl.integer_32_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif l_value_context.same_named_type (current_universe_impl.integer_64_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif l_value_context.same_named_type (current_universe_impl.natural_8_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif l_value_context.same_named_type (current_universe_impl.natural_16_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif l_value_context.same_named_type (current_universe_impl.natural_32_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif l_value_context.same_named_type (current_universe_impl.natural_64_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif l_value_context.same_named_type (current_universe_impl.character_8_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif l_value_context.same_named_type (current_universe_impl.character_32_type, current_class_impl) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			else
+				had_error := True
+				set_fatal_error
+				l_value_named_type := l_value_context.named_type
+				error_handler.report_vomb1a_error (current_class, current_class_impl, l_expression, l_value_named_type)
+			end
+			had_value_error := had_error
+			l_result_context_list := common_ancestor_type_list
+			l_old_result_context_list_count := l_result_context_list.count
+			if attached a_expression.when_parts as l_when_parts then
+				l_choice_context := new_context (current_type)
+				l_value_type := tokens.identity_type
+				nb := l_when_parts.count
+				from i := 1 until i > nb loop
+					l_when_part := l_when_parts.item (i)
+					l_choices := l_when_part.choices
+					nb2 := l_choices.count
+					from j := 1 until j > nb2 loop
+						l_choice := l_choices.choice (j)
+						l_choice_constant := l_choice.lower
+						check_expression_validity (l_choice_constant, l_choice_context, l_value_context)
+						if has_fatal_error then
+							had_error := True
+						else
+							l_constant := choice_constant (l_choice_constant)
+							if l_constant = Void then
+								had_error := True
+								set_fatal_error
+								error_handler.report_vomb2b_error (current_class, current_class_impl, l_choice_constant)
+							elseif not had_value_error then
+								if l_choice_context.same_named_type (l_value_type, l_value_context) then
+									-- OK.
+								elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant then
+										-- If we use the same object for the constant attribute
+										-- when analyzing different client features, each feature
+										-- will assign its own index to this object. That's why
+										-- we need to reset the index so that the index does not
+										-- get corrupted.
+									l_index := l_integer_constant.index
+									l_integer_constant.set_index (0)
+									l_cast_type := l_integer_constant.cast_type
+									l_integer_constant.set_cast_type (Void)
+									l_choice_context.wipe_out
+									check_expression_validity (l_integer_constant, l_choice_context, l_value_context)
+									l_integer_constant.set_cast_type (l_cast_type)
+									l_integer_constant.set_index (l_index)
+									if has_fatal_error then
+										had_error := True
+									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
+										-- OK.
+									else
+										had_error := True
+										set_fatal_error
+										l_value_named_type := l_value_context.named_type
+										l_choice_named_type := l_choice_context.named_type
+										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
+									end
+								elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant then
+										-- If we use the same object for the constant attribute
+										-- when analyzing different client features, each feature
+										-- will assign its own index to this object. That's why
+										-- we need to reset the index so that the index does not
+										-- get corrupted.
+									l_index := l_character_constant.index
+									l_character_constant.set_index (0)
+									l_cast_type := l_character_constant.cast_type
+									l_character_constant.set_cast_type (Void)
+									l_choice_context.wipe_out
+									check_expression_validity (l_character_constant, l_choice_context, l_value_context)
+									l_character_constant.set_cast_type (l_cast_type)
+									l_character_constant.set_index (l_index)
+									if has_fatal_error then
+										had_error := True
+									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
+										-- OK.
+									else
+										had_error := True
+										set_fatal_error
+										l_value_named_type := l_value_context.named_type
+										l_choice_named_type := l_choice_context.named_type
+										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
+									end
+								else
+									had_error := True
+									set_fatal_error
+									l_value_named_type := l_value_context.named_type
+									l_choice_named_type := l_choice_context.named_type
+									error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
+								end
+							end
+						end
+						l_choice_context.wipe_out
+						if l_choice.is_range then
+							l_choice_constant := l_choice.upper
+							check_expression_validity (l_choice_constant, l_choice_context, l_value_context)
+							if has_fatal_error then
+								had_error := True
+							else
+								l_constant := choice_constant (l_choice_constant)
+								if l_constant = Void then
+									had_error := True
+									set_fatal_error
+									error_handler.report_vomb2b_error (current_class, current_class_impl, l_choice_constant)
+								elseif not had_value_error then
+									if l_choice_context.same_named_type (l_value_type, l_value_context) then
+										-- OK.
+									elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant2 then
+											-- If we use the same object for the constant attribute
+											-- when analyzing different client features, each feature
+											-- will assign its own index to this object. That's why
+											-- we need to reset the index so that the index does not
+											-- get corrupted.
+										l_index := l_integer_constant2.index
+										l_integer_constant2.set_index (0)
+										l_cast_type := l_integer_constant2.cast_type
+										l_integer_constant2.set_cast_type (Void)
+										l_choice_context.wipe_out
+										check_expression_validity (l_integer_constant2, l_choice_context, l_value_context)
+										l_integer_constant2.set_cast_type (l_cast_type)
+										l_integer_constant2.set_index (l_index)
+										if has_fatal_error then
+											had_error := True
+										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
+											-- OK.
+										else
+											had_error := True
+											set_fatal_error
+											l_value_named_type := l_value_context.named_type
+											l_choice_named_type := l_choice_context.named_type
+											error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
+										end
+									elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant2 then
+											-- If we use the same object for the constant attribute
+											-- when analyzing different client features, each feature
+											-- will assign its own index to this object. That's why
+											-- we need to reset the index so that the index does not
+											-- get corrupted.
+										l_index := l_character_constant2.index
+										l_character_constant2.set_index (0)
+										l_cast_type := l_character_constant2.cast_type
+										l_character_constant2.set_cast_type (Void)
+										l_choice_context.wipe_out
+										check_expression_validity (l_character_constant2, l_choice_context, l_value_context)
+										l_character_constant2.set_cast_type (l_cast_type)
+										l_character_constant2.set_index (l_index)
+										if has_fatal_error then
+											had_error := True
+										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
+											-- OK.
+										else
+											had_error := True
+											set_fatal_error
+											l_value_named_type := l_value_context.named_type
+											l_choice_named_type := l_choice_context.named_type
+											error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
+										end
+									else
+										had_error := True
+										set_fatal_error
+										l_value_named_type := l_value_context.named_type
+										l_choice_named_type := l_choice_context.named_type
+										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
+									end
+								end
+							end
+							l_choice_context.wipe_out
+						end
+						j := j + 1
+-- TODO: check Unique and Constants and choice unicity.
+					end
+					i := i + 1
+				end
+				free_context (l_choice_context)
+				free_context (l_value_context)
+				from i := 1 until i > nb loop
+					l_when_part := l_when_parts.item (i)
+					l_expression_context := new_context (current_type)
+					check_expression_validity (l_when_part.then_expression, l_expression_context, current_target_type)
+					if has_fatal_error then
+						had_error := True
+						free_context (l_expression_context)
+					else
+						update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+					end
+					i := i + 1
+				end
+			else
+				free_context (l_value_context)
+			end
+			if attached a_expression.else_part as l_else_part then
+				l_expression_context := new_context (current_type)
+				check_expression_validity (l_else_part.expression, l_expression_context, current_target_type)
+				if has_fatal_error then
+					had_error := True
+					free_context (l_expression_context)
+				else
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				end
+			end
+			if had_error then
+				set_fatal_error
+			else
+				if l_result_context_list.count = l_old_result_context_list_count then
+						-- Empty list of types. Use "NONE".
+						-- See https://www.eiffel.org/doc/eiffel/Types
+					l_expression_context := new_context (current_type)
+					l_expression_context.force_last (current_system.none_type)
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				elseif l_result_context_list.count /= l_old_result_context_list_count + 1 then
+						-- There is no expression such as the types of all other
+						-- expressions conform to its type.
+					l_expression_context := new_context (current_type)
+					l_expression_context.force_last (current_system.any_type)
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				end
+				a_context.copy_type_context (l_result_context_list.last)
+				report_inspect_expression (a_expression, tokens.identity_type, a_context)
+			end
+			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
 		end
 
 	check_iteration_component_header_validity (a_iteration_component: ET_ITERATION_COMPONENT)
@@ -13976,7 +14252,19 @@ feature {NONE} -- Event handling
 		end
 
 	report_if_expression (a_expression: ET_IF_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
-			-- Report that a 'if' expression of type `a_type' in context
+			-- Report that an 'if' expression of type `a_type' in context
+			-- of `a_context' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_expression_not_void: a_expression /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		do
+		end
+
+	report_inspect_expression (a_expression: ET_INSPECT_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
+			-- Report that an 'inspect' expression of type `a_type' in context
 			-- of `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -15060,6 +15348,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_infix_expression_validity (an_expression, current_context)
+		end
+
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			check_inspect_expression_validity (a_expression, current_context)
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)

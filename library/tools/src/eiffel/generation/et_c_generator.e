@@ -62,6 +62,7 @@ inherit
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
+			process_inspect_expression,
 			process_inspect_instruction,
 			process_loop_instruction,
 			process_manifest_array,
@@ -10723,6 +10724,260 @@ feature {NONE} -- Expression generation
 				end
 				current_file.put_natural_64 (a_abs_value)
 			end
+		end
+
+	print_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Print `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		local
+			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_expression: ET_EXPRESSION
+			l_when_part: ET_WHEN_EXPRESSION
+			l_choices: ET_CHOICE_LIST
+			l_choice: ET_CHOICE
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_has_case: BOOLEAN
+			l_lower: detachable ET_CONSTANT
+			l_upper: detachable ET_CONSTANT
+			l_lower_integer: detachable ET_INTEGER_CONSTANT
+			l_upper_integer: detachable ET_INTEGER_CONSTANT
+			l_lower_character: detachable ET_CHARACTER_CONSTANT
+			l_upper_character: detachable ET_CHARACTER_CONSTANT
+			k, nb3: INTEGER
+			l_i_nat32, l_nb_nat32: NATURAL_32
+			l_value_type_set: ET_DYNAMIC_TYPE_SET
+			l_value_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_stop: BOOLEAN
+		do
+-- TODO
+			assignment_target := Void
+				-- Declaration of temporary result.
+			l_dynamic_type_set := dynamic_type_set (a_expression)
+			l_dynamic_type := l_dynamic_type_set.static_type
+			l_temp := new_temp_variable (l_dynamic_type.primary_type)
+			mark_temp_variable_frozen (l_temp)
+				-- We will set the index of `l_temp' later because
+				-- it could still be used in `call_operands'.
+			l_temp_index := a_expression.index
+			operand_stack.force (l_temp)
+			l_expression := a_expression.conditional.expression
+			l_value_type_set := dynamic_type_set (l_expression)
+			l_value_type := l_value_type_set.static_type.primary_type
+			print_operand (l_expression)
+			fill_call_operands (1)
+			print_indentation
+			current_file.put_string (c_switch)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			call_operands.wipe_out
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			if attached a_expression.when_parts as l_when_parts then
+				nb := l_when_parts.count
+				from i := 1 until i > nb loop
+					l_when_part := l_when_parts.item (i)
+					l_choices := l_when_part.choices
+					nb2 := l_choices.count
+					if nb2 = 0 then
+						-- Do nothing.
+					else
+						l_has_case := False
+						from j := 1 until j > nb2 loop
+							l_choice := l_choices.choice (j)
+							if l_choice.is_range then
+-- TODO
+								l_lower := choice_constant (l_choice.lower)
+								l_upper := choice_constant (l_choice.upper)
+								if attached {ET_INTEGER_CONSTANT} l_lower as l_integer_constant then
+									l_lower_integer := l_integer_constant
+									l_lower_character := Void
+								elseif attached {ET_CHARACTER_CONSTANT} l_lower as l_character_constant then
+									l_lower_character := l_character_constant
+									l_lower_integer := Void
+								else
+									l_lower_integer := Void
+									l_lower_character := Void
+								end
+								if attached {ET_INTEGER_CONSTANT} l_upper as l_integer_constant then
+									l_upper_integer := l_integer_constant
+									l_upper_character := Void
+								elseif attached {ET_CHARACTER_CONSTANT} l_upper as l_character_constant then
+									l_upper_character := l_character_constant
+									l_upper_integer := Void
+								else
+									l_upper_integer := Void
+									l_upper_character := Void
+								end
+								if l_lower_integer /= Void and l_upper_integer /= Void then
+									from
+-- TODO: check type of inspect value.
+										k := l_lower_integer.to_integer_32
+										nb3 := l_upper_integer.to_integer_32
+									until
+										k > nb3
+									loop
+										l_has_case := True
+										print_indentation
+										current_file.put_string (c_case)
+										current_file.put_character (' ')
+										print_integer_value (k.abs.to_natural_64, k < 0, l_value_type, True)
+										current_file.put_character (':')
+										current_file.put_new_line
+										k := k + 1
+									end
+								elseif l_lower_character /= Void and l_upper_character /= Void then
+									from
+										l_i_nat32 := l_lower_character.value.natural_32_code
+										l_nb_nat32 := l_upper_character.value.natural_32_code
+										l_stop := l_i_nat32 > l_nb_nat32
+									until
+										l_stop
+									loop
+										l_has_case := True
+										print_indentation
+										current_file.put_string (c_case)
+										current_file.put_character (' ')
+										if current_system.character_32_type.same_named_type (l_value_type.base_type, current_type.base_type, current_type.base_type) then
+											current_file.put_string (c_ge_nat32)
+											current_file.put_character ('(')
+											current_file.put_natural_32 (l_i_nat32)
+											current_file.put_character (')')
+										else
+												-- Type cast needed when compiling with mingw when the character
+												-- is represented by '\xyz' where x is not 0.
+											print_type_cast (l_value_type, current_file)
+											print_escaped_character_8 (l_i_nat32.to_character_8)
+										end
+										current_file.put_character (':')
+										current_file.put_new_line
+										if l_i_nat32 = l_nb_nat32 then
+											l_stop := True
+										else
+											l_i_nat32 := l_i_nat32 + 1
+										end
+									end
+								else
+-- TODO
+print ("ET_C_GENERATOR.print_inspect_expression - range%N")
+								end
+							else
+								l_has_case := True
+								print_indentation
+								current_file.put_string (c_case)
+								current_file.put_character (' ')
+								l_lower := choice_constant (l_choice.lower)
+								if attached {ET_INTEGER_CONSTANT} l_lower as l_integer_constant then
+									print_integer_value (l_integer_constant.value, l_integer_constant.is_negative, l_value_type, True)
+								elseif attached {ET_CHARACTER_CONSTANT} l_lower as l_character_constant then
+									if current_system.character_32_type.same_named_type (l_value_type.base_type, current_type.base_type, current_type.base_type) then
+										current_file.put_string (c_ge_nat32)
+										current_file.put_character ('(')
+										current_file.put_natural_32 (l_character_constant.value.natural_32_code)
+										current_file.put_character (')')
+									else
+											-- Type cast needed when compiling with mingw when the character
+											-- is represented by '\xyz' where x is not 0.
+										print_type_cast (l_value_type, current_file)
+										print_escaped_character_8 (l_character_constant.value.to_character_8)
+									end
+								else
+									if l_value_type /= dynamic_type_set (l_choice.lower).static_type.primary_type then
+										print_type_cast (l_value_type, current_file)
+									end
+									print_expression (l_choice.lower)
+								end
+								current_file.put_character (':')
+								current_file.put_new_line
+							end
+							j := j + 1
+						end
+						if l_has_case then
+							indent
+							assignment_target := l_temp
+							l_expression := l_when_part.then_expression
+							print_operand (l_expression)
+							assignment_target := Void
+							fill_call_operands (1)
+							if call_operands.first /= l_temp then
+								print_indentation
+								print_temp_name (l_temp, current_file)
+								current_file.put_character (' ')
+								current_file.put_character ('=')
+								current_file.put_character (' ')
+								print_attachment_expression (call_operands.first, dynamic_type_set (l_expression), l_dynamic_type)
+								current_file.put_character (';')
+								current_file.put_new_line
+							end
+							call_operands.wipe_out
+							print_indentation
+							current_file.put_string (c_break)
+							current_file.put_character (';')
+							current_file.put_new_line
+							dedent
+						end
+					end
+					i := i + 1
+				end
+			end
+			print_indentation
+			current_file.put_string (c_default)
+			current_file.put_character (':')
+			current_file.put_new_line
+			if attached a_expression.else_part as l_else_part then
+				indent
+				assignment_target := l_temp
+				l_expression := l_else_part.expression
+				print_operand (l_expression)
+				assignment_target := Void
+				fill_call_operands (1)
+				if call_operands.first /= l_temp then
+					print_indentation
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_attachment_expression (call_operands.first, dynamic_type_set (l_expression), l_dynamic_type)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				call_operands.wipe_out
+				print_indentation
+				current_file.put_string (c_break)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+			else
+				indent
+				print_indentation
+				current_file.put_string (c_ge_raise)
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_ex_when)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_break)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+			end
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			if l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				l_temp.set_index (l_temp_index)
+			end
+			mark_temp_variable_unfrozen (l_temp)
 		end
 
 	print_iteration_cursor (a_name: ET_IDENTIFIER)
@@ -35356,6 +35611,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			print_infix_expression (an_expression)
+		end
+
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			print_inspect_expression (a_expression)
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)

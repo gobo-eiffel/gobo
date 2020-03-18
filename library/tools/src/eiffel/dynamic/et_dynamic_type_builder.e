@@ -51,6 +51,7 @@ inherit
 			report_formal_argument_declaration,
 			report_function_address,
 			report_if_expression,
+			report_inspect_expression,
 			report_immutable_string_8_constant,
 			report_immutable_string_32_constant,
 			report_inline_agent_formal_argument_declaration,
@@ -1437,7 +1438,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_if_expression (a_expression: ET_IF_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
-			-- Report that a 'if' expression of type `a_type' in context
+			-- Report that an 'if' expression of type `a_type' in context
 			-- of `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -1481,6 +1482,48 @@ feature {NONE} -- Event handling
 						-- of `a_expression' should be known at this stage.
 					set_fatal_error
 					error_handler.report_giaaa_error
+				end
+			end
+		end
+
+	report_inspect_expression (a_expression: ET_INSPECT_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
+			-- Report that an 'inspect' expression of type `a_type' in context
+			-- of `a_context' has been processed.
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_sub_expression: ET_EXPRESSION
+			i, nb: INTEGER
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, a_context)
+				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+				set_dynamic_type_set (l_dynamic_type_set, a_expression)
+				if attached a_expression.when_parts as l_when_parts then
+					nb := l_when_parts.count
+					from i := 1 until i > nb loop
+						l_sub_expression := l_when_parts.item (i).then_expression
+						if attached dynamic_type_set (l_sub_expression) as l_then_dynamic_type_set then
+							propagate_inspect_expression_dynamic_types (a_expression, l_sub_expression, l_then_dynamic_type_set, l_dynamic_type_set)
+						else
+								-- Internal error: the dynamic type set of the sub-expressions
+								-- of `a_expression' should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+						i := i + 1
+					end
+				end
+				if attached a_expression.else_part as l_else_part then
+					l_sub_expression := l_else_part.expression
+					if attached dynamic_type_set (l_sub_expression) as l_else_dynamic_type_set then
+						propagate_inspect_expression_dynamic_types (a_expression, l_sub_expression, l_else_dynamic_type_set, l_dynamic_type_set)
+					else
+							-- Internal error: the dynamic type set of the sub-expressions
+							-- of `a_expression' should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					end
 				end
 			end
 		end
@@ -3944,6 +3987,20 @@ feature {NONE} -- Implementation
 		require
 			an_agent_not_void: an_agent /= Void
 			a_result_type_set_not_void: a_result_type_set /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_inspect_expression_dynamic_types (a_inspect_expression: ET_INSPECT_EXPRESSION; a_sub_expression: ET_EXPRESSION; a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_source_type_set' (which is the dynamic
+			-- type set of the sub-expressions `a_sub_expression' within `a_inspect_expression')
+			-- to the dynamic type set `a_target_type_set' (which is the dynamic
+			-- type set of `a_inspect_expression').
+		require
+			a_inspect_expression_not_void: a_inspect_expression /= Void
+			a_sub_expression_not_void: a_sub_expression /= Void
+			a_source_type_set_not_void: a_source_type_set /= Void
+			a_target_type_set_not_void: a_target_type_set /= Void
 		do
 			-- Do nothing.
 		end

@@ -5,7 +5,7 @@ note
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,6 +56,7 @@ inherit
 			process_if_expression,
 			process_if_instruction,
 			process_infix_expression,
+			process_inspect_expression,
 			process_inspect_instruction,
 			process_loop_instruction,
 			process_loop_invariants,
@@ -85,6 +86,8 @@ inherit
 			process_unfolded_tuple_actual_argument_list,
 			process_unqualified_call_expression,
 			process_unqualified_call_instruction,
+			process_when_expression,
+			process_when_expression_list,
 			process_when_part,
 			process_when_part_list
 		end
@@ -664,6 +667,18 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right.process (Current)
 		end
 
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.expression.process (Current)
+			if attached a_expression.when_parts as l_when_parts then
+				process_when_expression_list (l_when_parts)
+			end
+			if attached a_expression.else_part as l_else_part then
+				l_else_part.expression.process (Current)
+			end
+		end
+
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -912,6 +927,24 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached an_instruction.arguments as an_arguments then
 				process_actual_argument_list (an_arguments)
+			end
+		end
+
+	process_when_expression (a_when_part: ET_WHEN_EXPRESSION)
+			-- Process `a_when_part'.
+		do
+			a_when_part.then_expression.process (Current)
+		end
+
+	process_when_expression_list (a_list: ET_WHEN_EXPRESSION_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				process_when_expression (a_list.item (i))
+				i := i + 1
 			end
 		end
 

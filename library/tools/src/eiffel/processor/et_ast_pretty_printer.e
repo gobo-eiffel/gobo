@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -111,6 +111,7 @@ inherit
 			process_infix_and_then_operator,
 			process_infix_expression,
 			process_infix_or_else_operator,
+			process_inspect_expression,
 			process_inspect_instruction,
 			process_invariants,
 			process_keyword_expression,
@@ -187,6 +188,8 @@ inherit
 			process_variant,
 			process_verbatim_string,
 			process_void,
+			process_when_expression,
+			process_when_expression_list,
 			process_when_part,
 			process_when_part_list
 		end
@@ -3380,6 +3383,41 @@ feature {ET_AST_NODE} -- Processing
 			an_operator.else_keyword.process (Current)
 		end
 
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		local
+			l_conditional: ET_CONDITIONAL
+			l_expression: ET_EXPRESSION
+		do
+			tokens.inspect_keyword.process (Current)
+			print_space
+			l_conditional := a_expression.conditional
+			l_expression := l_conditional.expression
+			l_expression.process (Current)
+			comment_finder.add_excluded_node (l_expression)
+			comment_finder.find_comments (l_conditional, comment_list)
+			comment_finder.reset_excluded_nodes
+			process_comments
+			print_space
+			if attached a_expression.when_parts as l_when_parts then
+				l_when_parts.process (Current)
+				process_comments
+			end
+			if attached a_expression.else_part as l_else_part then
+				print_space
+				tokens.else_keyword.process (Current)
+				print_space
+				l_expression := l_else_part.expression
+				l_expression.process (Current)
+				comment_finder.add_excluded_node (l_expression)
+				comment_finder.find_comments (l_else_part, comment_list)
+				comment_finder.reset_excluded_nodes
+				process_comments
+			end
+			print_space
+			a_expression.end_keyword.process (Current)
+		end
+
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
@@ -3408,7 +3446,6 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 				print_new_line
 			end
-			process_comments
 			an_instruction.end_keyword.process (Current)
 		end
 
@@ -5384,6 +5421,32 @@ feature {ET_AST_NODE} -- Processing
 		do
 			process_keyword (tokens.void_keyword)
 			comment_finder.find_comments (an_expression, comment_list)
+		end
+
+	process_when_expression (a_when_part: ET_WHEN_EXPRESSION)
+			-- Process `a_when_part'.
+		do
+			a_when_part.choices.process (Current)
+			print_space
+			a_when_part.then_keyword.process (Current)
+			print_space
+			a_when_part.then_expression.process (Current)
+		end
+
+	process_when_expression_list (a_list: ET_WHEN_EXPRESSION_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					print_space
+				end
+				a_list.item (i).process (Current)
+				process_comments
+				i := i + 1
+			end
 		end
 
 	process_when_part (a_when_part: ET_WHEN_PART)

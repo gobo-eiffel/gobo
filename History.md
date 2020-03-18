@@ -14,6 +14,8 @@
 * Accept the *special symbols* `∀`, `∃`, `⟳`, `⟲` and `¦` (used
   in symbolic forms of *across loops*) in free operators made up
   of two or more symbols.
+* Added support for *multi-branch expressions* (of the form
+  `inspect x when 1, 2 then "foo" when 3..5 then "bar" else "gobo" end`).
 
 ## Version 20.01.21.1 - 21 January 2020
 

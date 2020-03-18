@@ -2,21 +2,21 @@ note
 
 	description:
 
-		"Eiffel lists of 'elseif' parts in 'if' expressions"
+		"Eiffel lists of 'when' parts in inspect expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_ELSEIF_EXPRESSION_LIST
+class ET_WHEN_EXPRESSION_LIST
 
 inherit
 
 	ET_AST_NODE
 
-	ET_HEAD_LIST [ET_ELSEIF_EXPRESSION]
+	ET_HEAD_LIST [ET_WHEN_EXPRESSION]
 
 create
 
@@ -25,7 +25,7 @@ create
 feature -- Initialization
 
 	reset
-			-- Reset elseif parts as they were when they were last parsed.
+			-- Reset when parts as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do
@@ -72,7 +72,7 @@ feature -- Access
 feature -- Status report
 
 	is_instance_free: BOOLEAN
-			-- Are all elseif parts instance-free (i.e. not dependent
+			-- Are all when parts instance-free (i.e. not dependent
 			-- on 'Current' or its attributes)?
 			-- Note that we do not consider unqualified calls and Precursors as
 			-- instance-free because it's not always possible syntactically
@@ -98,12 +98,12 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
-			a_processor.process_elseif_expression_list (Current)
+			a_processor.process_when_expression_list (Current)
 		end
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_ELSEIF_EXPRESSION]
+	fixed_array: KL_SPECIAL_ROUTINES [ET_WHEN_EXPRESSION]
 			-- Fixed array routines
 		once
 			create Result

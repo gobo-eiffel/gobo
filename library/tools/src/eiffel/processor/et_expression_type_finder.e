@@ -49,6 +49,7 @@ inherit
 			process_if_expression,
 			process_infix_cast_expression,
 			process_infix_expression,
+			process_inspect_expression,
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
@@ -1082,7 +1083,7 @@ feature {NONE} -- Expression processing
 			if had_error then
 				set_fatal_error
 			else
-				if l_result_context_list.count /= 1 then
+				if l_result_context_list.count /= l_old_result_context_list_count + 1 then
 						-- There is no expression such as the types of all other
 						-- expressions conform to its type.
 					l_expression_context := new_context (current_type)
@@ -1199,6 +1200,72 @@ feature {NONE} -- Expression processing
 				l_type := current_universe_impl.integer_type
 			end
 			a_context.force_last (l_type)
+		end
+
+	find_inspect_expression_type (a_expression: ET_INSPECT_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_when_part: ET_WHEN_EXPRESSION
+			i, nb: INTEGER
+			had_error: BOOLEAN
+			l_detachable_any_type: ET_CLASS_TYPE
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
+			l_old_result_context_list_count: INTEGER
+		do
+			reset_fatal_error (False)
+			l_detachable_any_type := current_system.detachable_any_type
+			l_result_context_list := common_ancestor_type_list
+			l_old_result_context_list_count := l_result_context_list.count
+			if attached a_expression.when_parts as l_when_parts then
+				nb := l_when_parts.count
+				from i := 1 until i > nb loop
+					l_when_part := l_when_parts.item (i)
+					l_expression_context := new_context (current_type)
+					find_expression_type (l_when_part.then_expression, l_expression_context, l_detachable_any_type)
+					if has_fatal_error then
+						had_error := True
+						free_context (l_expression_context)
+					else
+						update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+					end
+					i := i + 1
+				end
+			end
+			if attached a_expression.else_part as l_else_part then
+				l_expression_context := new_context (current_type)
+				find_expression_type (l_else_part.expression, l_expression_context, l_detachable_any_type)
+				if has_fatal_error then
+					had_error := True
+					free_context (l_expression_context)
+				else
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				end
+			end
+			if had_error then
+				set_fatal_error
+			else
+				if l_result_context_list.count = l_old_result_context_list_count then
+						-- Empty list of types. Use "NONE".
+						-- See https://www.eiffel.org/doc/eiffel/Types
+					l_expression_context := new_context (current_type)
+					l_expression_context.force_last (current_system.none_type)
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				elseif l_result_context_list.count /= l_old_result_context_list_count + 1 then
+						-- There is no expression such as the types of all other
+						-- expressions conform to its type.
+					l_expression_context := new_context (current_type)
+					l_expression_context.force_last (current_system.any_type)
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				end
+				a_context.copy_type_context (l_result_context_list.last)
+			end
+			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
 		end
 
 	find_iteration_cursor_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -1363,6 +1430,7 @@ feature {NONE} -- Expression processing
 			-- "ARRAY [NONE]" does not conform nor convert to it but "ARRAY [ANY]" does.
 			--
 			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+			-- and https://www.eiffel.org/doc/eiffel/Types
 			-- for more details.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -3310,6 +3378,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			find_infix_expression_type (an_expression, current_context)
+		end
+
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			find_inspect_expression_type (a_expression, current_context)
 		end
 
 	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)

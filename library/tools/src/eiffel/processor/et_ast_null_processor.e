@@ -5,7 +5,7 @@ note
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -657,6 +657,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		do
+		end
+
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -1114,6 +1119,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_void (an_expression: ET_VOID)
 			-- Process `an_expression'.
+		do
+		end
+
+	process_when_expression (a_when_part: ET_WHEN_EXPRESSION)
+			-- Process `a_when_part'.
+		do
+		end
+
+	process_when_expression_list (a_list: ET_WHEN_EXPRESSION_LIST)
+			-- Process `a_list'.
 		do
 		end
 

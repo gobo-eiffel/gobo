@@ -5,7 +5,7 @@
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2727,6 +2727,16 @@ feature -- AST nodes
 			end
 		end
 
+	new_inspect_expression (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_EXPRESSION_LIST;
+		an_else_part: detachable ET_CONDITIONAL; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_EXPRESSION
+			-- New inspect expression
+		do
+			if a_conditional /= Void then
+				create Result.make (a_conditional, a_when_parts)
+				Result.set_else_part (an_else_part)
+			end
+		end
+
 	new_inspect_instruction (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_PART_LIST;
 		an_else_compound: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_INSTRUCTION
 			-- New inspect instruction
@@ -3560,6 +3570,25 @@ feature -- AST nodes
 				if a_variant /= Void and then not a_variant.position.is_null then
 					Result.set_variant_keyword (a_variant)
 				end
+			end
+		end
+
+	new_when_expression (a_choices: detachable ET_CHOICE_LIST;
+		a_then_keyword: detachable ET_KEYWORD; a_then_expression: detachable ET_EXPRESSION): detachable ET_WHEN_EXPRESSION
+			-- New 'elseif' part of 'if' expression
+		do
+			if a_choices /= Void and a_then_expression /= Void then
+				create Result.make (a_choices, a_then_expression)
+			end
+		end
+
+	new_when_expression_list (nb: INTEGER): detachable ET_WHEN_EXPRESSION_LIST
+			-- New 'when' expression list with capacity `nb'
+		require
+			nb_positive: nb >= 0
+		do
+			if nb > 0 then
+				create Result.make_with_capacity (nb)
 			end
 		end
 

@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -187,6 +187,7 @@ create
 %type <detachable ET_INDEXING_TERM_ITEM> Index_value_comma
 %type <detachable ET_INDEXING_TERM_LIST> Index_terms
 %type <detachable ET_INLINE_AGENT> Inline_agent Inline_agent_no_actual_arguments
+%type <detachable ET_INSPECT_EXPRESSION> Multi_branch_expression
 %type <detachable ET_INSPECT_INSTRUCTION> Multi_branch
 %type <detachable ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
 %type <detachable ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
@@ -231,6 +232,8 @@ create
 %type <detachable ET_TYPE_ITEM> Type_comma
 %type <detachable ET_TYPE_LIST> Convert_types Convert_type_list
 %type <detachable ET_VARIANT> Variant_clause Variant_clause_opt
+%type <detachable ET_WHEN_EXPRESSION> When_expression
+%type <detachable ET_WHEN_EXPRESSION_LIST> When_expression_list When_expression_list_opt
 %type <detachable ET_WHEN_PART> When_part
 %type <detachable ET_WHEN_PART_LIST> When_list When_list_opt
 %type <detachable ET_WRITABLE> Writable
@@ -3384,6 +3387,48 @@ Choice_constant: Integer_constant
 
 ------------------------------------------------------------------------------------
 
+Multi_branch_expression: E_INSPECT Expression When_expression_list_opt E_ELSE Expression E_END
+		{ $$ := ast_factory.new_inspect_expression (ast_factory.new_conditional ($1, $2), $3, ast_factory.new_conditional ($4, $5), $6) }
+	| E_INSPECT Expression When_expression_list_opt E_END
+		{ $$ := ast_factory.new_inspect_expression (ast_factory.new_conditional ($1, $2), $3, Void, $4) }
+	;
+
+When_expression_list_opt: -- Empty
+		-- { $$ := Void }
+	| Add_counter When_expression_list
+		{
+			$$ := $2
+			remove_counter
+		}
+	;
+
+When_expression_list: When_expression
+		{
+			$$ := ast_factory.new_when_expression_list (counter_value)
+			if $$ /= Void and attached $1 as l_when_part then
+				$$.put_first (l_when_part)
+			end
+		}
+	| When_expression When_expression_list
+		{
+			$$ := $2
+			if $$ /= Void and attached $1 as l_when_part then
+				$$.put_first (l_when_part)
+			end
+		}
+	;
+
+When_expression: Choices E_THEN Expression
+		{
+			$$ := ast_factory.new_when_expression ($1, $2, $3)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+	
+------------------------------------------------------------------------------------
+
 Across_instruction_header: E_ACROSS Expression E_AS Identifier
 		{ $$ := new_across_instruction_header ($1, $2, $3, $4) }
 	| E_ACROSS Expression E_IS Identifier
@@ -3690,6 +3735,8 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 	| Quantifier_expression
 		{ $$ := $1 }
 	| Conditional_expression
+		{ $$ := $1 }
+	| Multi_branch_expression
 		{ $$ := $1 }
 	| Manifest_tuple
 		{ $$ := $1 }
