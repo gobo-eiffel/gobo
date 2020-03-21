@@ -17,6 +17,11 @@
 * Added support for *multi-branch expressions* (of the form
   `inspect x when 1, 2 then "foo" when 3..5 then "bar" else "gobo" end`).
 
+### Miscellaneous
+
+* Added test execution in [GitLab CI/CD](https://gitlab.com/ebezault/gobo/pipelines).
+
+
 ## Version 20.01.21.1 - 21 January 2020
 
 ### gec

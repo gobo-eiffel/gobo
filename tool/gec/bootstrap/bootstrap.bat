@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-rem copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
+rem copyright: "Copyright (c) 2016-2020, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -183,6 +183,7 @@ goto exit
 	goto c_compilation
 
 :c_compilation
+	if .%VERBOSE%. == .-v. echo Compiling gec (bootstrap 0)...
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c
@@ -203,13 +204,17 @@ goto exit
 
 :ge
 	cd %BIN_DIR%
+	if .%VERBOSE%. == .-v. echo Compiling gecc (bootstrap 1)...
 	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gecc\src\system.ecf
 	call .\gecc.bat
 	rem Compile gec twice to get a bootstrap effect.
+	if .%VERBOSE%. == .-v. echo Compiling gec (bootstrap 1)...
 	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gec\src\system.ecf
 	%BIN_DIR%\gecc%EXE% gec.bat
+	if .%VERBOSE%. == .-v. echo Compiling gec (bootstrap 2)...
 	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gec\src\system.ecf
 	%BIN_DIR%\gecc%EXE% gec.bat
+	if .%VERBOSE%. == .-v. echo Compiling gecc (bootstrap 2)...
 	%BIN_DIR%\gec%EXE% --finalize --cc=no --no-benchmark %GOBO%\tool\gecc\src\system.ecf
 	call .\gecc.bat
 	%RM% gec*.h

@@ -1,38 +1,35 @@
 variables:
   GOBO: '$CI_PROJECT_DIR'
 
-integration:
-  stage: integration
+test:
+  stage: test
   script:
-    - Write-Host "Just to define the 'integration' stage name"
+    - Write-Host "Just to define the 'test' stage name"
   except:
     refs:
       - tags
       - branches
 
-install_windows:
-  stage: integration
+test_windows:
+  stage: test
   tags:
     - shared-windows
     - windows
     - windows-1809
   script:
-    - '& "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64'
-    - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v msc'
-  except:
-    refs:
-      - tags
-      - branches
+    - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
+    - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_debug_ge'
 
-install_linux:
-  stage: integration
+test_linux:
+  stage: test
   tags:
     - linux
   script:
     - $CI_PROJECT_DIR/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
-    - echo `gec --version`
+    - gec --version
     - geant test_debug_ge
 
 stages:
-  - integration
+  - test
