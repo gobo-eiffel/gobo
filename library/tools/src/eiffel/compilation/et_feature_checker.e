@@ -177,6 +177,7 @@ feature {NONE} -- Initialization
 			create current_attachment_scope.make
 			create attachment_scope_builder.make
 			create unused_attachment_scopes.make (40)
+			create assertions_by_feature.make_map (30)
 				-- Common Ancestor Types.
 			create common_ancestor_type_list.make (500)
 				-- Indexing.
@@ -15802,7 +15803,7 @@ feature {NONE} -- Attachments
 			l_count: INTEGER
 			l_set: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE]
 		do
-			create l_set.make_map (30)
+			l_set := assertions_by_feature
 			add_precursors_with_preconditions_recursive (a_feature, l_set)
 			if attached a_feature.preconditions as l_preconditions then
 				l_set.force_last (l_preconditions, a_feature)
@@ -15834,6 +15835,7 @@ feature {NONE} -- Attachments
 				build_assertions_attachment_scope (l_set.item_for_iteration)
 				current_attachment_scope.merge_scope (l_preconditions_attachment_scope)
 				free_attachment_scope (l_preconditions_attachment_scope)
+				l_set.wipe_out
 			end
 		end
 
@@ -15873,6 +15875,11 @@ feature {NONE} -- Attachments
 
 	unused_attachment_scopes: DS_ARRAYED_LIST [ET_ATTACHMENT_SCOPE]
 			-- Attachment scopes that are not currently used
+
+	assertions_by_feature: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE]
+			-- Assertions indexed by features.
+			-- Used to collect the inherited preconditions,
+			-- indexed by the features they have been written in.
 
 feature {NONE} -- Assertions
 
@@ -16673,6 +16680,9 @@ invariant
 	attachment_scope_builder_not_void: attachment_scope_builder /= Void
 	unused_attachment_scopes_not_void: unused_attachment_scopes /= Void
 	no_void_unused_attachment_scope: not unused_attachment_scopes.has_void
+	assertions_by_feature_not_void: assertions_by_feature /= Void
+	no_void_assertion_by_feature: not assertions_by_feature.has_void_item
+	no_void_fetaure_for_assertion: not assertions_by_feature.has_void
 		-- Common Ancestor Types.
 	common_ancestor_type_list_not_void: common_ancestor_type_list /= Void
 	no_void_common_ancestor_type: not common_ancestor_type_list.has_void
