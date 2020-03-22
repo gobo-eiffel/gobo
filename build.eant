@@ -38,6 +38,8 @@
 		<delete>
 			<fileset directory="." include="@(**/.git*)"/>
 		</delete>
+		<delete file=".travis.yml"/>
+		<delete directory=".gitlab"/>
 		<delete directory=".sourceforge"/>
 		<delete directory="library/structure/doc/visio"/>
 		<delete directory="library/time/doc/visio"/>
