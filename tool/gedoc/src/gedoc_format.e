@@ -800,8 +800,13 @@ feature -- Error handling
 			a_wildcard_not_void: a_wildcard /= Void
 		local
 			l_error: UT_MESSAGE
+			l_message: STRING
 		do
-			create l_error.make ("No class matches wildcard '" + a_wildcard + "'.")
+			create l_message.make (50)
+			l_message.append_string_general ("No class matches wildcard '")
+			l_message.append_string_general (a_wildcard)
+			l_message.append_string_general ("'.")
+			create l_error.make (l_message)
 			report_error (l_error)
 		ensure
 			has_error: has_error
