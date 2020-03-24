@@ -8147,6 +8147,7 @@ feature {NONE} -- Expression validity
 			--    * 'manifest_value' is representable as an instance of 'manifest_type'.
 			--  * otherwise, try to determine whether 'manifest_value' is representable
 			--    as an instance of the type expected in the surrounding context.
+			--  * otherwise, if "STRING" is mapped to "STRING_32", then use this type.
 			--  * otherwise, the constant will be of type "STRING_8" if 'manifest_value'
 			--    is representable as a STRING_8, will be of type "STRING_32" if it
 			--    is representable as a STRING_32.
@@ -8154,7 +8155,7 @@ feature {NONE} -- Expression validity
 			--
 			-- Note that ECMA 367-2 says that the type of a manifest string constant
 			-- with no explicit 'manifest_type' is "STRING" (see 8.29.6 "Definition:
-			-- Type of a manifest constant", page 143). So the third bullet above is
+			-- Type of a manifest constant", page 143). So the fourth bullet above is
 			-- not quite compliant with ECMA. But this is the way it is implemented
 			-- in ISE (as of 19.05.10.3187) to be able to capture Unicode characters.
 			--
@@ -8235,6 +8236,14 @@ feature {NONE} -- Expression validity
 					-- Error: invalid cast type, it should be a sized variant of "STRING".
 				set_fatal_error
 				error_handler.report_vwmq0d_error (current_class, current_class_impl, a_string)
+			elseif current_universe_impl.string_type.same_named_type_with_type_marks (current_universe.string_32_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
+				if a_string.is_string_32 then
+					l_type := current_universe_impl.string_32_type
+					report_string_32_constant (a_string, l_type)
+				else
+					set_fatal_error
+					error_handler.report_gvwmc2c_error (current_class, current_class_impl, a_string, current_universe_impl.string_32_type)
+				end
 			elseif a_string.is_string_8 then
 				l_type := current_universe_impl.string_8_type
 				report_string_8_constant (a_string, l_type)
