@@ -5,7 +5,7 @@ note
 		"Lace Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,12 +20,22 @@ inherit
 
 	ET_SYSTEM
 		redefine
+			make,
 			clusters
 		end
 
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: STRING)
+			-- Create a new Eiffel system.
+		do
+			precursor (a_name)
+			set_default_class_mapping
+		end
 
 feature -- Access
 

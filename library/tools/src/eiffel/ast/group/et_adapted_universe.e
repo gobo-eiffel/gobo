@@ -5,7 +5,7 @@ note
 		"Eiffel adapted class universes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -132,6 +132,9 @@ feature -- Exporting classes
 	export_classes (other_universe: ET_UNIVERSE)
 			-- Export non-hidden classes locally declared in `universe'
 			-- so that they can be used in classes of `other_universe'.
+			-- Note that mapped classes are also exported, provided that
+			-- the classes they are mapped to is also declared in
+			-- `universe'.
 		require
 			other_universe_not_void: other_universe /= Void
 		local
@@ -146,12 +149,11 @@ feature -- Exporting classes
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item
 				l_actual_intrinsic_class := l_class.actual_intrinsic_class
-				if l_class.is_mapped then
-						-- Do not export mapped classes.
-						-- They will be exported under their actual name.
+				if l_actual_intrinsic_class.universe /= universe then
+						-- Do not export classes not declared locally.
 				elseif l_actual_intrinsic_class.group.is_hidden then
 						-- Do not export classes in hidden groups.
-				elseif l_actual_intrinsic_class.universe = universe then
+				else
 						-- Take into account class renaming and classname prefix.
 					l_class_name := l_cursor.key
 					l_old_class_name := l_class_name.upper_name

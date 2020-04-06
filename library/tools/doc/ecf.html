@@ -97,11 +97,62 @@
    </div>
    
   </div>
+  <div>
+   <h2>Class mappings</h2>
+   
+   <p>
+    Class mappings are defined in targets and clusters, using the following syntax:
+    
+    <blockquote><pre>
+&lt;mapping old_name="..." new_name="..."/&gt;
+</pre></blockquote>
+    They are used to create class name aliases. For example if 'old_name' is 'STRING'
+    and 'new_name' is 'STRING_8', it means that whenever the type 'STRING' will
+    be found in the class texts of the given target or cluster, they will be seen
+    as if 'STRING_8' had been typed.
+    
+   </p>
+   
+   <p>
+    Class mappings specified in a target override mappings with the same 'old_name'
+    specified in its parent targets. Likewise, class mappings specified in clusters
+    override mappings with the same 'old_name' in the enclosing target.
+    
+   </p>
+   
+   <p>
+    If the class name 'A1' is mapped to class 'B1' in a given library L1, and class
+    'B1' has been declared in this library, then both 'A1' and 'B1' will be visible
+    in other libraries or systems using this library L1. It is also possible to map
+    the class name 'A1' to a class 'B2' in a given library L1 even though class 'B2'
+    has been declared in another library L2 used by L1. In that case 'A1' will not
+    be visible in other libraries or systems using this library L1. These other libraries
+    or systems will also have to use L2 directly and they will have to contain the
+    same mapping declaration from 'A1' to 'B2.
+    
+   </p>
+   
+   <p>
+    In case of a class mapping appearing in a cluster C1, the class mapping will be seen
+    in the other clusters of the enclosing target only if the 'new_name' is a class
+    declared in the same cluster C1 (and this name is not overriden by a mapping in the
+    other clusters). Otherwise the class mapping is only seen in the class texts of
+    the given cluster C1.
+    
+   </p>
+   
+   <p>
+    Note that <i>gec</i> and <i>gelint</i>
+    do not support class mappings at the cluster level, only at the target level.
+    
+   </p>
+   
+  </div>
   <hr size="1" />
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2008, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>11 October 2008</font></address>
+     <address><font size="2"><b>Copyright © 2008-2020, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>6 April 2020</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="builtin_routines.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

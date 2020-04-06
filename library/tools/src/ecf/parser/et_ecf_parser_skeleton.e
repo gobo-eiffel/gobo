@@ -2346,15 +2346,15 @@ feature {NONE} -- Element change
 			elseif l_new_name.value.is_empty then
 				error_handler.report_eate_error (attribute_name (l_new_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
-				a_mappings.search (l_new_name.value)
+				a_mappings.search (l_old_name.value)
 				if a_mappings.found then
-					error_handler.report_eatd_error (attribute_name (l_new_name, a_position_table), attribute_value (l_new_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+					error_handler.report_eatd_error (attribute_name (l_old_name, a_position_table), attribute_value (l_old_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
-				a_mappings.force_last (l_old_name.value.as_upper, l_new_name.value.as_upper)
+				a_mappings.force_last (l_new_name.value.as_upper, l_old_name.value.as_upper)
 			end
 		ensure
-			no_void_new_class_mapping: not a_mappings.has_void
-			no_void_old_class_mapping: not a_mappings.has_void_item
+			no_void_old_class_mapping: not a_mappings.has_void
+			no_void_new_class_mapping: not a_mappings.has_void_item
 		end
 
 	add_options (a_options: ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;

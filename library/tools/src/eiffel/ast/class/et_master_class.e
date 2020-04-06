@@ -387,11 +387,11 @@ feature -- Status report
 			-- more, or its overriding class is not the same.
 
 	is_declared_locally: BOOLEAN
-			-- Has `intrinsic_class' been declared in `universe'?
+			-- Has `actual_intrinsic_class' been declared in `universe'?
 		do
-			Result := intrinsic_class.universe = universe
+			Result := actual_intrinsic_class.universe = universe
 		ensure
-			definition: Result = (intrinsic_class.universe = universe)
+			definition: Result = (actual_intrinsic_class.universe = universe)
 		end
 
 	is_mapped: BOOLEAN

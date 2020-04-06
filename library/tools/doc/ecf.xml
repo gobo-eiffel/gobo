@@ -6,7 +6,7 @@
 		"ECF Files"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/ecf">
 <chapterinfo>
 	<copyright>
-		<year>2008</year>
+		<year>2008-2020</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>11 October 2008</date>
+	<date>6 April 2020</date>
 </chapterinfo>
 
 <title>ECF Files</title>
@@ -89,6 +89,45 @@ this condition will be satisfied if the variable 'foo' has the value 'gobo' when
 from the project target, even if this variable has another value in the current target.
 </para>
 </section>
+</section>
+
+<section><title>Class mappings</title>
+<para>
+Class mappings are defined in targets and clusters, using the following syntax:
+<blockquote><programlisting>
+&lt;mapping old_name="..." new_name="..."/&gt;
+</programlisting></blockquote>
+They are used to create class name aliases. For example if 'old_name' is 'STRING'
+and 'new_name' is 'STRING_8', it means that whenever the type 'STRING' will
+be found in the class texts of the given target or cluster, they will be seen
+as if 'STRING_8' had been typed.
+</para>
+<para>
+Class mappings specified in a target override mappings with the same 'old_name'
+specified in its parent targets. Likewise, class mappings specified in clusters
+override mappings with the same 'old_name' in the enclosing target.
+</para>
+<para>
+If the class name 'A1' is mapped to class 'B1' in a given library L1, and class
+'B1' has been declared in this library, then both 'A1' and 'B1' will be visible
+in other libraries or systems using this library L1. It is also possible to map
+the class name 'A1' to a class 'B2' in a given library L1 even though class 'B2'
+has been declared in another library L2 used by L1. In that case 'A1' will not
+be visible in other libraries or systems using this library L1. These other libraries
+or systems will also have to use L2 directly and they will have to contain the
+same mapping declaration from 'A1' to 'B2.
+</para>
+<para>
+In case of a class mapping appearing in a cluster C1, the class mapping will be seen
+in the other clusters of the enclosing target only if the 'new_name' is a class
+declared in the same cluster C1 (and this name is not overriden by a mapping in the
+other clusters). Otherwise the class mapping is only seen in the class texts of
+the given cluster C1.
+</para>
+<para>
+Note that <projectname>gec</projectname> and <projectname>gelint</projectname>
+do not support class mappings at the cluster level, only at the target level.
+</para>
 </section>
 
 </chapter>

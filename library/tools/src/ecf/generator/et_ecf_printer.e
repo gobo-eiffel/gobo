@@ -948,11 +948,11 @@ feature -- Output
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_old_name)
 				file.put_character ('=')
-				print_quoted_string (l_mappings.item)
+				print_quoted_string (l_mappings.key)
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_new_name)
 				file.put_character ('=')
-				print_quoted_string (l_mappings.key)
+				print_quoted_string (l_mappings.item)
 				file.put_character ('/')
 				file.put_character ('>')
 				file.put_new_line

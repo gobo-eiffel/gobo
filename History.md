@@ -1,5 +1,15 @@
 # Release History
 
+## Version ?? - ??
+
+### Gobo Eiffel Tools Library
+
+* Changed the implementation of class mappings in ECF
+  (`<mapping old_name="..." new_name="..."/>`) so that its behavior
+  matches what is implemented in ISE Eiffel. Note that `gec` and
+  `gelint` do not support class mappings at the cluster level, only
+  at the target level.
+
 ## Version 20.03.22.1 - 22 March 2020
 
 ### gec

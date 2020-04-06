@@ -67,7 +67,6 @@ feature {NONE} -- Initialization
 			name := a_name
 			make_adapted (a_name, Current)
 			set_kernel_types
-			set_default_class_mapping
 		ensure
 			name_set: name = a_name
 			current_system_set: current_system = a_system

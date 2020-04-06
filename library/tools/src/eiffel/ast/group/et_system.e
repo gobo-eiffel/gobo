@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -64,7 +64,6 @@ feature {NONE} -- Initialization
 			name := a_name
 			make_adapted (a_name, Current)
 			set_kernel_types
-			set_default_class_mapping
 		end
 
 feature -- Status report

@@ -5,7 +5,7 @@ note
 		"ECF Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -193,7 +193,8 @@ feature -- Access
 			-- (may be Void)
 
 	class_mappings: detachable DS_HASH_TABLE [STRING, STRING]
-			-- Class mapping, indexed by new class names in upper-case
+			-- Class mapping, indexed by old class names in upper-case
+			-- (e.g. STRING mapped to STRING_32, old_name = STRING, new_anme = STRING_32)
 			-- (may be Void)
 
 	visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]

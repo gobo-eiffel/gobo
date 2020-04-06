@@ -5,7 +5,7 @@ note
 		"Xace Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2020, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_target)
 			make_system (a_target.name)
+			set_default_class_mapping
 			system_name := name
 		end
 

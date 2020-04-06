@@ -5,7 +5,7 @@ note
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -107,6 +107,7 @@ feature {NONE} -- Element change
 					l_target.fill_settings (l_system)
 					l_target.fill_capabilities (l_system)
 					l_target.fill_options (l_system)
+					l_target.fill_class_mappings (l_system, l_state)
 					parse_dotnet_assemblies (l_system, l_state)
 					from parsed_libraries.start until parsed_libraries.after loop
 						parse_dotnet_assemblies (parsed_libraries.item_for_iteration, l_state)
@@ -411,6 +412,7 @@ feature {NONE} -- Element change
 								else
 									select_target (l_target, l_library, a_state)
 									l_target.fill_options (l_library)
+									l_target.fill_class_mappings (l_library, a_state)
 								end
 							end
 								-- Check capabilities compatibility.
