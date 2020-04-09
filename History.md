@@ -19,6 +19,8 @@
 * Improved interoperability with ISE Eiffel by making sure that in
   void-safe mode the type `attached NONE` conforms to all other types,
   even expanded types.
+* Fixed bug when looking for duplicates in multiple aliases
+  (e.g. `alias "+" alias "+"`).
 
 ## Version 20.03.22.1 - 22 March 2020
 

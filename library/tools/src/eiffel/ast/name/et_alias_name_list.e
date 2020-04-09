@@ -88,8 +88,8 @@ feature -- Status report
 		local
 			i, nb2: INTEGER
 		do
-			nb2 := nb - 1
-			from i := 0 until i > nb2 loop
+			nb2 := count - 1
+			from i := count - nb until i > nb2 loop
 				if a_name.same_alias_name (storage.item (i)) then
 					Result := True
 					i := nb2 + 1 -- Jump out of the loop.
