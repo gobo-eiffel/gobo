@@ -9,6 +9,9 @@
   matches what is implemented in ISE Eiffel. Note that `gec` and
   `gelint` do not support class mappings at the cluster level, only
   at the target level.
+* Improved interoperability with ISE Eiffel by making sure that in
+  void-safe mode the type `attached NONE` conforms to all other types,
+  even expanded types.
 
 ## Version 20.03.22.1 - 22 March 2020
 

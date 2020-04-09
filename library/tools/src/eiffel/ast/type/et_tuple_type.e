@@ -5,7 +5,7 @@ note
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -426,7 +426,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			other_base_class := other.base_class
 			if other_base_class.is_none then
 					-- Class type "detachable NONE" conforms to any class type that is not expanded nor attached.
-					-- Class type "attached NONE" conforms to any attached class type that is not expanded.
+					-- Class type "attached NONE" conforms to any class type, even expanded types.
 					-- And tuple types are reference types.
 				if other_context.attachment_type_conformance_mode then
 					Result := is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context)
