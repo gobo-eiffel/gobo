@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Unsigned integer values coded on 32 bits."
 	external_name: "System.UInt32"
 	assembly: "mscorlib"
@@ -186,44 +186,44 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and alias "&" (i: NATURAL_32): NATURAL_32
+	bit_and alias "&" alias "⊗" (i: NATURAL_32): NATURAL_32
 			-- Bitwise and between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_or alias "|" (i: NATURAL_32): NATURAL_32
+	bit_or alias "|" alias "⦶" (i: NATURAL_32): NATURAL_32
 			-- Bitwise or between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_xor (i: NATURAL_32): NATURAL_32
+	bit_xor alias "⊕" (i: NATURAL_32): NATURAL_32
 			-- Bitwise xor between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_not: NATURAL_32
+	bit_not alias "⊝": NATURAL_32
 			-- One's complement of Current.
 		external
 			"built_in"
 		end
 
-	bit_shift_left alias "|<<" (n: INTEGER): NATURAL_32
+	bit_shift_left alias "|<<" alias "⧀" (n: INTEGER): NATURAL_32
 			-- Shift Current from `n' position to left.
 		external
 			"built_in"
 		end
 
-	bit_shift_right alias "|>>" (n: INTEGER): NATURAL_32
+	bit_shift_right alias "|>>" alias "⧁" (n: INTEGER): NATURAL_32
 			-- Shift Current from `n' position to right.
 		external
 			"built_in"
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -16,7 +16,7 @@ note
 		Use UC_UTF*_STRING to specify the encoding explicitly.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -40,6 +40,7 @@ inherit
 
 	KL_STRING
 		rename
+			three_way_comparison as three_way_comparison alias "⋚",
 			item as item,
 			capacity as byte_capacity,
 			clear_all as old_clear_all,
@@ -146,6 +147,7 @@ inherit
 
 	KL_STRING
 		rename
+			three_way_comparison as three_way_comparison alias "⋚",
 			item as old_item,
 			put as old_put,
 			capacity as byte_capacity,
@@ -233,6 +235,8 @@ inherit
 		end
 
 	KL_COMPARABLE
+		rename
+			three_way_comparison as three_way_comparison alias "⋚"
 		undefine
 			three_way_comparison,
 			is_equal,
@@ -1559,7 +1563,7 @@ feature -- Comparison
 --			same_string: Result implies same_string (other)
 		end
 
-	three_way_comparison (other: like Current): INTEGER
+	three_way_comparison alias "⋚" (other: like Current): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 			-- (ELKS 2001 STRING, inherited from COMPARABLE)

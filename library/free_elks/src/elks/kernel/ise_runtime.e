@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Set of features to access ISE runtime functionality.
 			To be used at your own risk.
@@ -96,7 +96,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	new_instance_of (type_id: INTEGER): ANY
+	frozen new_instance_of (type_id: INTEGER): ANY
 			-- New instance of dynamic `type_id'.
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
@@ -108,7 +108,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	new_special_of_reference_instance_of (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
+	frozen new_special_of_reference_instance_of (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
 			-- New instance of dynamic `type_id' that represents
 			-- a SPECIAL which can contain `a_capacity' elements of reference type.
 			-- To create a SPECIAL of basic type, use class SPECIAL directly.	
@@ -118,7 +118,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	new_tuple_instance_of (type_id: INTEGER): TUPLE
+	frozen new_tuple_instance_of (type_id: INTEGER): TUPLE
 			-- New instance of tuple of type `type_id'.
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
@@ -128,7 +128,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	new_type_instance_of (type_id: INTEGER): TYPE [detachable ANY]
+	frozen new_type_instance_of (type_id: INTEGER): TYPE [detachable ANY]
 			-- New instance of TYPE for object of type `type_id'.
 		external
  			"built_in static"
@@ -422,7 +422,7 @@ feature -- Internal support
 			"built_in static"
 		ensure
 			instance_free: class
-		end
+		end		
 
 	frozen character_8_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): CHARACTER_8
 			-- Character value of the field at `field_offset' in object `a_object + a_physical_offset'.
@@ -578,7 +578,7 @@ feature -- Internal support
 			instance_free: class
 		end
 
-	is_special_of_reference_type (type_id: INTEGER): BOOLEAN
+	frozen is_special_of_reference_type (type_id: INTEGER): BOOLEAN
 			-- Is type represented by `type_id' represent
 			-- a SPECIAL [XX] where XX is a reference type.
 		external
@@ -587,7 +587,7 @@ feature -- Internal support
 			instance_free: class
 		end
 
-	is_special_of_reference_or_basic_type (type_id: INTEGER): BOOLEAN
+	frozen is_special_of_reference_or_basic_type (type_id: INTEGER): BOOLEAN
 			-- Is type represented by `type_id' represent
 			-- a SPECIAL [XX] where XX is a reference type
 			-- or a basic expanded type (note that user-defined
@@ -598,7 +598,7 @@ feature -- Internal support
 			instance_free: class
 		end
 
-	is_tuple_type (type_id: INTEGER): BOOLEAN
+	frozen is_tuple_type (type_id: INTEGER): BOOLEAN
 			-- Is type represented by `type_id' represent a TUPLE?
 		external
 			"built_in static"

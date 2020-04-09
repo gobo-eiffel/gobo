@@ -462,7 +462,7 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and alias "&" (i: like Current): like Current
+	bit_and alias "&" alias "⊗" (i: like Current): like Current
 			-- Bitwise and between Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -473,7 +473,7 @@ feature -- Bit operations
 			bitwise_and_not_void: Result /= Void
 		end
 
-	bit_or alias "|" (i: like Current): like Current
+	bit_or alias "|" alias "⦶" (i: like Current): like Current
 			-- Bitwise or between Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -484,7 +484,7 @@ feature -- Bit operations
 			bitwise_or_not_void: Result /= Void
 		end
 
-	bit_xor (i: like Current): like Current
+	bit_xor alias "⊕" (i: like Current): like Current
 			-- Bitwise xor between Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -495,7 +495,7 @@ feature -- Bit operations
 			bitwise_xor_not_void: Result /= Void
 		end
 
-	bit_not: like Current
+	bit_not alias "⊝": like Current
 			-- One's complement of Current.
 		do
 			create Result
@@ -518,7 +518,7 @@ feature -- Bit operations
 			end
 		end
 
-	bit_shift_left alias "|<<" (n: INTEGER): like Current
+	bit_shift_left alias "|<<" alias "⧀" (n: INTEGER): like Current
 			-- Shift Current from `n' position to left.
 		require
 			n_nonnegative: n >= 0
@@ -530,7 +530,7 @@ feature -- Bit operations
 			bit_shift_left_not_void: Result /= Void
 		end
 
-	bit_shift_right alias "|>>" (n: INTEGER): like Current
+	bit_shift_right alias "|>>" alias "⧁" (n: INTEGER): like Current
 			-- Shift Current from `n' position to right.
 		require
 			n_nonnegative: n >= 0
@@ -605,7 +605,7 @@ invariant
 	sign_times_abs: sign * abs = item
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

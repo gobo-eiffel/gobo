@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Integer values coded on 64 bits"
 	external_name: "System.Int64"
 	assembly: "mscorlib"
@@ -192,44 +192,44 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and alias "&" (i: INTEGER_64): INTEGER_64
+	bit_and alias "&" alias "⊗" (i: INTEGER_64): INTEGER_64
 			-- Bitwise and between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_or alias "|" (i: INTEGER_64): INTEGER_64
+	bit_or alias "|" alias "⦶" (i: INTEGER_64): INTEGER_64
 			-- Bitwise or between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_xor (i: INTEGER_64): INTEGER_64
+	bit_xor alias "⊕" (i: INTEGER_64): INTEGER_64
 			-- Bitwise xor between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_not: INTEGER_64
+	bit_not alias "⊝": INTEGER_64
 			-- One's complement of Current.
 		external
 			"built_in"
 		end
 
-	bit_shift_left alias "|<<" (n: INTEGER): INTEGER_64
+	bit_shift_left alias "|<<" alias "⧀" (n: INTEGER): INTEGER_64
 			-- Shift Current from `n' position to left.
 		external
 			"built_in"
 		end
 
-	bit_shift_right alias "|>>" (n: INTEGER): INTEGER_64
+	bit_shift_right alias "|>>" alias "⧁" (n: INTEGER): INTEGER_64
 			-- Shift Current from `n' position to right.
 		external
 			"built_in"
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

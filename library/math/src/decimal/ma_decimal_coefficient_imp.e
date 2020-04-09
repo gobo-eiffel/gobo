@@ -1,11 +1,11 @@
-note
+﻿note
 
 	description:
 
 		"Simple implementation of coefficients using a native array of characters"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
-	copyright: "Copyright (c) 2004-2012, Paul G. Crismer and others"
+	copyright: "Copyright (c) 2004-2020, Paul G. Crismer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class MA_DECIMAL_COEFFICIENT_IMP
 inherit
 
 	MA_DECIMAL_COEFFICIENT
+		rename
+			three_way_comparison as three_way_comparison alias "⋚"
 		redefine
 			out,
 			three_way_comparison
@@ -183,7 +185,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	three_way_comparison (other: like Current): INTEGER
+	three_way_comparison alias "⋚" (other: like Current): INTEGER
 			-- Compare `other'; Result is [-1,0,+1] if [Current < other, Current = other, Current > other] respectively
 		local
 			index, count_a, count_b, local_difference: INTEGER

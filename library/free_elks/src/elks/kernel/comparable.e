@@ -62,7 +62,7 @@ feature -- Comparison
 			trichotomy: Result = (not (Current < other) and not (other < Current))
 		end
 
-	three_way_comparison (other: like Current): INTEGER
+	three_way_comparison alias "⋚" (other: like Current): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 		require
@@ -79,7 +79,7 @@ feature -- Comparison
 			greater_positive: (Result = 1) = (Current > other)
 		end
 
-	max (other: like Current): like Current
+	max alias "∨" (other: like Current): like Current
 			-- The greater of current object and `other'
 		require
 			other_exists: other /= Void
@@ -94,7 +94,7 @@ feature -- Comparison
 			other_if_smaller: Current < other implies Result = other
 		end
 
-	min (other: like Current): like Current
+	min alias "∧" (other: like Current): like Current
 			-- The smaller of current object and `other'
 		require
 			other_exists: other /= Void
@@ -117,7 +117,7 @@ note
 	ca_ignore:
 		"CA057", "CA057: simplifiable boolean expression",
 		"CA071", "CA071: self-comparison"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
