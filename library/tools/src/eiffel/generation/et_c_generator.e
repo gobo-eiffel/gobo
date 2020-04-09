@@ -1035,6 +1035,14 @@ feature {NONE} -- C code Generation
 					header_file.put_line (c_ge_use_threads)
 					header_file.put_new_line
 				end
+				if current_system.any_type.base_class.universe.character_type.same_named_type_with_type_marks (current_system.any_type.base_class.universe.character_32_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
+					header_file.put_string (c_define)
+					header_file.put_character (' ')
+					header_file.put_line (c_eif_character)
+					header_file.put_character (' ')
+					header_file.put_line (c_eif_character_32)
+					header_file.put_new_line
+				end
 				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
 				if multithreaded_mode then
@@ -19067,7 +19075,11 @@ feature {NONE} -- Built-in feature generation
 		local
 			l_string: STRING
 		do
-			current_file.put_string (c_ge_ms)
+			if attached a_feature.result_type_set as l_result_type_set and then l_result_type_set.static_type.base_type.same_named_type_with_type_marks (current_system.string_32_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
+				current_file.put_string (c_ge_ms32)
+			else
+				current_file.put_string (c_ge_ms8)
+			end
 			current_file.put_character ('(')
 			l_string := a_target_type.base_class.upper_name
 			print_escaped_string (l_string)
@@ -19642,7 +19654,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			current_file.put_character ('=')
 			current_file.put_character (' ')
 			l_string := current_type.base_type.unaliased_to_text
-			current_file.put_string (c_ge_ms)
+			if attached current_feature.result_type_set as l_result_type_set and then l_result_type_set.static_type.base_type.same_named_type_with_type_marks (current_system.string_32_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
+				current_file.put_string (c_ge_ms32)
+			else
+				current_file.put_string (c_ge_ms8)
+			end
 			current_file.put_character ('(')
 			print_escaped_string (l_string)
 			current_file.put_character (',')
@@ -24983,7 +24999,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			current_file.put_string (c_ge_ms)
+			if attached current_feature.result_type_set as l_result_type_set and then l_result_type_set.static_type.base_type.same_named_type_with_type_marks (current_system.string_32_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
+				current_file.put_string (c_ge_ms32)
+			else
+				current_file.put_string (c_ge_ms8)
+			end
 			current_file.put_string ("(s,l)")
 			current_file.put_character (';')
 			current_file.put_new_line
@@ -25846,7 +25866,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			current_file.put_string (c_ge_ms)
+			if attached current_feature.result_type_set as l_result_type_set and then l_result_type_set.static_type.base_type.same_named_type_with_type_marks (current_system.string_32_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
+				current_file.put_string (c_ge_ms32)
+			else
+				current_file.put_string (c_ge_ms8)
+			end
 			current_file.put_string ("(s,l)")
 			current_file.put_character (';')
 			current_file.put_new_line
@@ -37207,8 +37231,8 @@ feature {NONE} -- Constants
 	c_ge_mark_object: STRING = "GE_mark_object"
 	c_ge_min_int32: STRING = "GE_min_int32"
 	c_ge_min_int64: STRING = "GE_min_int64"
-	c_ge_ms: STRING = "GE_ms"
 	c_ge_ms8: STRING = "GE_ms8"
+	c_ge_ms32: STRING = "GE_ms32"
 	c_ge_ms32_from_utf32le: STRING = "GE_ms32_from_utf32le"
 	c_ge_mt: STRING = "GE_mt"
 	c_ge_mutex_lock: STRING = "GE_mutex_lock"

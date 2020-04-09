@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,11 @@
 #define EIF_DOUBLE EIF_REAL_64
 #endif
 #ifndef GE_ms
+#if EIF_CHARACTER == EIF_CHARACTER_8
 #define GE_ms(s,c) GE_ms8((s),(c))
+#else
+#define GE_ms(s,c) GE_ms32((s),(c))
+#endif
 #endif
 
 #if defined(__USE_POSIX) || defined(__unix__) || defined(_POSIX_C_SOURCE)

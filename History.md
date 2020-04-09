@@ -2,6 +2,13 @@
 
 ## Version ?? - ??
 
+### gec
+
+* Added support for class mappings `STRING` -> `STRING_32` and 
+  `CHARACTER` -> `CHARACTER_32` when specified that way in the ECF
+  file. The default is still set to `STRING` -> `STRING_8` and 
+  `CHARACTER` -> `CHARACTER_8` in the FreeELKS ECF file.
+
 ### Gobo Eiffel Tools Library
 
 * Changed the implementation of class mappings in ECF
@@ -33,7 +40,6 @@
 ### Miscellaneous
 
 * Added test execution in [GitLab CI/CD](https://gitlab.com/ebezault/gobo/pipelines).
-
 
 ## Version 20.01.21.1 - 21 January 2020
 
