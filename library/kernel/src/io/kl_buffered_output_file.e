@@ -153,7 +153,7 @@ feature -- Output
 			if l_string_count < l_capacity then
 				l_buffer.append_string (l_string)
 			else
-				old_put_string (l_string.as_string_8)
+				old_put_string (l_string.to_string_8)
 			end
 		end
 
