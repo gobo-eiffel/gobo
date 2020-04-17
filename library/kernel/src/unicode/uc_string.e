@@ -69,8 +69,7 @@ inherit
 				area,
 				mirror,
 				is_case_insensitive_equal,
-				valid_code,
-				to_string_32
+				valid_code
 			{ANY}
 				is_string_8,
 				valid_index,
@@ -139,7 +138,8 @@ inherit
 			index_of_code,
 			substring_index,
 			plus,
-			copy
+			copy,
+			to_string_32
 		select
 			put,
 			item
@@ -231,7 +231,8 @@ inherit
 			index_of_code,
 			plus,
 			copy,
-			at
+			at,
+			to_string_32
 		end
 
 	KL_COMPARABLE
@@ -3112,6 +3113,23 @@ feature -- Conversion
 			to_utf32_le_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, {STRING_8} "")
 			valid_utf32: utf32.valid_utf32 (utf32.bom_le + Result)
+		end
+
+	to_string_32: STRING_32
+			-- Convert `Current' as a STRING_32.
+		local
+			i, nb: INTEGER
+		do
+			create Result.make (count)
+			nb := byte_count
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				Result.append_code (item_code_at_byte_index (i).to_natural_32)
+				i := next_byte_index (i)
+			end
 		end
 
 	as_string: STRING_8

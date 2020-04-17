@@ -44,7 +44,7 @@ feature -- Output
 			-- Note: If `a_string' is a UC_STRING or descendant, then
 			-- write the bytes of its associated UTF unicode encoding.
 		do
-			old_put_string (STRING_.as_readable_string_8_no_uc_string (a_string))
+			old_put_string (STRING_.as_readable_string_8_no_uc_string (a_string).as_string_8)
 		end
 
 feature -- Basic operations
