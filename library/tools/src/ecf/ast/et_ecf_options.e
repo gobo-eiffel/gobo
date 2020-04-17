@@ -5,7 +5,7 @@ note
 		"ECF options"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			create primary_options.make_map (15)
 			primary_options.set_key_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			primary_options.set_hash_function (l_hash_function)
 			create primary_debugs.make_map (50)
 			primary_debugs.set_key_equality_tester (case_insensitive_string_equality_tester)

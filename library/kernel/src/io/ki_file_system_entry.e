@@ -5,7 +5,7 @@ note
 		"Interface for file system entries (files, directories, ...)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class KI_FILE_SYSTEM_ENTRY
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: like name)
 			-- Create a new file system entry object.
 			-- (`a_name' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset (a_name: STRING)
+	reset (a_name: like name)
 			-- Reuse current Eiffel object memory to
 			-- represent a new file system entry.
 			-- (`a_name' should follow the pathname convention

@@ -5,7 +5,7 @@ note
 		"Proxy character input streams"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2020, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,7 +59,7 @@ feature -- Input
 			base_stream.read_character
 		end
 
-	unread_character (an_item: CHARACTER)
+	unread_character (an_item: CHARACTER_8)
 			-- Put `an_item' back in input stream.
 			-- This character will be read first by the next
 			-- call to a read routine.
@@ -78,13 +78,13 @@ feature -- Access
 			Result := base_stream.name
 		end
 
-	last_string: STRING
+	last_string: STRING_8
 			-- Last string read
 		do
 			Result := base_stream.last_string
 		end
 
-	last_character: CHARACTER
+	last_character: CHARACTER_8
 			-- Last character read
 		do
 			Result := base_stream.last_character
@@ -117,7 +117,7 @@ feature -- Status report
 			Result := base_stream.is_rewindable
 		end
 
-	valid_unread_character (a_character: CHARACTER): BOOLEAN
+	valid_unread_character (a_character: CHARACTER_8): BOOLEAN
 			-- Can `a_character' be put back in input stream?
 		do
 			Result := base_stream.valid_unread_character (a_character)

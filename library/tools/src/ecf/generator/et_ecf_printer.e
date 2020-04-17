@@ -575,7 +575,7 @@ feature -- Output
 				l_expected_value := {ET_ECF_CAPABILITY_NAMES}.thread_capability_value
 				if a_condition.value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
 					create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
-					if l_splitter.split (l_value).there_exists (agent STRING_.same_case_insensitive (?, l_expected_value)) = a_condition.is_excluded then
+					if l_splitter.split (l_value).there_exists (agent STRING_.same_case_insensitive ({STRING_8} ?, l_expected_value)) = a_condition.is_excluded then
 						l_multithreaded_value := {ET_ECF_SETTING_NAMES}.false_setting_value
 					else
 						l_multithreaded_value := {ET_ECF_SETTING_NAMES}.true_setting_value

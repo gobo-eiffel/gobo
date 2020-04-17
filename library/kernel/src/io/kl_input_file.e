@@ -6,7 +6,7 @@ note
 		%(8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-20168, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,10 +45,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_character: CHARACTER
+	last_character: CHARACTER_8
 			-- Last character read
 
-	last_string: STRING
+	last_string: STRING_8
 			-- Last string read
 			-- (Note: this query always return the same object.
 			-- Therefore a clone should be used if the result
@@ -86,7 +86,7 @@ feature -- Input
 			end
 		end
 
-	unread_character (a_character: CHARACTER)
+	unread_character (a_character: CHARACTER_8)
 			-- Put `a_character' back in input file.
 			-- This character will be read first by the next
 			-- call to a read routine.
@@ -134,7 +134,7 @@ feature -- Input
 			end_of_file := (last_string.count = 0)
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+	read_to_string (a_string: STRING_8; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with
 			-- at most `nb' characters read from input file.
 			-- Return the number of characters actually read.
@@ -143,7 +143,7 @@ feature -- Input
 			-- will all be read.)
 		local
 			j: INTEGER
-			tmp_string: STRING
+			tmp_string: STRING_8
 			k, nb2: INTEGER
 			i: INTEGER
 			l_character_buffer: like character_buffer
@@ -191,7 +191,7 @@ feature -- Input
 			Result := i
 		end
 
-	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER
+	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER_8]; pos, nb: INTEGER): INTEGER
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' characters read from input file.
 			-- Return the number of characters actually read.
@@ -251,7 +251,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	character_buffer: detachable KL_LINKABLE [CHARACTER]
+	character_buffer: detachable KL_LINKABLE [CHARACTER_8]
 			-- Unread characters
 
 	file_readable: BOOLEAN
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			Result := is_open_read
 		end
 
-	old_read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+	old_read_to_string (a_string: STRING_8; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			character_read: not old_end_of_file implies Result > 0
 		end
 
-	dummy_string: STRING = ""
+	dummy_string: STRING_8 = ""
 			-- Dummy string
 
 	dummy_kl_character_buffer: KL_CHARACTER_BUFFER

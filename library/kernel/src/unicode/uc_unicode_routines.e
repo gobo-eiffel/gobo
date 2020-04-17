@@ -5,7 +5,7 @@ note
 		"Unicode routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,7 +64,7 @@ feature -- Status report
 			definition: Result = (a_code >= minimum_ascii_character_code and a_code <= maximum_ascii_character_code)
 		end
 
-	is_ascii_string (a_string: STRING): BOOLEAN
+	is_ascii_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_string' contain only ASCII characters?
 		require
 			a_string_not_void: a_string /= Void
@@ -81,7 +81,7 @@ feature -- Status report
 				until
 					i > nb
 				loop
-					if maximum_ascii_character_code < a_string.item_code (i) then
+					if maximum_ascii_character_natural_32_code < a_string.code (i) then
 						Result := False
 							-- Jump out of the loop.
 						i := nb + 1
@@ -94,10 +94,10 @@ feature -- Status report
 			instance_free: class
 		end
 
-	code_to_string (a_code: INTEGER): STRING
+	code_to_string (a_code: INTEGER): STRING_8
 			-- Return a string with `a_code' as its single character.
 			-- (If the character code is bigger than the maximum for
-			-- CHARACTER, the dynamic type of the result will be UC_STRING
+			-- CHARACTER_8, the dynamic type of the result will be UC_STRING
 			-- or a descendant.)
 		require
 			a_code_valid: valid_code (a_code)

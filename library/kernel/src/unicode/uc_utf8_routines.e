@@ -668,7 +668,7 @@ feature -- Conversion
 			byte_count_set: Result.count = substring_byte_count (a_string, s, e)
 		end
 
-	to_utf8 (a_string: STRING_8): STRING
+	to_utf8 (a_string: STRING_8): STRING_8
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-8 representation of `a_string'
 		require

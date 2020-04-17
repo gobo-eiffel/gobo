@@ -8,7 +8,7 @@ note
 		%when written to the standard error file."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,11 +58,8 @@ feature -- Output
 			-- Write `a_string' to standard error file.
 			-- Note: If `a_string' is a UC_STRING or descendant, then
 			-- write the bytes of its associated UTF unicode encoding.
-		local
-			a_string_string: STRING_8
 		do
-			a_string_string := STRING_.as_string (a_string)
-			console.put_string (a_string_string)
+			console.put_string (STRING_.as_readable_string_8_no_uc_string (a_string))
 		end
 
 feature -- Basic operations

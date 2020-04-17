@@ -10,7 +10,7 @@ note
 		%and '%%R' as line separators."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,17 +55,17 @@ feature -- Access
 	name: STRING = "stdin"
 			-- Name of input stream
 
-	last_character: CHARACTER
+	last_character: CHARACTER_8
 			-- Last character read
 
-	last_string: STRING
+	last_string: STRING_8
 			-- Last string read
 			-- (Note: this query always return the same object.
 			-- Therefore a clone should be used if the result
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
-	eol: STRING = "%N"
+	eol: STRING_8 = "%N"
 			-- Line separator
 
 feature -- Status report
@@ -97,7 +97,7 @@ feature -- Input
 			end
 		end
 
-	unread_character (a_character: CHARACTER)
+	unread_character (a_character: CHARACTER_8)
 			-- Put `a_character' back in input file.
 			-- This character will be read first by the next
 			-- call to a read routine.
@@ -124,7 +124,7 @@ feature -- Input
 			-- will all be read.)
 		local
 			i: INTEGER
-			s: STRING
+			s: STRING_8
 		do
 			if last_string.capacity < nb then
 				last_string.resize (nb)
@@ -160,7 +160,7 @@ feature -- Input
 			-- file are: '%N', '%R%N and '%R'.
 		local
 			done: BOOLEAN
-			c: CHARACTER
+			c: CHARACTER_8
 			is_eof: BOOLEAN
 			has_carriage: BOOLEAN
 		do
@@ -230,7 +230,7 @@ feature -- Input
 			end_of_file := False
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+	read_to_string (a_string: STRING_8; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from standard input file.
 			-- Return the number of characters actually read.
@@ -240,7 +240,7 @@ feature -- Input
 		local
 			i, j: INTEGER
 			k, nb2: INTEGER
-			s, tmp_string: STRING
+			s, tmp_string: STRING_8
 			a_buff: like character_buffer
 		do
 			from
@@ -296,7 +296,7 @@ feature -- Input
 			end
 		end
 
-	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER
+	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER_8]; pos, nb: INTEGER): INTEGER
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' characters read from standard input file.
 			-- Return the number of characters actually read.
@@ -313,10 +313,10 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	character_buffer: detachable KL_LINKABLE [CHARACTER]
+	character_buffer: detachable KL_LINKABLE [CHARACTER_8]
 			-- Unread characters
 
-	dummy_string: STRING = ""
+	dummy_string: STRING_8 = ""
 			-- Dummy string
 
 	console: PLAIN_TEXT_FILE

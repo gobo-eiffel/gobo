@@ -5,7 +5,7 @@ note
 		"Unicode constants"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103,13 +103,21 @@ feature -- Access
 --			small_enough: Result <= Platform.Maximum_byte_code
 --		end
 
-	minimum_ascii_character: CHARACTER = '%/0/'
+	maximum_ascii_character_natural_32_code: NATURAL_32 = 127
+			-- Largest code for ASCII characters
+			-- (2^7 - 1)
+--		ensure
+--			definition: Result = 127
+--			small_enough: Result <= Platform.Maximum_byte_code
+--		end
+
+	minimum_ascii_character: CHARACTER_8 = '%/0/'
 			-- Smallest ASCII character
 --		ensure
 --			definition: Result.code = minimum_ascii_code
 --		end
 
-	maximum_ascii_character: CHARACTER = '%/127/'
+	maximum_ascii_character: CHARACTER_8 = '%/127/'
 			-- Largest ASCII character
 --		ensure
 --			definition: Result.code = maximum_ascii_code

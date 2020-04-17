@@ -5,7 +5,7 @@ note
 		"ECF capability default values"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,7 +113,7 @@ feature -- Access
 		once
 			create Result.make_map (5)
 			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			Result.set_hash_function (l_hash_function)
 			Result.force_last (catcall_detection_capability_value_regexp, {ET_ECF_CAPABILITY_NAMES}.catcall_detection_capability_name)
 			Result.force_last (concurrency_capability_value_regexp, {ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name)
@@ -158,7 +158,7 @@ feature -- Access
 		once
 			create Result.make (3)
 			Result.set_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			Result.set_hash_function (l_hash_function)
 			Result.put_last ({ET_ECF_CAPABILITY_NAMES}.thread_capability_value)
 			Result.put_last ({ET_ECF_CAPABILITY_NAMES}.none_capability_value)
@@ -176,7 +176,7 @@ feature -- Access
 		once
 			create Result.make (5)
 			Result.set_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			Result.set_hash_function (l_hash_function)
 			Result.put_last ({ET_ECF_CAPABILITY_NAMES}.none_capability_value)
 			Result.put_last ({ET_ECF_CAPABILITY_NAMES}.conformance_capability_value)

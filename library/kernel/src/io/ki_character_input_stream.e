@@ -5,7 +5,7 @@ note
 		"Interface for character input streams"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class KI_CHARACTER_INPUT_STREAM
 
 inherit
 
-	KI_INPUT_STREAM [CHARACTER]
+	KI_INPUT_STREAM [CHARACTER_8]
 		rename
 			read as read_character,
 			unread as unread_character,
@@ -43,7 +43,7 @@ feature -- Input
 			character_read: not end_of_input implies last_string.count > 0
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+	read_to_string (a_string: STRING_8; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos', with
 			-- at most `nb' characters read from input stream.
 			-- Return the number of characters actually read.
@@ -85,7 +85,7 @@ feature -- Input
 
 feature -- Access
 
-	last_string: STRING
+	last_string: STRING_8
 			-- Last string read
 			-- (Note: this query always return the same object.
 			-- Therefore a clone should be used if the result
@@ -97,12 +97,12 @@ feature -- Access
 		deferred
 		ensure
 			last_string_not_void: Result /= Void
-			string_type: ANY_.same_types (Result, "")
+			string_type: ANY_.same_types (Result, {STRING_8} "")
 		end
 
 feature -- Status report
 
-	valid_unread_character (a_character: CHARACTER): BOOLEAN
+	valid_unread_character (a_character: CHARACTER_8): BOOLEAN
 			-- Can `a_character' be put back in input stream?
 		do
 			Result := True

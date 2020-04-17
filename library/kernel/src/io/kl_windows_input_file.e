@@ -6,7 +6,7 @@ note
 		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,8 +48,8 @@ feature -- Input
 			-- separator characters from the input file.
 		local
 			done: BOOLEAN
-			a_target: STRING
-			c: CHARACTER
+			a_target: STRING_8
+			c: CHARACTER_8
 			has_carriage: BOOLEAN
 			is_eof: BOOLEAN
 		do
@@ -129,7 +129,7 @@ feature -- Input
 
 feature -- Access
 
-	eol: STRING = "%R%N"
+	eol: STRING_8 = "%R%N"
 			-- Line separator
 
 end

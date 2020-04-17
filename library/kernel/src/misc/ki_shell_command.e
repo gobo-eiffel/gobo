@@ -5,7 +5,7 @@ note
 		"Interface for shell commands"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	command: STRING
+	command: READABLE_STRING_GENERAL
 			-- Command to be executed from the shell
 		deferred
 		end

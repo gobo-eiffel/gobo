@@ -5,7 +5,7 @@ note
 		"Interface for character input streams with the notion of lines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ feature -- Input
 
 feature -- Access
 
-	eol: STRING
+	eol: STRING_8
 			-- Line separator
 		deferred
 		ensure

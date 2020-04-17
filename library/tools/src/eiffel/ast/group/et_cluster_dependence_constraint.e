@@ -5,7 +5,7 @@ note
 		"Cluster dependence constraints"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2013/09/19 $"
 	revision: "$Revision: #1 $"
@@ -117,16 +117,16 @@ feature -- Status report
 				Result := True
 			elseif not group_pathnames.is_empty and then group_pathnames.there_exists (agent matches_pathname (a_group, group_pathname (a_group), ?)) then
 				Result := True
-			elseif not group_names.is_empty and then group_names.there_exists (agent STRING_.same_case_insensitive (?, a_group.full_name ('/'))) then
+			elseif not group_names.is_empty and then group_names.there_exists (agent STRING_.same_case_insensitive ({STRING_8} ?, a_group.full_name ('/'))) then
 				Result := True
-			elseif not group_names.is_empty and then group_names.there_exists (agent STRING_.same_case_insensitive (?, a_group.full_name ('.'))) then
+			elseif not group_names.is_empty and then group_names.there_exists (agent STRING_.same_case_insensitive ({STRING_8} ?, a_group.full_name ('.'))) then
 				Result := True
 			elseif attached a_group.parent as l_parent then
 				Result := has_group (l_parent)
 			elseif not group_names.is_empty then
 				if attached {ET_LIBRARY} a_group.universe as l_library then
 					l_library_name := l_library.full_name ('/')
-					Result := group_names.there_exists (agent STRING_.same_case_insensitive (?, l_library_name))
+					Result := group_names.there_exists (agent STRING_.same_case_insensitive ({STRING_8} ?, l_library_name))
 				end
 			end
 		end

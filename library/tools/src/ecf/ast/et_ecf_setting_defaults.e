@@ -5,7 +5,7 @@ note
 		"ECF setting default values"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -105,7 +105,7 @@ feature -- Access
 		once
 			create Result.make_map (50)
 			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			Result.set_hash_function (l_hash_function)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.absent_explicit_assertion_setting_name)
 			Result.force_last (boolean_setting_value_regexp, {ET_ECF_SETTING_NAMES}.address_expression_setting_name)

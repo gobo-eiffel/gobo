@@ -5,7 +5,7 @@ note
 		"Character output streams based on strings"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,7 +54,7 @@ feature -- Access
 			Result := "STRING"
 		end
 
-	eol: STRING = "%N"
+	eol: STRING_8 = "%N"
 			-- Line separator
 
 feature -- Setting
@@ -90,7 +90,7 @@ feature -- Output
 			-- Note: If `a_string' is a UC_STRING or descendant, then
 			-- write the bytes of its associated UTF unicode encoding.
 		do
-			string.append_string (STRING_.as_string (a_string))
+			string.append_string (STRING_.as_readable_string_8_no_uc_string (a_string))
 		end
 
 feature -- Basic operations

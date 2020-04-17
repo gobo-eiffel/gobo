@@ -5,7 +5,7 @@ note
 		"File systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -435,7 +435,7 @@ feature -- Working directory
 			l_path: PATH
 		do
 			if not rescued then
-				a_string_dirname := STRING_.as_string (a_dirname)
+				a_string_dirname := STRING_.as_string_no_uc_string (a_dirname)
 				if a_string_dirname.count > 0 then
 					create l_path.make_from_string (a_string_dirname)
 					execution_environment.change_working_path (l_path)

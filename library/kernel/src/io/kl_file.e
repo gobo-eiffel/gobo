@@ -5,7 +5,7 @@ note
 		"Files"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			if a_name.count > 0 then
-				old_make (STRING_.as_string (a_name))
+				old_make (STRING_.as_string_no_uc_string (a_name))
 			else
 				old_make (Empty_name)
 			end
@@ -157,7 +157,7 @@ feature -- Status report
 		do
 			if not rescued then
 				saved_string_name := string_name
-				string_other_name := STRING_.as_string (other_name)
+				string_other_name := STRING_.as_string_no_uc_string (other_name)
 				if string_name /= Empty_name and string_other_name.count > 0 then
 					if exists then
 						tmp_file1.reset (string_other_name)
@@ -270,7 +270,7 @@ feature -- Basic operations
 		do
 			if not rescued then
 				saved_string_name := string_name
-				string_new_name := STRING_.as_string (new_name)
+				string_new_name := STRING_.as_string_no_uc_string (new_name)
 				if string_name /= Empty_name and string_new_name.count > 0 then
 					if exists then
 						if not same_physical_file (string_new_name) then
@@ -308,7 +308,7 @@ feature -- Basic operations
 			new_file: KL_BINARY_OUTPUT_FILE
 			string_new_name: STRING
 		do
-			string_new_name := STRING_.as_string (new_name)
+			string_new_name := STRING_.as_string_no_uc_string (new_name)
 			if string_name /= Empty_name and string_new_name.count > 0 then
 				if exists then
 					if not same_physical_file (string_new_name) then
@@ -350,10 +350,10 @@ feature -- Basic operations
 			a_source_file: KL_BINARY_INPUT_FILE
 			a_target_file: KL_BINARY_OUTPUT_FILE
 			a_string_filename: STRING
-			a_string: STRING
+			a_string: STRING_8
 			nb: INTEGER
 		do
-			a_string_filename := STRING_.as_string (a_filename)
+			a_string_filename := STRING_.as_string_no_uc_string (a_filename)
 			if string_name /= Empty_name and a_string_filename.count > 0 then
 				create a_source_file.make (a_string_filename)
 				nb := a_source_file.count
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			string_name_not_void: string_name /= Void
-			file_named: string_name.is_equal (fn)
+			file_named: string_name.same_string_general (fn)
 			file_closed: old_is_closed
 		end
 
@@ -501,7 +501,7 @@ feature {NONE} -- Implementation
 			file_exists: old_exists
 		deferred
 		ensure
-			name_changed: string_name.is_equal (new_name)
+			name_changed: string_name.same_string_general (new_name)
 		end
 
 	old_change_mode (a_mask: INTEGER)
@@ -548,6 +548,5 @@ feature {KL_FILE} -- Implementation
 invariant
 
 	string_name_not_void: string_name /= Void
-	string_name_is_string: ANY_.same_types (string_name, "")
 
 end

@@ -5,7 +5,7 @@ note
 		"Unicode factories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,24 +24,24 @@ inherit
 
 feature -- Access
 
-	new_unicode_string (a_string: STRING): UC_STRING
+	new_unicode_string (a_string: READABLE_STRING_GENERAL): UC_STRING
 			-- New unicode string made up of the characters from `a_string'
 		require
 			a_string_not_void: a_string /= Void
 		do
-			create {UC_UTF8_STRING} Result.make_from_string (a_string)
+			create {UC_UTF8_STRING} Result.make_from_string_general (a_string)
 		ensure
 			instance_free: class
 			new_string_not_void: Result /= Void
 			count_set: Result.count = a_string.count
 		end
 
-	new_unicode_string_from_utf8 (a_string: STRING): UC_STRING
+	new_unicode_string_from_utf8 (a_string: STRING_8): UC_STRING
 			-- New unicode string made up of the characters
 			-- from `a_string' encoded in UTF-8
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: ANY_.same_types (a_string, "")
+			a_string_is_string: ANY_.same_types (a_string, {STRING_8} "")
 			valid_utf8: utf8.valid_utf8 (a_string)
 		do
 			create {UC_UTF8_STRING} Result.make_from_utf8 (a_string)
@@ -50,12 +50,12 @@ feature -- Access
 			new_string_not_void: Result /= Void
 		end
 
-	new_unicode_string_from_utf16 (a_string: STRING): UC_STRING
+	new_unicode_string_from_utf16 (a_string: STRING_8): UC_STRING
 			-- New unicode string made up of the characters
 			-- from `a_string' encoded in UTF-16
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: ANY_.same_types (a_string, "")
+			a_string_is_string: ANY_.same_types (a_string, {STRING_8} "")
 			valid_utf16: utf16.valid_utf16 (a_string)
 		do
 			create {UC_UTF8_STRING} Result.make_from_utf16 (a_string)
@@ -87,7 +87,7 @@ feature -- Access
 			empty: Result.count = 0
 		end
 
-	new_unicode_string_from_substring (a_string: STRING; start_index, end_index: INTEGER): UC_STRING
+	new_unicode_string_from_substring (a_string: READABLE_STRING_GENERAL; start_index, end_index: INTEGER): UC_STRING
 			-- New unicode string made up of the character sequence of
 			-- `a_string' between `start_index' and `end_index' inclusive
 		require
@@ -96,14 +96,14 @@ feature -- Access
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
 		do
-			create {UC_UTF8_STRING} Result.make_from_substring (a_string, start_index, end_index)
+			create {UC_UTF8_STRING} Result.make_from_substring_general (a_string, start_index, end_index)
 		ensure
 			instance_free: class
 			new_string_not_void: Result /= Void
 			count_set: Result.count = (end_index - start_index + 1)
 		end
 
-	new_unicode_string_filled (c: CHARACTER; n: INTEGER): UC_STRING
+	new_unicode_string_filled (c: CHARACTER_8; n: INTEGER): UC_STRING
 			-- New unicode string of length `n' filled with character `c'
 		require
 			valid_count: n >= 0
@@ -145,7 +145,7 @@ feature -- Access
 			occurrences: Result.code_occurrences (a_code) = n
 		end
 
-	new_unicode_character (a_char: CHARACTER): UC_CHARACTER
+	new_unicode_character (a_char: CHARACTER_8): UC_CHARACTER
 			-- New unicode character from Latin-1 character `a_char'
 		do
 			create Result.make_from_character (a_char)

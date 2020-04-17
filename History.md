@@ -9,6 +9,16 @@
   file. The default is still set to `STRING` -> `STRING_8` and 
   `CHARACTER` -> `CHARACTER_8` in the FreeELKS ECF file.
 
+### Gobo Eiffel Kernel Library
+
+* Made sure that the library works with both class mappings
+  `STRING` -> `STRING_8` and `STRING` -> `STRING_32`.
+
+### Gobo Eiffel Structure Library
+
+* Made sure that the library works with both class mappings
+  `STRING` -> `STRING_8` and `STRING` -> `STRING_32`.
+
 ### Gobo Eiffel Tools Library
 
 * Changed the implementation of class mappings in ECF

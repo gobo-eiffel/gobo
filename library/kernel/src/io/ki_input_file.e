@@ -6,7 +6,7 @@ note
 		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,7 +51,7 @@ feature -- Status report
 			definition: Result = end_of_file
 		end
 
-	valid_unread_character (a_character: CHARACTER): BOOLEAN
+	valid_unread_character (a_character: CHARACTER_8): BOOLEAN
 			-- Can `a_character' be put back in input stream?
 		do
 			Result := a_character.code <= Platform.Maximum_byte_code
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Access
 
-	last_character: CHARACTER
+	last_character: CHARACTER_8
 			-- Last character read
 		deferred
 		ensure then

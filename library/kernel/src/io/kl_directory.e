@@ -5,7 +5,7 @@ note
 		"Filesystem's directories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: like name)
 			-- Create a new directory object.
 			-- (`a_name' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -58,10 +58,11 @@ feature {NONE} -- Initialization
 			name := a_name
 			last_entry := Dummy_entry
 			if a_name.count > 0 then
-				old_make (STRING_.as_string (a_name))
+				string_name := STRING_.as_string_no_uc_string (a_name)
 			else
-				old_make (Empty_name)
+				string_name := Empty_name
 			end
+			old_make (string_name)
 		end
 
 feature -- Access
@@ -578,7 +579,6 @@ feature -- Input
 			-- Read next entry in directory.
 			-- Make result available in `last_entry'.
 		local
-			l_last_entry: detachable STRING
 			l_entry_buffer: like entry_buffer
 		do
 			l_entry_buffer := entry_buffer
@@ -589,10 +589,12 @@ feature -- Input
 				end_of_input := True
 			else
 				readentry
-				l_last_entry := last_entry_8
-				if l_last_entry /= Void then
+				if attached {STRING} last_entry_32 as l_last_entry_32 then
 					old_end_of_input := False
-					last_entry := l_last_entry
+					last_entry := l_last_entry_32
+				elseif attached last_entry_8 as l_last_entry_8 then
+					old_end_of_input := False
+					last_entry := l_last_entry_8
 				else
 					old_end_of_input := True
 					last_entry := Dummy_entry
@@ -637,19 +639,8 @@ feature {NONE} -- Implementation
 			-- Have all entries been read
 			-- (do not take `unread_entry' into account)?
 
-	string_name: STRING_8
-			-- File name as a STRING_8 instance. The value might be truncated
-			-- from the original name used to create the current FILE instance.
-		do
-			if internal_name.is_valid_as_string_8 then
-				Result := internal_name.to_string_8
-			else
-				Result := {UC_UTF8_ROUTINES}.string_to_utf8 (internal_name)
-			end
-		ensure
-			string_name_not_void: Result /= Void
-			string_name_not_empty: not Result.is_empty
-		end
+	string_name: STRING
+			-- Name of directory (STRING version)
 
 	tmp_file: KL_TEXT_INPUT_FILE
 			-- Temporary file object
@@ -682,7 +673,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	string_name_is_string: ANY_.same_types (string_name, "")
+	string_name_not_void: string_name /= Void
+	string_name_not_empty: not string_name.is_empty
 	valid_entry_buffer: valid_entry_buffer (entry_buffer)
 
 end

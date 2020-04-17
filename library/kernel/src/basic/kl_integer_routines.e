@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class INTEGER"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ inherit
 
 feature -- Conversion
 
-	to_character (an_int: INTEGER): CHARACTER
+	to_character (an_int: INTEGER): CHARACTER_8
 			-- Character whose code is `an_int'
 		require
 			an_int_large_enough: an_int >= Platform.Minimum_character_code
@@ -34,7 +34,7 @@ feature -- Conversion
 			valid_character_code: Result.code = an_int
 		end
 
-	to_hexadecimal (an_int: INTEGER; uppercase: BOOLEAN): STRING
+	to_hexadecimal (an_int: INTEGER; uppercase: BOOLEAN): STRING_8
 			-- Hexadecimal representation of `an_int';
 			-- Return a new string at each call.
 		require
@@ -46,12 +46,12 @@ feature -- Conversion
 		ensure
 			instance_free: class
 			hexadecimal_not_void: Result /= Void
-			is_string: ANY_.same_types (Result, "")
+			is_string: ANY_.same_types (Result, {STRING_8} "")
 --			regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (Result)
 --			regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (Result)
 		end
 
-	to_decimal (an_int: INTEGER): STRING
+	to_decimal (an_int: INTEGER): STRING_8
 			-- Decimal representation of `an_int';
 			-- Return a new string at each call.
 		do
@@ -60,11 +60,11 @@ feature -- Conversion
 		ensure
 			instance_free: class
 			decimal_not_void: Result /= Void
-			is_string: ANY_.same_types (Result, "")
+			is_string: ANY_.same_types (Result, {STRING_8} "")
 --			regexp: (0|(-?[1-9][0-9]*)).recognizes (Result)
 		end
 
-	to_octal (an_int: INTEGER): STRING
+	to_octal (an_int: INTEGER): STRING_8
 			-- Octal representation of `an_int';
 			-- Return a new string at each call.
 		require
@@ -75,7 +75,7 @@ feature -- Conversion
 		ensure
 			instance_free: class
 			octal_not_void: Result /= Void
-			is_string: ANY_.same_types (Result, "")
+			is_string: ANY_.same_types (Result, {STRING_8} "")
 --			regexp: (0|[1-7][0-7]*).recognizes (Result)
 		end
 
@@ -105,7 +105,7 @@ feature -- Conversion
 
 feature -- Output
 
-	append_decimal_integer (an_int: INTEGER; a_string: STRING)
+	append_decimal_integer (an_int: INTEGER; a_string: STRING_GENERAL)
 			-- Append decimal representation of `an_int' to `a_string'.
 			-- Note: works even when `a_string' is a UC_STRING.
 		require
@@ -114,9 +114,9 @@ feature -- Output
 			i, k: INTEGER
 		do
 			if an_int = 0 then
-				a_string.append_character ('0')
+				a_string.append_code ({UC_CHARACTER_CODES}.zero_code)
 			elseif an_int < 0 then
-				a_string.append_character ('-')
+				a_string.append_code ({UC_CHARACTER_CODES}.minus_code)
 					-- Avoid overflow.
 				k := -(an_int + 1)
 				i := k // 10
@@ -125,50 +125,50 @@ feature -- Output
 					if i /= 0 then
 						append_decimal_integer (i, a_string)
 					end
-					a_string.append_character ('1')
+					a_string.append_code ({UC_CHARACTER_CODES}.one_code)
 				when 1 then
 					if i /= 0 then
 						append_decimal_integer (i, a_string)
 					end
-					a_string.append_character ('2')
+					a_string.append_code ({UC_CHARACTER_CODES}.two_code)
 				when 2 then
 					if i /= 0 then
 						append_decimal_integer (i, a_string)
 					end
-					a_string.append_character ('3')
+					a_string.append_code ({UC_CHARACTER_CODES}.three_code)
 				when 3 then
 					if i /= 0 then
 						append_decimal_integer (i, a_string)
 					end
-					a_string.append_character ('4')
+					a_string.append_code ({UC_CHARACTER_CODES}.four_code)
 				when 4 then
 					if i /= 0 then
 						append_decimal_integer (i, a_string)
 					end
-					a_string.append_character ('5')
+					a_string.append_code ({UC_CHARACTER_CODES}.five_code)
 				when 5 then
 					if i /= 0 then
 						append_decimal_integer (i, a_string)
 					end
-					a_string.append_character ('6')
+					a_string.append_code ({UC_CHARACTER_CODES}.six_code)
 				when 6 then
 					if i /= 0 then
 						append_decimal_integer (i, a_string)
 					end
-					a_string.append_character ('7')
+					a_string.append_code ({UC_CHARACTER_CODES}.seven_code)
 				when 7 then
 					if i /= 0 then
 						append_decimal_integer (i, a_string)
 					end
-					a_string.append_character ('8')
+					a_string.append_code ({UC_CHARACTER_CODES}.eight_code)
 				when 8 then
 					if i /= 0 then
 						append_decimal_integer (i, a_string)
 					end
-					a_string.append_character ('9')
+					a_string.append_code ({UC_CHARACTER_CODES}.nine_code)
 				when 9 then
 					append_decimal_integer (i + 1, a_string)
-					a_string.append_character ('0')
+					a_string.append_code ({UC_CHARACTER_CODES}.zero_code)
 				end
 			else
 				k := an_int
@@ -178,25 +178,25 @@ feature -- Output
 				end
 				inspect k \\ 10
 				when 0 then
-					a_string.append_character ('0')
+					a_string.append_code ({UC_CHARACTER_CODES}.zero_code)
 				when 1 then
-					a_string.append_character ('1')
+					a_string.append_code ({UC_CHARACTER_CODES}.one_code)
 				when 2 then
-					a_string.append_character ('2')
+					a_string.append_code ({UC_CHARACTER_CODES}.two_code)
 				when 3 then
-					a_string.append_character ('3')
+					a_string.append_code ({UC_CHARACTER_CODES}.three_code)
 				when 4 then
-					a_string.append_character ('4')
+					a_string.append_code ({UC_CHARACTER_CODES}.four_code)
 				when 5 then
-					a_string.append_character ('5')
+					a_string.append_code ({UC_CHARACTER_CODES}.five_code)
 				when 6 then
-					a_string.append_character ('6')
+					a_string.append_code ({UC_CHARACTER_CODES}.six_code)
 				when 7 then
-					a_string.append_character ('7')
+					a_string.append_code ({UC_CHARACTER_CODES}.seven_code)
 				when 8 then
-					a_string.append_character ('8')
+					a_string.append_code ({UC_CHARACTER_CODES}.eight_code)
 				when 9 then
-					a_string.append_character ('9')
+					a_string.append_code ({UC_CHARACTER_CODES}.nine_code)
 				end
 			end
 		ensure
@@ -204,7 +204,7 @@ feature -- Output
 --			regexp: (0|(-?[1-9][0-9]*)).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
-	append_octal_integer (an_int: INTEGER; a_string: STRING)
+	append_octal_integer (an_int: INTEGER; a_string: STRING_GENERAL)
 			-- Append octal representation of `an_int' to `a_string'.
 			-- Note: works even when `a_string' is a UC_STRING.
 		require
@@ -214,7 +214,7 @@ feature -- Output
 			k: INTEGER
 		do
 			if an_int = 0 then
-				a_string.append_character ('0')
+				a_string.append_code ({UC_CHARACTER_CODES}.zero_code)
 			else
 				k := an_int // 8
 				if k /= 0 then
@@ -222,21 +222,21 @@ feature -- Output
 				end
 				inspect an_int \\ 8
 				when 0 then
-					a_string.append_character ('0')
+					a_string.append_code ({UC_CHARACTER_CODES}.zero_code)
 				when 1 then
-					a_string.append_character ('1')
+					a_string.append_code ({UC_CHARACTER_CODES}.one_code)
 				when 2 then
-					a_string.append_character ('2')
+					a_string.append_code ({UC_CHARACTER_CODES}.two_code)
 				when 3 then
-					a_string.append_character ('3')
+					a_string.append_code ({UC_CHARACTER_CODES}.three_code)
 				when 4 then
-					a_string.append_character ('4')
+					a_string.append_code ({UC_CHARACTER_CODES}.four_code)
 				when 5 then
-					a_string.append_character ('5')
+					a_string.append_code ({UC_CHARACTER_CODES}.five_code)
 				when 6 then
-					a_string.append_character ('6')
+					a_string.append_code ({UC_CHARACTER_CODES}.six_code)
 				when 7 then
-					a_string.append_character ('7')
+					a_string.append_code ({UC_CHARACTER_CODES}.seven_code)
 				end
 			end
 		ensure
@@ -244,7 +244,7 @@ feature -- Output
 --			regexp: (0|[1-7][0-7]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
-	append_hexadecimal_integer (an_int: INTEGER; a_string: STRING; uppercase: BOOLEAN)
+	append_hexadecimal_integer (an_int: INTEGER; a_string: STRING_GENERAL; uppercase: BOOLEAN)
 			-- Append a hexadecimal representation of `an_int' to `a_string'.
 			-- Note: works even when `a_string' is a UC_STRING.
 		require
@@ -254,7 +254,7 @@ feature -- Output
 			k: INTEGER
 		do
 			if an_int = 0 then
-				a_string.append_character ('0')
+				a_string.append_code ({UC_CHARACTER_CODES}.zero_code)
 			else
 				k := an_int // 16
 				if k /= 0 then
@@ -262,60 +262,60 @@ feature -- Output
 				end
 				inspect an_int \\ 16
 				when 0 then
-					a_string.append_character ('0')
+					a_string.append_code ({UC_CHARACTER_CODES}.zero_code)
 				when 1 then
-					a_string.append_character ('1')
+					a_string.append_code ({UC_CHARACTER_CODES}.one_code)
 				when 2 then
-					a_string.append_character ('2')
+					a_string.append_code ({UC_CHARACTER_CODES}.two_code)
 				when 3 then
-					a_string.append_character ('3')
+					a_string.append_code ({UC_CHARACTER_CODES}.three_code)
 				when 4 then
-					a_string.append_character ('4')
+					a_string.append_code ({UC_CHARACTER_CODES}.four_code)
 				when 5 then
-					a_string.append_character ('5')
+					a_string.append_code ({UC_CHARACTER_CODES}.five_code)
 				when 6 then
-					a_string.append_character ('6')
+					a_string.append_code ({UC_CHARACTER_CODES}.six_code)
 				when 7 then
-					a_string.append_character ('7')
+					a_string.append_code ({UC_CHARACTER_CODES}.seven_code)
 				when 8 then
-					a_string.append_character ('8')
+					a_string.append_code ({UC_CHARACTER_CODES}.eight_code)
 				when 9 then
-					a_string.append_character ('9')
+					a_string.append_code ({UC_CHARACTER_CODES}.nine_code)
 				when 10 then
 					if uppercase then
-						a_string.append_character ('A')
+						a_string.append_code ({UC_CHARACTER_CODES}.upper_a_code)
 					else
-						a_string.append_character ('a')
+						a_string.append_code ({UC_CHARACTER_CODES}.lower_a_code)
 					end
 				when 11 then
 					if uppercase then
-						a_string.append_character ('B')
+						a_string.append_code ({UC_CHARACTER_CODES}.upper_b_code)
 					else
-						a_string.append_character ('b')
+						a_string.append_code ({UC_CHARACTER_CODES}.lower_b_code)
 					end
 				when 12 then
 					if uppercase then
-						a_string.append_character ('C')
+						a_string.append_code ({UC_CHARACTER_CODES}.upper_c_code)
 					else
-						a_string.append_character ('c')
+						a_string.append_code ({UC_CHARACTER_CODES}.lower_c_code)
 					end
 				when 13 then
 					if uppercase then
-						a_string.append_character ('D')
+						a_string.append_code ({UC_CHARACTER_CODES}.upper_d_code)
 					else
-						a_string.append_character ('d')
+						a_string.append_code ({UC_CHARACTER_CODES}.lower_d_code)
 					end
 				when 14 then
 					if uppercase then
-						a_string.append_character ('E')
+						a_string.append_code ({UC_CHARACTER_CODES}.upper_e_code)
 					else
-						a_string.append_character ('e')
+						a_string.append_code ({UC_CHARACTER_CODES}.lower_e_code)
 					end
 				when 15 then
 					if uppercase then
-						a_string.append_character ('F')
+						a_string.append_code ({UC_CHARACTER_CODES}.upper_f_code)
 					else
-						a_string.append_character ('f')
+						a_string.append_code ({UC_CHARACTER_CODES}.lower_f_code)
 					end
 				end
 			end

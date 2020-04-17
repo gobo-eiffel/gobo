@@ -12,7 +12,7 @@ note
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,6 +26,13 @@ inherit
 			value as variable_value
 		end
 
+	KL_STRING_8_VALUES
+		rename
+			value as string_8_variable_value,
+			interpreted_string as interpreted_string_8,
+			expanded_string as expanded_string_8
+		end
+
 feature -- Access
 
 	variable_value (a_variable: STRING): detachable STRING
@@ -35,7 +42,27 @@ feature -- Access
 			-- the bytes of its associated UTF unicode encoding will
 			-- be used to query its value to the environment.
 		do
-			if attached environment_impl.item (STRING_.as_string (a_variable)) as l_item then
+			if attached environment_impl.item (STRING_.as_string_no_uc_string (a_variable)) as l_item then
+				if attached {STRING} l_item as l_string then
+					Result := l_string
+				elseif l_item.is_valid_as_string_8 then
+					Result := l_item.to_string_8
+				else
+					Result := {UC_UTF8_ROUTINES}.string_to_utf8 (l_item)
+				end
+			end
+		ensure then
+			instance_free: class
+		end
+
+	string_8_variable_value (a_variable: STRING_8): detachable STRING_8
+			-- Value of environment variable `a_variable',
+			-- Void if `a_variable' has not been set;
+			-- Note: If `a_variable' is a UC_STRING or descendant, then
+			-- the bytes of its associated UTF unicode encoding will
+			-- be used to query its value to the environment.
+		do
+			if attached environment_impl.item (STRING_.as_string_8_no_uc_string (a_variable)) as l_item then
 				if l_item.is_valid_as_string_8 then
 					Result := l_item.to_string_8
 				else
@@ -48,7 +75,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_variable_value (a_variable, a_value: STRING)
+	set_variable_value (a_variable, a_value: READABLE_STRING_GENERAL)
 			-- Set environment variable `a_variable' to `a_value'.
 			-- (This setting may fail on certain platforms.)
 			-- Note: If `a_variable' or `a_value' are UC_STRING or
@@ -59,12 +86,12 @@ feature -- Setting
 			a_variable_not_empty: a_variable.count > 0
 			a_value_not_void: a_value /= Void
 		do
-			environment_impl.put (STRING_.as_string (a_value), STRING_.as_string (a_variable))
+			environment_impl.put (STRING_.as_readable_string_general_no_uc_string (a_value), STRING_.as_readable_string_general_no_uc_string (a_variable))
 		ensure
 			instance_free: class
 			-- This setting may fail on certain platforms, hence the
 			-- following commented postcondition:
-			-- variable_set: equal (variable_value (a_variable), STRING_.as_string (a_value))
+			-- variable_set: equal (variable_value (a_variable), STRING_.as_readable_string_general_no_uc_string (a_value))
 		end
 
 feature -- Basic operations

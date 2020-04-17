@@ -5,7 +5,7 @@ note
 		"Unicode characters"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,7 +56,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_character (c: CHARACTER)
+	make_from_character (c: CHARACTER_8)
 			-- Create a new unicode character from Latin-1 character `c'.
 		do
 			code := c.code
@@ -123,7 +123,7 @@ feature -- Conversion
 			to_upper_not_void: Result /= Void
 		end
 
-	to_character: CHARACTER
+	to_character: CHARACTER_8
 			-- Character with code `code'
 		require
 			valid_code: code <= Platform.Maximum_character_code

@@ -129,7 +129,7 @@ feature {NONE} -- Processing
 			l_test_suite: detachable TS_TEST_SUITE
 			l_test_suite_name: STRING
 			l_root_name: STRING
-			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_comparator: UC_STRING_COMPARATOR
 			l_sorter: DS_QUICK_SORTER [STRING]
 			l_test_dirname: STRING
 		do
@@ -142,7 +142,7 @@ feature {NONE} -- Processing
 				end
 				a_directory.read_entry
 			end
-			create l_comparator.make
+			create l_comparator
 			create l_sorter.make (l_comparator)
 			l_entries.sort (l_sorter)
 			nb := l_entries.count

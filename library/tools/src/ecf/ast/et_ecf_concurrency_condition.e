@@ -6,7 +6,7 @@ note
 
 	remark: "Supersedes condition 'multithreaded' in ECF 1.8.0."
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -93,7 +93,7 @@ feature -- Status report
 			if l_state_value /= Void then
 				if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
 					create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
-					Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive (?, l_state_value))
+					Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive ({STRING_8} ?, l_state_value))
 				else
 					Result := STRING_.same_case_insensitive (value, l_state_value)
 				end
@@ -122,7 +122,7 @@ feature -- Status report
 		do
 			create l_values.make (3)
 			l_values.set_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			l_values.set_hash_function (l_hash_function)
 			if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
 				create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)

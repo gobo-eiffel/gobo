@@ -5,7 +5,7 @@ note
 		"ECF capabilities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			create primary_use_capabilities.make_map (10)
 			primary_use_capabilities.set_key_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			primary_use_capabilities.set_hash_function (l_hash_function)
 			create primary_support_capabilities.make_map (10)
 			primary_support_capabilities.set_key_equality_tester (case_insensitive_string_equality_tester)
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_map (3)
 			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			Result.set_hash_function (l_hash_function)
 			create l_order.make_map (3)
 			l_order.set_key_equality_tester (case_insensitive_string_equality_tester)

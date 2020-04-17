@@ -11,7 +11,7 @@ note
 	]"
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,19 +59,19 @@ feature -- Bits
 		end
 
 	Character_bits: INTEGER
-			-- Number of bits in a value of type CHARACTER
+			-- Number of bits in a value of type CHARACTER_8
 		once
 			Result := 8
 		end
 
 	Double_bits: INTEGER
-			-- Number of bits in a value of type DOUBLE
+			-- Number of bits in a value of type REAL_64
 		once
 			Result := old_double_bits
 		end
 
 	Integer_bits: INTEGER
-			-- Number of bits in a value of type INTEGER
+			-- Number of bits in a value of type INTEGER_32
 		once
 			Result := old_integer_bits
 		end
@@ -83,7 +83,7 @@ feature -- Bits
 		end
 
 	Real_bits: INTEGER
-			-- Number of bits in a value of type REAL
+			-- Number of bits in a value of type REAL_32
 		once
 			Result := old_real_bits
 		end
@@ -97,19 +97,19 @@ feature -- Bytes
 		end
 
 	Character_bytes: INTEGER
-			-- Number of bytes in a value of type CHARACTER
+			-- Number of bytes in a value of type CHARACTER_8
 		once
 			Result := 1
 		end
 
 	Double_bytes: INTEGER
-			-- Number of bytes in a value of type DOUBLE
+			-- Number of bytes in a value of type REAL_64
 		once
 			Result := old_double_bytes
 		end
 
 	Integer_bytes: INTEGER
-			-- Number of bytes in a value of type INTEGER
+			-- Number of bytes in a value of type INTEGER_32
 		once
 			Result := old_integer_bytes
 		end
@@ -121,7 +121,7 @@ feature -- Bytes
 		end
 
 	Real_bytes: INTEGER
-			-- Number of bytes in a value of type REAL
+			-- Number of bytes in a value of type REAL_32
 		once
 			Result := old_real_bytes
 		end
@@ -129,27 +129,27 @@ feature -- Bytes
 feature -- Values
 
 	Minimum_character_code: INTEGER
-			-- Smallest supported code for CHARACTER values
+			-- Smallest supported code for CHARACTER_8 values
 		once
-			Result := {CHARACTER}.min_value
+			Result := {CHARACTER_8}.min_value
 		end
 
 	Maximum_character_code: INTEGER
-			-- Largest supported code for CHARACTER values
+			-- Largest supported code for CHARACTER_8 values
 		once
-			Result := {CHARACTER}.max_value
+			Result := {CHARACTER_8}.max_value
 		end
 
 	Minimum_integer: INTEGER
-			-- Smallest supported value of type INTEGER
+			-- Smallest supported value of type INTEGER_32
 		once
-			Result := {INTEGER}.min_value
+			Result := {INTEGER_32}.min_value
 		end
 
 	Maximum_integer: INTEGER
-			-- Largest supported value of type INTEGER
+			-- Largest supported value of type INTEGER_32
 		once
-			Result := {INTEGER}.max_value
+			Result := {INTEGER_32}.max_value
 		end
 
 	Minimum_integer_64: INTEGER_64

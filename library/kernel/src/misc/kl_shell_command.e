@@ -5,7 +5,7 @@ note
 		"Shell commands"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,10 +22,6 @@ inherit
 	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end
 
-	KL_IMPORTED_STRING_ROUTINES
-
-	KL_IMPORTED_ANY_ROUTINES
-
 create
 
 	make
@@ -35,18 +31,13 @@ feature {NONE} -- Initialization
 	make (a_command: like command)
 			-- Create a new shell command.
 		do
-			string_command := STRING_.as_string (a_command)
 			command := a_command
 		end
 
 feature -- Access
 
-	command: STRING
-			-- Command to be executed from the shell;
-			-- Note: If `command' is a UC_STRING or descendant, then
-			-- the bytes of its associated UTF unicode encoding will
-			-- be used to invoke the command through the operating
-			-- system.
+	command: READABLE_STRING_GENERAL
+			-- Command to be executed from the shell
 
 feature -- Status report
 
@@ -72,7 +63,7 @@ feature -- Execution
 			retried: BOOLEAN
 		do
 			if not retried then
-				system (string_command)
+				system (command)
 				exit_code := return_code
 				if operating_system.is_windows then
 					is_system_code := False
@@ -97,16 +88,5 @@ feature -- Execution
 				retry
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	string_command: STRING
-			-- STRING version of `command'
-
-invariant
-
-	string_command_not_void: string_command /= Void
-	string_command_is_string: ANY_.same_types (string_command, "")
-	string_command_not_empty: string_command.count > 0
 
 end

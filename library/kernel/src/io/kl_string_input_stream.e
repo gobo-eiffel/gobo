@@ -5,7 +5,7 @@ note
 		"Character input streams based on strings"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,7 @@ feature -- Status report
 	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 
-	valid_unread_character (a_character: CHARACTER): BOOLEAN
+	valid_unread_character (a_character: CHARACTER_8): BOOLEAN
 			-- Can `a_character' be put back in input stream?
 		do
 			Result := (location >= 1 and location <= string.count) and then (a_character = string.item (location))
@@ -66,17 +66,17 @@ feature -- Access
 			Result := "STRING"
 		end
 
-	last_character: CHARACTER
+	last_character: CHARACTER_8
 			-- Last character read
 
-	last_string: STRING
+	last_string: STRING_8
 			-- Last string read
 			-- (Note: this query always return the same object.
 			-- Therefore a clone should be used if the result
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
-	eol: STRING = "%N"
+	eol: STRING_8 = "%N"
 			-- Line separator
 
 feature -- Input
@@ -93,7 +93,7 @@ feature -- Input
 			end
 		end
 
-	unread_character (a_character: CHARACTER)
+	unread_character (a_character: CHARACTER_8)
 			-- Put `a_character' back in input stream.
 			-- This item will be read first by the next
 			-- call to a read routine.
@@ -138,8 +138,8 @@ feature -- Input
 			-- separator characters from the input stream.
 		local
 			done: BOOLEAN
-			a_target: STRING
-			c: CHARACTER
+			a_target: STRING_8
+			c: CHARACTER_8
 			is_eof: BOOLEAN
 		do
 			STRING_.wipe_out (last_string)
@@ -188,7 +188,7 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	string: STRING
+	string: STRING_8
 			-- String being read
 
 	location: INTEGER

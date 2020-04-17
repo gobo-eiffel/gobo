@@ -149,7 +149,7 @@ feature -- Access
 		once
 			create Result.make_map (10)
 			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			Result.set_hash_function (l_hash_function)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.assertions_check_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.assertions_invariant_option_name)
@@ -237,7 +237,7 @@ feature -- Access
 		once
 			create Result.make_map (15)
 			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			Result.set_hash_function (l_hash_function)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.debug_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.full_class_checking_option_name)
@@ -462,7 +462,7 @@ feature -- Access
 		once
 			create Result.make_map (15)
 			Result.set_key_equality_tester (case_insensitive_string_equality_tester)
-			create l_hash_function.make (agent STRING_.case_insensitive_hash_code)
+			create l_hash_function.make (agent STRING_.case_insensitive_hash_code ({STRING} ?))
 			Result.set_hash_function (l_hash_function)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_export_class_missing_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.warning_obsolete_class_option_name)

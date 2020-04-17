@@ -5,7 +5,7 @@ note
 		"UTF-16 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,13 +22,13 @@ inherit
 
 feature -- Status report
 
-	valid_utf16 (a_string: STRING): BOOLEAN
+	valid_utf16 (a_string: STRING_8): BOOLEAN
 			-- Are the bytes in `a_string' a valid UTF-16 encoding?
 			-- 'a_string' has one byte per character.
 			-- Default to big endian when no BOM.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: ANY_.same_types (a_string, "")
+			a_string_is_string: a_string.same_type ({STRING_8} "")
 		local
 			a_most: INTEGER
 			i, cnt: INTEGER
@@ -61,12 +61,12 @@ feature -- Status report
 			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
 		end
 
-	valid_utf16be (a_string: STRING): BOOLEAN
+	valid_utf16be (a_string: STRING_8): BOOLEAN
 			-- Are the bytes in `a_string' valid UTF-16BE?
 			-- 'a_string' has one byte per character.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: ANY_.same_types (a_string, "")
+			a_string_is_string: a_string.same_type ({STRING_8} "")
 		local
 			a_most: INTEGER
 			i, cnt: INTEGER
@@ -94,12 +94,12 @@ feature -- Status report
 			utf16_even_count: Result implies ((a_string.count \\ 2) = 0)
 		end
 
-	valid_utf16le (a_string: STRING): BOOLEAN
+	valid_utf16le (a_string: STRING_8): BOOLEAN
 			-- Are the bytes in `a_string' valid UTF-16LE?
 			-- 'a_string' has one byte per character.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: ANY_.same_types (a_string, "")
+			a_string_is_string: a_string.same_type ({STRING_8} "")
 		local
 			a_most: INTEGER
 			i, cnt: INTEGER
@@ -128,7 +128,7 @@ feature -- Status report
 
 feature -- Endian-ness detection
 
-	bom_be: STRING
+	bom_be: STRING_8
 			-- BOM in big-endian format
 		once
 			Result := "%/254/%/255/"
@@ -140,7 +140,7 @@ feature -- Endian-ness detection
 			second_byte: Result.item_code (2) = Hex_ff
 		end
 
-	bom_le: STRING
+	bom_le: STRING_8
 			-- BOM in little-endian format
 		once
 			Result := "%/255/%/254/"
