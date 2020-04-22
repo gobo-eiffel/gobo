@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that may be compared according to a partial order relation"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ feature -- Comparison
 		deferred
 		end
 
-	is_less_equal alias "<=" (other: like Current): BOOLEAN
+	is_less_equal alias "<=" alias "≤" (other: like Current): BOOLEAN
 			-- Is current object less than or equal to `other'?
 		require
 			other_exists: other /= Void
@@ -34,7 +34,7 @@ feature -- Comparison
 			Result := other < Current
 		end
 
-	is_greater_equal alias ">=" (other: like Current): BOOLEAN
+	is_greater_equal alias ">=" alias "≥" (other: like Current): BOOLEAN
 			-- Is current object greater than or equal to `other'?
 		require
 			other_exists: other /= Void
@@ -43,7 +43,7 @@ feature -- Comparison
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

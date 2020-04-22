@@ -10,7 +10,7 @@
 	<description>
 		description: "ECF file for the FreeELKS Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="free_elks">
@@ -41,7 +41,37 @@
 				<exclude>/structures/cursors/compact_tree_cursor.e$</exclude>
 				<exclude>/structures/cursors/linked_cursor_tree_cursor.e$</exclude>
 				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>
+				<exclude>/elks/encoding$</exclude>
 			</file_rule>
+			<cluster name="encoding" location="$|elks|encoding">
+				<cluster name="implementation" location="$|implementation" hidden="true">
+					<cluster name="windows" location="$|windows" hidden="true">
+						<condition>
+							<platform value="windows"/>
+						</condition>
+					</cluster>
+					<cluster name="unix" location="$|unix" hidden="true">
+						<condition>
+							<platform excluded_value="windows"/>
+						</condition>
+					</cluster>
+				</cluster>
+			</cluster>
 		</cluster>
+		<external_include location="$(GOBO)/library/free_elks/src/elks/encoding/implementation/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_cflag value="`$GOBO/library/free_elks/src/elks/encoding/implementation/unix/Clib/iconv-config --include_path`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_cflag>
+		<external_linker_flag value="`$(GOBO)/library/free_elks/src/elks/encoding/implementation/unix/Clib/iconv-config --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_linker_flag>
 	</target>
 </system>

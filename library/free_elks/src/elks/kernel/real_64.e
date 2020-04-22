@@ -110,19 +110,19 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	minus alias "-" (other: REAL_64): REAL_64
+	minus alias "-" alias "−" (other: REAL_64): REAL_64
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	product alias "*" (other: REAL_64): REAL_64
+	product alias "*" alias "×" (other: REAL_64): REAL_64
 			-- Product with `other'
 		external
 			"built_in"
 		end
 
-	quotient alias "/" (other: REAL_64): REAL_64
+	quotient alias "/" alias "÷" (other: REAL_64): REAL_64
 			-- Division by `other'
 		external
 			"built_in"
@@ -140,7 +140,7 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	opposite alias "-": REAL_64
+	opposite alias "-" alias "−": REAL_64
 			-- Unary minus
 		external
 			"built_in"
@@ -213,7 +213,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

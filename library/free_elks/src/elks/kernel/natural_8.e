@@ -72,19 +72,19 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	minus alias "-" (other: NATURAL_8): NATURAL_8
+	minus alias "-" alias "−" (other: NATURAL_8): NATURAL_8
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	product alias "*" (other: NATURAL_8): NATURAL_8
+	product alias "*" alias "×" (other: NATURAL_8): NATURAL_8
 			-- Product by `other'
 		external
 			"built_in"
 		end
 
-	quotient alias "/" (other: NATURAL_8): REAL_64
+	quotient alias "/" alias "÷" (other: NATURAL_8): REAL_64
 			-- Division by `other'
 		external
 			"built_in"

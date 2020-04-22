@@ -29,7 +29,7 @@ feature -- Comparison
 			asymmetric: Result implies not (other < Current)
 		end
 
-	is_less_equal alias "<=" (other: like Current): BOOLEAN
+	is_less_equal alias "<=" alias "≤" (other: like Current): BOOLEAN
 			-- Is current object less than or equal to `other'?
 		do
 			Result := not (other < Current)
@@ -45,7 +45,7 @@ feature -- Comparison
 			definition: Result = (other < Current)
 		end
 
-	is_greater_equal alias ">=" (other: like Current): BOOLEAN
+	is_greater_equal alias ">=" alias "≥" (other: like Current): BOOLEAN
 			-- Is current object greater than or equal to `other'?
 		do
 			Result := not (Current < other)

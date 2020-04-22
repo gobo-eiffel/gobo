@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Truth values, with the boolean operations"
 	external_name: "System.Boolean"
 	assembly: "mscorlib"
@@ -50,7 +50,7 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	negated alias "not": BOOLEAN
+	negated alias "not" alias "¬": BOOLEAN
 			-- Negation
 		external
 			"built_in"
@@ -75,7 +75,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

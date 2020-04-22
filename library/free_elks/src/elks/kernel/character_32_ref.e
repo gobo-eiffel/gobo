@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "References to objects containing a unicode character value"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -86,7 +86,7 @@ feature -- Basic routines
 			valid_result: Result |-| item = incr
 		end
 
-	minus alias "-" (decr: NATURAL_32): CHARACTER_32
+	minus alias "-" alias "−" (decr: NATURAL_32): CHARACTER_32
 			-- Subtract `decr' from the code of `item'.
 		require
 			valid_decrement: (item.natural_32_code.to_integer_64 - decr).is_valid_character_32_code
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

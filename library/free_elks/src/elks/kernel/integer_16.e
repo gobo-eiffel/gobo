@@ -69,19 +69,19 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	minus alias "-" (other: INTEGER_16): INTEGER_16
+	minus alias "-" alias "−" (other: INTEGER_16): INTEGER_16
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	product alias "*" (other: INTEGER_16): INTEGER_16
+	product alias "*" alias "×" (other: INTEGER_16): INTEGER_16
 			-- Product by `other'
 		external
 			"built_in"
 		end
 
-	quotient alias "/" (other: INTEGER_16): REAL_64
+	quotient alias "/" alias "÷" (other: INTEGER_16): REAL_64
 			-- Division by `other'
 		external
 			"built_in"
@@ -93,7 +93,7 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	opposite alias "-": INTEGER_16
+	opposite alias "-" alias "−": INTEGER_16
 			-- Unary minus
 		external
 			"built_in"

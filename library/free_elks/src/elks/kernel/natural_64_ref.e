@@ -174,21 +174,21 @@ feature -- Basic operations
 			Result.set_item (item + other.item)
 		end
 
-	minus alias "-" (other: like Current): like Current
+	minus alias "-" alias "−" (other: like Current): like Current
 			-- Result of subtracting `other'.
 		do
 			create Result
 			Result.set_item (item - other.item)
 		end
 
-	product alias "*" (other: like Current): like Current
+	product alias "*" alias "×" (other: like Current): like Current
 			-- Product by `other'.
 		do
 			create Result
 			Result.set_item (item * other.item)
 		end
 
-	quotient alias "/" (other: like Current): REAL_64
+	quotient alias "/" alias "÷" (other: like Current): REAL_64
 			-- Division by `other'.
 		require
 			other_exists: other /= Void

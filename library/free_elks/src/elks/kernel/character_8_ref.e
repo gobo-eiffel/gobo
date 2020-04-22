@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "References to objects containing a character value"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -83,7 +83,7 @@ feature -- Basic routines
 			valid_result: Result |-| item = incr
 		end
 
-	minus alias "-" (decr: INTEGER): CHARACTER_8
+	minus alias "-" alias "−" (decr: INTEGER): CHARACTER_8
 			-- Subtract `decr' from the code of `item'
 		require
 			valid_decrement: (item.code - decr).is_valid_character_8_code
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 	is_space_flag: NATURAL_8 = 0x80;
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

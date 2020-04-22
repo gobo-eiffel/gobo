@@ -77,9 +77,12 @@ feature -- Access
 
 	object: ANY
 			-- <Precursor>
+		note
+			compiler: no_gc
 		do
-			check object_exists: attached {ISE_RUNTIME}.reference_field_at (physical_offset, referring_object.object_address, referring_physical_offset) as l_object then
-				Result := l_object
+			Result := {ISE_RUNTIME}.reference_field_at (physical_offset, referring_object.object_address, referring_physical_offset)
+			if Result = Void then
+				check object_exists: False then end
 			end
 		end
 
@@ -113,11 +116,11 @@ feature {REFLECTED_COPY_SEMANTICS_OBJECT} -- Access
 	referring_object: REFLECTED_OBJECT
 			-- Enclosing object containing `object' or a reference to `object.
 
-	referring_physical_offset: INTEGER;
+	referring_physical_offset: INTEGER
 			-- Actual offset in bytes of `object' in `referring_object'.
 
-note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+;note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

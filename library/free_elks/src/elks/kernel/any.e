@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Project-wide universal properties.
 		This class is an ancestor to all developer-written classes.
@@ -72,7 +72,7 @@ feature -- Comparison
 			consistent: standard_is_equal (other) implies Result
 		end
 
-	frozen standard_is_equal (other: like Current): BOOLEAN
+	frozen standard_is_equal alias "≜" (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object, and field-by-field identical to it?
 		require
@@ -119,7 +119,7 @@ feature -- Comparison
 						a.standard_is_equal (b))
 		end
 
-	frozen is_deep_equal (other: like Current): BOOLEAN
+	frozen is_deep_equal alias "≡≡≡" (other: like Current): BOOLEAN
 			-- Are `Current' and `other' attached to isomorphic object structures?
 		require
 			other_not_void: other /= Void
@@ -383,7 +383,7 @@ invariant
 	reflexive_conformance: conforms_to (Current)
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,0 +1,48 @@
+#!/bin/sh
+
+usage()
+{
+	cat <<EOF
+Usage: iconv-config [OPTIONS]
+Options
+	[--include_path]
+	[--library]
+EOF
+	exit $1
+}
+
+if test $# -eq 0; then
+	usage 1 1>&2
+fi
+
+#Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
+if [ -z "$ISE_LIBRARY" ]; then
+	ISE_LIBRARY=$ISE_EIFFEL
+fi
+
+while test $# -gt 0; do
+	case $1 in
+		--library)
+		if echo "$ISE_PLATFORM" | grep "bsd" >/dev/null 2>&1; then
+			echo -L/usr/local/lib -liconv
+		elif echo "$ISE_PLATFORM" | grep "iphone" >/dev/null 2>&1; then
+			echo -liconv
+		elif echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
+			echo -liconv
+		elif echo "$ISE_PLATFORM" | grep "windows" >/dev/null 2>&1; then
+			echo -liconv
+# mingw
+ 		fi
+		;;
+		--include_path)
+		if echo "$ISE_PLATFORM" | grep "bsd" >/dev/null 2>&1; then
+			echo -I/usr/local/include
+ 		fi
+		;;
+		*)
+		usage 1 1>&2
+		;;
+ 	esac
+	shift
+done
+

@@ -26,6 +26,9 @@
 #include "ge_console.h"
 #endif
 
+#ifdef EIF_WINDOWS
+#include <windows.h>
+#endif
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -34,6 +37,17 @@ extern "C" {
 
 EIF_POINTER console_def(EIF_INTEGER file)
 {
+#ifdef EIF_WINDOWS
+		/* The following is needed to avoid the function `WideCharToMultiByte`
+		   in ENCODING_IMP.cwin_wide_char_to_multi_byte to produce an error
+		   ERROR_INVALID_PARAMETER when the code page passed as argument is
+		   the code page of the console. */
+	UINT l_code_page;
+	l_code_page = GetConsoleOutputCP();
+	if (l_code_page != 0) {
+		SetConsoleOutputCP(l_code_page);
+	}
+#endif
 	switch (file) {
 	case 0:
 		return (EIF_POINTER)stdin;

@@ -71,19 +71,19 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	minus alias "-" (other: NATURAL_16): NATURAL_16
+	minus alias "-" alias "−" (other: NATURAL_16): NATURAL_16
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	product alias "*" (other: NATURAL_16): NATURAL_16
+	product alias "*" alias "×" (other: NATURAL_16): NATURAL_16
 			-- Product by `other'
 		external
 			"built_in"
 		end
 
-	quotient alias "/" (other: NATURAL_16): REAL_64
+	quotient alias "/" alias "÷" (other: NATURAL_16): REAL_64
 			-- Division by `other'
 		external
 			"built_in"
