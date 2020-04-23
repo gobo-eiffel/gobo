@@ -59,12 +59,20 @@
 #include <string.h>
 #include <stddef.h>
 
+#define EIF_OS_WINNT 	1
+#define EIF_OS_LINUX 	2
+#define EIF_OS_DARWIN 	4
+#define EIF_OS_VXWORKS	11
+#define EIF_OS_VMS	12
+
 /* Platform definition */
 /* Unix definition */
 #define EIF_IS_UNIX EIF_TRUE
+#define EIF_OS EIF_OS_LINUX
 /* Windows definition */
 #ifdef EIF_WINDOWS
 #define EIF_IS_WINDOWS EIF_TRUE
+#define EIF_OS EIF_OS_WINNT
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else
@@ -73,6 +81,7 @@
 /* VMS definition */
 #ifdef EIF_VMS
 #define EIF_IS_VMS EIF_TRUE
+#define EIF_OS EIF_OS_VMS
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else
@@ -81,6 +90,7 @@
 /* MAC definition */
 #ifdef EIF_MAC
 #define EIF_IS_MAC EIF_TRUE
+#define EIF_OS EIF_OS_DARWIN
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else
@@ -89,6 +99,7 @@
 /* VxWorks definition */
 #ifdef EIF_VXWORKS
 #define EIF_IS_VXWORKS EIF_TRUE
+#define EIF_OS EIF_OS_VXWORKS
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else
