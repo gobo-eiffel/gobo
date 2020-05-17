@@ -1,0 +1,41 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"See Also"
+
+	tool: "Gobo Eiffel Image"
+	copyright: "Copyright (c) 2020, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geimage/see_also">
+<chapterinfo>
+	<copyright>
+		<year>2020</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>17 May 2020</date>
+</chapterinfo>
+
+<title>See Also</title>
+
+<section><title>Related Resources</title>
+<para>
+There is another tool which is able to generate Eiffel classes from image files.
+It's called <ulink url="https://www.eiffel.org/blog/larryliuming/eiffel_image_embedder_tool"><projectname>Eiffel Image Embedder Tool</projectname></ulink>
+and it is included in <projectname>ISE EiffelStudio</projectname>'s package in
+<filename>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/eimgemb</filename>.
+See <link linkend="implementation">Implementation of geimage</link> to see
+why <projectname>geimage</projectname> has been introduced despite the
+existence of this other tool.
+</para>
+</section>
+</chapter>

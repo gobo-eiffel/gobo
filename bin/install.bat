@@ -97,6 +97,8 @@ goto no_verbose_no_testonly
 	if .%VERBOSE%. == .-v. echo Compiling gecop...
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gecop\src\system.ecf
 	if .%TEST_ONLY%. == .-t. goto clean
+	if .%VERBOSE%. == .-v. echo Compiling geimage...
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geimage\src\system.ecf
 	if .%VERBOSE%. == .-v. echo Compiling gelex...
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelex\src\system.ecf
 	if .%VERBOSE%. == .-v. echo Compiling geyacc...
@@ -118,6 +120,7 @@ goto no_verbose_no_testonly
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gedoc\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gecop\src\build.eant clean
 	if .%TEST_ONLY%. == .-t. goto exit
+	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\geimage\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gelex\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\geyacc\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gepp\src\build.eant clean

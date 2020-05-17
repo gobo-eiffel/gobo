@@ -9,6 +9,11 @@
   file. The default is still set to `STRING` -> `STRING_8` and 
   `CHARACTER` -> `CHARACTER_8` in the FreeELKS ECF file.
 
+### geimage
+
+* New tool which is able to embed an image into an Eiffel class
+  which can then be used in applications using `EiffelVision2`.
+
 ### Gobo Eiffel Kernel Library
 
 * Made sure that the library works with both class mappings

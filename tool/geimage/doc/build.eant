@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="geimage_doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel Image documentation"
+		copyright: "Copyright (c) 2020, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/doc.eant">
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+	
+<!-- Implementation -->
+
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+
+		<geant target="${target}" arguments="index"/>
+		<geant target="${target}" arguments="usage"/>
+		<geant target="${target}" arguments="implementation"/>
+		<geant target="${target}" arguments="see_also"/>
+	</target>
+
+</project>

@@ -1,0 +1,16 @@
+geimage
+compile_*.*
+*.exe
+*.dll
+*.bat
+*.sh
+*.h
+*.c
+*.o
+*.obj
+*.rc
+*.pdb
+*.ilk
+*.wb
+*.log
+EIFGEN*

@@ -1,0 +1,74 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Gobo Eiffel Image"
+
+	tool: "Gobo Eiffel Image"
+	copyright: "Copyright (c) 2020, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geimage/index">
+<chapterinfo>
+	<copyright>
+		<year>2020</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>17 May 2020</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Image</title>
+
+<para>
+<projectname>Gobo Eiffel Image</projectname>, or <projectname>geimage</projectname>
+for short, is an open source tool which is able to embed an image
+into an Eiffel class which can then be used in applications using 
+<projectname>EiffelVision2</projectname>.
+The image will then be compiled into the executable, so that there
+is no need to deploy the image file along side the executable
+anymore.
+</para>
+<para>
+This documentation of <projectname>geimage</projectname> is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="usage">Using <projectname>geimage</projectname></link>
+		</term>
+		<listitem><para>
+			Command-line options.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="see_also">See Also</link>
+		</term>
+		<listitem><para>
+			Related resources and acknowledgments.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

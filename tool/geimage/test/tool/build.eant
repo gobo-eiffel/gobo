@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<project name="geimage_tool_test" default="help">
+
+	<description>
+		system: "Gobo Eiffel Image"
+		copyright: "Copyright (c) 2020, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init" export="NONE">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tgeimage"/>
+	</target>
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="xgeimage_tool"/>
+		<set name="tool" value="geimage"/>
+		<set name="system_dir" value="${GOBO}/tool/${tool}/test/tool"/>
+	</target>
+
+</project>

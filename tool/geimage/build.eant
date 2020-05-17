@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="geimage" default="help">
+
+	<description>
+		description: "Gobo Eiffel Image"
+		copyright: "Copyright (c) 2020, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/tool.eant"/>
+	</inherit>
+
+</project>

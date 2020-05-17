@@ -130,6 +130,8 @@
 		<library name="gecop_test_tool" location="${GOBO_LIBRARY}/tool/gecop/test/tool/system.ecf" readonly="false"/>
 		<library name="gedoc" location="${GOBO_LIBRARY}/tool/gedoc/src/system.ecf" readonly="false"/>
 		<library name="gedoc_test_tool" location="${GOBO_LIBRARY}/tool/gedoc/test/tool/system.ecf" readonly="false"/>
+		<library name="geimage" location="${GOBO_LIBRARY}/tool/geimage/src/system.ecf" readonly="false"/>
+		<library name="geimage_test_tool" location="${GOBO_LIBRARY}/tool/geimage/test/tool/system.ecf" readonly="false"/>
 		<library name="gelex" location="${GOBO_LIBRARY}/tool/gelex/src/system.ecf" readonly="false"/>
 		<library name="gelex_test_tool" location="${GOBO_LIBRARY}/tool/gelex/test/tool/system.ecf" readonly="false"/>
 		<library name="gelint" location="${GOBO_LIBRARY}/tool/gelint/src/system.ecf" readonly="false"/>

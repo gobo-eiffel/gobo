@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Using geimage</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Using geimage</strong></font></td>
+    <td align="right"><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   <h2>Command-line options</h2>
+   
+   <p>
+    The usual way to invoke <i>geimage</i> is as follows:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>geimage &lt;image_filename&gt;</tt></i></font>
+     
+    </blockquote>
+    
+    This will read the file <font color="#800000"><i><tt>&lt;image_filename&gt;</tt></i></font> containing
+    the image and generate an Eiffel class in the current working directory
+    embedding this image. By default the class name is inferred from the name
+    of the image file. For example if the image filename is <font color="#800000"><i><tt>my_image.png</tt></i></font>
+    then the class name will be <font color="#008080"><i><tt>MY_IMAGE</tt></i></font> and the name
+    of the generated file will be <font color="#800000"><i><tt>my_image.e</tt></i></font>.
+    
+   </p>
+   <p>
+    Here is the list of options that can be used with <i>geimage</i>:
+    
+    <dl>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-h</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--help</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Print a summary of the command-line options of <i>geimage</i> and exit.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--class=&lt;class_name&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Name of the Eiffel class to be generated.
+      			(default: inferred from the image filename)
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-V</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--version</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Print the version number of <i>geimage</i> and exit.
+      		
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2020, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>17 May 2020</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

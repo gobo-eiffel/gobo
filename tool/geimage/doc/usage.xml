@@ -1,0 +1,81 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Using geimage"
+
+	tool: "Gobo Eiffel Image"
+	copyright: "Copyright (c) 2020, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geimage/usage">
+<chapterinfo>
+	<copyright>
+		<year>2020</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>17 May 2020</date>
+</chapterinfo>
+
+<title>Using geimage</title>
+
+<section><title>Command-line options</title>
+<para>
+The usual way to invoke <projectname>geimage</projectname> is as follows:
+<blockquote>
+	<filename>geimage &lt;image_filename&gt;</filename>
+</blockquote>
+
+This will read the file <filename>&lt;image_filename&gt;</filename> containing
+the image and generate an Eiffel class in the current working directory
+embedding this image. By default the class name is inferred from the name
+of the image file. For example if the image filename is <filename>my_image.png</filename>
+then the class name will be <classname>MY_IMAGE</classname> and the name
+of the generated file will be <filename>my_image.e</filename>.
+</para><para>
+Here is the list of options that can be used with <projectname>geimage</projectname>:
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>-h</filename>
+		</term>
+		<term>
+			<filename>--help</filename>
+		</term>
+		<listitem><para>
+			Print a summary of the command-line options of <projectname>geimage</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--class=&lt;class_name&gt;</filename>
+		</term>
+		<listitem><para>
+			Name of the Eiffel class to be generated.
+			(default: inferred from the image filename)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>-V</filename>
+		</term>
+		<term>
+			<filename>--version</filename>
+		</term>
+		<listitem><para>
+			Print the version number of <projectname>geimage</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</para>
+</section>
+
+</chapter>
