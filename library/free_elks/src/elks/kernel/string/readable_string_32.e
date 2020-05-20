@@ -15,12 +15,13 @@ deferred class
 inherit
 	READABLE_STRING_GENERAL
 		rename
-			same_string as same_string_general,
-			same_characters as same_characters_general,
-			same_caseless_characters as same_caseless_characters_general,
-			starts_with as starts_with_general,
 			ends_with as ends_with_general,
-			is_case_insensitive_equal as is_case_insensitive_equal_general
+			is_case_insensitive_equal as is_case_insensitive_equal_general,
+			plus as plus_general,
+			same_caseless_characters as same_caseless_characters_general,
+			same_characters as same_characters_general,
+			same_string as same_string_general,
+			starts_with as starts_with_general
 		redefine
 			copy, is_equal, out, has, index_of, last_index_of, occurrences
 		end
@@ -662,6 +663,20 @@ feature {READABLE_STRING_32} -- Duplication
 			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
 		end
 
+feature -- Basic operations
+
+	plus alias "+" (s: READABLE_STRING_32): like Current
+			-- Concatenation with `s`.
+		require
+			argument_attached: attached s
+		deferred
+		ensure
+			plus_attached: attached Result
+			new_count: Result.count = count + s.count
+			initial: elks_checking implies Result.substring (1, count) ~ Current
+			final: elks_checking implies Result.substring (count + 1, count + s.count).same_string (s)
+		end
+
 feature {NONE} -- Element change
 
 	fill_character (c: CHARACTER_32)
@@ -862,7 +877,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

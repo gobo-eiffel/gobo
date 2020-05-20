@@ -1,5 +1,5 @@
 ﻿note
-	description: "References to objects containing a boolean value"
+	description: "References to objects containing a boolean value."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -16,13 +16,13 @@ class BOOLEAN_REF inherit
 feature -- Access
 
 	item: BOOLEAN
-			-- Boolean value
+			-- Boolean value.
 		external
 			"built_in"
 		end
 
 	hash_code: INTEGER
-			-- Hash code value
+			-- Hash code value.
 		do
 			if item then
 				Result := 1
@@ -32,7 +32,7 @@ feature -- Access
 feature {NONE} -- Initialization
 
 	make_from_reference (v: BOOLEAN_REF)
-			-- Initialize `Current' with `v.item'.
+			-- Initialize `Current` with `v.item`.
 		require
 			v_not_void: v /= Void
 		do
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Conversion
 
 	to_reference: BOOLEAN_REF
-			-- Associated reference of Current
+			-- Associated reference of Current.
 		do
 			create Result
 			Result.set_item (item)
@@ -54,8 +54,8 @@ feature -- Conversion
 		end
 
 	to_integer: INTEGER
-			-- 1 if `True'
-			-- 0 if `False'
+			-- 1 if `True`.
+			-- 0 if `False`.
 		do
 			if item then
 				Result := 1
@@ -68,15 +68,15 @@ feature -- Conversion
 feature -- Element change
 
 	set_item (b: BOOLEAN)
-			-- Make `b' the `item' value.
+			-- Make `b` the `item` value.
 		external
 			"built_in"
 		end
 
 feature -- Basic operations
 
-	conjuncted alias "and" (other: like Current): BOOLEAN
-			-- Boolean conjunction with `other'
+	conjuncted alias "and" alias "∧" (other: like Current): BOOLEAN
+			-- Boolean conjunction with `other`.
 		require
 			other_exists: other /= Void
 		do
@@ -87,8 +87,8 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current and then other)
 		end
 
-	conjuncted_semistrict alias "and then" (other: like Current): BOOLEAN
-			-- Boolean semi-strict conjunction with `other'
+	conjuncted_semistrict alias "and then" alias "∧…" (other: like Current): BOOLEAN
+			-- Boolean semi-strict conjunction with `other`.
 		require
 			other_exists: other /= Void
 		do
@@ -97,8 +97,8 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current or else not other)
 		end
 
-	implication alias "implies" (other: like Current): BOOLEAN
-			-- Boolean implication of `other'
+	implication alias "implies" alias "⇒" (other: like Current): BOOLEAN
+			-- Boolean implication of `other`.
 			-- (semi-strict)
 		require
 			other_exists: other /= Void
@@ -109,13 +109,13 @@ feature -- Basic operations
 		end
 
 	negated alias "not" alias "¬": BOOLEAN
-			-- Negation
+			-- Negation.
 		do
 			Result := not item
 		end
 
-	disjuncted alias "or" (other: like Current): BOOLEAN
-			-- Boolean disjunction with `other'
+	disjuncted alias "or" alias "∨" (other: like Current): BOOLEAN
+			-- Boolean disjunction with `other`.
 		require
 			other_exists: other /= Void
 		do
@@ -126,8 +126,8 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current or else other)
 		end
 
-	disjuncted_semistrict alias "or else" (other: like Current): BOOLEAN
-			-- Boolean semi-strict disjunction with `other'
+	disjuncted_semistrict alias "or else" alias "∨…" (other: like Current): BOOLEAN
+			-- Boolean semi-strict disjunction with `other`.
 		require
 			other_exists: other /= Void
 		do
@@ -136,8 +136,8 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current and then not other)
 		end
 
-	disjuncted_exclusive alias "xor" (other: like Current): BOOLEAN
-			-- Boolean exclusive or with `other'
+	disjuncted_exclusive alias "xor" alias "⊻" (other: like Current): BOOLEAN
+			-- Boolean exclusive or with `other`.
 		require
 			other_exists: other /= Void
 		do
@@ -149,12 +149,9 @@ feature -- Basic operations
 feature -- Output
 
 	out: STRING
-			-- Printable representation of boolean
+			-- Printable representation of boolean.
 		do
-			Result := "False"
-			if item then
-				Result := "True"
-			end
+			Result := if item then "True" else "False" end
 		end
 
 invariant
@@ -164,7 +161,7 @@ invariant
 
 note
 	ca_ignore: "CA015", "CA015: double negation"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

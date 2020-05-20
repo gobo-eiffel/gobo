@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 						Code sets, only two byte and four byte encoding codeset are listed. 
 						The rest are granted as one byte encoding.
@@ -14,7 +14,7 @@ class
 
 feature -- Access
 
-	code_pages: HASH_TABLE [STRING, STRING]
+	code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			-- All code pages that iconv can possibly support.
 			-- It is not used now.
 		note
@@ -187,7 +187,7 @@ feature -- Access
 			Result.put ("RISCOS-LATIN1", "riscos-latin1")
 		end
 
-	two_byte_code_pages: HASH_TABLE [STRING, STRING]
+	two_byte_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			-- Two byte code pages that iconv can possibly support.
 		once
 			create Result.make (20)
@@ -214,7 +214,7 @@ feature -- Access
 			Result.put ("JAVA", "java")
 		end
 
-	four_byte_code_pages: HASH_TABLE [STRING, STRING]
+	four_byte_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			-- Four byte code pages that iconv can possibly support.
 		once
 			create Result.make (10)
@@ -233,7 +233,7 @@ feature -- Access
 			Result.put ("UCS-4-SWAPPED", "ucs-4-swapped")
 		end
 
-	little_endian_code_pages: HASH_TABLE [STRING, STRING]
+	little_endian_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			-- Little endian code pages that iconv can possibly support.
 		once
 			create Result.make (5)
@@ -244,7 +244,7 @@ feature -- Access
 			Result.put ("UTF-32LE", "utf-32le")
 		end
 
-	big_endian_code_pages: HASH_TABLE [STRING, STRING]
+	big_endian_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			-- Big endian code pages that iconv can possibly support.
 		once
 			create Result.make (5)
@@ -256,17 +256,16 @@ feature -- Access
 		end
 
 note
+	ca_ignore: "CA032", "CA032: too long routine"
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

@@ -190,7 +190,7 @@ feature -- Initialization
 		local
 			l_fd: INTEGER
 		do
-			set_name (a_prefix + "XXXXXX")
+			set_name (a_prefix.as_string_32 + {STRING_32} "XXXXXX")
 			l_fd := eif_temp_file (internal_name_pointer.item, is_plain_text)
 			make_with_name (buffered_file_info.pointer_to_file_name_32 (internal_name_pointer.item))
 			fd_open_read_write (l_fd)
@@ -2219,7 +2219,7 @@ invariant
 	name_not_empty: not internal_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

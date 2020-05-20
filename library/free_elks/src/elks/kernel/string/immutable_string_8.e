@@ -22,17 +22,18 @@ inherit
 
 	IMMUTABLE_STRING_GENERAL
 		rename
-			same_string as same_string_general,
-			same_characters as same_characters_general,
-			same_caseless_characters as same_caseless_characters_general,
-			starts_with as starts_with_general,
 			ends_with as ends_with_general,
-			is_case_insensitive_equal as is_case_insensitive_equal_general,
-			item as character_32_item,
 			has as character_32_has,
 			index_of as character_32_index_of,
+			is_case_insensitive_equal as is_case_insensitive_equal_general,
+			item as character_32_item,
 			last_index_of as character_32_last_index_of,
-			occurrences as character_32_occurrences
+			occurrences as character_32_occurrences,
+			plus as plus_general,
+			same_caseless_characters as same_caseless_characters_general,
+			same_characters as same_characters_general,
+			same_string as same_string_general,
+			starts_with as starts_with_general
 		undefine
 			is_equal, out, copy
 		end
@@ -55,6 +56,7 @@ convert
 	make_from_string ({READABLE_STRING_8, STRING_8}),
 	make_from_cil ({SYSTEM_STRING}),
 	to_cil: {SYSTEM_STRING},
+	as_readable_string_32: {READABLE_STRING_32},
 	as_string_32: {STRING_32},
 	as_string_8: {STRING_8}
 
@@ -134,37 +136,52 @@ feature -- Access
 			Result := area.item (i + area_lower - 1).code
 		end
 
-feature -- Element change
+feature -- Basic operations
 
-	plus alias "+" (s: READABLE_STRING_GENERAL): like Current
+	plus alias "+" (s: READABLE_STRING_8): like Current
+			-- <Precursor>
+		local
+			a: like area
+			n: like count
+		do
+			n := s.count
+			create a.make_empty (count + n + 1)
+			a.copy_data (area, area_lower, 0, count)
+			a.copy_data (s.area, s.area_lower, count, n + 1)
+			create Result.make_from_area_and_bounds (a, 0, count + n)
+		end
+
+	plus_general (s: READABLE_STRING_GENERAL): like Current
 			-- <Precursor>
 		local
 			a, a_8: like area
 			i, j, nb: INTEGER
 			l_s32_area: SPECIAL [CHARACTER_32]
 		do
-			create a.make_empty (count + s.count + 1)
-			a.copy_data (area, area_lower, 0, count)
 			if attached {READABLE_STRING_8} s as l_s8 then
-				a.copy_data (l_s8.area, l_s8.area_lower, count, l_s8.count + 1)
-			elseif attached {READABLE_STRING_32} s as l_s32 then
-				create a_8.make_empty (l_s32.count + 1)
-				from
-					i := 0
-					j := l_s32.area_lower
-					l_s32_area := l_s32.area
-					nb := l_s32.count - 1
-				until
-					i > nb
-				loop
-					a_8.extend (l_s32_area [j].to_character_8)
-					i := i + 1
-					j := j + 1
+				Result := plus (l_s8)
+			else
+				create a.make_empty (count + s.count + 1)
+				a.copy_data (area, area_lower, 0, count)
+				if attached {READABLE_STRING_32} s as l_s32 then
+					create a_8.make_empty (l_s32.count + 1)
+					from
+						i := 0
+						j := l_s32.area_lower
+						l_s32_area := l_s32.area
+						nb := l_s32.count - 1
+					until
+						i > nb
+					loop
+						a_8.extend (l_s32_area [j].to_character_8)
+						i := i + 1
+						j := j + 1
+					end
+					a_8.extend ('%/000/')
+					a.copy_data (a_8, 0, count, nb + 2)
 				end
-				a_8.extend ('%/000/')
-				a.copy_data (a_8, 0, count, nb + 2)
+				create Result.make_from_area_and_bounds (a, 0, count + s.count)
 			end
-			create Result.make_from_area_and_bounds (a, 0, count + s.count)
 		end
 
 	mirrored: like Current
@@ -274,7 +291,7 @@ feature {READABLE_STRING_8, READABLE_STRING_32} -- Implementation
 			-- Index where current string starts in `area'
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

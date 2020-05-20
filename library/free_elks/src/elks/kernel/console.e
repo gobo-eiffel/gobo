@@ -32,7 +32,7 @@ class CONSOLE inherit
 				put_natural, put_natural_8, put_natural_16, put_natural_32, put_natural_64,
 				read_natural, read_natural_8, read_natural_16, read_natural_32, read_natural_64
 		redefine
-			make_with_name,
+			initialize_encoding, detect_encoding,
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			read_real, read_double, read_character,
 			read_line, read_stream, read_word, next_line,
@@ -53,13 +53,6 @@ create {STD_FILES}
 	make_open_stdin, make_open_stdout, make_open_stderr
 
 feature -- Initialization
-
-	make_with_name (fn: READABLE_STRING_GENERAL)
-			-- Create file object with `fn' as file name.
-		do
-			Precursor (fn)
-			encoding := {SYSTEM_ENCODINGS}.console_encoding
-		end
 
 	make_open_stdin (fn: READABLE_STRING_GENERAL)
 			-- Create a standard input file.
@@ -83,6 +76,21 @@ feature -- Initialization
 			make_with_name (fn)
 			file_pointer := console_def (2)
 			set_write_mode
+		end
+
+	initialize_encoding
+			-- <Precursor/>
+		do
+			Precursor
+			encoding := {SYSTEM_ENCODINGS}.console_encoding
+		end
+
+feature -- Encoding
+
+	detect_encoding
+			-- <Precursor/>
+		do
+			encoding := {SYSTEM_ENCODINGS}.console_encoding
 		end
 
 feature -- Status report

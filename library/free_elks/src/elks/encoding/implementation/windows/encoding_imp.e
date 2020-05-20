@@ -18,10 +18,10 @@ inherit
 
 feature -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
+	convert_to (a_from_code_page: READABLE_STRING_8; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: READABLE_STRING_8)
 			-- Convert `a_from_string` of `a_from_code_page` to a string of `a_to_code_page`.
 		local
-			l_from_code_page, l_to_code_page: STRING
+			l_from_code_page, l_to_code_page: READABLE_STRING_8
 			l_string_32: STRING_32
 			l_from_be, l_to_be: BOOLEAN
 			l_converted_32: STRING_32
@@ -134,7 +134,7 @@ feature -- String encoding convertion
 			end
 		end
 
-	wide_char_to_multi_byte (a_code_page: STRING; a_string: STRING_32): STRING_8
+	wide_char_to_multi_byte (a_code_page: READABLE_STRING_8; a_string: STRING_32): STRING_8
 			-- Convert UTF-16 string into 8bit string by `a_code_page`.
 		local
 			l_count: INTEGER
@@ -148,7 +148,7 @@ feature -- String encoding convertion
 			Result := pointer_to_multi_byte (l_out_string.item, l_count)
 		end
 
-	multi_byte_to_wide_char (a_code_page: STRING; a_string: STRING_8): STRING_32
+	multi_byte_to_wide_char (a_code_page: READABLE_STRING_8; a_string: STRING_8): STRING_32
 			-- Convert 8bit string into UTF-16 string by `a_code_page`.
 		local
 			l_count: INTEGER
@@ -164,7 +164,7 @@ feature -- String encoding convertion
 
 feature -- Status report
 
-	is_code_page_valid (a_code_page: STRING): BOOLEAN
+	is_code_page_valid (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page` valid?
 		do
 			if a_code_page /= Void and then not a_code_page.is_empty then
@@ -172,7 +172,7 @@ feature -- Status report
 			end
 		end
 
-	is_code_page_convertible (a_from_code_page, a_to_code_page: STRING): BOOLEAN
+	is_code_page_convertible (a_from_code_page, a_to_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_from_code_page` convertible to `a_to_code_page`.
 		do
 				-- Always true. It is not really interesting here on windows without converting strings.
@@ -185,7 +185,7 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	platfrom_code_page_from_name (a_code_page_name: STRING): STRING
+	platfrom_code_page_from_name (a_code_page_name: READABLE_STRING_8): READABLE_STRING_8
 			-- Code page the OS supported.
 			-- Result can be passed to Windows API.
 		require
@@ -204,7 +204,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Status report
 
-	is_known_code_page (a_code_page: STRING): BOOLEAN
+	is_known_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page` a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -213,7 +213,7 @@ feature {NONE} -- Status report
 			Result := code_pages.has (a_code_page.as_lower)
 		end
 
-	is_two_byte_code_page (a_code_page: STRING): BOOLEAN
+	is_two_byte_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page` a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -222,7 +222,7 @@ feature {NONE} -- Status report
 			Result := two_byte_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_four_bype_code_page (a_code_page: STRING): BOOLEAN
+	is_four_bype_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page` a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -231,7 +231,7 @@ feature {NONE} -- Status report
 			Result := four_byte_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_big_endian_code_page (a_code_page: STRING): BOOLEAN
+	is_big_endian_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page` a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -321,6 +321,7 @@ feature {NONE} -- Implementation
 		end
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

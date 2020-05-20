@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Common ancestors to all immutable STRING classes."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -15,6 +15,9 @@ inherit
 			is_immutable
 		end
 
+convert
+	as_string_32: {READABLE_STRING_32, STRING_32}
+
 feature -- Status report
 
 	is_immutable: BOOLEAN = True
@@ -24,7 +27,7 @@ invariant
 	immutable: is_immutable
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

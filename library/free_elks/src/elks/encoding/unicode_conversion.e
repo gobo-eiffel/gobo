@@ -18,7 +18,7 @@ create {ENCODING}
 
 feature -- Query
 
-	is_code_page_valid (a_code_page: STRING): BOOLEAN
+	is_code_page_valid (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page` valid?
 		do
 			if a_code_page /= Void and then not a_code_page.is_empty then
@@ -26,7 +26,7 @@ feature -- Query
 			end
 		end
 
-	is_code_page_convertible (a_from_code_page, a_to_code_page: STRING): BOOLEAN
+	is_code_page_convertible (a_from_code_page, a_to_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_from_code_page` convertible to `a_to_code_page`.
 		do
 				-- We accept conversion between the same encodings to optimize.
@@ -58,7 +58,7 @@ feature -- Query
 	last_conversion_lost_data: BOOLEAN = False
 			-- Has last conversion between two encodings lost data?
 
-	is_valid_utf8 (a_string: STRING): BOOLEAN
+	is_valid_utf8 (a_string: READABLE_STRING_8): BOOLEAN
 			-- Is `a_string` valid UTF-8 string?
 		require
 			a_string_not_void: a_string /= Void
@@ -98,7 +98,7 @@ feature -- Query
 
 feature -- Conversion
 
-	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
+	convert_to (a_from_code_page: READABLE_STRING_8; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: READABLE_STRING_8)
 			-- Convert between Unicode encodings.
 		do
 			reset
@@ -154,7 +154,7 @@ feature -- Conversion
 
 feature -- Explicit Conversion
 
-	utf8_to_utf32 (a_string: STRING_8): STRING_32
+	utf8_to_utf32 (a_string: READABLE_STRING_8): STRING_32
 			-- UTF8 to UTF32 conversion, Eiffel implementation.
 		require
 			a_string_not_void: a_string /= Void
@@ -177,7 +177,7 @@ feature -- Explicit Conversion
 			Result_not_void: Result /= Void
 		end
 
-	utf32_to_utf8 (a_string: STRING_32): STRING_8
+	utf32_to_utf8 (a_string: READABLE_STRING_32): STRING_8
 			-- Convert UTF32 to UTF8.
 		require
 			a_string_not_void: a_string /= Void
@@ -261,7 +261,7 @@ feature -- Explicit Conversion
 								((a_code > 0xFFFF and a_code <= 0x10FFFF) implies a_string.count = old a_string.count + 4)
 		end
 
-	read_character_from_utf8 (a_position: INTEGER; a_read_bytes: detachable INTEGER_32_REF; a_string: STRING_8): CHARACTER_32
+	read_character_from_utf8 (a_position: INTEGER; a_read_bytes: detachable INTEGER_32_REF; a_string: READABLE_STRING_8): CHARACTER_32
 			-- Read a Unicode character from UTF-8 string.
 			-- `a_string` is in UTF-8.
 			-- `a_position` is the starting byte point of a character.
@@ -338,8 +338,8 @@ feature -- Explicit Conversion
 
 feature {NONE} -- Implementation
 
-	unicode_encodings: HASH_TABLE [STRING, STRING]
-			-- Supported Unicode encodings
+	unicode_encodings: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+			-- Supported Unicode encodings.
 		once
 			create Result.make (8)
 			Result.put ({CODE_PAGE_CONSTANTS}.utf7, {CODE_PAGE_CONSTANTS}.utf7.as_lower)

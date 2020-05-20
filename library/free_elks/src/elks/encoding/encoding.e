@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_code_page: STRING)
+	make (a_code_page: READABLE_STRING_8)
 			-- Set `code_page` with `a_code_page`
 			-- `a_code_page` should be valid, either it is from CODE_PAGE_CONSTANTS
 			-- or dynamically from i18n library.
@@ -29,11 +29,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code_page: STRING
+	code_page: READABLE_STRING_8
 			-- Code page/Character set name.
 			-- Immutable name.	
-
-feature -- Access
 
 	last_converted_stream: STRING_8
 			-- Stream representation of last converted string.

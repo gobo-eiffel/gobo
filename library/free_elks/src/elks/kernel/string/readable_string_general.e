@@ -29,6 +29,9 @@ inherit
 			is_equal
 		end
 
+convert
+	as_string_32: {READABLE_STRING_32, STRING_32}
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER)
@@ -899,9 +902,9 @@ feature -- Conversion
 		end
 
 	as_readable_string_32: READABLE_STRING_32
-			--
+			-- Equivalent to `as_string_32` with a different name.
 		obsolete
-			"Use explicit conversion `to_string_32' instead. [2017-05-31]"
+			"Use explicit conversion `to_string_32`, or, better use READABLE_STRING_32 and descendants instead. [2017-05-31]"
 		do
 			Result := as_string_32
 		end
@@ -1132,6 +1135,8 @@ feature -- Conversion
 feature -- Element change
 
 	plus alias "+" (s: READABLE_STRING_GENERAL): like Current
+			-- Concatenation of the current string with `s`.
+		obsolete "Use `plus` on sized variants of string classes. [2020-05-31]"
 		require
 			argument_not_void: s /= Void
 			compatible_strings: is_string_8 implies s.is_valid_as_string_8
@@ -1288,7 +1293,7 @@ feature -- Access: Cursor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

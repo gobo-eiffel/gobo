@@ -1077,15 +1077,34 @@ feature -- Access
 			end
 		end
 
-	plus alias "+" (other: READABLE_STRING_GENERAL): like Current
+	plus alias "+" (other: READABLE_STRING_8): like Current
 			-- New object which is a clone of `Current' extended
 			-- by the characters of `other'
 			-- (ELKS 2001 STRING)
 		do
 			create Result.make (byte_count + utf8.substring_byte_count (other, 1, other.count))
 			Result.append_string (Current)
-			Result.append_string_general (other)
+			Result.append_string (other)
 		ensure then
+			final_unicode: Result.substring (count + 1, count + other.count).same_unicode_string (other)
+		end
+
+	gobo_plus_general (other: READABLE_STRING_GENERAL): like Current
+			-- New object which is a clone of `Current' extended
+			-- by the characters of `other'
+			-- (ELKS 2001 STRING)
+		require
+			argument_not_void: other /= Void
+			compatible_strings: is_string_8 implies other.is_valid_as_string_8
+		do
+			create Result.make (byte_count + utf8.substring_byte_count (other, 1, other.count))
+			Result.append_string (Current)
+			Result.append_string_general (other)
+		ensure
+			plus_not_void: Result /= Void
+			new_count: Result.count = count + other.count
+			initial: Elks_checking implies Result.substring (1, count) ~ Current
+			final: Elks_checking implies Result.substring (count + 1, count + other.count).same_string_general (other)
 			final_unicode: Result.substring (count + 1, count + other.count).same_unicode_string (other)
 		end
 
@@ -2123,7 +2142,7 @@ feature -- Element change
 				put_substring_at_byte_index (str, s, e, nb, k)
 			end
 		ensure
-			appended: is_equal (old cloned_string + old a_string.substring (s, e))
+			appended: is_equal ((old cloned_string).gobo_plus_general (old a_string.substring (s, e)))
 		end
 
 	put_substring (a_string: READABLE_STRING_8; s, e: INTEGER)

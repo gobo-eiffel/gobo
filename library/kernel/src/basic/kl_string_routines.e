@@ -722,8 +722,8 @@ feature -- Access
 		do
 			if dummy_string.same_type (dummy_string_8) then
 				Result := concat_string_8 (a_string, other)
-			elseif attached {STRING} a_string as l_string_32 then
-				Result := l_string_32 + as_readable_string_general_no_uc_string (other)
+			elseif attached {STRING_32} a_string as l_string_32 and then attached {STRING} (l_string_32 + as_readable_string_general_no_uc_string (other)) as l_result then
+				Result := l_result
 			elseif attached {STRING} (a_string.to_string_32 + as_readable_string_general_no_uc_string (other)) as l_string_32 then
 				Result := l_string_32
 			else
@@ -756,13 +756,13 @@ feature -- Access
 			other_not_void: other /= Void
 		do
 			if attached {UC_STRING} a_string as uc_string then
-				Result := uc_string + other
+				Result := uc_string.gobo_plus_general (other)
 			elseif attached {UC_STRING} other as uc_string then
 				Result := uc_string.prefixed_string (a_string)
 			elseif attached {READABLE_STRING_8} a_string as l_string_8 and attached {READABLE_STRING_8} other as l_other_8 then
 				Result := l_string_8.to_string_8 + l_other_8
 			else
-				Result := create {UC_STRING}.make_from_string_general (a_string) + other
+				Result := (create {UC_STRING}.make_from_string_general (a_string)).gobo_plus_general (other)
 			end
 		ensure
 			instance_free: class

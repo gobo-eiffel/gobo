@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {DESCRIPTOR_CACHE}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,22 +19,22 @@ feature {NONE} -- Initialization
 
 feature -- Operation
 
-	put (a_cd: POINTER; a_conv_pair: STRING)
+	put (a_cd: POINTER; a_conv_pair: READABLE_STRING_8)
 			-- Cache `a_cd' by `a_conv_pair' as a key.
 		do
 			cache.force (a_cd, a_conv_pair)
 		end
 
-	search (a_conv_pair: STRING)
+	search (a_conv_pair: READABLE_STRING_8)
 			-- Search
 		do
 			cache.search (a_conv_pair)
 		end
 
-	record_converted_pair (a_to, a_from: STRING)
+	record_converted_pair (a_to, a_from: READABLE_STRING_8)
 			-- Record converted pair.
 		local
-			l_s: STRING
+			l_s: READABLE_STRING_8
 		do
 			l_s := a_to + a_from
 			converted_pair.force (l_s, l_s)
@@ -57,7 +56,7 @@ feature -- Querry
 			Result := cache.found_item
 		end
 
-	converted (a_to, a_from: STRING): BOOLEAN
+	converted (a_to, a_from: READABLE_STRING_8): BOOLEAN
 			-- Has `a_to' to `a_from' been converted once?
 		do
 			Result := converted_pair.has (a_to + a_from)
@@ -65,10 +64,10 @@ feature -- Querry
 
 feature {NONE} -- Implementation
 
-	cache: HASH_TABLE [POINTER, STRING]
+	cache: HASH_TABLE [POINTER, READABLE_STRING_8]
 			-- Cache for descriptor pointers.
 
-	converted_pair: HASH_TABLE [STRING, STRING]
+	converted_pair: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			-- Converted pairs.
 
 feature -- Clean up
@@ -98,7 +97,7 @@ invariant
 	cache_not_void: cache /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

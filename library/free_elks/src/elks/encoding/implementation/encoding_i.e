@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Interfaces of encoding conversion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {ENCODING} -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
+	convert_to (a_from_code_page: READABLE_STRING_8; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: READABLE_STRING_8)
 			-- Convert `a_from_string` of `a_from_code_page` to a string of `a_to_code_page`.
 		require
 			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
@@ -41,7 +41,7 @@ feature {ENCODING} -- Reset
 			last_was_wide_string := False
 		ensure
 			last_converted_string_reset: last_converted_string = Void
-			last_conversion_successful_reset: last_conversion_successful = False
+			last_conversion_successful_reset: not last_conversion_successful
 		end
 
 feature {ENCODING} -- Access
@@ -81,12 +81,12 @@ feature {ENCODING} -- Access
 
 feature {ENCODING} -- Status report
 
-	is_code_page_valid (a_code_page: STRING): BOOLEAN
+	is_code_page_valid (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page` valid?
 		deferred
 		end
 
-	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN
+	is_code_page_convertable (a_from_code_page, a_to_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_from_code_page` convertible to `a_to_code_page`.
 		obsolete
 			"Use is_code_page_convertible [2020-04-22]"
@@ -94,7 +94,7 @@ feature {ENCODING} -- Status report
 			Result := is_code_page_convertible (a_from_code_page, a_to_code_page)
 		end
 
-	is_code_page_convertible (a_from_code_page, a_to_code_page: STRING): BOOLEAN
+	is_code_page_convertible (a_from_code_page, a_to_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_from_code_page` convertible to `a_to_code_page`.
 		deferred
 		end
@@ -138,7 +138,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Implementation
 
-	utf32_to_utf16 (a_str: STRING_32): STRING_32
+	utf32_to_utf16 (a_str: READABLE_STRING_32): STRING_32
 			-- Convert utf32 to utf16 without data lose.
 		require
 			a_str_not_void: a_str /= Void
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	utf16_to_utf32 (a_str: STRING_32): STRING_32
+	utf16_to_utf32 (a_str: READABLE_STRING_32): STRING_32
 			-- Convert utf16 to utf32.
 		require
 			a_str_not_void: a_str /= Void
@@ -216,7 +216,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Common ancestors to all STRING classes."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -395,7 +395,7 @@ feature -- Removal
 			meaningful_interval: start_index <= end_index + 1
 		deferred
 		ensure
-			removed: elks_checking implies Current ~ (old substring (1, start_index - 1) + old substring (end_index + 1, count))
+			removed: elks_checking implies Current.as_string_32 ~ (old substring (1, start_index - 1).as_string_32 + old substring (end_index + 1, count))
 		end
 
 	remove_tail (n: INTEGER)
@@ -435,7 +435,7 @@ invariant
 	mutable: not is_immutable
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

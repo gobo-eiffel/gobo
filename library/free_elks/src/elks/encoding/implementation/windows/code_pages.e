@@ -1,5 +1,5 @@
-note
-	description: "Code page identifiers that Windows supports"
+﻿note
+	description: "Code page identifiers that Windows supports."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -10,8 +10,8 @@ class
 
 feature -- Code-Page Identifiers
 
-	code_pages: HASH_TABLE [STRING, STRING]
-			-- Code page identifiers
+	code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+			-- Code page identifiers.
 		once
 			create Result.make (160)
 			Result.put ("037", "037") -- IBM EBCDIC - U.S./Canada
@@ -177,9 +177,11 @@ feature -- Code-Page Identifiers
 
 			Result.put ("1201", {CODE_PAGE_CONSTANTS}.utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
 			Result.put ("12001", {CODE_PAGE_CONSTANTS}.utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
+		ensure
+			class
 		end
 
-	two_byte_code_pages: HASH_TABLE [STRING, STRING]
+	two_byte_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 		once
 			create Result.make (5)
 			Result.put ("1200", "1200")  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
@@ -187,9 +189,11 @@ feature -- Code-Page Identifiers
 			Result.put ("1200", {CODE_PAGE_CONSTANTS}.utf16.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
 			Result.put ("1200", {CODE_PAGE_CONSTANTS}.utf16_le.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
 			Result.put ("1201", {CODE_PAGE_CONSTANTS}.utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
+		ensure
+			class
 		end
 
-	four_byte_code_pages: HASH_TABLE [STRING, STRING]
+	four_byte_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 		once
 			create Result.make (5)
 			Result.put ("12000", "12000") -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
@@ -197,20 +201,25 @@ feature -- Code-Page Identifiers
 			Result.put ("12000", {CODE_PAGE_CONSTANTS}.utf32.as_lower) -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
 			Result.put ("12000", {CODE_PAGE_CONSTANTS}.utf32_le.as_lower) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
 			Result.put ("12001", {CODE_PAGE_CONSTANTS}.utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
+		ensure
+			class
 		end
 
-	big_endian_code_pages: HASH_TABLE [STRING, STRING]
+	big_endian_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 		once
 			create Result.make (4)
 			Result.put ("1201", "1201") -- Unicode UCS-2 Big-Endian
 			Result.put ("12001", "12001") -- Unicode UCS-4 Big-Endian
 			Result.put ("1201", {CODE_PAGE_CONSTANTS}.utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
 			Result.put ("12001", {CODE_PAGE_CONSTANTS}.utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
+		ensure
+			class
 		end
 
 note
+	ca_ignore: "CA032", "CA032: too long routine"
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -219,7 +228,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

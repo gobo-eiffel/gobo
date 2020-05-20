@@ -25,19 +25,20 @@ inherit
 		rename
 			append as append_string_general,
 			append_substring as append_substring_general,
-			prepend as prepend_string_general,
-			prepend_substring as prepend_substring_general,
-			same_string as same_string_general,
-			same_characters as same_characters_general,
-			same_caseless_characters as same_caseless_characters_general,
-			starts_with as starts_with_general,
 			ends_with as ends_with_general,
-			is_case_insensitive_equal as is_case_insensitive_equal_general,
-			item as character_32_item,
 			has as character_32_has,
 			index_of as character_32_index_of,
+			is_case_insensitive_equal as is_case_insensitive_equal_general,
+			item as character_32_item,
 			last_index_of as character_32_last_index_of,
-			occurrences as character_32_occurrences
+			occurrences as character_32_occurrences,
+			plus as plus_general,
+			prepend as prepend_string_general,
+			prepend_substring as prepend_substring_general,
+			same_caseless_characters as same_caseless_characters_general,
+			same_characters as same_characters_general,
+			same_string as same_string_general,
+			starts_with as starts_with_general
 		undefine
 			copy, is_equal, out
 		redefine
@@ -771,14 +772,6 @@ feature -- Element change
 			appended: elks_checking implies same_string (old (Current + s.substring (start_index, end_index)))
 		end
 
-	plus alias "+" (s: READABLE_STRING_GENERAL): like Current
-			-- <Precursor>
-		do
-			Result := new_string (count + s.count)
-			Result.append (Current)
-			Result.append_string_general (s)
-		end
-
 	append_string (s: detachable READABLE_STRING_8)
 			-- Append a copy of `s', if not void, at end.
 		do
@@ -1266,6 +1259,24 @@ feature -- Element change
 			inserted: item (i) = c
 			stable_before_i: elks_checking implies substring (1, i - 1) ~ (old substring (1, i - 1))
 			stable_after_i: elks_checking implies substring (i + 1, count) ~ (old substring (i, count))
+		end
+
+feature -- Basic operations
+
+	plus alias "+" (s: READABLE_STRING_8): like Current
+			-- <Precursor>
+		do
+			Result := new_string (count + s.count)
+			Result.append (Current)
+			Result.append (s)
+		end
+
+	plus_general (s: READABLE_STRING_GENERAL): like Current
+			-- <Precursor>
+		do
+			Result := new_string (count + s.count)
+			Result.append (Current)
+			Result.append_string_general (s)
 		end
 
 feature -- Removal
@@ -1794,7 +1805,7 @@ invariant
 	compare_character: not object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

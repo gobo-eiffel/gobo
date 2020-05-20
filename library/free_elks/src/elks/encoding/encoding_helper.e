@@ -10,21 +10,18 @@ class
 
 feature -- Conversion
 
-	multi_byte_to_pointer (a_string: STRING): MANAGED_POINTER
+	multi_byte_to_pointer (a_string: READABLE_STRING_8): MANAGED_POINTER
 			-- Managed pointer of `a_string`.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			l_cstr: C_STRING
 		do
-			create l_cstr.make (a_string)
-			Result := l_cstr.managed_data
+			Result := (create {C_STRING}.make (a_string)).managed_data
 		ensure
 			instance_free: class
 			result_not_void: Result /= Void
 		end
 
-	wide_string_to_pointer (a_string: STRING_32): MANAGED_POINTER
+	wide_string_to_pointer (a_string: READABLE_STRING_32): MANAGED_POINTER
 			-- Managed pointer of `a_string` which is taken as
 			-- 16bits string. High 16bits of characters of `a_string` are discarded.
 		require
