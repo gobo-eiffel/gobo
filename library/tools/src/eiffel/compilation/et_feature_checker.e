@@ -10865,7 +10865,7 @@ feature {NONE} -- Expression validity
 				-- Do nothing.
 			else
 				l_name := a_call.name
-				if l_name.is_infix_and_then or l_name.is_infix_implies then
+				if l_name.is_infix_and_then or l_name.is_infix_and_then_symbol or l_name.is_infix_implies or l_name.is_infix_implies_symbol then
 					l_target := l_infix_expression.left
 					l_old_object_test_scope := current_object_test_scope.count
 					object_test_scope_builder.build_scope (l_target, current_object_test_scope, current_class_impl)
@@ -10877,7 +10877,7 @@ feature {NONE} -- Expression validity
 						attachment_scope_builder.build_scope (l_target, current_attachment_scope)
 					end
 					l_scope_changed := True
-				elseif l_name.is_infix_or_else then
+				elseif l_name.is_infix_or_else or l_name.is_infix_or_else_symbol then
 					l_target := l_infix_expression.left
 					l_old_object_test_scope := current_object_test_scope.count
 					object_test_scope_builder.build_negated_scope (l_target, current_object_test_scope, current_class_impl)

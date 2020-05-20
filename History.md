@@ -36,6 +36,8 @@
   even expanded types.
 * Fixed bug when looking for duplicates in multiple aliases
   (e.g. `alias "+" alias "+"`).
+* Added support for new symbolic forms of boolean operators
+  (`∧`, `∨`, `¬`, `⇒`, `⊻`, `∧…`, `∨…`).
 
 ## Version 20.03.22.1 - 22 March 2020
 

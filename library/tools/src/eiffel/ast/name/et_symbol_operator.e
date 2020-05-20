@@ -1,11 +1,11 @@
-note
+﻿note
 
 	description:
 
 		"Eiffel symbol operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,36 +26,50 @@ inherit
 			break
 		redefine
 			is_infix,
+			is_infix_and_symbol,
+			is_infix_and_then_symbol,
 			is_infix_div,
 			is_infix_divide,
 			is_infix_ge,
 			is_infix_gt,
+			is_infix_implies_symbol,
 			is_infix_le,
 			is_infix_lt,
 			is_infix_minus,
 			is_infix_mod,
+			is_infix_or_symbol,
+			is_infix_or_else_symbol,
 			is_infix_plus,
 			is_infix_power,
 			is_infix_times,
+			is_infix_xor_symbol,
 			is_infix_dotdot,
 			is_prefix,
+			is_prefix_not_symbol,
 			is_prefix_minus,
 			is_prefix_plus
 		end
 
 create
 
+	make_and_symbol,
+	make_and_then_symbol,
 	make_div,
 	make_divide,
 	make_ge,
 	make_gt,
+	make_implies_symbol,
 	make_le,
 	make_lt,
 	make_minus,
 	make_mod,
+	make_not_symbol,
+	make_or_symbol,
+	make_or_else_symbol,
 	make_plus,
 	make_power,
-	make_times
+	make_times,
+	make_xor_symbol
 
 feature -- Status report
 
@@ -63,6 +77,18 @@ feature -- Status report
 			-- Is current feature name of the form binary 'alias "..."'?
 		do
 			Result := (code >= tokens.min_infix_code and code <= tokens.max_infix_code)
+		end
+
+	is_infix_and_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "∧"'?
+		do
+			Result := (code = tokens.infix_and_symbol_code)
+		end
+
+	is_infix_and_then_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "∧…"'?
+		do
+			Result := (code = tokens.infix_and_then_symbol_code)
 		end
 
 	is_infix_div: BOOLEAN
@@ -89,6 +115,12 @@ feature -- Status report
 			Result := (code = tokens.infix_gt_code)
 		end
 
+	is_infix_implies_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "⇒"'?
+		do
+			Result := (code = tokens.infix_implies_symbol_code)
+		end
+
 	is_infix_le: BOOLEAN
 			-- Is current feature name of the form binary 'alias "<="'?
 		do
@@ -113,6 +145,18 @@ feature -- Status report
 			Result := (code = tokens.infix_mod_code)
 		end
 
+	is_infix_or_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "∨"'?
+		do
+			Result := (code = tokens.infix_or_symbol_code)
+		end
+
+	is_infix_or_else_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "∨…"'?
+		do
+			Result := (code = tokens.infix_or_else_symbol_code)
+		end
+
 	is_infix_plus: BOOLEAN
 			-- Is current feature name of the form binary 'alias "+"'?
 		do
@@ -131,6 +175,12 @@ feature -- Status report
 			Result := (code = tokens.infix_times_code)
 		end
 
+	is_infix_xor_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "⊻"'?
+		do
+			Result := (code = tokens.infix_xor_symbol_code)
+		end
+
 	is_infix_dotdot: BOOLEAN
 			-- Is current feature name of the form binary 'alias ".."'?
 		do
@@ -141,6 +191,12 @@ feature -- Status report
 			-- Is current feature name of the form unary 'alias "..."'?
 		do
 			Result := (code >= tokens.min_prefix_code and code <= tokens.max_prefix_code)
+		end
+
+	is_prefix_not_symbol: BOOLEAN
+			-- Is current feature name of the form unary 'alias "¬"'?
+		do
+			Result := (code = tokens.prefix_not_symbol_code)
 		end
 
 	is_prefix_minus: BOOLEAN
@@ -162,6 +218,10 @@ feature -- Access
 			-- (using UTF-8 encoding)
 		do
 			inspect code
+			when infix_and_symbol_code then
+				Result := tokens.alias_and_symbol_name
+			when infix_and_then_symbol_code then
+				Result := tokens.alias_and_then_symbol_name
 			when infix_div_code then
 				Result := tokens.alias_div_name
 			when infix_divide_code then
@@ -170,6 +230,8 @@ feature -- Access
 				Result := tokens.alias_ge_name
 			when infix_gt_code then
 				Result := tokens.alias_gt_name
+			when infix_implies_symbol_code then
+				Result := tokens.alias_implies_symbol_name
 			when infix_le_code then
 				Result := tokens.alias_le_name
 			when infix_lt_code then
@@ -178,14 +240,22 @@ feature -- Access
 				Result := tokens.alias_minus_name
 			when infix_mod_code then
 				Result := tokens.alias_mod_name
+			when infix_or_symbol_code then
+				Result := tokens.alias_or_symbol_name
+			when infix_or_else_symbol_code then
+				Result := tokens.alias_or_else_symbol_name
 			when infix_plus_code then
 				Result := tokens.alias_plus_name
 			when infix_power_code then
 				Result := tokens.alias_power_name
 			when infix_times_code then
 				Result := tokens.alias_times_name
+			when infix_xor_symbol_code then
+				Result := tokens.alias_xor_symbol_name
 			when infix_dotdot_code then
 				Result := tokens.alias_dotdot_name
+			when prefix_not_symbol_code then
+				Result := tokens.alias_not_symbol_name
 			when prefix_minus_code then
 				Result := tokens.alias_minus_name
 			when prefix_plus_code then
@@ -246,6 +316,10 @@ feature -- Comparison
 				Result := True
 			else
 				inspect code
+				when infix_and_symbol_code then
+					Result := other.is_infix_and_symbol
+				when infix_and_then_symbol_code then
+					Result := other.is_infix_and_then_symbol
 				when infix_div_code then
 					Result := other.is_infix_div
 				when infix_divide_code then
@@ -254,6 +328,8 @@ feature -- Comparison
 					Result := other.is_infix_ge
 				when infix_gt_code then
 					Result := other.is_infix_gt
+				when infix_implies_symbol_code then
+					Result := other.is_infix_implies_symbol
 				when infix_le_code then
 					Result := other.is_infix_le
 				when infix_lt_code then
@@ -262,14 +338,22 @@ feature -- Comparison
 					Result := other.is_infix_minus
 				when infix_mod_code then
 					Result := other.is_infix_mod
+				when infix_or_symbol_code then
+					Result := other.is_infix_or_symbol
+				when infix_or_else_symbol_code then
+					Result := other.is_infix_or_else_symbol
 				when infix_plus_code then
 					Result := other.is_infix_plus
 				when infix_power_code then
 					Result := other.is_infix_power
 				when infix_times_code then
 					Result := other.is_infix_times
+				when infix_xor_symbol_code then
+					Result := other.is_infix_xor_symbol
 				when infix_dotdot_code then
 					Result := other.is_infix_dotdot
+				when prefix_not_symbol_code then
+					Result := other.is_prefix_not_symbol
 				when prefix_minus_code then
 					Result := other.is_prefix_minus
 				when prefix_plus_code then

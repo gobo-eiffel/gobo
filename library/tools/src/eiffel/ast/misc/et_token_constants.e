@@ -5822,6 +5822,8 @@ feature -- Keyword and symbol names
 	no_type_mark_name: STRING = ""
 			-- Type mark names
 
+	and_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∧") end
+	and_then_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∧…") end
 	arrow_symbol_name: STRING = "->"
 	assign_symbol_name: STRING = ":="
 	assign_attempt_symbol_name: STRING = "?="
@@ -5840,6 +5842,7 @@ feature -- Keyword and symbol names
 	for_all_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∀") end
 	ge_symbol_name: STRING = ">="
 	gt_symbol_name: STRING = ">"
+	implies_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⇒") end
 	le_symbol_name: STRING = "<="
 	left_array_symbol_name: STRING = "<<"
 	left_brace_symbol_name: STRING = "{"
@@ -5848,9 +5851,12 @@ feature -- Keyword and symbol names
 	lt_symbol_name: STRING = "<"
 	minus_symbol_name: STRING = "-"
 	mod_symbol_name: STRING = "\\"
+	not_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "¬") end
 	not_equal_symbol_name: STRING = "/="
 	not_tilde_symbol_name: STRING = "/~"
 	open_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⟳") end
+	or_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∨") end
+	or_else_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∨…") end
 	parentheses_symbol_name: STRING = "()"
 	plus_symbol_name: STRING = "+"
 	power_symbol_name: STRING = "^"
@@ -5863,6 +5869,7 @@ feature -- Keyword and symbol names
 	there_exists_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∃") end
 	tilde_symbol_name: STRING = "~"
 	times_symbol_name: STRING = "*"
+	xor_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⊻") end
 			-- Eiffel symbol names
 
 	unknown_name: STRING = "***unknown_name***"
@@ -5895,9 +5902,15 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 feature -- Alias names
 
 	alias_and_name: STRING = "alias %"and%""
+	alias_and_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∧%"") end
+	alias_and_then_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∧…%"") end
 	alias_implies_name: STRING = "alias %"implies%""
+	alias_implies_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"⇒%"") end
 	alias_or_name: STRING = "alias %"or%""
+	alias_or_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∨%"") end
+	alias_or_else_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∨…%"") end
 	alias_xor_name: STRING = "alias %"xor%""
+	alias_xor_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"⊻%"") end
 	alias_div_name: STRING = "alias %"//%""
 	alias_divide_name: STRING = "alias %"/%""
 	alias_ge_name: STRING = "alias %">=%""
@@ -5913,6 +5926,7 @@ feature -- Alias names
 	alias_and_then_name: STRING = "alias %"and then%""
 	alias_or_else_name: STRING = "alias %"or else%""
 	alias_not_name: STRING = "alias %"not%""
+	alias_not_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"¬%"") end
 	alias_bracket_name: STRING = "alias %"[]%""
 	alias_parenthesis_name: STRING = "alias %"()%""
 			-- Alias feature names

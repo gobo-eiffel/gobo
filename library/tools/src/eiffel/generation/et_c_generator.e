@@ -12452,7 +12452,9 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			if
 				l_target_static_type = current_dynamic_system.boolean_type and in_operand and then
 				(l_name.is_infix_and_then or l_name.is_infix_or_else or l_name.is_infix_implies or
-				l_name.is_infix_and or l_name.is_infix_or)
+				l_name.is_infix_and or l_name.is_infix_or or
+				l_name.is_infix_and_then_symbol or l_name.is_infix_or_else_symbol or
+				l_name.is_infix_implies_symbol or l_name.is_infix_and_symbol or l_name.is_infix_or_symbol)
 			then
 				print_operand (l_target)
 				fill_call_operands (1)
@@ -12467,7 +12469,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
-					l_or := l_name.is_infix_or_else or l_name.is_infix_or
+					l_or := l_name.is_infix_or_else or l_name.is_infix_or or l_name.is_infix_or_else_symbol or l_name.is_infix_or_symbol
 					if l_or then
 						current_file.put_character ('!')
 						current_file.put_character ('(')
@@ -12523,7 +12525,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					dedent
 					print_indentation
 					current_file.put_character ('}')
-					l_implies := l_name.is_infix_implies
+					l_implies := l_name.is_infix_implies or l_name.is_infix_implies_symbol
 					if not l_implies and l_semistrict_target = l_temp_target then
 						current_file.put_new_line
 					else

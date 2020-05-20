@@ -1,11 +1,11 @@
-note
+﻿note
 
 	description:
 
 		"Eiffel feature call names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -128,8 +128,20 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_infix_and_symbol: BOOLEAN
+			-- Is current call name of the form binary 'alias "∧"'?
+		do
+			-- Result := False
+		end
+
 	is_infix_and_then: BOOLEAN
 			-- Is current call name of the form binary 'alias "and then"'?
+		do
+			-- Result := False
+		end
+
+	is_infix_and_then_symbol: BOOLEAN
+			-- Is current call name of the form binary 'alias "∧…"'?
 		do
 			-- Result := False
 		end
@@ -170,6 +182,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_infix_implies_symbol: BOOLEAN
+			-- Is current call name of the form binary 'alias "⇒"'?
+		do
+			-- Result := False
+		end
+
 	is_infix_le: BOOLEAN
 			-- Is current call name of the form binary 'alias "<="'?
 		do
@@ -200,8 +218,20 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_infix_or_symbol: BOOLEAN
+			-- Is current call name of the form binary 'alias "∨"'?
+		do
+			-- Result := False
+		end
+
 	is_infix_or_else: BOOLEAN
 			-- Is current call name of the form binary 'alias "or else"'?
+		do
+			-- Result := False
+		end
+
+	is_infix_or_else_symbol: BOOLEAN
+			-- Is current call name of the form binary 'alias "∨…"'?
 		do
 			-- Result := False
 		end
@@ -226,6 +256,12 @@ feature -- Status report
 
 	is_infix_xor: BOOLEAN
 			-- Is current call name of the form binary 'alias "xor"'?
+		do
+			-- Result := False
+		end
+
+	is_infix_xor_symbol: BOOLEAN
+			-- Is current call name of the form binary 'alias "⊻"'?
 		do
 			-- Result := False
 		end
@@ -262,6 +298,12 @@ feature -- Status report
 
 	is_prefix_not: BOOLEAN
 			-- Is current call name of the form unary 'alias "not"'?
+		do
+			-- Result := False
+		end
+
+	is_prefix_not_symbol: BOOLEAN
+			-- Is current call name of the form unary 'alias "¬"'?
 		do
 			-- Result := False
 		end

@@ -3401,7 +3401,7 @@ feature {NONE} -- Processing
 			-- one character `c'.
 		require
 			one_char: text_count >= 1
-			valid_string: {RX_PCRE_ROUTINES}.regexp ({STRING_32} "[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]").recognizes (unicode_text_substring (1, 1))
+			valid_string: {RX_PCRE_ROUTINES}.regexp ({STRING_32} "[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲∧⇒¬∨⊻]").recognizes (unicode_text_substring (1, 1))
 			valid_c: unicode_text_item (1) = c
 		do
 			last_literal_start := 1
@@ -3488,18 +3488,33 @@ feature {NONE} -- Processing
 			when '⟲' then
 				last_token := E_CLOSE_REPEAT
 				last_detachable_et_symbol_value := ast_factory.new_close_repeat_symbol (Current)
+			when '∧' then
+				last_token := E_AND_SYMBOL
+				last_detachable_et_symbol_operator_value := ast_factory.new_and_symbol (Current)
+			when '⇒' then
+				last_token := E_IMPLIES_SYMBOL
+				last_detachable_et_symbol_operator_value := ast_factory.new_implies_symbol (Current)
+			when '¬' then
+				last_token := E_NOT_SYMBOL
+				last_detachable_et_symbol_operator_value := ast_factory.new_not_symbol (Current)
+			when '∨' then
+				last_token := E_OR_SYMBOL
+				last_detachable_et_symbol_operator_value := ast_factory.new_or_symbol (Current)
+			when '⊻' then
+				last_token := E_XOR_SYMBOL
+				last_detachable_et_symbol_operator_value := ast_factory.new_xor_symbol (Current)
 			else
 				last_token := E_UNKNOWN
 				last_detachable_et_position_value := current_position
 			end
 		end
 
-	process_two_char_symbol (c1, c2: CHARACTER_8)
+	process_two_char_symbol (c1, c2: CHARACTER_32)
 			-- Process Eiffel symbol with made up of exactly
 			-- two characters `c1' and `c2'.
 		require
 			two_chars: text_count >= 2
-			valid_string: {RX_PCRE_ROUTINES}.regexp ("//|\\\\|/=|/~|>=|<=|\->|\.\.|<<|>>|:=|\?=").recognizes (unicode_text_substring (1, 2))
+			valid_string: {RX_PCRE_ROUTINES}.regexp ({STRING_32} "//|\\\\|/=|/~|>=|<=|\->|\.\.|<<|>>|:=|\?=|∧…|∨…").recognizes (unicode_text_substring (1, 2))
 			valid_c1: text_item (1) = c1
 			valid_c2: text_item (2) = c2
 		do
@@ -3565,6 +3580,14 @@ feature {NONE} -- Processing
 				check valid_symbol: c2 = '=' end
 				last_token := E_REVERSE
 				last_detachable_et_symbol_value := ast_factory.new_assign_attempt_symbol (Current)
+			when '∧' then
+				check valid_symbol: c2 = '…' end
+				last_token := E_AND_THEN_SYMBOL
+				last_detachable_et_symbol_value := ast_factory.new_and_then_symbol (Current)
+			when '∨' then
+				check valid_symbol: c2 = '…' end
+				last_token := E_OR_ELSE_SYMBOL
+				last_detachable_et_symbol_value := ast_factory.new_or_else_symbol (Current)
 			else
 				last_token := E_UNKNOWN
 				last_detachable_et_position_value := current_position
@@ -3803,6 +3826,16 @@ feature {NONE} -- Processing
 					last_token := E_STRLT
 				when '>' then
 					last_token := E_STRGT
+				when '∧' then
+					last_token := E_STRANDSYMBOL
+				when '⇒' then
+					last_token := E_STRIMPLIESSYMBOL
+				when '¬' then
+					last_token := E_STRNOTSYMBOL
+				when '∨' then
+					last_token := E_STRORSYMBOL
+				when '⊻' then
+					last_token := E_STRXORSYMBOL
 				else
 					-- Do nothing.
 				end
@@ -3861,6 +3894,20 @@ feature {NONE} -- Processing
 					inspect unicode_text_item (3)
 					when 'r', 'R' then
 						last_token := E_STROR
+					else
+						-- Do nothing.
+					end
+				when '∧' then
+					inspect unicode_text_item (3)
+					when '…' then
+						last_token := E_STRANDTHENSYMBOL
+					else
+						-- Do nothing.
+					end
+				when '∨' then
+					inspect unicode_text_item (3)
+					when '…' then
+						last_token := E_STRORELSESYMBOL
 					else
 						-- Do nothing.
 					end

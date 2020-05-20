@@ -1,11 +1,11 @@
-note
+﻿note
 
 	description:
 
 		"Eiffel alias feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,28 +20,35 @@ inherit
 			is_bracket,
 			is_infix,
 			is_infix_and,
+			is_infix_and_symbol,
 			is_infix_and_then,
+			is_infix_and_then_symbol,
 			is_infix_div,
 			is_infix_divide,
 			is_infix_ge,
 			is_infix_gt,
 			is_infix_implies,
+			is_infix_implies_symbol,
 			is_infix_le,
 			is_infix_lt,
 			is_infix_minus,
 			is_infix_mod,
 			is_infix_or,
+			is_infix_or_symbol,
 			is_infix_or_else,
+			is_infix_or_else_symbol,
 			is_infix_plus,
 			is_infix_power,
 			is_infix_times,
 			is_infix_xor,
+			is_infix_xor_symbol,
 			is_infix_dotdot,
 			is_parenthesis,
 			is_prefix,
 			is_prefix_minus,
 			is_prefix_plus,
-			is_prefix_not
+			is_prefix_not,
+			is_prefix_not_symbol
 		end
 
 	ET_TOKEN_CODES
@@ -50,9 +57,13 @@ inherit
 create
 
 	make_and,
+	make_and_symbol,
 	make_implies,
+	make_implies_symbol,
 	make_or,
+	make_or_symbol,
 	make_xor,
+	make_xor_symbol,
 	make_div,
 	make_divide,
 	make_ge,
@@ -65,9 +76,12 @@ create
 	make_power,
 	make_times,
 	make_and_then,
+	make_and_then_symbol,
 	make_or_else,
+	make_or_else_symbol,
 	make_dotdot,
 	make_not,
+	make_not_symbol,
 	make_bracket,
 	make_parenthesis
 
@@ -86,6 +100,19 @@ feature {NONE} -- Initialization
 			is_infix_and: is_infix_and
 		end
 
+	make_and_symbol (a_string: like alias_string)
+			-- Create a new 'alias "∧"' feature name.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			alias_keyword := default_keyword
+			alias_string := a_string
+			code := tokens.infix_and_symbol_code
+		ensure
+			alias_string_set: alias_string = a_string
+			is_infix_and_symbol: is_infix_and_symbol
+		end
+
 	make_implies (a_string: like alias_string)
 			-- Create a new 'alias "implies"' feature name.
 		require
@@ -97,6 +124,19 @@ feature {NONE} -- Initialization
 		ensure
 			alias_string_set: alias_string = a_string
 			is_infix_implies: is_infix_implies
+		end
+
+	make_implies_symbol (a_string: like alias_string)
+			-- Create a new 'alias "⇒"' feature name.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			alias_keyword := default_keyword
+			alias_string := a_string
+			code := tokens.infix_implies_symbol_code
+		ensure
+			alias_string_set: alias_string = a_string
+			is_infix_implies_symbol: is_infix_implies_symbol
 		end
 
 	make_or (a_string: like alias_string)
@@ -112,6 +152,19 @@ feature {NONE} -- Initialization
 			is_infix_or: is_infix_or
 		end
 
+	make_or_symbol (a_string: like alias_string)
+			-- Create a new 'alias "∨"' feature name.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			alias_keyword := default_keyword
+			alias_string := a_string
+			code := tokens.infix_or_symbol_code
+		ensure
+			alias_string_set: alias_string = a_string
+			is_infix_or_symbol: is_infix_or_symbol
+		end
+
 	make_xor (a_string: like alias_string)
 			-- Create a new 'alias "xor"' feature name.
 		require
@@ -123,6 +176,19 @@ feature {NONE} -- Initialization
 		ensure
 			alias_string_set: alias_string = a_string
 			is_infix_xor: is_infix_xor
+		end
+
+	make_xor_symbol (a_string: like alias_string)
+			-- Create a new 'alias "⊻"' feature name.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			alias_keyword := default_keyword
+			alias_string := a_string
+			code := tokens.infix_xor_symbol_code
+		ensure
+			alias_string_set: alias_string = a_string
+			is_infix_xor_symbol: is_infix_xor_symbol
 		end
 
 	make_div (a_string: like alias_string)
@@ -281,6 +347,19 @@ feature {NONE} -- Initialization
 			is_infix_and_then: is_infix_and_then
 		end
 
+	make_and_then_symbol (a_string: like alias_string)
+			-- Create a new 'alias "∧…"' feature name.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			alias_keyword := default_keyword
+			alias_string := a_string
+			code := tokens.infix_and_then_symbol_code
+		ensure
+			alias_string_set: alias_string = a_string
+			is_infix_and_then_symbol: is_infix_and_then_symbol
+		end
+
 	make_or_else (a_string: like alias_string)
 			-- Create a new 'alias "or else"' feature name.
 		require
@@ -292,6 +371,19 @@ feature {NONE} -- Initialization
 		ensure
 			alias_string_set: alias_string = a_string
 			is_infix_or_else: is_infix_or_else
+		end
+
+	make_or_else_symbol (a_string: like alias_string)
+			-- Create a new 'alias "∨…"' feature name.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			alias_keyword := default_keyword
+			alias_string := a_string
+			code := tokens.infix_or_else_symbol_code
+		ensure
+			alias_string_set: alias_string = a_string
+			is_infix_or_else_symbol: is_infix_or_else_symbol
 		end
 
 	make_dotdot (a_string: like alias_string)
@@ -318,6 +410,19 @@ feature {NONE} -- Initialization
 		ensure
 			alias_string_set: alias_string = a_string
 			is_prefix_not: is_prefix_not
+		end
+
+	make_not_symbol (a_string: like alias_string)
+			-- Create a new 'alias "¬"' feature name.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			alias_keyword := default_keyword
+			alias_string := a_string
+			code := tokens.prefix_not_symbol_code
+		ensure
+			alias_string_set: alias_string = a_string
+			is_prefix_no_symbol: is_prefix_not_symbol
 		end
 
 	make_bracket (a_string: like alias_string)
@@ -357,7 +462,7 @@ feature -- Status report
 	is_keyword: BOOLEAN
 			-- Is the operator a keyword (or two keywords)?
 		do
-			Result := (code >= tokens.min_keyword_code and code <= tokens.max_keyword_code)
+			Result := (code >= tokens.min_keyword_operator_code and code <= tokens.max_keyword_operator_code)
 		end
 
 	is_bracket: BOOLEAN
@@ -378,10 +483,22 @@ feature -- Status report
 			Result := (code = tokens.infix_and_code)
 		end
 
+	is_infix_and_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "∧"'?
+		do
+			Result := (code = tokens.infix_and_symbol_code)
+		end
+
 	is_infix_and_then: BOOLEAN
 			-- Is current feature name of the form binary 'alias "and then"'?
 		do
 			Result := (code = tokens.infix_and_then_code)
+		end
+
+	is_infix_and_then_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "∧…"'?
+		do
+			Result := (code = tokens.infix_and_then_symbol_code)
 		end
 
 	is_infix_div: BOOLEAN
@@ -420,6 +537,12 @@ feature -- Status report
 			Result := (code = tokens.infix_implies_code)
 		end
 
+	is_infix_implies_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "⇒"'?
+		do
+			Result := (code = tokens.infix_implies_symbol_code)
+		end
+
 	is_infix_le: BOOLEAN
 			-- Is current feature name of the form binary 'alias "<="'?
 		do
@@ -450,10 +573,22 @@ feature -- Status report
 			Result := (code = tokens.infix_or_code)
 		end
 
+	is_infix_or_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "∨"'?
+		do
+			Result := (code = tokens.infix_or_symbol_code)
+		end
+
 	is_infix_or_else: BOOLEAN
 			-- Is current feature name of the form binary 'alias "or else"'?
 		do
 			Result := (code = tokens.infix_or_else_code)
+		end
+
+	is_infix_or_else_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "∨…"'?
+		do
+			Result := (code = tokens.infix_or_else_symbol_code)
 		end
 
 	is_infix_plus: BOOLEAN
@@ -478,6 +613,12 @@ feature -- Status report
 			-- Is current feature name of the form binary 'alias "xor"'?
 		do
 			Result := (code = tokens.infix_xor_code)
+		end
+
+	is_infix_xor_symbol: BOOLEAN
+			-- Is current feature name of the form binary 'alias "⊻"'?
+		do
+			Result := (code = tokens.infix_xor_symbol_code)
 		end
 
 	is_parenthesis: BOOLEAN
@@ -508,6 +649,12 @@ feature -- Status report
 			-- Is current feature name of the form unary 'alias "not"'?
 		do
 			Result := (code = tokens.prefix_not_code)
+		end
+
+	is_prefix_not_symbol: BOOLEAN
+			-- Is current feature name of the form unary 'alias "¬"'?
+		do
+			Result := (code = tokens.prefix_not_symbol_code)
 		end
 
 	is_prefixable: BOOLEAN
@@ -554,8 +701,12 @@ feature -- Access
 				Result := tokens.alias_parenthesis_name
 			when infix_and_code then
 				Result := tokens.alias_and_name
+			when infix_and_symbol_code then
+				Result := tokens.alias_and_symbol_name
 			when infix_and_then_code then
 				Result := tokens.alias_and_then_name
+			when infix_and_then_symbol_code then
+				Result := tokens.alias_and_then_symbol_name
 			when infix_div_code then
 				Result := tokens.alias_div_name
 			when infix_divide_code then
@@ -566,6 +717,8 @@ feature -- Access
 				Result := tokens.alias_gt_name
 			when infix_implies_code then
 				Result := tokens.alias_implies_name
+			when infix_implies_symbol_code then
+				Result := tokens.alias_implies_symbol_name
 			when infix_le_code then
 				Result := tokens.alias_le_name
 			when infix_lt_code then
@@ -576,8 +729,12 @@ feature -- Access
 				Result := tokens.alias_mod_name
 			when infix_or_code then
 				Result := tokens.alias_or_name
+			when infix_or_symbol_code then
+				Result := tokens.alias_or_symbol_name
 			when infix_or_else_code then
 				Result := tokens.alias_or_else_name
+			when infix_or_else_symbol_code then
+				Result := tokens.alias_or_else_symbol_name
 			when infix_plus_code then
 				Result := tokens.alias_plus_name
 			when infix_power_code then
@@ -586,6 +743,8 @@ feature -- Access
 				Result := tokens.alias_times_name
 			when infix_xor_code then
 				Result := tokens.alias_xor_name
+			when infix_xor_symbol_code then
+				Result := tokens.alias_xor_symbol_name
 			when infix_dotdot_code then
 				Result := tokens.alias_dotdot_name
 			when prefix_minus_code then
@@ -594,6 +753,8 @@ feature -- Access
 				Result := tokens.alias_plus_name
 			when prefix_not_code then
 				Result := tokens.alias_not_name
+			when prefix_not_symbol_code then
+				Result := tokens.alias_not_symbol_name
 			else
 					-- Should never happen.
 				Result := tokens.unknown_name
@@ -810,8 +971,12 @@ feature -- Comparison
 					Result := other.is_parenthesis
 				when infix_and_code then
 					Result := other.is_infix_and
+				when infix_and_symbol_code then
+					Result := other.is_infix_and_symbol
 				when infix_and_then_code then
 					Result := other.is_infix_and_then
+				when infix_and_then_symbol_code then
+					Result := other.is_infix_and_then_symbol
 				when infix_div_code then
 					Result := other.is_infix_div
 				when infix_divide_code then
@@ -822,6 +987,8 @@ feature -- Comparison
 					Result := other.is_infix_gt
 				when infix_implies_code then
 					Result := other.is_infix_implies
+				when infix_implies_symbol_code then
+					Result := other.is_infix_implies_symbol
 				when infix_le_code then
 					Result := other.is_infix_le
 				when infix_lt_code then
@@ -832,8 +999,12 @@ feature -- Comparison
 					Result := other.is_infix_mod
 				when infix_or_code then
 					Result := other.is_infix_or
+				when infix_or_symbol_code then
+					Result := other.is_infix_or_symbol
 				when infix_or_else_code then
 					Result := other.is_infix_or_else
+				when infix_or_else_symbol_code then
+					Result := other.is_infix_or_else_symbol
 				when infix_plus_code then
 					Result := other.is_infix_plus
 				when infix_power_code then
@@ -842,6 +1013,8 @@ feature -- Comparison
 					Result := other.is_infix_times
 				when infix_xor_code then
 					Result := other.is_infix_xor
+				when infix_xor_symbol_code then
+					Result := other.is_infix_xor_symbol
 				when infix_dotdot_code then
 					Result := other.is_infix_dotdot
 				when prefix_minus_code then
@@ -850,6 +1023,8 @@ feature -- Comparison
 					Result := other.is_prefix_plus
 				when prefix_not_code then
 					Result := other.is_prefix_not
+				when prefix_not_symbol_code then
+					Result := other.is_prefix_not_symbol
 				else
 					-- Result := False
 				end

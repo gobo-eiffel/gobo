@@ -34,18 +34,18 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 
 ----------/** Eiffel symbols **/------------------------------------------------
 
-[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]	{
+[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲∧⇒¬∨⊻]	{
 				last_break_end := 0
 				last_comment_end := 0
 				process_one_char_symbol (unicode_text_item (1))
 			}
-[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]{BREAK}+	{
+[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲∧⇒¬∨⊻]{BREAK}+	{
 				last_text_count := 1
 				last_break_end := text_count
 				last_comment_end := 0
 				process_one_char_symbol (unicode_text_item (1))
 			}
-[+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]({BREAK}|"--".*)+	{
+[+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲∧⇒¬∨⊻]({BREAK}|"--".*)+	{
 				last_text_count := 1
 				last_break_end := 0
 				last_comment_end := text_count
@@ -57,22 +57,22 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 				last_comment_end := text_count
 				process_one_char_symbol ('-')
 			}
-("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")	{
+("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?="|"∧…"|"∨…")	{
 				last_break_end := 0
 				last_comment_end := 0
-				process_two_char_symbol (text_item (1), text_item (2))
+				process_two_char_symbol (unicode_text_item (1), unicode_text_item (2))
 			}
-("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?="){BREAK}+	{
+("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?="|"∧…"|"∨…"){BREAK}+	{
 				last_text_count := 2
 				last_break_end := text_count
 				last_comment_end := 0
-				process_two_char_symbol (text_item (1), text_item (2))
+				process_two_char_symbol (unicode_text_item (1), unicode_text_item (2))
 			}
-("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")({BREAK}|"--".*)+	{
+("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?="|"∧…"|"∨…")({BREAK}|"--".*)+	{
 				last_text_count := 2
 				last_break_end := 0
 				last_comment_end := text_count
-				process_two_char_symbol (text_item (1), text_item (2))
+				process_two_char_symbol (unicode_text_item (1), unicode_text_item (2))
 			}
 
 
@@ -297,7 +297,7 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 
 ----------/** Eiffel strings **/------------------------------------------------
 
-\"([-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")\" {
+\"([-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲∧⇒¬∨⊻]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?="|"∧…"|"∨…")\" {
 					-- Regular manifest string.
 					-- Special symbols, standard operators and predefined operators
 					-- which cannot be free operators.
@@ -305,7 +305,7 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 				last_comment_end := 0
 				process_regular_manifest_string (text_count)
 			}
-\"([-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")\"/({BREAK}|"--") {
+\"([-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲∧⇒¬∨⊻]|"//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?="|"∧…"|"∨…")\"/({BREAK}|"--") {
 					-- Regular manifest string.
 					-- Special symbols, standard operators and predefined operators
 					-- which cannot be free operators.

@@ -662,6 +662,24 @@ feature -- Eiffel keywords
 
 feature -- Eiffel symbols
 
+	new_and_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∧' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_and_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
+	new_and_then_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∧…' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_and_then_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_arrow_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '->' symbol
 		require
@@ -805,6 +823,15 @@ feature -- Eiffel symbols
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_implies_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '⇒' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_implies_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_le_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '<=' symbol
 		require
@@ -875,6 +902,15 @@ feature -- Eiffel symbols
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_not_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '¬' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_not_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_not_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '/=' symbol
 		require
@@ -899,6 +935,24 @@ feature -- Eiffel symbols
 			a_scanner_not_void: a_scanner /= Void
 		do
 			Result := tokens.open_repeat_symbol
+		end
+
+	new_or_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∨' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_or_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
+	new_or_else_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∨…' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_or_else_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_plus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
@@ -991,6 +1045,15 @@ feature -- Eiffel symbols
 			a_scanner_not_void: a_scanner /= Void
 		do
 			create Result.make_times
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
+	new_xor_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '⊻' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_xor_symbol
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1297,11 +1360,39 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_and_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∧" feature name
+		do
+			if a_string /= Void then
+				create Result.make_and_symbol (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_and_then_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "and then" feature name
 		do
 			if a_string /= Void then
 				create Result.make_and_then (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
+	new_alias_and_then_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∧…" feature name
+		do
+			if a_string /= Void then
+				create Result.make_and_then_symbol (a_string)
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
@@ -1425,6 +1516,20 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_implies_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "⇒" feature name
+		do
+			if a_string /= Void then
+				create Result.make_implies_symbol (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_le_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "<=" feature name
 		do
@@ -1503,6 +1608,20 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_not_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "¬" feature name
+		do
+			if a_string /= Void then
+				create Result.make_not_symbol (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_or_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "or" feature name
 		do
@@ -1517,11 +1636,39 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_or_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∨" feature name
+		do
+			if a_string /= Void then
+				create Result.make_or_symbol (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_or_else_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "or else" feature name
 		do
 			if a_string /= Void then
 				create Result.make_or_else (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
+	new_alias_or_else_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∨…" feature name
+		do
+			if a_string /= Void then
+				create Result.make_or_else_symbol (a_string)
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
@@ -1592,6 +1739,20 @@ feature -- AST nodes
 		do
 			if a_string /= Void then
 				create Result.make_xor (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
+	new_alias_xor_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "⊻" feature name
+		do
+			if a_string /= Void then
+				create Result.make_xor_symbol (a_string)
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end

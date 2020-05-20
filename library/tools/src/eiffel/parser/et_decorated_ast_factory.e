@@ -83,6 +83,8 @@ inherit
 			new_void_keyword,
 			new_when_keyword,
 			new_xor_keyword,
+			new_and_symbol,
+			new_and_then_symbol,
 			new_arrow_symbol,
 			new_assign_attempt_symbol,
 			new_assign_symbol,
@@ -100,6 +102,7 @@ inherit
 			new_for_all_symbol,
 			new_ge_symbol,
 			new_gt_symbol,
+			new_implies_symbol,
 			new_le_symbol,
 			new_left_array_symbol,
 			new_left_brace_symbol,
@@ -108,9 +111,12 @@ inherit
 			new_lt_symbol,
 			new_minus_symbol,
 			new_mod_symbol,
+			new_not_symbol,
 			new_not_equal_symbol,
 			new_not_tilde_symbol,
 			new_open_repeat_symbol,
+			new_or_symbol,
+			new_or_else_symbol,
 			new_plus_symbol,
 			new_power_symbol,
 			new_question_mark_symbol,
@@ -122,6 +128,7 @@ inherit
 			new_there_exists_symbol,
 			new_tilde_symbol,
 			new_times_symbol,
+			new_xor_symbol,
 			new_binary_integer_constant,
 			new_break,
 			new_c1_character_constant,
@@ -150,7 +157,9 @@ inherit
 			new_agent_typed_open_argument,
 			new_agent_open_target,
 			new_alias_and_name,
+			new_alias_and_symbol_name,
 			new_alias_and_then_name,
+			new_alias_and_then_symbol_name,
 			new_alias_bracket_name,
 			new_alias_div_name,
 			new_alias_divide_name,
@@ -159,18 +168,23 @@ inherit
 			new_alias_ge_name,
 			new_alias_gt_name,
 			new_alias_implies_name,
+			new_alias_implies_symbol_name,
 			new_alias_le_name,
 			new_alias_lt_name,
 			new_alias_minus_name,
 			new_alias_mod_name,
 			new_alias_not_name,
+			new_alias_not_symbol_name,
 			new_alias_or_name,
+			new_alias_or_symbol_name,
 			new_alias_or_else_name,
+			new_alias_or_else_symbol_name,
 			new_alias_parenthesis_name,
 			new_alias_plus_name,
 			new_alias_power_name,
 			new_alias_times_name,
 			new_alias_xor_name,
+			new_alias_xor_symbol_name,
 			new_all_export,
 			new_argument_name_comma,
 			new_assertion_semicolon,
@@ -961,6 +975,22 @@ feature -- Eiffel keywords
 
 feature -- Eiffel symbols
 
+	new_and_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∧' symbol
+		do
+			create Result.make_and_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_and_then_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∧…' symbol
+		do
+			create Result.make_and_then_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
 	new_arrow_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '->' symbol
 		do
@@ -1097,6 +1127,14 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
+	new_implies_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '⇒' symbol
+		do
+			create Result.make_implies_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
 	new_le_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '<=' symbol
 		do
@@ -1161,6 +1199,14 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
+	new_not_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '¬' symbol
+		do
+			create Result.make_not_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
 	new_not_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '/=' symbol
 		do
@@ -1181,6 +1227,22 @@ feature -- Eiffel symbols
 			-- New '⟳' symbol
 		do
 			create Result.make_open_repeat
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_or_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∨' symbol
+		do
+			create Result.make_or_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_or_else_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∨…' symbol
+		do
+			create Result.make_or_else_symbol
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1269,6 +1331,14 @@ feature -- Eiffel symbols
 			-- New '*' symbol
 		do
 			create Result.make_times
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_xor_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '⊻' symbol
+		do
+			create Result.make_xor_symbol
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1581,11 +1651,39 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_and_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∧" feature name
+		do
+			if a_string /= Void then
+				create Result.make_and_symbol (a_string)
+				if an_alias /= Void then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_and_then_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "and then" feature name
 		do
 			if a_string /= Void then
 				create Result.make_and_then (a_string)
+				if an_alias /= Void then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
+	new_alias_and_then_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∧…" feature name
+		do
+			if a_string /= Void then
+				create Result.make_and_then_symbol (a_string)
 				if an_alias /= Void then
 					Result.set_alias_keyword (an_alias)
 				end
@@ -1707,6 +1805,20 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_implies_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "⇒" feature name
+		do
+			if a_string /= Void then
+				create Result.make_implies_symbol (a_string)
+				if an_alias /= Void then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_le_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "<=" feature name
 		do
@@ -1777,6 +1889,20 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_not_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "¬" feature name
+		do
+			if a_string /= Void then
+				create Result.make_not_symbol (a_string)
+				if an_alias /= Void then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_or_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "or" feature name
 		do
@@ -1791,11 +1917,39 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_or_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∨" feature name
+		do
+			if a_string /= Void then
+				create Result.make_or_symbol (a_string)
+				if an_alias /= Void then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_or_else_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "or else" feature name
 		do
 			if a_string /= Void then
 				create Result.make_or_else (a_string)
+				if an_alias /= Void then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
+	new_alias_or_else_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∨…" feature name
+		do
+			if a_string /= Void then
+				create Result.make_or_else_symbol (a_string)
 				if an_alias /= Void then
 					Result.set_alias_keyword (an_alias)
 				end
@@ -1866,6 +2020,20 @@ feature -- AST nodes
 		do
 			if a_string /= Void then
 				create Result.make_xor (a_string)
+				if an_alias /= Void then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
+	new_alias_xor_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "⊻" feature name
+		do
+			if a_string /= Void then
+				create Result.make_xor_symbol (a_string)
 				if an_alias /= Void then
 					Result.set_alias_keyword (an_alias)
 				end
