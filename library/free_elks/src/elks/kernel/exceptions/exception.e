@@ -3,8 +3,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2020-01-15 15:24:22 +0100 (Wed, 15 Jan 2020) $"
-	revision: "$Revision: 103853 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EXCEPTION
@@ -83,7 +83,7 @@ feature -- Access
 			end
 		end
 
-	exception_trace: detachable STRING
+	exception_trace: detachable STRING_8
 			-- String representation of current exception trace
 		obsolete
 			"Use `trace' instead. [2017-05-31]"
@@ -135,11 +135,11 @@ feature -- Access
 			cause_not_void: Result /= Void
 		end
 
-	frozen recipient_name: detachable STRING
+	frozen recipient_name: detachable STRING_8
 			-- Name of the routine whose execution was
 			-- interrupted by current exception
 
-	frozen type_name: detachable STRING
+	frozen type_name: detachable STRING_8
 			-- Name of the class that includes the recipient
 			-- of original form of current exception
 
@@ -153,7 +153,9 @@ feature -- Access obselete
 		obsolete
 			"Use `trace' instead. [2017-05-31]"
 		do
-			Result := exception_trace
+			if attached exception_trace as t then
+				Result := t
+			end
 		end
 
 feature -- Status settings
@@ -227,10 +229,16 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (generating_type.name_32)
+			Result := generating_type.out
 			if attached trace as t then
 				Result.append_character ('%N')
-				{UTF_CONVERTER}.escaped_utf_32_string_into_utf_8_string_8 (t, Result)
+				if attached {READABLE_STRING} t as r then
+					Result.append (r)
+				elseif attached {STRING_8} Result as s then
+					{UTF_CONVERTER}.escaped_utf_32_string_into_utf_8_string_8 (t, s)
+				elseif attached {STRING_32} Result as s then
+					s.append_string_general (t)
+				end
 			end
 		end
 
@@ -289,7 +297,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			internal_trace := a_trace
 		end
 
-	internal_trace: detachable STRING
+	internal_trace: detachable STRING_8
 			-- String representation of the exception trace
 
 ;note

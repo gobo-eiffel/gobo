@@ -64,7 +64,7 @@ feature {ENCODING} -- Access
 			last_converted_stream_not_void: Result /= Void
 		end
 
-	last_converted_string_8: detachable STRING_8
+	last_converted_string_8: STRING_8
 		require
 			last_conversion_successful: last_conversion_successful
 			not_wide: not last_was_wide_string

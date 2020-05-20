@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Original values of the attributes of a mismatched object."
 	instructions: "[
 		This object will contain the original values of the attributes
@@ -19,7 +19,7 @@ note
 class MISMATCH_INFORMATION
 
 inherit
-	HASH_TABLE [detachable ANY, STRING]
+	HASH_TABLE [detachable ANY, STRING_8]
 		redefine
 			default_create,
 			out
@@ -42,13 +42,13 @@ feature -- Initialization
 
 feature -- Access
 
-	class_name: STRING
+	class_name: STRING_8
 			-- Name of generating class which held attribute values
 		do
 			check
 				has_class_entry: has (type_name_key)
 			end
-			check attached {STRING} item (type_name_key) as r then
+			check attached {STRING_8} item (type_name_key) as r then
 				Result := r
 			end
 		ensure
@@ -61,7 +61,7 @@ feature -- Access
 	current_version: detachable IMMUTABLE_STRING_8
 			-- Version associated to `class_name' in the current system.
 
-	type_name_key: STRING = "_type_name"
+	type_name_key: STRING_8 = "_type_name"
 			-- Associated key for retrieving the type name of a mismatch.
 
 feature -- Status report
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 	internal_put (value: ANY; ckey: POINTER)
 			-- Allows run-time to insert items into table
 		do
-			put (value, create {STRING}.make_from_c (ckey))
+			put (value, create {STRING_8}.make_from_c (ckey))
 		end
 
 	set_string_versions (a_stored_version, a_current_version: POINTER)
@@ -177,7 +177,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -300,9 +300,9 @@ feature -- Obsoletes
 	maximum_character_code: INTEGER
 			-- Largest supported code for CHARACTER_8 values
 		obsolete
-			"Use `{CHARACTER}.max_value' instead. [2017-05-31]"
+			"Use `{CHARACTER_8}.max_value' instead. [2017-05-31]"
 		do
-			Result := {CHARACTER}.max_value
+			Result := {CHARACTER_8}.max_value
 		ensure
 			instance_free: class
 			meaningful: Result >= 127
@@ -322,9 +322,9 @@ feature -- Obsoletes
 	minimum_character_code: INTEGER
 			-- Smallest supported code for CHARACTER_8 values
 		obsolete
-			"Use `{CHARACTER}.min_value' instead. [2017-05-31]"
+			"Use `{CHARACTER_8}.min_value' instead. [2017-05-31]"
 		do
-			Result := {CHARACTER}.min_value
+			Result := {CHARACTER_8}.min_value
 		ensure
 			instance_free: class
 			meaningful: Result <= 0
@@ -342,7 +342,7 @@ feature -- Obsoletes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

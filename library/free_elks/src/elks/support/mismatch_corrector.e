@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Ancestor of all classes that need facility to retrieve an older version of an instance of current
 		class through storable.
@@ -19,13 +19,13 @@ feature -- Correction
 	correct_mismatch
 			-- Attempt to correct object mismatch using `mismatch_information'.
 		local
-			l_msg: STRING
+			l_msg: STRING_32
 			l_exc: EXCEPTIONS
 		do
 				-- If it is not redefined then we raise an exception.
-			create l_msg.make_from_string ("Mismatch: ")
+			create l_msg.make_from_string_general ("Mismatch: ")
 			create l_exc
-			l_msg.append (generating_type.name)
+			l_msg.append (generating_type.name_32)
 			l_exc.raise_retrieval_exception (l_msg)
 		end
 
@@ -36,7 +36,7 @@ feature -- Correction
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

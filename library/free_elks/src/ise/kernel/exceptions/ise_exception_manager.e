@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Exception manager. 
 		The manager handles all common operations of exception mechanism and interaction with the ISE runtime.
@@ -288,7 +288,7 @@ feature {EXCEPTIONS} -- Compatibility support
 
 feature {NONE} -- Access
 
-	exception_data: detachable TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]
+	exception_data: detachable TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING_8; rf_routine, rf_class: STRING_8; trace: STRING_8; line_number: INTEGER; is_invariant_entry: BOOLEAN]
 			-- Exception data
 			-- Used to store temporary exception information,
 			-- which is used to create exception object later.
@@ -309,8 +309,8 @@ feature {NONE} -- Element change
 			last_exception_set: last_exception_cell.item = a_last_exception
 		end
 
-	set_exception_data (code: INTEGER; new_obj: BOOLEAN; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING;
-						rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN)
+	set_exception_data (code: INTEGER; new_obj: BOOLEAN; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING_8;
+						rf_routine, rf_class: STRING_8; trace: STRING_8; line_number: INTEGER; is_invariant_entry: BOOLEAN)
 			-- Set exception data.
 		do
 			exception_data_cell.put ([code, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, trace, line_number, is_invariant_entry])
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation, ignoring
 
 feature {NONE} -- Cells
 
-	exception_data_cell: CELL [detachable TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]]
+	exception_data_cell: CELL [detachable TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING_8; rf_routine, rf_class: STRING_8; trace: STRING_8; line_number: INTEGER; is_invariant_entry: BOOLEAN]]
 			-- Cell to hold current exception data
 		once
 			create Result.put (Void)
@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -16,9 +16,18 @@ frozen class
 feature -- Feature specific to ISE runtime.
 
 	frozen generator_of_type (a_type_id: INTEGER): STRING
-			-- Name of the generating class of current object
+			-- Name of the generating class of current object.
 		external
 			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen generator_8_of_type (a_type_id: INTEGER): STRING_8
+			-- Name of the generating class of current object.
+		external
+			"built_in static"
+		alias "generator_of_type"
 		ensure
 			instance_free: class
 		end
@@ -33,6 +42,14 @@ feature -- Feature specific to ISE runtime.
 	frozen generating_type_of_type (a_type_id: INTEGER): STRING
 		external
 			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen generating_type_8_of_type (a_type_id: INTEGER): STRING_8
+		external
+			"built_in static"
+		alias "generating_type_of_type"
 		ensure
 			instance_free: class
 		end
@@ -184,7 +201,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	frozen storable_version_of_type (a_type_id: INTEGER): detachable STRING
+	frozen storable_version_of_type (a_type_id: INTEGER): detachable STRING_8
 		external
 			"built_in static"
 		ensure
@@ -422,7 +439,7 @@ feature -- Internal support
 			"built_in static"
 		ensure
 			instance_free: class
-		end		
+		end
 
 	frozen character_8_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): CHARACTER_8
 			-- Character value of the field at `field_offset' in object `a_object + a_physical_offset'.
@@ -874,7 +891,7 @@ feature -- Object marking
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

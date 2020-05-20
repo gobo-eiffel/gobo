@@ -64,63 +64,55 @@ feature -- Output
 	put_integer, putint, put_integer_32 (i: INTEGER)
 			-- Write ASCII value of `i' at current position.
 		do
-			put_string (i.out)
+			put_string_general (i.out)
 		end
 
 	put_integer_64 (i: INTEGER_64)
 			-- Write ASCII value of `i' at current position.
 		do
-			put_string (i.out)
+			put_string_general (i.out)
 		end
 
 	put_integer_16 (i: INTEGER_16)
 			-- Write ASCII value of `i' at current position.
 		do
-			put_string (i.out)
+			put_string_general (i.out)
 		end
 
 	put_integer_8 (i: INTEGER_8)
 			-- Write ASCII value of `i' at current position.
 		do
-			put_string (i.out)
+			put_string_general (i.out)
 		end
 
 	put_natural_64 (i: NATURAL_64)
 			-- Write ASCII value of `i' at current position.
 		do
-			put_string (i.out)
+			put_string_general (i.out)
 		end
 
 	put_natural, put_natural_32 (i: NATURAL_32)
 			-- Write ASCII value of `i' at current position.
 		do
-			put_string (i.out)
+			put_string_general (i.out)
 		end
 
 	put_natural_16 (i: NATURAL_16)
 			-- Write ASCII value of `i' at current position.
 		do
-			put_string (i.out)
+			put_string_general (i.out)
 		end
 
 	put_natural_8 (i: NATURAL_8)
 			-- Write ASCII value of `i' at current position.
 		do
-			put_string (i.out)
+			put_string_general (i.out)
 		end
 
 	put_boolean, putbool (b: BOOLEAN)
 			-- Write ASCII value of `b' at current position.
-		local
-			ext_bool_str: ANY
 		do
-			if b then
-				ext_bool_str := true_string.to_c
-				file_ps (file_pointer, $ext_bool_str, true_string.count)
-			else
-				ext_bool_str := false_string.to_c
-				file_ps (file_pointer, $ext_bool_str, false_string.count)
-			end
+			put_string_general (if b then true_string else false_string end)
 		end
 
 	put_real, putreal, put_real_32 (r: REAL_32)
@@ -136,12 +128,18 @@ feature -- Output
 		end
 
 	put_string_32 (s: READABLE_STRING_32)
-			-- Write Unicode string `s` at current position.
+			-- Write string `s` at current position.
+		do
+			put_string_general (s)
+		end
+
+	put_string_general (s: READABLE_STRING_GENERAL)
+			-- Write string `s` at current position.
 		require
 			extendible: extendible
 			non_void: s /= Void
 		local
-			str: STRING
+			str: STRING_8
 			utf32, utf8: ENCODING
 			l_encoding: like encoding
 		do

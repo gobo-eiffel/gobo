@@ -65,10 +65,18 @@ feature -- Access
 			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
 			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
 			-- Consider using `name_32` instead.
+		local
+			s: like runtime_name
 		do
 			Result := internal_name
 			if not attached Result then
-				create Result.make_from_string (runtime_name)
+				s := runtime_name
+				create Result.make_from_string
+					(if attached {READABLE_STRING_8} s as s8 then
+						s8
+					else
+						{UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s)
+					end)
 				internal_name := Result
 			end
 		ensure
@@ -205,7 +213,13 @@ feature -- Output
 	out: STRING
 			-- <Precursor>
 		do
-			create Result.make_from_string (name)
+			if attached {READABLE_STRING} name_32 as n then
+				create Result.make_from_string (n)
+			elseif attached {READABLE_STRING} name as n then
+				create Result.make_from_string (n)
+			else
+				check known_string_type: False then end
+			end
 		end
 
 	debug_output: READABLE_STRING_32
@@ -336,7 +350,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

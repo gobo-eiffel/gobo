@@ -421,7 +421,7 @@ feature -- Conversion
 			Result_valid_count: Result.count ={PLATFORM}.Integer_16_bits // 4
 		end
 
-	to_hex_character: CHARACTER
+	to_hex_character: CHARACTER_8
 			-- Convert `item' into an hexadecimal character.
 		require
 			in_bounds: 0 <= item and item <= 15
@@ -434,7 +434,7 @@ feature -- Conversion
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end
 
-	to_character: CHARACTER
+	to_character: CHARACTER_8
 			-- Returns corresponding ASCII character to `item' value.
 		obsolete
 			"Use `to_character_8' instead. [2017-05-31]"

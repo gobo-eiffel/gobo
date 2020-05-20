@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		To easily manage allocation and release of allocated C memory, and
 		to perform insertion of basic elements. Byte order is by default
@@ -282,7 +282,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Boolean_bytes)
 		end
 
-	read_character (pos: INTEGER): CHARACTER
+	read_character (pos: INTEGER): CHARACTER_8
 			-- Read CHARACTER at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -1233,7 +1233,7 @@ invariant
 	valid_count: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

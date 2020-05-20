@@ -682,27 +682,27 @@ feature -- Element change
 		end
 
 	prepend_boolean (b: BOOLEAN)
-			-- Prepend the string representation of `b' at front.
+			-- Prepend the string representation of `b` at front.
 		do
-			prepend (b.out)
+			prepend (if b then "True" else "False" end)
 		end
 
 	prepend_double (d: REAL_64)
 			-- Prepend the string representation of `d' at front.
 		do
-			prepend (d.out)
+			prepend_string_general (d.out)
 		end
 
 	prepend_integer (i: INTEGER)
 			-- Prepend the string representation of `i' at front.
 		do
-			prepend (i.out)
+			prepend_string_general (i.out)
 		end
 
 	prepend_real (r: REAL_32)
 			-- Prepend the string representation of `r' at front.
 		do
-			prepend (r.out)
+			prepend_string_general (r.out)
 		end
 
 	prepend_string (s: detachable READABLE_STRING_8)
@@ -814,7 +814,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character ((l_value \\ 10 + 48).to_character_8)
 					l_value := l_value // 10
 				end
 
@@ -865,7 +865,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character ((l_value \\ 10 + 48).to_character_8)
 					l_value := l_value // 10
 				end
 
@@ -916,7 +916,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character ((l_value \\ 10 + 48).to_character_8)
 					l_value := l_value // 10
 				end
 
@@ -967,7 +967,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character ((l_value \\ 10 + 48).to_character_8)
 					l_value := l_value // 10
 				end
 
@@ -1005,7 +1005,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character ((l_value \\ 10 + 48).to_character_8)
 					l_value := l_value // 10
 				end
 
@@ -1043,7 +1043,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character ((l_value \\ 10 + 48).to_character_8)
 					l_value := l_value // 10
 				end
 
@@ -1081,7 +1081,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character ((l_value \\ 10 + 48).to_character_8)
 					l_value := l_value // 10
 				end
 
@@ -1119,7 +1119,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_8)
+					append_character ((l_value \\ 10 + 48).to_character_8)
 					l_value := l_value // 10
 				end
 
@@ -1142,13 +1142,13 @@ feature -- Element change
 	append_real (r: REAL_32)
 			-- Append the string representation of `r' at end.
 		do
-			append (r.out)
+			append_string_general (r.out)
 		end
 
 	append_double (d: REAL_64)
 			-- Append the string representation of `d' at end.
 		do
-			append (d.out)
+			append_string_general (d.out)
 		end
 
 	append_character, extend (c: CHARACTER_8)
@@ -1170,9 +1170,9 @@ feature -- Element change
 		end
 
 	append_boolean (b: BOOLEAN)
-			-- Append the string representation of `b' at end.
+			-- Append the string representation of `b` at end.
 		do
-			append (b.out)
+			append (if b then "True" else "False" end)
 		end
 
 	insert (s: READABLE_STRING_8; i: INTEGER)

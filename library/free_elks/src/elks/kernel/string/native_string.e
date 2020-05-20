@@ -109,7 +109,7 @@ feature -- Access
 				-- Alias `managed_data' to be a C string so that we copy the raw sequence
 				-- of bytes into a STRING_8 but we do not include the null-terminating character.
 			create l_cstr.make_shared_from_pointer_and_count (managed_data.item, managed_data.count)
-			Result := l_cstr.substring (1, managed_data.count - unit_size)
+			Result := l_cstr.substring_8 (1, managed_data.count - unit_size)
 		end
 
 	string: STRING_32
@@ -277,7 +277,7 @@ invariant
 	even_count_on_windows: {PLATFORM}.is_windows implies managed_data.count \\ unit_size = 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

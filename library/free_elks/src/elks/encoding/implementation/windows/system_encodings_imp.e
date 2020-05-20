@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	system_code_page: STRING
+	system_code_page: STRING_8
 			-- System code page
 			-- Take oem as default
 		local
@@ -27,7 +27,7 @@ feature -- Access
 			Result.append_string_general (l_result)
 		end
 
-	console_code_page: STRING
+	console_code_page: STRING_8
 			-- Console code page
 		local
 			code_page: like console_input_code_page
@@ -43,7 +43,7 @@ feature -- Access
 			Result.append_natural_32 (code_page)
 		end
 
-	iso_8859_1_code_page: STRING = "28591"
+	iso_8859_1_code_page: STRING_8 = "28591"
 
 feature {NONE} -- NLS LC CTYPE CONSTANTS
 

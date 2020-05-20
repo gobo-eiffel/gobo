@@ -818,7 +818,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_32)
+					append_character ((l_value \\ 10 + 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -869,7 +869,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_32)
+					append_character ((l_value \\ 10 + 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -920,7 +920,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_32)
+					append_character ((l_value \\ 10 + 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -971,7 +971,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_32)
+					append_character ((l_value \\ 10 + 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -1009,7 +1009,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_32)
+					append_character ((l_value \\ 10 + 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -1047,7 +1047,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_32)
+					append_character ((l_value \\ 10+ 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -1085,7 +1085,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_32)
+					append_character ((l_value \\ 10 + 48).to_character_32)
 					l_value := l_value // 10
 				end
 
@@ -1123,7 +1123,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character_32)
+					append_character ((l_value \\ 10 + 48).to_character_32)
 					l_value := l_value // 10
 				end
 

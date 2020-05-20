@@ -168,10 +168,36 @@ feature -- Access
 			susbstring_not_void: Result /= Void
 		end
 
+	substring_8 (start_pos, end_pos: INTEGER): STRING_8
+			-- Copy of substring containing all characters at indices
+			-- between `start_pos' and `end_pos'.
+		require
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_position_not_too_big: end_pos <= capacity
+		local
+			l_count: INTEGER
+		do
+			l_count := end_pos - start_pos + 1
+			create Result.make (l_count)
+			Result.set_count (l_count)
+			read_substring_into (Result, start_pos, end_pos)
+		ensure
+			susbstring_not_void: Result /= Void
+		end
+
 	string: STRING
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 		do
 			Result := substring (1, c_strlen (item))
+		ensure
+			string_not_void: Result /= Void
+		end
+
+	string_8: STRING_8
+			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
+		do
+			Result := substring_8 (1, c_strlen (item))
 		ensure
 			string_not_void: Result /= Void
 		end
@@ -434,7 +460,7 @@ invariant
 	count_not_negative: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

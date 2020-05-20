@@ -22,6 +22,8 @@
 		</file_rule>
 		<option warning="true"/>
 		<mapping old_name="REAL" new_name="REAL_32"/>
+		<mapping old_name="IMMUTABLE_STRING" new_name="IMMUTABLE_STRING_8"/>
+		<mapping old_name="READABLE_STRING" new_name="READABLE_STRING_8"/>
 		<mapping old_name="STRING" new_name="STRING_8"/>
 		<mapping old_name="REAL_REF" new_name="REAL_32_REF"/>
 		<mapping old_name="INTEGER_REF" new_name="INTEGER_32_REF"/>

@@ -195,7 +195,7 @@ feature -- Status report
 			Result := {ISE_RUNTIME}.type_conforms_to (a_source_type, {ISE_RUNTIME}.detachable_type (a_field_type))
 		end
 
-	field_name (i: INTEGER): STRING
+	field_name (i: INTEGER): STRING_8
 			-- Name of `i'-th field of `object'
 		require
 			index_large_enough: i >= 1
@@ -632,7 +632,7 @@ feature {REFLECTED_OBJECT} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

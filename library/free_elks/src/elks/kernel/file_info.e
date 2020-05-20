@@ -254,11 +254,11 @@ feature {NATIVE_STRING_HANDLER} -- Access
 				create l_cstring.make_empty (l_count)
 				l_count := utf_16_to_multi_byte (a_ptr, l_cstring.item, l_count)
 					-- We do -1 since we simply do not count the null terminating character to build our string.
-				Result := l_cstring.substring (1, l_count - 1)
+				Result := l_cstring.substring_8 (1, l_count - 1)
 			else
 					-- On Unix we do not even try to interpret the path, we just give it as is.
 				create l_cstring.make_shared_from_pointer (a_ptr)
-				Result := l_cstring.string
+				Result := l_cstring.string_8
 			end
 		end
 
@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

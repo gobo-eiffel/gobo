@@ -404,7 +404,7 @@ feature -- Conversion
 			Result_valid_count: Result.count =  {PLATFORM}.Integer_16_bits // 4
 		end
 
-	to_hex_character: CHARACTER
+	to_hex_character: CHARACTER_8
 			-- `item' converted into a hexadecimal character.
 		require
 			in_bounds: 0 <= item and item <= 15

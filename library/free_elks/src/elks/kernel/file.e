@@ -8,9 +8,9 @@
 
 deferred class FILE inherit
 
-	UNBOUNDED [CHARACTER]
+	UNBOUNDED [CHARACTER_8]
 
-	SEQUENCE [CHARACTER]
+	SEQUENCE [CHARACTER_8]
 		undefine
 			prune
 		redefine
@@ -221,7 +221,7 @@ feature -- Access
 			name_not_empty: not Result.is_empty
 		end
 
-	item: CHARACTER
+	item: CHARACTER_8
 			-- Current item
 		do
 			read_character
@@ -1030,7 +1030,7 @@ feature -- Iteration
 
 feature -- Element change
 
-	extend (v: CHARACTER)
+	extend (v: like item)
 			-- Include `v' at end.
 		do
 			put_character (v)
@@ -1121,7 +1121,7 @@ feature -- Element change
 			file_ps (file_pointer, p.item + start_pos, nb_bytes)
 		end
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Write `c' at current position.
 		do
 			file_pc (file_pointer, c)
@@ -1843,7 +1843,7 @@ feature {NONE} -- Implementation
 			"eif_file_fd"
 		end
 
-	file_gc (file: POINTER): CHARACTER
+	file_gc (file: POINTER): CHARACTER_8
 			-- Access the next character
 		external
 			"C blocking signature (FILE *): EIF_CHARACTER use %"eif_file.h%""

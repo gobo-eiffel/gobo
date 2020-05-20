@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "System encoding implementation inferfaces"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,24 +10,24 @@ deferred class
 
 feature -- Access
 
-	system_code_page: STRING
+	system_code_page: STRING_8
 			-- System code page/charset
 		deferred
 		end
 
-	console_code_page: STRING
+	console_code_page: STRING_8
 			-- Console code page/charset
 		deferred
 		end
 
-	iso_8859_1_code_page: STRING
+	iso_8859_1_code_page: STRING_8
 			-- ISO-8859-1 encoding.
 		deferred
 		end
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -36,7 +36,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

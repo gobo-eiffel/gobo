@@ -6,8 +6,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2020-01-15 15:24:22 +0100 (Wed, 15 Jan 2020) $"
-	revision: "$Revision: 103853 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EXCEPTIONS
 
@@ -19,7 +19,7 @@ inherit
 
 feature -- Status report
 
-	meaning (except: INTEGER): detachable STRING
+	meaning (except: INTEGER): detachable STRING_8
 			-- A message in English describing what `except' is
 		do
 			if attached exception_manager.exception_from_code (except) as e then
@@ -49,7 +49,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	is_developer_exception_of_name (name: detachable STRING): BOOLEAN
+	is_developer_exception_of_name (name: detachable STRING_8): BOOLEAN
 			-- Is the last exception originally due to a developer
 			-- exception of name `name'?
 		do
@@ -60,7 +60,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	developer_exception_name: detachable STRING
+	developer_exception_name: detachable STRING_8
 			-- Name of last developer-raised exception
 		require
 			applicable: is_developer_exception
@@ -97,7 +97,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	tag_name: detachable STRING
+	tag_name: detachable STRING_8
 			-- Tag of last violated assertion clause
 		do
 			if attached exception_manager.last_exception as e and then attached e.description as d then
@@ -107,7 +107,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	recipient_name: detachable STRING
+	recipient_name: detachable STRING_8
 			-- Name of the routine whose execution was
 			-- interrupted by last exception
 		do
@@ -118,7 +118,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	class_name: detachable STRING
+	class_name: detachable STRING_8
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		do
@@ -139,7 +139,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	exception_trace: detachable STRING
+	exception_trace: detachable STRING_8
 			-- String representation of the exception trace
 		do
 			if attached exception_manager.last_exception as e and then attached e.original.trace as t then
@@ -149,7 +149,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	original_tag_name: detachable STRING
+	original_tag_name: detachable STRING_8
 			-- Assertion tag for original form of last
 			-- assertion violation.
 		do
@@ -171,7 +171,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	original_recipient_name: detachable STRING
+	original_recipient_name: detachable STRING_8
 			-- Name of the routine whose execution was
 			-- interrupted by original form of last exception
 		do
@@ -182,7 +182,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	original_class_name: detachable STRING
+	original_class_name: detachable STRING_8
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		do
@@ -217,7 +217,7 @@ feature -- Status setting
 			instance_free: class
 		end
 
-	raise (name: detachable STRING)
+	raise (name: detachable READABLE_STRING_GENERAL)
 			-- Raise a developer exception of name `name'.
 		local
 			l_exception: DEVELOPER_EXCEPTION
@@ -229,7 +229,7 @@ feature -- Status setting
 			instance_free: class
 		end
 
-	raise_retrieval_exception (name: detachable STRING)
+	raise_retrieval_exception (name: detachable READABLE_STRING_GENERAL)
 			-- Raise a retrieval exception of name `name'.
 		do
 			if attached exception_manager.exception_from_code (serialization_exception) as l_exception then

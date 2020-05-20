@@ -270,7 +270,7 @@ feature -- Input
 
 feature -- Output
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Write `c' at end of default output.
 		do
 			console_pc (file_pointer, c)
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			"C blocking signature (FILE *): EIF_REAL use %"eif_console.h%""
 		end
 
-	console_readchar (file: POINTER): CHARACTER
+	console_readchar (file: POINTER): CHARACTER_8
 			-- Read a character from the console
 		external
 			"C blocking signature (FILE *): EIF_CHARACTER use %"eif_console.h%""

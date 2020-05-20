@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Exception for a COM error
 		]"
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 	frozen ccom_hresult_to_string (a_code: INTEGER): STRING
 		do
 			Result := a_code.to_hex_string
-			Result := "0x" + Result
+			Result := {STRING} "0x" + Result
 		end
 
 	frozen ccom_hresult (an_exception_code: POINTER): INTEGER
@@ -193,7 +193,7 @@ feature {NONE} -- Accesss
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

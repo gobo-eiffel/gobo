@@ -227,7 +227,7 @@ feature -- Conversion
 			valid_count: Result.count = a_string.count * 2
 		end
 
-	string_general_to_stream (a_string: READABLE_STRING_GENERAL): STRING
+	string_general_to_stream (a_string: READABLE_STRING_GENERAL): STRING_8
 			-- Streamize `a_string`.
 		require
 			a_string_not_void: a_string /= Void

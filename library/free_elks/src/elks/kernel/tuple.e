@@ -1004,7 +1004,7 @@ feature -- Concatenation
 						l_type_string.append_character (',')
 						l_type_string.append_character (' ')
 					end
-					l_type_string.append (t1.generic_parameter_type (i).name)
+					l_type_string.append (t1.generic_parameter_type (i).out)
 					l_items.force (item (i), i - 1)
 					i := i + 1
 				end
@@ -1016,7 +1016,7 @@ feature -- Concatenation
 				loop
 					l_type_string.append_character (',')
 					l_type_string.append_character (' ')
-					l_type_string.append (t2.generic_parameter_type (i - n1).name)
+					l_type_string.append (t2.generic_parameter_type (i - n1).out)
 					l_items.force (a_other.item (i - n1), i - 1)
 					i := i + 1
 				end
@@ -1369,7 +1369,7 @@ feature -- Access: lower level
 
 feature {NONE} -- Implementation
 
-	area_name: STRING = "area"
+	area_name: STRING_8 = "area"
 			-- Name of attributes where TUPLE elements were stored.
 
 	is_tuple_uniform (code: like item_code): BOOLEAN

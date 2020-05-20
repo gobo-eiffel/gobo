@@ -5,7 +5,7 @@
 		a punctuation, a control or a space character.
 	]"
 	generator: "Unicode Helper Generator 1.3"
-	unicode_version: "11.0.0"
+	unicode_version: "13.0.0"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -159,69 +159,75 @@ feature -- Conversion
 					Result := a_char + 32
 				end
 			else
-				if (192 <= l_code) and (l_code <= 1366) then
+				if (192 <= l_code) and (l_code <= 590) then
 					Result := to_lower_table_1.item ((l_code - 192).to_integer_32).to_character_32
 				else
 					if l_code <= 11506 then
-						if l_code <= 8188 then
-							if l_code <= 5109 then
-								if l_code <= 4301 then
-									if l_code >= 4256 then
-										Result := to_lower_table_2.item ((l_code - 4256).to_integer_32).to_character_32
+						if l_code <= 7359 then
+							if l_code <= 4301 then
+								if l_code <= 1366 then
+									if l_code >= 880 then
+										Result := to_lower_table_2.item ((l_code - 880).to_integer_32).to_character_32
 									end
 								else
-									if l_code >= 5024 then
-										Result := to_lower_table_3.item ((l_code - 5024).to_integer_32).to_character_32
+									if l_code >= 4256 then
+										Result := to_lower_table_3.item ((l_code - 4256).to_integer_32).to_character_32
 									end
 								end
 							else
-								if l_code <= 7359 then
-									if l_code >= 7312 then
-										Result := to_lower_table_4.item ((l_code - 7312).to_integer_32).to_character_32
+								if l_code <= 5109 then
+									if l_code >= 5024 then
+										Result := to_lower_table_4.item ((l_code - 5024).to_integer_32).to_character_32
 									end
 								else
-									if l_code >= 7680 then
-										Result := to_lower_table_5.item ((l_code - 7680).to_integer_32).to_character_32
+									if l_code >= 7312 then
+										Result := to_lower_table_5.item ((l_code - 7312).to_integer_32).to_character_32
 									end
 								end
 							end
 						else
-							if l_code <= 9423 then
-								if l_code <= 8579 then
-									if l_code >= 8486 then
-										Result := to_lower_table_6.item ((l_code - 8486).to_integer_32).to_character_32
+							if l_code <= 8579 then
+								if l_code <= 8188 then
+									if l_code >= 7680 then
+										Result := to_lower_table_6.item ((l_code - 7680).to_integer_32).to_character_32
 									end
 								else
-									if l_code >= 9398 then
-										Result := to_lower_table_7.item ((l_code - 9398).to_integer_32).to_character_32
+									if l_code >= 8486 then
+										Result := to_lower_table_7.item ((l_code - 8486).to_integer_32).to_character_32
 									end
 								end
 							else
-								if l_code >= 11264 then
-									Result := to_lower_table_8.item ((l_code - 11264).to_integer_32).to_character_32
+								if l_code <= 9423 then
+									if l_code >= 9398 then
+										Result := to_lower_table_8.item ((l_code - 9398).to_integer_32).to_character_32
+									end
+								else
+									if l_code >= 11264 then
+										Result := to_lower_table_9.item ((l_code - 11264).to_integer_32).to_character_32
+									end
 								end
 							end
 						end
 					else
 						if l_code <= 68786 then
 							if l_code <= 65338 then
-								if l_code <= 42936 then
+								if l_code <= 42997 then
 									if l_code >= 42560 then
-										Result := to_lower_table_9.item ((l_code - 42560).to_integer_32).to_character_32
+										Result := to_lower_table_10.item ((l_code - 42560).to_integer_32).to_character_32
 									end
 								else
 									if l_code >= 65313 then
-										Result := to_lower_table_10.item ((l_code - 65313).to_integer_32).to_character_32
+										Result := to_lower_table_11.item ((l_code - 65313).to_integer_32).to_character_32
 									end
 								end
 							else
 								if l_code <= 66771 then
 									if l_code >= 66560 then
-										Result := to_lower_table_11.item ((l_code - 66560).to_integer_32).to_character_32
+										Result := to_lower_table_12.item ((l_code - 66560).to_integer_32).to_character_32
 									end
 								else
 									if l_code >= 68736 then
-										Result := to_lower_table_12.item ((l_code - 68736).to_integer_32).to_character_32
+										Result := to_lower_table_13.item ((l_code - 68736).to_integer_32).to_character_32
 									end
 								end
 							end
@@ -229,16 +235,16 @@ feature -- Conversion
 							if l_code <= 93791 then
 								if l_code <= 71871 then
 									if l_code >= 71840 then
-										Result := to_lower_table_13.item ((l_code - 71840).to_integer_32).to_character_32
+										Result := to_lower_table_14.item ((l_code - 71840).to_integer_32).to_character_32
 									end
 								else
 									if l_code >= 93760 then
-										Result := to_lower_table_14.item ((l_code - 93760).to_integer_32).to_character_32
+										Result := to_lower_table_15.item ((l_code - 93760).to_integer_32).to_character_32
 									end
 								end
 							else
 								if l_code >= 125184 and l_code <= 125217 then
-									Result := to_lower_table_15.item ((l_code - 125184).to_integer_32).to_character_32
+									Result := to_lower_table_16.item ((l_code - 125184).to_integer_32).to_character_32
 								end
 							end
 						end
@@ -316,7 +322,7 @@ feature -- Conversion
 					else
 						if l_code <= 66811 then
 							if l_code <= 43967 then
-								if l_code <= 42937 then
+								if l_code <= 42998 then
 									if l_code >= 42561 then
 										Result := to_upper_table_10.item ((l_code - 42561).to_integer_32).to_character_32
 									end
@@ -384,89 +390,101 @@ feature -- Conversion
 				if (181 <= l_code) and (l_code <= 670) then
 					Result := to_title_table_1.item ((l_code - 181).to_integer_32).to_character_32
 				else
-					if l_code <= 42937 then
-						if l_code <= 8179 then
-							if l_code <= 5117 then
-								if l_code <= 1414 then
-									if l_code >= 837 then
-										Result := to_title_table_2.item ((l_code - 837).to_integer_32).to_character_32
+					if l_code <= 42998 then
+						if l_code <= 8580 then
+							if l_code <= 7304 then
+								if l_code <= 5117 then
+									if l_code <= 1414 then
+										if l_code >= 837 then
+											Result := to_title_table_2.item ((l_code - 837).to_integer_32).to_character_32
+										end
+									else
+										if l_code >= 5112 then
+											Result := to_title_table_3.item ((l_code - 5112).to_integer_32).to_character_32
+										end
 									end
 								else
-									if l_code >= 5112 then
-										Result := to_title_table_3.item ((l_code - 5112).to_integer_32).to_character_32
-									end
-								end
-							else
-								if l_code <= 7304 then
 									if l_code >= 7296 then
 										Result := to_title_table_4.item ((l_code - 7296).to_integer_32).to_character_32
 									end
-								else
+								end
+							else
+								if l_code <= 8179 then
 									if l_code >= 7545 then
 										Result := to_title_table_5.item ((l_code - 7545).to_integer_32).to_character_32
+									end
+								else
+									if l_code >= 8526 then
+										Result := to_title_table_6.item ((l_code - 8526).to_integer_32).to_character_32
 									end
 								end
 							end
 						else
-							if l_code <= 9449 then
-								if l_code <= 8580 then
-									if l_code >= 8526 then
-										Result := to_title_table_6.item ((l_code - 8526).to_integer_32).to_character_32
-									end
-								else
+							if l_code <= 11565 then
+								if l_code <= 9449 then
 									if l_code >= 9424 then
 										Result := to_title_table_7.item ((l_code - 9424).to_integer_32).to_character_32
 									end
-								end
-							else
-								if l_code <= 11565 then
+								else
 									if l_code >= 11312 then
 										Result := to_title_table_8.item ((l_code - 11312).to_integer_32).to_character_32
 									end
-								else
+								end
+							else
+								if l_code <= 42651 then
 									if l_code >= 42561 then
 										Result := to_title_table_9.item ((l_code - 42561).to_integer_32).to_character_32
+									end
+								else
+									if l_code >= 42787 then
+										Result := to_title_table_10.item ((l_code - 42787).to_integer_32).to_character_32
 									end
 								end
 							end
 						end
 					else
-						if l_code <= 68850 then
+						if l_code <= 66811 then
 							if l_code <= 65370 then
 								if l_code <= 43967 then
 									if l_code >= 43859 then
-										Result := to_title_table_10.item ((l_code - 43859).to_integer_32).to_character_32
+										Result := to_title_table_11.item ((l_code - 43859).to_integer_32).to_character_32
 									end
 								else
 									if l_code >= 65345 then
-										Result := to_title_table_11.item ((l_code - 65345).to_integer_32).to_character_32
+										Result := to_title_table_12.item ((l_code - 65345).to_integer_32).to_character_32
 									end
 								end
 							else
-								if l_code <= 66811 then
+								if l_code <= 66639 then
 									if l_code >= 66600 then
-										Result := to_title_table_12.item ((l_code - 66600).to_integer_32).to_character_32
+										Result := to_title_table_13.item ((l_code - 66600).to_integer_32).to_character_32
 									end
 								else
-									if l_code >= 68800 then
-										Result := to_title_table_13.item ((l_code - 68800).to_integer_32).to_character_32
+									if l_code >= 66776 then
+										Result := to_title_table_14.item ((l_code - 66776).to_integer_32).to_character_32
 									end
 								end
 							end
 						else
-							if l_code <= 93823 then
-								if l_code <= 71903 then
-									if l_code >= 71872 then
-										Result := to_title_table_14.item ((l_code - 71872).to_integer_32).to_character_32
+							if l_code <= 71903 then
+								if l_code <= 68850 then
+									if l_code >= 68800 then
+										Result := to_title_table_15.item ((l_code - 68800).to_integer_32).to_character_32
 									end
 								else
-									if l_code >= 93792 then
-										Result := to_title_table_15.item ((l_code - 93792).to_integer_32).to_character_32
+									if l_code >= 71872 then
+										Result := to_title_table_16.item ((l_code - 71872).to_integer_32).to_character_32
 									end
 								end
 							else
-								if l_code >= 125218 and l_code <= 125251 then
-									Result := to_title_table_16.item ((l_code - 125218).to_integer_32).to_character_32
+								if l_code <= 93823 then
+									if l_code >= 93792 then
+										Result := to_title_table_17.item ((l_code - 93792).to_integer_32).to_character_32
+									end
+								else
+									if l_code >= 125218 and l_code <= 125251 then
+										Result := to_title_table_18.item ((l_code - 125218).to_integer_32).to_character_32
+									end
 								end
 							end
 						end
@@ -486,9 +504,9 @@ feature {NONE} -- Helper
 			if (128 <= l_code) and (l_code <= 687) then
 				Result := property_table_1.item ((l_code - 128).to_integer_32)
 			else
-				if l_code <= 64279 then
-					if l_code <= 6479 then
-						if l_code <= 3311 then
+				if l_code <= 65381 then
+					if l_code <= 8580 then
+						if l_code <= 3439 then
 							if l_code <= 2800 then
 								if l_code <= 2142 then
 									if l_code <= 1805 then
@@ -523,60 +541,62 @@ feature {NONE} -- Helper
 										end
 									end
 								else
-									if l_code >= 3174 then
-										Result := property_table_8.item ((l_code - 3174).to_integer_32)
+									if l_code <= 3311 then
+										if l_code >= 3174 then
+											Result := property_table_8.item ((l_code - 3174).to_integer_32)
+										end
+									else
+										if l_code >= 3430 then
+											Result := property_table_9.item ((l_code - 3430).to_integer_32)
+										end
 									end
 								end
 							end
 						else
-							if l_code <= 5120 then
-								if l_code <= 4351 then
-									if l_code <= 3439 then
-										if l_code >= 3430 then
-											Result := property_table_9.item ((l_code - 3430).to_integer_32)
-										end
-									else
+							if l_code <= 6169 then
+								if l_code <= 5120 then
+									if l_code <= 4351 then
 										if l_code >= 3558 then
 											Result := property_table_10.item ((l_code - 3558).to_integer_32)
 										end
+									else
+										if l_code >= 4960 then
+											Result := property_table_11.item ((l_code - 4960).to_integer_32)
+										end
 									end
 								else
-									if l_code >= 4960 then
-										Result := property_table_11.item ((l_code - 4960).to_integer_32)
-									end
-								end
-							else
-								if l_code <= 6169 then
 									if l_code <= 5942 then
-										if l_code >= 5741 then
-											Result := property_table_12.item ((l_code - 5741).to_integer_32)
+										if l_code >= 5742 then
+											Result := property_table_12.item ((l_code - 5742).to_integer_32)
 										end
 									else
 										if l_code >= 6100 then
 											Result := property_table_13.item ((l_code - 6100).to_integer_32)
 										end
 									end
+								end
+							else
+								if l_code <= 6829 then
+									if l_code <= 6479 then
+										if l_code >= 6468 then
+											Result := property_table_14.item ((l_code - 6468).to_integer_32)
+										end
+									else
+										if l_code >= 6608 then
+											Result := property_table_15.item ((l_code - 6608).to_integer_32)
+										end
+									end
 								else
-									if l_code >= 6468 then
-										Result := property_table_14.item ((l_code - 6468).to_integer_32)
+									if l_code >= 6992 then
+										Result := property_table_16.item ((l_code - 6992).to_integer_32)
 									end
 								end
 							end
 						end
 					else
-						if l_code <= 11854 then
-							if l_code <= 10223 then
-								if l_code <= 8580 then
-									if l_code <= 6829 then
-										if l_code >= 6608 then
-											Result := property_table_15.item ((l_code - 6608).to_integer_32)
-										end
-									else
-										if l_code >= 6992 then
-											Result := property_table_16.item ((l_code - 6992).to_integer_32)
-										end
-									end
-								else
+						if l_code <= 42239 then
+							if l_code <= 11632 then
+								if l_code <= 10223 then
 									if l_code <= 9002 then
 										if l_code >= 8968 then
 											Result := property_table_17.item ((l_code - 8968).to_integer_32)
@@ -586,9 +606,7 @@ feature {NONE} -- Helper
 											Result := property_table_18.item ((l_code - 10088).to_integer_32)
 										end
 									end
-								end
-							else
-								if l_code <= 11632 then
+								else
 									if l_code <= 10749 then
 										if l_code >= 10627 then
 											Result := property_table_19.item ((l_code - 10627).to_integer_32)
@@ -598,52 +616,48 @@ feature {NONE} -- Helper
 											Result := property_table_20.item ((l_code - 11264).to_integer_32)
 										end
 									end
+								end
+							else
+								if l_code <= 12539 then
+									if l_code <= 11858 then
+										if l_code >= 11776 then
+											Result := property_table_21.item ((l_code - 11776).to_integer_32)
+										end
+									else
+										if l_code >= 12288 then
+											Result := property_table_22.item ((l_code - 12288).to_integer_32)
+										end
+									end
 								else
-									if l_code >= 11776 then
-										Result := property_table_21.item ((l_code - 11776).to_integer_32)
+									if l_code >= 42238 then
+										Result := property_table_23.item ((l_code - 42238).to_integer_32)
 									end
 								end
 							end
 						else
-							if l_code <= 43002 then
-								if l_code <= 42239 then
-									if l_code <= 12539 then
-										if l_code >= 12288 then
-											Result := property_table_22.item ((l_code - 12288).to_integer_32)
+							if l_code <= 64279 then
+								if l_code <= 43615 then
+									if l_code <= 43002 then
+										if l_code >= 42509 then
+											Result := property_table_24.item ((l_code - 42509).to_integer_32)
 										end
 									else
-										if l_code >= 42238 then
-											Result := property_table_23.item ((l_code - 42238).to_integer_32)
-										end
-									end
-								else
-									if l_code >= 42509 then
-										Result := property_table_24.item ((l_code - 42509).to_integer_32)
-									end
-								end
-							else
-								if l_code <= 44025 then
-									if l_code <= 43615 then
 										if l_code >= 43124 then
 											Result := property_table_25.item ((l_code - 43124).to_integer_32)
 										end
-									else
+									end
+								else
+									if l_code <= 44025 then
 										if l_code >= 43742 then
 											Result := property_table_26.item ((l_code - 43742).to_integer_32)
 										end
-									end
-								else
-									if l_code >= 64256 then
-										Result := property_table_27.item ((l_code - 64256).to_integer_32)
+									else
+										if l_code >= 64256 then
+											Result := property_table_27.item ((l_code - 64256).to_integer_32)
+										end
 									end
 								end
-							end
-						end
-					end
-				else
-					if l_code <= 71486 then
-						if l_code <= 67903 then
-							if l_code <= 65794 then
+							else
 								if l_code <= 65131 then
 									if l_code <= 64831 then
 										if l_code >= 64830 then
@@ -655,35 +669,39 @@ feature {NONE} -- Helper
 										end
 									end
 								else
-									if l_code <= 65381 then
-										if l_code >= 65281 then
-											Result := property_table_30.item ((l_code - 65281).to_integer_32)
-										end
-									else
+									if l_code >= 65281 then
+										Result := property_table_30.item ((l_code - 65281).to_integer_32)
+									end
+								end
+							end
+						end
+					end
+				else
+					if l_code <= 73129 then
+						if l_code <= 69465 then
+							if l_code <= 67903 then
+								if l_code <= 66927 then
+									if l_code <= 65794 then
 										if l_code >= 65792 then
 											Result := property_table_31.item ((l_code - 65792).to_integer_32)
+										end
+									else
+										if l_code >= 66463 then
+											Result := property_table_32.item ((l_code - 66463).to_integer_32)
+										end
+									end
+								else
+									if l_code <= 67671 then
+										if l_code >= 67671 then
+											Result := property_table_33.item ((l_code - 67671).to_integer_32)
+										end
+									else
+										if l_code >= 67871 then
+											Result := property_table_34.item ((l_code - 67871).to_integer_32)
 										end
 									end
 								end
 							else
-								if l_code <= 67671 then
-									if l_code <= 66927 then
-										if l_code >= 66463 then
-											Result := property_table_32.item ((l_code - 66463).to_integer_32)
-										end
-									else
-										if l_code >= 67671 then
-											Result := property_table_33.item ((l_code - 67671).to_integer_32)
-										end
-									end
-								else
-									if l_code >= 67871 then
-										Result := property_table_34.item ((l_code - 67871).to_integer_32)
-									end
-								end
-							end
-						else
-							if l_code <= 69465 then
 								if l_code <= 68921 then
 									if l_code <= 68508 then
 										if l_code >= 68176 then
@@ -695,100 +713,136 @@ feature {NONE} -- Helper
 										end
 									end
 								else
-									if l_code >= 69461 then
-										Result := property_table_37.item ((l_code - 69461).to_integer_32)
+									if l_code <= 69293 then
+										if l_code >= 69293 then
+											Result := property_table_37.item ((l_code - 69293).to_integer_32)
+										end
+									else
+										if l_code >= 69461 then
+											Result := property_table_38.item ((l_code - 69461).to_integer_32)
+										end
 									end
 								end
-							else
+							end
+						else
+							if l_code <= 72025 then
 								if l_code <= 70873 then
 									if l_code <= 70393 then
 										if l_code >= 69703 then
-											Result := property_table_38.item ((l_code - 69703).to_integer_32)
+											Result := property_table_39.item ((l_code - 69703).to_integer_32)
 										end
 									else
 										if l_code >= 70731 then
-											Result := property_table_39.item ((l_code - 70731).to_integer_32)
+											Result := property_table_40.item ((l_code - 70731).to_integer_32)
 										end
 									end
 								else
-									if l_code >= 71105 then
-										Result := property_table_40.item ((l_code - 71105).to_integer_32)
+									if l_code <= 71486 then
+										if l_code >= 71105 then
+											Result := property_table_41.item ((l_code - 71105).to_integer_32)
+										end
+									else
+										if l_code >= 71739 then
+											Result := property_table_42.item ((l_code - 71739).to_integer_32)
+										end
+									end
+								end
+							else
+								if l_code <= 72817 then
+									if l_code <= 72354 then
+										if l_code >= 72162 then
+											Result := property_table_43.item ((l_code - 72162).to_integer_32)
+										end
+									else
+										if l_code >= 72769 then
+											Result := property_table_44.item ((l_code - 72769).to_integer_32)
+										end
+									end
+								else
+									if l_code >= 73040 then
+										Result := property_table_45.item ((l_code - 73040).to_integer_32)
 									end
 								end
 							end
 						end
 					else
-						if l_code <= 92783 then
-							if l_code <= 73129 then
-								if l_code <= 72354 then
-									if l_code <= 71913 then
-										if l_code >= 71739 then
-											Result := property_table_41.item ((l_code - 71739).to_integer_32)
+						if l_code <= 94178 then
+							if l_code <= 92783 then
+								if l_code <= 73727 then
+									if l_code <= 73464 then
+										if l_code >= 73463 then
+											Result := property_table_46.item ((l_code - 73463).to_integer_32)
 										end
 									else
-										if l_code >= 72255 then
-											Result := property_table_42.item ((l_code - 72255).to_integer_32)
+										if l_code >= 73727 then
+											Result := property_table_47.item ((l_code - 73727).to_integer_32)
 										end
 									end
 								else
-									if l_code <= 72817 then
-										if l_code >= 72769 then
-											Result := property_table_43.item ((l_code - 72769).to_integer_32)
+									if l_code <= 74868 then
+										if l_code >= 74864 then
+											Result := property_table_48.item ((l_code - 74864).to_integer_32)
 										end
 									else
-										if l_code >= 73040 then
-											Result := property_table_44.item ((l_code - 73040).to_integer_32)
+										if l_code >= 92768 then
+											Result := property_table_49.item ((l_code - 92768).to_integer_32)
 										end
 									end
 								end
 							else
-								if l_code <= 74868 then
-									if l_code <= 73464 then
-										if l_code >= 73463 then
-											Result := property_table_45.item ((l_code - 73463).to_integer_32)
+								if l_code <= 93850 then
+									if l_code <= 93017 then
+										if l_code >= 92917 then
+											Result := property_table_50.item ((l_code - 92917).to_integer_32)
 										end
 									else
-										if l_code >= 74864 then
-											Result := property_table_46.item ((l_code - 74864).to_integer_32)
+										if l_code >= 93760 then
+											Result := property_table_51.item ((l_code - 93760).to_integer_32)
 										end
 									end
 								else
-									if l_code >= 92768 then
-										Result := property_table_47.item ((l_code - 92768).to_integer_32)
+									if l_code >= 94178 then
+										Result := property_table_52.item ((l_code - 94178).to_integer_32)
 									end
 								end
 							end
 						else
-							if l_code <= 113823 then
-								if l_code <= 93850 then
-									if l_code <= 93017 then
-										if l_code >= 92917 then
-											Result := property_table_48.item ((l_code - 92917).to_integer_32)
+							if l_code <= 123209 then
+								if l_code <= 120831 then
+									if l_code <= 113823 then
+										if l_code >= 113823 then
+											Result := property_table_53.item ((l_code - 113823).to_integer_32)
 										end
 									else
-										if l_code >= 93760 then
-											Result := property_table_49.item ((l_code - 93760).to_integer_32)
+										if l_code >= 119808 then
+											Result := property_table_54.item ((l_code - 119808).to_integer_32)
 										end
 									end
 								else
-									if l_code >= 113823 then
-										Result := property_table_50.item ((l_code - 113823).to_integer_32)
+									if l_code <= 121483 then
+										if l_code >= 121479 then
+											Result := property_table_55.item ((l_code - 121479).to_integer_32)
+										end
+									else
+										if l_code >= 123200 then
+											Result := property_table_56.item ((l_code - 123200).to_integer_32)
+										end
 									end
 								end
 							else
-								if l_code <= 121483 then
-									if l_code <= 120831 then
-										if l_code >= 119808 then
-											Result := property_table_51.item ((l_code - 119808).to_integer_32)
+								if l_code <= 125279 then
+									if l_code <= 123641 then
+										if l_code >= 123632 then
+											Result := property_table_57.item ((l_code - 123632).to_integer_32)
 										end
 									else
-										if l_code >= 121479 then
-											Result := property_table_52.item ((l_code - 121479).to_integer_32)
+										if l_code >= 125184 then
+											Result := property_table_58.item ((l_code - 125184).to_integer_32)
 										end
 									end
 								else
-									if l_code >= 125184 and l_code <= 125279 then
-										Result := property_table_53.item ((l_code - 125184).to_integer_32)
+									if l_code >= 130032 and l_code <= 130041 then
+										Result := property_table_59.item ((l_code - 130032).to_integer_32)
 									end
 								end
 							end
@@ -813,7 +867,7 @@ feature {NONE} -- Flags
 feature {NONE} -- Property tables
 
 	to_lower_table_1: SPECIAL [NATURAL_16]
-			-- Table for Unicode characters in the range 0x000000C0 .. 0x00000556.
+			-- Table for Unicode characters in the range 0x000000C0 .. 0x0000024E.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
 				224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244,
@@ -834,47 +888,41 @@ feature {NONE} -- Property tables
 				515, 515, 517, 517, 519, 519, 521, 521, 523, 523, 525, 525, 527, 527, 529, 529, 531, 531, 533, 533, 535, 535,
 				537, 537, 539, 539, 541, 541, 543, 543, 414, 545, 547, 547, 549, 549, 551, 551, 553, 553, 555, 555, 557, 557,
 				559, 559, 561, 561, 563, 563, 564, 565, 566, 567, 568, 569, 11365, 572, 572, 410, 11366, 575, 576, 578, 578, 384,
-				649, 652, 583, 583, 585, 585, 587, 587, 589, 589, 591, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600,
-				601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622,
-				623, 624, 625, 626, 627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644,
-				645, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662, 663, 664, 665, 666,
-				667, 668, 669, 670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688,
-				689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710,
-				711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732,
-				733, 734, 735, 736, 737, 738, 739, 740, 741, 742, 743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754,
-				755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776,
-				777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798,
-				799, 800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820,
-				821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 833, 834, 835, 836, 837, 838, 839, 840, 841, 842,
-				843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859, 860, 861, 862, 863, 864,
-				865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 881, 881, 883, 883, 884, 885, 887,
-				887, 888, 889, 890, 891, 892, 893, 894, 1011, 896, 897, 898, 899, 900, 901, 940, 903, 941, 942, 943, 907,
-				972, 909, 973, 974, 912, 945, 946, 947, 948, 949, 950, 951, 952, 953, 954, 955, 956, 957, 958, 959, 960, 961,
-				930, 963, 964, 965, 966, 967, 968, 969, 970, 971, 940, 941, 942, 943, 944, 945, 946, 947, 948, 949, 950,
-				951, 952, 953, 954, 955, 956, 957, 958, 959, 960, 961, 962, 963, 964, 965, 966, 967, 968, 969, 970, 971, 972,
-				973, 974, 983, 976, 977, 965, 973, 971, 981, 982, 983, 985, 985, 987, 987, 989, 989, 991, 991, 993, 993, 995,
-				995, 997, 997, 999, 999, 1001, 1001, 1003, 1003, 1005, 1005, 1007, 1007, 1008, 1009, 1010, 1011, 952, 1013, 1014, 1016,
-				1016, 1010, 1019, 1019, 1020, 891, 892, 893, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116,
-				1117, 1118, 1119, 1072, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089,
-				1090, 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1099, 1100, 1101, 1102, 1103, 1072, 1073, 1074, 1075, 1076, 1077, 1078,
-				1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1099, 1100,
-				1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119, 1121, 1121, 1123,
-				1123, 1125, 1125, 1127, 1127, 1129, 1129, 1131, 1131, 1133, 1133, 1135, 1135, 1137, 1137, 1139, 1139, 1141, 1141, 1143, 1143,
-				1145, 1145, 1147, 1147, 1149, 1149, 1151, 1151, 1153, 1153, 1154, 1155, 1156, 1157, 1158, 1159, 1160, 1161, 1163, 1163, 1165, 1165,
-				1167, 1167, 1169, 1169, 1171, 1171, 1173, 1173, 1175, 1175, 1177, 1177, 1179, 1179, 1181, 1181, 1183, 1183, 1185, 1185, 1187, 1187,
-				1189, 1189, 1191, 1191, 1193, 1193, 1195, 1195, 1197, 1197, 1199, 1199, 1201, 1201, 1203, 1203, 1205, 1205, 1207, 1207, 1209, 1209,
-				1211, 1211, 1213, 1213, 1215, 1215, 1231, 1218, 1218, 1220, 1220, 1222, 1222, 1224, 1224, 1226, 1226, 1228, 1228, 1230, 1230, 1231,
-				1233, 1233, 1235, 1235, 1237, 1237, 1239, 1239, 1241, 1241, 1243, 1243, 1245, 1245, 1247, 1247, 1249, 1249, 1251, 1251, 1253, 1253,
-				1255, 1255, 1257, 1257, 1259, 1259, 1261, 1261, 1263, 1263, 1265, 1265, 1267, 1267, 1269, 1269, 1271, 1271, 1273, 1273, 1275, 1275,
-				1277, 1277, 1279, 1279, 1281, 1281, 1283, 1283, 1285, 1285, 1287, 1287, 1289, 1289, 1291, 1291, 1293, 1293, 1295, 1295, 1297, 1297,
-				1299, 1299, 1301, 1301, 1303, 1303, 1305, 1305, 1307, 1307, 1309, 1309, 1311, 1311, 1313, 1313, 1315, 1315, 1317, 1317, 1319, 1319,
-				1321, 1321, 1323, 1323, 1325, 1325, 1327, 1327, 1328, 1377, 1378, 1379, 1380, 1381, 1382, 1383, 1384, 1385, 1386, 1387, 1388, 1389,
-				1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1401, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409, 1410,
-				1411, 1412, 1413, 1414
+				649, 652, 583, 583, 585, 585, 587, 587, 589, 589, 591
 			>>).area
 		end
 
 	to_lower_table_2: SPECIAL [NATURAL_16]
+			-- Table for Unicode characters in the range 0x00000370 .. 0x00000556.
+		once
+			Result := ({ARRAY [NATURAL_16]} <<
+				881, 881, 883, 883, 884, 885, 887, 887, 888, 889, 890, 891, 892, 893, 894, 1011, 896, 897, 898, 899, 900,
+				901, 940, 903, 941, 942, 943, 907, 972, 909, 973, 974, 912, 945, 946, 947, 948, 949, 950, 951, 952, 953, 954,
+				955, 956, 957, 958, 959, 960, 961, 930, 963, 964, 965, 966, 967, 968, 969, 970, 971, 940, 941, 942, 943,
+				944, 945, 946, 947, 948, 949, 950, 951, 952, 953, 954, 955, 956, 957, 958, 959, 960, 961, 962, 963, 964, 965,
+				966, 967, 968, 969, 970, 971, 972, 973, 974, 983, 976, 977, 965, 973, 971, 981, 982, 983, 985, 985, 987, 987,
+				989, 989, 991, 991, 993, 993, 995, 995, 997, 997, 999, 999, 1001, 1001, 1003, 1003, 1005, 1005, 1007, 1007, 1008, 1009,
+				1010, 1011, 952, 1013, 1014, 1016, 1016, 1010, 1019, 1019, 1020, 891, 892, 893, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111,
+				1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119, 1072, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084,
+				1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1099, 1100, 1101, 1102, 1103, 1072, 1073,
+				1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095,
+				1096, 1097, 1098, 1099, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117,
+				1118, 1119, 1121, 1121, 1123, 1123, 1125, 1125, 1127, 1127, 1129, 1129, 1131, 1131, 1133, 1133, 1135, 1135, 1137, 1137, 1139, 1139,
+				1141, 1141, 1143, 1143, 1145, 1145, 1147, 1147, 1149, 1149, 1151, 1151, 1153, 1153, 1154, 1155, 1156, 1157, 1158, 1159, 1160, 1161,
+				1163, 1163, 1165, 1165, 1167, 1167, 1169, 1169, 1171, 1171, 1173, 1173, 1175, 1175, 1177, 1177, 1179, 1179, 1181, 1181, 1183, 1183,
+				1185, 1185, 1187, 1187, 1189, 1189, 1191, 1191, 1193, 1193, 1195, 1195, 1197, 1197, 1199, 1199, 1201, 1201, 1203, 1203, 1205, 1205,
+				1207, 1207, 1209, 1209, 1211, 1211, 1213, 1213, 1215, 1215, 1231, 1218, 1218, 1220, 1220, 1222, 1222, 1224, 1224, 1226, 1226, 1228,
+				1228, 1230, 1230, 1231, 1233, 1233, 1235, 1235, 1237, 1237, 1239, 1239, 1241, 1241, 1243, 1243, 1245, 1245, 1247, 1247, 1249,
+				1249, 1251, 1251, 1253, 1253, 1255, 1255, 1257, 1257, 1259, 1259, 1261, 1261, 1263, 1263, 1265, 1265, 1267, 1267, 1269, 1269,
+				1271, 1271, 1273, 1273, 1275, 1275, 1277, 1277, 1279, 1279, 1281, 1281, 1283, 1283, 1285, 1285, 1287, 1287, 1289, 1289, 1291, 1291,
+				1293, 1293, 1295, 1295, 1297, 1297, 1299, 1299, 1301, 1301, 1303, 1303, 1305, 1305, 1307, 1307, 1309, 1309, 1311, 1311, 1313, 1313,
+				1315, 1315, 1317, 1317, 1319, 1319, 1321, 1321, 1323, 1323, 1325, 1325, 1327, 1327, 1328, 1377, 1378, 1379, 1380, 1381, 1382, 1383,
+				1384, 1385, 1386, 1387, 1388, 1389, 1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1401, 1402, 1403, 1404,
+				1405, 1406, 1407, 1408, 1409, 1410, 1411, 1412, 1413, 1414
+			>>).area
+		end
+
+	to_lower_table_3: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x000010A0 .. 0x000010CD.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -884,7 +932,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_3: SPECIAL [NATURAL_16]
+	to_lower_table_4: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x000013A0 .. 0x000013F5.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -896,7 +944,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_4: SPECIAL [NATURAL_16]
+	to_lower_table_5: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x00001C90 .. 0x00001CBF.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -906,7 +954,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_5: SPECIAL [NATURAL_16]
+	to_lower_table_6: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x00001E00 .. 0x00001FFC.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -937,7 +985,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_6: SPECIAL [NATURAL_16]
+	to_lower_table_7: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x00002126 .. 0x00002183.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -949,7 +997,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_7: SPECIAL [NATURAL_16]
+	to_lower_table_8: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x000024B6 .. 0x000024CF.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -958,7 +1006,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_8: SPECIAL [NATURAL_16]
+	to_lower_table_9: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x00002C00 .. 0x00002CF2.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -977,8 +1025,8 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_9: SPECIAL [NATURAL_16]
-			-- Table for Unicode characters in the range 0x0000A640 .. 0x0000A7B8.
+	to_lower_table_10: SPECIAL [NATURAL_16]
+			-- Table for Unicode characters in the range 0x0000A640 .. 0x0000A7F5.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
 				42561, 42561, 42563, 42563, 42565, 42565, 42567, 42567, 42569, 42569, 42571, 42571, 42573, 42573, 42575, 42575, 42577, 42577, 42579, 42579, 42581,
@@ -998,11 +1046,14 @@ feature {NONE} -- Property tables
 				42866, 42867, 42868, 42869, 42870, 42871, 42872, 42874, 42874, 42876, 42876, 7545, 42879, 42879, 42881, 42881, 42883, 42883, 42885, 42885, 42887, 42887,
 				42888, 42889, 42890, 42892, 42892, 613, 42894, 42895, 42897, 42897, 42899, 42899, 42900, 42901, 42903, 42903, 42905, 42905, 42907, 42907, 42909, 42909,
 				42911, 42911, 42913, 42913, 42915, 42915, 42917, 42917, 42919, 42919, 42921, 42921, 614, 604, 609, 620, 618, 42927, 670, 647, 669, 43859,
-				42933, 42933, 42935, 42935, 42937
+				42933, 42933, 42935, 42935, 42937, 42937, 42939, 42939, 42941, 42941, 42943, 42943, 42944, 42945, 42947, 42947, 42900, 642, 7566, 42952, 42952,
+				42954, 42954, 42955, 42956, 42957, 42958, 42959, 42960, 42961, 42962, 42963, 42964, 42965, 42966, 42967, 42968, 42969, 42970, 42971, 42972, 42973, 42974,
+				42975, 42976, 42977, 42978, 42979, 42980, 42981, 42982, 42983, 42984, 42985, 42986, 42987, 42988, 42989, 42990, 42991, 42992, 42993, 42994, 42995, 42996,
+				42998
 			>>).area
 		end
 
-	to_lower_table_10: SPECIAL [NATURAL_16]
+	to_lower_table_11: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x0000FF21 .. 0x0000FF3A.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -1011,7 +1062,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_11: SPECIAL [NATURAL_32]
+	to_lower_table_12: SPECIAL [NATURAL_32]
 			-- Table for Unicode characters in the range 0x00010400 .. 0x000104D3.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
@@ -1028,7 +1079,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_12: SPECIAL [NATURAL_32]
+	to_lower_table_13: SPECIAL [NATURAL_32]
 			-- Table for Unicode characters in the range 0x00010C80 .. 0x00010CB2.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
@@ -1038,7 +1089,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_13: SPECIAL [NATURAL_32]
+	to_lower_table_14: SPECIAL [NATURAL_32]
 			-- Table for Unicode characters in the range 0x000118A0 .. 0x000118BF.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
@@ -1047,7 +1098,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_14: SPECIAL [NATURAL_32]
+	to_lower_table_15: SPECIAL [NATURAL_32]
 			-- Table for Unicode characters in the range 0x00016E40 .. 0x00016E5F.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
@@ -1056,7 +1107,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_lower_table_15: SPECIAL [NATURAL_32]
+	to_lower_table_16: SPECIAL [NATURAL_32]
 			-- Table for Unicode characters in the range 0x0001E900 .. 0x0001E921.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
@@ -1090,7 +1141,7 @@ feature {NONE} -- Property tables
 				573, 574, 11390, 11391, 577, 577, 579, 580, 581, 582, 582, 584, 584, 586, 586, 588, 588, 590, 590, 11375, 11373,
 				11376, 385, 390, 597, 393, 394, 600, 399, 602, 400, 42923, 605, 606, 607, 403, 42924, 610, 404, 612, 42893, 42922,
 				615, 407, 406, 42926, 11362, 42925, 621, 622, 412, 624, 11374, 413, 627, 628, 415, 630, 631, 632, 633, 634, 635,
-				636, 11364, 638, 639, 422, 641, 642, 425, 644, 645, 646, 42929, 430, 580, 433, 434, 581, 653, 654, 655, 656, 657,
+				636, 11364, 638, 639, 422, 641, 42949, 425, 644, 645, 646, 42929, 430, 580, 433, 434, 581, 653, 654, 655, 656, 657,
 				439, 659, 660, 661, 662, 663, 664, 665, 666, 667, 668, 42930, 42928
 			>>).area
 		end
@@ -1160,7 +1211,7 @@ feature {NONE} -- Property tables
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
 				42877, 7546, 7547, 7548, 11363, 7550, 7551, 7552, 7553, 7554, 7555, 7556, 7557, 7558, 7559, 7560, 7561, 7562, 7563, 7564, 7565,
-				7566, 7567, 7568, 7569, 7570, 7571, 7572, 7573, 7574, 7575, 7576, 7577, 7578, 7579, 7580, 7581, 7582, 7583, 7584, 7585, 7586, 7587,
+				42950, 7567, 7568, 7569, 7570, 7571, 7572, 7573, 7574, 7575, 7576, 7577, 7578, 7579, 7580, 7581, 7582, 7583, 7584, 7585, 7586, 7587,
 				7588, 7589, 7590, 7591, 7592, 7593, 7594, 7595, 7596, 7597, 7598, 7599, 7600, 7601, 7602, 7603, 7604, 7605, 7606, 7607, 7608, 7609,
 				7610, 7611, 7612, 7613, 7614, 7615, 7616, 7617, 7618, 7619, 7620, 7621, 7622, 7623, 7624, 7625, 7626, 7627, 7628, 7629, 7630, 7631,
 				7632, 7633, 7634, 7635, 7636, 7637, 7638, 7639, 7640, 7641, 7642, 7643, 7644, 7645, 7646, 7647, 7648, 7649, 7650, 7651, 7652, 7653,
@@ -1231,7 +1282,7 @@ feature {NONE} -- Property tables
 		end
 
 	to_upper_table_10: SPECIAL [NATURAL_16]
-			-- Table for Unicode characters in the range 0x0000A641 .. 0x0000A7B9.
+			-- Table for Unicode characters in the range 0x0000A641 .. 0x0000A7F6.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
 				42560, 42562, 42562, 42564, 42564, 42566, 42566, 42568, 42568, 42570, 42570, 42572, 42572, 42574, 42574, 42576, 42576, 42578, 42578, 42580, 42580,
@@ -1249,9 +1300,12 @@ feature {NONE} -- Property tables
 				42822, 42824, 42824, 42826, 42826, 42828, 42828, 42830, 42830, 42832, 42832, 42834, 42834, 42836, 42836, 42838, 42838, 42840, 42840, 42842, 42842, 42844,
 				42844, 42846, 42846, 42848, 42848, 42850, 42850, 42852, 42852, 42854, 42854, 42856, 42856, 42858, 42858, 42860, 42860, 42862, 42862, 42864, 42865, 42866,
 				42867, 42868, 42869, 42870, 42871, 42872, 42873, 42873, 42875, 42875, 42877, 42878, 42878, 42880, 42880, 42882, 42882, 42884, 42884, 42886, 42886, 42888,
-				42889, 42890, 42891, 42891, 42893, 42894, 42895, 42896, 42896, 42898, 42898, 42900, 42901, 42902, 42902, 42904, 42904, 42906, 42906, 42908, 42908, 42910,
+				42889, 42890, 42891, 42891, 42893, 42894, 42895, 42896, 42896, 42898, 42898, 42948, 42901, 42902, 42902, 42904, 42904, 42906, 42906, 42908, 42908, 42910,
 				42910, 42912, 42912, 42914, 42914, 42916, 42916, 42918, 42918, 42920, 42920, 42922, 42923, 42924, 42925, 42926, 42927, 42928, 42929, 42930, 42931, 42932,
-				42932, 42934, 42934, 42936, 42936
+				42932, 42934, 42934, 42936, 42936, 42938, 42938, 42940, 42940, 42942, 42942, 42944, 42945, 42946, 42946, 42948, 42949, 42950, 42951, 42951, 42953, 42953,
+				42955, 42956, 42957, 42958, 42959, 42960, 42961, 42962, 42963, 42964, 42965, 42966, 42967, 42968, 42969, 42970, 42971, 42972, 42973, 42974, 42975,
+				42976, 42977, 42978, 42979, 42980, 42981, 42982, 42983, 42984, 42985, 42986, 42987, 42988, 42989, 42990, 42991, 42992, 42993, 42994, 42995, 42996, 42997,
+				42997
 			>>).area
 		end
 
@@ -1356,7 +1410,7 @@ feature {NONE} -- Property tables
 				573, 574, 11390, 11391, 577, 577, 579, 580, 581, 582, 582, 584, 584, 586, 586, 588, 588, 590, 590, 11375, 11373,
 				11376, 385, 390, 597, 393, 394, 600, 399, 602, 400, 42923, 605, 606, 607, 403, 42924, 610, 404, 612, 42893, 42922,
 				615, 407, 406, 42926, 11362, 42925, 621, 622, 412, 624, 11374, 413, 627, 628, 415, 630, 631, 632, 633, 634, 635,
-				636, 11364, 638, 639, 422, 641, 642, 425, 644, 645, 646, 42929, 430, 580, 433, 434, 581, 653, 654, 655, 656, 657,
+				636, 11364, 638, 639, 422, 641, 42949, 425, 644, 645, 646, 42929, 430, 580, 433, 434, 581, 653, 654, 655, 656, 657,
 				439, 659, 660, 661, 662, 663, 664, 665, 666, 667, 668, 42930, 42928
 			>>).area
 		end
@@ -1416,7 +1470,7 @@ feature {NONE} -- Property tables
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
 				42877, 7546, 7547, 7548, 11363, 7550, 7551, 7552, 7553, 7554, 7555, 7556, 7557, 7558, 7559, 7560, 7561, 7562, 7563, 7564, 7565,
-				7566, 7567, 7568, 7569, 7570, 7571, 7572, 7573, 7574, 7575, 7576, 7577, 7578, 7579, 7580, 7581, 7582, 7583, 7584, 7585, 7586, 7587,
+				42950, 7567, 7568, 7569, 7570, 7571, 7572, 7573, 7574, 7575, 7576, 7577, 7578, 7579, 7580, 7581, 7582, 7583, 7584, 7585, 7586, 7587,
 				7588, 7589, 7590, 7591, 7592, 7593, 7594, 7595, 7596, 7597, 7598, 7599, 7600, 7601, 7602, 7603, 7604, 7605, 7606, 7607, 7608, 7609,
 				7610, 7611, 7612, 7613, 7614, 7615, 7616, 7617, 7618, 7619, 7620, 7621, 7622, 7623, 7624, 7625, 7626, 7627, 7628, 7629, 7630, 7631,
 				7632, 7633, 7634, 7635, 7636, 7637, 7638, 7639, 7640, 7641, 7642, 7643, 7644, 7645, 7646, 7647, 7648, 7649, 7650, 7651, 7652, 7653,
@@ -1487,31 +1541,35 @@ feature {NONE} -- Property tables
 		end
 
 	to_title_table_9: SPECIAL [NATURAL_16]
-			-- Table for Unicode characters in the range 0x0000A641 .. 0x0000A7B9.
+			-- Table for Unicode characters in the range 0x0000A641 .. 0x0000A69B.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
 				42560, 42562, 42562, 42564, 42564, 42566, 42566, 42568, 42568, 42570, 42570, 42572, 42572, 42574, 42574, 42576, 42576, 42578, 42578, 42580, 42580,
 				42582, 42582, 42584, 42584, 42586, 42586, 42588, 42588, 42590, 42590, 42592, 42592, 42594, 42594, 42596, 42596, 42598, 42598, 42600, 42600, 42602,
 				42602, 42604, 42604, 42606, 42607, 42608, 42609, 42610, 42611, 42612, 42613, 42614, 42615, 42616, 42617, 42618, 42619, 42620, 42621, 42622, 42623, 42624,
 				42624, 42626, 42626, 42628, 42628, 42630, 42630, 42632, 42632, 42634, 42634, 42636, 42636, 42638, 42638, 42640, 42640, 42642, 42642, 42644, 42644, 42646,
-				42646, 42648, 42648, 42650, 42650, 42652, 42653, 42654, 42655, 42656, 42657, 42658, 42659, 42660, 42661, 42662, 42663, 42664, 42665, 42666, 42667, 42668,
-				42669, 42670, 42671, 42672, 42673, 42674, 42675, 42676, 42677, 42678, 42679, 42680, 42681, 42682, 42683, 42684, 42685, 42686, 42687, 42688, 42689, 42690,
-				42691, 42692, 42693, 42694, 42695, 42696, 42697, 42698, 42699, 42700, 42701, 42702, 42703, 42704, 42705, 42706, 42707, 42708, 42709, 42710, 42711, 42712,
-				42713, 42714, 42715, 42716, 42717, 42718, 42719, 42720, 42721, 42722, 42723, 42724, 42725, 42726, 42727, 42728, 42729, 42730, 42731, 42732, 42733, 42734,
-				42735, 42736, 42737, 42738, 42739, 42740, 42741, 42742, 42743, 42744, 42745, 42746, 42747, 42748, 42749, 42750, 42751, 42752, 42753, 42754, 42755, 42756,
-				42757, 42758, 42759, 42760, 42761, 42762, 42763, 42764, 42765, 42766, 42767, 42768, 42769, 42770, 42771, 42772, 42773, 42774, 42775, 42776, 42777, 42778,
-				42779, 42780, 42781, 42782, 42783, 42784, 42785, 42786, 42786, 42788, 42788, 42790, 42790, 42792, 42792, 42794, 42794, 42796, 42796, 42798, 42798, 42800,
-				42801, 42802, 42802, 42804, 42804, 42806, 42806, 42808, 42808, 42810, 42810, 42812, 42812, 42814, 42814, 42816, 42816, 42818, 42818, 42820, 42820, 42822,
-				42822, 42824, 42824, 42826, 42826, 42828, 42828, 42830, 42830, 42832, 42832, 42834, 42834, 42836, 42836, 42838, 42838, 42840, 42840, 42842, 42842, 42844,
-				42844, 42846, 42846, 42848, 42848, 42850, 42850, 42852, 42852, 42854, 42854, 42856, 42856, 42858, 42858, 42860, 42860, 42862, 42862, 42864, 42865, 42866,
-				42867, 42868, 42869, 42870, 42871, 42872, 42873, 42873, 42875, 42875, 42877, 42878, 42878, 42880, 42880, 42882, 42882, 42884, 42884, 42886, 42886, 42888,
-				42889, 42890, 42891, 42891, 42893, 42894, 42895, 42896, 42896, 42898, 42898, 42900, 42901, 42902, 42902, 42904, 42904, 42906, 42906, 42908, 42908, 42910,
-				42910, 42912, 42912, 42914, 42914, 42916, 42916, 42918, 42918, 42920, 42920, 42922, 42923, 42924, 42925, 42926, 42927, 42928, 42929, 42930, 42931, 42932,
-				42932, 42934, 42934, 42936, 42936
+				42646, 42648, 42648, 42650, 42650
 			>>).area
 		end
 
 	to_title_table_10: SPECIAL [NATURAL_16]
+			-- Table for Unicode characters in the range 0x0000A723 .. 0x0000A7F6.
+		once
+			Result := ({ARRAY [NATURAL_16]} <<
+				42786, 42788, 42788, 42790, 42790, 42792, 42792, 42794, 42794, 42796, 42796, 42798, 42798, 42800, 42801, 42802, 42802, 42804, 42804, 42806, 42806,
+				42808, 42808, 42810, 42810, 42812, 42812, 42814, 42814, 42816, 42816, 42818, 42818, 42820, 42820, 42822, 42822, 42824, 42824, 42826, 42826, 42828,
+				42828, 42830, 42830, 42832, 42832, 42834, 42834, 42836, 42836, 42838, 42838, 42840, 42840, 42842, 42842, 42844, 42844, 42846, 42846, 42848, 42848, 42850,
+				42850, 42852, 42852, 42854, 42854, 42856, 42856, 42858, 42858, 42860, 42860, 42862, 42862, 42864, 42865, 42866, 42867, 42868, 42869, 42870, 42871, 42872,
+				42873, 42873, 42875, 42875, 42877, 42878, 42878, 42880, 42880, 42882, 42882, 42884, 42884, 42886, 42886, 42888, 42889, 42890, 42891, 42891, 42893, 42894,
+				42895, 42896, 42896, 42898, 42898, 42948, 42901, 42902, 42902, 42904, 42904, 42906, 42906, 42908, 42908, 42910, 42910, 42912, 42912, 42914, 42914, 42916,
+				42916, 42918, 42918, 42920, 42920, 42922, 42923, 42924, 42925, 42926, 42927, 42928, 42929, 42930, 42931, 42932, 42932, 42934, 42934, 42936, 42936, 42938,
+				42938, 42940, 42940, 42942, 42942, 42944, 42945, 42946, 42946, 42948, 42949, 42950, 42951, 42951, 42953, 42953, 42955, 42956, 42957, 42958, 42959, 42960,
+				42961, 42962, 42963, 42964, 42965, 42966, 42967, 42968, 42969, 42970, 42971, 42972, 42973, 42974, 42975, 42976, 42977, 42978, 42979, 42980, 42981, 42982,
+				42983, 42984, 42985, 42986, 42987, 42988, 42989, 42990, 42991, 42992, 42993, 42994, 42995, 42996, 42997, 42997
+			>>).area
+		end
+
+	to_title_table_11: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x0000AB53 .. 0x0000ABBF.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -1524,7 +1582,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_title_table_11: SPECIAL [NATURAL_16]
+	to_title_table_12: SPECIAL [NATURAL_16]
 			-- Table for Unicode characters in the range 0x0000FF41 .. 0x0000FF5A.
 		once
 			Result := ({ARRAY [NATURAL_16]} <<
@@ -1533,24 +1591,25 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_title_table_12: SPECIAL [NATURAL_32]
-			-- Table for Unicode characters in the range 0x00010428 .. 0x000104FB.
+	to_title_table_13: SPECIAL [NATURAL_32]
+			-- Table for Unicode characters in the range 0x00010428 .. 0x0001044F.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
 				66560, 66561, 66562, 66563, 66564, 66565, 66566, 66567, 66568, 66569, 66570, 66571, 66572, 66573, 66574, 66575, 66576, 66577, 66578, 66579, 66580,
-				66581, 66582, 66583, 66584, 66585, 66586, 66587, 66588, 66589, 66590, 66591, 66592, 66593, 66594, 66595, 66596, 66597, 66598, 66599, 66640, 66641,
-				66642, 66643, 66644, 66645, 66646, 66647, 66648, 66649, 66650, 66651, 66652, 66653, 66654, 66655, 66656, 66657, 66658, 66659, 66660, 66661, 66662, 66663,
-				66664, 66665, 66666, 66667, 66668, 66669, 66670, 66671, 66672, 66673, 66674, 66675, 66676, 66677, 66678, 66679, 66680, 66681, 66682, 66683, 66684, 66685,
-				66686, 66687, 66688, 66689, 66690, 66691, 66692, 66693, 66694, 66695, 66696, 66697, 66698, 66699, 66700, 66701, 66702, 66703, 66704, 66705, 66706, 66707,
-				66708, 66709, 66710, 66711, 66712, 66713, 66714, 66715, 66716, 66717, 66718, 66719, 66720, 66721, 66722, 66723, 66724, 66725, 66726, 66727, 66728, 66729,
-				66730, 66731, 66732, 66733, 66734, 66735, 66736, 66737, 66738, 66739, 66740, 66741, 66742, 66743, 66744, 66745, 66746, 66747, 66748, 66749, 66750, 66751,
-				66752, 66753, 66754, 66755, 66756, 66757, 66758, 66759, 66760, 66761, 66762, 66763, 66764, 66765, 66766, 66767, 66768, 66769, 66770, 66771, 66772, 66773,
-				66774, 66775, 66736, 66737, 66738, 66739, 66740, 66741, 66742, 66743, 66744, 66745, 66746, 66747, 66748, 66749, 66750, 66751, 66752, 66753, 66754, 66755,
-				66756, 66757, 66758, 66759, 66760, 66761, 66762, 66763, 66764, 66765, 66766, 66767, 66768, 66769, 66770, 66771
+				66581, 66582, 66583, 66584, 66585, 66586, 66587, 66588, 66589, 66590, 66591, 66592, 66593, 66594, 66595, 66596, 66597, 66598, 66599
 			>>).area
 		end
 
-	to_title_table_13: SPECIAL [NATURAL_32]
+	to_title_table_14: SPECIAL [NATURAL_32]
+			-- Table for Unicode characters in the range 0x000104D8 .. 0x000104FB.
+		once
+			Result := ({ARRAY [NATURAL_32]} <<
+				66736, 66737, 66738, 66739, 66740, 66741, 66742, 66743, 66744, 66745, 66746, 66747, 66748, 66749, 66750, 66751, 66752, 66753, 66754, 66755, 66756,
+				66757, 66758, 66759, 66760, 66761, 66762, 66763, 66764, 66765, 66766, 66767, 66768, 66769, 66770, 66771
+			>>).area
+		end
+
+	to_title_table_15: SPECIAL [NATURAL_32]
 			-- Table for Unicode characters in the range 0x00010CC0 .. 0x00010CF2.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
@@ -1560,7 +1619,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_title_table_14: SPECIAL [NATURAL_32]
+	to_title_table_16: SPECIAL [NATURAL_32]
 			-- Table for Unicode characters in the range 0x000118C0 .. 0x000118DF.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
@@ -1569,7 +1628,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_title_table_15: SPECIAL [NATURAL_32]
+	to_title_table_17: SPECIAL [NATURAL_32]
 			-- Table for Unicode characters in the range 0x00016E60 .. 0x00016E7F.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
@@ -1578,7 +1637,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	to_title_table_16: SPECIAL [NATURAL_32]
+	to_title_table_18: SPECIAL [NATURAL_32]
 			-- Table for Unicode characters in the range 0x0001E922 .. 0x0001E943.
 		once
 			Result := ({ARRAY [NATURAL_32]} <<
@@ -1735,7 +1794,7 @@ feature {NONE} -- Property tables
 			-- Table for Unicode characters in the range 0x00000C66 .. 0x00000CEF.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
-				8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1813,19 +1872,19 @@ feature {NONE} -- Property tables
 		end
 
 	property_table_12: SPECIAL [NATURAL_8]
-			-- Table for Unicode characters in the range 0x0000166D .. 0x00001736.
+			-- Table for Unicode characters in the range 0x0000166E .. 0x00001736.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
-				16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0,
+				16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0,
+				0, 0, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 16, 16
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 16, 16
 			>>).area
 		end
 
@@ -2010,13 +2069,13 @@ feature {NONE} -- Property tables
 		end
 
 	property_table_21: SPECIAL [NATURAL_8]
-			-- Table for Unicode characters in the range 0x00002E00 .. 0x00002E4E.
+			-- Table for Unicode characters in the range 0x00002E00 .. 0x00002E52.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
 				16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
 				16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
 				16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
-				16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+				16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 16
 			>>).area
 		end
 
@@ -2071,9 +2130,9 @@ feature {NONE} -- Property tables
 				2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 0, 0, 0, 1, 2, 1, 2,
 				0, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2,
 				1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1,
-				2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				2, 1, 2, 1, 2, 1, 2, 0, 0, 1, 2, 1, 1, 1, 1, 2, 1, 2, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0,
 				2
 			>>).area
 		end
@@ -2118,7 +2177,7 @@ feature {NONE} -- Property tables
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2,
 				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0,
-				0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2,
+				0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2,
 				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -2264,6 +2323,14 @@ feature {NONE} -- Property tables
 		end
 
 	property_table_37: SPECIAL [NATURAL_8]
+			-- Table for Unicode characters in the range 0x00010EAD .. 0x00010EAD.
+		once
+			Result := ({ARRAY [NATURAL_8]} <<
+				16
+			>>).area
+		end
+
+	property_table_38: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x00010F55 .. 0x00010F59.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2271,7 +2338,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_38: SPECIAL [NATURAL_8]
+	property_table_39: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x00011047 .. 0x000112F9.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2310,11 +2377,11 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_39: SPECIAL [NATURAL_8]
+	property_table_40: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x0001144B .. 0x000114D9.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
-				16, 16, 16, 16, 16, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 16, 0, 16, 0, 0,
+				16, 16, 16, 16, 16, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 16, 16, 0, 16, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -2324,7 +2391,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_40: SPECIAL [NATURAL_8]
+	property_table_41: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x000115C1 .. 0x0001173E.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2349,8 +2416,8 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_41: SPECIAL [NATURAL_8]
-			-- Table for Unicode characters in the range 0x0001183B .. 0x000118E9.
+	property_table_42: SPECIAL [NATURAL_8]
+			-- Table for Unicode characters in the range 0x0001183B .. 0x00011959.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
 				16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -2361,23 +2428,32 @@ feature {NONE} -- Property tables
 				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 				1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8, 8, 8,
-				8, 8, 8
-			>>).area
-		end
-
-	property_table_42: SPECIAL [NATURAL_8]
-			-- Table for Unicode characters in the range 0x00011A3F .. 0x00011AA2.
-		once
-			Result := ({ARRAY [NATURAL_8]} <<
-				16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 16, 16, 16, 0, 16, 16, 16, 16, 16
+				0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 8,
+				8, 8, 8, 8, 8, 8
 			>>).area
 		end
 
 	property_table_43: SPECIAL [NATURAL_8]
+			-- Table for Unicode characters in the range 0x000119E2 .. 0x00011AA2.
+		once
+			Result := ({ARRAY [NATURAL_8]} <<
+				16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 16, 16, 16, 16, 16
+			>>).area
+		end
+
+	property_table_44: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x00011C41 .. 0x00011C71.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2387,7 +2463,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_44: SPECIAL [NATURAL_8]
+	property_table_45: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x00011D50 .. 0x00011DA9.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2399,7 +2475,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_45: SPECIAL [NATURAL_8]
+	property_table_46: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x00011EF7 .. 0x00011EF8.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2407,7 +2483,15 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_46: SPECIAL [NATURAL_8]
+	property_table_47: SPECIAL [NATURAL_8]
+			-- Table for Unicode characters in the range 0x00011FFF .. 0x00011FFF.
+		once
+			Result := ({ARRAY [NATURAL_8]} <<
+				16
+			>>).area
+		end
+
+	property_table_48: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x00012470 .. 0x00012474.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2415,7 +2499,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_47: SPECIAL [NATURAL_8]
+	property_table_49: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x00016A60 .. 0x00016A6F.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2423,7 +2507,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_48: SPECIAL [NATURAL_8]
+	property_table_50: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x00016AF5 .. 0x00016B59.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2435,7 +2519,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_49: SPECIAL [NATURAL_8]
+	property_table_51: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x00016E40 .. 0x00016E9A.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2447,7 +2531,15 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_50: SPECIAL [NATURAL_8]
+	property_table_52: SPECIAL [NATURAL_8]
+			-- Table for Unicode characters in the range 0x00016FE2 .. 0x00016FE2.
+		once
+			Result := ({ARRAY [NATURAL_8]} <<
+				16
+			>>).area
+		end
+
+	property_table_53: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x0001BC9F .. 0x0001BC9F.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2455,7 +2547,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_51: SPECIAL [NATURAL_8]
+	property_table_54: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x0001D400 .. 0x0001D7FF.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2511,7 +2603,7 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_52: SPECIAL [NATURAL_8]
+	property_table_55: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x0001DA87 .. 0x0001DA8B.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2519,7 +2611,23 @@ feature {NONE} -- Property tables
 			>>).area
 		end
 
-	property_table_53: SPECIAL [NATURAL_8]
+	property_table_56: SPECIAL [NATURAL_8]
+			-- Table for Unicode characters in the range 0x0001E140 .. 0x0001E149.
+		once
+			Result := ({ARRAY [NATURAL_8]} <<
+				8, 8, 8, 8, 8, 8, 8, 8, 8, 8
+			>>).area
+		end
+
+	property_table_57: SPECIAL [NATURAL_8]
+			-- Table for Unicode characters in the range 0x0001E2F0 .. 0x0001E2F9.
+		once
+			Result := ({ARRAY [NATURAL_8]} <<
+				8, 8, 8, 8, 8, 8, 8, 8, 8, 8
+			>>).area
+		end
+
+	property_table_58: SPECIAL [NATURAL_8]
 			-- Table for Unicode characters in the range 0x0001E900 .. 0x0001E95F.
 		once
 			Result := ({ARRAY [NATURAL_8]} <<
@@ -2528,6 +2636,14 @@ feature {NONE} -- Property tables
 				2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 				2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8, 8, 8,
 				8, 8, 8, 8, 8, 8, 0, 0, 0, 0, 16, 16
+			>>).area
+		end
+
+	property_table_59: SPECIAL [NATURAL_8]
+			-- Table for Unicode characters in the range 0x0001FBF0 .. 0x0001FBF9.
+		once
+			Result := ({ARRAY [NATURAL_8]} <<
+				8, 8, 8, 8, 8, 8, 8, 8, 8, 8
 			>>).area
 		end
 

@@ -266,7 +266,7 @@ feature {NONE} -- Retrieval
 			-- Called from runtime to perform a proper dynamic dispatch on `correct_mismatch'
 			-- from MISMATCH_CORRECTOR.
 		local
-			l_msg: STRING
+			l_msg: STRING_32
 			l_exc: EXCEPTIONS
 		do
 			if attached {MISMATCH_CORRECTOR} Current as l_corrector then
@@ -274,7 +274,7 @@ feature {NONE} -- Retrieval
 			else
 				create l_msg.make_from_string ("Mismatch: ")
 				create l_exc
-				l_msg.append (generating_type.name)
+				l_msg.append (generating_type.name_32)
 				l_exc.raise_retrieval_exception (l_msg)
 			end
 		end
@@ -312,9 +312,18 @@ feature -- Output
 	print (o: detachable ANY)
 			-- Write terse external representation of `o'
 			-- on standard output.
+		local
+			s: READABLE_STRING
 		do
-			if o /= Void then
-				io.put_string (o.out)
+			if attached o then
+				s := o.out
+				if attached {READABLE_STRING_32} s as s32 then
+					io.put_string_32 (s32)
+				elseif attached {READABLE_STRING_8} s as s8 then
+					io.put_string (s8)
+				else
+					io.put_string_32 (s.as_string_32)
+				end
 			end
 		ensure
 			instance_free: class

@@ -179,7 +179,7 @@ feature -- Element change
 			default_output := output
 		end
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Write `c' at end of default output.
 		do
 			standard_default.put_character (c)

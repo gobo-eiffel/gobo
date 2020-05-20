@@ -95,10 +95,10 @@ feature -- Status report
 		do
 		end
 
-	last_character: CHARACTER
-			-- Last character read by `read_character'
+	last_character: CHARACTER_8
+			-- Last character read by `read_character`.
 
-	last_string: STRING
+	last_string: STRING_8
 			-- Last string read
 
 	last_integer: INTEGER
@@ -254,7 +254,7 @@ feature -- Output
 		deferred
 		end
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Write `c' to medium.
 		require
 			extendible: extendible
@@ -540,7 +540,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

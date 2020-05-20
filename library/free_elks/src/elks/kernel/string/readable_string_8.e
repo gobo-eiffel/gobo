@@ -758,10 +758,10 @@ feature -- Output
 			-- <Precursor>
 		do
 			create Result.make (count)
-			Result.append (Current)
+			Result.append_string_general (Current)
 		ensure then
 			out_not_void: Result /= Void
-			same_items: same_type ("") implies Result.same_string (Current)
+			same_items: same_type ("") implies Result.same_string_general (Current)
 		end
 
 feature {NONE} -- Implementation

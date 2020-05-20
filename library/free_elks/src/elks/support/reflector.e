@@ -286,6 +286,16 @@ feature -- Access
 			instance_free: class
 		end
 
+	class_name_8_of_type (type_id: INTEGER): STRING_8
+			-- Name of class associated with dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			Result := {ISE_RUNTIME}.generator_8_of_type (type_id)
+		ensure
+			instance_free: class
+		end
+
 	type_name_of_type (type_id: INTEGER): STRING
 			-- Name of `type_id''s generating type (type of which `type_id'
 			-- is a direct instance).
@@ -293,6 +303,17 @@ feature -- Access
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.generating_type_of_type (type_id)
+		ensure
+			instance_free: class
+		end
+
+	type_name_8_of_type (type_id: INTEGER): STRING_8
+			-- Name of `type_id''s generating type (type of which `type_id'
+			-- is a direct instance).
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			Result := {ISE_RUNTIME}.generating_type_8_of_type (type_id)
 		ensure
 			instance_free: class
 		end
@@ -364,6 +385,18 @@ feature -- Access
 		end
 
 	field_name_of_type (i: INTEGER; type_id: INTEGER): STRING
+			-- Name of `i'-th field of dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+			index_large_enough: i >= 1
+			index_small_enought: i <= field_count_of_type (type_id)
+		do
+			create Result.make_from_c ({ISE_RUNTIME}.field_name_of_type (i, type_id))
+		ensure
+			instance_free: class
+		end
+
+	field_name_8_of_type (i: INTEGER; type_id: INTEGER): STRING_8
 			-- Name of `i'-th field of dynamic type `type_id'.
 		require
 			type_id_nonnegative: type_id >= 0
