@@ -5,10 +5,8 @@ test:
   stage: test
   script:
     - Write-Host "Just to define the 'test' stage name"
-  except:
-    refs:
-      - tags
-      - branches
+  rules:
+    - when: never
 
 test_windows:
   stage: test
