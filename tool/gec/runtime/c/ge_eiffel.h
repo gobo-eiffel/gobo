@@ -72,6 +72,7 @@
 /* Windows definition */
 #ifdef EIF_WINDOWS
 #define EIF_IS_WINDOWS EIF_TRUE
+#undef EIF_OS
 #define EIF_OS EIF_OS_WINNT
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
@@ -81,6 +82,7 @@
 /* VMS definition */
 #ifdef EIF_VMS
 #define EIF_IS_VMS EIF_TRUE
+#undef EIF_OS
 #define EIF_OS EIF_OS_VMS
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
@@ -90,6 +92,7 @@
 /* MAC definition */
 #ifdef EIF_MAC
 #define EIF_IS_MAC EIF_TRUE
+#undef EIF_OS
 #define EIF_OS EIF_OS_DARWIN
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
@@ -99,6 +102,7 @@
 /* VxWorks definition */
 #ifdef EIF_VXWORKS
 #define EIF_IS_VXWORKS EIF_TRUE
+#undef EIF_OS
 #define EIF_OS EIF_OS_VXWORKS
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
