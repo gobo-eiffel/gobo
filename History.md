@@ -8,6 +8,8 @@
   `CHARACTER` -> `CHARACTER_32` when specified that way in the ECF
   file. The default is still set to `STRING` -> `STRING_8` and 
   `CHARACTER` -> `CHARACTER_8` in the FreeELKS ECF file.
+* Added support for new built-in features `generator_8_of_type` and
+  `generating_type_8_of_type` in class `ISE_RUNTIME`.
 
 ### geimage
 

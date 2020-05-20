@@ -3185,10 +3185,22 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_ise_runtime_generating_type_of_type_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_ise_runtime_generating_type_8_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_generating_type_8_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when {ET_TOKEN_CODES}.builtin_ise_runtime_generator_of_type then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_ise_runtime_generator_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when {ET_TOKEN_CODES}.builtin_ise_runtime_generator_8_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_generator_8_of_type_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			when {ET_TOKEN_CODES}.builtin_ise_runtime_generic_parameter_count then
@@ -15437,8 +15449,12 @@ feature {NONE} -- Query call generation
 				print_builtin_ise_runtime_field_type_of_type_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_ise_runtime_generating_type_of_type then
 				print_builtin_ise_runtime_generating_type_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_ise_runtime_generating_type_8_of_type then
+				print_builtin_ise_runtime_generating_type_8_of_type_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_ise_runtime_generator_of_type then
 				print_builtin_ise_runtime_generator_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_ise_runtime_generator_8_of_type then
+				print_builtin_ise_runtime_generator_8_of_type_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_ise_runtime_generic_parameter_count then
 				print_builtin_ise_runtime_generic_parameter_count_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_ise_runtime_integer_8_field then
@@ -23146,6 +23162,21 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			print_builtin_query_c_call (a_feature, c_ge_generating_type_of_encoded_type, True, a_target_type, a_check_void_target)
 		end
 
+	print_builtin_ise_runtime_generating_type_8_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.generating_type_8_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_name_used := True
+			print_builtin_query_c_call (a_feature, c_ge_generating_type_8_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
 	print_builtin_ise_runtime_generator_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ISE_RUNTIME.generator_of_type'.
@@ -23159,6 +23190,21 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 		do
 			type_info_generator_used := True
 			print_builtin_query_c_call (a_feature, c_ge_generator_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_generator_8_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.generator_8_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_generator_used := True
+			print_builtin_query_c_call (a_feature, c_ge_generator_8_of_encoded_type, True, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_generic_parameter_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -37184,7 +37230,9 @@ feature {NONE} -- Constants
 	c_ge_field_type_kind_of_encoded_type: STRING = "GE_field_type_kind_of_encoded_type"
 	c_ge_floor: STRING = "GE_floor"
 	c_ge_generating_type_of_encoded_type: STRING = "GE_generating_type_of_encoded_type"
+	c_ge_generating_type_8_of_encoded_type: STRING = "GE_generating_type_8_of_encoded_type"
 	c_ge_generator_of_encoded_type: STRING = "GE_generator_of_encoded_type"
+	c_ge_generator_8_of_encoded_type: STRING = "GE_generator_8_of_encoded_type"
 	c_ge_generic_parameter_of_encoded_type: STRING = "GE_generic_parameter_of_encoded_type"
 	c_ge_generic_parameter_count_of_encoded_type: STRING = "GE_generic_parameter_count_of_encoded_type"
 	c_ge_id_object: STRING = "GE_id_object"

@@ -225,6 +225,18 @@ EIF_REFERENCE GE_generator_of_type_index(EIF_TYPE_INDEX a_type)
 	return GE_str(l_generator);
 }
 
+EIF_REFERENCE GE_generator_8_of_type_index(EIF_TYPE_INDEX a_type)
+{
+	const char* l_generator;
+#ifdef GE_USE_TYPE_GENERATOR
+/* TODO: check that `a_type' is valid. */
+	l_generator = GE_type_infos[a_type].generator;
+#else
+	l_generator = "";
+#endif
+	return GE_str8(l_generator);
+}
+
 /*
  * Full name of `a_type'.
  */
@@ -244,6 +256,24 @@ EIF_REFERENCE GE_generating_type_of_encoded_type(EIF_ENCODED_TYPE a_type)
 	l_name = "";
 #endif
 	return GE_str(l_name);
+}
+
+EIF_REFERENCE GE_generating_type_8_of_encoded_type(EIF_ENCODED_TYPE a_type)
+{
+	const char* l_name;
+#ifdef GE_USE_TYPE_NAME
+/* TODO: check that `a_type' is valid. */
+	EIF_TYPE l_decoded_type;
+
+	l_decoded_type = GE_decoded_type(a_type);
+	l_name = GE_type_infos[l_decoded_type.id].name;
+	if (!l_decoded_type.annotations) {
+		l_name++;
+	}
+#else
+	l_name = "";
+#endif
+	return GE_str8(l_name);
 }
 
 /*

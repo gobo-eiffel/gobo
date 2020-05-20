@@ -1534,6 +1534,15 @@ feature -- Feature names
 			generating_type_of_type_feature_name_not_void: Result /= Void
 		end
 
+	generating_type_8_of_type_feature_name: ET_FEATURE_NAME
+			-- 'generating_type_8_of_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (generating_type_8_of_type_name)
+		ensure
+			instance_free: class
+			generating_type_8_of_type_feature_name_not_void: Result /= Void
+		end
+
 	generator_feature_name: ET_FEATURE_NAME
 			-- 'generator' feature name
 		once
@@ -1550,6 +1559,15 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			generator_of_type_feature_name_not_void: Result /= Void
+		end
+
+	generator_8_of_type_feature_name: ET_FEATURE_NAME
+			-- 'generator_8_of_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (generator_8_of_type_name)
+		ensure
+			instance_free: class
+			generator_8_of_type_feature_name_not_void: Result /= Void
 		end
 
 	generic_parameter_count_feature_name: ET_FEATURE_NAME
@@ -5071,11 +5089,17 @@ feature -- Keyword and symbol names
 	generating_type_of_type_name: STRING = "generating_type_of_type"
 			-- Name of Eiffel feature 'generating_type_of_type'
 
+	generating_type_8_of_type_name: STRING = "generating_type_8_of_type"
+			-- Name of Eiffel feature 'generating_type_8_of_type'
+
 	generator_name: STRING = "generator"
 			-- Name of Eiffel feature 'generator'
 
 	generator_of_type_name: STRING = "generator_of_type"
 			-- Name of Eiffel feature 'generator_of_type'
+
+	generator_8_of_type_name: STRING = "generator_8_of_type"
+			-- Name of Eiffel feature 'generator_8_of_type'
 
 	generic_parameter_count_name: STRING = "generic_parameter_count"
 			-- Name of Eiffel feature 'generic_parameter_count'

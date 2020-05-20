@@ -284,11 +284,14 @@ extern EIF_BOOLEAN GE_is_special_copy_semantics_item(EIF_INTEGER i, EIF_POINTER 
  */
 extern EIF_REFERENCE GE_generator_of_type_index(EIF_TYPE_INDEX a_type);
 #define GE_generator_of_encoded_type(a_type) GE_generator_of_type_index(GE_decoded_type(a_type).id)
+extern EIF_REFERENCE GE_generator_8_of_type_index(EIF_TYPE_INDEX a_type);
+#define GE_generator_8_of_encoded_type(a_type) GE_generator_8_of_type_index(GE_decoded_type(a_type).id)
 
 /*
  * Full name of `a_type'.
  */
 extern EIF_REFERENCE GE_generating_type_of_encoded_type(EIF_ENCODED_TYPE a_type);
+extern EIF_REFERENCE GE_generating_type_8_of_encoded_type(EIF_ENCODED_TYPE a_type);
 
 /*
  * Encoded type whose name is `a_name'.
