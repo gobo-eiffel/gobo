@@ -11,8 +11,6 @@ class
 inherit
 	ENCODING_I
 
-	STRING_HANDLER
-
 create {ENCODING}
 	default_create
 
@@ -22,7 +20,7 @@ feature -- Query
 			-- Is `a_code_page` valid?
 		do
 			if a_code_page /= Void and then not a_code_page.is_empty then
-				Result := unicode_encodings.has (a_code_page.as_lower)
+				Result := unicode_encodings.has (a_code_page)
 			end
 		end
 
@@ -62,37 +60,31 @@ feature -- Query
 			-- Is `a_string` valid UTF-8 string?
 		require
 			a_string_not_void: a_string /= Void
-		local
-			l_nat8: NATURAL_8
-			i, nb: INTEGER
 		do
-			from
-				i := 1
-				nb := a_string.count
-				Result := True
-			until
-				i > nb or not Result
-			loop
-				l_nat8 := a_string.code (i).to_natural_8
-				if l_nat8 <= 127 then
-						-- Form 0xxxxxxx.
-				elseif (l_nat8 & 0xE0) = 0xC0 then
-						-- Form 110xxxxx 10xxxxxx.
-					i := i + 1
-				elseif (l_nat8 & 0xF0) = 0xE0 then
-					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
-					i := i + 2
-				elseif (l_nat8 & 0xF8) = 0xF0 then
-					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
-					i := i + 3
-				elseif (l_nat8 & 0xFC) = 0xF8 then
-					-- Starts with 111110xx
-					Result := False
+			Result := {UTF_CONVERTER}.is_valid_utf_8_string_8 (a_string)
+		end
+
+	is_valid_as_string_16 (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Check high 16 bit of any char in `a_string` is zero.
+		local
+			i, nb: INTEGER_32
+			l_area: SPECIAL [CHARACTER_32]
+		do
+			if a_string /= Void then
+				if a_string.is_string_32 then
+					from
+						nb := a_string.count
+						Result := True
+						l_area := a_string.as_string_32.area
+					until
+						i = nb or not Result
+					loop
+						Result := l_area [i].code <= 0xFFFF
+						i := i + 1
+					end
 				else
-					-- Starts with 1111110x
-					Result := False
+					Result := True
 				end
-				i := i + 1
 			end
 		end
 
@@ -119,12 +111,7 @@ feature -- Conversion
 							a_from_string.to_string_8
 						else
 								-- Fallback to UTF-8.
-							{UTF_CONVERTER}.string_32_to_utf_8_string_8
-								(if attached {READABLE_STRING_32} a_from_string as s then
-									s
-								else
-									a_from_string.as_string_32
-								end)
+							{UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_from_string)
 						end)
 					last_conversion_successful := True
 				elseif a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32) then
@@ -158,21 +145,8 @@ feature -- Explicit Conversion
 			-- UTF8 to UTF32 conversion, Eiffel implementation.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			i, nb: INTEGER
-			l_ref: INTEGER_32_REF
 		do
-			from
-				i := 1
-				nb := a_string.count
-				create Result.make (nb)
-				create l_ref
-			until
-				i > nb
-			loop
-				Result.append_character (read_character_from_utf8 (i, l_ref, a_string))
-				i := i + l_ref.item
-			end
+			Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (a_string)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -181,46 +155,78 @@ feature -- Explicit Conversion
 			-- Convert UTF32 to UTF8.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			bytes_written: INTEGER
-			i: INTEGER
-			l_code: NATURAL_32
-			l_string_length: INTEGER
 		do
-			l_string_length := a_string.count
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_string)
+		ensure
+			Result_not_void: Result /= Void
+		end
 
-				-- First compute how many bytes we need to convert `a_string` to UTF-8.
-			from
-				i := l_string_length
-				bytes_written := 0
-			until
-				i = 0
-			loop
-				l_code := a_string.code (i)
-				if l_code <= 127 then
-					bytes_written := bytes_written + 1
-				elseif l_code <= 0x7FF then
-					bytes_written := bytes_written + 2
-				elseif l_code <= 0xFFFF then
-					bytes_written := bytes_written + 3
-				else -- l_code <= 0x10FFFF
-					bytes_written := bytes_written + 4
-				end
-				i := i - 1
-			end
-
-				-- Fill `utf_ptr8` with the converted data.
+	utf32_to_utf16 (a_str: READABLE_STRING_32): STRING_32
+			-- Convert utf32 to utf16 without data lose.
+		require
+			a_str_not_void: a_str /= Void
+		local
+			l_code: NATURAL_32
+			i, l_count: INTEGER
+		do
+			create Result.make (a_str.count * 2)
 			from
 				i := 1
-				create Result.make (bytes_written)
+				l_count := a_str.count
 			until
-				i > l_string_length
+				i > l_count
 			loop
-				l_code := a_string.code (i)
-				append_code_point_to_utf8 (l_code, Result)
+				l_code := a_str.code (i) & 0xFFFFF
+				if l_code > 0xFFFF then
+					l_code := l_code - 0x10000
+					Result.append_code (l_code |>> 10 | 0xD800)
+					Result.append_code (l_code & 0x03FF | 0xDC00)
+				else
+					Result.append_code (l_code)
+				end
 				i := i + 1
 			end
 		ensure
+			instance_free: class
+			Result_not_void: Result /= Void
+		end
+
+	utf16_to_utf32 (a_str: READABLE_STRING_32): STRING_32
+			-- Convert utf16 to utf32.
+		require
+			a_str_not_void: a_str /= Void
+		local
+			i, -- Old string pointer
+			l_count: INTEGER
+			l_code: NATURAL_32
+			l_temp: NATURAL_32
+			l_lower: NATURAL_32
+		do
+			l_count := a_str.count
+			create Result.make (l_count)
+			from
+				i := 1
+			until
+				i > l_count
+			loop
+				l_code := a_str.code (i)
+				i := i + 1
+				l_temp := l_code & 0xFFFF
+				if i <= l_count then
+					l_lower := a_str.code (i) & 0xFFFF
+				end
+				if l_temp >= 0xD800 and then l_temp <= 0xDBFF and then i <= l_count and then
+					l_lower >= 0xDC00 and then
+					l_lower <= 0xDFFF
+				then
+					Result.append_code ((l_temp & 0x03FF) |<< 10 + l_lower & 0x03FF + 0x10000)
+					i := i + 1
+				else
+					Result.append_code (l_temp)
+				end
+			end
+		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
@@ -231,29 +237,7 @@ feature -- Explicit Conversion
 				-- According to ISO/IEC 10646, the maximum Unicode point is 10FFFF.
 			a_code_is_valid: a_code >= 0 and then a_code <= 0x10FFFF
 		do
-				if a_code <= 127 then
-						-- Of the form 0xxxxxxx.
-					a_string.append_code (a_code)
-				elseif a_code <= 0x7FF then
-						-- Insert 110xxxxx 10xxxxxx.
-					a_string.append_code (0xC0 | (a_code |>> 6))
-					a_string.append_code (0x80 | (a_code & 0x3F))
-				elseif a_code <= 0xFFFF then
-						-- Start with 1110xxxx
-					a_string.append_code (0xE0 | (a_code |>> 12))
-					a_string.append_code (0x80 | ((a_code |>> 6) & 0x3F))
-					a_string.append_code (0x80 | (a_code & 0x3F))
-				else -- a_code <= 0x10FFFF then
-						-- Start with 11110xxx
-					check
-						max_4_bytes: a_code <= 0x10FFFF
-						-- UTF-8 has been restricted to 4 bytes characters
-					end
-					a_string.append_code (0xF0 | (a_code |>> 18))
-					a_string.append_code (0x80 | ((a_code |>> 12) & 0x3F))
-					a_string.append_code (0x80 | ((a_code |>> 6) & 0x3F))
-					a_string.append_code (0x80 | (a_code & 0x3F))
-				end
+			{UTF_CONVERTER}.utf_32_code_into_utf_8_string_8 (a_code, a_string)
 		ensure
 			a_string_appended: (a_code <= 127 implies a_string.count = old a_string.count + 1) and
 								((a_code > 127 and a_code <= 0x7FF) implies a_string.count = old a_string.count + 2) and
@@ -338,18 +322,21 @@ feature -- Explicit Conversion
 
 feature {NONE} -- Implementation
 
-	unicode_encodings: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	unicode_encodings: STRING_TABLE [READABLE_STRING_8]
 			-- Supported Unicode encodings.
 		once
 			create Result.make (8)
-			Result.put ({CODE_PAGE_CONSTANTS}.utf7, {CODE_PAGE_CONSTANTS}.utf7.as_lower)
-			Result.put ({CODE_PAGE_CONSTANTS}.utf8, {CODE_PAGE_CONSTANTS}.utf8.as_lower)
-			Result.put ({CODE_PAGE_CONSTANTS}.utf16, {CODE_PAGE_CONSTANTS}.utf16.as_lower)
-			Result.put ({CODE_PAGE_CONSTANTS}.utf32, {CODE_PAGE_CONSTANTS}.utf32.as_lower)
-			Result.put ({CODE_PAGE_CONSTANTS}.utf16_le, {CODE_PAGE_CONSTANTS}.utf16_le.as_lower)
-			Result.put ({CODE_PAGE_CONSTANTS}.utf32_le, {CODE_PAGE_CONSTANTS}.utf32_le.as_lower)
-			Result.put ({CODE_PAGE_CONSTANTS}.utf16_be, {CODE_PAGE_CONSTANTS}.utf16_be.as_lower)
-			Result.put ({CODE_PAGE_CONSTANTS}.utf32_be, {CODE_PAGE_CONSTANTS}.utf32_be.as_lower)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf7, {CODE_PAGE_CONSTANTS}.utf7)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf8, {CODE_PAGE_CONSTANTS}.utf8)
+
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16, {CODE_PAGE_CONSTANTS}.utf16)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_le, {CODE_PAGE_CONSTANTS}.utf16_le)
+
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32, {CODE_PAGE_CONSTANTS}.utf32)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_le, {CODE_PAGE_CONSTANTS}.utf32_le)
+
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_be, {CODE_PAGE_CONSTANTS}.utf16_be)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_be, {CODE_PAGE_CONSTANTS}.utf32_be)
 		end
 
 note

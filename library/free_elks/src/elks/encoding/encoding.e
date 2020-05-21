@@ -94,7 +94,7 @@ feature -- Conversion
 			a_string_not_void: a_string /= Void
 		local
 			l_is_unicode_conversion: BOOLEAN
-			l_unicode_conversion: like unicode_conversion
+			l_unicode_conversion: ENCODING_I
 		do
 			l_unicode_conversion := unicode_conversion
 			if
@@ -159,10 +159,10 @@ feature {NONE} -- Implementation
 	encoding_i: ENCODING_I
 			-- Current encoding implementation
 
-	unicode_conversion: UNICODE_CONVERSION
+	unicode_conversion: ENCODING_I
 			-- Unicode conversion
 		once
-			create Result
+			create {UNICODE_CONVERSION} Result
 		end
 
 	regular_encoding_imp: ENCODING_I

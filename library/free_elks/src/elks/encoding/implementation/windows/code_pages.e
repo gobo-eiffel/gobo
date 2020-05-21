@@ -10,10 +10,10 @@ class
 
 feature -- Code-Page Identifiers
 
-	code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	code_pages: STRING_TABLE [READABLE_STRING_8]
 			-- Code page identifiers.
 		once
-			create Result.make (160)
+			create Result.make_caseless (168)
 			Result.put ("037", "037") -- IBM EBCDIC - U.S./Canada
 			Result.put ("437", "437") -- OEM - United States
 			Result.put ("500", "500") -- IBM EBCDIC - International
@@ -166,52 +166,69 @@ feature -- Code-Page Identifiers
 			Result.put ("65001", "65001") -- Unicode UTF-8
 
 				-- Added for more functionalities.
-			Result.put ("65000", {CODE_PAGE_CONSTANTS}.utf7.as_lower) -- Unicode UTF-7
-			Result.put ("65001", {CODE_PAGE_CONSTANTS}.utf8.as_lower) -- Unicode UTF-8
+			Result.put ("65000", {CODE_PAGE_CONSTANTS}.utf7) -- Unicode UTF-7
+			Result.put ({CODE_PAGE_CONSTANTS}.utf7, {CODE_PAGE_CONSTANTS}.utf7)
+			Result.put ("65001", {CODE_PAGE_CONSTANTS}.utf8) -- Unicode UTF-8
+			Result.put ({CODE_PAGE_CONSTANTS}.utf8, {CODE_PAGE_CONSTANTS}.utf8)
+
 
 			Result.put ("1200", {CODE_PAGE_CONSTANTS}.utf16.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
-			Result.put ("1200", {CODE_PAGE_CONSTANTS}.utf16_le.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16, {CODE_PAGE_CONSTANTS}.utf16)
+			Result.put ("1200", {CODE_PAGE_CONSTANTS}.utf16_le)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_le, {CODE_PAGE_CONSTANTS}.utf16_le)
 
 			Result.put ("12000", {CODE_PAGE_CONSTANTS}.utf32.as_lower) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32, {CODE_PAGE_CONSTANTS}.utf32)
 			Result.put ("12000", {CODE_PAGE_CONSTANTS}.utf32_le.as_lower) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_le, {CODE_PAGE_CONSTANTS}.utf32_le)
 
 			Result.put ("1201", {CODE_PAGE_CONSTANTS}.utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_be, {CODE_PAGE_CONSTANTS}.utf16_be)
 			Result.put ("12001", {CODE_PAGE_CONSTANTS}.utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_be, {CODE_PAGE_CONSTANTS}.utf32_be)
 		ensure
 			class
 		end
 
-	two_byte_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	two_byte_code_pages: STRING_TABLE [READABLE_STRING_8]
 		once
-			create Result.make (5)
+			create Result.make_caseless (8)
 			Result.put ("1200", "1200")  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
 			Result.put ("1201", "1201") -- Unicode UCS-2 Big-Endian
 			Result.put ("1200", {CODE_PAGE_CONSTANTS}.utf16.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16, {CODE_PAGE_CONSTANTS}.utf16)
 			Result.put ("1200", {CODE_PAGE_CONSTANTS}.utf16_le.as_lower)  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_le, {CODE_PAGE_CONSTANTS}.utf16_le)
 			Result.put ("1201", {CODE_PAGE_CONSTANTS}.utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_be, {CODE_PAGE_CONSTANTS}.utf16_be)
 		ensure
 			class
 		end
 
-	four_byte_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	four_byte_code_pages: STRING_TABLE [READABLE_STRING_8] 
 		once
-			create Result.make (5)
+			create Result.make_caseless (8)
 			Result.put ("12000", "12000") -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
 			Result.put ("12001", "12001") -- Unicode UCS-4 Big-Endian
 			Result.put ("12000", {CODE_PAGE_CONSTANTS}.utf32.as_lower) -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32, {CODE_PAGE_CONSTANTS}.utf32)
 			Result.put ("12000", {CODE_PAGE_CONSTANTS}.utf32_le.as_lower) -- Unicode UCS-4 Little-Endian (BMP of ISO 10646)
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_le, {CODE_PAGE_CONSTANTS}.utf32_le)
 			Result.put ("12001", {CODE_PAGE_CONSTANTS}.utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_be, {CODE_PAGE_CONSTANTS}.utf32_be)
 		ensure
 			class
 		end
 
-	big_endian_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	big_endian_code_pages: STRING_TABLE [READABLE_STRING_8]
 		once
-			create Result.make (4)
+			create Result.make_caseless (6)
 			Result.put ("1201", "1201") -- Unicode UCS-2 Big-Endian
 			Result.put ("12001", "12001") -- Unicode UCS-4 Big-Endian
 			Result.put ("1201", {CODE_PAGE_CONSTANTS}.utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_be, {CODE_PAGE_CONSTANTS}.utf16_be)
 			Result.put ("12001", {CODE_PAGE_CONSTANTS}.utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_be, {CODE_PAGE_CONSTANTS}.utf32_be)
 		ensure
 			class
 		end

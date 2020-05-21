@@ -31,14 +31,14 @@ feature -- String encoding convertion
 			if a_from_string.is_empty then
 				last_conversion_successful := True
 				if a_from_string.is_string_8 then
-					last_converted_string := a_from_string.to_string_8.twin
+					last_converted_string := {STRING_8} ""
 				else
-					last_converted_string := a_from_string.as_string_32.twin
+					last_converted_string := {STRING_32} ""
 				end
 				last_was_wide_string := a_from_string.is_string_32
 			else
-				l_from_code_page := platfrom_code_page_from_name (a_from_code_page)
-				l_to_code_page := platfrom_code_page_from_name (a_to_code_page)
+				l_from_code_page := platform_code_page_from_name (a_from_code_page)
+				l_to_code_page := platform_code_page_from_name (a_to_code_page)
 
 				l_from_be := is_big_endian_code_page (a_from_code_page)
 				l_to_be := is_big_endian_code_page (a_to_code_page)
@@ -50,7 +50,7 @@ feature -- String encoding convertion
 						l_string_32 := string_16_switch_endian (l_string_32)
 					end
 					if is_four_bype_code_page (a_to_code_page) then
-						l_string_32 := utf16_to_utf32 (l_string_32)
+						l_string_32 := {UNICODE_CONVERSION}.utf16_to_utf32 (l_string_32)
 						if l_to_be = is_little_endian then
 							l_converted_32 := string_32_switch_endian (l_string_32)
 						else
@@ -75,7 +75,7 @@ feature -- String encoding convertion
 						l_string_32 := string_32_switch_endian (l_string_32)
 					end
 					if is_two_byte_code_page (a_to_code_page) then
-						l_string_32 := utf32_to_utf16 (l_string_32)
+						l_string_32 := {UNICODE_CONVERSION}.utf32_to_utf16 (l_string_32)
 						if l_to_be = is_little_endian then
 							l_converted_32 := string_16_switch_endian (l_string_32)
 						else
@@ -91,7 +91,7 @@ feature -- String encoding convertion
 						end
 						last_converted_string := l_converted_32
 					else
-						l_converted_32 := utf32_to_utf16 (l_string_32)
+						l_converted_32 := {UNICODE_CONVERSION}.utf32_to_utf16 (l_string_32)
 						l_converted_8 := wide_char_to_multi_byte (l_to_code_page, l_converted_32)
 						last_converted_string := l_converted_8
 					end
@@ -103,12 +103,7 @@ feature -- String encoding convertion
 							a_from_string.to_string_8
 						else
 								-- Fallback to UTF-8.
-							{UTF_CONVERTER}.string_32_to_utf_8_string_8
-								(if attached {READABLE_STRING_32} a_from_string as s then
-									s
-								else
-									a_from_string.as_string_32
-								end)
+							{UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_from_string)
 						end)
 					if is_two_byte_code_page (a_to_code_page) then
 						if l_to_be = is_little_endian then
@@ -119,7 +114,7 @@ feature -- String encoding convertion
 						last_converted_string := l_converted_32
 						last_was_wide_string := True
 					elseif is_four_bype_code_page (a_to_code_page) then
-						l_string_32 := utf16_to_utf32 (l_string_32)
+						l_string_32 := {UNICODE_CONVERSION}.utf16_to_utf32 (l_string_32)
 						if l_to_be = is_little_endian then
 							l_converted_32 := string_32_switch_endian (l_string_32)
 						else
@@ -185,7 +180,7 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	platfrom_code_page_from_name (a_code_page_name: READABLE_STRING_8): READABLE_STRING_8
+	platform_code_page_from_name (a_code_page_name: READABLE_STRING_8): READABLE_STRING_8
 			-- Code page the OS supported.
 			-- Result can be passed to Windows API.
 		require
@@ -194,7 +189,7 @@ feature {NONE} -- Access
 			a_code_page_valid: is_code_page_valid (a_code_page_name)
 		do
 			check
-				from_precondition: attached code_pages.item (a_code_page_name.as_lower) as r
+				from_precondition: attached code_pages [a_code_page_name] as r
 			then
 				Result := r
 			end
@@ -210,7 +205,7 @@ feature {NONE} -- Status report
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
-			Result := code_pages.has (a_code_page.as_lower)
+			Result := code_pages.has (a_code_page)
 		end
 
 	is_two_byte_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
@@ -219,7 +214,7 @@ feature {NONE} -- Status report
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
-			Result := two_byte_code_pages.has (a_code_page.as_lower)
+			Result := two_byte_code_pages.has (a_code_page)
 		end
 
 	is_four_bype_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
@@ -228,7 +223,7 @@ feature {NONE} -- Status report
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
-			Result := four_byte_code_pages.has (a_code_page.as_lower)
+			Result := four_byte_code_pages.has (a_code_page)
 		end
 
 	is_big_endian_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
@@ -237,7 +232,7 @@ feature {NONE} -- Status report
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
-			Result := big_endian_code_pages.has (a_code_page.as_lower)
+			Result := big_endian_code_pages.has (a_code_page)
 		end
 
 feature {NONE} -- Implementation

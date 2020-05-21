@@ -14,13 +14,13 @@ class
 
 feature -- Access
 
-	code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	code_pages: STRING_TABLE [READABLE_STRING_8]
 			-- All code pages that iconv can possibly support.
 			-- It is not used now.
 		note
 			EIS: "name=GNU libiconv", "src=http://www.gnu.org/software/libiconv/", "tag=encoding library"
 		once
-			create Result.make (122)
+			create Result.make_caseless (122)
 
 				-- European languages
 			Result.put ("ASCII", "ascii")
@@ -130,20 +130,20 @@ feature -- Access
 			Result.put ("NEXTSTEP", "nextstep")
 
 				-- Full Unicode
-			Result.put ("UTF-8", "utf-8")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf8, "utf-8")
 			Result.put ("UCS-2", "ucs-2")
 			Result.put ("UCS-2BE", "ucs-2be")
 			Result.put ("UCS-2LE", "ucs-2le")
 			Result.put ("UCS-4", "ucs-4")
 			Result.put ("UCS-4BE", "ucs-4be")
 			Result.put ("UCS-4LE", "ucs-4le")
-			Result.put ("UTF-16", "utf-16")
-			Result.put ("UTF-16BE", "utf-16be")
-			Result.put ("UTF-16LE", "utf-16le")
-			Result.put ("UTF-32", "utf-32")
-			Result.put ("UTF-32BE", "utf-32be")
-			Result.put ("UTF-32LE", "utf-32le")
-			Result.put ("UTF-7", "utf-7")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16, "utf-16")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_be, "utf-16be")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_le, "utf-16le")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32, "utf-32")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_be, "utf-32be")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_le, "utf-32le")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf7, "utf-7")
 			Result.put ("C99", "c99")
 			Result.put ("JAVA", "java")
 
@@ -187,10 +187,10 @@ feature -- Access
 			Result.put ("RISCOS-LATIN1", "riscos-latin1")
 		end
 
-	two_byte_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	two_byte_code_pages: STRING_TABLE [READABLE_STRING_8]
 			-- Two byte code pages that iconv can possibly support.
 		once
-			create Result.make (20)
+			create Result.make_caseless (20)
 
 			Result.put ("UCS-2", "ucs-2")
 			Result.put ("ISO-10646-UCS-2", "iso-10646-ucs-2") -- Alias
@@ -204,9 +204,9 @@ feature -- Access
 			Result.put ("UCS-2LE", "ucs-2le")
 			Result.put ("UNICODELITTLE", "unicodelittle") -- Alias
 
-			Result.put ("UTF-16", "utf-16")
-			Result.put ("UTF-16BE", "utf-16be")
-			Result.put ("UTF-16LE", "utf-16le")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16, "utf-16")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_be, "utf-16be")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_le, "utf-16le")
 
 			Result.put ("UCS-2-INTERNAL", "ucs-2-internal")
 			Result.put ("UCS-2-SWAPPED", "ucs-2-swapped")
@@ -214,10 +214,10 @@ feature -- Access
 			Result.put ("JAVA", "java")
 		end
 
-	four_byte_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	four_byte_code_pages: STRING_TABLE [READABLE_STRING_8]
 			-- Four byte code pages that iconv can possibly support.
 		once
-			create Result.make (10)
+			create Result.make_caseless (10)
 			Result.put ("UCS-4", "ucs-4")
 			Result.put ("ISO-10646-UCS-4", "iso-10646-ucs-4") -- Alias
 			Result.put ("csUCS4", "csucs4") -- Alias
@@ -225,34 +225,34 @@ feature -- Access
 			Result.put ("UCS-4BE", "ucs-4be")
 			Result.put ("UCS-4LE", "ucs-4le")
 
-			Result.put ("UTF-32", "utf-32")
-			Result.put ("UTF-32BE", "utf-32be")
-			Result.put ("UTF-32LE", "utf-32le")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32, "utf-32")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_be, "utf-32be")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_le, "utf-32le")
 
 			Result.put ("UCS-4-INTERNAL", "ucs-4-internal")
 			Result.put ("UCS-4-SWAPPED", "ucs-4-swapped")
 		end
 
-	little_endian_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	little_endian_code_pages: STRING_TABLE [READABLE_STRING_8]
 			-- Little endian code pages that iconv can possibly support.
 		once
-			create Result.make (5)
+			create Result.make_caseless (5)
 			Result.put ("UCS-2LE", "ucs-2le")
 			Result.put ("UNICODELITTLE", "unicodelittle") -- Alias
-			Result.put ("UTF-16LE", "utf-16le")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_le, "utf-16le")
 			Result.put ("UCS-4LE", "ucs-4le")
-			Result.put ("UTF-32LE", "utf-32le")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_le, "utf-32le")
 		end
 
-	big_endian_code_pages: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	big_endian_code_pages: STRING_TABLE [READABLE_STRING_8]
 			-- Big endian code pages that iconv can possibly support.
 		once
-			create Result.make (5)
+			create Result.make_caseless (5)
 			Result.put ("UCS-2BE", "ucs-2be")
 			Result.put ("UNICODEBIG", "unicodebig")
-			Result.put ("UTF-16BE", "utf-16be")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf16_be, "utf-16be")
 			Result.put ("UCS-4BE", "ucs-4be")
-			Result.put ("UTF-32BE", "utf-32be")
+			Result.put ({CODE_PAGE_CONSTANTS}.utf32_be, "utf-32be")
 		end
 
 note

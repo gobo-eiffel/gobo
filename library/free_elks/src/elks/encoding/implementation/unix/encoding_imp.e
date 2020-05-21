@@ -155,7 +155,7 @@ feature -- Status report
 			-- We don't care this on Unix. What we are really interested is `is_code_page_convertible'.
 		do
 			if a_code_page /= Void and then not a_code_page.is_empty then
-				Result := is_known_code_page (a_code_page.as_lower)
+				Result := is_known_code_page (a_code_page)
 			end
 		end
 
@@ -224,7 +224,7 @@ feature {NONE} -- Status report
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
-			Result := two_byte_code_pages.has (a_code_page.as_lower)
+			Result := two_byte_code_pages.has (a_code_page)
 		end
 
 	is_four_byte_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
@@ -233,7 +233,7 @@ feature {NONE} -- Status report
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
-			Result := four_byte_code_pages.has (a_code_page.as_lower)
+			Result := four_byte_code_pages.has (a_code_page)
 		end
 
 	is_big_endian_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
@@ -242,7 +242,7 @@ feature {NONE} -- Status report
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
-			Result := big_endian_code_pages.has (a_code_page.as_lower)
+			Result := big_endian_code_pages.has (a_code_page)
 		end
 
 	is_little_endian_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
@@ -251,7 +251,7 @@ feature {NONE} -- Status report
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
 		do
-			Result := little_endian_code_pages.has (a_code_page.as_lower)
+			Result := little_endian_code_pages.has (a_code_page)
 		end
 
 	is_endianness_specified (a_code_page: READABLE_STRING_8): BOOLEAN

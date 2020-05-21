@@ -387,7 +387,6 @@ feature -- UTF-32 to UTF-8
 		local
 			i: like {STRING_32}.count
 			n: like {STRING_32}.count
-			c: NATURAL_32
 		do
 			from
 				n := s.count
@@ -396,31 +395,38 @@ feature -- UTF-32 to UTF-8
 				i >= n
 			loop
 				i := i + 1
-				c := s.code (i)
-				if c <= 0x7F then
-						-- 0xxxxxxx
-					a_result.extend (c.to_character_8)
-				elseif c <= 0x7FF then
-						-- 110xxxxx 10xxxxxx
-					a_result.extend (((c |>> 6) | 0xC0).to_character_8)
-					a_result.extend (((c & 0x3F) | 0x80).to_character_8)
-				elseif c <= 0xFFFF then
-						-- 1110xxxx 10xxxxxx 10xxxxxx
-					a_result.extend (((c |>> 12) | 0xE0).to_character_8)
-					a_result.extend ((((c |>> 6) & 0x3F) | 0x80).to_character_8)
-					a_result.extend (((c & 0x3F) | 0x80).to_character_8)
-				else
-						-- c <= 1FFFFF - there are no higher code points
-						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-					a_result.extend (((c |>> 18) | 0xF0).to_character_8)
-					a_result.extend ((((c |>> 12) & 0x3F) | 0x80).to_character_8)
-					a_result.extend ((((c |>> 6) & 0x3F) | 0x80).to_character_8)
-					a_result.extend (((c & 0x3F) | 0x80).to_character_8)
-				end
+				utf_32_code_into_utf_8_string_8 (s.code (i), a_result)
 			end
 		ensure
 			instance_free: class
 			roundtrip: utf_8_string_8_to_string_32 (a_result.substring (old a_result.count + 1, a_result.count)).same_string_general (s)
+		end
+
+	utf_32_code_into_utf_8_string_8 (c: NATURAL_32; a_result: STRING_8)
+			-- Copy the UTF-8 sequence corresponding to code `c' appended into `a_result'.
+		do
+			if c <= 0x7F then
+					-- 0xxxxxxx
+				a_result.extend (c.to_character_8)
+			elseif c <= 0x7FF then
+					-- 110xxxxx 10xxxxxx
+				a_result.extend (((c |>> 6) | 0xC0).to_character_8)
+				a_result.extend (((c & 0x3F) | 0x80).to_character_8)
+			elseif c <= 0xFFFF then
+					-- 1110xxxx 10xxxxxx 10xxxxxx
+				a_result.extend (((c |>> 12) | 0xE0).to_character_8)
+				a_result.extend ((((c |>> 6) & 0x3F) | 0x80).to_character_8)
+				a_result.extend (((c & 0x3F) | 0x80).to_character_8)
+			else
+					-- c <= 1FFFFF - there are no higher code points
+					-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+				a_result.extend (((c |>> 18) | 0xF0).to_character_8)
+				a_result.extend ((((c |>> 12) & 0x3F) | 0x80).to_character_8)
+				a_result.extend ((((c |>> 6) & 0x3F) | 0x80).to_character_8)
+				a_result.extend (((c & 0x3F) | 0x80).to_character_8)
+			end
+		ensure
+			instance_free: class
 		end
 
 	escaped_utf_32_substring_into_utf_8_0_pointer (
@@ -2194,7 +2200,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
