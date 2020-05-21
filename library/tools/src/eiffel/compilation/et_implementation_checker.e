@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		require
 			a_system_processor_not_void: a_system_processor /= Void
 		local
-			l_feature_checker: ET_FEATURE_CHECKER
+			l_feature_checker: like feature_checker
 		do
 			create l_feature_checker.make (a_system_processor)
 			make_with_feature_checker (l_feature_checker)
@@ -228,6 +228,7 @@ feature {NONE} -- Processing
 							system_processor.report_class_postponed (current_class)
 						else
 							error_handler.report_compilation_status (Current, current_class, system_processor)
+							pre_action
 							if a_error_in_parent then
 								set_fatal_error (current_class)
 							end
@@ -261,6 +262,7 @@ feature {NONE} -- Processing
 								l_suppliers.wipe_out
 							end
 							current_class.set_implementation_checked
+							post_action
 							system_processor.report_class_processed (current_class)
 						end
 						current_class.set_checking_implementation (False)
@@ -319,6 +321,16 @@ feature {NONE} -- Processing
 		ensure
 			implementation_checked: not {PLATFORM}.is_thread_capable implies a_class.implementation_checked
 			suppliers_set: a_class.implementation_checked and suppliers_enabled implies a_class.suppliers /= Void
+		end
+
+	pre_action
+			-- Action executed before processing `current_class'.
+		do
+		end
+
+	post_action
+			-- Action executed after processing `current_class'.
+		do
 		end
 
 feature {NONE} -- Signature validity
