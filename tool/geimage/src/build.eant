@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for 'geimage'"
-		system: "Gobo Eiffel C Compilation"
+		system: "Gobo Eiffel Image"
 		copyright: "Copyright (c) 2020, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
