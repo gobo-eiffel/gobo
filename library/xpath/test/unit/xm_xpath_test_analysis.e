@@ -5,7 +5,7 @@ note
 		"Test static analysis"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2020, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -82,7 +82,7 @@ feature -- Test
 			check asserted_above: l_expression /= Void then end
 			assert ("Optimization sucessfull", not l_expression.is_error)
 			debug ("XPath expression factory")
-				print ("After analysis: %N")
+				std.output.put_line ("After analysis: ")
 				l_expression.display (1)
 			end
 		end

@@ -5,7 +5,7 @@ note
 		"XML event handler that parses xml-stylesheet PIs"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2020, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,9 @@ inherit
 		redefine
 			on_dtd_processing_instruction
 		end
+
+	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -418,7 +421,7 @@ feature {NONE} -- Initialization
 					stylesheets.force_last (a_pi)
 				end
 			else
-				print ("Can't create PI%N")
+				std.output.put_line ("Can't create PI")
 			end
 		end
 

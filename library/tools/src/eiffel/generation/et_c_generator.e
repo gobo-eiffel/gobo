@@ -2242,7 +2242,7 @@ feature {NONE} -- Feature generation
 				end
 				print_external_dllwin_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_dll_file, l_signature_arguments, l_signature_result, a_feature.alias_clause)
 			else
-print ("**** language not recognized: " + l_language_string + "%N")
+error_handler.report_warning_message ("**** language not recognized: " + l_language_string)
 			end
 				-- Close the block containing the body of the feature.
 			print_indentation
@@ -6551,7 +6551,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			a_feature_not_void: a_feature /= Void
 		do
 			if a_feature.is_once_per_object then
-print ("ET_C_GENERATOR.print_once_function: once key %"OBJECT%" not supported.%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_once_function: once key %"OBJECT%" not supported.")
 			end
 			print_internal_function (a_feature)
 		end
@@ -6562,7 +6562,7 @@ print ("ET_C_GENERATOR.print_once_function: once key %"OBJECT%" not supported.%N
 			a_feature_not_void: a_feature /= Void
 		do
 			if a_feature.is_once_per_object then
-print ("ET_C_GENERATOR.print_once_procedure: once key %"OBJECT%" not supported.%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure: once key %"OBJECT%" not supported.")
 			end
 			print_internal_procedure (a_feature)
 		end
@@ -6593,7 +6593,7 @@ print ("ET_C_GENERATOR.print_once_procedure: once key %"OBJECT%" not supported.%
 			l_compound := a_feature.compound
 			if (l_compound /= Void and then not l_compound.is_empty) or else a_feature.locals /= Void or else a_feature.rescue_clause /= Void then
 -- TODO
-print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported yet.%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_extended_attribute: initialization not supported yet.")
 			end
 			print_attribute (a_feature)
 		end
@@ -7595,7 +7595,7 @@ feature {NONE} -- Instruction generation
 									end
 								else
 -- TODO
-print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction - range")
 								end
 							else
 								l_has_case := True
@@ -10886,7 +10886,7 @@ feature {NONE} -- Expression generation
 									end
 								else
 -- TODO
-print ("ET_C_GENERATOR.print_inspect_expression - range%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression - range")
 								end
 							else
 								l_has_case := True
@@ -12224,7 +12224,7 @@ print ("ET_C_GENERATOR.print_inspect_expression - range%N")
 			an_expression_not_void: an_expression /= Void
 		do
 -- TODO.
-print ("ET_C_GENERATOR.print_old_expression%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			an_expression.expression.process (Current)
 		end
 
@@ -13191,7 +13191,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				operand_stack.force (an_expression)
 			else
 -- TODO.
-print ("ET_C_GENERATOR.print_strip_expression%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 				current_file.put_string (c_eif_void)
 			end
 		end
@@ -16132,7 +16132,7 @@ feature {NONE} -- Agent generation
 			an_agent_not_void: an_agent /= Void
 		do
 			if an_agent.is_once_per_object then
-print ("ET_C_GENERATOR.print_once_function_inline_agent: once key %"OBJECT%" not supported.%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_once_function_inline_agent: once key %"OBJECT%" not supported.")
 			end
 			print_agent (an_agent)
 		end
@@ -16143,7 +16143,7 @@ print ("ET_C_GENERATOR.print_once_function_inline_agent: once key %"OBJECT%" not
 			an_agent_not_void: an_agent /= Void
 		do
 			if an_agent.is_once_per_object then
-print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" not supported.%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" not supported.")
 			end
 			print_agent (an_agent)
 		end
@@ -16825,7 +16825,7 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 			an_agent_not_void: an_agent /= Void
 		do
 -- TODO
-print ("ET_C_GENERATOR.print_external_function_inline_agent_body_declaration not implemented%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_external_function_inline_agent_body_declaration not implemented")
 		end
 
 	print_external_procedure_inline_agent_body_declaration (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
@@ -16834,7 +16834,7 @@ print ("ET_C_GENERATOR.print_external_function_inline_agent_body_declaration not
 			an_agent_not_void: an_agent /= Void
 		do
 -- TODO
-print ("ET_C_GENERATOR.print_external_procedure_inline_agent_body_declaration not implemented%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_external_procedure_inline_agent_body_declaration not implemented")
 		end
 
 	print_once_function_inline_agent_body_declaration (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT)
@@ -16843,7 +16843,7 @@ print ("ET_C_GENERATOR.print_external_procedure_inline_agent_body_declaration no
 			an_agent_not_void: an_agent /= Void
 		do
 -- TODO
-print ("ET_C_GENERATOR.print_once_function_inline_agent_body_declaration not implemented%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_once_function_inline_agent_body_declaration not implemented")
 			print_internal_routine_inline_agent_body_declaration (an_agent)
 		end
 
@@ -16853,7 +16853,7 @@ print ("ET_C_GENERATOR.print_once_function_inline_agent_body_declaration not imp
 			an_agent_not_void: an_agent /= Void
 		do
 -- TODO
-print ("ET_C_GENERATOR.print_once_procedure_inline_agent_body_declaration not implemented%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inline_agent_body_declaration not implemented")
 			print_internal_routine_inline_agent_body_declaration (an_agent)
 		end
 
@@ -19115,7 +19115,7 @@ feature {NONE} -- Built-in feature generation
 			valid_feature: current_feature.static_feature = a_feature
 		do
 -- TODO
-print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
+error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented")
 		end
 
 	print_builtin_any_is_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -32481,7 +32481,7 @@ feature {NONE} -- Type generation
 						if attached {ET_EXTENDED_ATTRIBUTE} l_query.static_feature as l_extended_attribute then
 							if (attached l_extended_attribute.compound as l_compound and then not l_compound.is_empty) or else l_extended_attribute.locals /= Void or else l_extended_attribute.rescue_clause /= Void then
 -- TODO
-print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.static_feature.lower_name + ": initialization not supported yet.%N")
+error_handler.report_warning_message ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.static_feature.lower_name + ": initialization not supported yet.")
 							end
 						end
 					end

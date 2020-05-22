@@ -5,7 +5,7 @@ note
 		"Objects that provide a context for parsing an expression appearing in a context other than a stylesheet"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2020, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 	make_upon_node
 			-- TODO
 		do
-			print ("{XM_XPATH_STAND_ALONE_CONTEXT}.make_upon_node not implemented!%N")
+			std.output.put_line ("{XM_XPATH_STAND_ALONE_CONTEXT}.make_upon_node not implemented!")
 			check False then end
 		end
 
