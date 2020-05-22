@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #18 $"
@@ -963,6 +963,9 @@ feature -- Kernel types
 			-- Class type "[attached] STRING_8",
 			-- where '[attached]' is an implicit type mark
 
+	detachable_string_8_type: ET_CLASS_TYPE
+			-- Class type "detachable STRING_8"
+
 	string_32_type: ET_CLASS_TYPE
 			-- Class type "[attached] STRING_32",
 			-- where '[attached]' is an implicit type mark
@@ -1600,6 +1603,7 @@ feature -- Kernel types
 			l_master_class := master_class (l_name)
 			l_master_class.set_marked (True)
 			create string_8_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
+			create detachable_string_8_type.make (tokens.detachable_keyword, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create string_8_convert_feature.make (string_8_type)
 		end
@@ -1802,6 +1806,7 @@ feature -- Kernel types
 			string_type := tokens.unknown_class_type
 			detachable_string_type := tokens.unknown_class_type
 			string_8_type := tokens.unknown_class_type
+			detachable_string_8_type := tokens.unknown_class_type
 			string_8_convert_feature := tokens.unknown_convert_feature
 			string_32_type := tokens.unknown_class_type
 			string_32_convert_feature := tokens.unknown_convert_feature
@@ -2839,6 +2844,7 @@ invariant
 	special_detachable_any_type_not_void: special_detachable_any_type /= Void
 	special_identity_type_not_void: special_identity_type /= Void
 	string_8_type_not_void: string_8_type /= Void
+	detachable_string_8_type_not_void: detachable_string_8_type /= Void
 	string_32_type_not_void: string_32_type /= Void
 	system_object_type_not_void: system_object_type /= Void
 	system_object_parents_not_void: system_object_parents /= Void
