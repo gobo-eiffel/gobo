@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 		Commonly used console input and output mechanisms. 
 		This class may be used as ancestor by classes needing its facilities.
@@ -32,7 +32,7 @@ class CONSOLE inherit
 				put_natural, put_natural_8, put_natural_16, put_natural_32, put_natural_64,
 				read_natural, read_natural_8, read_natural_16, read_natural_32, read_natural_64
 		redefine
-			initialize_encoding, detect_encoding,
+			default_encoding, detect_encoding,
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			read_real, read_double, read_character,
 			read_line, read_stream, read_word, next_line,
@@ -78,19 +78,18 @@ feature -- Initialization
 			set_write_mode
 		end
 
-	initialize_encoding
-			-- <Precursor/>
-		do
-			Precursor
-			encoding := {SYSTEM_ENCODINGS}.console_encoding
-		end
-
 feature -- Encoding
 
+	default_encoding: ENCODING
+			-- <Precursor/>
+		once
+			Result := {SYSTEM_ENCODINGS}.console_encoding
+		end
+		
 	detect_encoding
 			-- <Precursor/>
 		do
-			encoding := {SYSTEM_ENCODINGS}.console_encoding
+			set_encoding ({SYSTEM_ENCODINGS}.console_encoding)
 		end
 
 feature -- Status report

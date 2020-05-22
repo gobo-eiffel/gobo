@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Files viewed as persistent sequences of ASCII characters"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -31,20 +31,13 @@ feature -- Initialization
 			-- <Precursor/>
 		do
 			Precursor (fn)
-			initialize_encoding
+			create last_string_32.make_empty
 		end
 
 	make_with_path (a_path: PATH)
 			-- <Precursor/>
 		do
 			Precursor (a_path)
-			initialize_encoding
-		end
-
-	initialize_encoding
-			-- Initialize the associated `encoding`.
-		do
-			encoding := {SYSTEM_ENCODINGS}.utf8
 			create last_string_32.make_empty
 		end
 
@@ -285,17 +278,41 @@ feature -- Encoding
 
 	encoding: ENCODING
 			-- Associated encoding.
+		do
+			if attached internal_encoding as l_encoding then
+				Result := l_encoding
+			else
+				Result := default_encoding
+				internal_encoding := Result
+			end
+		ensure
+			encoding_not_void: Result /= Void
+		end
 
+	default_encoding: ENCODING
+			-- Default value for `encoding`.
+		once
+			Result := {SYSTEM_ENCODINGS}.utf8
+		ensure
+			default_encoding_not_void: Result /= Void
+		end
+		
 	set_encoding (enc: like encoding)
 			-- Set associated `encoding` with `enc`.
+		require
+			enc_not_void: enc /= Void
 		do
-			encoding := enc
+			internal_encoding := enc
+		ensure
+			encoding_set: encoding = enc
 		end
 
 	set_utf8_encoding
 			-- Set `encoding` to UTF-8.
 		do
-			encoding := {SYSTEM_ENCODINGS}.utf8
+			set_encoding ({SYSTEM_ENCODINGS}.utf8)
+		ensure
+			encoding_set: encoding = {SYSTEM_ENCODINGS}.utf8
 		end
 
 	detect_encoding
@@ -323,7 +340,7 @@ feature -- Encoding
 								c3 := last_character
 								if c3 = '%/0xBF/' then
 										-- EF BB BF
-									encoding := {SYSTEM_ENCODINGS}.utf8
+									set_utf8_encoding
 								else
 									back
 								end
@@ -346,10 +363,10 @@ feature -- Encoding
 								end
 								if c3 = '%U' and c4 = '%U'then
 										-- FF FE 00 00
-									create encoding.make ({CODE_PAGE_CONSTANTS}.utf32_le)
+									set_encoding (create {ENCODING}.make ({CODE_PAGE_CONSTANTS}.utf32_le))
 								else
 									-- FF FE
-									create encoding.make ({CODE_PAGE_CONSTANTS}.utf16_le)
+									set_encoding (create {ENCODING}.make ({CODE_PAGE_CONSTANTS}.utf16_le))
 									back
 									back
 								end
@@ -364,7 +381,7 @@ feature -- Encoding
 						c2 := last_character
 						if c2 = '%/0xFF/' then
 								-- FE FF
-							create encoding.make ({CODE_PAGE_CONSTANTS}.utf16_be)
+							set_encoding (create {ENCODING}.make ({CODE_PAGE_CONSTANTS}.utf16_be))
 						else
 							back
 						end
@@ -383,7 +400,7 @@ feature -- Encoding
 										c4 := last_character
 										if c4 = '%/0xFF/' then
 												-- 00 00 FE FF
-											create encoding.make ({CODE_PAGE_CONSTANTS}.utf32_be)
+											set_encoding (create {ENCODING}.make ({CODE_PAGE_CONSTANTS}.utf32_be))
 										else
 											back
 										end
@@ -437,6 +454,11 @@ feature -- Encoding
 			end
 		end
 
+feature {NONE} -- Encoding
+
+	internal_encoding: detachable ENCODING
+			-- Internal value for `encoding`.
+			
 feature {NONE} -- Implementation
 
 	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR

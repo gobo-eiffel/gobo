@@ -16,7 +16,7 @@ feature -- Access
 			create Result.make (system_encodings_i.system_code_page)
 		ensure
 			instance_free: class
-			console_encoding_not_void: Result /= Void
+			system_encoding_not_void: Result /= Void
 		end
 
 	console_encoding: ENCODING
