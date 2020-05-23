@@ -6,7 +6,7 @@ note
 		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,8 @@ inherit
 
 	RAW_FILE
 		rename
-			make as old_make,
+			make as old_make_obsolete,
+			make_with_name as old_make,
 			name as string_name,
 			count as old_count,
 			exists as old_exists,

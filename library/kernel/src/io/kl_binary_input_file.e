@@ -29,7 +29,8 @@ inherit
 
 	RAW_FILE
 		rename
-			make as old_make,
+			make as old_make_obsolete,
+			make_with_name as old_make,
 			name as string_name,
 			count as old_count,
 			exists as old_exists,

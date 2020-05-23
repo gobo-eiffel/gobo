@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 	dummy_name: STRING = "dummy"
 			-- Dummy name
 
-	old_make (fn: STRING)
+	old_make (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name.
 		require
 			string_exists: fn /= Void
