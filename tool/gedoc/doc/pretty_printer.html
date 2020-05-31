@@ -58,23 +58,18 @@
    
    <p>
     Here is how to pretty-print all Eiffel classes in an Eiffel project:
-    
-    <blockquote>
-     	<font color="#800000"><i><tt>gedoc --force project.ecf</tt></i></font>
-     
-    </blockquote>
+    <pre>
+	<font color="#800000"><i><tt>gedoc --force project.ecf</tt></i></font>
+</pre>
     where <font color="#800000"><i><tt>project.ecf</tt></i></font> is an ECF file describing the Eiffel project.
     You can also pretty-print a subset of classes in this Eiffel project, using the command-line 
     option <font color="#800000"><i><tt>--class</tt></i></font> with wildcards. For example, to pretty-print only
     the classes of a given Eiffel library whose names start with <font color="#008080"><i><tt>DS_</tt></i></font>,
     just type:
-    
-    <blockquote>
-     	<font color="#800000"><i><tt>gedoc --force --class=DS_* project.ecf</tt></i></font>
-     
-    </blockquote>
-    
-   </p>
+    <pre>
+	<font color="#800000"><i><tt>gedoc --force --class=DS_* project.ecf</tt></i></font>
+</pre>
+    </p>
    
    <p>
     As seen in the previous section, the command-line option <font color="#800000"><i><tt>--output</tt></i></font>

@@ -57,6 +57,8 @@ inherit
 			process_dotnet_function,
 			process_dotnet_procedure,
 			process_equality_expression,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_expression_address,
 			process_extended_attribute,
 			process_external_function,
@@ -14005,12 +14007,11 @@ feature {NONE} -- Conversion
 								-- Error already reported by the feature flattener.
 							set_fatal_error
 						else
-							l_target_named_type := a_target_type.named_type
-							create l_convert_from_expression.make (l_target_named_type, l_convert_feature, a_source)
+							l_convert_from_expression := system_processor.ast_factory.new_convert_from_expression (a_source, l_convert_feature, a_source_type, a_target_type)
 							if attached l_convert_class.seeded_procedure (l_convert_feature.name.seed) as l_conversion_procedure then
 								check_creation_vape_validity (l_convert_from_expression.name, l_conversion_procedure, l_convert_class)
 								if not has_fatal_error then
-									report_creation_expression (l_convert_from_expression, l_target_named_type, l_conversion_procedure)
+									report_creation_expression (l_convert_from_expression, l_convert_from_expression.type, l_conversion_procedure)
 									Result := l_convert_from_expression
 								end
 							else
@@ -14027,7 +14028,7 @@ feature {NONE} -- Conversion
 								-- Error already reported by the feature flattener.
 							set_fatal_error
 						else
-							create l_convert_to_expression.make (a_source, l_convert_feature)
+							l_convert_to_expression := system_processor.ast_factory.new_convert_to_expression (a_source, l_convert_feature, a_source_type, a_target_type)
 							if attached l_convert_class.seeded_query (l_convert_feature.name.seed) as l_conversion_query then
 								check_qualified_vape_validity (l_convert_to_expression.name, l_conversion_query, l_convert_class)
 								if not has_fatal_error then
@@ -15253,6 +15254,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_equality_expression_validity (an_expression, current_context)
+		end
+
+	process_explicit_convert_from_expression (an_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			check_convert_from_expression_validity (an_expression, current_context)
+		end
+
+	process_explicit_convert_to_expression (an_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			check_convert_to_expression_validity (an_expression, current_context)
 		end
 
 	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS)

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Eiffel Implicit Conversions</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Eiffel Implicit Conversions</strong></font></td>
+    <td align="right"><a href="html_ise_stylesheet.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="ecf_pretty_printer.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   In Eiffel it is possible to have code of the form:
+   <pre>
+	local
+		foo: FOO
+		bar: BAR
+	do
+		...
+		foo := bar
+		...
+	end
+</pre>
+   even if <font color="#008080"><i><tt>BAR</tt></i></font> does not conform to
+   <font color="#008080"><i><tt>FOO</tt></i></font>. The mechanism allowing that is
+   called conversion, and is specified in <font color="#800000"><i><tt>convert</tt></i></font>
+   clauses near the top of class <font color="#008080"><i><tt>FOO</tt></i></font> or
+   <font color="#008080"><i><tt>BAR</tt></i></font>. For example in class
+   <font color="#008080"><i><tt>CHARACTER_8</tt></i></font> we can see:
+   <pre>
+	convert
+		...
+		to_character_32: {CHARACTER_32}
+</pre>
+   indicating that objects of type <font color="#008080"><i><tt>CHARACTER_8</tt></i></font>
+   can be converted to <font color="#008080"><i><tt>CHARACTER_32</tt></i></font> using routine
+   <font color="#008080"><i><tt>to_character_32</tt></i></font>.
+   
+  </p>
+  <p>
+   This mechanism looks nice at first sight, and we can end up with a lot
+   of such conversions in the code. This can be an issue because these
+   conversions are implicit in the code, and the user will not necessarily
+   notice that a potentially time consuming or memory consuming feature
+   call is involved in what looks like a simple assignment at first glance.
+   
+  </p>
+  <p>
+   <i>gedoc</i> provides two formats to help with this issue.
+   One to get the list of implicit conversions in the code, and another one
+   to replace them with explicit conversions (i.e. explicit calls to conversion
+   features).
+   
+  </p>
+  <div>
+   <h2>Showing implicit conversions</h2>
+   
+   <p>
+    Here is how to get the list of all implicit conversions in all classes of a project:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=implicit_converts project.ecf</tt></i></font>
+</pre>
+    where <font color="#800000"><i><tt>project.ecf</tt></i></font> is an ECF file describing the Eiffel project.
+    And to restrict to just the conversions from <font color="#008080"><i><tt>FOO</tt></i></font> to
+    <font color="#008080"><i><tt>BAR</tt></i></font>:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=implicit_converts --variable=convert=FOO-&gt;BAR project.ecf</tt></i></font>
+</pre>
+    where <font color="#008080"><i><tt>FOO</tt></i></font> and <font color="#008080"><i><tt>BAR</tt></i></font> are class names,
+    possibly containing wildcards such as <font color="#008080"><i><tt>CHARACTER_*</tt></i></font> or
+    <font color="#008080"><i><tt>?(READABLE_)STRING_8</tt></i></font>. Depending on the underlying operating
+    system and shell, the entire <font color="#800000"><i><tt>--variable</tt></i></font> option may need to
+    be enclosed in double quotes when the wildcards contain characters recognized by
+    the shell.
+    
+   </p>
+   
+   <p>
+    The output will contain lines of the form:
+    <pre>
+	[CONVERT] MY_CLASS (85,30): conversion from 'CHARACTER_8' to 'CHARACTER_32' using feature `to_character_32`.
+</pre>
+    indicating that there is an implicit conversion from
+    <font color="#008080"><i><tt>CHARACTER_8</tt></i></font> to <font color="#008080"><i><tt>CHARACTER_32</tt></i></font>
+    in class <font color="#008080"><i><tt>MY_CLASS</tt></i></font> at line 85 and column 30.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Making them explicit</h2>
+   
+   <p>
+    Here is how to make explicit all implicit conversions in a project:
+    <pre>
+	<font color="#800000"><i><tt><font color="#800000"><i><tt>gedoc --format=explicit_converts --force project.ecf</tt></i></font></tt></i></font>
+</pre>
+    or just those from <font color="#008080"><i><tt>STRING_32</tt></i></font> (or <font color="#008080"><i><tt>READABLE_STRING_32</tt></i></font>)
+    to <font color="#008080"><i><tt>STRING_8</tt></i></font> (or <font color="#008080"><i><tt>READABLE_STRING_8</tt></i></font>):
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=explicit_converts --force --variable=convert=?(READABLE_)STRING_32-&gt;?(READABLE_)STRING_8 project.ecf</tt></i></font>
+</pre>
+    In addition to showing the list of implicit conversions, these commands will
+    make them explicit in the class text. For example if we have:
+    <pre>
+	local
+		s8: STRING_8
+		s32: STRING_32
+	do
+		...
+		s8 := s32
+		...
+	end
+</pre>
+    <i>gedoc</i> will regenerate the text of the class as follows:
+    <pre>
+	local
+		s8: STRING_8
+		s32: STRING_32
+	do
+		...
+		s8 := s32.as_string_8
+		...
+	end
+</pre>
+    assuming that there is a conversion routine <font color="#008080"><i><tt>as_string_8</tt></i></font>
+    declared in class <font color="#008080"><i><tt>STRING_32</tt></i></font> to convert to <font color="#008080"><i><tt>STRING_8</tt></i></font>
+    
+   </p>
+   
+   <p>
+    Note that text of the classes which do not contain implicit conversions will not
+    be regenerated.
+    The command-line option <font color="#800000"><i><tt>--force</tt></i></font> tells <i>gedoc</i>
+    to overwrite the file containing the class being modified. Without this option,
+    files will not be overwritten and <i>gedoc</i> will emit an error
+    message. Alternatively, the command-line option <font color="#800000"><i><tt>--interactive</tt></i></font> can
+    be used. It will ask confirmation to the user before overwriting files. If you want to
+    generate the modified files in a directory different from the one containing the
+    original class text files, you should use the command-line option <font color="#800000"><i><tt>--output</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2020, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>30 May 2020</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="html_ise_stylesheet.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="ecf_pretty_printer.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

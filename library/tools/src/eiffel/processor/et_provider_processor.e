@@ -67,6 +67,8 @@ inherit
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_expression_address,
 			process_extended_attribute,
 			process_external_function,
@@ -677,6 +679,18 @@ feature {ET_AST_NODE} -- Processing
 		do
 			process_expression (an_expression.left)
 			process_expression (an_expression.right)
+		end
+
+	process_explicit_convert_from_expression (an_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			process_expression (an_expression.expression)
+		end
+
+	process_explicit_convert_to_expression (an_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			process_expression (an_expression.expression)
 		end
 
 	process_expression (a_expression: ET_EXPRESSION)

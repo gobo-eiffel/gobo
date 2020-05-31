@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,6 +30,8 @@ inherit
 			process_c2_character_constant,
 			process_c3_character_constant,
 			process_class,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_hexadecimal_integer_constant,
 			process_octal_integer_constant,
 			process_regular_integer_constant,
@@ -42,6 +44,9 @@ inherit
 			process_symbol,
 			process_token
 		end
+
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
 
 	KL_SHARED_STREAMS
 
@@ -59,7 +64,7 @@ feature {NONE} -- Initialization
 		do
 			file := a_file
 			bom_enabled := True
-			create buffer.make (4)
+			create buffer.make_empty
 		ensure
 			file_set: file = a_file
 			bom_enabled: bom_enabled
@@ -142,12 +147,25 @@ feature {ET_AST_NODE} -- Processing
 
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
+		local
+			c, b: NATURAL_32
 		do
 			precursor (a_constant)
 			file.put_character ('%'')
-			buffer.wipe_out
-			{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (buffer, a_constant.literal.natural_32_code)
-			file.put_string (buffer)
+			c := {UC_UTF8_ROUTINES}.natural_32_code_to_utf8 (a_constant.literal.natural_32_code)
+			file.put_character (((c & 0xFF000000) |>> (3 * {PLATFORM}.natural_8_bits)).to_character_8)
+			b := c & 0x00FF0000
+			if b /= 0 then
+				file.put_character ((b |>> (2 * {PLATFORM}.natural_8_bits)).to_character_8)
+				b := c & 0x0000FF00
+				if b /= 0 then
+					file.put_character ((b |>> {PLATFORM}.natural_8_bits).to_character_8)
+					b := c & 0x000000FF
+					if b /= 0 then
+						file.put_character (b.to_character_8)
+					end
+				end
+			end
 			file.put_character ('%'')
 			process_break (a_constant.break)
 		end
@@ -184,6 +202,85 @@ feature {ET_AST_NODE} -- Processing
 			end
 			precursor (a_class)
 		end
+
+	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `a_convert_expression'.
+		local
+			l_old_file: like file
+			l_expression: ET_EXPRESSION
+			l_break: detachable ET_BREAK
+			l_pretty_printer: like pretty_printer
+		do
+			tokens.create_keyword.process (Current)
+			file.put_character (' ')
+			tokens.left_brace_symbol.process (Current)
+			l_pretty_printer := pretty_printer
+			l_pretty_printer.reset
+			l_pretty_printer.set_comments_ignored (True)
+			buffer.string.wipe_out
+			l_pretty_printer.set_file (buffer)
+			a_convert_expression.type.process (l_pretty_printer)
+			l_pretty_printer.set_null_file
+			file.put_string (buffer.string)
+			tokens.right_brace_symbol.process (Current)
+			tokens.dot_symbol.process (Current)
+			a_convert_expression.name.process (Current)
+			file.put_character (' ')
+			tokens.left_parenthesis_symbol.process (Current)
+			l_old_file := file
+			buffer.string.wipe_out
+			file := buffer
+			l_expression := a_convert_expression.expression
+			l_expression.process (Current)
+			l_break := l_expression.last_leaf.break
+			if l_break /= Void then
+				buffer.string.remove_tail (l_break.text.count)
+			end
+			file := l_old_file
+			file.put_string (buffer.string)
+			tokens.right_parenthesis_symbol.process (Current)
+			process_break (l_break)
+		end
+
+	process_explicit_convert_to_expression (a_convert_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `a_convert_expression'.
+		local
+			l_need_parentheses: BOOLEAN
+			l_expression: ET_EXPRESSION
+			l_old_file: like file
+			l_break: detachable ET_BREAK
+		do
+			l_expression := a_convert_expression.expression
+			if
+				not attached {ET_PARENTHESIZED_EXPRESSION} l_expression and
+				not attached {ET_IDENTIFIER} l_expression and
+				not attached {ET_UNQUALIFIED_CALL_EXPRESSION} l_expression and
+				not attached {ET_QUALIFIED_CALL_EXPRESSION} l_expression and
+				not attached {ET_BRACKET_EXPRESSION} l_expression
+			then
+				l_need_parentheses := True
+			end
+			if l_need_parentheses then
+				tokens.left_parenthesis_symbol.process (Current)
+			end
+			l_old_file := file
+			buffer.string.wipe_out
+			file := buffer
+			l_expression.process (Current)
+			l_break := l_expression.last_leaf.break
+			if l_break /= Void then
+				buffer.string.remove_tail (l_break.text.count)
+			end
+			file := l_old_file
+			file.put_string (buffer.string)
+			if l_need_parentheses then
+				tokens.right_parenthesis_symbol.process (Current)
+			end
+			tokens.dot_symbol.process (Current)
+			a_convert_expression.name.process (Current)
+			process_break (l_break)
+		end
+
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -292,8 +389,24 @@ feature {ET_AST_NODE} -- Processing
 
 feature {NONE} -- Implementation
 
-	buffer: STRING
-			-- Buffer to print UTF-8 encoded strings
+	buffer: KL_STRING_OUTPUT_STREAM
+			-- Internal buffer
+
+	pretty_printer: ET_AST_PRETTY_PRINTER
+			-- Internal pretty-printer
+		do
+			if attached internal_pretty_printer as l_pretty_printer then
+				Result := l_pretty_printer
+			else
+				create Result.make_null
+				internal_pretty_printer := Result
+			end
+		ensure
+			pretty_printer_not_void: Result /= Void
+		end
+
+	internal_pretty_printer: detachable ET_AST_PRETTY_PRINTER
+			-- Internal pretty-printer (for lazy initialization)
 
 invariant
 

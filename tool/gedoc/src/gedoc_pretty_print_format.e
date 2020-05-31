@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Documentation Pretty-Print Format"
 
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,6 +14,9 @@ class GEDOC_PRETTY_PRINT_FORMAT
 inherit
 
 	GEDOC_FORMAT
+		redefine
+			make
+		end
 
 create
 
@@ -22,6 +25,15 @@ create
 create {GEDOC_PRETTY_PRINT_FORMAT}
 
 	make_from_format
+
+feature {NONE} -- Initialization
+
+	make (a_input_filename: STRING; a_system_processor: like system_processor)
+			-- Create a new documentation format with `a_input_filename'.
+		do
+			create pretty_printer.make_null
+			precursor (a_input_filename, a_system_processor)
+		end
 
 feature {NONE} -- Processing
 
@@ -77,7 +89,8 @@ feature {GEDOC_PRETTY_PRINT_FORMAT} -- Processing
 							l_file := new_output_file (l_filename)
 							l_file.recursive_open_write
 							if l_file.is_open_write then
-								create l_printer.make_null
+								l_printer := pretty_printer
+								l_printer.reset
 								l_printer.set_file (l_file)
 								a_class.process (l_printer)
 								l_printer.set_null_file
@@ -118,9 +131,16 @@ feature {NONE} -- Implementation
 			system_processor_set: a_formats.last.system_processor = a_system_processor
 		end
 
+	pretty_printer: ET_AST_PRETTY_PRINTER
+			-- Pretty-printer
+
 feature {NONE} -- Constants
 
 	eiffel_file_extension: STRING = ".e"
 			-- Extension for Eiffel files
+
+invariant
+
+	pretty_printer_not_void: pretty_printer /= Void
 
 end

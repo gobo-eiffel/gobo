@@ -66,17 +66,17 @@ original class text file, you should use the command-line option <filename>--out
 <section><title>Pretty-printing an Eiffel project</title>
 <para>
 Here is how to pretty-print all Eiffel classes in an Eiffel project:
-<blockquote>
+<programlisting>
 	<filename>gedoc --force project.ecf</filename>
-</blockquote>
+</programlisting>
 where <filename>project.ecf</filename> is an ECF file describing the Eiffel project.
 You can also pretty-print a subset of classes in this Eiffel project, using the command-line 
 option <filename>--class</filename> with wildcards. For example, to pretty-print only
 the classes of a given Eiffel library whose names start with <classname>DS_</classname>,
 just type:
-<blockquote>
+<programlisting>
 	<filename>gedoc --force --class=DS_* project.ecf</filename>
-</blockquote>
+</programlisting>
 </para>
 <para>
 As seen in the previous section, the command-line option <filename>--output</filename>

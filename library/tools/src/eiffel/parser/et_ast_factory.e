@@ -2135,6 +2135,23 @@ feature -- AST nodes
 			create Result.make_with_capacity (nb)
 		end
 
+	new_convert_from_expression (a_source: ET_EXPRESSION; a_convert_feature: ET_CONVERT_FEATURE; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FROM_EXPRESSION
+			-- New conversion from expresion to convert `a_source' of type `a_source_type' to `a_target_type'
+			-- using `a_convert_feature'
+		require
+			a_source_not_void: a_source /= Void
+			a_convert_feature_not_void: a_convert_feature /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_valid_context: a_source_type.is_valid_context
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_valid_context: a_target_type.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			create Result.make (a_target_type.named_type, a_convert_feature, a_source)
+		ensure
+			new_convert_from_expression_not_void: Result /= Void
+		end
+
 	new_convert_function (a_name: detachable ET_FEATURE_NAME; a_colon: detachable ET_SYMBOL;
 		a_types: detachable ET_TYPE_LIST): detachable ET_CONVERT_FUNCTION
 			-- New convert function
@@ -2151,6 +2168,23 @@ feature -- AST nodes
 			if a_name /= Void and a_types /= Void then
 				create Result.make (a_name, a_types)
 			end
+		end
+
+	new_convert_to_expression (a_source: ET_EXPRESSION; a_convert_feature: ET_CONVERT_FEATURE; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_TO_EXPRESSION
+			-- New conversion to expresion to convert `a_source' of type `a_source_type' to `a_target_type'
+			-- using `a_convert_feature'
+		require
+			a_source_not_void: a_source /= Void
+			a_convert_feature_not_void: a_convert_feature /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_valid_context: a_source_type.is_valid_context
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_valid_context: a_target_type.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			create Result.make (a_source, a_convert_feature)
+		ensure
+			new_convert_to_expression_not_void: Result /= Void
 		end
 
 	new_convert_types (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_TYPE_LIST

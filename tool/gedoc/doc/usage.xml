@@ -6,7 +6,7 @@
 		"Using gedoc"
 
 	tool: "Gobo Eiffel Doc"
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/usage">
 <chapterinfo>
 	<copyright>
-		<year>2017-2019</year>
+		<year>2017-2020</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>15 March 2019</date>
+	<date>31 May 2020</date>
 </chapterinfo>
 
 <title>Using gedoc</title>
@@ -66,7 +66,7 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--format=&lt;pretty_print|html_ise_stylesheet|ecf_pretty_print|available_targets&gt;</filename>
+			<filename>--format=&lt;pretty_print|html_ise_stylesheet|implicit_converts|explicit_converts|ecf_pretty_print|available_targets&gt;</filename>
 		</term>
 		<listitem><para>
 			Format for the output. (default: <filename>pretty_print</filename>) The formats currently supported are
@@ -74,11 +74,14 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 			<link linkend="pretty_printer">Eiffel pretty-printer</link>, 
 			<filename>html_ise_stylesheet</filename> to generate
 			<link linkend="html_ise_stylesheet">HTML documentation using
-			ISE's stylesheet</link>,
+			ISE's stylesheet</link>, 
+			<filename>implicit_converts</filename> and <filename>explicit_converts</filename>
+			to list <link linkend="implicit_conversions">implicit conversions</link> in the code and make them explicit,
+			<filename>ecf_pretty_print</filename> to use <projectname>gedoc</projectname> as an
 			<link linkend="ecf_pretty_printer">ECF pretty-printer</link> to format or
 			convert ECF files, and
-			<link linkend="available_targets">ECF available targets</link> to
-			figure out the list of available targets in an ECF file.
+			<filename>available_targets</filename> to
+			figure out the list of <link linkend="available_targets">available targets</link> in an ECF file.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

@@ -50,6 +50,8 @@ inherit
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_expression_address,
 			process_external_function_inline_agent,
 			process_external_procedure_inline_agent,
@@ -610,6 +612,18 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_expression.left.process (Current)
 			an_expression.right.process (Current)
+		end
+
+	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
+		end
+
+	process_explicit_convert_to_expression (a_convert_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
 		end
 
 	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS)

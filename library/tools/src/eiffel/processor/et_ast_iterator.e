@@ -1175,6 +1175,18 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right.process (Current)
 		end
 
+	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
+		end
+
+	process_explicit_convert_to_expression (a_convert_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
+		end
+		
 	process_export_list (a_list: ET_EXPORT_LIST)
 			-- Process `a_list'.
 		local

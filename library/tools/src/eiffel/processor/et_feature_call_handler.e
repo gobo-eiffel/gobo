@@ -68,6 +68,8 @@ inherit
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_expression_address,
 			process_extended_attribute,
 			process_external_function,
@@ -1341,6 +1343,20 @@ feature {ET_AST_NODE} -- Processing
 			had_error := has_fatal_error
 			process_expression (an_expression.right)
 			reset_fatal_error (had_error or has_fatal_error)
+		end
+
+	process_explicit_convert_from_expression (an_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_creation_expression (an_expression)
+		end
+
+	process_explicit_convert_to_expression (an_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_qualified_feature_call_expression (an_expression)
 		end
 
 	process_expression (a_expression: ET_EXPRESSION)

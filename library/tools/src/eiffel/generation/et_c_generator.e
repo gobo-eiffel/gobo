@@ -48,6 +48,8 @@ inherit
 			process_do_procedure,
 			process_do_procedure_inline_agent,
 			process_equality_expression,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_expression_address,
 			process_extended_attribute,
 			process_external_function,
@@ -35577,6 +35579,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			print_equality_expression (an_expression)
+		end
+
+	process_explicit_convert_from_expression (an_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			print_convert_from_expression (an_expression)
+		end
+
+	process_explicit_convert_to_expression (an_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			print_convert_to_expression (an_expression)
 		end
 
 	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS)

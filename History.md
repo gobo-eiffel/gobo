@@ -11,6 +11,12 @@
 * Added support for new built-in features `generator_8_of_type` and
   `generating_type_8_of_type` in class `ISE_RUNTIME`.
 
+### gedoc
+
+* Added formats `implicit_converts` to show the list of implicit
+  conversions in the Eiffel classes, and `explicit_converts` to
+  make them explicit in the class text.
+
 ### geimage
 
 * New tool which is able to embed an image into an Eiffel class

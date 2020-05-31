@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Documentation Format"
 
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -446,8 +446,6 @@ feature {NONE} -- Processing
 			-- Prepare `a_system' before being processed.
 		require
 			a_system_not_void: a_system /= Void
-		local
-			l_ast_factory: ET_DECORATED_AST_FACTORY
 		do
 			system_processor.error_handler.set_ise
 			system_processor.error_handler.set_verbose (verbose_flag)
@@ -459,16 +457,23 @@ feature {NONE} -- Processing
 			a_system.set_unique_universe_names
 			a_system.set_attachment_type_conformance_mode (False)
 			a_system.set_target_type_attachment_mode (False)
-			a_system.universes_do_all (agent {ET_UNIVERSE}.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark))
-			create l_ast_factory.make
-			l_ast_factory.set_keep_all_comments (True)
-			system_processor.set_ast_factory (l_ast_factory)
+			set_ast_factory
 			if input_classes.is_empty then
 					-- If `input_classes' is not empty, it means that we got them
-					-- from an Eiffel files as input (`parse_eiffel_file'). In that
+					-- from an Eiffel file as input (`parse_eiffel_file'). In that
 					-- case we do not run Degree 6 to get the list of classes.
 				system_processor.compile_degree_6 (a_system)
 			end
+		end
+
+	set_ast_factory
+			-- Configure the AST factory as needed.
+		local
+			l_ast_factory: ET_DECORATED_AST_FACTORY
+		do
+			create l_ast_factory.make
+			l_ast_factory.set_keep_all_comments (True)
+			system_processor.set_ast_factory (l_ast_factory)
 		end
 
 	build_input_classes (a_system: ET_SYSTEM)

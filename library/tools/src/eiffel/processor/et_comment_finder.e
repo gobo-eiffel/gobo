@@ -97,6 +97,8 @@ inherit
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_export_list,
 			process_expression_address,
 			process_expression_comma,
@@ -940,6 +942,22 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_expression) then
 				precursor (an_expression)
+			end
+		end
+
+	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			if not excluded_nodes.has (a_convert_expression) then
+				precursor (a_convert_expression)
+			end
+		end
+
+	process_explicit_convert_to_expression (a_convert_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			if not excluded_nodes.has (a_convert_expression) then
+				precursor (a_convert_expression)
 			end
 		end
 

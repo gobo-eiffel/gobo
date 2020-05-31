@@ -214,8 +214,10 @@ inherit
 			new_constraint_renames,
 			new_convert_feature_comma,
 			new_convert_features,
+			new_convert_from_expression,
 			new_convert_function,
 			new_convert_procedure,
+			new_convert_to_expression,
 			new_convert_types,
 			new_create_expression,
 			new_create_instruction,
@@ -342,6 +344,12 @@ feature -- Status report
 			-- Should the generated AST be decorated with Feature
 			-- and Feature_clause header comments?
 
+	explicit_convert_class_names: detachable DS_ARRAYED_LIST [TUPLE [from_class, to_class: detachable LX_DFA_WILDCARD]]
+			-- Implicit conversions that we want to make explicit.
+			-- A void regular expression means "any class".
+			-- An empty list means "all conversions".
+			-- A void list means "no conversion".
+
 feature -- Status setting
 
 	set_keep_all_breaks (b: BOOLEAN)
@@ -366,6 +374,19 @@ feature -- Status setting
 			keep_header_comments := b
 		ensure
 			keep_header_comments_set: keep_header_comments = b
+		end
+
+	set_explicit_convert_class_names (a_explicit_convert_class_names: like explicit_convert_class_names)
+			-- Set `explicit_convert_class_names' to `a_explicit_convert_class_names'.
+		require
+			regexps_compiled: a_explicit_convert_class_names /= Void implies
+				across a_explicit_convert_class_names is l_conversion all
+					(attached l_conversion.from_class as l_from_class implies l_from_class.is_compiled) and
+					(attached l_conversion.from_class as l_to_class implies l_to_class.is_compiled) end
+		do
+			explicit_convert_class_names := a_explicit_convert_class_names
+		ensure
+			explicit_convert_class_names_set: explicit_convert_class_names = a_explicit_convert_class_names
 		end
 
 feature -- Eiffel keywords
@@ -2392,6 +2413,44 @@ feature -- AST nodes
 			end
 		end
 
+	new_convert_from_expression (a_source: ET_EXPRESSION; a_convert_feature: ET_CONVERT_FEATURE; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FROM_EXPRESSION
+			-- New conversion from expresion to convert `a_source' of type `a_source_type' to `a_target_type'
+			-- using `a_convert_feature'
+		local
+			i, nb: INTEGER
+			l_explicit: BOOLEAN
+			l_conversion: TUPLE [from_class, to_class: detachable LX_DFA_WILDCARD]
+			l_from_class_name: STRING
+			l_to_class_name: STRING
+		do
+			if attached explicit_convert_class_names as l_explicit_convert_class_names then
+				nb := l_explicit_convert_class_names.count
+				if nb = 0 then
+					l_explicit := True
+				else
+					l_from_class_name := a_source_type.base_class.upper_name
+					l_to_class_name := a_target_type.base_class.upper_name
+					from i := 1 until i > nb loop
+						l_conversion := l_explicit_convert_class_names.item (i)
+						if
+							(not attached l_conversion.from_class as l_from_class or else l_from_class.recognizes (l_from_class_name)) and then
+							(not attached l_conversion.to_class as l_to_class or else l_to_class.recognizes (l_to_class_name))
+						then
+							l_explicit := True
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+			if l_explicit then
+				create {ET_EXPLICIT_CONVERT_FROM_EXPRESSION} Result.make (a_target_type.named_type, a_convert_feature, a_source, a_source_type.named_type)
+			else
+				create Result.make (a_target_type.named_type, a_convert_feature, a_source)
+			end
+		end
+
 	new_convert_function (a_name: detachable ET_FEATURE_NAME; a_colon: detachable ET_SYMBOL;
 		a_types: detachable ET_TYPE_LIST): detachable ET_CONVERT_FUNCTION
 			-- New convert function
@@ -2416,6 +2475,44 @@ feature -- AST nodes
 				if a_right_parenthesis /= Void then
 					Result.set_right_parenthesis (a_right_parenthesis)
 				end
+			end
+		end
+
+	new_convert_to_expression (a_source: ET_EXPRESSION; a_convert_feature: ET_CONVERT_FEATURE; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_TO_EXPRESSION
+			-- New conversion to expresion to convert `a_source' of type `a_source_type' to `a_target_type'
+			-- using `a_convert_feature'
+		local
+			i, nb: INTEGER
+			l_explicit: BOOLEAN
+			l_conversion: TUPLE [from_class, to_class: detachable LX_DFA_WILDCARD]
+			l_from_class_name: STRING
+			l_to_class_name: STRING
+		do
+			if attached explicit_convert_class_names as l_explicit_convert_class_names then
+				nb := l_explicit_convert_class_names.count
+				if nb = 0 then
+					l_explicit := True
+				else
+					l_from_class_name := a_source_type.base_class.upper_name
+					l_to_class_name := a_target_type.base_class.upper_name
+					from i := 1 until i > nb loop
+						l_conversion := l_explicit_convert_class_names.item (i)
+						if
+							(not attached l_conversion.from_class as l_from_class or else l_from_class.recognizes (l_from_class_name)) and then
+							(not attached l_conversion.to_class as l_to_class or else l_to_class.recognizes (l_to_class_name))
+						then
+							l_explicit := True
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+			if l_explicit then
+				create {ET_EXPLICIT_CONVERT_TO_EXPRESSION} Result.make (a_source, a_convert_feature, a_source_type.named_type, a_target_type.named_type)
+			else
+				create Result.make (a_source, a_convert_feature)
 			end
 		end
 
@@ -4029,5 +4126,12 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+invariant
+
+	explicit_convert_class_names_regexps_compiled: attached explicit_convert_class_names as l_explicit_convert_class_names implies
+		across l_explicit_convert_class_names is l_conversion all
+			(attached l_conversion.from_class as l_from_class implies l_from_class.is_compiled) and
+			(attached l_conversion.from_class as l_to_class implies l_to_class.is_compiled) end
 
 end

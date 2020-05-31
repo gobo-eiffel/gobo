@@ -1,0 +1,150 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Eiffel Implicit Conversions"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2020, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/implicit_conversions">
+<chapterinfo>
+	<copyright>
+		<year>2020</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>30 May 2020</date>
+</chapterinfo>
+
+<title>Eiffel Implicit Conversions</title>
+
+<para>
+In Eiffel it is possible to have code of the form:
+<programlisting>
+	local
+		foo: FOO
+		bar: BAR
+	do
+		...
+		foo := bar
+		...
+	end
+</programlisting>
+even if <classname>BAR</classname> does not conform to
+<classname>FOO</classname>. The mechanism allowing that is
+called conversion, and is specified in <filename>convert</filename>
+clauses near the top of class <classname>FOO</classname> or
+<classname>BAR</classname>. For example in class
+<classname>CHARACTER_8</classname> we can see:
+<programlisting>
+	convert
+		...
+		to_character_32: {CHARACTER_32}
+</programlisting>
+indicating that objects of type <classname>CHARACTER_8</classname>
+can be converted to <classname>CHARACTER_32</classname> using routine
+<featurename>to_character_32</featurename>.
+</para>
+<para>
+This mechanism looks nice at first sight, and we can end up with a lot
+of such conversions in the code. This can be an issue because these
+conversions are implicit in the code, and the user will not necessarily
+notice that a potentially time consuming or memory consuming feature
+call is involved in what looks like a simple assignment at first glance.
+</para>
+<para>
+<projectname>gedoc</projectname> provides two formats to help with this issue.
+One to get the list of implicit conversions in the code, and another one
+to replace them with explicit conversions (i.e. explicit calls to conversion
+features).
+</para>
+
+<section><title>Showing implicit conversions</title>
+<para>
+Here is how to get the list of all implicit conversions in all classes of a project:
+<programlisting>
+	<filename>gedoc --format=implicit_converts project.ecf</filename>
+</programlisting>
+where <filename>project.ecf</filename> is an ECF file describing the Eiffel project.
+And to restrict to just the conversions from <classname>FOO</classname> to
+<classname>BAR</classname>:
+<programlisting>
+	<filename>gedoc --format=implicit_converts --variable=convert=FOO->BAR project.ecf</filename>
+</programlisting>
+where <classname>FOO</classname> and <classname>BAR</classname> are class names,
+possibly containing wildcards such as <classname>CHARACTER_*</classname> or
+<classname>?(READABLE_)STRING_8</classname>. Depending on the underlying operating
+system and shell, the entire <filename>--variable</filename> option may need to
+be enclosed in double quotes when the wildcards contain characters recognized by
+the shell.
+</para>
+<para>
+The output will contain lines of the form:
+<programlisting>
+	[CONVERT] MY_CLASS (85,30): conversion from 'CHARACTER_8' to 'CHARACTER_32' using feature `to_character_32`.
+</programlisting>
+indicating that there is an implicit conversion from
+<classname>CHARACTER_8</classname> to <classname>CHARACTER_32</classname>
+in class <classname>MY_CLASS</classname> at line 85 and column 30.
+</para>
+</section>
+
+<section><title>Making them explicit</title>
+<para>
+Here is how to make explicit all implicit conversions in a project:
+<programlisting>
+	<filename><filename>gedoc --format=explicit_converts --force project.ecf</filename></filename>
+</programlisting>
+or just those from <classname>STRING_32</classname> (or <classname>READABLE_STRING_32</classname>)
+to <classname>STRING_8</classname> (or <classname>READABLE_STRING_8</classname>):
+<programlisting>
+	<filename>gedoc --format=explicit_converts --force --variable=convert=?(READABLE_)STRING_32->?(READABLE_)STRING_8 project.ecf</filename>
+</programlisting>
+In addition to showing the list of implicit conversions, these commands will
+make them explicit in the class text. For example if we have:
+<programlisting>
+	local
+		s8: STRING_8
+		s32: STRING_32
+	do
+		...
+		s8 := s32
+		...
+	end
+</programlisting>
+<projectname>gedoc</projectname> will regenerate the text of the class as follows:
+<programlisting>
+	local
+		s8: STRING_8
+		s32: STRING_32
+	do
+		...
+		s8 := s32.as_string_8
+		...
+	end
+</programlisting>
+assuming that there is a conversion routine <featurename>as_string_8</featurename>
+declared in class <classname>STRING_32</classname> to convert to <classname>STRING_8</classname>
+</para>
+<para>
+Note that text of the classes which do not contain implicit conversions will not
+be regenerated.
+The command-line option <filename>--force</filename> tells <projectname>gedoc</projectname>
+to overwrite the file containing the class being modified. Without this option,
+files will not be overwritten and <projectname>gedoc</projectname> will emit an error
+message. Alternatively, the command-line option <filename>--interactive</filename> can
+be used. It will ask confirmation to the user before overwriting files. If you want to
+generate the modified files in a directory different from the one containing the
+original class text files, you should use the command-line option <filename>--output</filename>.
+</para>
+</section>
+</chapter>

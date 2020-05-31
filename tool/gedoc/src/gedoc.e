@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Doc"
 
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -145,9 +145,11 @@ feature -- Argument parsing
 			format_option.set_description ("Format for the output. (default: pretty_print)")
 			format_option.extend ("pretty_print")
 			format_option.extend ("html_ise_stylesheet")
+			format_option.extend ("implicit_converts")
+			format_option.extend ("explicit_converts")
 			format_option.extend ("ecf_pretty_print")
 			format_option.extend ("available_targets")
-			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet|ecf_pretty_print|available_targets")
+			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet|implicit_converts|explicit_converts|ecf_pretty_print|available_targets")
 			l_parser.options.force_last (format_option)
 				-- class.
 			create class_option.make ('c', "class")
@@ -244,6 +246,10 @@ feature -- Argument parsing
 				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "html_ise_stylesheet" then
 				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
+			elseif format_option.parameter ~ "implicit_converts" then
+				create {GEDOC_IMPLICIT_CONVERTS_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
+			elseif format_option.parameter ~ "explicit_converts" then
+				create {GEDOC_EXPLICIT_CONVERTS_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "ecf_pretty_print" then
 				create {GEDOC_ECF_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "available_targets" then

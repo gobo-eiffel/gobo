@@ -6,7 +6,7 @@
 		"Gobo Eiffel Doc"
 
 	tool: "Gobo Eiffel Doc"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/index">
 <chapterinfo>
 	<copyright>
-		<year>2017-2018</year>
+		<year>2017-2020</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>24 October 2018</date>
+	<date>30 May 2020</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Doc</title>
@@ -60,6 +60,14 @@ This documentation of <projectname>gedoc</projectname> is structured as follows:
 		</term>
 		<listitem><para>
 			Generating HTML files using ISE's stylesheet.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="implicit_conversions">Implicit conversions</link>
+		</term>
+		<listitem><para>
+			Using <projectname>gedoc</projectname> to show implicit conversions, and to make them explicit.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

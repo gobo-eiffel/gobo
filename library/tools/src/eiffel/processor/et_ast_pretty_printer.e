@@ -86,6 +86,8 @@ inherit
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_export_list,
 			process_extended_attribute,
 			process_external_function,
@@ -224,6 +226,7 @@ feature -- Initialization
 			comment_printed := False
 			comment_list.wipe_out
 			comment_finder.reset_excluded_nodes
+			set_comments_ignored (False)
 		end
 
 feature -- Access
@@ -273,6 +276,20 @@ feature -- Indentation
 			indentation := 0
 		ensure
 			indentation_reset: indentation = 0
+		end
+
+feature -- Comments
+
+	comments_ignored: BOOLEAN
+			-- Should comments not be printed?
+
+	set_comments_ignored (b: BOOLEAN)
+			-- Set `comments_ignored' to `b'.
+		do
+			comments_ignored := b
+			comment_finder.set_comments_ignored (b)
+		ensure
+			comments_ignored_set: comments_ignored = b
 		end
 
 feature {ET_AST_NODE} -- Processing
@@ -844,7 +861,7 @@ feature {ET_AST_NODE} -- Processing
 	process_break (a_break: detachable ET_BREAK)
 			-- Process `a_break'.
 		do
-			if a_break /= Void and then a_break.has_comment then
+			if not comments_ignored and a_break /= Void and then a_break.has_comment then
 				comment_list.force_last (a_break)
 			end
 		end
@@ -863,11 +880,24 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant' without cast type.
 		require
 			a_constant_not_void: a_constant /= Void
+		local
+			c, b: NATURAL_32
 		do
 			print_character ('%'')
-			buffer.wipe_out
-			{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (buffer, a_constant.literal.natural_32_code)
-			print_string (buffer)
+			c := {UC_UTF8_ROUTINES}.natural_32_code_to_utf8 (a_constant.literal.natural_32_code)
+			file.put_character (((c & 0xFF000000) |>> (3 * {PLATFORM}.natural_8_bits)).to_character_8)
+			b := c & 0x00FF0000
+			if b /= 0 then
+				file.put_character ((b |>> (2 * {PLATFORM}.natural_8_bits)).to_character_8)
+				b := c & 0x0000FF00
+				if b /= 0 then
+					file.put_character ((b |>> {PLATFORM}.natural_8_bits).to_character_8)
+					b := c & 0x000000FF
+					if b /= 0 then
+						file.put_character (b.to_character_8)
+					end
+				end
+			end
 			print_character ('%'')
 			process_break (a_constant.break)
 		end
@@ -1207,8 +1237,11 @@ feature {ET_AST_NODE} -- Processing
 			-- Print comments in `comment_list' on their own line (go to
 			-- next line if necessary), with an extra indentation level.
 			-- Comments are followed by a new-line. Then wipe out the list.
+			-- Do not print the comments if `comments_ignored' is True.
 		do
-			print_indented_comments (comment_list)
+			if not comments_ignored then
+				print_indented_comments (comment_list)
+			end
 			comment_list.wipe_out
 		ensure
 			no_more_comments: comment_list.is_empty
@@ -1220,8 +1253,11 @@ feature {ET_AST_NODE} -- Processing
 			-- the first comment on the current line. The remaining comments
 			-- are printed on their own line, with an extra indentation level.
 			-- Comments are followed by a new-line. Then wipe out the list.
+			-- Do not print the comments if `comments_ignored' is True.
 		do
-			print_comments_on_same_line (comment_list)
+			if not comments_ignored then
+				print_comments_on_same_line (comment_list)
+			end
 			comment_list.wipe_out
 		ensure
 			no_more_comments: comment_list.is_empty
@@ -2323,6 +2359,54 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.operator.process (Current)
 			print_space
 			an_expression.right.process (Current)
+		end
+
+	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `a_convert_expression'.
+		local
+			l_old_comments_ignored: BOOLEAN
+		do
+			tokens.create_keyword.process (Current)
+			print_space
+			tokens.left_brace_symbol.process (Current)
+			l_old_comments_ignored := comments_ignored
+			set_comments_ignored (True)
+			a_convert_expression.type.process (Current)
+			set_comments_ignored (l_old_comments_ignored)
+			tokens.right_brace_symbol.process (Current)
+			tokens.dot_symbol.process (Current)
+			a_convert_expression.name.process (Current)
+			print_space
+			tokens.left_parenthesis_symbol.process (Current)
+			a_convert_expression.expression.process (Current)
+			tokens.right_parenthesis_symbol.process (Current)
+		end
+
+	process_explicit_convert_to_expression (a_convert_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `a_convert_expression'.
+		local
+			l_need_parentheses: BOOLEAN
+			l_expression: ET_EXPRESSION
+		do
+			l_expression := a_convert_expression.expression
+			if
+				not attached {ET_PARENTHESIZED_EXPRESSION} l_expression and
+				not attached {ET_IDENTIFIER} l_expression and
+				not attached {ET_UNQUALIFIED_CALL_EXPRESSION} l_expression and
+				not attached {ET_QUALIFIED_CALL_EXPRESSION} l_expression and
+				not attached {ET_BRACKET_EXPRESSION} l_expression
+			then
+				l_need_parentheses := True
+			end
+			if l_need_parentheses then
+				tokens.left_parenthesis_symbol.process (Current)
+			end
+			l_expression.process (Current)
+			if l_need_parentheses then
+				tokens.right_parenthesis_symbol.process (Current)
+			end
+			tokens.dot_symbol.process (Current)
+			a_convert_expression.name.process (Current)
 		end
 
 	process_export_list (a_list: ET_EXPORT_LIST)

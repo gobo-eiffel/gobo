@@ -17,7 +17,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,13 +31,9 @@ inherit
 			{ANY} print_new_line, print_indentation
 		redefine
 			make,
-			reset,
-			process_break,
 			process_c1_character_constant_without_cast_type,
 			process_c2_character_constant_without_cast_type,
 			process_c3_character_constant_without_cast_type,
-			process_comments,
-			process_comments_on_same_line,
 			process_extended_feature_name_of_feature,
 			process_feature_name,
 			process_formal_parameter_type,
@@ -74,15 +70,6 @@ feature {NONE} -- Initialization
 			create quoted_class_name_buffer.make (20)
 			create internal_feature_name.make ("dummy")
 			precursor (a_file, a_system_processor)
-		end
-
-feature -- Initialization
-
-	reset
-			-- Reset for another pretty-printing.
-		do
-			precursor
-			comments_ignored := False
 		end
 
 feature -- Mapping
@@ -612,14 +599,6 @@ feature {ET_AST_PROCESSOR} -- Processing
 			comment_finder.find_comments (a_alias_name, comment_list)
 		end
 
-	process_break (a_break: detachable ET_BREAK)
-			-- Process `a_break'.
-		do
-			if not comments_ignored then
-				precursor (a_break)
-			end
-		end
-
 	process_c1_character_constant_without_cast_type (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant' without cast type.
 		do
@@ -642,33 +621,6 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_echar)
 			precursor (a_constant)
 			print_end_span
-		end
-
-	process_comments
-			-- Process comments that have not been printed yet.
-			-- Print comments in `comment_list' on their own line (go to
-			-- next line if necessary), with an extra indentation level.
-			-- Comments are followed by a new-line. Then wipe out the list.
-			-- Do not print the comments if `comments_ignored' is True.
-		do
-			if not comments_ignored then
-				print_indented_comments (comment_list)
-			end
-			comment_list.wipe_out
-		end
-
-	process_comments_on_same_line
-			-- Process comments that have not been printed yet.
-			-- If `comment_list' is not empty, then print a space followed by
-			-- the first comment on the current line. The remaining comments
-			-- are printed on their own line, with an extra indentation level.
-			-- Comments are followed by a new-line. Then wipe out the list.
-			-- Do not print the comments if `comments_ignored' is True.
-		do
-			if not comments_ignored then
-				print_comments_on_same_line (comment_list)
-			end
-			comment_list.wipe_out
 		end
 
 	process_extended_feature_name_of_feature (a_feature: ET_FEATURE)
@@ -996,20 +948,6 @@ feature {NONE} -- Printing
 			else
 				file.put_character (c)
 			end
-		end
-
-feature {NONE} -- Comments
-
-	comments_ignored: BOOLEAN
-			-- Should comments not be printed?
-
-	set_comments_ignored (b: BOOLEAN)
-			-- Set `comments_ignored' to `b'.
-		do
-			comments_ignored := b
-			comment_finder.set_comments_ignored (b)
-		ensure
-			comments_ignored_set: comments_ignored = b
 		end
 
 	print_quoted_name (a_quoted_name: STRING; a_end_quote: CHARACTER; a_css_class: STRING)

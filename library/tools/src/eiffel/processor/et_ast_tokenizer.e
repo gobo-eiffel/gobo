@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,6 +26,8 @@ inherit
 			process_actual_parameter_list,
 			process_break,
 			process_constant_attribute,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_export_list,
 			process_feature_export,
 			process_formal_argument_list,
@@ -267,6 +269,47 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.semicolon as l_semicolon then
 				l_semicolon.process (Current)
 			end
+		end
+
+	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- <Precursor>
+		do
+			tokens.create_keyword.process (Current)
+			tokens.left_brace_symbol.process (Current)
+			a_convert_expression.type.process (Current)
+			tokens.right_brace_symbol.process (Current)
+			tokens.dot_symbol.process (Current)
+			a_convert_expression.name.process (Current)
+			tokens.left_parenthesis_symbol.process (Current)
+			a_convert_expression.expression.process (Current)
+			tokens.right_parenthesis_symbol.process (Current)
+		end
+
+	process_explicit_convert_to_expression (a_convert_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- <Precursor>
+		local
+			l_need_parentheses: BOOLEAN
+			l_expression: ET_EXPRESSION
+		do
+			l_expression := a_convert_expression.expression
+			if
+				not attached {ET_PARENTHESIZED_EXPRESSION} l_expression and
+				not attached {ET_IDENTIFIER} l_expression and
+				not attached {ET_UNQUALIFIED_CALL_EXPRESSION} l_expression and
+				not attached {ET_QUALIFIED_CALL_EXPRESSION} l_expression and
+				not attached {ET_BRACKET_EXPRESSION} l_expression
+			then
+				l_need_parentheses := True
+			end
+			if l_need_parentheses then
+				tokens.left_parenthesis_symbol.process (Current)
+			end
+			l_expression.process (Current)
+			if l_need_parentheses then
+				tokens.right_parenthesis_symbol.process (Current)
+			end
+			tokens.dot_symbol.process (Current)
+			a_convert_expression.name.process (Current)
 		end
 
 	process_export_list (a_list: ET_EXPORT_LIST)
