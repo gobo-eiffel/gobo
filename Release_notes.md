@@ -1,4 +1,4 @@
-# Release notes - Gobo Eiffel 20.03.22.1
+# Release notes - Gobo Eiffel 20.05.31.5
 
 In order to see what is new in this release, please read [History.md](./History.md).
 
