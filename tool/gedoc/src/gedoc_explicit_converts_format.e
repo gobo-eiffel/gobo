@@ -16,6 +16,7 @@ inherit
 	GEDOC_IMPLICIT_CONVERTS_FORMAT
 		redefine
 			make,
+			set_ast_factory,
 			process_system,
 			process_implicit_converts
 		end
@@ -38,6 +39,17 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Processing
+
+	set_ast_factory
+			-- Configure the AST factory as needed.
+		local
+			l_ast_factory: ET_DECORATED_AST_FACTORY
+		do
+			create l_ast_factory.make
+			l_ast_factory.set_keep_all_breaks (True)
+			set_explicit_convert_class_names (l_ast_factory)
+			system_processor.set_ast_factory (l_ast_factory)
+		end
 
 	process_system (a_system: ET_SYSTEM)
 			-- Process `input_classes' from `a_system'.

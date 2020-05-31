@@ -52,14 +52,23 @@ feature {NONE} -- Processing
 			-- Configure the AST factory as needed.
 		local
 			l_ast_factory: ET_DECORATED_AST_FACTORY
+		do
+			create l_ast_factory.make
+			set_explicit_convert_class_names (l_ast_factory)
+			system_processor.set_ast_factory (l_ast_factory)
+		end
+
+	set_explicit_convert_class_names (a_ast_factory: ET_DECORATED_AST_FACTORY)
+			-- Set 'explicit_convert_class_names' in `a_ast_factory'.
+		require
+			a_ast_factory_not_void: a_ast_factory /= Void
+		local
 			l_conversions: DS_ARRAYED_LIST [TUPLE [detachable LX_DFA_WILDCARD, detachable LX_DFA_WILDCARD]]
 			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_pattern: STRING
 			l_from_wildcard: LX_DFA_WILDCARD
 			l_to_wildcard: LX_DFA_WILDCARD
 		do
-			create l_ast_factory.make
-			l_ast_factory.set_keep_all_comments (True)
 			create l_conversions.make_default
 			if attached override_variables as l_override_variables then
 				if attached l_override_variables.primary_value ("convert") as l_convert then
@@ -84,8 +93,7 @@ feature {NONE} -- Processing
 					end
 				end
 			end
-			l_ast_factory.set_explicit_convert_class_names (l_conversions)
-			system_processor.set_ast_factory (l_ast_factory)
+			a_ast_factory.set_explicit_convert_class_names (l_conversions)
 		end
 
 	process_system (a_system: ET_SYSTEM)
