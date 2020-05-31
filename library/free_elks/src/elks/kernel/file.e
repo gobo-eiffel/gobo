@@ -1536,7 +1536,7 @@ feature -- Input
 			bytes_read := file_gss (file_pointer, p.item + start_pos, nb_bytes)
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+	read_to_string (a_string: STRING_8; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.

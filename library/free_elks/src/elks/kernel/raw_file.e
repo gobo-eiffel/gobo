@@ -219,7 +219,7 @@ feature -- Input
 			bytes_read := file_fread (p.item + start_pos, 1, nb_bytes, file_pointer)
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+	read_to_string (a_string: STRING_8; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
@@ -334,7 +334,7 @@ invariant
 	not_plain_text: not is_plain_text
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
