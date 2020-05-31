@@ -691,7 +691,9 @@ feature -- Access
 						-- type is itself a formal generic parameter.
 					l_actual_base_class := a_context.root_context.base_class
 					l_actual_index := l_actual_formal_type.index
-					if attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
+					if l_actual_base_class = l_formal_type.implementation_class and l_actual_index = l_index then
+						Result := l_formal_type.type_with_type_mark (l_type_mark)
+					elseif attached l_actual_base_class.formal_parameters as l_actual_formals and then l_actual_index <= l_actual_formals.count then
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
 						Result := l_actual_formal_type.type_with_type_mark (l_type_mark)
 					else
