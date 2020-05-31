@@ -217,18 +217,19 @@ feature {ET_AST_NODE} -- Processing
 			l_pretty_printer := pretty_printer
 			l_pretty_printer.reset
 			l_pretty_printer.set_comments_ignored (True)
-			buffer.string.wipe_out
 			l_pretty_printer.set_file (buffer)
 			a_convert_expression.type.process (l_pretty_printer)
 			l_pretty_printer.set_null_file
-			file.put_string (buffer.string)
+			if file /= buffer then
+				file.put_string (buffer.string)
+				buffer.string.wipe_out
+			end
 			tokens.right_brace_symbol.process (Current)
 			tokens.dot_symbol.process (Current)
 			a_convert_expression.name.process (Current)
 			file.put_character (' ')
 			tokens.left_parenthesis_symbol.process (Current)
 			l_old_file := file
-			buffer.string.wipe_out
 			file := buffer
 			l_expression := a_convert_expression.expression
 			l_expression.process (Current)
@@ -237,7 +238,10 @@ feature {ET_AST_NODE} -- Processing
 				buffer.string.remove_tail (l_break.text.count)
 			end
 			file := l_old_file
-			file.put_string (buffer.string)
+			if l_old_file /= buffer then
+				file.put_string (buffer.string)
+				buffer.string.wipe_out
+			end
 			tokens.right_parenthesis_symbol.process (Current)
 			process_break (l_break)
 		end
@@ -264,7 +268,6 @@ feature {ET_AST_NODE} -- Processing
 				tokens.left_parenthesis_symbol.process (Current)
 			end
 			l_old_file := file
-			buffer.string.wipe_out
 			file := buffer
 			l_expression.process (Current)
 			l_break := l_expression.last_leaf.break
@@ -272,7 +275,10 @@ feature {ET_AST_NODE} -- Processing
 				buffer.string.remove_tail (l_break.text.count)
 			end
 			file := l_old_file
-			file.put_string (buffer.string)
+			if l_old_file /= buffer then
+				file.put_string (buffer.string)
+				buffer.string.wipe_out
+			end
 			if l_need_parentheses then
 				tokens.right_parenthesis_symbol.process (Current)
 			end
