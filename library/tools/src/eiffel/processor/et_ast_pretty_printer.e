@@ -227,6 +227,7 @@ feature -- Initialization
 			comment_list.wipe_out
 			comment_finder.reset_excluded_nodes
 			set_comments_ignored (False)
+			set_use_as_type (False)
 		end
 
 feature -- Access
@@ -239,6 +240,10 @@ feature -- Status report
 	use_is_keyword: BOOLEAN
 			-- Should the obsolete 'is' keyword be used?
 
+	use_as_type: BOOLEAN
+			-- Should classes be considered as class types and
+			-- formal parameters as formal parameter types?
+
 feature -- Status setting
 
 	set_use_is_keyword (b: BOOLEAN)
@@ -247,6 +252,14 @@ feature -- Status setting
 			use_is_keyword := b
 		ensure
 			use_is_keyword_set: use_is_keyword = b
+		end
+
+	set_use_as_type (b: BOOLEAN)
+			-- Set `use_as_type' to `b'.
+		do
+			use_as_type := b
+		ensure
+			use_as_type_set: use_as_type = b
 		end
 
 feature -- Indentation
@@ -1053,118 +1066,126 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_obsolete_string: ET_MANIFEST_STRING
 		do
-			if bom_enabled and then a_class.has_utf8_bom then
-				print_bom
-			end
-			process_break (a_class.leading_break)
-			if not comment_list.is_empty then
-				process_comments
-					-- Add an extra line after the comment.
-				print_new_line
-			end
-			if attached a_class.first_indexing as l_indexing then
-				l_indexing.process (Current)
-				process_comments
-				print_new_line
-				print_new_line
-			end
-			if attached a_class.frozen_keyword as l_frozen_keyword then
-				l_frozen_keyword.process (Current)
-				print_space
-			end
-			if attached a_class.class_mark as l_class_mark then
-				l_class_mark.process (Current)
-				print_space
-			end
-			if attached a_class.external_keyword as l_external_keyword then
-				l_external_keyword.process (Current)
-				print_space
-			end
-			a_class.class_keyword.process (Current)
-			print_space
-			process_name_of_named_class (a_class.name, a_class)
-			if attached a_class.formal_parameters as l_formal_parameters then
-				if l_formal_parameters.is_empty then
-						-- Do not print empty brackets, but keep the comments if any.
-					comment_finder.find_comments (l_formal_parameters, comment_list)
-				else
+			if use_as_type then
+				process_name_of_named_class (a_class.name, a_class)
+				if attached a_class.formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
 					print_space
 					l_formal_parameters.process (Current)
 				end
-			end
-			process_comments
-			print_new_line
-			print_new_line
-			if attached a_class.obsolete_message as l_obsolete_message then
-				tokens.obsolete_keyword.process (Current)
-				l_obsolete_string := l_obsolete_message.manifest_string
-				comment_finder.add_excluded_node (l_obsolete_string)
-				comment_finder.find_comments (l_obsolete_message, comment_list)
-				comment_finder.reset_excluded_nodes
-				indent
-				process_comments
-				print_new_line
-				print_new_line
-				l_obsolete_string.process (Current)
-				dedent
-				process_comments
-				print_new_line
-				print_new_line
-			end
-			if attached a_class.parent_clauses as l_parents then
-				l_parents.process (Current)
-				process_comments
-				print_new_line
-				print_new_line
-			end
-			if attached a_class.creators as l_creators then
-				l_creators.process (Current)
-				process_comments
-				print_new_line
-				print_new_line
-			end
-			if attached a_class.convert_features as l_convert_features then
-				l_convert_features.process (Current)
-				process_comments
-				print_new_line
-				print_new_line
-			end
-			process_features (a_class)
-			if attached a_class.invariants as l_invariants then
-				l_invariants.process (Current)
-				process_comments
-			end
-			if attached a_class.second_indexing as l_indexing then
-				if (not attached a_class.invariants as l_invariants or else l_invariants.is_empty) and then a_class.queries.declared_count > 0 and then a_class.queries.item (a_class.queries.declared_count).is_attribute and then (a_class.procedures.declared_count = 0 or else a_class.procedures.item (a_class.procedures.declared_count).position < a_class.queries.item (a_class.queries.declared_count).position) then
-						-- Print a semicolon in order to avoid syntax error.
-						-- For example if we have:
-						--
-						--     feature
-						--         attr: INTEGER
-						--     note
-						--         license: "..."
-						--     end
-						--
-						-- it could also be seen as:
-						--
-						--     feature
-						--         attr: INTEGER
-						--             note
-						--                  license: "..."
-						--             end
-						--
-						-- even if this is not syntactically correct since the end
-						-- of the class is missing.
-					tokens.semicolon_symbol.process (Current)
+			else
+				if bom_enabled and then a_class.has_utf8_bom then
+					print_bom
 				end
-				l_indexing.process (Current)
+				process_break (a_class.leading_break)
+				if not comment_list.is_empty then
+					process_comments
+						-- Add an extra line after the comment.
+					print_new_line
+				end
+				if attached a_class.first_indexing as l_indexing then
+					l_indexing.process (Current)
+					process_comments
+					print_new_line
+					print_new_line
+				end
+				if attached a_class.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
+					print_space
+				end
+				if attached a_class.class_mark as l_class_mark then
+					l_class_mark.process (Current)
+					print_space
+				end
+				if attached a_class.external_keyword as l_external_keyword then
+					l_external_keyword.process (Current)
+					print_space
+				end
+				a_class.class_keyword.process (Current)
+				print_space
+				process_name_of_named_class (a_class.name, a_class)
+				if attached a_class.formal_parameters as l_formal_parameters then
+					if l_formal_parameters.is_empty then
+							-- Do not print empty brackets, but keep the comments if any.
+						comment_finder.find_comments (l_formal_parameters, comment_list)
+					else
+						print_space
+						l_formal_parameters.process (Current)
+					end
+				end
 				process_comments
 				print_new_line
 				print_new_line
+				if attached a_class.obsolete_message as l_obsolete_message then
+					tokens.obsolete_keyword.process (Current)
+					l_obsolete_string := l_obsolete_message.manifest_string
+					comment_finder.add_excluded_node (l_obsolete_string)
+					comment_finder.find_comments (l_obsolete_message, comment_list)
+					comment_finder.reset_excluded_nodes
+					indent
+					process_comments
+					print_new_line
+					print_new_line
+					l_obsolete_string.process (Current)
+					dedent
+					process_comments
+					print_new_line
+					print_new_line
+				end
+				if attached a_class.parent_clauses as l_parents then
+					l_parents.process (Current)
+					process_comments
+					print_new_line
+					print_new_line
+				end
+				if attached a_class.creators as l_creators then
+					l_creators.process (Current)
+					process_comments
+					print_new_line
+					print_new_line
+				end
+				if attached a_class.convert_features as l_convert_features then
+					l_convert_features.process (Current)
+					process_comments
+					print_new_line
+					print_new_line
+				end
+				process_features (a_class)
+				if attached a_class.invariants as l_invariants then
+					l_invariants.process (Current)
+					process_comments
+				end
+				if attached a_class.second_indexing as l_indexing then
+					if (not attached a_class.invariants as l_invariants or else l_invariants.is_empty) and then a_class.queries.declared_count > 0 and then a_class.queries.item (a_class.queries.declared_count).is_attribute and then (a_class.procedures.declared_count = 0 or else a_class.procedures.item (a_class.procedures.declared_count).position < a_class.queries.item (a_class.queries.declared_count).position) then
+							-- Print a semicolon in order to avoid syntax error.
+							-- For example if we have:
+							--
+							--     feature
+							--         attr: INTEGER
+							--     note
+							--         license: "..."
+							--     end
+							--
+							-- it could also be seen as:
+							--
+							--     feature
+							--         attr: INTEGER
+							--             note
+							--                  license: "..."
+							--             end
+							--
+							-- even if this is not syntactically correct since the end
+							-- of the class is missing.
+						tokens.semicolon_symbol.process (Current)
+					end
+					l_indexing.process (Current)
+					process_comments
+					print_new_line
+					print_new_line
+				end
+				a_class.end_keyword.process (Current)
+				process_comments_on_same_line
+				print_new_line
 			end
-			a_class.end_keyword.process (Current)
-			process_comments_on_same_line
-			print_new_line
 		end
 
 	process_class_assertion (a_assertion: ET_CLASS_ASSERTION)
@@ -1333,20 +1354,24 @@ feature {ET_AST_NODE} -- Processing
 	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
 		do
-			if attached a_parameter.type_mark as l_type_mark then
-				l_type_mark.process (Current)
+			if use_as_type then
+				process_formal_parameter_type (a_parameter)
+			else
+				if attached a_parameter.type_mark as l_type_mark then
+					l_type_mark.process (Current)
+					print_space
+				end
+				process_name_of_formal_parameter (a_parameter)
 				print_space
-			end
-			process_name_of_formal_parameter (a_parameter)
-			print_space
-			a_parameter.arrow_symbol.process (Current)
-			print_space
-			a_parameter.constraint.process (Current)
-			if attached a_parameter.creation_procedures as l_creation_procedures then
+				a_parameter.arrow_symbol.process (Current)
 				print_space
-				set_target_type (a_parameter)
-				l_creation_procedures.process (Current)
-				set_target_type (Void)
+				a_parameter.constraint.process (Current)
+				if attached a_parameter.creation_procedures as l_creation_procedures then
+					print_space
+					set_target_type (a_parameter)
+					l_creation_procedures.process (Current)
+					set_target_type (Void)
+				end
 			end
 		end
 
@@ -2365,14 +2390,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_convert_expression'.
 		local
 			l_old_comments_ignored: BOOLEAN
+			l_old_use_as_type: BOOLEAN
 		do
 			tokens.create_keyword.process (Current)
 			print_space
 			tokens.left_brace_symbol.process (Current)
 			l_old_comments_ignored := comments_ignored
 			set_comments_ignored (True)
+			l_old_use_as_type := use_as_type
+			set_use_as_type (True)
 			a_convert_expression.type.process (Current)
 			set_comments_ignored (l_old_comments_ignored)
+			set_use_as_type (l_old_use_as_type)
 			tokens.right_brace_symbol.process (Current)
 			tokens.dot_symbol.process (Current)
 			a_convert_expression.name.process (Current)
@@ -3242,11 +3271,15 @@ feature {ET_AST_NODE} -- Processing
 	process_formal_parameter (a_parameter: ET_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
 		do
-			if attached a_parameter.type_mark as l_type_mark then
-				l_type_mark.process (Current)
-				print_space
+			if use_as_type then
+				process_formal_parameter_type (a_parameter)
+			else
+				if attached a_parameter.type_mark as l_type_mark then
+					l_type_mark.process (Current)
+					print_space
+				end
+				process_name_of_formal_parameter (a_parameter)
 			end
-			process_name_of_formal_parameter (a_parameter)
 		end
 
 	process_formal_parameter_list (a_list: ET_FORMAL_PARAMETER_LIST)

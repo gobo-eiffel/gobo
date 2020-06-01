@@ -217,6 +217,7 @@ feature {ET_AST_NODE} -- Processing
 			l_pretty_printer := pretty_printer
 			l_pretty_printer.reset
 			l_pretty_printer.set_comments_ignored (True)
+			l_pretty_printer.set_use_as_type (True)
 			l_pretty_printer.set_file (buffer)
 			a_convert_expression.type.process (l_pretty_printer)
 			l_pretty_printer.set_null_file
