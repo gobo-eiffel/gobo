@@ -1,5 +1,11 @@
 # Release History
 
+## Version ?? - ??
+
+### Gobo Eiffel Tools Library
+
+* Improved processing of conversion expressions.
+
 ## Version 20.05.31.5 - 31 May 2020
 
 ### gec

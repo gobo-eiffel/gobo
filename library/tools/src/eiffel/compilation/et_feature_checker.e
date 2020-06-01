@@ -4945,8 +4945,9 @@ feature {NONE} -- Instruction validity
 				error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, a_procedure, a_class)
 			end
 			l_had_error := has_fatal_error
-				-- Check that all features which are called in a precondition of `a_procedure'
-				-- are exported to every class to which `a_procedure' is exported.
+				-- Check that if the call to `a_procedure' appears in a precondition
+				-- of `current_feature', then it is exported to all classes to which
+				-- `current_feature' is exported.
 			check_qualified_vape_validity (l_name, a_procedure, a_class)
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
@@ -9275,8 +9276,9 @@ feature {NONE} -- Expression validity
 				error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, a_feature, a_class)
 			end
 			l_had_error := has_fatal_error
-				-- Check that all features which are called in a precondition of `a_feature'
-				-- are exported to every class to which `a_feature' is exported.
+				-- Check that if the call to `a_feature' appears in a precondition
+				-- of `current_feature', then it is exported to all classes to which
+				-- `current_feature' is exported.
 			check_qualified_vape_validity (l_name, a_feature, a_class)
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
@@ -10064,8 +10066,9 @@ feature {NONE} -- Expression validity
 				error_handler.report_vuex2b_error (current_class, current_class_impl, l_name, a_query, a_class)
 			end
 			l_had_error := has_fatal_error
-				-- Check that all features which are called in a precondition of `a_query'
-				-- are exported to every class to which `a_query' is exported.
+				-- Check that if the call to `a_query' appears in a precondition
+				-- of `current_feature', then it is exported to all classes to which
+				-- `current_feature' is exported.
 			check_qualified_vape_validity (l_name, a_query, a_class)
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
@@ -13983,24 +13986,30 @@ feature {NONE} -- Conversion
 			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
 			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
 			l_target_named_type: ET_NAMED_TYPE
+			l_had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			if current_class = current_class_impl then
+			if current_class /= current_class_impl then
 					-- Convertibility should be resolved in the implementation class.
-					--
-					-- Look for convert feature without taking into account
-					-- the attachment status of the types involved.
-				a_source_type.force_last (tokens.attached_like_current)
-				a_target_type.force_last (tokens.attached_like_current)
+			elseif
+				(current_system.attachment_type_conformance_mode or
+				current_system.target_type_attachment_mode) and then
+				not a_source_type.is_type_attached
+			then
+					-- With convert-to, the source expression is the target
+					-- of a call to the conversion query.
+					-- With convert-from, the type of source expression should
+					-- be one of the conversion types (after possible generic
+					-- parameter substitutions) which are all attached
+					-- (see VYCP-9, ECMA-367, 3-36, section 8.15.7, page 880).				
+			else
 				l_convert_feature := type_checker.convert_feature (a_source_type, a_target_type)
 				if l_convert_feature = Void then
 						-- Check whether `a_source' is a non-explicitly typed manifest constant which
 						-- has a valid value for `a_target_type'. Useful when trying to convert the
-						-- left-and-side of a binary expression.
+						-- left-hand-side of a binary expression.
 					l_convert_feature := a_source.manifest_constant_convert_feature (a_source_type, a_target_type, current_universe)
 				end
-				a_source_type.remove_last
-				a_target_type.remove_last
 				if l_convert_feature /= Void then
 					if l_convert_feature.is_convert_from then
 						l_convert_class := a_target_type.base_class
@@ -14011,7 +14020,20 @@ feature {NONE} -- Conversion
 						else
 							l_convert_from_expression := system_processor.ast_factory.new_convert_from_expression (a_source, l_convert_feature, a_source_type, a_target_type)
 							if attached l_convert_class.seeded_procedure (l_convert_feature.name.seed) as l_conversion_procedure then
+									-- Check creation export status.
+									-- There is apparently no such rule in ECMA-367, 3-36.
+								if not l_conversion_procedure.is_creation_exported_to (current_class, l_convert_class, system_processor) then
+										-- The procedure is not a creation procedure exported to `current_class',
+										-- and it is not the implicit creation procedure 'default_create'.
+									set_fatal_error
+									error_handler.report_vgcc6c_error (current_class, current_class_impl, l_convert_from_expression.name, l_conversion_procedure, l_convert_class)
+								end
+								l_had_error := has_fatal_error
 								check_creation_vape_validity (l_convert_from_expression.name, l_conversion_procedure, l_convert_class)
+								reset_fatal_error (l_had_error or has_fatal_error)
+									-- Note that ECMA is more contraining, allowing only precondition-free features
+									-- or features with statically satisfied preconditions (see VYEC, ECMA-367, 3-36,
+									-- section 8.15.14, page 91).
 								if not has_fatal_error then
 									report_creation_expression (l_convert_from_expression, l_convert_from_expression.type, l_conversion_procedure)
 									Result := l_convert_from_expression
@@ -14032,7 +14054,22 @@ feature {NONE} -- Conversion
 						else
 							l_convert_to_expression := system_processor.ast_factory.new_convert_to_expression (a_source, l_convert_feature, a_source_type, a_target_type)
 							if attached l_convert_class.seeded_query (l_convert_feature.name.seed) as l_conversion_query then
+									-- Check export status.
+									-- There is apparently no such rule in ECMA-367, 3-36.
+								if not l_conversion_query.is_exported_to (current_class, system_processor) then
+										-- The feature is not exported to `current_class'.
+									set_fatal_error
+									error_handler.report_vuex2b_error (current_class, current_class_impl, l_convert_to_expression.name, l_conversion_query, l_convert_class)
+								end
+								l_had_error := has_fatal_error
+									-- Check that if the call to `l_conversion_query' appears in a precondition
+									-- of `current_feature', then it is exported to all classes to which
+									-- `current_feature' is exported.
 								check_qualified_vape_validity (l_convert_to_expression.name, l_conversion_query, l_convert_class)
+								reset_fatal_error (l_had_error or has_fatal_error)
+									-- Note that ECMA is more contraining, allowing only precondition-free features
+									-- or features with statically satisfied preconditions (see VYEC, ECMA-367, 3-36,
+									-- section 8.15.14, page 91).
 								if not has_fatal_error then
 									report_qualified_call_expression (l_convert_to_expression, a_source_type, l_conversion_query)
 									Result := l_convert_to_expression
