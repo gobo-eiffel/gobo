@@ -13999,6 +13999,8 @@ feature {NONE} -- Conversion
 						-- left-and-side of a binary expression.
 					l_convert_feature := a_source.manifest_constant_convert_feature (a_source_type, a_target_type, current_universe)
 				end
+				a_source_type.remove_last
+				a_target_type.remove_last
 				if l_convert_feature /= Void then
 					if l_convert_feature.is_convert_from then
 						l_convert_class := a_target_type.base_class
@@ -14050,8 +14052,6 @@ feature {NONE} -- Conversion
 						Result := l_convert_builtin_expression
 					end
 				end
-				a_source_type.remove_last
-				a_target_type.remove_last
 			end
 		ensure
 			implementation_class: Result /= Void implies (current_class = current_class_impl)
