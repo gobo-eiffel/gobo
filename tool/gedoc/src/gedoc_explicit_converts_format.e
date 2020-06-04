@@ -97,9 +97,10 @@ feature {GEDOC_EXPLICIT_CONVERTS_FORMAT} -- Processing
 								l_file := new_output_file (l_filename)
 								l_file.recursive_open_write
 								if l_file.is_open_write then
-									ast_printer.set_file (l_file)
-									a_class.process (ast_printer)
-									ast_printer.set_null_file
+									l_printer := ast_printer
+									l_printer.set_file (l_file)
+									a_class.process (l_printer)
+									l_printer.set_null_file
 									l_file.close
 									from i := 1 until i > nb loop
 										l_expression := explicit_convert_expressions.item (i)
