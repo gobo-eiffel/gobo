@@ -6589,11 +6589,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure: once
 			-- and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			l_compound: detachable ET_COMPOUND
 		do
-			l_compound := a_feature.compound
-			if (l_compound /= Void and then not l_compound.is_empty) or else a_feature.locals /= Void or else a_feature.rescue_clause /= Void then
+			if a_feature.has_self_initializing_code then
 -- TODO
 error_handler.report_warning_message ("ET_C_GENERATOR.print_extended_attribute: initialization not supported yet.")
 			end

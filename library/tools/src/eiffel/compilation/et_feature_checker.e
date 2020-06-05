@@ -1379,11 +1379,11 @@ feature {NONE} -- Feature validity
 					had_error := had_error or has_fatal_error
 				end
 				if current_system.attachment_type_conformance_mode then
-					if l_compound /= Void and then l_compound.has_non_null_instruction then
+					if a_feature.has_self_initializing_code then
 							-- Check that the 'Result' entity has been initialized when
-							-- declared as attached only when the body is not empty.
-							-- When the body is empty, we consider that it is not an
-							-- initialization declaration.
+							-- declared as attached only when it has code (other than
+							-- just pre- and postcondition). Otherwise we consider that
+							-- it is not an initialization declaration.
 						if not l_type.is_type_detachable (current_type) and not l_type.is_type_expanded (current_type) then
 							if system_processor.is_ise and then current_attachment_scope.has_result then
 									-- In ISE Eiffel, local variables (including 'Result') are considered

@@ -73,6 +73,17 @@ feature -- Initialization
 			precursor
 		end
 
+feature -- Status report
+
+	has_self_initializing_code: BOOLEAN
+			-- Has current attribute code for self-initialization?
+			-- If it has just pre- and postconditions, then we consider
+			-- that it is not a declaration for self-initialization.
+		do
+			Result := locals /= Void or else rescue_clause /= Void or else
+				attached compound as l_compound and then l_compound.has_non_null_instruction
+		end
+
 feature -- Access
 
 	obsolete_message: detachable ET_OBSOLETE

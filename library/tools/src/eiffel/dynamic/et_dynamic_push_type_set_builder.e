@@ -32,6 +32,7 @@ inherit
 			propagate_call_agent_result_dynamic_types,
 			propagate_cap_dynamic_types,
 			propagate_creation_dynamic_type,
+			propagate_extended_attribute_result_dynamic_types,
 			propagate_if_expression_dynamic_types,
 			propagate_inline_agent_result_dynamic_types,
 			propagate_inspect_expression_dynamic_types,
@@ -658,6 +659,15 @@ feature {NONE} -- Implementation
 			else
 				a_creation_type.put_target (l_target_type_set, current_dynamic_system)
 			end
+		end
+
+	propagate_extended_attribute_result_dynamic_types (a_result_type_set, a_attribute_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_result_type_set' (the dynamic type
+			-- set of the entity 'Result' in the body of the extended attribute
+			-- `current_dynamic_feature') to `a_attribute_type_set' (the dynamic
+			-- type set of this attribute when accessed from other routines).
+		do
+			a_result_type_set.put_target (a_attribute_type_set, current_dynamic_system)
 		end
 
 	propagate_if_expression_dynamic_types (a_if_expression: ET_IF_EXPRESSION; a_sub_expression: ET_EXPRESSION; a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)

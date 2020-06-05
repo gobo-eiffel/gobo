@@ -35,6 +35,7 @@ inherit
 			propagate_call_agent_result_dynamic_types,
 			propagate_cap_dynamic_types,
 			propagate_creation_dynamic_type,
+			propagate_extended_attribute_result_dynamic_types,
 			propagate_if_expression_dynamic_types,
 			propagate_inline_agent_result_dynamic_types,
 			propagate_inspect_expression_dynamic_types,
@@ -1198,6 +1199,20 @@ feature {NONE} -- Implementation
 			elseif not l_target_type_set.is_expanded then
 				create l_attachment.make (a_creation_type, a_creation, current_dynamic_feature, current_dynamic_type)
 				l_target_type_set.put_source (l_attachment, current_dynamic_system)
+			end
+		end
+
+	propagate_extended_attribute_result_dynamic_types (a_result_type_set, a_attribute_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_result_type_set' (the dynamic type
+			-- set of the entity 'Result' in the body of the extended attribute
+			-- `current_dynamic_feature') to `a_attribute_type_set' (the dynamic
+			-- type set of this attribute when accessed from other routines).
+		local
+			l_attachment: ET_DYNAMIC_EXTENDED_ATTRIBUTE_RESULT_ATTACHMENT
+		do
+			if not a_attribute_type_set.is_expanded then
+				create l_attachment.make (a_result_type_set, current_dynamic_feature, current_dynamic_type)
+				a_attribute_type_set.put_source (l_attachment, current_dynamic_system)
 			end
 		end
 
