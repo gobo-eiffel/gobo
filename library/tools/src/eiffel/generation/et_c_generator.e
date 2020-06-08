@@ -5849,10 +5849,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif in_static_feature then
-				print_internal_routine (a_feature, False)
+				print_internal_feature (a_feature, False)
 			else
 				if current_feature.is_regular then
-					print_internal_routine (a_feature, False)
+					print_internal_feature (a_feature, False)
 				end
 				if current_feature.is_address then
 					print_address_routine (a_feature)
@@ -5870,13 +5870,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif in_static_feature then
-				print_internal_routine (a_feature, False)
+				print_internal_feature (a_feature, False)
 			else
 				if current_feature.is_regular then
-					print_internal_routine (a_feature, False)
+					print_internal_feature (a_feature, False)
 				end
 				if current_feature.is_creation then
-					print_internal_routine (a_feature, True)
+					print_internal_feature (a_feature, True)
 				end
 				if current_feature.is_address then
 					print_address_routine (a_feature)
@@ -5884,7 +5884,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			end
 		end
 
-	print_internal_routine (a_feature: ET_INTERNAL_ROUTINE; a_creation: BOOLEAN)
+	print_internal_feature (a_feature: ET_INTERNAL_FEATURE; a_creation: BOOLEAN)
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -5907,6 +5907,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_once_prefix: detachable STRING
 			l_is_once: BOOLEAN
 			l_is_once_per_process: BOOLEAN
+			l_is_self_initialized_attribute: BOOLEAN
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -6185,6 +6186,29 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_character ('}')
 					current_file.put_new_line
 				end
+			elseif a_feature.is_attribute then
+					-- Self-initialized attribute.
+				l_is_self_initialized_attribute := True
+					-- Return the value of the attribute if already initialized.
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_attribute_access (current_feature, tokens.current_keyword, current_type, False)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				print_attribute_access (current_feature, tokens.current_keyword, current_type, False)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
 			end
 				-- Call stack.
 			if exception_trace_mode and then not l_is_empty then
@@ -6215,7 +6239,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_new_line
 				end
 			end
-			print_internal_routine_body_declaration (a_feature, l_result_type)
+			print_internal_feature_body_declaration (a_feature, l_result_type)
 			print_feature_trace_message_call (False)
 				-- Call stack.
 			if exception_trace_mode and then not l_is_empty then
@@ -6254,6 +6278,16 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					print_assign_completed_to_once_status (current_feature, l_once_kind, l_once_index)
 					print_once_mutex_unlock (current_feature, l_once_kind, l_once_index)
 				end
+			elseif l_is_self_initialized_attribute then
+					-- Record value of self-initialized attribute.
+				print_indentation
+				print_attribute_access (current_feature, tokens.current_keyword, current_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 			if l_result_type /= Void then
 				print_return_statement (a_feature)
@@ -6281,7 +6315,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			flush_to_c_file
 		end
 
-	print_internal_routine_body_declaration (a_feature: ET_INTERNAL_ROUTINE_CLOSURE; a_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE)
+	print_internal_feature_body_declaration (a_feature: ET_INTERNAL_FEATURE_CLOSURE; a_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE)
 			-- Print the local variables declaration, the compound and the
 			-- rescue clause of `a_feature' to `current_file'.
 		require
@@ -6591,10 +6625,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure: once
 			a_feature_not_void: a_feature /= Void
 		do
 			if a_feature.has_self_initializing_code then
--- TODO
-error_handler.report_warning_message ("ET_C_GENERATOR.print_extended_attribute: initialization not supported yet.")
+				print_internal_feature (a_feature, False)
+			else
+				print_attribute (a_feature)
 			end
-			print_attribute (a_feature)
 		end
 
 	print_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
@@ -13442,7 +13476,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 					error_handler.report_giaaa_error
 				else
 					l_call_type := l_call_type_set.static_type.primary_type
-					if l_dynamic_feature.is_attribute then
+					if
+						l_dynamic_feature.is_attribute and then
+						(not attached {ET_EXTENDED_ATTRIBUTE} l_dynamic_feature.static_feature as l_extended_attribute or else
+						not l_extended_attribute.has_self_initializing_code or else
+						not attached l_dynamic_feature.result_type_set as l_result_type_set or else
+						l_result_type_set.static_type.is_self_initializing)
+					then
+							-- This is an attribute for which there is not self-initialization code
+							-- to be executed.
 						if in_operand then
 							operand_stack.force (a_call)
 						elseif l_dynamic_feature.is_builtin then
@@ -14859,6 +14901,23 @@ feature {NONE} -- Query call generation
 				current_file.put_character ('(')
 				current_file.put_integer (l_unique_attribute.constant.to_integer_32)
 				current_file.put_character (')')
+			elseif attached {ET_EXTENDED_ATTRIBUTE} l_static_query as l_attribute then
+				if not l_attribute.has_self_initializing_code then
+						-- No attribute initialization code.
+						-- This is a regular attribute, possibly with assertions
+						-- or a 'note' clause.
+					l_target := call_operands.first
+					print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
+				elseif l_result_type_set.static_type.is_self_initializing then
+						-- The semantics rule MEVS, in ECMA-367 3-36, section 8.19.20,
+						-- says that the attribute initialization code is not executed
+						-- if the type of the attribute is self-initializing.
+					l_target := call_operands.first
+					print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
+				else
+						-- Self-initialization code for this attribute.
+					print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+				end
 			elseif attached {ET_ATTRIBUTE} l_static_query as l_attribute then
 				l_target := call_operands.first
 				print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
@@ -16872,7 +16931,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				l_result_type_set := dynamic_type_set (l_result)
 				l_result_type := l_result_type_set.static_type.primary_type
 			end
-			print_internal_routine_body_declaration (an_agent, l_result_type)
+			print_internal_feature_body_declaration (an_agent, l_result_type)
 			print_agent_trace_message_call (an_agent, False)
 		end
 
@@ -32477,12 +32536,6 @@ feature {NONE} -- Type generation
 						a_file.put_character ('/')
 						a_file.put_new_line
 						l_empty_struct := False
-						if attached {ET_EXTENDED_ATTRIBUTE} l_query.static_feature as l_extended_attribute then
-							if (attached l_extended_attribute.compound as l_compound and then not l_compound.is_empty) or else l_extended_attribute.locals /= Void or else l_extended_attribute.rescue_clause /= Void then
--- TODO
-error_handler.report_warning_message ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.static_feature.lower_name + ": initialization not supported yet.")
-							end
-						end
 					end
 					i := i + 1
 				end
@@ -34719,7 +34772,7 @@ feature {NONE} -- String generation
 
 feature {NONE} -- Misc C code
 
-	print_return_statement (a_feature: ET_INTERNAL_ROUTINE)
+	print_return_statement (a_feature: ET_INTERNAL_FEATURE)
 			-- Print C instruction to return the result of `a_feature'
 			-- if it is a function, or just an empty return if it's
 			-- a procedure.

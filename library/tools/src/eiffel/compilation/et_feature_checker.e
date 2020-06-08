@@ -1397,7 +1397,20 @@ feature {NONE} -- Feature validity
 								error_handler.report_vevi0e_error (current_class, current_class_impl, a_feature)
 							end
 						end
+						if l_type.is_type_self_initializing (current_type) then
+								-- The self-initializing code will never be executed
+								-- because the type of the attribute type is self-initializing
+								-- (see semantics rule MEVS, in ECMA-367 3-36, section 8.19.20).
+								-- This is not considered as a fatal error.
+							error_handler.report_vwab0a_error (current_class, current_class_impl, a_feature)
+						end
 					end
+				elseif l_type.is_type_self_initializing (current_type) then
+						-- The self-initializing code will never be executed
+						-- because the type of the attribute type is self-initializing
+						-- (see semantics rule MEVS, in ECMA-367 3-36, section 8.19.20).
+						-- This is not considered as a fatal error.
+					error_handler.report_vwab0a_error (current_class, current_class_impl, a_feature)
 				end
 				if l_rescue_compound /= Void then
 					if current_system.attachment_type_conformance_mode then

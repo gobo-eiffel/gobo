@@ -5,7 +5,7 @@ note
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -473,6 +473,33 @@ feature -- Status report
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := not is_type_attached_with_type_mark (a_type_mark, a_context)
+		end
+
+	is_type_self_initializing (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is current type self-initializing when viewed from `a_context'?
+			--
+			-- It is currently limited to detachable types and expanded types
+			-- in order to match ISE's implementation (as of ISE 20.03.10.3992).
+			-- The ECMA standard says that attached type with 'default_create'
+			-- as creation procedure are also self-initializing (see DEST,
+			-- section 8.19.13, page 106 of ECMA-367 3-36).
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_type_self_initializing_with_type_mark (Void, a_context)
+		end
+
+	is_type_self_initializing_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_self_initializing' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_type_expanded_with_type_mark (a_type_mark, a_context) or is_type_detachable_with_type_mark (a_type_mark, a_context)
 		end
 
 	has_anchored_type: BOOLEAN

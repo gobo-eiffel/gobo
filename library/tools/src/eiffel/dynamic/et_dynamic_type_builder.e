@@ -2548,13 +2548,11 @@ feature {NONE} -- Event handling
 						-- in this case.
 					dynamic_type_sets.force_last (l_result_type_set)
 					attached_result_index := dynamic_type_sets.count
-					if l_extended_attribute.has_self_initializing_code then
-						if l_dynamic_type /= l_dynamic_type.primary_type then
-								-- The type is not detachable nor expanded.
-								-- ISE does not execute self-initialization code when the
-								-- type of the attribute is detachable or expanded.
-							propagate_extended_attribute_result_dynamic_types (l_result_type_set, l_attribute_dynamic_type_set)
-						end
+					if l_extended_attribute.has_self_initializing_code and not l_dynamic_type.is_self_initializing then
+							-- The semantics rule MEVS, in ECMA-367 3-36, section 8.19.20,
+							-- says that the attribute initialization code is not executed
+							-- if the type of the attribute is self-initializing.
+						propagate_extended_attribute_result_dynamic_types (l_result_type_set, l_attribute_dynamic_type_set)
 					end
 				end
 			end

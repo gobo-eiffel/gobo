@@ -153,6 +153,7 @@ inherit
 			reportable_vuta2_error,
 			reportable_vvok1_error,
 			reportable_vvok2_error,
+			reportable_vwab_error,
 			reportable_vwbe_error,
 			reportable_vwce_error,
 			reportable_vweq_error,
@@ -1149,6 +1150,13 @@ feature -- Validity error status
 
 	reportable_vvok2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VVOK-2 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vwab_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWAB error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

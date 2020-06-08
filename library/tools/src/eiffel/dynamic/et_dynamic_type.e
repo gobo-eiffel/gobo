@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,6 +65,17 @@ feature -- Status report
 			Result := base_class.is_basic
 		ensure
 			definition: Result = base_class.is_basic
+		end
+
+	is_self_initializing: BOOLEAN
+			-- Is current type self-initializing?
+			--
+			-- It is currently limited to detachable types and expanded types
+			-- in order to match ISE's implementation (as of ISE 20.03.10.3992).
+			-- The ECMA standard says that attached type with 'default_create'
+			-- as creation procedure are also self-initializing (see DEST,
+			-- section 8.19.13, page 106 of ECMA-367 3-36).
+		deferred
 		end
 
 	has_type (a_type: ET_DYNAMIC_PRIMARY_TYPE): BOOLEAN

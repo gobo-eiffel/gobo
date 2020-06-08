@@ -314,6 +314,7 @@ create
 	make_vvok1c,
 	make_vvok2a,
 	make_vvok2b,
+	make_vwab0a,
 	make_vwbe0a,
 	make_vwce0a,
 	make_vweq0a,
@@ -13884,6 +13885,50 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = once indexing term
 		end
 
+	make_vwab0a (a_class, a_class_impl: ET_CLASS; a_attribute: ET_EXTENDED_ATTRIBUTE)
+			-- Create a new VWAB warning: the self-initializing code for
+			-- attribute `a_attribute' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself),
+			-- will never be executed because its type is either detachable
+			-- or expanded.
+			--
+			-- Not in ECMA, only in ISE (as of ISE 20.03.10.3992).
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.position
+			code := template_code (vwab0a_template_code)
+			etl_code := vwab_etl_code
+			default_template := default_message_template (vwab0a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of attribute
+		end
+
 	make_vwbe0a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Create a new VWBE error: the boolean expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants
@@ -16637,6 +16682,7 @@ feature {NONE} -- Implementation
 	vvok1c_default_template: STRING = "indexing once status %"$6%" and %"$7%" cannot be combined."
 	vvok2a_default_template: STRING = "once key %"$6%" is not supported. The supported once keys are %"THREAD%", %"PROCESS%" and %"OBJECT%"."
 	vvok2b_default_template: STRING = "indexing once status %"$6%" is not supported. Use one of the supported once keys %"THREAD%", %"PROCESS%" or %"OBJECT%"."
+	vwab0a_default_template: STRING = "self-initializing code for attribue `$7' will never be executed because its type is either detachable or expanded."
 	vwbe0a_default_template: STRING = "boolean expression of non-BOOLEAN type '$7'."
 	vwce0a_default_template: STRING = "expressions of types '$8' and '$7' in branches of conditional expression do not conform to each other."
 	vweq0a_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms nor converts to the other."
@@ -16818,6 +16864,7 @@ feature {NONE} -- Implementation
 	vuta2_etl_code: STRING = "VUTA-2"
 	vvok1_etl_code: STRING = "VVOK-1"
 	vvok2_etl_code: STRING = "VVOK-2"
+	vwab_etl_code: STRING = "VWAB"
 	vwbe_etl_code: STRING = "VWBE"
 	vwce_etl_code: STRING = "VWCE"
 	vweq_etl_code: STRING = "VWEQ"
@@ -17165,6 +17212,7 @@ feature {NONE} -- Implementation
 	vvok1c_template_code: STRING = "vvok1c"
 	vvok2a_template_code: STRING = "vvok2a"
 	vvok2b_template_code: STRING = "vvok2b"
+	vwab0a_template_code: STRING = "vwab0a"
 	vwbe0a_template_code: STRING = "vwbe0a"
 	vwce0a_template_code: STRING = "vwce0a"
 	vweq0a_template_code: STRING = "vweq0a"

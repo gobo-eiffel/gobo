@@ -7141,6 +7141,28 @@ feature -- Validity errors
 			end
 		end
 
+	report_vwab0a_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_EXTENDED_ATTRIBUTE)
+			-- Report VWAB warning: the self-initializing code for
+			-- attribute `a_attribute' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself),
+			-- will never be executed because its type is either detachable
+			-- or expanded.
+			--
+			-- Not in ECMA, only in ISE (as of ISE 20.03.10.3992).
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwab_error (a_class) then
+				create l_error.make_vwab0a (a_class, a_class_impl, a_attribute)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_vwbe0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Report VWBE error: the boolean expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants
@@ -9456,6 +9478,16 @@ feature -- Validity error status
 
 	reportable_vvok2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VVOK-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vwab_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWAB error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+
+Warning code: VWAB
+
+Warning: attribute body is never executed because the type of the attribute is self-initializing (i.e. expanded or detachable).
+What to do: remove any instructions in the attribute body.
+
+Class: AA
+Feature: f
+Line: 23
+      attribute
+->      print ("Self-initialization of f%N")
+        Result := "foo"
+
+-------------------------------------------------------------------------------
+Void

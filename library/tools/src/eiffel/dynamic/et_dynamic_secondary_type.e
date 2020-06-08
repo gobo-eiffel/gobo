@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,6 +47,19 @@ feature -- Status report
 			-- Is current type expanded?
 		do
 			Result := primary_type.base_type.is_expanded
+		end
+
+	is_self_initializing: BOOLEAN
+			-- Is current type self-initializing?
+			--
+			-- It is currently limited to detachable types and expanded types
+			-- in order to match ISE's implementation (as of ISE 20.03.10.3992).
+			-- The ECMA standard says that attached type with 'default_create'
+			-- as creation procedure are also self-initializing (see DEST,
+			-- section 8.19.13, page 106 of ECMA-367 3-36).
+		do
+			Result := not attached type_mark as l_type_mark or else
+				not l_type_mark.is_attached_mark or else is_expanded
 		end
 
 feature -- Access

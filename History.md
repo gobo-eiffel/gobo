@@ -2,6 +2,10 @@
 
 ## Version ?? - ??
 
+### gec
+
+* Added runtime support for attributes with self-initializing code.
+
 ### Gobo Eiffel Tools Library
 
 * Improved processing of conversion expressions.
