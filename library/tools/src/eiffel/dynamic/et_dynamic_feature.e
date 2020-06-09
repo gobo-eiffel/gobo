@@ -5,7 +5,7 @@ note
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -382,6 +382,15 @@ feature -- Status report
 			Result := static_feature.is_once_per_process
 		ensure
 			definition: Result = static_feature.is_once_per_process
+			is_once: Result implies is_once
+		end
+
+	is_once_per_object: BOOLEAN
+			-- Is current feature a once-per-object routine?
+		do
+			Result := static_feature.is_once_per_object
+		ensure
+			definition: Result = static_feature.is_once_per_object
 			is_once: Result implies is_once
 		end
 

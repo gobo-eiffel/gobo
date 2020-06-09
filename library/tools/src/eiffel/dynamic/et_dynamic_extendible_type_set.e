@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets to which new types can be added"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +46,23 @@ feature -- Status report
 				end
 			else
 				Result := precursor (a_type)
+			end
+		end
+
+	has_once_per_object_routines: BOOLEAN
+			-- Is there a type in current type set which contains once-per-object routines?
+		local
+			i: INTEGER
+		do
+			if attached dynamic_types as l_dynamic_types then
+				from i := count until i < 1 loop
+					if l_dynamic_types.dynamic_type (i).has_once_per_object_routines then
+						Result := True
+						i := 0 -- JUmp out of the loop.
+					else
+						i := i - 1
+					end
+				end
 			end
 		end
 

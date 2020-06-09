@@ -271,6 +271,9 @@ feature -- Features
 			-- in its instances. That's why we need to know whether the current type has such
 			-- kind of attributes.
 
+	has_once_per_object_routines: BOOLEAN
+			-- Does current type contain once-per-object routines?
+
 	queries: ET_DYNAMIC_FEATURE_LIST
 			-- Queries executed at run-time, if any
 			-- (Note that attributes are stored first, from 1 to `attribute_count'.)
@@ -306,7 +309,7 @@ feature -- Features
 				if Result.is_attribute then
 					put_attribute (Result, a_system)
 				else
-					queries.force_last (Result)
+					put_function (Result)
 				end
 			end
 		ensure
@@ -339,7 +342,7 @@ feature -- Features
 			else
 				Result := new_dynamic_procedure (a_procedure, a_system)
 				register_feature_seeds (Result, l_procedures_by_seed)
-				procedures.force_last (Result)
+				put_procedure (Result)
 			end
 		ensure
 			dynamic_procedure_not_void: Result /= Void
@@ -373,7 +376,7 @@ feature -- Features
 				if Result.is_attribute then
 					put_attribute (Result, a_system)
 				else
-					queries.force_last (Result)
+					put_function (Result)
 				end
 			end
 		ensure
@@ -404,7 +407,7 @@ feature -- Features
 			elseif attached base_class.seeded_procedure (a_seed) as l_procedure then
 				Result := new_dynamic_procedure (l_procedure, a_system)
 				register_feature_seeds (Result, l_procedures_by_seed)
-				procedures.force_last (Result)
+				put_procedure (Result)
 			end
 		ensure
 			is_procedure: Result /= Void implies Result.is_procedure
@@ -561,7 +564,9 @@ feature {NONE} -- Features
 				queries.force_last (queries.item (attribute_count))
 				queries.put (an_attribute, attribute_count)
 			end
-			if not attached an_attribute.result_type_set as l_result_type_set then
+			if has_reference_attributes and has_generic_expanded_attributes then
+				-- Already set.
+			elseif not attached an_attribute.result_type_set as l_result_type_set then
 					-- Should never happen. The precondition says that `an_attribute'
 					-- is a query, an therefore has a result type set.
 				check is_query: False end
@@ -580,6 +585,31 @@ feature {NONE} -- Features
 			one_more: attribute_count = old attribute_count + 1
 			reference_attribute: (attached an_attribute.result_type_set as l_result_type_set and then not l_result_type_set.is_expanded) implies has_reference_attributes
 			generic_expanded_attribute: (attached an_attribute.result_type_set as l_result_type_set and then l_result_type_set.is_expanded and then l_result_type_set.static_type.primary_type.is_generic) implies has_generic_expanded_attributes
+		end
+
+	put_function (a_function: ET_DYNAMIC_FEATURE)
+			-- Add `a_function' to `queries'.
+		require
+			a_function_not_void: a_function /= Void
+			is_function: not a_function.is_attribute
+			is_query: a_function.is_query
+		do
+			queries.force_last (a_function)
+			if not has_once_per_object_routines then
+				has_once_per_object_routines := a_function.is_once_per_object
+			end
+		end
+
+	put_procedure (a_procedure: ET_DYNAMIC_FEATURE)
+			-- Add `a_procedure' to `procedures'.
+		require
+			a_procedure_not_void: a_procedure /= Void
+			is_procedure: a_procedure.is_procedure
+		do
+			procedures.force_last (a_procedure)
+			if not has_once_per_object_routines then
+				has_once_per_object_routines := a_procedure.is_once_per_object
+			end
 		end
 
 	queries_by_seed: detachable DS_HASH_TABLE [ET_DYNAMIC_FEATURE, INTEGER]
