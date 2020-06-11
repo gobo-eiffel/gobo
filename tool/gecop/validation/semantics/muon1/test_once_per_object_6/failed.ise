@@ -1,0 +1,5 @@
+b1 is equal to b2: True
+Calling g
+b1 is equal to b2: True
+Calling f
+b1 is equal to b2: False

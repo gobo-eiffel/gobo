@@ -1,0 +1,8 @@
+First call to f
+Calling f
+Second call to f
+Second call was block by first call
+End of first call to f
+Value of second call: bar
+Value of first call: bar
+End of second call to f

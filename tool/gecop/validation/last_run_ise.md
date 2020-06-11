@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     193 tests
-    # FAILED:     60 tests
+    # Passed:     238 tests
+    # FAILED:     67 tests
     # Aborted:    0 test
-    # Total:      253 tests
+    # Total:      305 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo/test\_close\_repeat\_1](definition/difo/test\_close\_repeat\_1)\] test\_failed</br>
@@ -23,6 +23,13 @@ FAIL:  \[[definition/dlcf3/test\_export\_all\_redeclared\_1](definition/dlcf3/te
 FAIL:  \[[definition/dlcf3/test\_export\_all\_repeated\_1](definition/dlcf3/test\_export\_all\_repeated\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_f\_redeclared\_1](definition/dlcf3/test\_export\_f\_redeclared\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_f\_repeated\_1](definition/dlcf3/test\_export\_f\_repeated\_1)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_3](semantics/muon1/test\_once\_per\_object\_3)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_4](semantics/muon1/test\_once\_per\_object\_4)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_5](semantics/muon1/test\_once\_per\_object\_5)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_6](semantics/muon1/test\_once\_per\_object\_6)\] test\_failed</br>
+FAIL:  \[[semantics/muon3/test\_once\_per\_object\_4](semantics/muon3/test\_once\_per\_object\_4)\] test\_failed</br>
+FAIL:  \[[semantics/muon4/test\_once\_per\_object\_2](semantics/muon4/test\_once\_per\_object\_2)\] test\_failed</br>
+FAIL:  \[[semantics/muon4/test\_once\_per\_object\_4](semantics/muon4/test\_once\_per\_object\_4)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test11](validity/vape1/test11)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test13](validity/vape1/test13)\] test\_failed</br>

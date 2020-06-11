@@ -1,0 +1,5 @@
+First call to f
+Calling f
+Second (recursive) call to f
+Value of second call: Void
+Value of first call: bar
