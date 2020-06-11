@@ -4,8 +4,8 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     191 tests
-    # FAILED:     62 tests
+    # Passed:     193 tests
+    # FAILED:     60 tests
     # Aborted:    0 test
     # Total:      253 tests
 
@@ -15,10 +15,8 @@ FAIL:  \[[definition/difo/test\_open\_repeat\_1](definition/difo/test\_open\_rep
 FAIL:  \[[definition/difo/test\_tilde\_1](definition/difo/test\_tilde\_1)\] test\_failed</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
 FAIL:  \[[definition/difo1/test\_close\_repeat\_2](definition/difo1/test\_close\_repeat\_2)\] test\_failed</br>
-FAIL:  \[[definition/difo1/test\_for\_all\_1](definition/difo1/test\_for\_all\_1)\] test\_failed</br>
 FAIL:  \[[definition/difo1/test\_for\_all\_2](definition/difo1/test\_for\_all\_2)\] test\_failed</br>
 FAIL:  \[[definition/difo1/test\_open\_repeat\_2](definition/difo1/test\_open\_repeat\_2)\] test\_failed</br>
-FAIL:  \[[definition/difo1/test\_there\_exists\_1](definition/difo1/test\_there\_exists\_1)\] test\_failed</br>
 FAIL:  \[[definition/difo1/test\_there\_exists\_2](definition/difo1/test\_there\_exists\_2)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_all\_f\_repeated\_1](definition/dlcf3/test\_export\_all\_f\_repeated\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_all\_redeclared\_1](definition/dlcf3/test\_export\_all\_redeclared\_1)\] test\_failed</br>
