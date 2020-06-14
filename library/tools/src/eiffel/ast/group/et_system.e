@@ -342,6 +342,10 @@ feature -- Compilation options
 			-- and comparing NaN with another NaN will yield True and not False
 			-- as usually done in IEEE arithmetic?
 
+	line_generation_mode: BOOLEAN
+			-- Should information about positions of constructs in the Eiffel code
+			-- be included in the generated C code (e.g. using #line clauses)?
+
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 
@@ -425,6 +429,14 @@ feature -- Compilation options setting
 			total_order_on_reals_mode := b
 		ensure
 			total_order_on_reals_mode_set: total_order_on_reals_mode = b
+		end
+
+	set_line_generation_mode (b: BOOLEAN)
+			-- Set `line_generation_mode' to `b'.
+		do
+			line_generation_mode := b
+		ensure
+			line_generation_mode_set: line_generation_mode = b
 		end
 
 	set_use_boehm_gc (b: BOOLEAN)

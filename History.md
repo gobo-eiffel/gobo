@@ -5,6 +5,8 @@
 ### gec
 
 * Added runtime support for attributes with self-initializing code.
+* Added support for the ECF setting `line_generation`, with
+  preprocessor statements `#line` now included in the generated C code.
 
 ### Gobo Eiffel Tools Library
 

@@ -515,6 +515,11 @@ feature -- Basic operations
 			if l_value /= Void and then l_value.is_boolean then
 				a_system.set_total_order_on_reals_mode (l_value.to_boolean)
 			end
+				-- "line_generation".
+			l_value := settings.value ({ET_ECF_SETTING_NAMES}.line_generation_setting_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_system.set_line_generation_mode (l_value.to_boolean)
+			end
 		end
 
 	fill_capabilities (a_system: ET_ECF_SYSTEM)

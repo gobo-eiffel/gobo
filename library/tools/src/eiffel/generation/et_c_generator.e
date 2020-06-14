@@ -316,6 +316,13 @@ feature -- Compilation options
 			Result := current_system.total_order_on_reals_mode
 		end
 
+	line_generation_mode: BOOLEAN
+			-- Should information about positions of constructs in the Eiffel code
+			-- be included in the generated C code (e.g. using #line clauses)?
+		do
+			Result := current_system.line_generation_mode
+		end
+
 	current_in_exception_trace: BOOLEAN = False
 			-- Should address of current object be displayed when generating an exception trace?
 
@@ -6909,6 +6916,9 @@ feature {NONE} -- Instruction generation
 			l_once_kind: INTEGER
 			l_once_index: INTEGER
 		do
+			if line_generation_mode then
+				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+			end
 			l_source := an_instruction.source
 			l_source_type_set := dynamic_type_set (l_source)
 			l_target := an_instruction.target
@@ -6982,6 +6992,9 @@ feature {NONE} -- Instruction generation
 			l_once_index: INTEGER
 			l_once_kind: INTEGER
 		do
+			if line_generation_mode then
+				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+			end
 			l_source := an_instruction.source
 			l_source_type_set := dynamic_type_set (l_source)
 			l_source_type := l_source_type_set.static_type
@@ -7249,6 +7262,9 @@ feature {NONE} -- Instruction generation
 			i, nb: INTEGER
 		do
 			if attached an_instruction.then_compound as l_then_compound then
+				if line_generation_mode then
+					print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+				end
 				print_indentation
 				current_file.put_character ('{')
 				current_file.put_new_line
@@ -7282,6 +7298,7 @@ feature {NONE} -- Instruction generation
 						dedent
 						print_indentation
 						current_file.put_character ('}')
+						current_file.put_new_line
 					end
 					i := i + 1
 				end
@@ -7334,6 +7351,9 @@ feature {NONE} -- Instruction generation
 			l_once_index: INTEGER
 			l_once_kind: INTEGER
 		do
+			if line_generation_mode then
+				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+			end
 				-- Look for the dynamic type of the creation type.
 			l_target := an_instruction.target
 			if attached an_instruction.type as l_type then
@@ -7429,6 +7449,9 @@ feature {NONE} -- Instruction generation
 			l_elseif: ET_ELSEIF_PART
 			i, nb: INTEGER
 		do
+			if line_generation_mode then
+				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+			end
 			print_operand (an_instruction.expression)
 			fill_call_operands (1)
 			print_indentation
@@ -7457,6 +7480,9 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (' ')
 					current_file.put_character ('{')
 					current_file.put_new_line
+					if line_generation_mode then
+						print_position (l_elseif.position, current_feature.static_feature.implementation_class)
+					end
 					indent
 					print_operand (l_elseif.expression)
 					fill_call_operands (1)
@@ -7527,6 +7553,9 @@ feature {NONE} -- Instruction generation
 			l_stop: BOOLEAN
 		do
 -- TODO.
+			if line_generation_mode then
+				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+			end
 			l_expression := an_instruction.conditional.expression
 			l_value_type_set := dynamic_type_set (l_expression)
 			l_value_type := l_value_type_set.static_type.primary_type
@@ -7546,6 +7575,9 @@ feature {NONE} -- Instruction generation
 				nb := l_when_parts.count
 				from i := 1 until i > nb loop
 					l_when_part := l_when_parts.item (i)
+					if line_generation_mode then
+						print_position (l_when_part.position, current_feature.static_feature.implementation_class)
+					end
 					l_choices := l_when_part.choices
 					nb2 := l_choices.count
 					if nb2 = 0 then
@@ -7769,6 +7801,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_cursor_type: ET_DYNAMIC_TYPE
 			l_cursor_type_set: ET_DYNAMIC_TYPE_SET
 		do
+			if line_generation_mode then
+				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+			end
 				-- Declaration of the iteration cursor.
 			l_cursor_name := an_instruction.unfolded_cursor_name
 			l_cursor_type_set := dynamic_type_set (l_cursor_name)
@@ -7863,8 +7898,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 		local
 			l_expression: ET_EXPRESSION
 		do
-			if attached an_instruction.from_compound as l_from_compound then
+			if attached an_instruction.from_compound as l_from_compound and then not l_from_compound.is_empty then
 				print_compound (l_from_compound)
+			elseif line_generation_mode then
+				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
 			end
 			print_indentation
 			current_file.put_string (c_while)
@@ -7877,6 +7914,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			current_file.put_new_line
 			indent
 			l_expression := an_instruction.until_expression
+			if line_generation_mode then
+				print_position (l_expression.position, current_feature.static_feature.implementation_class)
+			end
 			print_operand (l_expression)
 			fill_call_operands (1)
 			print_indentation
@@ -7925,6 +7965,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			had_error: BOOLEAN
 		do
+			if line_generation_mode then
+				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+			end
 			if attached an_instruction.arguments as l_actuals then
 				nb := l_actuals.count
 				from i := 1 until i > nb loop
@@ -8037,6 +8080,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_switch: BOOLEAN
 			l_printed: BOOLEAN
 		do
+			if line_generation_mode then
+				print_position (a_call.position, current_feature.static_feature.implementation_class)
+			end
 			l_target := a_call.target
 			l_name := a_call.name
 			l_actuals := a_call.arguments
@@ -8243,6 +8289,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
+			if line_generation_mode then
+				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+			end
 			print_indentation
 			current_file.put_string (c_ac)
 			current_file.put_string (c_arrow)
@@ -8312,6 +8361,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 		local
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
+			if line_generation_mode then
+				print_position (a_instruction.position, current_feature.static_feature.implementation_class)
+			end
 			l_target_type := current_dynamic_system.dynamic_primary_type (a_instruction.type, current_type.base_type)
 			print_instruction_static_call (l_target_type, a_instruction.name, a_instruction.arguments)
 		end
@@ -8381,6 +8433,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_seed: INTEGER
 			i, nb: INTEGER
 		do
+			if line_generation_mode then
+				print_position (a_call.position, current_feature.static_feature.implementation_class)
+			end
 			if in_static_feature then
 				print_instruction_static_call (current_type, a_call.name, a_call.arguments)
 			else
@@ -34790,6 +34845,27 @@ feature {NONE} -- Misc C code
 			current_file.put_new_line
 		end
 
+	print_position (a_position: ET_POSITION; a_class: ET_CLASS)
+			-- Print "#line" instruction corresponding to `a_position' in `a_class'.
+		require
+			a_position_not_void: a_position /= Void
+			a_class_not_void: a_class /= Void
+		local
+			l_line: INTEGER
+			l_filename: STRING
+		do
+			l_line := a_position.line
+			l_filename := a_class.filename
+			if l_line /= 0 and l_filename /= Void then
+				current_file.put_string (c_line)
+				current_file.put_character (' ')
+				current_file.put_integer (l_line)
+				current_file.put_character (' ')
+				print_escaped_string (l_filename)
+				current_file.put_new_line
+			end
+		end
+
 feature {NONE} -- Indentation
 
 	indentation: INTEGER
@@ -37518,6 +37594,7 @@ feature {NONE} -- Constants
 	c_int64_t: STRING = "int64_t"
 	c_is_special: STRING = "is_special"
 	c_last_rescue: STRING = "last_rescue"
+	c_line: STRING = "#line"
 	c_memcmp: STRING = "memcmp"
 	c_memcpy: STRING = "memcpy"
 	c_memset: STRING = "memset"
