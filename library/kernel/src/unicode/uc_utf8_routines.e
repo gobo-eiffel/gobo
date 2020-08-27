@@ -313,7 +313,7 @@ feature -- Access
 			a_byte3_is_encoded_next_byte: is_encoded_next_byte (a_byte3)
 			a_byte4_is_encoded_next_byte: is_encoded_next_byte (a_byte4)
 		do
-			Result := ((a_byte1.natural_32_code & 0x07) |<< 18) | ((a_byte3.natural_32_code & 0x3F) |<< 12) | ((a_byte3.natural_32_code & 0x3F) |<< 6) | (a_byte4.natural_32_code & 0x3F)
+			Result := ((a_byte1.natural_32_code & 0x07) |<< 18) | ((a_byte2.natural_32_code & 0x3F) |<< 12) | ((a_byte3.natural_32_code & 0x3F) |<< 6) | (a_byte4.natural_32_code & 0x3F)
 		ensure
 			instance_free: class
 		end
