@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			l_buffer.put (End_of_buffer_character, nb + 1)
 			l_buffer.put (End_of_buffer_character, nb + 2)
 			make_from_buffer (l_buffer)
+			count := nb
 		ensure
 			capacity_set: capacity = a_string.count
 			at_least_one: not a_string.is_empty implies count > 0
