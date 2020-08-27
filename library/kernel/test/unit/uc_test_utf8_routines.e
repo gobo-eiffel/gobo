@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2020, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -99,6 +99,12 @@ feature -- Tests
 			assert ("0xf4_0x80_0xc0_0x80", not utf8.valid_utf8 ("%/244/%/128/%/192/%/128/"))
 			assert ("0xf4_0x80_0x80_0xc0", not utf8.valid_utf8 ("%/244/%/128/%/128/%/192/"))
 			assert ("five_bytes", not utf8.valid_utf8 ("%/244/%/143/%/191/%/191/%/128/"))
+		end
+
+	test_four_byte_character_code
+			-- Test feature 'four_byte_character_code'.
+		do
+			assert_naturals_32_equal ("code_127001", 127001, utf8.four_byte_character_code ((0xF0).to_character_8, (0x9F).to_character_8, (0x80).to_character_8, (0x99).to_character_8))
 		end
 
 end
