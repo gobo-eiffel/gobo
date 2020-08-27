@@ -609,6 +609,68 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
+	assert_characters_32_equal (a_tag: STRING; expected, actual: CHARACTER_32)
+			-- Assert that `expected = actual'
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_message: STRING
+		do
+			assertions.add_assertion
+			if expected /= actual then
+				l_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_characters_32_equal (a_tag: STRING; expected, actual: CHARACTER_32)
+			-- Check that `expected = actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_characters_32_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_characters_32_not_equal (a_tag: STRING; expected, actual: CHARACTER_32)
+			-- Assert that `expected /= actual'
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_message: STRING
+		do
+			assertions.add_assertion
+			if expected = actual then
+				l_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_characters_32_not_equal (a_tag: STRING; expected, actual: CHARACTER_32)
+			-- Check that `expected /= actual'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_characters_32_not_equal (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_booleans_equal (a_tag: STRING; expected, actual: BOOLEAN)
 			-- Assert that `expected = actual'
 		require
