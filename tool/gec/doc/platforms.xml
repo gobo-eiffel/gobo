@@ -103,6 +103,13 @@ has already been used successfully:
 			<entry>64-bit, little endian, Tru64</entry>
 			<entry></entry>
 		</row>
+		<row>
+			<entry>Mac OS X</entry>
+			<entry>clang 11.0.3</entry>
+			<entry>64-bit x86</entry>
+			<entry></entry>
+		</row>
+
 	</tbody>
 	</tgroup>
 </table>

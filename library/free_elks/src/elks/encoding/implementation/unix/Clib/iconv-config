@@ -32,12 +32,20 @@ while test $# -gt 0; do
 		elif echo "$ISE_PLATFORM" | grep "windows" >/dev/null 2>&1; then
 			echo -liconv
 # mingw
+		elif [ uname = "Darwin" ]; then
+			echo -liconv
+		else # Potentially sensible default for unknown platform
+			echo -liconv
  		fi
 		;;
 		--include_path)
 		if echo "$ISE_PLATFORM" | grep "bsd" >/dev/null 2>&1; then
 			echo -I/usr/local/include
- 		fi
+ 		elif [ uname = "Darwin" ]; then
+			echo -I/usr/include/
+		else # Potentially sensible default for unknown platform 
+			echo -I/usr/local/include
+		fi
 		;;
 		*)
 		usage 1 1>&2
