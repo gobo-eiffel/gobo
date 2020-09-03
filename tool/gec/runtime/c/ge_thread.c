@@ -1332,12 +1332,13 @@ static void* GE_thread_routine(void* arg)
 
 	SIGBLOCK;
 	GE_unprotected_mutex_lock((EIF_POINTER)l_thread_context->parent_context->children_mutex);
+	/* Wait for the parent thread to set the thread id. */
+	GE_unprotected_mutex_unlock((EIF_POINTER)l_thread_context->parent_context->children_mutex);
 	l_context.thread = l_thread_context;
 	GE_thread_init_onces(&l_context);
 	GE_init_exception(&l_context);
 	GE_register_thread_context(&l_context);
 	GE_thread_set_priority(l_thread_context->thread_id, l_thread_context->initial_priority);
-	GE_unprotected_mutex_unlock((EIF_POINTER)l_thread_context->parent_context->children_mutex);
 	SIGRESUME;
 	l_thread_context->routine(l_thread_context->current);
 	GE_thread_exit();
@@ -1441,6 +1442,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 
 				SIGBLOCK;
 				GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
+					/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
 				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_thread_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
 					l_current_thread_context->last_thread_id = l_thread_id;
@@ -1458,6 +1460,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #elif defined EIF_WINDOWS
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
+			/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
 		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)attr->stack_size, GE_thread_routine, l_thread_context, 0, NULL);
 		if (l_thread_id == 0) {
 			GE_free(l_thread_context);
