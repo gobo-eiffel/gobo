@@ -314,7 +314,7 @@ ___________________________________________________________
 </project>
 ___________________________________________________________
 
-' ' produces:
+'geant -v -b depends1.eant' produces:
 ___________________________________________________________
 Loading Project's configuration from depends1.eant
 Building Project
