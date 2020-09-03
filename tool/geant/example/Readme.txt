@@ -1,6 +1,6 @@
 This document explains the individual geant examples and how to use them.
 It serves as a first draft version for the geant documentation.
-All examples should be invoked from the commandline.
+All examples should be invoked from the command line.
 
 geant syntax:
 
@@ -26,10 +26,10 @@ ___________________________________________________________
 	</project>
 ___________________________________________________________
 
-Since we do not provide a buildfile on the commandline the default
+Since we do not provide a build file on the command line the default
 name (build.eant) is used. With the option '-b' respectively
 '--buildfile' it is possible to use a different file.  There is no
-target specified on the commandline either. In this case geant tries
+target specified on the command line either. In this case geant tries
 to find a 'default' attribute in the <project> element by which the
 start target for the build process can be specified. When there is no
 default attribute geant gives up and terminates with the message
@@ -50,8 +50,8 @@ ___________________________________________________________
 
 A target can have an optional 'description' subelement which should
 describe briefly what the target does. It must be the first subelement.
-In a future version there will be a '--projecthelp' commandline option
-which will just list all the targetnames with its description without
+In a future version there will be a '--projecthelp' command line option
+which will just list all the target names with its description without
 starting the build process.
 
 A <target> element may contain zero or more task elements as direct
@@ -59,12 +59,12 @@ children. Each task element is executed in sequential order. The
 specific action which is performed is dependent on the individual
 tasks.
 
-The only task wich our 'hi' target contains is <echo>. <echo> has a
+The only task which our 'hi' target contains is <echo>. <echo> has a
 single attribute called 'message' and this message is printed to
 stdout. This is the reason why you see 'Hello world' on your screen.
 
 In the following sections all other examples are explained. We usually
-do not use 'build.eant' as filename for the examples since we have
+do not use 'build.eant' as a filename for the examples since we have
 mostly more than one build file in a directory.
 
 Variables:
@@ -75,7 +75,7 @@ Setting and querying a variable
 
 cd to examples/variables
 
-buildfile variable1.eant:
+build file variable1.eant:
 ___________________________________________________________
 <project name="variables1" default="var">
 	<target name="var">
@@ -99,11 +99,11 @@ ___________________________________________________________
 ___________________________________________________________
 
 With the <set> task a variable can be defined. The 'name' attribute specifies
-the name of the variable and the 'value' attribute it's value.
+the name of the variable and the 'value' attribute its value.
 The values of variables can be retrieved using the ${<variablename>} syntax.
 Thus ${who} in the examples returns 'world'.
 
-The value of a variable can be overridden by a -D option on the commandline
+The value of a variable can be overridden by a -D option on the command line.
 
 'geant -v -b variables1.eant -Dwho=Eiffel' produces:
 ___________________________________________________________
@@ -124,7 +124,7 @@ Cascading Variables:
 
 cd to examples/variables
 
-buildfile variables2.eant:
+build file variables2.eant:
 ___________________________________________________________
 <project name="variables2" default="var">
 	<target name="var">
@@ -136,7 +136,7 @@ ___________________________________________________________
 </project>
 ___________________________________________________________
 
-'geant -v -b variable2.eant' produces:
+'geant -v -b variables2.eant' produces:
 ___________________________________________________________
 Loading Project's configuration from variables2.eant
 Building Project
@@ -159,7 +159,7 @@ Demonstrates the <exec> task.
 
 cd to examples/exec
 
-	buildfile dir.eant (for windows):
+	build file dir.eant (for windows):
 ___________________________________________________________
 <project name="dir" default="dir">
 	<target name="dir">
@@ -198,10 +198,10 @@ ___________________________________________________________
 
 
 The exec task can be used as a general means to execute a command as
-one would do on the commandline. This can always be used when there
+one would do on the command line. This can always be used when there
 is no appropriate task available.
 The attribute 'executable' takes the exact string one would specify
-on the commandline after replacing possibly existing variables.
+on the command line after replacing possibly existing variables.
 
 call (unix):
 
@@ -209,14 +209,14 @@ call (unix):
 
 output:
 
-	the same output as a 'ls -l' command on the commandline would show.
+	the same output as a 'ls -l' command on the command line would show.
 
 geant:
 Demonstrates the <geant> task.
 
 cd to examples/geant
 
-buildfile geant1.eant:
+build file geant1.eant:
 ___________________________________________________________
 <project name="geant" default="one">
 	<target name="one">
@@ -277,16 +277,16 @@ ___________________________________________________________
 
 
 With the geant task other geant files can be invoked. This can be
-done in the within the same project scope (default behaviour) or in
+done in the within the same project scope (default behavior) or in
 a new project scope when the 'file' attribute is set to 'true'.
 At the moment the big difference is that for an invocation in the
 same scope all defined variables are still available in the called build
 file. The example makes this visible by displaying 'Hello ${who}'
-instead of 'Hello Bart' for the first <geant> invokation. The
+instead of 'Hello Bart' for the first <geant> invocation. The
 second <geant> invocation passes all variables and thats why you see
 'Hello Bart'.
 In the future <geant> will be able to take arguments which can be passed
-to the called build project exactly like you can do it on the commandline already.
+to the called build project exactly like you can do it on the command line already.
 
 
 depends:
@@ -314,7 +314,7 @@ ___________________________________________________________
 </project>
 ___________________________________________________________
 
-'geant -v -b depends1.eant' produces:
+' ' produces:
 ___________________________________________________________
 Loading Project's configuration from depends1.eant
 Building Project
@@ -328,7 +328,7 @@ depend_demo.B:
 
   [echo]
 B
-
+ 
 depend_demo.C:
 
   [echo]
@@ -387,7 +387,7 @@ C
 ___________________________________________________________
 
 As values of the 'if' and 'unless' XML attributes of target elements
-you can use variable values and environmentvariables. This
+you can use variable values and environment variables. This
 means the 'if' attribute returns true if the variable is defined
 otherwise true. The value of the variable does not matter. The same
 is true for 'unless' except that it returns true if it is not
@@ -440,9 +440,9 @@ get executed.
 The file unless1.eant contains the same examples but the if's have
 been replaced with unless's.
 
-condidional/if2:
-Demonstrates how we can use 'if' and 'unless' to create a os
-independent buildfile.
+conditional/if2:
+Demonstrates how we can use 'if' and 'unless' to create an OS
+independent build file.
 
 cd to examples/conditional.
 
@@ -497,7 +497,7 @@ Note:
 	'windir' exists that we are in a windows environment. Otherwise we
 	are on unix. This should be ok for most situations.
 
-File if3.eant basically has the same behaviour but introduces an
+File if3.eant basically has the same behavior but introduces an
 additional abstraction layer by introducing some variables defining
 the operating system:
 ___________________________________________________________
