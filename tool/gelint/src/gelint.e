@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,6 +51,8 @@ feature -- Execution
 				-- For compatibility with ISE's tools, define the environment
 				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
 			ise_variables.set_ise_library_variable
+				-- Also define the environment variable "$ISE_PLATFORM" if not set yet.
+			ise_variables.set_ise_platform_variable
 			create error_handler.make_standard
 			parse_arguments
 			l_filename := ecf_filename

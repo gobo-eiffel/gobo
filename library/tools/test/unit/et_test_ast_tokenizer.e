@@ -5,7 +5,7 @@ note
 		"Test features of class ET_AST_TOKENIZER"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,6 +85,8 @@ feature -- Test
 				-- For compatibility with ISE's tools, define the environment
 				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
 			ise_variables.set_ise_library_variable
+				-- Also define the environment variable "$ISE_PLATFORM" if not set yet.
+			ise_variables.set_ise_platform_variable
 			if eiffel_compiler.is_ise then
 				ise_version := ise_latest
 			elseif eiffel_compiler.is_ge then

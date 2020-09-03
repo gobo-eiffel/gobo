@@ -46,6 +46,8 @@ feature -- Execution
 				-- For compatibility with ISE's tools, define the environment
 				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
 			ise_variables.set_ise_library_variable
+				-- Also define the environment variable "$ISE_PLATFORM" if not set yet.
+			ise_variables.set_ise_platform_variable
 			create error_handler.make_standard
 			parse_arguments
 			if attached format as l_format then
