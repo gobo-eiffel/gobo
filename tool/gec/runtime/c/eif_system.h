@@ -4,7 +4,7 @@
 		""Part of ISE Eiffel runtime. Needed to compile class EXECUTION_ENVIRONMENT"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@
 
 #ifdef EIF_WINDOWS
 #include "Winbase.h"
-#elif defined(EIF_VMS) || defined(EIF_MACOSX)
+#elif defined(EIF_VMS)
 #include "sysctl.conf"
 #else
 #include <unistd.h>
