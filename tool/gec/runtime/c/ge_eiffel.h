@@ -52,9 +52,13 @@
 #endif
 
 /* See https://sourceforge.net/p/predef/wiki/OperatingSystems/ */
-#if (defined(macintosh) || defined(Macintosh) || \
-	(defined(__APPLE__) && defined(__MACH__)))
+#if (defined(macintosh) || defined(Macintosh))
+#define EIF_MAC 1
 #define EIF_MACOSX 1
+#endif
+#if (defined(__APPLE__) && defined(__MACH__))
+/* Apparently ISE does not define EIF_MASOSX for Mac OS X >=10.4 (see EXECUTION_ENVIRONMENT.available_cpu_count) */
+#define EIF_MAC 1
 #endif
 
 #if (defined(VMS) || defined(__VMS))
@@ -104,7 +108,7 @@
 #define EIF_IS_VMS EIF_FALSE
 #endif
 /* MAC definition */
-#ifdef EIF_MACOSX
+#ifdef EIF_MAC
 #define EIF_IS_MAC EIF_TRUE
 #undef EIF_OS
 #define EIF_OS EIF_OS_DARWIN

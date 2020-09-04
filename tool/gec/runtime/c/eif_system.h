@@ -18,7 +18,7 @@
 
 #ifdef EIF_WINDOWS
 #include "Winbase.h"
-#elif defined(EIF_VMS)
+#elif defined(EIF_VMS) || defined(EIF_MACOSX)
 #include "sysctl.conf"
 #else
 #include <unistd.h>
