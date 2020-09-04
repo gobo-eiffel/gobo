@@ -51,6 +51,20 @@
 #include <windows.h>
 #endif
 
+/* See https://sourceforge.net/p/predef/wiki/OperatingSystems/ */
+#if (defined(macintosh) || defined(Macintosh) || \
+	(defined(__APPLE__) && defined(__MACH__)))
+#define EIF_MACOSX 1
+#endif
+
+#if (defined(VMS) || defined(__VMS))
+#define EIF_VMS 1
+#endif
+
+#if (defined(__VXWORKS__) || defined(__vxworks))
+#define EIF_VXWORKS 1
+#endif
+
 #define BYTEORDER 0x1234
 
 #include <stdlib.h>
@@ -90,7 +104,7 @@
 #define EIF_IS_VMS EIF_FALSE
 #endif
 /* MAC definition */
-#ifdef EIF_MAC
+#ifdef EIF_MACOSX
 #define EIF_IS_MAC EIF_TRUE
 #undef EIF_OS
 #define EIF_OS EIF_OS_DARWIN
