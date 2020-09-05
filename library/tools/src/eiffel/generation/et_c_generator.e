@@ -133,6 +133,9 @@ inherit
 	KL_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
+	ET_SHARED_ISE_VARIABLES
+		export {NONE} all end
+
 	KL_IMPORTED_CHARACTER_ROUTINES
 		export {NONE} all end
 
@@ -643,6 +646,9 @@ feature {NONE} -- Compilation script generation
 					l_file.put_line ("@echo off")
 				else
 					l_file.put_line ("#!/bin/sh")
+					if attached ise_variables.ise_platform_value as l_ise_platform_value and then not l_ise_platform_value.is_empty then
+						l_file.put_line ("export " + ise_variables.ise_platform_variable + "=" + l_ise_platform_value)
+					end
 				end
 					-- Make files.
 				a_variables.search ("make")
