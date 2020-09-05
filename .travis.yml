@@ -11,8 +11,8 @@ branches:
   - /.*/
 
 os:
-  - linux
   - osx
+  - linux
 
 before_script:
   # Install Gobo Eiffel
