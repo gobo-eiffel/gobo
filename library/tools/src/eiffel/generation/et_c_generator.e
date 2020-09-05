@@ -647,7 +647,9 @@ feature {NONE} -- Compilation script generation
 				else
 					l_file.put_line ("#!/bin/sh")
 					if attached ise_variables.ise_platform_value as l_ise_platform_value and then not l_ise_platform_value.is_empty then
-						l_file.put_line ("export " + ise_variables.ise_platform_variable + "=" + l_ise_platform_value)
+							-- Set environment variable $ISE_PLATFORM only if it's not defined yet.
+							-- (See https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_03.html#sect_10_03_03)
+						l_file.put_line ("export " + ise_variables.ise_platform_variable + "=${" + ise_variables.ise_platform_variable + ":-" + l_ise_platform_value + "}")
 					end
 				end
 					-- Make files.
