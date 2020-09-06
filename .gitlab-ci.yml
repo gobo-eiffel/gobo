@@ -24,7 +24,7 @@ test_linux:
   tags:
     - linux
   script:
-    - hostnamectl
+    - cat /etc/*-release
     - gcc --version
     - $CI_PROJECT_DIR/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
