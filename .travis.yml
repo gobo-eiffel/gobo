@@ -15,7 +15,7 @@ os:
   - linux
 
 before_script:
-  - hostnamectl
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then hostnamectl; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then gcc --version; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then clang --version; fi
   # Install Gobo Eiffel
