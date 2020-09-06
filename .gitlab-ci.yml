@@ -25,6 +25,7 @@ test_linux:
     - linux
   script:
     - cat /etc/*-release
+    - arch
     - gcc --version
     - $CI_PROJECT_DIR/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
