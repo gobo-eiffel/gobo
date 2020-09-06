@@ -6,7 +6,7 @@
 		"Supported Platforms"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/platforms">
 <chapterinfo>
 	<copyright>
-		<year>2006-2016</year>
+		<year>2006-2020</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>27 December 2016</date>
+	<date>6 September 2020</date>
 </chapterinfo>
 
 <title>Supported Platforms</title>
@@ -53,97 +53,46 @@ has already been used successfully:
 	</thead>
 	<tbody>
 		<row>
-			<entry>Windows XP Pro</entry>
-			<entry>msc 7.1 (Visual Studio .NET 2003)</entry>
-			<entry>32-bit x86</entry>
+			<entry>Windows 10</entry>
+			<entry>msc 15 (Visual Studio 2017)</entry>
+			<entry>x86 64-bit</entry>
 			<entry></entry>
 		</row>
 		<row>
-			<entry>Windows XP</entry>
-			<entry>msc 8 (Visual Studio .NET 2005)</entry>
-			<entry>32-bit x86</entry>
+			<entry>Windows 10</entry>
+			<entry>msc 16 (Visual Studio 2019)</entry>
+			<entry>x86 64-bit</entry>
+			<entry>Using <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab runner</ulink></entry>
+		</row>
+		<row>
+			<entry>Debian GNU/Linux 10</entry>
+			<entry>gcc 8.3.0</entry>
+			<entry>x86 64-bit</entry>
+			<entry>Using <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab runner</ulink></entry>
+		</row>
+		<row>
+			<entry>Linux Ubuntu 16.04.6</entry>
+			<entry>gcc 5.4.0</entry>
+			<entry>x86 64-bit</entry>
+			<entry>Using <ulink url="https://travis-ci.org/github/ebezault/gobo/builds">Travis CI</ulink></entry>
+		</row>
+		<row>
+			<entry>Linux CentOS 7</entry>
+			<entry>gcc 4.8.5</entry>
+			<entry>x86 64-bit</entry>
+			<entry>Using SourceForge</entry>
+		</row>
+		<row>
+			<entry>Mac OS X 10.13.6</entry>
+			<entry>clang 9.1.0</entry>
+			<entry>x86 64-bit</entry>
+			<entry>Using <ulink url="https://travis-ci.org/github/ebezault/gobo/builds">Travis CI</ulink></entry>
+		</row>
+		<row>
+			<entry>Mac OS X</entry>
+			<entry>clang 11.0.3</entry>
+			<entry>x86 64-bit</entry>
 			<entry></entry>
-		</row>
-		<row>
-			<entry>Windows XP Pro</entry>
-			<entry>bcc 5.5.1</entry>
-			<entry>32-bit x86</entry>
-			<entry>
-				bcc raises floating-point overflow exceptions (msc does not).
-				bcc ignores all '\r' when reading text files (msc ignores '\r' only when followed by '\n').
-			</entry>
-		</row>
-		<row>
-			<entry>Linux Ubuntu 5.10 "The Breezy Badger"</entry>
-			<entry>gcc 4.0.2</entry>
-			<entry>32-bit x86</entry>
-			<entry></entry>
-		</row>
-		<row>
-			<entry>Debian Linux 2.6.15</entry>
-			<entry>tcc 0.9.23</entry>
-			<entry>32-bit x86</entry>
-			<entry></entry>
-		</row>
-		<row>
-			<entry>Red Hat Enterprise Linux 4</entry>
-			<entry>gcc 3.4.5</entry>
-			<entry>64-bit x86</entry>
-			<entry></entry>
-		</row>
-		<row>
-			<entry>OpenBSD 3.8</entry>
-			<entry>gcc ???</entry>
-			<entry>32-bit x86</entry>
-			<entry></entry>
-		</row>
-		<row>
-			<entry>alpha OSF1 V5.1</entry>
-			<entry>Compaq C V6.4</entry>
-			<entry>64-bit, little endian, Tru64</entry>
-			<entry></entry>
-		</row>
-	</tbody>
-	</tgroup>
-</table>
-<para>
-And using computers from SourceForge's Compile Farm:
-</para>
-<table>
-	<title></title>
-	<tgroup cols="4">
-	<thead>
-		<row>
-			<entry>Name</entry>
-			<entry>Operating System</entry>
-			<entry>C Compiler</entry>
-			<entry>Hardware</entry>
-		</row>
-	</thead>
-	<tbody>
-		<row>
-			<entry>x86-linux2</entry>
-			<entry>Fedora Linux FC2</entry>
-			<entry>gcc 3.3.3</entry>
-			<entry>32-bit x86, little endian</entry>
-		</row>
-		<row>
-			<entry>x86-linux1</entry>
-			<entry>Debian GNU/Linux 3.1</entry>
-			<entry>gcc 3.3.5</entry>
-			<entry>32-bit x86, little endian</entry>
-		</row>
-		<row>
-			<entry>x86-openbsd1</entry>
-			<entry>OpenBSD 3.8</entry>
-			<entry>gcc 3.3.5</entry>
-			<entry>32-bit x86, little endian</entry>
-		</row>
-		<row>
-			<entry>sparc-solaris1</entry>
-			<entry>Sun Solaris 9 (SunOS 5.9)</entry>
-			<entry>gcc 3.3.2</entry>
-			<entry>64-bit Sun UltraSPARC-II, big-endian</entry>
 		</row>
 	</tbody>
 	</tgroup>
@@ -165,11 +114,12 @@ All this is explained in <filename>$GOBO/bin/Readme.md</filename>.
 If you are using a C compiler other than Microsoft Visual C
 <projectname>cl</projectname> on Windows or GNU <projectname>gcc</projectname>
 on other operating systems such as Linux, you should provide a configuration
-file for your compiler as explained in the section <link linkend="usage">"Back-end
+file for your C compiler as explained in the section <link linkend="usage">"Back-end
 C compiler"</link>.
 </para>
 <para>
-Then, depending on your platform and your C compiler, you should run either one of these:
+Then, depending on your platform and your C compiler, you should run either one of these
+commands:
 <blockquote>
 <programlisting>
 <filename>%GOB%\bin\install.bat &lt;c_compiler&gt;</filename>
@@ -181,7 +131,7 @@ the following test:
 <blockquote>
 <programlisting>
 <filename>cd $GOBO</filename>
-<filename>geant test_debug_ge</filename>
+<filename>geant test_ge</filename>
 </programlisting>
 </blockquote>
 </para>

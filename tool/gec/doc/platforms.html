@@ -41,100 +41,46 @@
     </thead>
     <tbody>
      <tr>
-      <td>Windows XP Pro</td>
-      <td>msc 7.1 (Visual Studio .NET 2003)</td>
-      <td>32-bit x86</td>
+      <td>Windows 10</td>
+      <td>msc 15 (Visual Studio 2017)</td>
+      <td>x86 64-bit</td>
       <td></td>
      </tr>
      <tr>
-      <td>Windows XP</td>
-      <td>msc 8 (Visual Studio .NET 2005)</td>
-      <td>32-bit x86</td>
+      <td>Windows 10</td>
+      <td>msc 16 (Visual Studio 2019)</td>
+      <td>x86 64-bit</td>
+      <td>Using <a href="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab runner</a></td>
+     </tr>
+     <tr>
+      <td>Debian GNU/Linux 10</td>
+      <td>gcc 8.3.0</td>
+      <td>x86 64-bit</td>
+      <td>Using <a href="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab runner</a></td>
+     </tr>
+     <tr>
+      <td>Linux Ubuntu 16.04.6</td>
+      <td>gcc 5.4.0</td>
+      <td>x86 64-bit</td>
+      <td>Using <a href="https://travis-ci.org/github/ebezault/gobo/builds">Travis CI</a></td>
+     </tr>
+     <tr>
+      <td>Linux CentOS 7</td>
+      <td>gcc 4.8.5</td>
+      <td>x86 64-bit</td>
+      <td>Using SourceForge</td>
+     </tr>
+     <tr>
+      <td>Mac OS X 10.13.6</td>
+      <td>clang 9.1.0</td>
+      <td>x86 64-bit</td>
+      <td>Using <a href="https://travis-ci.org/github/ebezault/gobo/builds">Travis CI</a></td>
+     </tr>
+     <tr>
+      <td>Mac OS X</td>
+      <td>clang 11.0.3</td>
+      <td>x86 64-bit</td>
       <td></td>
-     </tr>
-     <tr>
-      <td>Windows XP Pro</td>
-      <td>bcc 5.5.1</td>
-      <td>32-bit x86</td>
-      <td>
-       				bcc raises floating-point overflow exceptions (msc does not).
-       				bcc ignores all '\r' when reading text files (msc ignores '\r' only when followed by '\n').
-       			
-      </td>
-     </tr>
-     <tr>
-      <td>Linux Ubuntu 5.10 "The Breezy Badger"</td>
-      <td>gcc 4.0.2</td>
-      <td>32-bit x86</td>
-      <td></td>
-     </tr>
-     <tr>
-      <td>Debian Linux 2.6.15</td>
-      <td>tcc 0.9.23</td>
-      <td>32-bit x86</td>
-      <td></td>
-     </tr>
-     <tr>
-      <td>Red Hat Enterprise Linux 4</td>
-      <td>gcc 3.4.5</td>
-      <td>64-bit x86</td>
-      <td></td>
-     </tr>
-     <tr>
-      <td>OpenBSD 3.8</td>
-      <td>gcc ???</td>
-      <td>32-bit x86</td>
-      <td></td>
-     </tr>
-     <tr>
-      <td>alpha OSF1 V5.1</td>
-      <td>Compaq C V6.4</td>
-      <td>64-bit, little endian, Tru64</td>
-      <td></td>
-     </tr>
-    </tbody>
-   </table>
-   
-   <p>
-    And using computers from SourceForge's Compile Farm:
-    
-   </p>
-   
-   <table border="2" alt="">
-    <caption></caption>
-    <col span="4" />
-    <thead>
-     <tr>
-      <td><b>Name</b></td>
-      <td><b>Operating System</b></td>
-      <td><b>C Compiler</b></td>
-      <td><b>Hardware</b></td>
-     </tr>
-    </thead>
-    <tbody>
-     <tr>
-      <td>x86-linux2</td>
-      <td>Fedora Linux FC2</td>
-      <td>gcc 3.3.3</td>
-      <td>32-bit x86, little endian</td>
-     </tr>
-     <tr>
-      <td>x86-linux1</td>
-      <td>Debian GNU/Linux 3.1</td>
-      <td>gcc 3.3.5</td>
-      <td>32-bit x86, little endian</td>
-     </tr>
-     <tr>
-      <td>x86-openbsd1</td>
-      <td>OpenBSD 3.8</td>
-      <td>gcc 3.3.5</td>
-      <td>32-bit x86, little endian</td>
-     </tr>
-     <tr>
-      <td>sparc-solaris1</td>
-      <td>Sun Solaris 9 (SunOS 5.9)</td>
-      <td>gcc 3.3.2</td>
-      <td>64-bit Sun UltraSPARC-II, big-endian</td>
      </tr>
     </tbody>
    </table>
@@ -159,13 +105,14 @@
     If you are using a C compiler other than Microsoft Visual C
     <i>cl</i> on Windows or GNU <i>gcc</i>
     on other operating systems such as Linux, you should provide a configuration
-    file for your compiler as explained in the section <a href="usage.html">"Back-end
+    file for your C compiler as explained in the section <a href="usage.html">"Back-end
      C compiler"</a>.
     
    </p>
    
    <p>
-    Then, depending on your platform and your C compiler, you should run either one of these:
+    Then, depending on your platform and your C compiler, you should run either one of these
+    commands:
     
     <blockquote>
      <pre>
@@ -179,7 +126,7 @@
     <blockquote>
      <pre>
 <font color="#800000"><i><tt>cd $GOBO</tt></i></font>
-<font color="#800000"><i><tt>geant test_debug_ge</tt></i></font>
+<font color="#800000"><i><tt>geant test_ge</tt></i></font>
 </pre>
      </blockquote>
     
@@ -199,7 +146,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2006-2016, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 December 2016</font></address>
+     <address><font size="2"><b>Copyright © 2006-2020, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>6 September 2020</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="future.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>
