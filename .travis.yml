@@ -15,6 +15,9 @@ os:
   - linux
 
 before_script:
+  - hostnamectl
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then gcc --version; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then clang --version; fi
   # Install Gobo Eiffel
   - export GOBO=$PWD
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 bin/install.sh -v -t gcc; fi
