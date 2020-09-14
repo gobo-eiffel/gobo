@@ -716,7 +716,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			l_attachment_mark := a_keywords.attachment_mark
 			if not l_attachment_mark.is_implicit_mark then
-				l_attachment_mark.process (Current)
+				process_type_mark (l_attachment_mark)
 				print_space
 			end
 			a_keywords.separateness_keyword.process (Current)
@@ -1200,7 +1200,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached a_type.type_mark as l_type_mark then
 				if not l_type_mark.is_implicit_mark then
-					l_type_mark.process (Current)
+					process_type_mark (l_type_mark)
 					print_space
 				end
 			end
@@ -1358,7 +1358,7 @@ feature {ET_AST_NODE} -- Processing
 				process_formal_parameter_type (a_parameter)
 			else
 				if attached a_parameter.type_mark as l_type_mark then
-					l_type_mark.process (Current)
+					process_type_mark (l_type_mark)
 					print_space
 				end
 				process_name_of_formal_parameter (a_parameter)
@@ -3275,7 +3275,7 @@ feature {ET_AST_NODE} -- Processing
 				process_formal_parameter_type (a_parameter)
 			else
 				if attached a_parameter.type_mark as l_type_mark then
-					l_type_mark.process (Current)
+					process_type_mark (l_type_mark)
 					print_space
 				end
 				process_name_of_formal_parameter (a_parameter)
@@ -3314,7 +3314,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached a_type.type_mark as l_type_mark then
 				if not l_type_mark.is_implicit_mark then
-					l_type_mark.process (Current)
+					process_type_mark (l_type_mark)
 					print_space
 				end
 			end
@@ -3786,7 +3786,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached a_type.type_mark as l_type_mark then
 				if not l_type_mark.is_implicit_mark then
-					l_type_mark.process (Current)
+					process_type_mark (l_type_mark)
 					print_space
 				end
 			end
@@ -3800,7 +3800,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached a_type.type_mark as l_type_mark then
 				if not l_type_mark.is_implicit_mark then
-					l_type_mark.process (Current)
+					process_type_mark (l_type_mark)
 					print_space
 				end
 			end
@@ -4903,7 +4903,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached a_type.type_mark as l_type_mark then
 				if not l_type_mark.is_implicit_mark then
-					l_type_mark.process (Current)
+					process_type_mark (l_type_mark)
 					print_space
 				end
 			end
@@ -4933,7 +4933,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached a_type.type_mark as l_type_mark then
 				if not l_type_mark.is_implicit_mark then
-					l_type_mark.process (Current)
+					process_type_mark (l_type_mark)
 					print_space
 				end
 			end
@@ -5328,7 +5328,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached a_type.type_mark as l_type_mark then
 				if not l_type_mark.is_implicit_mark then
-					l_type_mark.process (Current)
+					process_type_mark (l_type_mark)
 					print_space
 				end
 			end
@@ -5370,6 +5370,14 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			a_list.right_brace.process (Current)
+		end
+
+	process_type_mark (a_type_mark: ET_TYPE_MARK)
+			-- Process `a_type_mark'.
+		require
+			a_type_mark_not_void: a_type_mark /= Void
+		do
+			a_type_mark.process (Current)
 		end
 
 	process_type_rename_constraint (a_type_rename_constraint: ET_TYPE_RENAME_CONSTRAINT)
