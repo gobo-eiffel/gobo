@@ -8,5 +8,5 @@ In this test, the formal generic parameter `G` of class `BB` has two constraints
 
 ### Notes
 
-* ISE Eiffel (as of 18.11.10.2592 and after) reports the violation of `VTGC-3` before having a change to report the violation of this validity rule `VGMC`.
-* Gobo Eiffel reports the violation of `VGGC-3` before having a change to report the violation of this validity rule `VGMC`.
+* ISE Eiffel (as of 18.11.10.2592 and after) reports the violation of `VTGC-3` before having a chance to report the violation of this validity rule `VGMC`.
+* Gobo Eiffel reports the violation of `VGGC-3` before having a chance to report the violation of this validity rule `VGMC`.
