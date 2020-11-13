@@ -1,2 +1,2 @@
-[VGMC] class BB (9,11): `f' is a tuple label in both generic constraints '[attached] TUPLE [f: [attached] INTEGER]' and '[attached] TUPLE [i: [attached] INTEGER, f: [attached] INTEGER]'.
+[VGMC] class BB (9,11): `f' is a tuple label in both generic constraints '[attached] TUPLE [f: [attached] INTEGER]' and '[attached] TUPLE [i: [attached] INTEGER; f: [attached] INTEGER]'.
 ----

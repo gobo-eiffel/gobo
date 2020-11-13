@@ -11,6 +11,9 @@
 ### Gobo Eiffel Tools Library
 
 * Improved processing of conversion expressions.
+* Fixed textual representation of `ET_TUPLE_TYPE` in case of labeled
+  tuples: should use `;` instead of `,` as separator for actual generic
+  parameters (e.g. `"TUPLE [a: A; b: B]"` and not `"TUPLE [a: A, b: B]"`).
 
 ## Version 20.05.31.5 - 31 May 2020
 
