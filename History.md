@@ -14,6 +14,11 @@
 * Fixed textual representation of `ET_TUPLE_TYPE` in case of labeled
   tuples: should use `;` instead of `,` as separator for actual generic
   parameters (e.g. `"TUPLE [a: A; b: B]"` and not `"TUPLE [a: A, b: B]"`).
+* Fixed the fact that it is valid to have `x.f` where the type of `x` is
+  a formal generic parameter and `f` is a tuple label declared in several
+  constraints `G -> {TUPLE [f: INTEGER], TUPLE [f: INTEGER]}` because the
+  two constraints have the same base type and the labels are at the same
+  position.
 
 ## Version 20.05.31.5 - 31 May 2020
 

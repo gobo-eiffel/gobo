@@ -1,4 +1,4 @@
-class BB [G -> {TUPLE [f: INTEGER], TUPLE [f: INTEGER; g: BOOLEAN]}]
+class BB [G -> {TUPLE [f: INTEGER], TUPLE [f: INTEGER]}]
 
 feature
 

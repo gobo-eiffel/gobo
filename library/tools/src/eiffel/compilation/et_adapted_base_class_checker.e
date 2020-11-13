@@ -5,7 +5,7 @@ note
 		"Eiffel adapted base class checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -204,16 +204,20 @@ feature -- Validity checking
 											error_handler.report_giaaa_error
 										end
 									elseif l_found_tuple_label_index /= 0 then
-											-- We have two tuple labels with the same name.
-										set_fatal_error
-										if l_seed = 0 then
-											if not feature_flattening_error_only and not class_interface_error_only then
-												error_handler.report_vgmc0d_error (current_class, current_class_impl, a_name, l_found_tuple_label_index, l_found_adapted_base_class, l_tuple_label_index, l_adapted_base_class)
+										if l_found_tuple_label_index /= l_tuple_label_index or not l_found_adapted_base_class.base_type.same_named_type (l_adapted_base_class.base_type, current_class, current_class) then
+												-- We have two tuple labels with the same name.
+												-- This is not considered as an error if this is the same tuple index and
+												-- the constraint types are the same (with the same type marks).
+											set_fatal_error
+											if l_seed = 0 then
+												if not feature_flattening_error_only and not class_interface_error_only then
+													error_handler.report_vgmc0d_error (current_class, current_class_impl, a_name, l_found_tuple_label_index, l_found_adapted_base_class, l_tuple_label_index, l_adapted_base_class)
+												end
+											else
+													-- Internal error: this should not happen when the seed
+													-- has already been successfully determined.
+												error_handler.report_giaaa_error
 											end
-										else
-												-- Internal error: this should not happen when the seed
-												-- has already been successfully determined.
-											error_handler.report_giaaa_error
 										end
 									end
 								else

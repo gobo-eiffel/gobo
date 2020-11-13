@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     287 tests
+    # Passed:     289 tests
     # FAILED:     18 tests
     # Aborted:    0 test
-    # Total:      305 tests
+    # Total:      307 tests
 
 Test Results:</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_1](semantics/muon1/test\_once\_per\_object\_1)\] unknown\_test\_result</br>
