@@ -1,0 +1,22 @@
+-------------------------------------------------------------------------------
+
+Error code: VTMC(1)
+
+Error: Cannot call feature. Feature not found.
+       No constraining type has a feature with that name.
+
+What to do: Make sure that the name of the feature is correct:
+       - Correct the feature name to feature which is available.
+       - Ensure that the feature name occurs in exactly one
+         constraining type.
+
+Class: BB [G -> {TUPLE [f: INTEGER_32; g: INTEGER_32], TUPLE [f: INTEGER_32; h: INTEGER_32]}]
+Feature: f
+The feature with name `f' does not occur in the following type set:
+   {TUPLE [INTEGER_32, INTEGER_32],TUPLE [INTEGER_32, INTEGER_32]}
+Line: 9
+      do
+->      i := a.f
+      end
+
+-------------------------------------------------------------------------------
