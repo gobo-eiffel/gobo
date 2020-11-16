@@ -6,7 +6,7 @@
 		"ISE Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2020, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="ise_task">
 <chapterinfo>
 	<copyright>
-		<year>2002-2018</year>
+		<year>2002-2020</year>
 		<holder>Sven Ehrke and others</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>14 October 2018</date>
+	<date>16 November 2020</date>
 </chapterinfo>
 
 	<title>ise</title>
@@ -104,6 +104,20 @@
 			</varlistentry>
 
 			<varlistentry>
+				<term>executable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Filename (optionally with a pathname) of ISE's Eiffel compiler executable.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing executable</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>Version of 'ec' in the PATH</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
 				<term>clean</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>clean</para>
@@ -155,9 +169,15 @@
           <optional>
             <attribute name="finish_freezing"/>
           </optional>
+          <optional>
+            <attribute name="executable"/>
+          </optional>
         </group>
         <attribute name="clean"/>
       </choice>
+      <optional>
+        <attribute name="exit_code_variable"/>
+      </optional>
     </element>
   </define>
 ]]>

@@ -6,7 +6,7 @@
 		"Gec Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec_task">
 <chapterinfo>
 	<copyright>
-		<year>2006-2018</year>
+		<year>2006-2020</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
@@ -23,7 +23,7 @@
 		<surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>16 October 2018</date>
+	<date>16 November 2020</date>
 </chapterinfo>
 
 	<title>gec</title>
@@ -248,7 +248,21 @@
 					<para><emphasis>Default: </emphasis>false</para>
 				</listitem>
 			</varlistentry>
-			
+
+			<varlistentry>
+				<term>executable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Filename (optionally with a pathname) of gec executable.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing executable</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>Version of 'gec' in the PATH</para>
+				</listitem>
+			</varlistentry>
+
 			<varlistentry>
 				<term>clean</term>
 				<listitem>
@@ -334,12 +348,15 @@
           <optional>
             <attribute name="metrics"/>
           </optional>
+          <optional>
+            <attribute name="executable"/>
+          </optional>
         </group>
         <attribute name="clean"/>
-        <optional>
-          <attribute name="exit_code_variable"/>
-        </optional>
       </choice>
+      <optional>
+        <attribute name="exit_code_variable"/>
+      </optional>
     </element>
   </define>
 ]]>

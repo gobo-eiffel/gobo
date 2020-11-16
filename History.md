@@ -2,6 +2,13 @@
 
 ## Version ?? - ??
 
+### geant
+
+* Added option `executable` for the tasks `<gec>` and `<ise>` to be
+  able specify the filename (optionally with a pathname) of the Eiffel
+  compiler executable. The default is the executable which can be found
+  in the `PATH`.
+
 ### gec
 
 * Added runtime support for attributes with self-initializing code.

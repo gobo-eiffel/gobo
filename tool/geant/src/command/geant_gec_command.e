@@ -5,7 +5,7 @@ note
 		"Gec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2020, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_project)
 			c_compile := "gecc"
+			executable_filename := "gec"
 			split_mode := True
 		end
 
@@ -65,6 +66,9 @@ feature -- Status report
 		end
 
 feature -- Access
+
+	executable_filename: STRING
+			-- Filename of "gec" executable
 
 	ecf_filename: detachable STRING
 			-- ECF filename
@@ -127,6 +131,17 @@ feature -- Access
 			-- Name of variable holding exit code of gec compilation process
 
 feature -- Setting
+
+	set_executable_filename (a_filename: like executable_filename)
+			-- Set `executable_filename' to `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.is_empty
+		do
+			executable_filename := a_filename
+		ensure
+			executable_filename_set: executable_filename = a_filename
+		end
 
 	set_ecf_filename (a_filename: like ecf_filename)
 			-- Set `ecf_filename' to `a_filename'.
@@ -439,7 +454,8 @@ feature -- Command-line
 			a_filename: STRING
 		do
 			create Result.make (50)
-			Result.append_string ("gec ")
+			Result.append_string (executable_filename)
+			Result.append_character (' ')
 			if attached target_name as l_target_name and then not l_target_name.is_empty then
 				Result.append_string ("--target=")
 				Result.append_string (l_target_name)
@@ -507,5 +523,10 @@ feature -- Command-line
 			command_line_not_void: Result /= Void
 			command_line_not_empty: Result.count > 0
 		end
+
+invariant
+
+	executable_filename_not_void: executable_filename /= Void
+	executable_filename_not_empty: not executable_filename.is_empty
 
 end

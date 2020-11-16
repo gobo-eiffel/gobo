@@ -171,7 +171,17 @@
      <p><i>Default: </i>false
      </p>
     </dd>
+    
     			
+    <dt>executable</dt>
+    <dd><i>Description: </i>Filename (optionally with a pathname) of gec executable.
+     					
+     <p><i>Domain: </i>Valid filename pointing to existing executable
+     </p>
+     <p><i>Default: </i>Version of 'gec' in the PATH
+     </p>
+    </dd>
+    
     			
     <dt>clean</dt>
     <dd><i>Description: </i>clean
@@ -251,12 +261,15 @@
           &lt;optional&gt;
             &lt;attribute name="metrics"/&gt;
           &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;attribute name="executable"/&gt;
+          &lt;/optional&gt;
         &lt;/group&gt;
         &lt;attribute name="clean"/&gt;
-        &lt;optional&gt;
-          &lt;attribute name="exit_code_variable"/&gt;
-        &lt;/optional&gt;
       &lt;/choice&gt;
+      &lt;optional&gt;
+        &lt;attribute name="exit_code_variable"/&gt;
+      &lt;/optional&gt;
     &lt;/element&gt;
   &lt;/define&gt;
 
@@ -279,7 +292,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2006-2018, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>16 October 2018</font></address>
+     <address><font size="2"><b>Copyright © 2006-2020, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>16 November 2020</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="geant_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="gelex_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

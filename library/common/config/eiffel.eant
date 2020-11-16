@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel compilation"
-		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -69,6 +69,8 @@
 			<argument name="a_library_root" value="${system_dir}"/>
 		</geant>
 		<delete file="${system}${exe}"/>
+		<set name="gec_executable" value="gec"/>
+		<set name="gec_executable" value="${GEC_EXECUTABLE}" if="${GEC_EXECUTABLE}"/>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
 		<set name="split" value="true"/>
@@ -78,7 +80,7 @@
 		<set name="gelint_option" value="false" unless="${gelint_option}"/>
 		<set name="gc_option" value="no"/>
 		<set name="gc_option" value="boehm" if="${BOEHM_GC}"/>
-		<gec ecf="${ecf_filename}" target="${system}" finalize="${finalize}" gelint="${gelint_option}" gc="${gc_option}" c_compile="no" catcall="error" split="${split}" split_size="${split_size_option}"/>
+		<gec ecf="${ecf_filename}" executable="${gec_executable}" target="${system}" finalize="${finalize}" gelint="${gelint_option}" gc="${gc_option}" c_compile="no" catcall="error" split="${split}" split_size="${split_size_option}"/>
 		<exec executable="gecc ${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="gecc ${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>
@@ -104,13 +106,15 @@
 		<delete>
 			<fileset include="?(${system}_)module_*.dll"/>
 		</delete>
+		<set name="ec_executable" value="ec"/>
+		<set name="ec_executable" value="${EC_EXECUTABLE}" if="${EC_EXECUTABLE}"/>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
 		<set name="compatible" value="false"/>
 		<set name="compatible" value="true" if="${GOBO_COMPATIBLE}"/>
 		<set name="project_path" value="${GOBO_BUILD_PREFIX}" if="${GOBO_BUILD_PREFIX}"/>
 		<set name="project_path" value="" unless="${GOBO_BUILD_PREFIX}"/>
-		<ise ecf="${ecf_filename}" system="${system}" target="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true" project_path="${project_path}"/>
+		<ise ecf="${ecf_filename}" executable="${ec_executable}" system="${system}" target="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true" project_path="${project_path}"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<set name="compilation_directory" value="EIFGENs" unless="${GOBO_BUILD_PREFIX}"/>
