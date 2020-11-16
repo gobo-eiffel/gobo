@@ -5,7 +5,7 @@ note
 		"Test suites"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,6 +61,24 @@ feature -- Measurement
 			loop
 				Result := Result + a_cursor.item.count
 				a_cursor.forth
+			end
+		end
+
+feature -- Element change
+
+	add_test_cases_to_suite (a_suite: TS_TEST_SUITE)
+			-- Add test cases to `a_suite'.
+		local
+			l_cursor: DS_LIST_CURSOR [TS_TEST]
+		do
+			l_cursor := tests.new_cursor
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_cursor.item.add_test_cases_to_suite (a_suite)
+				l_cursor.forth
 			end
 		end
 

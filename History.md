@@ -8,6 +8,16 @@
 * Added support for the ECF setting `line_generation`, with
   preprocessor statements `#line` now included in the generated C code.
 
+### gecop
+
+* Made `gecop` multi-threaded. Each thread will run its own set of
+  validation tests independently of the others.
+
+### Gobo Eiffel Test Library
+
+* Added support for multi-threading where running tests with the
+  class `TS_MULTITHREADED_TEST_SUITE`.
+
 ### Gobo Eiffel Tools Library
 
 * Improved processing of conversion expressions.

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<project name="execute">
+
+	<description>
+		description: "Execute a command in a directory"
+		copyright: "Copyright (c) 2020, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="execute">
+		<description>
+			Execute ${executable} in ${directory}.
+		</description>
+		<exec executable="${executable}" exit_code_variable="return_code" dir="${directory}"/>
+	</target>
+	
+</project>

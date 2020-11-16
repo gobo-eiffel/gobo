@@ -5,7 +5,7 @@ note
 		"Test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/07/19 $"
 	revision: "$Revision: #20 $"
@@ -129,6 +129,14 @@ feature -- Measurement
 
 	count: INTEGER = 1
 			-- Number of test cases
+
+feature -- Element change
+
+	add_test_cases_to_suite (a_suite: TS_TEST_SUITE)
+			-- Add test cases to `a_suite'.
+		do
+			a_suite.put_test (Current)
+		end
 
 feature -- Execution
 
