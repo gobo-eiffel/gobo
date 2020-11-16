@@ -65,6 +65,15 @@ Here is the list of options that can be used with <projectname>gecop</projectnam
 	</varlistentry>
 	<varlistentry>
 		<term>
+			<filename>--tool-executable=&lt;filename&gt;</filename>
+		</term>
+		<listitem><para>
+			Executable filename (optionally with a pathname) of the Eiffel tool to be tested.
+			(default: gec|gelint|ec in the PATH)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
 			<filename>--validation=&lt;directory_name&gt;</filename>
 		</term>
 		<listitem><para>

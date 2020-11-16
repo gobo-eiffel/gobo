@@ -100,15 +100,21 @@ feature -- Test Gobo Eiffel Compiler
 			a_debug: STRING
 			a_geant_filename: STRING
 			l_directory: KL_DIRECTORY
+			l_executable: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
 			else
 				a_debug := ""
 			end
+			if variables.has ("executable") then
+				l_executable := " -D%"GEC_EXECUTABLE=" + variables.value ("executable") + "%""
+			else
+				l_executable := ""
+			end
 			a_geant_filename := geant_filename
 				-- Compile program.
-			execute_shell ("geant -b %"" + a_geant_filename + "%" -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
+			execute_shell ("geant -b %"" + a_geant_filename + "%"" + l_executable + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
 			concat_output1 (agent filter_output_gec)
 				-- Execute program.
 			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
@@ -233,13 +239,19 @@ feature -- Test gelint
 		local
 			a_debug: STRING
 			l_directory: KL_DIRECTORY
+			l_executable: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
 			else
 				a_debug := ""
 			end
-			execute_shell ("gelint --variable=GOBO_EIFFEL=ge --flat " + ecf_filename + output1_log)
+			if variables.has ("executable") then
+				l_executable := variables.value ("executable")
+			else
+				l_executable := "gelint"
+			end
+			execute_shell (l_executable + " --variable=GOBO_EIFFEL=ge --flat %"" + ecf_filename + "%"" + output1_log)
 			concat_output1 (agent filter_output_gelint)
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -349,11 +361,21 @@ feature -- Test ISE Eiffel
 			l_dotnet: STRING
 			a_geant_filename: STRING
 			l_directory: KL_DIRECTORY
+			l_executable: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
 			else
 				a_debug := ""
+			end
+			if variables.has ("executable") then
+				l_executable := " -D%"EC_EXECUTABLE=" + variables.value ("executable") + "%""
+			else
+					-- Use 'ecb' by default to run the validation suite.
+					-- It runs faster. The generated EIFGEN is not compatible with 'ec',
+					-- but this is not a problem here since we remove the EIFGEN at the
+					-- end of this test.
+				l_executable := " -DEC_EXECUTABLE=ecb"
 			end
 			if variables.has ("GOBO_DOTNET") or attached Execution_environment.variable_value ("GOBO_DOTNET") as l_variable and then not l_variable.is_empty then
 				l_dotnet := " -DGOBO_DOTNET=true"
@@ -362,15 +384,15 @@ feature -- Test ISE Eiffel
 			end
 			a_geant_filename := geant_filename
 				-- Compile program.
-			execute_shell ("geant -b " + a_geant_filename + l_dotnet + " compile_" + a_debug + "ise" + output1_log)
+			execute_shell ("geant -b %"" + a_geant_filename + "%"" + l_executable + l_dotnet + " compile_" + a_debug + "ise" + output1_log)
 			concat_output1 (agent filter_output_ise)
 				-- Execute program.
-			if file_system.file_exists (program_exe) then
+			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
 				execute_shell (program_exe + output2_log)
 				concat_output2
 			end
 				-- Clean.
-			execute_shell ("geant -b " + a_geant_filename + " clobber" + output3_log)
+			execute_shell ("geant -b %"" + a_geant_filename + "%" clobber" + output3_log)
 			concat_output3
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -680,7 +702,7 @@ feature {NONE} -- Directory and file names
 			-- Name of program source directory
 
 	program_exe: STRING
-			-- Name of program executable filename
+			-- Name of program executable file
 		do
 			Result := file_system.pathname (file_system.relative_current_directory, program_name + file_system.exe_extension)
 		ensure

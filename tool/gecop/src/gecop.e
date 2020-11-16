@@ -77,6 +77,9 @@ feature -- Execution
 			l_directory.open_read
 			if l_directory.is_open_read then
 				create l_tester.make_default
+				if tool_executable_option.was_found and then attached tool_executable_option.parameter as l_executable_filename and then not l_executable_filename.is_empty then
+					l_tester.variables.set_value ("executable", l_executable_filename)
+				end
 				create l_test_suite.make ("validation", l_tester.variables)
 				l_tester.set_suite (l_test_suite)
 				create l_relative_path.make_default
@@ -428,6 +431,9 @@ feature -- Argument parsing
 	tool_option: AP_ENUMERATION_OPTION
 			-- Option for '--tool=<eiffel_tool>'
 
+	tool_executable_option: AP_STRING_OPTION
+			-- Option for '--tool_executable=<executable_filename>'
+
 	validation_option: AP_STRING_OPTION
 			-- Option for '--validation=<directory_name>'
 
@@ -471,6 +477,11 @@ feature -- Argument parsing
 			tool_option.extend ("ise_dotnet")
 			tool_option.extend ("ise_dotnet_debug")
 			l_parser.options.force_last (tool_option)
+				-- tool_executable
+			create tool_executable_option.make_with_long_form ("tool-executable")
+			tool_executable_option.set_description ("Executable filename (optionally with a pathname) of Eiffel tool to be tested. (default: gec|gelint|ec in the PATH)")
+			tool_executable_option.set_parameter_description ("filename")
+			l_parser.options.force_last (tool_executable_option)
 				-- validation
 			create validation_option.make_with_long_form ("validation")
 			validation_option.set_description ("Directory containing the Eiffel validation suite. (default: $GOBO/tool/gecop/validation)")
@@ -518,6 +529,7 @@ feature -- Argument parsing
 			end
 		ensure
 			tool_option_not_void: tool_option /= Void
+			tool_executable_option_not_void: tool_executable_option /= Void
 			validation_option_not_void: validation_option /= Void
 			filter_option_not_void: filter_option /= Void
 			aggregate_option_not_void: aggregate_option /= Void
@@ -563,6 +575,7 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	tool_option_not_void: tool_option /= Void
+	tool_executable_option_not_void: tool_executable_option /= Void
 	validation_option_not_void: validation_option /= Void
 	filter_option_not_void: filter_option /= Void
 	aggregate_option_not_void: aggregate_option /= Void

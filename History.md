@@ -19,6 +19,10 @@
 
 * Made `gecop` multi-threaded. Each thread will run its own set of
   validation tests independently of the others.
+* Added command-line option `--tool-executable` to specify the 
+  executable filename (optionally with a pathname) of the Eiffel tool
+  to be tested. The default is either `gec`, `gelint`, `ec` which can
+  be found in the `PATH`.
 
 ### Gobo Eiffel Test Library
 
