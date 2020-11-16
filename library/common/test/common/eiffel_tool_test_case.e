@@ -19,8 +19,11 @@ feature -- Test
 
 	run_validation
 			-- Run Eiffel validation suite with `program_name'.
+		local
+			l_program_full_filename: STRING
 		do
-			assert_execute ("gecop --tool=" + program_name + output_log)
+			l_program_full_filename := file_system.pathname (file_system.current_working_directory, program_name + file_system.exe_extension)
+			assert_execute ("gecop --tool=" + program_name + " --tool-executable=" + l_program_full_filename + output_log)
 			assert_expected_validation_results
 		end
 

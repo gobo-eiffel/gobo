@@ -14,6 +14,8 @@
 * Added runtime support for attributes with self-initializing code.
 * Added support for the ECF setting `line_generation`, with
   preprocessor statements `#line` now included in the generated C code.
+* Let the test in `$GOBO/tool/gec/test/tool` run `gecop` with the `gec`
+  executable just built (the executable under test).
 
 ### gecop
 
@@ -23,6 +25,11 @@
   executable filename (optionally with a pathname) of the Eiffel tool
   to be tested. The default is either `gec`, `gelint`, `ec` which can
   be found in the `PATH`.
+
+### gelint
+
+* Let the test in `$GOBO/tool/gelint/test/tool` run `gecop` with the
+  `gelint` executable just built (the executable under test).
 
 ### Gobo Eiffel Test Library
 
