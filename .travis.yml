@@ -125,4 +125,4 @@ script:
   # Test
   - if [ "$TRAVIS_GOBO_EIFFEL" = "ise" ]; then source $GOBO/.travis/install_ise.sh; fi
   - cd $GOBO/$TRAVIS_GOBO_TEST_DIR
-  - travis_wait 60 geant test$TRAVIS_GOBO_DEBUG_$TRAVIS_GOBO_EIFFEL
+  - travis_wait 60 geant test${TRAVIS_GOBO_DEBUG}_${TRAVIS_GOBO_EIFFEL}
