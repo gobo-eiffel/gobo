@@ -4,7 +4,7 @@ note
 
 		"Test 'gelint'"
 
-	copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,9 @@ feature -- Test
 			-- Test 'gelint'.
 		do
 			compile_program
-			run_validation
+			if not eiffel_compiler.is_ise then
+				run_validation
+			end
 		end
 
 end
