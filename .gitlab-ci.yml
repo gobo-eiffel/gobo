@@ -18,7 +18,7 @@ test_library_windows:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\library"
-    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_debug_ge'
+    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
 
 test_tool_windows:
   stage: test
@@ -30,7 +30,7 @@ test_tool_windows:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\tool"
-    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_debug_ge'
+    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
 
 test_library_linux:
   stage: test
@@ -44,7 +44,7 @@ test_library_linux:
     - export PATH=$PATH:$GOBO/bin
     - gec --version
     - cd $GOBO/library
-    - geant test_debug_ge
+    - geant test_ge
 
 test_tool_linux:
   stage: test
@@ -58,7 +58,7 @@ test_tool_linux:
     - export PATH=$PATH:$GOBO/bin
     - gec --version
     - cd $GOBO/tool
-    - geant test_debug_ge
+    - geant test_ge
 
 stages:
   - test
