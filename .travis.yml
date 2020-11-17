@@ -27,102 +27,102 @@ before_script:
   - cd $GOBO
 
 env:
-  - TRAVIS_GOBO_TEST_DIR=library TRAVIS_GOBO_EIFFEL=ge
-  - TRAVIS_GOBO_TEST_DIR=tool TRAVIS_GOBO_EIFFEL=ge
-  - TRAVIS_GOBO_TEST_DIR=library/argument TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/common TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/free_elks TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/kernel TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/lexical TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/math TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/parse TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/pattern TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/regexp TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/string TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/structure TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/test TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/thread TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/time TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/tools TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/utility TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/xml TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/xpath TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=library/xslt TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/geant TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/gec TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/gecc TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/gedoc TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/gelex TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/gelint TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/gepp TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/getest TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/gexslt TRAVIS_GOBO_EIFFEL=ise
-  - TRAVIS_GOBO_TEST_DIR=tool/geyacc TRAVIS_GOBO_EIFFEL=ise
+  - TRAVIS_GOBO_TEST_DIR=library TRAVIS_GOBO_EIFFEL=ge TRAVIS_GOBO_DEBUG=
+  - TRAVIS_GOBO_TEST_DIR=tool TRAVIS_GOBO_EIFFEL=ge TRAVIS_GOBO_DEBUG=
+  - TRAVIS_GOBO_TEST_DIR=library/argument TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/common TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/free_elks TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/kernel TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/lexical TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/math TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/parse TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/pattern TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/regexp TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/string TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/structure TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/test TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/thread TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/time TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/tools TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/utility TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/xml TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/xpath TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=library/xslt TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/geant TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/gec TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/gecc TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/gedoc TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/gelex TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/gelint TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/gepp TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/getest TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/gexslt TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
+  - TRAVIS_GOBO_TEST_DIR=tool/geyacc TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
 
 matrix:
   exclude:
 # Tests do not work for with ISE on MacOS because of incompatibilities in versions of libiconv.2.dylib.
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/argument TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/argument TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/common TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/common TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/free_elks TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/free_elks TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/kernel TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/kernel TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/lexical TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/lexical TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/math TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/math TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/parse TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/parse TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/pattern TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/pattern TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/regexp TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/regexp TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/string TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/string TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/structure TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/structure TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/test TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/test TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/thread TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/thread TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/time TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/time TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/tools TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/tools TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/utility TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/utility TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/xml TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/xml TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/xpath TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/xpath TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=library/xslt TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=library/xslt TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/geant TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/geant TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/gec TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/gec TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/gecc TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/gecc TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/gedoc TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/gedoc TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/gelex TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/gelex TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/gelint TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/gelint TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/gepp TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/gepp TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/getest TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/getest TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/gexslt TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/gexslt TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
     - os: osx
-      env: TRAVIS_GOBO_TEST_DIR=tool/geyacc TRAVIS_GOBO_EIFFEL=ise
+      env: TRAVIS_GOBO_TEST_DIR=tool/geyacc TRAVIS_GOBO_EIFFEL=ise TRAVIS_GOBO_DEBUG=_debug
   
 script: 
   # Test
   - if [ "$TRAVIS_GOBO_EIFFEL" = "ise" ]; then source $GOBO/.travis/install_ise.sh; fi
   - cd $GOBO/$TRAVIS_GOBO_TEST_DIR
-  - travis_wait 60 geant test_debug_$TRAVIS_GOBO_EIFFEL
+  - travis_wait 60 geant test$TRAVIS_GOBO_DEBUG_$TRAVIS_GOBO_EIFFEL
