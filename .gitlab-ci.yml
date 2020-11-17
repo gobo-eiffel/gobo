@@ -18,7 +18,7 @@ test_library_windows:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\library"
-    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
+    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_debug_ge'
 
 test_tool_windows:
   stage: test
