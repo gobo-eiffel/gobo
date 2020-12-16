@@ -3,8 +3,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-10-17 17:13:58 +0000 (Sat, 17 Oct 2020) $"
+	revision: "$Revision: 104784 $"
 
 class
 	NATURAL_16_REF
@@ -491,8 +491,8 @@ feature -- Bit operations
 			-- `Current' shifted from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
-			n_less_or_equal_to_16: n <= 16
-			n_greater_or_equal_to_minus_16: n >= -16
+			n_less_than_16: n < 16
+			n_greater_than_minus_16: n > -16
 		do
 			if n > 0 then
 				Result := bit_shift_right (n).item
@@ -505,7 +505,7 @@ feature -- Bit operations
 			-- `Current' shifted from `n' position to left.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_16: n <= 16
+			n_less_than_16: n < 16
 		do
 			create Result
 			Result.set_item (item.bit_shift_left (n))
@@ -517,7 +517,7 @@ feature -- Bit operations
 			-- `Current' shifted from `n' position to right.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_16: n <= 16
+			n_less_than_16: n < 16
 		do
 			create Result
 			Result.set_item (item.bit_shift_right (n))
@@ -531,7 +531,7 @@ feature -- Bit operations
 			n_nonnegative: n >= 0
 			n_less_than_16: n < 16
 		do
-			Result := item & ((1).to_natural_16 |<< n) /= 0
+			Result := item & ({NATURAL_16} 1 |<< n) /= 0
 		end
 
 	frozen set_bit (b: BOOLEAN; n: INTEGER): NATURAL_16
@@ -542,9 +542,9 @@ feature -- Bit operations
 			n_less_than_16: n < 16
 		do
 			if b then
-				Result := item | ((1).to_natural_16 |<< n)
+				Result := item | ({NATURAL_16} 1 |<< n)
 			else
-				Result := item & ((1).to_natural_16 |<< n).bit_not
+				Result := item & ({NATURAL_16} 1 |<< n).bit_not
 			end
 		end
 

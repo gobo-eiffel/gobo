@@ -7,8 +7,8 @@
 	access: cursor, membership
 	representation: recursive
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-11-05 14:26:28 +0000 (Thu, 05 Nov 2020) $"
+	revision: "$Revision: 104861 $"
 
 deferred class TREE [G] inherit
 
@@ -889,9 +889,15 @@ feature {NONE} -- Implementation
 			result_is_leaf: is_leaf
 		end
 
+	is_stable: BOOLEAN
+			-- Use to disable invariant monitoring to avoid DDD issue.
+		do
+			Result := True
+		end
+
 invariant
 
-	tree_consistency: child_readable implies (attached child as c and then c.parent = Current)
+	tree_consistency: is_stable and child_readable implies (attached child as c and then c.parent = Current)
 	leaf_definition: is_leaf = (arity = 0)
 	child_off_definition: child_off = child_before or child_after
 	child_before_definition: child_before = (child_index = 0)
@@ -901,7 +907,7 @@ invariant
 	child_after_definition: child_after = (child_index >= child_capacity + 1)
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

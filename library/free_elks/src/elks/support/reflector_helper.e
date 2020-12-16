@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "Helper for routines in INTERNAL class."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-09-14 22:34:03 +0000 (Mon, 14 Sep 2020) $"
+	revision: "$Revision: 104657 $"
 
 class
 	REFLECTOR_HELPER
@@ -119,6 +119,8 @@ feature {NONE} -- Implementation: status report
 					i := detachable_keyword.count + 1
 				elseif s.substring_index (expanded_keyword, 1) = 1 then
 					i := expanded_keyword.count + 1
+				elseif s.substring_index (separate_keyword, 1) = 1 then
+					i := separate_keyword.count + 1
 				else
 					i := 1
 				end
@@ -226,13 +228,15 @@ feature {NONE} -- ECMA mapping helper
 	detachable_keyword: STRING = "detachable"
 	expanded_keyword: STRING = "expanded"
 			-- Symbols use for attachment marks.
+			
+	separate_keyword: STRING = "separate"
 
 feature {NONE} -- Type creation
 
 	type_keyword: STRING = "TYPE";
 			-- Used for creating type objects.
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
