@@ -126,7 +126,11 @@
 			</condition>
 		</library>
 		<library name="gecc_test_tool" location="${GOBO_LIBRARY}/tool/gecc/test/tool/system.ecf" readonly="false"/>
-		<library name="gecop" location="${GOBO_LIBRARY}/tool/gecop/src/system.ecf" readonly="false"/>
+		<library name="gecop" location="${GOBO_LIBRARY}/tool/gecop/src/system.ecf" readonly="false">
+			<condition>
+				<concurrency excluded_value="scoop"/>
+			</condition>
+		</library>
 		<library name="gecop_test_tool" location="${GOBO_LIBRARY}/tool/gecop/test/tool/system.ecf" readonly="false"/>
 		<library name="gedoc" location="${GOBO_LIBRARY}/tool/gedoc/src/system.ecf" readonly="false"/>
 		<library name="gedoc_test_tool" location="${GOBO_LIBRARY}/tool/gedoc/test/tool/system.ecf" readonly="false"/>
