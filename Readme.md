@@ -126,15 +126,12 @@ appear in this list yet, please
 We will try to provide a bug fix as soon as possible
 (usually within one or two days).
 
-You can also subscribe to the *Gobo Eiffel*
-[mailing list](http://groups.yahoo.com/group/gobo-eiffel/)
-and take part to the discussions or ask your questions there.
-There is another
+There is a
 [mailing list](http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop)
 (hosted at SourceForge) for discussions about the features under
 development in the
 [Git repository](https://github.com/gobo-eiffel/gobo)
-on GitHub.
+on GitHub. You can subscribe and take part to the discussions or ask your questions there.
 
 Although the license allows you to do pretty much whatever you want 
 with this software, we would be grateful to get your feedback, 
@@ -151,4 +148,4 @@ are available to help you make the first steps.
 
 ## Authors
 
-Copyright (c) 1997-2020, Eric Bezault and others
+Copyright (c) 1997-2021, Eric Bezault and others
