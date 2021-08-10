@@ -2,7 +2,7 @@
 
 	<target name="one">
 		<description>calls other ant files</description>
-		<set name="who" value="Bart"/>
+		<setenv name="who" value="Bart"/>
 
 		<set name="buildfile" value="../variables/variables5.eant"/>
 
