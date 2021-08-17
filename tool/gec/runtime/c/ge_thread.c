@@ -1679,7 +1679,7 @@ void GE_thread_exit(void)
 			l_free_thread_context = (l_thread_context->n_children == 0);
 			if (!l_free_thread_context) {
 					/* We cannot destroy ourself because we still have some running children
-					 * threads, we therefore needs to mark ourself dead. */
+					 * threads, we therefore need to mark ourself dead. */
 				l_thread_context->is_alive = 0;
 			}
 			GE_unprotected_mutex_unlock((EIF_POINTER)l_thread_context->children_mutex);
