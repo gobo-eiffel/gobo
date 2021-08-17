@@ -1,6 +1,6 @@
 # Semantics MOLO
 
-These [tests](.) are exercising the semantics rule below.</br>
+These [tests](.) are exercising the semantics rule below.
 
 ## MOLO: Loop semantics
 
