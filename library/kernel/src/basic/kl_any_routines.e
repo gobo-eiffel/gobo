@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class ANY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	same_objects (obj1, obj2: detachable ANY): BOOLEAN
+	same_objects (obj1, obj2: detachable separate ANY): BOOLEAN
 			-- Are `obj1' and `obj2' the same object?
 			-- Useful as a way to workaround VWEQ validity rule
 			-- (when running flat Degree 3 for example):
