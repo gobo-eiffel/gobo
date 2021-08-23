@@ -80,12 +80,19 @@ void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_
 	return new_p;
 }
 
-/*
- * Call dispose routine `disp' on object `C'.
- */
 #ifdef GE_USE_BOEHM_GC
+/*
+ * Call dispose routine on object `C'.
+ */
 void GE_boehm_dispose(void* C, void* disp) {
 	((GE_types[((EIF_REFERENCE)C)->id][0]).dispose)(GE_current_context(), (EIF_REFERENCE) C);
+}
+
+/*
+ * Call dispose routine `disp' on once-per-object data `data'.
+ */
+void GE_boehm_dispose_once_per_object_data(void* data, void* disp) {
+	((void (*) (void*)) disp)(data);
 }
 #endif
 

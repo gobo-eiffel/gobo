@@ -142,6 +142,9 @@ extern void GE_thread_onces_set_counts(
 	unsigned int a_reference_count,
 	unsigned int a_procedure_count);
 
+/* Global mutex to protect creation of once-per-object data. */
+extern EIF_POINTER GE_once_per_object_data_mutex;
+
 /*
  * Initialize data to handle threads.
  * To be called at the beginning of the main function

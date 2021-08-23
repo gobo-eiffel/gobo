@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic TUPLE types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,8 @@ inherit
 			make as make_type
 		redefine
 			is_tuple,
-			has_nested_reference_attributes,
+			has_nested_non_embedded_attributes,
+			has_nested_reference_fields,
 			new_dynamic_query, new_dynamic_procedure
 		end
 
@@ -81,20 +82,20 @@ feature -- Status report
 
 feature -- Features
 
-	has_nested_reference_attributes: BOOLEAN
-			-- Does current type contain attributes whose types are declared of reference type,
-			-- or recursively does it contain expanded attributes whose type contains attributes
-			-- of reference type?
+	has_nested_non_embedded_attributes: BOOLEAN
+			-- Does current type contain non-embedded attributes or recursively does it contain
+			-- embedded expanded attributes whose type contains non-embedded attributes?
 		local
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
-			if has_reference_attributes then
+			if has_non_embedded_attributes then
 				Result := True
 			else
-					-- Look at the attributes of the types of expanded items.
+					-- Look for non-embedded attributes in the types of embedded
+					-- expanded attributes, if any.
 					--
-					-- We should not have cyclic recursive enclosed expanded objects.
+					-- We should not have cyclic recursive embedded expanded objects.
 					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
 					-- or by another proper handling if ECMA relaxed this rule
 					-- (through the introduction of attached types). But in case
@@ -104,7 +105,7 @@ feature -- Features
 				nb := item_type_sets.count
 				from i := 1 until i > nb loop
 					l_type := item_type_sets.item (i).static_type.primary_type
-					if l_type.is_expanded and then l_type.has_nested_reference_attributes then
+					if l_type.is_embedded and then l_type.has_nested_non_embedded_attributes then
 							-- Note that for non-generic expanded types, there is no type other
 							-- than itself that conforms to it. However for generic expanded types,
 							-- other generic derivations of the same generic class may conform to
@@ -114,6 +115,46 @@ feature -- Features
 							-- Indeed, if that static type has expanded attributes, then conforming
 							-- generic derivations cannot have these attributes of reference
 							-- type (because no reference type conforms to an expanded type).
+						Result := True
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+				has_reference_attributes := False
+			end
+		end
+
+	has_nested_reference_fields: BOOLEAN
+			-- Does current type contain references, or recursively does it have
+			-- embedded expanded attributes whose types contain references?
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if has_reference_fields then
+				Result := True
+			else
+					-- Look for references in the types of embedded
+					-- expanded attributes, if any.
+					--
+					-- We should not have cyclic recursive embedded expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we temporarily
+					-- set `has_reference_attributes' to True to break that cycle.
+				has_reference_attributes := True
+				nb := item_type_sets.count
+				from i := 1 until i > nb loop
+					l_type := item_type_sets.item (i).static_type.primary_type
+					if l_type.is_embedded and then l_type.has_nested_reference_fields then
+							-- Note that for non-generic expanded types, there is no type other
+							-- than itself that conforms to it. For generic expanded types, we
+							-- should either disallow conformance of other generic derivations of
+							-- the same generic class, or have the corresponding attribute
+							-- non-embedded in the enclosing object (while preserving the copy
+							-- semantics).
 						Result := True
 						i := nb + 1
 					else

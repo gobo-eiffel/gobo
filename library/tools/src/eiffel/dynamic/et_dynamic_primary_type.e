@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +54,17 @@ feature -- Status report
 	is_alive: BOOLEAN
 			-- Is current type considered alive?
 			-- (e.g. instances of this type may be created)
+
+	is_embedded: BOOLEAN
+			-- Are objects of this type embedded within the enclosing object?
+			--
+			-- Note that in the future, some attributes whose types are declared of expanded type
+			-- (such as generic expanded types) may not be embedded with the enclosing object
+			-- but have a reference to them (while still having the copy semantics). Hence the
+			-- distinction between `is_embedded' and `is_expanded'.
+		do
+			Result := is_expanded
+		end
 
 	is_agent_type: BOOLEAN
 			-- Is current type an agent type?
@@ -212,22 +223,45 @@ feature -- Features
 	has_reference_attributes: BOOLEAN
 			-- Does current type contain attributes whose types are declared of reference type?
 
-	has_nested_reference_attributes: BOOLEAN
+	has_generic_expanded_attributes: BOOLEAN
+			-- Does current type contain attributes whose types are declared of generic expanded type?
+			-- Note that for non-generic expanded types, there is no type other than itself
+			-- that conforms to it. Therefore we don't need to keep the type-id in its instances.
+			-- However for generic expanded types, other generic derivations of the same generic
+			-- class may conform to it. So as for reference types, we need to keep the type-id
+			-- in its instances. That's why we need to know whether the current type has such
+			-- kind of attributes.
+
+	has_non_embedded_attributes: BOOLEAN
 			-- Does current type contain attributes whose types are declared of reference type,
-			-- or recursively does it contain expanded attributes whose type contains attributes
-			-- of reference type?
+			-- or attributes whose types are declared of expanded type but which are not
+			-- embedded within the enclosing object?
+			-- The corresponding field in the enclosing object is a reference.
+			--
+			-- Note that in the future, some attributes whose types are declared of expanded type
+			-- (such as generic expanded types) may not be embedded with the enclosing object
+			-- but have a reference to them (while still having the copy semantics). Hence the
+			-- distinction between non-embedded attributes and reference attributes.
+		do
+			Result := has_reference_attributes
+		end
+
+	has_nested_non_embedded_attributes: BOOLEAN
+			-- Does current type contain non-embedded attributes or recursively does it contain
+			-- embedded expanded attributes whose type contains non-embedded attributes?
 		local
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
-			if has_reference_attributes then
+			if has_non_embedded_attributes then
 				Result := True
 			elseif is_basic then
 				Result := False
 			else
-					-- Look at the attributes of the types of expanded attributes, if any.
+					-- Look for non-embedded attributes in the types of embedded
+					-- expanded attributes, if any.
 					--
-					-- We should not have cyclic recursive enclosed expanded objects.
+					-- We should not have cyclic recursive embedded expanded objects.
 					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
 					-- or by another proper handling if ECMA relaxed this rule
 					-- (through the introduction of attached types). But in case
@@ -238,7 +272,7 @@ feature -- Features
 				from i := 1 until i > nb loop
 					if attached queries.item (i).result_type_set as l_result_type_set then
 						l_type := l_result_type_set.static_type.primary_type
-						if l_type.is_expanded and then l_type.has_nested_reference_attributes then
+						if l_type.is_embedded and then l_type.has_nested_non_embedded_attributes then
 								-- Note that for non-generic expanded types, there is no type other
 								-- than itself that conforms to it. However for generic expanded types,
 								-- other generic derivations of the same generic class may conform to
@@ -262,17 +296,62 @@ feature -- Features
 			end
 		end
 
-	has_generic_expanded_attributes: BOOLEAN
-			-- Does current type contain attributes whose types are declared of generic expanded type?
-			-- Note that for non-generic expanded types, there is no type other than itself
-			-- that conforms to it. Therefore we don't need to keep the type-id in its instances.
-			-- However for generic expanded types, other generic derivations of the same generic
-			-- class may conform to it. So as for reference types, we need to keep the type-id
-			-- in its instances. That's why we need to know whether the current type has such
-			-- kind of attributes.
-
 	has_once_per_object_routines: BOOLEAN
 			-- Does current type contain once-per-object routines?
+
+	has_reference_fields: BOOLEAN
+			-- Does current type contain non-embedded attributes or once-per-object routines?
+			-- Note that there is a reference field (like a pseudo attribute) to store once-per-object data.
+		do
+			Result := has_non_embedded_attributes or has_once_per_object_routines
+		end
+
+	has_nested_reference_fields: BOOLEAN
+			-- Does current type contain references, or recursively does it have
+			-- embedded expanded attributes whose types contain references?
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if has_reference_fields then
+				Result := True
+			elseif is_basic then
+				Result := False
+			else
+					-- Look for references in the types of embedded
+					-- expanded attributes, if any.
+					--
+					-- We should not have cyclic recursive embedded expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we temporarily
+					-- set `has_reference_attributes' to True to break that cycle.
+				has_reference_attributes := True
+				nb := attribute_count
+				from i := 1 until i > nb loop
+					if attached queries.item (i).result_type_set as l_result_type_set then
+						l_type := l_result_type_set.static_type.primary_type
+						if l_type.is_embedded and then l_type.has_nested_reference_fields then
+								-- Note that for non-generic expanded types, there is no type other
+								-- than itself that conforms to it. For generic expanded types, we
+								-- should either disallow conformance of other generic derivations of
+								-- the same generic class, or have the corresponding attribute
+								-- non-embedded in the enclosing object (while preserving the copy
+								-- semantics).
+							Result := True
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					else
+							-- Should never happen: queries have a result type set.
+						i := i + 1
+					end
+				end
+				has_reference_attributes := False
+			end
+		end
 
 	queries: ET_DYNAMIC_FEATURE_LIST
 			-- Queries executed at run-time, if any

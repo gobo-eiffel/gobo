@@ -315,10 +315,20 @@ extern void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem
  * Register dispose routine `disp' to be called on object `obj' when it will be collected.
  */
 #ifdef GE_USE_BOEHM_GC
-extern void GE_boehm_dispose(void* C, void* disp); /* Call dispose routine `disp' on object `C'. */
-#define GE_register_dispose(obj, disp) GC_REGISTER_FINALIZER_NO_ORDER((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, NULL, NULL, NULL)
+extern void GE_boehm_dispose(void* C, void* disp); /* Call dispose routine on object `C'. */
+#define GE_register_dispose(obj, disp) GC_REGISTER_FINALIZER_NO_ORDER((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, (void*)(disp), NULL, NULL)
 #else /* No GC */
 #define GE_register_dispose(obj, disp) /* do nothing */
+#endif
+
+/*
+ * Register dispose routine `disp' to be called on once-per-object `data' when it will be collected.
+ */
+#ifdef GE_USE_BOEHM_GC
+extern void GE_boehm_dispose_once_per_object_data(void* data, void* disp); /* Call dispose routine `disp' on once-per-object data `data'. */
+#define GE_register_dispose_once_per_object_data(data, disp) GC_REGISTER_FINALIZER_NO_ORDER((void*)(data), (void (*) (void*, void*)) &GE_boehm_dispose_once_per_object_data, (void*)(disp), NULL, NULL)
+#else /* No GC */
+#define GE_register_dispose_once_per_object_data(data, disp) /* do nothing */
 #endif
 
 /*

@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,12 +62,6 @@ feature -- Status report
 				not l_type_mark.is_attached_mark or else is_expanded
 		end
 
-	has_once_per_object_routines: BOOLEAN
-			-- Does current type contain once-per-object routines?
-		do
-			Result := primary_type.has_once_per_object_routines
-		end
-		
 feature -- Access
 
 	base_type: ET_BASE_TYPE

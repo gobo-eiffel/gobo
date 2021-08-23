@@ -269,6 +269,9 @@ static void GE_thread_init_onces(GE_context* a_context)
 		GE_thread_onces_procedure_count);
 }
 
+/* Global mutex to protect creation of once-per-object data. */
+EIF_POINTER GE_once_per_object_data_mutex;
+
 /* Key to access Thread Specific Data. */
 static EIF_TSD_TYPE GE_thread_context_key;
 

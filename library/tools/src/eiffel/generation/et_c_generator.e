@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1116,6 +1116,8 @@ feature {NONE} -- C code Generation
 				print_polymorphic_procedure_call_functions
 					-- Print object allocation functions.
 				print_object_allocation_functions
+				print_once_per_object_data_allocation_functions
+				print_once_per_object_data_dispose_functions
 					-- Print Eiffel feature functions.
 				if attached current_dynamic_system.root_creation_procedure as l_root_procedure then
 					if attached current_dynamic_system.ise_exception_manager_init_exception_manager_feature as l_ise_exception_manager_init_exception_manager_feature then
@@ -5911,9 +5913,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_is_empty: BOOLEAN
 			l_once_kind: INTEGER
 			l_once_index: INTEGER
-			l_once_prefix: detachable STRING
 			l_is_once: BOOLEAN
 			l_is_once_per_process: BOOLEAN
+			l_is_once_per_thread: BOOLEAN
+			l_is_once_per_object: BOOLEAN
 			l_is_self_initialized_attribute: BOOLEAN
 		do
 			old_file := current_file
@@ -6064,44 +6067,106 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if a_feature.is_once then
 				l_is_once := True
 				l_is_once_per_process := a_feature.is_once_per_process
-				l_once_feature := a_feature.implementation_feature
-				l_once_kind := once_kind (current_feature)
-				once_features.search (l_once_feature)
-				if once_features.found then
-					l_once_index := once_features.found_item
-				else
-					if not multithreaded_mode or else l_is_once_per_process then
-						l_once_index := once_per_process_counts.item (l_once_kind)
-						once_per_process_counts.put (l_once_index + 1, l_once_kind)
+				l_is_once_per_thread := a_feature.is_once_per_thread
+				l_is_once_per_object := a_feature.is_once_per_object
+				if l_is_once_per_process or l_is_once_per_thread then
+					l_once_feature := a_feature.implementation_feature
+					l_once_kind := once_kind (current_feature)
+					once_features.search (l_once_feature)
+					if once_features.found then
+						l_once_index := once_features.found_item
 					else
-						l_once_index := once_per_thread_counts.item (l_once_kind)
-						once_per_thread_counts.put (l_once_index + 1, l_once_kind)
+						if not multithreaded_mode or else l_is_once_per_process then
+							l_once_index := once_per_process_counts.item (l_once_kind)
+							once_per_process_counts.put (l_once_index + 1, l_once_kind)
+						else
+							l_once_index := once_per_thread_counts.item (l_once_kind)
+							once_per_thread_counts.put (l_once_index + 1, l_once_kind)
+						end
+						once_features.force_last (l_once_index, l_once_feature)
 					end
-					once_features.force_last (l_once_index, l_once_feature)
 				end
-				l_once_prefix := once_prefixes.item (l_once_kind)
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_raise_thread_safe_once_exception_if_any (current_feature, l_once_kind, l_once_index)
-				print_return_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_character (' ')
-				current_file.put_string (c_else)
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				if multithreaded_mode and then l_is_once_per_process then
+				if l_is_once_per_object then
+						-- Create once-per-object data for 'Current' object if not created yet.
+					if multithreaded_mode then
+						print_once_per_object_global_mutex_lock
+					end
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('!')
+					print_attribute_onces_access (tokens.current_keyword, current_type, False)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					print_attribute_onces_access (tokens.current_keyword, current_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ge_new_once_per_object_data)
+					current_file.put_integer (current_type.id)
+					current_file.put_character ('(')
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+					if multithreaded_mode then
+						print_once_per_object_global_mutex_unlock
+					end
+				end
+				if not multithreaded_mode or else l_is_once_per_thread then
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_once_status (current_feature, l_once_kind, l_once_index)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_raise_once_exception_if_any (current_feature, l_once_kind, l_once_index)
+					print_return_once_value (current_feature, l_once_kind, l_once_index)
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+				else
+					if multithreaded_mode and then l_is_once_per_process then
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_thread_safe_once_per_process_status (current_feature, l_once_kind, l_once_index)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_raise_thread_safe_once_exception_if_any (current_feature, l_once_kind, l_once_index)
+						print_return_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_character (' ')
+						current_file.put_string (c_else)
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+					end
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -6118,11 +6183,15 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					print_once_mutex_unlock (current_feature, l_once_kind, l_once_index)
 					if l_result_type /= Void then
 						print_assign_once_value_to_result (current_feature, l_once_kind, l_once_index)
-						print_assign_result_to_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
+						if l_is_once_per_process then
+							print_assign_result_to_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
+						end
 					end
-					print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
-					print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
-					print_raise_thread_safe_once_exception_if_any (current_feature, l_once_kind, l_once_index)
+					if l_is_once_per_process then
+						print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
+						print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
+					end
+					print_raise_once_exception_if_any (current_feature, l_once_kind, l_once_index)
 					print_return_statement (a_feature)
 					dedent
 					print_indentation
@@ -6141,12 +6210,16 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					indent
 					if l_result_type /= Void then
 						print_assign_once_value_to_result (current_feature, l_once_kind, l_once_index)
-						print_assign_result_to_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
+						if l_is_once_per_process then
+							print_assign_result_to_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
+						end
 					end
-					print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
-					print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
+					if l_is_once_per_process then
+						print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
+						print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
+					end
 					print_once_mutex_unlock (current_feature, l_once_kind, l_once_index)
-					print_raise_thread_safe_once_exception_if_any (current_feature, l_once_kind, l_once_index)
+					print_raise_once_exception_if_any (current_feature, l_once_kind, l_once_index)
 					print_return_statement (a_feature)
 					dedent
 					print_indentation
@@ -6274,16 +6347,21 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						-- expanded types because a boxed version of the Result (and not
 						-- the Result itself) is kept in the 'GE_onces' C struct. So we
 						-- used the content of the boxed value in place of Result
-						-- in case its fields get modified. Set it back to Result here.
+						-- in case its fields get modified. (See `print_result'.)
+						-- Set it back to Result here.
 					print_assign_once_value_to_result (current_feature, l_once_kind, l_once_index)
 				end
-				if multithreaded_mode and then l_is_once_per_process then
-					if l_result_type /= Void then
-						print_assign_result_to_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
+				if multithreaded_mode then
+					if l_is_once_per_process then
+						if l_result_type /= Void then
+							print_assign_result_to_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
+						end
+						print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
 					end
-					print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
-					print_assign_completed_to_once_status (current_feature, l_once_kind, l_once_index)
-					print_once_mutex_unlock (current_feature, l_once_kind, l_once_index)
+					if not l_is_once_per_thread then
+						print_assign_completed_to_once_status (current_feature, l_once_kind, l_once_index)
+						print_once_mutex_unlock (current_feature, l_once_kind, l_once_index)
+					end
 				end
 			elseif l_is_self_initialized_attribute then
 					-- Record value of self-initialized attribute.
@@ -6349,11 +6427,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				--
 				-- Variable for rescue chain.
 			if current_agent = Void then
-				once_features.search (current_feature.static_feature.implementation_feature)
-				if once_features.found then
+				if current_feature.is_once then
 					l_is_once := True
-					l_once_index := once_features.found_item
-					l_once_kind := once_kind (current_feature)
+					once_features.search (current_feature.static_feature.implementation_feature)
+					if once_features.found then
+						l_once_index := once_features.found_item
+						l_once_kind := once_kind (current_feature)
+					end
 				end
 			end
 			l_rescue := a_feature.rescue_clause
@@ -6438,12 +6518,16 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 				if l_is_once then
 					print_assign_last_exception_to_once_exception (current_feature, l_once_kind, l_once_index)
-				end
-				if multithreaded_mode and then a_feature.is_once_per_process then
-					print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
-					print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
-					print_assign_completed_to_once_status (current_feature, l_once_kind, l_once_index)
-					print_once_mutex_unlock (current_feature, l_once_kind, l_once_index)
+					if multithreaded_mode then
+						if a_feature.is_once_per_process then
+							print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
+							print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
+						end
+						if not current_feature.is_once_per_thread then
+							print_assign_completed_to_once_status (current_feature, l_once_kind, l_once_index)
+							print_once_mutex_unlock (current_feature, l_once_kind, l_once_index)
+						end
+					end
 				end
 				if l_rescue /= Void then
 					print_indentation
@@ -6593,9 +6677,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			if a_feature.is_once_per_object then
-error_handler.report_warning_message ("ET_C_GENERATOR.print_once_function: once key %"OBJECT%" not supported.")
-			end
 			print_internal_function (a_feature)
 		end
 
@@ -6604,9 +6685,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_function: once 
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			if a_feature.is_once_per_object then
-error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure: once key %"OBJECT%" not supported.")
-			end
 			print_internal_procedure (a_feature)
 		end
 
@@ -6950,24 +7028,24 @@ feature {NONE} -- Instruction generation
 				current_file.put_new_line
 			end
 			call_operands.wipe_out
-				-- The following is to make sure that if a once-function is called
-				-- recursively, the semantics specified by ECMA will be satisfied.
-				-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
-				-- to the once-function should return the value of 'Result' as it
-				-- was when the recursive calls occurred.
-				-- There is a special treatment for once functions of non-basic
-				-- expanded types because a boxed version of the Result (and not
-				-- the Result itself) is kept in the 'GE_onces' C struct. So we
-				-- need to use the content of the boxed value in place of Result
-				-- in case its fields get modified.
-			if l_target.is_result and then not (l_target_type.is_expanded and then not l_target_type.is_basic) then
-				if current_agent = Void then
+			if current_agent = Void and then current_feature.is_once then
+					-- Make sure that if a once-function is called
+					-- recursively, the semantics specified by ECMA will be satisfied.
+					-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
+					-- to the once-function should return the value of 'Result' as it
+					-- was when the recursive calls occurred.
+					-- There is a special treatment for once functions of non-basic
+					-- expanded types because a boxed version of the Result (and not
+					-- the Result itself) is kept in the 'GE_onces' C struct. So we
+					-- need to use the content of the boxed value in place of Result
+					-- in case its fields get modified. (See `print_result'.)
+				if l_target.is_result and then not (l_target_type.is_expanded and then not l_target_type.is_basic) then
 					once_features.search (current_feature.static_feature.implementation_feature)
 					if once_features.found then
 						l_once_index := once_features.found_item
 						l_once_kind := once_kind (current_feature)
-						print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
 					end
+					print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
 				end
 			end
 		end
@@ -7224,24 +7302,24 @@ feature {NONE} -- Instruction generation
 			l_conforming_types.wipe_out
 			l_non_conforming_types.wipe_out
 			call_operands.wipe_out
-				-- The following is to make sure that if a once-function is called
-				-- recursively, the semantics specified by ECMA will be satisfied.
-				-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
-				-- to the once-function should return the value of 'Result' as it
-				-- was when the recursive calls occurred.
-				-- There is a special treatment for once functions of non-basic
-				-- expanded types because a boxed version of the Result (and not
-				-- the Result itself) is kept in the 'GE_onces' C struct. So we
-				-- need to use the content of the boxed value in place of Result
-				-- in case its fields get modified.
-			if l_target.is_result and then not (l_target_type.is_expanded and then not l_target_type.is_basic) then
-				if current_agent = Void then
+			if current_agent = Void and then current_feature.is_once then
+					-- Make sure that if a once-function is called
+					-- recursively, the semantics specified by ECMA will be satisfied.
+					-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
+					-- to the once-function should return the value of 'Result' as it
+					-- was when the recursive calls occurred.
+					-- There is a special treatment for once functions of non-basic
+					-- expanded types because a boxed version of the Result (and not
+					-- the Result itself) is kept in the 'GE_onces' C struct. So we
+					-- need to use the content of the boxed value in place of Result
+					-- in case its fields get modified. (See `print_result'.)
+				if l_target.is_result and then not (l_target_type.is_expanded and then not l_target_type.is_basic) then
 					once_features.search (current_feature.static_feature.implementation_feature)
 					if once_features.found then
 						l_once_index := once_features.found_item
 						l_once_kind := once_kind (current_feature)
-						print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
 					end
+					print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
 				end
 			end
 		end
@@ -7411,24 +7489,24 @@ feature {NONE} -- Instruction generation
 				current_file.put_new_line
 				call_operands.wipe_out
 			end
-				-- The following is to make sure that if a once-function is called
-				-- recursively, the semantics specified by ECMA will be satisfied.
-				-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
-				-- to the once-function should return the value of 'Result' as it
-				-- was when the recursive calls occurred.
-				-- There is a special treatment for once functions of non-basic
-				-- expanded types because a boxed version of the Result (and not
-				-- the Result itself) is kept in the 'GE_onces' C struct. So we
-				-- need to use the content of the boxed value in place of Result
-				-- in case its fields get modified.
-			if l_target.is_result and then not (l_dynamic_type.is_expanded and then not l_dynamic_type.is_basic) then
-				if current_agent = Void then
+			if current_agent = Void and then current_feature.is_once then
+					-- Make sure that if a once-function is called
+					-- recursively, the semantics specified by ECMA will be satisfied.
+					-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
+					-- to the once-function should return the value of 'Result' as it
+					-- was when the recursive calls occurred.
+					-- There is a special treatment for once functions of non-basic
+					-- expanded types because a boxed version of the Result (and not
+					-- the Result itself) is kept in the 'GE_onces' C struct. So we
+					-- need to use the content of the boxed value in place of Result
+					-- in case its fields get modified. (See `print_result'.)
+				if l_target.is_result and then not (l_dynamic_type.is_expanded and then not l_dynamic_type.is_basic) then
 					once_features.search (current_feature.static_feature.implementation_feature)
 					if once_features.found then
 						l_once_index := once_features.found_item
 						l_once_kind := once_kind (current_feature)
-						print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
 					end
+					print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
 				end
 			end
 		end
@@ -9411,6 +9489,30 @@ feature {NONE} -- Expression generation
 				current_file.put_string (c_arrow)
 			end
 			print_attribute_type_id_name (a_target_type, current_file)
+		end
+
+	print_attribute_onces_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print access to 'onces' pseudo attribute applied to object `a_target' of type `a_target_type'.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+		require
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+		do
+			if a_target_type.is_expanded then
+				current_file.put_character ('(')
+				print_expression (a_target)
+				current_file.put_character (')')
+				current_file.put_character ('.')
+			else
+				current_file.put_character ('(')
+				print_type_cast (a_target_type, current_file)
+				current_file.put_character ('(')
+				print_non_void_expression (a_target, a_check_void_target)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+			end
+			print_attribute_onces_name (a_target_type, current_file)
 		end
 
 	print_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
@@ -12930,8 +13032,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 							current_file.put_character (')')
 						end
 						current_file.put_character ('&')
-						if not l_static_type.is_basic then
-								-- The following is to make sure that if a once-function is called
+						if current_agent = Void and then current_feature.is_once then
+								-- Make sure that if a once-function is called
 								-- recursively, the semantics specified by ECMA will be satisfied.
 								-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
 								-- to the once-function should return the value of 'Result' as it
@@ -12941,26 +13043,24 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 								-- the Result itself) is kept in the 'GE_onces' C struct. So we
 								-- need to use the content of the boxed value in place of Result
 								-- in case its fields get modified.
-							if current_agent = Void then
+							if not l_static_type.is_basic then
 								once_features.search (current_feature.static_feature.implementation_feature)
 								if once_features.found then
 									l_once_index := once_features.found_item
 									l_once_kind := once_kind (current_feature)
-										-- The once value has been boxed.
-										-- It needs to be unboxed.
-									current_file.put_character ('(')
-									current_file.put_character ('(')
-									print_boxed_type_cast (l_static_type, current_file)
-									current_file.put_character ('(')
-									print_once_value (current_feature, l_once_kind, l_once_index)
-									current_file.put_character (')')
-									current_file.put_character (')')
-									current_file.put_string (c_arrow)
-									print_boxed_attribute_item_name (l_static_type, current_file)
-									current_file.put_character (')')
-								else
-									print_result_name (current_file)
 								end
+									-- The once value has been boxed.
+									-- It needs to be unboxed.
+								current_file.put_character ('(')
+								current_file.put_character ('(')
+								print_boxed_type_cast (l_static_type, current_file)
+								current_file.put_character ('(')
+								print_once_value (current_feature, l_once_kind, l_once_index)
+								current_file.put_character (')')
+								current_file.put_character (')')
+								current_file.put_string (c_arrow)
+								print_boxed_attribute_item_name (l_static_type, current_file)
+								current_file.put_character (')')
 							else
 								print_result_name (current_file)
 							end
@@ -12977,8 +13077,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					else
 						print_result_name (current_file)
 					end
-				else
-						-- The following is to make sure that if a once-function is called
+				elseif current_agent = Void and then current_feature.is_once then
+						-- Make sure that if a once-function is called
 						-- recursively, the semantics specified by ECMA will be satisfied.
 						-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
 						-- to the once-function should return the value of 'Result' as it
@@ -12988,33 +13088,29 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						-- the Result itself) is kept in the 'GE_onces' C struct. So we
 						-- need to use the content of the boxed value in place of Result
 						-- in case its fields get modified.
-					if current_agent = Void then
+					l_dynamic_type_set := dynamic_type_set (an_expression)
+					l_static_type := l_dynamic_type_set.static_type.primary_type
+					if l_static_type.is_expanded and then not l_static_type.is_basic then
 						once_features.search (current_feature.static_feature.implementation_feature)
 						if once_features.found then
-							l_dynamic_type_set := dynamic_type_set (an_expression)
-							l_static_type := l_dynamic_type_set.static_type.primary_type
-							if l_static_type.is_expanded and then not l_static_type.is_basic then
-								l_once_index := once_features.found_item
-								l_once_kind := once_kind (current_feature)
-									-- The once value has been boxed.
-									-- It needs to be unboxed.
-								current_file.put_character ('(')
-								print_boxed_type_cast (l_static_type, current_file)
-								current_file.put_character ('(')
-								print_once_value (current_feature, l_once_kind, l_once_index)
-								current_file.put_character (')')
-								current_file.put_character (')')
-								current_file.put_string (c_arrow)
-								print_boxed_attribute_item_name (l_static_type, current_file)
-							else
-								print_result_name (current_file)
-							end
-						else
-							print_result_name (current_file)
+							l_once_index := once_features.found_item
+							l_once_kind := once_kind (current_feature)
 						end
+							-- The once value has been boxed.
+							-- It needs to be unboxed.
+						current_file.put_character ('(')
+						print_boxed_type_cast (l_static_type, current_file)
+						current_file.put_character ('(')
+						print_once_value (current_feature, l_once_kind, l_once_index)
+						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_string (c_arrow)
+						print_boxed_attribute_item_name (l_static_type, current_file)
 					else
 						print_result_name (current_file)
 					end
+				else
+					print_result_name (current_file)
 				end
 			end
 		end
@@ -13031,6 +13127,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_temp: ET_IDENTIFIER
 			l_pointer: BOOLEAN
 			l_pointer_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_static_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_once_kind: INTEGER
+			l_once_index: INTEGER
 		do
 			l_pointer_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.pointer_type, current_type.base_type)
 			if has_rescue then
@@ -13084,7 +13183,42 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				elseif l_result_type_set.is_expanded then
 					print_type_cast (l_pointer_type, current_file)
 					current_file.put_character ('&')
-					print_result_name (current_file)
+					if current_agent = Void and then current_feature.is_once then
+							-- Make sure that if a once-function is called
+							-- recursively, the semantics specified by ECMA will be satisfied.
+							-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
+							-- to the once-function should return the value of 'Result' as it
+							-- was when the recursive calls occurred.
+							-- There is a special treatment for once functions of non-basic
+							-- expanded types because a boxed version of the Result (and not
+							-- the Result itself) is kept in the 'GE_onces' C struct. So we
+							-- need to use the content of the boxed value in place of Result
+							-- in case its fields get modified.
+						l_static_type := l_result_type_set.static_type.primary_type
+						if not l_static_type.is_basic then
+							once_features.search (current_feature.static_feature.implementation_feature)
+							if once_features.found then
+								l_once_index := once_features.found_item
+								l_once_kind := once_kind (current_feature)
+							end
+								-- The once value has been boxed.
+								-- It needs to be unboxed.
+							current_file.put_character ('(')
+							current_file.put_character ('(')
+							print_boxed_type_cast (l_static_type, current_file)
+							current_file.put_character ('(')
+							print_once_value (current_feature, l_once_kind, l_once_index)
+							current_file.put_character (')')
+							current_file.put_character (')')
+							current_file.put_string (c_arrow)
+							print_boxed_attribute_item_name (l_static_type, current_file)
+							current_file.put_character (')')
+						else
+							print_result_name (current_file)
+						end
+					else
+						print_result_name (current_file)
+					end
 				elseif attached l_result_type_set.special_type as l_special_type then
 					current_file.put_character ('(')
 					print_result_name (current_file)
@@ -17866,7 +18000,7 @@ feature {NONE} -- Deep features generation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_has_nested_references: BOOLEAN
+			l_has_nested_non_embedded_attributes: BOOLEAN
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_attribute: ET_DYNAMIC_FEATURE
@@ -17948,8 +18082,8 @@ feature {NONE} -- Deep features generation
 				current_file.put_character (';')
 				current_file.put_new_line
 			else
-				l_has_nested_references := a_type.has_nested_reference_attributes
-				if l_has_nested_references then
+				l_has_nested_non_embedded_attributes := a_type.has_nested_non_embedded_attributes
+				if l_has_nested_non_embedded_attributes then
 					print_indentation
 					current_file.put_string (c_ge_deep)
 					current_file.put_character ('*')
@@ -18002,9 +18136,9 @@ feature {NONE} -- Deep features generation
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
-					if not l_has_nested_references then
-							-- Copy items if they are not reference objects or expanded
-							-- objects containing (recursively) reference attributes.
+					if not l_has_nested_non_embedded_attributes then
+							-- Copy items if they are non-embedded objects or embedded expanded
+							-- objects containing (recursively) non-embedded attributes.
 						print_indentation
 						current_file.put_string (c_memcpy)
 						current_file.put_character ('(')
@@ -18025,7 +18159,7 @@ feature {NONE} -- Deep features generation
 						-- Clear item slots beyond 'count' if needed.
 					current_file.put_string (c_ifndef)
 					current_file.put_character (' ')
-					if l_special_type.has_nested_reference_attributes then
+					if l_special_type.has_nested_reference_fields then
 						current_file.put_line (c_ge_malloc_cleared)
 					else
 						current_file.put_line (c_ge_malloc_atomic_cleared)
@@ -18093,9 +18227,9 @@ feature {NONE} -- Deep features generation
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
-				if l_has_nested_references then
+				if l_has_nested_non_embedded_attributes then
 						-- Allocate a 'GE_deep' struct to keep track of already twined
-						-- reference objects, or use 'd' if not a null pointer (which
+						-- non-embedded objects, or use 'd' if not a null pointer (which
 						-- means that the current object is not the root of the deep twin).
 					print_indentation
 					current_file.put_string (c_if)
@@ -18155,9 +18289,9 @@ feature {NONE} -- Deep features generation
 							elseif l_attribute_type.is_expanded then
 									-- If the items are expanded.
 									-- We need to deep twin them only if they themselves contain
-									-- (recursively) reference attributes. Otherwise we can copy
+									-- (recursively) non-embedded attributes. Otherwise we can copy
 									-- their contents without further ado.
-								if l_attribute_type.has_nested_reference_attributes then
+								if l_attribute_type.has_nested_non_embedded_attributes then
 									l_temp := new_temp_variable (l_capacity_type)
 									print_indentation
 									current_file.put_string (c_for)
@@ -18255,11 +18389,11 @@ feature {NONE} -- Deep features generation
 									-- it in that case.
 							else
 								l_attribute_type := l_attribute_type_set.static_type.primary_type
-								if l_attribute_type.is_expanded then
-										-- If the attribute is expanded, then its contents has
+								if l_attribute_type.is_embedded then
+										-- If the attribute is embedded, then its contents has
 										-- already been copied. We need to deep twin it only if
-										-- it itself contains (recursively) reference attributes.
-									if l_attribute_type.has_nested_reference_attributes then
+										-- it itself contains (recursively) non-embedded attributes.
+									if l_attribute_type.has_nested_non_embedded_attributes then
 										print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False), agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
 									end
 								else
@@ -18278,11 +18412,11 @@ feature {NONE} -- Deep features generation
 										-- If the dynamic type set of the item is empty,
 										-- then this item is always Void. No need to twin
 										-- it in that case.
-								elseif l_attribute_type.is_expanded then
-										-- If the item is expanded, then its contents has
+								elseif l_attribute_type.is_embedded then
+										-- If the item is embedded, then its contents has
 										-- already been copied. We need to deep twin it only if
-										-- it itself contains (recursively) reference attributes.
-									if l_attribute_type.has_nested_reference_attributes then
+										-- it itself contains (recursively) non-embedded attributes.
+									if l_attribute_type.has_nested_non_embedded_attributes then
 										print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False), agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
 									end
 								else
@@ -27018,7 +27152,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Clear new item slots if needed.
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
-				if l_special_type.has_nested_reference_attributes then
+				if l_special_type.has_nested_reference_fields then
 					current_file.put_line (c_ge_malloc_cleared)
 				else
 					current_file.put_line (c_ge_malloc_atomic_cleared)
@@ -27098,7 +27232,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Clear discarded item slots if needed.
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
-				if l_special_type.has_nested_reference_attributes then
+				if l_special_type.has_nested_reference_fields then
 					current_file.put_line (c_ge_malloc_cleared)
 				else
 					current_file.put_line (c_ge_malloc_atomic_cleared)
@@ -27417,7 +27551,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Clear discarded item slots if needed.
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
-				if l_special_type.has_nested_reference_attributes then
+				if l_special_type.has_nested_reference_fields then
 					current_file.put_line (c_ge_malloc_cleared)
 				else
 					current_file.put_line (c_ge_malloc_atomic_cleared)
@@ -28944,6 +29078,16 @@ feature {NONE} -- C function generation
 				current_file.put_new_line
 				if multithreaded_mode then
 					print_indentation
+					current_file.put_string (c_ge_once_per_object_data_mutex)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ge_mutex_create)
+					current_file.put_character ('(')
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
 					current_file.put_string (c_ge_thread_onces_set_counts)
 					current_file.put_character ('(')
 					from i := 1 until i > once_kind_count loop
@@ -30246,7 +30390,7 @@ feature {NONE} -- C function generation
 			current_file.put_character ('(')
 			print_boxed_type_declaration (a_type, current_file)
 			current_file.put_character (')')
-			if a_type.has_nested_reference_attributes then
+			if a_type.has_nested_reference_fields then
 				current_file.put_string (c_ge_malloc)
 			else
 				current_file.put_string (c_ge_malloc_atomic)
@@ -30663,7 +30807,7 @@ feature {NONE} -- Memory allocation
 
 	print_object_allocation_functions
 			-- For each non-expanded type that is alive (e.g. that can have instances at runtime),
-			-- print 'GE_new<type-id>' functions to `current_file', and its signature to `header_file'.
+			-- print a 'GE_new<type-id>' function to `current_file', and its signature to `header_file'.
 			-- 'GE_new<type-id>' creates a new instance of type type-id, with possible default
 			-- initialization depending on its argument. It also registers the 'dispose' feature
 			-- for that object to the GC if such feature exists.
@@ -30679,7 +30823,6 @@ feature {NONE} -- Memory allocation
 				if l_type.is_alive and then not l_type.is_expanded then
 					if not l_type.base_class.is_type_class then
 						print_object_allocation_function (l_type)
-						flush_to_c_file
 					end
 				end
 				i := i + 1
@@ -30697,7 +30840,7 @@ feature {NONE} -- Memory allocation
 		local
 			l_special_type: detachable ET_DYNAMIC_SPECIAL_TYPE
 			l_item_type: detachable ET_DYNAMIC_PRIMARY_TYPE
-			l_has_nested_reference_attributes: BOOLEAN
+			l_has_nested_reference_fields: BOOLEAN
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_integer_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
@@ -30776,8 +30919,8 @@ feature {NONE} -- Memory allocation
 			current_file.put_character ('(')
 			print_type_declaration (a_type, current_file)
 			current_file.put_character (')')
-			if a_type.has_nested_reference_attributes then
-				l_has_nested_reference_attributes := True
+			if a_type.has_nested_reference_fields then
+				l_has_nested_reference_fields := True
 				current_file.put_string (c_ge_malloc)
 			else
 				current_file.put_string (c_ge_malloc_atomic)
@@ -30860,7 +31003,7 @@ feature {NONE} -- Memory allocation
 					-- Initialize items if needed.
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
-				if l_has_nested_reference_attributes then
+				if l_has_nested_reference_fields then
 					current_file.put_line (c_ge_malloc_cleared)
 				else
 					current_file.put_line (c_ge_malloc_atomic_cleared)
@@ -30899,6 +31042,321 @@ feature {NONE} -- Memory allocation
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Flush to file.
+			flush_to_c_file
+		end
+
+	print_once_per_object_data_allocation_functions
+			-- For each type with once-per-object routines that is alive (e.g. that can have instances at runtime),
+			-- print 'GE_new_once_per_object_data<type-id>' function to `current_file', and its signature to `header_file'.
+			-- 'GE_new_once_per_object_data<type-id>' creates the once-per-object data for an object of type type-id.
+			-- It also registers a 'dispose' function for that data to the GC if necessary.
+		local
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+			i, nb: INTEGER
+		do
+			l_dynamic_types := dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				if l_type.is_alive and then l_type.has_once_per_object_routines then
+					print_once_per_object_data_allocation_function (l_type)
+				end
+				i := i + 1
+			end
+		end
+
+	print_once_per_object_data_allocation_function (a_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print 'GE_new_once_per_object_data<type-id>' function to `current_file', and its signature to `header_file'.
+			-- 'GE_new_once_per_object_data<type-id>' creates the once-per-object data for an object of type `a_type'.
+			-- It also registers a 'dispose' function for that data to the GC if necessary.
+		require
+			a_type_not_void: a_type /= Void
+			a_type_has_once_per_object_routines: a_type.has_once_per_object_routines
+		local
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_procedures: ET_DYNAMIC_FEATURE_LIST
+			l_procedure: ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
+		do
+				-- Print signature to `header_file' and `current_file'.
+			header_file.put_string ("/* New once-per-object data for type ")
+			header_file.put_string (a_type.base_type.unaliased_to_text)
+			header_file.put_line (" */")
+			current_file.put_string ("/* New once-per-object data for type ")
+			current_file.put_string (a_type.base_type.unaliased_to_text)
+			current_file.put_line (" */")
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			print_once_per_object_data_type_name (a_type, header_file)
+			print_once_per_object_data_type_name (a_type, current_file)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			header_file.put_string (c_ge_new_once_per_object_data)
+			current_file.put_string (c_ge_new_once_per_object_data)
+			header_file.put_integer (a_type.id)
+			current_file.put_integer (a_type.id)
+			header_file.put_character ('(')
+			header_file.put_character (')')
+			current_file.put_character ('(')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			print_once_per_object_data_type_name (a_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			print_result_name (current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_once_per_object_data_type_name (a_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_string (c_ge_malloc)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			print_once_per_object_data_type_name (a_type, current_file)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Make sure that the allocated memory is cleared (with zeros).
+			current_file.put_string (c_ifndef)
+			current_file.put_character (' ')
+			current_file.put_line (c_ge_malloc_cleared)
+			print_indentation
+			current_file.put_string (c_memset)
+			current_file.put_character ('(')
+			print_result_name (current_file)
+			current_file.put_character (',')
+			current_file.put_character ('0')
+			current_file.put_character (',')
+			current_file.put_character ('a')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			print_once_per_object_data_type_name (a_type, current_file)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+			current_file.put_line (c_endif)
+				-- Initialize mutexes.
+			if multithreaded_mode then
+				l_queries := a_type.queries
+				i := a_type.attribute_count + 1
+				nb := l_queries.count
+				from
+				until
+					i > nb
+				loop
+					l_query := l_queries.item (i)
+					if l_query.is_once_per_object then
+						print_indentation
+						print_result_name (current_file)
+						current_file.put_string (c_arrow)
+						print_once_per_object_mutex_name (l_query, a_type, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ge_mutex_create)
+						current_file.put_character ('(')
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					i := i + 1
+				end
+				l_procedures := a_type.procedures
+				nb := l_procedures.count
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					l_procedure := l_procedures.item (i)
+					if l_procedure.is_once_per_object then
+						print_indentation
+						print_result_name (current_file)
+						current_file.put_string (c_arrow)
+						print_once_per_object_mutex_name (l_procedure, a_type, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ge_mutex_create)
+						current_file.put_character ('(')
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					i := i + 1
+				end
+					-- Register 'dispose' function to destroy the mutexes.
+				print_indentation
+				current_file.put_string (c_ge_register_dispose_once_per_object_data)
+				current_file.put_character ('(')
+				print_result_name (current_file)
+				current_file.put_character (',')
+				current_file.put_character ('&')
+				current_file.put_string (c_ge_dispose_once_per_object_data)
+				current_file.put_integer (a_type.id)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+				-- Return the new data.
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+				-- Flush to file.
+			flush_to_c_file
+		end
+
+	print_once_per_object_data_dispose_functions
+			-- For each type with once-per-object routines that is alive (e.g. that can have instances at runtime),
+			-- print 'GE_dispose_once_per_object_data<type-id>' function to `current_file', and its signature to `header_file'.
+			-- 'GE_dispose_once_per_object_data<type-id>' destroys the mutexes used in multithreaded mode.
+		local
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+			i, nb: INTEGER
+		do
+			l_dynamic_types := dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				if l_type.is_alive and then l_type.has_once_per_object_routines then
+					print_once_per_object_data_dispose_function (l_type)
+				end
+				i := i + 1
+			end
+		end
+
+	print_once_per_object_data_dispose_function (a_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print 'GE_dispose_once_per_object_data<type-id>' function to `current_file', and its signature to `header_file'.
+			-- 'GE_dispose_once_per_object_data<type-id>' destroys the mutexes used in multithreaded mode.
+		require
+			a_type_not_void: a_type /= Void
+			a_type_has_once_per_object_routines: a_type.has_once_per_object_routines
+		local
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_procedures: ET_DYNAMIC_FEATURE_LIST
+			l_procedure: ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
+		do
+			if multithreaded_mode then
+					-- Print signature to `header_file' and `current_file'.
+				header_file.put_string ("/* Dispose once-per-object data for type ")
+				header_file.put_string (a_type.base_type.unaliased_to_text)
+				header_file.put_line (" */")
+				current_file.put_string ("/* Dispose once-per-object data for type ")
+				current_file.put_string (a_type.base_type.unaliased_to_text)
+				current_file.put_line (" */")
+				header_file.put_string (c_extern)
+				header_file.put_character (' ')
+				header_file.put_string (c_void)
+				current_file.put_string (c_void)
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				header_file.put_string (c_ge_dispose_once_per_object_data)
+				current_file.put_string (c_ge_dispose_once_per_object_data)
+				header_file.put_integer (a_type.id)
+				current_file.put_integer (a_type.id)
+				header_file.put_character ('(')
+				current_file.put_character ('(')
+				print_once_per_object_data_type_name (a_type, header_file)
+				print_once_per_object_data_type_name (a_type, current_file)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				header_file.put_character ('a')
+				header_file.put_character ('1')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				header_file.put_character (')')
+				current_file.put_character (')')
+				header_file.put_character (';')
+				header_file.put_new_line
+				current_file.put_new_line
+					-- Print body to `current_file'.
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				l_queries := a_type.queries
+				i := a_type.attribute_count + 1
+				nb := l_queries.count
+				from
+				until
+					i > nb
+				loop
+					l_query := l_queries.item (i)
+					if l_query.is_once_per_object then
+						print_indentation
+						current_file.put_string (c_ge_mutex_destroy)
+						current_file.put_character ('(')
+						current_file.put_character ('a')
+						current_file.put_character ('1')
+						current_file.put_string (c_arrow)
+						print_once_per_object_mutex_name (l_query, a_type, current_file)
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					i := i + 1
+				end
+				l_procedures := a_type.procedures
+				nb := l_procedures.count
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					l_procedure := l_procedures.item (i)
+					if l_procedure.is_once_per_object then
+						print_indentation
+						current_file.put_string (c_ge_mutex_destroy)
+						current_file.put_character ('(')
+						current_file.put_character ('a')
+						current_file.put_character ('1')
+						current_file.put_string (c_arrow)
+						print_once_per_object_mutex_name (l_procedure, a_type, current_file)
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					i := i + 1
+				end
+				dedent
+				current_file.put_character ('}')
+				current_file.put_new_line
+				current_file.put_new_line
+			end
+				-- Flush to file.
+			flush_to_c_file
 		end
 
 	print_dispose_registration (an_object: ET_EXPRESSION; a_type: ET_DYNAMIC_PRIMARY_TYPE)
@@ -31115,24 +31573,46 @@ feature {NONE} -- Trace generation
 
 feature {NONE} -- Once feature generation
 
-	print_once_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+	print_once_per_process_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print variable containing once status of `a_feature'.
-			-- `a_feature' is expected to be a once routine of kind
+			-- `a_feature' is expected to be a once-per-process routine of kind
 			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
 			-- C struct.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once: a_feature.is_once
+			a_feature_is_once_per_process: a_feature.is_once_per_process
 		local
 			l_once_prefix: STRING
 		do
 			l_once_prefix := once_prefixes.item (a_once_kind)
-			if not multithreaded_mode or else a_feature.is_once_per_process then
-				current_file.put_string (c_ge_process_onces)
-			else
+			current_file.put_string (c_ge_process_onces)
+			current_file.put_string (c_arrow)
+			current_file.put_string (l_once_prefix)
+			current_file.put_string (c_status_suffix)
+			current_file.put_character ('[')
+			current_file.put_integer (a_once_index)
+			current_file.put_character (']')
+		end
+
+	print_thread_safe_once_per_process_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once status of `a_feature'.
+			-- `a_feature' is expected to be a once-per-process routine of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+			-- In multithreaded mode, use the version cached in the current thread.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once_per_process: a_feature.is_once_per_process
+		local
+			l_once_prefix: STRING
+		do
+			l_once_prefix := once_prefixes.item (a_once_kind)
+			if multithreaded_mode then
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
-				current_file.put_string (c_thread_onces)
+				current_file.put_string (c_process_onces)
+			else
+				current_file.put_string (c_ge_process_onces)
 			end
 			current_file.put_string (c_arrow)
 			current_file.put_string (l_once_prefix)
@@ -31142,16 +31622,14 @@ feature {NONE} -- Once feature generation
 			current_file.put_character (']')
 		end
 
-	print_thread_safe_once_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+	print_once_per_thread_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print variable containing once status of `a_feature'.
-			-- `a_feature' is expected to be a once routine of kind
+			-- `a_feature' is expected to be a once-per-thread routine of kind
 			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
 			-- C struct.
-			-- In case of once-per-process in multithreaded mode,
-			-- use the version cached in the current thread.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once: a_feature.is_once
+			a_feature_is_once_per_thread: a_feature.is_once_per_thread
 		local
 			l_once_prefix: STRING
 		do
@@ -31159,11 +31637,7 @@ feature {NONE} -- Once feature generation
 			if multithreaded_mode then
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
-				if a_feature.is_once_per_process then
-					current_file.put_string (c_process_onces)
-				else
-					current_file.put_string (c_thread_onces)
-				end
+				current_file.put_string (c_thread_onces)
 			else
 				current_file.put_string (c_ge_process_onces)
 			end
@@ -31173,47 +31647,191 @@ feature {NONE} -- Once feature generation
 			current_file.put_character ('[')
 			current_file.put_integer (a_once_index)
 			current_file.put_character (']')
+		end
+
+	print_once_per_object_status (a_feature: ET_DYNAMIC_FEATURE)
+			-- Print variable containing once status of `a_feature'.
+			-- `a_feature' is expected to be a once-per-object routine.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once_per_object: a_feature.is_once_per_object
+		do
+			print_attribute_onces_access (tokens.current_keyword, current_type, False)
+			current_file.put_string (C_arrow)
+			print_once_per_object_status_name (a_feature, current_type, current_file)
+		end
+
+	print_once_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once status of `a_feature'.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once: a_feature.is_once
+		do
+			if a_feature.is_once_per_object then
+				print_once_per_object_status (a_feature)
+			elseif a_feature.is_once_per_process then
+				print_once_per_process_status (a_feature, a_once_kind, a_once_index)
+			elseif a_feature.is_once_per_thread then
+				print_once_per_thread_status (a_feature, a_once_kind, a_once_index)
+			else
+					-- Internal error: this once key is not supported.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_once_per_process_value (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once value of `a_feature'.
+			-- `a_feature' is expected to be a once-per-process function of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once_per_process: a_feature.is_once_per_process
+			a_feature_is_function: a_feature.is_function
+		local
+			l_once_prefix: STRING
+		do
+			l_once_prefix := once_prefixes.item (a_once_kind)
+			current_file.put_string (c_ge_process_onces)
+			current_file.put_string (c_arrow)
+			current_file.put_string (l_once_prefix)
+			current_file.put_string (c_value_suffix)
+			current_file.put_character ('[')
+			current_file.put_integer (a_once_index)
+			current_file.put_character (']')
+		end
+
+	print_thread_safe_once_per_process_value (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once value of `a_feature'.
+			-- `a_feature' is expected to be a once-per-process function of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+			-- In case of once-per-process in multithreaded mode,
+			-- use the version cached in the current thread.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once_per_process: a_feature.is_once_per_process
+			a_feature_is_function: a_feature.is_function
+		local
+			l_once_prefix: STRING
+		do
+			l_once_prefix := once_prefixes.item (a_once_kind)
+			if multithreaded_mode then
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_process_onces)
+			else
+				current_file.put_string (c_ge_process_onces)
+			end
+			current_file.put_string (c_arrow)
+			current_file.put_string (l_once_prefix)
+			current_file.put_string (c_value_suffix)
+			current_file.put_character ('[')
+			current_file.put_integer (a_once_index)
+			current_file.put_character (']')
+		end
+
+	print_once_per_thread_value (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once value of `a_feature'.
+			-- `a_feature' is expected to be a once-per-thread function of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once_per_thread: a_feature.is_once_per_thread
+			a_feature_is_function: a_feature.is_function
+		local
+			l_once_prefix: STRING
+		do
+			l_once_prefix := once_prefixes.item (a_once_kind)
+			if multithreaded_mode then
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_thread_onces)
+			else
+				current_file.put_string (c_ge_process_onces)
+			end
+			current_file.put_string (c_arrow)
+			current_file.put_string (l_once_prefix)
+			current_file.put_string (c_value_suffix)
+			current_file.put_character ('[')
+			current_file.put_integer (a_once_index)
+			current_file.put_character (']')
+		end
+
+	print_once_per_object_value (a_feature: ET_DYNAMIC_FEATURE)
+			-- Print variable containing once value of `a_feature'.
+			-- `a_feature' is expected to be a once-per-object function.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_once_per_object: a_feature.is_once_per_object
+		do
+			print_attribute_onces_access (tokens.current_keyword, current_type, False)
+			current_file.put_string (C_arrow)
+			print_once_per_object_value_name (a_feature, current_type, current_file)
 		end
 
 	print_once_value (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print variable containing once value of `a_feature'.
-			-- `a_feature' is expected to be a once function of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once function of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
 			a_feature_is_function: a_feature.is_function
+		do
+			if a_feature.is_once_per_object then
+				print_once_per_object_value (a_feature)
+			elseif a_feature.is_once_per_process then
+				print_once_per_process_value (a_feature, a_once_kind, a_once_index)
+			elseif a_feature.is_once_per_thread then
+				print_once_per_thread_value (a_feature, a_once_kind, a_once_index)
+			else
+					-- Internal error: this once key is not supported.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_once_per_process_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once exception of `a_feature'.
+			-- `a_feature' is expected to be a once-per-process routine of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once_per_process: a_feature.is_once_per_process
 		local
 			l_once_prefix: STRING
 		do
 			l_once_prefix := once_prefixes.item (a_once_kind)
-			if not multithreaded_mode or else a_feature.is_once_per_process then
-				current_file.put_string (c_ge_process_onces)
-			else
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_thread_onces)
-			end
+			current_file.put_string (c_ge_process_onces)
 			current_file.put_string (c_arrow)
 			current_file.put_string (l_once_prefix)
-			current_file.put_string (c_value_suffix)
+			current_file.put_string (c_exception_suffix)
 			current_file.put_character ('[')
 			current_file.put_integer (a_once_index)
 			current_file.put_character (']')
 		end
 
-	print_thread_safe_once_value (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
-			-- Print variable containing once value of `a_feature'.
-			-- `a_feature' is expected to be a once function of kind
+	print_thread_safe_once_per_process_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once exception of `a_feature'.
+			-- `a_feature' is expected to be a once-per_process routine of kind
 			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
 			-- C struct.
 			-- In case of once-per-process in multithreaded mode,
 			-- use the version cached in the current thread.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once: a_feature.is_once
-			a_feature_is_function: a_feature.is_function
+			a_feature_is_once_per_process: a_feature.is_once_per_process
 		local
 			l_once_prefix: STRING
 		do
@@ -31221,89 +31839,86 @@ feature {NONE} -- Once feature generation
 			if multithreaded_mode then
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
-				if a_feature.is_once_per_process then
-					current_file.put_string (c_process_onces)
-				else
-					current_file.put_string (c_thread_onces)
-				end
+				current_file.put_string (c_process_onces)
 			else
 				current_file.put_string (c_ge_process_onces)
 			end
 			current_file.put_string (c_arrow)
 			current_file.put_string (l_once_prefix)
-			current_file.put_string (c_value_suffix)
+			current_file.put_string (c_exception_suffix)
 			current_file.put_character ('[')
 			current_file.put_integer (a_once_index)
 			current_file.put_character (']')
+		end
+
+	print_once_per_thread_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once exception of `a_feature'.
+			-- `a_feature' is expected to be a once-per-thread routine of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once_per_thread: a_feature.is_once_per_thread
+		local
+			l_once_prefix: STRING
+		do
+			l_once_prefix := once_prefixes.item (a_once_kind)
+			if multithreaded_mode then
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_thread_onces)
+			else
+				current_file.put_string (c_ge_process_onces)
+			end
+			current_file.put_string (c_arrow)
+			current_file.put_string (l_once_prefix)
+			current_file.put_string (c_exception_suffix)
+			current_file.put_character ('[')
+			current_file.put_integer (a_once_index)
+			current_file.put_character (']')
+		end
+
+	print_once_per_object_exception (a_feature: ET_DYNAMIC_FEATURE)
+			-- Print variable containing once exception of `a_feature'.
+			-- `a_feature' is expected to be a once-per-object routine.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once_per_object: a_feature.is_once_per_object
+		do
+			print_attribute_onces_access (tokens.current_keyword, current_type, False)
+			current_file.put_string (C_arrow)
+			print_once_per_object_exception_name (a_feature, current_type, current_file)
 		end
 
 	print_once_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print variable containing once exception of `a_feature'.
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
-			a_feature_is_function: a_feature.is_function
-		local
-			l_once_prefix: STRING
 		do
-			l_once_prefix := once_prefixes.item (a_once_kind)
-			if not multithreaded_mode or else a_feature.is_once_per_process then
-				current_file.put_string (c_ge_process_onces)
+			if a_feature.is_once_per_object then
+				print_once_per_object_exception (a_feature)
+			elseif a_feature.is_once_per_process then
+				print_once_per_process_exception (a_feature, a_once_kind, a_once_index)
+			elseif a_feature.is_once_per_thread then
+				print_once_per_thread_exception (a_feature, a_once_kind, a_once_index)
 			else
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_thread_onces)
+					-- Internal error: this once key is not supported.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			end
-			current_file.put_string (c_arrow)
-			current_file.put_string (l_once_prefix)
-			current_file.put_string (c_exception_suffix)
-			current_file.put_character ('[')
-			current_file.put_integer (a_once_index)
-			current_file.put_character (']')
-		end
-
-	print_thread_safe_once_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
-			-- Print variable containing once exception of `a_feature'.
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
-			-- In case of once-per-process in multithreaded mode,
-			-- use the version cached in the current thread.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_feature_is_once: a_feature.is_once
-			a_feature_is_function: a_feature.is_function
-		local
-			l_once_prefix: STRING
-		do
-			l_once_prefix := once_prefixes.item (a_once_kind)
-			if multithreaded_mode then
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				if a_feature.is_once_per_process then
-					current_file.put_string (c_process_onces)
-				else
-					current_file.put_string (c_thread_onces)
-				end
-			else
-				current_file.put_string (c_ge_process_onces)
-			end
-			current_file.put_string (c_arrow)
-			current_file.put_string (l_once_prefix)
-			current_file.put_string (c_exception_suffix)
-			current_file.put_character ('[')
-			current_file.put_integer (a_once_index)
-			current_file.put_character (']')
 		end
 
 	print_assign_called_to_once_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to set the once status of `a_feature' to "called".
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
@@ -31323,17 +31938,17 @@ feature {NONE} -- Once feature generation
 
 	print_assign_called_to_thread_safe_once_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to set the once status of `a_feature' to "called".
-			-- `a_feature' is expected to be a once routine of kind
+			-- `a_feature' is expected to be a once-per-process routine of kind
 			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
 			-- C struct.
-			-- In case of once-per-process in multithreaded mode,
-			-- use the version cached in the current thread.
+			-- Use the version cached in the current thread.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once: a_feature.is_once
+			a_feature_is_once: a_feature.is_once_per_process
+			multithreaded_mode: multithreaded_mode
 		do
 			print_indentation
-			print_thread_safe_once_status (a_feature, a_once_kind, a_once_index)
+			print_thread_safe_once_per_process_status (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
@@ -31347,9 +31962,10 @@ feature {NONE} -- Once feature generation
 
 	print_assign_completed_to_once_status (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to set the once status of `a_feature' to "completed".
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
@@ -31369,9 +31985,10 @@ feature {NONE} -- Once feature generation
 
 	print_once_status_is_completed (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to test whether the once status of `a_feature' is set to "completed".
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
@@ -31389,9 +32006,10 @@ feature {NONE} -- Once feature generation
 
 	print_assign_result_to_once_value (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to set the once value of `a_feature' to "Result".
-			-- `a_feature' is expected to be a once function of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
@@ -31423,21 +32041,21 @@ feature {NONE} -- Once feature generation
 
 	print_assign_result_to_thread_safe_once_value (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to set the once value of `a_feature' to "Result".
-			-- `a_feature' is expected to be a once function of kind
+			-- `a_feature' is expected to be a once-per-process routine of kind
 			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
 			-- C struct.
-			-- In case of once-per-process in multithreaded mode,
-			-- use the version cached in the current thread.
+			-- Use the version cached in the current thread.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once: a_feature.is_once
+			a_feature_is_once: a_feature.is_once_per_process
 			a_feature_is_function: a_feature.is_function
+			multithreaded_mode: multithreaded_mode
 		local
 			l_result_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if attached a_feature.result_type_set as l_result_type_set then
 				print_indentation
-				print_thread_safe_once_value (a_feature, a_once_kind, a_once_index)
+				print_thread_safe_once_per_process_value (a_feature, a_once_kind, a_once_index)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -31459,9 +32077,10 @@ feature {NONE} -- Once feature generation
 
 	print_assign_once_value_to_result (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to set "Result" to the once value of `a_feature'.
-			-- `a_feature' is expected to be a once function of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
@@ -31499,9 +32118,10 @@ feature {NONE} -- Once feature generation
 			-- Print C instruction to return the once value of `a_feature'.
 			-- if it is a function, or just an empty return if it's
 			-- a procedure.
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
@@ -31536,14 +32156,14 @@ feature {NONE} -- Once feature generation
 			-- Print C instruction to return the once value of `a_feature'.
 			-- if it is a function, or just an empty return if it's
 			-- a procedure.
-			-- `a_feature' is expected to be a once routine of kind
+			-- `a_feature' is expected to be a once-per-process routine of kind
 			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
 			-- C struct.
-			-- In case of once-per-process in multithreaded mode,
-			-- use the version cached in the current thread.
+			-- Use the version cached in the current thread.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once: a_feature.is_once
+			a_feature_is_once: a_feature.is_once_per_process
+			multithreaded_mode: multithreaded_mode
 		local
 			l_result_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
@@ -31558,13 +32178,13 @@ feature {NONE} -- Once feature generation
 					current_file.put_character ('(')
 					print_boxed_type_cast (l_result_type, current_file)
 					current_file.put_character ('(')
-					print_thread_safe_once_value (a_feature, a_once_kind, a_once_index)
+					print_thread_safe_once_per_process_value (a_feature, a_once_kind, a_once_index)
 					current_file.put_character (')')
 					current_file.put_character (')')
 					current_file.put_string (c_arrow)
 					print_boxed_attribute_item_name (l_result_type, current_file)
 				else
-					print_thread_safe_once_value (a_feature, a_once_kind, a_once_index)
+					print_thread_safe_once_per_process_value (a_feature, a_once_kind, a_once_index)
 				end
 			end
 			current_file.put_character (';')
@@ -31573,9 +32193,10 @@ feature {NONE} -- Once feature generation
 
 	print_assign_last_exception_to_once_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to set the once exception of `a_feature' to the last exception raised.
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
@@ -31596,15 +32217,16 @@ feature {NONE} -- Once feature generation
 	print_assign_once_exception_to_thread_safe_once_exception (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to set the version of once exception cached in
 			-- current thread to the non-cached version of once exception.
-			-- `a_feature' is expected to be a once routine of kind
+			-- `a_feature' is expected to be a once-per-process routine of kind
 			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
 			-- C struct.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once: a_feature.is_once
+			a_feature_is_once: a_feature.is_once_per_process
+			multithreaded_mode: multithreaded_mode
 		do
 			print_indentation
-			print_thread_safe_once_exception (a_feature, a_once_kind, a_once_index)
+			print_thread_safe_once_per_process_exception (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
@@ -31613,13 +32235,12 @@ feature {NONE} -- Once feature generation
 			current_file.put_new_line
 		end
 
-	print_raise_thread_safe_once_exception_if_any (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+	print_raise_once_exception_if_any (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to raise the once exception if any.
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
-			-- In case of once-per-process in multithreaded mode,
-			-- use the version cached in the current thread.
+			-- In case of one-per-process or once-per-thread, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
@@ -31628,7 +32249,7 @@ feature {NONE} -- Once feature generation
 			current_file.put_string (c_if)
 			current_file.put_character (' ')
 			current_file.put_character ('(')
-			print_thread_safe_once_exception (a_feature, a_once_kind, a_once_index)
+			print_once_exception (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (')')
 			current_file.put_character (' ')
 			current_file.put_character ('{')
@@ -31640,7 +32261,7 @@ feature {NONE} -- Once feature generation
 			current_file.put_string (c_ac)
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			print_thread_safe_once_exception (a_feature, a_once_kind, a_once_index)
+			print_once_exception (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
@@ -31650,9 +32271,46 @@ feature {NONE} -- Once feature generation
 			current_file.put_new_line
 		end
 
-	print_once_mutex (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+	print_raise_thread_safe_once_exception_if_any (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print code to raise the once exception if any.
+			-- `a_feature' is expected to be a once-per_thread routine of kind
+			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
+			-- C struct.
+			-- Use the version cached in the current thread.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once_per_process: a_feature.is_once_per_process
+			multithreaded_mode: multithreaded_mode
+		do
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_thread_safe_once_per_process_exception (a_feature, a_once_kind, a_once_index)
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_ge_raise_once_exception)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			print_thread_safe_once_per_process_exception (a_feature, a_once_kind, a_once_index)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+		end
+
+	print_once_per_process_mutex (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print variable containing once mutex of `a_feature'.
-			-- `a_feature' is expected to be a once routine of kind
+			-- `a_feature' is expected to be a once-per_thread routine of kind
 			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
 			-- C struct.
 		require
@@ -31672,36 +32330,76 @@ feature {NONE} -- Once feature generation
 			current_file.put_character (']')
 		end
 
-	print_once_mutex_try_lock (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
-			-- Print code to try to lock the once mutex of `a_feature'.
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+	print_once_per_object_mutex (a_feature: ET_DYNAMIC_FEATURE)
+			-- Print variable containing once mutex of `a_feature'.
+			-- `a_feature' is expected to be a once-per-object routine.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once_per_process: a_feature.is_once_per_process
+			a_feature_is_once_per_object: a_feature.is_once_per_object
+			multithreaded_mode: multithreaded_mode
+		do
+			print_attribute_onces_access (tokens.current_keyword, current_type, False)
+			current_file.put_string (C_arrow)
+			print_once_per_object_mutex_name (a_feature, current_type, current_file)
+		end
+
+	print_once_mutex (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print variable containing once mutex of `a_feature'.
+			-- In case of one-per-process, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once: a_feature.is_once
+			a_feature_not_once_per_thread: not a_feature.is_once_per_thread
+			multithreaded_mode: multithreaded_mode
+		do
+			if a_feature.is_once_per_object then
+				print_once_per_object_mutex (a_feature)
+			elseif a_feature.is_once_per_object then
+				print_once_per_process_mutex (a_feature, a_once_kind, a_once_index)
+			else
+					-- Internal error: this once key is not supported.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_once_mutex_try_lock (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
+			-- Print code to try to lock the once mutex of `a_feature'.
+			-- In case of one-per-process, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once: a_feature.is_once
+			a_feature_not_once_per_thread: not a_feature.is_once_per_thread
 			multithreaded_mode: multithreaded_mode
 		do
 			current_file.put_string (c_ge_mutex_try_lock)
 			current_file.put_character ('(')
-			print_once_mutex (a_feature, a_once_kind, a_once_index)
+			print_once_per_process_mutex (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (')')
 		end
 
 	print_once_mutex_lock (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to lock the once mutex of `a_feature'.
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once_per_process: a_feature.is_once_per_process
+			a_feature_is_once: a_feature.is_once
+			a_feature_not_once_per_thread: not a_feature.is_once_per_thread
 			multithreaded_mode: multithreaded_mode
 		do
 			print_indentation
 			current_file.put_string (c_ge_mutex_lock)
 			current_file.put_character ('(')
-			print_once_mutex (a_feature, a_once_kind, a_once_index)
+			print_once_per_process_mutex (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
@@ -31709,23 +32407,54 @@ feature {NONE} -- Once feature generation
 
 	print_once_mutex_unlock (a_feature: ET_DYNAMIC_FEATURE; a_once_kind, a_once_index: INTEGER)
 			-- Print code to unlock the once mutex of `a_feature'.
-			-- `a_feature' is expected to be a once routine of kind
-			-- `a_once_kind' with index `a_once_index' in 'GE_onces'
-			-- C struct.
+			-- In case of one-per-process, `a_feature'
+			-- is expected to be a once routine of kind `a_once_kind' with
+			-- index `a_once_index' in 'GE_onces' C struct.
+			-- Otherwise, `a_once_kind' and `a_once_index' are ignored
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_once_per_process: a_feature.is_once_per_process
+			a_feature_is_once: a_feature.is_once
+			a_feature_not_once_per_thread: not a_feature.is_once_per_thread
 			multithreaded_mode: multithreaded_mode
 		do
 			print_indentation
 			current_file.put_string (c_ge_mutex_unlock)
 			current_file.put_character ('(')
-			print_once_mutex (a_feature, a_once_kind, a_once_index)
+			print_once_per_process_mutex (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
 		end
 
+	print_once_per_object_global_mutex_lock
+			-- Print code to lock the global mutex to protect
+			-- creation of once-per-object data.
+		require
+			multithreaded_mode: multithreaded_mode
+		do
+			print_indentation
+			current_file.put_string (c_ge_mutex_lock)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_once_per_object_data_mutex)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_once_per_object_global_mutex_unlock
+			-- Print code to unlock the global mutex to protect
+			-- creation of once-per-object data.
+		require
+			multithreaded_mode: multithreaded_mode
+		do
+			print_indentation
+			current_file.put_string (c_ge_mutex_unlock)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_once_per_object_data_mutex)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
 feature {NONE} -- Type generation
 
 	sort_types
@@ -31887,6 +32616,9 @@ feature {NONE} -- Type generation
 					else
 						print_boxed_type_definition (l_type, a_file)
 					end
+					if l_type.has_once_per_object_routines then
+						print_once_per_object_data_type_definition (l_type, a_file)
+					end
 					a_file.put_new_line
 				end
 				i := i + 1
@@ -31905,6 +32637,9 @@ feature {NONE} -- Type generation
 					l_type := l_expanded_types.item (i)
 					print_type_struct (l_type, a_file)
 					print_boxed_type_struct (l_type, a_file)
+					if l_type.has_once_per_object_routines then
+						print_once_per_object_data_struct (l_type, a_file)
+					end
 					i := i + 1
 				end
 			else
@@ -31916,6 +32651,9 @@ feature {NONE} -- Type generation
 				l_type := l_dynamic_types.item (i)
 				if l_type.is_alive and not l_type.is_expanded then
 					print_type_struct (l_type, a_file)
+					if l_type.has_once_per_object_routines then
+						print_once_per_object_data_struct (l_type, a_file)
+					end
 				end
 				i := i + 1
 			end
@@ -32506,6 +33244,24 @@ feature {NONE} -- Type generation
 			a_file.put_new_line
 		end
 
+	print_once_per_object_data_type_definition (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' the type definition of the once-per-object data of `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_typedef)
+			a_file.put_character (' ')
+			a_file.put_string (c_struct)
+			a_file.put_character (' ')
+			print_once_per_object_data_struct_name (a_type, a_file)
+			a_file.put_character (' ')
+			print_once_per_object_data_type_name (a_type, a_file)
+			a_file.put_character (';')
+			a_file.put_new_line
+		end
+
 	print_type_struct (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' declaration of C struct corresponding to `a_type', if_any.
 		require
@@ -32555,6 +33311,15 @@ feature {NONE} -- Type generation
 					a_file.put_character (';')
 					a_file.put_new_line
 					l_empty_struct := False
+				end
+				if a_type.has_once_per_object_routines then
+					a_file.put_character ('%T')
+					print_once_per_object_data_type_name (a_type, a_file)
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					print_attribute_onces_name (a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_new_line
 				end
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_type as l_dynamic_special_type then
 					l_special_type := l_dynamic_special_type
@@ -32715,6 +33480,134 @@ feature {NONE} -- Type generation
 				a_file.put_new_line
 				a_file.put_new_line
 			end
+		end
+
+	print_once_per_object_data_struct (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' declaration of C struct corresponding to once-per-object data of `a_type'.
+			-- Note that the data for once-per-object is not embedded in the object struct
+			-- put stored in a different struct so that we can easy process it independently
+			-- of the object's attributes. It can also have its own GC dispose function
+			-- (to free mutexes for example).
+		require
+			a_type_not_void: a_type /= Void
+			a_type_has_once_per_object_routines: a_type.has_once_per_object_routines
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_procedures: ET_DYNAMIC_FEATURE_LIST
+			l_procedure: ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
+		do
+			a_file.put_character ('/')
+			a_file.put_character ('*')
+			a_file.put_character (' ')
+			a_file.put_string ("Struct for once-per-object data of type ")
+			a_file.put_string (a_type.base_type.unaliased_to_text)
+			a_file.put_character (' ')
+			a_file.put_character ('*')
+			a_file.put_character ('/')
+			a_file.put_new_line
+			a_file.put_string (c_struct)
+			a_file.put_character (' ')
+			print_once_per_object_data_struct_name (a_type, a_file)
+			a_file.put_character (' ')
+			a_file.put_character ('{')
+			a_file.put_new_line
+			l_queries := a_type.queries
+			i := a_type.attribute_count + 1
+			nb := l_queries.count
+			from until i > nb loop
+				l_query := l_queries.item (i)
+				if not l_query.is_once_per_object then
+					-- Nothing to be done.
+				elseif not attached l_query.result_type_set as l_result_type_set then
+						-- Internal error: queries should have a result type.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					a_file.put_character ('%T')
+					a_file.put_string (c_unsigned)
+					a_file.put_character (' ')
+					a_file.put_string (c_char)
+					a_file.put_character (' ')
+					print_once_per_object_status_name (l_query, a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_character (' ')
+					a_file.put_character ('/')
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_string (l_query.static_feature.name.name)
+					a_file.put_character (' ')
+					a_file.put_character ('*')
+					a_file.put_character ('/')
+					a_file.put_new_line
+					a_file.put_character ('%T')
+					print_type_declaration (l_result_type_set.static_type.primary_type, a_file)
+					a_file.put_character (' ')
+					print_once_per_object_value_name (l_query, a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_new_line
+					a_file.put_character ('%T')
+					a_file.put_string (c_eif_reference)
+					a_file.put_character (' ')
+					print_once_per_object_exception_name (l_query, a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_new_line
+					if multithreaded_mode then
+						a_file.put_character ('%T')
+						a_file.put_string (c_eif_pointer)
+						a_file.put_character (' ')
+						print_once_per_object_mutex_name (l_query, a_type, a_file)
+						a_file.put_character (';')
+						a_file.put_new_line
+					end
+				end
+				i := i + 1
+			end
+			l_procedures := a_type.procedures
+			nb := l_procedures.count
+			from i := 1 until i > nb loop
+				l_procedure := l_procedures.item (i)
+				if l_procedure.is_once_per_object then
+					a_file.put_character ('%T')
+					a_file.put_string (c_unsigned)
+					a_file.put_character (' ')
+					a_file.put_string (c_char)
+					a_file.put_character (' ')
+					print_once_per_object_status_name (l_procedure, a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_character (' ')
+					a_file.put_character ('/')
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_string (l_procedure.static_feature.name.name)
+					a_file.put_character (' ')
+					a_file.put_character ('*')
+					a_file.put_character ('/')
+					a_file.put_new_line
+					a_file.put_character ('%T')
+					a_file.put_string (c_eif_reference)
+					a_file.put_character (' ')
+					print_once_per_object_exception_name (l_procedure, a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_new_line
+					if multithreaded_mode then
+						a_file.put_character ('%T')
+						a_file.put_string (c_eif_pointer)
+						a_file.put_character (' ')
+						print_once_per_object_mutex_name (l_procedure, a_type, a_file)
+						a_file.put_character (';')
+						a_file.put_new_line
+					end
+				end
+				i := i + 1
+			end
+			a_file.put_character ('}')
+			a_file.put_character (';')
+			a_file.put_new_line
+			a_file.put_new_line
 		end
 
 	print_types_array
@@ -33427,6 +34320,25 @@ feature {NONE} -- Type generation
 			end
 		end
 
+	print_once_per_object_data_type_name (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of once-per-object data of `a_type' to `a_file'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('T')
+				a_file.put_character ('o')
+				a_file.put_integer (a_type.id)
+			else
+-- TODO: long names
+				short_names := True
+				print_once_per_object_data_type_name (a_type, a_file)
+				short_names := False
+			end
+		end
+
 	print_struct_name (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of C struct corresponding to `a_type' to `a_file'.
 		require
@@ -33465,6 +34377,25 @@ feature {NONE} -- Type generation
 -- TODO: long names
 				short_names := True
 				print_boxed_struct_name (a_type, a_file)
+				short_names := False
+			end
+		end
+
+	print_once_per_object_data_struct_name (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of C struct corresponding to the once-per-object data of `a_type' to `a_file'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('S')
+				a_file.put_character ('o')
+				a_file.put_integer (a_type.id)
+			else
+-- TODO: long names
+				short_names := True
+				print_once_per_object_data_struct_name (a_type, a_file)
 				short_names := False
 			end
 		end
@@ -33651,6 +34582,13 @@ feature {NONE} -- Default initialization values generation
 					a_file.put_integer (a_type.id)
 						-- Flags.
 					a_file.put_character (',')
+					a_file.put_character ('0')
+					l_empty_struct := False
+				end
+				if a_type.has_once_per_object_routines then
+					if not l_empty_struct then
+						a_file.put_character (',')
+					end
 					a_file.put_character ('0')
 					l_empty_struct := False
 				end
@@ -33950,6 +34888,23 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
+	print_attribute_onces_name (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' the name of the 'onces' pseudo attribute for objects of type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_string (c_onces)
+			else
+-- TODO: long names
+				short_names := True
+				print_attribute_onces_name (a_type, a_file)
+				short_names := False
+			end
+		end
+
 	print_attribute_special_item_name (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print to `a_file' the name of the 'item' pseudo attribute for 'SPECIAL' objects of type `a_type'.
 		require
@@ -34070,6 +35025,86 @@ feature {NONE} -- Feature name generation
 -- TODO: long names
 				short_names := True
 				print_boxed_attribute_item_name (a_type, a_file)
+				short_names := False
+			end
+		end
+
+	print_once_per_object_value_name (a_once_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' the name of the value of the once-per-object
+			-- routine `a_once_routine' for objects of type `a_type'.
+		require
+			an_attribute_not_void: a_once_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('v')
+				a_file.put_integer (a_once_routine.id)
+			else
+-- TODO: long names
+				short_names := True
+				print_once_per_object_value_name (a_once_routine, a_type, a_file)
+				short_names := False
+			end
+		end
+
+	print_once_per_object_status_name (a_once_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' the name of the status of the once-per-object
+			-- routine `a_once_routine' for objects of type `a_type'.
+		require
+			an_attribute_not_void: a_once_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('s')
+				a_file.put_integer (a_once_routine.id)
+			else
+-- TODO: long names
+				short_names := True
+				print_once_per_object_status_name (a_once_routine, a_type, a_file)
+				short_names := False
+			end
+		end
+
+	print_once_per_object_exception_name (a_once_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' the name of the exception of the once-per-object
+			-- routine `a_once_routine' for objects of type `a_type'.
+		require
+			an_attribute_not_void: a_once_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('e')
+				a_file.put_integer (a_once_routine.id)
+			else
+-- TODO: long names
+				short_names := True
+				print_once_per_object_exception_name (a_once_routine, a_type, a_file)
+				short_names := False
+			end
+		end
+
+	print_once_per_object_mutex_name (a_once_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' the name of the mutex of the once-per-object
+			-- routine `a_once_routine' for objects of type `a_type'.
+		require
+			an_attribute_not_void: a_once_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('m')
+				a_file.put_integer (a_once_routine.id)
+			else
+-- TODO: long names
+				short_names := True
+				print_once_per_object_mutex_name (a_once_routine, a_type, a_file)
 				short_names := False
 			end
 		end
@@ -34837,7 +35872,7 @@ feature {NONE} -- Misc C code
 		do
 			print_indentation
 			current_file.put_string (c_return)
-			if attached current_feature.result_type_set as l_result_type_set then
+			if current_feature.result_type_set /= Void then
 				current_file.put_character (' ')
 				print_result_name (current_file)
 			end
@@ -36252,8 +37287,8 @@ feature {NONE} -- Access
 feature {NONE} -- Once features
 
 	once_features: DS_HASH_TABLE [INTEGER, ET_FEATURE]
-			-- Once features already generated, with their
-			-- indexes in 'GE_onces' C struct's arrays
+			-- Once-per-process or once-per-thread features already generated,
+			-- with their indexes in 'GE_onces' C struct's arrays
 
 	once_kind (a_feature: ET_DYNAMIC_FEATURE): INTEGER
 			-- Once kind of `a_feature' in 'GE_onces' C struct,
@@ -37354,6 +38389,7 @@ feature {NONE} -- Constants
 	c_ge_default: STRING = "GE_default"
 	c_ge_default_context: STRING = "GE_default_context"
 	c_ge_developer_raise: STRING = "GE_developer_raise"
+	c_ge_dispose_once_per_object_data: STRING = "GE_dispose_once_per_object_data"
 	c_ge_dts: STRING = "GE_dts"
 	c_ge_encoded_type_conforms_to: STRING = "GE_encoded_type_conforms_to"
 	c_ge_encoded_type_from_name: STRING = "GE_encoded_type_from_name"
@@ -37425,6 +38461,8 @@ feature {NONE} -- Constants
 	c_ge_ms32: STRING = "GE_ms32"
 	c_ge_ms32_from_utf32le: STRING = "GE_ms32_from_utf32le"
 	c_ge_mt: STRING = "GE_mt"
+	c_ge_mutex_create: STRING = "GE_mutex_create"
+	c_ge_mutex_destroy: STRING = "GE_mutex_destroy"
 	c_ge_mutex_lock: STRING = "GE_mutex_lock"
 	c_ge_mutex_try_lock: STRING = "GE_mutex_try_lock"
 	c_ge_mutex_unlock: STRING = "GE_mutex_unlock"
@@ -37445,6 +38483,7 @@ feature {NONE} -- Constants
 	c_ge_new_instance_of_encoded_type: STRING = "GE_new_instance_of_encoded_type"
 	c_ge_new_istr8: STRING = "GE_new_istr8"
 	c_ge_new_istr32: STRING = "GE_new_istr32"
+	c_ge_new_once_per_object_data: STRING = "GE_new_once_per_object_data"
 	c_ge_new_special_of_reference_instance_of_encoded_type: STRING = "GE_new_special_of_reference_instance_of_encoded_type"
 	c_ge_new_str8: STRING = "GE_new_str8"
 	c_ge_new_str32: STRING = "GE_new_str32"
@@ -37457,6 +38496,7 @@ feature {NONE} -- Constants
 	c_ge_object_id: STRING = "GE_object_id"
 	c_ge_object_id_free: STRING = "GE_object_id_free"
 	c_ge_object_size: STRING = "GE_object_size"
+	c_ge_once_per_object_data_mutex: STRING = "GE_once_per_object_data_mutex"
 	c_ge_once_raise: STRING = "GE_once_raise"
 	c_ge_persistent_field_count_of_encoded_type: STRING = "GE_persistent_field_count_of_encoded_type"
 	c_ge_pointer_field: STRING = "GE_pointer_field"
@@ -37469,6 +38509,7 @@ feature {NONE} -- Constants
 	c_ge_raw_object_at_offset: STRING = "GE_raw_object_at_offset"
 	c_ge_raw_reference_field_at: STRING = "GE_raw_reference_field_at"
 	c_ge_register_dispose: STRING = "GE_register_dispose"
+	c_ge_register_dispose_once_per_object_data: STRING = "GE_register_dispose_once_per_object_data"
 	c_ge_real_32_field: STRING = "GE_real_32_field"
 	c_ge_real_32_field_at: STRING = "GE_real_32_field_at"
 	c_ge_real_32_ieee_is_equal: STRING = "GE_real_32_ieee_is_equal"
@@ -37606,6 +38647,7 @@ feature {NONE} -- Constants
 	c_offset: STRING = "offset"
 	c_offsetof: STRING = "offsetof"
 	c_once_objects: STRING = "once_objects"
+	c_onces: STRING = "onces"
 	c_or_else: STRING = "||"
 	c_pre_ecma_mapping_status: STRING = "pre_ecma_mapping_status"
 	c_previous: STRING = "previous"

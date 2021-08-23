@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,11 +26,6 @@ feature -- Status report
 			Result := static_type.is_expanded
 		ensure
 			definition: Result = static_type.is_expanded
-		end
-
-	has_once_per_object_routines: BOOLEAN
-			-- Is there a type in current type set which contains once-per-object routines?
-		deferred
 		end
 
 	is_never_void: BOOLEAN
